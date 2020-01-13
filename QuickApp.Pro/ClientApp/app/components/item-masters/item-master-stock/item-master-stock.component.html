@@ -570,11 +570,11 @@
                                                [ngModelOptions]="{standalone: true}"
                                                [(ngModel)]="sourceItemMaster.leadTimeDays">
                                     </div>
-                                    <div class="col-md-5">
+                                    <!-- <div class="col-md-5">
                                         <span style="font-size: 11px;">Hours</span>
                                         <input type="number" pKeyFilter="int" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==5) return false;" class="form-control input-value" [ngModelOptions]="{standalone: true}"
                                                [(ngModel)]="sourceItemMaster.leadTimeHours">
-                                    </div>
+                                    </div> -->
                                     <div class="clear"></div>
                                     <label class="control-label spacing-label">Stock Level</label>
                                     <div>
@@ -1516,33 +1516,33 @@
                                         </div>
                                         <label class="control-label">Classification <span style="color:red;">*</span></label>
                                         <div class="inline-block display-flex">
-                                            <div class="checkbox-cstm check-value">
+                                            <div >
                                                 <label class="control-label">
-                                                    <input type="checkbox" id="" name="unspecified" [(ngModel)]="exportInfo.IsExportUnspecified" (change)="validateClassificationRequired()">
-                                                    <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                                    <input type="radio" id="" name="classification" value="unspecified" [(ngModel)]="exportInfo.IsExportUnspecified" (change)="validateClassificationRequired()">
+                                               
                                                     Unspecified
                                                 </label>
                                             </div>
-                                            <div class="checkbox-cstm check-value">
+                                            <div>
                                                 <label class="control-label">
-                                                    <input type="checkbox" id="" name="nonmilitary" [(ngModel)]="exportInfo.IsExportNONMilitary" (change)="validateClassificationRequired()">
-                                                    <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                                    <input type="radio" id="" name="classification"  value="nonmiltary" [(ngModel)]="exportInfo.IsExportNONMilitary" (change)="validateClassificationRequired()">
+                                  
                                                     NON-Military
                                                 </label>
                                             </div>
                                         </div>
                                         <div class="inline-block display-flex">
-                                            <div class="checkbox-cstm check-value">
+                                            <div >
                                                 <label class="control-label">
-                                                    <input type="checkbox" id="" name="miltary" value="miltary" [(ngModel)]="exportInfo.IsExportMilitary" (change)="validateClassificationRequired()">
-                                                    <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                                    <input type="radio" id="" name="classification" value="miltary" [(ngModel)]="exportInfo.IsExportMilitary" (change)="validateClassificationRequired()">
+                                                   
                                                     Miltary
                                                 </label>
                                             </div>
-                                            <div class="checkbox-cstm check-value">
+                                            <div >
                                                 <label class="control-label">
-                                                    <input type="checkbox" id="" name="dual" [(ngModel)]="exportInfo.IsExportDual" (change)="validateClassificationRequired()">
-                                                    <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                                    <input type="radio" id="" name="classification" value="dual" [(ngModel)]="exportInfo.IsExportDual" (change)="validateClassificationRequired()">
+                                                 
                                                     Dual
                                                 </label>
                                             </div>

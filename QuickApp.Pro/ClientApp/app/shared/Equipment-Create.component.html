@@ -4,12 +4,13 @@
 >
   <div style="width: 100%; z-index: 1;" *ngIf="!isEdit">
     <span class="cat-heading cat4"
-      >Add New {{ isWorkOrder ? 'Asset' : 'Equipments'}}<i (click)="addRow()" class="fa fa-plus"></i
+      >Add New {{ isWorkOrder ? 'Asset' : 'Equipments'
+      }}<i (click)="addRow()" class="fa fa-plus"></i
     ></span>
   </div>
   <table class="table table-bordered table-fixed workflow-table-equip">
     <tr>
-      <th><label>S.No</label></th>
+      <!-- <th><label>S.No</label></th> -->
       <th><label>Asset Class *</label></th>
       <th><label>Asset Type </label></th>
       <th><label>Asset Description</label></th>
@@ -17,7 +18,7 @@
       <th><label>Actions </label></th>
     </tr>
     <tr *ngFor="let eqp of workFlow.equipments; let i = index">
-      <td>{{ (currentPage - 1) * itemsPerPage + i + 1 }}</td>
+      <!-- <td>{{ (currentPage - 1) * itemsPerPage + i + 1 }}</td> -->
       <td>
         <p-autoComplete
           (onSelect)="onPartSelect($event, eqp)"

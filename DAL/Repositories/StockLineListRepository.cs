@@ -1237,10 +1237,10 @@ namespace DAL.Repositories
             }
         }
 
-        public IEnumerable<StockLine> getStockLinesByIds(long[] ids)
+        public IEnumerable<StockLineDraft> getStockLinesByIds(long[] ids)
         {
-            var stockLines = (from st in _appContext.StockLine
-                              where ids.Contains(st.StockLineId)
+            var stockLines = (from st in _appContext.StockLineDraft
+                              where ids.Contains(st.StockLineDraftId)
                               select st);
             return stockLines;
         }

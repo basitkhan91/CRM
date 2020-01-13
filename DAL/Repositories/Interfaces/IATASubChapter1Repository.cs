@@ -8,7 +8,9 @@ namespace DAL.Repositories.Interfaces
     public interface IATASubChapter1Repository : IRepository<ATASubChapter>
     {
         IEnumerable<ATASubChapter> GetAllATAMainnData();
-        IEnumerable<ATASubChapterAudit> GetATASubChapterAuditDetails(long aTASubChapterId);
+      //  IEnumerable<ATASubChapterAudit> GetATASubChapterAuditDetails(long aTASubChapterId);
+
+      Object GetATASubChapterAuditDetails(long aTASubChapterId);
 
     }
 }

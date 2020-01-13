@@ -23,9 +23,9 @@
                                                    optionLabel="header" [(ngModel)]="selectedColumns" [style]="{minWidth: '200px'}"
                                                     [resetFilterOnHide]="true" style="float:left" (onChange)="columnsChanges()"></p-multiSelect>                                   
 
-                                    <button type="button" class="btn btn-primary-cstm " matTooltip="Download All Data" matTooltipPosition="above"
+                                    <button type="button" class="btn btn-primary-cstm " matTooltip="Download Data" matTooltipPosition="above"
                                             tooltipPosition="top" pButton icon="fa-download" iconPos="left"
-                                            label="Export All Data" (click)="dt.exportCSV()"></button>
+                                            label="Export Data" (click)="dt.exportCSV()"></button>
                                     <button type="button" class="btn btn-primary-cstm " matTooltip="Download Selected" matTooltipPosition="above"
                                             tooltipPosition="top" pButton icon="fa-download" iconPos="left"
                                             label="Export Selection Only"

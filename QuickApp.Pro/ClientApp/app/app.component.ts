@@ -194,6 +194,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                         label: ' Capabilities',
                         items: [
                             { label: 'Capabilities List', routerLink: '/itemmastersmodule/itemmasterpages/app-item-master-capabilities-list' },
+                            { label: 'Capabilities Create', routerLink: '/itemmastersmodule/itemmasterpages/app-item-master-create-capabilities' },
                             { label: 'Reports & Forms', items: [{ label: 'Capabilities List', routerLink: '/#' }] }]
                     }
 
@@ -249,14 +250,14 @@ export class AppComponent implements OnInit, AfterViewInit {
                 items: [
 
                     { label: 'Vendor List', routerLink: '/vendorsmodule/vendorpages/app-vendors-list' },
-                     { label: 'Create Vendor', routerLink: '/vendorsmodule/vendorpages/app-vendor-general-information' },
+                    { label: 'Create Vendor', routerLink: '/vendorsmodule/vendorpages/app-vendor-general-information' },
                     //{ label: 'Create Vendor',  command: (event?: any) => { this.newVendorClick(); } },
                     //{ label: 'Vendor Classification', routerLink: '/singlepages/singlepages/app-vendor-classification' },
                     //{ label: 'Process 1099', routerLink: '/singlepages/singlepages/app-vendor-process1099' },
                     {
                         label: 'Vendor Capabilities', items: [{ label: 'Vendor Caps List', routerLink: '/vendorsmodule/vendorpages/app-vendor-capabilities-list' },
                         { label: 'Add Vendor Caps', routerLink: '/vendorsmodule/vendorpages/app-add-vendor-capabilities' },
-                            { label: 'Reports and Forms', items: [{ label: 'Caps Report', routerLink: '/singlepages/singlepages/app-caps-report' }] }],
+                        { label: 'Reports and Forms', items: [{ label: 'Caps Report', routerLink: '/singlepages/singlepages/app-caps-report' }] }],
                     },
                     // {
                     //     label: 'Purchase Order', items: [{ label: 'PO List', routerLink: '/vendorsmodule/vendorpages/app-polist' },
@@ -282,7 +283,7 @@ export class AppComponent implements OnInit, AfterViewInit {
             {
                 label: 'Purchase Order',
                 icon: 'fa fa-fw fa-shopping-cart',
-                items: [     
+                items: [
                     { label: 'PO List', routerLink: '/vendorsmodule/vendorpages/app-polist' },
                     { label: 'Create PO', routerLink: '/vendorsmodule/vendorpages/app-create-po' },
                     { label: 'PO Approval', routerLink: '/#' },
@@ -292,7 +293,7 @@ export class AppComponent implements OnInit, AfterViewInit {
             {
                 label: 'Repair Order',
                 icon: 'fa fa-fw fa-cog',
-                items: [ 
+                items: [
                     { label: 'RO List', routerLink: '/vendorsmodule/vendorpages/app-ro-list' },
                     { label: 'Create RO', routerLink: '/vendorsmodule/vendorpages/app-create-ro' },
                     { label: 'RO Approval', routerLink: '/#' }
@@ -626,18 +627,18 @@ export class AppComponent implements OnInit, AfterViewInit {
                             { label: 'Conditions', routerLink: '/singlepages/singlepages/app-conditions' },
                             { label: 'Customer Classification', routerLink: '/singlepages/singlepages/app-customer-classification' },
                             { label: 'Dash Numbers', routerLink: '/singlepages/singlepages/app-dashnumber' },
-                            { label: 'Default Messages', routerLink: '/singlepages/singlepages/app-defaultmessage' },                         
+                            { label: 'Default Messages', routerLink: '/singlepages/singlepages/app-defaultmessage' },
                             { label: 'Documents', routerLink: '/singlepages/singlepages/app-documents' },
                             { label: 'Integration', routerLink: '/singlepages/singlepages/app-integration' },
                             { label: 'Percent', routerLink: '/singlepages/singlepages/app-percent' },
                             { label: 'Priority', routerLink: '/singlepages/singlepages/app-priority' },
                             { label: 'Process 1099', routerLink: '/singlepages/singlepages/app-vendor-process1099' },
                             { label: 'Provision', routerLink: '/singlepages/singlepages/app-provision' },
-                            { label: 'Site', routerLink: '/singlepages/singlepages/app-site' },     
-                            { label: 'Vendor Classification', routerLink: '/singlepages/singlepages/app-vendor-classification' },                    
+                            { label: 'Site', routerLink: '/singlepages/singlepages/app-site' },
+                            { label: 'Vendor Classification', routerLink: '/singlepages/singlepages/app-vendor-classification' },
                             { label: 'Work Scope', routerLink: '/singlepages/singlepages/app-work-scope' },
-                           
-                           
+
+
                         ]
                     },
                     {
@@ -646,6 +647,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                             {
                                 label: 'Asset Attributes', items: [
                                     { label: 'Asset Attribute Type', routerLink: '/singlepages/singlepages/app-asset-attribute-type' },
+                                    { label: 'Intangible Attribute Type', routerLink: '/singlepages/singlepages/app-asset-intangible-attribute-type' },
                                     { label: 'Depreciation - Book', routerLink: '/#' },
                                     { label: 'Depreciation - Tax', routerLink: '/#' },
                                     { label: 'Depreciation Date', routerLink: '/#' },
@@ -658,8 +660,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                             { label: 'Depreciation Intervals', routerLink: '/singlepages/singlepages/app-depreciation-intervals' },
                             { label: 'Asset Disposal Type', routerLink: '/singlepages/singlepages/app-disposal-type' },
                             { label: 'Asset Intangible Type', routerLink: '/singlepages/singlepages/app-asset-intangible-type' },
-                            { label: 'Intangible Attribute Type', routerLink: '/singlepages/singlepages/app-asset-intangible-attribute-type' },
-                            ]
+                        ]
                     },
 
                     {
@@ -769,11 +770,11 @@ export class AppComponent implements OnInit, AfterViewInit {
     }
 
     newVendorClick() {
-       
+
         const url = `${this.configurations.baseUrl}/vendorsmodule/vendorpages/app-vendor-general-information`;
         location.assign(url);
     }
-    
+
     initNotificationsLoading() {
         this.notificationsLoadingSubscription = this.notificationService.getNewNotificationsPeriodically()
             .subscribe(notifications => {

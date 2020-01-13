@@ -11,7 +11,7 @@ namespace QuickApp.Pro.ViewModels
         public long PurchaseOrderPartRecordId { get; set; }
         public long RepairOrderPartRecordId { get; set; }
         public short? QuantityRejected { get; set; }
-        public List<StockLine> StockLines { get; set; }
-        public List<TimeLife> TimeLife { get; set; }
+        public List<StockLineDraft> StockLines { get; set; }
+        public List<TimeLifeDraft> TimeLife { get; set; }
     }
 }

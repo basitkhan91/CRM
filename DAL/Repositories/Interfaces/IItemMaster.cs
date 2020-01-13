@@ -22,6 +22,9 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<object> getAllItemMasterNonstockdata();
 
         IEnumerable<object> getAllItemMasterequipmentdata();
+        object getAllItemMasterStockdataById(long id);
+        object getAllItemMasterNonstockdataById(long id);
+        object getAllItemMasterequipmentdataById(long id);
         IEnumerable<object> getLegalEntityData();
 
         IEnumerable<object> getRolesData();

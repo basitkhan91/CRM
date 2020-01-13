@@ -50,7 +50,7 @@ namespace DAL.Models
         public long? ExportUomId { get; set; }
         public long? SoldUnitOfMeasureId { get; set; }
         public int? LeadTimeDays { get; set; }
-        public int? LeadTimeHours { get; set; }
+       // public int? LeadTimeHours { get; set; }
         public int? ReorderPoint { get; set; }
         public int? ReorderQuantiy { get; set; }
         public int? MinimumOrderQuantity { get; set; }

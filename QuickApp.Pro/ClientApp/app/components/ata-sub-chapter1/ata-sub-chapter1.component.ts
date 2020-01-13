@@ -57,6 +57,7 @@ export class AtaSubChapter1Component implements OnInit {
 	disableSaveGroupId: boolean = false;
 	PortalList: any;
 	disableSaveForDescription: boolean = false;
+    disableSaveForDescriptionMsg : boolean = false;
 	descriptionList: any;
 	ataList: any;
 	new = {
@@ -104,6 +105,33 @@ export class AtaSubChapter1Component implements OnInit {
 
 		this.getList();
 	}
+
+    onBlur(event) {
+        
+        const value = event.target.value;
+		this.disableSaveForDescriptionMsg = false;
+		for (let i = 0; i < this.originalData.length; i++) {
+			let description = this.originalData[i].description;
+			let ataSubChapterId = this.originalData[i].ataSubChapterId;
+            if (description.toLowerCase() == value.toLowerCase()) {
+                if (!this.isEdit || this.isEdit) {
+					this.disableSaveForDescriptionMsg = true;
+					this.disableSaveForDescription = true;
+                }
+				else if (ataSubChapterId != this.selectedRecordForEdit.ataSubChapterId) {
+					this.disableSaveForDescriptionMsg = true;
+					this.disableSaveForDescription = false;
+                }
+                else {
+					this.disableSaveForDescriptionMsg = false;
+					this.disableSaveForDescription = false;
+                }
+                console.log('description :', description);
+                break;
+            }
+        }
+    }
+
 
 	customExcelUpload(event) {
 		// const file = event.target.files;
@@ -160,12 +188,13 @@ export class AtaSubChapter1Component implements OnInit {
 		const exists = validateRecordExistsOrNot(field, value, this.originalData, this.selectedRecordForEdit);
 		if (exists.length > 0) {
 			this.disableSaveForDescription = true;
+            this.disableSaveForDescriptionMsg = true;
 		}
 		else {
 			this.disableSaveForDescription = false;
-		}
-
-	}
+            this.disableSaveForDescriptionMsg = false;
+        }
+    }
 	filterDescription(event) {
 		this.descriptionList = this.originalData;
 
@@ -200,33 +229,42 @@ export class AtaSubChapter1Component implements OnInit {
 				);
 			})
 		} else {
-			
-			this.atasubchapterService.updateATASubChapter1(data).subscribe(() => {
-				this.selectedRecordForEdit = undefined;
-				this.isEdit = false;
-				this.resetForm();
-				this.getList();
-				this.alertService.showMessage(
-					'Success',
-					`Added  New ATA Subchapter Successfully  `,
-					MessageSeverity.success
-				);
-			})
-		}
+
+            this.atasubchapterService.updateATASubChapter1(data).subscribe(() => {
+                this.selectedRecordForEdit = undefined;
+                this.isEdit = false;
+                this.resetForm();
+                this.getList();
+                this.alertService.showMessage(
+                    'Success',
+                    `Updated  ATA Subchapter Successfully  `,
+                    MessageSeverity.success
+                );
+            });
+        }
 	}
 
 	resetForm() {
 		this.isEdit = false;
 		this.selectedRecordForEdit = undefined;
+		this.disableSaveForDescriptionMsg = false;
+        this.disableSaveForDescription = false;
 		this.addNew = { ...this.new };
 	}
 
+    getmemo($event) {
+		
+			this.disableSaveForDescriptionMsg = false;
+			this.disableSaveForDescription = false;
+        
+    }
 
 	edit(rowData) {
 		console.log(rowData);
 		this.isEdit = true;
 		this.disableSaveGroupId = false;
-		this.disableSaveForDescription = false;
+		this.disableSaveForDescription = true;
+        this.disableSaveForDescriptionMsg = false;
 
 
 		this.addNew = {
