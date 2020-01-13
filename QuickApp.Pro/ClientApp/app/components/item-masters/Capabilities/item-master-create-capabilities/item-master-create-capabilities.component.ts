@@ -99,6 +99,8 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
     pnData: any = [];
     itemMasterIDFromPartNumberSelection: any;
     @Output() loadCapesList = new EventEmitter<any>();
+    @Output() closeCapesPopup = new EventEmitter<any>();
+    @Input() isEnableCapesList: boolean = false;
     //Swamy Code 01/13/2020
     selectedAircraftName: any;
     //Swamy Code 01/13/2020
@@ -490,18 +492,24 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
                 MessageSeverity.success
             );
         })
+        this.onCloseCapes();
     }
 
     resetFormData() {
-        this.capabilityTypeId = null;
-        this.selectedAircraftId = undefined;
+        this.capabilityTypeId  = null ;
+        this.selectedAircraftId = null;
         this.selectedAircraftName = "";
         this.modelUnknown = false;
-        this.selectedModelId = undefined;
+        this.selectedModelId = null;
         this.LoadValues = [];
         this.dashNumberUnknown = false;
         this.LoadDashnumber = [];
         this.newDashnumValue = [];
         this.newModelValue = [];
+        this.aircraftData  = [];
+        //this.viewTable = false;
+    }
+    onCloseCapes() {
+        this.closeCapesPopup.emit(true);
     }
 }
