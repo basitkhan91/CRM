@@ -82,7 +82,7 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 	allRolistInfo: any[] = [];
 	allEmployeeList: any[] = [];
     showRestrictQuantity: boolean;
-	showFreeQuantity: boolean;
+	showFreeQuantity: boolean = true;
 	stocklinePOObject: any[] = [];
 	stocklineROObject: any[] = [];
 	allIntegrationInfo: any[] = [];
@@ -95,7 +95,6 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 	glAccountCollection: any[];
 	allglAccountInfo: any[];
 	showCompanyError: boolean;
-	showNormalQuantity: boolean = true;
     showPartDescriptionError: boolean;
     showConditionError: boolean;
     showSiteError: boolean;
@@ -445,7 +444,6 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 			this.hideSerialNumber = true;
 			this.showRestrictQuantity = true;
 			this.showFreeQuantity = false;
-			this.showNormalQuantity = false;
 			this.hasSerialized = true; //for Knowing is Serialized or not for Serial Number 
 
 		}
@@ -454,7 +452,6 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 			this.hideSerialNumber = false;
 			this.showRestrictQuantity = false;
 			this.showFreeQuantity = true;
-			this.showNormalQuantity = false;
 			this.hasSerialized = false; //for Knowing is Serialized or not for Serial Number 
 		}
 
@@ -993,7 +990,7 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 
 	savestockLineclose()
 	{
-		if ((this.sourceStockLineSetup.partNumber)) {
+		if ((!this.sourceStockLineSetup.partNumber)) {
 			this.showPartNumberError = true;
 		}
 		else
@@ -1052,10 +1049,15 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 			this.showSerialNumberError = true;
 		}
 
-        if (this.availableQty < 0) {
-            this.invalidQty = true;
-            this.invalidQtyError = true;
-        }
+		if (this.availableQty > 0) {
+			this.invalidQty = false;
+			this.invalidQtyError = false;
+		}
+		else {
+			this.invalidQty = true;
+			this.invalidQtyError = true;
+		}
+
         this.isSaving = true;
 
 		if (
@@ -1063,7 +1065,7 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 			|| ((this.sourceStockLineSetup.isSerialized == true) && (!this.sourceStockLineSetup.serialNumber))
 			|| (!this.sourceStockLineSetup.companyId) || (!this.sourceStockLineSetup.partNumber) || (!this.sourceStockLineSetup.partDescription)
 			|| (!this.sourceStockLineSetup.conditionId) || (!this.sourceStockLineSetup.siteId) || (!this.sourceStockLineSetup.receivedDate)
-			|| (!this.sourceStockLineSetup.receiverNumber) || (!this.sourceStockLineSetup.glAccountId)
+			|| (!this.sourceStockLineSetup.receiverNumber) || (!this.sourceStockLineSetup.glAccountId) || (this.invalidQty)
         )
         {
 			this.display = true;

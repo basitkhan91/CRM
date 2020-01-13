@@ -12857,6 +12857,17 @@ p-autocomplete .ui-autocomplete-dropdown {
         border: none;
         padding: 4px;
     }
+    .pcal-item-capes .ui-calendar button {
+        border: none;
+        padding: 5px;
+    }
+    // .pcal-item-capes .ui-datepicker {
+    //     width: 150px !important;
+    // }
+    .pcal-item-capes .ui-datepicker-group {
+        width: 200px !important;
+        padding: 10px;
+    }
 
 button {
     background: #c1c1c1;
@@ -13922,7 +13933,9 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
 .p-dropdown-custom-sm .ui-dropdown {
     width: 122px !important;
 }
-
+.p-dropdown-custom-sm .ui-dropdown-trigger {
+    background-color: #ffffff !important;
+}
 .pas-table-cstm tr th {
     padding: 8px 4px !important;
 }
@@ -14435,8 +14448,11 @@ p-table .ui-table-summary {
     text-align: right !important;
     margin-right: -12px;
 }
+p-table .ui-table-summary label {
+    width: 100px;
+}
 p-table .ui-table-summary label.footer {
-    margin-left: 58%;
+    margin-left: 44%;
 }
 p-table .ui-table-summary input {
     opacity: 0.8 !important;
@@ -14451,7 +14467,7 @@ p-table tr td .btn i.fa-pencil {
     color: #0252b1;
 }
 .itemcapes-ptable .ui-table-scrollable-body {
-    min-height: 200px;
+    min-height: 250px;
 }
 .action-icons-cstm .btn {
     font-size: 14px;
@@ -14475,6 +14491,11 @@ p-table tr td .btn i.fa-pencil {
 }
 .btn-ro-cstm {
     color: #259e08 !important;
+.pcheckbox-cstm .ui-chkbox {
+    padding: 0;
+}
+.pcheckbox-cstm .ui-chkbox-icon {
+    font-size: 18px !important;
 }
 
 .accountdropdown.ui-dropdown .ui-dropdown-trigger {

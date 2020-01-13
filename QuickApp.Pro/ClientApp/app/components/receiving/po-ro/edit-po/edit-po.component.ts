@@ -1124,7 +1124,7 @@ export class EditPoComponent implements OnInit {
                     }
 
                     for (var tl of part.timeLife) {
-                        if (tl.stockLineId == stockLine.stockLineId) {
+                        if (tl.stockLineDraftId == stockLine.stockLineDraftId) {
                             timeLife.push(tl);
                         }
                     }

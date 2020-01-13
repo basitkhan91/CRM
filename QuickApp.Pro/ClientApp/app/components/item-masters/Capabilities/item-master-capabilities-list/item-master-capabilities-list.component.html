@@ -39,7 +39,7 @@
             <span class="help-icon" (click)="openHelpText(helpText)" data-original-title="Help" data-toggle="tooltip"><i class="fa fa-info" data-toggle="modal" data-target="#help-popup"></i></span>-->
 
             <div class="right_col" role="main">
-                <p-table class="ptable-custom" #capabilityListTable [value]="allItemMasterCapsList" [rows]="20" [metaKeySelection]="true" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[20,50,100]" [columns]="selectedColumns" selectionMode="multiple" [(selection)]="selectedColumn" [resizableColumns]="true" [reorderableColumns]="true" [scrollable]="true" scrollHeight="450px">
+                <p-table class="rpo-table-cstm rro-table-cstm" #capabilityListTable [value]="allItemMasterCapsList" [rows]="20" [metaKeySelection]="true" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[20,50,100]" [columns]="selectedColumns" selectionMode="multiple" [(selection)]="selectedColumn" [resizableColumns]="true" [reorderableColumns]="true" [scrollable]="true" scrollHeight="450px">
                     <ng-template pTemplate="caption">
 
                         <div style="text-align: right">
@@ -77,7 +77,7 @@
                                 <p-sortIcon [field]="col.field"></p-sortIcon>
                             </th>
 
-                            <th  style="widows: 50px;; position:sticky"></th>
+                            <th  style="width: 70px; position:sticky">Actions</th>
 
                         </tr>
                         <tr>
@@ -85,7 +85,7 @@
                                 <input style="width:100%;" pInputText type="text" (input)="capabilityListTable.filter($event.target.value, col.field, col.filterMatchMode)">
 
                             </th>
-                            <th  style="widows: 50px;; position:sticky"></th>
+                            <th  style="width: 70px; position:sticky"></th>
                         </tr>
                         <!--
                         <tr>
@@ -165,7 +165,7 @@
 
                             </td>
 
-                            <td style="width:50px">
+                            <td style="width:70px">
 
                                 <button class="btn-delete" type="button" mat-icon-button matTooltip="Delete" (click)="deleteCapability(deleteCapabilityContent, rowData.itemMasterCapesId)">
                                     <mat-icon color="warn">delete</mat-icon>
@@ -211,15 +211,19 @@
           <!-- Modal content-->
           <div class="modal-content">
             <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <button type="button" class="close" (click)="closeCapes()">&times;</button>
               <h4 class="modal-title">Add Capes</h4>
             </div>
             <div class="modal-body">
+            <div *ngIf="showCapes"> 
+
            <app-item-master-create-capabilities 
            [itemMasterId] ="itemMasterId"
+           [isEnableCapesList] ="isEnableCapesList"
            (loadCapesList)="loadCapesList($event)"
+           (closeCapesPopup)="closeCapesPopup($event)"
            ></app-item-master-create-capabilities>
-
+            </div>
             </div>
             <!-- <div class="modal-footer">
               <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
