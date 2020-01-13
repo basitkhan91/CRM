@@ -20,7 +20,7 @@ import { BinService } from '../../../../services/bin.service';
 import { ManufacturerService } from '../../../../services/manufacturer.service';
 import { StocklineService } from '../../../../services/stockline.service';
 import { ReceivingService } from '../../../../services/receiving/receiving.service';
-import { PurchaseOrder, PurchaseOrderPart, StockLine, DropDownData, TimeLife, ReceiveParts } from './PurchaseOrder.model';
+import { PurchaseOrder, PurchaseOrderPart, StockLine, StockLineDraft, DropDownData, TimeLife, ReceiveParts, TimeLifeDraft } from './PurchaseOrder.model';
 import { ManagementStructure } from './managementstructure.model';
 import { Dropdown } from 'primeng/dropdown';
 import { AccountService } from '../../../../services/account.service';
@@ -226,8 +226,8 @@ export class ReceivngPoComponent implements OnInit {
                         part.timeLifeList = [];
 
                         for (var i = 0; i < part.stocklineListObj.length; i++) {
-                            let timeLife: TimeLife = new TimeLife();
-                            timeLife.timeLifeCyclesId = 0;
+                            let timeLife: TimeLifeDraft = new TimeLifeDraft();
+                            timeLife.timeLifeDraftCyclesId = 0;
                             timeLife.purchaseOrderId = part.purchaseOrderId;
                             timeLife.purchaseOrderPartRecordId = part.purchaseOrderPartRecordId;
                             timeLife.cyclesRemaining = '';
@@ -447,7 +447,7 @@ export class ReceivngPoComponent implements OnInit {
         return this.legalEntityService.getManagemententity();
     }
 
-    private setStockLineManagementStructure(managementStructureId: number, stockLine: StockLine) {
+    private setStockLineManagementStructure(managementStructureId: number, stockLine: StockLineDraft) {
         let stockLineManagementStructureHierarchy: ManagementStructure[][] = [[]];
         let stockLineSelectedManagementStructureHierarchy: ManagementStructure[] = [];
 
@@ -701,8 +701,8 @@ export class ReceivngPoComponent implements OnInit {
 
             if (part.itemMaster.isTimeLife) {
                 for (var i = 0; i < quantity; i++) {
-                    let timeLife: TimeLife = new TimeLife();
-                    timeLife.timeLifeCyclesId = 0;
+                    let timeLife: TimeLifeDraft = new TimeLifeDraft();
+                    timeLife.timeLifeDraftCyclesId = 0;
                     timeLife.purchaseOrderId = part.purchaseOrderId;
                     timeLife.purchaseOrderPartRecordId = part.purchaseOrderPartRecordId;
                     timeLife.cyclesRemaining = '';
@@ -759,14 +759,14 @@ export class ReceivngPoComponent implements OnInit {
 
         if (part.itemMaster.isSerialized) {
             for (var i = 0; i < part.quantityActuallyReceived; i++) {
-                let stockLine: StockLine = new StockLine();
+                let stockLine: StockLineDraft = new StockLineDraft();
                 this.setStockLineManagementStructure(part.managementStructureId, stockLine);
                 stockLine.purchaseOrderId = part.purchaseOrderId;
                 stockLine.purchaseOrderPartRecordId = part.purchaseOrderPartRecordId;
                 stockLine.itemMasterId = part.itemMaster.itemMasterId;
                 stockLine.partNumber = part.itemMaster.partNumber;
                 stockLine.quantity = 1;
-                stockLine.stockLineId = 0;
+                stockLine.stockLineDraftId = 0;
                 stockLine.createdDate = new Date();
                 stockLine.manufacturerId = part.itemMaster.manufacturerId;
                 stockLine.visible = false;
@@ -807,14 +807,14 @@ export class ReceivngPoComponent implements OnInit {
             }
         }
         else {
-            let stockLine: StockLine = new StockLine();
+            let stockLine: StockLineDraft = new StockLineDraft();
             this.setStockLineManagementStructure(part.managementStructureId, stockLine);
             stockLine.purchaseOrderId = part.purchaseOrderId;
             stockLine.purchaseOrderPartRecordId = part.purchaseOrderPartRecordId;
             stockLine.partNumber = part.itemMaster.partNumber;
             stockLine.itemMasterId = part.itemMaster.itemMasterId;
             stockLine.quantity = part.quantityActuallyReceived;
-            stockLine.stockLineId = 0;
+            stockLine.stockLineDraftId = 0;
             stockLine.createdDate = new Date();
             stockLine.manufacturerId = part.itemMaster.manufacturerId;
             stockLine.visible = false;
@@ -1002,7 +1002,7 @@ export class ReceivngPoComponent implements OnInit {
         );
     }
 
-    getStockLineSite(stockLine: StockLine): void {
+    getStockLineSite(stockLine: StockLineDraft): void {
         stockLine.SiteList = [];
         stockLine.siteId = 0;
         stockLine.WareHouseList = [];
@@ -1155,7 +1155,7 @@ export class ReceivngPoComponent implements OnInit {
 
     onChangeTimeLife(part: PurchaseOrderPart) {
         part.timeLifeList[part.currentTLIndex].detailsNotProvided = part.detailsNotProvided;
-        part.timeLifeList[part.currentTLIndex].timeLifeCyclesId = 0;
+        part.timeLifeList[part.currentTLIndex].timeLifeDraftCyclesId = 0;
         part.timeLifeList[part.currentTLIndex].purchaseOrderId = part.purchaseOrderId;
         part.timeLifeList[part.currentTLIndex].purchaseOrderPartRecordId = part.purchaseOrderPartRecordId;
         part.timeLifeList[part.currentTLIndex].cyclesRemaining = '';
@@ -1453,6 +1453,13 @@ export class ReceivngPoComponent implements OnInit {
 
     togglePartTimeLife(part: PurchaseOrderPart): void {
 
+        if ((part.itemMaster.isSerialized == null || part.itemMaster.isSerialized == false) && part.itemMaster.isTimeLife == true) {
+            part.itemMaster.isTimeLife = false;
+            this.alertService.showMessage(this.pageTitle, "Part is not serialized, please make the part serialzed before making it timeLife.", MessageSeverity.error);
+            return;
+        }
+
+
         if (part.itemMaster.isTimeLife == null) {
             part.itemMaster.isTimeLife == false;
         }
@@ -1466,8 +1473,8 @@ export class ReceivngPoComponent implements OnInit {
                         part.currentSERIndex = 0;
                         part.currentTLIndex = 0;
                         for (var i = 0; i < part.quantityActuallyReceived; i++) {
-                            let timeLife: TimeLife = new TimeLife();
-                            timeLife.timeLifeCyclesId = 0;
+                            let timeLife: TimeLifeDraft = new TimeLifeDraft();
+                            timeLife.timeLifeDraftCyclesId = 0;
                             timeLife.purchaseOrderId = part.purchaseOrderId;
                             timeLife.purchaseOrderPartRecordId = part.purchaseOrderPartRecordId;
                             timeLife.cyclesRemaining = '';

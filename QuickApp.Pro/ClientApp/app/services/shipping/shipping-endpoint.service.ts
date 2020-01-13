@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { ConfigurationService } from '../configuration.service';
 import { Observable } from 'rxjs';
 import { EndpointFactory } from '../endpoint-factory.service';
-import { PurchaseOrderPart, PurchaseOrder, StockLine, ReceiveParts } from '../../components/receiving/po-ro/receivng-po/PurchaseOrder.model';
+import { PurchaseOrderPart, PurchaseOrder, StockLine, ReceiveParts, StockLineDraft } from '../../components/receiving/po-ro/receivng-po/PurchaseOrder.model';
 
 @Injectable()
 export class ShippingEndpoint extends EndpointFactory {
@@ -73,10 +73,10 @@ export class ShippingEndpoint extends EndpointFactory {
         var listObj = [];
 
         for (let part of receiveParts) {
-            let stockLines: StockLine[] = [];
+            let stockLines: StockLineDraft[] = [];
 
             part.stockLines.forEach(SL => {
-                var stockLine = new StockLine();
+                var stockLine = new StockLineDraft();
 
                 stockLine.stockLineNumber = SL.stockLineNumber;
                 stockLine.owner = SL.owner;
@@ -90,7 +90,7 @@ export class ShippingEndpoint extends EndpointFactory {
                 stockLine.shippingReference = SL.shippingReference;
                 stockLine.shippingViaId = SL.shippingViaId;
                 stockLine.partCertificationNumber = SL.partCertificationNumber;
-                stockLine.stockLineId = SL.stockLineId;
+                stockLine.stockLineDraftId = SL.stockLineDraftId;
                 stockLine.conditionId = SL.conditionId;
                 stockLine.quantityRejected = 0;
                 stockLine.purchaseOrderUnitCost = SL.purchaseOrderUnitCost;

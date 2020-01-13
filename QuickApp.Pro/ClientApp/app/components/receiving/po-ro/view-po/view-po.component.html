@@ -382,22 +382,24 @@
                                 <td>
                                     <input type="checkbox" disabled [checked]="part.itemMaster.isTimeLife != false" />
                                 </td>
-                                <td style="min-width: 106px;">Remaining {{part.timeLife[stockline_row_index].cyclesRemaining}} hrs</td>
-                                <td style="min-width: 106px;">Since New {{part.timeLife[stockline_row_index].cyclesSinceNew}} hrs</td>
-                                <td style="min-width: 106px;">Since OVH {{part.timeLife[stockline_row_index].cyclesSinceOVH}} hrs</td>
-                                <td style="min-width: 106px;">Since Insp {{part.timeLife[stockline_row_index].cyclesSinceInspection}} hrs</td>
-                                <td style="min-width: 106px;">Since Repair {{part.timeLife[stockline_row_index].cyclesSinceRepair}} hrs</td>
+                                <td colspan="13" *ngIf="part.timeLife[stockline_row_index] == undefined "> </td>
+                                <ng-container *ngIf="part.timeLife[stockline_row_index] != undefined">
+                                    <td style="min-width: 106px;">Remaining {{part.timeLife[stockline_row_index].cyclesRemaining}} hrs</td>
+                                    <td style="min-width: 106px;">Since New {{part.timeLife[stockline_row_index].cyclesSinceNew}} hrs</td>
+                                    <td style="min-width: 106px;">Since OVH {{part.timeLife[stockline_row_index].cyclesSinceOVH}} hrs</td>
+                                    <td style="min-width: 106px;">Since Insp {{part.timeLife[stockline_row_index].cyclesSinceInspection}} hrs</td>
+                                    <td style="min-width: 106px;">Since Repair {{part.timeLife[stockline_row_index].cyclesSinceRepair}} hrs</td>
 
-                                <td style="min-width: 106px;">Remaining {{part.timeLife[stockline_row_index].timeRemaining}} hrs</td>
-                                <td style="min-width: 106px;">Since New {{part.timeLife[stockline_row_index].timeSinceNew}} hrs</td>
-                                <td style="min-width: 106px;">Since OVH {{part.timeLife[stockline_row_index].timeSinceOVH}} hrs</td>
-                                <td style="min-width: 106px;">Since Insp {{part.timeLife[stockline_row_index].timeSinceInspection}} hrs</td>
-                                <td style="min-width: 106px;">Since Repair {{part.timeLife[stockline_row_index].timeSinceRepair}} hrs</td>
+                                    <td style="min-width: 106px;">Remaining {{part.timeLife[stockline_row_index].timeRemaining}} hrs</td>
+                                    <td style="min-width: 106px;">Since New {{part.timeLife[stockline_row_index].timeSinceNew}} hrs</td>
+                                    <td style="min-width: 106px;">Since OVH {{part.timeLife[stockline_row_index].timeSinceOVH}} hrs</td>
+                                    <td style="min-width: 106px;">Since Insp {{part.timeLife[stockline_row_index].timeSinceInspection}} hrs</td>
+                                    <td style="min-width: 106px;">Since Repair {{part.timeLife[stockline_row_index].timeSinceRepair}} hrs</td>
 
-                                <td style="min-width: 106px;">Since New {{part.timeLife[stockline_row_index].lastSinceNew}} hrs</td>
-                                <td style="min-width: 106px;">Since OVH {{part.timeLife[stockline_row_index].lastSinceOVH}} hrs</td>
-                                <td style="min-width: 106px;">Since Insp {{part.timeLife[stockline_row_index].lastSinceInspection}} hrs</td>                    
-
+                                    <td style="min-width: 106px;">Since New {{part.timeLife[stockline_row_index].lastSinceNew}} hrs</td>
+                                    <td style="min-width: 106px;">Since OVH {{part.timeLife[stockline_row_index].lastSinceOVH}} hrs</td>
+                                    <td style="min-width: 106px;">Since Insp {{part.timeLife[stockline_row_index].lastSinceInspection}} hrs</td>
+                                </ng-container>                                
                             </tr>
                         </ng-container>
                     </ng-container>
