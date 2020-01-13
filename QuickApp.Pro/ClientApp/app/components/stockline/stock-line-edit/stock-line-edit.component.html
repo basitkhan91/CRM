@@ -95,28 +95,27 @@
                 <div class="form-group col-sm-12">
                     <label class="control-label col-sm-4">Qty On Hand<strong style="color:red">*</strong></label>
                     <div class="col-sm-7">
-                        <input class="form-control qty-input" *ngIf="showNormalQuantity" type="number" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.quantityOnHand">
-                        <input class="form-control qty-input" *ngIf="showRestrictQuantity" type="number" min="0" max="1" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.quantityOnHand">
-                        <input class="form-control qty-input" *ngIf="showFreeQuantity" type="number" min="0" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.quantityOnHand">
+                        <input class="form-control qty-input" *ngIf="showRestrictQuantity" type="number" min="0" max="1" (change)="calculateQtyAvailable($event)"  [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.quantityOnHand">
+                        <input class="form-control qty-input" *ngIf="showNormalQuantity" type="number" min="0" (change)="calculateQtyAvailable($event)" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.quantityOnHand">
                     </div>
                 </div>
 
                 <div class="form-group col-sm-12">
-                    <label class="control-label col-sm-4">Qty Reserved<strong style="color:red">*</strong></label>
+                    <label class="control-label col-sm-4">Qty Reserved</label>
                     <div class="col-sm-7">
-                        <input class="form-control qty-input" type="number" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.quantityReserved">
+                        <input class="form-control qty-input" type="number" [ngModelOptions]="{standalone: true}" (change)="calculateQtyAvailable($event)" [(ngModel)]="sourceStockLineSetup.quantityReserved">
                     </div>
                 </div>
 
                 <div class="form-group col-sm-12">
-                    <label class="control-label col-sm-4">Qty Issued<strong style="color:red">*</strong></label>
+                    <label class="control-label col-sm-4">Qty Issued</label>
                     <div class="col-sm-7">
-                        <input class="form-control qty-input" type="number" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.quantityIssued">
+                        <input class="form-control qty-input" type="number" [ngModelOptions]="{standalone: true}" (change)="calculateQtyAvailable($event)"showf [(ngModel)]="sourceStockLineSetup.quantityIssued">
                     </div>
                 </div>
 
                 <div class="form-group col-sm-12">
-                    <label class="control-label col-sm-4">Qty Available<strong style="color:red">*</strong></label>
+                    <label class="control-label col-sm-4">Qty Available</label>
                     <div class="col-sm-7">
                         <input class="form-control qty-input" type="number" [disabled]="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.quantityAvailable">
                     </div>
@@ -734,10 +733,17 @@
 
 
 <p-dialog header="Error" [(visible)]="display" [modal]="true" [dismissableMask]="true" maximizedLeft="140px" maximizedTop="1850px"
-		  [width]="350" [minWidth]="200" [responsive]="true"
-		  [minY]="1050" [baseZIndex]="1100000">
-	<p [ngStyle]="{'color':'red'}">
-		Please Enter Serial Number
-	</p>
+          [width]="350" [minWidth]="200" [responsive]="true"
+          [minY]="1050" [baseZIndex]="1100000">
+    <p *ngIf="showCompanyError" [ngStyle]="{'color':'red'}"> Please Enter Company</p>
+    <p *ngIf="showPartNumberError" [ngStyle]="{'color':'red'}"> Please Enter Part Number</p>
+    <p *ngIf="showSerialNumberError" [ngStyle]="{'color':'red'}"> Please Enter Serial Number </p>
+    <p *ngIf="showConditionError" [ngStyle]="{'color':'red'}"> Please Enter Condition</p>
+    <p *ngIf="showSiteError" [ngStyle]="{'color':'red'}"> Please Select Site</p>
+    <p *ngIf="showReceiveDateError" [ngStyle]="{'color':'red'}"> Please Select Receive Date</p>
+    <p *ngIf="showReceiverNumberError" [ngStyle]="{'color':'red'}"> Please Enter receive Number</p>
+    <p *ngIf="showGlAccountNumberError" [ngStyle]="{'color':'red'}"> Please Enter GL Account</p>
+    <p *ngIf="QuantityOnHandError" [ngStyle]="{'color':'red'}"> Please Enter Quantity On Hand</p>
+    <p *ngIf="invalidQtyError" [ngStyle]="{'color':'red'}"> Available Quantity cannot be negative</p>
 
 </p-dialog>

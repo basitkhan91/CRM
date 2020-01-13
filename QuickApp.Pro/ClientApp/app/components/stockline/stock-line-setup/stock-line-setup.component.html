@@ -98,7 +98,7 @@
                             <label class="control-label col-sm-4">Qty On Hand <strong class="clr-red">*</strong></label>
                             <div class="col-sm-7">
                                 <input class="form-control qty-input" *ngIf="showRestrictQuantity" type="number" maxlength="1" min="0" max="1" (change)="calculateQtyAvailable($event)" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.QuantityOnHand">
-                                <input class="form-control qty-input" *ngIf="showFreeQuantity" (keypress)="calculateQtyAvailable($event)" type="number" min="0" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.QuantityOnHand">
+                                <input class="form-control qty-input" *ngIf="showFreeQuantity" (change)="calculateQtyAvailable($event)" type="number" min="0" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceStockLineSetup.QuantityOnHand">
                             </div>
                         </div>
 
