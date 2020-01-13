@@ -86,16 +86,32 @@ export class StockLineEditComponent implements OnInit, AfterViewInit
 	currentStocklineIntegrationPortalData: any[];
 	selectedModels: any[] = [];
     showRestrictQuantity: boolean;
-    showFreeQuantity: boolean;
     showquantity: boolean;
 	collectionofstocklineIntegrationPortalData: any;
     attempToDelete: boolean = false;
+	availableQty: number;
+	invalidQty: boolean;
+	invalidQtyError: boolean;
+	showPartNumberError: boolean;
+	disableSaveglAccount: boolean;
+	glAccountcla: any[];
+	glAccountCollection: any[];
+	allglAccountInfo: any[];
+	showCompanyError: boolean;
+	showPartDescriptionError: boolean;
+	showConditionError: boolean;
+	showSiteError: boolean;
+	showReceiveDateError: boolean;
+	showReceiverNumberError: boolean;
+	showGlAccountNumberError: boolean;
+	QuantityOnHandError: boolean;
+	hasSerialized: boolean;
+	showSerialNumberError: boolean;
 
     stocklineEditForm = new FormGroup({
         companyId: new FormControl('companyId', Validators.minLength(1)),
 
     });
-
 
 	ngOnInit(): void
 	{
@@ -141,13 +157,8 @@ export class StockLineEditComponent implements OnInit, AfterViewInit
 	allConditionInfo: Condition[] = [];
 	allManufacturerInfo: any[] = [];
 	allIntegrationInfo: any[] = [];
-	disableSaveglAccount: boolean;
-	glAccountcla: any[];
-	glAccountCollection: any[];
-    allglAccountInfo: any[];
     managementStructureData: any[];
 
-    /** stock-line-edit ctor */
     constructor(private fb: FormBuilder, private empService: EmployeeService,public integrationService: IntegrationService,public vendorservice: VendorService, public manufacturerService: ManufacturerService, public itemser: ItemMasterService, public glAccountService: GLAccountClassService, public vendorService: VendorService, public customerService: CustomerService, public inteService: IntegrationService, public workFlowtService1: LegalEntityService, public workFlowtService: BinService, public siteService: SiteService, public integration: IntegrationService, public stocklineser: StocklineService, private http: HttpClient, public ataservice: AtaMainService, private changeDetectorRef: ChangeDetectorRef, private router: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public conditionService: ConditionService, private dialog: MatDialog) {
 		this.dataSource = new MatTableDataSource();
         if (this.stocklineser.listCollection && this.stocklineser.isEditMode == true)
@@ -607,14 +618,12 @@ export class StockLineEditComponent implements OnInit, AfterViewInit
 		if (this.sourceStockLineSetup.isSerialized == true) {
 			this.hideSerialNumber = true;
 			this.showRestrictQuantity = true;
-			this.showFreeQuantity = false;
 			this.showNormalQuantity = false;
 		}
 		else {
 			this.hideSerialNumber = false;
 			this.showRestrictQuantity = false;
-			this.showFreeQuantity = true;
-			this.showNormalQuantity = false;
+			this.showNormalQuantity = true;
 
 		}
 
@@ -666,6 +675,18 @@ export class StockLineEditComponent implements OnInit, AfterViewInit
 			results => this.onDataLoadIntegrationSuccessful(results[0]),
 			error => this.onDataLoadFailed(error)
 		);
+	}
+
+	calculateQtyAvailable(event) {
+
+		if (this.sourceStockLineSetup.QuantityOnHand) { this.availableQty = this.sourceStockLineSetup.QuantityOnHand };
+		if (this.sourceStockLineSetup.QuantityOnHand && this.sourceStockLineSetup.QuantityReserved) {
+			this.availableQty = this.sourceStockLineSetup.QuantityOnHand - this.sourceStockLineSetup.QuantityReserved
+		}
+		if (this.sourceStockLineSetup.QuantityOnHand && this.sourceStockLineSetup.QuantityReserved && this.sourceStockLineSetup.QuantityIssued) {
+			this.availableQty = this.sourceStockLineSetup.QuantityOnHand - this.sourceStockLineSetup.QuantityReserved - this.sourceStockLineSetup.QuantityIssued;
+		}
+		this.sourceStockLineSetup.quantityAvailable = this.availableQty;
 	}
 
 	private onDataLoadIntegrationSuccessful(allWorkFlows: Integration[]) {
@@ -1036,165 +1057,212 @@ export class StockLineEditComponent implements OnInit, AfterViewInit
 	}
 
 	savestockLineclose() {
-		if ((this.sourceStockLineSetup.quantity == true)) {
-			this.showquantity = true;
+		if ((this.sourceStockLineSetup.partNumber)) {
+			this.showPartNumberError = false;
 		}
 		else {
-			this.showquantity = false;
+			this.showPartNumberError = true;
+		}
+
+		if (this.sourceStockLineSetup.companyId) {
+			this.showCompanyError = false;
+		}
+		else { this.showCompanyError = true; }
+
+		if (this.sourceStockLineSetup.partDescription) {
+			this.showPartDescriptionError = false;
+		}
+		else { this.showPartDescriptionError = true; }
+
+		if (this.sourceStockLineSetup.conditionId) {
+			this.showConditionError = false;
+		}
+		else { this.showConditionError = true; }
+
+		if (this.sourceStockLineSetup.siteId) {
+			this.showSiteError = false;
+		}
+		else { this.showSiteError = true; }
+
+		if (this.sourceStockLineSetup.receivedDate) {
+			this.showReceiveDateError = false;
+		}
+		else { this.showReceiveDateError = true; }
+
+		if (this.sourceStockLineSetup.receiverNumber) {
+			this.showReceiverNumberError = false;
+		}
+		else { this.showReceiverNumberError = true; }
+
+		if (this.sourceStockLineSetup.glAccountId) {
+			this.showGlAccountNumberError = false;
+		}
+		else { this.showGlAccountNumberError = true; }
+
+		if (this.sourceStockLineSetup.QuantityOnHand) {
+			this.QuantityOnHandError = false;
+		}
+		else { this.QuantityOnHandError = true; }
+
+		if ((this.hasSerialized == true) && (this.sourceStockLineSetup.serialNumber)) {
+			this.showSerialNumberError = false;
+		}
+		else if ((this.hasSerialized == false) && (!this.sourceStockLineSetup.serialNumber)) {
+			this.showSerialNumberError = false;
+		}
+		else {
+			this.showSerialNumberError = true;
+		}
+
+		if (this.availableQty > 0) {
+			this.invalidQty = false;
+			this.invalidQtyError = false;
+		}
+		else {
+			this.invalidQty = true;
+			this.invalidQtyError = true;
 		}
 		this.isSaving = true;
-		if ((this.sourceStockLineSetup.isSerialized == true) && (!this.sourceStockLineSetup.serialNumber))
-		{
-			this.display = true;
-			this.modelValue = true;
-		}
+		if (
+			((this.sourceStockLineSetup.partNumber != undefined) && (this.sourceStockLineSetup.partNumber != "undefined")) &&
+			((this.sourceStockLineSetup.isSerialized == true) && (this.sourceStockLineSetup.serialNumber)) &&
+			(this.sourceStockLineSetup.companyId) && (this.sourceStockLineSetup.partNumber) && (this.sourceStockLineSetup.partDescription)
+			&& (this.sourceStockLineSetup.conditionId) && (this.sourceStockLineSetup.siteId) && (this.sourceStockLineSetup.receivedDate)
+			&& (this.sourceStockLineSetup.receiverNumber) && (this.sourceStockLineSetup.glAccountId)
+			&& (!this.invalidQty)
+		) {
+			if ((this.sourceStockLineSetup.isSerialized == true) && (this.sourceStockLineSetup.serialNumber)) {
+				if (!this.sourceStockLine.stockLineId) {
+					this.sourceStockLine.createdBy = this.userName;
+					this.sourceStockLine.updatedBy = this.userName;
+					this.sourceStockLine.masterCompanyId = 1;
+					this.sourceStockLine.itemTypeId = 1;
+					this.stocklineser.newStockLine(this.sourceStockLine).subscribe(data => {
+						this.collectionofstockLine = data;
+						this.router.navigateByUrl('/stocklinemodule/stocklinepages/app-stock-line-list')
+						this.value = 1;
 
-		if ((this.sourceStockLineSetup.isSerialized == true) && (this.sourceStockLineSetup.serialNumber)) {
-			if (!this.sourceStockLine.stockLineId) {
-				this.sourceStockLine.createdBy = this.userName;
-				this.sourceStockLine.updatedBy = this.userName;
-				this.sourceStockLine.masterCompanyId = 1;
-				this.sourceStockLine.itemTypeId = 1;
-				this.stocklineser.newStockLine(this.sourceStockLine).subscribe(data => {
-					this.collectionofstockLine = data;
-					//this.saveItemMasterDetails(this.sourceStockLineSetup);
-					this.router.navigateByUrl('/stocklinemodule/stocklinepages/app-stock-line-list')
-					this.value = 1;
+					})
+				}
+				else {
 
-				})
-			}
-			else {
+					this.sourceStockLineSetup.updatedBy = this.userName;
+					this.sourceStockLineSetup.masterCompanyId = 1;
+					this.sourceItemMaster.itemMasterId = this.sourceStockLineSetup.itemMasterId;
+					this.sourceItemMaster.partId = this.selectedPartId
 
-                this.sourceStockLineSetup.updatedBy = this.userName;
-                this.sourceStockLineSetup.masterCompanyId = 1;
-				this.sourceItemMaster.itemMasterId = this.sourceStockLineSetup.itemMasterId;
-                this.sourceItemMaster.partId = this.selectedPartId
+					if (this.stocklineEditForm.get('departmentId').value != null && this.stocklineEditForm.get('departmentId').value > 0) {
 
-                if (this.stocklineEditForm.get('departmentId').value != null && this.stocklineEditForm.get('departmentId').value > 0) {
+						this.sourceStockLineSetup.managementStructureId = this.stocklineEditForm.get('departmentId').value;
 
-                    this.sourceStockLineSetup.managementStructureId = this.stocklineEditForm.get('departmentId').value;
+					}
+					else if (this.stocklineEditForm.get('divisionId').value != null && this.sourceStockLineSetup.departmentId == '' && this.sourceStockLineSetup.departmentId > 0) {
 
-                }
-                else if (this.stocklineEditForm.get('divisionId').value != null && this.sourceStockLineSetup.departmentId == '' && this.sourceStockLineSetup.departmentId > 0) {
+						this.sourceStockLineSetup.managementStructureId = this.stocklineEditForm.get('divisionId').value;
+					}
+					else if (this.stocklineEditForm.get('BusinessUnitId').value != null && this.sourceStockLineSetup.departmentId == '' && this.sourceStockLineSetup.divisionId == '' && this.sourceStockLineSetup.divisionId > 0) {
+						this.sourceStockLineSetup.managementStructureId = this.stocklineEditForm.get('BusinessUnitId').value;
+					}
+					else {
 
-                    this.sourceStockLineSetup.managementStructureId = this.stocklineEditForm.get('divisionId').value;
-                }
-                else if (this.stocklineEditForm.get('BusinessUnitId').value != null && this.sourceStockLineSetup.departmentId == '' && this.sourceStockLineSetup.divisionId == '' && this.sourceStockLineSetup.divisionId > 0) {
-                    this.sourceStockLineSetup.managementStructureId = this.stocklineEditForm.get('BusinessUnitId').value;
-                }
-                else {
+						this.sourceStockLineSetup.managementStructureId = this.stocklineEditForm.get('companyId').value;
+					}
 
-                    this.sourceStockLineSetup.managementStructureId = this.stocklineEditForm.get('companyId').value;
-                }
+					this.stocklineser.updateStockSetupLine(this.sourceStockLineSetup).subscribe(
+						data => {
+							if (data) {
+								this.saveCompleted(this.sourceStockLineSetup);
+								//for Saving Time Life start
+								if (this.sourceStockLineSetup.timeLifeCyclesId) {
+									console.log("Update Timelife");
+									this.stocklineser.updateStockLineTimelife(this.sourceTimeLife).subscribe(data => {
+										//this.saveItemMasterDetails(this.sourceStockLineSetup);
+										this.collectionofstockLine = data;
+										this.router.navigateByUrl('/stocklinemodule/stocklinepages/app-stock-line-list')
+									})
 
-				this.stocklineser.updateStockSetupLine(this.sourceStockLineSetup).subscribe(
-					data => {
-						if (data) {
-							this.saveCompleted(this.sourceStockLineSetup);
-							//for Saving Time Life start
-							if (this.sourceStockLineSetup.timeLifeCyclesId)
-							{
-								console.log("Update Timelife");
-								this.stocklineser.updateStockLineTimelife(this.sourceTimeLife).subscribe(data => {
-									//this.saveItemMasterDetails(this.sourceStockLineSetup);
-									this.collectionofstockLine = data;
-									this.router.navigateByUrl('/stocklinemodule/stocklinepages/app-stock-line-list')
-								})
-
-							}
-							else {
-								this.stocklineser.newStockLineTimeLife(this.sourceTimeLife).subscribe(data => {
-									this.collectionofstockLine = data;
-									//this.saveItemMasterDetails(this.sourceStockLineSetup);
-									this.value = 1;
-									this.router.navigateByUrl('/stocklinemodule/stocklinepages/app-stock-line-list')
-								})
-							}
-							//for Saving Time Life End
-							//for Saving Integration Multiselect Start
-							if (this.selectedModels.length > 0) {
-								//in this while Edit if we unselect Check box that also treating as a select only
-								//so we have list before edi
-								//if list in previous and selected Model Data Has same PortalId then i will pop in Previous list
-								if (this.selectedModels.length > 0) {
-									this.stocklineser.deleteIntegrationById(this.sourceStockLineSetup.stockLineId).subscribe();
 								}
-								for (let i = 0; i < this.currentStocklineIntegrationPortalData.length; i++) {
-									for (let j = 0; j < this.selectedModels.length; j++) {
-										if (this.currentStocklineIntegrationPortalData[i].integrationPortalId == this.selectedModels[j].integrationPortalId) {
-											if ((this.attempToDelete == true) && (this.selectedModels[j].attempToDelete == true)) {
-												this.selectedModels.splice(j, 1);
+								else {
+									this.stocklineser.newStockLineTimeLife(this.sourceTimeLife).subscribe(data => {
+										this.collectionofstockLine = data;
+										//this.saveItemMasterDetails(this.sourceStockLineSetup);
+										this.value = 1;
+										this.router.navigateByUrl('/stocklinemodule/stocklinepages/app-stock-line-list')
+									})
+								}
+								//for Saving Time Life End
+								//for Saving Integration Multiselect Start
+								if (this.selectedModels.length > 0) {
+									//in this while Edit if we unselect Check box that also treating as a select only
+									//so we have list before edi
+									//if list in previous and selected Model Data Has same PortalId then i will pop in Previous list
+									if (this.selectedModels.length > 0) {
+										this.stocklineser.deleteIntegrationById(this.sourceStockLineSetup.stockLineId).subscribe();
+									}
+									for (let i = 0; i < this.currentStocklineIntegrationPortalData.length; i++) {
+										for (let j = 0; j < this.selectedModels.length; j++) {
+											if (this.currentStocklineIntegrationPortalData[i].integrationPortalId == this.selectedModels[j].integrationPortalId) {
+												if ((this.attempToDelete == true) && (this.selectedModels[j].attempToDelete == true)) {
+													this.selectedModels.splice(j, 1);
+												}
 											}
 										}
 									}
+									this.saveStocklineIntegrationPortalData(this.sourceStockLineSetup.stockLineId, this.selectedModels);
 								}
-								this.saveStocklineIntegrationPortalData(this.sourceStockLineSetup.stockLineId, this.selectedModels);
-							}
 
+							}
+						});
+				}
+			}
+			else if (((this.sourceStockLineSetup.isSerialized == false) || (this.sourceStockLineSetup.isSerialized == undefined) || (this.sourceStockLineSetup.isSerialized == "undefined") || (this.sourceStockLineSetup.isSerialized == null)) && (!this.sourceStockLineSetup.serialNumber)) {
+				this.sourceStockLine.updatedBy = this.userName;
+				this.sourceStockLine.masterCompanyId = 1;
+				this.sourceItemMaster.itemMasterId = this.sourceStockLineSetup.itemMasterId;
+				this.sourceItemMaster.partId = this.selectedPartId
+
+				this.stocklineser.updateStockSetupLine(this.sourceStockLineSetup).subscribe(
+					data => {
+						this.saveCompleted(this.sourceStockLineSetup);
+						if (this.sourceStockLineSetup.timeLifeCyclesId) {
+							console.log("Update Timelife");
+							this.stocklineser.updateStockLineTimelife(this.sourceTimeLife).subscribe(data => {
+								this.collectionofstockLine = data;
+								//this.saveItemMasterDetails(this.sourceStockLineSetup);
+								this.router.navigateByUrl('/stocklinemodule/stocklinepages/app-stock-line-list')
+							})
 						}
-					});
+						else {
+							this.stocklineser.newStockLineTimeLife(this.sourceTimeLife).subscribe(data => {
+								this.collectionofstockLine = data;
+								this.value = 1;
+								//this.saveItemMasterDetails(this.sourceStockLineSetup);
+								this.router.navigateByUrl('/stocklinemodule/stocklinepages/app-stock-line-list')
+							})
+						}
+
+						if (this.selectedModels.length > 0) {
+							if (this.selectedModels.length > 0) {
+								this.stocklineser.deleteIntegrationById(this.sourceStockLineSetup.stockLineId).subscribe();
+							}
+							for (let i = 0; i < this.currentStocklineIntegrationPortalData.length; i++) {
+								for (let j = 0; j < this.selectedModels.length; j++) {
+									if (this.currentStocklineIntegrationPortalData[i].integrationPortalId == this.selectedModels[j].integrationPortalId) {
+										if ((this.attempToDelete == true) && (this.selectedModels[j].attempToDelete == true)) {
+											this.selectedModels.splice(j, 1);
+										}
+
+									}
+								}
+							}
+							this.saveStocklineIntegrationPortalData(this.sourceStockLineSetup.stockLineId, this.selectedModels);
+						}
+					})
 			}
 		}
-
-		else if (((this.sourceStockLineSetup.isSerialized == false) || (this.sourceStockLineSetup.isSerialized == undefined) || (this.sourceStockLineSetup.isSerialized == "undefined") || (this.sourceStockLineSetup.isSerialized == null)) && (!this.sourceStockLineSetup.serialNumber))
-		{
-			this.sourceStockLine.updatedBy = this.userName;
-			this.sourceStockLine.masterCompanyId = 1;
-			this.sourceItemMaster.itemMasterId = this.sourceStockLineSetup.itemMasterId;
-			this.sourceItemMaster.partId = this.selectedPartId
-
-			this.stocklineser.updateStockSetupLine(this.sourceStockLineSetup).subscribe(
-				data => {
-					this.saveCompleted(this.sourceStockLineSetup);
-					if (this.sourceStockLineSetup.timeLifeCyclesId) {
-						console.log("Update Timelife");
-						this.stocklineser.updateStockLineTimelife(this.sourceTimeLife).subscribe(data => {
-							this.collectionofstockLine = data;
-							//this.saveItemMasterDetails(this.sourceStockLineSetup);
-							this.router.navigateByUrl('/stocklinemodule/stocklinepages/app-stock-line-list')
-						})
-					}
-					else {
-						this.stocklineser.newStockLineTimeLife(this.sourceTimeLife).subscribe(data => {
-							this.collectionofstockLine = data;
-							this.value = 1;
-							//this.saveItemMasterDetails(this.sourceStockLineSetup);
-							this.router.navigateByUrl('/stocklinemodule/stocklinepages/app-stock-line-list')
-						})
-					}
-
-					if (this.selectedModels.length > 0)
-					{
-						if (this.selectedModels.length > 0)
-						{
-							this.stocklineser.deleteIntegrationById(this.sourceStockLineSetup.stockLineId).subscribe();
-						}
-						for (let i = 0; i < this.currentStocklineIntegrationPortalData.length;i++)
-						{
-							for (let j = 0; j < this.selectedModels.length; j++)
-							{
-								if (this.currentStocklineIntegrationPortalData[i].integrationPortalId == this.selectedModels[j].integrationPortalId  )
-								{
-									if ((this.attempToDelete == true) && (this.selectedModels[j].attempToDelete == true))
-									{
-										this.selectedModels.splice(j, 1);
-									}
-									
-								}
-							}
-						}
-						this.saveStocklineIntegrationPortalData(this.sourceStockLineSetup.stockLineId, this.selectedModels);
-					}
-				})
+		else {
+			this.display = true;
 		}
-	}
-
-	//saveItemMasterDetails(sourceStockLine: any) {
-	//	this.stocklineser.updateItemMasterEndpoint(sourceStockLine);
-	//}
-
-	closethis() {
-
 	}
 
 	ngAfterViewInit() {
