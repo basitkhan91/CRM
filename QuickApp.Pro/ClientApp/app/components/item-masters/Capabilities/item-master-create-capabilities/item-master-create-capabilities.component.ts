@@ -99,6 +99,9 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
     pnData: any = [];
     itemMasterIDFromPartNumberSelection: any;
     @Output() loadCapesList = new EventEmitter<any>();
+    //Swamy Code 01/13/2020
+    selectedAircraftName: any;
+    //Swamy Code 01/13/2020
 
     constructor(public itemser: ItemMasterService,
         private aircraftModelService: AircraftModelService,
@@ -168,8 +171,12 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
         })
     }
 
-    getAircraftModelByManfacturer(value) {
+    getAircraftModelByManfacturer(value) {        
         // this.newValue = value.originalEvent.target.textContent;
+        //Swamy Code 01/13/2020
+        let airtCraftObject = this.manufacturerData.find(element => element.value == this.selectedAircraftId);
+        this.selectedAircraftName = airtCraftObject.label;
+        //Swamy Code 01/13/2020
 
         // if (this.newValue) {
         this.aircraftModelService.getAircraftModelListByManufactureId(this.selectedAircraftId).subscribe(models => {
@@ -349,7 +356,12 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
 
 
     async getPartPublicationByItemMasterId(itemMasterId) {
-        await this.workOrderService.getPartPublicationByItemMaster(itemMasterId).subscribe(res => {
+        //Swamy Code 01/13/2020
+        let iMid = this.activatedRoute.snapshot.paramMap.get('id');
+        if(!iMid){
+            iMid = this.itemMasterIDFromPartNumberSelection;
+        } 
+        await this.workOrderService.getPartPublicationByItemMaster(iMid).subscribe(res => {
             this.cmmList = res.map(x => {
                 return {
                     value: x.publicationRecordId,
@@ -357,6 +369,7 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
                 }
             });
         })
+        //Swamy Code 01/13/2020
     }
 
     getAtAChapters() {
@@ -468,6 +481,7 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
         ]
         this.itemser.saveItemMasterCapes(capesData).subscribe(res => {
             this.aircraftData = [];
+            this.resetFormData();
             this.loadCapesList.emit(true);
             this.alertService.showMessage(
                 this.moduleName,
@@ -475,5 +489,18 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
                 MessageSeverity.success
             );
         })
+    }
+
+    resetFormData(){
+        this.capabilityTypeId = null;
+        this.selectedAircraftId = undefined;
+        this.selectedAircraftName = "";
+        this.modelUnknown = false;
+        this.selectedModelId = undefined;
+        this.LoadValues = [];
+        this.dashNumberUnknown = false;
+        this.LoadDashnumber = [];
+        this.newDashnumValue = [];
+        this.newModelValue = [];
     }
 }
