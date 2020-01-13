@@ -105,7 +105,7 @@ namespace DAL.Repositories
                                 iM.ConsumeUnitOfMeasureId,
                                 iM.SoldUnitOfMeasureId,
                                 iM.LeadTimeDays,
-                                iM.LeadTimeHours,
+                     
                                 iM.ReorderQuantiy,
                                 iM.ReorderPoint,
                                 iM.MinimumOrderQuantity,

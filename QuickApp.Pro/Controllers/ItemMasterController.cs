@@ -586,7 +586,7 @@ namespace QuickApp.Pro.Controllers
                     itemmaserObj.StockUnitOfMeasureId = itemMasterViewModel.StockUnitOfMeasureId;
                     itemmaserObj.ConsumeUnitOfMeasureId = itemMasterViewModel.ConsumeUnitOfMeasureId;
                     itemmaserObj.LeadTimeDays = itemMasterViewModel.LeadTimeDays;
-                    itemmaserObj.LeadTimeHours = itemMasterViewModel.LeadTimeHours;
+
                     itemmaserObj.ReorderQuantiy = itemMasterViewModel.ReorderQuantiy;
                     itemmaserObj.ReorderPoint = itemMasterViewModel.ReorderPoint;
                     itemmaserObj.MinimumOrderQuantity = itemMasterViewModel.MinimumOrderQuantity;

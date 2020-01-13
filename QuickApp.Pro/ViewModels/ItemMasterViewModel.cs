@@ -126,7 +126,7 @@ namespace QuickApp.Pro.ViewModels
 
         public int? LeadTimeDays { get; set; }
 
-        public int? LeadTimeHours { get; set; }
+        // public int? LeadTimeHours { get; set; } 
 
         public int? ReorderPoint { get; set; }
 
