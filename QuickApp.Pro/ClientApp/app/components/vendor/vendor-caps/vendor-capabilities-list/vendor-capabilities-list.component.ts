@@ -58,6 +58,9 @@ export class VendorCapabilitiesListComponent implements OnInit{
     @Input() isEnableVendor: boolean;
     @Input() vendorId: number = 0;
     @Output() vendorCapabilityId = new EventEmitter<any>();
+    totalRecords: number = 0;
+	totalPages: number = 0;
+	pageSize: number = 10;
 
     constructor(private vendorService: VendorService, private modalService: NgbModal, private authService: AuthService, private _route: Router, private alertService: AlertService, private vendorCapesService: VendorCapabilitiesService)
     {
@@ -120,7 +123,12 @@ export class VendorCapabilitiesListComponent implements OnInit{
         this.loadingIndicator = false;
         this.dataSource.data = allWorkFlows;
         this.allvendorCapsList = allWorkFlows;
-        console.log(this.allvendorCapsList);
+
+        if (this.allvendorCapsList.length > 0) {
+            this.totalRecords = this.allvendorCapsList.length;
+            this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+        }
+        //console.log(this.allvendorCapsList);
     }
 
     getVenCapesListByStatus(status) {

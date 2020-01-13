@@ -190,7 +190,8 @@ export class VendorsListComponent implements OnInit {
         { field: "dashNumber", header: "Dash Numbers" },
         { field: "memo", header: "Memo" }
     ];
-	
+    sourceViewforDocument: any;
+	sourceViewforDocumentList: any = [];
     // purchaseOrderData: any;
     // poPageSize: number = 10;
     // poPageIndex: number = 0;
@@ -1083,6 +1084,19 @@ export class VendorsListComponent implements OnInit {
                     memo: x.memo,
                 }
             })
+		})
+    }
+    
+    viewFileSelectedCapsRow(rowData)
+    {
+        this.sourceViewforDocument=rowData;
+        this.toGetUploadDocumentsList(rowData.attachmentId, rowData.vendorId,3);
+    }
+    
+  	toGetUploadDocumentsList(attachmentId, vendorId,moduleId)
+	{
+		this.workFlowtService.toGetUploadDocumentsList(attachmentId, vendorId,moduleId).subscribe(res => {
+            this.sourceViewforDocumentList = res;           
 		})
 	}
 

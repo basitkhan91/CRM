@@ -4298,7 +4298,7 @@ namespace QuickApp.Pro.Controllers
 
         [HttpGet("searchForGetAirCraftByVendorCapsId/{vendorCapabilityId}")]
 
-        public IActionResult orAirMappedMultiDashId(long vendorCapabilityId, string aircraftTypeID, string aircraftModelID, string dashNumberId)
+        public IActionResult orAirMappedMultiDashId(long vendorCapabilityId, string aircraftTypeID, string aircraftModelID, string dashNumberId,string memo)
         {
             var result = _unitOfWork.Vendor.searchItemAircraftMappingDataByMultiTypeIdModelIDDashID(vendorCapabilityId, aircraftTypeID, aircraftModelID, dashNumberId);
 

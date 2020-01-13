@@ -125,6 +125,10 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 	@Input() isEnableVendor: boolean;
 	vendorName: string;
 	vendorCode: string;
+	totalRecords: number = 0;
+	totalPages: number = 0;
+	pageSize: number = 10;
+    pageIndex: number = 0;
 
 	colsaircraftLD: any[] = [
         { field: "aircraft", header: "Aircraft" },
@@ -224,7 +228,12 @@ export class AddVendorCapabilitiesComponent implements OnInit{
                     dashNumber: x.dashNumber,
                     memo: x.memo,
                 }
-            })
+			})
+			
+			if (this.aircraftListDataValues.length > 0) {
+				this.totalRecords = this.aircraftListDataValues.length;
+				this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+			}
 		})
 	}
 
