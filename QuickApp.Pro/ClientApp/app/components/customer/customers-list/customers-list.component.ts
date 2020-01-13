@@ -149,6 +149,7 @@ export class CustomersListComponent implements OnInit {
     sourceViewInterforShippingInfo: any;
     demosticShippingViaDataInfo: any;
     demosticInterShippingViaDataInfo: any;
+    home: any;
     selectedColumnsForInternationShipViaTable = [
         { field: 'shipVia', header: 'Ship Via' },
         { field: 'shippingAccountInfo', header: 'Shipping AccountInfo' },
