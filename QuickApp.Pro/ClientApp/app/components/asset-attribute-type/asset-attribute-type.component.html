@@ -10,7 +10,7 @@
                             <h3 class="po-head lead">{{header}}</h3>
                             &nbsp;&nbsp;
                             <!--Step x: Customize the data-target-->
-                            <a class="plusicon-cstm new-margin" pTooltip="Add {{rowName}}" tooltipPosition="right" data-target="#editItem" data-toggle="modal" (click)="addNewItem()">
+                            <a class="plusicon-cstm new-margin" matTooltip="Add {{rowName}}" matTooltipPosition="right" data-target="#editItem" data-toggle="modal" (click)="addNewItem()">
                                 <i class="fa fa-plus-circle fa-lg"></i>
                             </a>
                         </div>
@@ -226,6 +226,12 @@
                         </p>
                         <p>
                             <span class="label">
+                                <b>Legal Entity: </b>
+                            </span>
+                            <span class="value">{{itemDetails.selectedCompanyNames}}</span>
+                        </p>
+                        <p>
+                            <span class="label">
                                 <b>Created By: </b>
                             </span>
                             <span class="value">{{itemDetails.createdBy}}</span>
@@ -252,7 +258,7 @@
                     <div class="clear"></div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" >Close</button>
                 </div>
             </div>
 
@@ -279,11 +285,13 @@
                                     </label>
                                 </div>
                                 <div class="col-sm-5">
-                                    <!-- <p-autoComplete field="assetTypeName" [(ngModel)]="currentRow.assetTypeId" name="assetTypeId"
-                    [suggestions]="filteredAssetTypeList" (completeMethod)="filterAssetType($event)"
-                    [forceSelection]="true" [size]="30" [minLength]="1" (onSelect)="selectedAssetType($event)"
-                    [dropdown]="true" class="p-autoComplete-ctsm" [required]="true">
-    </p-autoComplete> -->
+                                    <!-- 
+                                    <p-autoComplete field="assetTypeName" [(ngModel)]="currentRow.assetTypeId" name="assetTypeId"
+                                                    [suggestions]="filteredAssetTypeList" (completeMethod)="filterAssetType($event)"
+                                                    [forceSelection]="true" [size]="30" [minLength]="1" (onSelect)="selectedAssetType($event)"
+                                                    [dropdown]="true" class="p-autoComplete-ctsm" [required]="true">
+                                    </p-autoComplete> 
+                                    -->
                                     <select name="assetTypeId" [(ngModel)]="currentRow.assetTypeId" (ngModelChange)="selectedAssetType($event)" required>
                                         <option *ngFor="let allAssetType of allAssetTypes" [ngValue]="allAssetType">{{allAssetType.assetTypeName}}</option>
                                     </select>
@@ -587,7 +595,6 @@
 
     <ng-template #viewClick class="modal fade " id="viewClick" role="dialog">
 
-        <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" (click)="dismissModel()">×</button>
                 <h4 class="modal-title">{{rowName}} Details</h4>
@@ -681,6 +688,12 @@
                     </p>
                     <p>
                         <span class="label">
+                            <b>Legal Entity: </b>
+                        </span>
+                        <span class="value">{{itemDetails.selectedCompanyNames}}</span>
+                    </p>
+                    <p>
+                        <span class="label">
                             <b>Active: </b>
                         </span>
                         <span class="value">{{itemDetails.isActive ? 'true' : 'false'}}</span>
@@ -715,6 +728,5 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" id="" name="" (click)="dismissModel()">Close</button>
             </div>
-        </div>
     </ng-template>
 </div>
