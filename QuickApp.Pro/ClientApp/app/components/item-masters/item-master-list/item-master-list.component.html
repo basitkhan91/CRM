@@ -1,7 +1,27 @@
 ﻿<div class="x_panel">
 	<div class="x_content">
 		<div class="pheading">
-			<h3 class="po-head lead">Item Master List</h3>
+			
+
+			<!-- <form id="" class="lgrey-bg div8 filters" name="" action="#" method="post" onsubmit="return false;">
+				<div class="col-sm-12">
+					<label class="control-label col-sm-2">Item Category</label>
+					<div class="col-sm-8 mleft25 item-category-selection">
+						<label><input type="radio" name="item-category" value="Stock" checked="checked" (click)="onRadioChange(0)"> Stock</label>
+						<label><input type="radio" name="item-category" value="non-stock" (click)="onRadioChange(1)"> Non-Stock</label>
+						<label><input type="radio" name="item-category" value="exchange" (click)="onRadioChange(3)"> Exchange</label>
+						<label><input type="radio" name="item-category" value="loan" (click)="onRadioChange(4)"> Loan</label>
+					</div>
+				</div>
+				<div class="clear"></div>
+
+				<hr>
+			</form> -->
+		</div>
+
+		<div class="card">
+			<div style="padding: 0 25px;">
+				<h3 class="po-head lead" style="margin-left: 0;">Item Master List</h3>
 			<!-- <h4 class="page-heading">Item Master's List</h4> -->
 			<div class="form-row status-radio">
 				<div class="col-md-8">
@@ -30,25 +50,9 @@
 					</div>
 				</div>
 			</div>
-
-			<!-- <form id="" class="lgrey-bg div8 filters" name="" action="#" method="post" onsubmit="return false;">
-				<div class="col-sm-12">
-					<label class="control-label col-sm-2">Item Category</label>
-					<div class="col-sm-8 mleft25 item-category-selection">
-						<label><input type="radio" name="item-category" value="Stock" checked="checked" (click)="onRadioChange(0)"> Stock</label>
-						<label><input type="radio" name="item-category" value="non-stock" (click)="onRadioChange(1)"> Non-Stock</label>
-						<label><input type="radio" name="item-category" value="exchange" (click)="onRadioChange(3)"> Exchange</label>
-						<label><input type="radio" name="item-category" value="loan" (click)="onRadioChange(4)"> Loan</label>
-					</div>
-				</div>
-				<div class="clear"></div>
-
-				<hr>
-			</form> -->
-		</div>
-
-		<div class="card">
-			<div class="card-body">
+			<hr>
+			</div>
+			<div class="card-body" style="padding-top: 0;">
 				<div class="right_col" role="main" *ngIf="stockTable">
 				<div class="inline-block display-flex">
 					<h3 class="po-head lead">{{radioButtonValue}} List</h3>
@@ -66,7 +70,7 @@
 										   selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
 							   <div class="inner-addon right-addon w200 inline-block g-filter-search-cstm">
 								<i class="fa fa-search"></i>
-								<input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder=" Filter">
+								<input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder=" Filter" style="height: 28px !important;">
 							</div>
 							<button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" iconPos="left" label="Export Data" matTooltip="Download Data" matTooltipPosition="above" (click)="dt.exportCSV()" style="padding: 5px 12px !important;"></button>
 							<button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" iconPos="left" label="Export Selected Data" matTooltip="Download Selected Data" matTooltipPosition="above" (click)="dt.exportCSV({selectionOnly:true})" style="padding: 5px 12px !important;"></button>
@@ -142,8 +146,8 @@
 						</tr>
 					</ng-template>
 				</p-table>
-			</div></div>
-		</div>
+			</div>
+		
 	
 		<!-- <div class="clear"></div>
 		<div class="right_col" role="main" *ngIf="stockTable">
@@ -393,8 +397,8 @@
 
 			<h5>{{radioButtonValue}} List</h5>
 			
-
-
+		</div>
+		</div>
 		</div>
 	</div>
 </div>
