@@ -1014,7 +1014,10 @@ export class VendorsListComponent implements OnInit {
 		this.workFlowtService.getDefaultlist(vendorId).subscribe(
 			res => {
                 this.defaultPaymentData = res[0];
-                this.paymentTypeName=this.defaultPaymentData.paymentType;               
+                if(this.defaultPaymentData != null && this.defaultPaymentData.paymentType != null)
+                {
+                    this.paymentTypeName=this.defaultPaymentData.paymentType;     
+                }                        
             }
 		);
     }
@@ -1040,8 +1043,8 @@ export class VendorsListComponent implements OnInit {
         this.capsCols = [
             { field: 'vendorCode', header: 'Vendor Code' },
             { field: 'vendorName', header: 'Vendor Name' },
-            { field: 'capabilityType', header: 'Caps Type' },      
-            //{ field: 'capabilityType', header: 'Vendor Caps' },
+            //{ field: 'capabilityType', header: 'Caps Type' },      
+            { field: 'capabilityType', header: 'Vendor Caps' },
             { field: 'partNumber', header: 'PN' },
             { field: 'partDescription', header: 'PN Description' },                
             { field: 'vendorRanking', header: ' Vendor Ranking' },

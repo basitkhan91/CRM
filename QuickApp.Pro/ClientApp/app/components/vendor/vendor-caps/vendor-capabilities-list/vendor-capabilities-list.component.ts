@@ -108,7 +108,7 @@ export class VendorCapabilitiesListComponent implements OnInit{
             { field: 'capabilityType', header: 'Vendor Caps' },
             { field: 'partNumber', header: 'PN' },
             { field: 'partDescription', header: 'PN Description' },
-            { field: 'capabilityType', header: 'Caps Type' },            
+            //{ field: 'capabilityType', header: 'Caps Type' },            
             { field: 'vendorRanking', header: ' Vendor Ranking' },
             { field: 'tat', header: 'TAT' },
         ];

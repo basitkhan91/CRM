@@ -108,6 +108,11 @@
 											</div>
 									</div> -->
 								</div>
+								<div class="form-group memo-popup-cstm" style="margin-top: 12px;">
+									<label>Cap Description</label>
+									<span pTooltip="{{sourceVendorCap.capabilityDescription}}" tooltipPosition="top"><input type="text" name="capabilityDescription" pInputText class="form-control" value="{{sourceVendorCap.capabilityDescription}}" disabled /></span>
+									<i class="fa fa-info-circle fa-lg" data-toggle="modal" data-target="#add-description" pTooltip="{{sourceVendorCap.capabilityDescription}}" tooltipPosition="top" (click)="onAddDescription('capDesc')"></i>
+								</div>
 								<!-- <div class="form-group">
 									<label>Capability Type <span class="clr-red">*</span></label>
 									<p-multiSelect [options]="capabilityTypeList" name="capabilityType" [(ngModel)]="sourceVendorCap.capabilityTypes" [panelStyle]="{minWidth:'12em'}" #capabilityType="ngModel" required></p-multiSelect>
@@ -166,11 +171,11 @@
 											</div>
 									</div>  -->
 								</div>
-								<div class="form-group memo-popup-cstm" style="margin-top: 12px;">
+								<!-- <div class="form-group memo-popup-cstm" style="margin-top: 12px;">
 									<label>Cap Description</label>
 									<span pTooltip="{{sourceVendorCap.capabilityDescription}}" tooltipPosition="top"><input type="text" name="capabilityDescription" pInputText class="form-control" value="{{sourceVendorCap.capabilityDescription}}" disabled /></span>
 									<i class="fa fa-info-circle fa-lg" data-toggle="modal" data-target="#add-description" pTooltip="{{sourceVendorCap.capabilityDescription}}" tooltipPosition="top" (click)="onAddDescription('capDesc')"></i>
-								</div>
+								</div> -->
 								<div class="form-group memo-popup-cstm" style="margin-top: 12px;">
 									<label>Memo</label>
 									<span pTooltip="{{sourceVendorCap.memo}}" tooltipPosition="top"><input type="text" name="memo" pInputText class="form-control" value="{{sourceVendorCap.memo}}" disabled /></span>
