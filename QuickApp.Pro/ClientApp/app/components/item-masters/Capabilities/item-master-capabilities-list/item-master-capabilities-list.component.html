@@ -211,15 +211,18 @@
           <!-- Modal content-->
           <div class="modal-content">
             <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <button type="button" class="close" data-dismiss="modal" (click)="closeCapes()">&times;</button>
               <h4 class="modal-title">Add Capes</h4>
             </div>
             <div class="modal-body">
+            <div *ngIf="showCapes"> 
+
            <app-item-master-create-capabilities 
            [itemMasterId] ="itemMasterId"
+
            (loadCapesList)="loadCapesList($event)"
            ></app-item-master-create-capabilities>
-
+            </div>
             </div>
             <!-- <div class="modal-footer">
               <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>

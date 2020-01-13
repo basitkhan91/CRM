@@ -32,7 +32,7 @@ import { AtaSubChapter1Service } from '../../../../services/atasubchapter1.servi
 })
 /** item-master-create-capabilities component*/
 export class ItemMasterCreateCapabilitiesComponent implements OnInit {
-    @Input() itemMasterId ; 
+    @Input() itemMasterId;
     manufacturerData: any = [];
     LoadValues: any;
     selectedAircraftId: any;
@@ -122,24 +122,25 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
         // this.getIntergationWithList();
         // this.getAllEmployees();
         this.getItemMasterList();
+        this.resetFormData();
 
     }
     getItemMasterList() {
-		
 
-		this.itemser.getItemStockList("Stock").subscribe(res => {
+
+        this.itemser.getItemStockList("Stock").subscribe(res => {
             console.log(res);
             let resData = res[0]
-            if(resData){
-                for(let i=0; i<resData.length; i++){
+            if (resData) {
+                for (let i = 0; i < resData.length; i++) {
                     this.pnData.push({
-                        label: resData[i].partNumber, value : resData[i].itemMasterId
-                    }) 
-                } 
+                        label: resData[i].partNumber, value: resData[i].itemMasterId
+                    })
+                }
             }
-             
+
         })
-	}
+    }
 
     get userName(): string {
         return this.authService.currentUser ? this.authService.currentUser.userName : "";
@@ -155,8 +156,6 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
 
     getAircraftTypesList() {
         this.itemser.getAircraft().subscribe(res => {
-            console.log(res);
-
             const allaircraftInfo = res[0];
 
 
@@ -171,13 +170,10 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
         })
     }
 
-    getAircraftModelByManfacturer(value) {        
+    getAircraftModelByManfacturer(value) {
         // this.newValue = value.originalEvent.target.textContent;
-        //Swamy Code 01/13/2020
         let airtCraftObject = this.manufacturerData.find(element => element.value == this.selectedAircraftId);
         this.selectedAircraftName = airtCraftObject.label;
-        //Swamy Code 01/13/2020
-
         // if (this.newValue) {
         this.aircraftModelService.getAircraftModelListByManufactureId(this.selectedAircraftId).subscribe(models => {
 
@@ -253,9 +249,9 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
                         Memo: '',
                         IsChecked: false,
                         // ...this.capes
-                       
-                        capabilityTypeId:  this.capabilityTypeId,
-                        capailityTypeName:  getValueFromArrayOfObjectById ('label','value', this.capabilityTypeId ,this.capabalityTypeList),
+
+                        capabilityTypeId: this.capabilityTypeId,
+                        capailityTypeName: getValueFromArrayOfObjectById('label', 'value', this.capabilityTypeId, this.capabalityTypeList),
                         managementStructureId: null,
                         description: '',
                         ataChapterId: null,
@@ -273,7 +269,7 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
                         departmentId: null,
                     }
                 })
-                console.log(this.aircraftData);                
+                console.log(this.aircraftData);
             })
         }
         if (this.selectedAircraftId !== undefined && this.modelUnknown) {
@@ -287,8 +283,8 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
                 Memo: '',
                 IsChecked: false,
                 // ...this.capes
-                capabilityTypeId:  this.capabilityTypeId,
-                capailityTypeName:  getValueFromArrayOfObjectById ('label','value', this.capabilityTypeId ,this.capabalityTypeList),
+                capabilityTypeId: this.capabilityTypeId,
+                capailityTypeName: getValueFromArrayOfObjectById('label', 'value', this.capabilityTypeId, this.capabalityTypeList),
                 managementStructureId: null,
                 description: '',
                 ataChapterId: null,
@@ -319,8 +315,8 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
                     Memo: '',
                     IsChecked: false,
                     // ...this.capes,
-                    capabilityTypeId:  this.capabilityTypeId,
-                    capailityTypeName: getValueFromArrayOfObjectById ('label','value', this.capabilityTypeId ,this.capabalityTypeList),
+                    capabilityTypeId: this.capabilityTypeId,
+                    capailityTypeName: getValueFromArrayOfObjectById('label', 'value', this.capabilityTypeId, this.capabalityTypeList),
                     managementStructureId: null,
                     description: '',
                     ataChapterId: null,
@@ -348,7 +344,7 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
 
     }
 
-    
+
     getDynamicVariableData(variable, index) {
         return this[variable + index]
     }
@@ -356,11 +352,10 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
 
 
     async getPartPublicationByItemMasterId(itemMasterId) {
-        //Swamy Code 01/13/2020
         let iMid = this.activatedRoute.snapshot.paramMap.get('id');
-        if(!iMid){
+        if (!iMid) {
             iMid = this.itemMasterIDFromPartNumberSelection;
-        } 
+        }
         await this.workOrderService.getPartPublicationByItemMaster(iMid).subscribe(res => {
             this.cmmList = res.map(x => {
                 return {
@@ -369,7 +364,13 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
                 }
             });
         })
-        //Swamy Code 01/13/2020
+    }
+
+    resetVerified(rowData, value) {
+        if (value === false) {
+            rowData.verifiedById = null;
+            rowData.verifiedDate = new Date();
+        }
     }
 
     getAtAChapters() {
@@ -397,12 +398,12 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
 
 
     selectedLegalEntity(legalEntityId, index) {
-        console.log(index);        
+        console.log(index);
         if (legalEntityId) {
             this.aircraftData[index].managementStructureId = legalEntityId;
             this.commonService.getBusinessUnitListByLegalEntityId(legalEntityId).subscribe(res => {
                 this['businessUnitList' + index] = res;
-              
+
             })
         }
 
@@ -411,8 +412,8 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
         if (businessUnitId) {
             this.aircraftData[index].managementStructureId = businessUnitId;
             this.commonService.getDivisionListByBU(businessUnitId).subscribe(res => {
-            
-                  this['divisionList' + index] = res;
+
+                this['divisionList' + index] = res;
             })
         }
 
@@ -421,7 +422,7 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
         if (divisionUnitId) {
             this.aircraftData[index].managementStructureId = divisionUnitId;
             this.commonService.getDepartmentListByDivisionId(divisionUnitId).subscribe(res => {
-                  this['departmentList' + index] = res;
+                this['departmentList' + index] = res;
             })
         }
 
@@ -436,45 +437,45 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
 
 
 
-    	// get subchapter by Id in the add ATA Mapping
-	getATASubChapterByATAChapter(value, index) {
+    // get subchapter by Id in the add ATA Mapping
+    getATASubChapterByATAChapter(value, index) {
 
 
-		this.atasubchapter1service.getATASubChapterListByATAChapterId(value).subscribe(atasubchapter => {
+        this.atasubchapter1service.getATASubChapterListByATAChapterId(value).subscribe(atasubchapter => {
             const responseData = atasubchapter[0];
             console.log(atasubchapter[0]);
             this["ataSubChapaters" + index] = responseData.map(x => {
-				return {
-					label: x.description,
-					value: x.ataChapterId
-				}
+                return {
+                    label: x.description,
+                    value: x.ataChapterId
+                }
             })
-            console.log(this["ataSubChapaters" + index]);            
+            console.log(this["ataSubChapaters" + index]);
         })
-	}
+    }
 
-    saveCapability(){
+    saveCapability() {
         let iMid = this.activatedRoute.snapshot.paramMap.get('id');
-        if(!iMid){
+        if (!iMid) {
             iMid = this.itemMasterIDFromPartNumberSelection;
-        } 
+        }
         // else if(!this.itemMasterIDFromPartNumberSelection){
         //     iMid = 
         // }
 
         const capesData = [
-            ...this.aircraftData.map(x => { 
+            ...this.aircraftData.map(x => {
                 return {
                     ...x,
-                    aircraftDashNumberId : x.DashNumberId,
+                    aircraftDashNumberId: x.DashNumberId,
                     itemMasterId: iMid,
-                    masterCompanyId:1,
+                    masterCompanyId: 1,
                     createdBy: this.userName,
                     updatedBy: this.userName,
-                    createdDate:new Date(),
-                    updatedDate:new Date(),
-                    isActive:true,
-                    isDeleted:false
+                    createdDate: new Date(),
+                    updatedDate: new Date(),
+                    isActive: true,
+                    isDeleted: false
                 }
             }),
 
@@ -491,7 +492,7 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
         })
     }
 
-    resetFormData(){
+    resetFormData() {
         this.capabilityTypeId = null;
         this.selectedAircraftId = undefined;
         this.selectedAircraftName = "";

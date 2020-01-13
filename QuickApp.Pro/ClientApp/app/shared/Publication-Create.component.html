@@ -5,7 +5,7 @@
     <table class="table table-bordered table-fixed workflow-table-pub">
         <thead class="thead-light">
             <tr>
-                <th> S.No </th>
+                <!-- <th> S.No </th> -->
                 <th> Pub ID* </th>
                 <th> Pub Desc </th>
                 <th> Pub Type </th>
@@ -25,7 +25,7 @@
         </thead>
         <tbody>
             <tr [hidden]="publ.isDeleted" *ngFor="let publ of workFlow.publication;let i = index">
-                <td>{{(currentPage - 1) * itemsPerPage + i + 1}}</td>
+                <!-- <td>{{(currentPage - 1) * itemsPerPage + i + 1}}</td> -->
                 <td>
                     <select class="form-control custom-select dropdown-select wf-pub-id"
                             [(ngModel)]="publ.publicationId"

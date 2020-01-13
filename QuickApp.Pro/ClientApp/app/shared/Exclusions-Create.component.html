@@ -9,7 +9,7 @@
   </div>
   <table class="table table-bordered table-fixed workflow-table-exclusion">
     <tr>
-      <th><label>S.No</label></th>
+      <!-- <th><label>S.No</label></th> -->
       <th><label>EPN *</label></th>
       <th><label>EPN Description *</label></th>
       <th><label>QTY </label></th>
@@ -24,7 +24,7 @@
       [hidden]="exclusion.isDelete"
       *ngFor="let exclusion of workFlow.exclusions; let i = index"
     >
-      <td>{{ (currentPage - 1) * itemsPerPage + i + 1 }}</td>
+      <!-- <td>{{ (currentPage - 1) * itemsPerPage + i + 1 }}</td> -->
       <td>
         <p-autoComplete
           (onSelect)="onPartSelect($event, exclusion)"
@@ -122,7 +122,7 @@
     </tr>
 
     <tr>
-      <td>Total</td>
+      <!-- <td>Total</td> -->
       <td>&nbsp;</td>
       <td>&nbsp;</td>
       <td>{{ workFlow.sumofQty }}</td>

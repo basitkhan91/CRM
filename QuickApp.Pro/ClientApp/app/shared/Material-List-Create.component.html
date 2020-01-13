@@ -15,7 +15,7 @@
   <table class="table table-bordered table-fixed workflow-table-material">
     <thead>
       <tr>
-        <th>S.No</th>
+        <!-- <th>S.No</th> -->
         <th>PN *</th>
         <th>Description *</th>
         <th>Cond *</th>
@@ -41,7 +41,7 @@
         [hidden]="material.isDelete"
         *ngFor="let material of workFlow.materialList; let i = index"
       >
-        <td>{{ (currentPage - 1) * itemsPerPage + i + 1 }}</td>
+        <!-- <td>{{ (currentPage - 1) * itemsPerPage + i + 1 }}</td> -->
         <td>
           <p-autoComplete
             (onSelect)="onPartSelect($event, material)"

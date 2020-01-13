@@ -5,7 +5,7 @@
     <table class="table table-bordered table-fixed workflow-table-expertise" style="margin-top:31px;">
 
         <tr>
-            <th><label>S.No</label></th>
+            <!-- <th><label>S.No</label></th> -->
             <th><label> Expertise Type *</label></th>
             <th><label>Estimated Hours </label></th>
             <th><label>Direct Labor Rate</label></th>
@@ -16,7 +16,7 @@
             <th><label>Action </label></th>
         </tr>
         <tr class="expertise-tr" [hidden]="expert.isDelete" *ngFor="let expert of workFlow.expertise;let i = index">
-            <td>{{(currentPage - 1) * itemsPerPage + i + 1}}</td>
+            <!-- <td>{{(currentPage - 1) * itemsPerPage + i + 1}}</td> -->
             <td>
                 <select class="form-control custom-select wf-pub-id"
                         id="ddlExpertiesType"
@@ -80,9 +80,9 @@
 
         </tr>
         <tr *ngIf="workFlow.expertise.length > 0">
-            <td>
+            <!-- <td>
                 <b>Total </b>
-            </td>
+            </td> -->
             <td>&nbsp;</td>
             <td> {{workFlow.sumofestimatedhrs }}</td>
             <td>&nbsp;</td>

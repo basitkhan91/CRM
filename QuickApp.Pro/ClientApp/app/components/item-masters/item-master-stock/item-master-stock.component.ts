@@ -313,7 +313,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     modelUnknown = false;
     dashNumberUnknown = false;
     newFields = {
-        Condition: null ,
+        Condition: null,
         PP_UOMId: null,
         PP_CurrencyId: null,
         PP_FXRatePerc: null,
@@ -412,7 +412,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     allSites: any[] = [];
     wareHouseData: any[] = [];
     locationData: any[] = [];
-    shelfData: any[] = []; 
+    shelfData: any[] = [];
     binData: any[] = [];
 
     // errorLogForPS: string = '';
@@ -424,7 +424,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         public priority: PriorityService, public inteService: IntegrationService,
         public workFlowtService: ItemClassificationService, public itemservice: ItemGroupService,
         public proService: ProvisionService, private dialog: MatDialog,
-        private masterComapnyService: MasterComapnyService, public commonService: CommonService, @Inject(DOCUMENT) document,private configurations: ConfigurationService, public siteService: SiteService, public stockLineService: StocklineService) {
+        private masterComapnyService: MasterComapnyService, public commonService: CommonService, @Inject(DOCUMENT) document, private configurations: ConfigurationService, public siteService: SiteService, public stockLineService: StocklineService) {
         this.itemser.currentUrl = '/itemmastersmodule/itemmasterpages/app-item-master-stock';
         this.itemser.bredcrumbObj.next(this.itemser.currentUrl);//Bread Crumb
         this.displayedColumns.push('action');
@@ -448,16 +448,16 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                 const responseDataOfEdit = res;
                 this.isDisabledSteps = true;
                 this.sourceItemMaster = responseDataOfEdit[0];
-                if(this.sourceItemMaster.siteId){
+                if (this.sourceItemMaster.siteId) {
                     this.siteValueChange()
                 }
-                if(this.sourceItemMaster.warehouseId){
+                if (this.sourceItemMaster.warehouseId) {
                     this.wareHouseValueChange()
                 }
-                if(this.sourceItemMaster.locationId){
+                if (this.sourceItemMaster.locationId) {
                     this.locationValueChange()
                 }
-                if(this.sourceItemMaster.shelfId){
+                if (this.sourceItemMaster.shelfId) {
                     this.shelfValueChange()
                 }
                 this.sourceItemMaster.expirationDate = new Date(this.sourceItemMaster.expirationDate);
@@ -727,26 +727,26 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     }
 
     private loadSiteData()  //retriving Information
-	{
-		this.alertService.startLoadingMessage();
-		this.loadingIndicator = true;
+    {
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
 
-		this.siteService.getSiteList().subscribe(   //Getting Site List Hear
-			results => this.onSiteDataLoadSuccessful(results[0]), //Pasing first Array and calling Method
-			error => this.onDataLoadFailed(error)
-		);
+        this.siteService.getSiteList().subscribe(   //Getting Site List Hear
+            results => this.onSiteDataLoadSuccessful(results[0]), //Pasing first Array and calling Method
+            error => this.onDataLoadFailed(error)
+        );
 
     }
     private onSiteDataLoadSuccessful(getSiteList: Site[]) {
 
-		this.alertService.stopLoadingMessage();
-		this.loadingIndicator = false;
-		this.allSites = getSiteList; //Contain first array of Loaded table Data will put in Html as [value]
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        this.allSites = getSiteList; //Contain first array of Loaded table Data will put in Html as [value]
 
-		//console.log(this.allSites);
+        //console.log(this.allSites);
     }
     siteValueChange() //Site Valu Selection in Form
-	{
+    {
         this.stockLineService.getWareHouseDataBySiteId(this.sourceItemMaster.siteId).subscribe(
             result => {
                 this.alertService.stopLoadingMessage();
@@ -755,10 +755,10 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             },
             error => this.onDataLoadFailed(error)
         )
-		
+
     }
     wareHouseValueChange() //Site Valu Selection in Form
-	{
+    {
         this.stockLineService.getLocationDataByWarehouseId(this.sourceItemMaster.warehouseId).subscribe(
             result => {
                 this.alertService.stopLoadingMessage();
@@ -767,10 +767,10 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             },
             error => this.onDataLoadFailed(error)
         )
-		
+
     }
     locationValueChange() //Site Valu Selection in Form
-	{
+    {
         this.stockLineService.getShelfDataByLocationId(this.sourceItemMaster.locationId).subscribe(
             result => {
                 this.alertService.stopLoadingMessage();
@@ -779,10 +779,10 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             },
             error => this.onDataLoadFailed(error)
         )
-		
+
     }
     shelfValueChange() //Site Valu Selection in Form
-	{
+    {
         this.stockLineService.getBinDataByShelfId(this.sourceItemMaster.shelfId).subscribe(
             result => {
                 this.alertService.stopLoadingMessage();
@@ -791,8 +791,8 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             },
             error => this.onDataLoadFailed(error)
         )
-		
-	}
+
+    }
     errorMessageHandler(log) {
         this.alertService.showMessage(
             'Error',
@@ -1322,9 +1322,9 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.allPartnumbersInfo = allWorkFlows;
         console.log(allWorkFlows, "allWorkFlows+++")
         this.revisedPartNumbersList = [];
-        for(let i = 0; i<allWorkFlows.length; i++){
-            if(this.isEdit == true){
-                if(allWorkFlows[i].itemMasterId != this.itemMasterId){
+        for (let i = 0; i < allWorkFlows.length; i++) {
+            if (this.isEdit == true) {
+                if (allWorkFlows[i].itemMasterId != this.itemMasterId) {
                     this.revisedPartNumbersList.push({
                         itemMasterId: allWorkFlows[i].itemMasterId,
                         partNumber: allWorkFlows[i].partNumber
@@ -3465,6 +3465,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             this.itemservice.newAction(this.sourceAction).subscribe(
                 data => {
                     this.sourceItemMaster.itemGroupId = data.itemGroupId;
+                    this.alertService.showMessage("Success", `Saved Item Group Successfully`, MessageSeverity.success);
                     this.itemgroup();
                 })
         }
@@ -4722,8 +4723,8 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
     }
 
-    getConditionsList(){
-        this.commonService.smartDropDownList('Condition', 'ConditionId' , 'Description'  ).subscribe(res => {
+    getConditionsList() {
+        this.commonService.smartDropDownList('Condition', 'ConditionId', 'Description').subscribe(res => {
             this.conditionList = res;
         })
     }
@@ -4798,15 +4799,15 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     }
 
     saveItemMasterGeneralInformation(addCustomerWorkForm) {
-        this.listOfErrors = pulloutRequiredFieldsOfForm(addCustomerWorkForm);         
-        if(this.listOfErrors.length > 0){
-           
+        this.listOfErrors = pulloutRequiredFieldsOfForm(addCustomerWorkForm);
+        if (this.listOfErrors.length > 0) {
+
             this.display = true;
             this.modelValue = true;
-             return false;
+            return false;
 
         } else {
-           
+
 
 
             this.isSaving = true;
@@ -4842,26 +4843,26 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                         if (this.isSaveCapes == true) {
                             this.saveCapabilities();
                         }
-                      
 
-                        const vdata = {                           
-                            referenceId:this.ItemMasterId,
+
+                        const vdata = {
+                            referenceId: this.ItemMasterId,
                             masterCompanyId: 1,
                             createdBy: this.userName,
                             updatedBy: this.userName,
-                            moduleId:22
+                            moduleId: 22
                         }
-                
+
                         for (var key in vdata) {
                             this.formData.append(key, vdata[key]);
                         }
-                       
+
                         this.commonService.uploadDocumentsEndpoint(this.formData).subscribe(res => {
                             //this.saveSuccessHelper(data);
                             this.formData = new FormData();
                             this.toGetAllDocumentsList(this.ItemMasterId);
                         });
-                        
+
                     }
 
                     // // get aircraft Mapped Information by ItemMasterId
@@ -4881,7 +4882,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                     this.changeOfTab('AircraftInfo');
                     // response Data after save 
                     this.collectionofItemMaster = data;
-                    
+
 
                     this.savesuccessCompleted(this.sourceItemMaster);
 
@@ -4966,18 +4967,18 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                                 this.saveAircraftmodelinfo(data.partId, data.itemMasterId, this.selectedModels);
                             }
                         }
-                        const vdata = {                           
-                            referenceId:this.ItemMasterId,
+                        const vdata = {
+                            referenceId: this.ItemMasterId,
                             masterCompanyId: 1,
                             createdBy: this.userName,
                             updatedBy: this.userName,
-                            moduleId:22
+                            moduleId: 22
                         }
-                
+
                         for (var key in vdata) {
                             this.formData.append(key, vdata[key]);
                         }
-                       
+
                         this.commonService.uploadDocumentsEndpoint(this.formData).subscribe(res => {
                             //this.saveSuccessHelper(data);
                             this.formData = new FormData();
@@ -5858,7 +5859,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         } else if (value === 'PurchaseSales') {
             this.currentTab = 'PurchaseSales';
             this.activeMenuItem = 5;
-        }  else if (value === 'NhaTlaAlternateTab') {
+        } else if (value === 'NhaTlaAlternateTab') {
             this.currentTab = 'NhaTlaAlternateTab';
             this.activeMenuItem = 6;
         } else if (value === "Exchange") {
@@ -5870,7 +5871,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             this.currentTab = 'ExportInfo';
             this.activeMenuItem = 8;
         }
-       
+
     }
     changeOfNTAETab(value) {
         console.log('invoked');
@@ -5887,8 +5888,8 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         } else if (value == "Equivalency") {
             this.currentNTAETab = 'Equivalency';
             this.activeNTAEMenuItem = 4;
-        } 
-       
+        }
+
     }
     //New Priority
     private loadPriority() {
@@ -6119,44 +6120,41 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     }
 
 
-    fileUpload(event,fileType) {    
-              
-		if (event.files.length === 0)
-			return;
+    fileUpload(event, fileType) {
 
-        for (let file of event.files)
-        {       
-            this.formData.append(fileType, file);            
-        }			
+        if (event.files.length === 0)
+            return;
+
+        for (let file of event.files) {
+            this.formData.append(fileType, file);
+        }
     }
-  
 
-    toGetAllDocumentsList(itemMasterId)
-	{       
-        var moduleId=22;
-        this.commonService.GetDocumentsList(itemMasterId,moduleId).subscribe(res => {
-			this.allUploadedDocumentsList = res;
-			//console.log(this.allEmployeeTrainingDocumentsList);
-		})
+
+    toGetAllDocumentsList(itemMasterId) {
+        var moduleId = 22;
+        this.commonService.GetDocumentsList(itemMasterId, moduleId).subscribe(res => {
+            this.allUploadedDocumentsList = res;
+            //console.log(this.allEmployeeTrainingDocumentsList);
+        })
     }
     // downloadFileUpload(rowData) {	
     //     const url = `${this.configurations.baseUrl}/api/FileUpload/downloadattachedfile?filePath=${rowData.link}`;
-	// 	window.location.assign(url);       
+    // 	window.location.assign(url);       
     // }
-    downloadFileUpload(rowData) {	       
-		this.commonService.toDownLoadFile(rowData.link);		
+    downloadFileUpload(rowData) {
+        this.commonService.toDownLoadFile(rowData.link);
     }
 
-    getAttachmentDeleteById(rowData)
-    {
+    getAttachmentDeleteById(rowData) {
 
-       let attachmentDetailId=rowData.attachmentDetailId;
-       let updatedBy=this.userName;
+        let attachmentDetailId = rowData.attachmentDetailId;
+        let updatedBy = this.userName;
 
-        this.commonService.GetAttachmentDeleteById(attachmentDetailId,updatedBy).subscribe(res => {	           
+        this.commonService.GetAttachmentDeleteById(attachmentDetailId, updatedBy).subscribe(res => {
             this.toGetAllDocumentsList(this.itemMasterId);
-            this.documentDeleted=true;
-		})
+            this.documentDeleted = true;
+        })
     }
 }
 
