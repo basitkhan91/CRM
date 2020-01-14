@@ -892,6 +892,13 @@ namespace QuickApp.Pro.Controllers
             return Ok();
         }
 
+        [HttpGet("buildmethoddetails")]
+        public IActionResult GetQuoteBuildMethodDetails(long workflowWorkorderId)
+        {
+            unitOfWork.WorkOrderRepository.GetQuoteBuildMethodDetails(workflowWorkorderId);
+            return Ok();
+        }
+
 
 
         #endregion
