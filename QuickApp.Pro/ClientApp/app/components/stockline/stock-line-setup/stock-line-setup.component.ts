@@ -75,9 +75,7 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
     showManagement: boolean;
     allCompanys: any[];
 	selectedOwnerFromValue: string = '';
-    AllowEdit: boolean;
     hideSerialNumber: boolean;
-	modelValue: boolean;
 	allPolistInfo: any[] = [];
 	allRolistInfo: any[] = [];
 	allEmployeeList: any[] = [];
@@ -102,19 +100,11 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
     showReceiverNumberError: boolean;
     showGlAccountNumberError: boolean;
     QuantityOnHandError: boolean;
-    disableSave: boolean;
-    BuHasData: boolean;
-    DepaHasData: boolean;
-    divHasData: boolean;
-    showBuError: boolean;
-    showDivError: boolean;
-    showDepError: boolean;
     hasSerialized: boolean;
     showSerialNumberError: boolean;
     disableSavepartNumber: boolean;
     alllegalEntityInfo: any[] = [];
     managementStructureData: any[];
-    updateMode: boolean = false;
     quantityAvailable: any;
     PurchaseOrderId: any;
     minDateValue: Date;
@@ -153,13 +143,12 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 	isDisabled = true;
 	collectionofstockLine: any;
 	value: number;
-	display: boolean;
+	displayError: boolean=false;
 	modal: NgbModalRef;
 	timeLifeEditAllow: any;
 	allConditionInfo: Condition[] = [];
     allManufacturerInfo: any[] = [];
     availableQty: number;
-    invalidQty: boolean;
     invalidQtyError: boolean;
 
     stocklineCreationForm = new FormGroup({
@@ -888,23 +877,19 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
         }
     }
 
-	getDepartmentlist(businessUnitId)
-    {
-        var businessUnitId = this.stocklineCreationForm.controls['BusinessUnitId'].value;
-        console.log(businessUnitId);
-        if (this.updateMode == false) {
-            this.sourceStockLineSetup.departmentId = "";
-            this.sourceStockLineSetup.divisionId = "";
-            this.sourceStockLineSetup.managementStructureId = businessUnitId;
-            this.departmentList = [];
-            this.divisionlist = [];
-            for (let i = 0; i < this.allManagemtninfo.length; i++) {
-                if (this.allManagemtninfo[i].parentId == businessUnitId) {
-                    this.departmentList.push(this.allManagemtninfo[i]);
-                }
-            }
-
-        }
+	getDepartmentlist(businessUnitId) {
+		var businessUnitId = this.stocklineCreationForm.controls['BusinessUnitId'].value;
+		console.log(businessUnitId);
+		this.sourceStockLineSetup.departmentId = "";
+		this.sourceStockLineSetup.divisionId = "";
+		this.sourceStockLineSetup.managementStructureId = businessUnitId;
+		this.departmentList = [];
+		this.divisionlist = [];
+		for (let i = 0; i < this.allManagemtninfo.length; i++) {
+			if (this.allManagemtninfo[i].parentId == businessUnitId) {
+				this.departmentList.push(this.allManagemtninfo[i]);
+			}
+		}
 	}
 
     getDivisionlist(value) {
@@ -992,51 +977,68 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 	{
 		if ((!this.sourceStockLineSetup.partNumber)) {
 			this.showPartNumberError = true;
+			this.displayError = true;
 		}
 		else
 		{
 			this.showPartNumberError = false;
 		}
 
-		if (this.sourceStockLineSetup.companyId) {
+		if (this.stocklineCreationForm.get('companyId').value) {
 			this.showCompanyError = false;
 		}
-		else { this.showCompanyError = true; }
+		else {
+		this.showCompanyError = true;
+			this.displayError = true;
+		}
 
 		if (this.sourceStockLineSetup.partDescription) {
 			this.showPartDescriptionError = false;
 		}
-		else { this.showPartDescriptionError = true; }
+		else {
+		this.showPartDescriptionError = true;
+			this.displayError = true;
+		}
 
         if (this.sourceStockLineSetup.conditionId) {
 			this.showConditionError = false;
 		}
-		else { this.showConditionError = true; }
+		else {
+			this.showConditionError = true;
+			this.displayError = true;
+		}
 
 		if (this.sourceStockLineSetup.siteId) {
 			this.showSiteError = false;
 		}
-		else { this.showSiteError = true; }
+		else {
+			this.showSiteError = true;
+			this.displayError = true;
+		}
 
 		if (this.sourceStockLineSetup.receivedDate) {
 			this.showReceiveDateError = false;
 		}
-		else { this.showReceiveDateError = true; }
+		else {
+		this.showReceiveDateError = true;
+			this.displayError = true;
+		}
 
 		if (this.sourceStockLineSetup.receiverNumber) {
 			this.showReceiverNumberError = false;
 		}
-		else { this.showReceiverNumberError = true; }
-
-		if (this.sourceStockLineSetup.glAccountId) {
-			this.showGlAccountNumberError = false;
+		else {
+		this.showReceiverNumberError = true;
+			this.displayError = true;
 		}
-		else { this.showGlAccountNumberError = true; }
 
         if (this.sourceStockLineSetup.QuantityOnHand) {
             this.QuantityOnHandError = false;
         }
-        else { this.QuantityOnHandError = true; }
+		else {
+		this.QuantityOnHandError = true;
+			this.displayError = true;
+		}
 
 		if ((this.hasSerialized == true) && (this.sourceStockLineSetup.serialNumber)) {
 			this.showSerialNumberError = false;
@@ -1047,45 +1049,20 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 		else
 		{
 			this.showSerialNumberError = true;
+			this.displayError = true;
 		}
 
 		if (this.availableQty > 0) {
-			this.invalidQty = false;
 			this.invalidQtyError = false;
 		}
 		else {
-			this.invalidQty = true;
 			this.invalidQtyError = true;
+			this.displayError = true;
 		}
 
         this.isSaving = true;
 
-		if (
-			((this.sourceStockLineSetup.partNumber == undefined) || (this.sourceStockLineSetup.partNumber == "undefined"))
-			|| ((this.sourceStockLineSetup.isSerialized == true) && (!this.sourceStockLineSetup.serialNumber))
-			|| (!this.sourceStockLineSetup.companyId) || (!this.sourceStockLineSetup.partNumber) || (!this.sourceStockLineSetup.partDescription)
-			|| (!this.sourceStockLineSetup.conditionId) || (!this.sourceStockLineSetup.siteId) || (!this.sourceStockLineSetup.receivedDate)
-			|| (!this.sourceStockLineSetup.receiverNumber) || (!this.sourceStockLineSetup.glAccountId) || (this.invalidQty)
-        )
-        {
-			this.display = true;
-			this.disableSave = true;
-			this.modelValue = true;
-		}
-
-		else
-		{
-			this.disableSave = false;
-		}
-
-		if (
-			((this.sourceStockLineSetup.partNumber != undefined) && (this.sourceStockLineSetup.partNumber != "undefined")) &&
-			((this.sourceStockLineSetup.isSerialized == true) && (this.sourceStockLineSetup.serialNumber)) &&
-			(this.sourceStockLineSetup.companyId) && (this.sourceStockLineSetup.partNumber) && (this.sourceStockLineSetup.partDescription)
-			|| (this.sourceStockLineSetup.conditionId) && (this.sourceStockLineSetup.siteId) && (this.sourceStockLineSetup.receivedDate)
-            || (this.sourceStockLineSetup.receiverNumber) && (this.sourceStockLineSetup.glAccountId)
-            || (this.invalidQty)
-		)
+		if (!this.displayError)
 		{
             if (!this.sourceStockLineSetup.stockLineId) {
                 this.sourceStockLineSetup.createdBy = this.userName;
@@ -1124,17 +1101,17 @@ export class StockLineSetupComponent implements OnInit, AfterViewInit {
 						})
 					}
 
-				else //for Saving Stockline and Integration
-				{
-						this.stocklineser.newStockLine(this.sourceStockLineSetup).subscribe(data => {
-							this.collectionofstockLine = data;
-							this.saveStocklineIntegrationPortalData(data.stockLineId, this.selectedModels); //for Saving Integration Data
-							//this.saveItemMasterDetails(this.sourceStockLineSetup);
-							this.router.navigateByUrl('/stocklinemodule/stocklinepages/app-stock-line-list')
-							this.value = 1;
+					else //for Saving Stockline and Integration
+					{
+							this.stocklineser.newStockLine(this.sourceStockLineSetup).subscribe(data => {
+								this.collectionofstockLine = data;
+								this.saveStocklineIntegrationPortalData(data.stockLineId, this.selectedModels); //for Saving Integration Data
+								//this.saveItemMasterDetails(this.sourceStockLineSetup);
+								this.router.navigateByUrl('/stocklinemodule/stocklinepages/app-stock-line-list')
+								this.value = 1;
 
-						})
-					}
+							})
+						}
 				}
 			}
 		}
