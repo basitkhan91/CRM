@@ -414,6 +414,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     locationData: any[] = [];
     shelfData: any[] = [];
     binData: any[] = [];
+    isEnableItemMaster: boolean = true;
 
     // errorLogForPS: string = '';
 

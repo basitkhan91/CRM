@@ -115,7 +115,10 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
         public vendorser: VendorService,
         private atasubchapter1service: AtaSubChapter1Service,
         private activatedRoute: ActivatedRoute
-    ) { }
+    ) {
+        this.itemser.currentUrl = '/itemmastersmodule/itemmasterpages/app-item-master-create-capabilities';
+            this.itemser.bredcrumbObj.next(this.itemser.currentUrl);//Bread Crumb
+     }
     ngOnInit() {
         console.log(this.itemMasterId, "itemMasterId")
         this.getCapabilityTypesList();
