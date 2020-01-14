@@ -3494,6 +3494,32 @@ namespace DAL.Repositories
             }
         }
 
+        public object GetQuoteBuildMethodDetails(long workflowWorkorderId)
+        {
+            try
+            {
+                var data = (from qd in _appContext.WorkOrderQuoteDetails
+                            join im in _appContext.ItemMaster on qd.ItemMasterId equals im.ItemMasterId
+                            where qd.WorkflowWorkOrderId == workflowWorkorderId
+                            select new
+                            {
+                                qd.ItemMasterId,
+                                im.PartNumber,
+                                BuildMethod = qd.BuildMethodId == 1 ? "WF" : (qd.BuildMethodId == 2 ? "WO" : (qd.BuildMethodId == 3 ? "WF" : "Third Party")),
+                                qd.BuildMethodId,
+                                qd.SelectedId,
+                                qd.ReferenceNo
+                            }
+                            ).FirstOrDefault();
+                return data;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
 
         public WorkOrderQuoteDetails CreateWorkOrderQuoteExclusions(WorkOrderQuoteDetails quoteExclusions)
         {
