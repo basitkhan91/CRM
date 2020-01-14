@@ -126,7 +126,7 @@ export class StockLineListComponent implements OnInit {
 
     totalRecords: number = 0;
     totalPages: number = 0;
-    pageSize: number = 20;
+    pageSize: number = 10;
 
         // To display the values in header and column name values
     headers = [

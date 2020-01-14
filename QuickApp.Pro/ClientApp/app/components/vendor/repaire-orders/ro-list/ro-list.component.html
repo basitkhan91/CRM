@@ -14,7 +14,7 @@
 		  <div class="form-row status-radio">
 				<div class="col-md-8">
 					<div class="form-group">
-						<label style="float:left; width:auto; margin-right:20px; padding-top:3px;">Status:</label>
+						<label class="radiobtn-label">Status:</label>
 						<div class="pull-left" style="margin-top: 4px; margin-right: 15px;">
 							<label class="radio-cstm wauto">
 								<input type="radio" name="rostatus" class="form-control" value="open" (click)="getROListByStatus('open')" [(ngModel)]="currentStatus">
@@ -22,22 +22,22 @@
 						</div>
 						<div class="pull-left" style="margin-top: 4px; margin-right: 15px;">
 							<label class="radio-cstm wauto">
-								<input type="radio" name="rostatus" class="form-control" value="closed" (click)="getROListByStatus('closed')">
+								<input type="radio" name="rostatus" class="form-control" value="closed" (click)="getROListByStatus('closed')" [(ngModel)]="currentStatus">
 								<span class="checkmark"></span>Closed</label>
 						</div>
 						<div class="pull-left" style="margin-top: 4px; margin-right: 15px;">
 							<label class="radio-cstm wauto">
-								<input type="radio" name="rostatus" class="form-control" value="pending" (click)="getROListByStatus('pending')">
+								<input type="radio" name="rostatus" class="form-control" value="pending" (click)="getROListByStatus('pending')" [(ngModel)]="currentStatus">
 								<span class="checkmark"></span>Pending</label>
 						</div>
 						<div class="pull-left" style="margin-top: 4px; margin-right: 15px;">
 							<label class="radio-cstm wauto">
-								<input type="radio" name="rostatus" class="form-control" value="fulfilling" (click)="getROListByStatus('fulfilling')">
+								<input type="radio" name="rostatus" class="form-control" value="fulfilling" (click)="getROListByStatus('fulfilling')" [(ngModel)]="currentStatus">
 								<span class="checkmark"></span>Fulfilling</label>
 						</div>
 						<div class="pull-left" style="margin-top: 4px; margin-right: 15px;">
 							<label class="radio-cstm wauto">
-								<input type="radio" name="rostatus" class="form-control" value="canceled" (click)="getROListByStatus('canceled')">
+								<input type="radio" name="rostatus" class="form-control" value="canceled" (click)="getROListByStatus('canceled')" [(ngModel)]="currentStatus">
 								<span class="checkmark"></span>Canceled</label>
 						</div>
 					</div>
@@ -168,7 +168,7 @@
 			  <tr>
 				<th style="width:120px" *ngFor="let col of columns" [ngSwitch]="col.field">
 					<input type="text" *ngIf="col.field !== 'openDate' && col.field !== 'closedDate'" style="width:100%;" pInputText (keyup)="onChangeInputField($event.target.value, col.field ,$event.target)">
-					<input type="date" *ngIf="col.field == 'openDate'" name="openDate" [ngModel]="currentdate | date:'yyyy-MM-dd'" style="width:100%;" (change)="onChangeInputField($event.target.value, col.field ,$event.target)">
+					<input type="date" class="hidePlaceHolder" *ngIf="col.field == 'openDate'" name="openDate" style="width:100%;" (change)="onChangeInputField($event.target.value, col.field ,$event.target)">
 					<input type="date" class="hidePlaceHolder" *ngIf="col.field == 'closedDate'" name="closedDate" style="width:100%;" (change)="onChangeInputField($event.target.value, col.field ,$event.target)">
 					<!-- <p-calendar [showIcon]="true" *ngIf="col.field == 'closedDate'"></p-calendar> -->
 				</th>

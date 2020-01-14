@@ -67,7 +67,7 @@ export class AssetAttributeTypeComponent implements OnInit {
     selectedDeptID: number = 0;
     allmgmtData: any[];
     mgmtStructureId: any;
-    disableForMgmtStructure: boolean;
+    disableForMgmtStructure: boolean = false;
     depriciationMethodList: any[] = [];
     conventionTypeList: any[] = [];
     objectKeys = Object.keys;
@@ -219,7 +219,7 @@ export class AssetAttributeTypeComponent implements OnInit {
     companySelected(): void {
         console.log(`Company Id :${this.selectedCompanyID}`);
 
-        if (this.selectedCompanyID != undefined && this.selectedCompanyID.toString() !== "0") {
+        if (this.selectedCompanyID != undefined && this.selectedCompanyID.length > 0) {
             //this.mgmtStructureId = this.selectedCompanyID;
             this.disableForMgmtStructure = false;
         }
@@ -401,12 +401,13 @@ export class AssetAttributeTypeComponent implements OnInit {
         this.currentRow.residualPercentage = 0;
         this.currentRow.isActive = true;
         //this.currentRow.managementStructureId= 1;
-        let selectedCompanyIDs: any[] = [];
+        this.currentRow.selectedCompanyIds = "";
         this.selectedCompanyID = [];
         this.selectedBUId = 0;
         this.selectedDivisionID = 0;
         this.selectedDeptID = 0;
         this.recordExists = false;
+        this.disableForMgmtStructure = true;
         ////console.log(new AssetAttributeType().assetAttributeTypeName);
         ////console.log(this.currentRow.assetAttributeTypeName);
         this.currentModeOfOperation = ModeOfOperation.Add;
@@ -639,8 +640,12 @@ export class AssetAttributeTypeComponent implements OnInit {
         };
         this.currentRow = { ...this.currentRow };
         this.mgmtStructureId = this.currentRow.managementStructureId;
-        this.selectedCompanyID = (rowData.selectedCompanyIds != null && rowData.selectedCompanyIds != undefined) ? rowData.selectedCompanyIds.split(",") : "";
+        this.selectedCompanyID = (rowData.selectedCompanyIds != null && rowData.selectedCompanyIds != undefined) ? rowData.selectedCompanyIds.split(",") : [];
         console.log('rowData', rowData);
+        if (this.selectedCompanyID.length > 0)
+            this.disableForMgmtStructure = false;
+        else
+            this.disableForMgmtStructure = true;
         //this.populateMgmtStructure(this.currentRow.managementStructureId);
         //console.log("conventionType = " + this.currentRow);
     }
@@ -648,6 +653,7 @@ export class AssetAttributeTypeComponent implements OnInit {
     //turn the item active/inActive
     toggleActiveStatus(rowData) {
         this.currentRow = rowData as AssetAttributeType;
+        this.selectedCompanyID = (rowData.selectedCompanyIds != null && rowData.selectedCompanyIds != undefined) ? rowData.selectedCompanyIds.split(",") : [];
         this.saveExistingItem(this.currentRow);
     }
 

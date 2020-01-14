@@ -105,7 +105,7 @@ namespace DAL.Repositories
                                 iM.ConsumeUnitOfMeasureId,
                                 iM.SoldUnitOfMeasureId,
                                 iM.LeadTimeDays,
-                     
+
                                 iM.ReorderQuantiy,
                                 iM.ReorderPoint,
                                 iM.MinimumOrderQuantity,
@@ -1399,35 +1399,12 @@ namespace DAL.Repositories
                 var totalRecords = (from imc in _appContext.ItemMasterCapes
                                     join im in _appContext.ItemMaster on imc.ItemMasterId equals im.ItemMasterId
                                     join ct in _appContext.capabilityType on imc.CapabilityTypeId equals ct.CapabilityTypeId
-                                    join act in _appContext.AircraftType on imc.AircraftTypeId equals act.AircraftTypeId
-                                    join acm in _appContext.AircraftModel on imc.AircraftModelId equals acm.AircraftModelId into imcacm
-                                    from acm in imcacm.DefaultIfEmpty()
-                                    join acd in _appContext.AircraftDashNumber on imc.AircraftDashNumberId equals acd.DashNumberId into imcacd
-                                    from acd in imcacd.DefaultIfEmpty()
-                                    join atc in _appContext.ATAChapter on imc.ATAChapterId equals atc.ATAChapterId into imcatc
-                                    from atc in imcatc.DefaultIfEmpty()
-                                    join ats in _appContext.ATASubChapter on imc.ATASubChapterId equals ats.ATASubChapterId into imcats
-                                    from ats in imcats.DefaultIfEmpty()
-                                    join pub in _appContext.Publication on imc.CMMId equals pub.PublicationRecordId into imcpub
-                                    from pub in imcpub.DefaultIfEmpty()
-                                    join ip in _appContext.IntegrationPortal on imc.IntegrateWithId equals ip.IntegrationPortalId into imcip
-                                    from ip in imcip.DefaultIfEmpty()
                                     join ver in _appContext.Employee on imc.VerifiedById equals ver.EmployeeId into imcver
                                     from ver in imcver.DefaultIfEmpty()
                                     where imc.IsDeleted == false
                                     && imc.ItemMasterId == (capesFilters.filters.ItemMasterId > 0 ? capesFilters.filters.ItemMasterId : imc.ItemMasterId)
                                     && im.PartNumber.Contains(!String.IsNullOrEmpty(capesFilters.filters.partNo) ? capesFilters.filters.partNo : im.PartNumber)
                                     && ct.Description.Contains(!String.IsNullOrEmpty(capesFilters.filters.capabilityType) ? capesFilters.filters.capabilityType : ct.Description)
-                                    && act.Description.Contains(!String.IsNullOrEmpty(capesFilters.filters.aircraftType) ? capesFilters.filters.aircraftType : act.Description)
-                                    //&& acm.ModelName.Contains(!String.IsNullOrEmpty(capesFilters.filters.aircraftModel) ? capesFilters.filters.aircraftModel : acm.ModelName)
-                                    && (acm.ModelName == null || acm.ModelName.Contains(!string.IsNullOrEmpty(capesFilters.filters.aircraftModel) ? capesFilters.filters.aircraftModel : acm.ModelName))
-                                    && (acd.DashNumber == null || acd.DashNumber.Contains(!string.IsNullOrEmpty(capesFilters.filters.aircraftDashNumber) ? capesFilters.filters.aircraftDashNumber : acd.DashNumber))
-                                    && imc.Description.Contains(!String.IsNullOrEmpty(capesFilters.filters.description) ? capesFilters.filters.description : imc.Description)
-                                    && (atc.ATAChapterName == null || atc.ATAChapterName.Contains(!string.IsNullOrEmpty(capesFilters.filters.aTAChapter) ? capesFilters.filters.aTAChapter : atc.ATAChapterName))
-                                    && (ats.Description == null || ats.Description.Contains(!string.IsNullOrEmpty(capesFilters.filters.aTASubChapter) ? capesFilters.filters.aTASubChapter : ats.Description))
-                                    && imc.EntryDate == (capesFilters.filters.entryDate != null ? capesFilters.filters.entryDate : imc.EntryDate)
-                                    && (pub.PublicationId == null || pub.PublicationId.Contains(!string.IsNullOrEmpty(capesFilters.filters.cMM) ? capesFilters.filters.cMM : pub.PublicationId))
-                                    && (ip.Description == null || ip.Description.Contains(!string.IsNullOrEmpty(capesFilters.filters.integrateWith) ? capesFilters.filters.integrateWith : ip.Description))
                                     && imc.IsVerified == (capesFilters.filters.isVerified != null ? capesFilters.filters.isVerified : imc.IsVerified)
                                     && (ver.FirstName == null || ver.FirstName.Contains(!string.IsNullOrEmpty(capesFilters.filters.verifiedBy) ? capesFilters.filters.verifiedBy : ver.FirstName))
                                     && imc.VerifiedDate == (capesFilters.filters.verifiedDate != null ? capesFilters.filters.verifiedDate : imc.VerifiedDate)
@@ -1441,35 +1418,12 @@ namespace DAL.Repositories
                 var list = (from imc in _appContext.ItemMasterCapes
                             join im in _appContext.ItemMaster on imc.ItemMasterId equals im.ItemMasterId
                             join ct in _appContext.capabilityType on imc.CapabilityTypeId equals ct.CapabilityTypeId
-                            join act in _appContext.AircraftType on imc.AircraftTypeId equals act.AircraftTypeId
-                            join acm in _appContext.AircraftModel on imc.AircraftModelId equals acm.AircraftModelId into imcacm
-                            from acm in imcacm.DefaultIfEmpty()
-                            join acd in _appContext.AircraftDashNumber on imc.AircraftDashNumberId equals acd.DashNumberId into imcacd
-                            from acd in imcacd.DefaultIfEmpty()
-                            join atc in _appContext.ATAChapter on imc.ATAChapterId equals atc.ATAChapterId into imcatc
-                            from atc in imcatc.DefaultIfEmpty()
-                            join ats in _appContext.ATASubChapter on imc.ATASubChapterId equals ats.ATASubChapterId into imcats
-                            from ats in imcats.DefaultIfEmpty()
-                            join pub in _appContext.Publication on imc.CMMId equals pub.PublicationRecordId into imcpub
-                            from pub in imcpub.DefaultIfEmpty()
-                            join ip in _appContext.IntegrationPortal on imc.IntegrateWithId equals ip.IntegrationPortalId into imcip
-                            from ip in imcip.DefaultIfEmpty()
                             join ver in _appContext.Employee on imc.VerifiedById equals ver.EmployeeId into imcver
                             from ver in imcver.DefaultIfEmpty()
                             where imc.IsDeleted == false
                             && imc.ItemMasterId == (capesFilters.filters.ItemMasterId > 0 ? capesFilters.filters.ItemMasterId : imc.ItemMasterId)
                             && im.PartNumber.Contains(!String.IsNullOrEmpty(capesFilters.filters.partNo) ? capesFilters.filters.partNo : im.PartNumber)
                             && ct.Description.Contains(!String.IsNullOrEmpty(capesFilters.filters.capabilityType) ? capesFilters.filters.capabilityType : ct.Description)
-                            && act.Description.Contains(!String.IsNullOrEmpty(capesFilters.filters.aircraftType) ? capesFilters.filters.aircraftType : act.Description)
-                            //&& acm.ModelName.Contains(!String.IsNullOrEmpty(capesFilters.filters.aircraftModel) ? capesFilters.filters.aircraftModel : acm.ModelName)
-                            && (acm.ModelName == null || acm.ModelName.Contains(!string.IsNullOrEmpty(capesFilters.filters.aircraftModel) ? capesFilters.filters.aircraftModel : acm.ModelName))
-                            && (acd.DashNumber == null || acd.DashNumber.Contains(!string.IsNullOrEmpty(capesFilters.filters.aircraftDashNumber) ? capesFilters.filters.aircraftDashNumber : acd.DashNumber))
-                            && imc.Description.Contains(!String.IsNullOrEmpty(capesFilters.filters.description) ? capesFilters.filters.description : imc.Description)
-                            && (atc.ATAChapterName == null || atc.ATAChapterName.Contains(!string.IsNullOrEmpty(capesFilters.filters.aTAChapter) ? capesFilters.filters.aTAChapter : atc.ATAChapterName))
-                            && (ats.Description == null || ats.Description.Contains(!string.IsNullOrEmpty(capesFilters.filters.aTASubChapter) ? capesFilters.filters.aTASubChapter : ats.Description))
-                            && imc.EntryDate == (capesFilters.filters.entryDate != null ? capesFilters.filters.entryDate : imc.EntryDate)
-                            && (pub.PublicationId == null || pub.PublicationId.Contains(!string.IsNullOrEmpty(capesFilters.filters.cMM) ? capesFilters.filters.cMM : pub.PublicationId))
-                            && (ip.Description == null || ip.Description.Contains(!string.IsNullOrEmpty(capesFilters.filters.integrateWith) ? capesFilters.filters.integrateWith : ip.Description))
                             && imc.IsVerified == (capesFilters.filters.isVerified != null ? capesFilters.filters.isVerified : imc.IsVerified)
                             && (ver.FirstName == null || ver.FirstName.Contains(!string.IsNullOrEmpty(capesFilters.filters.verifiedBy) ? capesFilters.filters.verifiedBy : ver.FirstName))
                             && imc.VerifiedDate == (capesFilters.filters.verifiedDate != null ? capesFilters.filters.verifiedDate : imc.VerifiedDate)
@@ -1481,15 +1435,6 @@ namespace DAL.Repositories
                                 partNo = im.PartNumber,
                                 pnDiscription = im.PartDescription,
                                 capabilityType = ct.Description,
-                                aircraftType = act.Description,
-                                aircraftModel = imc.AircraftModelId == 0 ? "Unknown" : acm.ModelName,
-                                aircraftDashNumber = imc.AircraftDashNumberId == 0 ? "Unknown" : acd.DashNumber,
-                                description = imc.Description,
-                                aTAChapter = atc == null ? "" : atc.ATAChapterName,
-                                aTASubChapter = ats == null ? "" : ats.Description,
-                                entryDate = imc.EntryDate,
-                                cMM = pub.PublicationId,
-                                integrateWith = ip.Description,
                                 isVerified = imc.IsVerified,
                                 verifiedBy = ver == null ? "" : ver.FirstName,
                                 verifiedDate = imc.VerifiedDate,
@@ -1502,6 +1447,79 @@ namespace DAL.Repositories
                           ).Distinct()
                           .Paginate(pageNumber, pageSize, sorts, filters).Results;
 
+                foreach (var item in list)
+                {
+                    item.company = GetManagementStructureCodes(item.ManagementStrId);
+                }
+
+                return list;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public IEnumerable<object> ItemMasterCapesGlobalSearch(long itemMasterId, string filterText, int pageNumber, int pageSize)
+        {
+            var take = pageSize;
+            var skip = take * (pageNumber);
+
+            if (itemMasterId == null)
+                itemMasterId = 0;
+            try
+            {
+
+                var totalRecords = (from imc in _appContext.ItemMasterCapes
+                                    join im in _appContext.ItemMaster on imc.ItemMasterId equals im.ItemMasterId
+                                    join ct in _appContext.capabilityType on imc.CapabilityTypeId equals ct.CapabilityTypeId
+                                    join ver in _appContext.Employee on imc.VerifiedById equals ver.EmployeeId into imcver
+                                    from ver in imcver.DefaultIfEmpty()
+                                    where imc.IsDeleted == false
+                                     && imc.ItemMasterId == (itemMasterId > 0 ?itemMasterId : imc.ItemMasterId)
+                                    && (im.PartNumber.Contains(filterText)
+                                    || ct.Description.Contains(filterText)
+                                    || ver.FirstName.Contains(filterText)
+                                    || imc.Memo.Contains(filterText)
+                                    || im.PartDescription.Contains(filterText))
+                                    select new
+                                    {
+                                        imc.ItemMasterCapesId
+                                    }).Distinct().Count();
+
+                var list = (from imc in _appContext.ItemMasterCapes
+                            join im in _appContext.ItemMaster on imc.ItemMasterId equals im.ItemMasterId
+                            join ct in _appContext.capabilityType on imc.CapabilityTypeId equals ct.CapabilityTypeId
+                            join ver in _appContext.Employee on imc.VerifiedById equals ver.EmployeeId into imcver
+                            from ver in imcver.DefaultIfEmpty()
+                            where imc.IsDeleted == false
+                                    && imc.ItemMasterId == (itemMasterId > 0 ? itemMasterId : imc.ItemMasterId)
+                                    && (im.PartNumber.Contains(filterText)
+                                    || ct.Description.Contains(filterText)
+                                    || ver.FirstName.Contains(filterText)
+                                    || imc.Memo.Contains(filterText)
+                                    || im.PartDescription.Contains(filterText))
+                            select new ItemMasterCapesFilters()
+                            {
+                                ItemMasterCapesId = imc.ItemMasterCapesId,
+                                partNo = im.PartNumber,
+                                pnDiscription = im.PartDescription,
+                                capabilityType = ct.Description,
+                                isVerified = imc.IsVerified,
+                                verifiedBy = ver == null ? "" : ver.FirstName,
+                                verifiedDate = imc.VerifiedDate,
+                                memo = imc.Memo,
+                                createdDate = imc.CreatedDate,
+                                isActive = imc.IsActive,
+                                ManagementStrId = imc.ManagementStructureId,
+                                TotalRecords = totalRecords
+                            }
+                          ).Distinct()
+                          .OrderByDescending(p => p.createdDate)
+                              .Skip(skip)
+                              .Take(take)
+                              .ToList();
                 foreach (var item in list)
                 {
                     item.company = GetManagementStructureCodes(item.ManagementStrId);

@@ -108,14 +108,23 @@ export class ItemMasterCapabilitiesListComponent implements OnInit {
     selectedForDeleteContent: any;
     showCapes: boolean = false;
     isEnableCapesList: boolean = true;
+    globalSearchData: any = {};
+    pnData: any;
+    capabalityTypeList: any;
+    aircraftModelData: any;
+    ataChapterData: any;
+    entityList: any;
+    buData: any;
+    divisionData: any;
+    departmentData: any;
+    @Input() isEnableItemMaster: boolean = false;
 
     /** item-master-capabilities-list ctor */
     constructor(private itemMasterService: ItemMasterService,
         private cdRef: ChangeDetectorRef,
         private modalService: NgbModal, private authService: AuthService, private _route: Router, private alertService: AlertService, private dashnumberservices: DashNumberService, private formBuilder: FormBuilder, public workFlowtService: LegalEntityService, private atasubchapter1service: AtaSubChapter1Service, private atamain: AtaMainService, public inteService: IntegrationService, private workOrderService: WorkOrderService, private commonservice: CommonService, private activatedRoute: ActivatedRoute) {
         this.dataSource = new MatTableDataSource();
-        this.itemMasterService.currentUrl = '/itemmastersmodule/itemmasterpages/app-item-master-capabilities-list';
-        this.itemMasterService.bredcrumbObj.next(this.itemMasterService.currentUrl);//Bread Crumb
+               
     }
 
     capabilityForm: any = {
@@ -154,6 +163,12 @@ export class ItemMasterCapabilitiesListComponent implements OnInit {
 
     ngOnInit() {
         console.log(this.itemMasterId, "itemMasterIdInList")
+        console.log(this.isEnableItemMaster);
+        
+        if(!this.isEnableItemMaster) {
+            this.itemMasterService.currentUrl = '/itemmastersmodule/itemmasterpages/app-item-master-capabilities-list';
+            this.itemMasterService.bredcrumbObj.next(this.itemMasterService.currentUrl);//Bread Crumb
+        } 
 
         this.capabilitiesForm = this.formBuilder.group({
             mfgForm: this.formBuilder.array([])
@@ -1260,11 +1275,10 @@ export class ItemMasterCapabilitiesListComponent implements OnInit {
         this.selectedForDeleteContent = content;
         if (this.isDeleteCapabilityPopupOpened == true) {
             this.itemMasterService.deleteCapabilityById(capabilityId, "admin").subscribe(res => {
-                console.log(res, "response of itemMaster+++++++++++++");
                 this.loadData()
                 this.dismissModel()
                 this.isDeleteCapabilityPopupOpened = false;
-
+                this.alertService.showMessage("Success", `Action was deleted successfully`, MessageSeverity.success);
                 // return false;
                 // this.itemMasterData = res[0];
             }),
@@ -1285,6 +1299,9 @@ export class ItemMasterCapabilitiesListComponent implements OnInit {
     loadCapesList(data) {
         console.log(data);
         this.loadData();
+    }
+    searchCaps(){
+
     }
 
 }

@@ -54,8 +54,9 @@
                                 <i class="fa fa-search"></i>
                                 <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder=" Filter" style="height: 28px !important;">
                             </div>
-                            <button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()" style="padding: 5px 10px !important;"></button>
-                            <button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" iconPos="left" label="Export Selection Only"  (click)="dt.exportCSV({selectionOnly:true})" style="padding: 5px 10px !important;"></button>
+                           
+                            <button type="button" class="btn btn-primary-cstm" matTooltip="Download  Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export  Data" (click)="dt.exportCSV()" style="padding: 5px 10px !important;"></button>
+                            <button type="button" class="btn btn-primary-cstm"  matTooltip="Download Selected Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})" style="padding: 5px 10px !important;"></button>
 
                             <div class="excel-upload excel-upload-cstm">
                                 <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
@@ -79,7 +80,7 @@
                     </ng-template>
 
                     <ng-template pTemplate="body" let-rowData let-columns="columns">
-                        <tr [pSelectableRow]="rowData" [pSelectableRowDblClick]="rowData" (dblclick)="viewSelectedRowdbl(rowData)" [ngStyle]="{'background-color' : rowData.isPrimary === true ? '#79ffe3'  : 'white'  }">
+                        <tr [pSelectableRow]="rowData" [pSelectableRowDblClick]="rowData" (dblclick)="viewSelectedRowdbl(rowData)" [ngClass]="{'row-primary': rowData.isPrimary === true}">
                             <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
                                 {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
                             </td>
@@ -155,8 +156,8 @@
                                     <i class="fa fa-search"></i>
                                     <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder=" Filter" style="height: 28px !important;">
                                 </div>
-                                <button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()" style="padding: 5px 10px !important;"></button>
-                                <button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" iconPos="left" label="Export Selection Only" *ngIf="selectedrowsFromInternational" (click)="dt.exportCSV({selectionOnly:true})" style="padding: 5px 10px !important;"></button>
+                                <button type="button" class="btn btn-primary-cstm"  matTooltip="Download  Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export  Data" (click)="dt.exportCSV()" style="padding: 5px 10px !important;"></button>
+                                <button type="button" class="btn btn-primary-cstm"  matTooltip="Download Selected Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export Selection Only"  (click)="dt.exportCSV({selectionOnly:true})" style="padding: 5px 10px !important;"></button>
 
                                 <div class="excel-upload excel-upload-cstm">
                                     <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
@@ -178,7 +179,7 @@
                         </ng-template>
 
                         <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
-                            <tr [pSelectableRow]="rowData" [pSelectableRowDblClick]="rowData" (dblclick)="viewInterShipping(rowData)" [ngStyle]="{'background-color' : rowData.isPrimary === true ? '#79ffe3'  : 'white'  }">
+                            <tr [pSelectableRow]="rowData" [pSelectableRowDblClick]="rowData" (dblclick)="viewInterShipping(rowData)" [ngClass]="{'row-primary': rowData.isPrimary === true}">
                                 <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
                                     {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'expirationDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'startDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
                                 </td>
@@ -211,7 +212,7 @@
                 </div>
             </form>
             <div class="clear"></div>
-            <button type="button" class="btn btn-primary-cstm pull-right" (click)="nextClick()">Next</button>
+            <button type="button" class="btn btn-primary-cstm pull-right" (click)="nextClick()">Save & Next</button>
             <button type="button" class="btn btn-primary-cstm pull-right submit-btn" (click)="backClick()">Previous</button>
         </div>
     </div>
@@ -651,11 +652,12 @@
 
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label>Primary</label>
-                                <div class="checkbox-cstm" style="margin: 2px 0 0 0; clear: both;">
-                                    <label>
+                               
+                                <div class="checkbox-cstm">
+                                    <label style="margin-top:17px;">
                                         <input type="checkbox" name="isPrimary" class="form-check-input" checked id="isPrimary" [(ngModel)]="internationalShippingInfo.isPrimary">
                                         <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                    Primary
                                     </label>
                                 </div>
                             </div>
@@ -788,6 +790,8 @@
                             </td>
                             <td>
                                 <p-inputSwitch [(ngModel)]="rowData['isActive']" name="isActiveIS{{rowIndex}}" (onChange)="updateActiveorInActiveForS(rowData)"></p-inputSwitch>
+                          
+
                                 <span data-toggle="modal" data-target="#viewDomesticVia"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" matTooltip="View" (click)="openDomesticShippingViewVia(rowData)"><i class="fa fa-eye"></i></a> </span> <!-- (click)="openInterShippingView(rowData)" -->
 
                                 <button class="btn-edit" mat-icon-button data-toggle="modal" matTooltip="edit" (click)="editDomesticShipVia(rowData)">
@@ -808,7 +812,7 @@
                 </p-table>
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="resetShipViaDomestic()">Close</button>
+                    <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="resetShipViaDomestic()">Close</button>
                 </div>
 
             </div>

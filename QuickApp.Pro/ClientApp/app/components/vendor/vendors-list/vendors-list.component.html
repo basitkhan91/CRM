@@ -1,4 +1,6 @@
-﻿﻿<div class="card">
+﻿﻿<p-breadcrumb [model]="breadcrumbs"></p-breadcrumb>
+
+<div class="card">
     <div class="card-body">
         <div class="inline-block display-flex" *ngIf="isVendorList && !isCreatePO && !isCreateRO">
             <h4 _ngcontent-c24="" class="po-head" style="padding: 0px 8px;"> Vendor List </h4>
@@ -46,7 +48,7 @@
             </ng-template>
             <ng-template pTemplate="colgroup" let-columns>
                 <colgroup>
-                    <col *ngFor="let col of columns" style="width:130px">
+                    <col *ngFor="let col of columns" style="width:160px">
                 </colgroup>
             </ng-template>
 
@@ -83,55 +85,65 @@
                         {{col.field == 'vendorPhone'?rowData['t']['vendorPhone']:rowData[col.field]}}
                     </td>
 
-                    <td style="width:200px">
-                        <ng-container *ngIf="!isCreatePO && !isCreateRO">
+                    <td class="action-icons-cstm" style="width:200px;">
+                        <div>
+                            <ng-container *ngIf="!isCreatePO && !isCreateRO">
                                 <p-inputSwitch [validate] moduleName="app-vendors-list" requirePermission="canUpdate"
                                 *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off"
                                 (onChange)="handleChanges(rowData,$event)" [(ngModel)]="rowData['isActive']">
-                        </p-inputSwitch>
-                        <p-inputSwitch [validate] moduleName="app-vendors-list" requirePermission="canUpdate"
-                                        *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on"
-                                        offLabel="off" (onChange)="handleChanges(rowData,$event)"
-                                        [(ngModel)]="rowData['isActive']"></p-inputSwitch>
-                        <p-inputSwitch [validate] moduleName="app-vendors-list" requirePermission="canUpdate"
-                                        *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off"
-                                        (onChange)="handleChanges(rowData,$event)" [(ngModel)]="rowData['isActive']">
-                        </p-inputSwitch>
-                        </ng-container>
-                        
-                        <span data-toggle="modal" data-target="#view">
-                            <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip"
-                               (click)="openView(view,rowData)" matTooltip="View"><i class="fa fa-eye"></i></a>
-                        </span>
-                        <button *ngIf="!isCreatePO && !isCreateRO" [validate] moduleName="app-vendors-list" requirePermission="canUpdate"
-                                class="btn-edit" mat-icon-button (click)="openEdit(rowData)" matTooltip="Edit">
-                            <mat-icon>edit</mat-icon>
-                        </button>
-
-                        <i class="fa fa-users" mat-icon-button matTooltip="Contacts"
-                           (click)="openContactList(contentcontact,rowData)">
-
-                        </i>
-
-                        <button *ngIf="!isCreatePO && !isCreateRO" [validate] moduleName="app-vendors-list" requirePermission="canDelete"
-                                class="btn-delete" mat-icon-button matTooltip="Delete"
-                                (click)=" openDelete(content1, rowData)">
-                            <mat-icon color="warn">delete</mat-icon>
-                        </button>
-
-                        <button class="btn-history" mat-icon-button matTooltip="History"
-                                (click)="openHist(contentHist,rowData)">
-                            <mat-icon color="green">history</mat-icon>
-                        </button>
-                        <button *ngIf="(isVendorList && isCreatePO) || (!isCreatePO && !isCreateRO)" class="btn-pos" mat-icon-button matTooltip="PO's" data-toggle="modal" data-target="#purchaseOrderList" (click)="getVendorId(rowData)">
-                            <mat-icon color="green">format_list_bulleted</mat-icon>
-                        </button>
-                            
-                        <button *ngIf="(isVendorList && isCreateRO) || (!isCreatePO && !isCreateRO)" class="btn-ros" mat-icon-button matTooltip="RO's" data-toggle="modal" data-target="#repairOrderList" (click)="getVendorId(rowData)">
-                            <mat-icon color="green">view_list</mat-icon>
-                        </button>
-                        <a *ngIf="isCreatePO" (click)="gotoCreatePO(rowData)" matTooltip="Create PO" class="btn btn-success nobg btn-cstm"><span><i class="fa fa-plus"></i></span></a>
-                        <a *ngIf="isCreateRO" (click)="gotoCreateRO(rowData)" matTooltip="Create RO" class="btn btn-success nobg btn-cstm"><span><i class="fa fa-plus"></i></span></a>
+                                </p-inputSwitch>
+                                <p-inputSwitch [validate] moduleName="app-vendors-list" requirePermission="canUpdate"
+                                                *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on"
+                                                offLabel="off" (onChange)="handleChanges(rowData,$event)"
+                                                [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                                <p-inputSwitch [validate] moduleName="app-vendors-list" requirePermission="canUpdate"
+                                                *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off"
+                                                (onChange)="handleChanges(rowData,$event)" [(ngModel)]="rowData['isActive']">
+                                </p-inputSwitch>
+                            </ng-container>
+                            <span data-toggle="modal" data-target="#view"><a class="btn nobg btn-view-cstm" (click)="openView(view,rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
+                            <span *ngIf="!isCreatePO && !isCreateRO"><a class="btn nobg btn-edit-cstm" (click)="openEdit(rowData)" matTooltip="Edit"><i class="fa fa-pencil"></i></a> </span>
+                            <span><a class="btn nobg btn-users-cstm" (click)="openContactList(contentcontact,rowData)" matTooltip="Contacts"><i class="fa fa-users"></i></a> </span>
+                            <span *ngIf="!isCreatePO && !isCreateRO"><a class="btn nobg btn-delete-cstm" (click)="openDelete(content1, rowData)" matTooltip="Delete"><i class="fa fa-trash"></i></a> </span>
+                            <span data-toggle="modal" data-target="#contentAuditHist"><a class="btn nobg btn-hist-cstm" (click)="openHist(contentHist,rowData)" matTooltip="History"><i class="fa fa-history"></i></a></span>
+                            <span data-toggle="modal" data-target="#purchaseOrderList" *ngIf="(isVendorList && isCreatePO) || (!isCreatePO && !isCreateRO)"><a class="btn nobg btn-po-cstm" (click)="getVendorId(rowData)" matTooltip="PO's"><i class="fa fa-list-ul"></i></a></span>
+                            <span data-toggle="modal" data-target="#repairOrderList" *ngIf="(isVendorList && isCreateRO) || (!isCreatePO && !isCreateRO)"><a class="btn nobg btn-ro-cstm" (click)="getVendorId(rowData)" matTooltip="RO's"><i class="fa fa-list"></i></a></span>
+                            <span *ngIf="isCreatePO"><a class="btn nobg btn-pluspo-cstm" (click)="gotoCreatePO(rowData)" matTooltip="Create PO"><i class="fa fa-plus"></i></a> </span>
+                            <span *ngIf="isCreateRO"><a class="btn nobg btn-plusro-cstm" (click)="gotoCreateRO(rowData)" matTooltip="Create RO"><i class="fa fa-plus" style="color: #259e08;"></i></a> </span>
+                            <!-- <span data-toggle="modal" data-target="#view">
+                                    <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip"
+                                       (click)="openView(view,rowData)" matTooltip="View"><i class="fa fa-eye"></i></a>
+                                </span> -->
+                                <!-- <button *ngIf="!isCreatePO && !isCreateRO" [validate] moduleName="app-vendors-list" requirePermission="canUpdate"
+                                        class="btn-edit" mat-icon-button (click)="openEdit(rowData)" matTooltip="Edit">
+                                    <mat-icon>edit</mat-icon>
+                                </button> -->
+        
+                                <!-- <i class="fa fa-users" mat-icon-button matTooltip="Contacts"
+                                   (click)="openContactList(contentcontact,rowData)">
+        
+                                </i> -->
+        
+                                <!-- <button *ngIf="!isCreatePO && !isCreateRO" [validate] moduleName="app-vendors-list" requirePermission="canDelete"
+                                        class="btn-delete" mat-icon-button matTooltip="Delete"
+                                        (click)=" openDelete(content1, rowData)">
+                                    <mat-icon color="warn">delete</mat-icon>
+                                </button> -->
+        
+                                <!-- <button class="btn-history" mat-icon-button matTooltip="History"
+                                        (click)="openHist(contentHist,rowData)">
+                                    <mat-icon color="green">history</mat-icon>
+                                </button> -->
+                                <!-- <button *ngIf="(isVendorList && isCreatePO) || (!isCreatePO && !isCreateRO)" class="btn-pos" mat-icon-button matTooltip="PO's" data-toggle="modal" data-target="#purchaseOrderList" (click)="getVendorId(rowData)">
+                                    <mat-icon color="green">format_list_bulleted</mat-icon>
+                                </button> -->
+                                    
+                                <!-- <button *ngIf="(isVendorList && isCreateRO) || (!isCreatePO && !isCreateRO)" class="btn-ros" mat-icon-button matTooltip="RO's" data-toggle="modal" data-target="#repairOrderList" (click)="getVendorId(rowData)">
+                                    <mat-icon color="green">view_list</mat-icon>
+                                </button> -->
+                                <!-- <a *ngIf="isCreatePO" (click)="gotoCreatePO(rowData)" matTooltip="Create PO" class="btn btn-success nobg btn-cstm"><span><i class="fa fa-plus"></i></span></a>
+                                <a *ngIf="isCreateRO" (click)="gotoCreateRO(rowData)" matTooltip="Create RO" class="btn btn-success nobg btn-cstm"><span><i class="fa fa-plus"></i></span></a> -->
+                        </div>
 
                     </td>
                 </tr>

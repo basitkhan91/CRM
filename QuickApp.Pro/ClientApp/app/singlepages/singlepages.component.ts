@@ -134,6 +134,20 @@ export class SingleComponent {
 				];
 			}
 
+			else if (this.currentUrl == '/singlepages/singlepages/asset-location') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'Asset Location ' }
+				];
+			}
+
+			else if (this.currentUrl == '/singlepages/singlepages/asset-acquistion-type') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'Asset Acquistion Type ' }
+				];
+			}
+
 			else if (this.currentUrl == '/singlepages/singlepages/app-labor-and-overhead-cost-setup') {
 				this.items = [
 					{ label: 'Single Screens' },
@@ -835,6 +849,20 @@ export class SingleComponent {
 				this.items = [
 					{ label: 'Single Screens' },
 					{ label: 'Asset Status ' }
+				];
+			}
+
+			else if (this.currentUrl == '/singlepages/singlepages/asset-location') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'Asset Location ' }
+				];
+			}
+
+			else if (this.currentUrl == '/singlepages/singlepages/asset-acquistion-type') {
+				this.items = [
+					{ label: 'Single Screens' },
+					{ label: 'Asset Acquistion Type ' }
 				];
 			}
 

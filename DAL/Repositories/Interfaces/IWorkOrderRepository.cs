@@ -155,5 +155,7 @@ namespace DAL.Repositories.Interfaces
         object GetWorkOrderStageandStatus();
         object GetNTESTDValues(long itemMasterId, string workScope);
 
+        object GetQuoteBuildMethodDetails(long workflowWorkorderId);
+
     }
 }

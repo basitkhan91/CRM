@@ -69,8 +69,8 @@ export class PolistComponent implements OnInit {
     currentStatusPO: string = 'open';
     modal: NgbModalRef;
     filterText: any = '';
-    currentdate: any = new Date(); //this.datePipe.transform(new Date(), "MM/dd/yyyy");
-    todayDate: any = this.datePipe.transform(new Date(), "yyyy-MM-dd");
+    //currentdate: any = new Date(); //this.datePipe.transform(new Date(), "MM/dd/yyyy");
+    //todayDate: any = this.datePipe.transform(new Date(), "yyyy-MM-dd");
 
     constructor(private _route: Router,
         private authService: AuthService,
@@ -216,11 +216,11 @@ export class PolistComponent implements OnInit {
         this.pageSize = event.rows;
         event.first = pageIndex;
         this.lazyLoadEventDataInput = event;
-        this.lazyLoadEventDataInput.filters = { ...this.lazyLoadEventDataInput.filters, status: 'open', openDate: this.todayDate }
+        this.lazyLoadEventDataInput.filters = { ...this.lazyLoadEventDataInput.filters, status: 'open' } //openDate: this.todayDate
         if(this.isEnablePOList) {
             this.lazyLoadEventDataInput.filters = { ...this.lazyLoadEventDataInput.filters, vendorId: this.vendorId }
         }
-        console.log(this.filterText);        
+        console.log(this.filterText);
         if(this.filterText == '') {
             this.getList(this.lazyLoadEventDataInput);
         } else {
@@ -267,7 +267,7 @@ export class PolistComponent implements OnInit {
             closedDate: this.closedDateInput,
             vendorName: this.vendorNameInput,
             vendorCode: this.vendorCodeInput,
-            status: this.statusIdInput,
+            status: this.statusIdInput ? this.statusIdInput : this.currentStatusPO,
             requestedBy: this.requestedByInput,
             approvedBy: this.approvedByInput,
             vendorId: this.vendorId ? this.vendorId : null

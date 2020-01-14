@@ -17,7 +17,7 @@
                 <div class="clear"></div>
                 <div class="tab-content form-bg">
                     <div class="tab-pane active" id="home">
-                <form action="#" #addcustomerwork="ngForm" method="post" id="addcustomerwork" name="" class="form-horizontal add-custustomer">
+                <form  #addcustomerworkForm="ngForm"   class="form-horizontal">
 
                     <div class="card">
                         <div class="form-row col-row col-row1">
@@ -28,7 +28,7 @@
                                         <div class="col-sm-7 add-icon-inline-right">
                                             <!--<div class="inner-addon right-addon inline-block">-->
 
-                                                <p-autoComplete class="pautocomp-cstm" [(ngModel)]="sourcereceving.firstName" [ngModelOptions]="{standalone: true}" (onSelect)="empnameId($event)" [suggestions]="firstCollection" (completeMethod)="filterfirstName($event)" [size]="30" required
+                                                <p-autoComplete  class="pautocomp-cstm" [(ngModel)]="sourcereceving.firstName" name="firstName" (onSelect)="empnameId($event)" [suggestions]="firstCollection" (completeMethod)="filterfirstName($event)" [size]="30" required
                                                                 [minLength]="1" [dropdown]="true" >
                                                     <ng-template let-firstName pTemplate="item">
                                                         <div class="ui-helper-clearfix">{{firstName}}</div>
@@ -98,7 +98,7 @@
                                     <div class="form-group col-sm-12">
                                         <label class="control-label col-sm-4">Receiving Num</label>
                                         <div class="col-sm-7">
-                                            <input sstyle="font-size: 1px" class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.receivingCustomerNumber" readonly>
+                                            <input sstyle="font-size: 1px" class="form-control" type="text" name="receivingCustomerNumber" [(ngModel)]="sourcereceving.receivingCustomerNumber" readonly>
                                         </div>
                                     </div>
 
@@ -108,7 +108,7 @@
                                             <div class="inner-addon right-addon inline-block">
                                                 <!--<i class="fa fa-search"></i>-->
                                                 <!--<input sstyle="font-size: 1px" type="text" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.customerReference">-->
-                                                <p-autoComplete class="pautocomp-cstm" [(ngModel)]="sourcereceving.customerReference"  [ngModelOptions]="{standalone: true}" [suggestions]="customerReferenceNames" (completeMethod)="filterReferenceNames($event)" [size]="30"
+                                                <p-autoComplete class="pautocomp-cstm" [(ngModel)]="sourcereceving.customerReference"  name="customerReference" [suggestions]="customerReferenceNames" (completeMethod)="filterReferenceNames($event)" [size]="30"
                                                                 [minLength]="1" [dropdown]="true" required>
                                                     <ng-template let-name pTemplate="item">
                                                         <div class="ui-helper-clearfix">{{name}}</div>
@@ -121,8 +121,8 @@
                                         <label class="control-label col-sm-4">Contact<strong class="clr-red">*</strong></label>
                                         <div class="col-sm-7">
                                            
-                                            <select style="border-radius:5px;" sstyle="font-size: 1px" [(ngModel)]="sourcereceving.customerContactId" [ngModelOptions]="{standalone: true}" (change)="customerContactChange(sourcereceving.customerContactId)" required>
-                                                    <option>--Select</option>
+                                            <select style="border-radius:5px;" sstyle="font-size: 1px" [(ngModel)]="sourcereceving.customerContactId"  name="customerContactId" (change)="customerContactChange(sourcereceving.customerContactId)" required>
+                                                    <option value="">--Select</option>
                                                     <option *ngFor="let contact of customerContactList" [ngValue]="contact.contactId">{{contact.firstName}}</option>
                                             </select>
                                         </div>
@@ -130,7 +130,7 @@
                                     <div class="form-group col-sm-12">
                                         <label class="control-label col-sm-4">Contact Phone<strong class="clr-red">*</strong></label>
                                         <div class="col-sm-7">
-                                            <input sstyle="font-size: 1px" class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.workPhone" required (keypress)="patternMobilevalidationWithSpl($event)">
+                                            <input sstyle="font-size: 1px" class="form-control" type="text" name="workPhone" [(ngModel)]="sourcereceving.workPhone" required (keypress)="patternMobilevalidationWithSpl($event)">
                                         </div>
                                     </div>
                                     <div class="form-group col-sm-12 input-icon1">
@@ -138,7 +138,7 @@
                                         <div class="col-sm-7 add-icon-inline-right">
                                             <!--<div class="inner-addon right-addon inline-block">-->
 
-                                                <p-autoComplete class="pautocomp-cstm" sstyle="font-size: 1px" [(ngModel)]="sourcereceving.partNumber" (onSelect)="partnmId($event)" [ngModelOptions]="{standalone: true}" [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="30"
+                                                <p-autoComplete class="pautocomp-cstm" sstyle="font-size: 1px" name="partNumber" [(ngModel)]="sourcereceving.partNumber" (onSelect)="partnmId($event)"  [suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="30"
                                                                 [minLength]="1" [dropdown]="true" required>
                                                     <ng-template let-partName pTemplate="part">
                                                         <div class="ui-helper-clearfix">{{partName}}</div>
@@ -247,7 +247,7 @@
                                                     <div class="form-group col-sm-12">
                                                         <label class="control-label col-sm-4">Condition<strong class="clr-red">*</strong></label>
                                                         <div class="col-sm-7">
-                                                            <select style="border-radius:5px;" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourcereceving.conditionId" required>
+                                                            <select style="border-radius:5px;" class="form-control" name="conditionId" [(ngModel)]="sourcereceving.conditionId" required>
                                                                 <option *ngFor="let condition of allConditionInfo" [ngValue]="condition.conditionId">{{condition.description}}</option>
                                                             </select>
                                                         </div>
@@ -256,7 +256,7 @@
                                                         <label class="control-label col-sm-4">Site <strong class="clr-red">*</strong></label>
                                                         <div class="col-sm-7">
 
-                                                            <select required style="border-radius:5px;" [(ngModel)]="sourcereceving.siteId" [ngModelOptions]="{standalone: true}" (change)="siteValueChange($event.target.value)">
+                                                            <select required style="border-radius:5px;" [(ngModel)]="sourcereceving.siteId" name="siteId"  (change)="siteValueChange($event.target.value)">
                                                                 <option>--Select</option>
                                                                 <option *ngFor="let site of allSites" [ngValue]="site.siteId">{{site.name}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
                                                             </select>
@@ -273,10 +273,10 @@
 
 
                                                     <div class="form-group col-sm-12">
-                                                        <label class="control-label col-sm-4">Warehouse </label>
+                                                        <label class="control-label col-sm-4">Warehouse <strong class="clr-red">*</strong></label>
                                                         <div class="col-sm-7">
-                                                            <select required style="border-radius:5px;" [(ngModel)]="sourcereceving.warehouseId" [ngModelOptions]="{standalone: true}" (change)="wareHouseValueChange(sourcereceving.warehouseId)">
-                                                                <option>--Select</option>
+                                                            <select  style="border-radius:5px;" [(ngModel)]="sourcereceving.warehouseId" name="warehouseId" (change)="wareHouseValueChange(sourcereceving.warehouseId)" required>
+                                                                <option value="">--Select</option>
                                                                 <option *ngFor="let site of allWareHouses" [ngValue]="site.warehouseId">{{site.warehouseName}}</option>
                                                             </select>
                                                         </div>
@@ -284,7 +284,7 @@
                                                     <div class="form-group col-sm-12">
                                                         <label class="control-label col-sm-4">Location</label>
                                                         <div class="col-sm-7">
-                                                            <select required style="border-radius:5px;" [(ngModel)]="sourcereceving.locationId" [ngModelOptions]="{standalone: true}" (change)="locationValueChange(sourcereceving.locationId)">
+                                                            <select  style="border-radius:5px;" [(ngModel)]="sourcereceving.locationId" [ngModelOptions]="{standalone: true}" (change)="locationValueChange(sourcereceving.locationId)">
                                                                 <option>--Select</option>
                                                                 <option *ngFor="let site of allLocations" [ngValue]="site.locationId">{{site.name}}</option>
                                                             </select>
@@ -495,7 +495,7 @@
                                                                                 <div class="form-group">
                                                                                     <select style="border-radius:5px;" class="form-control" name="primaryCompany" [(ngModel)]="sourcereceving.companyId"
                                                                                             (change)="getBUList(sourcereceving.companyId)" #mCompanyName required>
-                                                                                        <option value="0">Select Company</option>
+                                                                                        <option value="">Select Company</option>
                                                                                         <option *ngFor="let name of maincompanylist" [ngValue]="name.managementStructureId">{{name.code}}</option>
                                                                                     </select>
                                                                                     <div *ngIf="mCompanyName.invalid && (mCompanyName.dirty || mCompanyName.touched)" class="alert alert-danger alert-danger-cstm">
@@ -603,12 +603,12 @@
                                 <div class="clear"></div>
                                
                                 <div class="col-sm-12 mt8">
-                                        <div class="col-sm-6">
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <button class="btn btn-primary-cstm float-right" pButton type="button" (click)="editItemAndCloseModel(content)"   [disabled]="!addcustomerwork.valid"  label="Save" style="padding: 0 !important;"></button>
-                                        </div>
+                                    <div class="col-sm-6">
                                     </div>
+                                    <div class="pull-right">
+                                        <button class="btn btn-primary-cstm submit-btn" type="submit" (click)="editItemAndCloseModel(content)" [disabled]="!addcustomerworkForm.valid">Save</button>
+                                    </div>
+                                </div>
 
                                
                             

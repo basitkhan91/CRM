@@ -63,8 +63,8 @@ export class RoListComponent implements OnInit {
     @Input() vendorId: number;
     currentStatus: string = 'open';
     filterText: any = '';
-    currentdate: any = new Date();
-    todayDate: any = this.datePipe.transform(new Date(), "yyyy-MM-dd");
+    // currentdate: any = new Date();
+    // todayDate: any = this.datePipe.transform(new Date(), "yyyy-MM-dd");
 
     constructor(private _route: Router,
         private authService: AuthService,
@@ -210,7 +210,7 @@ export class RoListComponent implements OnInit {
         this.pageSize = event.rows;
         event.first = pageIndex;
         this.lazyLoadEventDataInput = event;
-        this.lazyLoadEventDataInput.filters = { ...this.lazyLoadEventDataInput.filters, status: 'open', openDate: this.todayDate };
+        this.lazyLoadEventDataInput.filters = { ...this.lazyLoadEventDataInput.filters, status: 'open' };
         if(this.isEnableROList) {
             this.lazyLoadEventDataInput.filters = { ...this.lazyLoadEventDataInput.filters, vendorId: this.vendorId }
         }
@@ -262,7 +262,7 @@ export class RoListComponent implements OnInit {
             closedDate: this.closedDateInput,
             vendorName: this.vendorNameInput,
             vendorCode: this.vendorCodeInput,
-            status: this.statusIdInput,
+            status: this.statusIdInput ? this.statusIdInput : this.currentStatus,
             requestedBy: this.requestedByInput,
             approvedBy: this.approvedByInput,
             vendorId: this.vendorId ? this.vendorId : null

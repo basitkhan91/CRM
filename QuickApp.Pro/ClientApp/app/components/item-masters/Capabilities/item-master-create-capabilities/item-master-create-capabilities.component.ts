@@ -101,9 +101,9 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
     @Output() loadCapesList = new EventEmitter<any>();
     @Output() closeCapesPopup = new EventEmitter<any>();
     @Input() isEnableCapesList: boolean = false;
-    //Swamy Code 01/13/2020
     selectedAircraftName: any;
-    //Swamy Code 01/13/2020
+    partData: any = {};
+    itemMastersList: any[] = [];
 
     constructor(public itemser: ItemMasterService,
         private aircraftModelService: AircraftModelService,
@@ -115,7 +115,10 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
         public vendorser: VendorService,
         private atasubchapter1service: AtaSubChapter1Service,
         private activatedRoute: ActivatedRoute
-    ) { }
+    ) {
+        this.itemser.currentUrl = '/itemmastersmodule/itemmasterpages/app-item-master-create-capabilities';
+            this.itemser.bredcrumbObj.next(this.itemser.currentUrl);//Bread Crumb
+     }
     ngOnInit() {
         console.log(this.itemMasterId, "itemMasterId")
         this.getCapabilityTypesList();
@@ -132,12 +135,23 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
 
         this.itemser.getItemStockList("Stock").subscribe(res => {
             console.log(res);
-            let resData = res[0]
+            let resData = res[0];
+            this.itemMastersList = resData;
             if (resData) {
                 for (let i = 0; i < resData.length; i++) {
                     this.pnData.push({
                         label: resData[i].partNumber, value: resData[i].itemMasterId
                     })
+                    if(this.itemMasterId){
+                        if(resData[i].itemMasterId == this.itemMasterId){
+                            this.partData = {
+                                partNumber: resData[i].partNumber,
+                                partDescription: resData[i].partDescription,
+                                manufacturerName: resData[i].manufacturer.name
+                            }
+                        }
+                    }
+                   
                 }
             }
 
@@ -207,6 +221,7 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
                     value: dashnumbers.dashNumberId
                 }
             });
+            this.filterDashNumberDropdown(this.aircraftData)
 
         });
     }
@@ -234,89 +249,24 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
 
 
     mapAircraftInformation() {
-        console.log(this.selectedDashnumber)
-        this.viewTable = true;
-        // Selected All 
-        if (this.selectedAircraftId !== undefined && this.selectedModelId !== undefined && this.selectedDashnumber !== undefined) {
-            this.Dashnumservice.getAllDashModels(this.dashNumberUrl, this.selectedAircraftId, this.selectedDashnumber).subscribe(aircraftdata => {
-                const responseValue = aircraftdata;
-                this.aircraftData = responseValue.map(x => {
-                    return {
-                        AircraftType: x.aircraft,
-                        aircraftTypeId: this.selectedAircraftId,
-                        AircraftModel: x.model,
-                        DashNumber: x.dashNumber,
-                        AircraftModelId: x.modelid,
-                        DashNumberId: x.dashNumberId,
-                        Memo: '',
-                        IsChecked: false,
-                        // ...this.capes
-
-                        capabilityTypeId: this.capabilityTypeId,
-                        capailityTypeName: getValueFromArrayOfObjectById('label', 'value', this.capabilityTypeId, this.capabalityTypeList),
-                        managementStructureId: null,
-                        description: '',
-                        ataChapterId: null,
-                        ataSubChapterId: null,
-                        entryDate: new Date(),
-                        cmmId: null,
-                        integrateWithId: null,
-                        isVerified: false,
-                        verifiedById: null,
-                        verifiedDate: new Date(),
-                        memo: '',
-                        companyId: null,
-                        buId: null,
-                        divisionId: null,
-                        departmentId: null,
-                    }
-                })
-                console.log(this.aircraftData);
-            })
-        }
-        if (this.selectedAircraftId !== undefined && this.modelUnknown) {
-            this.aircraftData = [{
-                AircraftType: this.newValue,
-                aircraftTypeId: this.selectedAircraftId,
-                AircraftModel: 'Unknown',
-                DashNumber: 'Unknown',
-                AircraftModelId: 0,
-                DashNumberId: 0,
-                Memo: '',
-                IsChecked: false,
-                // ...this.capes
-                capabilityTypeId: this.capabilityTypeId,
-                capailityTypeName: getValueFromArrayOfObjectById('label', 'value', this.capabilityTypeId, this.capabalityTypeList),
-                managementStructureId: null,
-                description: '',
-                ataChapterId: null,
-                ataSubChapterId: null,
-                entryDate: new Date(),
-                cmmId: null,
-                integrateWithId: null,
-                isVerified: false,
-                verifiedById: null,
-                verifiedDate: new Date(),
-                memo: '',
-                companyId: null,
-                buId: null,
-                divisionId: null,
-                departmentId: null,
-            }]
-        }
-
-        if (this.selectedAircraftId !== undefined && this.selectedModelId !== undefined && this.dashNumberUnknown) {
-            this.aircraftData = this.selectedModelId.map(x => {
+    console.log(this.selectedDashnumber)
+    this.viewTable = true;
+    // Selected All 
+    if (this.selectedAircraftId !== undefined && this.selectedModelId !== undefined && this.selectedDashnumber !== undefined) {
+        this.Dashnumservice.getAllDashModels(this.dashNumberUrl, this.selectedAircraftId, this.selectedDashnumber).subscribe(aircraftdata => {
+            const responseValue = aircraftdata;
+            let mappedAircraftData = responseValue.map(x => {
                 return {
-                    AircraftType: this.newValue,
+                    AircraftType: x.aircraft,
                     aircraftTypeId: this.selectedAircraftId,
-                    AircraftModel: x.modelName,
-                    DashNumber: 'Unknown',
-                    AircraftModelId: x.aircraftModelId,
-                    DashNumberId: 0,
+                    AircraftModel: x.model,
+                    DashNumber: x.dashNumber,
+                    AircraftModelId: x.modelid,
+                    DashNumberId: x.dashNumberId,
                     Memo: '',
                     IsChecked: false,
-                    // ...this.capes,
+                    // ...this.capes
+
                     capabilityTypeId: this.capabilityTypeId,
                     capailityTypeName: getValueFromArrayOfObjectById('label', 'value', this.capabilityTypeId, this.capabalityTypeList),
                     managementStructureId: null,
@@ -336,13 +286,89 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
                     departmentId: null,
                 }
             })
-        }
+            for(let i=0; i<mappedAircraftData.length; i++){
+                this.aircraftData = [...this.aircraftData, mappedAircraftData[i]]
+            }
+            console.log(this.aircraftData);
+            this.filterDashNumberDropdown(this.aircraftData);
 
-        this.getPartPublicationByItemMasterId(this.itemMasterId);
-        this.getAtAChapters();
-        this.getIntergationWithList();
-        this.getAllEmployees();
-        this.getLegalEntity();
+        })
+    }
+    if (this.selectedAircraftId !== undefined && this.modelUnknown) {
+        let mappedAircraftData  = [{
+            AircraftType: this.newValue,
+            aircraftTypeId: this.selectedAircraftId,
+            AircraftModel: 'Unknown',
+            DashNumber: 'Unknown',
+            AircraftModelId: 0,
+            DashNumberId: 0,
+            Memo: '',
+            IsChecked: false,
+            // ...this.capes
+            capabilityTypeId: this.capabilityTypeId,
+            capailityTypeName: getValueFromArrayOfObjectById('label', 'value', this.capabilityTypeId, this.capabalityTypeList),
+            managementStructureId: null,
+            description: '',
+            ataChapterId: null,
+            ataSubChapterId: null,
+            entryDate: new Date(),
+            cmmId: null,
+            integrateWithId: null,
+            isVerified: false,
+            verifiedById: null,
+            verifiedDate: new Date(),
+            memo: '',
+            companyId: null,
+            buId: null,
+            divisionId: null,
+            departmentId: null,
+        }]
+        for(let i=0; i<mappedAircraftData.length; i++){
+            this.aircraftData = [...this.aircraftData, mappedAircraftData[i]]
+        }
+    }
+
+    if (this.selectedAircraftId !== undefined && this.selectedModelId !== undefined && this.dashNumberUnknown) {
+        let mappedAircraftData = this.selectedModelId.map(x => {
+            return {
+                AircraftType: this.newValue,
+                aircraftTypeId: this.selectedAircraftId,
+                AircraftModel: x.modelName,
+                DashNumber: 'Unknown',
+                AircraftModelId: x.aircraftModelId,
+                DashNumberId: 0,
+                Memo: '',
+                IsChecked: false,
+                // ...this.capes,
+                capabilityTypeId: this.capabilityTypeId,
+                capailityTypeName: getValueFromArrayOfObjectById('label', 'value', this.capabilityTypeId, this.capabalityTypeList),
+                managementStructureId: null,
+                description: '',
+                ataChapterId: null,
+                ataSubChapterId: null,
+                entryDate: new Date(),
+                cmmId: null,
+                integrateWithId: null,
+                isVerified: false,
+                verifiedById: null,
+                verifiedDate: new Date(),
+                memo: '',
+                companyId: null,
+                buId: null,
+                divisionId: null,
+                departmentId: null,
+            }
+        })
+        for(let i=0; i<mappedAircraftData.length; i++){
+            this.aircraftData = [...this.aircraftData, mappedAircraftData[i]]
+        }
+    }
+    console.log(this.aircraftData, "this.aircraftData+++")
+    this.getPartPublicationByItemMasterId(this.itemMasterId);
+    this.getAtAChapters();
+    this.getIntergationWithList();
+    this.getAllEmployees();
+    this.getLegalEntity();
 
     }
 
@@ -358,6 +384,16 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
         if (!iMid) {
             iMid = this.itemMasterIDFromPartNumberSelection;
         }
+        for(let i=0; i<this.itemMastersList.length; i++){
+            if(this.itemMastersList[i].itemMasterId == iMid){
+                this.partData = {
+                    partNumber: this.itemMastersList[i].partNumber,
+                    partDescription: this.itemMastersList[i].partDescription,
+                    manufacturerName: this.itemMastersList[i].manufacturer.name
+                }
+            }
+        }
+        
         await this.workOrderService.getPartPublicationByItemMaster(iMid).subscribe(res => {
             this.cmmList = res.map(x => {
                 return {
@@ -511,5 +547,21 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
     }
     onCloseCapes() {
         this.closeCapesPopup.emit(true);
+    }
+    filterDashNumberDropdown (aircraft){        
+        var props =  ['label', 'value'];
+        var result = this.LoadDashnumber.filter(function(o1){
+            return !aircraft.some(function(o2){
+                return o1.value === o2.DashNumberId;          // assumes unique id
+            });
+        }).map(function(o){  
+            return props.reduce(function(newo, name){
+                newo[name] = o[name];
+                return newo;
+            }, {});
+        });
+        this.LoadDashnumber = result;
+        this.selectedDashnumber = undefined;
+        console.log(this.LoadDashnumber, "this.LoadDashnumber +++")
     }
 }

@@ -168,7 +168,7 @@ export class ItemMasterListComponent implements OnInit, AfterViewInit {
 		this.loadRolesData();
 	}
 	openHist() {
-		alert("Functionality not yet done");
+		// alert("Functionality not yet done");
 
 	}
 

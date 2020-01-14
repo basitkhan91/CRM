@@ -149,6 +149,7 @@ export class CustomersListComponent implements OnInit {
     sourceViewInterforShippingInfo: any;
     demosticShippingViaDataInfo: any;
     demosticInterShippingViaDataInfo: any;
+    sourceViewforDocument: any;
     home: any;
     selectedColumnsForInternationShipViaTable = [
         { field: 'shipVia', header: 'Ship Via' },
@@ -188,6 +189,8 @@ export class CustomersListComponent implements OnInit {
     modal: NgbModalRef;
     viewDataGeneralInformation: any[];
     viewDataclassification: any[];
+    viewDocumnets: any;
+
     viewDataIntegration: any[];
     customerContacts: any;
     selectedRow: any;
@@ -265,8 +268,9 @@ export class CustomersListComponent implements OnInit {
 
         { field: 'docName', header: 'Name' },
         { field: 'docDescription', header: 'Description' },
-        { field: 'documents', header: 'Documents' },
-        { field: 'docMemo', header: 'Memo' }
+        //{ field: 'documents', header: 'Documents' },
+        { field: 'docMemo', header: 'Memo' },
+       
     ];
     customerPMAColumns = [
         { field: 'partNumber', header: 'Part Number' },
@@ -558,9 +562,12 @@ export class CustomersListComponent implements OnInit {
     }
 
     getCustomerDocumentsByCustomerId(customerId) {
-
+        const id = customerId
         this.customerService.getDocumentList(customerId).subscribe(res => {
             this.DocumentsList = res;
+
+           
+
         })
     }
 
@@ -617,6 +624,21 @@ export class CustomersListComponent implements OnInit {
             
         })
     }
+    toGetUploadDocumentsList(attachmentId, customerId) {
+
+
+        this.customerService.toGetUploadDocumentsList(attachmentId, customerId, 1).subscribe(res => {
+            this.viewDocumnets = res;
+                  })
+    }
+    openDocument(content, row) {
+        this.customerService.toGetUploadDocumentsList(row.attachmentId, row.customerId, 1).subscribe(res => {
+            this.viewDocumnets = res;
+
+            this.sourceViewforDocument = row;
+        })
+
+        }
     // changePage(event: { first: any; rows: number }) {
     //     console.log(event);
     //     this.pageIndex = (event.first / event.rows);
