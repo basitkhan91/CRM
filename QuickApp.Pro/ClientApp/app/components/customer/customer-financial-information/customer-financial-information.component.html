@@ -82,20 +82,20 @@
                                             </select>
                                         </div>
                                         <div class="form-group" style="margin-top: 15px;" *ngIf="savedGeneralInformationData.isCustomerAlsoVendor">
-                                            <div class="label-cstm">Allow Netting of AP/AR</div>
-                                            <span class="checkbox-cstm">
-                                                <label style="width: 20px;">
+                                               <span class="checkbox-cstm">
+                                                <label>
                                                     <input type="checkbox" name="allowNettingOfAPAR" [(ngModel)]="savedGeneralInformationData.allowNettingOfAPAR">
                                                     <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                                    Allow Netting of AP/AR
                                                 </label>
                                             </span>
                                         </div>
                                         <div class="form-group" style="margin-top: 15px;">
-                                            <div class="label-cstm">Tax Exempt</div>
                                             <span class="checkbox-cstm">
-                                                <label style="width: 20px;">
+                                                <label>
                                                     <input type="checkbox" name="isTaxExempt" [(ngModel)]="savedGeneralInformationData.isTaxExempt">
                                                     <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                                    Tax Exempt
                                                 </label>
                                             </span>
                                         </div>
@@ -135,21 +135,21 @@
                                     </div>
 
                                     <div class="col-md-2">
-                                        <div class="form-group" style="margin-top: 15px;margin-left:20px;">
-                                            <div class="label-cstm">Allow Partial Billing</div>
+                                        <div class="form-group" style="margin-top: 15px;margin-left:0px;">
                                             <span class="checkbox-cstm">
-                                                <label style="width: 20px;">
+                                                <label>
                                                     <input type="checkbox" name="allowPartialBilling" [(ngModel)]="savedGeneralInformationData.allowPartialBilling">
                                                     <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                                    Allow Partial Billing
                                                 </label>
                                             </span>
                                         </div>
                                         <div class="form-group" style="margin-top: 15px;">
-                                            <div class="label-cstm">Allow ProForma Billing</div>
                                             <span class="checkbox-cstm">
-                                                <label style="width: 20px;">
+                                                <label>
                                                     <input type="checkbox" name="allowProformaBilling" [(ngModel)]="savedGeneralInformationData.allowProformaBilling">
                                                     <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                                    Allow ProForma Billing
                                                 </label>
                                             </span>
                                         </div>

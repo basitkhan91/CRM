@@ -938,7 +938,7 @@ export class CustomerWorkSetupComponent
 		this.allLocations = [];
 		this.allShelfs = [];
 		this.allBins = [];
-		this.sourcereceving.warehouseId = 0
+		this.sourcereceving.warehouseId = ''
 		this.sourcereceving.locationId = 0;
 		this.sourcereceving.shelfId = 0;
 		this.sourcereceving.binId = 0;
