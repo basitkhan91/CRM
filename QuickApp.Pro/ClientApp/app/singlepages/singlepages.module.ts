@@ -153,6 +153,8 @@ import { VendorProcess1099Component } from "../components/vendor-process1099/ven
 import { VendorProcess1099Service } from "../services/vendorprocess1099.service";
 import { CapsReportComponent } from "../components/caps-report/caps-report.component";
 import { AdjustmentReasonComponent } from "../components/adjustment-reason/adjustment-reason.component";
+import { CapabilityTypeComponent } from "../components/capabilitytype/capability-type.component";
+import { CapabilityTypeService } from "../services/capability-type.service";
 
 
 @NgModule({
@@ -247,7 +249,8 @@ import { AdjustmentReasonComponent } from "../components/adjustment-reason/adjus
         DashnumberComponent,
         PaginationComponent,
         VendorProcess1099Component,
-        CapsReportComponent
+        CapsReportComponent,
+        CapabilityTypeComponent
     ],
     providers: [
         PercentService,
@@ -290,7 +293,8 @@ import { AdjustmentReasonComponent } from "../components/adjustment-reason/adjus
         DashNumberEndpointService,
         PaginationService,
         CommonService,
-        VendorProcess1099Service
+        VendorProcess1099Service,
+        CapabilityTypeService
 
       
        

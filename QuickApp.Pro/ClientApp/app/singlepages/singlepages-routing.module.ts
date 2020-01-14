@@ -82,6 +82,7 @@ import { JobTypeComponent } from '../components/job-type/job-type.component';
 import { VendorProcess1099Component } from "../components/vendor-process1099/vendor-process1099.component";
 import { CapsReportComponent } from "../components/caps-report/caps-report.component";
 import { StockAdjustmentComponent } from "../components/stockline/stock-adjustment/stock-adjustment.component";
+import { CapabilityTypeComponent } from "../components/capabilitytype/capability-type.component";
 
 
 const singlePagesRoutes: Routes = [
@@ -432,6 +433,11 @@ const singlePagesRoutes: Routes = [
                 path: "app-caps-report",
                 component: CapsReportComponent,
                 data: { title: "Caps Report" }
+            },
+            {
+                path: "app-capability-type",
+                component: CapabilityTypeComponent,
+                data: { title: "Capability Type" }
             },
         ]
     }
