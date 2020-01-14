@@ -88,6 +88,12 @@ import { CertificationTypeComponent } from "../components/certification-type/cer
 import { AssetStatusComponent } from "../components/AssetStatus/asset-status.component";
 import { AssetStatusService } from "../services/asset-status/asset-status.service";
 import { AssetStatusEndpointService } from "../services/asset-status/assetstatus-endpoint.service";
+import { AssetLocationComponent } from "../components/asset-location/asset-location.component";
+import { AssetLocationService } from "../services/asset-location/asset-location.service";
+import { AssetLocationEndpointService } from "../services/asset-location/asset-location-endpoint.service";
+import { AssetAcquistionTypeComponent } from "../components/asset-acquistion-type/asset-acquistion-type.component";
+import { AssetAcquistionTypeService } from "../services/asset-acquistion-type/asset-acquistion-type.service";
+import { AssetAcquistionTypeEndpointService } from "../services/asset-acquistion-type/asset-acquistion-type-endpoint.service";
 import { DepriciationMethodComponent } from "../components/depriciation-method/depriciation-method.component";
 import { DepriciationMethodService } from "../services/depriciation-method/depriciation.service";
 import { DepriciationMethodEndpointService } from "../services/depriciation-method/depriciationmethod-endpoint.service";
@@ -230,6 +236,8 @@ import { AdjustmentReasonComponent } from "../components/adjustment-reason/adjus
         ShelfComponent,
         CertificationTypeComponent,
         AssetStatusComponent,
+        AssetLocationComponent,
+        AssetAcquistionTypeComponent,
         DisposalTypeComponent,
         DepriciationMethodComponent,
         AssetDepConventionTypeComponent,
@@ -248,6 +256,10 @@ import { AdjustmentReasonComponent } from "../components/adjustment-reason/adjus
         AssetStatusService,
         AssetStatusEndpointService,
         AssetStatusEndpointService,
+        AssetLocationService,
+        AssetLocationEndpointService,
+        AssetAcquistionTypeService,
+        AssetAcquistionTypeEndpointService,
         DepriciationMethodService,
         DepriciationMethodEndpointService,
         DisposalTypeEndpointService,

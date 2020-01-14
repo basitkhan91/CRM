@@ -438,7 +438,7 @@
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-primary-cstm" data-dismiss="modal"
-                            [disabled]="IntangibleAttrType.invalid || disableSave "
+                            [disabled]="IntangibleAttrType.invalid || disableSave || disableForMgmtStructure "
                             (click)="currentModeOfOperation === 2 ? saveNewItem() : updateItem();">
                         {{currentModeOfOperation == 3 ? 'Update' : 'Save' }}
                     </button>
