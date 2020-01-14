@@ -204,6 +204,8 @@ export class ItemMasterCapabilitiesListComponent implements OnInit {
 
     dataSource: MatTableDataSource<any>;
     cols: any[];
+    pnCols: any[];
+    nonPnCols: any[];
     paginator: MatPaginator;
     sort: MatSort;
 
@@ -220,7 +222,6 @@ export class ItemMasterCapabilitiesListComponent implements OnInit {
             first: 0,
             rows: 10,
             sortOrder: -1,
-            sortField: "integrateWith",
             filters: {
                 partNo: "",
                 itemMasterId: iMid
@@ -233,21 +234,36 @@ export class ItemMasterCapabilitiesListComponent implements OnInit {
         );
 
         // To display the values in header and column name values
-        this.cols = [
-            { field: 'capabilityType', header: 'Cap Type' },
+        this.pnCols = [
             { field: 'partNo', header: 'PN' },
             { field: 'pnDiscription', header: 'PN Description' },
-            { field: 'aircraftType', header: 'Aircraft' },
-            { field: 'aircraftModel', header: 'Model' },
-            { field: 'aircraftDashNumber', header: 'Dash Num' },
-            { field: 'aTAChapter', header: 'ATA Chapter' },
-            { field: 'entryDate', header: 'Entry Date' },
-            { field: 'cMM', header: 'CMM ID' },
+            { field: 'capabilityType', header: 'Cap Type' },
+            { field: 'level1', header: 'Level 01' },
+            { field: 'level2', header: 'Level 02' },
+            { field: 'level3', header: 'Level 03' },
+            { field: 'level4', header: 'Level 04' },
             { field: 'isVerified', header: 'Verified' },
             { field: 'verifiedBy', header: 'Verified By' },
             { field: 'verifiedDate', header: 'Date Verified' },
-            { field: 'company', header: 'Company' }
+            { field: 'memo', header: 'Memo' }
         ];
+        this.nonPnCols = [
+            { field: 'capabilityType', header: 'Cap Type' },
+            { field: 'level1', header: 'Level 01' },
+            { field: 'level2', header: 'Level 02' },
+            { field: 'level3', header: 'Level 03' },
+            { field: 'level4', header: 'Level 04' },
+            { field: 'isVerified', header: 'Verified' },
+            { field: 'verifiedBy', header: 'Verified By' },
+            { field: 'verifiedDate', header: 'Date Verified' },
+            { field: 'memo', header: 'Memo' }
+        ];
+
+        if(this.itemMasterId == undefined){
+            this.cols = this.nonPnCols
+        } else {
+            this.cols = this.pnCols
+        }
 
         this.selectedColumns = this.cols;
 
