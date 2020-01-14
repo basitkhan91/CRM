@@ -213,7 +213,7 @@ export class WorkOrderListComponent implements OnInit {
         event.first = pageIndex;
         this.lazyLoadEventData.filters = {
             ...this.lazyLoadEventData.filters,
-            workOrderStatus: 'open',
+            workOrderStatus: this.lazyLoadEventData.filters.workOrderStatus == undefined ? this.currentStatus : this.lazyLoadEventData.filters.workOrderStatus ,
             viewType: this.viewType
         }
         if (!this.isGlobalFilter) {
