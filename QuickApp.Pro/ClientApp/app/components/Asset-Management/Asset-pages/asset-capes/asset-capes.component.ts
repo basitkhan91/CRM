@@ -109,12 +109,14 @@ export class AssetCapesComponent implements OnInit {
     dashNumberUnknown = false;
     newValue: any;
     LoadValues: any[] = [];
+    isDisabledSteps = false;
 
     constructor(private router: ActivatedRoute, private modalService: NgbModal, private alertService: AlertService, public itemMasterService: ItemMasterService, private route: Router,
         private assetServices: AssetService, private dashnumberservices: DashNumberService, private formBuilder: FormBuilder, private commonservice: CommonService
         , private aircraftManufacturerService: AircraftManufacturerService, private aircraftModelService: AircraftModelService) {
 
         this.AssetId = this.router.snapshot.params['id'];
+        this.activeIndex = 1;
         if (this.assetServices.listCollection == undefined) {
             this.GetAssetData(this.AssetId);
         }
@@ -307,7 +309,27 @@ export class AssetCapesComponent implements OnInit {
             error => this.onDataLoadFailed(error)
         );
     }
+    changeOfTab(value) {
+        console.log('invoked');
+        console.log(`Parent master id ${this.AssetId}`);
+        const { assetId } = this.AssetId;
+        if (this.assetServices.isEditMode == true) {
+            if (value === 'General') {
+                this.activeIndex = 0;
+                this.route.navigateByUrl(`assetmodule/assetpages/app-edit-asset/${this.AssetId}`);
+            } else if (value === 'Capes') {
+                this.activeIndex = 1;
+                this.route.navigateByUrl(`/assetmodule/assetpages/app-asset-capes/${this.AssetId}`);
+            } else if (value === 'Calibration') {
+                this.activeIndex = 2;
+                this.route.navigateByUrl(`/assetmodule/assetpages/app-asset-calibration/${this.AssetId}`);
+            } else if (value == "Maintenance") {
+                this.activeIndex = 3;
+                this.route.navigateByUrl(`/assetmodule/assetpages/app-asset-maintenance-warranty/${this.AssetId}`);
+            }
+        }
 
+    }
 
     private onDataLoadFailed(error: any) {
         // alert(error);
@@ -912,14 +934,14 @@ export class AssetCapesComponent implements OnInit {
             }]
         }
 
-        if (this.selectedAircraftId !== undefined && this.selectedModelId !== undefined && this.dashNumberUnknown) {
+        if (this.selectedAircraftId !== undefined && capdata.selectedModel !== undefined && this.dashNumberUnknown) {
             console.log(915);
-            this.aircraftData = this.selectedModelId.map(x => {
+            this.aircraftData = capdata.selectedModel.map(x => {
                 return {
-                    AircraftType: x.aircraft,
-                    AircraftModel: x.modelName,
+                    AircraftType: this.newValue,
+                    AircraftModel: x.label,
                     DashNumber: 'Unknown',
-                    AircraftModelId: x.aircraftModelId,
+                    AircraftModelId: x.value,
                     DashNumberId: '',
                     CapibilityType: capdata.selectedCap,
                     PartNumber: capdata.selectedPartId

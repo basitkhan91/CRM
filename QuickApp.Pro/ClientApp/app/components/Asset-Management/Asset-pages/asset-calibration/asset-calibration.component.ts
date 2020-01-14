@@ -40,6 +40,7 @@ export class AssetCalibrationComponent implements OnInit {
     constructor(private router: ActivatedRoute, private assetService: AssetService, private vendorService: VendorService, private alertService: AlertService,
         private authService: AuthService, private glAccountService: GlAccountService, private route: Router, private currencyService: CurrencyService) {
         this.AssetId = this.router.snapshot.params['id'];
+        this.activeIndex = 2;
         if (this.assetService.listCollection == undefined) {
             this.GetAssetData(this.AssetId);
         }
@@ -233,7 +234,27 @@ export class AssetCalibrationComponent implements OnInit {
             error => this.onDataLoadFailed(error)
         );
     }
+    changeOfTab(value) {
+        console.log('invoked');
+        console.log(`Parent master id ${this.AssetId}`);
+        const { assetId } = this.AssetId;
+        if (this.assetService.isEditMode == true) {
+            if (value === 'General') {
+                this.activeIndex = 0;
+                this.route.navigateByUrl(`assetmodule/assetpages/app-edit-asset/${this.AssetId}`);
+            } else if (value === 'Capes') {
+                this.activeIndex = 1;
+                this.route.navigateByUrl(`/assetmodule/assetpages/app-asset-capes/${this.AssetId}`);
+            } else if (value === 'Calibration') {
+                this.activeIndex = 2;
+                this.route.navigateByUrl(`/assetmodule/assetpages/app-asset-calibration/${this.AssetId}`);
+            } else if (value == "Maintenance") {
+                this.activeIndex = 3;
+                this.route.navigateByUrl(`/assetmodule/assetpages/app-asset-maintenance-warranty/${this.AssetId}`);
+            }
+        }
 
+    }
 
     private oncurrencySuccessful(getCreditTermsList: Currency[]) {
         this.alertService.stopLoadingMessage();
