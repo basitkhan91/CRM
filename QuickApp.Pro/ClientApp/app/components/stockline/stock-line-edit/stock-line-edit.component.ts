@@ -90,7 +90,6 @@ export class StockLineEditComponent implements OnInit, AfterViewInit
 	collectionofstocklineIntegrationPortalData: any;
     attempToDelete: boolean = false;
 	availableQty: number;
-	invalidQty: boolean;
 	invalidQtyError: boolean;
 	showPartNumberError: boolean;
 	disableSaveglAccount: boolean;
@@ -144,14 +143,12 @@ export class StockLineEditComponent implements OnInit, AfterViewInit
 	sourceStockLineSetup: any = {};
 	sourceTimeLife: any = {};
 	sourceItemMaster: any = {};
-	private isSaving: boolean;
 	loadingIndicator: boolean;
-	private isEditMode: boolean = false;
 	private isDeleteMode: boolean = false;
 	isDisabled = true;
 	collectionofstockLine: any;
 	value: number;
-	display: boolean;
+	displayError: boolean;
 	modal: NgbModalRef;
 	timeLifeEditAllow: any;
 	allConditionInfo: Condition[] = [];
@@ -679,12 +676,12 @@ export class StockLineEditComponent implements OnInit, AfterViewInit
 
 	calculateQtyAvailable(event) {
 
-		if (this.sourceStockLineSetup.QuantityOnHand) { this.availableQty = this.sourceStockLineSetup.QuantityOnHand };
-		if (this.sourceStockLineSetup.QuantityOnHand && this.sourceStockLineSetup.QuantityReserved) {
-			this.availableQty = this.sourceStockLineSetup.QuantityOnHand - this.sourceStockLineSetup.QuantityReserved
+		if (this.sourceStockLineSetup.quantityOnHand) { this.availableQty = this.sourceStockLineSetup.quantityOnHand };
+		if (this.sourceStockLineSetup.quantityOnHand && this.sourceStockLineSetup.quantityReserved) {
+			this.availableQty = this.sourceStockLineSetup.quantityOnHand - this.sourceStockLineSetup.quantityReserved
 		}
-		if (this.sourceStockLineSetup.QuantityOnHand && this.sourceStockLineSetup.QuantityReserved && this.sourceStockLineSetup.QuantityIssued) {
-			this.availableQty = this.sourceStockLineSetup.QuantityOnHand - this.sourceStockLineSetup.QuantityReserved - this.sourceStockLineSetup.QuantityIssued;
+		if (this.sourceStockLineSetup.quantityOnHand && this.sourceStockLineSetup.quantityReserved && this.sourceStockLineSetup.quantityIssued) {
+			this.availableQty = this.sourceStockLineSetup.quantityOnHand - this.sourceStockLineSetup.quantityReserved - this.sourceStockLineSetup.quantityIssued;
 		}
 		this.sourceStockLineSetup.quantityAvailable = this.availableQty;
 	}
@@ -1038,7 +1035,6 @@ export class StockLineEditComponent implements OnInit, AfterViewInit
 	}
 
 	private saveCompleted(user?: any) {
-		this.isSaving = false;
 		if (this.isDeleteMode == true) {
 			this.alertService.showMessage("Success", `Action was deleted successfully`, MessageSeverity.success);
 			this.isDeleteMode = false;
@@ -1050,7 +1046,6 @@ export class StockLineEditComponent implements OnInit, AfterViewInit
 	}
 
 	private saveFailedHelper(error: any) {
-		this.isSaving = false;
 		this.alertService.stopLoadingMessage();
 		this.alertService.showStickyMessage("Save Error", "The below errors occured whilst saving your changes:", MessageSeverity.error, error);
 		this.alertService.showStickyMessage(error, null, MessageSeverity.error);
@@ -1062,75 +1057,78 @@ export class StockLineEditComponent implements OnInit, AfterViewInit
 		}
 		else {
 			this.showPartNumberError = true;
+			this.displayError = true;
 		}
 
-		if (this.sourceStockLineSetup.companyId) {
+		if (this.stocklineEditForm.get('companyId').value || this.sourceStockLineSetup.legalEntityId) {
 			this.showCompanyError = false;
 		}
-		else { this.showCompanyError = true; }
-
-		if (this.sourceStockLineSetup.partDescription) {
-			this.showPartDescriptionError = false;
+		else {
+		this.showCompanyError = true;
+			this.displayError = true;
 		}
-		else { this.showPartDescriptionError = true; }
 
 		if (this.sourceStockLineSetup.conditionId) {
 			this.showConditionError = false;
 		}
-		else { this.showConditionError = true; }
+		else {
+		this.showConditionError = true;
+			this.displayError = true;
+		}
 
 		if (this.sourceStockLineSetup.siteId) {
 			this.showSiteError = false;
 		}
-		else { this.showSiteError = true; }
+		else {
+		this.showSiteError = true;
+			this.displayError = true;
+		}
 
 		if (this.sourceStockLineSetup.receivedDate) {
 			this.showReceiveDateError = false;
 		}
-		else { this.showReceiveDateError = true; }
+		else {
+		this.showReceiveDateError = true;
+			this.displayError = true;
+		}
 
 		if (this.sourceStockLineSetup.receiverNumber) {
 			this.showReceiverNumberError = false;
 		}
-		else { this.showReceiverNumberError = true; }
-
-		if (this.sourceStockLineSetup.glAccountId) {
-			this.showGlAccountNumberError = false;
+		else {
+		this.showReceiverNumberError = true;
+			this.displayError = true;
 		}
-		else { this.showGlAccountNumberError = true; }
 
-		if (this.sourceStockLineSetup.QuantityOnHand) {
+		if (this.sourceStockLineSetup.quantityOnHand) {
 			this.QuantityOnHandError = false;
 		}
-		else { this.QuantityOnHandError = true; }
-
-		if ((this.hasSerialized == true) && (this.sourceStockLineSetup.serialNumber)) {
-			this.showSerialNumberError = false;
-		}
-		else if ((this.hasSerialized == false) && (!this.sourceStockLineSetup.serialNumber)) {
-			this.showSerialNumberError = false;
-		}
 		else {
-			this.showSerialNumberError = true;
+		this.QuantityOnHandError = true;
+			this.displayError = true;
 		}
 
-		if (this.availableQty > 0) {
-			this.invalidQty = false;
+		if (this.sourceStockLineSetup.isSerialized != null) {
+			if ((this.sourceStockLineSetup.isSerialized == true) && (this.sourceStockLineSetup.serialNumber)) {
+				this.showSerialNumberError = false;
+			}
+			else if ((this.sourceStockLineSetup.isSerialized == false) && (!this.sourceStockLineSetup.serialNumber)) {
+				this.showSerialNumberError = false;
+			}
+			else {
+				this.showSerialNumberError = true;
+				this.displayError = true;
+			}
+		}
+
+		if (this.availableQty > 0 || this.sourceStockLineSetup.quantityAvailable >0) {
 			this.invalidQtyError = false;
 		}
 		else {
-			this.invalidQty = true;
 			this.invalidQtyError = true;
+			this.displayError = true;
 		}
-		this.isSaving = true;
-		if (
-			((this.sourceStockLineSetup.partNumber != undefined) && (this.sourceStockLineSetup.partNumber != "undefined")) &&
-			((this.sourceStockLineSetup.isSerialized == true) && (this.sourceStockLineSetup.serialNumber)) &&
-			(this.sourceStockLineSetup.companyId) && (this.sourceStockLineSetup.partNumber) && (this.sourceStockLineSetup.partDescription)
-			&& (this.sourceStockLineSetup.conditionId) && (this.sourceStockLineSetup.siteId) && (this.sourceStockLineSetup.receivedDate)
-			&& (this.sourceStockLineSetup.receiverNumber) && (this.sourceStockLineSetup.glAccountId)
-			&& (!this.invalidQty)
-		) {
+		if (!this.displayError) {
 			if ((this.sourceStockLineSetup.isSerialized == true) && (this.sourceStockLineSetup.serialNumber)) {
 				if (!this.sourceStockLine.stockLineId) {
 					this.sourceStockLine.createdBy = this.userName;
@@ -1141,33 +1139,25 @@ export class StockLineEditComponent implements OnInit, AfterViewInit
 						this.collectionofstockLine = data;
 						this.router.navigateByUrl('/stocklinemodule/stocklinepages/app-stock-line-list')
 						this.value = 1;
-
 					})
 				}
 				else {
-
 					this.sourceStockLineSetup.updatedBy = this.userName;
 					this.sourceStockLineSetup.masterCompanyId = 1;
 					this.sourceItemMaster.itemMasterId = this.sourceStockLineSetup.itemMasterId;
 					this.sourceItemMaster.partId = this.selectedPartId
-
 					if (this.stocklineEditForm.get('departmentId').value != null && this.stocklineEditForm.get('departmentId').value > 0) {
-
 						this.sourceStockLineSetup.managementStructureId = this.stocklineEditForm.get('departmentId').value;
-
 					}
 					else if (this.stocklineEditForm.get('divisionId').value != null && this.sourceStockLineSetup.departmentId == '' && this.sourceStockLineSetup.departmentId > 0) {
-
 						this.sourceStockLineSetup.managementStructureId = this.stocklineEditForm.get('divisionId').value;
 					}
 					else if (this.stocklineEditForm.get('BusinessUnitId').value != null && this.sourceStockLineSetup.departmentId == '' && this.sourceStockLineSetup.divisionId == '' && this.sourceStockLineSetup.divisionId > 0) {
 						this.sourceStockLineSetup.managementStructureId = this.stocklineEditForm.get('BusinessUnitId').value;
 					}
 					else {
-
 						this.sourceStockLineSetup.managementStructureId = this.stocklineEditForm.get('companyId').value;
 					}
-
 					this.stocklineser.updateStockSetupLine(this.sourceStockLineSetup).subscribe(
 						data => {
 							if (data) {
@@ -1260,9 +1250,7 @@ export class StockLineEditComponent implements OnInit, AfterViewInit
 					})
 			}
 		}
-		else {
-			this.display = true;
-		}
+		
 	}
 
 	ngAfterViewInit() {

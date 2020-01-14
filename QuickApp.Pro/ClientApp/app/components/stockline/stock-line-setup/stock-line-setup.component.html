@@ -734,7 +734,7 @@
     </div>
 </div>
 
-<p-dialog header="Error" [(visible)]="display" [modal]="true" [dismissableMask]="true" maximizedLeft="140px" maximizedTop="1850px"
+<p-dialog header="Error" [(visible)]="displayError" [modal]="true" [dismissableMask]="true" maximizedLeft="140px" maximizedTop="1850px"
           [width]="350" [minWidth]="200" [responsive]="true"
           [minY]="1050" [baseZIndex]="1100000">
     <p *ngIf="showCompanyError" [ngStyle]="{'color':'red'}"> Please Enter Company</p>
@@ -744,8 +744,7 @@
     <p *ngIf="showSiteError" [ngStyle]="{'color':'red'}"> Please Select Site</p>
     <p *ngIf="showReceiveDateError" [ngStyle]="{'color':'red'}"> Please Select Receive Date</p>
     <p *ngIf="showReceiverNumberError" [ngStyle]="{'color':'red'}"> Please Enter receive Number</p>
-    <p *ngIf="showGlAccountNumberError" [ngStyle]="{'color':'red'}"> Please Enter GL Account</p>
     <p *ngIf="QuantityOnHandError" [ngStyle]="{'color':'red'}"> Please Enter Quantity On Hand</p>
-    <p *ngIf="invalidQtyError" [ngStyle]="{'color':'red'}"> Available Quantity cannot be negative</p>
+    <p *ngIf="invalidQtyError" [ngStyle]="{'color':'red'}"> Available Quantity must be positive number</p>
 
 </p-dialog>
