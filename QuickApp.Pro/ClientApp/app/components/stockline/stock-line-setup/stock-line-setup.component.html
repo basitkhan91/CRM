@@ -1,7 +1,96 @@
-﻿﻿<div class="card">
-    <div class="card-body">
+﻿﻿<div>
+    <div>
 
         <div class="x_content">
+
+            <div class="card">
+                <div class="card-header">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb rpo-bcrumb" style="background-color: transparent;">
+                            <li class="breadcrumb-item active" aria-current="page">Stock Line Setup</li>
+                        </ol>
+                    </nav>
+                </div>
+                <div class="card-body">
+                   <!-- <h4 class="po-head">Stock Line Setup</h4> {{isEditMode ? 'Edit' : 'Create'}}-->
+                        <div class="form-row">                            
+                            <div class="col-md-3">
+                                <div class="card" style="margin-top: 20px;">
+                                    <div class="card-header" style="padding: 10px 12px;">
+                                        <h5 style="margin-bottom: 0; font-size: 12px;">Management Structure <span class="clr-red">*</span></h5>
+                                    </div>
+                                    <div class="card-body" style="padding: 12px 12px 4px;">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <p-dropdown placeholder="Select Legal Entity"
+                                                            name="company"
+                                                            #companyId="ngModel"
+                                                            required
+                                                            [options]="legalEntityList"
+                                                            class="p-dropdown-custom-md-2"
+                                                            (onChange)="selectedLegalEntity($event.value)"
+                                                            [(ngModel)]="managementStructure.companyId">
+                                                </p-dropdown>
+                                            </div>
+                                            <div class="form-group">
+                                                <p-dropdown placeholder="Select"
+                                                            name="bu"
+                                                            #bu="ngModel"
+                                                            [options]="businessUnitList"
+                                                            class="p-dropdown-custom-md-2"
+                                                            (onChange)="selectedBusinessUnit($event.value)"
+                                                            [(ngModel)]="managementStructure.buId">
+                                                </p-dropdown>
+                                            </div>
+                                            <div class="form-group">
+                                                <p-dropdown placeholder="Select"
+                                                            name="division"
+                                                            #division="ngModel"
+                                                            [options]="divisionList"
+                                                            class="p-dropdown-custom-md-2"
+                                                            (onChange)="selectedDivision($event.value)"
+                                                            [(ngModel)]="managementStructure.divisionId">
+                                                </p-dropdown>
+                                            </div>
+                                            <div class="form-group">
+                                                <p-dropdown placeholder="Select"
+                                                            name="department"
+                                                            #department="ngModel"
+                                                            [options]="departmentList"
+                                                            class="p-dropdown-custom-md-2"
+                                                            (onChange)="selectedDepartment($event.value)"
+                                                            [(ngModel)]="managementStructure.departmentId">
+                                                </p-dropdown>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>PN <span class="clr-red">*</span>                                    
+                                    </label>
+                                    <div class="inner-addon right-addon inline-block">
+                                        <p-autoComplete field="label" class="pautocomp-cstm" [(ngModel)]="stockLineForm.itemMasterId" name="partNumber" [suggestions]="partNumbersCollection" (completeMethod)="filterPartNumbers($event)" [size]="30" [minLength]="1" [dropdown]="true" (onSelect)="onPartNumberSelected();" #partNum="ngModel" errorMessage="Records not found" [forceSelection]="true" required></p-autoComplete>
+                                        <div *ngIf="partNum.invalid && (partNum.dirty || partNum.touched)" class="alert alert-danger alert-danger-cstm">
+                                                <div *ngIf="partNum.errors.required">
+                                                    <small> Part Number is required </small>
+                                                </div>
+                                        </div>
+                                    </div>
+                                </div>
+        
+                                <!-- <div class="form-group memo-popup-cstm" style="margin-top: 12px;">
+                                    <label>Memo</label>
+                                    <span pTooltip="{{sourcePoApproval.poMemo}}" tooltipPosition="top"><input type="text" name="poMemo" pInputText class="form-control" value="{{sourcePoApproval.poMemo}}" disabled /></span>
+                                    <i class="fa fa-info-circle fa-lg" data-toggle="modal" data-target="#cpo-memo" pTooltip="{{sourcePoApproval.poMemo}}" tooltipPosition="top" (click)="onAddMemo()"></i>
+                                </div> -->
+                            </div>
+                        </div>                
+                </div>
+            </div>
+
+
+
 
             <h4 class="page-heading clr-green">Stock Line Setup</h4>
             <div class="clear"></div>
