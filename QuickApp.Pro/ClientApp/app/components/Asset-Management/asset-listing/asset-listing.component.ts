@@ -118,8 +118,8 @@ export class AssetListingComponent implements OnInit {
             { field: 'name', header: 'Asset Name' },
             { field: 'alternateAssetId', header: 'Alt Asset Id' },
             { field: 'manufacturerName', header: 'Manufacturer' },
-            { field: 'isSerialized', header: 'Serial Num' },
-            { field: 'calibrationRequired', header: 'Calibrated' },
+            { field: 'isSerializedNew', header: 'Serial Num' },
+            { field: 'calibrationRequiredNew', header: 'Calibrated' },
             { field: 'companyName', header: 'Company' },
             { field: 'buName', header: 'BU' },
             { field: 'deptName', header: 'Div.' },
@@ -394,10 +394,10 @@ export class AssetListingComponent implements OnInit {
                 deptName: deptName,
                 divName: divName,
                 manufacturerName: manufacturerName,
-                isSerialized: this.currentAsset.isSerialized == true ? 'Yes' : 'No',
-                calibrationRequired: this.currentAsset.calibrationRequired == true ? 'Yes' : 'No',
+                isSerializedNew: this.currentAsset.isSerialized == true ? 'Yes' : 'No',
+                calibrationRequiredNew: this.currentAsset.calibrationRequired == true ? 'Yes' : 'No',
                 assetClass: this.currentAsset.isDepreciable == true ? 'Depreciable' : 'Intangible',
-                assetType: this.currentAsset.assetType.assetTypeName,
+                assetType: this.currentAsset.assetType.assetTypeName,              
             };
             
             this.allAssetInfoNew.push(this.currentAsset);
