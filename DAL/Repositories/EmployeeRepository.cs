@@ -65,7 +65,7 @@ namespace DAL.Repositories
 
 
 
-                           where (t.IsDeleted == false || t.IsDeleted == null) && t.IsActive==true
+                           where (t.IsDeleted == false || t.IsDeleted == null) && t.IsActive == true
                            // select new { t, ad, vt }).ToList();
                            select new
                            {
@@ -126,13 +126,13 @@ namespace DAL.Repositories
                                t.CreatedBy,
                                t.UpdatedBy,
                                t.UpdatedDate,
-                               JobTypeName=jobtype.JobTypeName,
+                               JobTypeName = jobtype.JobTypeName,
                                t.CurrencyId,
                                t.IsHeWorksInShop,
                                t.Memo,
                                JobTitle = jobtitle.Description
                                //cc.Description
-                           }).Distinct().OrderByDescending(p=>p.UpdatedDate).ToList();
+                           }).Distinct().OrderByDescending(p => p.UpdatedDate).ToList();
 
 
 
@@ -291,21 +291,44 @@ namespace DAL.Repositories
 
         public IEnumerable<object> EmployeeUserRole(List<EmployeeUserRole> objEmployeeUserRoles)
         {
+            if (objEmployeeUserRoles.Count > 0)
+            {
+                var empId = objEmployeeUserRoles.FirstOrDefault().EmployeeId;
+                if (empId > 0)
+                {
+                    var data = (from emr in _appContext.EmployeeUserRole
+                                where emr.EmployeeId == empId && emr.IsActive == true
+                                select emr).ToList();
+
+                    if (data.Count > 0)
+                    {
+                        foreach (var obj in data)
+                        {
+                            EmployeeUserRole deptDelete = _appContext.EmployeeUserRole.Find(obj.EmployeeUserRoleId);
+                            _appContext.EmployeeUserRole.Remove(deptDelete);
+                            _appContext.SaveChanges();
+                        }
+                    }
+                }
+
+            }        
+
             foreach (var obj in objEmployeeUserRoles)
             {
                 obj.IsActive = true;
                 obj.IsDeleted = false;
                 obj.CreatedDate = DateTime.Now;
                 obj.UpdatedDate = DateTime.Now;
-                if (obj.EmployeeUserRoleId > 0)
-                {
-                    _appContext.EmployeeUserRole.Update(obj);
-                }
-                else
-                {
-                    _appContext.EmployeeUserRole.Add(obj);
-                }
+                //if (obj.EmployeeUserRoleId > 0)
+                //{
+                //    _appContext.EmployeeUserRole.Update(obj);
+                //}
+                //else
+                //{
+                //    _appContext.EmployeeUserRole.Add(obj);
+                //}
 
+                _appContext.EmployeeUserRole.Add(obj);
                 _appContext.SaveChanges();
             }
 
@@ -381,14 +404,14 @@ namespace DAL.Repositories
 
                            join compmanagmentLegalEntity in _appContext.ManagementStructure on biumanagmentLegalEntity.ParentId equals compmanagmentLegalEntity.ManagementStructureId into comivCompany
                            from compmanagmentLegalEntity in comivCompany.DefaultIfEmpty()
-                            
+
                            join employeetraingInfo in _appContext.EmployeeTraining on t.EmployeeId equals employeetraingInfo.EmployeeId into employeeTraingInfo
                            from employeetraingInfo in employeeTraingInfo.DefaultIfEmpty()
 
                            join employeetraingType in _appContext.EmployeeTrainingType on employeetraingInfo.EmployeeTrainingTypeId equals employeetraingType.EmployeeTrainingTypeId into employeeTraingTypeInfo
                            from employeetraingType in employeeTraingTypeInfo.DefaultIfEmpty()
-                           
-                           where t.EmployeeId== employeeId
+
+                           where t.EmployeeId == employeeId
                            select new
                            {
                                t.AuditEmployeeId,
@@ -412,10 +435,10 @@ namespace DAL.Repositories
                                orgCountries,
                                nationalCountryId,
                                managementStructeInfo,
-                               employeeExpertise= ext.Description,
+                               employeeExpertise = ext.Description,
                                // empSupervisor,
-                               Jobtitle= jt.Description,
-                               JobType= tpy.JobTypeName,
+                               Jobtitle = jt.Description,
+                               JobType = tpy.JobTypeName,
                                t.Fax,
                                t.Email,
                                t.SSN,
@@ -427,7 +450,7 @@ namespace DAL.Repositories
                                biumanagmentLegalEntity,
                                compmanagmentLegalEntity,
                                employeetraingInfo,
-                               employeetraingType,                            
+                               employeetraingType,
 
                                t.IsHourly,
                                t.HourlyPay,
@@ -436,7 +459,7 @@ namespace DAL.Repositories
                                t.SupervisorId,
                                t.MasterCompanyId,
                                t.IsDeleted,
-                               t.ManagementStructureId,                              
+                               t.ManagementStructureId,
                                t.IsActive,
                                t.CreatedDate,
                                t.CreatedBy,
@@ -445,17 +468,17 @@ namespace DAL.Repositories
                                JobTypeName = tpy.JobTypeName,
                                t.CurrencyId,
                                t.IsHeWorksInShop,
-                               payType= Convert.ToBoolean(t.IsHourly) ? "Hourly" : "Yearly",
-                               company= divmanagmentLegalEntity.Name
+                               payType = Convert.ToBoolean(t.IsHourly) ? "Hourly" : "Yearly",
+                               company = divmanagmentLegalEntity.Name
                                //cc.Description
                            }).Distinct().OrderByDescending(p => p.AuditEmployeeId).ToList();
 
-           
+
 
             return retData;
         }
 
-        
+
 
         //Task<Tuple<bool, string[]>> CreateRoleAsync(ApplicationRole role, IEnumerable<string> claims);
 

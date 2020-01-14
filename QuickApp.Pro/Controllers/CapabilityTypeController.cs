@@ -27,7 +27,78 @@ namespace QuickApp.Pro.Controllers
             return Ok(allActions);
         }
 
-       
+        [HttpGet("capabilityTypeEdit/{id}")]
+        public IActionResult CapabilityTypeEdit(int id)
+        {
+            var allActions = _unitOfWork.capabilityTypeRepository.CapabilityTypeEdit(id);
+            return Ok(allActions);
+        }
+
+
+        [HttpPost("capabilityTypeSave")]
+        public IActionResult CapabilityTypeSave([FromBody]CapabilityType objCapsTypeDto)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    if (objCapsTypeDto == null)
+                        return BadRequest($"{nameof(objCapsTypeDto)} cannot be null");
+
+
+                    if (objCapsTypeDto.CapabilityTypeId > 0)
+                    {
+                       
+                        objCapsTypeDto.UpdatedDate = DateTime.Now;
+                        objCapsTypeDto.IsActive = true;
+                        objCapsTypeDto.IsDeleted = false;
+                        _unitOfWork.capabilityTypeRepository.Update(objCapsTypeDto);
+                    }
+                    else
+                    {
+                        objCapsTypeDto.CreatedDate = DateTime.Now;
+                        objCapsTypeDto.UpdatedDate = DateTime.Now;
+                        objCapsTypeDto.IsActive = true;
+                        objCapsTypeDto.IsDeleted = false;
+                        _unitOfWork.capabilityTypeRepository.Add(objCapsTypeDto);
+                    }
+
+                    _unitOfWork.SaveChanges();
+                    return Ok(objCapsTypeDto);
+                }
+
+            }
+            catch (System.Exception)
+            {
+                throw;
+            }
+            return Ok(ModelState);
+        }
+
+
+        [HttpPut("capabilityTypeStatusUpdate/{id}")]
+        public IActionResult CapabilityTypeStatusUpdate(int id, bool status, string updatedBy)
+        {
+            var result = _unitOfWork.capabilityTypeRepository.CapabilityTypeStatusUpdate(id, status, updatedBy);
+            return Ok(result);
+        }
+
+        [HttpDelete("capabilityTypeDelete/{id}")]
+        public IActionResult CapabilityTypeDelete(int id, string updatedBy)
+        {
+            var result = _unitOfWork.capabilityTypeRepository.CapabilityTypeDelete(id, updatedBy);
+            return Ok(result);
+        }
+
+        [HttpGet("capabilityTypeAuditHistory/{Id}")]
+        public IActionResult CapabilityTypeAuditHistory(int Id)
+        {
+            var allActions = _unitOfWork.capabilityTypeRepository.GetAllCapabilityTypeDataAudit(Id);
+            return Ok(allActions);
+        }
+
+
+
 
     }
 }

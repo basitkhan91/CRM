@@ -10,8 +10,12 @@ namespace DAL.Repositories.Interfaces
     {
         IEnumerable<DAL.Models.CapabilityType> GetAllCapabilityListData();
         IEnumerable<object> getAllCapesList(long id);
+        object CapabilityTypeEdit(int id);
+        bool CapabilityTypeStatusUpdate(int id, bool status, string updatedBy);
+        bool CapabilityTypeDelete(int id, string updatedBy);
+        IEnumerable<object> GetAllCapabilityTypeDataAudit(int capabilityTypeId);
 
-        
+
 
     }
 }

@@ -67,6 +67,7 @@ namespace DAL
         public DbSet<VendorCapabiliyAudit> VendorCapabiliyAudit { get; set; }
         public DbSet<Reason> Reason { get; set; }
         public DbSet<CapabilityType> capabilityType { get; set; }
+        public DbSet<CapabilityTypeAudit> CapabilityTypeAudit { get; set; }
 
         public DbSet<ActionAttribute> ActionAttribute { get; set; }
         public DbSet<ActionAttributeAudit> ActionAttributeAudit { get; set; }
