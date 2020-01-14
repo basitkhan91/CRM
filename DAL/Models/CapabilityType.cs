@@ -26,7 +26,12 @@ namespace DAL.Models
         public string UpdatedBy { get; set; }
         public DateTime? UpdatedDate { get; set; }
         public DateTime? CreatedDate { get; set; }
-              
+        public Int32? SequenceNo { get; set; }
+        public string CapabilityTypeDesc { get; set; }
+
+        
+
+
         //[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         //public virtual ICollection<Capability> Capabilities { get; set; }
     }

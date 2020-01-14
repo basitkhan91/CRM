@@ -354,10 +354,11 @@ namespace DAL.Repositories
                                   location = l.Name,
                                   warehouse = w.Name,
 
-                                  im.ExpirationDate,
+                                 
+                                  stl.ExpirationDate,
                                   stl.SerialNumber,
                                   conditionId = co == null ? 0 : co.ConditionId,
-                                  //conditionId = co.ConditionId,
+                                 
                                   stl.ChangePartNumber,
                                   partDescription = im.PartDescription,
                                   stl.Quantity,

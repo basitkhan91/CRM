@@ -17,6 +17,9 @@ namespace DAL.Models
         public DateTime? CreatedDate { get; set; }
         public bool IsActive { get; set; }
         public bool IsDeleted { get; set; }
+        public Int32? SequenceNo { get; set; }
+        public string CapabilityTypeDesc { get; set; }
+
 
     }
 }
