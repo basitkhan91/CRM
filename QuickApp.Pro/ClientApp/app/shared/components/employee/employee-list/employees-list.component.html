@@ -280,7 +280,35 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>     
+                                    </div>    
+                                    
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step4">Management Structure</a> </h4>
+                                        </div>
+                                        <div id="step4" class="panel-collapse  collapse">
+                                            <div class="panel-body">
+                                                <div class="card">
+                                                    <div class="card-body">
+                                                        <div>
+                                                        <div class="table-responsive default-bg clear" *ngIf="selectedRoleNames">
+                                                            <div class="col-sm-6">
+                                                                <p><span class="label"><b>Roles : </b></span><span class="value">{{selectedRoleNames}}</span></p>
+                                                                <p><span class="label"><b>Memo </b></span><span class="value">{{empMemo}}</span></p>
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                                <p >
+                                                                    <app-tree-structure [gridData]="gridData"></app-tree-structure>
+                                                               </p>                                                                
+                                                            </div>
+                                                                                                                  
+                                                        </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
