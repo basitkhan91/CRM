@@ -117,14 +117,14 @@ export class ItemMasterCapabilitiesListComponent implements OnInit {
     buData: any;
     divisionData: any;
     departmentData: any;
+    @Input() isEnableItemMaster: boolean = false;
 
     /** item-master-capabilities-list ctor */
     constructor(private itemMasterService: ItemMasterService,
         private cdRef: ChangeDetectorRef,
         private modalService: NgbModal, private authService: AuthService, private _route: Router, private alertService: AlertService, private dashnumberservices: DashNumberService, private formBuilder: FormBuilder, public workFlowtService: LegalEntityService, private atasubchapter1service: AtaSubChapter1Service, private atamain: AtaMainService, public inteService: IntegrationService, private workOrderService: WorkOrderService, private commonservice: CommonService, private activatedRoute: ActivatedRoute) {
         this.dataSource = new MatTableDataSource();
-        this.itemMasterService.currentUrl = '/itemmastersmodule/itemmasterpages/app-item-master-capabilities-list';
-        this.itemMasterService.bredcrumbObj.next(this.itemMasterService.currentUrl);//Bread Crumb
+               
     }
 
     capabilityForm: any = {
@@ -163,6 +163,12 @@ export class ItemMasterCapabilitiesListComponent implements OnInit {
 
     ngOnInit() {
         console.log(this.itemMasterId, "itemMasterIdInList")
+        console.log(this.isEnableItemMaster);
+        
+        if(!this.isEnableItemMaster) {
+            this.itemMasterService.currentUrl = '/itemmastersmodule/itemmasterpages/app-item-master-capabilities-list';
+            this.itemMasterService.bredcrumbObj.next(this.itemMasterService.currentUrl);//Bread Crumb
+        } 
 
         this.capabilitiesForm = this.formBuilder.group({
             mfgForm: this.formBuilder.array([])

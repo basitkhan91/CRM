@@ -5,6 +5,7 @@ import { CustomerService } from '../../../services/customer.service';
 import { EmployeeService } from '../../../services/employee.service';
 import { AtaMainService } from '../../../services/atamain.service';
 import { MessageSeverity, AlertService } from '../../../services/alert.service';
+import { MenuItem } from 'primeng/api';
 
 @Component({
 	selector: 'app-customer-create',
@@ -28,7 +29,8 @@ export class CustomerStepsPrimengComponent {
 	search_ataChapterList: any;
 	add_ataChapterList: any;
     ataListDataValues: any;
-    contactList: any;
+	contactList: any;
+	breadcrumbs: MenuItem[];
 	// ifvalue: boolean;
 	// generalcollection: any;
 	// collection: any;
@@ -73,7 +75,11 @@ export class CustomerStepsPrimengComponent {
 		this.getAllCustomers();
 		this.getAllEmployees();
         this.getAllATAChapter();
-        this.getAllCustomersData();
+		this.getAllCustomersData();
+		this.breadcrumbs = [
+            {label:'Customers'},
+            {label: this.editMode ? 'Edit Customer' : 'Create Customer'},
+        ];
         
 		// 	this.showComponentPTab = this.customerService.ShowPtab;
 		// 	this.currentUrl = this.route.url;
