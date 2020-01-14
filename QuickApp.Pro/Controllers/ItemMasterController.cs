@@ -1078,14 +1078,14 @@ namespace QuickApp.Pro.Controllers
                             iM.IsActive,
                             iM.ManagementStructureId,
                             //iM.ManufacturerId,
-                            iM.AircraftTypeId,
-                            iM.AircraftModelId,
-                            iM.AircraftDashNumberId,
-                            iM.Description,
-                            iM.ATAChapterId,
-                            iM.ATASubChapterId,
-                            iM.EntryDate,
-                            iM.CMMId,
+                            //iM.AircraftTypeId,
+                            //iM.AircraftModelId,
+                            //iM.AircraftDashNumberId,
+                            //iM.Description,
+                            //iM.ATAChapterId,
+                            //iM.ATASubChapterId,
+                            //iM.EntryDate,
+                            //iM.CMMId,
                             //iM.isIntegrateWith,
                            // iM.IntegrateWith,
                             iM.IsVerified,
@@ -1120,14 +1120,14 @@ namespace QuickApp.Pro.Controllers
                                       iM.IsActive,
                                       iM.ManagementStructureId,
                                      // iM.ManufacturerId,
-                                      iM.AircraftTypeId,
-                                      iM.AircraftModelId,
-                                      iM.AircraftDashNumberId,
-                                      iM.Description,
-                                      iM.ATAChapterId,
-                                      iM.ATASubChapterId,
-                                      iM.EntryDate,
-                                      iM.CMMId,
+                                      //iM.AircraftTypeId,
+                                      //iM.AircraftModelId,
+                                      //iM.AircraftDashNumberId,
+                                      //iM.Description,
+                                      //iM.ATAChapterId,
+                                      ///iM.ATASubChapterId,
+                                      //iM.EntryDate,
+                                     // iM.CMMId,
                                       //iM.isIntegrateWith,
                                       //iM.IntegrateWith,
                                       iM.IsVerified,
@@ -2069,6 +2069,13 @@ namespace QuickApp.Pro.Controllers
         {
                 var result = _unitOfWork.itemMaster.GetItemMasterCapes(capesFilters);
                 return Ok(result);
+        }
+
+        [HttpGet("itemmastercapesglobalsearch")]
+        public IActionResult ItemMasterCapesGlobalSearch(long itemMasterId, string filterText, int pageNumber=1, int pageSize=10)
+        {
+           var result= _unitOfWork.itemMaster.ItemMasterCapesGlobalSearch(itemMasterId, filterText, pageNumber, pageSize);
+            return Ok(result);
         }
     }
 }

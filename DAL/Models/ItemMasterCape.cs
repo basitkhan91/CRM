@@ -22,16 +22,7 @@ namespace DAL.Models
         public long ItemMasterCapesId { get; set; }
         public long ItemMasterId { get; set; }
         public int CapabilityTypeId { get; set; }
-        public int AircraftTypeId { get; set; }
-        public long AircraftModelId { get; set; }
-        public long AircraftDashNumberId { get; set; }
         public long ManagementStructureId { get; set; }
-        public string Description { get; set; }
-        public long? ATAChapterId { get; set; }
-        public long? ATASubChapterId { get; set; }
-        public DateTime? EntryDate { get; set; }
-        public long? CMMId { get; set; }
-        public int? IntegrateWithId { get; set; }
         public bool? IsVerified { get; set; }
         public long? VerifiedById { get; set; }
         public DateTime? VerifiedDate { get; set; }
