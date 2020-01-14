@@ -215,13 +215,14 @@
                                                     </div>
                                                 </div>
                                                 <div class="form-group" style="margin-top: 15px;clear: both;">
-                                                    <div class="label-cstm">PBH Customer</div>
-                                                    <span class="checkbox-cstm">
-                                                        <label style="width: 20px;">
+                                                    <span class="checkbox-cstm" style="margin-left: 0;">
+                                                        <label>
                                                             <input type="checkbox" name="isPBHCustomer" [(ngModel)]="generalInformation.isPBHCustomer">
                                                             <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                                            PBH Customer
                                                         </label>
                                                     </span>
+                                                   
                                                     <div class="rpma-input memo-popup-cstm" *ngIf="generalInformation.isPBHCustomer">
                                                         <span pTooltip="{{generalInformation.pbhCustomerMemo}}" tooltipPosition="top"><input type="text" name="pbhCustomerMemo" pInputText class="form-control" value="{{generalInformation.pbhCustomerMemo}}" disabled /></span>
                                                         <i class="fa fa-info-circle fa-lg" data-toggle="modal" data-target="#memo-popup" pTooltip="{{generalInformation.pbhCustomerMemo}}" tooltipPosition="top" (click)="onClickPBHCustomer('PBHCustomer')"></i>
@@ -247,14 +248,14 @@
                                             <div class="col-md-3">
 
                                                 <div class="form-group" style="margin-top: 15px;clear: both;">
-                                                    <div class="label-cstm">Restrict PMA</div>
-
-                                                    <span class="checkbox-cstm">
-                                                        <label style="width: 20px;">
+                                                    <span class="checkbox-cstm" style="margin-left: 0;">
+                                                        <label>
                                                             <input type="checkbox" id="rpma" name="rpma" [(ngModel)]="generalInformation.restrictPMA">
                                                             <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                                            Restrict PMA
                                                         </label>
                                                     </span>
+                                                  
 
 
 
@@ -277,7 +278,7 @@
                                                             <p-table class="table-responsive ptable-cus-pma" [value]="generalInformation.restrictedPMAParts" [paginator]="true" [rows]="3" [columns]="restrictHeaders">
                                                                 <ng-template pTemplate="header" let-columns>
                                                                     <tr>
-                                                                        <th *ngFor="let col of columns"  pTooltip={{col.header}}>
+                                                                        <th *ngFor="let col of columns" pTooltip={{col.header}}>
                                                                             {{col.header}}
                                                                         </th>
                                                                         <th>Actions</th>
@@ -285,7 +286,7 @@
                                                                 </ng-template>
                                                                 <ng-template pTemplate="body" let-part let-rowData let-columns="columns" let-i="rowIndex">
                                                                     <tr>
-                                                                        <td *ngFor="let col of columns"  pTooltip={{part[col.field]}}>
+                                                                        <td *ngFor="let col of columns" pTooltip={{part[col.field]}}>
                                                                             {{part[col.field]}}
                                                                         </td>
                                                                         <td>
@@ -304,14 +305,14 @@
                                                 </div>
 
                                                 <div class="form-group" style="margin-top: 15px;clear: both;">
-                                                    <div class="label-cstm" style="margin-top: 15px">Restrict DER</div>
-                                                    <span class="checkbox-cstm" style="margin-top: 15px">
-                                                        <label style="width: 20px;">
+                                                    <span class="checkbox-cstm" style="margin-left: 0;">
+                                                        <label>
                                                             <input type="checkbox" id="rber" name="rber" [(ngModel)]="generalInformation.restrictBER">
-                                                            <span class="cr" style="margin-top: 15px"><i class="cr-icon pi pi-check"></i></span>
+                                                            <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                                            Restrict DER
                                                         </label>
                                                     </span>
-
+                                                   
 
 
                                                     <div class="table-small" *ngIf="generalInformation.restrictBER">
@@ -333,7 +334,7 @@
                                                             <p-table class="table-responsive ptable-cus-pma overlap" [value]="generalInformation.restrictedDERParts" [paginator]="true" [rows]="3" [columns]="restrictHeaders">
                                                                 <ng-template pTemplate="header" let-columns>
                                                                     <tr>
-                                                                        <th *ngFor="let col of columns"   pTooltip={{col.header}}>
+                                                                        <th *ngFor="let col of columns" pTooltip={{col.header}}>
                                                                             {{col.header}}
                                                                         </th>
                                                                         <th>Actions</th>
@@ -341,7 +342,7 @@
                                                                 </ng-template>
                                                                 <ng-template pTemplate="body" let-part let-rowData let-columns="columns" let-i="rowIndex">
                                                                     <tr>
-                                                                        <td *ngFor="let col of columns"  pTooltip={{part[col.field]}}>
+                                                                        <td *ngFor="let col of columns" pTooltip={{part[col.field]}}>
                                                                             {{part[col.field]}}
                                                                         </td>
                                                                         <td>

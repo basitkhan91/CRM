@@ -1000,7 +1000,7 @@ namespace QuickApp.Pro.Controllers
                 contactObj.UpdatedDate = DateTime.Now;
                 contactObj.CreatedBy = contactViewModel.CreatedBy;
                 contactObj.UpdatedBy = contactViewModel.UpdatedBy;
-                customercontactViewModel.IsDefaultContact = customercontactViewModel.IsDefaultContact;
+                //customercontactViewModel.IsDefaultContact = customercontactViewModel.IsDefaultContact;
                 contactObj.WorkPhoneExtn = contactObj.WorkPhoneExtn;
                 _unitOfWork.ContactRepository.Add(contactObj);
 
@@ -1024,7 +1024,6 @@ namespace QuickApp.Pro.Controllers
                 CustomerContactViewModel.MasterCompanyId = 1;
                 contactObj.ContactId = CustomerContactViewModel.ContactId;
                 contactObj.CustomerId = CustomerContactViewModel.CustomerId;
-                contactObj.IsDefaultContact = CustomerContactViewModel.IsDefaultContact;
                 contactObj.MasterCompanyId = CustomerContactViewModel.MasterCompanyId;
                 contactObj.IsActive = CustomerContactViewModel.IsActive;
                 contactObj.CreatedDate = DateTime.Now;
@@ -1036,10 +1035,24 @@ namespace QuickApp.Pro.Controllers
                 if (CustomerContactViewModel.IsDefaultContact == true)
                 {
                     var customerContact = _context.CustomerContact.Where(p => p.CustomerId == CustomerContactViewModel.CustomerId).ToList();
-                    customerContact.ForEach(p => p.IsDefaultContact = false);
-                    _unitOfWork.CustomerContact.UpdateRange(customerContact);
-                    _unitOfWork.SaveChanges();
+                    
+                    //customerContact.ForEach(p => p.IsDefaultContact = false);
+                   // _unitOfWork.CustomerContact.UpdateRange(customerContact);
+                    //_unitOfWork.SaveChanges();
+                    if (customerContact != null && customerContact.Count > 0)
+                    {
+                        foreach (var item in customerContact)
+                        {
+                            item.IsDefaultContact = false;
+                            _context.CustomerContact.Update(item);
+                            _context.SaveChanges();
+                        }
+                    }
+
+
+
                 }
+                contactObj.IsDefaultContact = CustomerContactViewModel.IsDefaultContact;
 
                 _unitOfWork.CustomerContact.Add(contactObj);
                 _unitOfWork.SaveChanges();
