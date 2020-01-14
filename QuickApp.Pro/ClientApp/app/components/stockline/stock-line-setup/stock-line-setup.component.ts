@@ -159,6 +159,7 @@ export class StockLineSetupComponent implements OnInit {
 		this.stocklineser.bredcrumbObj.next(this.stocklineser.currentUrl);
 		this.loadCustomerData();
 		this.loadPartNumData();
+		this.getLegalEntity();
         // this.loadManagementdata();
         // this.loadData();
         // this.loadEmployeeData();
@@ -239,6 +240,18 @@ export class StockLineSetupComponent implements OnInit {
         if (departmentId) {
             this.stockLineForm.managementStructureId = departmentId;
         }
+	}
+	
+	calculateQtyAvailable() {
+        
+        // if (this.stockLineForm.QuantityOnHand) { this.availableQty = this.stockLineForm.QuantityOnHand };
+        // if (this.stockLineForm.QuantityOnHand && this.stockLineForm.QuantityReserved) {
+        //     this.availableQty = this.stockLineForm.QuantityOnHand - this.stockLineForm.QuantityReserved
+        // }
+        // if (this.stockLineForm.QuantityOnHand && this.stockLineForm.QuantityReserved && this.stockLineForm.QuantityIssued) {
+        //     this.availableQty = this.stockLineForm.QuantityOnHand - this.stockLineForm.QuantityReserved - this.stockLineForm.QuantityIssued;
+        // }
+        // this.stockLineForm.quantityAvailable = this.availableQty;
     }
 
     // constructor(private fb: FormBuilder, public integrationService: IntegrationService,private empService: EmployeeService,public vendorservice: VendorService,public manufacturerService: ManufacturerService,public itemser: ItemMasterService,public glAccountService: GLAccountClassService,public vendorService: VendorService,public customerService: CustomerService,public inteService: IntegrationService,public workFlowtService1: LegalEntityService,public workFlowtService: BinService,public siteService: SiteService,public integration: IntegrationService, public stocklineser: StocklineService, private http: HttpClient, public ataservice: AtaMainService, private changeDetectorRef: ChangeDetectorRef, private router: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public conditionService: ConditionService, private dialog: MatDialog)
