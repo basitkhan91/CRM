@@ -63,6 +63,8 @@ import { VendorcapabilitiesComponent } from "../components/vendorcapabilities/ve
 import { LaberAndOverheadCostSetupComponent } from "../components/laber-and-overhead-cost-setup/laber-and-overhead-cost-setup.component";
 import { CertificationTypeComponent } from "../components/certification-type/certification-type.component";
 import { AssetStatusComponent } from "../components/AssetStatus/asset-status.component";
+import { AssetLocationComponent } from "../components/asset-location/asset-location.component";
+import { AssetAcquistionTypeComponent } from "../components/asset-acquistion-type/asset-acquistion-type.component";
 import { DepriciationMethodComponent } from "../components/depriciation-method/depriciation-method.component";
 import { DisposalTypeComponent } from "../components/disposal-type/disposal-type.component";
 import { AssetDepConventionTypeComponent } from "../components/Asset-dep-convention-type/asset-dep-convention-type.component";
@@ -91,6 +93,16 @@ const singlePagesRoutes: Routes = [
                 path: "asset-status",
                 component: AssetStatusComponent,
                 data: { title: "Asset Status" }
+            },
+            {
+                path: "asset-location",
+                component: AssetLocationComponent,
+                data: { title: "Asset Location" }
+            },
+            {
+                path: "asset-acquistion-type",
+                component: AssetAcquistionTypeComponent,
+                data: { title: "Asset Acquistion Type" }
             },
             {
                 path: "app-tasks",

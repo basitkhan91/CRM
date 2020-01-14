@@ -97,6 +97,7 @@ export class AssetIntangibleAttributeTypeComponent implements OnInit {
         this.currentRow = this.newItem(0);
         let selectedCompanyIDs: any[] = [];
         this.selectedCompanyID = [];
+        this.disableForMgmtStructure = true;
         this.currentModeOfOperation = ModeOfOperation.Add;
     }
 
@@ -292,7 +293,7 @@ export class AssetIntangibleAttributeTypeComponent implements OnInit {
     companySelected(): void {
         ////console.log(`Company Id :${this.selectedCompanyID}`);
 
-        if (this.selectedCompanyID != undefined && this.selectedCompanyID.toString() !== "0") {
+        if (this.selectedCompanyID != undefined && this.selectedCompanyID.length > 0) {
             //this.mgmtStructureId = this.selectedCompanyID;
             this.disableForMgmtStructure = false;
         }
@@ -491,6 +492,7 @@ export class AssetIntangibleAttributeTypeComponent implements OnInit {
 
     newItem(rowData): AssetIntangibleAttributeType {
         let item = new AssetIntangibleAttributeType();
+        this.disableForMgmtStructure = true;
         let defaultUserName = "admin";
         if (rowData) {
             item.assetIntangibleAttributeTypeId = rowData.assetIntangibleAttributeTypeId || 0;
@@ -576,6 +578,7 @@ export class AssetIntangibleAttributeTypeComponent implements OnInit {
                 MasterCompanyId: 1,
                 selectedCompanyIds: this.selectedCompanyID.join(","),
             };
+            console.log('data', data);
             this.coreDataService.update(data).subscribe(response => {
                 this.alertService.showMessage('Success', this.rowName + " updated successfully.", MessageSeverity.success);
                 this.getItemList();
@@ -618,14 +621,19 @@ export class AssetIntangibleAttributeTypeComponent implements OnInit {
         this.currentRow = { ...this.currentRow };
         this.mgmtStructureId = this.currentRow.managementStructureId;
         this.populateMgmtStructure(this.currentRow.managementStructureId);
-        this.selectedCompanyID = (rowData.selectedCompanyIds != null && rowData.selectedCompanyIds != undefined) ? rowData.selectedCompanyIds.split(",") : "";
+        this.selectedCompanyID = (rowData.selectedCompanyIds != null && rowData.selectedCompanyIds != undefined) ? rowData.selectedCompanyIds.split(",") : [];
+        if (this.selectedCompanyID.length > 0)
+            this.disableForMgmtStructure = false;
+        else
+            this.disableForMgmtStructure = true;
         this.currentModeOfOperation = ModeOfOperation.Update;
     }
 
     //turn the item active/inActive
     toggleActiveStatus(rowData) {
-        this.currentRow = this.newItem(rowData);
-        this.saveExistingItem(this.currentRow);
+        this.currentRow = rowData as AssetIntangibleAttributeType;
+        this.selectedCompanyID = (rowData.selectedCompanyIds != null && rowData.selectedCompanyIds != undefined) ? rowData.selectedCompanyIds.split(",") : [];
+        this.saveExistingItem(rowData);
     }
 
     updateItem(): void {
@@ -635,7 +643,7 @@ export class AssetIntangibleAttributeTypeComponent implements OnInit {
     viewItemDetails(rowData) {
         this.itemDetails = rowData;
     }
-AssetIntangibleAttributeTypeModel
+    //AssetIntangibleAttributeTypeModel
     loadManagementdata() {
         this.legalEntityService.getManagemententity().subscribe(
             res => {

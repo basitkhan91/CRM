@@ -491,7 +491,7 @@
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-primary-cstm" data-dismiss="modal"
-                            [disabled]="AssetType.invalid || disableSave" (click)="currentModeOfOperation === 2 ? saveNewItem() : updateItem();">
+                            [disabled]="AssetType.invalid || disableSave || disableForMgmtStructure" (click)="currentModeOfOperation === 2 ? saveNewItem() : updateItem();">
                         {{currentModeOfOperation == 3 ? 'Update' : 'Save' }}
                     </button>
                     <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="resetFromData()">Close</button>

@@ -5,13 +5,13 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="inline-block display-flex">
-                            <h3 class="po-head lead"> Asset Status</h3>
+                            <h3 class="po-head lead"> Asset Location</h3>
                             &nbsp;&nbsp;
-                            <a class="plusicon-cstm new-margin" matTooltip="Add Asset Status" matTooltipPosition="right" (click)="open(contentEdit)">
+                            <a class="plusicon-cstm new-margin" matTooltip="Add Asset Location" matTooltipPosition="right" (click)="open(contentEdit)">
                                 <i class="fa fa-plus-circle fa-lg"></i>
                             </a>
                         </div>
-                        <p-table #dt class="rpo-table-cstm rro-table-cstm" [value]="assetStatusList" [metaKeySelection]="true" [totalRecords]="totalRecords" [rows]="10" [paginator]="true" [pageLinks]="3"
+                        <p-table #dt class="rpo-table-cstm rro-table-cstm" [value]="assetLocationList" [metaKeySelection]="true" [totalRecords]="totalRecords" [rows]="10" [paginator]="true" [pageLinks]="3"
                                  [rowsPerPageOptions]="[10,20,50,100]" [columns]="selectedColumns" (onPage)="changePage($event)" selectionMode="multiple"
                                  [resizableColumns]="true" [reorderableColumns]="true" [scrollable]="true" scrollHeight="450px">
 
@@ -110,26 +110,26 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
     <div class="modal-content">
         <div class="modal-header">
             <button type="button" class="close" (click)="dismissModel()" data-dismiss="modal" id="" name="">×</button>
-            <h4 class="modal-title"> Asset Status Details</h4>
+            <h4 class="modal-title"> Asset Location Details</h4>
         </div>
         <div class="modal-body viewform">
             <div class="col-sm-12">
                 <p>
                     <span class="label">
-                        <b> Asset Status Code: </b>
+                        <b> Asset Location Code: </b>
                     </span>
                     <span class="value">{{code}}</span>
                 </p>
                 <p>
                     <span class="label">
-                        <b> Asset Status Name: </b>
+                        <b> Asset Location Name: </b>
                     </span>
                     <span class="value">{{name}}</span>
                 </p>
 
                 <p>
                     <span class="label">
-                        <b> Asset Status Memo: </b>
+                        <b> Asset Location Memo: </b>
                     </span>
                     <span class="value">{{memo}}</span>
                 </p>
@@ -182,7 +182,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
     </div>
     <div class="modal-body">
         <strong>
-            Asset Status Code:
+            Asset Location Code:
             <span class="new-label">{{code_Name}}</span>
         </strong>
     </div>
@@ -196,19 +196,19 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
 
 <ng-template #contentEdit let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static">
     <div class="modal-header">
-        <h4 class="modal-title" *ngIf="isEditMode">Edit Asset Status</h4>
-        <h4 class="modal-title" *ngIf="!isEditMode">Add Asset Status</h4>
+        <h4 class="modal-title" *ngIf="isEditMode">Edit Asset Location</h4>
+        <h4 class="modal-title" *ngIf="!isEditMode">Add Asset Location</h4>
         <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
     <div class="modal-body">
-        <form #userForm="ngForm" class="form-horizontal" (ngSubmit)="SaveandEditAssetStatus()">
+        <form #userForm="ngForm" class="form-horizontal" (ngSubmit)="SaveandEditAssetLocation()">
             <div class="form-group">
                 <div class="col-sm-12">
                     <div class="col-sm-4">
                         <label for="name" class="control-label">
-                            Asset Status Code
+                            Asset Location Code
                             <span class="clr-red">*</span>
                         </label>
                     </div>
@@ -216,7 +216,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                         <!--<p-autoComplete field="code" [(ngModel)]="codeName" (onSelect)="partnmId($event)" (onKeyUp)="eventHandler('code', $event.target.value)" name="code"
                                         [suggestions]="localCollection" (completeMethod)="filterDisposalType($event)" [size]="30" [minLength]="1"
                                         [dropdown]="true" class="p-autoComplete-ctsm" required>-->
-                        <p-autoComplete [(ngModel)]="codeName" name="codeName" (onSelect)="partnmId($event)" (onKeyUp)="eventHandler($event)" [suggestions]="localCollection" (completeMethod)="filterAssetStatus($event)" [size]="30"
+                        <p-autoComplete [(ngModel)]="codeName" name="codeName" (onSelect)="partnmId($event)" (onKeyUp)="eventHandler($event)" [suggestions]="localCollection" (completeMethod)="filterAssetLocation($event)" [size]="30"
                                         [minLength]="1" [dropdown]="true" class="p-autoComplete-ctsm" required>
                             <ng-template let-codeName pTemplate="item">
                                 <div class="ui-helper-clearfix">{{codeName}}</div>
@@ -229,7 +229,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                 </div>
                 <div class="col-sm-12">
                     <div class="col-sm-4">
-                        <label for="AssetStatusName" class="control-label control-item">
+                        <label for="AssetLocationName" class="control-label control-item">
                             Name
                             <span class="clr-red">*</span>
                         </label>
@@ -237,10 +237,10 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                     <div class="col-sm-5">
                         <input type="text" name="name" class="form-control" required #Name="ngModel" [(ngModel)]="sourceAction.name" minlength="2">
                         <div *ngIf="Name.dirty && Name.errors?.required && Name.errors" class="invalid-form-error-message">
-                            Asset Status Name required.
+                            Asset Location Name required.
                         </div>
                         <div *ngIf="Name.dirty && Name.errors?.minlength && Name.errors" class="invalid-form-error-message">
-                            Asset Status Name must be at least 2 characters long.
+                            Asset Location Name must be at least 2 characters long.
                         </div>
                         <div class="clear"></div>
                     </div>
@@ -248,7 +248,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
 
                 <div class="col-sm-12">
                     <div class="col-sm-4">
-                        <label for="AssetStatusMemo" class="control-label">Memo</label>
+                        <label for="AssetLocationMemo" class="control-label">Memo</label>
                     </div>
                     <div class="col-sm-5">
                         <textarea class="text-item" #memo="ngModel" id="memo" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.memo" minlength="2"></textarea>
@@ -271,7 +271,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
         </form>
     </div>
     <div class="modal-footer">
-        <button class="btn btn-primary-cstm" [disabled]="!userForm.valid || disableSave" (click)="SaveandEditAssetStatus()">{{isEditMode == true ? 'Update' : 'Save' }}</button>
+        <button class="btn btn-primary-cstm" [disabled]="!userForm.valid || disableSave" (click)="SaveandEditAssetLocation()">{{isEditMode == true ? 'Update' : 'Save' }}</button>
         <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
     </div>
 </ng-template>
@@ -283,7 +283,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
     <div class="modal-content">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h4 class="modal-title">History of Asset Status</h4>
+            <h4 class="modal-title">History of Asset Location</h4>
         </div>
         <div class="modal-body">
             <div class="table-responsive rro-table-cstm">
