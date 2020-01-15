@@ -23,6 +23,7 @@ export class ReceivingEndpointService extends EndpointFactory {
     private readonly addStocklineMapperData: string = "/api/receivingPart/addStocklineMapperData";
     private readonly _receivePartsUrl: string = "/api/receivingro/receiveParts";
     private readonly _updateStockLinesUrl: string = "/api/receivingro/UpdateStockLines";
+    private readonly _createStockLinesUrl: string = "/api/receivingPart/CreateStockLine";
 
     get getAll() { return this.configurations.baseUrl + this.getAllURL; }
     get removeById() { return this.configurations.baseUrl + this.removeByIdURL; }
@@ -32,6 +33,7 @@ export class ReceivingEndpointService extends EndpointFactory {
     get receivingPurchaseOrderForViewDataGet() { return this.configurations.baseUrl + this.receivingPurchaseOrderDataForViewById; }
     get ReceivePartsURL() { return this.configurations.baseUrl + this._receivePartsUrl; }
     get UpdateStockLinesURL() { return this.configurations.baseUrl + this._updateStockLinesUrl; }
+    get CreateStockLinesURL() { return this.configurations.baseUrl + this._createStockLinesUrl; }
 
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
 
@@ -233,5 +235,8 @@ export class ReceivingEndpointService extends EndpointFactory {
             });
     }
 
-
+    CreateStockLine(purchaseOrderId: any) {
+        let url = `${this.CreateStockLinesURL}/${purchaseOrderId}`;
+        return this.http.get<any>(url);
+    }
 }

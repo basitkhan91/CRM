@@ -228,7 +228,7 @@ namespace QuickApp.Pro.Controllers
                             stockLine.UpdatedBy = UserName;
                             stockLine.CreatedDate = DateTime.Now;
                             stockLine.UpdatedDate = DateTime.Now;
-
+                            stockLine.PurchaseOrderPartRecordId = receivePart.PurchaseOrderPartRecordId;
                             var lastIdNumber = unitOfWork.purchaseOrder.GetLastIdNumber(stockLine.PurchaseOrderId.Value, stockLine.PurchaseOrderPartRecordId.Value);
                             stockLine.IdNumber = (lastIdNumber + 1).ToString();
 
@@ -407,6 +407,19 @@ namespace QuickApp.Pro.Controllers
             return Ok(parts);
         }
 
+        [HttpGet("CreateStockLine/{purchaseOrderId}")]
+        public IActionResult CreateStockLine(long purchaseOrderId)
+        {
+            try
+            {
+                unitOfWork.PartStockLineMapper.CreateStockLine(purchaseOrderId);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
 
         #endregion Public Methods
 
