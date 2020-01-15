@@ -1451,18 +1451,14 @@ export class ReceivngPoComponent implements OnInit {
             });
     }
 
-    togglePartTimeLife(part: PurchaseOrderPart): void {
+    togglePartTimeLife(part: PurchaseOrderPart, event) {
 
         if ((part.itemMaster.isSerialized == null || part.itemMaster.isSerialized == false) && part.itemMaster.isTimeLife == true) {
             part.itemMaster.isTimeLife = false;
             this.alertService.showMessage(this.pageTitle, "Part is not serialized, please make the part serialzed before making it timeLife.", MessageSeverity.error);
-            return;
+            return false;
         }
 
-
-        if (part.itemMaster.isTimeLife == null) {
-            part.itemMaster.isTimeLife == false;
-        }
 
         this.itemmaster.updateItemMasterTimeLife(part.itemMasterId, part.itemMaster.isTimeLife).subscribe(
             result => {
