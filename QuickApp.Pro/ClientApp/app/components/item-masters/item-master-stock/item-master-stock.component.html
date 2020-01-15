@@ -63,7 +63,7 @@
                          [ngClass]="{ active: activeMenuItem >= 5 , editable : activeMenuItem === 5}"
                          (click)="changeOfTab('PurchaseSales')"
                          [class.isDisabled]="!isDisabledSteps">
-                        <div class="md-step-circle"><span>4</span></div>
+                        <div class="md-step-circle"><span>5</span></div>
                         <div class="md-step-title">Purchase and Sales</div>
                         <div class="md-step-bar-left"></div>
                         <div class="md-step-bar-right"></div>
@@ -74,17 +74,17 @@
                          [ngClass]="{ active: activeMenuItem >= 6 , editable : activeMenuItem === 6}"
                          (click)="changeOfTab('NhaTlaAlternateTab')"
                          [class.isDisabled]="!isDisabledSteps">
-                        <div class="md-step-circle"><span>5</span></div>
+                        <div class="md-step-circle"><span>6</span></div>
                         <div class="md-step-title">NHA, TLA, Alternate, Equivalency</div>
                         <div class="md-step-bar-left"></div>
                         <div class="md-step-bar-right"></div>
                     </div>
 
                     <div class="md-step"
-                        [ngClass]="{ active: activeMenuItem >= 67 , editable : activeMenuItem === 7 }"
+                        [ngClass]="{ active: activeMenuItem >= 7 , editable : activeMenuItem === 7 }"
                         (click)="changeOfTab('Exchange')"
                         [class.isDisabled]="!isDisabledSteps">
-                        <div class="md-step-circle"><span>6</span></div>
+                        <div class="md-step-circle"><span>7</span></div>
                         <div class="md-step-title">Exchange and Loans</div>
                         <div class="md-step-bar-left"></div>
                         <div class="md-step-bar-right"></div>
@@ -93,7 +93,7 @@
                          [ngClass]="{ active: activeMenuItem >= 8 , editable : activeMenuItem === 8 }"
                          (click)="changeOfTab('ExportInfo')"
                          [class.isDisabled]="!isDisabledSteps">
-                        <div class="md-step-circle"><span>7</span></div>
+                        <div class="md-step-circle"><span>8</span></div>
                         <div class="md-step-title">Export Info</div>
                         <div class="md-step-bar-left"></div>
                         <div class="md-step-bar-right"></div>
@@ -161,7 +161,7 @@
                                     <div class="inline-block display-flex spacing-label">
                                         <label class="control-label">
                                             Item Classification <strong class="clr-red">*</strong>
-                                            <span style="margin-left:3px;margin-top:5px;cursor:pointer;"><i class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#addCustomerClass" (click)="itemclassification(contentEdit)"></i></span>
+                                            <span style="margin-left:3px;margin-top:5px;cursor:pointer;"  matTooltip="Add Item Classification"  tooltipPosition="top" matTooltipPosition="above"><i class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#addCustomerClass" (click)="itemclassification(contentEdit)"></i></span>
                                         </label>
 
                                     </div>
@@ -179,7 +179,7 @@
                                     <div class="inline-block display-flex spacing-label">
                                         <label class="control-label">
                                             Item Group
-                                            <span style="margin-left:3px;margin-top:5px;cursor:pointer;"><i class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#addCustomerClass" (click)="item(contentEdits)"></i></span>
+                                            <span style="margin-left:3px;margin-top:5px;cursor:pointer;"  matTooltip="Add Item Group"  tooltipPosition="top" matTooltipPosition="above"><i class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#addCustomerClass" (click)="item(contentEdits)"></i></span>
                                         </label>
 
                                     </div>
@@ -386,7 +386,7 @@
                                     <div class="inline-block display-flex spacing-label">
                                         <label class="control-label">
                                             Manufacturer <strong class="clr-red">*</strong>
-                                            <span style="margin-left:3px;margin-top:5px;cursor:pointer;">
+                                            <span style="margin-left:3px;margin-top:5px;cursor:pointer;"  matTooltip="Add Manufacturer"  tooltipPosition="top" matTooltipPosition="above">
                                                 <i class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#addCustomerClass"
                                                    (click)="Manufacturer(modeledt)"></i>
                                             </span>
@@ -880,11 +880,11 @@
                             <div class="col-md-12 ">
                                 <div class="shadow-Box">
                                     <div class="col-sm-12">
-                                        <h4 class="float-left">Search Aircraft Information</h4>
-                                        <h4 class="float-right">
+                                        <h5 class="float-left">Search Aircraft Information</h5>
+                                        <h5 class="float-right">
                                             Add Aircraft Information
                                             <a class="plusicon-cstm" href="#" data-toggle="modal" data-target="#ModalDashNumber"><i class="fa fa-plus-circle fa-lg"></i></a>
-                                        </h4>
+                                        </h5>
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-group ">
@@ -997,11 +997,11 @@
                             <div class="col-md-12 ">
                                 <div class="shadow-Box">
                                     <div class="col-sm-12">
-                                        <h4 class="float-left">Search ATA chapters</h4>
-                                        <h4 class="float-right">
+                                        <h5 class="float-left">Search ATA chapters</h5>
+                                        <h5 class="float-right">
                                             Add ATA Information
                                             <a class="plusicon-cstm" href="#" data-toggle="modal" data-target="#ATAADD" (click)="addNewATA()"><i class="fa fa-plus-circle fa-lg"></i></a>
-                                        </h4>
+                                        </h5>
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-group ">
@@ -1166,10 +1166,12 @@
                         </div>
 
                         <div class="col-sm-12">
-                            <span class="float-right">
-                                <button type="button" (click)="addFieldValue(); " class="btn btn-primary">Add</button>
-                            </span>
-                        </div>
+                            <h5 class="float-right">
+                                Add Purchase and Sales
+                                <!--<button type="button" (click)="addFieldValue();" class="btn"><i class="fa fa-plus-circle fa-lg" matTooltip="Add Purchase and Sales"  tooltipPosition="top" matTooltipPosition="left"></i></button>-->
+                                <span class="plusicon-cstm" (click)="addFieldValue();"><i class="fa fa-plus-circle fa-lg"></i></span>
+                            </h5>
+                            </div>
                     </div>
                     <form #purchaseSales="ngForm">
                         <div class="table-responsive ">
@@ -1290,7 +1292,7 @@
                                             <input type="number" class="input-field-value" pInputText pKeyFilter="money" maxlength="7" name="SP_FSP_FXRatePerc{{i}}" required [(ngModel)]="field.SP_FSP_FXRatePerc" />
                                         </td>
                                         <td>
-                                            <input type="number" class="input-field-value" pInputText pKeyFilter="int" maxlength="15" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.SP_FSP_FlatPriceAmount" />
+                                            <input type="number" class="input-field-value" pInputText pKeyFilter="num" maxlength="15" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.SP_FSP_FlatPriceAmount" />
                                         </td>
                                         <td>
                                             <input type="date" class="input-field-value" [ngModel]="field.SP_FSP_LastFlatPriceDate | date:'yyyy-MM-dd'" (ngModelChange)="field.SP_FSP_LastFlatPriceDate = $event" [ngModelOptions]="{standalone: true}">
@@ -1496,7 +1498,7 @@
                                         </span>
                                         <label class="control-label">
                                             Export UOM <span style="color:red;">*</span>
-                                            <span style="margin-left:3px;margin-top:5px;cursor:pointer;">
+                                            <span style="margin-left:3px;margin-top:5px;cursor:pointer;"  matTooltip="Add Export UOM"  tooltipPosition="top" matTooltipPosition="above">
                                                 <i class="fa fa-plus-circle fa-lg" data-toggle="modal"
                                                    data-target="#ModalUnit" (click)="exportUOmOpen(ModalUnit)"></i>
                                             </span>
@@ -1581,7 +1583,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">×</button>
-                    <h4 class="modal-title">Add Aircraft Info</h4>
+                    <h5 class="modal-title">Add Aircraft Info</h5>
                 </div>
                 <div class="modal-body">
                     <div class="form-row">
@@ -1681,7 +1683,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">×</button>
-                    <h4 class="modal-title">Add ATA Info</h4>
+                    <h5 class="modal-title">Add ATA Info</h5>
                 </div>
                 <div class="modal-body">
 
@@ -1835,7 +1837,7 @@
             <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
                 <span aria-hidden="true">&times;</span>
             </button>
-            <h4 class="modal-title" title="Add Export UOM" >Add Export UOM</h4>
+            <h5 class="modal-title" title="Add Export UOM" >Add Export UOM</h5>
         </div>
         <div class="modal-body">
             <form #userForm="ngForm" (ngSubmit)="saveConsumeunitofmeasure()" class="form-horizontal">
