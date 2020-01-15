@@ -8,8 +8,7 @@
     </div>
     <div class="md-step"
          [ngClass]="{ active: activeIndex >= 1, editable : activeIndex === 1 }"
-         (click)="changeOfTab('Capes')"
-         [class.isDisabled]="!isDisabledSteps">
+         (click)="changeOfTab('Capes')">
         <div class="md-step-circle"><span>2</span></div>
         <div class="md-step-title">Capes</div>
         <div class="md-step-bar-left"></div>
@@ -17,8 +16,7 @@
     </div>
     <div class="md-step"
          [ngClass]="{ active: activeIndex >= 2 , editable : activeIndex === 2 }"
-         (click)="changeOfTab('Calibration')"
-         [class.isDisabled]="!isDisabledSteps">
+         (click)="changeOfTab('Calibration')">
         <div class="md-step-circle"><span>3</span></div>
         <div class="md-step-title">Calibration</div>
         <div class="md-step-bar-left"></div>
@@ -26,15 +24,13 @@
     </div>
     <div class="md-step"
          [ngClass]="{ active: activeIndex >= 3 , editable : activeIndex === 3 }"
-         (click)="changeOfTab('Maintenance')"
-         [class.isDisabled]="!isDisabledSteps">
+         (click)="changeOfTab('Maintenance')">
         <div class="md-step-circle"><span>4</span></div>
         <div class="md-step-title">Maintenance & Warranty</div>
         <div class="md-step-bar-left"></div>
         <div class="md-step-bar-right"></div>
     </div>
 </div>
-
 
 <div class="card padding-10">
     <div id="mCSB_4_container" class="mCSB_container mCS_y_hidden mCS_no_scrollbar_y" style="position: relative; left: 0px; top: 0px;" dir="ltr">

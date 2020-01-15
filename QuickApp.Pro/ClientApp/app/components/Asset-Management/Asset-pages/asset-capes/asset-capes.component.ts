@@ -109,7 +109,6 @@ export class AssetCapesComponent implements OnInit {
     dashNumberUnknown = false;
     newValue: any;
     LoadValues: any[] = [];
-    isDisabledSteps = false;
 
     constructor(private router: ActivatedRoute, private modalService: NgbModal, private alertService: AlertService, public itemMasterService: ItemMasterService, private route: Router,
         private assetServices: AssetService, private dashnumberservices: DashNumberService, private formBuilder: FormBuilder, private commonservice: CommonService
