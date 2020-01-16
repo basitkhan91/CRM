@@ -5,7 +5,9 @@ namespace DAL.Repositories.Interfaces
 {
     public interface IEmployee : IRepository<DAL.Models.Employee>
     {
+        object EmployeeDetailsById(long employeeId);
         IEnumerable<object> GetAllEmployeeData();
+
 
         IEnumerable<object> GetEMployeelicensuerDetails(long employeeId);
         IEnumerable<object> GetEmpTariningDetails(long id);

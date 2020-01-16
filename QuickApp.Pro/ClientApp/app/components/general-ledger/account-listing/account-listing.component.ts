@@ -13,13 +13,13 @@ import { AuditHistory } from '../../../models/audithistory.model';
 import { MasterCompany } from '../../../models/mastercompany.model';
 import { Customer } from '../../../models/customer.model';
 import { TableModule, Table } from 'primeng/table';
+import { LazyLoadEvent, SortEvent, MenuItem } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { InputTextModule } from 'primeng/inputtext';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { Router } from '@angular/router';
-import { Globals } from '../../../globals'
-import { LazyLoadEvent, SortEvent } from 'primeng/api';
+import { Globals } from '../../../globals';
 import { listSearchFilterObjectCreation } from '../../../generic/autocomplete';
 import { AccountListingService } from '../../../services/account-listing/account-listing.service'
 
@@ -37,11 +37,13 @@ export class AccountListingComponent implements OnInit {
     totalPages: number = 0;
     headers = [
         { field: 'ledgerName', header: 'Ledger Name' },
-        { field: 'oldAccountCode', header: 'Old GL Account Code' },
-        { field: 'accountCode', header: 'GL Account Code' },
-        { field: 'accountName', header: 'Account Name' },        
-        { field: 'leafleafNodeNameName', header: 'Leaf Node Name' },
+        { field: 'oldAccountCode', header: 'Old Account Code' },
+        { field: 'accountCode', header: 'Account Code' },
+        { field: 'accountName', header: 'Account Name' },     
+        { field: 'accountType', header: 'Account Type' },
+        { field: 'accountDescription', header: 'Account Description' },
         { field: 'isActive', header: 'Active' },
+        { field: 'leafNodeName', header: 'Leaf Node Name' }        
     ]
     selectedColumns = this.headers;
     data: any;
@@ -52,6 +54,9 @@ export class AccountListingComponent implements OnInit {
     private table: Table;
     lazyLoadEventData: any;   
     filterKeysByValue: object = {};
+    home: any;
+    breadcrumbs: MenuItem[];
+    filteredText: string;
 
     constructor(private _route: Router,
         private authService: AuthService,
@@ -66,7 +71,10 @@ export class AccountListingComponent implements OnInit {
 
     }
     ngOnInit() {
-        
+        this.breadcrumbs = [
+            { label: 'Accounting' },
+            { label: 'GL Account List' },
+        ];
     }
 
     getList(data) {
@@ -95,8 +103,13 @@ export class AccountListingComponent implements OnInit {
     columnsChanges() {
         this.refreshList();
     }
-    refreshList() {       
-        this.table.reset();  
+    refreshList() {
+        if (this.filteredText != "" && this.filteredText != null && this.filteredText != undefined) {
+            this.globalSearch(this.filteredText);
+        }
+        else {
+            this.table.reset();
+        }        
     }
     
     loadData(event) {
@@ -130,6 +143,7 @@ export class AccountListingComponent implements OnInit {
 
     globalSearch(value) {
         this.pageIndex = 0;
+        this.filteredText = value;
         this.customerService.getGlobalSearch(value, this.pageIndex, this.pageSize).subscribe(res => {
             this.data = res;
             if (res.length > 0) {

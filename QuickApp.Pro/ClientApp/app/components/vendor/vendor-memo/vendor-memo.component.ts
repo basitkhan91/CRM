@@ -43,7 +43,7 @@ export class VendorMemoComponent implements OnInit{
 			
 	memoCols = [
 		{ field: 'module', header: 'Module' },			
-		{ field: 'orderNumber', header: 'Id' },
+		{ field: 'orderNumber', header: 'ID' },
 		//{ field: 'notes', header: 'Memo text' },      
 
 		// { field: 'module', header: 'Module' },			
