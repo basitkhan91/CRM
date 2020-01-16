@@ -1372,7 +1372,7 @@ namespace DAL.Repositories
                 var sorts = new Sorts<ItemMasterCapesFilters>();
                 var filters = new EntityFrameworkPaginate.Filters<ItemMasterCapesFilters>();
 
-                filters.Add(!string.IsNullOrEmpty(capesFilters.filters.company), x => x.company.Contains(capesFilters.filters.company));
+                
 
                 if (string.IsNullOrEmpty(capesFilters.SortField))
                 {
@@ -1396,24 +1396,40 @@ namespace DAL.Repositories
                     sorts.Add(true, x => propertyInfo.GetValue(x, null));
                 }
 
+                
+                filters.Add(capesFilters.filters.ItemMasterId > 0, x => x.ItemMasterId== capesFilters.filters.ItemMasterId);
+                filters.Add(!string.IsNullOrEmpty(capesFilters.filters.partNo), x => x.partNo.ToLower().Contains(capesFilters.filters.partNo.ToLower()));
+                filters.Add(!string.IsNullOrEmpty(capesFilters.filters.capabilityType), x => x.capabilityType.ToLower().Contains(capesFilters.filters.capabilityType.ToLower()));
+                filters.Add(capesFilters.filters.isVerified != null, x => x.isVerified== capesFilters.filters.isVerified);
+                filters.Add(capesFilters.filters.verifiedDate != null, x => x.verifiedDate == capesFilters.filters.verifiedDate);
+                filters.Add(!string.IsNullOrEmpty(capesFilters.filters.memo), x => x.memo.ToLower().Contains(capesFilters.filters.memo.ToLower()));
+                filters.Add(!string.IsNullOrEmpty(capesFilters.filters.pnDiscription), x => x.pnDiscription.ToLower().Contains(capesFilters.filters.pnDiscription.ToLower()));
+
+
+                filters.Add(!string.IsNullOrEmpty(capesFilters.filters.company), x => x.company.Contains(capesFilters.filters.company));
+
                 var totalRecords = (from imc in _appContext.ItemMasterCapes
                                     join im in _appContext.ItemMaster on imc.ItemMasterId equals im.ItemMasterId
                                     join ct in _appContext.capabilityType on imc.CapabilityTypeId equals ct.CapabilityTypeId
                                     join ver in _appContext.Employee on imc.VerifiedById equals ver.EmployeeId into imcver
                                     from ver in imcver.DefaultIfEmpty()
                                     where imc.IsDeleted == false
-                                    && imc.ItemMasterId == (capesFilters.filters.ItemMasterId > 0 ? capesFilters.filters.ItemMasterId : imc.ItemMasterId)
-                                    && im.PartNumber.Contains(!String.IsNullOrEmpty(capesFilters.filters.partNo) ? capesFilters.filters.partNo : im.PartNumber)
-                                    && ct.Description.Contains(!String.IsNullOrEmpty(capesFilters.filters.capabilityType) ? capesFilters.filters.capabilityType : ct.Description)
-                                    && imc.IsVerified == (capesFilters.filters.isVerified != null ? capesFilters.filters.isVerified : imc.IsVerified)
                                     && (ver.FirstName == null || ver.FirstName.Contains(!string.IsNullOrEmpty(capesFilters.filters.verifiedBy) ? capesFilters.filters.verifiedBy : ver.FirstName))
-                                    && imc.VerifiedDate == (capesFilters.filters.verifiedDate != null ? capesFilters.filters.verifiedDate : imc.VerifiedDate)
-                                    && imc.Memo.Contains(!String.IsNullOrEmpty(capesFilters.filters.memo) ? capesFilters.filters.memo : imc.Memo)
-                                    && im.PartDescription.Contains(!String.IsNullOrEmpty(capesFilters.filters.pnDiscription) ? capesFilters.filters.pnDiscription : im.PartDescription)
-                                    select new
+                                    select new ItemMasterCapesFilters()
                                     {
-                                        imc.ItemMasterCapesId
-                                    }).Distinct().Count();
+                                        ItemMasterCapesId = imc.ItemMasterCapesId,
+                                        partNo = im.PartNumber,
+                                        pnDiscription = im.PartDescription,
+                                        capabilityType = ct.Description,
+                                        isVerified = imc.IsVerified,
+                                        verifiedBy = ver == null ? "" : ver.FirstName,
+                                        verifiedDate = imc.VerifiedDate,
+                                        memo = imc.Memo,
+                                        createdDate = imc.CreatedDate,
+                                        isActive = imc.IsActive,
+                                        ManagementStrId = imc.ManagementStructureId,
+                                    }).Distinct()
+                                    .Paginate(pageNumber, pageSize, sorts, filters).RecordCount;
 
                 var list = (from imc in _appContext.ItemMasterCapes
                             join im in _appContext.ItemMaster on imc.ItemMasterId equals im.ItemMasterId
@@ -1421,14 +1437,7 @@ namespace DAL.Repositories
                             join ver in _appContext.Employee on imc.VerifiedById equals ver.EmployeeId into imcver
                             from ver in imcver.DefaultIfEmpty()
                             where imc.IsDeleted == false
-                            && imc.ItemMasterId == (capesFilters.filters.ItemMasterId > 0 ? capesFilters.filters.ItemMasterId : imc.ItemMasterId)
-                            && im.PartNumber.Contains(!String.IsNullOrEmpty(capesFilters.filters.partNo) ? capesFilters.filters.partNo : im.PartNumber)
-                            && ct.Description.Contains(!String.IsNullOrEmpty(capesFilters.filters.capabilityType) ? capesFilters.filters.capabilityType : ct.Description)
-                            && imc.IsVerified == (capesFilters.filters.isVerified != null ? capesFilters.filters.isVerified : imc.IsVerified)
                             && (ver.FirstName == null || ver.FirstName.Contains(!string.IsNullOrEmpty(capesFilters.filters.verifiedBy) ? capesFilters.filters.verifiedBy : ver.FirstName))
-                            && imc.VerifiedDate == (capesFilters.filters.verifiedDate != null ? capesFilters.filters.verifiedDate : imc.VerifiedDate)
-                            && imc.Memo.Contains(!String.IsNullOrEmpty(capesFilters.filters.memo) ? capesFilters.filters.memo : imc.Memo)
-                            && im.PartDescription.Contains(!String.IsNullOrEmpty(capesFilters.filters.pnDiscription) ? capesFilters.filters.pnDiscription : im.PartDescription)
                             select new ItemMasterCapesFilters()
                             {
                                 ItemMasterCapesId = imc.ItemMasterCapesId,
@@ -1646,21 +1655,21 @@ namespace DAL.Repositories
                 sorts.Add(true, x => propertyInfo.GetValue(x, null));
             }
 
-            filters.Add(!string.IsNullOrEmpty(capesFilters.filters.partNo), x => x.partNo.Contains(capesFilters.filters.partNo));
-            filters.Add(!string.IsNullOrEmpty(capesFilters.filters.partDescription), x => x.partDescription.Contains(capesFilters.filters.partDescription));
-            filters.Add(!string.IsNullOrEmpty(capesFilters.filters.manufacturer), x => x.manufacturer.Contains(capesFilters.filters.manufacturer));
-            filters.Add(!string.IsNullOrEmpty(capesFilters.filters.aircraft), x => x.aircraft.Contains(capesFilters.filters.aircraft));
-            filters.Add(!string.IsNullOrEmpty(capesFilters.filters.model), x => x.model.Contains(capesFilters.filters.model));
-            filters.Add(!string.IsNullOrEmpty(capesFilters.filters.dashNumber), x => x.dashNumber.Contains(capesFilters.filters.dashNumber));
-            filters.Add(!string.IsNullOrEmpty(capesFilters.filters.aTAChapter), x => x.aTAChapter.Contains(capesFilters.filters.aTAChapter));
-            filters.Add(!string.IsNullOrEmpty(capesFilters.filters.aTASubChapter), x => x.aTASubChapter.Contains(capesFilters.filters.aTASubChapter));
-            filters.Add(!string.IsNullOrEmpty(capesFilters.filters.capabilityType), x => x.capabilityType.Contains(capesFilters.filters.capabilityType));
-            filters.Add(!string.IsNullOrEmpty(capesFilters.filters.level1), x => x.level1.Contains(capesFilters.filters.level1));
-            filters.Add(!string.IsNullOrEmpty(capesFilters.filters.level2), x => x.level2.Contains(capesFilters.filters.level2));
-            filters.Add(!string.IsNullOrEmpty(capesFilters.filters.level3), x => x.level3.Contains(capesFilters.filters.level3));
-            filters.Add(!string.IsNullOrEmpty(capesFilters.filters.level4), x => x.level4.Contains(capesFilters.filters.level4));
-            filters.Add(!string.IsNullOrEmpty(capesFilters.filters.publication), x => x.publication.Contains(capesFilters.filters.publication));
-            filters.Add(!string.IsNullOrEmpty(capesFilters.filters.integrationPortal), x => x.integrationPortal.Contains(capesFilters.filters.integrationPortal));
+            filters.Add(!string.IsNullOrEmpty(capesFilters.filters.partNo), x => x.partNo.ToLower().Contains(capesFilters.filters.partNo.ToLower()));
+            filters.Add(!string.IsNullOrEmpty(capesFilters.filters.partDescription), x => x.partDescription.ToLower().Contains(capesFilters.filters.partDescription.ToLower()));
+            filters.Add(!string.IsNullOrEmpty(capesFilters.filters.manufacturer), x => x.manufacturer.ToLower().Contains(capesFilters.filters.manufacturer.ToLower()));
+            filters.Add(!string.IsNullOrEmpty(capesFilters.filters.aircraft), x => x.aircraft.ToLower().Contains(capesFilters.filters.aircraft.ToLower()));
+            filters.Add(!string.IsNullOrEmpty(capesFilters.filters.model), x => x.model.ToLower().Contains(capesFilters.filters.model.ToLower()));
+            filters.Add(!string.IsNullOrEmpty(capesFilters.filters.dashNumber), x => x.dashNumber.ToLower().Contains(capesFilters.filters.dashNumber.ToLower()));
+            filters.Add(!string.IsNullOrEmpty(capesFilters.filters.aTAChapter), x => x.aTAChapter.ToLower().Contains(capesFilters.filters.aTAChapter.ToLower()));
+            filters.Add(!string.IsNullOrEmpty(capesFilters.filters.aTASubChapter), x => x.aTASubChapter.ToLower().Contains(capesFilters.filters.aTASubChapter.ToLower()));
+            filters.Add(!string.IsNullOrEmpty(capesFilters.filters.capabilityType), x => x.capabilityType.Contains(capesFilters.filters.capabilityType.ToLower()));
+            filters.Add(!string.IsNullOrEmpty(capesFilters.filters.level1), x => x.level1.ToLower().Contains(capesFilters.filters.level1.ToLower()));
+            filters.Add(!string.IsNullOrEmpty(capesFilters.filters.level2), x => x.level2.ToLower().Contains(capesFilters.filters.level2.ToLower()));
+            filters.Add(!string.IsNullOrEmpty(capesFilters.filters.level3), x => x.level3.ToLower().Contains(capesFilters.filters.level3.ToLower()));
+            filters.Add(!string.IsNullOrEmpty(capesFilters.filters.level4), x => x.level4.ToLower().Contains(capesFilters.filters.level4.ToLower()));
+            filters.Add(!string.IsNullOrEmpty(capesFilters.filters.publication), x => x.publication.ToLower().Contains(capesFilters.filters.publication.ToLower()));
+            filters.Add(!string.IsNullOrEmpty(capesFilters.filters.integrationPortal), x => x.integrationPortal.ToLower().Contains(capesFilters.filters.integrationPortal.ToLower()));
 
 
             try

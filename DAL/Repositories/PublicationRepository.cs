@@ -542,99 +542,45 @@ namespace DAL.Repositories
 
                 string sortColumn = string.Empty;
                 var sorts = new Sorts<PublicationFilters>();
+                var filters = new EntityFrameworkPaginate.Filters<PublicationFilters>();
 
                 if (pubFilters.filters.RevisionNum != null)
                     revisionNo = pubFilters.filters.RevisionNum;
 
                 if (string.IsNullOrEmpty(pubFilters.SortField))
                 {
-                    sortColumn = "CreatedDate";
+                    sortColumn = "createdDate";
                     pubFilters.SortOrder = -1;
-                    sorts.Add(sortColumn == "CreatedDate", x => x.CreatedDate, true);
+                    sorts.Add(sortColumn == "createdDate", x => x.CreatedDate, true);
                 }
                 else
                 {
                     sortColumn = pubFilters.SortField;
                 }
 
+                sortColumn = char.ToUpper(sortColumn[0]) + sortColumn.Substring(1);
+
+                var propertyInfo = typeof(PublicationFilters).GetProperty(sortColumn);
+
                 if (pubFilters.SortOrder == -1)
                 {
-                    switch (pubFilters.SortField)
-                    {
-                        case "publicationId":
-                            sorts.Add(sortColumn == "publicationId", x => x.PublicationId, true);
-                            break;
-                        case "description":
-                            sorts.Add(sortColumn == "description", x => x.Description, true);
-                            break;
-                        case "publicationType":
-                            sorts.Add(sortColumn == "publicationType", x => x.PublicationType, true);
-                            break;
-                        case "publishedBy":
-                            sorts.Add(sortColumn == "publishedBy", x => x.PublishedBy, true);
-                            break;
-                        case "revisionDate":
-                            sorts.Add(sortColumn == "revisionDate", x => x.RevisionDate, true);
-                            break;
-                        case "revisionNum":
-                            sorts.Add(sortColumn == "revisionNum", x => x.RevisionNum, true);
-                            break;
-                        case "nextReviewDate":
-                            sorts.Add(sortColumn == "nextReviewDate", x => x.NextReviewDate, true);
-                            break;
-                        case "expirationDate":
-                            sorts.Add(sortColumn == "expirationDate", x => x.ExpirationDate, true);
-                            break;
-                        case "location":
-                            sorts.Add(sortColumn == "location", x => x.Location, true);
-                            break;
-                        case "verifiedBy":
-                            sorts.Add(sortColumn == "verifiedBy", x => x.VerifiedBy, true);
-                            break;
-                        case "verifiedDate":
-                            sorts.Add(sortColumn == "verifiedDate", x => x.VerifiedDate, true);
-                            break;
-                    }
+                    sorts.Add(true, x => propertyInfo.GetValue(x, null), true);
                 }
                 else
                 {
-                    switch (pubFilters.SortField)
-                    {
-                        case "publicationId":
-                            sorts.Add(sortColumn == "publicationId", x => x.PublicationId);
-                            break;
-                        case "description":
-                            sorts.Add(sortColumn == "description", x => x.Description);
-                            break;
-                        case "publicationType":
-                            sorts.Add(sortColumn == "publicationType", x => x.PublicationType);
-                            break;
-                        case "publishedBy":
-                            sorts.Add(sortColumn == "publishedBy", x => x.PublishedBy);
-                            break;
-                        case "revisionDate":
-                            sorts.Add(sortColumn == "revisionDate", x => x.RevisionDate);
-                            break;
-                        case "revisionNum":
-                            sorts.Add(sortColumn == "revisionNum", x => x.RevisionNum);
-                            break;
-                        case "nextReviewDate":
-                            sorts.Add(sortColumn == "nextReviewDate", x => x.NextReviewDate);
-                            break;
-                        case "expirationDate":
-                            sorts.Add(sortColumn == "expirationDate", x => x.ExpirationDate);
-                            break;
-                        case "location":
-                            sorts.Add(sortColumn == "location", x => x.Location);
-                            break;
-                        case "verifiedBy":
-                            sorts.Add(sortColumn == "verifiedBy", x => x.VerifiedBy);
-                            break;
-                        case "verifiedDate":
-                            sorts.Add(sortColumn == "verifiedDate", x => x.VerifiedDate);
-                            break;
-                    }
+                    sorts.Add(true, x => propertyInfo.GetValue(x, null));
                 }
+
+                filters.Add(!string.IsNullOrEmpty(pubFilters.filters.PublicationId), x => x.PublicationId.ToLower().Contains(pubFilters.filters.PublicationId.ToLower()));
+                filters.Add(!string.IsNullOrEmpty(pubFilters.filters.Description), x => x.Description.ToLower().Contains(pubFilters.filters.Description.ToLower()));
+                filters.Add(!string.IsNullOrEmpty(pubFilters.filters.PublicationType), x => x.PublicationType.ToLower().Contains(pubFilters.filters.PublicationType.ToLower()));
+                filters.Add(!string.IsNullOrEmpty(pubFilters.filters.PublishedBy), x => x.PublishedBy.ToLower().Contains(pubFilters.filters.PublishedBy.ToLower()));
+                filters.Add(pubFilters.filters.RevisionDate != null, x => x.RevisionDate== pubFilters.filters.RevisionDate);
+                filters.Add(revisionNo > 0, x => x.RevisionNum == revisionNo);
+                filters.Add(pubFilters.filters.NextReviewDate != null, x => x.NextReviewDate == pubFilters.filters.NextReviewDate);
+                filters.Add(pubFilters.filters.ExpirationDate != null, x => x.ExpirationDate == pubFilters.filters.ExpirationDate);
+                filters.Add(!string.IsNullOrEmpty(pubFilters.filters.Location), x => x.Location.ToLower().Contains(pubFilters.filters.Location.ToLower()));
+                filters.Add(pubFilters.filters.VerifiedDate != null, x => x.VerifiedDate == pubFilters.filters.VerifiedDate);
 
 
                 var totalRecords = (from p in _appContext.Publication
@@ -642,40 +588,33 @@ namespace DAL.Repositories
                                     join e in _appContext.Employee on p.EmployeeId equals e.EmployeeId into emp
                                     from e in emp.DefaultIfEmpty()
                                     where p.IsDeleted == false
-                                            && p.PublicationId.Contains(!String.IsNullOrEmpty(pubFilters.filters.PublicationId) ? pubFilters.filters.PublicationId : p.PublicationId)
-                                            && p.Description.Contains(!String.IsNullOrEmpty(pubFilters.filters.Description) ? pubFilters.filters.Description : p.Description)
-                                            && pt.Name.Contains(!string.IsNullOrEmpty(pubFilters.filters.PublicationType) ? pubFilters.filters.PublicationType : pt.Name)
-                                            && p.Publishby.Contains(!String.IsNullOrEmpty(pubFilters.filters.PublishedBy) ? pubFilters.filters.PublishedBy : p.Publishby)
-                                            && p.RevisionDate == (pubFilters.filters.RevisionDate != null ? pubFilters.filters.RevisionDate : p.RevisionDate)
-                                            && p.RevisionNum == (revisionNo > 0 ? revisionNo : p.RevisionNum)
-                                            && p.NextReviewDate == (pubFilters.filters.NextReviewDate != null ? pubFilters.filters.NextReviewDate : p.NextReviewDate)
-                                            && p.ExpirationDate == (pubFilters.filters.ExpirationDate != null ? pubFilters.filters.ExpirationDate : p.ExpirationDate)
-                                            && p.Location.Contains(!String.IsNullOrEmpty(pubFilters.filters.Location) ? pubFilters.filters.Location : p.Location)
-                                            && (e.FirstName == null || e.FirstName.Contains(!string.IsNullOrEmpty(pubFilters.filters.VerifiedBy) ? pubFilters.filters.VerifiedBy : e.FirstName))
-                                            && p.VerifiedDate == (pubFilters.filters.VerifiedDate != null ? pubFilters.filters.VerifiedDate : p.VerifiedDate)
-                                    select new
+                                    && (e.FirstName == null || e.FirstName.ToLower().Contains(!string.IsNullOrEmpty(pubFilters.filters.VerifiedBy) ? pubFilters.filters.VerifiedBy.ToLower() : e.FirstName))
+                                    select new PublicationFilters()
                                     {
-                                        p.PublicationRecordId
+                                        PublicationRecordId = p.PublicationRecordId,
+                                        PublicationId = p.PublicationId,
+                                        Description = p.Description,
+                                        PublicationType = pt.Name,
+                                        PublishedBy = p.Publishby,
+                                        RevisionDate = p.RevisionDate,
+                                        RevisionNum = p.RevisionNum,
+                                        NextReviewDate = p.NextReviewDate,
+                                        ExpirationDate = p.ExpirationDate,
+                                        Location = p.Location,
+                                        VerifiedBy = e.FirstName == null ? "" : e.FirstName,
+                                        VerifiedDate = p.VerifiedDate,
+                                        CreatedDate = p.CreatedDate,
+                                        IsActive = p.IsActive,
                                     }
                           ).Distinct()
-                          .Count();
+                          .Paginate(pageNumber, pageSize, sorts, filters).RecordCount;
 
                 var list = (from p in _appContext.Publication
                             join pt in _appContext.PublicationType on p.PublicationTypeId equals pt.PublicationTypeId
                             join e in _appContext.Employee on p.EmployeeId equals e.EmployeeId into emp
                             from e in emp.DefaultIfEmpty()
                             where p.IsDeleted == false
-                                    && p.PublicationId.Contains(!String.IsNullOrEmpty(pubFilters.filters.PublicationId) ? pubFilters.filters.PublicationId : p.PublicationId)
-                                    && p.Description.Contains(!String.IsNullOrEmpty(pubFilters.filters.Description) ? pubFilters.filters.Description : p.Description)
-                                    && pt.Name.Contains(!string.IsNullOrEmpty(pubFilters.filters.PublicationType) ? pubFilters.filters.PublicationType : pt.Name)
-                                    && p.Publishby.Contains(!String.IsNullOrEmpty(pubFilters.filters.PublishedBy) ? pubFilters.filters.PublishedBy : p.Publishby)
-                                    && p.RevisionDate == (pubFilters.filters.RevisionDate != null ? pubFilters.filters.RevisionDate : p.RevisionDate)
-                                    && p.RevisionNum == (revisionNo > 0 ? revisionNo : p.RevisionNum)
-                                    && p.NextReviewDate == (pubFilters.filters.NextReviewDate != null ? pubFilters.filters.NextReviewDate : p.NextReviewDate)
-                                    && p.ExpirationDate == (pubFilters.filters.ExpirationDate != null ? pubFilters.filters.ExpirationDate : p.ExpirationDate)
-                                    && p.Location.Contains(!String.IsNullOrEmpty(pubFilters.filters.Location) ? pubFilters.filters.Location : p.Location)
-                                    && (e.FirstName == null || e.FirstName.Contains(!string.IsNullOrEmpty(pubFilters.filters.VerifiedBy) ? pubFilters.filters.VerifiedBy : e.FirstName))
-                                    && p.VerifiedDate == (pubFilters.filters.VerifiedDate != null ? pubFilters.filters.VerifiedDate : p.VerifiedDate)
+                            && (e.FirstName == null || e.FirstName.ToLower().Contains(!string.IsNullOrEmpty(pubFilters.filters.VerifiedBy) ? pubFilters.filters.VerifiedBy.ToLower() : e.FirstName))
                             select new PublicationFilters()
                             {
                                 PublicationRecordId = p.PublicationRecordId,
@@ -695,7 +634,7 @@ namespace DAL.Repositories
                                 TotalRecords = totalRecords
                             }
                           ).Distinct()
-                          .Paginate(pageNumber, pageSize, sorts).Results;
+                          .Paginate(pageNumber, pageSize, sorts,filters).Results;
 
                 return list;
             }
