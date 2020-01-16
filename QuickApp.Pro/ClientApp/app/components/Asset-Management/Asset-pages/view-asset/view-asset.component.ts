@@ -1,6 +1,7 @@
 ﻿import { Component, OnInit, Input } from '@angular/core';
 import { AlertService } from '../../../../services/alert.service';
 import { Router } from '@angular/router';
+import * as $ from 'jquery'
 import { fadeInOut } from '../../../../services/animations';
 
 @Component({
@@ -20,5 +21,18 @@ export class ViewAssetComponent implements OnInit {
 
     constructor(private alertService: AlertService,
           private _route: Router, ) {
+    }
+
+    openAllCollapse() {
+        $('#step1').collapse('show');
+        $('#step2').collapse('show');
+        $('#step3').collapse('show');
+        $('#step4').collapse('show');
+    }
+    closeAllCollapse() {
+        $('#step1').collapse('hide');
+        $('#step2').collapse('hide');
+        $('#step3').collapse('hide');
+        $('#step4').collapse('hide');
     }
  }
