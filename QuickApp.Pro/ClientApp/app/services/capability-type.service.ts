@@ -29,9 +29,23 @@ export class CapabilityTypeService {
         return this.http.post(`${this.baseUrl}/api/CapabilityType/capabilityTypeSave`, JSON.stringify(object), this.authService.getRequestHeaders())
     }
     getStatusCapabilityTypeEndpoint<T>(id: number, updatedBy: string, isActive: boolean) {
-        return this.http.put<any>(`${this.baseUrl}/api/CapabilityType/capabilityTypeStatusUpdate/${id}?status = ${isActive}&updatedBy=${updatedBy}`, this.authService.getRequestHeaders())
+        return this.http.put<any>(`${this.baseUrl}/api/CapabilityType/capabilityTypeStatusUpdate/${id}?status=${isActive}&updatedBy=${updatedBy}`, this.authService.getRequestHeaders())
 
     }
 
-     
+    getDeleteCapabilityTypeEndpoint<T>(id: number, updatedBy: string) {
+
+        return this.http.delete<any>(`${this.baseUrl}/api/CapabilityType/CapabilityTypeDelete/${id}?updatedBy=${updatedBy}`, this.authService.getRequestHeaders());
+ 
+
+    }
+
+
+    getAllCapabilityTypeAudit(id: number) {
+
+        return this.http.get<any>(`${this.baseUrl}/api/CapabilityType/CapabilityTypeAuditHistory/${id}`, this.authService.getRequestHeaders())
+
+
+    }
+    
 }
