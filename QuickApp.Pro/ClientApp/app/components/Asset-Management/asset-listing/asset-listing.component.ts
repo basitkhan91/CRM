@@ -249,27 +249,29 @@ export class AssetListingComponent implements OnInit {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
-
+ 
     openView(content, row) {
-        console.log('row @170 ',row);
+        console.log('row @170 ', row);
+        this.assetViewList.entryDate = row.entryDate;
         this.assetViewList.assetId = row.assetId;
         this.assetViewList.alternateAssetId = row.alternateAssetId;
         this.assetViewList.name = row.name;
         this.assetViewList.description = row.description;
-        this.assetViewList.companyId = row.companyId;
-        this.assetViewList.businessUnitId = row.businessUnitId;
-        this.assetViewList.departmentId = row.departmentId;
-        this.assetViewList.divisionId = row.divisionId;
+        this.assetViewList.companyName = row.companyName;
+        this.assetViewList.buName = row.buName;
+        this.assetViewList.deptName = row.deptName;
+        this.assetViewList.divName = row.divName;
+        this.assetViewList.depreOrIntang = row.isDepreciable == true ? 'Depreciable' : 'Intangible';
         this.assetViewList.calibrationRequired = row.calibrationRequired;
         this.assetViewList.certificationRequired = row.certificationRequired;
         this.assetViewList.inspectionRequired = row.inspectionRequired;
         this.assetViewList.verificationRequired = row.verificationRequired;
         this.assetViewList.model = row.model;
         this.assetViewList.assetAcquisitionTypeId = row.assetAcquisitionTypeId;
-        if (row.manufacturer) {
-            this.assetViewList.manufacturerId = row.manufacturer.name;
-        }
-        else { this.assetViewList.manufacturerId = "" }
+        this.assetViewList.manufacturerName = row.manufacturerName;
+        this.assetViewList.manufacturedDate = row.manufacturedDate;
+        this.assetViewList.model = row.model;
+        this.assetViewList.isSerialized = row.isSerialized == true ? 'Yes' : 'No';
         if (row.currency) {
             this.assetViewList.currencyId = row.currency.symbol;
         }
@@ -280,18 +282,37 @@ export class AssetListingComponent implements OnInit {
             this.assetViewList.glAccountId = row.glAccount.accountName;
         }
         else { this.assetViewList.glAccountId = "" }
+        this.assetViewList.calibrationFrequencyMonths = row.calibrationFrequencyMonths;
+        this.assetViewList.calibrationFrequencyDays = row.calibrationFrequencyDays;
+        this.assetViewList.calibrationDefaultVendorId = row.calibrationDefaultVendorId;
+        this.assetViewList.calibrationDefaultCost = row.calibrationDefaultCost;
+        this.assetViewList.calibrationGlAccountId = row.calibrationGlAccountId;
+
+        this.assetViewList.certificationFrequencyMonths = row.certificationFrequencyMonths;
+        this.assetViewList.certificationFrequencyDays = row.certificationFrequencyDays;
+        this.assetViewList.certificationDefaultVendorId = row.certificationDefaultVendorId;
+        this.assetViewList.certificationDefaultCost = row.certificationDefaultCost;
+        this.assetViewList.certificationGlAccountId = row.certificationGlAccountId;
+
         this.assetViewList.inspectionFrequencyMonths = row.inspectionFrequencyMonths;
         this.assetViewList.inspectionFrequencyDays = row.inspectionFrequencyDays;
         this.assetViewList.inspectionDefaultVendorId = row.inspectionDefaultVendorId;
         this.assetViewList.inspectionDefaultCost = row.inspectionDefaultCost;
         this.assetViewList.inspectionGlaAccountId = row.inspectionGlaAccountId;
+
+        this.assetViewList.verificationFrequencyMonths = row.verificationFrequencyMonths;
+        this.assetViewList.verificationFrequencyDays = row.verificationFrequencyDays;
+        this.assetViewList.verificationDefaultVendorId = row.verificationDefaultVendorId;
+        this.assetViewList.verificationDefaultCost = row.verificationDefaultCost;
+        this.assetViewList.verificationGlaAccountId = row.verificationGlaAccountId;
+
         this.getInsecGLAccName();
         this.getInspecVendorName();
         this.assetViewList.inspectionMemo = row.inspectionMemo;
         this.assetViewList.manufacturedDate = row.manufacturedDate;
         this.assetViewList.isSerialized = row.isSerialized;
         if (row.unitOfMeasure) {
-            this.assetViewList.unitOfMeasureId = row.unitOfMeasure.description;
+            this.assetViewList.unitOfMeasureId = row.unitOfMeasure.shortName;
         }
         else { this.assetViewList.unitOfMeasureId = "" }
 
