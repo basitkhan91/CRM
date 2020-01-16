@@ -147,7 +147,7 @@ export class EmployeesListComponent implements OnInit {
             this.shiftId = allWorkFlows[0].employeeShiftMapping.shiftId;
             this.leaveMapArray = allWorkFlows[0].employeeLeaveTypeMapping;
             this.shiftMapArray = allWorkFlows[0].employeeShiftMapping;
-                 
+                           
         // if(this.shiftMapArray.length>0)
         // {
         //     console.log(this.shiftMapArray);
@@ -333,6 +333,7 @@ export class EmployeesListComponent implements OnInit {
     }
     openView(content, row) {
        
+        console.log(row);
         this.toGetEmployeeTrainingDocumentsList(row.employeeId);
         this.loadEmployeeRoles(row.employeeId);
         this.getManagementStructureData(row.employeeId)

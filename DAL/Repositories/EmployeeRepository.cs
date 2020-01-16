@@ -145,6 +145,141 @@ namespace DAL.Repositories
 
         }
 
+        public object EmployeeDetailsById(long employeeId)
+        {
+            var empData = (from t in _appContext.Employee
+                           join oc in _appContext.Countries on t.OriginatingCountryId equals oc.countries_id into ocd
+                           from oc in ocd.DefaultIfEmpty()
+                           join nc in _appContext.Countries on t.NationalityCountryId equals nc.countries_id into ncd
+                           from nc in ncd.DefaultIfEmpty()
+                           join ee in _appContext.EmployeeExpertise on t.EmployeeExpertiseId equals ee.EmployeeExpertiseId into eed
+                           from ee in eed.DefaultIfEmpty()
+                           join jty in _appContext.JobType on t.JobTypeId equals jty.JobTypeId into jtyd
+                           from jty in jtyd.DefaultIfEmpty()
+
+                           join jot in _appContext.JobTitle on t.JobTitleId equals jot.JobTitleId into jotd
+                           from jot in jotd.DefaultIfEmpty()                       
+
+                           join mle in _appContext.ManagementStructure on t.ManagementStructureId equals mle.ManagementStructureId into mainCompanyTree
+                           from mle in mainCompanyTree.DefaultIfEmpty()
+
+                           join divmle in _appContext.ManagementStructure on mle.ParentId equals divmle.ManagementStructureId into mainDivCompany
+                           from divmle in mainDivCompany.DefaultIfEmpty()
+
+                           join biumle in _appContext.ManagementStructure on divmle.ParentId equals biumle.ManagementStructureId into BIUDivCompany
+                           from biumle in BIUDivCompany.DefaultIfEmpty()
+
+                           join compmle in _appContext.ManagementStructure on biumle.ParentId equals compmle.ManagementStructureId into comivCompany
+                           from compmle in comivCompany.DefaultIfEmpty()
+
+                           join empsu in _appContext.Employee on t.EmployeeId equals empsu.SupervisorId into employeesupervisiorInfo
+                           from empsu in employeesupervisiorInfo.DefaultIfEmpty()
+
+                               //join emt in _appContext.EmployeeTraining on t.EmployeeId equals emt.EmployeeId into emtd
+                               //from emt in emtd.DefaultIfEmpty()
+
+                               //join emty in _appContext.EmployeeTrainingType on emt.EmployeeTrainingTypeId equals emty.EmployeeTrainingTypeId into employeeTraingTypeInfo
+                               //from emty in employeeTraingTypeInfo.DefaultIfEmpty()
+
+                           join cu in _appContext.Currency on t.CurrencyId equals cu.CurrencyId into cud
+                           from cu in cud.DefaultIfEmpty()
+
+                           join mc in _appContext.MasterCompany on t.MasterCompanyId equals mc.MasterCompanyId into mcd
+                           from mc in mcd.DefaultIfEmpty()
+
+                           where t.EmployeeId == employeeId
+
+                           select new
+                           {
+                               t.EmployeeId,
+                               t.FirstName,
+                               t.LastName,
+                               t.MiddleName,
+                               t.EmployeeIdAsPerPayroll,
+                               t.StationId,
+                               t.JobTitleId,
+                               t.JobTypeId,
+                               t.EmployeeExpertiseId,
+                               t.DateOfBirth,
+                               t.OriginatingCountryId,
+                               OriginatingCountryName= oc.countries_name,
+                               NationalityCountryName= nc.countries_name,
+                               t.NationalityCountryId,
+                               t.StartDate,                             
+                               t.EmployeeCode,
+                               t.MobilePhone,
+                               t.WorkPhone,                            
+                               EmployeeExpertiseName=ee.Description,
+                               t.Fax,
+                               t.Email,
+                               t.SSN,                            
+                               managmentLegalEntityName= mle.Name,
+                               divmanagmentLegalEntityName= divmle.Name,
+                               biumanagmentLegalEntityName= biumle.Name,
+                               compmanagmentLegalEntityName= compmle.Name, 
+                               t.InMultipleShifts,
+                               t.AllowOvertime,
+                               t.AllowDoubleTime,
+                               t.IsHourly,
+                               t.HourlyPay,
+                               t.EmployeeCertifyingStaff,
+                               t.EmployeeLeaveTypeId,
+                               t.SupervisorId,
+                               t.MasterCompanyId,
+                               t.IsDeleted,
+                               t.ManagementStructureId,
+                               //t.MasterCompany,
+                               MasterCompanyName= mc.CompanyName,
+                               t.IsActive,
+                               t.CreatedDate,
+                               t.CreatedBy,
+                               t.UpdatedBy,
+                               t.UpdatedDate,
+                               JobTypeName = jty.JobTypeName,
+                               t.CurrencyId,
+                               t.IsHeWorksInShop,
+                               t.Memo,
+                               JobTitle = jot.Description,                             
+                               SupervisorName= string.Concat(empsu.FirstName," ",empsu.MiddleName, " ", empsu.LastName),
+                               CurrencyName= string.Concat(cu.DisplayName,"( ",cu.Symbol," )"),
+                               //LeaveTypeIds=_appContext.Employee
+                               //.Join(_appContext.EmployeeLeaveTypeMapping,
+                               //t=>t.EmployeeId,
+                               //mp=>mp.EmployeeId)
+
+                                LeaveTypeIds = _appContext.Employee
+                                 .Join(_appContext.EmployeeLeaveTypeMapping,
+                                 t => t.EmployeeId,
+                                 mp => mp.EmployeeId,
+                                 (t, mp) => new { t, mp })
+                                .Join(_appContext.EmployeeLeaveType,
+                                 mp1 => mp1.mp.EmployeeId,
+                                 inte => Convert.ToInt64(inte.EmployeeLeaveTypeId),
+                               (mp1, inte) => new { mp1, inte })
+                               .Where(p => p.mp1.t.EmployeeId == t.EmployeeId)
+                                .Select(p => p.inte.EmployeeLeaveTypeId),
+
+                               LeaveTypeNames = string.Join(",", _appContext.Employee
+                                 .Join(_appContext.EmployeeLeaveTypeMapping,
+                                 t => t.EmployeeId,
+                                 mp => mp.EmployeeId,
+                                 (t, mp) => new { t, mp })
+                                .Join(_appContext.EmployeeLeaveType,
+                                 mp1 => mp1.mp.EmployeeId,
+                                 inte => Convert.ToInt64(inte.EmployeeLeaveTypeId),
+                               (mp1, inte) => new { mp1, inte })
+                               .Where(p => p.mp1.t.EmployeeId == t.EmployeeId)
+                                .Select(p => p.inte.Description)),
+
+
+
+                           }).Distinct().FirstOrDefault();
+
+
+
+            return empData;
+        }
+
 
         public IEnumerable<object> GetEMployeelicensuerDetails(long employeeId)
         {
@@ -311,7 +446,7 @@ namespace DAL.Repositories
                     }
                 }
 
-            }        
+            }
 
             foreach (var obj in objEmployeeUserRoles)
             {
