@@ -32,6 +32,13 @@ namespace QuickApp.Pro.Controllers
             _context = context;
         }
 
+        [HttpGet("employeeDetailsById/{employeeId}")]      
+        public IActionResult EmployeeDetailsById(long employeeId)
+        {
+            var empDetails = _unitOfWork.employee.EmployeeDetailsById(employeeId);
+            return Ok(empDetails);
+        }
+
 
         // GET: api/values
         [HttpGet("Get")]
@@ -43,6 +50,7 @@ namespace QuickApp.Pro.Controllers
 
         }
 
+        
         [HttpGet("GetAllEmployeeInfo")]
         public List<Employee> getAllEmployeeInfo()
         {
