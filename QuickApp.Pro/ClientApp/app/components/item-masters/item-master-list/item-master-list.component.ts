@@ -166,7 +166,9 @@ export class ItemMasterListComponent implements OnInit, AfterViewInit {
 		//this.StockList();
 		//this.EuipmentList();
 		this.loadRolesData();
-	}
+
+       
+    }
 	openHist() {
 		// alert("Functionality not yet done");
 
@@ -299,10 +301,12 @@ export class ItemMasterListComponent implements OnInit, AfterViewInit {
 		this.loadingIndicator = true;
 
 		this.itemMasterService.getItemStockList(value).subscribe(
-			results => this.onitemmasterSuccessful(results[0], value),
+			results => this.onitemmasterSuccessful(results[0], value), 
 			error => this.onDataLoadFailed(error)
 		);
-	}
+
+        
+    }
 	private loadRolesData() {
 		//this.alertService.startLoadingMessage();
 		this.loadingIndicator = true;
@@ -319,23 +323,24 @@ export class ItemMasterListComponent implements OnInit, AfterViewInit {
 		this.dataSource.data = allWorkFlows;
 		this.allitemstockinfo = allWorkFlows;
 
-
+	
 	}
 	private onitemmasterSuccessful(allWorkFlows: any[], value) {
-		//debugger;
+
 		if (value == "Stock") {
 			this.stockTable = true;
 			this.cols = [
 				{ field: 'partNumber', header: 'PN' },
 				{ field: 'partDescription', header: 'PN Description' },
-				{ field: 'isHazardousMaterial', header: 'Is Hazardous Material' },
-				//{ field: '', header: 'Material Type' },
-				{ field: 'provisiondesc', header: 'Provision' },
-				//{ field: '', header: 'capes' },
 				{ field: 'manufacturerdesc', header: 'Manufacturer' },
+				//{ field: '', header: 'Material Type' },
+				{ field: 'classificationdesc', header: 'classification' },
+				//{ field: '', header: 'capes' },
+				{ field: 'itemGroupId', header: 'Group ID' },
 				//{ field: '', header: ' Aircraft Manufacturer' },
 				{ field: 'nationalStockNumber', header: 'NSN' },
-				{ field: 'prioritydesc', header: 'Priority' },
+				{ field: 'isSerialized', header: 'Serialized' },
+				{ field: 'isTimeLife', header: 'Time Life' },
 				//{ field: 'updatedDate', header: 'Updated Date' },
 				//{ field: 'createdDate', header: 'Created Date' }
 			];
@@ -580,11 +585,9 @@ export class ItemMasterListComponent implements OnInit, AfterViewInit {
 		//debugger;
 		this.loadingIndicator = false;
 		this.allEquipmentInfo = allWorkFlows;
+    }
 
-	}
-
-
-	private onDataLoadFailed(error: any) {
+    private onDataLoadFailed(error: any) {
 		// alert(error);
 		//this.alertService.stopLoadingMessage();
 		// this.loadingIndicator = false;
