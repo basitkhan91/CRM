@@ -98,8 +98,8 @@ namespace DAL.Repositories.Interfaces
 
         object GetWorkOrderQuoteDetails(long workOrderId);
 
-
-
+        IEnumerable<object> WorkOrderQuoteList(Filters<WOQuoteFilters> woQuoteFilters);
+        object WorkOrderQuoteView(long workOrderQuoteId);
 
 
         List<WorkOrderFreight> CreateWorkOrderFreight(List<WorkOrderFreight> workOrderFreight);

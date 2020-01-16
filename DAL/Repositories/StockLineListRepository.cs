@@ -1,6 +1,7 @@
 ﻿using DAL.Common;
 using DAL.Models;
 using DAL.Repositories.Interfaces;
+using EntityFrameworkPaginate;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -693,7 +694,7 @@ namespace DAL.Repositories
             }
         }
 
-        public IEnumerable<object> GetAllStockLinelistData(Filters<StockListFilters> stockListFilters)
+        public IEnumerable<object> GetAllStockLinelistData(Common.Filters<StockListFilters> stockListFilters)
         {
             try
             {
@@ -1344,6 +1345,176 @@ namespace DAL.Repositories
                     }
                 }
                 return stockLines;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public IEnumerable<object> StockLineReoprtView(Common.Filters<StockLineReportFilter> slReportFilter)
+        {
+            if (slReportFilter.filters == null)
+                slReportFilter.filters = new StockLineReportFilter();
+            var pageNumber = slReportFilter.first + 1;
+            var pageSize = slReportFilter.rows;
+
+            string sortColumn = string.Empty;
+
+            var sorts = new Sorts<StockLineReportFilter>();
+            var filters = new EntityFrameworkPaginate.Filters<StockLineReportFilter>();
+
+            if (string.IsNullOrEmpty(slReportFilter.SortField))
+            {
+                sortColumn = "createdDate";
+                slReportFilter.SortOrder = -1;
+                sorts.Add(sortColumn == "createdDate", x => x.createdDate, true);
+            }
+            else
+            {
+                sortColumn = slReportFilter.SortField;
+            }
+
+            var propertyInfo = typeof(StockLineReportFilter).GetProperty(sortColumn);
+
+            if (slReportFilter.SortOrder == -1)
+            {
+                sorts.Add(true, x => propertyInfo.GetValue(x, null), true);
+            }
+            else
+            {
+                sorts.Add(true, x => propertyInfo.GetValue(x, null));
+            }
+
+            filters.Add(!string.IsNullOrEmpty(slReportFilter.filters.partNumber), x => x.partNumber.ToLower().Contains(slReportFilter.filters.partNumber.ToLower()));
+            filters.Add(!string.IsNullOrEmpty(slReportFilter.filters.partDescription), x => x.partDescription.ToLower().Contains(slReportFilter.filters.partDescription.ToLower()));
+            filters.Add(!string.IsNullOrEmpty(slReportFilter.filters.serialNumber), x => x.serialNumber.ToLower().Contains(slReportFilter.filters.serialNumber.ToLower()));
+            filters.Add(!string.IsNullOrEmpty(slReportFilter.filters.stocklineNumber), x => x.stocklineNumber.ToLower().Contains(slReportFilter.filters.stocklineNumber.ToLower()));
+            filters.Add(!string.IsNullOrEmpty(slReportFilter.filters.condition), x => x.condition.ToLower().Contains(slReportFilter.filters.condition.ToLower()));
+            filters.Add(!string.IsNullOrEmpty(slReportFilter.filters.vendorName), x => x.vendorName.ToLower().Contains(slReportFilter.filters.vendorName.ToLower()));
+            filters.Add(slReportFilter.filters.vendorCode != null && slReportFilter.filters.vendorCode > 0, x => x.vendorCode == slReportFilter.filters.vendorCode);
+            filters.Add(slReportFilter.filters.quantity != null && slReportFilter.filters.quantity > 0, x => x.quantity == slReportFilter.filters.quantity);
+            filters.Add(slReportFilter.filters.qtyAdjusted != null && slReportFilter.filters.qtyAdjusted > 0, x => x.qtyAdjusted == slReportFilter.filters.qtyAdjusted);
+            filters.Add(slReportFilter.filters.poUnitCost != null && slReportFilter.filters.poUnitCost > 0, x => x.poUnitCost == slReportFilter.filters.poUnitCost);
+            filters.Add(slReportFilter.filters.unitPrice != null && slReportFilter.filters.unitPrice > 0, x => x.unitPrice == slReportFilter.filters.unitPrice);
+            filters.Add(slReportFilter.filters.extendedPrice != null && slReportFilter.filters.extendedPrice > 0, x => x.extendedPrice == slReportFilter.filters.extendedPrice);
+            filters.Add(!string.IsNullOrEmpty(slReportFilter.filters.wareHouse), x => x.wareHouse.ToLower().Contains(slReportFilter.filters.wareHouse.ToLower()));
+            filters.Add(!string.IsNullOrEmpty(slReportFilter.filters.shelf), x => x.shelf.ToLower().Contains(slReportFilter.filters.shelf.ToLower()));
+            filters.Add(!string.IsNullOrEmpty(slReportFilter.filters.bin), x => x.bin.ToLower().Contains(slReportFilter.filters.bin.ToLower()));
+            filters.Add(!string.IsNullOrEmpty(slReportFilter.filters.accountCode), x => x.accountCode.ToLower().Contains(slReportFilter.filters.accountCode.ToLower()));
+            filters.Add(!string.IsNullOrEmpty(slReportFilter.filters.purchaseOrderNumber), x => x.purchaseOrderNumber.ToLower().Contains(slReportFilter.filters.purchaseOrderNumber.ToLower()));
+            filters.Add(!string.IsNullOrEmpty(slReportFilter.filters.repairOrderNumber), x => x.repairOrderNumber.ToLower().Contains(slReportFilter.filters.repairOrderNumber.ToLower()));
+            filters.Add(slReportFilter.filters.repairOrderUnitCost != null && slReportFilter.filters.repairOrderUnitCost > 0, x => x.repairOrderUnitCost == slReportFilter.filters.repairOrderUnitCost);
+            filters.Add(slReportFilter.filters.receivedDate != null, x => x.receivedDate == slReportFilter.filters.receivedDate);
+            filters.Add(!string.IsNullOrEmpty(slReportFilter.filters.receiverNumber), x => x.receiverNumber.ToLower().Contains(slReportFilter.filters.receiverNumber.ToLower()));
+            filters.Add(!string.IsNullOrEmpty(slReportFilter.filters.reconciliationNumber), x => x.reconciliationNumber.ToLower().Contains(slReportFilter.filters.reconciliationNumber.ToLower()));
+
+            try
+            {
+
+                var totalRecords = (from stl in _appContext.StockLine
+                                    join im in _appContext.ItemMaster on stl.ItemMasterId equals im.ItemMasterId into stlim
+                                    from im in stlim.DefaultIfEmpty()
+                                    join cnd in _appContext.Condition on stl.ConditionId equals cnd.ConditionId into stlcnd
+                                    from cnd in stlcnd.DefaultIfEmpty()
+                                    join mnf in _appContext.Manufacturer on stl.ManufacturerId equals mnf.ManufacturerId into stlmnf
+                                    from mnf in stlmnf.DefaultIfEmpty()
+                                    join whs in _appContext.Warehouse on stl.WarehouseId equals whs.WarehouseId into stlwhs
+                                    from whs in stlwhs.DefaultIfEmpty()
+                                    join shf in _appContext.Shelf on stl.ShelfId equals shf.ShelfId into stlshf
+                                    from shf in stlshf.DefaultIfEmpty()
+                                    join bnd in _appContext.Bin on stl.BinId equals bnd.BinId into stlbnd
+                                    from bnd in stlbnd.DefaultIfEmpty()
+                                    join glc in _appContext.GLAccount on stl.GLAccountId equals glc.GLAccountId into stlglc
+                                    from glc in stlglc.DefaultIfEmpty()
+                                    join pox in _appContext.PurchaseOrder on stl.PurchaseOrderId equals pox.PurchaseOrderId into stlpox
+                                    from pox in stlpox.DefaultIfEmpty()
+                                    join rox in _appContext.RepairOrder on stl.RepairOrderId equals rox.RepairOrderId into stlrox
+                                    from rox in stlrox.DefaultIfEmpty()
+                                    join mpx in _appContext.MasterParts on im.MasterPartId equals mpx.MasterPartId into stlmpx
+                                    from mpx in stlmpx.DefaultIfEmpty()
+                                    where stl.IsDeleted == false 
+                                    select new StockLineReportFilter()
+                                    {
+                                        StockLineId = stl.StockLineId,
+                                        partNumber = mpx.PartNumber == null ? "" : mpx.PartNumber,
+                                        partDescription = mpx.Description == null ? "" : mpx.Description,
+                                        serialNumber = stl.SerialNumber == null ? "" : stl.SerialNumber,
+                                        stocklineNumber = stl.StockLineNumber == null ? "" : stl.StockLineNumber,
+                                        condition = cnd.Description == null ? "" : cnd.Description,
+                                        vendorName = mnf.Name == null ? "" : mnf.Name,
+                                        vendorCode = mnf.ManufacturerId == null ? 0 : mnf.ManufacturerId,
+                                        quantity = stl.Quantity == null ? 0 : stl.Quantity,
+                                        qtyAdjusted = 0,
+                                        poUnitCost = stl.PurchaseOrderUnitCost == null ? 0 : stl.PurchaseOrderUnitCost,
+                                        unitPrice = stl.UnitSalesPrice == null ? 0 : stl.UnitSalesPrice,
+                                        extendedPrice = 0,
+                                        wareHouse = whs.Name == null ? "" : whs.Name,
+                                        shelf = shf.Name == null ? "" : shf.Name,
+                                        bin = bnd.Name == null ? "" : bnd.Name,
+                                        accountCode = glc.AccountCode == null ? "" : glc.AccountCode,
+                                        purchaseOrderNumber = pox.PurchaseOrderNumber == null ? "" : pox.PurchaseOrderNumber,
+                                        repairOrderNumber = rox.RepairOrderNumber == null ? "" : rox.RepairOrderNumber,
+                                        repairOrderUnitCost = stl.RepairOrderUnitCost == null ? 0 : stl.RepairOrderUnitCost,
+                                        receivedDate = stl.ReceivedDate,
+                                        receiverNumber = stl.ReceiverNumber == null ? "" : stl.ReceiverNumber,
+                                        reconciliationNumber = stl.ReconciliationNumber == null ? "" : stl.ReconciliationNumber,
+                                        isActive = stl.isActive,
+                                    }).Distinct()
+                            .Paginate(pageNumber, pageSize, sorts, filters).RecordCount;
+
+                var list = (from stl in _appContext.StockLine
+                            join im in _appContext.ItemMaster on stl.ItemMasterId equals im.ItemMasterId into stlim
+                            from im in stlim.DefaultIfEmpty()
+                            join cnd in _appContext.Condition on stl.ConditionId equals cnd.ConditionId into stlcnd
+                            from cnd in stlcnd.DefaultIfEmpty()
+                            join mnf in _appContext.Manufacturer on stl.ManufacturerId equals mnf.ManufacturerId into stlmnf
+                            from mnf in stlmnf.DefaultIfEmpty()
+                            join whs in _appContext.Warehouse on stl.WarehouseId equals whs.WarehouseId into stlwhs
+                            from whs in stlwhs.DefaultIfEmpty()
+                            join shf in _appContext.Shelf on stl.ShelfId equals shf.ShelfId into stlshf
+                            from shf in stlshf.DefaultIfEmpty()
+                            join bnd in _appContext.Bin on stl.BinId equals bnd.BinId into stlbnd
+                            from bnd in stlbnd.DefaultIfEmpty()
+                            join glc in _appContext.GLAccount on stl.GLAccountId equals glc.GLAccountId into stlglc
+                            from glc in stlglc.DefaultIfEmpty()
+                            join pox in _appContext.PurchaseOrder on stl.PurchaseOrderId equals pox.PurchaseOrderId into stlpox
+                            from pox in stlpox.DefaultIfEmpty()
+                            join rox in _appContext.RepairOrder on stl.RepairOrderId equals rox.RepairOrderId into stlrox
+                            from rox in stlrox.DefaultIfEmpty()
+                            join mpx in _appContext.MasterParts on im.MasterPartId equals mpx.MasterPartId into stlmpx
+                            from mpx in stlmpx.DefaultIfEmpty()
+                            where stl.IsDeleted == false 
+                            select new StockLineReportFilter()
+                            {
+                                StockLineId=stl.StockLineId,
+                                partNumber = mpx.PartNumber == null ? "" : mpx.PartNumber,
+                                partDescription = mpx.Description == null ? "" : mpx.Description,
+                                serialNumber = stl.SerialNumber == null ? "" : stl.SerialNumber,
+                                stocklineNumber = stl.StockLineNumber == null ? "" : stl.StockLineNumber,
+                                condition = cnd.Description == null ? "" : cnd.Description,
+                                vendorName = mnf.Name == null ? "" : mnf.Name,
+                                vendorCode = mnf.ManufacturerId == null ? 0 : mnf.ManufacturerId,
+                                quantity = stl.Quantity == null ? 0 : stl.Quantity,
+                                qtyAdjusted = 0,
+                                poUnitCost = stl.PurchaseOrderUnitCost == null ? 0 : stl.PurchaseOrderUnitCost,
+                                unitPrice = stl.UnitSalesPrice == null ? 0 : stl.UnitSalesPrice,
+                                extendedPrice = 0,
+                                wareHouse = whs.Name == null ? "" : whs.Name,
+                                shelf = shf.Name == null ? "" : shf.Name,
+                                bin = bnd.Name == null ? "" : bnd.Name,
+                                accountCode = glc.AccountCode == null ? "" : glc.AccountCode,
+                                purchaseOrderNumber = pox.PurchaseOrderNumber == null ? "" : pox.PurchaseOrderNumber,
+                                repairOrderNumber = rox.RepairOrderNumber == null ? "" : rox.RepairOrderNumber,
+                                repairOrderUnitCost = stl.RepairOrderUnitCost == null ? 0 : stl.RepairOrderUnitCost,
+                                receivedDate = stl.ReceivedDate,
+                                receiverNumber = stl.ReceiverNumber == null ? "" : stl.ReceiverNumber,
+                                reconciliationNumber = stl.ReconciliationNumber == null ? "" : stl.ReconciliationNumber,
+                                isActive = stl.isActive,
+                                totalRecords = totalRecords
+                            }).Distinct()
+                            .Paginate(pageNumber, pageSize, sorts, filters).Results;
+                return list;
             }
             catch (Exception ex)
             {

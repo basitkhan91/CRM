@@ -9,6 +9,7 @@ namespace DAL.Models
         public string CustomerName { get; set; }
         public DateTime? OpenDate { get; set; }
         public string WorkOrderStatus { get; set; }
+        public long WorkOrderStatusId { get; set; }
         public string PartNoType { get; set; }
         public string WorkScopeType { get; set; }
         public string PriorityType { get; set; }
@@ -33,5 +34,15 @@ namespace DAL.Models
         public bool IsActive { get; set; }
         public DateTime? CreatedDate { get; set; }
         public int TotalRecords { get; set; }
+    }
+
+    public class WorkOrderFilters1
+    {
+        public long WorkOrderId { get; set; }
+         
+        public string PartNos { get; set; }
+        //public long WorkOrderStatusId { get; set; }
+        //public DateTime? CreatedDate { get; set; }
+        //public int TotalRecords { get; set; }
     }
 }
