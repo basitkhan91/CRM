@@ -18,5 +18,12 @@ namespace DAL.Models
         public string RequestedBy { get; set; }
         public string ApprovedBy { get; set; }
         public long? VendorId { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public string PurchaseOrderNumber { get; set; }
+        public short? StatusId { get; set; }
+        public bool IsActive { get; set; }
+        public int TotalRecords { get; set; }       
+
+
     }
 }
