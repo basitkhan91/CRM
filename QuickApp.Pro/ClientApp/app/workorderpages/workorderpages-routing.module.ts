@@ -7,6 +7,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { WorkOrderPagesComponent } from './workorderpages.component';
 import { WorkOrderQuoteComponent } from '../components/work-order/work-order-setup/work-order-quote/work-order-quote.component';
+import { WorkOrderQuoteListComponent } from '../components/work-order/work-order-setup/work-order-quote-list/work-order-quote-list.component';
 import { WorkOrderListComponent } from '../components/work-order/work-order-list/work-order-list.component';
 import { AuthService } from '../services/auth.service';
 import { AuthGuard } from '../services/auth-guard.service';
@@ -120,6 +121,11 @@ const workorderPagesRoutes: Routes = [
         path: 'app-work-order-quote',
         component: WorkOrderQuoteComponent,
         data: { title: 'Quote' }
+      },
+      {
+        path: 'app-work-order-quote-list',
+        component: WorkOrderQuoteListComponent,
+        data: { title: 'Quote List' }
       },
       // {
       //   path: 'app-work-order-shipping',
