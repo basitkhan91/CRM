@@ -101,7 +101,8 @@
     </div>
 </form>
 </div>
-<div class="col-sm-12 mt8">
-        <button class="btn btn-primary-cstm float-left" pButton type="button" (click)=" moveTab('PurchaseSales');" icon="pi pi-angle-left" iconPos="left" label="Prev" style="padding: 0 !important;"></button>
-        <button class="btn btn-primary-cstm float-right" pButton (click)="saveAndMove()" type="button" icon="pi pi-angle-right" iconPos="right" label="Save & Go to Next Step" style="padding: 0 !important;"></button>
+<div>
+    <button class="btn btn-primary-cstm pull-right submit-btn" (click)="saveAndMove()" type="button" style="height: 30px; width: 100px">Save & Next</button> &nbsp;
+
+    <button class="btn btn-primary-cstm pull-right submit-btn" type="button" (click)=" moveTab('PurchaseSales');" style="height: 30px; width: 100px">Previous</button> 
 </div>

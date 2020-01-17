@@ -115,32 +115,33 @@
 							</td>
 							<td>{{car.partNumber}}</td>
 							<td>{{car.partDescription}}</td>
-							<td>{{car.isHazardousMaterial}}</td>
-							<td>{{car.provision?.description}}</td>
 							<td>{{car.manufacturer?.name}}</td>
+							<td>{{car.itemClassification?.description}}</td>
+							<td>{{car.itemGroupId}}</td>
 							<td>{{car.nationalStockNumber}}</td>
-							<td>{{car.priority?.description}}</td>
+							<td>{{car.isSerialized}}</td> 
+							<td>{{car.isTimeLife}}</td>
 							<td class="action-icons-cstm" style="width:130px;">
 								<div>
-								<p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="handleChangeforstock(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
-								<p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChangeforstock(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
-								<p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChangeforstock(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
-	
-								<span data-toggle="modal" data-target="#view"><a class="btn nobg btn-view-cstm" (click)="openView(view,rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
-								<span><a class="btn nobg btn-edit-cstm" (click)="openEdit(car)" matTooltip="Edit"><i class="fa fa-pencil"></i></a> </span>
-								<span><a class="btn nobg btn-delete-cstm" (click)="openDelete(content,rowData)" matTooltip="Delete"><i class="fa fa-trash"></i></a> </span>
-								<span><a class="btn nobg btn-hist-cstm" (click)="openHist()" matTooltip="History"><i class="fa fa-history"></i></a></span>
-	
-								<!-- <span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openView(view,rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span> -->
-								<!-- <button class="btn-edit" mat-icon-button (click)="openEdit(car)" matTooltip="Edit">
-									<mat-icon>edit</mat-icon>
-								</button> -->
-								<!-- <button class="btn-delete" mat-icon-button matTooltip="Delete" (click)="openDelete(content,rowData)">
-									<mat-icon color="warn">delete</mat-icon>
-								</button> -->
-								<!-- <button class="btn-history" mat-icon-button matTooltip="History" (click)="openHist()">
-									<mat-icon color="green">history</mat-icon>
-								</button> -->
+									<p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="handleChangeforstock(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+									<p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChangeforstock(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+									<p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChangeforstock(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+
+									<span data-toggle="modal" data-target="#view"><a class="btn nobg btn-view-cstm" (click)="openView(view,rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
+									<span><a class="btn nobg btn-edit-cstm" (click)="openEdit(car)" matTooltip="Edit"><i class="fa fa-pencil"></i></a> </span>
+									<span><a class="btn nobg btn-delete-cstm" (click)="openDelete(content,rowData)" matTooltip="Delete"><i class="fa fa-trash"></i></a> </span>
+									<span><a class="btn nobg btn-hist-cstm" (click)="openHist()" matTooltip="History"><i class="fa fa-history"></i></a></span>
+
+									<!-- <span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openView(view,rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span> -->
+									<!-- <button class="btn-edit" mat-icon-button (click)="openEdit(car)" matTooltip="Edit">
+				<mat-icon>edit</mat-icon>
+			</button> -->
+									<!-- <button class="btn-delete" mat-icon-button matTooltip="Delete" (click)="openDelete(content,rowData)">
+				<mat-icon color="warn">delete</mat-icon>
+			</button> -->
+									<!-- <button class="btn-history" mat-icon-button matTooltip="History" (click)="openHist()">
+				<mat-icon color="green">history</mat-icon>
+			</button> -->
 								</div>
 							</td>
 						</tr>
@@ -561,7 +562,7 @@
                                         <p><span class="label"><b>FX Rate: </b></span><span class="value">{{viewItemMaster.exportClassificationId}}</span></p>
                                         <p><span class="label"><b>Last List Price Date: </b></span><span class="value">{{viewItemMaster.purchaseLastListPriceDate}}</span></p>
                                         <p><span class="label"><b>Last disc(%) Date: </b></span><span class="value">{{viewItemMaster.purchaseLastDiscountPercentDate}}</span></p>
-                                        <p><span class="label"><b>Last list price after discount date:: </b></span><span class="value">{{viewItemMaster.purchaseLastListPriceAfterDiscountDate}}</span></p>
+                                        <p><span class="label"><b>Last list price after discount date: </b></span><span class="value">{{viewItemMaster.purchaseLastListPriceAfterDiscountDate}}</span></p>
                                     </div>
                                     <div class="col-sm-6">
                                         <h4>Sales Price</h4>

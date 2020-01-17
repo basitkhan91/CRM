@@ -850,14 +850,14 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-12 mt8">
+                    <!--<div class="col-sm-12 mt8">
                         <div class="col-sm-6">
-                        </div>
-                        <div class="col-sm-6">
-                            <button class="btn btn-primary-cstm float-right" pButton type="submit"  icon="pi pi-angle-right" iconPos="right" label="Save & Next" style="padding: 0 !important;"></button>
+                        </div>-->
+                        <div class="form-row pull-right">
+                            <button class="btn btn-primary-cstm submit-btn" pButton type="submit" style="height: 30px" >Save &amp; Next</button>
                             <!-- <button class="btn btn-primary-cstm float-right" pButton type="button" (click)="saveItemMasterGeneralInformation()" icon="pi pi-angle-right" iconPos="right" label="Save & Next" style="padding: 0 !important;"></button> -->
                         </div>
-                    </div>
+                    <!--/div>-->
                 </div>
                 <!--Jyotsna Code-->
                 <div [ngClass]="{hideTab : currentTab !== 'AircraftInfo'}">
@@ -971,10 +971,11 @@
                         </div> -->
 
                     </div>
-                    <div class="col-sm-12 mt8">
-                        <button class="btn btn-primary-cstm float-left" pButton type="button" (click)="moveGeneralInfromation(); changeOfTab('General')" icon="pi pi-angle-left" iconPos="left" label="Prev" style="padding: 0 !important;"></button>
-                        <button class="btn btn-primary-cstm float-right" pButton (click)="moveAtachapter()" type="button" icon="pi pi-angle-right" iconPos="right" label="Go to Next Step" style="padding: 0 !important;"></button>
-                    </div>
+                   
+                    <button class="btn btn-primary-cstm pull-right submit-btn"  (click)="moveAtachapter()" type="button" style="height: 30px; width: 100px">Save & Next</button> &nbsp;
+
+                    <button class="btn btn-primary-cstm pull-right submit-btn"  type="button" (click)="moveGeneralInfromation(); changeOfTab('General')" style="height: 30px">Previous</button>
+                    
                 </div>
                 <div [ngClass]="{hideTab : currentTab !== 'Atachapter'}">
                     <div class="card">
@@ -1061,9 +1062,10 @@
                         </p-table>
                         <br />
                     </div>
-                    <div class="col-sm-12 mt8">
-                        <button class="btn btn-primary-cstm float-left" pButton type="button" (click)="moveAircraftInformation(); changeOfTab('AircraftInfo');" icon="pi pi-angle-left" iconPos="left" label="Prev" style="padding: 0 !important;"></button>
-                        <button class="btn btn-primary-cstm float-right" pButton (click)="movePurchaseInformation(); changeOfTab('PurchaseSales');" type="button" icon="pi pi-angle-right" iconPos="right" label="Save & Go to Next Step" style="padding: 0 !important;"></button>
+                    <div>
+                        <button class="btn btn-primary-cstm pull-right submit-btn" (click)="movePurchaseInformation(); changeOfTab('PurchaseSales');" type="button"  style="height: 30px; width: 100px">Save & Next</button> &nbsp;
+
+                        <button class="btn btn-primary-cstm pull-right submit-btn"  type="button" (click)="moveAircraftInformation(); changeOfTab('AircraftInfo');" style="height: 30px; width: 100px">Previous</button>
                     </div>
 
                 </div>
@@ -1338,9 +1340,10 @@
                             </table>
 
                         </div>
-                        <div class="col-sm-12 mt8">
-                            <button class="btn btn-primary-cstm float-left" pButton type="button" (click)="moveAtachapter()" icon="pi pi-angle-left" iconPos="left" label="Prev" style="padding: 0 !important;"></button>
-                            <button class="btn btn-primary-cstm float-right" pButton (click)="moveExportInformation()" [disabled]="!purchaseSales.valid" type="submit" icon="pi pi-angle-right" iconPos="right" label="Save & Go to Next Step" style="padding: 0 !important;"></button>
+                        <div>
+                            <button class="btn btn-primary-cstm pull-right submit-btn"  (click)="moveExportInformation()" [disabled]="!purchaseSales.valid" type="submit" style="height: 30px; width: 100px">Save & Next</button> &nbsp;
+
+                            <button class="btn btn-primary-cstm pull-right submit-btn"  type="button" (click)="moveAtachapter()" style="height: 30px; width: 100px">Previous</button>
                         </div>
                     </form>
                 </div>
@@ -1554,18 +1557,17 @@
                             </div>
                         </div>
 
-                        <div class="col-sm-12 mt8">
-                            <div class="col-sm-6">
-                                <button class="btn btn-primary-cstm float-left" pButton type="button" (click)="changeOfTab('Exchange')" icon="pi pi-angle-left" iconPos="left" label="Prev" style="padding: 0 !important;"></button>
-                            </div>
-                            <div class="col-sm-6">
-                                <span class="float-right">
-                                    <button class="btn btn-primary-cstm" pButton type="submit" [disabled]="!exportInformatiom.valid || !isValidClassification" label="Save" (click)="saveExportInformation()" style="padding: 0 !important;"></button>
-                                    &nbsp;
-                                    <button class="btn btn-primary-cstm" pButton type="button" (click)="saveandcreate()" icon="pi pi-angle-right" iconPos="right" label="Save & Add New" style="padding: 0 !important;"></button>
-                                </span>
-                            </div>
+                        <!--<div class="col-sm-12 mt8">-->
+                        <div>
+
+                            <button class="btn btn-primary-cstm pull-right submit-btn" type="button" (click)="saveandcreate()" style="height: 30px; width: 115px">Save & Add New</button>
+                            &nbsp;
+                            <button class="btn btn-primary-cstm pull-right submit-btn" type="submit" [disabled]="!exportInformatiom.valid || !isValidClassification" (click)="saveExportInformation()" style="height: 30px; width:80px">save</button>
+                            &nbsp;
+                            <button class="btn btn-primary-cstm pull-right submit-btn" type="button" (click)="changeOfTab('Exchange')" style="height: 30px; width: 100px">Previous</button>
+
                         </div>
+                        <!--</div>-->
                     </form>
                 </div>
 
