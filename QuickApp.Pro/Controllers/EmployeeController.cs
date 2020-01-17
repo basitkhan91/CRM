@@ -39,6 +39,20 @@ namespace QuickApp.Pro.Controllers
             return Ok(empDetails);
         }
 
+        [HttpPost("employeelist")]
+        public IActionResult GetEmployeeList([FromBody]Filters<EmployeeFilters> employeeFilters)
+        {
+            var result = _unitOfWork.employee.GetEmployeeList(employeeFilters);
+            return Ok(result);
+        }
+
+        [HttpGet("employeeglobalsearch")]
+        public IActionResult EmployeeGlobalSearch(string filterText, int pageNumber = 0, int pageSize = 10)
+        {
+            var result = _unitOfWork.employee.EmployeeGlobalSearch(filterText, pageNumber, pageSize);
+            return Ok(result);
+        }
+
 
         // GET: api/values
         [HttpGet("Get")]
