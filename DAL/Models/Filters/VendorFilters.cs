@@ -1,18 +1,23 @@
-﻿namespace DAL.Models
+﻿using System;
+
+namespace DAL.Models
 {
     public class VendorFilters
     {
-        public long VendorId { get; set; }
-        public string VendorName { get; set; }
-        public string VendorCode { get; set; }
-        public string Description { get; set; }
-        public string ClassificationName { get; set; }
-        public string VendorCapabilityName { get; set; }
-        public string VendorEmail { get; set; }
-        public string City { get; set; }
-        public string StateOrProvince { get; set; }        
-        public string VendorPhoneContact { get; set; }
-        public string Status { get; set; }
-       
-    }
+        public long vendorId { get; set; }
+        public string vendorName { get; set; }
+        public string vendorCode { get; set; }
+        public string description { get; set; }
+        public string classificationName { get; set; }
+        public string vendorCapabilityName { get; set; }
+        public string vendorEmail { get; set; }
+        public string city { get; set; }
+        public string stateOrProvince { get; set; }        
+        public string vendorPhoneContact { get; set; }
+        public string status { get; set; }
+        public DateTime createdDate { get; set; }
+        public bool? isActive { get; set; }
+        public int totalRecords { get; set; }
+
+}
 }

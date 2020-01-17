@@ -47,6 +47,9 @@ namespace DAL.Repositories
                               from customer in cus.DefaultIfEmpty()
 
 
+                              join managementStructeInfo in _appContext.ManagementStructure on stl.ManagementStructureId equals managementStructeInfo.ManagementStructureId into managmentCompany
+                              from managementStructeInfo in managmentCompany.DefaultIfEmpty()
+
                               join employee in _appContext.Employee on stl.EmployeeId equals employee.EmployeeId into emp
                               from employee in emp.DefaultIfEmpty()
                               
@@ -58,6 +61,19 @@ namespace DAL.Repositories
                               from contact in con.DefaultIfEmpty()
                               join work in _appContext.WorkOrder on stl.CustomerId equals work.CustomerId into wor
                               from work in wor.DefaultIfEmpty()
+
+                              join managmentLegalEntity in _appContext.ManagementStructure on stl.ManagementStructureId equals managmentLegalEntity.ManagementStructureId into mainCompanyTree
+                              from managmentLegalEntity in mainCompanyTree.DefaultIfEmpty()
+
+                              join divmanagmentLegalEntity in _appContext.ManagementStructure on managmentLegalEntity.ParentId equals divmanagmentLegalEntity.ManagementStructureId into mainDivCompany
+                              from divmanagmentLegalEntity in mainDivCompany.DefaultIfEmpty()
+
+                              join biumanagmentLegalEntity in _appContext.ManagementStructure on divmanagmentLegalEntity.ParentId equals biumanagmentLegalEntity.ManagementStructureId into BIUDivCompany
+                              from biumanagmentLegalEntity in BIUDivCompany.DefaultIfEmpty()
+
+                              join compmanagmentLegalEntity in _appContext.ManagementStructure on biumanagmentLegalEntity.ParentId equals compmanagmentLegalEntity.ManagementStructureId into comivCompany
+                              from compmanagmentLegalEntity in comivCompany.DefaultIfEmpty()
+
 
                               where stl.IsDeleted !=true
 
@@ -136,10 +152,16 @@ namespace DAL.Repositories
                                   im.ItemTypeId,
                                   stl.ManagementStructureId,
                                   work.WorkOrderNum,
+                                  managmentLegalEntity,
+                                  divmanagmentLegalEntity,
+                                  biumanagmentLegalEntity,
+                                  compmanagmentLegalEntity,
+                                  managementStructeInfo,
+
                                   //work.WorkOrderId
 
 
-                               WorkOrderId = work.WorkOrderId == null ? 0 : work.WorkOrderId,
+                                  WorkOrderId = work.WorkOrderId == null ? 0 : work.WorkOrderId,
 
                               }).ToList();
                 return result;
@@ -197,24 +219,14 @@ namespace DAL.Repositories
                                 from employee in emp.DefaultIfEmpty()
 
 
-                                    //join ti in _appContext.TimeLife on stl.TimeLifeCyclesId equals ti.TimeLifeCyclesId into time
-                                    //from ti in time.DefaultIfEmpty()
-
-                                    //join contact in _appContext.Contact on Convert.ToInt64(stl.ContactId) equals contact.ContactId into con
-                                    //from contact in con.DefaultIfEmpty()
-
-                                    //join work in _appContext.WorkOrder on stl.CustomerId equals work.CustomerId into wor
-                                    //from work in wor.DefaultIfEmpty()
-                                where (stl.IsDeleted == false || stl.IsDeleted == null)
+                                         where (stl.IsDeleted == false || stl.IsDeleted == null)
 
                                  && im.PartNumber.Contains((!String.IsNullOrEmpty(customerFilters.filters.partNumber) ? customerFilters.filters.partNumber : im.PartNumber))
                                 && stl.ReceivingCustomerNumber.Contains((!String.IsNullOrEmpty(customerFilters.filters.receivingCustomerNumber) ? customerFilters.filters.receivingCustomerNumber : stl.ReceivingCustomerNumber))
-                              //  && stl.ChangePartNumber.Contains((!String.IsNullOrEmpty(customerFilters.filters.changePartNumber) ? customerFilters.filters.changePartNumber : stl.ChangePartNumber))
-                                && employee.FirstName.Contains((!String.IsNullOrEmpty(customerFilters.filters.firstName) ? customerFilters.filters.firstName : employee.FirstName))
+                                 && employee.FirstName.Contains((!String.IsNullOrEmpty(customerFilters.filters.firstName) ? customerFilters.filters.firstName : employee.FirstName))
                                 && customer.Name.Contains((!String.IsNullOrEmpty(customerFilters.filters.name) ? customerFilters.filters.name : customer.Name))
                                 && stl.CustomerReference.Contains((!String.IsNullOrEmpty(customerFilters.filters.customerReference) ? customerFilters.filters.customerReference : stl.CustomerReference))
-                                //&& work.WorkOrderNum.Contains((!String.IsNullOrEmpty(customerFilters.filters.workOrderNum) ? customerFilters.filters.workOrderNum : work.WorkOrderNum))
-                                && im.PartDescription.Contains((!String.IsNullOrEmpty(customerFilters.filters.partDescription) ? customerFilters.filters.partDescription : im.PartDescription))
+                                 && im.PartDescription.Contains((!String.IsNullOrEmpty(customerFilters.filters.partDescription) ? customerFilters.filters.partDescription : im.PartDescription))
                                 // && stl.ChangePartNumber.Contains((!String.IsNullOrEmpty(customerFilters.filters.changePartNumber) ? customerFilters.filters.changePartNumber : stl.ChangePartNumber))
 
                                  && customerFilters.filters.changePartNumber == null ? string.IsNullOrEmpty(stl.ChangePartNumber) || stl.ChangePartNumber != null :
@@ -224,8 +236,7 @@ namespace DAL.Repositories
                                 {
                                     stl.ReceivingCustomerWorkId,
                                     OwnerType = stl.OwnerType == null ? 0 : stl.OwnerType,
-                                    //conditionId = co == null ? 0 : co.ConditionId,
-
+                                 
 
                                 }).Distinct().Count();
 
@@ -245,14 +256,11 @@ namespace DAL.Repositories
 
                         && im.PartNumber.Contains((!String.IsNullOrEmpty(customerFilters.filters.partNumber) ? customerFilters.filters.partNumber : im.PartNumber))
                         && stl.ReceivingCustomerNumber.Contains((!String.IsNullOrEmpty(customerFilters.filters.receivingCustomerNumber) ? customerFilters.filters.receivingCustomerNumber : stl.ReceivingCustomerNumber))
-                       // && stl.ChangePartNumber.Contains((!String.IsNullOrEmpty(customerFilters.filters.changePartNumber) ? customerFilters.filters.changePartNumber : stl.ChangePartNumber))
                         && employee.FirstName.Contains((!String.IsNullOrEmpty(customerFilters.filters.firstName) ? customerFilters.filters.firstName : employee.FirstName))
                         && customer.Name.Contains((!String.IsNullOrEmpty(customerFilters.filters.name) ? customerFilters.filters.name : customer.Name))
                         && stl.CustomerReference.Contains((!String.IsNullOrEmpty(customerFilters.filters.customerReference) ? customerFilters.filters.customerReference : stl.CustomerReference))
-                        //&& work.WorkOrderNum.Contains((!String.IsNullOrEmpty(customerFilters.filters.WorkOrderNum) ? customerFilters.filters.workOrderNum : work.WorkOrderNum))
                         && im.PartDescription.Contains((!String.IsNullOrEmpty(customerFilters.filters.partDescription) ? customerFilters.filters.partDescription : im.PartDescription))
-                         //&& stl.ChangePartNumber.Contains((!String.IsNullOrEmpty(customerFilters.filters.changePartNumber) ? customerFilters.filters.changePartNumber : stl.ChangePartNumber))
-
+                    
                         && customerFilters.filters.changePartNumber == null ? string.IsNullOrEmpty(stl.ChangePartNumber) || stl.ChangePartNumber != null :
                                          stl.ChangePartNumber.Contains(customerFilters.filters.changePartNumber)
 
@@ -264,9 +272,7 @@ namespace DAL.Repositories
 
                             firstName=  employee.FirstName,
                             name=customer.Name,
-                            //customer.CustomerCode,
-                            //contact.WorkPhone,
-
+                         
                             partNumber = stl.PartNumber,
 
                             receivingCustomerNumber=stl.ReceivingCustomerNumber,
@@ -319,6 +325,21 @@ namespace DAL.Repositories
 
                               join employee in _appContext.Employee on stl.EmployeeId equals employee.EmployeeId into emp
                               from employee in emp.DefaultIfEmpty()
+                              join managementStructeInfo in _appContext.ManagementStructure on stl.ManagementStructureId equals managementStructeInfo.ManagementStructureId into managmentCompany
+                              from managementStructeInfo in managmentCompany.DefaultIfEmpty()
+
+
+                              join managmentLegalEntity in _appContext.ManagementStructure on stl.ManagementStructureId equals managmentLegalEntity.ManagementStructureId into mainCompanyTree
+                              from managmentLegalEntity in mainCompanyTree.DefaultIfEmpty()
+
+                              join divmanagmentLegalEntity in _appContext.ManagementStructure on managmentLegalEntity.ParentId equals divmanagmentLegalEntity.ManagementStructureId into mainDivCompany
+                              from divmanagmentLegalEntity in mainDivCompany.DefaultIfEmpty()
+
+                              join biumanagmentLegalEntity in _appContext.ManagementStructure on divmanagmentLegalEntity.ParentId equals biumanagmentLegalEntity.ManagementStructureId into BIUDivCompany
+                              from biumanagmentLegalEntity in BIUDivCompany.DefaultIfEmpty()
+
+                              join compmanagmentLegalEntity in _appContext.ManagementStructure on biumanagmentLegalEntity.ParentId equals compmanagmentLegalEntity.ManagementStructureId into comivCompany
+                              from compmanagmentLegalEntity in comivCompany.DefaultIfEmpty()
 
 
                               join ti in _appContext.TimeLife on stl.TimeLifeCyclesId equals ti.TimeLifeCyclesId into time
@@ -398,6 +419,11 @@ namespace DAL.Repositories
                                   w,
                                   l,
                                   ti,
+                                  managmentLegalEntity,
+                                  divmanagmentLegalEntity,
+                                  biumanagmentLegalEntity,
+                                  compmanagmentLegalEntity,
+                                  managementStructeInfo,
                                   conditionType = co.Description,
                                   im.ItemTypeId,
                                   stl.ManagementStructureId

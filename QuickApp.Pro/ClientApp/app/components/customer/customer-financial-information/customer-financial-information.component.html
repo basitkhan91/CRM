@@ -1,4 +1,4 @@
-﻿<div>
+﻿
 
     <div class="right_col" role="main">
         <div style="">
@@ -36,11 +36,7 @@
                                             <label>
                                                 <span class="pull-left">Mark Up %</span>
                                                 <span style="margin-left:3px;cursor:pointer;">
-                                                    <!--<a data-dismiss="modal"
-                                                                                     [routerLink]="[
-                                                      '/singlepages/singlepages/app-percent'
-                                                    ]"><i class="fa fa-plus-circle fa-lg"></i></a>-->
-                                                    <a href="#" class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#addmarkup"></a>
+                                                        <a href="#" class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#addmarkup" matTooltip="Add Percentage" ></a>
 
                                                 </span>
 
@@ -56,7 +52,7 @@
                                         <div class="form-group">
                                             <label>
                                                 <span class="pull-left">Credit Terms </span><span class="clr-red">*</span>
-                                                <span style="margin-left:3px;cursor:pointer;"><a href="#" class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#addcredit"></a></span>
+                                                <span style="margin-left:3px;cursor:pointer;"><a href="#" class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#addcredit" matTooltip="Add Credit Terms"></a></span>
                                             </label>
                                             <select name="creditTermsId" [(ngModel)]="savedGeneralInformationData.creditTermsId" required>
                                                 <option *ngFor="let creditTermsId of creditTermList" [ngValue]="creditTermsId.value">{{creditTermsId.label}}</option>
@@ -65,7 +61,7 @@
                                         <div class="form-group">
                                             <label>
                                                 <span class="pull-left">Discount %</span>
-                                                <span style="margin-left:3px;cursor:pointer;"><a href="#" class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#addDiscount"></a></span>
+                                                <span style="margin-left:3px;cursor:pointer;"><a href="#" class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#addDiscount" matTooltip="Add Discount"></a></span>
                                             </label>
                                             <select name="discountId" [(ngModel)]="savedGeneralInformationData.discountId">
                                                 <option *ngFor="let discontValue of discountList" [ngValue]="discontValue.discountId">{{discontValue.discontValue}}</option>
@@ -81,15 +77,7 @@
                                                 </option>
                                             </select>
                                         </div>
-                                        <div class="form-group" style="margin-top: 15px;" *ngIf="savedGeneralInformationData.isCustomerAlsoVendor">
-                                               <span class="checkbox-cstm">
-                                                <label>
-                                                    <input type="checkbox" name="allowNettingOfAPAR" [(ngModel)]="savedGeneralInformationData.allowNettingOfAPAR">
-                                                    <span class="cr"><i class="cr-icon pi pi-check"></i></span>
-                                                    Allow Netting of AP/AR
-                                                </label>
-                                            </span>
-                                        </div>
+                                      
                                         <div class="form-group" style="margin-top: 15px;">
                                             <span class="checkbox-cstm">
                                                 <label>
@@ -130,11 +118,19 @@
                                                 </table>
                                             </div>
 
-                                            <!--<input type="file" id="file">-->
-                                        </div>
+                                                  </div>
                                     </div>
 
                                     <div class="col-md-2">
+                                        <div class="form-group" style="margin-top: 15px;" *ngIf="savedGeneralInformationData.isCustomerAlsoVendor">
+                                            <span class="checkbox-cstm">
+                                                <label>
+                                                    <input type="checkbox" name="allowNettingOfAPAR" [(ngModel)]="savedGeneralInformationData.allowNettingOfAPAR">
+                                                    <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                                    Allow Netting of AP/AR
+                                                </label>
+                                            </span>
+                                        </div>
                                         <div class="form-group" style="margin-top: 15px;margin-left:0px;">
                                             <span class="checkbox-cstm">
                                                 <label>
@@ -165,15 +161,14 @@
                                                         </label>
                                                         <span style="margin-left:3px;cursor:pointer;">
 
-                                                            <a href="#" class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#addTaxType"></a>
+                                                            <a href="#" class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#addTaxType" matTooltip="Add Tax Type"></a>
 
                                                         </span>
                                                         <select name="taxType" [(ngModel)]="selectedTaxType">
                                                             <option value="">select</option>
                                                             <option *ngFor="let Percentlist of taxTypeList" [ngValue]="Percentlist.value">{{Percentlist.label}}</option>
                                                         </select>
-                                                        <!--<p-dropdown class="p-dropdown-custom" [options]="taxTypeList" placeholder="Select TaxType" name="taxType" [(ngModel)]="selectedTaxType"></p-dropdown>-->
-                                                    </div>
+                                                        </div>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <div class="form-group">
@@ -182,15 +177,14 @@
                                                         </label>
                                                         <span style="margin-left:3px;cursor:pointer;">
 
-                                                            <a href="#" class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#addTaxRate"></a>
+                                                            <a href="#" class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#addTaxRate" matTooltip="Add Tax Rate"></a>
 
                                                         </span>
                                                         <select name="taxRates" [(ngModel)]="selectedTaxRates">
                                                             <option value="">select</option>
                                                             <option *ngFor="let Percentlist of taxRatesList" [ngValue]="Percentlist.value">{{Percentlist.label}}</option>
                                                         </select>
-                                                        <!-- <p-multiSelect class="autocomp-customer-cstm" [options]="taxRatesList" name="taxRates" [(ngModel)]="selectedTaxRates"></p-multiSelect> -->
-                                                    </div>
+                                                            </div>
                                                 </div>
                                                 <div class="col-md-3">
                                                     <div class="form-group">
@@ -204,10 +198,7 @@
                                             <p-table #taxInfoTable [value]="taxTypeRateMapping" [paginator]="true" [rows]="3" [columns]="taxInfoTableColumns" *ngIf="taxTypeRateMapping.length>0">
                                                 <ng-template pTemplate="header" let-columns>
                                                     <tr>
-                                                        <!-- <th>S.No</th> -->
-                                                        <!-- <th>TaxType</th>
-                                                        <th>TaxRate</th> -->
-                                                        <th *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
+                                                           <th *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
                                                             {{col.header}}
                                                             <p-sortIcon [field]="col.field"></p-sortIcon>
                                                         </th>
@@ -223,12 +214,7 @@
                                                 </ng-template>
                                                 <ng-template pTemplate="body" let-i="rowIndex" let-rowData let-columns="columns">
                                                     <tr >
-                                                        <!-- {{($index + 1) + (currentPage - 1) * itemsPerPage}} -->
-                                                        <!-- <td>  {{(0 + 1) + (1 - 1) * 3}} </td> -->
-
-                                                        <!-- <td>{{t.taxType}}</td>
-                                                        <td>{{t.taxRate}}</td> -->
-                                                        <td *ngFor="let col of columns">
+                                                                  <td *ngFor="let col of columns">
                                                             {{rowData[col.field]}}
                                                         </td>
                                                         <td>
@@ -295,8 +281,9 @@
                 <div class="modal-body">
                     <div class="modal-body" style="padding-bottom: 30px;">
                         <div class="form-group">
+
                             <label for="name" class="control-label">Mark Up Percentage <span class="clr-red">*</span></label>
-                            <div class="col-sm-5">
+                            <div class="col-sm-3">
                                 <input type="text" class="form-control" name="markUpValue" pKeyFilter="pnum" [(ngModel)]="addNewIntergration.markUpValue" required />
                             </div>
                         </div>
@@ -325,88 +312,112 @@
 
                     <div class="modal-body">
                         <div class="form-group">
-                            <label>Credit Term <span class="clr-red">*</span></label>
-                            <div class="inner-addon right-addon inline-block">
+                            <div class="col-sm-12">
+                                <div class="col-sm-4">
 
-                                <p-autoComplete class="p-dropdown-custom-2" name="classificationName"
-                                                [(ngModel)]="addNewCreditTerms.name"
-                                                (onSelect)="selectedCreditTerm()"
-                                                (onKeyUp)="checkCreditTermsExists('field',$event.target.value)"
-                                                [suggestions]="_creditTermList" field="label" (completeMethod)="filterCreditTerms($event)"
-                                                [size]="30" [minLength]="1" [dropdown]="true" required>
-                                </p-autoComplete>
-                                <div *ngIf="isCreditTermsExists" class="clr-red">Entry Already Exists</div>
+                                    <label>Credit Term <span class="clr-red">*</span></label>
+                                </div>
+                                <div class="col-sm-5">
+                                    <div class="inner-addon right-addon inline-block">
+
+                                        <p-autoComplete class="p-autoComplete-ctsm" name="classificationName"
+                                                        [(ngModel)]="addNewCreditTerms.name"
+                                                        (onSelect)="selectedCreditTerm()"
+                                                        (onKeyUp)="checkCreditTermsExists('field',$event.target.value)"
+                                                        [suggestions]="_creditTermList" field="label" (completeMethod)="filterCreditTerms($event)"
+                                                        [size]="30" [minLength]="1" [dropdown]="true" required>
+                                        </p-autoComplete>
+                                        <div *ngIf="isCreditTermsExists" class="clr-red">Entry Already Exists</div>
+                                    </div>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-
                         <div class="form-group">
-                            <label>Percentage <span class="clr-red">*</span></label>
-                            <div class="inner-addon right-addon inline-block">
-                                <select name="percentage" [(ngModel)]="addNewCreditTerms.percentage">
-                                    <option value="">Select Percentage</option>
-                                    <option *ngFor="let Percentlist of percentageList" [ngValue]="Percentlist.label">{{Percentlist.label}}</option>
-                                </select>
+                            <div class="col-sm-12">
+                                <div class="col-sm-4">
 
-                                <!--<p-autoComplete class="p-dropdown-custom-2" name="percentage"
-                                                [(ngModel)]="addNewCreditTerms.percentage"
-                                                (onSelect)="selectedPercentage()"
-                                                (onKeyUp)="checkPercentageExists('percentValue',$event.target.value)"
-                                                [suggestions]="_creditTermPercentageList" field="percentValue" (completeMethod)="filterPercentage($event)"
-                                                [size]="30" [minLength]="1" [dropdown]="true" required>
-                                </p-autoComplete>-->
-                                <!--<div *ngIf="isPercentageExists" class="clr-red">Entry Already Exists</div>-->
+                                    <label>Percentage <span class="clr-red">*</span></label>
+                                </div>
+                                <div class="col-sm-5">
 
+                                    <div class="inner-addon right-addon inline-block">
+                                        <select name="percentage" [(ngModel)]="addNewCreditTerms.percentage">
+                                            <option value="">Select Percentage</option>
+                                            <option *ngFor="let Percentlist of percentageList" [ngValue]="Percentlist.label">{{Percentlist.label}}</option>
+                                        </select>
+
+
+                                    </div>
+
+                                </div>
+                                </div>
                             </div>
-
-                        </div>
-
                         <div class="form-group">
-                            <label>Days <span class="clr-red">*</span></label>
-                            <!--<select name="days" [(ngModel)]="addNewCreditTerms.days" required>
-                                <option *ngFor="let number of state_taxRateList" value="{{number}}">{{number}}</option>
-                            </select>-->
-                            <input type="text" id="" class="form-control" pInputText pKeyFilter="num" name="days" [(ngModel)]="addNewCreditTerms.days" required maxlength="3">
+                            <div class="col-sm-12">
+                                <div class="col-sm-4">
+
+                                    <label>Days <span class="clr-red">*</span></label>
+                                </div>
+                               
+                                    <div class="col-sm-5">
+
+                                        <input type="text" id="" class="form-control" pInputText pKeyFilter="num" name="days" [(ngModel)]="addNewCreditTerms.days" required maxlength="3">
 
 
-                        </div>
-
-                        <div class="form-group">
-                            <label>NetDays <span class="clr-red">*</span></label>
-                            <!--<select name="netDays" [(ngModel)]="addNewCreditTerms.netDays" required>
-                                <option *ngFor="let number of state_taxRateList" value="{{number}}">{{number}}&#37;</option>
-                            </select>-->
-                            <input type="text" id="" class="form-control" pInputText pKeyFilter="num" name="netDays" [(ngModel)]="addNewCreditTerms.netDays" required maxlength="3">
-
-                        </div>
-                        <div class="form-group">
-                            <label for="description" class="control-label w100">Memo</label>
-                            <div class="control-data">
-                                <input type="text" id="" placeholder="Tool Bar" class="form-control" name="memo" [(ngModel)]="addNewCreditTerms.memo">
-
+                                    </div>
+                                </div>
                             </div>
-                            <div class="clear"></div>
-                        </div>
-
-
-
                         <div class="form-group">
-                            <div class="col-sm-6">
-                                <span class="checkbox-cstm">
-                                    <label style="margin-top: 12px;" class="form-check-label" for="isActive">
-                                        <input type="checkbox" name="isActive" #isActive="ngModel" class="form-check-input" checked id="isActive" [(ngModel)]="creditTermsNew.isActive">
-                                        <span class="cr"><i class="cr-icon pi pi-check"></i></span> Active
-                                    </label>
-                                </span>
+                            <div class="col-sm-12">
+                                <div class="col-sm-4">
+
+                                    <label>NetDays <span class="clr-red">*</span></label>
+                                </div>
+                                <div class="col-sm-5">
+
+                                    <input type="text" id="" class="form-control" pInputText pKeyFilter="num" name="netDays" [(ngModel)]="addNewCreditTerms.netDays" required maxlength="3">
+
+                                </div>
+                                </div>
                             </div>
-                            <div class="clear"></div>
-                        </div>
-                    </div>
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <div class="col-sm-4">
+
+                                    <label for="description" class="control-label w100">Memo</label>
+                                </div>
+                                <div class="col-sm-5">
+
+                                    <div class="control-data">
+                                         <textarea #memo="ngModel"  name="memo"   [(ngModel)]="addNewCreditTerms.memo"></textarea>
+
+                                    </div>
+                                </div>
+                            </div>
+                                    <div class="clear"></div>
+                                </div>
+
+
+
+                                <div class="form-group">
+                                    <div class="col-sm-6">
+                                        <span class="checkbox-cstm">
+                                            <label style="margin-top: 12px;" class="form-check-label" for="isActive">
+                                                <input type="checkbox" name="isActive" #isActive="ngModel" class="form-check-input" checked id="isActive" [(ngModel)]="creditTermsNew.isActive">
+                                                <span class="cr"><i class="cr-icon pi pi-check"></i></span> Active
+                                            </label>
+                                        </span>
+                                    </div>
+                                    <div class="clear"></div>
+                                </div>
+                            </div>
                     <div class="modal-footer">
+                      
                         <button class="btn btn-primary-cstm" data-dismiss="modal" (click)="newCreditTermAdd()" [disabled]="!addCredit.valid || isCreditTermsExists">Submit</button>
 
-                        <button type="button" class="btn btn-default" data-dismiss="modal" (click)="resetCreditTermsPopUp()">Close</button>
+                        <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="resetCreditTermsPopUp()">Close</button>
                     </div>
-                </div>
+                        </div>
 
             </div>
         </form>
@@ -425,28 +436,37 @@
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label>Discount Percentage<span class="clr-red">*</span></label>
-                            <div class="inner-addon right-addon inline-block">
+                            <div class="col-sm-12">
+                                <div class="col-sm-4">
 
-                                <p-autoComplete class="p-dropdown-custom-2" name="discontValue"
-                                                [(ngModel)]="discontValue"
-                                                pKeyFilter="num"
-                                                (onSelect)="selectedDiscount()"
-                                                (onKeyUp)="checkDiscountExistss($event)"
-                                                [suggestions]="_discountList" field="label" (completeMethod)="filterDiscount($event)"
-                                                [size]="30" [minLength]="1" [dropdown]="true" required>
-                                </p-autoComplete>
-                                <div *ngIf="isDiscountExists" class="clr-red">Entry Already Exists</div>
+
+                                    <label>Discount Percentage<span class="clr-red">*</span></label>
+                                </div>
+                                <div class="col-sm-5">
+
+                                    <div class="inner-addon right-addon inline-block">
+
+                                        <p-autoComplete class="p-dropdown-custom-2" name="discontValue"
+                                                        [(ngModel)]="discontValue"
+                                                        pKeyFilter="num"
+                                                        (onSelect)="selectedDiscount()"
+                                                        (onKeyUp)="checkDiscountExistss($event)"
+                                                        [suggestions]="_discountList" field="label" (completeMethod)="filterDiscount($event)"
+                                                        [size]="30" [minLength]="1" [dropdown]="true" required>
+                                        </p-autoComplete>
+                                        <div *ngIf="isDiscountExists" class="clr-red">Entry Already Exists</div>
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                            </div>
+                            <div class="modal-footer">
+
+                                <button class="btn btn-primary-cstm" data-dismiss="modal" (click)="newDiscountAdd()" [disabled]="!discount.valid || isDiscountExists">Submit</button>
+                                <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="restDiscount()">Close</button>
+
                             </div>
                         </div>
-                    </div>
-                    <div class="modal-footer">
-
-                        <button class="btn btn-primary-cstm" data-dismiss="modal" (click)="newDiscountAdd()" [disabled]="!discount.valid || isDiscountExists">Submit</button>
-                        <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="restDiscount()">Close</button>
-
-                    </div>
-                </div>
 
             </div>
         </form>
@@ -456,7 +476,6 @@
     <div id="addTaxType" class="modal fade" role="dialog" data-backdrop="static">
         <form #addTaxTypes="ngForm">
             <div class="modal-dialog">
-                <!-- Modal content-->
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -465,39 +484,55 @@
 
                     <div class="modal-body">
                         <div class="form-group">
-                            <label>Description <span class="clr-red">*</span></label>
-                            <div class="inner-addon right-addon inline-block">
+                            <div class="col-sm-12">
+                                <div class="col-sm-4">
+                                    <div class="inner-addon right-addon inline-block">
 
-                                <p-autoComplete class="p-dropdown-custom-2" name="description"
-                                                [(ngModel)]="addNewTaxType.description"
-                                                (onSelect)="selectedTaxTypes()"
-                                                (onKeyUp)="checkTaxTypeExists('field',$event.target.value)"
-                                                [suggestions]="_TaxTypeList" field="label" (completeMethod)="filterTaxType($event)"
-                                                [size]="30" [minLength]="1" [dropdown]="true" required>
-                                </p-autoComplete>
-                                <div *ngIf="isTaxTypeExists" class="clr-red">Tax Type Already Exists</div>
+                                        <label>Description <span class="clr-red">*</span></label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-5">
+
+
+                                        <p-autoComplete class="p-dropdown-custom-2" name="description"
+                                                        [(ngModel)]="addNewTaxType.description"
+                                                        (onSelect)="selectedTaxTypes()"
+                                                        (onKeyUp)="checkTaxTypeExists('field',$event.target.value)"
+                                                        [suggestions]="_TaxTypeList" field="label" (completeMethod)="filterTaxType($event)"
+                                                        [size]="30" [minLength]="1" [dropdown]="true" required>
+                                        </p-autoComplete>
+                                        <div *ngIf="isTaxTypeExists" class="clr-red">Tax Type Already Exists</div>
+
+                                    </div>
+                                </div>
                             </div>
-                        </div>
 
                         <div class="form-group">
-                            <label for="description" class="control-label w100">Memo</label>
-                            <div class="control-data">
-                                <input type="text" id="" class="form-control" placeholder="Tool Bar" name="memo" [(ngModel)]="addNewTaxType.memo">
+                            <div class="col-sm-12">
+                                <div class="col-sm-4">
+
+                                    <label for="description" class="control-label w100">Memo</label>
+                                </div>
+                                <div class="col-sm-5">
+
+                                    <div class="control-data">
+                                        <textarea #memo="ngModel" name="memo" [(ngModel)]="addNewTaxType.memo"></textarea>
+
+                                    </div>
+                                    <div class="clear"></div>
+                                </div>
+                                </div>
+                            </div>
+
 
                             </div>
-                            <div class="clear"></div>
+                            <div class="modal-footer">
+                                <button class="btn btn-primary-cstm" data-dismiss="modal" (click)="newTaxTypeAdd()" [disabled]="!addTaxTypes.valid || isTaxTypeExists">Submit</button>
+
+
+                                <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="resetTaxType()">Close</button>
+                            </div>
                         </div>
-
-
-
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-primary-cstm" data-dismiss="modal" (click)="newTaxTypeAdd()" [disabled]="!addTaxTypes.valid || isTaxTypeExists">Submit</button>
-
-
-                        <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="resetTaxType()">Close</button>
-                    </div>
-                </div>
 
             </div>
         </form>
@@ -507,60 +542,45 @@
     <div id="addTaxRate" class="modal fade" role="dialog" data-backdrop="static">
         <form #addTaxRates="ngForm">
             <div class="modal-dialog">
-                <!-- Modal content-->
-                <div class="modal-content">
+                  <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                         <h4 class="modal-title">Add Tax Rate</h4>
                     </div>
 
                     <div class="modal-body">
-                        <!--<div class="form-group">
-                            <label>Tax Type <span class="clr-red">*</span></label>
-                            <div class="inner-addon right-addon inline-block">
-                                <select name="taxTypeId" [(ngModel)]="addNewTaxRate.taxTypeId" placeholder="Select TaxType" required>
-                                    <option value="">Select Tax Type</option>
-                                    <option *ngFor="let TaxTypelist of taxTypeList" [ngValue]="TaxTypelist.value">{{TaxTypelist.label}}</option>
-                                </select>
+                      
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <div class="col-sm-4">
 
+                                    <label>Tax Rate <span class="clr-red">*</span></label>
+                                </div>
+                                <div class="col-sm-5">
 
+                                    <div class="inner-addon right-addon inline-block">
+
+                                        <p-autoComplete class="p-dropdown-custom-2" name="taxRate"
+                                                        [(ngModel)]="addNewTaxRate.taxRate"
+                                                        (onSelect)="selectedTaxRate()"
+                                                        (onKeyUp)="checkPercentExists($event.target.value)"
+                                                        [suggestions]="_TaxRateList" field="label" (completeMethod)="filterTaxRate($event)"
+                                                        [size]="30" [minLength]="1" [dropdown]="true" required>
+                                        </p-autoComplete>
+                                        <div *ngIf="isTaxRateExists" class="clr-red">Tax Rate Already Exists</div>
+                                    </div>
+                                </div>
+                                </div>
                             </div>
 
-                        </div>-->
-                        <div class="form-group">
-                            <label>Tax Rate <span class="clr-red">*</span></label>
-                            <div class="inner-addon right-addon inline-block">
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-primary-cstm" data-dismiss="modal" (click)="newTaxRateAdd()" [disabled]="!addTaxRates.valid  || isTaxRateExists">Submit</button>
 
-                                <p-autoComplete class="p-dropdown-custom-2" name="taxRate"
-                                                [(ngModel)]="addNewTaxRate.taxRate"
-                                                (onSelect)="selectedTaxRate()"
-                                                (onKeyUp)="checkPercentExists($event.target.value)"
-                                                [suggestions]="_TaxRateList" field="label" (completeMethod)="filterTaxRate($event)"
-                                                [size]="30" [minLength]="1" [dropdown]="true" required>
-                                </p-autoComplete>
-                                <div *ngIf="isTaxRateExists" class="clr-red">Tax Rate Already Exists</div>
+                                <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="resetTaxRate()">Close</button>
+
                             </div>
                         </div>
-
-                        <!--<div class="form-group">
-                            <label for="description" class="control-label w100">Memo</label>
-                            <div class="control-data">
-                                <input type="text" id="" class="form-control" placeholder="Tool Bar" name="memo" [(ngModel)]="addNewTaxRate.memo">
-
-                            </div>
-                            <div class="clear"></div>
-                        </div>-->
-
-
-
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-primary-cstm" data-dismiss="modal" (click)="newTaxRateAdd()" [disabled]="!addTaxRates.valid  || isTaxRateExists">Submit</button>
-
-                        <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="resetTaxRate()">Close</button>
-
-                    </div>
-                </div>
 
             </div>
         </form>
@@ -569,7 +589,6 @@
     <div id="addmarkup" class="modal fade" role="dialog" data-backdrop="static">
         <form #admarkup="ngForm">
             <div class="modal-dialog">
-                <!-- Modal content-->
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -577,45 +596,29 @@
                     </div>
 
                     <div class="modal-body">
-                        <!--<div class="form-group">
-                            <label>Tax Type <span class="clr-red">*</span></label>
-                            <div class="inner-addon right-addon inline-block">
-                                <select name="taxTypeId" [(ngModel)]="addNewTaxRate.taxTypeId" placeholder="Select TaxType" required>
-                                    <option value="">Select Tax Type</option>
-                                    <option *ngFor="let TaxTypelist of taxTypeList" [ngValue]="TaxTypelist.value">{{TaxTypelist.label}}</option>
-                                </select>
-
-
-                            </div>
-
-                        </div>-->
+                       
                         <div class="form-group">
-                            <label>Percentage <span class="clr-red">*</span></label>
-                            <div class="inner-addon right-addon inline-block">
-
-                                <p-autoComplete class="p-dropdown-custom-2" name="taxratenew"
-                                                [(ngModel)]="addNewTaxRate.taxRate"
-                                                (onSelect)="selectedTaxRate()"
-                                                (onKeyUp)="checkPercentExists($event.target.value)"
-                                                [suggestions]="_TaxRateList" field="label" (completeMethod)="filterTaxRate($event)"
-                                                [size]="30" [minLength]="1" [dropdown]="true" required>
-                                </p-autoComplete>
-                                <div *ngIf="isTaxRateExists" class="clr-red">Percentage Already Exists</div>
+                            <div class="col-sm-12">
+                                <div class="col-sm-4">
+                                    <label for="description" class="control-label" style="margin-top:7px;">
+                                        Percentage
+                                        <span class="clr-red">*</span>
+                                    </label>
+                                </div>
+                                <div class="col-sm-5">
+                                    <p-autoComplete class="p-dropdown-custom-2" name="taxratenew"
+                                                    [(ngModel)]="addNewTaxRate.taxRate"
+                                                    (onSelect)="selectedTaxRate()"
+                                                    (onKeyUp)="checkPercentExists($event.target.value)"
+                                                    [suggestions]="_TaxRateList" field="label" (completeMethod)="filterTaxRate($event)"
+                                                    [size]="30" [minLength]="1" [dropdown]="true" required>
+                                    </p-autoComplete>
+                                    <div *ngIf="isTaxRateExists" class="clr-red"> Already Exists</div>
+                                </div>
                             </div>
+
                         </div>
-
-                        <!--<div class="form-group">
-                            <label for="description" class="control-label w100">Memo</label>
-                            <div class="control-data">
-                                <input type="text" id="" class="form-control" placeholder="Tool Bar" name="memo" [(ngModel)]="addNewTaxRate.memo">
-
-                            </div>
-                            <div class="clear"></div>
-                        </div>-->
-
-
-
-                    </div>
+                        </div>
                     <div class="modal-footer">
                         <button class="btn btn-primary-cstm" data-dismiss="modal" (click)="newTaxRateAdd()" [disabled]="!admarkup.valid  || isTaxRateExists">Submit</button>
 

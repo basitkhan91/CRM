@@ -62,10 +62,10 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                                         }}
                                     </td>
                                     <td style="width:200px" *ngIf="selectedColumns.length> 0">
+                                      
                                         <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="changeStatus(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
                                         <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="changeStatus(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
                                         <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="changeStatus(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
-
 
                                         <span data-toggle="modal" data-target="#view">
                                             <a class="btn btn-info boxed-float-btn nobg" matTooltip="View" (click)="viewSelectedRow(rowData)" data-target="#view" data-toggle="modal">
@@ -76,10 +76,10 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                                             <mat-icon>edit</mat-icon>
                                         </button>
 
-                                        <button class="btn-delete" mat-icon-button matTooltip="Delete" data-target="#delete" data-toggle="modal">
+                                        <button class="btn-delete" mat-icon-button matTooltip="Delete" data-target="#delete" data-toggle="modal" (click)="delete(rowData)">
                                             <mat-icon color="warn">delete</mat-icon>
                                         </button>
-                                        <button class="btn-history" mat-icon-button matTooltip="History" data-toggle="modal" data-target="#contentHist">
+                                        <button class="btn-history" mat-icon-button matTooltip="History" data-toggle="modal" data-target="#contentHist" (click)="showAuditPopup(rowData)">
                                             <mat-icon color="green">history</mat-icon>
                                         </button>
                                     </td>
@@ -124,7 +124,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                             <div class="col-sm-5">
                                 <p-autoComplete field="description" [(ngModel)]="addNewCapabilityType.description" name="capabilityType"
                                                 [suggestions]="capabilityTypeList" [size]="30" [minLength]="1" (completeMethod)="filterCapabilityType($event)" (onSelect)="selectedCapabilityType($event)" (onKeyUp)="checkCapabilityTypeExists($event.target.value)"
-                                                [dropdown]="true" class="p-autoComplete-ctsm" required>
+                                                [dropdown]="true" class="p-autoComplete-ctsm" required (ngModelChange)="getChange()">
 
                                 </p-autoComplete>
                                 <div *ngIf="disableSaveForCapabilityType" class="clr-red">Already Exists</div>
@@ -133,32 +133,37 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                         </div>
                         <div class="col-sm-12">
                             <div class="col-sm-4">
-                                <label for="description" class="control-label">Description</label>
+                                <label for="description" class="control-label">Sequence <span class="clr-red">*</span></label>
+                               
                             </div>
                             <div class="col-sm-5">
-                                <textarea class="text-item" #capabilityTypeDesc="ngModel" id="capabilityTypeDesc" name="capabilityTypeDesc" [(ngModel)]="addNewCapabilityType.capabilityTypeDesc"></textarea>
+                                <p-autoComplete class="p-autoComplete-ctsm" name="sequenceNum"
+                                                [(ngModel)]="addNewCapabilityType.sequenceNo"
+                                                pKeyFilter="num"
+                                                (onSelect)="selectedSequence($event)"
+                                                (onKeyUp)="checkSequenceExists($event.target.value)"
+                                                [suggestions]="sequenceList" field="sequenceNo" (completeMethod)="filterSequence($event)"
+                                                [size]="30" [minLength]="1" [dropdown]="true" required (ngModelChange)="getChange()">
+                                </p-autoComplete>
+                                <div *ngIf="disableSaveForSequence" class="clr-red">Already Exists</div>
+                            
                             </div>
                         </div>
                         <div class="col-sm-12">
                             <div class="col-sm-4">
-                                <label for="description" class="control-label">Sequence</label>
+                                <label for="description" class="control-label">Description</label>
                             </div>
                             <div class="col-sm-5">
-                                <input class="form-control"
-                                       id="sequenceNo"
-                                       type="text"
-                                       name="sequenceNo"
-                                       pInputText
-                                       pKeyFilter="num"
-                                       [(ngModel)]="addNewCapabilityType.sequenceNo" />
-                                  </div>
+                                <textarea class="text-item" #capabilityTypeDesc="ngModel" id="capabilityTypeDesc" name="capabilityTypeDesc" [(ngModel)]="addNewCapabilityType.capabilityTypeDesc" (ngModelChange)="getChange()"></textarea>
+                            </div>
                         </div>
+
                         <div class="col-sm-12">
                             <div class="col-sm-4">
                                 <label for="description" class="control-label">Memo</label>
                             </div>
                             <div class="col-sm-5">
-                                <textarea class="text-item" #sequenceMemo="ngModel" id="sequenceMemo" name="sequenceMemo" [(ngModel)]="addNewCapabilityType.sequenceMemo"></textarea>
+                                <textarea class="text-item" #sequenceMemo="ngModel" id="sequenceMemo" name="sequenceMemo" [(ngModel)]="addNewCapabilityType.sequenceMemo" (ngModelChange)="getChange()"></textarea>
                             </div>
                         </div>
 
@@ -167,7 +172,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                         <div class="col-sm-6">
                             <div class="checkbox-cstm">
                                 <label>
-                                    <input type="checkbox" name="isActive" [(ngModel)]="addNewCapabilityType.isActive">
+                                    <input type="checkbox" name="isActive" [(ngModel)]="addNewCapabilityType.isActive" (ngModelChange)="getChange()">
                                     <span class="cr">
                                         <i class="cr-icon pi pi-check"></i>
                                     </span>
@@ -180,7 +185,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                 </form>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-primary-cstm" data-dismiss="modal" [disabled]="addCapabilityTypeForm.invalid || disableSaveForCapabilityType" (click)="saveCapabilityType();"> {{isEdit ? 'Update' : 'Save' }}</button>
+                <button class="btn btn-primary-cstm" data-dismiss="modal" [disabled]="addCapabilityTypeForm.invalid || disableSaveForCapabilityType ||disableSaveForCondition || disableSaveForSequence" (click)="saveCapabilityType();"> {{isEdit ? 'Update' : 'Save' }}</button>
                 <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="resetCapabilityTypeForm()">Close</button>
 
             </div>
@@ -264,4 +269,78 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
 
     </div>
 
+</div>
+<div *ngIf="selectedRowforDelete" #delete id="delete" class="modal fade" role="dialog" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Are You Sure Want to Delete ?</h4>
+            </div>
+            <div class="modal-body">
+                <strong>
+                   Capability Type:
+                    <span class="new-label">{{selectedRowforDelete.description}}</span>
+                </strong>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary-cstm" data-dismiss="modal" (click)="deleteConformation('Yes')">Yes</button>
+                <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="deleteConformation('No')">No</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+<div *ngIf="auditHistory" id="contentHist" #contentHist class="modal fade" role="dialog" data-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">History of '{{historyName}}' </h4>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive  rro-table-cstm">
+                    <table class="table table-bordered" *ngIf="auditHistory.length> 0 else noDatavailable">
+                        <thead>
+                            <tr>
+                                 <th>Capability Type</th>
+                                <th>Description</th>
+                                <th>Sequence</th>
+                                <th>Memo</th>
+                                <th>Is Active</th>
+                                <th>Last Updated By</th>
+                                <th>Last Updated Time</th>
+                                <th>Created By</th>
+                                <th>Created Time</th>
+                            </tr>
+                        </thead>
+                        <tbody *ngIf="auditHistory.length> 0">
+                            <tr *ngFor="let audit of auditHistory; let i = index;">
+
+                                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'description', audit.description)  ? 'black' : 'red'  }">{{audit.description}}</td>
+                                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'capabilityTypeDesc', audit.capabilityTypeDesc)  ? 'black' : 'red'  }">{{audit.capabilityTypeDesc}}</td>
+                                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'sequenceNo', audit.sequenceNo)  ? 'black' : 'red'  }">{{audit.sequenceNo}}</td>
+                                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'sequenceMemo', audit.sequenceMemo)  ? 'black' : 'red'  }">{{audit.sequenceMemo}}</td>
+                                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'isActive', audit.isActive)  ? 'black' : 'red'  }">{{audit.isActive}}</td>
+
+                                <td>{{audit.updatedBy}}</td>
+                                <td>{{audit.updatedDate | date: 'dd-MM-yyyy h:mm a '}}</td>
+                                <td>{{audit.createdBy}}</td>
+                                <td>{{audit.createdDate | date: 'dd-MM-yyyy h:mm a '}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <ng-template #noDatavailable>
+                        <div class="text-center">
+                            <img src="../../assets/images/binoculars.png" style="height: 100px; width: 100px;">
+                            <h4 style="color: #ff5663;">No History Found </h4>
+                        </div>
+                    </ng-template>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
 </div>

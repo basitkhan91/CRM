@@ -5,9 +5,9 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="inline-block display-flex">
-                            <h3 class="po-head lead"> Asset Acquistion Type</h3>
+                            <h3 class="po-head lead"> Acquistion Type</h3>
                             &nbsp;&nbsp;
-                            <a class="plusicon-cstm new-margin" matTooltip="Add Asset Acquistion Type" matTooltipPosition="right" (click)="open(contentEdit)">
+                            <a class="plusicon-cstm new-margin" matTooltip="Add Acquistion Type" matTooltipPosition="right" (click)="open(contentEdit)">
                                 <i class="fa fa-plus-circle fa-lg"></i>
                             </a>
                         </div>
@@ -110,26 +110,26 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
     <div class="modal-content">
         <div class="modal-header">
             <button type="button" class="close" (click)="dismissModel()" data-dismiss="modal" id="" name="">×</button>
-            <h4 class="modal-title"> Asset Acquistion Type Details</h4>
+            <h4 class="modal-title"> Acquistion Type Details</h4>
         </div>
         <div class="modal-body viewform">
             <div class="col-sm-12">
                 <p>
                     <span class="label">
-                        <b> Asset Acquistion Type Code: </b>
+                        <b> Acquistion Type Code: </b>
                     </span>
                     <span class="value">{{code}}</span>
                 </p>
                 <p>
                     <span class="label">
-                        <b> Asset Acquistion Type Name: </b>
+                        <b> Acquistion Type: </b>
                     </span>
                     <span class="value">{{name}}</span>
                 </p>
 
                 <p>
                     <span class="label">
-                        <b> Asset Acquistion Type Memo: </b>
+                        <b> Acquistion Type Memo: </b>
                     </span>
                     <span class="value">{{memo}}</span>
                 </p>
@@ -182,7 +182,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
     </div>
     <div class="modal-body">
         <strong>
-            Asset Acquistion Type Code:
+            Acquistion Type Code:
             <span class="new-label">{{code_Name}}</span>
         </strong>
     </div>
@@ -196,8 +196,8 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
 
 <ng-template #contentEdit let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static">
     <div class="modal-header">
-        <h4 class="modal-title" *ngIf="isEditMode">Edit Asset Acquistion Type</h4>
-        <h4 class="modal-title" *ngIf="!isEditMode">Add Asset Acquistion Type</h4>
+        <h4 class="modal-title" *ngIf="isEditMode">Edit Acquistion Type</h4>
+        <h4 class="modal-title" *ngIf="!isEditMode">Add Acquistion Type</h4>
         <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
             <span aria-hidden="true">&times;</span>
         </button>
@@ -208,7 +208,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                 <div class="col-sm-12">
                     <div class="col-sm-4">
                         <label for="name" class="control-label">
-                            Asset Acquistion Type Code
+                            Acquistion Type Code
                             <span class="clr-red">*</span>
                         </label>
                     </div>
@@ -230,17 +230,17 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                 <div class="col-sm-12">
                     <div class="col-sm-4">
                         <label for="AssetAcquistionTypeName" class="control-label control-item">
-                            Name
+                            Acquistion Type 
                             <span class="clr-red">*</span>
                         </label>
                     </div>
                     <div class="col-sm-5">
                         <input type="text" name="name" class="form-control" required #Name="ngModel" [(ngModel)]="sourceAction.name" minlength="2">
                         <div *ngIf="Name.dirty && Name.errors?.required && Name.errors" class="invalid-form-error-message">
-                            Asset Acquistion Type Name required.
+                            Acquistion Type required.
                         </div>
                         <div *ngIf="Name.dirty && Name.errors?.minlength && Name.errors" class="invalid-form-error-message">
-                            Asset Acquistion Type Name must be at least 2 characters long.
+                            Acquistion Type must be at least 2 characters long.
                         </div>
                         <div class="clear"></div>
                     </div>
@@ -283,7 +283,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
     <div class="modal-content">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h4 class="modal-title">History of Asset Acquistion Type</h4>
+            <h4 class="modal-title">History of Acquistion Type</h4>
         </div>
         <div class="modal-body">
             <div class="table-responsive rro-table-cstm">
@@ -291,8 +291,8 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                     <thead>
                         <tr>
                             <!-- <th>UMID</th> -->
-                            <th>Code</th>
-                            <th>Name</th>
+                            <th>Acquistion Type Code</th>
+                            <th>Acquistion Type</th>
                             <th>Memo</th>
                             <th>IsActive</th>
                             <th>Updated By</th>

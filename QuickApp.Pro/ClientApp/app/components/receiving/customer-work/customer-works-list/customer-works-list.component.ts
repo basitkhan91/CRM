@@ -60,6 +60,10 @@ export class CustomerWorksListComponent implements OnInit, AfterViewInit{
     filteredText: string;
     private table: Table;
     auditHisory: any[];
+    public departname: any;
+    public divsioname: any;
+    public biuName: any;
+    public compnayname: any;
           cols = [
              
     { field: 'receivingCustomerNumber', header: 'Recev.No.' },
@@ -78,7 +82,7 @@ export class CustomerWorksListComponent implements OnInit, AfterViewInit{
     constructor(private receivingCustomerWorkService: ReceivingCustomerWorkService, private masterComapnyService: MasterComapnyService, private _route: Router, private authService: AuthService, private alertService: AlertService, private modalService: NgbModal, private commonService: CommonService) {
         this.dataSource = new MatTableDataSource();
         this.receivingCustomerWorkService.isEditMode = false;
-       // this.loadData();
+       
     }
 
      
@@ -86,7 +90,7 @@ export class CustomerWorksListComponent implements OnInit, AfterViewInit{
     ngAfterViewInit(): void {
     }
     ngOnInit(): void {
-        //this.loadData();
+      
 }
 
 
@@ -118,9 +122,7 @@ export class CustomerWorksListComponent implements OnInit, AfterViewInit{
     getList(data) {
 
         console.log(data.sortField);
-        //data.sortColumn = data.sortField;
-        // this.filterObjectCreate(data.filters);
-        const PagingData = { ...data, filters: listSearchFilterObjectCreation(data.filters) }
+         const PagingData = { ...data, filters: listSearchFilterObjectCreation(data.filters) }
         this.receivingCustomerWorkService.getCustomerWorkAll(PagingData).subscribe(res => {
             this.allRecevinginfo = res;
             if (res.length > 0) {
@@ -130,15 +132,7 @@ export class CustomerWorksListComponent implements OnInit, AfterViewInit{
 
         })
     }
-    //private loadData() {
-
-    //    this.alertService.startLoadingMessage();
-    //    this.loadingIndicator = true;
-
-    //    this.receivingCustomerWorkService.getReceiveCustomerList().subscribe(
-    //        results => this.onDataLoadSuccessful(results[0]),
-    //        error => this.onDataLoadFailed(error)
-    //    );
+   
 
       
 
@@ -151,13 +145,9 @@ export class CustomerWorksListComponent implements OnInit, AfterViewInit{
         console.log(allWorkFlows,'work');
     }
     openEdits(row) {
-        //this.receivingCustomerWorkService.isEditMode = true;
-        //this.isSaving = true;
-        //this.receivingCustomerWorkService.listCollection = row;
-
+    
         const { receivingCustomerWorkId } = row;
-        //this._route.navigateByUrl(`customersmodule/customerpages/app-customer-edit/${customerId}`);
-
+       
         this._route.navigateByUrl(`receivingmodule/receivingpages/app-customer-work-setup/edit/${receivingCustomerWorkId}`);
     }
   
@@ -170,15 +160,37 @@ export class CustomerWorksListComponent implements OnInit, AfterViewInit{
             this.receivingCustomerWorkService.listCollection = response[0];
             row = response[0];
             this.sourceAction = row;
-            //this.commonService.getManagementStructureDetails(row.managementStructureId).subscribe(res => {
-               
-            //    this.showViewProperties.level1 = res[0].key;
-            //    this.showViewProperties.level2 = res.Level2;
-            //    this.showViewProperties.level3 = res.Level3;
-            //    this.showViewProperties.level4 = res.Level4;
+            if (row.managmentLegalEntity != null && row.divmanagmentLegalEntity != null && row.biumanagmentLegalEntity != null && row.compmanagmentLegalEntity != null) {
+                this.departname = row.managementStructeInfo.name;
+                this.divsioname = row.divmanagmentLegalEntity.name;
+                this.biuName = row.biumanagmentLegalEntity.name;
+                this.compnayname = row.compmanagmentLegalEntity.name;
 
+            }
+            else if (row.biumanagmentLegalEntity != null && row.divmanagmentLegalEntity != null && row.managmentLegalEntity != null) {
+
+                this.divsioname = row.managmentLegalEntity.name;
+                this.biuName = row.divmanagmentLegalEntity.name;
+                this.compnayname = row.biumanagmentLegalEntity.name;
+
+
+
+            }
+            else if (row.divmanagmentLegalEntity != null && row.managmentLegalEntity != null) {
+                this.biuName = row.managmentLegalEntity.name;
+                this.compnayname = row.divmanagmentLegalEntity.name;
+
+
+            }
+            else if (row.managementStructeInfo != null) {
+
+                this.compnayname = row.managmentLegalEntity.name;
+
+            }
+            else {
                 
-            //    });
+            }
+          
             this.showViewProperties.isTimeLife = row.isTimeLife;
             this.showViewProperties.receivingCustomerNumber = row.receivingCustomerNumber;
             this.showViewProperties.customerReference = row.customerReference;
@@ -332,8 +344,7 @@ export class CustomerWorksListComponent implements OnInit, AfterViewInit{
         this.sourcereceving.updatedBy = this.userName;
         this.receivingCustomerWorkService.deleteReason(this.sourcereceving.receivingCustomerWorkId, this.userName).subscribe(
 
-        //this.receivingCustomerWorkService.deleteReason(this.sourcereceving.receivingCustomerWorkId).subscribe(
-         response => this.saveCompleted(this.sourcereceving),
+           response => this.saveCompleted(this.sourcereceving),
             error => this.saveFailedHelper(error));
         this.modal.close();
     }
@@ -394,9 +405,7 @@ export class CustomerWorksListComponent implements OnInit, AfterViewInit{
 
     }
     openHistory(content, rowData) {
-        //const { customerShippingAddressId } = rowData.customerShippingAddressId;
-        //const { customerShippingId } = rowData.customerShippingId;
-        this.alertService.startLoadingMessage();
+           this.alertService.startLoadingMessage();
 
         this.receivingCustomerWorkService.getAuditHistory(rowData.receivingCustomerWorkId).subscribe(
             results => this.onAuditHistoryLoadSuccessful(results[0], content),
@@ -444,10 +453,7 @@ export class CustomerWorksListComponent implements OnInit, AfterViewInit{
         else {
             this.table.reset();
         }
-        // this.getList();
-        // this.table.sortOrder = 0;
-        // this.table.sortField = '';
-
+      
 
     }
 

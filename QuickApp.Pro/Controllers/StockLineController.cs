@@ -1184,6 +1184,11 @@ namespace QuickApp.Pro.Controllers
             return result.ToList<object>();
         }
 
-
+        [HttpPost("stocklinereoprtview")]
+        public IActionResult StockLineReoprtView([FromBody]Filters<StockLineReportFilter> slReportFilter)
+        {
+            var result = _unitOfWork.stockLineList.StockLineReoprtView(slReportFilter);
+            return Ok(result);
+        }
     }
 }

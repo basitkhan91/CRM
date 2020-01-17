@@ -10,7 +10,7 @@
                             <h3 class="po-head lead">Asset List</h3>
                             &nbsp;&nbsp;
                             <!--Step x: Customize the data-target-->
-                            <a class="plusicon-cstm new-margin" pTooltip="Add Asset" tooltipPosition="right" (click)="navigateTogeneralInfo()">
+                            <a class="plusicon-cstm new-margin" matTooltip="Add Asset" matTooltipPosition="right" (click)="navigateTogeneralInfo()">
                                 <i class="fa fa-plus-circle fa-lg"></i>
                             </a>
                         </div>
@@ -48,7 +48,7 @@
                                                (input)="dt.filterGlobal($event.target.value, 'contains')"
                                                placeholder="Filter">
                                     </div>
-                                    <button type="button" class="btn btn-primary-cstm" matTooltip="Download Data" pTooltip="Download Data" matTooltipPosition="above"
+                                    <button type="button" class="btn btn-primary-cstm" matTooltip="Download Data" matTooltipPosition="above"
                                             pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
                                     <button type="button" class="btn btn-primary-cstm" matTooltip="Download Selected Data" pTooltip="Download Selected Data" matTooltipPosition="above"
                                             pButton icon="fa-download" iconPos="left" label="Export Selected Data" (click)="dt.exportCSV({selectionOnly:true})"></button>
@@ -141,6 +141,7 @@
                 <button type="button" class="close" data-dismiss="modal" (click)="dismissModel()">×</button>
                 <h4 class="modal-title">Details of Asset {{assetViewList.assetId}}</h4>
             </div>
+            <hr>
             <div class="modal-body viewform">
                 <app-view-asset [assetViewList]="assetViewList"></app-view-asset>
             </div>

@@ -1,7 +1,7 @@
 ﻿import { Component, OnInit, ViewChild } from '@angular/core';
 
 import { fadeInOut } from '../../services/animations';
-// import { VendorProcess1099Service } from '../../services/vendorprocess1099.service';
+
 import { AlertService, MessageSeverity } from '../../services/alert.service';
 import { AuthService } from '../../services/auth.service';
 import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
@@ -28,6 +28,7 @@ export class CapabilityTypeComponent implements OnInit {
         { field: 'sequenceNo', header: 'Sequence' }
 
     ]
+    selectedRowforDelete: any;
     selectedRecordForEdit: any;
     isEdit: boolean = false;
     totalRecords: any;
@@ -35,7 +36,12 @@ export class CapabilityTypeComponent implements OnInit {
     pageSize: number = 10;
     totalPages: number;
     capabilityTypeList: any;
+    sequenceList: any;
     viewRowData: any;
+    historyName: any;
+    auditHistory: any[] = [];
+    disableSaveForCondition: boolean;
+    disableSaveForSequence: boolean = false;
     newCapabilityType =
         {
             capabilityTypeId: null,
@@ -97,9 +103,10 @@ export class CapabilityTypeComponent implements OnInit {
         console.log(rowData);
         this.isEdit = true;
         this.disableSaveForCapabilityType = false;
-
+        this.disableSaveForCondition = true;
         this.addNewCapabilityType = {
-            ...rowData, description: getObjectById('capabilityTypeId', rowData.capabilityTypeId, this.capabilityTypeData)
+            ...rowData, description: getObjectById('capabilityTypeId', rowData.capabilityTypeId, this.capabilityTypeData),
+            sequenceNo: getObjectById('capabilityTypeId', rowData.capabilityTypeId, this.capabilityTypeData)
         };
         this.selectedRecordForEdit = { ...this.addNewCapabilityType }
 
@@ -115,7 +122,7 @@ export class CapabilityTypeComponent implements OnInit {
 
 
             this.commonService.smartExcelFileUpload(this.formData).subscribe(res => {
-
+                this.getCapabilityTypeList();
                 this.formData = new FormData();
 
                 this.alertService.showMessage(
@@ -128,7 +135,10 @@ export class CapabilityTypeComponent implements OnInit {
         }
 
     }
+    delete(rowData) {
+        this.selectedRowforDelete = rowData;
 
+    }
     sampleExcelDownload() {
         const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=CapabilityType&fileName=CapabilityType.xlsx`;
         window.location.assign(url);
@@ -141,7 +151,22 @@ export class CapabilityTypeComponent implements OnInit {
 
             if (this.addNewCapabilityType.description == this.capabilityTypeData[i].description || value == this.capabilityTypeData[i].description) {
                 this.disableSaveForCapabilityType = true;
-                // this.disableSave = true;
+            
+
+                return;
+            }
+
+        }
+
+    }
+    checkSequenceExists(value) {
+
+
+        this.disableSaveForSequence = false;
+        for (let i = 0; i < this.capabilityTypeData.length; i++) {
+
+            if (this.addNewCapabilityType.sequenceNo == this.capabilityTypeData[i].sequenceNo || value == this.capabilityTypeData[i].sequenceNo) {
+                this.disableSaveForSequence = true;
 
 
                 return;
@@ -158,9 +183,14 @@ export class CapabilityTypeComponent implements OnInit {
         const exists = selectedValueValidate('description', object, this.selectedRecordForEdit)
         this.disableSaveForCapabilityType = !exists;
     }
+    selectedSequence(object) {
+        const exists = selectedValueValidate('sequenceNo', object, this.selectedRecordForEdit)
+        this.disableSaveForSequence = !exists;
+    }
+
 
     changeStatus(rowData) {
-        debugger
+      
         console.log(rowData);
         
         const data = { ...rowData }
@@ -174,24 +204,64 @@ export class CapabilityTypeComponent implements OnInit {
         })
 
     }
+   
+    getChange() {
+        this.disableSaveForCondition = false;
+
+    }
+  
+    
+    deleteConformation(value) {
+        if (value === 'Yes') {
+            this.capabilityService.getDeleteCapabilityTypeEndpoint(this.selectedRowforDelete.capabilityTypeId, this.selectedRowforDelete.updatedBy).subscribe(() => {
+                this.getCapabilityTypeList();
+                this.alertService.showMessage(
+                    'Success',
+                    `Deleted Capability Type Successfully  `,
+                    MessageSeverity.success
+                );
+            })
+        } else {
+            this.selectedRowforDelete = undefined;
+        }
+    }
     filterCapabilityType(event) {
         this.capabilityTypeList = this.capabilityTypeData;
 
-        const vendorProcess1099Data = [...this.capabilityTypeData.filter(x => {
+        const capabilityTypeData = [...this.capabilityTypeData.filter(x => {
             return x.description.toLowerCase().includes(event.query.toLowerCase())
         })]
-        this.capabilityTypeList = vendorProcess1099Data;
+        this.capabilityTypeList = capabilityTypeData;
     }
+
+
+    filterSequence(event) {
+        this.sequenceList = this.capabilityTypeData;
+        
+      
+        const capabilityTypeData = [...this.capabilityTypeData.filter(x => {
+            if (x.sequenceNo !== null && x.sequenceNo !== "") {
+                return x.sequenceNo.includes(parseInt(event))
+            }
+        })]
+        this.sequenceList = capabilityTypeData;
+
+          }
+
     resetCapabilityTypeForm() {
         this.isEdit = false;
         this.disableSaveForCapabilityType = false;
-        // this.selectedRecordForEdit = undefined;
+        this.selectedRecordForEdit = undefined;
+        this.disableSaveForCondition = false;
+        this.disableSaveForSequence = false;
+
         this.addNewCapabilityType = { ...this.newCapabilityType };
     }
     saveCapabilityType() {
         const data = {
             ...this.addNewCapabilityType, createdBy: this.userName, updatedBy: this.userName,
-            description: editValueAssignByCondition('description', this.addNewCapabilityType.description)
+            description: editValueAssignByCondition('description', this.addNewCapabilityType.description),
+            sequenceNo: editValueAssignByCondition('sequenceNo', this.addNewCapabilityType.sequenceNo)
         };
         if (!this.isEdit) {
 
@@ -200,7 +270,7 @@ export class CapabilityTypeComponent implements OnInit {
                 this.getCapabilityTypeList();
                 this.alertService.showMessage(
                     'Success',
-                    `Added  New Vendor Process1099 Successfully`,
+                    `Added  Capability Type Successfully`,
                     MessageSeverity.success
                 );
             })
@@ -208,11 +278,12 @@ export class CapabilityTypeComponent implements OnInit {
             this.capabilityService.getNewCapabilityTypeEndpoint(data).subscribe(() => {
                 this.selectedRecordForEdit = undefined;
                 this.isEdit = false;
+                this.disableSaveForCondition = false;
                 this.resetCapabilityTypeForm();
                 this.getCapabilityTypeList();
                 this.alertService.showMessage(
                     'Success',
-                    `Updated Vendor Process1099 Successfully`,
+                    `Updated Capability Type Successfully`,
                     MessageSeverity.success
                 );
             })
@@ -221,6 +292,27 @@ export class CapabilityTypeComponent implements OnInit {
 
 
 
+    getAuditHistoryById(capabilityTypeId) {
+        this.capabilityService.getAllCapabilityTypeAudit(capabilityTypeId).subscribe(res => {
+            this.auditHistory = res;
+        })
+    }
+    showAuditPopup(audit): void {
+        this.historyName = audit.description;
+        this.getAuditHistoryById(audit.capabilityTypeId);
+           }
+
+    getColorCodeForHistory(i, field, value) {
+        const data = this.auditHistory;
+        const dataLength = data.length;
+        if (i >= 0 && i <= dataLength) {
+            if ((i + 1) === dataLength) {
+                return true;
+            } else {
+                return data[i + 1][field] === value
+            }
+        }
+    }
 
     
 

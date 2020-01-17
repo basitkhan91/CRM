@@ -1,11 +1,16 @@
-﻿using DAL.Models;
+﻿using DAL.Common;
+using DAL.Models;
 using System.Collections.Generic;
 
 namespace DAL.Repositories.Interfaces
 {
     public interface IEmployee : IRepository<DAL.Models.Employee>
     {
+        IEnumerable<object> GetEmployeeList(Filters<EmployeeFilters> employeeFilters);
+        IEnumerable<object> EmployeeGlobalSearch(string filterText, int pageNumber, int pageSize);
+        object EmployeeDetailsById(long employeeId);
         IEnumerable<object> GetAllEmployeeData();
+
 
         IEnumerable<object> GetEMployeelicensuerDetails(long employeeId);
         IEnumerable<object> GetEmpTariningDetails(long id);
