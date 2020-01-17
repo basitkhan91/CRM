@@ -194,7 +194,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                         label: ' Capabilities',
                         items: [
                             { label: 'Capabilities List', routerLink: '/itemmastersmodule/itemmasterpages/app-item-master-capabilities-list' },
-                            { label: 'Capabilities Create', routerLink: '/itemmastersmodule/itemmasterpages/app-item-master-create-capabilities' },
+                            { label: 'Create Capabilities', routerLink: '/itemmastersmodule/itemmasterpages/app-item-master-create-capabilities' },
                             { label: 'Reports & Forms', items: [{ label: 'Capabilities List', routerLink: '/#' }] }]
                     }
 

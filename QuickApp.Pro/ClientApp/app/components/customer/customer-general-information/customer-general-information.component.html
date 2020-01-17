@@ -290,7 +290,7 @@
                                                                             {{part[col.field]}}
                                                                         </td>
                                                                         <td>
-                                                                            <button class="btn-delete" (click)="deleteRestirctPMA(i, rowData)" mat-icon-button matTooltip="Delete">
+                                                                            <button class="btn-delete" (click)="openPopupForDeleteRestrictPMA(i, rowData, deleteRestrictPMAContent)" mat-icon-button matTooltip="Delete">
                                                                                 <mat-icon color="warn">delete</mat-icon>
                                                                             </button>
                                                                         </td>
@@ -346,7 +346,7 @@
                                                                             {{part[col.field]}}
                                                                         </td>
                                                                         <td>
-                                                                            <button class="btn-delete" (click)="deleteRestrictDER(i, rowData)" mat-icon-button matTooltip="Delete">
+                                                                            <button class="btn-delete" (click)="openPopupForDeleteRestrictDER(i, rowData, deleteRestrictDERContent)" mat-icon-button matTooltip="Delete">
                                                                                 <mat-icon color="warn">delete</mat-icon>
                                                                             </button>
                                                                         </td>
@@ -630,3 +630,39 @@
         </div>
     </div>
 </div>
+<ng-template #deleteRestrictPMAContent let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title">Are You Sure Want to Delete?</h4>
+        <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <strong>
+            Part Number:
+            <span class="new-label">{{selectedRowForDeleteRestrictPMA.partNumber}}</span>
+        </strong>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-success" (click)="deleteRestirctPMA()">Yes</button>
+        <button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
+    </div>
+</ng-template>
+<ng-template #deleteRestrictDERContent let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title">Are You Sure Want to Delete?</h4>
+        <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <strong>
+            Part Number:
+            <span class="new-label">{{selectedRowForDeleteRestrictDER.partNumber}}</span>
+        </strong>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-success" (click)="deleteRestirctDER()">Yes</button>
+        <button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
+    </div>
+</ng-template>
