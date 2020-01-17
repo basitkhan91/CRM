@@ -1,4 +1,4 @@
-﻿import { Component, Input, Output, EventEmitter } from '@angular/core';
+﻿import { Component, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
 import { CustomerService } from '../../../services/customer.service';
 import { AlertService, MessageSeverity } from '../../../services/alert.service';
 import { CustomerBillingAddressModel } from '../../../models/customer-billing-address.model';
@@ -21,6 +21,8 @@ export class CustomerBillingInformationComponent {
 	@Input() editGeneralInformationData;
 	@Input() editMode;
 	@Output() tab = new EventEmitter<any>();
+	@Input() selectedCustomerTab: string = "";
+
 	countryList: any[];
 	// countryListOriginal: any[];
     selectedRowForDelete: any;
@@ -183,6 +185,17 @@ export class CustomerBillingInformationComponent {
 		// };
 
 	}
+
+	ngOnChanges(changes: SimpleChanges) {
+		for (let property in changes) {
+            if (property == 'selectedCustomerTab') {
+				if(changes[property].currentValue == "Billing"){
+					this.getBillingDataById()
+				}
+			 }
+		} 
+
+      }
 
 	get userName(): string {
 		return this.authService.currentUser ? this.authService.currentUser.userName : "";

@@ -1,7 +1,7 @@
 ﻿
 import { Component, Input, EventEmitter, Output } from '@angular/core';
 import { CustomerService } from '../../../services/customer.service';
-import { OnInit } from '@angular/core/src/metadata/lifecycle_hooks';
+import { OnInit, SimpleChanges } from '@angular/core/src/metadata/lifecycle_hooks';
 import { AuthService } from '../../../services/auth.service';
 import { AlertService, MessageSeverity } from '../../../services/alert.service';
 import { CustomerShippingModel } from '../../../models/customer-shipping.model';
@@ -26,6 +26,8 @@ export class CustomerShippingInformationComponent implements OnInit {
     @Input() editGeneralInformationData;
     @Input() editMode;
     @Output() tab = new EventEmitter();
+    @Input() selectedCustomerTab: string = "";
+
 
     domesticShippingInfo = new CustomerShippingModel()
     internationalShippingInfo = new CustomerInternationalShippingModel()
@@ -134,6 +136,19 @@ export class CustomerShippingInformationComponent implements OnInit {
         // this.getInternationalShippingByCustomerId();
         // this.id = this.savedGeneralInformationData.customerId
     }
+
+    ngOnChanges(changes: SimpleChanges) {
+		for (let property in changes) {
+            if (property == 'selectedCustomerTab') {
+				if(changes[property].currentValue == "Shipping"){
+                    this.getDomesticShippingByCustomerId()
+                    this.getInternationalShippingByCustomerId()
+                    this.getShipViaDataByInternationalShippingId()
+				}
+			 }
+		} 
+
+      }
 
 
     get userName(): string {
