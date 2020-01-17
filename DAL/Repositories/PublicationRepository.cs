@@ -588,7 +588,7 @@ namespace DAL.Repositories
                                     join e in _appContext.Employee on p.EmployeeId equals e.EmployeeId into emp
                                     from e in emp.DefaultIfEmpty()
                                     where p.IsDeleted == false
-                                    && (e.FirstName == null || e.FirstName.ToLower().Contains(!string.IsNullOrEmpty(pubFilters.filters.VerifiedBy) ? pubFilters.filters.VerifiedBy.ToLower() : e.FirstName))
+                                    && (e.FirstName == null || e.FirstName.Contains(!string.IsNullOrEmpty(pubFilters.filters.VerifiedBy) ? pubFilters.filters.VerifiedBy : e.FirstName))
                                     select new PublicationFilters()
                                     {
                                         PublicationRecordId = p.PublicationRecordId,
@@ -614,7 +614,7 @@ namespace DAL.Repositories
                             join e in _appContext.Employee on p.EmployeeId equals e.EmployeeId into emp
                             from e in emp.DefaultIfEmpty()
                             where p.IsDeleted == false
-                            && (e.FirstName == null || e.FirstName.ToLower().Contains(!string.IsNullOrEmpty(pubFilters.filters.VerifiedBy) ? pubFilters.filters.VerifiedBy.ToLower() : e.FirstName))
+                            && (e.FirstName == null || e.FirstName.Contains(!string.IsNullOrEmpty(pubFilters.filters.VerifiedBy) ? pubFilters.filters.VerifiedBy : e.FirstName))
                             select new PublicationFilters()
                             {
                                 PublicationRecordId = p.PublicationRecordId,
