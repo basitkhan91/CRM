@@ -33,6 +33,7 @@ export class AssetMaintenanceWarrantyComponent implements OnInit {
     constructor(private router: ActivatedRoute,private assetService: AssetService, private vendorService: VendorService, private route: Router,
         private authService: AuthService, private alertService: AlertService, private glAccountService: GlAccountService) {
         this.AssetId = this.router.snapshot.params['id'];
+        this.activeIndex = 3;
         if (this.assetService.listCollection == undefined) {
             this.GetAssetData(this.AssetId);
         }
@@ -175,6 +176,27 @@ export class AssetMaintenanceWarrantyComponent implements OnInit {
     sampleExcelDownload() {
     }
 
+    changeOfTab(value) {
+        console.log('invoked');
+        console.log(`Parent master id ${this.AssetId}`);
+        const { assetId } = this.AssetId;
+        if (this.assetService.isEditMode == true) {
+            if (value === 'General') {
+                this.activeIndex = 0;
+                this.route.navigateByUrl(`assetmodule/assetpages/app-edit-asset/${this.AssetId}`);
+            } else if (value === 'Capes') {
+                this.activeIndex = 1;
+                this.route.navigateByUrl(`/assetmodule/assetpages/app-asset-capes/${this.AssetId}`);
+            } else if (value === 'Calibration') {
+                this.activeIndex = 2;
+                this.route.navigateByUrl(`/assetmodule/assetpages/app-asset-calibration/${this.AssetId}`);
+            } else if (value == "Maintenance") {
+                this.activeIndex = 3;
+                this.route.navigateByUrl(`/assetmodule/assetpages/app-asset-maintenance-warranty/${this.AssetId}`);
+            }
+        }
+
+    }
     private onGlAccountLoad(getGlList: GlAccount[]) {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;

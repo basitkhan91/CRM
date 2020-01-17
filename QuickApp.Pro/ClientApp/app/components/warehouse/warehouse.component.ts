@@ -117,7 +117,7 @@ export class WarehouseComponent implements OnInit, AfterViewInit{
 	ngOnInit(): void
 	{
 		this.cols = [
-			{ field: 'warehouseId', header: 'WareHosue Id' },
+			{ field: 'warehouseId', header: 'Warehosue Id' },
 			{ field: 'name', header: 'Warehouse Name' },
 			{ field: 'siteName', header: 'Site Name' },
 			{ field: 'address1', header: 'Address Line 1' },

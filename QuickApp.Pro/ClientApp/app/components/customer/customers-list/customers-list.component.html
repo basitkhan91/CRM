@@ -126,45 +126,12 @@
                             <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="changeStatus(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
                             <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="changeStatus(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
                             <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="changeStatus(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
-                            <!-- <span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openView(view,rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span> -->
                             <span><a class="btn nobg" (click)="viewSelectedRowdbl(viewdbl,rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
                             <span><a class="btn nobg" (click)="edit(rowData)" matTooltip="Edit"><i class="fa fa-pencil"></i></a> </span>
                             <span><a class="btn nobg" (click)="openContactList(contentcontact,rowData)" matTooltip="Contacts"><i class="fa fa-users"></i></a> </span>
                             <span data-toggle="modal" data-target="#delete"><a class="btn nobg" (click)="delete(content1,rowData)" matTooltip="Delete"><i class="fa fa-trash"></i></a> </span>
                             <span data-toggle="modal" data-target="#contentAuditHist"><a class="btn nobg" (click)="getAuditHistoryById(contentAuditHist,rowData)" matTooltip="History"><i class="fa fa-history"></i></a></span>
-                            <!-- <span>
-                                <a class="btn  boxed-float-btn nobg"
-                                   data-toggle="tooltip"
-                                   (click)="viewSelectedRowdbl(viewdbl,rowData)"
-                                   matTooltip="View">
-                                    <i class="fa fa-eye"></i>
-                                </a>
-                            </span> -->
-                            <!-- <button class="btn-edit"
-                                    mat-icon-button
-                                    (click)="edit(rowData)"
-                                    matTooltip="Edit">
-                                <mat-icon>edit</mat-icon>
-                            </button> -->
-                            <!-- <i class="fa fa-users" mat-icon-button matTooltip="Contacts"
-                               (click)="openContactList(contentcontact,rowData)">
-                            </i> -->
-                            <!-- <button class="btn-delete"
-                                    mat-icon-button
-                                    matTooltip="Delete"
-                                    data-target="#delete"
-                                    data-toggle="modal"
-                                    (click)="delete(content1,rowData)">
-                                <mat-icon color="warn">delete</mat-icon>
-                            </button> -->
-                            <!-- <button class="btn-history"
-                                    mat-icon-button
-                                    matTooltip="History"
-                                    data-target="#contentAuditHist"
-                                    data-toggle="modal"
-                                    (click)="getAuditHistoryById(contentAuditHist,rowData)">
-                                <mat-icon color="green">history</mat-icon>
-                            </button> -->
+                         
                         </div>
                     </td>
                 </tr>
@@ -188,8 +155,8 @@
     </div>
 </div>
 
- 
-<ng-template #viewdbl class="modal fade" id="viewdbl" role="dialog" >
+
+<ng-template #viewdbl class="modal fade" id="viewdbl" role="dialog">
     <div role="dialog" style="overflow-y:scroll">
         <div class="modal-dialog modal-lg">
             <!-- Modal content-->
@@ -883,7 +850,7 @@
                                                         </td>
                                                         <td>
                                                             <span>
-                                                                <a class="btn btn-info boxed-float-btn nobg" data-toggle="modal" data-target="#docView" (click)="openDocument(view,rowData)" matTooltip="View">
+                                                                <a class="btn btn-info boxed-float-btn nobg" data-toggle="modal" data-target="#fileDocview" (click)="openDocument(view,rowData)" matTooltip="View">
                                                                     <i class="fa fa-eye"></i>
                                                                 </a>
                                                             </span>
@@ -894,47 +861,6 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-                <div id="docView" class="modal fade" role="dialog" data-backdrop="static">
-                    <div class="modal-dialog">
-
-                        <!-- Modal content-->
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal">&times;</button>
-
-                            </div>
-                            <div class="modal-body" *ngIf="sourceViewforDocument">
-                                <div class="col-sm-12">
-                                    <div>
-                                        <h4 class="modal-title">Attachment Details '{{sourceViewforDocument.docName}}'</h4>
-
-                                        <table class="table table-bordered">
-                                            <tr>
-                                                <th>File Name</th>
-                                                <th>Actions</th>
-                                            </tr>
-                                            <tr *ngFor="let f of viewDocumnets">
-                                                <td>{{f.fileName}}</td>
-
-                                                <td><a class="btnfile btn-success btn-tbl-file-download" (click)="downloadFileUpload(f)" download>Download</a>  </td>
-
-
-                                            </tr>
-
-                                        </table>
-
-
-                                    </div>
-                                    <div class="clear"></div>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
                             </div>
                         </div>
 
@@ -951,7 +877,7 @@
         </div>
 
     </div>
-   
+
 </ng-template>
 
 <ng-template #contentcontact let-c="close" let-d="dismiss" class="modal fade" role="dialog">
@@ -1076,3 +1002,43 @@
         <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
     </div>
 </ng-template>
+
+<div id="fileDocview" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false" style="z-index: 10000;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Details of Customer Documents</h4>
+            </div>
+            <div class="modal-body" *ngIf="sourceViewforDocument">
+                <div class="col-sm-12">
+                    <p><span class="label"><b>Name: </b></span><span class="value">{{sourceViewforDocument.docName}}</span></p>
+                    <p><span class="label"><b>Description: </b></span><span class="value">{{sourceViewforDocument.docDescription}}</span></p>
+                    <p><span class="label"><b>Memo: </b></span><span class="value">{{sourceViewforDocument.docMemo}}</span></p>
+
+                    <div class="table-responsive table-overflow">
+                        <h4 class="panel-title" style="padding-left: 10px;">Attachment Details:</h4>
+                        <table class="table table-bordered ">
+                            <tr>
+                                <th>File Name</th>
+                                <th>Action</th>
+                            </tr>
+                            <tr *ngFor="let f of viewDocumnets">
+                                <td>{{f.fileName}}</td>
+                                <td><a (click)="downloadFileUpload(f)" matTooltip="Download" class="btn nobg btn-cstm"><span><i class="fa fa-download"></i></span></a> </td>
+                               
+
+                            </tr>
+
+                        </table>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>

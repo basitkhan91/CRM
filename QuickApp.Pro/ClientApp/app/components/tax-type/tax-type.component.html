@@ -170,7 +170,7 @@
                             <label for="description" class="control-label">Memo</label>
                         </div>
                         <div class="col-sm-5">
-                            <textarea class="text-item" #memo="ngModel" id="memo" name="memodescription" [(ngModel)]="addNew.memo" minlength="2"></textarea>
+                            <textarea class="text-item" #memo="ngModel" id="memo" name="memodescription" [(ngModel)]="addNew.memo" minlength="2" (ngModelChange)="getChange()"></textarea>
                         </div>
                     </div>
                 </div>
@@ -178,7 +178,7 @@
                     <div class="col-sm-6">
                         <div class="checkbox-cstm">
                             <label>
-                                <input type="checkbox" name="isActive" [(ngModel)]="addNew.isActive">
+                                <input type="checkbox" name="isActive" [(ngModel)]="addNew.isActive" (ngModelChange)="getChange()">
                                 <span class="cr">
                                     <i class="cr-icon pi pi-check"></i>
                                 </span>

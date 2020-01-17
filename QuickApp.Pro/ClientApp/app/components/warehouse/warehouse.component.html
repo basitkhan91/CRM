@@ -5,9 +5,9 @@
 				<div class="card">
 					<div class="card-body">
 						<div class="inline-block display-flex">
-							<h3 class="po-head lead">Ware House</h3>
+							<h3 class="po-head lead">Warehouse</h3>
 							&nbsp;&nbsp;
-							<a class="plusicon-cstm new-margin" pTooltip="Add Ware House" tooltipPosition="right" (click)="open(contentEdit)">
+							<a class="plusicon-cstm new-margin" matTooltip="Add Warehouse" matTooltipPosition="right" (click)="open(contentEdit)">
 								<i class="fa fa-plus-circle fa-lg"></i>
 							</a>
 						</div>
@@ -19,21 +19,21 @@
 									<p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header" selectedItemsLabel="{0} columns selected"
 									 [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
 									
-									<button type="button" class="btn btn-primary-cstm " pTooltip="Download Selected" tooltipPosition="top" pButton icon="fa-download"
-									 iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
-									<button type="button" class="btn btn-primary-cstm " pTooltip="Download All Data" tooltipPosition="top" pButton icon="fa-download"
+									<button type="button" class="btn btn-primary-cstm "  matTooltip="Download Data" matTooltipPosition="above" pButton icon="fa-download"
+									 iconPos="left" label="Export  Data" (click)="dt.exportCSV()"></button>
+									<button type="button" class="btn btn-primary-cstm " matTooltip="Download Selected" matTooltipPosition="above" pButton icon="fa-download"
 									 iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})"></button>
                                     <div class="excel-upload  excel-upload-cstm">
                                         <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected"
                                                accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
                                                (change)="bulkUpload($event)">
                                         <label for="upload">
-                                            <span matTooltip="Upload Data (Excel)">
+                                            <span matTooltip="Upload Data (Excel)" matTooltipPosition="above">
                                                 <i class="fa fa-upload"></i>
                                             </span>
                                         </label>
                                         &nbsp; &nbsp;
-                                        <button class="btn btn-primary-cstm" (click)="sampleExcelDownload()">Sample File Download</button>
+                                        <button class="btn btn-primary-cstm" matTooltip="Download Sample file" matTooltipPosition="above" (click)="sampleExcelDownload()">Sample File Download</button>
                                     </div>
 								</div>
 							</ng-template>
@@ -110,8 +110,8 @@
 
 <ng-template #contentEdit let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static">
 	<div class="modal-header">
-		<h4 class="modal-title" *ngIf="isEditMode">Edit WareHouse</h4>
-		<h4 class="modal-title" *ngIf="!isEditMode">Add WareHouse</h4>
+		<h4 class="modal-title" *ngIf="isEditMode">Edit Warehouse</h4>
+		<h4 class="modal-title" *ngIf="!isEditMode">Add Warehouse</h4>
 		<button type="button" class="close" aria-label="Close" (click)="dismissModel()">
 			<span aria-hidden="true">&times;</span>
 		</button>
@@ -136,7 +136,7 @@
 						</div>
 						<div class="col-sm-12">
 							<div class="col-sm-4">
-								<label for="actionname" class="control-label">WareHouse Name
+								<label for="actionname" class="control-label">Warehouse Name
 									<span class="clr-red">*</span>
 								</label>
 							</div>
@@ -329,13 +329,13 @@
 	<div class="modal-content">
 		<div class="modal-header">
 			<button type="button" class="close" (click)="dismissModel()" data-dismiss="modal" id="" name="">×</button>
-			<h4 class="modal-title">Ware House Details</h4>
+			<h4 class="modal-title">Warehouse Details</h4>
 		</div>
 		<div class="modal-body viewform">
 			<div class="col-sm-6">
 				<p>
 					<span class="label view-Header">
-						<b> WareHouse Name : </b>
+						<b> Warehouse Name : </b>
 					</span>
 					<span class="value">{{warehouse_Name}}</span>
 				</p>

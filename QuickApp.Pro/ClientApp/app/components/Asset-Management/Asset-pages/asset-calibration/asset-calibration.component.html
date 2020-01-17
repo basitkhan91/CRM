@@ -1,393 +1,458 @@
-﻿<div class="card padding-10">
-<div id="mCSB_3_container" class="mCSB_container mCS_y_hidden mCS_no_scrollbar_y"
-    style="position: relative; left: 0px; top: 0px;" dir="ltr">
-    <fieldset class="calibration-tab sf-step-el">
-        <div class="col-sm-12">
-            <div class="form-group marginr50" style="display: inline-block;margin: 10px 5px 0 5px;">
-                <p class="fs10">
-                    <label class="control-label" style="width: auto;">Asset ID :</label>
-                    {{local?.assetId}}
-                </p>
+﻿<div class="md-stepper-horizontal orange">
+    <div class="md-step"
+         [ngClass]="{ active: activeIndex >= 0 , editable : activeIndex === 0}" (click)="changeOfTab('General')">
+        <div class="md-step-circle"><span>1</span></div>
+        <div class="md-step-title">General Information</div>
+        <div class="md-step-bar-left"></div>
+        <div class="md-step-bar-right"></div>
+    </div>
+    <div class="md-step"
+         [ngClass]="{ active: activeIndex >= 1, editable : activeIndex === 1 }"
+         (click)="changeOfTab('Capes')">
+        <div class="md-step-circle"><span>2</span></div>
+        <div class="md-step-title">Capes</div>
+        <div class="md-step-bar-left"></div>
+        <div class="md-step-bar-right"></div>
+    </div>
+    <div class="md-step"
+         [ngClass]="{ active: activeIndex >= 2 , editable : activeIndex === 2 }"
+         (click)="changeOfTab('Calibration')">
+        <div class="md-step-circle"><span>3</span></div>
+        <div class="md-step-title">Calibration</div>
+        <div class="md-step-bar-left"></div>
+        <div class="md-step-bar-right"></div>
+    </div>
+    <div class="md-step"
+         [ngClass]="{ active: activeIndex >= 3 , editable : activeIndex === 3 }"
+         (click)="changeOfTab('Maintenance')">
+        <div class="md-step-circle"><span>4</span></div>
+        <div class="md-step-title">Maintenance & Warranty</div>
+        <div class="md-step-bar-left"></div>
+        <div class="md-step-bar-right"></div>
+    </div>
+</div>
+<div class="card padding-10">
+    <div id="mCSB_3_container" class="mCSB_container mCS_y_hidden mCS_no_scrollbar_y"
+         style="position: relative; left: 0px; top: 0px;" dir="ltr">
+        <fieldset class="calibration-tab sf-step-el">
+            <div class="col-sm-12">
+                <div class="form-group marginr50" style="display: inline-block;margin: 10px 5px 0 5px;">
+                    <p class="fs10">
+                        <label class="control-label" style="width: auto;">Asset ID :</label>
+                        {{local?.assetId}}
+                    </p>
+                </div>
+                <div class="form-group marginr50" style="display: inline-block;margin: 10px 5px 0 5px;">
+                    <p class="fs10">
+                        <label class="control-label" style="width: auto;">Alt Asset ID :</label>
+                        {{local?.alternateAssetId}}
+                    </p>
+                </div>
+                <div class="form-group marginr50" style="display: inline-block;margin: 10px 5px 0 5px;">
+                    <p class="fs10">
+                        <label class="control-label" style="width: auto;">Asset Name : </label>
+                        {{local?.name}}
+                    </p>
+                </div>
+                <!--<div class="form-group" style="display: inline-block;">
+                    <p class="fs10">
+                        <label class="control-label" style="width: auto;">Asset Type</label>
+                        {{local?.assetTypeSingleScreenId}}
+                    </p>
+                </div>-->
             </div>
-            <div class="form-group marginr50" style="display: inline-block;margin: 10px 5px 0 5px;">
-                <p class="fs10">
-                    <label class="control-label" style="width: auto;">Alt Asset ID :</label>
-                    {{local?.alternateAssetId}}
-                </p>
-            </div>
-            <div class="form-group marginr50" style="display: inline-block;margin: 10px 5px 0 5px;">
-                <p class="fs10">
-                    <label class="control-label" style="width: auto;">Asset Name : </label>
-                    {{local?.name}}
-                </p>
-            </div>
-            <!--<div class="form-group" style="display: inline-block;">
-                <p class="fs10">
-                    <label class="control-label" style="width: auto;">Asset Type</label>
-                    {{local?.assetTypeSingleScreenId}}
-                </p>
-            </div>-->
-        </div>
-        <div class="clear"></div>
-        <div class="clear"></div>
-        <hr class="hr-light-grey">
-        <div class="col-sm-3">
+            <div class="clear"></div>
+            <div class="clear"></div>
+            <hr class="hr-light-grey">
+            <div class="col-sm-3">
                 <div class="form-group col-sm-12">
-                        <label class="control-label col-sm-5">Calibration Required</label>
-                        <div class="col-sm-6">
-                            <input class="form-control" type="checkbox" [ngModelOptions]="{standalone: true}"
-                                [(ngModel)]="currentCalibration.calibrationRequired">
+                    <label class="control-label col-sm-5">Calibration Required</label>
+                    <div class="col-sm-6">
+                        <input class="form-control" type="checkbox" [ngModelOptions]="{standalone: true}"
+                               [(ngModel)]="currentCalibration.calibrationRequired">
+                    </div>
+                </div>
+                <div *ngIf="currentCalibration.calibrationRequired">
+                    <div class="form-group col-sm-12">
+                        <label class="control-label col-sm-4">Calibration Frequency</label>
+                        <div class="col-sm-7">
+                            <div class="col-sm-4">
+                                <span class="bold">
+                                    Mths<input type="number" min="0" max="12"
+                                               [ngModelOptions]="{standalone: true}"
+                                               [(ngModel)]="currentCalibration.calibrationFrequencyMonths">
+                                </span>
+
+                            </div>
+                            <div class="col-sm-4">
+                                <span class="bold">
+                                    -Days<input type="number" min="0" max="31"
+                                                [ngModelOptions]="{standalone: true}"
+                                                [(ngModel)]="currentCalibration.calibrationFrequencyDays">
+                                </span>
+
+                            </div>
                         </div>
                     </div>
-                    <div *ngIf="currentCalibration.calibrationRequired">
-                            <div class="form-group col-sm-12">
-                                <label class="control-label col-sm-4">Calibration Frequency</label>
-                                <div class="col-sm-7">
-                                    <div class="col-sm-4">
-                                        <span class="bold">Mths<input type="number" min="0" max="12"
-                                                [ngModelOptions]="{standalone: true}"
-                                                [(ngModel)]="currentCalibration.calibrationFrequencyMonths"></span>
-            
-                                    </div>
-                                    <div class="col-sm-4">
-                                        <span class="bold">-Days<input type="number" min="0" max="31"
-                                                [ngModelOptions]="{standalone: true}"
-                                                [(ngModel)]="currentCalibration.calibrationFrequencyDays"></span>
-            
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group col-sm-12">
-                                <label class="control-label col-sm-4">Default Vendor</label>
-                                <div class="col-sm-7">
-                                    <select [ngModelOptions]="{standalone: true}"
-                                        [(ngModel)]="currentCalibration.calibrationDefaultVendorId">
-                                        <option>--Select--</option>
-                                        <option class="form-control" *ngFor="let vendors of allVendorInfo"
-                                            [ngValue]="vendors.vendorId">
-                                            {{vendors.vendorName}}
-                                        </option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group col-sm-12">
-                                <label class="control-label col-sm-4">Dafault Cost</label>
-                                <div class="col-sm-7">
-                                    <input class="form-control w70 amount" type="number" [ngModelOptions]="{standalone: true}"
-                                        [(ngModel)]="currentCalibration.calibrationDefaultCost">
-                                    <select class="w70 form-control" [ngModelOptions]="{standalone: true}"
-                                        [(ngModel)]="currentCalibration.calibrationCurrencyId">
-                                        <option>--Select--</option>
-                                        <option class="form-control" *ngFor="let currencyName of allCurrencyInfo"
-                                            [ngValue]="currencyName.currencyId">
-                                            {{currencyName.symbol}}
-                                        </option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group col-sm-12">
-                                <label class="control-label col-sm-4">GL Account</label>
-                                <div class="col-sm-7">
-                                    <select class="autosuggest" [ngModelOptions]="{standalone: true}"
-                                        [(ngModel)]="currentCalibration.calibrationGlAccountId">
-                                        <option>--Select--</option>
-                                        <option class="form-control" *ngFor="let glAccounts of allGlInfo"
-                                            [ngValue]="glAccounts.glAccountId">
-                                            {{glAccounts.accountName}}
-                                        </option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group col-sm-12">
-                                <label class="control-label col-sm-4">Calibration Memo</label>
-                                <div class="col-sm-7">
-                                    <textarea class="form-control" [ngModelOptions]="{standalone: true}"
-                                        [(ngModel)]="currentCalibration.calibrationMemo"></textarea>
-                                </div>
-                            </div>
-                            <div class="clear"></div>
+                    <div class="form-group col-sm-12">
+                        <label class="control-label col-sm-4">Default Vendor</label>
+                        <div class="col-sm-7">
+                            <select [ngModelOptions]="{standalone: true}"
+                                    [(ngModel)]="currentCalibration.calibrationDefaultVendorId">
+                                <option>--Select--</option>
+                                <option class="form-control" *ngFor="let vendors of allVendorInfo"
+                                        [ngValue]="vendors.vendorId">
+                                    {{vendors.vendorName}}
+                                </option>
+                            </select>
                         </div>
-            
-        </div>
-        <div class="col-sm-3">
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <label class="control-label col-sm-4">Dafault Cost</label>
+                        <div class="col-sm-7">
+                            <input class="form-control w70 amount" type="number" [ngModelOptions]="{standalone: true}"
+                                   [(ngModel)]="currentCalibration.calibrationDefaultCost">
+                            <select class="w70 form-control" [ngModelOptions]="{standalone: true}"
+                                    [(ngModel)]="currentCalibration.calibrationCurrencyId">
+                                <option>--Select--</option>
+                                <option class="form-control" *ngFor="let currencyName of allCurrencyInfo"
+                                        [ngValue]="currencyName.currencyId">
+                                    {{currencyName.symbol}}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <label class="control-label col-sm-4">GL Account</label>
+                        <div class="col-sm-7">
+                            <select class="autosuggest" [ngModelOptions]="{standalone: true}"
+                                    [(ngModel)]="currentCalibration.calibrationGlAccountId">
+                                <option>--Select--</option>
+                                <option class="form-control" *ngFor="let glAccounts of allGlInfo"
+                                        [ngValue]="glAccounts.glAccountId">
+                                    {{glAccounts.accountName}}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <label class="control-label col-sm-4">Calibration Memo</label>
+                        <div class="col-sm-7">
+                            <textarea class="form-control" [ngModelOptions]="{standalone: true}"
+                                      [(ngModel)]="currentCalibration.calibrationMemo"></textarea>
+                        </div>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+
+            </div>
+            <div class="col-sm-3">
                 <div class="form-group col-sm-12">
-                        <label class="control-label col-sm-5">Certification Required</label>
-                        <div class="col-sm-6">
-                            <input class="form-control" type="checkbox" [ngModelOptions]="{standalone: true}"
-                                [(ngModel)]="currentCalibration.certificationRequired">
-                        </div>
+                    <label class="control-label col-sm-5">Certification Required</label>
+                    <div class="col-sm-6">
+                        <input class="form-control" type="checkbox" [ngModelOptions]="{standalone: true}"
+                               [(ngModel)]="currentCalibration.certificationRequired">
+                    </div>
                 </div>
                 <div *ngIf="currentCalibration.certificationRequired">
-                        <div class="form-group col-sm-12">
-                            <label class="control-label col-sm-4">Certification Frequency</label>
-                            <div class="col-sm-7">
-                                <div class="col-sm-4">
-                                    <span class="bold">Mths<input type="number" min="0" max="12"
-                                            [ngModelOptions]="{standalone: true}"
-                                            [(ngModel)]="currentCalibration.certificationFrequencyMonths"></span>
-                                </div>
-                                <div class="col-sm-4">
-                                    <span class="bold">-Days<input type="number" min="0" max="31"
-                                            [ngModelOptions]="{standalone: true}"
-                                            [(ngModel)]="currentCalibration.certificationFrequencyDays"></span>
-                                </div>
+                    <div class="form-group col-sm-12">
+                        <label class="control-label col-sm-4">Certification Frequency</label>
+                        <div class="col-sm-7">
+                            <div class="col-sm-4">
+                                <span class="bold">
+                                    Mths<input type="number" min="0" max="12"
+                                               [ngModelOptions]="{standalone: true}"
+                                               [(ngModel)]="currentCalibration.certificationFrequencyMonths">
+                                </span>
+                            </div>
+                            <div class="col-sm-4">
+                                <span class="bold">
+                                    -Days<input type="number" min="0" max="31"
+                                                [ngModelOptions]="{standalone: true}"
+                                                [(ngModel)]="currentCalibration.certificationFrequencyDays">
+                                </span>
                             </div>
                         </div>
-                        <div class="form-group col-sm-12">
-                            <label class="control-label col-sm-4">Default Vendor</label>
-                            <div class="col-sm-7">
-                                <select [ngModelOptions]="{standalone: true}"
-                                    [(ngModel)]="currentCalibration.certificationDefaultVendorId">
-                                    <option>--Select--</option>
-                                    <option class="form-control" *ngFor="let vendors of allVendorInfo"
-                                        [ngValue]="vendors.vendorId">
-                                        {{vendors.vendorName}}
-                                    </option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group col-sm-12">
-                            <label class="control-label col-sm-4">Dafault Cost</label>
-                            <div class="col-sm-7">
-                                <input class="form-control w70 amount" [ngModelOptions]="{standalone: true}"
-                                    [(ngModel)]="currentCalibration.certificationDefaultCost" type="number">
-                                <select class="w70 form-control" [ngModelOptions]="{standalone: true}"
-                                    [(ngModel)]="currentCalibration.certificationCurrencyId">
-                                    <option>--Select--</option>
-                                    <option class="form-control" *ngFor="let currencyName of allCurrencyInfo"
-                                        [ngValue]="currencyName.currencyId">
-                                        {{currencyName.symbol}}
-                                    </option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group col-sm-12">
-                            <label class="control-label col-sm-4">GL Account</label>
-                            <div class="col-sm-7">
-                                <select class="autosuggest" [ngModelOptions]="{standalone: true}"
-                                    [(ngModel)]="currentCalibration.certificationGlAccountId">
-                                    <option>--Select--</option>
-                                    <option class="form-control" *ngFor="let glAccounts of allGlInfo"
-                                        [ngValue]="glAccounts.glAccountId">
-                                        {{glAccounts.accountName}}
-                                    </option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group col-sm-12">
-                            <label class="control-label col-sm-4">Certification Memo</label>
-                            <div class="col-sm-7">
-                                <textarea class="form-control" [ngModelOptions]="{standalone: true}"
-                                    [(ngModel)]="currentCalibration.certificationMemo"></textarea>
-                            </div>
-                        </div>
-                        <div class="clear"></div>
                     </div>
-            
-        </div>
-        <div class="col-sm-3">
-                <div class="form-group col-sm-12">
-                        <label class="control-label col-sm-5">Inspection Required</label>
-                        <div class="col-sm-6">
-                            <input class="form-control" type="checkbox" [ngModelOptions]="{standalone: true}"
-                                [(ngModel)]="currentCalibration.inspectionRequired">
+                    <div class="form-group col-sm-12">
+                        <label class="control-label col-sm-4">Default Vendor</label>
+                        <div class="col-sm-7">
+                            <select [ngModelOptions]="{standalone: true}"
+                                    [(ngModel)]="currentCalibration.certificationDefaultVendorId">
+                                <option>--Select--</option>
+                                <option class="form-control" *ngFor="let vendors of allVendorInfo"
+                                        [ngValue]="vendors.vendorId">
+                                    {{vendors.vendorName}}
+                                </option>
+                            </select>
                         </div>
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <label class="control-label col-sm-4">Dafault Cost</label>
+                        <div class="col-sm-7">
+                            <input class="form-control w70 amount" [ngModelOptions]="{standalone: true}"
+                                   [(ngModel)]="currentCalibration.certificationDefaultCost" type="number">
+                            <select class="w70 form-control" [ngModelOptions]="{standalone: true}"
+                                    [(ngModel)]="currentCalibration.certificationCurrencyId">
+                                <option>--Select--</option>
+                                <option class="form-control" *ngFor="let currencyName of allCurrencyInfo"
+                                        [ngValue]="currencyName.currencyId">
+                                    {{currencyName.symbol}}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <label class="control-label col-sm-4">GL Account</label>
+                        <div class="col-sm-7">
+                            <select class="autosuggest" [ngModelOptions]="{standalone: true}"
+                                    [(ngModel)]="currentCalibration.certificationGlAccountId">
+                                <option>--Select--</option>
+                                <option class="form-control" *ngFor="let glAccounts of allGlInfo"
+                                        [ngValue]="glAccounts.glAccountId">
+                                    {{glAccounts.accountName}}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <label class="control-label col-sm-4">Certification Memo</label>
+                        <div class="col-sm-7">
+                            <textarea class="form-control" [ngModelOptions]="{standalone: true}"
+                                      [(ngModel)]="currentCalibration.certificationMemo"></textarea>
+                        </div>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+
+            </div>
+            <div class="col-sm-3">
+                <div class="form-group col-sm-12">
+                    <label class="control-label col-sm-5">Inspection Required</label>
+                    <div class="col-sm-6">
+                        <input class="form-control" type="checkbox" [ngModelOptions]="{standalone: true}"
+                               [(ngModel)]="currentCalibration.inspectionRequired">
+                    </div>
                 </div>
                 <div *ngIf="currentCalibration.inspectionRequired">
-                        <div class="form-group col-sm-12">
-                            <label class="control-label col-sm-4">Inspection Frequency</label>
-                            <div class="col-sm-7">
-                                <div class="col-sm-4">
-                                    <span class="bold">Mths<input type="number" min="0" max="12"
-                                            [ngModelOptions]="{standalone: true}"
-                                            [(ngModel)]="currentCalibration.inspectionFrequencyMonths"></span>
-                                </div>
-                                <div class="col-sm-4">
-                                    <span class="bold">-Days<input type="number" min="0" max="31"
-                                            [ngModelOptions]="{standalone: true}"
-                                            [(ngModel)]="currentCalibration.inspectionFrequencyDays"></span>
-                                </div>
+                    <div class="form-group col-sm-12">
+                        <label class="control-label col-sm-4">Inspection Frequency</label>
+                        <div class="col-sm-7">
+                            <div class="col-sm-4">
+                                <span class="bold">
+                                    Mths<input type="number" min="0" max="12"
+                                               [ngModelOptions]="{standalone: true}"
+                                               [(ngModel)]="currentCalibration.inspectionFrequencyMonths">
+                                </span>
+                            </div>
+                            <div class="col-sm-4">
+                                <span class="bold">
+                                    -Days<input type="number" min="0" max="31"
+                                                [ngModelOptions]="{standalone: true}"
+                                                [(ngModel)]="currentCalibration.inspectionFrequencyDays">
+                                </span>
                             </div>
                         </div>
-                        <div class="form-group col-sm-12">
-                            <label class="control-label col-sm-4">Default Vendor</label>
-                            <div class="col-sm-7">
-                                <select [ngModelOptions]="{standalone: true}"
-                                    [(ngModel)]="currentCalibration.inspectionDefaultVendorId">
-                                    <option>--Select--</option>
-                                    <option class="form-control" *ngFor="let vendors of allVendorInfo"
-                                        [ngValue]="vendors.vendorId">
-                                        {{vendors.vendorName}}
-                                    </option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group col-sm-12">
-                            <label class="control-label col-sm-4">Dafault Cost</label>
-                            <div class="col-sm-7">
-                                <input class="form-control w70 amount" type="number" [ngModelOptions]="{standalone: true}"
-                                    [(ngModel)]="currentCalibration.inspectionDefaultCost">
-                                <select class="w70 form-control" [ngModelOptions]="{standalone: true}"
-                                    [(ngModel)]="currentCalibration.inspectionCurrencyId">
-                                    <option>--Select--</option>
-                                    <option class="form-control" *ngFor="let currencyName of allCurrencyInfo"
-                                        [ngValue]="currencyName.currencyId">
-                                        {{currencyName.symbol}}
-                                    </option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group col-sm-12">
-                            <label class="control-label col-sm-4">GL Account</label>
-                            <div class="col-sm-7">
-                                <select class="autosuggest" [ngModelOptions]="{standalone: true}"
-                                    [(ngModel)]="currentCalibration.inspectionGlaAccountId">
-                                    <option>--Select--</option>
-                                    <option class="form-control" *ngFor="let glAccounts of allGlInfo"
-                                        [ngValue]="glAccounts.glAccountId">
-                                        {{glAccounts.accountName}}
-                                    </option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group col-sm-12">
-                            <label class="control-label col-sm-4">Inspection Memo</label>
-                            <div class="col-sm-7">
-                                <textarea class="form-control" [ngModelOptions]="{standalone: true}"
-                                    [(ngModel)]="currentCalibration.inspectionMemo"></textarea>
-                            </div>
-                        </div>
-                        <div class="clear"></div>
                     </div>
-            
-        </div>
-        <div class="col-sm-3">
-                <div class="form-group col-sm-12">
-                        <label class="control-label col-sm-5">Verification Required</label>
-                        <div class="col-sm-6">
-                            <input class="form-control" type="checkbox" [ngModelOptions]="{standalone: true}"
-                                [(ngModel)]="currentCalibration.verificationRequired">
+                    <div class="form-group col-sm-12">
+                        <label class="control-label col-sm-4">Default Vendor</label>
+                        <div class="col-sm-7">
+                            <select [ngModelOptions]="{standalone: true}"
+                                    [(ngModel)]="currentCalibration.inspectionDefaultVendorId">
+                                <option>--Select--</option>
+                                <option class="form-control" *ngFor="let vendors of allVendorInfo"
+                                        [ngValue]="vendors.vendorId">
+                                    {{vendors.vendorName}}
+                                </option>
+                            </select>
                         </div>
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <label class="control-label col-sm-4">Dafault Cost</label>
+                        <div class="col-sm-7">
+                            <input class="form-control w70 amount" type="number" [ngModelOptions]="{standalone: true}"
+                                   [(ngModel)]="currentCalibration.inspectionDefaultCost">
+                            <select class="w70 form-control" [ngModelOptions]="{standalone: true}"
+                                    [(ngModel)]="currentCalibration.inspectionCurrencyId">
+                                <option>--Select--</option>
+                                <option class="form-control" *ngFor="let currencyName of allCurrencyInfo"
+                                        [ngValue]="currencyName.currencyId">
+                                    {{currencyName.symbol}}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <label class="control-label col-sm-4">GL Account</label>
+                        <div class="col-sm-7">
+                            <select class="autosuggest" [ngModelOptions]="{standalone: true}"
+                                    [(ngModel)]="currentCalibration.inspectionGlaAccountId">
+                                <option>--Select--</option>
+                                <option class="form-control" *ngFor="let glAccounts of allGlInfo"
+                                        [ngValue]="glAccounts.glAccountId">
+                                    {{glAccounts.accountName}}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <label class="control-label col-sm-4">Inspection Memo</label>
+                        <div class="col-sm-7">
+                            <textarea class="form-control" [ngModelOptions]="{standalone: true}"
+                                      [(ngModel)]="currentCalibration.inspectionMemo"></textarea>
+                        </div>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+
+            </div>
+            <div class="col-sm-3">
+                <div class="form-group col-sm-12">
+                    <label class="control-label col-sm-5">Verification Required</label>
+                    <div class="col-sm-6">
+                        <input class="form-control" type="checkbox" [ngModelOptions]="{standalone: true}"
+                               [(ngModel)]="currentCalibration.verificationRequired">
+                    </div>
                 </div>
                 <div *ngIf="currentCalibration.verificationRequired">
-                        <div class="form-group col-sm-12">
-                            <label class="control-label col-sm-4">Verification Frequency</label>
-                            <div class="col-sm-7">
-                                <div class="col-sm-4">
-                                    <span class="bold">Mths<input type="number" min="0" max="12"
-                                            [ngModelOptions]="{standalone: true}"
-                                            [(ngModel)]="currentCalibration.verificationFrequencyMonths"></span>
-                                </div>
-                                <div class="col-sm-4">
-                                    <span class="bold">-Days<input type="number" min="0" max="31"
-                                            [ngModelOptions]="{standalone: true}"
-                                            [(ngModel)]="currentCalibration.verificationFrequencyDays"></span>
-                                </div>
+                    <div class="form-group col-sm-12">
+                        <label class="control-label col-sm-4">Verification Frequency</label>
+                        <div class="col-sm-7">
+                            <div class="col-sm-4">
+                                <span class="bold">
+                                    Mths<input type="number" min="0" max="12"
+                                               [ngModelOptions]="{standalone: true}"
+                                               [(ngModel)]="currentCalibration.verificationFrequencyMonths">
+                                </span>
+                            </div>
+                            <div class="col-sm-4">
+                                <span class="bold">
+                                    -Days<input type="number" min="0" max="31"
+                                                [ngModelOptions]="{standalone: true}"
+                                                [(ngModel)]="currentCalibration.verificationFrequencyDays">
+                                </span>
                             </div>
                         </div>
-                        <div class="form-group col-sm-12">
-                            <label class="control-label col-sm-4">Default Vendor</label>
-                            <div class="col-sm-7">
-                                <select [ngModelOptions]="{standalone: true}"
-                                    [(ngModel)]="currentCalibration.verificationDefaultVendorId">
-                                    <option>--Select--</option>
-                                    <option class="form-control" *ngFor="let vendors of allVendorInfo"
-                                        [ngValue]="vendors.vendorId">
-                                        {{vendors.vendorName}}
-                                    </option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group col-sm-12">
-                            <label class="control-label col-sm-4">Dafault Cost</label>
-                            <div class="col-sm-7">
-                                <input class="form-control w70 amount" [ngModelOptions]="{standalone: true}"
-                                    [(ngModel)]="currentCalibration.verificationDefaultCost" type="number">
-                                <select class="w70 form-control" [ngModelOptions]="{standalone: true}"
-                                    [(ngModel)]="currentCalibration.verificationCurrencyId">
-                                    <option>--Select--</option>
-                                    <option class="form-control" *ngFor="let currencyName of allCurrencyInfo"
-                                        [ngValue]="currencyName.currencyId">
-                                        {{currencyName.symbol}}
-                                    </option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group col-sm-12">
-                            <label class="control-label col-sm-4">GL Account</label>
-                            <div class="col-sm-7">
-                                <select class="autosuggest" [ngModelOptions]="{standalone: true}"
-                                    [(ngModel)]="currentCalibration.verificationGlAccountId">
-                                    <option>--Select--</option>
-                                    <option class="form-control" *ngFor="let glAccounts of allGlInfo"
-                                        [ngValue]="glAccounts.glAccountId">
-                                        {{glAccounts.accountName}}
-                                    </option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group col-sm-12">
-                            <label class="control-label col-sm-4">Verification Memo</label>
-                            <div class="col-sm-7">
-                                <textarea class="form-control" [ngModelOptions]="{standalone: true}"
-                                    [(ngModel)]="currentCalibration.verificationMemo"></textarea>
-                            </div>
-                        </div>
-                        <div class="clear"></div>
                     </div>
-        </div>
-
-        <div class="col-sm-12">
-            <div class="form-group col-sm-12 calibration-block w400" *ngIf="currentCalibration.calibrationRequired || currentCalibration.certificationRequired || currentCalibration.inspectionRequired || currentCalibration.verificationRequired">
-                <div class="table-responsive">
-                    <table class="table table-bordered table-striped">
-                        <thead>
-                            <tr>
-                                <th></th>
-                                <th colspan="2">Tolerance</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Min</td>
-                                <td><input type="text" class="form-control mauto" [ngModelOptions]="{standalone: true}"
-                                        [(ngModel)]="currentCalibration.assetCalibrationMin"></td>
-                                <td><input type="text" class="form-control mauto" [ngModelOptions]="{standalone: true}"
-                                        [(ngModel)]="currentCalibration.assetCalibrationMinTolerance"></td>
-                            </tr>
-                            <tr>
-                                <td>Max</td>
-                                <td><input type="text" class="form-control mauto" [ngModelOptions]="{standalone: true}"
-                                        [(ngModel)]="currentCalibration.assetCalibratonMax"></td>
-                                <td><input type="text" class="form-control mauto" [ngModelOptions]="{standalone: true}"
-                                        [(ngModel)]="currentCalibration.assetCalibrationMaxTolerance"></td>
-                            </tr>
-                            <tr>
-                                <td>Expected</td>
-                                <td><input type="text" class="form-control mauto" [ngModelOptions]="{standalone: true}"
-                                        [(ngModel)]="currentCalibration.assetCalibrationExpected"></td>
-                                <td><input type="text" class="form-control mauto" [ngModelOptions]="{standalone: true}"
-                                        [(ngModel)]="currentCalibration.assetCalibrationExpectedTolerance"></td>
-                            </tr>
-                            <tr>
-                                <td></td>
-                                <td colspan="2"><textarea class="form-control" [ngModelOptions]="{standalone: true}"
-                                        [(ngModel)]="currentCalibration.assetCalibrationMemo"></textarea></td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <div class="form-group col-sm-12">
+                        <label class="control-label col-sm-4">Default Vendor</label>
+                        <div class="col-sm-7">
+                            <select [ngModelOptions]="{standalone: true}"
+                                    [(ngModel)]="currentCalibration.verificationDefaultVendorId">
+                                <option>--Select--</option>
+                                <option class="form-control" *ngFor="let vendors of allVendorInfo"
+                                        [ngValue]="vendors.vendorId">
+                                    {{vendors.vendorName}}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <label class="control-label col-sm-4">Dafault Cost</label>
+                        <div class="col-sm-7">
+                            <input class="form-control w70 amount" [ngModelOptions]="{standalone: true}"
+                                   [(ngModel)]="currentCalibration.verificationDefaultCost" type="number">
+                            <select class="w70 form-control" [ngModelOptions]="{standalone: true}"
+                                    [(ngModel)]="currentCalibration.verificationCurrencyId">
+                                <option>--Select--</option>
+                                <option class="form-control" *ngFor="let currencyName of allCurrencyInfo"
+                                        [ngValue]="currencyName.currencyId">
+                                    {{currencyName.symbol}}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <label class="control-label col-sm-4">GL Account</label>
+                        <div class="col-sm-7">
+                            <select class="autosuggest" [ngModelOptions]="{standalone: true}"
+                                    [(ngModel)]="currentCalibration.verificationGlAccountId">
+                                <option>--Select--</option>
+                                <option class="form-control" *ngFor="let glAccounts of allGlInfo"
+                                        [ngValue]="glAccounts.glAccountId">
+                                    {{glAccounts.accountName}}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <label class="control-label col-sm-4">Verification Memo</label>
+                        <div class="col-sm-7">
+                            <textarea class="form-control" [ngModelOptions]="{standalone: true}"
+                                      [(ngModel)]="currentCalibration.verificationMemo"></textarea>
+                        </div>
+                    </div>
+                    <div class="clear"></div>
                 </div>
             </div>
-        </div>
-        <div class="clear"></div>
-    </fieldset>
-</div>
-<div>
-    <button [disabled]="currentCalibration.isIntangible" type="submit" class="btn btn-primary-cstm pull-right submit-btn"
-        (click)="saveCalibration()">Save & Next</button>
-    
-    <!--<button type="button" class="btn btn-success pull-right submit-btn" (click)="nextClick()">Next</button>-->
-    <button type="button" class="btn btn-primary-cstm pull-right submit-btn" (click)="backClick()">Previous</button>
-</div>
+
+            <div class="col-sm-12">
+                <div class="form-group col-sm-12 calibration-block w400" *ngIf="currentCalibration.calibrationRequired || currentCalibration.certificationRequired || currentCalibration.inspectionRequired || currentCalibration.verificationRequired">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th colspan="2">Tolerance</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Min</td>
+                                    <td>
+                                        <input type="text" class="form-control mauto" [ngModelOptions]="{standalone: true}"
+                                               [(ngModel)]="currentCalibration.assetCalibrationMin">
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control mauto" [ngModelOptions]="{standalone: true}"
+                                               [(ngModel)]="currentCalibration.assetCalibrationMinTolerance">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Max</td>
+                                    <td>
+                                        <input type="text" class="form-control mauto" [ngModelOptions]="{standalone: true}"
+                                               [(ngModel)]="currentCalibration.assetCalibratonMax">
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control mauto" [ngModelOptions]="{standalone: true}"
+                                               [(ngModel)]="currentCalibration.assetCalibrationMaxTolerance">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Expected</td>
+                                    <td>
+                                        <input type="text" class="form-control mauto" [ngModelOptions]="{standalone: true}"
+                                               [(ngModel)]="currentCalibration.assetCalibrationExpected">
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control mauto" [ngModelOptions]="{standalone: true}"
+                                               [(ngModel)]="currentCalibration.assetCalibrationExpectedTolerance">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td colspan="2">
+                                        <textarea class="form-control" [ngModelOptions]="{standalone: true}"
+                                                  [(ngModel)]="currentCalibration.assetCalibrationMemo"></textarea>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="clear"></div>
+        </fieldset>
+    </div>
+    <div>
+        <button [disabled]="currentCalibration.isIntangible" type="submit" class="btn btn-primary-cstm pull-right submit-btn"
+                (click)="saveCalibration()">
+            Save & Next
+        </button>
+
+        <!--<button type="button" class="btn btn-success pull-right submit-btn" (click)="nextClick()">Next</button>-->
+        <button type="button" class="btn btn-primary-cstm pull-right submit-btn" (click)="backClick()">Previous</button>
+    </div>
 
 </div>

@@ -10,5 +10,6 @@ namespace DAL.Repositories.Interfaces
         RepairOrderDto GetReceivingRepairOrderList(long id);
         object GetPurchaseOrderHeader(long purchaseOrderId);
         object GetPurchaseOrderPartsForSummary(long purchaseOrderId);
+        void CreateStockLine(long purchaseOrderId);
     }
 }

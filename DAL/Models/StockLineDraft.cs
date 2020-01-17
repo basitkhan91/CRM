@@ -113,5 +113,8 @@ namespace DAL.Models
         public virtual PurchaseOrder PurchaseOrder { get; set; }
         public virtual PurchaseOrderPart PurchaseOrderPartRecord { get; set; }
 
+        [NotMapped]
+        public TimeLifeDraft TimeLifeDraft { get; set; }
+
     }
 }

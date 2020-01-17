@@ -71,12 +71,13 @@
                                 <div class="more-details" [hidden]="!isDetailedView">
                                     <div class="col-md-12 row">
                                         <div class="col-md-3 col-offset-3">
-                                            <label style="width: auto;">
+                                            <label style="width: auto;" data-toggle="tooltip" title="Single MPN" >
                                                 <input type="radio" [value]=true name="type" #type="ngModel"
+                                                        
                                                        [(ngModel)]="workOrderGeneralInformation.isSinglePN">
                                                 Single MPN
                                             </label>
-                                            <label style="width: auto;">
+                                            <label style="width: auto;" data-toggle="tooltip" title="Multiple MPN" >
                                                 <input type="radio" [value]=false name="type" #type="ngModel"
                                                        [(ngModel)]="workOrderGeneralInformation.isSinglePN">
                                                 Multiple MPN
@@ -85,26 +86,26 @@
                                         <div class="col-md-6">
 
                                             <label class="control-label col-sm-4 w80">WO Type</label>
-                                            <label style="width: auto;">
+                                            <label style="width: auto;" data-toggle="tooltip" title="Customer">
                                                 <input type="radio" value="1" name="dealer"
                                                        #dealer="ngModel"
                                                        [(ngModel)]="workOrderGeneralInformation.workOrderTypeId"
                                                        (click)="woDealerChange($event.target.value)">
                                                 Customer
                                             </label>
-                                            <label style="width: auto;">
+                                            <label style="width: auto;" data-toggle="tooltip" title="Internal">
                                                 <input type="radio" value="2" name="dealer" #dealer="ngModel" [(ngModel)]="workOrderGeneralInformation.workOrderTypeId"
                                                        (click)="woDealerChange($event.target.value)">
                                                 Internal
                                             </label>
 
-                                            <label style="width: auto;">
+                                            <label style="width: auto;" data-toggle="tooltip" title="Tear Down">
                                                 <input type="radio" value="3" name="dealer" #dealer="ngModel"
                                                        [(ngModel)]="workOrderGeneralInformation.workOrderTypeId"
                                                        (click)="woDealerChange($event.target.value)">
                                                 Tear Down
                                             </label>
-                                            <label style="width: auto;">
+                                            <label style="width: auto;" data-toggle="tooltip" title="Shop Service">
                                                 <input type="radio" value="4" name="dealer" #dealer="ngModel"
                                                        [(ngModel)]="workOrderGeneralInformation.workOrderTypeId"
                                                        (click)="woDealerChange($event.target.value)">

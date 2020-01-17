@@ -122,7 +122,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                 </p>
                 <p>
                     <span class="label">
-                        <b> Asset Location Name: </b>
+                        <b> Asset Location: </b>
                     </span>
                     <span class="value">{{name}}</span>
                 </p>
@@ -230,17 +230,17 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                 <div class="col-sm-12">
                     <div class="col-sm-4">
                         <label for="AssetLocationName" class="control-label control-item">
-                            Name
+                            Asset Location 
                             <span class="clr-red">*</span>
                         </label>
                     </div>
                     <div class="col-sm-5">
                         <input type="text" name="name" class="form-control" required #Name="ngModel" [(ngModel)]="sourceAction.name" minlength="2">
                         <div *ngIf="Name.dirty && Name.errors?.required && Name.errors" class="invalid-form-error-message">
-                            Asset Location Name required.
+                            Asset Location required.
                         </div>
                         <div *ngIf="Name.dirty && Name.errors?.minlength && Name.errors" class="invalid-form-error-message">
-                            Asset Location Name must be at least 2 characters long.
+                            Asset Location must be at least 2 characters long.
                         </div>
                         <div class="clear"></div>
                     </div>
@@ -291,8 +291,8 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                     <thead>
                         <tr>
                             <!-- <th>UMID</th> -->
-                            <th>Code</th>
-                            <th>Name</th>
+                            <th>Asset Location Code</th>
+                            <th>Asset Location</th>
                             <th>Memo</th>
                             <th>IsActive</th>
                             <th>Updated By</th>

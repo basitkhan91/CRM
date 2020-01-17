@@ -80,11 +80,7 @@
                                     <button class="btn-delete" mat-icon-button matTooltip="Delete" (click)="openDelete(content,rowData)">
                                         <mat-icon color="warn">delete</mat-icon>
                                     </button>
-                                    <!--<span data-toggle="modal" data-target="#history">
-                            <a data-toggle="tooltip" matTooltip="History" class="btn btn-success nobg"  (click)="openHistory(contentAuditHist,rowData)">
-                                <i class="fa fa-history"></i>
-                            </a>
-                        </span>-->
+                                 
                                     <button class="btn-history" mat-icon-button matTooltip="history" (click)="openHistory(contentAuditHist,rowData)">
                                         <mat-icon color="green">history</mat-icon>
                                     </button>
@@ -146,8 +142,8 @@
             <div id="" class="table-responsive default-bg clear">
                 <p class="lead">Receiving Customer Work</p>
                 <div class="panel-body">
-                    <div class="col-sm-6">
-                        <!--<table class="table table-bordered table-striped">
+                    <div class="col-sm-5">
+                        <table class="table table-bordered table-striped">
                             <thead>
                                 <tr>
                                     <th colspan="15" class="text-center"><strong>Management Structure</strong></th>
@@ -155,142 +151,121 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>{{showViewProperties.level1}}</td>
-                                    <td>{{showViewProperties.level2}}</td>
-                                    <td>{{showViewProperties.level3}}</td>
-                                    <td>{{showViewProperties.level4}}</td>
+                                    <td>{{compnayname ? compnayname : '-'}}</td>
+                                    <td>{{biuName ? biuName : '-'}}</td>
+                                    <td>{{divsioname ? divsioname : '-'}}</td>
+                                    <td>{{departname ? departname : '-'}}</td>
 
                                 </tr>
-                                </tbody>
-                            </table>-->
-                                    <!--<p><span class="label"><b>Company: </b></span><span class="value">{{sourceAction.companyId}}</span></p>-->
+                            </tbody>
+                        </table>
                     </div>
-                    <div class="col-sm-6">
-                        <p><span class="label"><b>Receiving Num: </b></span><span class="value">{{showViewProperties.receivingCustomerNumber}}</span></p>
-                        <p><span class="label"><b>Employee: </b></span><span class="value">{{showViewProperties.employeeId}}</span></p>
-                    </div>
-                    <div class="clear"></div>
-                    <hr class="hr-dark">
-                    <div class="col-sm-6">
-                        <p><span class="label"><b>Name: </b></span><span class="value">{{showViewProperties.customerId}}</span></p>
-                        <p><span class="label"><b>Ref: </b></span><span class="value">{{showViewProperties.customerReference}}</span></p>
-                        <p><span class="label"><b>Contact: </b></span><span class="value">{{showViewProperties.contactFirstName}}</span></p>
-                        <p><span class="label"><b>Contact Phone: </b></span><span class="value">{{showViewProperties.workPhone}}</span></p>
-                        <p><span class="label"><b>PN: </b></span><span class="value">{{showViewProperties.partNumber}}</span></p>
-                        <p><span class="label"><b>PN Description: </b></span><span class="value">{{showViewProperties.partDescription}}</span></p>
-                        <p><span class="label"><b>Change PN: </b></span><span class="value">{{showViewProperties.changePartNumber}}</span></p>
-                        <p><span class="label"><b>Parts Cert Num: </b></span><span class="value">{{showViewProperties.partCertificationNumber}}</span></p>
-                        <p><span class="label"><b>Expiration Date: </b></span><span class="value">{{showViewProperties.expirationDate}}</span></p>
-                        <p><span class="label"><b>QTY : </b></span><span class="value">{{showViewProperties.quantity}}</span></p>
-                        <p><span class="label"><b>Condtion : </b></span><span class="value">{{showViewProperties.conditionId}}</span></p>
-                        <p><span class="label"><b>Warehouse : </b></span><span class="value">{{showViewProperties.warehouseId}}</span></p>
-                        <p><span class="label"><b>Location: </b></span><span class="value">{{showViewProperties.locationId}}</span></p>
-                        <p><span class="label"><b>Owner: </b></span><span class="value">{{showViewProperties.owner}}</span></p>
-                    </div>
-                    <div class="col-sm-6">
-                        <p><span class="label"><b>Customer Stock: </b></span><span class="value">{{showViewProperties.isCustomerStock}}</span></p>
-                        <p><span class="label"><b>Traceable to: </b></span><span class="value">{{showViewProperties.traceableToType}}</span></p>
-                        <p><span class="label"><b>Traceable Name: </b></span><span class="value">{{showViewProperties.traceableTo}}</span></p>
-                        <p><span class="label"><b>Obtain From: </b></span><span class="value">{{showViewProperties.obtainFromType}}</span></p>
-                        <p><span class="label"><b>Obtain From Name: </b></span><span class="value">{{showViewProperties.obtainFrom}}</span></p>
-                        <p><span class="label"><b>MFG Date: </b></span><span class="value">{{showViewProperties.manufacturingDate}}</span></p>
-                        <p><span class="label"><b>Exp Date: </b></span><span class="value">{{showViewProperties.expirationDate}}</span></p>
-                        <p><span class="label"><b>MFG Trace: </b></span><span class="value">{{showViewProperties.manufacturingTrace}}</span></p>
-                        <p><span class="label"><b>MFR Lot #: </b></span><span class="value">{{showViewProperties.manufacturingLotNumber}}</span></p>
+                    <div class="col-sm-1">
+                        </div>
+                        <div class="col-sm-6">
+                            <p><span class="label"><b>Receiving Num: </b></span><span class="value">{{showViewProperties.receivingCustomerNumber}}</span></p>
+                            <p><span class="label"><b>Employee: </b></span><span class="value">{{showViewProperties.employeeId}}</span></p>
+                        </div>
+                        <div class="clear"></div>
+                        <hr class="hr-dark">
+                        <div class="col-sm-6">
+                            <p><span class="label"><b>Name: </b></span><span class="value">{{showViewProperties.customerId}}</span></p>
+                            <p><span class="label"><b>Ref: </b></span><span class="value">{{showViewProperties.customerReference}}</span></p>
+                            <p><span class="label"><b>Contact: </b></span><span class="value">{{showViewProperties.contactFirstName}}</span></p>
+                            <p><span class="label"><b>Contact Phone: </b></span><span class="value">{{showViewProperties.workPhone}}</span></p>
+                            <p><span class="label"><b>PN: </b></span><span class="value">{{showViewProperties.partNumber}}</span></p>
+                            <p><span class="label"><b>PN Description: </b></span><span class="value">{{showViewProperties.partDescription}}</span></p>
+                            <p><span class="label"><b>Change PN: </b></span><span class="value">{{showViewProperties.changePartNumber}}</span></p>
+                            <p><span class="label"><b>Parts Cert Num: </b></span><span class="value">{{showViewProperties.partCertificationNumber}}</span></p>
+                            <p><span class="label"><b>Expiration Date: </b></span><span class="value">{{showViewProperties.expirationDate}}</span></p>
+                            <p><span class="label"><b>QTY : </b></span><span class="value">{{showViewProperties.quantity}}</span></p>
+                            <p><span class="label"><b>Condtion : </b></span><span class="value">{{showViewProperties.conditionId}}</span></p>
+                            <p><span class="label"><b>Warehouse : </b></span><span class="value">{{showViewProperties.warehouseId}}</span></p>
+                            <p><span class="label"><b>Location: </b></span><span class="value">{{showViewProperties.locationId}}</span></p>
+                            <p><span class="label"><b>Owner: </b></span><span class="value">{{showViewProperties.owner}}</span></p>
+                        </div>
+                        <div class="col-sm-6">
+                            <p><span class="label"><b>Customer Stock: </b></span><span class="value">{{showViewProperties.isCustomerStock}}</span></p>
+                            <p><span class="label"><b>Traceable to: </b></span><span class="value">{{showViewProperties.traceableToType}}</span></p>
+                            <p><span class="label"><b>Traceable Name: </b></span><span class="value">{{showViewProperties.traceableTo}}</span></p>
+                            <p><span class="label"><b>Obtain From: </b></span><span class="value">{{showViewProperties.obtainFromType}}</span></p>
+                            <p><span class="label"><b>Obtain From Name: </b></span><span class="value">{{showViewProperties.obtainFrom}}</span></p>
+                            <p><span class="label"><b>MFG Date: </b></span><span class="value">{{showViewProperties.manufacturingDate}}</span></p>
+                            <p><span class="label"><b>Exp Date: </b></span><span class="value">{{showViewProperties.expirationDate}}</span></p>
+                            <p><span class="label"><b>MFG Trace: </b></span><span class="value">{{showViewProperties.manufacturingTrace}}</span></p>
+                            <p><span class="label"><b>MFR Lot #: </b></span><span class="value">{{showViewProperties.manufacturingLotNumber}}</span></p>
 
-                        <h4>Time Life</h4>
-                        <p><span class="label"><b>Date: </b></span><span class="value">{{showViewProperties.timeLifeDate}}</span></p>
-                        <p><span class="label"><b>Origin: </b></span><span class="value">{{showViewProperties.timeLifeOrigin}}</span></p>
-                        <div class="table-responsive form-group col-sm-12" *ngIf="showViewProperties.isTimeLife">
-                            <table class="table table-bordered table-striped">
-                                <thead>
-                                    <tr>
-                                        <th colspan="15" class="text-center"><strong>TIME LIFE ADJUSTMENTS</strong></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <th></th>
-                                        <th class="text-center">Cycles</th>
-                                        <th class="text-center">Time</th>
-                                        <th class="text-center">Last</th>
-                                    </tr>
-                                    <tr>
-                                        <td><b>Remaining</b></td>
-                                        <td class="clr2 text-center">
-                                            <span>{{showViewProperties.cyclesRemaining}}</span>
-                                        </td>
-                                        <td class="clr2 text-center"><span>{{showViewProperties.timeRemaining}}</span></td>
-                                        <td></td>
+                            <h4>Time Life</h4>
+                            <p><span class="label"><b>Date: </b></span><span class="value">{{showViewProperties.timeLifeDate}}</span></p>
+                            <p><span class="label"><b>Origin: </b></span><span class="value">{{showViewProperties.timeLifeOrigin}}</span></p>
+                            <div class="table-responsive form-group col-sm-12" *ngIf="showViewProperties.isTimeLife">
+                                <table class="table table-bordered table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th colspan="15" class="text-center"><strong>TIME LIFE ADJUSTMENTS</strong></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th></th>
+                                            <th class="text-center">Cycles</th>
+                                            <th class="text-center">Time</th>
+                                            <th class="text-center">Last</th>
+                                        </tr>
+                                        <tr>
+                                            <td><b>Remaining</b></td>
+                                            <td class="clr2 text-center">
+                                                <span>{{showViewProperties.cyclesRemaining}}</span>
+                                            </td>
+                                            <td class="clr2 text-center"><span>{{showViewProperties.timeRemaining}}</span></td>
+                                            <td></td>
 
-                                    </tr>
-                                    <tr>
-                                        <td><b>Since New</b></td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>Since New</b></td>
 
-                                        <td class="clr2 text-center"><span>{{showViewProperties.cyclesSinceNew}}</span></td>
-                                        <td class="clr2 text-center"><span>{{showViewProperties.timeSinceNew}}</span></td>
-                                        <td class="clr2 text-center"><span>{{showViewProperties.lastSinceNew}}</span></td>
-
-
-
-                                    </tr>
-                                    <tr>
-                                        <td><b>Since Ovh</b></td>
-                                        <td class="clr2 text-center"><span>{{showViewProperties.cyclesSinceOVH}}</span></td>
-                                        <td class="clr2 text-center"><span>{{showViewProperties.timeSinceOVH}}</span></td>
-                                        <td class="clr2 text-center"><span>{{showViewProperties.lastSinceOVH}}</span></td>
+                                            <td class="clr2 text-center"><span>{{showViewProperties.cyclesSinceNew}}</span></td>
+                                            <td class="clr2 text-center"><span>{{showViewProperties.timeSinceNew}}</span></td>
+                                            <td class="clr2 text-center"><span>{{showViewProperties.lastSinceNew}}</span></td>
 
 
-                                    </tr>
-                                    <tr>
-                                        <td><b>Since Insp</b></td>
-                                        <td class="clr2 text-center"><span>{{showViewProperties.cyclesSinceInspection}}</span></td>
-                                        <td class="clr2 text-center"><span>{{showViewProperties.timeSinceInspection}}</span></td>
-                                        <td class="clr2 text-center"><span>{{showViewProperties.lastSinceInspection}}</span></td>
+
+                                        </tr>
+                                        <tr>
+                                            <td><b>Since Ovh</b></td>
+                                            <td class="clr2 text-center"><span>{{showViewProperties.cyclesSinceOVH}}</span></td>
+                                            <td class="clr2 text-center"><span>{{showViewProperties.timeSinceOVH}}</span></td>
+                                            <td class="clr2 text-center"><span>{{showViewProperties.lastSinceOVH}}</span></td>
 
 
-                                    </tr>
-                                    <tr>
-                                        <td><b>Since Repair</b></td>
-                                        <td class="clr2 text-center"><span>{{showViewProperties.cyclesSinceRepair}}</span></td>
-                                        <td class="clr2 text-center"><span>{{showViewProperties.timeSinceRepair}}</span></td>
-                                        <td></td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                                        </tr>
+                                        <tr>
+                                            <td><b>Since Insp</b></td>
+                                            <td class="clr2 text-center"><span>{{showViewProperties.cyclesSinceInspection}}</span></td>
+                                            <td class="clr2 text-center"><span>{{showViewProperties.timeSinceInspection}}</span></td>
+                                            <td class="clr2 text-center"><span>{{showViewProperties.lastSinceInspection}}</span></td>
+
+
+                                        </tr>
+                                        <tr>
+                                            <td><b>Since Repair</b></td>
+                                            <td class="clr2 text-center"><span>{{showViewProperties.cyclesSinceRepair}}</span></td>
+                                            <td class="clr2 text-center"><span>{{showViewProperties.timeSinceRepair}}</span></td>
+                                            <td></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
                         </div>
 
+
+
+
+
+
                     </div>
-                    
-                    <!--<div class="col-sm-4">
-                        <h5>Cycles</h5>
-                        <p><span class="label"><b>Remaining: </b></span><span class="value">{{showViewProperties.cyclesRemaining}}</span></p>
-                        <p><span class="label"><b>Since New: </b></span><span class="value">{{showViewProperties.cyclesSinceNew}}</span></p>
-                        <p><span class="label"><b>Since Ovh: </b></span><span class="value">{{showViewProperties.cyclesSinceOVH}}</span></p>
-                        <p><span class="label"><b>Since Insp: </b></span><span class="value">{{showViewProperties.cyclesSinceInspection}}</span></p>
-                        <p><span class="label"><b>Since Repair: </b></span><span class="value">{{showViewProperties.cyclesSinceRepair}}</span></p>
-                    </div>
-                    <div class="col-sm-4">
-                        <h5>Time</h5>
-                        <p><span class="label"><b>Remaining: </b></span><span class="value">{{showViewProperties.timeRemaining}}</span></p>
-                        <p><span class="label"><b>Since New: </b></span><span class="value">{{showViewProperties.timeSinceNew}}</span></p>
-                        <p><span class="label"><b>Since Ovh: </b></span><span class="value">{{showViewProperties.timeSinceOVH}}</span></p>
-                        <p><span class="label"><b>Since Insp: </b></span><span class="value">{{showViewProperties.timeSinceInspection}}</span></p>
-                        <p><span class="label"><b>Since Repair: </b></span><span class="value">{{showViewProperties.timeSinceRepair}}</span></p>
-                    </div>
-                    <div class="col-sm-4">
-                        <h5>Last</h5>
-                        <p><span class="label"><b>Since New: </b></span><span class="value">{{showViewProperties.lastSinceNew}}</span></p>
-                        <p><span class="label"><b>Since Ovh: </b></span><span class="value">{{showViewProperties.lastSinceOVH}}</span></p>
-                        <p><span class="label"><b>Since Insp: </b></span><span class="value">{{showViewProperties.lastSinceInspection}}</span></p>
-                    </div>-->
-
-
-
-              
-
                 </div>
-            </div>
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-info" data-dismiss="modal" (click)="dismissModel()">Close</button>
@@ -299,7 +274,7 @@
 </ng-template>
 
 <ng-template #contentAuditHist let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static">
-    <!--<div #contentAuditHist id="contentAuditHist" class="modal fade">-->
+  
     <div class="modal-header">
 
         <h4 class="modal-title">History of Receive Customer Work</h4>

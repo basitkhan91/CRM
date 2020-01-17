@@ -468,7 +468,13 @@ export class SingleComponent {
 					{ label: 'Single Screens' },
 					{ label: 'Caps Report' }
 				];
-			}
+            }
+            else if (this.currentUrl == '/singlepages/singlepages/app-capability-type') {
+                this.items = [
+                    { label: 'Single Screens' },
+                    { label: 'Capability Type' }
+                ];
+            }
 		}
 
 
@@ -920,7 +926,13 @@ export class SingleComponent {
 					{ label: 'Single Screens' },
 					{ label: 'Caps Report' }
 				];
-			}
+            }
+            else if (this.currentUrl == '/singlepages/singlepages/app-capability-type') {
+                this.items = [
+                    { label: 'Single Screens' },
+                    { label: 'Capability Type' }
+                ];
+            }
 		}
 	}
 }
