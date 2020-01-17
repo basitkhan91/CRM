@@ -11,6 +11,13 @@ import { VendorEndpointService } from '../../../services/vendor-endpoint.service
 import { Vendor } from '../../../models/vendor.model';
 import { GlAccount } from '../../../models/GlAccount.model';
 import { LegalEntityService } from '../../../services/legalentity.service';
+import { AssetAttributeTypeService } from '../../../services/asset-attribute-type/asset-attribute-type.service';
+import { AssetIntangibleTypeService } from '../../../services/asset-intangible-type/asset-intangible-type.service';
+import { AssetIntangibleAttributeTypeService } from '../../../services/asset-intangible-attribute-type/asset-intangible-attribute-type.service';
+import { DepriciationMethodService } from '../../../services/depriciation-method/depriciation.service';
+import { DepriciationMethod } from '../../../models/depriciation-method.model';
+import { CommonService } from '../../../services/common.service';
+import { ItemMasterCapabilitiesModel } from '../../../models/itemMasterCapabilities.model';
 
 @Component({
     selector: 'app-asset-listing',
@@ -50,7 +57,11 @@ export class AssetListingComponent implements OnInit {
     maincompanylist: any[] = [];
     allManufacturerInfo: any[] = [];
     managementStructureData: any = [];
-
+    depriciationMethodList: DepriciationMethod[] = [];
+    depreciationFrequencyList: any[];
+    assetAcquisitionTypeList: any[];
+    GLAccountList: any[] = [];
+    allCapesInfo: ItemMasterCapabilitiesModel[] = [];
     // comented for asset audit
     //AuditDetails: SingleScreenAuditDetails[];
 
@@ -74,9 +85,11 @@ export class AssetListingComponent implements OnInit {
     allAssetInfoNew: any[] = [];
     cols: { field: string; header: string; }[];
     selectedColumns: { field: string; header: string; }[];
+    selectedCol: { field: string; header: string; }[];
     constructor(private alertService: AlertService, private assetService: AssetService, private _route: Router,
         private modalService: NgbModal, private glAccountService: GlAccountService,
-        private vendorEndpointService: VendorEndpointService,
+        public assetattrService1: AssetAttributeTypeService, public assetIntangibleService: AssetIntangibleAttributeTypeService,
+        private vendorEndpointService: VendorEndpointService, private depriciationMethodService: DepriciationMethodService, private commonservice: CommonService,
         private legalEntityServices: LegalEntityService
     ) {
         this.assetService.isEditMode = false;
@@ -114,17 +127,17 @@ export class AssetListingComponent implements OnInit {
 
         this.cols = [
 
-            { field: 'assetId', header: 'Asset ID' },
             { field: 'name', header: 'Asset Name' },
-            { field: 'alternateAssetId', header: 'Alternate Asset ID' },
+            { field: 'assetId', header: 'Asset ID' },
+            { field: 'alternateAssetId', header: 'Alt Asset ID' },
             { field: 'manufacturerName', header: 'Manufacturer' },
             { field: 'isSerializedNew', header: 'Serial Num' },
             { field: 'calibrationRequiredNew', header: 'Calibrated' },
-            { field: 'companyName', header: 'Company' },
+            { field: 'companyName', header: 'Co' },
             { field: 'buName', header: 'BU' },
             { field: 'deptName', header: 'Div' },
             { field: 'divName', header: 'Dept' },
-            { field: 'assetClass', header: 'Asset Type' },
+            { field: 'assetClass', header: 'Asset Category' },
             { field: 'assetType', header: 'Asset Class' },
         ];
 
@@ -249,7 +262,13 @@ export class AssetListingComponent implements OnInit {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
- 
+
+    loadDepricationMethod() {
+        this.depriciationMethodService.getAll().subscribe(depriciationmethods => {
+            this.depriciationMethodList = depriciationmethods[0].columnData;
+            console.log(this.depriciationMethodList);
+        });
+    }
     openView(content, row) {
         console.log('row @170 ', row);
         this.assetViewList.entryDate = row.entryDate;
@@ -267,7 +286,8 @@ export class AssetListingComponent implements OnInit {
         this.assetViewList.inspectionRequired = row.inspectionRequired;
         this.assetViewList.verificationRequired = row.verificationRequired;
         this.assetViewList.model = row.model;
-        this.assetViewList.assetAcquisitionTypeId = row.assetAcquisitionTypeId;
+        this.getAssetAcquisitionTypeList();
+        this.assetViewList.assetAcquisitionTypeId = this.getAssetAcqName(row.assetAcquisitionTypeId);
         this.assetViewList.manufacturerName = row.manufacturerName;
         this.assetViewList.manufacturedDate = row.manufacturedDate;
         this.assetViewList.model = row.model;
@@ -308,6 +328,9 @@ export class AssetListingComponent implements OnInit {
 
         this.getInsecGLAccName();
         this.getInspecVendorName();
+        this.loadDepricationMethod();
+        this.glList();
+        this.getDepreciationFrequencyList();
         this.assetViewList.inspectionMemo = row.inspectionMemo;
         this.assetViewList.manufacturedDate = row.manufacturedDate;
         this.assetViewList.isSerialized = row.isSerialized;
@@ -323,12 +346,31 @@ export class AssetListingComponent implements OnInit {
             this.assetViewList.glAccountId = "";
         }
 
+        this.assetattrService1.getByAssetTypeId(row.assetTypeId).subscribe(
+            audits => this.onSuccessfulAssetType(audits)
+        );
+
         if (row.assetType) {
-            this.assetViewList.assetTypeId = row.assetType.assetTypeName;
+            this.assetViewList.assetTypeId = row.assetType;
         }
         else {
             this.assetViewList.assetTypeId = "";
         }
+        this.assetService.getcapabilityListData(row.assetRecordId).subscribe(
+            results => this.onCapesLoaded(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
+
+        this.cols = [
+
+            { field: 'partNumber', header: 'PN' },
+            { field: 'partDescription', header: 'PN Description' },
+            { field: 'captypedescription', header: 'Capability Type' },
+            { field: 'manufacturer', header: 'Aircraft Manufacturer' },
+            { field: 'modelname', header: 'Models' },
+            { field: 'dashnumber', header: 'Dash Number' }
+        ];
+        this.selectedCol = this.cols;
         this.assetViewList.unitCost = row.unitCost;
         this.assetViewList.expirationDate = row.expirationDate;
         this.assetViewList.asset_Location = row.asset_Location;
@@ -357,7 +399,104 @@ export class AssetListingComponent implements OnInit {
             }, () => { console.log('Backdrop click') })
         }
     }
+    private onCapesLoaded(allCapes: ItemMasterCapabilitiesModel[]) {
+        this.allCapesInfo = allCapes;
+    }
+    
+    getAssetAcqName(id) {
+        for (let i = 0; i < this.assetAcquisitionTypeList.length; i++) {
+            if (id == this.assetAcquisitionTypeList[i].value)
+                return this.assetAcquisitionTypeList[i].label;
+        }
+    }
 
+    getDeprMethodName(id) {
+        for (let i = 0; i < this.depriciationMethodList.length; i++) {
+            if (id == this.depriciationMethodList[i].assetDepreciationMethodId)
+                return this.depriciationMethodList[i].name;
+        }
+    }
+
+    getDeprFrequencyName(id) {
+        for (let i = 0; i < this.depreciationFrequencyList.length; i++) {
+            if (id == this.depreciationFrequencyList[i].value)
+                return this.depreciationFrequencyList[i].label;
+        }
+    }
+
+    getGLAccountName(id) {
+        for (let i = 0; i < this.GLAccountList.length; i++) {
+            if (id == this.GLAccountList[i].glAccountId)
+                return this.GLAccountList[i].accountName;
+        }
+    }
+
+    getGLAccountCode(id) {
+        for (let i = 0; i < this.GLAccountList.length; i++) {
+            if (id == this.GLAccountList[i].glAccountId)
+                return this.GLAccountList[i].accountCode;
+        }
+    }
+
+
+    onSuccessfulAssetType(audits: any[]) {
+        if (audits && audits[0]) {
+            this.assetViewList.assetAttributeTypeId = audits[0].assetAttributeTypeId;
+            this.assetViewList.assetAttributeTypeName = audits[0].assetAttributeTypeName;
+            this.assetViewList.description = audits[0].description;
+            this.assetViewList.conventionType = audits[0].conventionType;
+            this.assetViewList.depreciationMethod = audits[0].depreciationMethod;
+            this.assetViewList.depreciationMethodObj = this.getDeprMethodName(audits[0].depreciationMethod);
+            this.assetViewList.residualPercentage = audits[0].residualPercentage;
+            this.assetViewList.residualValue = audits[0].residualValue;
+            this.assetViewList.assetLife = audits[0].assetLife;
+            this.assetViewList.depreciationFrequencyId = audits[0].depreciationFrequencyId;
+            this.assetViewList.depreciationFrequencyObj = this.getDeprFrequencyName(audits[0].depreciationFrequencyId);
+            this.assetViewList.acquiredGLAccountId = audits[0].acquiredGLAccountId;
+            this.assetViewList.acquiredGLAccountObj = this.getGLAccountName(audits[0].acquiredGLAccountId);
+            this.assetViewList.deprExpenseGLAccountId = audits[0].deprExpenseGLAccountId;
+            this.assetViewList.deprExpenseGLAccountObj = this.getGLAccountName(audits[0].deprExpenseGLAccountId);
+            this.assetViewList.adDepsGLAccountId = audits[0].adDepsGLAccountId;
+            this.assetViewList.adDepsGLAccountObj = this.getGLAccountName(audits[0].adDepsGLAccountId);
+            this.assetViewList.assetSale = audits[0].assetSale;
+            this.assetViewList.assetSaleObj = this.getGLAccountCode(audits[0].assetSale);
+            this.assetViewList.assetWriteOff = audits[0].assetWriteOff;
+            this.assetViewList.assetWriteOffObj = this.getGLAccountCode(audits[0].assetWriteOff);
+            this.assetViewList.assetWriteDown = audits[0].assetWriteDown;
+            this.assetViewList.assetWriteDownObj = this.getGLAccountCode(audits[0].assetWriteDown);
+            this.assetViewList.createdBy = audits[0].createdBy;
+            this.assetViewList.updatedBy = audits[0].updatedBy;
+            this.assetViewList.createdDate = audits[0].createdDate;
+            this.assetViewList.updatedDate = audits[0].updatedDate;
+            this.assetViewList.isDelete = audits[0].isDelete;
+            this.assetViewList.isActive = audits[0].isActive;
+        }
+    }
+
+    getAssetAcquisitionTypeList() {
+        this.commonservice.smartDropDownList('AssetAcquisitionType', 'AssetAcquisitionTypeId', 'Name').subscribe(res => {
+            this.assetAcquisitionTypeList = res;
+
+        })
+    }
+
+    private onGlAccountLoad_1(getGlList: GlAccount[]) {
+        this.GLAccountList = getGlList;
+    }
+
+    private glList() {
+        this.glAccountService.getAll().subscribe(
+            results => this.onGlAccountLoad_1(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
+    }
+
+    getDepreciationFrequencyList() {
+        this.commonservice.smartDropDownList('AssetDepreciationFrequency', 'AssetDepreciationFrequencyId', 'Name').subscribe(res => {
+            this.depreciationFrequencyList = res;
+
+        })
+    }
     private loadManagementdata() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;

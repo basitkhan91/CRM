@@ -98,16 +98,16 @@
                                 <span class="label"><b>Asset Parent: </b></span><span class="value">{{assetViewList.assetParentId}}</span>
                             </p>
                             <p><span class="label"><b>Asset Class: </b></span><span class="value">{{assetViewList.assetTypeId}}</span></p>
-                            <p><span class="label"><b>Depreciation Method: </b></span><span class="value">{{assetViewList.assetTypeId}}</span></p>
-                            <p><span class="label"><b>Residual %: </b></span><span class="value">{{assetViewList.assetTypeId}}</span></p>
-                            <p><span class="label"><b>Asset Life: </b></span><span class="value">{{assetViewList.assetTypeId}}</span></p>
-                            <p><span class="label"><b>Depr Frequency: </b></span><span class="value">{{assetViewList.assetTypeId}}</span></p>
-                            <p><span class="label"><b>Acquired GL: </b></span><span class="value">{{assetViewList.assetTypeId}}</span></p>
-                            <p><span class="label"><b>Depr Expense GL: </b></span><span class="value">{{assetViewList.assetTypeId}}</span></p>
-                            <p><span class="label"><b>AD Depr GL: </b></span><span class="value">{{assetViewList.assetTypeId}}</span></p>
-                            <p><span class="label"><b>Sale GL: </b></span><span class="value">{{assetViewList.assetTypeId}}</span></p>
-                            <p><span class="label"><b>Write Off GL: </b></span><span class="value">{{assetViewList.assetTypeId}}</span></p>
-                            <p><span class="label"><b>Write Down GL: </b></span><span class="value">{{assetViewList.assetTypeId}}</span></p>
+                            <p><span class="label"><b>Depreciation Method: </b></span><span class="value">{{assetViewList.depreciationMethodObj}}</span></p>
+                            <p><span class="label"><b>Residual %: </b></span><span class="value">{{assetViewList.residualPercentage}}</span></p>
+                            <p><span class="label"><b>Asset Life: </b></span><span class="value">{{assetViewList.assetLife}}</span></p>
+                            <p><span class="label"><b>Depr Frequency: </b></span><span class="value">{{assetViewList.depreciationFrequencyObj}}</span></p>
+                            <p><span class="label"><b>Acquired GL: </b></span><span class="value">{{assetViewList.acquiredGLAccountObj}}</span></p>
+                            <p><span class="label"><b>Depr Expense GL: </b></span><span class="value">{{assetViewList.deprExpenseGLAccountObj}}</span></p>
+                            <p><span class="label"><b>AD Depr GL: </b></span><span class="value">{{assetViewList.adDepsGLAccountId}}</span></p>
+                            <p><span class="label"><b>Sale GL: </b></span><span class="value">{{assetViewList.assetSaleObj}}</span></p>
+                            <p><span class="label"><b>Write Off GL: </b></span><span class="value">{{assetViewList.assetWriteOffObj}}</span></p>
+                            <p><span class="label"><b>Write Down GL: </b></span><span class="value">{{assetViewList.assetWriteDownObj}}</span></p>
                         </div>
                     </div>
                 </div>
@@ -123,44 +123,44 @@
                         <div class="col-sm-12">
                             <div class="table-responsive">
                                 <!--<table class="table table-bordered table-striped">
-        <thead>
-            <tr>
-                <th>S.no</th>
-                <th>PN</th>
-                <th>PN Description</th>
-                <th>Capability type</th>
-                <th>Aircraft maufacturer</th>
-                <th>Models</th>
+                                    <thead>
+                                        <tr>
+                                            <th>S.no</th>
+                                            <th>PN</th>
+                                            <th>PN Description</th>
+                                            <th>Capability type</th>
+                                            <th>Aircraft maufacturer</th>
+                                            <th>Models</th>
 
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>{{assetViewList.assetTypeId}}</td>
-                <td>PN123</td>
-                <td>Engine toll</td>
-                <td>MFG</td>
-                <td>Airbus</td>
-                <td>AB123</td>
-            </tr>
-            <tr>
-                <td>2</td>
-                <td>PN123</td>
-                <td>Engine toll</td>
-                <td>Overhaul</td>
-                <td>Boeing</td>
-                <td>AB125</td>
-            </tr>
-            <tr>
-                <td>3</td>
-                <td>PN123</td>
-                <td>Engine toll</td>
-                <td>Exchange</td>
-                <td>Airbus</td>
-                <td>AB124</td>
-            </tr>
-        </tbody>
-    </table>-->
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>{{assetViewList.assetTypeId}}</td>
+                                            <td>PN123</td>
+                                            <td>Engine toll</td>
+                                            <td>MFG</td>
+                                            <td>Airbus</td>
+                                            <td>AB123</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2</td>
+                                            <td>PN123</td>
+                                            <td>Engine toll</td>
+                                            <td>Overhaul</td>
+                                            <td>Boeing</td>
+                                            <td>AB125</td>
+                                        </tr>
+                                        <tr>
+                                            <td>3</td>
+                                            <td>PN123</td>
+                                            <td>Engine toll</td>
+                                            <td>Exchange</td>
+                                            <td>Airbus</td>
+                                            <td>AB124</td>
+                                        </tr>
+                                    </tbody>
+                                </table>-->
                                 <p-table>
 
                                     <ng-template pTemplate="header" let-columns>
@@ -175,15 +175,11 @@
                                     </ng-template>
 
 
-                                    <ng-template pTemplate="body" let-rowData let-assetCapes let-rowIndex="rowIndex">
+                                    <ng-template pTemplate="body" let-rowData let-columns="columns" let-asset>
                                         <tr [pSelectableRow]="rowData" pReorderableRowHandle>
-                                            <td>{{assetCapes.partNumber}}</td>
-                                            <td>{{assetCapes.partDescription}}</td>
-                                            <td>{{assetCapes.captypedescription}}</td>
-                                            <td>{{assetCapes.manufacturer}}</td>
-                                            <td>{{assetCapes.modelname}}</td>
-                                            <td>{{assetCapes.dashnumber}}</td>
-                                            <td>
+
+                                            <td style="width:auto" *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
+                                                {{rowData[col.field]}}
                                             </td>
                                         </tr>
                                     </ng-template>
@@ -321,12 +317,16 @@
                     <div class="panel-body">
                         <div class="col-sm-6">
                             <p>
-                                <span class="label"><b>Maintenance Required: </b></span><input type="checkbox"
-                                                                                               [disabled]="true" [checked]="assetViewList.assetIsMaintenanceReqd" />
+                                <span class="label"><b>Maintenance Required: </b></span>
+                                <span class="value">{{assetViewList.assetIsMaintenanceReqd}}</span>
+                                <!--<input type="checkbox"
+                                       [disabled]="true" [checked]="assetViewList.assetIsMaintenanceReqd" />-->
                             </p>
                             <p>
-                                <span class="label"><b>Maintenance Contract: </b></span><input type="checkbox"
-                                                                                               [disabled]="true" [checked]="assetViewList.assetMaintenanceIsContract" />
+                                <span class="label"><b>Maintenance Contract: </b></span>
+                                <span class="value">{{assetViewList.assetMaintenanceIsContract}}</span>
+                                <!--<input type="checkbox"
+                                       [disabled]="true" [checked]="assetViewList.assetMaintenanceIsContract" />-->
                             </p>
 
                             <p>
@@ -342,8 +342,10 @@
                         </div>
                         <div class="col-sm-6">
                             <p>
-                                <span class="label"><b>Warranty Required: </b></span><input type="checkbox" [disabled]="true"
-                                                                                            [checked]="assetViewList.isWarrantyRequired" />
+                                <span class="label"><b>Warranty Required: </b></span>
+                                <span class="value">{{assetViewList.isWarrantyRequired}}</span>
+                                <!--<input type="checkbox" [disabled]="true"
+                                       [checked]="assetViewList.isWarrantyRequired" />-->
                             </p>
                         </div>
                     </div>
