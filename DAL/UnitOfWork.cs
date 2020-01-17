@@ -222,6 +222,8 @@ namespace DAL
         ITagType _tagTypeRepository;
         IMasterSalesOrderQuoteStatusRepository _masterSalesOrderQuoteStatusRepository;
         IEmployeeStationRepository _employeeStationRepository;
+        IGlobalSettingsRepository _globalSettingsRepository;
+
 
 
         public UnitOfWork(ApplicationDbContext context, IOptions<AppSettings> appSettings)
@@ -2006,7 +2008,18 @@ namespace DAL
             }
         }
 
-        
+        public IGlobalSettingsRepository GlobalSettingsRepository
+        {
+            get
+            {
+                if (_globalSettingsRepository == null)
+                    _globalSettingsRepository = new GlobalSettingsRepository(_context);
+
+                return _globalSettingsRepository;
+            }
+        }
+
+
     }
 }
 
