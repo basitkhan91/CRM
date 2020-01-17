@@ -10,8 +10,6 @@ namespace DAL.Models
         public long WorkOrderQuoteId { get; set; }
         [ForeignKey("WorkOrderId")]
         public long WorkOrderId { get; set; }
-        [ForeignKey("WorkFlowWorkOrderId")]
-        public long WorkFlowWorkOrderId { get; set; }
         public string QuoteNumber { get; set; }
         public DateTime OpenDate { get; set; }
         public DateTime QuoteDueDate { get; set; }
