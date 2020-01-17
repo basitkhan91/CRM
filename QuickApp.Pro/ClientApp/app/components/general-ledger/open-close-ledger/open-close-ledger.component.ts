@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { LazyLoadEvent, SortEvent, MenuItem } from 'primeng/api';
+
 import { fadeInOut } from '../../../services/animations';
 import { AccountCalenderService } from '../../../services/account-calender/accountcalender.service';
 import { AuthService } from '../../../services/auth.service';
@@ -27,7 +29,8 @@ export class OpenCloseLedgerComponent implements OnInit {
     ledgerNameObject: any;
     showTable: boolean;
     calendarContentDisabled: boolean = true;
-
+    home: any;
+    breadcrumbs: MenuItem[];
 
     constructor(private legalEntityservice: LegalEntityService, private route: ActivatedRoute, private router: Router,
         private accountListingService: AccountListingService, private calendarService: AccountCalenderService, private authService: AuthService, private alertService: AlertService) {
@@ -38,6 +41,11 @@ export class OpenCloseLedgerComponent implements OnInit {
         this.selectedPeriod = 12;
         this.calendarStatus = ['Current', 'Open', 'Future JE', 'Closed', 'Never Opened']
         this.getLedgerObject()
+
+        this.breadcrumbs = [
+            { label: 'Accounting' },
+            { label: 'Open / Close Ledger' },
+        ];
     }
 
     get userName(): string {
