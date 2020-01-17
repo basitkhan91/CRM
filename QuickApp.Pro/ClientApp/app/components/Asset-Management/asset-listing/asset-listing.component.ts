@@ -139,6 +139,7 @@ export class AssetListingComponent implements OnInit {
             { field: 'divName', header: 'Dept' },
             { field: 'assetClass', header: 'Asset Category' },
             { field: 'assetType', header: 'Asset Class' },
+            { field: 'assetStatus', header: 'Status' },
         ];
 
         this.selectedColumns = this.cols;
@@ -558,6 +559,7 @@ export class AssetListingComponent implements OnInit {
                 calibrationRequiredNew: this.currentAsset.calibrationRequired == true ? 'Yes' : 'No',
                 assetClass: this.currentAsset.isDepreciable == true ? 'Tangible' : 'Intangible',
                 assetType: this.currentAsset.assetType.assetTypeName,              
+                assetStatus: this.currentAsset.isActive == true ? 'Active' : 'In Active',
             };
             
             this.allAssetInfoNew.push(this.currentAsset);
