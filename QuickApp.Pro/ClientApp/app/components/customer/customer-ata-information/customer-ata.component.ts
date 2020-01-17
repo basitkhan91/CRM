@@ -25,16 +25,10 @@ export class CustomerATAInformationComponent implements OnInit {
     @Input() contactList;
     @Output() tab = new EventEmitter();
     @Output() refreshCustomerATAMapped = new EventEmitter();
-    // LoadAtachapter: any = [];
-    // ataMainchapter: any;
-    // atasubchapter: any;
-    // add_ataSubChapterList: any;
-    ataChapter: any;
+       ataChapter: any;
     atasubchapterValues: any;
     ataChapterList: { value: any; label: string; }[];
-    // add_SelectedModels: any;
-    // add_SelectedId: any;
-    search_SelectedATA = []
+     search_SelectedATA = []
     search_SelectedContact = []
     search_SelectedATASubChapter = []
     ataHeaders = [
@@ -43,13 +37,11 @@ export class CustomerATAInformationComponent implements OnInit {
         { field: 'ataSubChapterDescription', header: 'ATA Sub-Chapter' }
 
     ]
-    // ataListDataValues: any;
-    ataChapterIdUrl: string;
+     ataChapterIdUrl: string;
     contactIdUrl: string;
     ataSubchapterIdUrl: any;
     search_ataSubChapterList: any;
-    // search_ataChapterList: { value: number; label: string; }[];
-    id: number;
+     id: number;
     contactid: number;
     searchATAParams: string;
     customerName: any;
@@ -60,8 +52,7 @@ export class CustomerATAInformationComponent implements OnInit {
     customerContactATAMappingId: number;
     selectedRowForDelete: any;
     @Input() selectedTab: string = "";
-    //contactList: any;
-    constructor(
+      constructor(
         private atasubchapter1service: AtaSubChapter1Service,
         private atamain: AtaMainService,
         private authService: AuthService,
@@ -86,46 +77,17 @@ export class CustomerATAInformationComponent implements OnInit {
             this.customerName = this.savedGeneralInformationData.name;
         }
 
-        // this.getAllATAChapter();
-        this.getAllATASubChapter();
-       // this.getContactsByCustomerId();
-        // this.ataChapter = this.LoadAtachapter;
-
+           this.getAllATASubChapter();
+    
     }
-    //ngOnChanges(changes: SimpleChanges) {
-    //    for (let property in changes) {
-    //        if (property == 'selectedTab') {
-
-
-    //        }
-    //        //   console.log('Current: ', changes[property].currentValue);
-    //    }
-    //}
+  
 
     get userName(): string {
         return this.authService.currentUser ? this.authService.currentUser.userName : "";
     }
 
-    // getAllATAChapter() {
-    //     this.atamain.getAtaMainList().subscribe(res => {
-    //         const responseData = res[0];
-    //         // used to get the complete object in the value 
-    //         this.ataChapterList = responseData.map(x => {
-    //             return {
-    //                 value: x,
-    //                 label: x.ataChapterName
-    //             }
-
-    //         })
-    //         // used to get the id for the value 
-    //         this.search_ataChapterList = responseData.map(x => {
-    //             return {
-    //                 value: x.ataChapterId,
-    //                 label: x.ataChapterName
-    //             }
-    //         })
-    //     });
-    // }
+   
+   
 
     // get all subchapters
     getAllATASubChapter() {
@@ -137,64 +99,14 @@ export class CustomerATAInformationComponent implements OnInit {
                 }
             })
             // making copy for the subchapters in both add and seach 
-            // this.add_ataSubChapterList = ataSubChapter;
-            this.search_ataSubChapterList = ataSubChapter;
+                 this.search_ataSubChapterList = ataSubChapter;
         })
 
 
     }
 
-
-    
-
-    // // get subchapter by Id in the add ATA Mapping
-    // getATASubChapterByATAChapter() {
-    //     const selectedATAId = getValueFromObjectByKey('ataChapterId', this.add_SelectedId)
-    //     this.atasubchapter1service.getATASubChapterListByATAChapterId(selectedATAId).subscribe(atasubchapter => {
-    //         const responseData = atasubchapter[0];
-    //         this.add_ataSubChapterList = responseData.map(x => {
-    //             return {
-    //                 label: x.description,
-    //                 value: x
-    //             }
-    //         })
-    //     })
-    // }
-    // // post the ata Mapping 
-    // async addATAMapping() {
-    //     // const id = this.savedGeneralInformationData.customerId;
-    //     const ataMappingData = this.add_SelectedModels.map(x => {
-    //         return {
-    //             CustomerId: this.id,
-    //             ATAChapterId: getValueFromObjectByKey('ataChapterId', this.add_SelectedId),
-    //             ATASubChapterId: x.ataSubChapterId,
-    //             ATAChapterCode: getValueFromObjectByKey('ataChapterCode', this.add_SelectedId),
-    //             ATAChapterName: getValueFromObjectByKey('ataChapterName', this.add_SelectedId),
-    //             ATASubChapterDescription: x.description,
-    //             MasterCompanyId: x.masterCompanyId,
-    //             CreatedBy: this.userName,
-    //             UpdatedBy: this.userName,
-    //             CreatedDate: new Date(),
-    //             UpdatedDate: new Date(),
-    //             IsDeleted: false,
-    //         }
-    //     })
-
-    //     this.customerService.postCustomerATAs(ataMappingData).subscribe(res => {
-    //         this.add_SelectedModels = undefined;
-    //         this.add_SelectedId = undefined;
-    //         this.alertService.showMessage(
-    //             'Success',
-    //             'Saved ATA Mapped Data Successfully ',
-    //             MessageSeverity.success
-    //         );
-    //         this.getMappedATAByCustomerId();
-    //     })
-
-    // }
     // get mapped ata by customer id 
     getMappedATAByCustomerId() {
-        // const id = this.savedGeneralInformationData.customerId;
         this.customerService.getATAMappedByCustomerId(this.id).subscribe(res => {
             this.ataListDataValues = res;
             console.log(res);
@@ -257,8 +169,7 @@ export class CustomerATAInformationComponent implements OnInit {
     }
 
     getContactsByCustomerId() {
-        //this.contactList = this.contactList;
-        this.customerService.getContactsByCustomerId(this.id).subscribe(res => {
+         this.customerService.getContactsByCustomerId(this.id).subscribe(res => {
             const responseData: any = res;
                 this.contactList = responseData.map(x => {
                     return {
@@ -306,8 +217,7 @@ export class CustomerATAInformationComponent implements OnInit {
         }
 
         console.log(this.searchATAParams);
-        // const ItemMasterID = this.isEdit === true ? this.itemMasterId : this.collectionofItemMaster.itemMasterId;
-        this.customerService
+         this.customerService
             .searchATAMappedByMultiATAIDATASUBIDByCustomerId(
                 this.id,
                 this.searchATAParams,
@@ -321,33 +231,10 @@ export class CustomerATAInformationComponent implements OnInit {
                 this.search_SelectedContact = [];
                 this.search_SelectedATASubChapter = [];
                 this.search_SelectedATA = [];
-                // .map(x => {
-                //     return {
-                //         ataChapterName: x.ataChapterName,
-                //         ataSubChapterDescription: x.ataSubChapterDescription,
-                //         ataChapterCode: x.ataChapterCode,
-                //         ataSubChapterId: x.ataSubChapterId,
-                //         ataChapterId: x.ataChapterId
-                //     };
-                // });
-            });
+                        });
     }
 
 
-
-
-
-    //deleteATAMapping(rowData) {
-    //    this.customerService.deleteATAMappedByContactId(rowData.customerContactATAMappingId).subscribe(res => {
-    //        this.refreshCustomerATAMapped.emit(this.id);
-    //        this.alertService.showMessage(
-    //            'Success',
-    //            'Successfully Deleted ATA Mapped Data',
-    //            MessageSeverity.success
-    //        );
-    //        this.getMappedATAByCustomerId();
-    //    })
-    //}
 
     nextClick() {
         this.tab.emit('Financial');

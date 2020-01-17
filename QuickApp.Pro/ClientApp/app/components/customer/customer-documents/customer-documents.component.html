@@ -154,10 +154,10 @@
                                 </tr>
                                 <tr *ngFor="let f of sourceViewforDocumentList ">
                                     <td>{{f.fileName}}</td>
-                                  
-                                    <td><a class="btn  btn-tbl-file-download" (click)="downloadFileUpload(f)" download>Download</a>  </td>
 
-                                  
+                                     <td><a (click)="downloadFileUpload(f)" matTooltip="Download" class="btn nobg btn-cstm"><span><i class="fa fa-download"></i></span></a> </td>
+
+
                                 </tr>
 
                             </table>
@@ -217,7 +217,7 @@
                                 </tr>
                                 <tr *ngFor="let f of sourceViewforDocumentList ">
                                     <td>{{f.fileName}}</td>
-                                    <td><a class="btn  btn-tbl-file-download" (click)="downloadFileUpload(f)" download>Download</a>  </td>
+                                     <td><a (click)="downloadFileUpload(f)" matTooltip="Download" class="btn nobg btn-cstm"><span><i class="fa fa-download"></i></span></a> </td>
 
 
                                 </tr>
