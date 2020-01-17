@@ -183,17 +183,7 @@ export class CustomerAircraftComponent implements OnInit {
     searchByFieldUrlCreateforAircraftInformation() {
      
         this.aircraftManfacturerIdsUrl = this.selectAircraftManfacturer;
-        //if (this.selectAircraftManfacturer.length >= 0) {
-        //    const aircraftTypeIds = this.selectAircraftManfacturer.reduce(
-        //         (acc, value) => {
-        //             return `${acc},${value}`;
-        //         },
-        //         ''
-        //     );
-        //     this.aircraftManfacturerIdsUrl = aircraftTypeIds.substr(1);
-        // } else {
-        //     this.aircraftManfacturerIdsUrl = '';
-        // }
+       
 
         if (this.selectedAircraftModel.length > 0) {
             
@@ -509,8 +499,7 @@ export class CustomerAircraftComponent implements OnInit {
     }
     
     async saveAircraft() {
-        // const id = this.savedGeneralInformationData.customerId;
-        const inventoryData = this.inventoryData.filter(x => {
+         const inventoryData = this.inventoryData.filter(x => {
             if (x.IsChecked) {
                 return x;
             }
@@ -563,8 +552,7 @@ export class CustomerAircraftComponent implements OnInit {
     }
 
     getAircraftMappedDataByCustomerId() {
-        // const id = this.savedGeneralInformationData.customerId;
-        this.customerService.getMappedAirCraftDetails(this.id).subscribe(res => {
+         this.customerService.getMappedAirCraftDetails(this.id).subscribe(res => {
             this.aircraftListDataValues = res;
         })
     }
@@ -591,8 +579,7 @@ export class CustomerAircraftComponent implements OnInit {
         console.log(data);
         this.viewAircraftData = data;
 
-        // this.isViewModel = false;
-    }
+       }
     getColorCodeForHistory(i, field, value) {
         const data = this.aircraftauditHisory;
         const dataLength = data.length;
@@ -604,18 +591,7 @@ export class CustomerAircraftComponent implements OnInit {
             }
         }
     }
-   // getMappedAirCraftDetailsAudit
-
-    //deleteAircraftMappedInventory(customerAircraftMappingId) {
-    //    this.customerService.deleteAircraftInvetoryById(customerAircraftMappingId).subscribe(res => {
-    //        this.getAircraftMappedDataByCustomerId();
-    //        this.alertService.showMessage(
-    //            'Success',
-    //            'Successfully Deleted Aircraft Inventory ',
-    //            MessageSeverity.success
-    //        );
-    //    })
-    //}
+  
     dismissModel() {
         this.modal.close();
     }

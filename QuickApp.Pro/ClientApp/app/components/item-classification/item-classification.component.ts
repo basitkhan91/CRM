@@ -123,7 +123,7 @@ export class ItemClassificationComponent implements OnInit, AfterViewInit {
     existingRecordsResponse: Object;
     disableSaveForItemCodeMsg: boolean = false;
     disableSaveForItemDescMsg:boolean= false;
-
+    disableSaveForEdit: boolean = false;
 	constructor(private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public itemClassificationService: ItemClassificationService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private configurations: ConfigurationService) {
         this.displayedColumns.push('action');
         this.dataSource = new MatTableDataSource();
@@ -146,66 +146,15 @@ export class ItemClassificationComponent implements OnInit, AfterViewInit {
         this.selectedColumns = this.cols;
     }
 
-    onBlurcode(event) {
-        const value = event.target.value;
-        this.disableSaveForItemCodeMsg = false;
-        for (let i = 0; i < this.allitemclassificationInfo.length; i++) {
-            let itemClassificationCode = this.allitemclassificationInfo[i].itemClassificationCode;
-            let itemClassificationId = this.allitemclassificationInfo[i].itemClassificationId;
-            if (itemClassificationCode.toLowerCase() == value.toLowerCase()) {
-                if (!this.isEditMode) {
-                    this.disableSaveForItemCodeMsg = true;
-                    this.disableSaveForItemCode= true;
-                }
-                else if (itemClassificationId != this.selectedRecordForEdit.conditionId) {
-                    this.disableSaveForItemCodeMsg = true;
-                    this.disableSaveForItemCode = false;
-                   
-                }
-                else {
-                    this.disableSaveForItemCodeMsg = false;
-                    this.disableSaveForItemCode = false;
-                }
-                break;
-            }
-        }
-
-    }
+  
 
 
-    getmemo($event) {
-        this.disableSaveForItemDescMsg = false;
-            this.disableSaveForItemDesc = false;
-            this.disableSaveForItemCode = false;
+    getmemo() {
+                 this.disableSaveForEdit = false;
     };
 
 
-    onBlurDesc(event) {
-        const value = event.target.value;
-        this.disableSaveForItemDescMsg = false;
-        for (let i = 0; i < this.allitemclassificationInfo.length; i++) {
-            let description = this.allitemclassificationInfo[i].description;
-            let itemClassificationId = this.allitemclassificationInfo[i].itemClassificationId;
-            if (description.toLowerCase() == value.toLowerCase()) {
-                if (!this.isEditMode) {
-                    this.disableSaveForItemDescMsg = true;
-                    this.disableSaveForItemDesc = true;
-                }
-                else if (itemClassificationId != this.selectedRecordForEdit.conditionId) {
-                    this.disableSaveForItemDescMsg = true;
-                    this.disableSaveForItemDesc = false;
-
-                }
-                else {
-                    this.disableSaveForItemDescMsg = false;
-                    this.disableSaveForItemDesc = false;
-                }
-                break;
-            }
-        }
-
-    }
-
+   
 
     ngAfterViewInit() {
         this.dataSource.paginator = this.paginator;
@@ -226,50 +175,11 @@ export class ItemClassificationComponent implements OnInit, AfterViewInit {
     get userName(): string {
         return this.authService.currentUser ? this.authService.currentUser.userName : "";
     }
-    selectedItemCode(object) {
-        const exists = selectedValueValidate('itemClassificationCode', object, this.selectedRecordForEdit);
-        this.disableSaveForItemCodeMsg = !exists;
-        this.disableSaveForItemCode = !exists;
-    }
-    selectedItemDesc(object) {
-        const exists = selectedValueValidate('description', object, this.selectedRecordForEdit);
-        this.disableSaveForItemDescMsg = !exists;
-        this.disableSaveForItemDesc = !exists;
-    }
+   
 
-    checkItemCodeExists(field, value) {
-        const exists = validateRecordExistsOrNot(field, value, this.allitemclassificationInfo , this.selectedRecordForEdit);
-        if (exists.length > 0) {
-          //  this.disableSaveForItemDescMsg = true;
-            this.disableSaveForItemCodeMsg = true;
-            this.disableSaveForItemCode = true;
-           // this.disableSaveForItemDesc = true;
+   
 
-        }
-        else {
-          //  this.disableSaveForItemDescMsg = false;
-            this.disableSaveForItemCodeMsg = false;
-            this.disableSaveForItemCode = false;
-           // this.disableSaveForItemDesc = false;
-        }
-    }
-
-    checkItemDescExists(field, value) {
-        const exists = validateRecordExistsOrNot(field, value, this.allitemclassificationInfo , this.selectedRecordForEdit);
-        if (exists.length > 0) {
-            this.disableSaveForItemDescMsg = true;
-         //   this.disableSaveForItemCodeMsg = true;
-          //  this.disableSaveForItemCode = true;
-            this.disableSaveForItemDesc = true;
-
-        }
-        else {
-            this.disableSaveForItemDescMsg = false;
-          //  this.disableSaveForItemCodeMsg = false;
-          //  this.disableSaveForItemCode = false;
-            this.disableSaveForItemDesc = false;
-        }
-    }
+  
 
     filterItemCode(event) {
         this.itemClassificationList = this.allitemclassificationInfo;
@@ -279,12 +189,52 @@ export class ItemClassificationComponent implements OnInit, AfterViewInit {
         })]
         this.itemClassificationList = itemCData;
     }
+    checkItemCodeExists(value) {
+
+
+        this.disableSaveForItemCodeMsg = false;
+        for (let i = 0; i < this.allitemclassificationInfo.length; i++) {
+
+            if (this.addNewItemClassification.itemClassificationCode == this.allitemclassificationInfo[i].itemClassificationCode || value == this.allitemclassificationInfo[i].itemClassificationCode) {
+                this.disableSaveForItemCodeMsg = true;
+
+
+                return;
+            }
+
+        }
+
+    }
+    selectedItemCode(object) {
+        const exists = selectedValueValidate('itemClassificationCode', object, this.selectedRecordForEdit)
+        this.disableSaveForItemCodeMsg = !exists;
+    }
+    checkItemDescExists(value) {
+
+
+        this.disableSaveForItemDescMsg = false;
+        for (let i = 0; i < this.allitemclassificationInfo.length; i++) {
+
+            if (this.addNewItemClassification.description == this.allitemclassificationInfo[i].description || value == this.allitemclassificationInfo[i].description) {
+                this.disableSaveForItemDescMsg = true;
+
+
+                return;
+            }
+
+        }
+
+    }
+    selectedItemDesc(object) {
+        const exists = selectedValueValidate('description', object, this.selectedRecordForEdit)
+        this.disableSaveForItemDescMsg = !exists;
+    }
 
     filterItemDesc(event) {
         this.itemClassificationDescList = this.allitemclassificationInfo;
 
         const itemCData = [...this.allitemclassificationInfo.filter(x => {
-            return x.itemClassificationCode.toLowerCase().includes(event.query.toLowerCase())   
+            return x.description.toLowerCase().includes(event.query.toLowerCase())   
           
         })]
         this.itemClassificationDescList = itemCData;
@@ -293,12 +243,10 @@ export class ItemClassificationComponent implements OnInit, AfterViewInit {
     editItemClassification(rowData) {
         console.log(rowData);
         this.isEditMode = true;
-        this.disableSaveForItemCode = true;
-        this.disableSaveForItemDesc = true;
-        this.disableSaveForItemCodeMsg = false;
+        this.disableSaveForEdit = true;
+         this.disableSaveForItemCodeMsg = false;
         this.disableSaveForItemDescMsg = false;
-        // this.addNewUOM = rowData;
-
+     
        this.addNewItemClassification = {
             ...rowData, 
             itemClassificationCode: getObjectByValue('itemClassificationCode', rowData.itemClassificationCode, this.allitemclassificationInfo),
@@ -451,550 +399,7 @@ export class ItemClassificationComponent implements OnInit, AfterViewInit {
     }
 
 
-    // private loadData() {
-    //     this.alertService.startLoadingMessage();
-    //     this.loadingIndicator = true;
 
-    //     this.itemClassificationService.getWorkFlows().subscribe(
-    //         results => this.onDataLoadSuccessful(results[0]),
-    //         error => this.onDataLoadFailed(error)
-    //     );
-
-    // }
-
-    // private loadMasterCompanies() {
-    //     this.alertService.startLoadingMessage();
-    //     this.loadingIndicator = true;
-
-    //     this.masterComapnyService.getMasterCompanies().subscribe(
-    //         results => this.onDataMasterCompaniesLoadSuccessful(results[0]),
-    //         error => this.onDataLoadFailed(error)
-    //     );
-
-    // }
-
-    // public applyFilter(filterValue: string) {
-    //     this.dataSource.filter = filterValue;
-    // }
-
-    // private refresh() {
-    //     // Causes the filter to refresh there by updating with recently added data.
-    //     // this.applyFilter(this.dataSource.filter);
-    // }
-    // private onDataLoadSuccessful(allWorkFlows: ItemClassificationModel[]) {
-    //     // alert('success');
-    //     this.alertService.stopLoadingMessage();
-    //     this.loadingIndicator = false;
-    //     this.dataSource.data = allWorkFlows;
-    //     this.totalRecords = allWorkFlows.length;
-    //     this.allitemclassificationInfo = allWorkFlows;
-    // }
-
-    // private onDataMasterCompaniesLoadSuccessful(allComapnies: MasterCompany[]) {
-    //     // alert('success');
-    //     this.alertService.stopLoadingMessage();
-    //     this.loadingIndicator = false;
-    //     this.allComapnies = allComapnies;
-
-    // }
-
-    // private onDataLoadFailed(error: any) {
-    //     // alert(error);
-    //     this.alertService.stopLoadingMessage();
-    //     this.loadingIndicator = false;
-
-    // }
-   
-	// open() {
-	// 	this.disableSave = false;
-	// 	this.disableClassdesc = false;
-    //     this.isEditMode = false;
-    //     this.isDeleteMode = false;
-	// 	this.disabletypeSave = false;
-    //     this.isSaving = true;
-    //     this.loadMasterCompanies();
-	// 	this.sourceAction = new ItemClassificationModel();
-    //     this.sourceAction.isActive = true;
-	// 	this.itemName = "";
-	// 	this.className = "";
-	// 	this.itemTypeName = "";
-
-    // }
-
-
-
-    // openDelete(content, row) {
-
-    //     this.isEditMode = false;
-    //     this.isDeleteMode = true;
-    //     this.sourceAction = row;
-    //     this.item_Name = row.itemClassificationCode;        
-    //     this.modal = this.modalService.open(content, { size: 'sm' });
-    //     this.modal.result.then(() => {
-    //         console.log('When user closes');
-    //     }, () => { console.log('Backdrop click') })
-    // }
-
-	// openEdit(content, row) {
-	// 	this.disableClassdesc = false;
-	// 	this.disableSave = false;
-	// 	this.disabletypeSave = false;
-    //     this.isEditMode = true;
-    //     this.isSaving = true;
-    //     this.loadMasterCompanies();
-    //     this.sourceAction = row;
-	// 	this.itemName = this.sourceAction.itemClassificationCode;
-	// 	this.className = this.sourceAction.description;
-	// 	this.itemTypeName = this.sourceAction.itemType;
-    //     this.loadMasterCompanies();
-    //     this.modal = this.modalService.open(content, { size: 'sm' });
-    //     this.modal.result.then(() => {
-    //         console.log('When user closes');
-    //     }, () => { console.log('Backdrop click') })
-    // }
-
-    // openHist(content, row) {
-    //     this.alertService.startLoadingMessage();
-    //     this.loadingIndicator = true;
-
-
-    //     this.sourceAction = row;
-
-
-
-    //     this.isSaving = true;
-
-    //     this.itemClassificationService.historyAcion(this.sourceAction.itemClassificationId).subscribe(
-    //         results => this.onHistoryLoadSuccessful(results[0], content),
-    //         error => this.saveFailedHelper(error));
-
-
-    // }
-    //     eventHandler(event) {
-    //         let value = event.target.value.toLowerCase();
-    //         if (this.selectedActionName) {
-    //             if (value == this.selectedActionName.toLowerCase()) {
-    //                 //alert("Action Name already Exists");
-    //                 this.disableSave = true;
-    //             }
-    //             else {
-    //                 this.disableSave = false;
-    //             }
-    //         }
-
-	// }
-	// classeventHandler(event) {
-	// 	let value = event.target.value.toLowerCase();
-	// 	if (this.selectedActionName) {
-	// 		if (value == this.selectedActionName.toLowerCase()) {
-	// 			//alert("Action Name already Exists");
-	// 			this.disableClassdesc = true;
-	// 		}
-	// 		else {
-	// 			this.disableClassdesc = false;
-	// 		}
-	// 	}
-
-	// }
-	// classeventtypeHandler(event) {
-	// 	let value = event.target.value.toLowerCase();
-	// 	if (this.selectedActionName) {
-	// 		if (value == this.selectedActionName.toLowerCase()) {
-	// 			//alert("Action Name already Exists");
-	// 			this.disabletypeSave = true;
-	// 		}
-	// 		else {
-	// 			this.disabletypeSave = false;
-	// 		}
-	// 	}
-
-	// }
-
-
-	// classificationId(event) {
-	// 	//debugger;
-	// 	if (this.allitemclassificationInfo) {
-	// 		for (let i = 0; i < this.allitemclassificationInfo.length; i++) {
-	// 			if (event == this.allitemclassificationInfo[i].description) {
-	// 				//alert("Action Name already Exists");
-	// 				this.disableClassdesc = true;
-	// 				this.selectedActionName = event;
-	// 			}
-	// 		}
-	// 	}
-	// }
-	// classificationtypeId(event) {
-	// 	//debugger;
-	// 	if (this.allitemclassificationInfo) {
-	// 		for (let i = 0; i < this.allitemclassificationInfo.length; i++) {
-	// 			if (event == this.allitemclassificationInfo[i].itemType) {
-	// 				this.disabletypeSave = true;
-	// 				this.selectedActionName = event;
-	// 			}
-	// 		}
-	// 	}
-	// }
-    // filterItems(event) {
-
-    //     this.localCollection = [];
-    //     for (let i = 0; i < this.allitemclassificationInfo.length; i++) {
-    //         let itemName = this.allitemclassificationInfo[i].itemClassificationCode;
-    //         if (itemName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-    //             this.actionamecolle.push([{
-    //                 "itemClassificationId": this.allitemclassificationInfo[i].itemClassificationId,
-    //                 "itemName": itemName
-    //             }]),
-    //             this.localCollection.push(itemName);
-    //         }
-    //     }
-	// }
-
-
-	// filterItemNames(event) {
-
-	// 	this.localNameCollection = [];
-	// 	if (this.allitemclassificationInfo) {
-	// 		for (let i = 0; i < this.allitemclassificationInfo.length; i++) {
-	// 			let className = this.allitemclassificationInfo[i].description;
-	// 			if (className.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-	// 				this.classnamecolle.push([{
-	// 					"itemClassificationId": this.allitemclassificationInfo[i].itemClassificationId,
-	// 					"className": className
-	// 				}]),
-	// 					this.localNameCollection.push(className);
-	// 			}
-	// 		}
-	// 	}
-	// }
-	// filterItemtypes(event) {
-
-	// 	this.localtypeCollection = [];
-	// 	if (this.allitemclassificationInfo) {
-	// 		for (let i = 0; i < this.allitemclassificationInfo.length; i++) {
-	// 			let itemTypeName = this.allitemclassificationInfo[i].itemType;
-	// 			if (itemTypeName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-	// 				this.classificationtypecolle.push([{
-	// 					"itemClassificationId": this.allitemclassificationInfo[i].itemClassificationId,
-	// 					"itemTypeName": itemTypeName
-	// 				}]),
-	// 					this.localtypeCollection.push(itemTypeName);
-	// 			}
-	// 		}
-	// 	}
-	// }
-
-    // handleChange(rowData, e) {
-    //     if (e.checked == false) {
-    //         this.sourceAction = rowData;
-    //         this.sourceAction.updatedBy = this.userName;
-    //         this.Active = "In Active";
-    //         this.sourceAction.isActive == false;
-    //         this.loadMasterCompanies();
-    //         this.sourceAction.masterCompanyId = 1; this.itemClassificationService.updateAction(this.sourceAction).subscribe(
-    //             response => this.saveCompleted(this.sourceAction),
-    //             error => this.saveFailedHelper(error));
-    //         //alert(e);
-    //     }
-    //     else {
-    //         this.sourceAction = rowData;
-    //         this.sourceAction.updatedBy = this.userName;
-    //         this.Active = "Active";
-    //         this.sourceAction.isActive == true;
-    //         this.sourceAction.masterCompanyId = 1;
-    //         this.itemClassificationService.updateAction(this.sourceAction).subscribe(
-    //             response => this.saveCompleted(this.sourceAction),
-    //             error => this.saveFailedHelper(error));
-    //         //alert(e);
-    //     }
-
-    // }
-    // private onHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {
-
-
-    //     this.alertService.stopLoadingMessage();
-    //     this.loadingIndicator = false;
-
-    //     this.auditHisory = auditHistory;
-
-
-    //     this.modal = this.modalService.open(content, { size: 'lg' });
-
-    //     this.modal.result.then(() => {
-    //         console.log('When user closes');
-    //     }, () => { console.log('Backdrop click') })
-
-
-    // }
   
-    
-            // this.isSaving = true;
-    
-            // if (this.isEditMode == false) {
-            //     this.sourceAction.createdBy = this.userName;
-            //     this.sourceAction.updatedBy = this.userName;
-            // 	this.sourceAction.itemClassificationCode = this.itemName;
-            // 	this.sourceAction.description = this.className;
-            // 	this.sourceAction.itemType = this.itemTypeName;
-            //     this.sourceAction.masterCompanyId = 1;
-            //     this.itemClassificationService.newAction(this.sourceAction).subscribe(
-            //         role => this.saveSuccessHelper(role),
-            //         error => this.saveFailedHelper(error));
-            // }
-            // else {
-    
-            //     this.sourceAction.updatedBy = this.userName;
-            // 	this.sourceAction.itemClassificationCode = this.itemName;
-            // 	this.sourceAction.description = this.className;
-            // 	this.sourceAction.itemType = this.itemTypeName;
-            //     this.sourceAction.masterCompanyId = 1;
-            //     this.itemClassificationService.updateAction(this.sourceAction).subscribe(
-            //         response => this.saveCompleted(this.sourceAction),
-            //         error => this.saveFailedHelper(error));
-            // }
-    
-            // this.modal.close();
-
-    // deleteItemAndCloseModel() {
-    //     this.isSaving = true;
-    //     this.sourceAction.updatedBy = this.userName;
-    //     this.itemClassificationService.deleteAcion(this.sourceAction.itemClassificationId).subscribe(
-    //         response => this.saveCompleted(this.sourceAction),
-    //         error => this.saveFailedHelper(error));
-    //     this.modal.close();
-    // }
-
-    // dismissModel() {
-    //     this.isDeleteMode = false;
-    //     this.isEditMode = false;
-    //     this.modal.close();
-    // }
-
-    // private saveCompleted(user?: ItemClassificationModel) {
-    //     this.isSaving = false;
-
-    //     if (this.isDeleteMode == true) {
-    //         this.alertService.showMessage("Success", `Action was deleted successfully`, MessageSeverity.success);
-    //         this.isDeleteMode = false;
-    //     }
-    //     else {
-    //         this.alertService.showMessage("Success", `Action was edited successfully`, MessageSeverity.success);
-
-    //     }
-
-    //     this.getItemClassificationList();
-    // }
-
-
-    // openView(content, row) {
-    //     console.log(row);
-    //     this.sourceAction = row;
-    //     this.item_Name = row.itemClassificationCode;
-    //     this.description = row.description;
-    //     this.itemType = row.itemType;     
-    //     this.memo = row.memo;
-    //     this.createdBy = row.createdBy;
-    //     this.updatedBy = row.updatedBy;
-    //     this.createdDate = row.createdDate;
-    //     this.updatedDate = row.updatedDate;
-    //     this.loadMasterCompanies();
-    //     this.modal = this.modalService.open(content, { size: 'sm' });
-    //     this.modal.result.then(() => {
-    //         console.log('When user closes');
-    //     }, () => { console.log('Backdrop click') })
-    // }
-    // openHelpText(content) {
-    //     this.modal = this.modalService.open(content, { size: 'sm' });
-    //     this.modal.result.then(() => {
-    //         console.log('When user closes');
-    //     }, () => { console.log('Backdrop click') })
-    // }
-
-    // private saveSuccessHelper(role?: ItemClassificationModel) {
-    //     this.isSaving = false;
-    //     this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
-
-    //     this.getItemClassificationList();
-    
-    // }
-    
-
-
-    // private saveFailedHelper(error: any) {
-    //     this.isSaving = false;
-    //     this.alertService.stopLoadingMessage();
-    //     this.alertService.showStickyMessage("Save Error", "The below errors occured whilst saving your changes:", MessageSeverity.error, error);
-    //     this.alertService.showStickyMessage(error, null, MessageSeverity.error);
-    // }
-
-    // private getDismissReason(reason: any): string {
-    //     if (reason === ModalDismissReasons.ESC) {
-    //         return 'by pressing ESC';
-    //     } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
-    //         return 'by clicking on a backdrop';
-    //     } else {
-    //         return `with: ${reason}`;
-    //     }
-    // }
-
-    // showAuditPopup(template, id): void {
-    //     this.auditItemClassification(id);
-    //     this.modal = this.modalService.open(template, { size: 'sm' });
-    // }
-
-    // auditItemClassification(itemClassificationId: number): void {
-    //     this.AuditDetails = [];
-    //     this.itemClassificationService.getItemClassificationAudit(itemClassificationId).subscribe(audits => {
-    //         if (audits.length > 0) {
-    //             this.AuditDetails = audits;
-    //             this.AuditDetails[0].ColumnsToAvoid = ["itemClassificationAuditId", "itemClassificationId", "masterCompanyId", "createdBy", "createdDate", "updatedDate"];
-    //         }
-    //     });
-    // }
-
-    // loadItemClassification(event: LazyLoadEvent) //when page initilizes it will call this method
-    // {
-    //     this.loading = true;
-    //     this.rows = event.rows;
-    //     this.first = event.first;
-
-    //     if (this.field)
-    //     {
-    //         this.itemClassification.push({
-    //             ItemClassificationCode: this.itemClassificationCodeInputFieldValue,
-    //             Description: this.descriptionInputFieldValue,
-    //             ItemType: this.itemTypeInputFieldValue,
-    //             Memo: this.memoInputFieldValue,
-    //             CreatedBy: this.createdByInputFieldValue,
-    //             UpdatedBy: this.updatedByInputFieldValue,
-    //             first: this.first,
-    //             page: 10,
-    //             pageCount: 10,
-    //             rows: this.rows,
-    //             limit: 5
-    //         })
-    //         if (this.itemClassification) {
-    //             this.itemClassificationService.getServerPages(this.itemClassification[this.itemClassification.length - 1]).subscribe( //we are sending event details to service
-    //                 pages => {
-    //                     this.itemClassificationPaginationList = pages;
-    //                     this.itemClassificationPagination = this.itemClassificationPaginationList[0].itemClassificationList;
-    //                     this.totalRecords = this.itemClassificationPaginationList[0].totalRecordsCount;
-    //                     this.totelPages = Math.ceil(this.totalRecords / this.rows);
-    //                 });
-    //         }
-    //         else {
-    //         }
-    //     }
-    //     else {
-    //         setTimeout(() => {
-    //             if (this.allitemclassificationInfo) {
-    //                 this.itemClassificationService.getServerPages(event).subscribe( //we are sending event details to service
-    //                     pages => {
-    //                         this.itemClassificationPaginationList = pages;
-    //                         this.itemClassificationPagination = this.itemClassificationPaginationList[0].itemClassificationList;
-    //                         this.totalRecords = this.itemClassificationPaginationList[0].totalRecordsCount;
-    //                         this.totelPages = Math.ceil(this.totalRecords / this.rows);
-    //                     });
-    //                 this.loading = false;
-    //             }
-    //         }, 1000);
-    //     }
-        
-    // }
-
-    // filterItems(event) {
-
-    //     this.localCollection = [];
-    //     for (let i = 0; i < this.allitemclassificationInfo.length; i++) {
-    //         let itemName = this.allitemclassificationInfo[i].itemClassificationCode;
-    //         if (itemName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-    //             this.actionamecolle.push([{
-    //                 "itemClassificationId": this.allitemclassificationInfo[i].itemClassificationId,
-    //                 "itemName": itemName
-    //             }]),
-    //             this.localCollection.push(itemName);
-    //         }
-    //     }
-	// }
-
-    // updatePaginatorState() //need to pass this Object after update or Delete to get Server Side pagination
-    // {
-    //     this.paginatorState = {
-    //         rows: this.rows,
-    //         first: this.first
-    //     }
-    //     if (this.paginatorState) {
-    //         this.loadItemClassification(this.paginatorState);
-    //     }
-    // }
-
-    // inputFiledFilter(event, filed, matchMode) {
-    //     this.first = 0;
-    //     this.event = event;
-    //     this.field = filed;
-    //     this.matvhMode = matchMode;
-
-    //     if (filed == 'itemClassificationCode') {
-    //         this.itemClassificationCodeInputFieldValue = event;
-    //     }
-    //     if (filed == 'description') {
-    //         this.descriptionInputFieldValue = event;
-    //     }
-    //     if (filed == 'itemType') {
-    //         this.itemTypeInputFieldValue = event;
-    //     }
-    //     if (filed == 'memo') {
-    //         this.memoInputFieldValue = event;
-    //     }
-    //     if (filed == 'createdBy') {
-    //         this.createdByInputFieldValue = event;
-    //     }
-    //     if (filed == 'updatedBy') {
-    //         this.updatedByInputFieldValue = event;
-    //     }
-    //     this.itemClassification.push({
-    //         ItemClassificationCode: this.itemClassificationCodeInputFieldValue,
-    //         Description: this.descriptionInputFieldValue,
-    //         ItemType: this.itemTypeInputFieldValue,
-    //         Memo: this.memoInputFieldValue,
-    //         CreatedBy: this.createdByInputFieldValue,
-    //         UpdatedBy: this.updatedByInputFieldValue,
-    //         first: this.first,
-    //         page: 10,
-    //         pageCount: 10,
-    //         rows: this.rows,
-    //         limit: 5
-    //     })
-    //     if (this.itemClassification) {
-    //         this.itemClassificationService.getServerPages(this.itemClassification[this.itemClassification.length - 1]).subscribe( //we are sending event details to service
-    //             pages => {
-    //                 this.itemClassificationPaginationList = pages;
-    //                 this.itemClassificationPagination = this.itemClassificationPaginationList[0].itemClassificationList;
-    //                 this.totalRecords = this.itemClassificationPaginationList[0].totalRecordsCount;
-    //                 this.totelPages = Math.ceil(this.totalRecords / this.rows);
-    //             });
-    //     }
-    //     else {
-    //     }
-    // }
-    // eventPage(data) {
-    //     this.property = data.field;
-    //     this.itemClassificationPaginationList = this.sortData(this.itemClassificationPaginationList, this.property, false);
-
-    //     console.log(this.property);
-    //     console.log(data);
-    // }
-
-    // sortData(array: any[], property: string, isNumber: boolean) {
-    //     var collection;
-    //     if (isNumber) {
-    //         return array.sort((item1, item2) => {
-    //             return (item1[property] > item2[property]) ? 1 : -1;
-    //         });
-    //     } else {
-    //         return array.sort((item1, item2) => {
-    //             return (item1[property].toLowerCase() > item2[property].toLowerCase()) ? 1 : -1;
-    //         });
-    //     }
-    // }
 
 }
