@@ -276,8 +276,9 @@
                                                     (onSelect)="selectedIntangibleType($event)"
                                                     [dropdown]="true" class="p-autoComplete-ctsm" required>
                                     </p-autoComplete>-->
-                                    <select name="assetTypeId" [(ngModel)]="currentRow.assetIntangibleTypeId" 
-                                            (ngModelChange)="selectedIntangibleType($event)" required>
+                                    <select name="assetTypeId" [(ngModel)]="currentRow.assetIntangibleTypeId"
+                                            (ngModelChange)="selectedIntangibleType($event)" required
+                                            (onBlur)="onBlurCheck($event, 'assetIntangibleTypeId')">
                                         <option *ngFor="let intangibleType of allAssetIntangibleTypes"
                                                 [ngValue]="intangibleType">
                                             {{intangibleType.assetIntangibleName}}
@@ -292,7 +293,8 @@
                                     <label for="assetDepreciationMethodId" class="control-label">Amortization Method <span class="clr-red">*</span></label>
                                 </div>
                                 <div class="col-sm-5">
-                                    <select name="assetDepreciationMethodId" [(ngModel)]="currentRow.assetDepreciationMethodId" required>
+                                    <select name="assetDepreciationMethodId" [(ngModel)]="currentRow.assetDepreciationMethodId"
+                                            (ngModelChange)="onBlurCheck($event, 'assetDepreciationMethodId')" required>
                                         <option *ngFor="let depMethod of depreciationMethodList" [ngValue]="depMethod">{{depMethod.label}}</option>
                                     </select>
                                 </div>
@@ -303,7 +305,9 @@
                                 </div>
                                 <div class="col-sm-5">
                                     <input type="number" min="0" max="12" name="intangibleLifeYears" class="form-control"
-                                           [(ngModel)]="currentRow.intangibleLifeYears" required>
+                                           [(ngModel)]="currentRow.intangibleLifeYears"
+                                           (ngModelChange)="onBlurCheck($event, 'intangibleLifeYears')"
+                                           required>
                                 </div>
                             </div>
                             <div class="col-sm-12">
@@ -311,7 +315,9 @@
                                     <label for="assetAmortizationIntervalId" class="control-label">Amort Frequency<span class="clr-red">*</span></label>
                                 </div>
                                 <div class="col-sm-5">
-                                    <select name="assetAmortizationIntervalId" [(ngModel)]="currentRow.assetAmortizationIntervalId" required>
+                                    <select name="assetAmortizationIntervalId" [(ngModel)]="currentRow.assetAmortizationIntervalId"
+                                            (ngModelChange)="onBlurCheck($event, 'assetAmortizationIntervalId')"
+                                            required>
                                         <option *ngFor="let freq of depreciationFreqList" [ngValue]="freq">{{freq.label}}</option>
                                     </select>
                                 </div>
@@ -330,6 +336,7 @@
                                                     name="amortExpenseGLAccountId"
                                                     [suggestions]="filteredGLAccountList" (completeMethod)="filterGLAccount($event)"
                                                     [size]="30" [minLength]="1"
+                                                    (ngModelChange)="onBlurCheck($event, 'amortExpenseGLAccountId')"
                                                     [dropdown]="true" class="p-autoComplete-ctsm" required>
                                     </p-autoComplete>
                                 </div>
@@ -348,6 +355,7 @@
                                                     name="accAmortDeprGLAccountId"
                                                     [suggestions]="filteredGLAccountList" (completeMethod)="filterGLAccount($event)"
                                                     [size]="30" [minLength]="1"
+                                                    (ngModelChange)="onBlurCheck($event, 'accAmortDeprGLAccountId')"
                                                     [dropdown]="true" class="p-autoComplete-ctsm" required>
                                     </p-autoComplete>
                                 </div>
@@ -366,6 +374,7 @@
                                                     name="intangibleGLAccountId"
                                                     [suggestions]="filteredGLAccountList" (completeMethod)="filterGLAccount($event)"
                                                     [size]="30" [minLength]="1"
+                                                    (ngModelChange)="onBlurCheck($event, 'intangibleGLAccountId')"
                                                     [dropdown]="true" class="p-autoComplete-ctsm" required>
                                     </p-autoComplete>
                                 </div>
@@ -384,6 +393,7 @@
                                                     name="intangibleWriteDownGLAccountId"
                                                     [suggestions]="filteredGLAccountList" (completeMethod)="filterGLAccount($event)"
                                                     [size]="30" [minLength]="1"
+                                                    (ngModelChange)="onBlurCheck($event, 'intangibleWriteDownGLAccountId')"
                                                     [dropdown]="true" class="p-autoComplete-ctsm" required>
                                     </p-autoComplete>
                                 </div>
@@ -402,6 +412,7 @@
                                                     name="intangibleWriteOffGLAccountId"
                                                     [suggestions]="filteredGLAccountList" (completeMethod)="filterGLAccount($event)"
                                                     [size]="30" [minLength]="1"
+                                                    (ngModelChange)="onBlurCheck($event, 'intangibleWriteOffGLAccountId')"
                                                     [dropdown]="true" class="p-autoComplete-ctsm" required>
                                     </p-autoComplete>
                                 </div>
@@ -425,7 +436,8 @@
                             <div class="col-sm-6">
                                 <div class="checkbox-cstm">
                                     <label>
-                                        <input type="checkbox" name="isActive" [(ngModel)]="currentRow.isActive">
+                                        <input type="checkbox" name="isActive" [(ngModel)]="currentRow.isActive"
+                                               (change)="onActiveClick()">
                                         <span class="cr">
                                             <i class="cr-icon pi pi-check"></i>
                                         </span>
@@ -527,104 +539,104 @@
     </div>
 
     <ng-template #viewClick class="modal fade " id="viewClick" role="dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" (click)="dismissModel()">×</button>
-                    <h4 class="modal-title">{{rowName}} Details</h4>
-                </div>
-                <div class="modal-body viewform">
-                    <div class="col-sm-12">
-                        <p>
-                            <span class="label">
-                                <b>Intangible Class: </b>
-                            </span>
-                            <span class="value">{{itemDetails.assetIntangibleName}}</span>
-                        </p>
-                        <p>
-                            <span class="label">
-                                <b>Amortization Method: </b>
-                            </span>
-                            <span class="value">{{itemDetails.depreciationMethodName}}</span>
-                        </p>
-
-                        <p>
-                            <span class="label">
-                                <b>Intangible Life: </b>
-                            </span>
-                            <span class="value">{{itemDetails.intangibleLifeYears}}</span>
-                        </p>
-                        <p>
-                            <span class="label">
-                                <b>Amort Expense GL: </b>
-                            </span>
-                            <span class="value">{{itemDetails.amortExpenseGL}}</span>
-                        </p>
-                        <p>
-                            <span class="label">
-                                <b>Acc Amort Depr GL: </b>
-                            </span>
-                            <span class="value">{{itemDetails.accAmortdeprGL}}</span>
-                        </p>
-                        <p>
-                            <span class="label">
-                                <b>Intangible GL: </b>
-                            </span>
-                            <span class="value">{{itemDetails.intangibleGL}}</span>
-                        </p>
-                        <p>
-                            <span class="label">
-                                <b>Intangible Write Down: </b>
-                            </span>
-                            <span class="value">{{itemDetails.intangiblewritedDownGL}}</span>
-                        </p>
-                        <p>
-                            <span class="label">
-                                <b>Intangible Write Off: </b>
-                            </span>
-                            <span class="value">{{itemDetails.intangiblewritedoffGL}}</span>
-                        </p>
-                        <p>
-                            <span class="label">
-                                <b>Active: </b>
-                            </span>
-                            <span class="value">{{itemDetails.isActive ? 'true' : 'false'}}</span>
-                        </p>
-                        <p>
-                            <span class="label">
-                                <b>Legal Entity: </b>
-                            </span>
-                            <span class="value">{{itemDetails.selectedCompanyNames}}</span>
-                        </p>
-                        <p>
-                            <span class="label">
-                                <b>Created By: </b>
-                            </span>
-                            <span class="value">{{itemDetails.createdBy}}</span>
-                        </p>
-                        <p>
-                            <span class="label">
-                                <b>Created Date: </b>
-                            </span>
-                            <span class="value">{{itemDetails.createdDate | date: 'MM/dd/yyyy h:mm:ss a'}}</span>
-                        </p>
-                        <p>
-                            <span class="label">
-                                <b>Last Updated By: </b>
-                            </span>
-                            <span class="value">{{itemDetails.updatedBy}}</span>
-                        </p>
-                        <p>
-                            <span class="label">
-                                <b>Last Updated Date: </b>
-                            </span>
-                            <span class="value">{{itemDetails.updatedDate | date: 'MM/dd/yyyy h:mm:ss a'}}</span>
-                        </p>
-                    </div>
-                    <div class="clear"></div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="dismissModel()">Close</button>
-                </div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" (click)="dismissModel()">×</button>
+                <h4 class="modal-title">{{rowName}} Details</h4>
             </div>
+            <div class="modal-body viewform">
+                <div class="col-sm-12">
+                    <p>
+                        <span class="label">
+                            <b>Intangible Class: </b>
+                        </span>
+                        <span class="value">{{itemDetails.assetIntangibleName}}</span>
+                    </p>
+                    <p>
+                        <span class="label">
+                            <b>Amortization Method: </b>
+                        </span>
+                        <span class="value">{{itemDetails.depreciationMethodName}}</span>
+                    </p>
+
+                    <p>
+                        <span class="label">
+                            <b>Intangible Life: </b>
+                        </span>
+                        <span class="value">{{itemDetails.intangibleLifeYears}}</span>
+                    </p>
+                    <p>
+                        <span class="label">
+                            <b>Amort Expense GL: </b>
+                        </span>
+                        <span class="value">{{itemDetails.amortExpenseGL}}</span>
+                    </p>
+                    <p>
+                        <span class="label">
+                            <b>Acc Amort Depr GL: </b>
+                        </span>
+                        <span class="value">{{itemDetails.accAmortdeprGL}}</span>
+                    </p>
+                    <p>
+                        <span class="label">
+                            <b>Intangible GL: </b>
+                        </span>
+                        <span class="value">{{itemDetails.intangibleGL}}</span>
+                    </p>
+                    <p>
+                        <span class="label">
+                            <b>Intangible Write Down: </b>
+                        </span>
+                        <span class="value">{{itemDetails.intangiblewritedDownGL}}</span>
+                    </p>
+                    <p>
+                        <span class="label">
+                            <b>Intangible Write Off: </b>
+                        </span>
+                        <span class="value">{{itemDetails.intangiblewritedoffGL}}</span>
+                    </p>
+                    <p>
+                        <span class="label">
+                            <b>Active: </b>
+                        </span>
+                        <span class="value">{{itemDetails.isActive ? 'true' : 'false'}}</span>
+                    </p>
+                    <p>
+                        <span class="label">
+                            <b>Legal Entity: </b>
+                        </span>
+                        <span class="value">{{itemDetails.selectedCompanyNames}}</span>
+                    </p>
+                    <p>
+                        <span class="label">
+                            <b>Created By: </b>
+                        </span>
+                        <span class="value">{{itemDetails.createdBy}}</span>
+                    </p>
+                    <p>
+                        <span class="label">
+                            <b>Created Date: </b>
+                        </span>
+                        <span class="value">{{itemDetails.createdDate | date: 'MM/dd/yyyy h:mm:ss a'}}</span>
+                    </p>
+                    <p>
+                        <span class="label">
+                            <b>Last Updated By: </b>
+                        </span>
+                        <span class="value">{{itemDetails.updatedBy}}</span>
+                    </p>
+                    <p>
+                        <span class="label">
+                            <b>Last Updated Date: </b>
+                        </span>
+                        <span class="value">{{itemDetails.updatedDate | date: 'MM/dd/yyyy h:mm:ss a'}}</span>
+                    </p>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="dismissModel()">Close</button>
+            </div>
+        </div>
     </ng-template>
 </div>

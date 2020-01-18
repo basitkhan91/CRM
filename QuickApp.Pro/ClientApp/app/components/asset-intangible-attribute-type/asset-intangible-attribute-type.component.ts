@@ -26,7 +26,7 @@ import { UploadTag } from "../../models/UploadTag.enum";
     animations: [fadeInOut]
 })
 export class AssetIntangibleAttributeTypeComponent implements OnInit, OnChanges {
-    
+
     itemList: any[] = [];
     filteredItemList: AssetIntangibleAttributeType[];
     allAssetIntangibleTypes: AssetIntangibleType[];
@@ -123,7 +123,7 @@ export class AssetIntangibleAttributeTypeComponent implements OnInit, OnChanges 
             results => this.onIntangibleTypeLoad(results[0]),
             error => this.onDataLoadFailed(error),
         );
-        
+
     }
 
     private onIntangibleTypeLoad(getAssetTypeList: AssetIntangibleType[]) {
@@ -293,7 +293,7 @@ export class AssetIntangibleAttributeTypeComponent implements OnInit, OnChanges 
         for (let i = 0; i < this.itemList.length; i++) {
             if ((this.itemList[i].assetIntangibleTypeId === object.assetIntangibleTypeId && this.currentModeOfOperation == 2)
                 || (this.itemList[i].assetIntangibleTypeId === object.assetIntangibleTypeId && this.currentModeOfOperation == 3 &&
-                this.currentRow.assetIntangibleAttributeTypeId != this.itemList[i].assetIntangibleAttributeTypeId)
+                    this.currentRow.assetIntangibleAttributeTypeId != this.itemList[i].assetIntangibleAttributeTypeId)
             ) {
                 this.recordExists = true;
                 this.disableSave = true;
@@ -313,6 +313,10 @@ export class AssetIntangibleAttributeTypeComponent implements OnInit, OnChanges 
         }
         else {
             this.disableForMgmtStructure = true;
+        }
+        if (this.isEditMode == true &&
+            this.selectedCompanyID != undefined && this.selectedCompanyID.length > 0) {
+            this.disableSave = false;
         }
         //this.divisionList = [];
         //this.departmentList = [];
@@ -616,8 +620,9 @@ export class AssetIntangibleAttributeTypeComponent implements OnInit, OnChanges 
 
     showItemEdit(rowData): void {
         console.log(rowData);
-        this.disableSave = false;
+        this.disableSave = true;
         this.recordExists = false;
+        this.isEditMode = true;
         //this.currentRow = this.newItem(rowData);
         this.currentRow = {
             ...rowData,
@@ -640,7 +645,12 @@ export class AssetIntangibleAttributeTypeComponent implements OnInit, OnChanges 
             this.disableForMgmtStructure = false;
         else
             this.disableForMgmtStructure = true;
-        this.selectedRow = this.currentRow;
+        for (let i = 0; i < this.itemList.length; i++) {
+            if (this.itemList[i].assetIntangibleAttributeTypeId == this.currentRow.assetIntangibleAttributeTypeId) {
+                this.selectedRow = this.itemList[i];
+            }
+        }
+
         this.currentModeOfOperation = ModeOfOperation.Update;
     }
 
@@ -694,7 +704,7 @@ export class AssetIntangibleAttributeTypeComponent implements OnInit, OnChanges 
     private loadData() {
         this.getItemList();
         console.log(this.itemList);
-        
+
         this.rowName = "Intangible Attribute Type";
         this.header = "Intangible Attribute  Type";
         this.breadCrumb.currentUrl = '/singlepages/singlepages/app-asset-intangible-attribute-type';
@@ -846,7 +856,85 @@ export class AssetIntangibleAttributeTypeComponent implements OnInit, OnChanges 
         this.modal.close();
     }
 
-    validateOnChange(event, field) {
+    onBlurCheck(event, field) {
+        //console.log(field);
+        //console.log(event);
+        //console.log(this.selectedRow);
 
+        //console.log(this.code);
+        if (this.isEditMode) {
+            for (let attr in this.currentRow as AssetIntangibleAttributeType) {
+                //console.log(attr, field);
+                if (attr == 'assetIntangibleTypeId') {
+                    let oldValue = editValueAssignByCondition('assetIntangibleTypeId', this.selectedRow.assetIntangibleTypeId);
+                    let newValue = editValueAssignByCondition('assetIntangibleTypeId', this.currentRow.assetIntangibleTypeId);
+                    if (oldValue != newValue)
+                        this.disableSave = false;
+                }
+                else if (attr == 'assetDepreciationMethodId') {
+                    //console.log('assetDepreciationMethodId');
+                    let oldValue = editValueAssignByCondition('value', this.selectedRow.assetDepreciationMethodId);
+                    let newValue = editValueAssignByCondition('value', this.currentRow.assetDepreciationMethodId);
+                    //console.log(oldValue, newValue);
+                    if (oldValue != newValue)
+                        this.disableSave = false;
+                }
+                else if (attr == 'intangibleLifeYears') {
+                    let oldValue = this.selectedRow.intangibleLifeYears;
+                    let newValue = this.currentRow.intangibleLifeYears;
+                    if (oldValue != newValue)
+                        this.disableSave = false;
+                }
+                else if (attr == 'assetAmortizationIntervalId') {
+                    let oldValue = editValueAssignByCondition('value', this.selectedRow.assetAmortizationIntervalId);
+                    let newValue = editValueAssignByCondition('value', this.currentRow.assetAmortizationIntervalId);
+                    if (oldValue != newValue)
+                        this.disableSave = false;
+                }
+                else if (attr == 'amortExpenseGLAccountId') {
+                    let oldValue = editValueAssignByCondition('glAccountId', this.selectedRow.amortExpenseGLAccountId);
+                    let newValue = editValueAssignByCondition('glAccountId', this.currentRow.amortExpenseGLAccountId);
+                    if (oldValue != newValue)
+                        this.disableSave = false;
+                }
+                else if (attr == 'amortExpenseGLAccountId') {
+                    let oldValue = editValueAssignByCondition('glAccountId', this.selectedRow.amortExpenseGLAccountId);
+                    let newValue = editValueAssignByCondition('glAccountId', this.currentRow.amortExpenseGLAccountId);
+                    if (oldValue != newValue)
+                        this.disableSave = false;
+                }
+                else if (attr == 'accAmortDeprGLAccountId') {
+                    let oldValue = editValueAssignByCondition('glAccountId', this.selectedRow.accAmortDeprGLAccountId);
+                    let newValue = editValueAssignByCondition('glAccountId', this.currentRow.accAmortDeprGLAccountId);
+                    if (oldValue != newValue)
+                        this.disableSave = false;
+                }
+                else if (attr == 'intangibleGLAccountId') {
+                    let oldValue = editValueAssignByCondition('glAccountId', this.selectedRow.intangibleGLAccountId);
+                    let newValue = editValueAssignByCondition('glAccountId', this.currentRow.intangibleGLAccountId);
+                    if (oldValue != newValue)
+                        this.disableSave = false;
+                }
+                else if (attr == 'intangibleWriteDownGLAccountId') {
+                    let oldValue = editValueAssignByCondition('glAccountId', this.selectedRow.intangibleWriteDownGLAccountId);
+                    let newValue = editValueAssignByCondition('glAccountId', this.currentRow.intangibleWriteDownGLAccountId);
+                    if (oldValue != newValue)
+                        this.disableSave = false;
+                }
+                else if (attr == 'intangibleWriteOffGLAccountId') {
+                    let oldValue = editValueAssignByCondition('glAccountId', this.selectedRow.intangibleWriteOffGLAccountId);
+                    let newValue = editValueAssignByCondition('glAccountId', this.currentRow.intangibleWriteOffGLAccountId);
+                    console.log(oldValue, newValue);
+                    if (oldValue != newValue)
+                        this.disableSave = false;
+                }
+            }
+        }
+        console.log(this.disableSave);
+    }
+
+    onActiveClick() {
+        if (this.isEditMode == true)
+            this.disableSave = false;
     }
 }
