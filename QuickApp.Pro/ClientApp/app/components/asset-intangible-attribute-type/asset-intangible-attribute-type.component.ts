@@ -1,4 +1,4 @@
-﻿import { OnInit, Component } from "@angular/core";
+﻿import { OnInit, Component, OnChanges, SimpleChanges, ChangeDetectionStrategy, ElementRef } from "@angular/core";
 import { fadeInOut } from "../../services/animations";
 import { AlertService, MessageSeverity } from "../../services/alert.service";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
@@ -20,11 +20,13 @@ import { UploadTag } from "../../models/UploadTag.enum";
 
 @Component({
     selector: 'app-asset-intangible-attribute-type',
+    changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: './asset-intangible-attribute-type.component.html',
     styleUrls: ['asset-intangible-attribute-type.component.scss'],
     animations: [fadeInOut]
 })
-export class AssetIntangibleAttributeTypeComponent implements OnInit {
+export class AssetIntangibleAttributeTypeComponent implements OnInit, OnChanges {
+    
     itemList: any[] = [];
     filteredItemList: AssetIntangibleAttributeType[];
     allAssetIntangibleTypes: AssetIntangibleType[];
@@ -39,6 +41,7 @@ export class AssetIntangibleAttributeTypeComponent implements OnInit {
     itemDetails: any;
     companyListData: any[] = [];
     currentRow: AssetIntangibleAttributeType;
+    selectedRow: AssetIntangibleAttributeType;
     currentModeOfOperation: ModeOfOperation;
     rowName: string;
     header: string;
@@ -83,6 +86,17 @@ export class AssetIntangibleAttributeTypeComponent implements OnInit {
     ngOnInit(): void {
         //gather up all the required data to be displayed on the screen 
         this.loadData();
+    }
+
+    ngOnChanges(changes: SimpleChanges): void {
+        console.log(JSON.stringify(changes));
+        for (let propName in changes) {
+            let chng = changes[propName];
+            let cur = JSON.stringify(chng.currentValue);
+            let prev = JSON.stringify(chng.previousValue);
+            console.log(`${propName}: currentValue = ${cur}, previousValue = ${prev}`);
+        }
+        //throw new Error("Method not implemented.");
     }
 
     //for auditing
@@ -626,6 +640,7 @@ export class AssetIntangibleAttributeTypeComponent implements OnInit {
             this.disableForMgmtStructure = false;
         else
             this.disableForMgmtStructure = true;
+        this.selectedRow = this.currentRow;
         this.currentModeOfOperation = ModeOfOperation.Update;
     }
 
@@ -831,5 +846,7 @@ export class AssetIntangibleAttributeTypeComponent implements OnInit {
         this.modal.close();
     }
 
+    validateOnChange(event, field) {
 
+    }
 }
