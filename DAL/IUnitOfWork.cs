@@ -295,5 +295,6 @@ namespace DAL
         IMasterSalesOrderQuoteStatusRepository MasterSalesOrderQuoteStatusRepository { get; }
         IEmployeeStationRepository employeeStationRepository { get; }
 
+        IGlobalSettingsRepository GlobalSettingsRepository { get; }
     }
 }

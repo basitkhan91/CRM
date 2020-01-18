@@ -492,6 +492,7 @@ export class SalesQuoteCreateComponent implements OnInit {
       this.salesQuote.customerContactId = this.salesOrderQuoteObj.customerContactId;
       this.salesQuote.customerReferenceName = this.salesOrderQuoteObj.customerReference;
       this.salesQuote.contractReferenceName = this.salesOrderQuoteObj.contractReference;
+      this.salesQuote.quoteApprovedById = this.salesOrderQuoteObj.quoteApprovedById;
 
       this.salesQuote.salesPersonName = getObjectById(
         "employeeId",
@@ -793,6 +794,7 @@ export class SalesQuoteCreateComponent implements OnInit {
       this.salesOrderQuote.creditTermId = this.salesQuote.creditLimitTermsId;
       this.salesOrderQuote.restrictPMA = this.salesQuote.restrictPMA;
       this.salesOrderQuote.restrictDER = this.salesQuote.restrictDER;
+     // this.salesOrderQuote.quoteApprovedById = this.salesQuote.quoteApprovedById;
       if (this.salesQuote.approvedDate)
         this.salesOrderQuote.approvedDate = this.salesQuote.approvedDate.toDateString();
       this.salesOrderQuote.currencyId = this.salesQuote.currencyId;

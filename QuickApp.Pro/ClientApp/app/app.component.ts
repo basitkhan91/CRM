@@ -194,7 +194,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                         label: ' Capabilities',
                         items: [
                             { label: 'Capabilities List', routerLink: '/itemmastersmodule/itemmasterpages/app-item-master-capabilities-list' },
-                            { label: 'Capabilities Create', routerLink: '/itemmastersmodule/itemmasterpages/app-item-master-create-capabilities' },
+                            { label: 'Create Capabilities', routerLink: '/itemmastersmodule/itemmasterpages/app-item-master-create-capabilities' },
                             { label: 'Reports & Forms', items: [{ label: 'Capabilities List', routerLink: '/#' }] }]
                     }
 
@@ -361,7 +361,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                     },
                     {
                         label: 'Work-order Quote', items: [
-                            { label: 'WO Quote List', routerLink: '/#' },
+                            { label: 'WO Quote List', routerLink: '/workordersmodule/workorderspages/app-work-order-quote-list' },
                             { label: 'Create New WO Quote', routerLink: '/workordersmodule/workorderspages/app-work-order-quote' },
                             { label: 'WO Quote Approvals', routerLink: '/#' }
                         ]

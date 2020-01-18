@@ -60,5 +60,8 @@ th {
     text-overflow: ellipsis;
     white-space: nowrap;
 }
-
+:host /deep/ p-multiselect .ui-multiselect .ui-multiselect-label {
+    white-space: nowrap;
+    width: calc(100% - 30px);
+}
 

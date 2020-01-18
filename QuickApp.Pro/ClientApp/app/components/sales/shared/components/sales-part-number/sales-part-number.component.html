@@ -8,7 +8,7 @@
       <p-table [value]="selectedParts" class="rpo-table-cstm rro-table-cstm" [columns]="columns" [scrollable]="true" [style]="{ width: '100%' }">
         <ng-template pTemplate="colgroup" let-columns>
             <colgroup>
-              <col *ngFor="let col of columns" style="width:200px" />
+              <col *ngFor="let col of columns" [ngStyle]="{'width': col.width}" />
             </colgroup>
           </ng-template>  
         <ng-template pTemplate="header">

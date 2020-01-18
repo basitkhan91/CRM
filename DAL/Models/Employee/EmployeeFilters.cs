@@ -4,7 +4,7 @@ namespace DAL.Models
 {
     public class EmployeeFilters
     {
-        public int EmployeeId { get; set; }
+        public long EmployeeId { get; set; }
 
         public string EmployeeCode { get; set; }
         public string FirstName { get; set; }
@@ -15,6 +15,11 @@ namespace DAL.Models
         public string Company { get; set; }
         public string Paytype { get; set; }
         public string Status { get; set; }
-      
+        public DateTime CreatedDate { get; set; }
+        public bool? IsActive { get; set; }
+        public int TotalRecords { get; set; }
+
+        public string IsHourly { get; set; }
+
     }
 }

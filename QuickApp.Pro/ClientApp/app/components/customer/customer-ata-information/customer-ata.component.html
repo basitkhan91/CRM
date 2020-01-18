@@ -13,12 +13,7 @@
         <div class="shadow-Box">
             <div class="col-sm-12">
                 <h4 class="float-left">Search ATA chapters</h4>
-                <!-- <h4 class="float-right">
-          Add ATA Information
-          <a class="plusicon-cstm" data-toggle="modal" data-target="#ATAADD"
-            ><i class="fa fa-plus-circle fa-lg"></i
-          ></a>
-        </h4> -->
+              
             </div>
             <div class="col-md-3">
                 <div class="form-group ">
@@ -97,12 +92,13 @@
           {{ rowData[col.field] }}
         </td>
         <td>
-          <button  matTooltip="Delete"
-            class="btn btn-danger nobg" 
-            (click)="deleteATAMapping(deleteContent,rowData)"
-          >
-            <i class="fa fa-trash"></i>
-          </button>
+            <!--<button matTooltip="Delete"
+                    class="btn btn-danger nobg"
+                    (click)="deleteATAMapping(deleteContent,rowData)">
+                <i class="fa fa-trash"></i>
+            </button>-->
+            <span data-toggle="modal"><a class="btn nobg"  (click)="deleteATAMapping(deleteContent,rowData)" matTooltip="Delete"><i class="fa fa-trash"></i></a> </span>
+
         </td>
       </tr>
     </ng-template>
@@ -144,83 +140,3 @@
         <button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
     </div>
 </ng-template>
-<!-- <div class="col-sm-12 mt8">
-            <button class="btn btn-primary-cstm float-left" pButton type="button" (click)="moveAircraftInformation(); changeOfTab('AircraftInfo');" icon="pi pi-angle-left" iconPos="left" label="Prev" style="padding: 0 !important;"></button>
-            <button class="btn btn-primary-cstm float-right" pButton (click)="movePurchaseInformation(); changeOfTab('PurchaseSales');" type="button" icon="pi pi-angle-right" iconPos="right" label="Save & Go to Next Step" style="padding: 0 !important;"></button>
-        </div> -->
-<!-- <div id="ATAADD" class="modal fade custom-popup" role="dialog">
-  <div class="modal-dialog modal-full">
-  
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">×</button>
-        <h4 class="modal-title">Add ATA Information</h4>
-      </div>
-      <div class="modal-body">
-        <form>
-          <div class="form-row">
-            <div class="col-md-3">
-              <div class="form-group">
-                <label class="popup-plusicon-cstm"
-                  >ATA Chapter
-                  <a
-                    data-dismiss="modal"
-                    [routerLink]="['/singlepages/singlepages/app-ata-main']"
-                    ><i class="fa fa-plus-circle fa-lg"></i
-                  ></a>
-                </label>
-                <p-dropdown
-                  name="ataPopUp"
-                  class="p-dropdown-custom-md"
-                  [(ngModel)]="add_SelectedId"
-                  (onChange)="getATASubChapterByATAChapter()"
-                  [options]="ataChapterList"
-                ></p-dropdown>
-              </div>
-            </div>
-
-            <div class="col-md-4">
-              <div class="form-group">
-                <label
-                  class="popup-plusicon-cstm"
-                  style="width: 170px !important;"
-                  >ATA SubChapters
-                  <a
-                    data-dismiss="modal"
-                    [routerLink]="[
-                      '/singlepages/singlepages/app-ata-sub-chapter1'
-                    ]"
-                    ><i class="fa fa-plus-circle fa-lg"></i></a
-                ></label>
-                <p-multiSelect
-                  class="imstock-pmselect"
-                  [options]="add_ataSubChapterList"
-                  [(ngModel)]="add_SelectedModels"
-                  name="popUpATASubchapter"
-                  [panelStyle]="{ minWidth: '12em' }"
-                ></p-multiSelect>
-              </div>
-            </div>
-
-            <div class="col-md-2">
-              <button
-                style="margin-top: 20px;"
-                type="button"
-                class="btn btn-primary-cstm"
-                data-dismiss="modal"
-                (click)="addATAMapping()"
-              >
-                Add
-              </button>
-            </div>
-          </div>
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">
-          Close
-        </button>
-      </div>
-    </div>
-  </div>
-</div> -->

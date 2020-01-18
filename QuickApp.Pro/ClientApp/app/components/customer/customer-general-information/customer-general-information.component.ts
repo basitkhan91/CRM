@@ -1,7 +1,7 @@
 ﻿import { Component, OnInit, ChangeDetectorRef, Output, EventEmitter, Input } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { FormBuilder } from '@angular/forms';
-import { NgbModal, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbActiveModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { fadeInOut } from '../../../services/animations';
 import { AuthService } from '../../../services/auth.service';
 import { MessageSeverity, AlertService } from '../../../services/alert.service';
@@ -110,6 +110,10 @@ export class CustomerGeneralInformationComponent implements OnInit {
     tempIntegrationIds: any = [];
     changeName: boolean = false;
     ataListDataValues: any;
+    selectedRowForDeleteRestrictPMA: any = {};
+    selectedRowForDeleteRestrictDER: any = {};
+    modal: NgbModalRef;
+
     // editData: any;
 
     // selectedCustomerCodeData: any;
@@ -348,7 +352,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
     // }
 
 
-    constructor(public integrationService: IntegrationService, public customerClassificationService: CustomerClassificationService, public ataservice: AtaMainService, private authService: AuthService, private alertService: AlertService,
+    constructor(public integrationService: IntegrationService, private modalService: NgbModal, public customerClassificationService: CustomerClassificationService, public ataservice: AtaMainService, private authService: AuthService, private alertService: AlertService,
         public customerService: CustomerService, public itemService: ItemMasterService, public vendorser: VendorService, private currencyService: CurrencyService, private commonService: CommonService) {
 
 
@@ -691,11 +695,12 @@ export class CustomerGeneralInformationComponent implements OnInit {
         this.restictPMAtempList = [];                            
         }
     }
-    deleteRestirctPMA(i, rowData) {
-      
-        if (rowData.restrictedPartId > 0) {
+    deleteRestirctPMA() {
 
-            this.customerService.deleteRestrictedPartsById(rowData.restrictedPartId, this.userName).subscribe(res => {
+      
+        if (this.selectedRowForDeleteRestrictPMA.restrictedPartId > 0) {
+
+            this.customerService.deleteRestrictedPartsById(this.selectedRowForDeleteRestrictPMA.restrictedPartId, this.userName).subscribe(res => {
                 this.alertService.showMessage(
                     'Success',
                     `Sucessfully Deleted Restricted Part`,
@@ -703,13 +708,28 @@ export class CustomerGeneralInformationComponent implements OnInit {
                 );
             })
         }
-        this.partListForPMA = [{ label: rowData.partNumber, value: rowData }, ...this.partListForPMA];
-        this.generalInformation.restrictedPMAParts.splice(i, 1);
+        this.dismissModel()
+        this.partListForPMA = [{ label: this.selectedRowForDeleteRestrictPMA.partNumber, value: this.selectedRowForDeleteRestrictPMA }, ...this.partListForPMA];
+        this.generalInformation.restrictedPMAParts.splice(this.selectedRowForDeleteRestrictPMA.index, 1);
        
         if (this.generalInformation.restrictedPMAParts.length == 0) {
             this.disableRestrictedPMA = false;
         }
        
+    }
+    openPopupForDeleteRestrictPMA(i, rowData, content){
+        this.selectedRowForDeleteRestrictPMA = rowData;
+        this.selectedRowForDeleteRestrictPMA['index'] = i;
+        
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
+
+    }
+    openPopupForDeleteRestrictDER(i, rowData, content){
+        this.selectedRowForDeleteRestrictDER = rowData;
+        this.selectedRowForDeleteRestrictDER['index'] = i;
+        
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
+
     }
     patternMobilevalidationWithSpl(event: any) {
         const pattern = /[0-9\+\-()\ ]/;
@@ -741,10 +761,10 @@ export class CustomerGeneralInformationComponent implements OnInit {
         }
             
     }
-    deleteRestrictDER(i, rowData) {
-        if (rowData.restrictedPartId > 0) {
+    deleteRestirctDER() {
+        if (this.selectedRowForDeleteRestrictDER.restrictedPartId > 0) {
 
-            this.customerService.deleteRestrictedPartsById(rowData.restrictedPartId, this.userName).subscribe(res => {
+            this.customerService.deleteRestrictedPartsById(this.selectedRowForDeleteRestrictDER.restrictedPartId, this.userName).subscribe(res => {
                 this.alertService.showMessage(
                     'Success',
                     `Sucessfully Deleted Restricted Part`,
@@ -752,8 +772,9 @@ export class CustomerGeneralInformationComponent implements OnInit {
                 );
             })
         }
-        this.partListForDER = [{ label: rowData.partNumber, value: rowData }, ...this.partListForDER];
-        this.generalInformation.restrictedDERParts.splice(i, 1);
+        this.dismissModel()
+        this.partListForDER = [{ label: this.selectedRowForDeleteRestrictDER.partNumber, value: this.selectedRowForDeleteRestrictDER }, ...this.partListForDER];
+        this.generalInformation.restrictedDERParts.splice(this.selectedRowForDeleteRestrictDER.index, 1);
         if (this.generalInformation.restrictedDERParts.length == 0) {
             this.disableRestrictedDER = false;
         }
@@ -2157,11 +2178,10 @@ export class CustomerGeneralInformationComponent implements OnInit {
 
     // // Close Model Popup
 
-    // public dismissModel() {
-    //     this.isDeleteMode = false;
-    //     this.isEditMode = false;
-    //     this.modal.close();
-    // }
+    public dismissModel() {
+        this.selectedRowForDeleteRestrictPMA = {};
+        this.modal.close();
+    }
 
 
 

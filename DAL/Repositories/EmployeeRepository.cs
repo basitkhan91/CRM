@@ -1,5 +1,6 @@
 ﻿using DAL.Models;
 using DAL.Repositories.Interfaces;
+using EntityFrameworkPaginate;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -10,8 +11,411 @@ namespace DAL.Repositories
 {
     public class EmployeeRepository : Repository<DAL.Models.Employee>, IEmployee
     {
+        //private ICommonRepository commonRepository;
+        private List<long> ManagementStructureIds = new List<long>();
+        private static Dictionary<string, string> keyValues = new Dictionary<string, string>();
+
         public EmployeeRepository(ApplicationDbContext context) : base(context)
-        { }
+        {
+            
+        }
+
+        public IEnumerable<object> GetEmployeeList(Common.Filters<EmployeeFilters> employeeFilters)
+        {
+            if (employeeFilters.filters == null)
+                employeeFilters.filters = new EmployeeFilters();
+            var pageNumber = employeeFilters.first + 1;
+            var pageSize = employeeFilters.rows;
+            string sortColumn = string.Empty;
+
+            short statusId = 2;
+            var sorts = new Sorts<EmployeeFilters>();
+            var filters = new EntityFrameworkPaginate.Filters<EmployeeFilters>();
+
+
+
+            if (string.IsNullOrEmpty(employeeFilters.SortField))
+            {
+                sortColumn = "CreatedDate";
+                employeeFilters.SortOrder = -1;
+                sorts.Add(sortColumn == "CreatedDate", x => x.CreatedDate, true);
+            }
+            else
+            {
+                sortColumn = employeeFilters.SortField;
+            }
+
+            var propertyInfo = typeof(EmployeeFilters).GetProperty(sortColumn);
+
+            if (employeeFilters.SortOrder == -1)
+            {
+                sorts.Add(true, x => propertyInfo.GetValue(x, null), true);
+            }
+            else
+            {
+                sorts.Add(true, x => propertyInfo.GetValue(x, null));
+            }
+
+            if (!string.IsNullOrEmpty(employeeFilters.filters.Status))
+            {
+                if (employeeFilters.filters.Status.ToLower() == "inactive")
+                {
+                    statusId = 0;
+                }
+                else if (employeeFilters.filters.Status.ToLower() == "active")
+                {
+                    statusId = 1;
+                }
+                else
+                {
+                    statusId = 2;
+                }
+
+            }
+
+
+            filters.Add(!string.IsNullOrEmpty(employeeFilters.filters.EmployeeCode), x => x.EmployeeCode.Contains(employeeFilters.filters.EmployeeCode));
+            filters.Add(!string.IsNullOrEmpty(employeeFilters.filters.FirstName), x => x.FirstName.Contains(employeeFilters.filters.FirstName));
+            filters.Add(!string.IsNullOrEmpty(employeeFilters.filters.LastName), x => x.LastName.Contains(employeeFilters.filters.LastName));
+            filters.Add(!string.IsNullOrEmpty(employeeFilters.filters.Jobtitle), x => x.Jobtitle.Contains(employeeFilters.filters.Jobtitle));
+            filters.Add(!string.IsNullOrEmpty(employeeFilters.filters.EmployeeExpertise), x => x.EmployeeExpertise.Contains(employeeFilters.filters.EmployeeExpertise));
+            filters.Add(!string.IsNullOrEmpty(employeeFilters.filters.Company), x => x.Company.Contains(employeeFilters.filters.Company));
+            filters.Add(!string.IsNullOrEmpty(employeeFilters.filters.Paytype), x => x.Paytype.Contains(employeeFilters.filters.Paytype));
+            filters.Add(statusId == 2, x => x.IsActive == x.IsActive);
+            filters.Add(statusId == 1, x => x.IsActive == true);
+            filters.Add(statusId == 0, x => x.IsActive == false);
+
+            var totalRecords = (from t in _appContext.Employee
+                                join ee in _appContext.EmployeeExpertise on t.EmployeeExpertiseId equals ee.EmployeeExpertiseId into eed
+                                from ee in eed.DefaultIfEmpty()
+
+                                join jot in _appContext.JobTitle on t.JobTitleId equals jot.JobTitleId into jotd
+                                from jot in jotd.DefaultIfEmpty()
+
+                                join mle in _appContext.ManagementStructure on t.ManagementStructureId equals mle.ManagementStructureId into mainCompanyTree
+                                from mle in mainCompanyTree.DefaultIfEmpty()
+
+                                join divmle in _appContext.ManagementStructure on mle.ParentId equals divmle.ManagementStructureId into mainDivCompany
+                                from divmle in mainDivCompany.DefaultIfEmpty()
+
+                                join biumle in _appContext.ManagementStructure on divmle.ParentId equals biumle.ManagementStructureId into BIUDivCompany
+                                from biumle in BIUDivCompany.DefaultIfEmpty()
+
+                                join compmle in _appContext.ManagementStructure on biumle.ParentId equals compmle.ManagementStructureId into comivCompany
+                                from compmle in comivCompany.DefaultIfEmpty()
+
+                                where( t.IsDeleted == false || t.IsDeleted == null)
+                                 //&& t.StartDate == (employeeFilters.filters.StartDate != null ? employeeFilters.filters.StartDate : t.StartDate)
+
+                                select new EmployeeFilters()
+                                {
+                                    EmployeeId = Convert.ToInt64(t.EmployeeId),
+                                    EmployeeCode = t.EmployeeCode,
+                                    FirstName = t.FirstName,
+                                    LastName = t.LastName,
+                                    Jobtitle = jot.Description,
+                                    EmployeeExpertise = ee.Description,
+                                    StartDate = t.StartDate,
+                                    IsActive = t.IsActive,
+                                    CreatedDate = t.CreatedDate,
+                                    Company = GetManagementStrucreCodeByName(t.ManagementStructureId, "Level1"),
+                                    Paytype = Convert.ToBoolean(t.IsHourly) ? "Hourly" : "Yearly",                                                                       
+                                }).Distinct().Paginate(pageNumber, pageSize, sorts, filters).RecordCount;
+
+            var list = (from t in _appContext.Employee
+                        join ee in _appContext.EmployeeExpertise on t.EmployeeExpertiseId equals ee.EmployeeExpertiseId into eed
+                        from ee in eed.DefaultIfEmpty()
+
+                        join jot in _appContext.JobTitle on t.JobTitleId equals jot.JobTitleId into jotd
+                        from jot in jotd.DefaultIfEmpty()
+
+                        join mle in _appContext.ManagementStructure on t.ManagementStructureId equals mle.ManagementStructureId into mainCompanyTree
+                        from mle in mainCompanyTree.DefaultIfEmpty()
+
+                        join divmle in _appContext.ManagementStructure on mle.ParentId equals divmle.ManagementStructureId into mainDivCompany
+                        from divmle in mainDivCompany.DefaultIfEmpty()
+
+                        join biumle in _appContext.ManagementStructure on divmle.ParentId equals biumle.ManagementStructureId into BIUDivCompany
+                        from biumle in BIUDivCompany.DefaultIfEmpty()
+
+                        join compmle in _appContext.ManagementStructure on biumle.ParentId equals compmle.ManagementStructureId into comivCompany
+                        from compmle in comivCompany.DefaultIfEmpty()
+
+                        where (t.IsDeleted == false || t.IsDeleted == null)
+                         //&& t.StartDate == (employeeFilters.filters.StartDate != null ? employeeFilters.filters.StartDate : t.StartDate)
+
+                        select new EmployeeFilters()
+                        {
+                            EmployeeId = Convert.ToInt64(t.EmployeeId),
+                            EmployeeCode = t.EmployeeCode,
+                            FirstName = t.FirstName,
+                            LastName = t.LastName,
+                            Jobtitle = jot.Description,
+                            EmployeeExpertise = ee.Description,
+                            StartDate = t.StartDate,
+                            IsActive = t.IsActive,
+                            CreatedDate = t.CreatedDate,
+                            //managmentLegalEntityName = mle.Name,
+                            //divmanagmentLegalEntityName = divmle.Name,
+                            //biumanagmentLegalEntityName = biumle.Name,
+                            //compmanagmentLegalEntityName = compmle.Name,     
+                            Company= GetManagementStrucreCodeByName(t.ManagementStructureId, "Level1"),
+                            Paytype = Convert.ToBoolean(t.IsHourly) ? "Hourly" : "Yearly",
+                            TotalRecords= totalRecords
+
+
+                        }).Distinct().Paginate(pageNumber, pageSize, sorts, filters).Results;
+
+
+
+            return list;
+
+
+
+        }
+
+
+        public IEnumerable<object> EmployeeGlobalSearch(string filterText, int pageNumber, int pageSize)
+        {
+            var take = pageSize;
+            var skip = take * (pageNumber);
+
+            if (!string.IsNullOrEmpty(filterText))
+            {
+
+                var totalRecords = (from t in _appContext.Employee
+                                    join ee in _appContext.EmployeeExpertise on t.EmployeeExpertiseId equals ee.EmployeeExpertiseId into eed
+                                    from ee in eed.DefaultIfEmpty()
+
+                                    join jot in _appContext.JobTitle on t.JobTitleId equals jot.JobTitleId into jotd
+                                    from jot in jotd.DefaultIfEmpty()
+
+                                    join mle in _appContext.ManagementStructure on t.ManagementStructureId equals mle.ManagementStructureId into mainCompanyTree
+                                    from mle in mainCompanyTree.DefaultIfEmpty()
+
+                                    join divmle in _appContext.ManagementStructure on mle.ParentId equals divmle.ManagementStructureId into mainDivCompany
+                                    from divmle in mainDivCompany.DefaultIfEmpty()
+
+                                    join biumle in _appContext.ManagementStructure on divmle.ParentId equals biumle.ManagementStructureId into BIUDivCompany
+                                    from biumle in BIUDivCompany.DefaultIfEmpty()
+
+                                    join compmle in _appContext.ManagementStructure on biumle.ParentId equals compmle.ManagementStructureId into comivCompany
+                                    from compmle in comivCompany.DefaultIfEmpty()
+
+                                    where (t.IsDeleted == false || t.IsDeleted == null)
+                                     && (t.FirstName.Contains(filterText)
+                                      || t.LastName.Contains(filterText)
+                                      || t.EmployeeCode.Contains(filterText)
+                                      || jot.Description.Contains(filterText)
+                                      || ee.Description.Contains(filterText))                           
+                                    select new EmployeeFilters()
+                                    {
+                                        EmployeeId = Convert.ToInt64(t.EmployeeId),                                       
+                                    }).Distinct().Count();
+
+                var list = (from t in _appContext.Employee
+                            join ee in _appContext.EmployeeExpertise on t.EmployeeExpertiseId equals ee.EmployeeExpertiseId into eed
+                            from ee in eed.DefaultIfEmpty()
+
+                            join jot in _appContext.JobTitle on t.JobTitleId equals jot.JobTitleId into jotd
+                            from jot in jotd.DefaultIfEmpty()
+
+                            join mle in _appContext.ManagementStructure on t.ManagementStructureId equals mle.ManagementStructureId into mainCompanyTree
+                            from mle in mainCompanyTree.DefaultIfEmpty()
+
+                            join divmle in _appContext.ManagementStructure on mle.ParentId equals divmle.ManagementStructureId into mainDivCompany
+                            from divmle in mainDivCompany.DefaultIfEmpty()
+
+                            join biumle in _appContext.ManagementStructure on divmle.ParentId equals biumle.ManagementStructureId into BIUDivCompany
+                            from biumle in BIUDivCompany.DefaultIfEmpty()
+
+                            join compmle in _appContext.ManagementStructure on biumle.ParentId equals compmle.ManagementStructureId into comivCompany
+                            from compmle in comivCompany.DefaultIfEmpty()
+
+                            where (t.IsDeleted == false || t.IsDeleted == null)
+                             && (t.FirstName.Contains(filterText)
+                                      || t.LastName.Contains(filterText)
+                                      || t.EmployeeCode.Contains(filterText)
+                                      || jot.Description.Contains(filterText)
+                                      || ee.Description.Contains(filterText))
+
+                            select new EmployeeFilters()
+                            {
+                                EmployeeId = Convert.ToInt64(t.EmployeeId),
+                                EmployeeCode = t.EmployeeCode,
+                                FirstName = t.FirstName,
+                                LastName = t.LastName,
+                                Jobtitle = jot.Description,
+                                EmployeeExpertise = ee.Description,
+                                StartDate = t.StartDate,
+                                IsActive = t.IsActive,
+                                CreatedDate = t.CreatedDate,                                   
+                                Company = mle.Name,
+                                Paytype = Convert.ToBoolean(t.IsHourly) ? "Hourly" : "Yearly",
+                                TotalRecords = totalRecords
+
+
+                            }).Distinct().OrderByDescending(p => p.CreatedDate)
+                              .Skip(skip)
+                              .Take(take)
+                              .ToList();
+
+
+
+                return list;
+
+                
+            }
+            else
+            {
+                var totalRecords = (from t in _appContext.Employee
+                                    join ee in _appContext.EmployeeExpertise on t.EmployeeExpertiseId equals ee.EmployeeExpertiseId into eed
+                                    from ee in eed.DefaultIfEmpty()
+
+                                    join jot in _appContext.JobTitle on t.JobTitleId equals jot.JobTitleId into jotd
+                                    from jot in jotd.DefaultIfEmpty()
+
+                                    join mle in _appContext.ManagementStructure on t.ManagementStructureId equals mle.ManagementStructureId into mainCompanyTree
+                                    from mle in mainCompanyTree.DefaultIfEmpty()
+
+                                    join divmle in _appContext.ManagementStructure on mle.ParentId equals divmle.ManagementStructureId into mainDivCompany
+                                    from divmle in mainDivCompany.DefaultIfEmpty()
+
+                                    join biumle in _appContext.ManagementStructure on divmle.ParentId equals biumle.ManagementStructureId into BIUDivCompany
+                                    from biumle in BIUDivCompany.DefaultIfEmpty()
+
+                                    join compmle in _appContext.ManagementStructure on biumle.ParentId equals compmle.ManagementStructureId into comivCompany
+                                    from compmle in comivCompany.DefaultIfEmpty()
+
+                                    where (t.IsDeleted == false || t.IsDeleted == null)
+                                    select new EmployeeFilters()
+                                    {
+                                        EmployeeId = Convert.ToInt64(t.EmployeeId)                                    
+                                    }).Distinct().Count();
+
+                var list = (from t in _appContext.Employee
+                            join ee in _appContext.EmployeeExpertise on t.EmployeeExpertiseId equals ee.EmployeeExpertiseId into eed
+                            from ee in eed.DefaultIfEmpty()
+
+                            join jot in _appContext.JobTitle on t.JobTitleId equals jot.JobTitleId into jotd
+                            from jot in jotd.DefaultIfEmpty()
+
+                            join mle in _appContext.ManagementStructure on t.ManagementStructureId equals mle.ManagementStructureId into mainCompanyTree
+                            from mle in mainCompanyTree.DefaultIfEmpty()
+
+                            join divmle in _appContext.ManagementStructure on mle.ParentId equals divmle.ManagementStructureId into mainDivCompany
+                            from divmle in mainDivCompany.DefaultIfEmpty()
+
+                            join biumle in _appContext.ManagementStructure on divmle.ParentId equals biumle.ManagementStructureId into BIUDivCompany
+                            from biumle in BIUDivCompany.DefaultIfEmpty()
+
+                            join compmle in _appContext.ManagementStructure on biumle.ParentId equals compmle.ManagementStructureId into comivCompany
+                            from compmle in comivCompany.DefaultIfEmpty()
+
+                            where t.IsDeleted == false || t.IsDeleted == null
+
+                            select new EmployeeFilters()
+                            {
+                                EmployeeId = Convert.ToInt64(t.EmployeeId),
+                                EmployeeCode = t.EmployeeCode,
+                                FirstName = t.FirstName,
+                                LastName = t.LastName,
+                                Jobtitle = jot.Description,
+                                EmployeeExpertise = ee.Description,
+                                StartDate = t.StartDate,
+                                IsActive = t.IsActive,
+                                CreatedDate = t.CreatedDate,
+                                Company = mle.Name,
+                                Paytype = Convert.ToBoolean(t.IsHourly) ? "Hourly" : "Yearly",
+                                TotalRecords = totalRecords
+
+
+                            }).Distinct().OrderByDescending(p => p.CreatedDate)
+                              .Skip(skip)
+                              .Take(take)
+                              .ToList();
+
+
+
+                return list;
+            }
+
+        }
+
+
+        private string GetManagementStrucreCodeByName(long? managementStructureId, string keyName)
+        {
+            string returnValue = string.Empty;
+
+            if (managementStructureId != null)
+            {
+                if (Array.IndexOf(ManagementStructureIds.ToArray(), managementStructureId) < 0)
+                {
+                    ManagementStructureIds.Add(Convert.ToInt64(managementStructureId));
+                    keyValues = GetManagementStructureCodes(Convert.ToInt64(managementStructureId));
+                }
+
+                if (keyValues.ContainsKey(keyName))
+                {
+                    returnValue = keyValues[keyName];
+                }
+            }
+            return returnValue;
+        }
+        public Dictionary<string, string> GetManagementStructureCodes(long manmgStrucId)
+        {
+            Dictionary<string, string> keyValuePairs = new Dictionary<string, string>();
+            ManagementStructure level4 = null;
+            ManagementStructure level3 = null;
+            ManagementStructure level2 = null;
+            ManagementStructure level1 = null;
+            try
+            {
+                level4 = _appContext.ManagementStructure.Where(p => p.IsDelete != true && p.ManagementStructureId == manmgStrucId).FirstOrDefault();
+                if (level4 != null && level4.ParentId > 0)
+                {
+                    level3 = _appContext.ManagementStructure.Where(p => p.IsDelete != true && p.ManagementStructureId == level4.ParentId).FirstOrDefault();
+                }
+                if (level3 != null && level3.ParentId > 0)
+                {
+                    level2 = _appContext.ManagementStructure.Where(p => p.IsDelete != true && p.ManagementStructureId == level3.ParentId).FirstOrDefault();
+                }
+                if (level2 != null && level2.ParentId > 0)
+                {
+                    level1 = _appContext.ManagementStructure.Where(p => p.IsDelete != true && p.ManagementStructureId == level2.ParentId).FirstOrDefault();
+                }
+
+
+                if (level4 != null && level3 != null && level2 != null && level1 != null)
+                {
+                    keyValuePairs.Add("Level4", level4.Code);
+                    keyValuePairs.Add("Level3", level3.Code);
+                    keyValuePairs.Add("Level2", level2.Code);
+                    keyValuePairs.Add("Level1", level1.Code);
+                }
+                else if (level4 != null && level2 != null && level3 != null)
+                {
+                    keyValuePairs.Add("Level3", level4.Code);
+                    keyValuePairs.Add("Level2", level3.Code);
+                    keyValuePairs.Add("Level1", level2.Code);
+                }
+                else if (level4 != null && level3 != null)
+                {
+                    keyValuePairs.Add("Level2", level4.Code);
+                    keyValuePairs.Add("Level1", level3.Code);
+                }
+                else if (level4 != null)
+                {
+                    keyValuePairs.Add("Level1", level4.Code);
+                }
+                return keyValuePairs;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+                
 
         public IEnumerable<object> GetAllEmployeeData()
         {
@@ -158,7 +562,7 @@ namespace DAL.Repositories
                            from jty in jtyd.DefaultIfEmpty()
 
                            join jot in _appContext.JobTitle on t.JobTitleId equals jot.JobTitleId into jotd
-                           from jot in jotd.DefaultIfEmpty()                       
+                           from jot in jotd.DefaultIfEmpty()
 
                            join mle in _appContext.ManagementStructure on t.ManagementStructureId equals mle.ManagementStructureId into mainCompanyTree
                            from mle in mainCompanyTree.DefaultIfEmpty()
@@ -202,21 +606,21 @@ namespace DAL.Repositories
                                t.EmployeeExpertiseId,
                                t.DateOfBirth,
                                t.OriginatingCountryId,
-                               OriginatingCountryName= oc.countries_name,
-                               NationalityCountryName= nc.countries_name,
+                               OriginatingCountryName = oc.countries_name,
+                               NationalityCountryName = nc.countries_name,
                                t.NationalityCountryId,
-                               t.StartDate,                             
+                               t.StartDate,
                                t.EmployeeCode,
                                t.MobilePhone,
-                               t.WorkPhone,                            
-                               EmployeeExpertiseName=ee.Description,
+                               t.WorkPhone,
+                               EmployeeExpertiseName = ee.Description,
                                t.Fax,
                                t.Email,
-                               t.SSN,                            
-                               managmentLegalEntityName= mle.Name,
-                               divmanagmentLegalEntityName= divmle.Name,
-                               biumanagmentLegalEntityName= biumle.Name,
-                               compmanagmentLegalEntityName= compmle.Name, 
+                               t.SSN,
+                               managmentLegalEntityName = mle.Name,
+                               divmanagmentLegalEntityName = divmle.Name,
+                               biumanagmentLegalEntityName = biumle.Name,
+                               compmanagmentLegalEntityName = compmle.Name,
                                t.InMultipleShifts,
                                t.AllowOvertime,
                                t.AllowDoubleTime,
@@ -229,7 +633,7 @@ namespace DAL.Repositories
                                t.IsDeleted,
                                t.ManagementStructureId,
                                //t.MasterCompany,
-                               MasterCompanyName= mc.CompanyName,
+                               MasterCompanyName = mc.CompanyName,
                                t.IsActive,
                                t.CreatedDate,
                                t.CreatedBy,
@@ -239,15 +643,11 @@ namespace DAL.Repositories
                                t.CurrencyId,
                                t.IsHeWorksInShop,
                                t.Memo,
-                               JobTitle = jot.Description,                             
-                               SupervisorName= string.Concat(empsu.FirstName," ",empsu.MiddleName, " ", empsu.LastName),
-                               CurrencyName= string.Concat(cu.DisplayName,"( ",cu.Symbol," )"),
-                               //LeaveTypeIds=_appContext.Employee
-                               //.Join(_appContext.EmployeeLeaveTypeMapping,
-                               //t=>t.EmployeeId,
-                               //mp=>mp.EmployeeId)
+                               JobTitle = jot.Description,
+                               SupervisorName = string.Concat(empsu.FirstName, " ", empsu.MiddleName, " ", empsu.LastName),
+                               CurrencyName = string.Concat(cu.DisplayName, "( ", cu.Symbol, " )"),
 
-                                LeaveTypeIds = _appContext.Employee
+                               LeaveTypeIds = _appContext.Employee
                                  .Join(_appContext.EmployeeLeaveTypeMapping,
                                  t => t.EmployeeId,
                                  mp => mp.EmployeeId,
@@ -271,7 +671,29 @@ namespace DAL.Repositories
                                .Where(p => p.mp1.t.EmployeeId == t.EmployeeId)
                                 .Select(p => p.inte.Description)),
 
+                               ShiftIds = _appContext.Employee
+                                 .Join(_appContext.EmployeeShiftMapping,
+                                 t => t.EmployeeId,
+                                 mp => mp.EmployeeId,
+                                 (t, mp) => new { t, mp })
+                                .Join(_appContext.Shift,
+                                 mp1 => mp1.mp.EmployeeId,
+                                 inte => Convert.ToInt64(inte.ShiftId),
+                               (mp1, inte) => new { mp1, inte })
+                               .Where(p => p.mp1.t.EmployeeId == t.EmployeeId)
+                                .Select(p => p.inte.ShiftId),
 
+                              ShiftNames = string.Join(",", _appContext.Employee
+                                 .Join(_appContext.EmployeeShiftMapping,
+                                 t => t.EmployeeId,
+                                 mp => mp.EmployeeId,
+                                 (t, mp) => new { t, mp })
+                                .Join(_appContext.Shift,
+                                 mp1 => mp1.mp.EmployeeId,
+                                 inte => Convert.ToInt64(inte.ShiftId),
+                               (mp1, inte) => new { mp1, inte })
+                               .Where(p => p.mp1.t.EmployeeId == t.EmployeeId)
+                                .Select(p => p.inte.Description)),
 
                            }).Distinct().FirstOrDefault();
 

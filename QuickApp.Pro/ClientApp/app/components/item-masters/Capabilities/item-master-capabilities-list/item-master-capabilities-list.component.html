@@ -70,11 +70,15 @@
 
                     <ng-template pTemplate="header" let-columns>
                         <tr>
-
-                            <th class="text-center" *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
-                                {{col.header}}
-                                <p-sortIcon [field]="col.field"></p-sortIcon>
+                            <ng-container *ngFor="let col of columns">
+                            <th class="text-center" *ngIf="col.field!='level1' && col.field!='level2' && col.field!='level3' && col.field!='level4'"  pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
+                                    {{col.header}}
+                                    <p-sortIcon [field]="col.field"></p-sortIcon>
                             </th>
+                            <th class="text-center" *ngIf="col.field=='level1'"  colspan="4"  pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
+                               Management Structure
+                            </th>
+                        </ng-container>
 
                             <th  style="width: 70px; position:sticky">Actions</th>
 

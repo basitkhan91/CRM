@@ -1,4 +1,4 @@
-﻿import { Component, Input, OnInit, ChangeDetectorRef } from '@angular/core';
+﻿import { Component, Input, OnInit, ChangeDetectorRef, OnChanges } from '@angular/core';
 import { Params, ActivatedRoute } from '@angular/router';
 import {
   WorkOrderQuote,
@@ -32,10 +32,12 @@ import {
   styleUrls: ['./work-order-quote.component.scss']
 })
 /** WorkOrderQuote component*/
-export class WorkOrderQuoteComponent implements OnInit {
+export class WorkOrderQuoteComponent implements OnInit, OnChanges {
   @Input() quoteForm: WorkOrderQuote;
+  @Input() quoteListViewData: any = {};
   @Input() workorderid: number = 0;
   @Input() isView: boolean = false;
+  @Input() isQuoteListView: boolean = false;
   customerName: string;
   creditLimit: any;
   creditTerms: any;
@@ -135,6 +137,13 @@ editingIndex: number;
       this.loadCurrency();
     }
     
+  }
+
+  ngOnChanges() {
+    if(this.isQuoteListView){
+      this.quoteForm = new WorkOrderQuote();
+      this.formDataFromViewListData();
+    }
   }
 
   calculateExpiryDate() {
@@ -1119,6 +1128,45 @@ updateExclusionsList(event) {
     this.workOrderExclusionsList[this.editingIndex] = event.exclusions[0];
     $('#addNewExclusions').modal('hide');
     this.isEdit = false;
+  }
+}
+
+formDataFromViewListData(){
+  if(this.quoteListViewData){
+    this.quoteForm.quoteNumber = this.quoteListViewData.quoteNumber;
+    this.quoteForm.openDate = new Date(this.quoteListViewData.openDate);
+    this.quoteDueDate = new Date(this.quoteListViewData.quoteDueDate);
+    this.validFor = this.quoteListViewData.validForDays;
+    this.expirationDate = new Date(this.quoteListViewData.expirationDate);
+    if(this.quoteListViewData.quoteStatus == "open"){
+      this.quoteForm.expirationDateStatus = 1;
+    }
+    else if(this.quoteListViewData.quoteStatus == "closed"){
+      this.quoteForm.expirationDateStatus = 2;
+    }
+    if(this.quoteListViewData.quoteStatus == "cancelled"){
+      this.quoteForm.expirationDateStatus = 3;
+    }
+    if(this.quoteListViewData.quoteStatus == "delayed"){
+      this.quoteForm.expirationDateStatus = 4;
+    }
+    this.workOrderNumber = this.quoteListViewData.workOrderNum;
+    this.customerName = this.quoteListViewData.customerName;
+    this.customerCode = this.quoteListViewData.customerCode;
+    this.customerContact = this.quoteListViewData.customerContact;
+    this.customerEmail = this.quoteListViewData.customerEmail;
+    this.customerPhone = this.quoteListViewData.customerPhone;
+    this.customerRef = this.quoteListViewData.customerRef;
+    this.accountsReceivableBalance = this.quoteListViewData.arBalance;
+    this.creditLimit = this.quoteListViewData.creditLimit;
+    this.creditTerms = this.quoteListViewData.creditTerms;
+    this.salesPerson = this.quoteListViewData.salesPerson;
+    this.csr = this.quoteListViewData.csr;
+    this.employeeName = this.quoteListViewData.employee;
+    this.currency = this.quoteListViewData.currency;
+    this.dso = this.quoteListViewData.dso;
+    this.warnings = this.quoteListViewData.warnings;
+    this.memo = this.quoteListViewData.memo;
   }
 }
 }
