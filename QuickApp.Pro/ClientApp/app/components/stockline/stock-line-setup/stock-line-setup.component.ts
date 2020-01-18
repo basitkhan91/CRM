@@ -28,40 +28,68 @@ import { EmployeeService } from '../../../services/employee.service';
 import { CommonService } from '../../../services/common.service';
 import { Subject } from 'rxjs'
 import { takeUntil } from 'rxjs/operators';
+import { GlAccountService } from '../../../services/glAccount/glAccount.service';
+import { getObjectById, getValueFromArrayOfObjectById, getValueFromObjectByKey, editValueAssignByCondition } from '../../../generic/autocomplete';
+import { DatePipe } from '@angular/common';
 
 @Component({
 	selector: 'app-stock-line-setup',
 	templateUrl: './stock-line-setup.component.html',
 	styleUrls: ['./stock-line-setup.component.scss'],
-	animations: [fadeInOut]
+	animations: [fadeInOut],
+	providers: [DatePipe]
 })
 /** stock-line-setup component*/
 export class StockLineSetupComponent implements OnInit {
 
+	isEditMode: boolean = false;
 	legalEntityList: any;	
 	businessUnitList: any;
     divisionList: any;
 	departmentList: any;
 	stockLineForm: any = {};
 	allCustomersList: any = []; 
+	allVendorsList: any = []; 
+	allCompanyList: any = []; 
 	allPartnumbersList: any = [];
+	allEmployeeList: any = [];
 	partNumbersCollection: any = [];
+	allConditionInfo: Condition[] = [];
+	minDateValue: Date = new Date();
 	private onDestroy$: Subject<void> = new Subject<void>();
 	managementStructure = {
-        companyId: null,
-        buId: null,
-        divisionId: null,
-        departmentId: null,
-    }
+        companyId: 0,
+        buId: 0,
+        divisionId: 0,
+        departmentId: 0,
+	}
+	allWareHouses: any;
+    allLocations: any;
+	allShelfs: any;
+	allBins: any;
+	allSites: Site[];
+	customerNames: any[];
+	vendorNames: any[];
+	companyNames: any[];
+	certifyByNames: any[];
+	allManufacturerInfo: any = [];
+	allTagTypes: any = [];
+	allPolistInfo: any = [];
+	allRolistInfo: any = [];
+	allGlAccountInfo: any = [];
+	textAreaInfo: string;
+	textAreaLabel: string;
+	allIntegrationInfo: any = [];
+	integrationInfoList: any = [];
+	sourceTimeLife: any = {};
+	hideSerialNumber: boolean = true;
+	disableMagmtStruct: boolean = true;
+	disableCondition: boolean = true;
+	disableSiteName: boolean = true;
 
-	// allSites: Site[]
 	// public sourceBin: any = {};
-    // allWareHouses: any;
-    // allLocations: any;
-	// allShelfs: any;
 	// allTagTypes: any;
     // wareHouseId: any;
-    // allBins: any;
     // bulist: any[];
     // departmentList: any[];
 	// divisionlist: any[];
@@ -91,8 +119,7 @@ export class StockLineSetupComponent implements OnInit {
 	// cols1: any[];
     // showManagement: boolean;
     // allCompanys: any[];
-	// selectedOwnerFromValue: string = '';
-    // hideSerialNumber: boolean;
+	// selectedOwnerFromValue: string = '';    
 	// allPolistInfo: any[] = [];
 	// allRolistInfo: any[] = [];
 	// allEmployeeList: any[] = [];
@@ -130,7 +157,6 @@ export class StockLineSetupComponent implements OnInit {
 	// showLable: boolean;
 	// //sourceStockLine: any = {};
 	// sourceStockLineSetup: any = {};
-	// sourceTimeLife: any = {};
 	// sourceItemMaster: any = {};
 	// private isSaving: boolean;
 	// loadingIndicator: boolean;
@@ -142,7 +168,6 @@ export class StockLineSetupComponent implements OnInit {
 	// modal: NgbModalRef;
 	// timeLifeEditAllow: any;
 	// allConditionInfo: Condition[] = [];
-    // allManufacturerInfo: any[] = [];
     // availableQty: number;
     // invalidQtyError: boolean;
 
@@ -151,28 +176,54 @@ export class StockLineSetupComponent implements OnInit {
 
 	// });
 	
-	constructor(private stocklineser: StocklineService, private commonService: CommonService) {}
+	constructor(private stocklineser: StocklineService, private commonService: CommonService, private conditionService: ConditionService, private binService: BinService, private siteService: SiteService, private vendorService: VendorService, private manufacturerService: ManufacturerService, private integrationService: IntegrationService, private itemMasterService: ItemMasterService, private glAccountService: GlAccountService, private router: Router, private datePipe: DatePipe) {
+		this.stockLineForm.siteId = 0;
+		this.stockLineForm.warehouseId = 0;
+		this.stockLineForm.locationId = 0;
+		this.stockLineForm.shelfId = 0;
+		this.stockLineForm.binId = 0;
+		this.stockLineForm.obtainFromType = 0;
+		this.stockLineForm.ownerType = 0;
+		this.stockLineForm.traceableToType = 0;
+		this.stockLineForm.manufacturerId = 0;
+		this.stockLineForm.tagType = 0;
+		this.stockLineForm.purchaseOrderId = 0;
+		this.stockLineForm.repairOrderId = 0;
+		this.stockLineForm.conditionId = 0;
+		this.stockLineForm.oem = true;
+		this.stockLineForm.certifiedDate = this.minDateValue;
+		this.stockLineForm.tagDate = this.minDateValue;
+		this.stockLineForm.certifiedDueDate = this.minDateValue;
+		this.stockLineForm.stockLineNumber = 'Generating';
+		this.stockLineForm.controlNumber = 'Generating';
+		this.stockLineForm.idNumber = 'Generating';
+	}
 
-	ngOnInit(): void
-	{
+	ngOnInit() {
         this.stocklineser.currentUrl = '/stocklinemodule/stocklinepages/app-stock-line-setup';
 		this.stocklineser.bredcrumbObj.next(this.stocklineser.currentUrl);
 		this.loadCustomerData();
+		this.loadVendorData();
+		this.loadCompanyData();
 		this.loadPartNumData();
 		this.getLegalEntity();
+		this.loadConditionData();
+		this.loadSiteData();
+		this.loadEmployeeData();
+		this.loadTagTypes();
+		this.loadIntegrationPortal();
+		this.loadGlAccountData();
         // this.loadManagementdata();
         // this.loadData();
         // this.loadEmployeeData();
         // this.loadSiteData();
         // this.Integration();
         // this.loadManufacturerData();
-        // this.loadIntegrationPortal();
         // this.glAccountlistdata();
         // this.customerList();
         // this.vendorList();
         // this.loadGlAccountData();
         // this.ptnumberlistdata();
-		// this.loadTagTypes();
         // this.minDateValue = new Date();
         // this.sourceStockLineSetup.oem = true;
 	}
@@ -183,9 +234,78 @@ export class StockLineSetupComponent implements OnInit {
 		});
 	}
 
+	loadVendorData() {
+		// this.vendorService.getWorkFlows().subscribe(res => {
+		// 	this.allVendorsList = res[0];
+		// });
+		this.commonService.smartDropDownList('Vendor', 'VendorId', 'VendorName').subscribe(response => {
+			this.allVendorsList = response;
+		});
+	}
+
+	loadCompanyData() {
+		this.commonService.smartDropDownList('LegalEntity', 'LegalEntityId', 'Name').subscribe(res => {
+			this.allCompanyList = res;
+		})
+	}
+
 	private loadPartNumData() {
 		this.commonService.smartDropDownList('ItemMaster', 'ItemMasterId', 'partnumber').subscribe(response => {
 			this.allPartnumbersList = response;
+		});
+	}
+
+	private loadConditionData() {
+		this.conditionService.getConditionList().subscribe( res => {
+			this.allConditionInfo = res[0];
+		});
+	}
+
+	private loadSiteData() {
+		this.siteService.getSiteList().subscribe(res => {
+			this.allSites = res[0];
+		});
+	}
+
+	loadManufacturerData() {
+		this.manufacturerService.getWorkFlows().subscribe(res => {
+			this.allManufacturerInfo = res[0]; 
+		});
+	}
+
+	loadEmployeeData() {
+		this.commonService.smartDropDownList('Employee', 'employeeId', 'firstName').subscribe(res => {
+			this.allEmployeeList = res;
+		})
+	}
+
+	private loadTagTypes() {
+		this.stocklineser.getAllTagTypes().subscribe(res => {
+			this.allTagTypes = res;
+		});
+	}
+
+	loadPOData(itemMasterId) {
+        this.vendorService.getPurchaseOrderByItemId(itemMasterId).subscribe(res => {
+			this.allPolistInfo = res[0];
+		});
+	}
+
+	loadROData(itemMasterId) {
+        this.vendorService.getRepairOrderByItemId(itemMasterId).subscribe(res => {
+			this.allRolistInfo = res[0];
+		});
+	}
+
+	private loadIntegrationPortal() {
+		this.integrationService.getWorkFlows().subscribe(res => {
+			this.allIntegrationInfo = res[0];
+		});
+	}
+
+	private loadGlAccountData() {
+		this.glAccountService.getAll().subscribe(res => {
+			this.allGlAccountInfo = res[0];
 		});
 	}
 
@@ -199,8 +319,85 @@ export class StockLineSetupComponent implements OnInit {
 		}
 	}
 
-	onPartNumberSelected() {
+	filterCustomerNames(event) {
+		this.customerNames = this.allCustomersList;
 
+		if (event.query !== undefined && event.query !== null) {
+			const customers = [...this.allCustomersList.filter(x => {
+				return x.label.toLowerCase().includes(event.query.toLowerCase())
+			})]
+			this.customerNames = customers;
+		}
+	}
+
+	filterVendorNames(event) {
+		this.vendorNames = this.allVendorsList;
+
+		if (event.query !== undefined && event.query !== null) {
+			const vendors = [...this.allVendorsList.filter(x => {
+				return x.label.toLowerCase().includes(event.query.toLowerCase())
+			})]
+			this.vendorNames = vendors;
+		}
+	}
+
+	filterCompanyNames(event) {
+		this.companyNames = this.allCompanyList;
+
+		if (event.query !== undefined && event.query !== null) {
+			const companies = [...this.allCompanyList.filter(x => {
+				return x.label.toLowerCase().includes(event.query.toLowerCase())
+			})]
+			this.companyNames = companies;
+		}
+	}
+
+	filterEmployees(event) {
+		this.certifyByNames = this.allEmployeeList;
+
+		if (event.query !== undefined && event.query !== null) {
+			const empFirstName = [...this.allEmployeeList.filter(x => {
+				return x.label;
+			})]
+			this.certifyByNames = empFirstName;
+		}
+	}
+
+	onPartNumberSelected(itemMasterId) {
+		this.loadPOData(itemMasterId);
+		this.loadROData(itemMasterId);
+		this.itemMasterService.getItemMasterById(itemMasterId).subscribe(res => {
+			console.log(res[0][0]);
+			const partDetails = res[0][0];
+			this.stockLineForm.partDescription = partDetails.partDescription;
+			this.stockLineForm.shelfLife = partDetails.shelfLife;
+			this.stockLineForm.isSerialized = partDetails.isSerialized;
+			this.stockLineForm.ITARNumber = partDetails.itarNumber;
+			this.stockLineForm.nationalStockNumber = partDetails.nationalStockNumber;
+			this.stockLineForm.ExportECCN = partDetails.exportECCN;
+			// this.stockLineForm.NHA = partDetails.t.nha;
+			// this.stockLineForm.tagDate = partDetails.t.TagDate;
+			// this.stockLineForm.openDate = partDetails.t.openDate;
+			this.stockLineForm.tagDays = partDetails.tagDays;
+			this.stockLineForm.manufacturingDays = partDetails.manufacturingDays;
+			this.stockLineForm.daysReceived = partDetails.daysReceived;
+			this.stockLineForm.openDays = partDetails.openDays;
+			this.stockLineForm.IsManufacturingDateAvailable = partDetails.IsManufacturingDateAvailable;
+			if (this.stockLineForm.isSerialized == true) {
+				this.hideSerialNumber = false;
+				// this.showRestrictQuantity = true;
+				// this.showFreeQuantity = false;
+			}
+			else {
+				this.hideSerialNumber = true;
+				// this.showRestrictQuantity = false;
+				// this.showFreeQuantity = true;
+			}
+			this.stockLineForm.isPMA = partDetails.isPma;
+			this.stockLineForm.isDER = partDetails.der;			
+			this.sourceTimeLife.timeLife = partDetails.isTimeLife;
+			this.stockLineForm.glAccountName = partDetails.glAccountId ? getValueFromArrayOfObjectById('accountName', 'glAccountId', partDetails.glAccountId, this.allGlAccountInfo) : '';
+		});
 	}
 	
 	getLegalEntity() {
@@ -210,49 +407,284 @@ export class StockLineSetupComponent implements OnInit {
 	}
 	
 	selectedLegalEntity(legalEntityId) {
-        if (legalEntityId) {
+		this.businessUnitList = [];
+		this.divisionList = [];
+		this.departmentList = [];
+		this.managementStructure.buId = 0;
+		this.managementStructure.divisionId = 0;
+		this.managementStructure.departmentId = 0;
+
+        if (legalEntityId != 0) {
             this.stockLineForm.managementStructureId = legalEntityId;
             this.commonService.getBusinessUnitListByLegalEntityId(legalEntityId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
                 this.businessUnitList = res;
-            })
-        }
-
+			});
+			this.disableMagmtStruct = false;
+		} else {
+			this.disableMagmtStruct = true;
+		}
     }
     selectedBusinessUnit(businessUnitId) {
-        if (businessUnitId) {
+		this.divisionList = [];
+		this.departmentList = [];
+		this.managementStructure.divisionId = 0;
+		this.managementStructure.departmentId = 0;
+
+        if (businessUnitId != 0) {
             this.stockLineForm.managementStructureId = businessUnitId;
             this.commonService.getDivisionListByBU(businessUnitId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
                 this.divisionList = res;
             })
         }
-
     }
     selectedDivision(divisionUnitId) {
-        if (divisionUnitId) {
+		this.departmentList = [];
+		this.managementStructure.departmentId = 0;
+
+        if (divisionUnitId != 0) {
             this.stockLineForm.managementStructureId = divisionUnitId;
             this.commonService.getDepartmentListByDivisionId(divisionUnitId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
                 this.departmentList = res;
             })
         }
-
     }
     selectedDepartment(departmentId) {
-        if (departmentId) {
+        if (departmentId != 0) {
             this.stockLineForm.managementStructureId = departmentId;
         }
 	}
 	
 	calculateQtyAvailable() {
         
-        // if (this.stockLineForm.QuantityOnHand) { this.availableQty = this.stockLineForm.QuantityOnHand };
-        // if (this.stockLineForm.QuantityOnHand && this.stockLineForm.QuantityReserved) {
-        //     this.availableQty = this.stockLineForm.QuantityOnHand - this.stockLineForm.QuantityReserved
-        // }
-        // if (this.stockLineForm.QuantityOnHand && this.stockLineForm.QuantityReserved && this.stockLineForm.QuantityIssued) {
-        //     this.availableQty = this.stockLineForm.QuantityOnHand - this.stockLineForm.QuantityReserved - this.stockLineForm.QuantityIssued;
-        // }
-        // this.stockLineForm.quantityAvailable = this.availableQty;
+        if (this.stockLineForm.QuantityOnHand) { 
+			this.stockLineForm.quantityAvailable = this.stockLineForm.QuantityOnHand 
+		}
+        if (this.stockLineForm.QuantityOnHand && this.stockLineForm.QuantityReserved) {
+            this.stockLineForm.quantityAvailable = this.stockLineForm.QuantityOnHand - this.stockLineForm.QuantityReserved
+        }
+        if (this.stockLineForm.QuantityOnHand && this.stockLineForm.QuantityReserved && this.stockLineForm.QuantityIssued) {
+            this.stockLineForm.quantityAvailable = this.stockLineForm.QuantityOnHand - this.stockLineForm.QuantityReserved - this.stockLineForm.QuantityIssued;
+        }
+        //this.stockLineForm.quantityAvailable = this.availableQty;
+	}
+	
+	getWareHouseList(siteId) {
+		this.allWareHouses = [];
+		this.allLocations = [];
+		this.allShelfs = [];
+		this.allBins = [];
+		this.stockLineForm.warehouseId = 0;
+		this.stockLineForm.locationId = 0;
+		this.stockLineForm.shelfId = 0;
+		this.stockLineForm.binId = 0;
+		
+		if(siteId != 0) {
+			this.binService.getWareHouseDate(siteId).subscribe( res => {
+				this.allWareHouses = res;
+			});
+			this.disableSiteName = false;
+		} else {
+			this.disableSiteName = true;
+		}
+	}
+
+	getLocationList(warehouseId) {
+		this.allLocations = [];
+		this.allShelfs = [];
+		this.allBins = [];
+		this.stockLineForm.locationId = 0;
+		this.stockLineForm.shelfId = 0;
+		this.stockLineForm.binId = 0;
+
+		if(warehouseId != 0) {
+			this.binService.getLocationDate(warehouseId).subscribe(res => {
+				this.allLocations = res;
+			});
+		}		
+	}
+
+	getShelfList(locationId) {
+		this.allShelfs = [];
+		this.allBins = [];		
+		this.stockLineForm.shelfId = 0;
+		this.stockLineForm.binId = 0;
+		
+		if(locationId != 0) {
+			this.binService.getShelfDate(locationId).subscribe(res => {
+				this.allShelfs = res;
+			});
+		}		
+	}
+
+	getBinList(shelfId) {
+		this.allBins = [];
+		this.stockLineForm.binId = 0;
+
+		if(shelfId != 0) {
+			this.binService.getBinDataById(shelfId).subscribe(res => {
+				this.allBins = res;
+			});	
+		}		
+	}
+
+	onSelectObrainFrom() {
+		this.stockLineForm.obtainFrom = undefined;
+	}
+
+	onSelectOwner() {
+		this.stockLineForm.owner = undefined;
+	}
+
+	onSelectTraceableTo() {
+		this.stockLineForm.traceableTo = undefined;
+	}
+
+	onChangePONum(purchaseOrderId) {
+        this.stocklineser.getPurchaseOrderUnitCost(purchaseOrderId).subscribe(res => {
+			this.stockLineForm.purchaseOrderUnitCost = res[0].unitCost;
+		});
+	}
+	
+	onChangeRONum(repairOrderId) {
+        this.stocklineser.getRepairOrderUnitCost(repairOrderId).subscribe(res => {
+			this.stockLineForm.repairOrderUnitCost = res[0].unitCost;
+		});
     }
+
+	onAddTextAreaInfo(value) {
+		if(value == 'blackListedReason') {
+			this.textAreaLabel = 'BlackListed Reason';
+			this.textAreaInfo = this.stockLineForm.blackListedReason;
+		}
+		else if(value == 'incidentReason') {
+			this.textAreaLabel = 'Incident Reason';
+			this.textAreaInfo = this.stockLineForm.incidentReason;
+		}
+		else if(value == 'accidentReason') {
+			this.textAreaLabel = 'Accident Reason';
+			this.textAreaInfo = this.stockLineForm.accidentReason;
+		}
+		else if(value == 'memo') {
+			this.textAreaLabel = 'Memo';
+			this.textAreaInfo = this.stockLineForm.memo;
+		}
+	}
+
+	onSaveTextAreaInfo() {
+		if(this.textAreaLabel == 'BlackListed Reason') {
+			this.stockLineForm.blackListedReason = this.textAreaInfo;
+		}
+		else if(this.textAreaLabel == 'Incident Reason') {
+			this.stockLineForm.incidentReason = this.textAreaInfo;
+		}
+		else if(this.textAreaLabel == 'Accident Reason') {
+			this.stockLineForm.accidentReason = this.textAreaInfo;
+		}	
+		else if(this.textAreaLabel == 'Memo') {
+			this.stockLineForm.memo = this.textAreaInfo;
+		}
+	}
+
+	onSelectConditionType() {
+		if (this.stockLineForm.conditionId != 0) {
+			this.disableCondition = false;
+		} else {
+			this.disableCondition = true;
+		}
+	}
+
+	onSaveStockLine() {
+		console.log(this.stockLineForm);
+		console.log(this.sourceTimeLife);
+		this.stockLineForm = {
+			...this.stockLineForm,
+			certifiedDate: this.datePipe.transform(this.stockLineForm.certifiedDate, "MM/dd/yyyy"),
+			tagDate: this.datePipe.transform(this.stockLineForm.tagDate, "MM/dd/yyyy"),
+			certifiedDueDate: this.datePipe.transform(this.stockLineForm.certifiedDueDate, "MM/dd/yyyy"),
+			shelfLifeExpirationDate: this.datePipe.transform(this.stockLineForm.shelfLifeExpirationDate, "MM/dd/yyyy"),
+			receivedDate: this.datePipe.transform(this.stockLineForm.receivedDate, "MM/dd/yyyy"),
+			itemMasterId: getValueFromObjectByKey('value', this.stockLineForm.itemMasterId),
+			partNumber: getValueFromObjectByKey('label', this.stockLineForm.itemMasterId),
+			obtainFrom: this.stockLineForm.obtainFrom ? editValueAssignByCondition('value', this.stockLineForm.obtainFrom) : '',
+			owner: this.stockLineForm.owner ? editValueAssignByCondition('value', this.stockLineForm.owner) : '',
+			traceableTo: this.stockLineForm.traceableTo ? editValueAssignByCondition('value', this.stockLineForm.traceableTo) : '',
+			certifiedBy: this.stockLineForm.certifiedBy ? getValueFromObjectByKey('value', this.stockLineForm.certifiedBy) : '',
+		}
+		console.log(this.stockLineForm);
+		if(!this.isEditMode) {
+			this.stocklineser.newStockLine(this.stockLineForm).subscribe(data => {
+				console.log(data);
+				this.allIntegrationInfo.map(x => {
+					if(x.listedCheckbox == true || x.integratedCheckbox == true) {
+						const integrationInfo = {
+							...x,
+							stockLineId: data.stockLineId
+						}
+						this.integrationInfoList.push(integrationInfo);
+					}				
+				});
+				//this.collectionofstockLine = data;
+				this.saveStocklineIntegrationPortalData(this.integrationInfoList); //for Saving Integration Data
+				if (this.sourceTimeLife.timeLife) {
+					this.stocklineser.newStockLineTimeLife(this.sourceTimeLife).subscribe(res => {
+						console.log(res);				
+					});
+				}
+				//this.saveItemMasterDetails(this.sourceStockLineSetup);
+				this.router.navigateByUrl('/stocklinemodule/stocklinepages/app-stock-line-list');
+			})
+		}
+		else {
+			this.stocklineser.updateStockSetupLine(this.stockLineForm).subscribe(data => {
+				console.log(data);
+				this.allIntegrationInfo.map(x => {
+					if(x.listedCheckbox == true || x.integratedCheckbox == true) {
+						const integrationInfo = {
+							...x,
+							stockLineId: data.stockLineId
+						}
+						this.integrationInfoList.push(integrationInfo);
+					}				
+				});
+				this.saveStocklineIntegrationPortalData(this.integrationInfoList); //for Saving Integration Data
+				// if (this.sourceTimeLife.timeLifeCyclesId) {
+				// 	this.stocklineser.updateStockLineTimelife(this.sourceTimeLife).subscribe(res => {
+				// 		console.log(res);				
+				// 	});
+				// }
+				this.router.navigateByUrl('/stocklinemodule/stocklinepages/app-stock-line-list');
+			})
+		}
+				
+	}
+
+	saveStocklineIntegrationPortalData(data) {
+		this.stocklineser.saveStocklineIntegrationPortalData(data).subscribe(stocklineIntegrationPortalData => {
+			console.log(stocklineIntegrationPortalData);
+			//this.collectionofstocklineIntegrationPortalData = stocklineIntegrationPortalData;
+		})
+	}
+
+	//public getSelectedItem(selectedRow, event) {
+		//console.log(selectedRow);
+		
+		// //;
+		// let ischange = false;
+		// selectedRow.isListed = true;
+		// if (this.selectedModels.length > 0) {
+		// 	//praveen's code//
+		// 	this.selectedModels.map((row) => {
+		// 		if (selectedRow.integrationPortalId == row.integrationPortalId) {
+		// 			ischange = true;
+		// 		}
+		// 	});
+		// }
+		// if (!ischange) {
+		// 	this.selectedModels.push(selectedRow);
+		// }
+		// console.log(this.selectedModels);
+    //}
+
 
     // constructor(private fb: FormBuilder, public integrationService: IntegrationService,private empService: EmployeeService,public vendorservice: VendorService,public manufacturerService: ManufacturerService,public itemser: ItemMasterService,public glAccountService: GLAccountClassService,public vendorService: VendorService,public customerService: CustomerService,public inteService: IntegrationService,public workFlowtService1: LegalEntityService,public workFlowtService: BinService,public siteService: SiteService,public integration: IntegrationService, public stocklineser: StocklineService, private http: HttpClient, public ataservice: AtaMainService, private changeDetectorRef: ChangeDetectorRef, private router: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public conditionService: ConditionService, private dialog: MatDialog)
 	// {
