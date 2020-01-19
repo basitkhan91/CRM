@@ -16,7 +16,9 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<Object> GetListGlobalFilter(string value, int pageNumber, int pageSize);
 
         IEnumerable<object>  GetAllStockLineIntegrationPortalData(long id);
+        IEnumerable<object> GetAllIntegrationPortalData();
         IEnumerable<object> getStocklineDataById(long id);
+        IEnumerable<object> getStocklineDetailsById(long id);
         IEnumerable<object>  GetAllTimeLifeData(long id);
         void StocklineStatus(long StocklineId, bool status, string updatedBy);
         IEnumerable<StockLineDraft> getStockLinesByIds(long[] ids);
