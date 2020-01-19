@@ -1487,21 +1487,34 @@
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label for="weight" class="control-label">
-                                            Weight <strong class="clr-red">*</strong>
-                                        </label>
-                                        <span class="display-flex inline-block">
-                                            <input type="number" class="input-field-value" pKeyFilter="num" pInputText maxlength="10" required [(ngModel)]="exportInfo.ExportWeight" name="exportWeight" />
-                                            <select class="form-control w80 select-value-drop" id="" name="unitOfMeasureId" required (change)="changeValueStringToInt($event.target.value)" [(ngModel)]="exportInfo.ExportWeightUnit">
-                                                <option *ngFor="let unitName of allPurchaseUnitOfMeasureinfo"
-                                                        [ngValue]="unitName.unitOfMeasureId">
-                                                    {{unitName.shortName}}
-                                                </option>
-                                            </select>
-                                        </span>
+                                        <div class="inline-block display-flex">
+                                            <div>
+                                                <label for="weight" class="control-label">
+                                                    Weight <strong class="clr-red">*</strong> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+
+                                                </label>
+                                                <span class="display-flex inline-block">
+                                                    <input type="number" class="input-field-value" pKeyFilter="num" pInputText maxlength="10" required [(ngModel)]="exportInfo.ExportWeight" name="exportWeight" />
+
+                                                </span>
+                                            </div>
+                                            <div>
+                                                <label for="weight" class="control-label">
+                                                    UOM <strong class="clr-red">*</strong>
+                                                </label>
+                                                <span class="display-flex inline-block">
+                                                    <select class="form-control w80 select-value-drop" id="" name="unitOfMeasureId" required (change)="changeValueStringToInt($event.target.value)" [(ngModel)]="exportInfo.ExportWeightUnit">
+                                                        <option *ngFor="let unitName of allPurchaseUnitOfMeasureinfo"
+                                                                [ngValue]="unitName.unitOfMeasureId">
+                                                            {{unitName.shortName}}
+                                                        </option>
+                                                    </select>
+                                                </span>
+                                            </div>
+                                        </div>
                                         <label class="control-label">
-                                            Export UOM <span style="color:red;">*</span>
-                                            <span style="margin-left:3px;margin-top:5px;cursor:pointer;"  matTooltip="Add Export UOM"  tooltipPosition="top" matTooltipPosition="above">
+                                            Export UOM <span style="color: red;">*</span>
+                                            <span style="margin-left: 3px; margin-top: 5px; cursor: pointer;" matTooltip="Add Export UOM" tooltipPosition="top" matTooltipPosition="above">
                                                 <i class="fa fa-plus-circle fa-lg" data-toggle="modal"
                                                    data-target="#ModalUnit" (click)="exportUOmOpen(ModalUnit)"></i>
                                             </span>
@@ -1513,47 +1526,66 @@
                                                 {{unitName.shortName}}
                                             </option>
                                         </select>
-                                        <label class="control-label">Size (L,W,H)</label>
                                         <div class="inline-block display-flex">
-                                            <input type="number" name="exportLength" class="input-field-value" pInputText pKeyFilter="num" maxlength="10" [(ngModel)]="exportInfo.ExportSizeLength" />&nbsp;
-                                            <input type="number" name="exportWidth" class="input-field-value" pInputText pKeyFilter="num" maxlength="10" [(ngModel)]="exportInfo.ExportSizeWidth" />&nbsp;
-                                            <input type="number" name="exportHeight" class="input-field-value" pInputText pKeyFilter="num" maxlength="10" [(ngModel)]="exportInfo.ExportSizeHeight" />
-                                        </div>
-                                        <label class="control-label">Classification <span style="color:red;">*</span></label>
-                                        <div class="inline-block display-flex">
-                                            <div >
-                                                <label class="control-label">
-                                                    <input type="radio" id="" name="classification" value="unspecified" [(ngModel)]="exportInfo.IsExportUnspecified" (change)="validateClassificationRequired()">
-                                               
-                                                    Unspecified
-                                                </label>
-                                            </div>
                                             <div>
-                                                <label class="control-label">
-                                                    <input type="radio" id="" name="classification"  value="nonmiltary" [(ngModel)]="exportInfo.IsExportNONMilitary" (change)="validateClassificationRequired()">
-                                  
-                                                    NON-Military
-                                                </label>
+                                                <label class="control-label">Size (L,W,H)</label>
+                                                <span class="display-flex inline-block">
+                                                    <input type="number" name="exportLength" class="input-field-value" pInputText pKeyFilter="num" maxlength="10" [(ngModel)]="exportInfo.ExportSizeLength" />&nbsp;
+                                                    <input type="number" name="exportWidth" class="input-field-value" pInputText pKeyFilter="num" maxlength="10" [(ngModel)]="exportInfo.ExportSizeWidth" />&nbsp;
+                                                    <input type="number" name="exportHeight" class="input-field-value" pInputText pKeyFilter="num" maxlength="10" [(ngModel)]="exportInfo.ExportSizeHeight" />
+                                                </span>
+                                            </div>
+                                                    <div>
+                                                        <label for="weight" class="control-label">
+                                                            UOM <strong class="clr-red">*</strong>
+                                                        </label>
+                                                        <span class="display-flex inline-block">
+                                                            <select class="form-control w80 select-value-drop" id="" name="unitOfMeasureId" required (change)="changeValueStringToInt($event.target.value)" [(ngModel)]="exportInfo.ExportWeightUnit">
+                                                                <option *ngFor="let unitName of allPurchaseUnitOfMeasureinfo"
+                                                                        [ngValue]="unitName.unitOfMeasureId">
+                                                                    {{unitName.shortName}}
+                                                                </option>
+                                                            </select>
+                                                        </span>
+                                                    </div>
+                                               
+                                           
+                                            </div>
+                                                <label class="control-label">Classification <span style="color: red;">*</span></label>
+                                                <div class="inline-block display-flex">
+                                                    <div>
+                                                        <label class="control-label">
+                                                            <input type="radio" id="" name="classification" value="unspecified" [(ngModel)]="exportInfo.IsExportUnspecified" (change)="validateClassificationRequired()">
+
+                                                            Unspecified
+                                                        </label>
+                                                    </div>
+                                                    <div>
+                                                        <label class="control-label">
+                                                            <input type="radio" id="" name="classification" value="nonmiltary" [(ngModel)]="exportInfo.IsExportNONMilitary" (change)="validateClassificationRequired()">
+
+                                                            NON-Military
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="inline-block display-flex">
+                                                    <div>
+                                                        <label class="control-label">
+                                                            <input type="radio" id="" name="classification" value="miltary" [(ngModel)]="exportInfo.IsExportMilitary" (change)="validateClassificationRequired()">
+
+                                                            Miltary
+                                                        </label>
+                                                    </div>
+                                                    <div>
+                                                        <label class="control-label">
+                                                            <input type="radio" id="" name="classification" value="dual" [(ngModel)]="exportInfo.IsExportDual" (change)="validateClassificationRequired()">
+
+                                                            Dual
+                                                        </label>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div class="inline-block display-flex">
-                                            <div >
-                                                <label class="control-label">
-                                                    <input type="radio" id="" name="classification" value="miltary" [(ngModel)]="exportInfo.IsExportMilitary" (change)="validateClassificationRequired()">
-                                                   
-                                                    Miltary
-                                                </label>
-                                            </div>
-                                            <div >
-                                                <label class="control-label">
-                                                    <input type="radio" id="" name="classification" value="dual" [(ngModel)]="exportInfo.IsExportDual" (change)="validateClassificationRequired()">
-                                                 
-                                                    Dual
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
                         </div>
 
