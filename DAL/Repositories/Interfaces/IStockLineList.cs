@@ -24,6 +24,7 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<StockLineDraft> getStockLinesByIds(long[] ids);
         void CreateStockLine(StockLine model);
         IEnumerable<StockLineReport> GenerateStockLineReoprt();
+        IEnumerable<object> StockLineReoprtView(Filters<StockLineReportFilter> slReportFilter);
 
 
         IEnumerable<object> GetAllWarehouseData(long siteId);

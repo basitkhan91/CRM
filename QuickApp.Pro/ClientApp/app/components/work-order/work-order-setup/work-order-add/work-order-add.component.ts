@@ -1001,7 +1001,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
             this.workFlowObject.materialList = [];
             this.alertService.showMessage(
                 this.moduleName,
-                'update Work Order MaterialList  Succesfully',
+                'Update Work Order MaterialList  Succesfully',
                 MessageSeverity.success
             );
             this.getMaterialListByWorkOrderId();

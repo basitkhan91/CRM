@@ -11,7 +11,7 @@
   <div class="col-md-2">
     <select [(ngModel)]="approver.employeeId" name="shipToSiteName" (change)="onApproverSelect(approver,i)" required>
         <option>--Select</option>
-        <option *ngFor="let employee of allEmployeeinfo" [ngValue]="employee.employeeId">
+        <option *ngFor="let employee of employeeList[i]" [ngValue]="employee.employeeId">
           {{employee.firstName}}
           </option>
       </select>

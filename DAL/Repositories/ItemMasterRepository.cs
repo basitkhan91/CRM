@@ -1372,7 +1372,7 @@ namespace DAL.Repositories
                 var sorts = new Sorts<ItemMasterCapesFilters>();
                 var filters = new EntityFrameworkPaginate.Filters<ItemMasterCapesFilters>();
 
-                filters.Add(!string.IsNullOrEmpty(capesFilters.filters.company), x => x.company.Contains(capesFilters.filters.company));
+                
 
                 if (string.IsNullOrEmpty(capesFilters.SortField))
                 {
@@ -1396,24 +1396,40 @@ namespace DAL.Repositories
                     sorts.Add(true, x => propertyInfo.GetValue(x, null));
                 }
 
+                
+                filters.Add(capesFilters.filters.ItemMasterId > 0, x => x.ItemMasterId== capesFilters.filters.ItemMasterId);
+                filters.Add(!string.IsNullOrEmpty(capesFilters.filters.partNo), x => x.partNo.ToLower().Contains(capesFilters.filters.partNo.ToLower()));
+                filters.Add(!string.IsNullOrEmpty(capesFilters.filters.capabilityType), x => x.capabilityType.ToLower().Contains(capesFilters.filters.capabilityType.ToLower()));
+                filters.Add(capesFilters.filters.isVerified != null, x => x.isVerified== capesFilters.filters.isVerified);
+                filters.Add(capesFilters.filters.verifiedDate != null, x => x.verifiedDate == capesFilters.filters.verifiedDate);
+                filters.Add(!string.IsNullOrEmpty(capesFilters.filters.memo), x => x.memo.ToLower().Contains(capesFilters.filters.memo.ToLower()));
+                filters.Add(!string.IsNullOrEmpty(capesFilters.filters.pnDiscription), x => x.pnDiscription.ToLower().Contains(capesFilters.filters.pnDiscription.ToLower()));
+
+
+                filters.Add(!string.IsNullOrEmpty(capesFilters.filters.company), x => x.company.Contains(capesFilters.filters.company));
+
                 var totalRecords = (from imc in _appContext.ItemMasterCapes
                                     join im in _appContext.ItemMaster on imc.ItemMasterId equals im.ItemMasterId
                                     join ct in _appContext.capabilityType on imc.CapabilityTypeId equals ct.CapabilityTypeId
                                     join ver in _appContext.Employee on imc.VerifiedById equals ver.EmployeeId into imcver
                                     from ver in imcver.DefaultIfEmpty()
                                     where imc.IsDeleted == false
-                                    && imc.ItemMasterId == (capesFilters.filters.ItemMasterId > 0 ? capesFilters.filters.ItemMasterId : imc.ItemMasterId)
-                                    && im.PartNumber.Contains(!String.IsNullOrEmpty(capesFilters.filters.partNo) ? capesFilters.filters.partNo : im.PartNumber)
-                                    && ct.Description.Contains(!String.IsNullOrEmpty(capesFilters.filters.capabilityType) ? capesFilters.filters.capabilityType : ct.Description)
-                                    && imc.IsVerified == (capesFilters.filters.isVerified != null ? capesFilters.filters.isVerified : imc.IsVerified)
                                     && (ver.FirstName == null || ver.FirstName.Contains(!string.IsNullOrEmpty(capesFilters.filters.verifiedBy) ? capesFilters.filters.verifiedBy : ver.FirstName))
-                                    && imc.VerifiedDate == (capesFilters.filters.verifiedDate != null ? capesFilters.filters.verifiedDate : imc.VerifiedDate)
-                                    && imc.Memo.Contains(!String.IsNullOrEmpty(capesFilters.filters.memo) ? capesFilters.filters.memo : imc.Memo)
-                                    && im.PartDescription.Contains(!String.IsNullOrEmpty(capesFilters.filters.pnDiscription) ? capesFilters.filters.pnDiscription : im.PartDescription)
-                                    select new
+                                    select new ItemMasterCapesFilters()
                                     {
-                                        imc.ItemMasterCapesId
-                                    }).Distinct().Count();
+                                        ItemMasterCapesId = imc.ItemMasterCapesId,
+                                        partNo = im.PartNumber,
+                                        pnDiscription = im.PartDescription,
+                                        capabilityType = ct.Description,
+                                        isVerified = imc.IsVerified,
+                                        verifiedBy = ver == null ? "" : ver.FirstName,
+                                        verifiedDate = imc.VerifiedDate,
+                                        memo = imc.Memo,
+                                        createdDate = imc.CreatedDate,
+                                        isActive = imc.IsActive,
+                                        ManagementStrId = imc.ManagementStructureId,
+                                    }).Distinct()
+                                    .Paginate(pageNumber, pageSize, sorts, filters).RecordCount;
 
                 var list = (from imc in _appContext.ItemMasterCapes
                             join im in _appContext.ItemMaster on imc.ItemMasterId equals im.ItemMasterId
@@ -1421,14 +1437,7 @@ namespace DAL.Repositories
                             join ver in _appContext.Employee on imc.VerifiedById equals ver.EmployeeId into imcver
                             from ver in imcver.DefaultIfEmpty()
                             where imc.IsDeleted == false
-                            && imc.ItemMasterId == (capesFilters.filters.ItemMasterId > 0 ? capesFilters.filters.ItemMasterId : imc.ItemMasterId)
-                            && im.PartNumber.Contains(!String.IsNullOrEmpty(capesFilters.filters.partNo) ? capesFilters.filters.partNo : im.PartNumber)
-                            && ct.Description.Contains(!String.IsNullOrEmpty(capesFilters.filters.capabilityType) ? capesFilters.filters.capabilityType : ct.Description)
-                            && imc.IsVerified == (capesFilters.filters.isVerified != null ? capesFilters.filters.isVerified : imc.IsVerified)
                             && (ver.FirstName == null || ver.FirstName.Contains(!string.IsNullOrEmpty(capesFilters.filters.verifiedBy) ? capesFilters.filters.verifiedBy : ver.FirstName))
-                            && imc.VerifiedDate == (capesFilters.filters.verifiedDate != null ? capesFilters.filters.verifiedDate : imc.VerifiedDate)
-                            && imc.Memo.Contains(!String.IsNullOrEmpty(capesFilters.filters.memo) ? capesFilters.filters.memo : imc.Memo)
-                            && im.PartDescription.Contains(!String.IsNullOrEmpty(capesFilters.filters.pnDiscription) ? capesFilters.filters.pnDiscription : im.PartDescription)
                             select new ItemMasterCapesFilters()
                             {
                                 ItemMasterCapesId = imc.ItemMasterCapesId,
@@ -1447,10 +1456,47 @@ namespace DAL.Repositories
                           ).Distinct()
                           .Paginate(pageNumber, pageSize, sorts, filters).Results;
 
-                foreach (var item in list)
+                if (list != null && list.Count() > 0)
                 {
-                    item.company = GetManagementStructureCodes(item.ManagementStrId);
+                    string level1 = string.Empty;
+                    string level2 = string.Empty;
+                    string level3 = string.Empty;
+                    string level4 = string.Empty;
+
+                    foreach (var item in list)
+                    {
+                        level1 = string.Empty;
+                        level2 = string.Empty;
+                        level3 = string.Empty;
+                        level4 = string.Empty;
+
+                        Dictionary<string, string> keyValuePairs = GetManagementStructureCodes(item.ManagementStrId);
+                        if (keyValuePairs != null && keyValuePairs.Count > 0)
+                        {
+                            if (keyValuePairs.TryGetValue("Level1", out level1))
+                                item.level1 = level1;
+                            else
+                                item.level1 = string.Empty;
+
+                            if (keyValuePairs.TryGetValue("Level2", out level2))
+                                item.level2 = level2;
+                            else
+                                item.level2 = string.Empty;
+
+                            if (keyValuePairs.TryGetValue("Level3", out level3))
+                                item.level3 = level3;
+                            else
+                                item.level3 = string.Empty;
+
+                            if (keyValuePairs.TryGetValue("Level4", out level4))
+                                item.level4 = level4;
+                            else
+                                item.level4 = string.Empty;
+                        }
+
+                    }
                 }
+
 
                 return list;
             }
@@ -1477,7 +1523,7 @@ namespace DAL.Repositories
                                     join ver in _appContext.Employee on imc.VerifiedById equals ver.EmployeeId into imcver
                                     from ver in imcver.DefaultIfEmpty()
                                     where imc.IsDeleted == false
-                                     && imc.ItemMasterId == (itemMasterId > 0 ?itemMasterId : imc.ItemMasterId)
+                                     && imc.ItemMasterId == (itemMasterId > 0 ? itemMasterId : imc.ItemMasterId)
                                     && (im.PartNumber.Contains(filterText)
                                     || ct.Description.Contains(filterText)
                                     || ver.FirstName.Contains(filterText)
@@ -1520,9 +1566,45 @@ namespace DAL.Repositories
                               .Skip(skip)
                               .Take(take)
                               .ToList();
-                foreach (var item in list)
+                if (list != null && list.Count() > 0)
                 {
-                    item.company = GetManagementStructureCodes(item.ManagementStrId);
+                    string level1 = string.Empty;
+                    string level2 = string.Empty;
+                    string level3 = string.Empty;
+                    string level4 = string.Empty;
+
+                    foreach (var item in list)
+                    {
+                        level1 = string.Empty;
+                        level2 = string.Empty;
+                        level3 = string.Empty;
+                        level4 = string.Empty;
+
+                        Dictionary<string, string> keyValuePairs = GetManagementStructureCodes(item.ManagementStrId);
+                        if (keyValuePairs != null && keyValuePairs.Count > 0)
+                        {
+                            if (keyValuePairs.TryGetValue("Level1", out level1))
+                                item.level1 = level1;
+                            else
+                                item.level1 = string.Empty;
+
+                            if (keyValuePairs.TryGetValue("Level2", out level2))
+                                item.level2 = level2;
+                            else
+                                item.level2 = string.Empty;
+
+                            if (keyValuePairs.TryGetValue("Level3", out level3))
+                                item.level3 = level3;
+                            else
+                                item.level3 = string.Empty;
+
+                            if (keyValuePairs.TryGetValue("Level4", out level4))
+                                item.level4 = level4;
+                            else
+                                item.level4 = string.Empty;
+                        }
+
+                    }
                 }
 
                 return list;
@@ -1534,7 +1616,208 @@ namespace DAL.Repositories
             }
         }
 
-        private string GetManagementStructureCodes(long manmgStrucId)
+        public IEnumerable<object> ItemMasterData(Common.Filters<ItemMasterDataFilters> capesFilters)
+        {
+            if (capesFilters.filters == null)
+                capesFilters.filters = new ItemMasterDataFilters();
+            var pageNumber = capesFilters.first + 1;
+            var pageSize = capesFilters.rows;
+
+            string sortColumn = string.Empty;
+
+            if (capesFilters.filters.ItemMasterId == null)
+                capesFilters.filters.ItemMasterId = 0;
+
+            var sorts = new Sorts<ItemMasterDataFilters>();
+            var filters = new EntityFrameworkPaginate.Filters<ItemMasterDataFilters>();
+
+
+
+            if (string.IsNullOrEmpty(capesFilters.SortField))
+            {
+                sortColumn = "createdDate";
+                capesFilters.SortOrder = -1;
+                sorts.Add(sortColumn == "createdDate", x => x.createdDate, true);
+            }
+            else
+            {
+                sortColumn = capesFilters.SortField;
+            }
+
+            var propertyInfo = typeof(ItemMasterDataFilters).GetProperty(sortColumn);
+
+            if (capesFilters.SortOrder == -1)
+            {
+                sorts.Add(true, x => propertyInfo.GetValue(x, null), true);
+            }
+            else
+            {
+                sorts.Add(true, x => propertyInfo.GetValue(x, null));
+            }
+
+            filters.Add(!string.IsNullOrEmpty(capesFilters.filters.partNo), x => x.partNo.ToLower().Contains(capesFilters.filters.partNo.ToLower()));
+            filters.Add(!string.IsNullOrEmpty(capesFilters.filters.partDescription), x => x.partDescription.ToLower().Contains(capesFilters.filters.partDescription.ToLower()));
+            filters.Add(!string.IsNullOrEmpty(capesFilters.filters.manufacturer), x => x.manufacturer.ToLower().Contains(capesFilters.filters.manufacturer.ToLower()));
+            filters.Add(!string.IsNullOrEmpty(capesFilters.filters.aircraft), x => x.aircraft.ToLower().Contains(capesFilters.filters.aircraft.ToLower()));
+            filters.Add(!string.IsNullOrEmpty(capesFilters.filters.model), x => x.model.ToLower().Contains(capesFilters.filters.model.ToLower()));
+            filters.Add(!string.IsNullOrEmpty(capesFilters.filters.dashNumber), x => x.dashNumber.ToLower().Contains(capesFilters.filters.dashNumber.ToLower()));
+            filters.Add(!string.IsNullOrEmpty(capesFilters.filters.aTAChapter), x => x.aTAChapter.ToLower().Contains(capesFilters.filters.aTAChapter.ToLower()));
+            filters.Add(!string.IsNullOrEmpty(capesFilters.filters.aTASubChapter), x => x.aTASubChapter.ToLower().Contains(capesFilters.filters.aTASubChapter.ToLower()));
+            filters.Add(!string.IsNullOrEmpty(capesFilters.filters.capabilityType), x => x.capabilityType.Contains(capesFilters.filters.capabilityType.ToLower()));
+            filters.Add(!string.IsNullOrEmpty(capesFilters.filters.level1), x => x.level1.ToLower().Contains(capesFilters.filters.level1.ToLower()));
+            filters.Add(!string.IsNullOrEmpty(capesFilters.filters.level2), x => x.level2.ToLower().Contains(capesFilters.filters.level2.ToLower()));
+            filters.Add(!string.IsNullOrEmpty(capesFilters.filters.level3), x => x.level3.ToLower().Contains(capesFilters.filters.level3.ToLower()));
+            filters.Add(!string.IsNullOrEmpty(capesFilters.filters.level4), x => x.level4.ToLower().Contains(capesFilters.filters.level4.ToLower()));
+            filters.Add(!string.IsNullOrEmpty(capesFilters.filters.publication), x => x.publication.ToLower().Contains(capesFilters.filters.publication.ToLower()));
+            filters.Add(!string.IsNullOrEmpty(capesFilters.filters.integrationPortal), x => x.integrationPortal.ToLower().Contains(capesFilters.filters.integrationPortal.ToLower()));
+
+
+            try
+            {
+                var totalRecords = (from im in _appContext.ItemMaster
+                                    join man in _appContext.Manufacturer on im.ManufacturerId equals man.ManufacturerId
+                                    join imc in _appContext.ItemMasterCapes on im.ItemMasterId equals imc.ItemMasterId into imimc
+                                    from imc in imimc.DefaultIfEmpty()
+                                    join ct in _appContext.capabilityType on imc.CapabilityTypeId equals ct.CapabilityTypeId into imcct
+                                    from ct in imcct.DefaultIfEmpty()
+                                    join ima in _appContext.ItemMasterAircraftMapping on im.ItemMasterId equals ima.ItemMasterId into imima
+                                    from ima in imima.DefaultIfEmpty()
+                                    join act in _appContext.AircraftType on ima.AircraftTypeId equals act.AircraftTypeId into imaact
+                                    from act in imaact.DefaultIfEmpty()
+                                    join acm in _appContext.AircraftModel on ima.AircraftModelId equals acm.AircraftModelId into imaacm
+                                    from acm in imaacm.DefaultIfEmpty()
+                                    join ad in _appContext.AircraftDashNumber on ima.DashNumberId equals ad.DashNumberId into imaad
+                                    from ad in imaad.DefaultIfEmpty()
+                                    join ata in _appContext.ItemMasterATAMapping on im.ItemMasterId equals ata.ItemMasterId into imata
+                                    from ata in imata.DefaultIfEmpty()
+                                    join pim in _appContext.PublicationItemMasterMapping on im.ItemMasterId equals pim.ItemMasterId into impim
+                                    from pim in impim.DefaultIfEmpty()
+                                    join pub in _appContext.Publication on pim.PublicationRecordId equals pub.PublicationRecordId into pimpub
+                                    from pub in pimpub.DefaultIfEmpty()
+                                    join imip in _appContext.ItemMasterIntegrationPortal on im.ItemMasterId equals imip.ItemMasterId into imimip
+                                    from imip in imimip.DefaultIfEmpty()
+                                    join ip in _appContext.IntegrationPortal on imip.IntegrationPortalId equals ip.IntegrationPortalId into imipip
+                                    from ip in imipip.DefaultIfEmpty()
+                                    where (im.IsDeleted == null || im.IsDeleted == false) && im.IsActive == true
+                                    && im.ItemMasterId == (capesFilters.filters.ItemMasterId > 0 ? capesFilters.filters.ItemMasterId : im.ItemMasterId)
+                                            && im.ItemMasterId == (capesFilters.filters.ItemMasterId > 0 ? capesFilters.filters.ItemMasterId : im.ItemMasterId)
+                                    select new ItemMasterDataFilters()
+                                    {
+                                        ItemMasterId = im.ItemMasterId,
+                                        partNo = im.PartNumber,
+                                        partDescription = im.PartDescription,
+                                        manufacturer = man.Name,
+                                        aircraft = act == null ? "" : act.Description,
+                                        model = acm == null ? "" : acm.ModelName,
+                                        dashNumber = ad == null ? "" : ad.DashNumber,
+                                        aTAChapter = ata == null ? "" : ata.ATAChapterName,
+                                        aTASubChapter = ata == null ? "" : ata.ATASubChapterDescription,
+                                        capabilityType = ct == null ? "" : ct.Description,
+                                        publication = pub == null ? "" : pub.PublicationId,
+                                        integrationPortal = ip == null ? "" : ip.Description,
+                                        ManagementStrId = imc == null ? 0 : imc.ManagementStructureId,
+                                    }
+                            ).Distinct()
+                            .Paginate(pageNumber, pageSize, sorts, filters).RecordCount;
+
+                var list = (from im in _appContext.ItemMaster
+                            join man in _appContext.Manufacturer on im.ManufacturerId equals man.ManufacturerId
+                            join imc in _appContext.ItemMasterCapes on im.ItemMasterId equals imc.ItemMasterId into imimc
+                            from imc in imimc.DefaultIfEmpty()
+                            join ct in _appContext.capabilityType on imc.CapabilityTypeId equals ct.CapabilityTypeId into imcct
+                            from ct in imcct.DefaultIfEmpty()
+                            join ima in _appContext.ItemMasterAircraftMapping on im.ItemMasterId equals ima.ItemMasterId into imima
+                            from ima in imima.DefaultIfEmpty()
+                            join act in _appContext.AircraftType on ima.AircraftTypeId equals act.AircraftTypeId into imaact
+                            from act in imaact.DefaultIfEmpty()
+                            join acm in _appContext.AircraftModel on ima.AircraftModelId equals acm.AircraftModelId into imaacm
+                            from acm in imaacm.DefaultIfEmpty()
+                            join ad in _appContext.AircraftDashNumber on ima.DashNumberId equals ad.DashNumberId into imaad
+                            from ad in imaad.DefaultIfEmpty()
+                            join ata in _appContext.ItemMasterATAMapping on im.ItemMasterId equals ata.ItemMasterId into imata
+                            from ata in imata.DefaultIfEmpty()
+                            join pim in _appContext.PublicationItemMasterMapping on im.ItemMasterId equals pim.ItemMasterId into impim
+                            from pim in impim.DefaultIfEmpty()
+                            join pub in _appContext.Publication on pim.PublicationRecordId equals pub.PublicationRecordId into pimpub
+                            from pub in pimpub.DefaultIfEmpty()
+                            join imip in _appContext.ItemMasterIntegrationPortal on im.ItemMasterId equals imip.ItemMasterId into imimip
+                            from imip in imimip.DefaultIfEmpty()
+                            join ip in _appContext.IntegrationPortal on imip.IntegrationPortalId equals ip.IntegrationPortalId into imipip
+                            from ip in imipip.DefaultIfEmpty()
+                            where (im.IsDeleted == null || im.IsDeleted == false) && im.IsActive == true
+                            && im.ItemMasterId == (capesFilters.filters.ItemMasterId > 0 ? capesFilters.filters.ItemMasterId : im.ItemMasterId)
+                            select new ItemMasterDataFilters()
+                            {
+                                ItemMasterId = im.ItemMasterId,
+                                partNo = im.PartNumber,
+                                partDescription = im.PartDescription,
+                                manufacturer = man.Name,
+                                aircraft = act == null ? "" : act.Description,
+                                model = acm == null ? "" : acm.ModelName,
+                                dashNumber = ad == null ? "" : ad.DashNumber,
+                                aTAChapter = ata == null ? "" : ata.ATAChapterName,
+                                aTASubChapter = ata == null ? "" : ata.ATASubChapterDescription,
+                                capabilityType = ct == null ? "" : ct.Description,
+                                publication = pub == null ? "" : pub.PublicationId,
+                                integrationPortal = ip == null ? "" : ip.Description,
+                                ManagementStrId = imc == null ? 0 : imc.ManagementStructureId,
+                                TotalRecords = totalRecords
+                            }
+                            ).Distinct()
+                            .Paginate(pageNumber, pageSize, sorts, filters).Results;
+                            
+
+                if (list != null && list.Count() > 0)
+                {
+                    string level1 = string.Empty;
+                    string level2 = string.Empty;
+                    string level3 = string.Empty;
+                    string level4 = string.Empty;
+
+                    foreach (var item in list)
+                    {
+                        level1 = string.Empty;
+                        level2 = string.Empty;
+                        level3 = string.Empty;
+                        level4 = string.Empty;
+
+                        Dictionary<string, string> keyValuePairs = GetManagementStructureCodes(item.ManagementStrId);
+                        if (keyValuePairs != null && keyValuePairs.Count > 0)
+                        {
+                            if (keyValuePairs.TryGetValue("Level1", out level1))
+                                item.level1 = level1;
+                            else
+                                item.level1 = string.Empty;
+
+                            if (keyValuePairs.TryGetValue("Level2", out level2))
+                                item.level2 = level2;
+                            else
+                                item.level2 = string.Empty;
+
+                            if (keyValuePairs.TryGetValue("Level3", out level3))
+                                item.level3 = level3;
+                            else
+                                item.level3 = string.Empty;
+
+                            if (keyValuePairs.TryGetValue("Level4", out level4))
+                                item.level4 = level4;
+                            else
+                                item.level4 = string.Empty;
+                        }
+
+                    }
+                }
+
+                return list;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        private Dictionary<string, string> GetManagementStructureCodes(long manmgStrucId)
         {
             Dictionary<string, string> keyValuePairs = new Dictionary<string, string>();
             ManagementStructure level4 = null;
@@ -1582,12 +1865,9 @@ namespace DAL.Repositories
                     keyValuePairs.Add("Level1", level4.Code);
                 }
 
-                if (keyValuePairs != null && keyValuePairs.Count > 0)
-                {
-                    level1Code = keyValuePairs["Level1"];
-                }
 
-                return level1Code;
+
+                return keyValuePairs;
             }
             catch (Exception ex)
             {

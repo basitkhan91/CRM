@@ -47,7 +47,7 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
     viewTable: boolean = false;
     aircraftData: any;
     newValue: any;
-    capabilityTypeId = null;
+    capabilityTypeId: any = [];
     // ataSubChapaters = [];
     ataChapters = [];
     intergationList = [];
@@ -78,9 +78,9 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
     colaircraft: any[] = [
         // {field: 'capailityTypeName' , header: 'Capability Type' },
         // {field: 'managementStructureId', header: 'ManagementStructure'},
-        { field: "AircraftType", header: "Aircraft" },
-        { field: "AircraftModel", header: "Model" },
-        { field: "DashNumber", header: "Dash Numbers" },
+        // { field: "AircraftType", header: "Aircraft" },
+        // { field: "AircraftModel", header: "Model" },
+        // { field: "DashNumber", header: "Dash Numbers" },
         // {field: 'description', header:'Description'},
         // {field: 'ataChapterId' , header : 'ATA Chapter'},
         // {field: 'ataSubChapterId', header: 'ATA SubChapter'},
@@ -246,9 +246,45 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
 
     }
 
+    mapAircraftInformation(){
+        this.viewTable = true;
+        // const responseValue = aircraftdata;
+        console.log(this.capabilityTypeId, "this.capabilityTypeId+++")
+            let mappedAircraftData = this.capabilityTypeId.map(x => {
+                console.log(x, "x capid")
+                return {
+                    Memo: '',
+                    IsChecked: false,
+                    // ...this.capes
 
+                    capabilityTypeId: x,
+                    capailityTypeName: getValueFromArrayOfObjectById('label', 'value', x, this.capabalityTypeList),
+                    managementStructureId: null,
+                    description: '',
+                    
+                    entryDate: new Date(),                   
+                    isVerified: false,
+                    verifiedById: null,
+                    verifiedDate: new Date(),
+                    memo: '',
+                    companyId: null,
+                    buId: null,
+                    divisionId: null,
+                    departmentId: null,
+                }
+            })
+            for(let i=0; i<mappedAircraftData.length; i++){
+                this.aircraftData = [...this.aircraftData, mappedAircraftData[i]]
+            }
+            console.log(this.aircraftData, "this.aircarftdata");
+            this.getLegalEntity();
+            this.getAllEmployees();
+            this.filterCapabilityListDropdown(this.aircraftData);
 
-    mapAircraftInformation() {
+            // this.filterDashNumberDropdown(this.aircraftData);
+    }
+
+    mapAircraftInformationOld() {
     console.log(this.selectedDashnumber)
     this.viewTable = true;
     // Selected All 
@@ -289,7 +325,7 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
             for(let i=0; i<mappedAircraftData.length; i++){
                 this.aircraftData = [...this.aircraftData, mappedAircraftData[i]]
             }
-            console.log(this.aircraftData);
+            console.log(this.aircraftData, "this.aircarftdata");
             this.filterDashNumberDropdown(this.aircraftData);
 
         })
@@ -380,6 +416,8 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
 
 
     async getPartPublicationByItemMasterId(itemMasterId) {
+        this.capabilityTypeId = [];
+        this.aircraftData = [];
         let iMid = this.activatedRoute.snapshot.paramMap.get('id');
         if (!iMid) {
             iMid = this.itemMasterIDFromPartNumberSelection;
@@ -394,14 +432,14 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
             }
         }
         
-        await this.workOrderService.getPartPublicationByItemMaster(iMid).subscribe(res => {
-            this.cmmList = res.map(x => {
-                return {
-                    value: x.publicationRecordId,
-                    label: x.publicationId
-                }
-            });
-        })
+        // await this.workOrderService.getPartPublicationByItemMaster(iMid).subscribe(res => {
+        //     this.cmmList = res.map(x => {
+        //         return {
+        //             value: x.publicationRecordId,
+        //             label: x.publicationId
+        //         }
+        //     });
+        // })
     }
 
     resetVerified(rowData, value) {
@@ -527,12 +565,13 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
                 'Saved Capes Details Successfully',
                 MessageSeverity.success
             );
+            
         })
-        this.onCloseCapes();
+        // this.onCloseCapes();
     }
 
     resetFormData() {
-        this.capabilityTypeId  = null ;
+        this.capabilityTypeId  = [] ;
         this.selectedAircraftId = null;
         this.selectedAircraftName = "";
         this.modelUnknown = false;
@@ -543,7 +582,7 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
         this.newDashnumValue = [];
         this.newModelValue = [];
         this.aircraftData  = [];
-        //this.viewTable = false;
+        this.viewTable = false;
     }
     onCloseCapes() {
         this.closeCapesPopup.emit(true);
@@ -563,5 +602,22 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
         this.LoadDashnumber = result;
         this.selectedDashnumber = undefined;
         console.log(this.LoadDashnumber, "this.LoadDashnumber +++")
+    }
+
+    filterCapabilityListDropdown (aircraft){        
+        var props =  ['label', 'value'];
+        var result = this.capabalityTypeList.filter(function(o1){
+            return !aircraft.some(function(o2){
+                return o1.value === o2.capabilityTypeId;          // assumes unique id
+            });
+        }).map(function(o){  
+            return props.reduce(function(newo, name){
+                newo[name] = o[name];
+                return newo;
+            }, {});
+        });
+        this.capabalityTypeList = result;
+        this.capabilityTypeId = undefined;
+        console.log(this.capabalityTypeList, "this.LoadDashnumber +++")
     }
 }

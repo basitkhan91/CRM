@@ -38,110 +38,34 @@
 					<p-dropdown class="imstock-pddowm imcapes-pddowm" [options]="pnData" filter="true"  [(ngModel)]="itemMasterIDFromPartNumberSelection" name="itemMasterIDFromPartNumberSelection" id="partNumber" title="Part Number" required  placeholder="Select Part Number" [showClear]="true" (onChange)="getPartPublicationByItemMasterId(itemMasterIDFromPartNumberSelection)"></p-dropdown>
 				</div>
 			  </div>
-			  <div class="col-md-2">
+			  <div class="col-md-3">
 				<div class="form-group">
-					<label>Capability <span class="clr-red">*</span>
+					<label class="popup-plusicon-cstm">Capability <span class="clr-red">*</span>
 						<a
 					  data-dismiss="modal" style="margin-left: 3px;"
 					  [routerLink]="['/singlepages/singlepages/app-aircraft-manufacturer']"
 					  ><i class="fa fa-plus-circle fa-lg"></i></a>
 					</label>
-				  <p-dropdown
+				  <!-- <p-dropdown multipl
 					class="imstock-pddowm imcapes-pddowm"
 					name="capabilityTypeId"
 					[options]="capabalityTypeList"
 					[(ngModel)]="capabilityTypeId"
 					placeholder="Select Capability"
 					[showClear]="true" [required]="true"
-				  ></p-dropdown>
-				</div>
-			  </div>
-			
-			  <div class="col-md-2">
-				<div class="form-group">
-				  <label class="popup-plusicon-cstm"
-					>Aircraft Type <span class="clr-red">*</span>
-					<a
-					  data-dismiss="modal" style="margin-left: 3px;"
-					  [routerLink]="['/singlepages/singlepages/app-aircraft-manufacturer']"
-					  ><i class="fa fa-plus-circle fa-lg"></i></a
-				  ></label>
-				  <p-dropdown
-					class="imstock-pddowm imcapes-pddowm"
-					[options]="manufacturerData"
-					filter="true"
-					name="selectedAircraftId"
-					[(ngModel)]="selectedAircraftId"
-					(onChange)="getAircraftModelByManfacturer($event)"
-					placeholder="Select Aircraft"
-					[showClear]="true" [required]="true"
-				  ></p-dropdown>
-				</div>
-			  </div>
-			  <div class="col-md-2">
-				<div class="form-group">
-				  <label class="popup-plusicon-cstm" style="width: 150px !important">
-					Model <span class="clr-red">*</span>
-					<a
-					  data-dismiss="modal" style="margin-left: 3px;"
-					  [routerLink]="['/singlepages/singlepages/app-aircraft-model']"
-					  ><i class="fa fa-plus-circle fa-lg"></i
-					></a>
-					<input
-					  type="checkbox"
-					  name="unknownmodel"
-					  [(ngModel)]="modelUnknown"
-					  style="width: 20px !important;
-											 margin-left: 7px; "
-					  (change)="resetAircraftModelsorDashNumbers()"
-					/>
-					Unknown
-				  </label>
-			
-				  <p-multiSelect
-					*ngIf="!modelUnknown"
+					></p-dropdown> -->
+					<p-multiSelect
 					[maxSelectedLabels]="2"
-					[disabled]="!selectedAircraftId"
 					class="imstock-pmselect"
-					[options]="LoadValues"
-					[(ngModel)]="selectedModelId"
-					name="selectedModelId"
-					(onChange)="getDashNumberByTypeandModel($event)" [required]="true"
-				  ></p-multiSelect>
+					[options]="capabalityTypeList"
+					[(ngModel)]="capabilityTypeId"
+					name="capabilityTypeId"					
+					></p-multiSelect>
+				
 				</div>
 			  </div>
-			  <div class="col-md-2" *ngIf="!modelUnknown">
-				<div class="form-group">
-				  <label class="popup-plusicon-cstm" style="width: 190px !important">
-					DashNumber <span class="clr-red">*</span>
-					<a
-					  data-dismiss="modal" style="margin-left: 3px;"
-					  [routerLink]="['/singlepages/singlepages/app-dashnumber']"
-					  ><i class="fa fa-plus-circle fa-lg"></i
-					></a>
-					<input
-					  type="checkbox"
-					  name="unknownDashNumber"
-					  [(ngModel)]="dashNumberUnknown"
-					  style="width: 20px !important;
-												margin-left: 7px; "
-					  (change)="resetAircraftModelsorDashNumbers()"
-					/>
-					Unknown
-				  </label>
 			
-				  <p-multiSelect
-					*ngIf="!modelUnknown && !dashNumberUnknown"
-					[maxSelectedLabels]="2"
-					[disabled]="!selectedAircraftId"
-					class="imstock-pmselect"
-					[options]="LoadDashnumber"
-					[(ngModel)]="selectedDashnumber"
-					name="selectedDashnumber"
-					(onChange)="selectedDashnumbervalue($event)" [required]="true"
-				  ></p-multiSelect>
-				</div>
-			  </div>
+			  
 			  <div class="col-md-2">
 				<button
 				  style="margin-top: 20px;margin-left: 30px;"
@@ -169,20 +93,14 @@
 			  >
 				<ng-template pTemplate="header" let-columns>
 				  <tr>
-					<th style="width: 130px;text-align: center;">Capaility Type</th>
+					<th style="width: 130px;text-align: center;">Capability Type</th>
 					<th style="width: 520px;text-align: center;" colspan="4">Managment Structure <span class="clr-red">*</span></th>
 					<th style="width: 130px;text-align: center;" *ngFor="let col of columns">
 					  {{ col.header }}
 					</th>
-					<th style="width: 130px;text-align: center;">Description</th>
-					<th style="width: 130px;text-align: center;">ATA Chapter</th>
-					<th style="width: 130px;text-align: center;">ATA SubChapter</th>
-					<th style="width: 130px;text-align: center;">EntryDate</th>
-					<th style="width: 130px;text-align: center;">CMM</th>
-					<th style="width: 130px;text-align: center;">Integrate With</th>
 					<th style="width: 130px;text-align: center;">Verified</th>
-					<th style="width: 130px;text-align: center;">VerifiedBy</th>
-					<th style="width: 130px;text-align: center;">VerifiedDate</th>
+					<th style="width: 130px;text-align: center;">Verified By</th>
+					<th style="width: 130px;text-align: center;">Verified Date</th>
 					<th style="width: 130px;text-align: center;">Memo</th>
 				  </tr>
 				</ng-template>
@@ -245,57 +163,7 @@
 				  </p-dropdown>
 					</td>
 			
-					<td style="width: 130px;">{{ selectedAircraftName }}</td>
-					<td style="width: 130px;">{{ rowData.AircraftModel }}</td>
-					<td style="width: 130px;">{{ rowData.DashNumber }}</td>
-					<td style="width: 130px;">
-					  <input type="text" class="form-control" name="description{{row_no}}" [(ngModel)]="rowData.description" />
-					</td>
-					<td style="width: 130px;">
-					  <p-dropdown
-						class="p-dropdown-custom-sm"
-						[options]="ataChapters"
-						name="atachapter{{row_no}}"
-						[(ngModel)]="rowData.ataChapterId"
-						placeholder="Select"
-						(onChange)="getATASubChapterByATAChapter($event.value, row_no)"
-					  ></p-dropdown>
-					</td>
-					<td style="width: 130px;">
-					  <p-dropdown
-						class="p-dropdown-custom-sm"
-						[options]="getDynamicVariableData('ataSubChapaters',row_no)"
-						name="subChapter{{row_no}}"
-						placeholder="Select"
-						[(ngModel)]="rowData.ataSubChapterId"
-					  ></p-dropdown>
-					</td>
-					<td style="width: 130px;">
-					  <p-calendar
-						class="pcal-item-capes"
-						[(ngModel)]="rowData.entryDate"
-						name="entryDate{{row_no}}"
-						[showIcon]="true"
-					  ></p-calendar>
-					</td>
-					<td style="width: 130px;">
-					  <p-dropdown
-						class="p-dropdown-custom-sm"
-						[options]="cmmList"
-						placeholder="Select"
-						name="cmm{{row_no}}"
-						[(ngModel)]="rowData.cmmId"
-					  ></p-dropdown>
-					</td>
-					<td style="width: 130px;">
-					  <p-dropdown
-						class="p-dropdown-custom-sm"
-						[options]="intergationList"
-						name="intergationList"
-						placeholder="Select"
-						[(ngModel)]="rowData.integrateWithId"
-					  ></p-dropdown>
-					</td>
+				
 					<td style="width: 130px;text-align: center;">
 					  <p-checkbox
 					  	class="pcheckbox-cstm"
@@ -335,8 +203,8 @@
 					  <input
 						type="text"
 						class="form-control input-value"
-						[(ngModel)]="rowData.Memo"
-						name="Memo{{row_no}}"
+						[(ngModel)]="rowData.memo"
+						name="memo{{row_no}}"
 					  />
 					</td>
 				  

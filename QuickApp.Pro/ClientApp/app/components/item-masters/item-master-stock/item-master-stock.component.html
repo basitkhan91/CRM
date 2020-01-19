@@ -63,7 +63,7 @@
                          [ngClass]="{ active: activeMenuItem >= 5 , editable : activeMenuItem === 5}"
                          (click)="changeOfTab('PurchaseSales')"
                          [class.isDisabled]="!isDisabledSteps">
-                        <div class="md-step-circle"><span>4</span></div>
+                        <div class="md-step-circle"><span>5</span></div>
                         <div class="md-step-title">Purchase and Sales</div>
                         <div class="md-step-bar-left"></div>
                         <div class="md-step-bar-right"></div>
@@ -74,17 +74,17 @@
                          [ngClass]="{ active: activeMenuItem >= 6 , editable : activeMenuItem === 6}"
                          (click)="changeOfTab('NhaTlaAlternateTab')"
                          [class.isDisabled]="!isDisabledSteps">
-                        <div class="md-step-circle"><span>5</span></div>
+                        <div class="md-step-circle"><span>6</span></div>
                         <div class="md-step-title">NHA, TLA, Alternate, Equivalency</div>
                         <div class="md-step-bar-left"></div>
                         <div class="md-step-bar-right"></div>
                     </div>
 
                     <div class="md-step"
-                        [ngClass]="{ active: activeMenuItem >= 67 , editable : activeMenuItem === 7 }"
+                        [ngClass]="{ active: activeMenuItem >= 7 , editable : activeMenuItem === 7 }"
                         (click)="changeOfTab('Exchange')"
                         [class.isDisabled]="!isDisabledSteps">
-                        <div class="md-step-circle"><span>6</span></div>
+                        <div class="md-step-circle"><span>7</span></div>
                         <div class="md-step-title">Exchange and Loans</div>
                         <div class="md-step-bar-left"></div>
                         <div class="md-step-bar-right"></div>
@@ -93,7 +93,7 @@
                          [ngClass]="{ active: activeMenuItem >= 8 , editable : activeMenuItem === 8 }"
                          (click)="changeOfTab('ExportInfo')"
                          [class.isDisabled]="!isDisabledSteps">
-                        <div class="md-step-circle"><span>7</span></div>
+                        <div class="md-step-circle"><span>8</span></div>
                         <div class="md-step-title">Export Info</div>
                         <div class="md-step-bar-left"></div>
                         <div class="md-step-bar-right"></div>
@@ -161,7 +161,7 @@
                                     <div class="inline-block display-flex spacing-label">
                                         <label class="control-label">
                                             Item Classification <strong class="clr-red">*</strong>
-                                            <span style="margin-left:3px;margin-top:5px;cursor:pointer;"><i class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#addCustomerClass" (click)="itemclassification(contentEdit)"></i></span>
+                                            <span style="margin-left:3px;margin-top:5px;cursor:pointer;"  matTooltip="Add Item Classification"  tooltipPosition="top" matTooltipPosition="above"><i class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#addCustomerClass" (click)="itemclassification(contentEdit)"></i></span>
                                         </label>
 
                                     </div>
@@ -179,7 +179,7 @@
                                     <div class="inline-block display-flex spacing-label">
                                         <label class="control-label">
                                             Item Group
-                                            <span style="margin-left:3px;margin-top:5px;cursor:pointer;"><i class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#addCustomerClass" (click)="item(contentEdits)"></i></span>
+                                            <span style="margin-left:3px;margin-top:5px;cursor:pointer;"  matTooltip="Add Item Group"  tooltipPosition="top" matTooltipPosition="above"><i class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#addCustomerClass" (click)="item(contentEdits)"></i></span>
                                         </label>
 
                                     </div>
@@ -386,7 +386,7 @@
                                     <div class="inline-block display-flex spacing-label">
                                         <label class="control-label">
                                             Manufacturer <strong class="clr-red">*</strong>
-                                            <span style="margin-left:3px;margin-top:5px;cursor:pointer;">
+                                            <span style="margin-left:3px;margin-top:5px;cursor:pointer;"  matTooltip="Add Manufacturer"  tooltipPosition="top" matTooltipPosition="above">
                                                 <i class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#addCustomerClass"
                                                    (click)="Manufacturer(modeledt)"></i>
                                             </span>
@@ -850,14 +850,14 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-12 mt8">
+                    <!--<div class="col-sm-12 mt8">
                         <div class="col-sm-6">
-                        </div>
-                        <div class="col-sm-6">
-                            <button class="btn btn-primary-cstm float-right" pButton type="submit"  icon="pi pi-angle-right" iconPos="right" label="Save & Next" style="padding: 0 !important;"></button>
+                        </div>-->
+                        <div class="form-row pull-right">
+                            <button class="btn btn-primary-cstm submit-btn" pButton type="submit" style="height: 30px" >Save &amp; Next</button>
                             <!-- <button class="btn btn-primary-cstm float-right" pButton type="button" (click)="saveItemMasterGeneralInformation()" icon="pi pi-angle-right" iconPos="right" label="Save & Next" style="padding: 0 !important;"></button> -->
                         </div>
-                    </div>
+                    <!--/div>-->
                 </div>
                 <!--Jyotsna Code-->
                 <div [ngClass]="{hideTab : currentTab !== 'AircraftInfo'}">
@@ -880,11 +880,11 @@
                             <div class="col-md-12 ">
                                 <div class="shadow-Box">
                                     <div class="col-sm-12">
-                                        <h4 class="float-left">Search Aircraft Information</h4>
-                                        <h4 class="float-right">
+                                        <h5 class="float-left">Search Aircraft Information</h5>
+                                        <h5 class="float-right">
                                             Add Aircraft Information
                                             <a class="plusicon-cstm" href="#" data-toggle="modal" data-target="#ModalDashNumber"><i class="fa fa-plus-circle fa-lg"></i></a>
-                                        </h4>
+                                        </h5>
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-group ">
@@ -971,10 +971,11 @@
                         </div> -->
 
                     </div>
-                    <div class="col-sm-12 mt8">
-                        <button class="btn btn-primary-cstm float-left" pButton type="button" (click)="moveGeneralInfromation(); changeOfTab('General')" icon="pi pi-angle-left" iconPos="left" label="Prev" style="padding: 0 !important;"></button>
-                        <button class="btn btn-primary-cstm float-right" pButton (click)="moveAtachapter()" type="button" icon="pi pi-angle-right" iconPos="right" label="Go to Next Step" style="padding: 0 !important;"></button>
-                    </div>
+                   
+                    <button class="btn btn-primary-cstm pull-right submit-btn"  (click)="moveAtachapter()" type="button" style="height: 30px; width: 100px">Save & Next</button> &nbsp;
+
+                    <button class="btn btn-primary-cstm pull-right submit-btn"  type="button" (click)="moveGeneralInfromation(); changeOfTab('General')" style="height: 30px">Previous</button>
+                    
                 </div>
                 <div [ngClass]="{hideTab : currentTab !== 'Atachapter'}">
                     <div class="card">
@@ -997,11 +998,11 @@
                             <div class="col-md-12 ">
                                 <div class="shadow-Box">
                                     <div class="col-sm-12">
-                                        <h4 class="float-left">Search ATA chapters</h4>
-                                        <h4 class="float-right">
+                                        <h5 class="float-left">Search ATA chapters</h5>
+                                        <h5 class="float-right">
                                             Add ATA Information
                                             <a class="plusicon-cstm" href="#" data-toggle="modal" data-target="#ATAADD" (click)="addNewATA()"><i class="fa fa-plus-circle fa-lg"></i></a>
-                                        </h4>
+                                        </h5>
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-group ">
@@ -1061,9 +1062,10 @@
                         </p-table>
                         <br />
                     </div>
-                    <div class="col-sm-12 mt8">
-                        <button class="btn btn-primary-cstm float-left" pButton type="button" (click)="moveAircraftInformation(); changeOfTab('AircraftInfo');" icon="pi pi-angle-left" iconPos="left" label="Prev" style="padding: 0 !important;"></button>
-                        <button class="btn btn-primary-cstm float-right" pButton (click)="movePurchaseInformation(); changeOfTab('PurchaseSales');" type="button" icon="pi pi-angle-right" iconPos="right" label="Save & Go to Next Step" style="padding: 0 !important;"></button>
+                    <div>
+                        <button class="btn btn-primary-cstm pull-right submit-btn" (click)="movePurchaseInformation(); changeOfTab('PurchaseSales');" type="button"  style="height: 30px; width: 100px">Save & Next</button> &nbsp;
+
+                        <button class="btn btn-primary-cstm pull-right submit-btn"  type="button" (click)="moveAircraftInformation(); changeOfTab('AircraftInfo');" style="height: 30px; width: 100px">Previous</button>
                     </div>
 
                 </div>
@@ -1166,10 +1168,12 @@
                         </div>
 
                         <div class="col-sm-12">
-                            <span class="float-right">
-                                <button type="button" (click)="addFieldValue(); " class="btn btn-primary">Add</button>
-                            </span>
-                        </div>
+                            <h5 class="float-right">
+                                Add Purchase and Sales
+                                <!--<button type="button" (click)="addFieldValue();" class="btn"><i class="fa fa-plus-circle fa-lg" matTooltip="Add Purchase and Sales"  tooltipPosition="top" matTooltipPosition="left"></i></button>-->
+                                <span class="plusicon-cstm" (click)="addFieldValue();"><i class="fa fa-plus-circle fa-lg"></i></span>
+                            </h5>
+                            </div>
                     </div>
                     <form #purchaseSales="ngForm">
                         <div class="table-responsive ">
@@ -1290,7 +1294,7 @@
                                             <input type="number" class="input-field-value" pInputText pKeyFilter="money" maxlength="7" name="SP_FSP_FXRatePerc{{i}}" required [(ngModel)]="field.SP_FSP_FXRatePerc" />
                                         </td>
                                         <td>
-                                            <input type="number" class="input-field-value" pInputText pKeyFilter="int" maxlength="15" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.SP_FSP_FlatPriceAmount" />
+                                            <input type="number" class="input-field-value" pInputText pKeyFilter="num" maxlength="15" [ngModelOptions]="{standalone: true}" [(ngModel)]="field.SP_FSP_FlatPriceAmount" />
                                         </td>
                                         <td>
                                             <input type="date" class="input-field-value" [ngModel]="field.SP_FSP_LastFlatPriceDate | date:'yyyy-MM-dd'" (ngModelChange)="field.SP_FSP_LastFlatPriceDate = $event" [ngModelOptions]="{standalone: true}">
@@ -1336,9 +1340,10 @@
                             </table>
 
                         </div>
-                        <div class="col-sm-12 mt8">
-                            <button class="btn btn-primary-cstm float-left" pButton type="button" (click)="moveAtachapter()" icon="pi pi-angle-left" iconPos="left" label="Prev" style="padding: 0 !important;"></button>
-                            <button class="btn btn-primary-cstm float-right" pButton (click)="moveExportInformation()" [disabled]="!purchaseSales.valid" type="submit" icon="pi pi-angle-right" iconPos="right" label="Save & Go to Next Step" style="padding: 0 !important;"></button>
+                        <div>
+                            <button class="btn btn-primary-cstm pull-right submit-btn"  (click)="moveExportInformation()" [disabled]="!purchaseSales.valid" type="submit" style="height: 30px; width: 100px">Save & Next</button> &nbsp;
+
+                            <button class="btn btn-primary-cstm pull-right submit-btn"  type="button" (click)="moveAtachapter()" style="height: 30px; width: 100px">Previous</button>
                         </div>
                     </form>
                 </div>
@@ -1482,21 +1487,34 @@
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label for="weight" class="control-label">
-                                            Weight <strong class="clr-red">*</strong>
-                                        </label>
-                                        <span class="display-flex inline-block">
-                                            <input type="number" class="input-field-value" pKeyFilter="num" pInputText maxlength="10" required [(ngModel)]="exportInfo.ExportWeight" name="exportWeight" />
-                                            <select class="form-control w80 select-value-drop" id="" name="unitOfMeasureId" required (change)="changeValueStringToInt($event.target.value)" [(ngModel)]="exportInfo.ExportWeightUnit">
-                                                <option *ngFor="let unitName of allPurchaseUnitOfMeasureinfo"
-                                                        [ngValue]="unitName.unitOfMeasureId">
-                                                    {{unitName.shortName}}
-                                                </option>
-                                            </select>
-                                        </span>
+                                        <div class="inline-block display-flex">
+                                            <div>
+                                                <label for="weight" class="control-label">
+                                                    Weight <strong class="clr-red">*</strong> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+
+                                                </label>
+                                                <span class="display-flex inline-block">
+                                                    <input type="number" class="input-field-value" pKeyFilter="num" pInputText maxlength="10" required [(ngModel)]="exportInfo.ExportWeight" name="exportWeight" />
+
+                                                </span>
+                                            </div>
+                                            <div>
+                                                <label for="weight" class="control-label">
+                                                    UOM <strong class="clr-red">*</strong>
+                                                </label>
+                                                <span class="display-flex inline-block">
+                                                    <select class="form-control w80 select-value-drop" id="" name="unitOfMeasureId" required (change)="changeValueStringToInt($event.target.value)" [(ngModel)]="exportInfo.ExportWeightUnit">
+                                                        <option *ngFor="let unitName of allPurchaseUnitOfMeasureinfo"
+                                                                [ngValue]="unitName.unitOfMeasureId">
+                                                            {{unitName.shortName}}
+                                                        </option>
+                                                    </select>
+                                                </span>
+                                            </div>
+                                        </div>
                                         <label class="control-label">
-                                            Export UOM <span style="color:red;">*</span>
-                                            <span style="margin-left:3px;margin-top:5px;cursor:pointer;">
+                                            Export UOM <span style="color: red;">*</span>
+                                            <span style="margin-left: 3px; margin-top: 5px; cursor: pointer;" matTooltip="Add Export UOM" tooltipPosition="top" matTooltipPosition="above">
                                                 <i class="fa fa-plus-circle fa-lg" data-toggle="modal"
                                                    data-target="#ModalUnit" (click)="exportUOmOpen(ModalUnit)"></i>
                                             </span>
@@ -1508,62 +1526,80 @@
                                                 {{unitName.shortName}}
                                             </option>
                                         </select>
-                                        <label class="control-label">Size (L,W,H)</label>
                                         <div class="inline-block display-flex">
-                                            <input type="number" name="exportLength" class="input-field-value" pInputText pKeyFilter="num" maxlength="10" [(ngModel)]="exportInfo.ExportSizeLength" />&nbsp;
-                                            <input type="number" name="exportWidth" class="input-field-value" pInputText pKeyFilter="num" maxlength="10" [(ngModel)]="exportInfo.ExportSizeWidth" />&nbsp;
-                                            <input type="number" name="exportHeight" class="input-field-value" pInputText pKeyFilter="num" maxlength="10" [(ngModel)]="exportInfo.ExportSizeHeight" />
-                                        </div>
-                                        <label class="control-label">Classification <span style="color:red;">*</span></label>
-                                        <div class="inline-block display-flex">
-                                            <div >
-                                                <label class="control-label">
-                                                    <input type="radio" id="" name="classification" value="unspecified" [(ngModel)]="exportInfo.IsExportUnspecified" (change)="validateClassificationRequired()">
-                                               
-                                                    Unspecified
-                                                </label>
-                                            </div>
                                             <div>
-                                                <label class="control-label">
-                                                    <input type="radio" id="" name="classification"  value="nonmiltary" [(ngModel)]="exportInfo.IsExportNONMilitary" (change)="validateClassificationRequired()">
-                                  
-                                                    NON-Military
-                                                </label>
+                                                <label class="control-label">Size (L,W,H)</label>
+                                                <span class="display-flex inline-block">
+                                                    <input type="number" name="exportLength" class="input-field-value" pInputText pKeyFilter="num" maxlength="10" [(ngModel)]="exportInfo.ExportSizeLength" />&nbsp;
+                                                    <input type="number" name="exportWidth" class="input-field-value" pInputText pKeyFilter="num" maxlength="10" [(ngModel)]="exportInfo.ExportSizeWidth" />&nbsp;
+                                                    <input type="number" name="exportHeight" class="input-field-value" pInputText pKeyFilter="num" maxlength="10" [(ngModel)]="exportInfo.ExportSizeHeight" />
+                                                </span>
+                                            </div>
+                                                    <div>
+                                                        <label for="weight" class="control-label">
+                                                            UOM <strong class="clr-red">*</strong>
+                                                        </label>
+                                                        <span class="display-flex inline-block">
+                                                            <select class="form-control w80 select-value-drop" id="" name="unitOfMeasureId" required (change)="changeValueStringToInt($event.target.value)" [(ngModel)]="exportInfo.ExportWeightUnit">
+                                                                <option *ngFor="let unitName of allPurchaseUnitOfMeasureinfo"
+                                                                        [ngValue]="unitName.unitOfMeasureId">
+                                                                    {{unitName.shortName}}
+                                                                </option>
+                                                            </select>
+                                                        </span>
+                                                    </div>
+                                               
+                                           
+                                            </div>
+                                                <label class="control-label">Classification <span style="color: red;">*</span></label>
+                                                <div class="inline-block display-flex">
+                                                    <div>
+                                                        <label class="control-label">
+                                                            <input type="radio" id="" name="classification" value="unspecified" [(ngModel)]="exportInfo.IsExportUnspecified" (change)="validateClassificationRequired()">
+
+                                                            Unspecified
+                                                        </label>
+                                                    </div>
+                                                    <div>
+                                                        <label class="control-label">
+                                                            <input type="radio" id="" name="classification" value="nonmiltary" [(ngModel)]="exportInfo.IsExportNONMilitary" (change)="validateClassificationRequired()">
+
+                                                            NON-Military
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="inline-block display-flex">
+                                                    <div>
+                                                        <label class="control-label">
+                                                            <input type="radio" id="" name="classification" value="miltary" [(ngModel)]="exportInfo.IsExportMilitary" (change)="validateClassificationRequired()">
+
+                                                            Miltary
+                                                        </label>
+                                                    </div>
+                                                    <div>
+                                                        <label class="control-label">
+                                                            <input type="radio" id="" name="classification" value="dual" [(ngModel)]="exportInfo.IsExportDual" (change)="validateClassificationRequired()">
+
+                                                            Dual
+                                                        </label>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div class="inline-block display-flex">
-                                            <div >
-                                                <label class="control-label">
-                                                    <input type="radio" id="" name="classification" value="miltary" [(ngModel)]="exportInfo.IsExportMilitary" (change)="validateClassificationRequired()">
-                                                   
-                                                    Miltary
-                                                </label>
-                                            </div>
-                                            <div >
-                                                <label class="control-label">
-                                                    <input type="radio" id="" name="classification" value="dual" [(ngModel)]="exportInfo.IsExportDual" (change)="validateClassificationRequired()">
-                                                 
-                                                    Dual
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
                         </div>
 
-                        <div class="col-sm-12 mt8">
-                            <div class="col-sm-6">
-                                <button class="btn btn-primary-cstm float-left" pButton type="button" (click)="changeOfTab('Exchange')" icon="pi pi-angle-left" iconPos="left" label="Prev" style="padding: 0 !important;"></button>
-                            </div>
-                            <div class="col-sm-6">
-                                <span class="float-right">
-                                    <button class="btn btn-primary-cstm" pButton type="submit" [disabled]="!exportInformatiom.valid || !isValidClassification" label="Save" (click)="saveExportInformation()" style="padding: 0 !important;"></button>
-                                    &nbsp;
-                                    <button class="btn btn-primary-cstm" pButton type="button" (click)="saveandcreate()" icon="pi pi-angle-right" iconPos="right" label="Save & Add New" style="padding: 0 !important;"></button>
-                                </span>
-                            </div>
+                        <!--<div class="col-sm-12 mt8">-->
+                        <div>
+
+                            <button class="btn btn-primary-cstm pull-right submit-btn" type="button" (click)="saveandcreate()" style="height: 30px; width: 115px">Save & Add New</button>
+                            &nbsp;
+                            <button class="btn btn-primary-cstm pull-right submit-btn" type="submit" [disabled]="!exportInformatiom.valid || !isValidClassification" (click)="saveExportInformation()" style="height: 30px; width:80px">save</button>
+                            &nbsp;
+                            <button class="btn btn-primary-cstm pull-right submit-btn" type="button" (click)="changeOfTab('Exchange')" style="height: 30px; width: 100px">Previous</button>
+
                         </div>
+                        <!--</div>-->
                     </form>
                 </div>
 
@@ -1581,7 +1617,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">×</button>
-                    <h4 class="modal-title">Add Aircraft Info</h4>
+                    <h5 class="modal-title">Add Aircraft Info</h5>
                 </div>
                 <div class="modal-body">
                     <div class="form-row">
@@ -1681,7 +1717,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">×</button>
-                    <h4 class="modal-title">Add ATA Info</h4>
+                    <h5 class="modal-title">Add ATA Info</h5>
                 </div>
                 <div class="modal-body">
 
@@ -1835,7 +1871,7 @@
             <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
                 <span aria-hidden="true">&times;</span>
             </button>
-            <h4 class="modal-title" title="Add Export UOM" >Add Export UOM</h4>
+            <h5 class="modal-title" title="Add Export UOM" >Add Export UOM</h5>
         </div>
         <div class="modal-body">
             <form #userForm="ngForm" (ngSubmit)="saveConsumeunitofmeasure()" class="form-horizontal">

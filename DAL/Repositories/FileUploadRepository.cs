@@ -335,6 +335,10 @@ namespace DAL.Repositories
                 case "VendorClassification":
                     UploadVendorClassification(BindCustomData<VendorClassification>(file, "VendorClassificationId", moduleName));
                     break;
+                case "CapabilityType":
+                    UploadCapabilityType(BindCustomData<CapabilityType>(file, "CapabilityTypeId", moduleName));
+                    break;
+
                 default:
                     break;
             }
@@ -451,6 +455,19 @@ namespace DAL.Repositories
                                                     if (reader.GetValue(propCount).GetType().Name == "Double" && property.PropertyType.Name == "Int64")
                                                     {
                                                         property.SetValue(model, Convert.ToInt64(reader.GetValue(propCount)));
+                                                    }
+                                                    else if(property.Name.Equals("SequenceNo") && property.PropertyType.Name == "Int32")
+                                                    {
+                                                        var sequenceData = reader.GetValue(propCount);
+                                                        if(sequenceData != null)
+                                                        {
+                                                            property.SetValue(model, Convert.ToInt32(sequenceData));
+                                                        }
+                                                        else
+                                                        {
+                                                            property.SetValue(model, 1);
+                                                        }
+                                                       
                                                     }
                                                     else
                                                         property.SetValue(model, reader.GetValue(propCount));
@@ -939,7 +956,23 @@ namespace DAL.Repositories
             }
         }
 
-        
+        private void UploadCapabilityType(List<CapabilityType> capabilityList)
+        {
+
+            foreach (var item in capabilityList)
+            {
+
+                var flag = _appContext.capabilityType.Any(p => p.IsDeleted == false && (!string.IsNullOrEmpty(p.Description)
+                && p.Description.ToLower() == item.Description.Trim().ToLower())||p.SequenceNo==item.SequenceNo);
+              
+                if (!flag)
+                {
+                    _appContext.capabilityType.Add(item);
+                    _appContext.SaveChanges();
+                }
+            }
+        }
+
 
         private static PropertyInfo[] GetProperties(object obj)
         {

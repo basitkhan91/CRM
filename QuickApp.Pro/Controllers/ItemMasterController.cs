@@ -2077,5 +2077,12 @@ namespace QuickApp.Pro.Controllers
            var result= _unitOfWork.itemMaster.ItemMasterCapesGlobalSearch(itemMasterId, filterText, pageNumber, pageSize);
             return Ok(result);
         }
+
+        [HttpPost("itemmasterdata")]
+        public IActionResult ItemMasterData([FromBody]Filters<ItemMasterDataFilters> capesFilters)
+        {
+            var result = _unitOfWork.itemMaster.ItemMasterData(capesFilters);
+            return Ok(result);
+        }
     }
 }

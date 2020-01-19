@@ -43,6 +43,7 @@ import { AuditModule } from "../audit/audit.module";
 import { InterCompanySetupComponent } from "../components/general-ledger/intercompany-setup/intercompany-setup.component";
 import { AutoCompleteModule } from "primeng/autocomplete";
 import { TooltipModule } from "../../../node_modules/primeng/tooltip";
+import { BreadcrumbModule } from 'primeng/breadcrumb';
 
 import { AccountListingComponent } from "../components/general-ledger/account-listing/account-listing.component";
 import { AccountListingCreateComponent } from "../components/general-ledger/account-listing-create/account-listing-create.component";
@@ -70,7 +71,7 @@ import { OpenCloseLedgerComponent } from '../components/general-ledger/open-clos
         AuditModule,
         AutoCompleteModule,
         TooltipModule,
-        DropdownModule
+        DropdownModule,BreadcrumbModule
 
     ],
     declarations: [

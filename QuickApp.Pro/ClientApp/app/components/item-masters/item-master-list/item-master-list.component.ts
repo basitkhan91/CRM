@@ -9,6 +9,10 @@ import { MasterComapnyService } from '../../../services/mastercompany.service';
 import { MasterCompany } from '../../../models/mastercompany.model';
 import { AlertService, MessageSeverity } from '../../../services/alert.service';
 import { CommonService } from '../../../services/common.service';
+import { Currency } from '../../../models/currency.model';
+import { ItemMasterLoanExchange } from '../../../models/item-master-loan-exchange.model';
+import { CurrencyService } from '../../../services/currency.service';
+import * as $ from 'jquery';
 
 @Component({
 	selector: 'app-item-master-list',
@@ -18,6 +22,7 @@ import { CommonService } from '../../../services/common.service';
 })
 /** item-master-list component*/
 export class ItemMasterListComponent implements OnInit, AfterViewInit {
+    public isCollapsed = false;
 	viewItemMaster: any = {};
 	EquipmentDelete: boolean = false;
 	isDeleteMode: boolean = false;
@@ -139,9 +144,37 @@ export class ItemMasterListComponent implements OnInit, AfterViewInit {
 	isSaving: boolean;
 	itemName: string;
 	allUploadedDocumentsList: any = [];
+	aircraftListDataValues: any;
+	ataMappedList: any;
+	allItemMasterCapsList: any[] = [];
+	pnCols: any[];
+	ntaeTableColumns: any[];
+	ntaeData: any = [];
+	ntaeData2: any = [];
+	ntaeData3: any = [];
+    ntaeData4: any = [];
+    filterManufacturerData: any = [];
+	filterDiscriptionData: any = [];
+	filterPartItemClassificationData: any = [];
+    showExchange: boolean = false;
+    showLoan: boolean = false;
+    exchangeCurrencies: Currency[];
+	loanCurrencies: Currency[];
+	currentItem: ItemMasterLoanExchange;
+	displayName: string;
+	displayNameLoan: string;
+	exchangeListPrice: any;
+    loanFees :any;
+        loanCorePrice :any;
+	loanOutrightPrice: any;
+    exchangeCorePrice :any;
+    exchangeOverhaulPrice:any;
+    exchangeOutrightPrice :any;
+    exchangeCoreCost :any;
+
 	//selectedColumns: any;
 	/** item-master-list ctor */
-	constructor(private authService: AuthService, private route: Router, private alertService: AlertService, private router: Router, public itemMasterService: ItemMasterService, private modalService: NgbModal, private masterComapnyService: MasterComapnyService, public commonService: CommonService) {
+	constructor(private authService: AuthService, private route: Router, private alertService: AlertService, private router: Router, public itemMasterService: ItemMasterService, private modalService: NgbModal, private masterComapnyService: MasterComapnyService, public commonService: CommonService, private currencyService: CurrencyService,) {
 		this.itemMasterService.currentUrl = '/itemmastersmodule/itemmasterpages/app-item-master-list';
 		this.itemMasterService.bredcrumbObj.next(this.itemMasterService.currentUrl);//Bread Crumb
 		this.itemMasterService.listCollection = null;
@@ -166,7 +199,10 @@ export class ItemMasterListComponent implements OnInit, AfterViewInit {
 		//this.StockList();
 		//this.EuipmentList();
 		this.loadRolesData();
-	}
+        this.getcurrencyExchangeLoan();
+
+       
+    }
 	openHist() {
 		// alert("Functionality not yet done");
 
@@ -223,6 +259,29 @@ export class ItemMasterListComponent implements OnInit, AfterViewInit {
 		// this.actionName = this.sourceItemMaster.description;
 
 	}
+
+
+    dblExpandAllItemMasterListModel() {
+        $('#step1').collapse('show');
+        $('#step2').collapse('show');
+        $('#step3').collapse('show');
+        $('#step4').collapse('show');
+        $('#step6').collapse('show');
+        $('#step8').collapse('show');
+        $('#step58').collapse('show');
+      
+    }
+    dblCloseAllItemMasterListModel() {
+        $('#step1').collapse('hide');
+        $('#step2').collapse('hide');
+        $('#step3').collapse('hide');
+        $('#step4').collapse('hide');
+        $('#step6').collapse('hide');
+        $('#step8').collapse('hide');
+        $('#step58').collapse('hide');
+       
+
+    }
 
 
 	openEdited(row) {
@@ -299,10 +358,12 @@ export class ItemMasterListComponent implements OnInit, AfterViewInit {
 		this.loadingIndicator = true;
 
 		this.itemMasterService.getItemStockList(value).subscribe(
-			results => this.onitemmasterSuccessful(results[0], value),
+			results => this.onitemmasterSuccessful(results[0], value), 
 			error => this.onDataLoadFailed(error)
 		);
-	}
+
+        
+    }
 	private loadRolesData() {
 		//this.alertService.startLoadingMessage();
 		this.loadingIndicator = true;
@@ -314,28 +375,29 @@ export class ItemMasterListComponent implements OnInit, AfterViewInit {
 	}
 	private onDataLoadSuccessful(allWorkFlows: any[]) {
 		//debugger;
-		this.alertService.stopLoadingMessage();
+		
 		this.loadingIndicator = false;
 		this.dataSource.data = allWorkFlows;
 		this.allitemstockinfo = allWorkFlows;
 
-
+	
 	}
 	private onitemmasterSuccessful(allWorkFlows: any[], value) {
-		//debugger;
+
 		if (value == "Stock") {
 			this.stockTable = true;
 			this.cols = [
 				{ field: 'partNumber', header: 'PN' },
 				{ field: 'partDescription', header: 'PN Description' },
-				{ field: 'isHazardousMaterial', header: 'Is Hazardous Material' },
-				//{ field: '', header: 'Material Type' },
-				{ field: 'provisiondesc', header: 'Provision' },
-				//{ field: '', header: 'capes' },
 				{ field: 'manufacturerdesc', header: 'Manufacturer' },
+				//{ field: '', header: 'Material Type' },
+				{ field: 'classificationdesc', header: 'Classification' },
+				//{ field: '', header: 'capes' },
+				{ field: 'itemGroupId', header: 'Group ID' },
 				//{ field: '', header: ' Aircraft Manufacturer' },
 				{ field: 'nationalStockNumber', header: 'NSN' },
-				{ field: 'prioritydesc', header: 'Priority' },
+				{ field: 'isSerialized', header: 'Serialized' },
+				{ field: 'isTimeLife', header: 'Time Life' },
 				//{ field: 'updatedDate', header: 'Updated Date' },
 				//{ field: 'createdDate', header: 'Created Date' }
 			];
@@ -458,7 +520,54 @@ export class ItemMasterListComponent implements OnInit, AfterViewInit {
 	}
 
 
+    colsaircraftLD: any[] = [
+        { field: "aircraft", header: "Aircraft" },
+        { field: "model", header: "Model" },
+        { field: "dashNumber", header: "Dash Numbers" },
+        { field: "memo", header: "Memo" }
+	];
 
+    atasub : any[] = [
+        { field: 'ataChapterName', header: 'ATA Chapter' },
+        { field: 'ataSubChapterDescription', header: 'ATA Sub-Chapter' }
+	];
+
+        pnCols1 = [
+            { field: 'partNo', header: 'PN' },
+            { field: 'pnDiscription', header: 'PN Description' },
+            { field: 'capabilityType', header: 'Cap Type' },
+            { field: 'level1', header: 'Level 01' },
+            { field: 'level2', header: 'Level 02' },
+            { field: 'level3', header: 'Level 03' },
+            { field: 'level4', header: 'Level 04' },
+            { field: 'isVerified', header: 'Verified' },
+            { field: 'verifiedBy', header: 'Verified By' },
+            { field: 'verifiedDate', header: 'Date Verified' },
+            { field: 'memo', header: 'Memo' }
+	];
+
+
+        alterTableColumns: any[] = [
+            { field: "altPartNo", header: "PN" },
+            { field: "altPartDescription", header: "Description" },
+            { field: "manufacturer", header: "Manufacturer " }
+        ];
+        //nhaTableColumns: any[] = [
+        //    { field: "altPartNo", header: "PN" },
+        //    { field: "altPartDescription", header: "Description" },
+        //    { field: "manufacturer", header: "Manufacturer " }
+        //];
+        //tlaTableColumns: any[] = [
+        //    { field: "altPartNo", header: "PN" },
+        //    { field: "altPartDescription", header: "Description" },
+        //    { field: "manufacturer", header: "Manufacturer " }
+        //];
+        equivalencyTableColumns: any[] = [
+            { field: "altPartNo", header: "PN" },
+            { field: "altPartDescription", header: "Description" },
+            { field: "manufacturer", header: "Manufacturer " },
+            { field: "itemClassification", header: "ITEM CLASSIFICATION " },
+        ];
 
 	get userName(): string {
 		return this.authService.currentUser ? this.authService.currentUser.userName : "";
@@ -580,11 +689,9 @@ export class ItemMasterListComponent implements OnInit, AfterViewInit {
 		//debugger;
 		this.loadingIndicator = false;
 		this.allEquipmentInfo = allWorkFlows;
+    }
 
-	}
-
-
-	private onDataLoadFailed(error: any) {
+    private onDataLoadFailed(error: any) {
 		// alert(error);
 		//this.alertService.stopLoadingMessage();
 		// this.loadingIndicator = false;
@@ -794,18 +901,210 @@ export class ItemMasterListComponent implements OnInit, AfterViewInit {
 		//this.salesLastSalesDiscountPercentDate = row.salesLastSalesDiscountPercentDate
 		//this.salesMarkUpOnListPriceAfterDisc = row.salesMarkUpOnListPriceAfterDisc
 
+		this.getAircraftMappedDataByItemMasterId(row.itemMasterId);
+		this.getATAMappedDataByItemMasterId(row.itemMasterId);
+		this.getCapabilityList(row.itemMasterId);
+		this.getNtaeData(row.itemMasterId);
+        this.getExchange(row.itemMasterId);
 
 		this.loadMasterCompanies();
 		this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
-		this.modal.result.then(() => {
-			console.log('When user closes');
-		}, () => { console.log('Backdrop click') })
+        this.modal.result.then(() => {
+                console.log('When user closes');
+            },
+            () => { console.log('Backdrop click') });
+    }
+
+
+	getExchange(itemMasterId) {
+       
+       
+            this.itemMasterService.getExchangeLoan(itemMasterId).subscribe(c => {
+                if (c[0] != null) {
+					this.currentItem = c[0];
+
+					this.exchangeListPrice = this.currentItem.exchangeListPrice;
+					this.exchangeCorePrice = this.currentItem.exchangeCorePrice;
+					this.exchangeOverhaulPrice = this.currentItem.exchangeOverhaulPrice;
+					this.exchangeOutrightPrice = this.currentItem.exchangeOutrightPrice;
+					this.exchangeCoreCost = this.currentItem.exchangeCoreCost;
+					this.loanFees = this.currentItem.loanFees;
+					this.loanCorePrice = this.currentItem.loanCorePrice;
+					this.loanOutrightPrice = this.currentItem.loanOutrightPrice;
+
+                    this.showExchange = this.currentItem.isExchange;
+                    this.showLoan = this.currentItem.isLoan;
+                }
+            });
 	}
-	getItemMasterById(itemMasterId){
-		this.itemMasterService.getItemMasterDetailById(itemMasterId).subscribe(res => {
+
+ 
+
+    getcurrencyExchangeLoan() {
+        this.currencyService.getCurrencyList().subscribe(dat => {
+            this.exchangeCurrencies = [...dat[0]];
+			this.loanCurrencies = [...dat[0]];
+			this.displayNameLoan = this.loanCurrencies[0].displayName;
+			this.displayName = this.exchangeCurrencies[0].displayName;
+
+        });
+    }
+
+	getNtaeData(itemMasterId) {
+		this.filterManufacturerData = [];
+		this.filterDiscriptionData = [];
+		this.filterPartItemClassificationData = [];
+		let reqData = {
+            first: 0,
+            rows: 10,
+            sortOrder: 1,
+            filters: {
+                ItemMasterId: itemMasterId,
+                MappingType: 3,
+            },
+        }
+        let reqDatas = {
+            first: 0,
+            rows: 10,
+            sortOrder: 1,
+            filters: {
+                ItemMasterId: itemMasterId,
+                MappingType: 4,
+            },
+			globalFilter: null
+		}
+        let reqDatas1 = {
+            first: 0,
+            rows: 10,
+            sortOrder: 1,
+            filters: {
+                ItemMasterId: itemMasterId,
+                MappingType: 1,
+            },
+            globalFilter: null
+		}
+		let reqDatas2 = {
+            first: 0,
+            rows: 10,
+            sortOrder: 1,
+            filters: {
+                ItemMasterId: itemMasterId,
+                MappingType: 2,
+            },
+            globalFilter: null
+        }
+
+		this.itemMasterService.getnhatlaaltequpartlis(reqData).subscribe(res => {
+			this.ntaeData = res;
+            this.getntlafieds(this.ntaeData);
+        });
+        this.itemMasterService.getnhatlaaltequpartlis(reqDatas).subscribe(res => {
+            this.ntaeData2 = res;
+            this.getntlafieds(this.ntaeData2);
+		});
+        this.itemMasterService.getnhatlaaltequpartlis(reqDatas1).subscribe(res => {
+            this.ntaeData3 = res;
+            this.getntlafieds(this.ntaeData3);
+        });
+
+		this.itemMasterService.getequivalencypartlist(reqDatas2).subscribe(res => {
+            this.ntaeData4 = res;
+			for (let i = 0; i < this.ntaeData4.length; i++) {
+				if (this.ntaeData4[i].attachmentDetails) {
+					this.ntaeData4[i]["fileName"] = this.ntaeData4[i].attachmentDetails.ad.fileName
+                }
+                this.filterManufacturerData.push({
+					label: this.ntaeData4[i].manufacturer,
+					value: this.ntaeData4[i].manufacturerId
+                });
+                this.filterDiscriptionData.push({
+					label: this.ntaeData4[i].altPartDescription,
+					value: this.ntaeData4[i].altPartDescription
+                });
+                this.filterPartItemClassificationData.push({
+					label: this.ntaeData4[i].itemClassification,
+					value: this.ntaeData4[i].itemClassificationId
+                });
+            }
+        });
+
+		//}
+	}
+
+	getntlafieds(ntaeData) {
+        for (let i = 0; i < ntaeData.length; i++) {
+            this.filterManufacturerData.push({
+                label: ntaeData[i].manufacturer,
+                value: ntaeData[i].manufacturerId
+            });
+            this.filterDiscriptionData.push({
+                label: ntaeData[i].altPartDescription,
+                value: ntaeData[i].altPartDescription
+            });
+        }
+
+    }
+
+
+	getCapabilityList(itemMasterId) {
+        let reqData = {
+            first: 0,
+            rows: 10,
+            sortOrder: -1,
+            filters: {
+                partNo: "",
+                itemMasterId: itemMasterId
+    },
+            globalFilter: null
+        }
+        this.itemMasterService.getItemMasterCapsList(reqData).subscribe(
+            results => this.onDataLoadSuccessfuls(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
+    }
+
+    private onDataLoadSuccessfuls(allWorkFlows: any[]) {
+       // this.dataSource.data = allWorkFlows;
+        this.allItemMasterCapsList = allWorkFlows;
+    }
+
+
+	getATAMappedDataByItemMasterId(itemMasterId) {
+        // check whether edit or create and send and passes ItemMasterId
+        this.itemMasterService.getMappedATADetails(itemMasterId).subscribe(res => {
+            this.ataMappedList = res.map(x => {
+                return {
+                    ...x,
+                    ataChapterName: x.ataChapterName,
+                    ataSubChapterDescription: x.ataSubChapterDescription
+                }
+            });
+        });
+    }
+
+	getAircraftMappedDataByItemMasterId(itemMasterId) {
+        // check whether edit or create and send and passes ItemMasterId
+        this.itemMasterService.getMappedAirCraftDetails(itemMasterId).subscribe(data => {
+            const responseData = data;
+            this.aircraftListDataValues = responseData.map(x => { //aircraftListData
+                return {
+                    ...x,
+                    aircraft: x.aircraftType,
+                    model: x.aircraftModel,
+                    dashNumber: x.dashNumber,
+                    memo: x.memo,
+                }
+            });
+        });
+    }
+
+	getItemMasterById(itemMasterId) {
+        this.itemMasterService.getItemMasterDetailById(itemMasterId).subscribe(res => {
 			this.viewItemMaster = res[0];
-		})
-	}
+
+            console.log(this.viewItemMaster);
+        });
+    }
 	openViewforNonstock(content, row) {
 
 		//this.sourceAction = row;
@@ -902,5 +1201,8 @@ export class ItemMasterListComponent implements OnInit, AfterViewInit {
 	}
 	downloadFileUpload(rowData) {	       
 		this.commonService.toDownLoadFile(rowData.link);		
-    }
+	}
+
+
+
 }

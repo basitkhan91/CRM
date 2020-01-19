@@ -2,6 +2,7 @@
 using DAL.Common;
 using DAL.Models;
 using DAL.Repositories.Interfaces;
+using EntityFrameworkPaginate;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,26 +16,51 @@ namespace DAL.Repositories
         public VenodrRepository(ApplicationDbContext context) : base(context)
         { }
 
-        public IEnumerable<object> GetVendorsList(Filters<VendorFilters> vendorFilters)
+        public IEnumerable<object> GetVendorsList(Common.Filters<VendorFilters> vendorFilters)
         {
             if (vendorFilters.filters == null)
                 vendorFilters.filters = new VendorFilters();
-            var pageNumber = vendorFilters.first + 1;
-            var take = vendorFilters.rows;
-            var skip = take * (pageNumber - 1);
+            var pageNumber = vendorFilters.first + 1;           
+            var pageSize = vendorFilters.rows;           
+            string sortColumn = string.Empty;
 
             short statusId = 2;
+            var sorts = new Sorts<VendorFilters>();
+            var filters = new EntityFrameworkPaginate.Filters<VendorFilters>();
 
+            
 
-            if (!string.IsNullOrEmpty(vendorFilters.filters.Status))
+            if (string.IsNullOrEmpty(vendorFilters.SortField))
             {
-                if (vendorFilters.filters.Status.ToLower() == "inactive")
+                sortColumn = "createdDate";
+                vendorFilters.SortOrder = -1;
+                sorts.Add(sortColumn == "createdDate", x => x.createdDate, true);
+            }
+            else
+            {
+                sortColumn = vendorFilters.SortField;
+            }
+
+            var propertyInfo = typeof(VendorFilters).GetProperty(sortColumn);
+
+            if (vendorFilters.SortOrder == -1)
+            {
+                sorts.Add(true, x => propertyInfo.GetValue(x, null), true);
+            }
+            else
+            {
+                sorts.Add(true, x => propertyInfo.GetValue(x, null));
+            }
+
+            if (!string.IsNullOrEmpty(vendorFilters.filters.status))
+            {
+                if (vendorFilters.filters.status.ToLower() == "inactive")
                 {
-                    statusId = 0;
+                    statusId = 0;                  
                 }
-                else if (vendorFilters.filters.Status.ToLower() == "active")
+                else if (vendorFilters.filters.status.ToLower() == "active")
                 {
-                    statusId = 1;
+                    statusId = 1;                   
                 }
                 else
                 {
@@ -42,6 +68,21 @@ namespace DAL.Repositories
                 }
 
             }
+
+
+            filters.Add(!string.IsNullOrEmpty(vendorFilters.filters.vendorName), x => x.vendorName.Contains(vendorFilters.filters.vendorName));
+            filters.Add(!string.IsNullOrEmpty(vendorFilters.filters.vendorCode), x => x.vendorCode.Contains(vendorFilters.filters.vendorCode));
+            filters.Add(!string.IsNullOrEmpty(vendorFilters.filters.vendorEmail), x => x.vendorEmail.Contains(vendorFilters.filters.vendorEmail)); 
+            filters.Add(!string.IsNullOrEmpty(vendorFilters.filters.city), x => x.city.Contains(vendorFilters.filters.city));
+            filters.Add(!string.IsNullOrEmpty(vendorFilters.filters.stateOrProvince), x => x.stateOrProvince.Contains(vendorFilters.filters.stateOrProvince));
+            filters.Add(!string.IsNullOrEmpty(vendorFilters.filters.classificationName), x => x.classificationName.Contains(vendorFilters.filters.classificationName));
+            filters.Add(!string.IsNullOrEmpty(vendorFilters.filters.vendorCapabilityName), x => x.vendorCapabilityName.Contains(vendorFilters.filters.vendorCapabilityName));
+            filters.Add(!string.IsNullOrEmpty(vendorFilters.filters.vendorPhoneContact), x => x.vendorPhoneContact.Contains(vendorFilters.filters.vendorPhoneContact));
+            filters.Add(!string.IsNullOrEmpty(vendorFilters.filters.description), x => x.description.Contains(vendorFilters.filters.description));
+            filters.Add(statusId == 2, x => x.isActive == x.isActive);
+            filters.Add(statusId == 1, x => x.isActive == true);
+            filters.Add(statusId == 0, x => x.isActive == false);
+          
             var totalRecords = (from t in _appContext.Vendor
                                 join ad in _appContext.Address on t.AddressId equals ad.AddressId
                                 join vt in _appContext.VendorType on t.VendorTypeId equals vt.VendorTypeId into vtt
@@ -51,22 +92,22 @@ namespace DAL.Repositories
                                 join vca in _appContext.VendorCapabiliy on t.capabilityId equals vca.VendorCapabilityId into vcad
                                 from vca in vcad.DefaultIfEmpty()
                                 where (t.IsDelete == false || t.IsDelete == null)
-                                  && t.VendorName.Contains(!String.IsNullOrEmpty(vendorFilters.filters.VendorName) ? vendorFilters.filters.VendorName : t.VendorName)
-                                  && t.VendorCode.Contains(!String.IsNullOrEmpty(vendorFilters.filters.VendorCode) ? vendorFilters.filters.VendorCode : t.VendorCode)
-                                  && t.VendorEmail.Contains(!String.IsNullOrEmpty(vendorFilters.filters.VendorEmail) ? vendorFilters.filters.VendorEmail : t.VendorEmail)
-                                  && t.IsActive == (statusId == 2 ? t.IsActive : (statusId == 0 ? false : true))
-                                  && ad.City.Contains(!String.IsNullOrEmpty(vendorFilters.filters.City) ? vendorFilters.filters.City : ad.City)
-                                  && ad.StateOrProvince.Contains(!String.IsNullOrEmpty(vendorFilters.filters.StateOrProvince) ? vendorFilters.filters.StateOrProvince : ad.StateOrProvince)
-                                  && vc.ClassificationName.Contains(!String.IsNullOrEmpty(vendorFilters.filters.ClassificationName) ? vendorFilters.filters.ClassificationName : vc.ClassificationName)
-                                  && vca.capabilityDescription.Contains(!String.IsNullOrEmpty(vendorFilters.filters.VendorCapabilityName) ? vendorFilters.filters.VendorCapabilityName : vca.capabilityDescription)
-                                  && t.VendorPhone.Contains(!String.IsNullOrEmpty(vendorFilters.filters.VendorPhoneContact) ? vendorFilters.filters.VendorPhoneContact : t.VendorPhone)
-                                // && vt.Description.Contains(!String.IsNullOrEmpty(vendorFilters.filters.Description) ? vendorFilters.filters.Description : vt.Description)
-                                select new
+                                select new VendorFilters()
                                 {
-                                    t.VendorId,
-
+                                    vendorId = t.VendorId,
+                                    vendorName = t.VendorName,
+                                    vendorCode = t.VendorCode,
+                                    vendorEmail = t.VendorEmail,
+                                    isActive = t.IsActive,
+                                    description = vt.Description,
+                                    city = ad.City,
+                                    stateOrProvince = ad.StateOrProvince,
+                                    classificationName = vc.ClassificationName,
+                                    vendorCapabilityName = vca.capabilityDescription,
+                                    vendorPhoneContact = t.VendorPhone + " - " + t.VendorPhoneExt,
+                                    createdDate = t.CreatedDate
                                 }
-                         ).Distinct().Count();
+                         ).Distinct().Paginate(pageNumber, pageSize, sorts, filters).RecordCount;
 
             var list = (from t in _appContext.Vendor
                         join ad in _appContext.Address on t.AddressId equals ad.AddressId
@@ -77,100 +118,27 @@ namespace DAL.Repositories
                         join vca in _appContext.VendorCapabiliy on t.capabilityId equals vca.VendorCapabilityId into vcad
                         from vca in vcad.DefaultIfEmpty()
                         where (t.IsDelete == false || t.IsDelete == null)
-                          && t.VendorName.Contains(!String.IsNullOrEmpty(vendorFilters.filters.VendorName) ? vendorFilters.filters.VendorName : t.VendorName)
-                          && t.VendorCode.Contains(!String.IsNullOrEmpty(vendorFilters.filters.VendorCode) ? vendorFilters.filters.VendorCode : t.VendorCode)
-                          && t.VendorEmail.Contains(!String.IsNullOrEmpty(vendorFilters.filters.VendorEmail) ? vendorFilters.filters.VendorEmail : t.VendorEmail)
-                          && t.IsActive == (statusId == 2 ? t.IsActive : (statusId == 0 ? false : true))
-                          && ad.City.Contains(!String.IsNullOrEmpty(vendorFilters.filters.City) ? vendorFilters.filters.City : ad.City)
-                          && ad.StateOrProvince.Contains(!String.IsNullOrEmpty(vendorFilters.filters.StateOrProvince) ? vendorFilters.filters.StateOrProvince : ad.StateOrProvince)
-                          && vc.ClassificationName.Contains(!String.IsNullOrEmpty(vendorFilters.filters.ClassificationName) ? vendorFilters.filters.ClassificationName : vc.ClassificationName)
-                          && vca.capabilityDescription.Contains(!String.IsNullOrEmpty(vendorFilters.filters.VendorCapabilityName) ? vendorFilters.filters.VendorCapabilityName : vca.capabilityDescription)
-                          && t.VendorPhone.Contains(!String.IsNullOrEmpty(vendorFilters.filters.VendorPhoneContact) ? vendorFilters.filters.VendorPhoneContact : t.VendorPhone)
-                          && vt.Description.Contains(!String.IsNullOrEmpty(vendorFilters.filters.Description) ? vendorFilters.filters.Description : vt.Description)
-                        select new
+                        select new VendorFilters()
                         {
-                            t.VendorId,
-                            t.VendorName,
-                            t.VendorCode,
-                            t.VendorEmail,
-                            t.IsActive,
-                            vt.Description,
-                            ad.City,
-                            ad.StateOrProvince,
-                            vc.ClassificationName,
-                            VendorCapabilityName = vca.capabilityDescription,
-                            VendorPhoneContact = t.VendorPhone + " - " + t.VendorPhoneExt,
-                            t.CreatedDate,
-                            TotalRecords = totalRecords,
+                            vendorId=t.VendorId,
+                            vendorName= t.VendorName,
+                            vendorCode=t.VendorCode,
+                            vendorEmail=t.VendorEmail,
+                            isActive=t.IsActive,
+                            description = vt.Description,
+                            city = ad.City,
+                            stateOrProvince = ad.StateOrProvince,
+                            classificationName=vc.ClassificationName,
+                            vendorCapabilityName = vca.capabilityDescription,
+                            vendorPhoneContact = t.VendorPhone + " - " + t.VendorPhoneExt,
+                            createdDate=t.CreatedDate,
+                            totalRecords = totalRecords,
                         }).Distinct()
-                          .OrderByDescending(p => p.CreatedDate)
-                          .Skip(skip)
-                          .Take(take)
-                          .ToList();
+                           .Paginate(pageNumber, pageSize, sorts, filters).Results;
 
-
-            if (vendorFilters.SortOrder.HasValue && !string.IsNullOrEmpty(vendorFilters.SortField))
-            {
-                if (vendorFilters.SortOrder.Value == -1)
-                {
-                    switch (vendorFilters.SortField)
-                    {
-                        case "VendorName":
-                            return list.OrderByDescending(p => p.VendorName).ToList();
-                        case "VendorCode":
-                            return list.OrderByDescending(p => p.VendorCode).ToList();
-                        case "Description":
-                            return list.OrderByDescending(p => p.Description).ToList();
-                        case "ClassificationName":
-                            return list.OrderByDescending(p => p.ClassificationName).ToList();
-                        case "VendorCapabilityName":
-                            return list.OrderByDescending(p => p.VendorCapabilityName).ToList();
-                        case "Status":
-                            return list.OrderByDescending(p => p.IsActive).ToList();
-                        case "VendorEmail":
-                            return list.OrderByDescending(p => p.VendorEmail).ToList();
-                        case "City":
-                            return list.OrderByDescending(p => p.City).ToList();
-                        case "StateOrProvince":
-                            return list.OrderByDescending(p => p.StateOrProvince).ToList();
-                        case "VendorPhoneContact":
-                            return list.OrderByDescending(p => p.VendorPhoneContact).ToList();
-
-                    }
-                }
-                else
-                {
-                    switch (vendorFilters.SortField)
-                    {
-                        case "VendorName":
-                            return list.OrderBy(p => p.VendorName).ToList();
-                        case "VendorCode":
-                            return list.OrderBy(p => p.VendorCode).ToList();
-                        case "Description":
-                            return list.OrderBy(p => p.Description).ToList();
-                        case "ClassificationName":
-                            return list.OrderBy(p => p.ClassificationName).ToList();
-                        case "VendorCapabilityName":
-                            return list.OrderBy(p => p.VendorCapabilityName).ToList();
-                        case "IsActive":
-                            return list.OrderBy(p => p.IsActive).ToList();
-                        case "VendorEmail":
-                            return list.OrderBy(p => p.VendorEmail).ToList();
-                        case "City":
-                            return list.OrderBy(p => p.City).ToList();
-                        case "StateOrProvince":
-                            return list.OrderBy(p => p.StateOrProvince).ToList();
-                        case "VendorPhoneContact":
-                            return list.OrderBy(p => p.VendorPhoneContact).ToList();
-
-                    }
-                }
-            }
             return list;
 
-
-
-            // return null;
+           
         }
 
         public IEnumerable<object> VendorGlobalSearch(string filterText, int pageNumber, int pageSize)

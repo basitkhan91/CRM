@@ -880,7 +880,7 @@ export class CustomerWorkEditComponent {
         this.allLocations = [];
         this.allShelfs = [];
         this.allBins = [];
-        this.sourcereceving.warehouseId = ''
+        this.sourcereceving.warehouseId = 0
         this.sourcereceving.locationId = 0;
         this.sourcereceving.shelfId = 0;
         this.sourcereceving.binId = 0;

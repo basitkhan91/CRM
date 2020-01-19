@@ -1,8 +1,6 @@
 ﻿using DAL.Common;
 using DAL.Models;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace DAL.Repositories.Interfaces
 {
@@ -98,8 +96,8 @@ namespace DAL.Repositories.Interfaces
 
         object GetWorkOrderQuoteDetails(long workOrderId);
 
-
-
+        IEnumerable<object> WorkOrderQuoteList(Filters<WOQuoteFilters> woQuoteFilters);
+        object WorkOrderQuoteView(long workOrderQuoteId);
 
 
         List<WorkOrderFreight> CreateWorkOrderFreight(List<WorkOrderFreight> workOrderFreight);

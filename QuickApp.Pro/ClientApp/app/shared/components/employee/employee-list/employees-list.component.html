@@ -140,6 +140,7 @@
                                                     <div class="table-responsive default-bg clear">
                                                         <div class="col-sm-4">
                                                             <p><span class="label"><b>First Name: </b></span><span class="value">{{allEmployeelist.firstName ? allEmployeelist.firstName : '-'}}</span></p>
+                                                            <p><span class="label"><b>Middle Name: </b></span><span class="value">{{allEmployeelist.middleName ? allEmployeelist.middleName : '-'}}</span></p>
                                                             <p><span class="label"><b>Last Name: </b></span><span class="value">{{allEmployeelist.lastName ? allEmployeelist.lastName : '-'}}</span></p>
                                                             <p><span class="label"><b>Employee Id: </b></span><span class="value">{{allEmployeelist.employeeId ? allEmployeelist.employeeId : '-'}}</span></p>
                                                             <p><span class="label"><b>Employee Id (per Payroll): </b></span><span class="value">{{allEmployeelist.employeeIdAsPerPayroll ? allEmployeelist.employeeIdAsPerPayroll : '-'}}</span></p>
@@ -180,12 +181,14 @@
                                                                 <span class="value">{{allEmployeelist.hourlyPay ? allEmployeelist.hourlyPay : '-'}}</span>
                                                             </p>   
                                                             <p><span class="label"><b>Currency: </b></span><span class="value">{{currencyName}}</span></p>
-                                                            <p><span class="label"><b>Leave: </b></span><span class="value">
+                                                            <p><span class="label"><b>Leave Type: </b></span><span class="value">
                                                                 <div *ngFor="let leave of leaveMapArray">
                                                                     <span class="value">{{leave.employeeLeaveTypeId}}</span>
                                                                 </div>
                                                             </span></p>
                                                             <p><span class="label"><b>Employee Certifying Staff?: </b></span><span class="value">{{allEmployeelist.employeeCertifyingStaff ? allEmployeelist.employeeCertifyingStaff : '-'}}</span></p>
+                                                            <!-- <p><span class="label"><b>Supervisor Name: </b></span><span class="value">{{allEmployeelist.employeeCertifyingStaff ? allEmployeelist.employeeCertifyingStaff : '-'}}</span></p> -->
+                                                            
                                                         </div>
                                                     </div>
                                                     </div>
@@ -280,7 +283,35 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>     
+                                    </div>    
+                                    
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step4">Management Structure</a> </h4>
+                                        </div>
+                                        <div id="step4" class="panel-collapse  collapse">
+                                            <div class="panel-body">
+                                                <div class="card">
+                                                    <div class="card-body">
+                                                        <div>
+                                                        <div class="table-responsive default-bg clear" *ngIf="selectedRoleNames">
+                                                            <div class="col-sm-6">
+                                                                <p><span class="label"><b>Roles : </b></span><span class="value">{{selectedRoleNames}}</span></p>
+                                                                <p><span class="label"><b>Memo </b></span><span class="value">{{empMemo}}</span></p>
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                                <p >
+                                                                    <app-tree-structure [gridData]="gridData"></app-tree-structure>
+                                                               </p>                                                                
+                                                            </div>
+                                                                                                                  
+                                                        </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -316,7 +347,7 @@
                                     <th>Start Date</th>
                                     <!-- <th>Company</th> -->
                                     <th>Pay Type</th>
-                                    <th>IsActive</th>
+                                    <th>Is Active</th>
                                     <th>Updated By</th>
                                     <th>Updated Time</th>
                                 </tr>

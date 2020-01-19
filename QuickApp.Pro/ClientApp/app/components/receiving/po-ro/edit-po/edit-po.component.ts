@@ -1104,7 +1104,7 @@ export class EditPoComponent implements OnInit {
             if (part.stockLine) {
 
                 var timeLife = [];
-                var stockLineToUpdate = part.stockLine.filter(x => x.isEnabled);
+                var stockLineToUpdate = part.stockLine;
                 var index = 1;
                 for (var stockLine of stockLineToUpdate) {
 
