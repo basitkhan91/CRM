@@ -236,7 +236,7 @@ export class AssetCalibrationComponent implements OnInit {
     }
     changeOfTab(value) {
         console.log('invoked');
-        console.log(`Parent master id ${this.AssetId}`);
+        console.log(`asset-calibration : master id ${this.AssetId}`);
         const { assetId } = this.AssetId;
         if (this.assetService.isEditMode == true) {
             if (value === 'General') {
@@ -326,6 +326,7 @@ export class AssetCalibrationComponent implements OnInit {
             }
             this.currentCalibration.updatedBy = this.userName;
             this.currentCalibration.masterCompanyId = 1;
+            console.log(this.currentCalibration);
             this.assetService.updateAsset(this.currentCalibration).subscribe(data => {
                 this.currentCalibration.updatedBy = this.userName;
                 this.localCollection = data;
