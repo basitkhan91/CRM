@@ -8,12 +8,8 @@ import { EndpointFactory } from './endpoint-factory.service';
 @Injectable()
 
 
-// module Types : 
-// Customer : 1
-// Vendor : 2 
-// Company or Legacy : 3 
 
-export class StageService {
+export class StageCodeService {
     baseUrl = this.configurations.baseUrl
     constructor(private http: HttpClient, private configurations: ConfigurationService, private authService: EndpointFactory) { }
 
@@ -22,9 +18,18 @@ export class StageService {
         return this.http.get<any>(`${this.baseUrl}/api/workOrderStage/workorderstagelist`, this.authService.getRequestHeaders())
 
     }
-    createShipVia(object) {
-        return this.http.post<any>(`${this.baseUrl}/api/Common/createshipvia`, JSON.stringify(object), this.authService.getRequestHeaders())
+    createWorkOrderStageCode(object) {
+        return this.http.post<any>(`${this.baseUrl}/api/workOrderStage/createworkorderstage`, JSON.stringify(object), this.authService.getRequestHeaders())
     }
-    
+    updateWorkOrderStageCode(object) {
+        return this.http.post<any>(`${this.baseUrl}/api/workOrderStage/updateworkorderstage`, JSON.stringify(object), this.authService.getRequestHeaders())
+    }
+    updateWorkOrderStageCodeStatus(workOrderStageId, status, updatedBy) {
+        return this.http.get<any>(`${this.baseUrl}/api/workOrderStage/updateworkorderstagestatus?workOrderStageId=${workOrderStageId}&status=${status}&updatedBy=${updatedBy}`, this.authService.getRequestHeaders())
+    }
+    deleteWorkOrderStageCode(workOrderStageId, updatedBy) {
+        return this.http.get<any>(`${this.baseUrl}/api/workOrderStage/deleteworkorderstage?workOrderStageId=${workOrderStageId}&updatedBy=${updatedBy}`, this.authService.getRequestHeaders())
+
+    }
 
 }

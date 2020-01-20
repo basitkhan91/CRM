@@ -7,7 +7,7 @@
                             <div class="inline-block display-flex">
                                 <h3 class="po-head lead">Stage Code</h3>
                                 &nbsp;&nbsp;
-                                <a class="plusicon-cstm new-margin" pTooltip="Add Tax Type" tooltipPosition="right" data-target="#add" data-toggle="modal" (click)="resetForm()">
+                                <a class="plusicon-cstm new-margin" pTooltip="Add Stage Code" tooltipPosition="right" data-target="#add" data-toggle="modal" (click)="resetForm()">
                                     <i class="fa fa-plus-circle fa-lg"></i>
                                 </a>
                             </div>
@@ -121,8 +121,8 @@
                 </div>
                 <div class="modal-body">
                     <strong>
-                        Tax Type:
-                        <span class="new-label">{{selectedRowforDelete.taxTypeName}}</span>
+                        Stage Code
+                        <span class="new-label">{{selectedRowforDelete.stage}}</span>
                     </strong>
                 </div>
                 <div class="modal-footer">
@@ -141,7 +141,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">{{isEdit ? 'Edit' : 'Add' }} Tax Rate   </h4>
+                    <h4 class="modal-title">{{isEdit ? 'Edit' : 'Add' }} Stage Code  </h4>
                 </div>
                 <div class="modal-body">
                     <form #create="ngForm">
@@ -150,33 +150,184 @@
                             <div class="col-sm-12">
                                 <div class="col-sm-4">
                                     <label for="description" class="control-label">
-                                        Tax Type
+                                        Stage Code
                                         <span class="clr-red">*</span>
                                     </label>
                                 </div>
                                 <div class="col-sm-5">
-                                        <p-autoComplete field="description" 
-                                                        [(ngModel)]="addNew.taxTypeId"
-                                                        name="taxTypeId"
-                                                        [suggestions]="filteredTaxType" (completeMethod)="filterTaxType($event)" 
-                                                        [forceSelection]="true" [size]="30" [minLength]="1"
-                                                        [dropdown]="true" class="p-autoComplete-ctsm" required>
-                                        </p-autoComplete>
+                                    <input type="text" name="code" class="form-control" #code="ngModel" [(ngModel)]="addNew.code" required>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-12">
+                                <div class="col-sm-4">
+                                    <label for="description" class="control-label">
+                                       Description
+                                    
+                                    </label>
+                                </div>
+                                <div class="col-sm-5">
+                                    <input type="text" name="stageDescription" class="form-control" #stageDescription="ngModel" [(ngModel)]="addNew.stage" required>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-12">
+                                <div class="col-sm-4">
+                                    <label for="description" class="control-label">
+                                     Sequence
+                                     <span class="clr-red">*</span>
+                                    </label>
+                                </div>
+                                <div class="col-sm-5">
+                                    <input type="number" name="sequence" class="form-control" #sequence="ngModel" [(ngModel)]="addNew.sequence" required>
                                 </div>
                             </div>
     
                             <div class="col-sm-12">
                                 <div class="col-sm-4">
                                     <label for="description" class="control-label">
-                                        Rate %
+                                       Status
                                         <span class="clr-red">*</span>
                                     </label>
                                 </div>
+                                <p-dropdown [options]="workOrderStatusList" name="workOrderStatus" #workOrderStatus="ngModel" placeholder="Select Status" 
+                                class="p-dropdown-custom-stagecode"
+                                [(ngModel)]="addNew.statusId" required>
+                                </p-dropdown>
+                            </div>
+
+
+
+                            <div class="col-sm-12">
+                                <div class="col-sm-4">
+                                    <label for="description" class="control-label">
+                                        Management Structure
+                                        <span class="clr-red">*</span>
+                                    </label>
+                                </div>
+                                <p-dropdown placeholder="Select Legal Entity"
+                                name="company"
+                                #wocompanyId="ngModel"
+                                required
+                                [options]="legalEntityList"
+                                class="p-dropdown-custom-stagecode"
+                                (onChange)="selectedLegalEntity($event.value)"
+                                [(ngModel)]="managementStructure.companyId">
+                                </p-dropdown>
+                                
+                                
+                            </div>
+
+
+                            <div class="col-sm-12">
+                                <div class="col-sm-4">
+          
+                                </div>
+                                <p-dropdown placeholder="Select "
+                                name="bu"
+                                #wobu="ngModel"
+                                [options]="businessUnitList"
+                                class="p-dropdown-custom-stagecode"
+                                (onChange)="selectedBusinessUnit($event.value)"
+                                [(ngModel)]="managementStructure.buId">
+                                 </p-dropdown>
+                                
+                                
+                            </div>
+
+                            <div class="col-sm-12">
+                                <div class="col-sm-4">
+          
+                                </div>
+                                <p-dropdown placeholder="Select "
+                                name="division"
+                                #wodivision="ngModel"
+                                [options]="divisionList"
+                                class="p-dropdown-custom-stagecode"
+                                (onChange)="selectedDivision($event.value)"
+                                [(ngModel)]="managementStructure.divisionId">
+                                </p-dropdown>
+                                
+                                
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="col-sm-4">
+          
+                                </div>
+                                <p-dropdown placeholder="Select "
+                                name="department"
+                                #wodepartment="ngModel"
+                                [options]="departmentList"
+                                class="p-dropdown-custom-stagecode"
+                                (onChange)="selectedDepartment($event.value)"
+                                [(ngModel)]="managementStructure.departmentId">
+                                </p-dropdown>
+                                
+                                
+                            </div>
+
+
+
+ 
+
+                            <!-- <div class="col-md-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="po-head-15f"> <span class="clr-red">*</span>  </h5>
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <p-dropdown placeholder="Select Legal Entity"
+                                                            name="company"
+                                                            #wocompanyId="ngModel"
+                                                            required
+                                                            [options]="legalEntityList"
+                                                            class="p-dropdown-custom-md-2"
+                                                            (onChange)="selectedLegalEntity($event.value)"
+                                                            [(ngModel)]="managementStructure.companyId">
+                                                </p-dropdown>
+                                            </div>
+                                            <div class="form-group">
+                                                <p-dropdown placeholder="Select "
+                                                            name="bu"
+                                                            #wobu="ngModel"
+                                                            [options]="businessUnitList"
+                                                            class="p-dropdown-custom-md-2"
+                                                            (onChange)="selectedBusinessUnit($event.value)"
+                                                            [(ngModel)]="managementStructure.buId">
+                                                </p-dropdown>
+                                            </div>
+                                            <div class="form-group">
+                                                <p-dropdown placeholder="Select "
+                                                            name="division"
+                                                            #wodivision="ngModel"
+                                                            [options]="divisionList"
+                                                            class="p-dropdown-custom-md-2"
+                                                            (onChange)="selectedDivision($event.value)"
+                                                            [(ngModel)]="managementStructure.divisionId">
+                                                </p-dropdown>
+                                            </div>
+                                            <div class="form-group">
+                                                <p-dropdown placeholder="Select "
+                                                            name="department"
+                                                            #wodepartment="ngModel"
+                                                            [options]="departmentList"
+                                                            class="p-dropdown-custom-md-2"
+                                                            (onChange)="selectedDepartment($event.value)"
+                                                            [(ngModel)]="managementStructure.departmentId">
+                                                </p-dropdown>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div> -->
+                            <div class="col-sm-12">
+                                <div class="col-sm-4">
+                                    <label for="description" class="control-label">Description</label>
+                                </div>
                                 <div class="col-sm-5">
-                                    <select name="residualPercentage" [(ngModel)]="addNew.taxRate">
-                                        <option value="">Select Rate</option>
-                                        <option *ngFor="let Percentlist of percentageList" [ngValue]="Percentlist">{{Percentlist.value}}</option>
-                                    </select>
+                                    <textarea class="text-item" #description="ngModel" name="description" 
+                                              [(ngModel)]="addNew.description" minlength="2"></textarea>
                                 </div>
                             </div>
     
@@ -185,24 +336,12 @@
                                     <label for="description" class="control-label">Memo</label>
                                 </div>
                                 <div class="col-sm-5">
-                                    <textarea class="text-item" #memo="ngModel" id="memo" name="memodescription" 
+                                    <textarea class="text-item" #memo="ngModel" name="memo" 
                                               [(ngModel)]="addNew.memo" minlength="2"></textarea>
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <div class="col-sm-6">
-                                <div class="checkbox-cstm">
-                                    <label>
-                                        <input type="checkbox" name="isActive" [(ngModel)]="addNew.isActive">
-                                        <span class="cr">
-                                            <i class="cr-icon pi pi-check"></i>
-                                        </span>
-                                        Active
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
+
     
                     </form>
                 </div>

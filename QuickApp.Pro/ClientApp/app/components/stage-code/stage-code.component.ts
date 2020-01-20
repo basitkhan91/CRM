@@ -6,13 +6,15 @@ import { AuthService } from "../../services/auth.service";
 import { AuditHistory } from '../../models/audithistory.model';
 import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
 import { StageCode } from "../../models/stage-code.model";
-import { StageCodeService } from "../../services/stage-code/stage-code.service";
 import { ModeOfOperation } from "../../models/ModeOfOperation.enum";
 import { Table } from "primeng/table";
 import { TaxRate } from "../../models/taxrate.model";
 import { CommonService } from "../../services/common.service";
 import { ConfigurationService } from "../../services/configuration.service";
-import { StageService } from '../../services/work-order-stagecode.service';
+import { StageCodeService } from '../../services/work-order-stagecode.service';
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from "rxjs";
+import { ManagementStructure } from "../../models/managementstructure.model";
 
 
 @Component({
@@ -35,8 +37,15 @@ export class StageCodeComponent implements OnInit {
     totalPages: number;
     currentModeOfOperation: ModeOfOperation;
     headers = [
-        { field: 'taxType', header: 'Tax Type' },
-        { field: 'taxRate', header: 'Tax Rate' },
+        { field: 'code', header: 'Stage Code' },
+        { field: 'stage', header: 'Stage Description' },
+        { field: 'description', header: 'Description' },
+        { field: 'sequence', header: 'Sequence' },
+        { field: 'status', header: 'Status' },
+        // {field: '', header: ''},
+        // {field: '', header: ''},
+        // {field: '', header: ''},
+        // {field: '', header: ''},
         { field: 'memo', header: 'Memo' },
     ]
     selectedColumns = this.headers;
@@ -65,20 +74,26 @@ export class StageCodeComponent implements OnInit {
     //     createdDate: "",
     //     updatedDate: "",
     // }
+    managementStructure = new ManagementStructure();
     addNew = new StageCode();
     selectedRecordForEdit: any;
     viewRowData: any;
     selectedRowforDelete: any;
-    // originalData: any;
     existingRecordsResponse = [];
-
+    workOrderStatusList: any;
+    private onDestroy$: Subject<void> = new Subject<void>();
+    legalEntityList: any;
+    businessUnitList: any;
+    divisionList: any;
+    departmentList: any;
     constructor(
         private breadCrumb: SingleScreenBreadcrumbService,
         private authService: AuthService,
         private modalService: NgbModal,
         private configurations: ConfigurationService,
-        private stageService: StageService,
-        private commonservice: CommonService) {
+        private stageService: StageCodeService,
+        private alertService: AlertService,
+        private commonService: CommonService) {
 
 
     }
@@ -92,7 +107,56 @@ export class StageCodeComponent implements OnInit {
         this.breadCrumb.currentUrl = '/singlepages/WorkOrder/StageCode';
         this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
         this.getList();
+        this.getAllWorkOrderStatus();
+        this.getLegalEntity();
 
+    }
+
+
+    getAllWorkOrderStatus(): void {
+        this.commonService.smartDropDownList('WorkOrderStatus', 'ID', 'Description').pipe(takeUntil(this.onDestroy$)).subscribe(res => {
+            this.workOrderStatusList = res.sort(function (a, b) { return a.value - b.value; });
+        })
+    }
+
+    getLegalEntity() {
+        this.commonService.getLegalEntityList().pipe(takeUntil(this.onDestroy$)).subscribe(res => {
+            this.legalEntityList = res;
+        })
+    }
+
+
+    selectedLegalEntity(legalEntityId) {
+        if (legalEntityId) {
+            this.addNew.managementStructureId = legalEntityId;
+            this.commonService.getBusinessUnitListByLegalEntityId(legalEntityId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
+                this.businessUnitList = res;
+            })
+        }
+
+    }
+    selectedBusinessUnit(businessUnitId) {
+        if (businessUnitId) {
+            this.addNew.managementStructureId = businessUnitId;
+            this.commonService.getDivisionListByBU(businessUnitId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
+                this.divisionList = res;
+            })
+        }
+
+    }
+    selectedDivision(divisionUnitId) {
+        if (divisionUnitId) {
+            this.addNew.managementStructureId = divisionUnitId;
+            this.commonService.getDepartmentListByDivisionId(divisionUnitId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
+                this.departmentList = res;
+            })
+        }
+
+    }
+    selectedDepartment(departmentId) {
+        if (departmentId) {
+            this.addNew.managementStructureId = departmentId;
+        }
     }
 
     get userName(): string {
@@ -108,22 +172,9 @@ export class StageCodeComponent implements OnInit {
         this.getList();
     }
 
-    getAllPercentage() {
-        this.commonservice.smartDropDownList('[Percent]', 'PercentId', 'PercentValue').subscribe(res => {
-
-            this.percentageList = res;
-        });
-
-    }
 
 
-    filterTaxType(event): void {
-        this.filteredTaxType = this.allTaxTypes;
-        const ASSETADATA = [...this.allTaxTypes.filter(x => {
-            return x.description.toLowerCase().includes(event.query.toLowerCase())
-        })]
-        this.filteredTaxType = ASSETADATA;
-    }
+
 
     customExcelUpload() {
 
@@ -136,98 +187,60 @@ export class StageCodeComponent implements OnInit {
 
     getList() {
         this.stageService.getWorkOrderStageList().subscribe(res => {
-            const responseData = res[0];
-            // this.uomHeaders = responseData.columHeaders;
-            // this.selectedColumns = responseData.columHeaders;
-            this.originalData = responseData.map(x => {
-                return {
-                    ...x,
-                    //taxType: getValueFromArrayOfObjectById('description', 'taxTypeId', x.taxTypeId, this.allTaxTypes)
-                }
-            });
-            console.log(this.originalData);
+            const responseData = res;
+            this.originalData = responseData;
             this.totalRecords = responseData.length;
             this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
         })
     }
     changePage(event: { first: any; rows: number }) {
-        //console.log(event);
-        // this.pageIndex = pageIndex;
         this.pageSize = event.rows;
         this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
     }
 
 
-    checkTaxTypeExists(field, value) {
-        //console.log('this.selectedRecordForEdit', this.selectedRecordForEdit);
-        // const exists = validateRecordExistsOrNot(field, value, this.originalData, this.selectedRecordForEdit);
-        //console.log(exists);
-        // if (exists.length > 0) {
-        //     this.disableSave = true;
-        // }
-        // else {
-        //     this.disableSave = false;
-        // }
 
-    }
 
-    selectedTaxType(object) {
-        //console.log('selectedTaxType', object);
-        // const exists = selectedValueValidate('description', object, this.selectedRecordForEdit)
 
-        // this.disableSave = !exists;
-    }
 
     save() {
-
         if (!this.isEdit) {
             const data = {
                 ...this.addNew, createdBy: this.userName, updatedBy: this.userName,
-                // taxTypeId: editValueAssignByCondition('taxTypeId', this.addNew.taxTypeId),
-                // taxRateId: editValueAssignByCondition('value', this.addNew.taxRate),
-                // taxRate: editValueAssignByCondition('value', this.addNew.taxRate),
                 masterCompanyId: 1,
-                // unitName: editValueAssignByCondition('description', this.addNew.unitName)
             };
-            //console.log('data', data);
-            // this.taxRateService.newTaxRate(data).subscribe(() => {
-            //     this.resetForm();
-            //     this.getList();
-            //     this.alertService.showMessage(
-            //         'Success',
-            //         `Added Tax Rate Successfully  `,
-            //         MessageSeverity.success
-            //     );
-            // });
+            this.stageService.createWorkOrderStageCode(data).subscribe(() => {
+                this.resetForm();
+                this.getList();
+                this.alertService.showMessage(
+                    'Success',
+                    `Added New Stage Successfully  `,
+                    MessageSeverity.success
+                );
+            });
         } else {
             const data = {
                 ...this.addNew, updatedBy: this.userName,
-                // taxTypeId: editValueAssignByCondition('taxTypeId', this.addNew.taxTypeId),
-                // //taxTypeId: editValueAssignByCondition('description', this.addNew.taxTypeId),
-                // taxRate: editValueAssignByCondition('value', this.addNew.taxRate),
                 masterCompanyId: 1,
             };
-            //console.log('data', data);
-            // this.taxRateService.updateTaxRate(data).subscribe(() => {
-            //     this.selectedRecordForEdit = undefined;
-            //     this.isEdit = false;
-            //     this.resetForm();
-            //     this.getList();
-            //     this.alertService.showMessage(
-            //         'Success',
-            //         `Updated Tax Rate Successfully  `,
-            //         MessageSeverity.success
-            //     );
-            // })
+            this.stageService.updateWorkOrderStageCode(data).subscribe(() => {
+                this.selectedRecordForEdit = undefined;
+                this.isEdit = false;
+                this.resetForm();
+                this.getList();
+                this.alertService.showMessage(
+                    'Success',
+                    `Updated Tax Rate Successfully  `,
+                    MessageSeverity.success
+                );
+            })
         }
     }
 
     resetForm() {
         this.isEdit = false;
+        this.managementStructure = new ManagementStructure();
         this.selectedRecordForEdit = undefined;
-
-        // this.addNew = new TaxRate();
-        // this.addNew.isActive = true;
     }
 
 
@@ -235,53 +248,50 @@ export class StageCodeComponent implements OnInit {
         console.log('rowData', rowData);
         this.isEdit = true;
         this.disableSave = false;
-        //console.log(this.getTaxTypeId(rowData.taxTypeId));
         this.addNew = {
             ...rowData,
-            //taxTypeId: getObjectById('taxTypeId', this.getTaxTypeId(rowData.taxTypeId), this.allTaxTypes),
-            // taxTypeId: getObjectById('taxTypeId', rowData.taxTypeId, this.allTaxTypes),
-            // taxRate: getObjectById('value', rowData.taxRate, this.percentageList),
         };
         this.addNew = {
             ...this.addNew
         };
-        console.log('addNew', this.addNew);
+        if (this.addNew.managementStructureId !== null) {
+            this.commonService.getManagementStructureDetails(this.addNew.managementStructureId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
+                this.selectedLegalEntity(res.Level1);
+                this.selectedBusinessUnit(res.Level2);
+                this.selectedDivision(res.Level3);
+                this.selectedDepartment(res.Level4);
+                this.managementStructure = {
+                    companyId: res.Level1 !== undefined ? res.Level1 : null,
+                    buId: res.Level2 !== undefined ? res.Level2 : null,
+                    divisionId: res.Level3 !== undefined ? res.Level3 : null,
+                    departmentId: res.Level4 !== undefined ? res.Level4 : null,
+                }
+
+            })
+        }
+
         this.selectedRecordForEdit = { ...this.addNew }
 
     }
 
-    // getTaxTypeId(value) {
-    //     //console.log(value);
-    //     for (let i = 0; i < this.allTaxTypes.length; i++) {
-    //         let description = this.allTaxTypes[i].description;
-    //         let taxTypeId = this.allTaxTypes[i].taxTypeId;
-    //         //console.log(description,value);
-    //         if (description.toLowerCase() == value.toLowerCase()) {
-    //             return taxTypeId.toString();
-    //         }
-    //     }
-    //     return '0';
-    // }
 
     changeStatus(rowData) {
-        //console.log(rowData);
-        const data = { ...rowData }
-        // this.taxRateService.updateTaxRate(data).subscribe(() => {
-        //     // this.getUOMList();
-        //     this.alertService.showMessage(
-        //         'Success',
-        //         `Updated Status Successfully  `,
-        //         MessageSeverity.success
-        //     );
-        // })
+        const { workOrderStageId } = rowData;
+        const { isActive } = rowData;
+        this.stageService.updateWorkOrderStageCodeStatus(workOrderStageId, isActive, this.userName).subscribe(() => {
+            this.getList();
+            this.alertService.showMessage(
+                'Success',
+                `Updated Status Successfully  `,
+                MessageSeverity.success
+            );
+        })
 
     }
     viewSelectedRow(rowData) {
-        //console.log(rowData);
         let data =
         {
             ...rowData,
-            //taxTypeName: editValueAssignByCondition('description', rowData.taxTypeId),
         };
         this.viewRowData = data;
     }
@@ -291,20 +301,19 @@ export class StageCodeComponent implements OnInit {
     delete(rowData) {
         this.selectedRowforDelete = {
             ...rowData,
-            // taxTypeName: editValueAssignByCondition('description', this.addNew.taxTypeId),
         };
 
     }
     deleteConformation(value) {
         if (value === 'Yes') {
-            // this.taxRateService.deleteTaxRate(this.selectedRowforDelete.taxRateId).subscribe(() => {
-            //     this.getList();
-            //     this.alertService.showMessage(
-            //         'Success',
-            //         `Deleted Tax Rate Successfully`,
-            //         MessageSeverity.success
-            //     );
-            // })
+            this.stageService.deleteWorkOrderStageCode(this.selectedRowforDelete.workOrderStageId, this.userName).subscribe(() => {
+                this.getList();
+                this.alertService.showMessage(
+                    'Success',
+                    `Deleted Work Order Stage Code Successfully`,
+                    MessageSeverity.success
+                );
+            })
         } else {
             this.selectedRowforDelete = undefined;
         }
