@@ -234,7 +234,7 @@ namespace QuickApp.Pro.Controllers
 
                             if (!string.IsNullOrEmpty(stockLine.SerialNumber))
                             {
-                                var isSerialExist = unitOfWork.Repository<StockLineDraft>().Find(x => x.ItemMasterId == stockLine.ItemMasterId && x.ManufacturerId == stockLine.ManufacturerId && x.SerialNumber == stockLine.SerialNumber).FirstOrDefault();
+                                var isSerialExist = unitOfWork.Repository<StockLine>().Find(x => x.ItemMasterId == stockLine.ItemMasterId && x.ManufacturerId == stockLine.ManufacturerId && x.SerialNumber == stockLine.SerialNumber).FirstOrDefault();
                                 if (isSerialExist != null)
                                 {
                                     return BadRequest(new Exception("Serial Number - " + stockLine.SerialNumber + " at page - " + (index + 1) + " already exists."));
@@ -300,8 +300,6 @@ namespace QuickApp.Pro.Controllers
                     }
                     unitOfWork.SaveChanges();
 
-                    //TODO : this needs to be called when the final screen summary page save is clicked.
-                    //setPurchaseOrderStatus(purchaseOrderId);
                 }
                 else
                 {
@@ -413,6 +411,7 @@ namespace QuickApp.Pro.Controllers
             try
             {
                 unitOfWork.PartStockLineMapper.CreateStockLine(purchaseOrderId);
+                setPurchaseOrderStatus(purchaseOrderId);
                 return Ok();
             }
             catch (Exception ex)
