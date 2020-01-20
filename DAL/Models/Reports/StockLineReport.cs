@@ -12,7 +12,7 @@ namespace DAL.Models
         public string StocklineNumber { get; set; }
         public string Condition { get; set; }
         public string VendorName { get; set; }
-        public long VendorCode { get; set; }
+        public string VendorCode { get; set; }
         public int? Quantity { get; set; }
         public int? QtyAdjusted { get; set; }
         public decimal? POUnitCost { get; set; }
