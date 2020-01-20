@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DAL.Models;
 using DAL.Repositories.Interfaces;
 
 namespace DAL.Repositories
@@ -13,6 +14,10 @@ namespace DAL.Repositories
         private static long[] accessedManagementStructureId = { 0 };
         private List<long> ManagementStructureIds = new List<long>();
         private static Dictionary<string, string> keyValues = new Dictionary<string, string>();
+        private string UserName
+        {
+            get { return "admin"; }
+        }
         #endregion Private Members
 
         #region Public Methods
@@ -199,9 +204,9 @@ namespace DAL.Repositories
                              DiscountPerUnit = part.DiscountPerUnit,
                              ExtendedCost = part.ExtendedCost,
                              UnitCost = part.UnitCost,
-                             StockLine = _appContext.StockLine.Where(x => x.RepairOrderId == repairOrderId && x.RepairOrderPartRecordId == part.RepairOrderPartRecordId).Select(SL => new
+                             StockLine = _appContext.StockLineDraft.Where(x => x.RepairOrderId == repairOrderId && x.RepairOrderPartRecordId == part.RepairOrderPartRecordId).Select(SL => new
                              {
-                                 StockLineId = SL.StockLineId,
+                                 StockLineId = SL.StockLineDraftId,
                                  StockLineNumber = SL.StockLineNumber,
                                  ControlNumber = SL.ControlNumber,
                                  IdNumber = SL.IdNumber,
@@ -313,14 +318,14 @@ namespace DAL.Repositories
                              PartDescription = itm.PartDescription,
                              QuantityToRepair = part.QuantityOrdered,
                              DiscountPerUnit = part.DiscountPerUnit,
-                             StockLineCount = _appContext.StockLine.Count(x => x.RepairOrderId == repairOrderId && x.RepairOrderPartRecordId == part.RepairOrderPartRecordId),
+                             StockLineCount = _appContext.StockLineDraft.Count(x => x.RepairOrderId == repairOrderId && x.RepairOrderPartRecordId == part.RepairOrderPartRecordId),
                              RoPartSplitUserName = emp != null ? emp.FirstName + " " + emp.LastName : "",
                              UomText = uom != null ? uom.ShortName : "",
-                             StockLine = _appContext.StockLine.Where(x => x.RepairOrderId == repairOrderId && x.RepairOrderPartRecordId == part.RepairOrderPartRecordId).Select(SL => new
+                             StockLine = _appContext.StockLineDraft.Where(x => x.RepairOrderId == repairOrderId && x.RepairOrderPartRecordId == part.RepairOrderPartRecordId).Select(SL => new
                              {
                                  RepairOrderId = SL.RepairOrderId,
                                  RepairOrderPartRecordId = SL.RepairOrderPartRecordId,
-                                 StockLineId = SL.StockLineId,
+                                 StockLineId = SL.StockLineDraftId,
                                  StockLineNumber = SL.StockLineNumber,
                                  ControlNumber = SL.ControlNumber,
                                  IdNumber = SL.IdNumber,
@@ -392,6 +397,30 @@ namespace DAL.Repositories
 
             return parts;
 
+        }
+
+        public void CreateStockLine(long repaireOrderId)
+        {
+            var draftedStockLines = _appContext.StockLineDraft.Where(x => x.RepairOrderId == repaireOrderId).OrderBy(x => x.StockLineDraftId).ToList();
+
+            foreach (var dstl in draftedStockLines)
+            {
+                dstl.TimeLifeDraft = _appContext.TimeLifeDraft.Where(x => x.StockLineDraftId == dstl.StockLineDraftId).FirstOrDefault();
+                var stockLine = ConvertStockLineFromDraft(dstl);
+                _appContext.StockLine.Add(stockLine);
+                _appContext.SaveChanges();
+
+                if (dstl.TimeLifeDraft != null)
+                {
+                    var timelife = ConvertTimeLifeFromDraft(dstl.TimeLifeDraft);
+                    timelife.StockLineId = stockLine.StockLineId;
+                    _appContext.TimeLife.Add(timelife);
+                    _appContext.TimeLifeDraft.Remove(dstl.TimeLifeDraft);
+                }
+
+                _appContext.StockLineDraft.Remove(dstl);
+                _appContext.SaveChanges();
+            }
         }
 
         #endregion Public Methods
@@ -487,7 +516,6 @@ namespace DAL.Repositories
             return "";
         }
 
-
         private string GetShippViaText(long? shippViaId)
         {
             if (shippViaId != null)
@@ -521,6 +549,139 @@ namespace DAL.Repositories
             }
             return returnValue;
         }
+
+        private StockLine ConvertStockLineFromDraft(StockLineDraft draftedStockLine)
+        {
+            return new StockLine()
+            {
+                PartNumber = draftedStockLine.PartNumber,
+                StockLineNumber = draftedStockLine.StockLineNumber,
+                StocklineMatchKey = draftedStockLine.StocklineMatchKey,
+                ControlNumber = draftedStockLine.ControlNumber,
+                ItemMasterId = draftedStockLine.ItemMasterId,
+                Quantity = draftedStockLine.Quantity,
+                BlackListed = draftedStockLine.BlackListed,
+                BlackListedReason = draftedStockLine.BlackListedReason,
+                Incident = draftedStockLine.Incident,
+                IncidentReason = draftedStockLine.IncidentReason,
+                Accident = draftedStockLine.Accident,
+                AccidentReason = draftedStockLine.AccidentReason,
+                QuantityOnOrder = draftedStockLine.QuantityOnOrder,
+                QuantityAvailable = draftedStockLine.QuantityAvailable,
+                QuantityOnHand = draftedStockLine.QuantityOnHand,
+                QuantityIssued = draftedStockLine.QuantityIssued,
+                QuantityTurnIn = draftedStockLine.QuantityTurnIn,
+                QuantityReserved = draftedStockLine.QuantityReserved,
+                WorkOrderMaterialsId = draftedStockLine.WorkOrderMaterialsId,
+                WorkOrderId = draftedStockLine.WorkOrderId,
+                ConditionId = draftedStockLine.ConditionId,
+                SerialNumber = draftedStockLine.SerialNumber,
+                ShelfLife = draftedStockLine.ShelfLife,
+                ShelfLifeExpirationDate = draftedStockLine.ShelfLifeExpirationDate,
+                WarehouseId = draftedStockLine.WarehouseId,
+                LocationId = draftedStockLine.LocationId,
+                ObtainFrom = draftedStockLine.ObtainFrom,
+                Owner = draftedStockLine.Owner,
+                TraceableTo = draftedStockLine.TraceableTo,
+                ManufacturerId = draftedStockLine.ManufacturerId,
+                Manufacturer = draftedStockLine.Manufacturer,
+                ManufacturerLotNumber = draftedStockLine.ManufacturerLotNumber,
+                ManufacturingDate = draftedStockLine.ManufacturingDate,
+                ManufacturingBatchNumber = draftedStockLine.ManufacturingBatchNumber,
+                PartCertificationNumber = draftedStockLine.PartCertificationNumber,
+                CertifiedBy = draftedStockLine.CertifiedBy,
+                CertifiedDate = draftedStockLine.CertifiedDate,
+                TagDate = draftedStockLine.TagDate,
+                TagType = draftedStockLine.TagType,
+                CertifiedDueDate = draftedStockLine.CertifiedDueDate,
+                CalibrationMemo = draftedStockLine.CalibrationMemo,
+                OrderDate = draftedStockLine.OrderDate,
+                PurchaseOrderId = draftedStockLine.PurchaseOrderId,
+                PurchaseOrderUnitCost = draftedStockLine.PurchaseOrderUnitCost,
+                InventoryUnitCost = draftedStockLine.InventoryUnitCost,
+                RepairOrderId = draftedStockLine.RepairOrderId,
+                RepairOrderUnitCost = draftedStockLine.RepairOrderUnitCost,
+                RepairOrderExtendedCost = draftedStockLine.RepairOrderExtendedCost,
+                ReceivedDate = draftedStockLine.ReceivedDate,
+                ReceiverNumber = draftedStockLine.ReceiverNumber,
+                ReconciliationNumber = draftedStockLine.ReconciliationNumber,
+                UnitSalesPrice = draftedStockLine.UnitSalesPrice,
+                CoreUnitCost = draftedStockLine.CoreUnitCost,
+                GLAccountId = draftedStockLine.GLAccountId,
+                AssetId = draftedStockLine.AssetId,
+                IsHazardousMaterial = draftedStockLine.IsHazardousMaterial,
+                IsPMA = draftedStockLine.IsPMA,
+                IsDER = draftedStockLine.IsDER,
+                OEM = draftedStockLine.OEM,
+                Memo = draftedStockLine.Memo,
+                ManagementStructureEntityId = draftedStockLine.ManagementStructureEntityId,
+                LegalEntityId = draftedStockLine.LegalEntityId,
+                MasterCompanyId = draftedStockLine.MasterCompanyId,
+                IsSerialized = draftedStockLine.IsSerialized,
+                ShelfId = draftedStockLine.ShelfId,
+                BinId = draftedStockLine.BinId,
+                SiteId = draftedStockLine.SiteId,
+                ObtainFromType = draftedStockLine.ObtainFromType,
+                OwnerType = draftedStockLine.OwnerType,
+                TraceableToType = draftedStockLine.TraceableToType,
+                UnitCostAdjustmentReasonTypeId = draftedStockLine.UnitCostAdjustmentReasonTypeId,
+                UnitSalePriceAdjustmentReasonTypeId = draftedStockLine.UnitSalePriceAdjustmentReasonTypeId,
+                IdNumber = draftedStockLine.IdNumber,
+                QuantityToReceive = draftedStockLine.QuantityToReceive,
+                ExpirationDate = draftedStockLine.ExpirationDate,
+                ManufacturingTrace = draftedStockLine.ManufacturingTrace,
+                PurchaseOrderExtendedCost = draftedStockLine.PurchaseOrderExtendedCost,
+                AircraftTailNumber = draftedStockLine.AircraftTailNumber,
+                ShippingViaId = draftedStockLine.ShippingViaId,
+                EngineSerialNumber = draftedStockLine.EngineSerialNumber,
+                QuantityRejected = draftedStockLine.QuantityRejected,
+                PurchaseOrderPartRecordId = draftedStockLine.PurchaseOrderPartRecordId,
+                ShippingAccount = draftedStockLine.ShippingAccount,
+                ShippingReference = draftedStockLine.ShippingReference,
+                TimeLifeCyclesId = draftedStockLine.TimeLifeCyclesId,
+                TimeLifeDetailsNotProvided = draftedStockLine.TimeLifeDetailsNotProvided,
+                RepairOrderPartRecordId = draftedStockLine.RepairOrderPartRecordId,
+                isActive = draftedStockLine.isActive,
+                IsDeleted = draftedStockLine.IsDeleted,
+                WorkOrderExtendedCost = draftedStockLine.WorkOrderExtendedCost,
+                CreatedBy = UserName,
+                UpdatedBy = UserName,
+                UpdatedDate = DateTime.Now,
+                CreatedDate = DateTime.Now
+            };
+        }
+
+        private TimeLife ConvertTimeLifeFromDraft(TimeLifeDraft draftedTimeLife)
+        {
+            return new TimeLife()
+            {
+                CyclesRemaining = draftedTimeLife.CyclesRemaining,
+                CyclesSinceNew = draftedTimeLife.CyclesSinceNew,
+                CyclesSinceOVH = draftedTimeLife.CyclesSinceOVH,
+                CyclesSinceInspection = draftedTimeLife.CyclesSinceInspection,
+                CyclesSinceRepair = draftedTimeLife.CyclesSinceRepair,
+                TimeRemaining = draftedTimeLife.TimeRemaining,
+                TimeSinceNew = draftedTimeLife.TimeSinceNew,
+                TimeSinceOVH = draftedTimeLife.TimeSinceOVH,
+                TimeSinceInspection = draftedTimeLife.TimeSinceInspection,
+                TimeSinceRepair = draftedTimeLife.TimeSinceRepair,
+                LastSinceNew = draftedTimeLife.LastSinceNew,
+                LastSinceOVH = draftedTimeLife.LastSinceOVH,
+                LastSinceInspection = draftedTimeLife.LastSinceInspection,
+                MasterCompanyId = draftedTimeLife.MasterCompanyId,
+                IsActive = draftedTimeLife.IsActive,
+                DetailsNotProvided = draftedTimeLife.DetailsNotProvided,
+                PurchaseOrderId = draftedTimeLife.PurchaseOrderId,
+                PurchaseOrderPartRecordId = draftedTimeLife.PurchaseOrderPartRecordId,
+                RepairOrderId = draftedTimeLife.RepairOrderId,
+                RepairOrderPartRecordId = draftedTimeLife.RepairOrderPartRecordId,
+                CreatedBy = UserName,
+                UpdatedBy = UserName,
+                UpdatedDate = DateTime.Now,
+                CreatedDate = DateTime.Now
+            };
+        }
+
 
 
         #endregion Private Methods
