@@ -79,7 +79,7 @@ namespace DAL.Repositories
                                 CreatedDate = stage.CreatedDate,
                                 Description = stage.Description,
                                 IsActive = stage.IsActive,
-                                ManagementStrId = stage.ManagementStructureId,
+								ManagementStructureId = stage.ManagementStructureId,
                                 Memo = stage.Memo,
                                 Sequence = stage.Sequence,
                                 Stage = stage.Stage,
@@ -105,7 +105,7 @@ namespace DAL.Repositories
                         level3 = string.Empty;
                         level4 = string.Empty;
 
-                        var mngInfoList = GetManagementStructureCodes(item.ManagementStrId);
+                        var mngInfoList = GetManagementStructureCodes(item.ManagementStructureId);
                         if (mngInfoList != null && mngInfoList.Count > 0)
                         {
                             if (mngInfoList.Any(p => p.Level1 == "Level1"))
@@ -262,7 +262,7 @@ namespace DAL.Repositories
         private List<MangStructureInfo> GetManagementStructureCodes(long manmgStrucId)
         {
             List<MangStructureInfo> mngInfoList = new List<MangStructureInfo>();
-            MangStructureInfo mangStructureInfo = null;
+            MangStructureInfo mangStructureInfo = new MangStructureInfo();
             ManagementStructure level4 = null;
             ManagementStructure level3 = null;
             ManagementStructure level2 = null;
@@ -287,7 +287,7 @@ namespace DAL.Repositories
 
                 if (level4 != null && level3 != null && level2 != null && level1 != null)
                 {
-                    mangStructureInfo = new MangStructureInfo();
+                    
 
                     mangStructureInfo.Level1 = "Level1";
                     mangStructureInfo.LevelCode1 = level1.Code;
@@ -310,37 +310,37 @@ namespace DAL.Repositories
                 }
                 else if (level4 != null && level2 != null && level3 != null)
                 {
-                    mangStructureInfo.Level1 = "Level1";
-                    mangStructureInfo.LevelCode1 = level1.Code;
-                    mangStructureInfo.LevelId1 = level1.ManagementStructureId;
+                    mangStructureInfo.Level3 = "Level3";
+                    mangStructureInfo.LevelCode3 = level4.Code;
+                    mangStructureInfo.LevelId3 = level4.ManagementStructureId;
 
                     mangStructureInfo.Level2 = "Level2";
-                    mangStructureInfo.LevelCode2 = level2.Code;
-                    mangStructureInfo.LevelId2 = level2.ManagementStructureId;
+                    mangStructureInfo.LevelCode2 = level3.Code;
+                    mangStructureInfo.LevelId2 = level3.ManagementStructureId;
 
-                    mangStructureInfo.Level3 = "Level3";
-                    mangStructureInfo.LevelCode3 = level3.Code;
-                    mangStructureInfo.LevelId3 = level3.ManagementStructureId;
+                    mangStructureInfo.Level1 = "Level1";
+                    mangStructureInfo.LevelCode1 = level2.Code;
+                    mangStructureInfo.LevelId1 = level2.ManagementStructureId;
 
                     mngInfoList.Add(mangStructureInfo);
                 }
                 else if (level4 != null && level3 != null)
                 {
-                    mangStructureInfo.Level1 = "Level1";
-                    mangStructureInfo.LevelCode1 = level1.Code;
-                    mangStructureInfo.LevelId1 = level1.ManagementStructureId;
-
                     mangStructureInfo.Level2 = "Level2";
-                    mangStructureInfo.LevelCode2 = level2.Code;
-                    mangStructureInfo.LevelId2 = level2.ManagementStructureId;
+                    mangStructureInfo.LevelCode2 = level4.Code;
+                    mangStructureInfo.LevelId2 = level4.ManagementStructureId;
+
+                    mangStructureInfo.Level1 = "Level1";
+                    mangStructureInfo.LevelCode1 = level3.Code;
+                    mangStructureInfo.LevelId1 = level3.ManagementStructureId;
 
                     mngInfoList.Add(mangStructureInfo);
                 }
                 else if (level4 != null)
                 {
                     mangStructureInfo.Level1 = "Level1";
-                    mangStructureInfo.LevelCode1 = level1.Code;
-                    mangStructureInfo.LevelId1 = level1.ManagementStructureId;
+                    mangStructureInfo.LevelCode1 = level4.Code;
+                    mangStructureInfo.LevelId1 = level4.ManagementStructureId;
 
                     mngInfoList.Add(mangStructureInfo);
                 }

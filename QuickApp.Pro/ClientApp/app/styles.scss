@@ -13933,8 +13933,11 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
 .p-dropdown-custom-sm .ui-dropdown {
     width: 122px !important;
 }
-.p-dropdown-custom-sm .ui-dropdown-trigger {
+.p-dropdown-custom-sm .ui-dropdown-trigger, .p-dropdown-custom-stagecode .ui-dropdown-trigger {
     background-color: #ffffff !important;
+}
+.p-dropdown-custom-stagecode .ui-dropdown {
+    width: 190px !important;
 }
 .pas-table-cstm tr th {
     padding: 8px 4px !important;
