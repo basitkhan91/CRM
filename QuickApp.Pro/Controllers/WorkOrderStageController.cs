@@ -75,10 +75,10 @@ namespace QuickApp.Pro.Controllers
             return Ok(ModelState);
         }
 
-        [HttpPost("workorderstagelist")]
-        public IActionResult WorkOrderStageList([FromBody]Filters<WorkOrderStageFilters> woFilters)
+        [HttpGet("workorderstagelist")]
+        public IActionResult WorkOrderStageList()
         {
-            var result = unitOfWork.WorkOrderStageRepository.WorkOrderStageList(woFilters);
+            var result = unitOfWork.WorkOrderStageRepository.WorkOrderStageList();
             return Ok(result);
         }
 
