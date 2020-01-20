@@ -50,4 +50,11 @@ export class UserRoleService {
         return this.userRoleEndpoint.assignRolesToUser<UserRoleMapper[]>(userRoleMapper);
     }
 
+    getGlobalData(masterCompanyId: number) 
+    {
+        return Observable.forkJoin(
+            this.userRoleEndpoint.getSavedCountryDataEndPoint<any>(masterCompanyId));
+        // return this.accountEndpoint.getSavedCountryDataEndPoint<any>(masterCompanyId);
+    }
+
 }

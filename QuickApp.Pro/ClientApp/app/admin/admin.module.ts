@@ -27,6 +27,8 @@ import { AutoCompleteModule } from "primeng/autocomplete";
 import { BreadcrumbModule } from 'primeng/breadcrumb'; //bread crumb
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import {DropdownModule} from 'primeng/dropdown';
+import { AccountService } from "../services/account.service";
+import { GlAccountEndpointService } from "../services/glAccount/glAccount-endpoint.service";
 
 
 @NgModule({
@@ -54,6 +56,10 @@ import {DropdownModule} from 'primeng/dropdown';
         UserListComponent,
         EditUserDialogComponent,
         GlobalSettingsComponent
+    ],
+    providers: [
+        GlAccountEndpointService,
+        AccountService
     ],
     entryComponents: [
         EditUserDialogComponent,

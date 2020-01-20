@@ -54,3 +54,6 @@ a.fa.fa-plus-circle {
         margin-right: 15px;
     }
 }
+:host /deep/ .ui-autocomplete{
+    padding: 0px !important 
+}

@@ -16,6 +16,7 @@ export class UserRoleEndPointService extends EndpointFactory {
     private readonly getAllUserRolesURL: string = "api/userrolepermission/getAllUserRole";
     private readonly assignRoleToUserURL: string = "api/userrolepermission/assignRoleToUser";
     private readonly getUserRolesByUserIdURL: string = "api/userrolepermission/getUserRolesByUserId";
+    private readonly getSavedCountryDataURL: string = "api/globalsettings/globalsettings?masterCompanyId="
     
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
         super(http, configurations, injector);
@@ -67,6 +68,12 @@ export class UserRoleEndPointService extends EndpointFactory {
         let endpointUrl = `${this.getUserRolesByUserIdURL}/${userId}`;
         return this.http.get<T>(endpointUrl, this.getRequestHeaders()).catch(error => {
             return this.handleError(error, () => this.getUserRolesByUserId(userId));
+        });
+    }
+    getSavedCountryDataEndPoint<T>(masterCompanyId: number): Observable<T> {
+        let endpointUrl = `${this.getSavedCountryDataURL}${masterCompanyId}`;
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders()).catch(error => {
+            return this.handleError(error, () => this.getSavedCountryDataEndPoint(masterCompanyId));
         });
     }
 
