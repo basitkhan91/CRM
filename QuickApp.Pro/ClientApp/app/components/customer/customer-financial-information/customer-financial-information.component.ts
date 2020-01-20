@@ -18,6 +18,8 @@ import { NgbModal, NgbActiveModal, ModalDismissReasons } from '@ng-bootstrap/ng-
 import { ConfigurationService } from '../../../services/configuration.service';
 import { getValueFromObjectByKey, getObjectByValue, getObjectById, selectedValueValidate } from '../../../generic/autocomplete';
 import { Pipe, PipeTransform } from '@angular/core';
+import { DBkeys } from '../../../services/db-Keys';
+import { LocalStoreManager } from '../../../services/local-store-manager.service';
 @Component({
     selector: 'app-customer-financial-information',
     templateUrl: './customer-financial-information.component.html',
@@ -118,6 +120,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
         { field: "taxType", header: "Tax Type" },
         { field: "taxRate", header: "Tax Rate" },
     ];
+    globalSettings: any = {};
  
     constructor(public taxtypeser: TaxTypeService, public creditTermsService: CreditTermsService,
         public currencyService: CurrencyService,
@@ -131,7 +134,8 @@ export class CustomerFinancialInformationComponent implements OnInit {
         public percentService: PercentService,
         private modalService: NgbModal, private activeModal: NgbActiveModal,
         private configurations: ConfigurationService,
-        public creditTermService: CreditTermsService
+        public creditTermService: CreditTermsService,
+        private localStorage: LocalStoreManager,
       
 
     ) {
@@ -181,12 +185,17 @@ export class CustomerFinancialInformationComponent implements OnInit {
         this.getTaxRates();
         this.getAllDiscountList1();
         this.getAllTaxRates();
+        this.getGlobalSettings();
     
     }
 
 
     get userName(): string {
         return this.authService.currentUser ? this.authService.currentUser.userName : "";
+    }
+
+    getGlobalSettings(){
+        this.globalSettings = this.localStorage.getDataObject<any>(DBkeys.GLOBAL_SETTINGS);
     }
 
   
@@ -758,6 +767,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
     dismissModel() {
         this.modal.close();
     }
+    
    
 
   
