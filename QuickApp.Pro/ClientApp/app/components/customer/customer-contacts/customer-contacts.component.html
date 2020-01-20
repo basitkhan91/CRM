@@ -1,7 +1,7 @@
 ﻿<div class="right_col" role="main">
     <div>
         <div class="x_content">
-            <div class="col-md-12 tab-header-cstm">        
+            <div class="col-md-12 shadow-box-cstm">        
                 <div class="col-md-4">
                     <p class="fs12">
                     <label class="control-label labels-font-header" style="width: auto;">Customer Name: </label>
@@ -13,8 +13,8 @@
                     <span class="span-header-red" style="text-transform: capitalize"> {{customerCode }} </span> </p>
                 </div>                            
             </div>
-            <div class="clear"></div>
-            <hr />
+            <!-- <div class="clear"></div>
+            <hr /> -->
             <!-- <div class="form-group col-sm-4 Customer-details-heading" style="display: inline-block;margin: 10px 5px 0 5px;">
                 <p class="fs10">
                     <label class="control-label w100">Customer Name:</label>
@@ -28,26 +28,26 @@
                 </p>
             </div> -->
 
-            <div class="table-responsive">
+            <div class="card" style="padding: 10px;">
                 <div>
                     <div class="col-md-12">
                         <h4 class="po-head-sm"> <!--class="float-right"-->
-                                Contacts
-                                <a class="plusicon-cstm"
-                                  href="#"
-                                  data-toggle="modal" matTooltip="Add Contact" matTooltipPosition="above"
-                                  data-target="#addContactDetails" 
-                                  ><i class="fa fa-plus-circle fa-lg" (click)="onAddContactInfo()"></i
-                                ></a>
-                              </h4>
+                            Contacts
+                            <a class="plusicon-cstm"
+                                href="#"
+                                data-toggle="modal" matTooltip="Add Contact" matTooltipPosition="above"
+                                data-target="#addContactDetails" 
+                                ><i class="fa fa-plus-circle fa-lg" (click)="onAddContactInfo()"></i
+                            ></a>
+                        </h4>
                     </div>
                     <div class="clear"></div>
-                    <!-- <hr /> -->
+                    <hr />
                 </div>
                 <!-- class="rpo-table-cstm rro-table-cstm" -->
-                <p-table #dt  class="rpo-table-cstm rro-table-cstm tab-table-cstm" [value]="customerContacts" [metaKeySelection]="true" [rows]="10" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[10,50,100]" [columns]="selectedColumns" selectionMode="multiple" [resizableColumns]="true" [reorderableColumns]="true">
+                <p-table #dt  class="rpo-table-cstm rro-table-cstm tab-table-cstm" [value]="customerContacts" [metaKeySelection]="true" [rows]="10" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[10,50,100]" [columns]="selectedColumns" selectionMode="multiple" [resizableColumns]="true" [reorderableColumns]="true" [scrollable]="true" scrollHeight="450px">
                     <ng-template pTemplate="caption">
-                        <div style="text-align: right">
+                        <div style="text-align: right; min-height: 30px; margin-left: -6px;">
                             <p-multiSelect [options]="customerContactsColumns" [(ngModel)]="selectedColumns" [ngModelOptions]="{standalone: true}" optionLabel="header"
                                            selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
                             <div class="inner-addon right-addon w200 inline-block g-filter-search-cstm">
@@ -62,13 +62,13 @@
         <span matTooltip="Upload Data (Excel)"><i class="fa fa-upload"></i></span>
     </label>
 </div>-->
-
-
-
-
                         </div>
+                    </ng-template>
 
-
+                    <ng-template pTemplate="colgroup" let-columns>
+                        <colgroup>
+                            <col *ngFor="let col of columns" style="width:130px">
+                        </colgroup>
                     </ng-template>
 
                     <ng-template pTemplate="header" let-columns>
@@ -78,7 +78,7 @@
                                 {{col.header}}
                                 <p-sortIcon [field]="col.field"></p-sortIcon>
                             </th>
-                            <th style="width:200px;position:sticky" *ngIf="selectedColumns.length > 0">
+                            <th style="width:140px;position:sticky" *ngIf="selectedColumns.length > 0">
                                
                                 Actions
                             </th>                          
@@ -87,7 +87,7 @@
                             <th style="width:auto" *ngFor="let col of columns" [ngSwitch]="col.field">
                                 <input style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field, 'contains')">
                             </th>
-                            <th style="width:200px;position:sticky"></th>
+                            <th style="width:140px;position:sticky"></th>
                         </tr>
                     </ng-template>
 
@@ -99,7 +99,7 @@
                                 {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
                             </td>
 
-                            <td style="width:200px" *ngIf="selectedColumns.length > 0">
+                            <td style="width:140px" *ngIf="selectedColumns.length > 0">
                                 <p-inputSwitch name="isActive{{i}}" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
                                 <span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="viewSelectedRow(rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
 
@@ -129,11 +129,11 @@
                 <div *ngIf="customerContacts.length<=0" class="no-records-cstm">
                     No Records
                 </div>
-            </div>
-            <div style="margin-top: 10px;">
-                <button type="button" class="btn btn-primary-cstm pull-right submit-btn" (click)="nextClick()">Save & Next</button>
-                <button type="button" class="btn btn-primary-cstm pull-right submit-btn" (click)="backClick()">Previous</button>
-            </div>
+                <div style="margin-top: 10px;">
+                    <button type="button" class="btn btn-primary-cstm pull-right submit-btn" (click)="nextClick()">Save & Next</button>
+                    <button type="button" class="btn btn-primary-cstm pull-right submit-btn" (click)="backClick()">Previous</button>
+                </div>
+            </div>            
         </div>
     </div>
 

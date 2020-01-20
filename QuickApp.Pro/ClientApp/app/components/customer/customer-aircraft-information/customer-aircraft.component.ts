@@ -78,14 +78,16 @@ export class CustomerAircraftComponent implements OnInit {
         { field: "memo", header: "Memo" }
 
     ]
+    selectedColumns: any = this.colsaircraftLD;
     dashNumberUnknown: boolean = false;
     aircraftListDataValues: any;
     id: number;
     customerCode: any;
     customerName: any;
     public sourceCustomer: any = {}
-
-
+    totalRecords: any;
+    totalPages: number;
+    pageSize: number = 10;
 
     constructor(private route: ActivatedRoute, private itemser: ItemMasterService,
         private aircraftModelService: AircraftModelService,
@@ -334,7 +336,10 @@ export class CustomerAircraftComponent implements OnInit {
        
           this.customerService.searchAirMappedByMultiTypeIDModelIDDashIDByCustomerId(this.id, this.searchAircraftParams).subscribe(res => {
             this.aircraftListDataValues = res;
-
+            if (this.aircraftListDataValues.length > 0) {
+                this.totalRecords = this.aircraftListDataValues.length;
+                this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+            }
 
             this.aircraftManfacturerIdsUrl = '';
             this.aircraftModelsIdUrl = '';
@@ -554,6 +559,10 @@ export class CustomerAircraftComponent implements OnInit {
     getAircraftMappedDataByCustomerId() {
          this.customerService.getMappedAirCraftDetails(this.id).subscribe(res => {
             this.aircraftListDataValues = res;
+            if (this.aircraftListDataValues.length > 0) {
+                this.totalRecords = this.aircraftListDataValues.length;
+                this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+            }
         })
     }
     getCustomerAircraftHistory(content, row) {
