@@ -39,15 +39,20 @@ export class StageCodeComponent implements OnInit {
     headers = [
         { field: 'code', header: 'Stage Code' },
         { field: 'stage', header: 'Stage Description' },
-        { field: 'description', header: 'Description' },
+        { field: 'level1', header: 'Level 01' },
+        { field: 'level2', header: 'Level 02' },
+        { field: 'level3', header: 'Level 03' },
+        { field: 'level4', header: 'Level 04' },
         { field: 'sequence', header: 'Sequence' },
         { field: 'status', header: 'Status' },
         // {field: '', header: ''},
         // {field: '', header: ''},
         // {field: '', header: ''},
         // {field: '', header: ''},
+        { field: 'description', header: 'Description' },
         { field: 'memo', header: 'Memo' },
     ]
+
     selectedColumns = this.headers;
     formData = new FormData()
     @ViewChild('dt')
