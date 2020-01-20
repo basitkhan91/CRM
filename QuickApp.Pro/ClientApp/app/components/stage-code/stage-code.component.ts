@@ -245,6 +245,7 @@ export class StageCodeComponent implements OnInit {
     resetForm() {
         this.isEdit = false;
         this.managementStructure = new ManagementStructure();
+        this.addNew = new StageCode();
         this.selectedRecordForEdit = undefined;
     }
 

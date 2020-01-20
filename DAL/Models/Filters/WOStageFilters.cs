@@ -9,7 +9,7 @@ namespace DAL.Models
         public DateTime CreatedDate { get; set; }
         public string Description { get; set; }
         public bool IsActive { get; set; }
-        public long ManagementStrId { get; set; }
+        public long ManagementStructureId { get; set; }
         public string Memo { get; set; }
         public int Sequence { get; set; }
         public string Stage { get; set; }

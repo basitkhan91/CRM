@@ -79,7 +79,7 @@ namespace DAL.Repositories
                                 CreatedDate = stage.CreatedDate,
                                 Description = stage.Description,
                                 IsActive = stage.IsActive,
-                                ManagementStrId = stage.ManagementStructureId,
+								ManagementStructureId = stage.ManagementStructureId,
                                 Memo = stage.Memo,
                                 Sequence = stage.Sequence,
                                 Stage = stage.Stage,
@@ -105,7 +105,7 @@ namespace DAL.Repositories
                         level3 = string.Empty;
                         level4 = string.Empty;
 
-                        var mngInfoList = GetManagementStructureCodes(item.ManagementStrId);
+                        var mngInfoList = GetManagementStructureCodes(item.ManagementStructureId);
                         if (mngInfoList != null && mngInfoList.Count > 0)
                         {
                             if (mngInfoList.Any(p => p.Level1 == "Level1"))
