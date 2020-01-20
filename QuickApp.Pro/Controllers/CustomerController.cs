@@ -479,7 +479,7 @@ namespace QuickApp.Pro.Controllers
                         objVendor.RelatedCustomerId = actionobject.CustomerId;
                         objVendor.MasterCompanyId = 1;
                         objVendor.IsActive = true;
-                        objVendor.IsDelete = false;
+                        objVendor.IsDeleted = false;
                         objVendor.VendorTypeId = actionobject.CustomerAffiliationId;
                         objVendor.CurrencyId = actionobject.CurrencyId;
                         objVendor.CreditTermsId = actionobject.CreditTermsId;
@@ -719,7 +719,7 @@ namespace QuickApp.Pro.Controllers
                     //objVendor.RelatedCustomerId = actionobject.CustomerId;
                     objVendor.MasterCompanyId = 1;
                     objVendor.IsActive = actionobject.IsActive;
-                    objVendor.IsDelete = actionobject.IsDeleted;
+                    objVendor.IsDeleted = actionobject.IsDeleted;
                     objVendor.VendorTypeId = actionobject.CustomerAffiliationId;
                     objVendor.CurrencyId = actionobject.CurrencyId;
                     objVendor.CreditTermsId = actionobject.CreditTermsId;
@@ -758,7 +758,7 @@ namespace QuickApp.Pro.Controllers
                     objcreateVendor.RelatedCustomerId = actionobject.CustomerId;
                     objcreateVendor.MasterCompanyId = 1;
                     objcreateVendor.IsActive = true;
-                    objcreateVendor.IsDelete = false;
+                    objcreateVendor.IsDeleted = false;
                     objcreateVendor.VendorTypeId = actionobject.CustomerAffiliationId;
                     objcreateVendor.CurrencyId = actionobject.CurrencyId;
                     objcreateVendor.CreditTermsId = actionobject.CreditTermsId;

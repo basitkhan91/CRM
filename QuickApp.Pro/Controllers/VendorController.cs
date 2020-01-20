@@ -3509,7 +3509,7 @@ namespace QuickApp.Pro.Controllers
                 var vendorObject = _unitOfWork.Vendor.GetSingleOrDefault(c => c.VendorId == id);
                 vendor.MasterCompanyId = 1;
                 vendorObject.VendorId = vendor.VendorId;
-                vendorObject.IsDelete = vendor.IsDelete;
+                vendorObject.IsDeleted = vendor.IsDelete;
                 //vendorObject.IsActive = vendor.IsActive;
                 vendorObject.UpdatedDate = DateTime.Now;
                 vendorObject.UpdatedBy = vendor.UpdatedBy;
@@ -4328,7 +4328,7 @@ namespace QuickApp.Pro.Controllers
             var allTaxrateInfo = _context.Vendor.Include("Manufacturer").Include("Provision").Include("Priority")
                 .Include("ItemClassification").Include("Currency").Include("ExportClassification")
                     .Where(a => a.VendorTypeId == 1
-                                && (a.IsDelete == true || a.IsDelete == null) || a.VendorTypeId == 1 && (a.IsDelete == true || a.IsDelete == null))
+                                && (a.IsDeleted == true || a.IsDeleted == null) || a.VendorTypeId == 1 && (a.IsDeleted == true || a.IsDeleted == null))
                                     .ToList();
             return Ok(allTaxrateInfo);
 
