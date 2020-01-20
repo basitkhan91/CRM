@@ -140,6 +140,20 @@ namespace QuickApp.Pro.Controllers
             return Ok(journel);
         }
 
+        [HttpGet("AllBalanceTypes")]
+        public IActionResult AllBalanceTypes()
+        {
+            var balanceTypes = unitOfWork.Repository<BalanceType>().GetAll().Where(x => x.IsDeleted != true && x.IsActive == true).OrderByDescending(x => x.ID);
+            return Ok(balanceTypes);
+        }
+
+        [HttpGet("AllJournalCategory")]
+        public IActionResult AllJournalCategory()
+        {
+            var journalCategory = unitOfWork.Repository<JournalCategory>().GetAll().Where(x => x.IsDeleted != true && x.IsActive == true).OrderByDescending(x => x.ID);
+            return Ok(journalCategory);
+        }
+
         [HttpGet("removeById/{id}")]
         public IActionResult removeManualJournelById(long id)
         {
