@@ -146,6 +146,23 @@ namespace QuickApp.Pro.Controllers
             }
         }
 
+        [HttpGet("StocklineDetailsById/{id}")]
+        [Produces(typeof(List<StockLine>))]
+        public IActionResult GetStocklineDetailsById(long id)
+        {
+
+            try
+            {
+                var result = _unitOfWork.stockLineList.getStocklineDetailsById(id);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         //For getting the stocklineAdjustment Data
         [HttpGet("AdjustmentGet/{id}")]
         [Produces(typeof(List<StockLAdjustmentViewModel>))]
@@ -179,6 +196,22 @@ namespace QuickApp.Pro.Controllers
                 return BadRequest(ex.Message);
             }
 
+        }
+
+        [HttpGet("GetAllIntegrationData")]
+        [Produces(typeof(List<StocklineIntegrationPortalViewModel>))]
+        public IActionResult GetAllIntegrationData()
+        {
+            try
+            {
+                var result = _unitOfWork.stockLineList.GetAllIntegrationPortalData();
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpGet("timeLifeGetById/{id}")]
@@ -298,26 +331,29 @@ namespace QuickApp.Pro.Controllers
         //}
 
         [HttpPost("stockLineIntegration")]
-        public IActionResult stockLineIntegration([FromBody] StockLineViewModel stockLineViewModel)
+        public IActionResult stockLineIntegration([FromBody] IEnumerable<StockLineViewModel> stockLineViewModel)
         {
             if (stockLineViewModel == null)
                 return BadRequest($"{nameof(stockLineViewModel)} cannot be null");
             if (ModelState.IsValid)
             {
-                StocklineIntegrationPortal actionobject = new StocklineIntegrationPortal();
-                actionobject.MasterCompanyId = 1;
-                actionobject.StocklineId = stockLineViewModel.StockLineId;
-                actionobject.IntegrationPortalId = stockLineViewModel.IntegrationPortalId;
-                actionobject.IsListed = stockLineViewModel.IsListed;
-                actionobject.CreatedDate = DateTime.Now;
-                actionobject.UpdatedDate = DateTime.Now;
-                actionobject.CreatedBy = stockLineViewModel.CreatedBy;
-                actionobject.UpdatedBy = stockLineViewModel.UpdatedBy;
-
-                _context.StocklineIntegrationPortal.Add(actionobject);
-                _context.SaveChanges();
-
-                // _context.stocklineAdjustmentReasons.Add(actionobject);
+                foreach (var item in stockLineViewModel)
+                {
+                    StocklineIntegrationPortal actionobject = new StocklineIntegrationPortal();
+                    actionobject.MasterCompanyId = item.MasterCompanyId.HasValue ? item.MasterCompanyId.Value : 1;
+                    actionobject.StocklineId = item.StockLineId;
+                    actionobject.IntegrationPortalId = item.IntegrationPortalId;
+                    actionobject.IsListed = item.IsListed;
+                    actionobject.CreatedDate = item.CreatedDate.HasValue ? item.CreatedDate.Value : DateTime.Now;
+                    actionobject.UpdatedDate = item.UpdatedDate;
+                    actionobject.CreatedBy = item.CreatedBy;
+                    actionobject.UpdatedBy = item.UpdatedBy;
+                    actionobject.IsActive = true;
+                    actionobject.IsListed = item.IsListed;
+                    actionobject.StocklineIntegrationPortalId = item.StocklineIntegrationPortalId.HasValue ? item.StocklineIntegrationPortalId.Value : 0;
+                    _context.StocklineIntegrationPortal.Add(actionobject);
+                    _context.SaveChanges();
+                }
             }
             return Ok(ModelState);
         }

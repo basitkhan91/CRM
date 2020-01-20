@@ -1,11 +1,8 @@
-﻿
-<div class="card general1">
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item" aria-current="page">General Ledger</li>
-            <li class="breadcrumb-item active" aria-current="page">{{accountTitle}}</li>
-        </ol>
-    </nav>
+﻿<div class="card">
+    <p-breadcrumb [model]="breadcrumbs"></p-breadcrumb>
+</div>
+
+<div class="card general1"> 
     <div class="col-xs-12 x_content">
         <h4 class="page-heading">{{accountTitle}}</h4>
         <form [formGroup]="accountListCreateForm" (ngSubmit)="onSubmitAccountForm()" id="add-customerwork" class="form-horizontal add-glaccount">

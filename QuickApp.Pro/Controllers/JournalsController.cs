@@ -133,6 +133,12 @@ namespace QuickApp.Pro.Controllers
             }
 
         }
+        [HttpGet("AllJournalTypes")]
+        public IActionResult AllJournalTypes()
+        {
+            var journel = unitOfWork.Repository<JournalType>().GetAll().Where(x => x.IsDeleted != true && x.IsActive== true).OrderByDescending(x => x.ID);
+            return Ok(journel);
+        }
 
         [HttpGet("removeById/{id}")]
         public IActionResult removeManualJournelById(long id)

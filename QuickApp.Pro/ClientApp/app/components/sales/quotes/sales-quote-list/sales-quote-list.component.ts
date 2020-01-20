@@ -43,7 +43,10 @@ export class SalesQuoteListComponent implements OnInit {
   sales: any[];
   selected: any;
   modal: NgbModalRef;
+  headers:any[];
   columns: any[];
+  selectedColumns:any[];
+  selectedColumn:any[];
   totalRecords: number = 0;
   totalPages: number = 0;
   pageSize: number = 10;
@@ -105,8 +108,8 @@ export class SalesQuoteListComponent implements OnInit {
   }
 
   initColumns() {
-    this.columns = [
-      { field: "salesQuoteId", header: "Quote number", width: "100px" },
+    this.headers = [
+      { field: "salesQuoteId", header: "Quote number", width: "200px" },
       { field: "quoteDate", header: "Quote Date", width: "200px" },
       { field: "versionNumber", header: "Version Number", width: "200px" },
       { field: "customerName", header: "Customer Name", width: "200px" },
@@ -115,8 +118,9 @@ export class SalesQuoteListComponent implements OnInit {
       { field: "salesPrice", header: "Sales Price", width: "200px" },
       { field: "cost", header: "Cost", width: "200px" },
       { field: "numberOfItems", header: "numberOfItems", width: "200px" },
-      { field: "", header: "actions", width: "200px" }
+     // { field: "", header: "actions", width: "100px" }
     ];
+    this.selectedColumns = this.headers;
   }
 
   initPartColumns() {

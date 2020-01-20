@@ -1,5 +1,7 @@
 ﻿import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { LazyLoadEvent, SortEvent, MenuItem } from 'primeng/api';
+
 import { fadeInOut } from '../../../services/animations';
 import { AccountCalenderService } from '../../../services/account-calender/accountcalender.service';
 import { AuthService } from '../../../services/auth.service';
@@ -40,13 +42,16 @@ export class AccountingCalendarComponent implements OnInit {
     editCalendarPage: boolean = false;
     displayShowButton: boolean = true;
     pageTitle: String = "Create Accounting Calendar";
+    home: any;
+    breadcrumbs: MenuItem[];
 
     constructor(private legalEntityservice: LegalEntityService, private route: ActivatedRoute, private router: Router,
             private accountListingService: AccountListingService, private calendarService: AccountCalenderService, private authService: AuthService, private alertService:AlertService) {
         //this.currentCalendarObj.fromDate = new Date('2019-01-01');
     }
     //add Legal Entity///
-    ngOnInit() {
+    ngOnInit() {        
+
         let date = new Date();
         let year = date.getFullYear();
         this.minDate= new Date(year + '-' + '01-01');
@@ -65,6 +70,10 @@ export class AccountingCalendarComponent implements OnInit {
             }
         });
 
+        this.breadcrumbs = [
+            { label: 'Accounting' },
+            { label: this.editCalendarPage ? 'Accounting Calendar Edit' : 'Create Accounting Calendar' },
+        ];
     }
     
     loadEditCalendarData(value) {

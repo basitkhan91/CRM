@@ -104,7 +104,12 @@ export class WorkOrderQuoteService {
     getWorkOrderQuoteDetail(workOrderId, workFlowWorkOrderId){
         return this.quoteEndPointService.getWorkOrderQuoteDetail(workOrderId, workFlowWorkOrderId)
     }
-
+    getWorkOrderQuoteList(payload){
+        return this.quoteEndPointService.getWorkOrderQuoteList(payload);
+    }
+    getWorkOrderQuoteData(workOrderQuoteId) {
+        return this.quoteEndPointService.getWorkOrderQuoteData(workOrderQuoteId);
+    }
 
 
 }

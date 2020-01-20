@@ -73,9 +73,9 @@ export class CreateAssetComponent implements OnInit {
     depriciationMethodList: DepriciationMethod[] = [];
     allAssets: any[] = [];
     auditHistory: any[];
-    amortizationFrequencyList:any[];
-    depreciationFrequencyList:any[];
-    assetAcquisitionTypeList: any[];
+    amortizationFrequencyList: any[] = [];
+    depreciationFrequencyList:any[] = [];
+    assetAcquisitionTypeList: any[] = [];
     GLAccountList: any[] = [];
     AssetId: any;
     static assetService;
@@ -746,7 +746,7 @@ export class CreateAssetComponent implements OnInit {
                 this.route.navigateByUrl(`/assetmodule/assetpages/app-asset-capes/${this.AssetId}`);
             } else if (value === 'Calibration') {
                 this.activeIndex = 2;
-                this.route.navigateByUrl(`/assetmodule/assetpages/app-asset-calibration/${this.AssetId}`);
+                this.route.navigateByUrl(`/assetmodule/assetpages/app-asset-calibration/${assetId}`);
             } else if (value == "Maintenance") {
                 this.activeIndex = 3;
                 this.route.navigateByUrl(`/assetmodule/assetpages/app-asset-maintenance-warranty/${this.AssetId}`);
