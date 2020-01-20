@@ -25,9 +25,14 @@ import { InputSwitchModule } from "primeng/inputswitch";
 import { CheckboxModule } from "primeng/checkbox";
 import { AutoCompleteModule } from "primeng/autocomplete";
 import { BreadcrumbModule } from 'primeng/breadcrumb'; //bread crumb
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import {DropdownModule} from 'primeng/dropdown';
+
 
 @NgModule({
     imports: [
+        FormsModule, 
+        ReactiveFormsModule,
         SharedModule,
         AdminRoutingModule,
         TableModule,
@@ -38,7 +43,8 @@ import { BreadcrumbModule } from 'primeng/breadcrumb'; //bread crumb
         InputSwitchModule,
         CheckboxModule,
         AutoCompleteModule,
-        BreadcrumbModule
+        BreadcrumbModule,
+        DropdownModule
     ],
     declarations: [
         AdminComponent,

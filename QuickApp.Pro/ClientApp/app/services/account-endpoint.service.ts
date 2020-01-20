@@ -23,7 +23,10 @@ export class AccountEndpoint extends EndpointFactory {
     private readonly _roleByRoleNameUrl: string = "/api/account/roles/name";
     private readonly _permissionsUrl: string = "/api/account/permissions";
     private readonly _countriesListURL: string = "/api/globalsettings/getcultureinfos";
-    private readonly _getCountrySpecificDataUrl : string = "/api/globalsettingsinfo?culture="
+    private readonly _getCountrySpecificDataUrl : string = "/api/globalsettings/globalsettingsinfo?culture="
+    
+    private readonly _getSavedCountryDataUrl : string = "/api/globalsettings/globalsettings?masterCompanyId="
+    private readonly _saveCountryLevelGlobalSettingsUrl: string = "/api/globalsettings/createglobalsettings"
 
     get usersUrl() { return this.configurations.baseUrl + this._usersUrl; }
     get userByUserNameUrl() { return this.configurations.baseUrl + this._userByUserNameUrl; }
@@ -35,7 +38,8 @@ export class AccountEndpoint extends EndpointFactory {
     get permissionsUrl() { return this.configurations.baseUrl + this._permissionsUrl; }
     get countriesListUrl() { return this.configurations.baseUrl + this._countriesListURL; }
     get getCountrySpecificDataUrl() { return this.configurations.baseUrl + this._getCountrySpecificDataUrl; }
-
+    get getSavedCountryDataUrl() { return this.configurations.baseUrl + this._getSavedCountryDataUrl; }
+    get saveCountryLevelGlobalSettingsUrl() { return this.configurations.baseUrl + this._saveCountryLevelGlobalSettingsUrl; }
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
 
         super(http, configurations, injector);
@@ -216,5 +220,17 @@ export class AccountEndpoint extends EndpointFactory {
             .catch(error => {
                 return this.handleError(error, () => this.getCountrySpecificDataEndPoint(countryId))
             })
+    }
+    getSavedCountryDataEndPoint<T>(masterCompanyId): Observable<T>{
+        return this.http.get<T>(`${this.getSavedCountryDataUrl}${masterCompanyId}` , this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getSavedCountryDataEndPoint(masterCompanyId))
+            })
+    }
+    saveCountryLevelGlobalSettingsEndPoint<T>(data): Observable<T>{
+        return this.http.post<T>(this.saveCountryLevelGlobalSettingsUrl, JSON.stringify(data), this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.saveCountryLevelGlobalSettingsEndPoint(data));
+            });
     }
 }

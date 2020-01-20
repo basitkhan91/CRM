@@ -230,6 +230,14 @@ export class AccountService
     }
     getCountrySpecificData(countryId) 
     {
-        return this.accountEndpoint.getCountrySpecificDataEndPoint<any>();
+        return this.accountEndpoint.getCountrySpecificDataEndPoint<any>(countryId);
+    }
+    getSavedCountryData(masterCompanyId) 
+    {
+        return this.accountEndpoint.getSavedCountryDataEndPoint<any>(masterCompanyId);
+    }
+    saveCountryLevelGlobalSettings(data) 
+    {
+        return this.accountEndpoint.saveCountryLevelGlobalSettingsEndPoint<any>(data);
     }
 }
