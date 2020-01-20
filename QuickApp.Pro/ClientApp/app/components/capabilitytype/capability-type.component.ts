@@ -237,16 +237,19 @@ export class CapabilityTypeComponent implements OnInit {
 
     filterSequence(event) {
         this.sequenceList = this.capabilityTypeData;
-        
       
         const capabilityTypeData = [...this.capabilityTypeData.filter(x => {
             if (x.sequenceNo !== null && x.sequenceNo !== "") {
-                return x.sequenceNo.includes(parseInt(event))
+
+                //if (x.sequenceNo == event)
+                //    return x;
+                x.sequenceNo = String(x.sequenceNo)
+                return x.sequenceNo.toLowerCase().includes((event.query.toLowerCase()))
             }
         })]
         this.sequenceList = capabilityTypeData;
 
-          }
+         }
 
     resetCapabilityTypeForm() {
         this.isEdit = false;

@@ -112,6 +112,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
     ataListDataValues: any;
     selectedRowForDeleteRestrictPMA: any = {};
     selectedRowForDeleteRestrictDER: any = {};
+    disableAccountType: boolean = false;
     modal: NgbModalRef;
 
    
@@ -155,7 +156,8 @@ export class CustomerGeneralInformationComponent implements OnInit {
                     name: getObjectByValue('name', res.name, this.customerallListOriginal),
                     country: getObjectById('countries_id', res.country, this.countryListOriginal),
                     customerParentName: getObjectByValue('name', res.customerParentName, this.customerallListOriginal),
-                    customerCode: getObjectByValue('customerCode', res.customerCode, this.customerallListOriginal)
+                    customerCode: getObjectByValue('customerCode', res.customerCode, this.customerallListOriginal),
+                    customerAffiliationId: String(res.customerAffiliationId)
 
                 };
                 this.generalInformation1 = {
@@ -168,7 +170,10 @@ export class CustomerGeneralInformationComponent implements OnInit {
                     
                 };
 
+                if (this.generalInformation.customerAffiliationId == 1) {
+                    this.disableAccountType = true;
 
+                }
                
 
             });
@@ -747,7 +752,19 @@ export class CustomerGeneralInformationComponent implements OnInit {
         this.modal.close();
     }
 
+    selectedCustomerType(event) {
+        console.log(event)
+        if (event == 1) {
+            this.generalInformation.customerTypeId = 3;
+            this.disableAccountType = true;
+        }
+        else {
+            this.disableAccountType = false;
 
+        }
+      
+
+    }
 
 
 }
