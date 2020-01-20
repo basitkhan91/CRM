@@ -8,7 +8,7 @@ namespace DAL.Repositories.Interfaces
     {
         WorkOrderStage CreateWorkOrderStage(WorkOrderStage workOrderStage);
         WorkOrderStage UpdateWorkOrderStage(WorkOrderStage workOrderStage);
-        IEnumerable<object> WorkOrderStageList(Filters<WorkOrderStageFilters> woFilters);
+        IEnumerable<object> WorkOrderStageList();
         void DeleteWorkOrderStage(long workOrderStageId,string updatedBy);
         void WorkOrderStageStatus(long workOrderStageId,bool status, string updatedBy);
         object WorkOrderStageById(long workOrderStageId);
