@@ -13498,9 +13498,25 @@ button {
         margin: 5px 0;
     }
 
-    .shadow-Box label {
+    .shadow-box-cstm {
+        border-radius: 5px;
+        border: 1px solid #ddd;
+        padding: 5px 10px;
+        margin: 5px 0;
+    }
+
+    .shadow-Box label, .shadow-box-cstm label {
         text-align: left;
         width: 100%;
+    }
+    .shadow-box-cstm p {
+        margin-bottom: 5px;
+    }
+    .tab-header-cstm {
+        margin-top: 10px;
+    }
+    .tab-header-cstm p {
+        margin-bottom: 0;
     }
 
     .mtop20 {
@@ -13838,6 +13854,9 @@ button {
     position: relative;
     border-collapse: collapse;
 }
+.tab-table-cstm .ui-table {
+    padding-bottom: 10px;
+}
 
 .ata-table-cstm {
     overflow-y: hidden;
@@ -13926,6 +13945,16 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
     font-size: 15px !important;
     color: #295d92 !important;
     margin-left: 6px;
+}
+.po-head-sm {
+    font-weight: bold;
+    font-size: 15px !important;
+    color: #295d92 !important;
+    margin-left: 6px;
+    margin-top: 10px;
+}
+.search-header-cstm {
+    font-size: 16px !important;
 }
 .p-dropdown-custom-md-Header-table .ui-dropdown {
     width: 136px !important;
@@ -14497,6 +14526,12 @@ p-table tr td .btn i.fa-pencil {
 }
 .pcheckbox-cstm .ui-chkbox-icon {
     font-size: 18px !important;
+}
+.no-records-cstm {
+    text-align: center;
+    margin: 0 6px;
+    border: 1px solid;
+    max-width: calc(100% - 12px);
 }
 
 .accountdropdown.ui-dropdown .ui-dropdown-trigger {
