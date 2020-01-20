@@ -17,8 +17,9 @@ const StocklinePagesRoutes: Routes = [
 		children: [
 			{ path: "app-stock-line-list", component: StockLineListComponent, data: { title: "StockLine List" } },
 			{ path: "app-stock-line-setup", component: StockLineSetupComponent, data: { title: "StockLine setup" } },
+			{ path: "app-stock-line-setup/edit/:id", component: StockLineSetupComponent, data: { title: "StockLine Edit" } },
 			{ path: "app-stock-adjustment", component: StockAdjustmentComponent, data: { title: "StockLine adjustment" } },
-			{ path: "app-stock-line-edit", component: StockLineEditComponent, data: { title: "StockLine Edit" } },
+			// { path: "app-stock-line-edit", component: StockLineEditComponent, data: { title: "StockLine Edit" } },
 		]
 	}
 ];

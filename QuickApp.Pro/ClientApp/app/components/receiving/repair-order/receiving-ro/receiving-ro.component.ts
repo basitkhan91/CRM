@@ -1195,7 +1195,7 @@ export class ReceivingRoComponent implements OnInit {
         //let partsToPost: ReceiveParts[] = this.extractAllAllStockLines();
         let partsToPost: any = this.extractAllAllStockLines();
         this.receivingService.receiveParts(partsToPost).subscribe(data => {
-            this.alertService.showMessage(this.pageTitle, 'Parts Received successfully.', MessageSeverity.success);
+            this.alertService.showMessage(this.pageTitle, 'Stockline drafted successfully.', MessageSeverity.success);
             //return this.route.navigate(['/receivingmodule/receivingpages/app-edit-ro']);
             this.route.navigateByUrl(`/receivingmodule/receivingpages/app-edit-ro?repairOrderId=${this.repairOrderId}`);
         },
