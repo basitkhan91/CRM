@@ -22,6 +22,8 @@ export class AccountEndpoint extends EndpointFactory {
     private readonly _rolesUrl: string = "/api/account/roles";
     private readonly _roleByRoleNameUrl: string = "/api/account/roles/name";
     private readonly _permissionsUrl: string = "/api/account/permissions";
+    private readonly _countriesListURL: string = "/api/globalsettings/getcultureinfos";
+    private readonly _getCountrySpecificDataUrl : string = "/api/globalsettingsinfo?culture="
 
     get usersUrl() { return this.configurations.baseUrl + this._usersUrl; }
     get userByUserNameUrl() { return this.configurations.baseUrl + this._userByUserNameUrl; }
@@ -31,6 +33,8 @@ export class AccountEndpoint extends EndpointFactory {
     get rolesUrl() { return this.configurations.baseUrl + this._rolesUrl; }
     get roleByRoleNameUrl() { return this.configurations.baseUrl + this._roleByRoleNameUrl; }
     get permissionsUrl() { return this.configurations.baseUrl + this._permissionsUrl; }
+    get countriesListUrl() { return this.configurations.baseUrl + this._countriesListURL; }
+    get getCountrySpecificDataUrl() { return this.configurations.baseUrl + this._getCountrySpecificDataUrl; }
 
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
 
@@ -196,5 +200,21 @@ export class AccountEndpoint extends EndpointFactory {
             .catch(error => {
                 return this.handleError(error, () => this.getPermissionsEndpoint());
             });
+    }
+
+    //Global Settings 
+    getCountriesListEndPoint<T>(): Observable<T> {
+
+        return this.http.get<T>(this.countriesListUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getCountriesListEndPoint());
+            });
+    }
+
+    getCountrySpecificDataEndPoint<T>(countryId): Observable<T>{
+        return this.http.get<T>(`${this.getCountrySpecificDataUrl}${countryId}` , this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getCountrySpecificDataEndPoint(countryId))
+            })
     }
 }

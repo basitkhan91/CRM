@@ -222,4 +222,14 @@ export class AccountService
     {
         return this.authService.currentUser;
     }
+
+    //Global Settings 
+    getCountriesList()
+    {
+        return this.accountEndpoint.getCountriesListEndPoint<any>();
+    }
+    getCountrySpecificData(countryId) 
+    {
+        return this.accountEndpoint.getCountrySpecificDataEndPoint<any>();
+    }
 }
