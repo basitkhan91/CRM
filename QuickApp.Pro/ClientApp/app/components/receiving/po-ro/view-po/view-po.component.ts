@@ -91,11 +91,6 @@ export class ViewPoComponent implements OnInit {
     }
 
     ngOnInit() {
-        // if (this.receivingService.purchaseOrderId == undefined && this.receivingService.purchaseOrderId == null ) {
-        //     this.alertService.showMessage(this.pageTitle, "No purchase order is selected to edit.", MessageSeverity.error);
-        //     return this.route.navigate(['/receivingmodule/receivingpages/app-purchase-order']);
-        // }
-
         this.purchaseOrderId = this._actRoute.snapshot.queryParams['purchaseorderid'];
         this.receivingService.getReceivingPOHeaderById(this.purchaseOrderId).subscribe(res => {
             console.log(res);
@@ -111,10 +106,6 @@ export class ViewPoComponent implements OnInit {
         this.receivingService.getReceivingPOPartsForViewById(this.purchaseOrderId).subscribe(
             results => {
                 this.purchaseOrderData = results;
-                // this.purchaseOrderData.openDate = new Date(results[0].openDate).toLocaleDateString();
-                // this.purchaseOrderData.needByDate = new Date(results[0].needByDate);
-                // this.purchaseOrderData.dateApproved = new Date(results[0].dateApproved).toLocaleDateString();
-
                 this.getManagementStructure().subscribe(
                     results => {
                         this.managementStructure = results[0];
@@ -1071,7 +1062,13 @@ export class ViewPoComponent implements OnInit {
         );
     }
 
-    onSearchPO() {
-        return this.route.navigate(['/receivingmodule/receivingpages/app-purchase-order']);
+    CreatePurchaseOrderStockline() {
+        this.receivingService.createStockLine(this.purchaseOrderId).subscribe(
+            results => {
+                this.alertService.showMessage(this.pageTitle, "Stockline created successfully.", MessageSeverity.success);
+                return this.route.navigate(['/receivingmodule/receivingpages/app-purchase-order']);
+            },
+            error => this.onDataLoadFailed(error)
+        );        
     }
 }

@@ -26,4 +26,6 @@ export class DBkeys {
     public static readonly SHOW_DASHBOARD_BANNER = "show_dashboard_banner";
     public static readonly User_Role_Permission = "user_role_permission";
     public static readonly Module_Hierarchy = "module_hierarchy";
+    public static readonly GLOBAL_SETTINGS = "global_settings";
+    public static readonly MASTER_COMPANY_ID = 1;
 }

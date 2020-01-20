@@ -220,7 +220,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                         <p-autoComplete [(ngModel)]="codeName" name="codeName" (onSelect)="partnmId($event)" 
                                         (onKeyUp)="eventHandler($event)" [suggestions]="localCollection" 
                                         (completeMethod)="filterDisposalType($event)" [size]="30"
-                                        (onBlur)="onBlurCheck($event, 'select', 'codeName')"
+                                        (onBlur)="onBlurCheck($event, 'code')"
                                         [minLength]="1" [dropdown]="true" class="p-autoComplete-ctsm" required>
                             <ng-template let-codeName pTemplate="item">
                                 <div class="ui-helper-clearfix">{{codeName}}</div>
@@ -240,7 +240,8 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                     </div>
                     <div class="col-sm-5">
                         <input type="text" name="name" class="form-control" 
-                               required #Name="ngModel" [(ngModel)]="sourceAction.name" minlength="2" (change)="enableSave()" >
+                               required #Name="ngModel" [(ngModel)]="sourceAction.name" minlength="2" 
+                               (change)="onBlurCheck($event,'name')"  >
                         <div *ngIf="Name.dirty && Name.errors?.required && Name.errors" class="invalid-form-error-message">
                             Asset Disposal Type Name required.
                         </div>
@@ -256,8 +257,10 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                         <label for="AssetDisposalMemo" class="control-label">Memo</label>
                     </div>
                     <div class="col-sm-5">
-                        <textarea class="text-item" #memo="ngModel" (change)="enableSave()" 
-                                  id="memo" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.memo" minlength="2"></textarea>
+                        <textarea class="text-item" #memo="ngModel" (change)="enableSave($event,'memo')" 
+                                  id="memo" [ngModelOptions]="{standalone: true}" 
+                                  [(ngModel)]="sourceAction.memo" 
+                                  minlength="2"></textarea>
                     </div>
                     <div class="clear"></div>
                 </div>
@@ -266,7 +269,9 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                 <div class="col-sm-6">
                     <div class="checkbox-cstm check-value">
                         <label>
-                            <input type="checkbox" name="isActive" (change)="enableSave()" #isActive="ngModel" class="form-check-input trigger2" checked id="isActive" [(ngModel)]="sourceAction.isActive" [ngModelOptions]="{standalone: true}">
+                            <input type="checkbox" name="isActive" (change)="enableSave($event, 'isActive')" 
+                                   #isActive="ngModel" class="form-check-input trigger2" checked id="isActive" 
+                                   [(ngModel)]="sourceAction.isActive" [ngModelOptions]="{standalone: true}">
                             <span class="cr"><i class="cr-icon pi pi-check"></i></span>
                             Active
                         </label>

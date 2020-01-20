@@ -32,6 +32,27 @@ namespace QuickApp.Pro.Controllers
             _context = context;
         }
 
+        [HttpGet("employeeDetailsById/{employeeId}")]      
+        public IActionResult EmployeeDetailsById(long employeeId)
+        {
+            var empDetails = _unitOfWork.employee.EmployeeDetailsById(employeeId);
+            return Ok(empDetails);
+        }
+
+        [HttpPost("employeelist")]
+        public IActionResult GetEmployeeList([FromBody]Filters<EmployeeFilters> employeeFilters)
+        {
+            var result = _unitOfWork.employee.GetEmployeeList(employeeFilters);
+            return Ok(result);
+        }
+
+        [HttpGet("employeeglobalsearch")]
+        public IActionResult EmployeeGlobalSearch(string filterText, int pageNumber = 0, int pageSize = 10)
+        {
+            var result = _unitOfWork.employee.EmployeeGlobalSearch(filterText, pageNumber, pageSize);
+            return Ok(result);
+        }
+
 
         // GET: api/values
         [HttpGet("Get")]
@@ -43,6 +64,7 @@ namespace QuickApp.Pro.Controllers
 
         }
 
+        
         [HttpGet("GetAllEmployeeInfo")]
         public List<Employee> getAllEmployeeInfo()
         {

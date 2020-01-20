@@ -37,6 +37,7 @@ export class WorkOrderAssetsComponent implements OnInit {
     generalInfoForm: NgForm;
     isEdit: boolean = false;
     editData: any;
+    assetAuditHistory: any;
 
     ngOnInit(): void {
         console.log(this.workFlowObject);
@@ -140,6 +141,13 @@ export class WorkOrderAssetsComponent implements OnInit {
         this.isEdit = true;
         this.editData = rowData;
     }
+    getAuditHistoryById(rowData) {
+        const { workOrderAssetId } = rowData;
+        this.workOrderService.assetsHistoryByWorkOrderAssetId(workOrderAssetId).subscribe(res => {
+            this.assetAuditHistory = res;
+        })
+
+    }
     delete(rowData) {
         const { workOrderAssetId } = rowData;
         this.workOrderService.deleteWorkOrderAssetByAssetId(workOrderAssetId, this.userName).subscribe(res => {
@@ -164,6 +172,17 @@ export class WorkOrderAssetsComponent implements OnInit {
         $('#addNewEquipments').modal('hide');
     }
 
+    getColorCodeForHistory(i, field, value) {
+        const data = this.assetAuditHistory;
+        const dataLength = data.length;
+        if (i >= 0 && i <= dataLength) {
+            if ((i + 1) === dataLength) {
+                return true;
+            } else {
+                return data[i + 1][field] === value
+            }
+        }
+    }
 
     // getWorkOrderAssetList(): void {
     //     this.workOrderService.getWorkOrderAssetList(7).subscribe(

@@ -26,7 +26,7 @@
             </div>
 
             <div class="form-group">
-              <label> Quotation Status <span class="clr-red">*</span></label>
+              <label> Quote Status <span class="clr-red">*</span></label>
               <select [(ngModel)]="quoteForm.expirationDateStatus" name="ExpDateStatus" [disabled]="isView">
                 <option value=1>Open</option>
                 <option value=2>Closed</option>
@@ -115,10 +115,11 @@
               <label for="Currency">Currency
                 <span class="clr-red">*</span>
               </label>
-              <select [(ngModel)]="currency" name="Currency" [disabled]="isView">
+              <select [(ngModel)]="currency" name="Currency" [disabled]="isView" *ngIf="!isQuoteListView">
                 <option value="">Select Currency</option>
                 <option *ngFor="let cur of currencyList" [value]="cur.value">{{cur.label}}</option>
               </select>
+              <input class="form-control" type="text" [(ngModel)]="currency" name="Currency" *ngIf="isQuoteListView" [disabled]="isView"/>
             </div>
             <div class="form-group ">
               <label> DSO <span class="clr-red">*</span></label>
@@ -146,13 +147,13 @@
           <textarea class="form-control" [(ngModel)]="memo" name="memo" [disabled]="isView"></textarea>
       </div>
     </div>
-    <div class="col-md-12" *ngIf="!isView">
+    <div class="col-md-12" *ngIf="!isView && !isQuoteListView">
       <button class="btn btn-primary-cstm pull-right" (click)="saveQuoteDetails()" [disabled]="checkValidQuote()">{{quotationHeader && quotationHeader.workOrderQuoteId?'Update':'Save'}}</button>
     </div>
   </div>
 </div>
 
-<div class="table-responsive" style="height: 300px;">
+<div class="table-responsive" style="height: 300px;" *ngIf="!isQuoteListView">
   <table class="table table-bordered table-striped table-fixed table-sorting mpn-list-table"
   id="mpn-list-table">
   <thead>
@@ -264,7 +265,7 @@
 
 <br>
 
-<div class="card" *ngIf="quoteForm.quoteNumber && quoteForm.quoteNumber != ''">
+<div class="card" *ngIf="quoteForm.quoteNumber && quoteForm.quoteNumber != '' && !isQuoteListView">
   <div class="card-body">
 
     <div class="col-md-12">

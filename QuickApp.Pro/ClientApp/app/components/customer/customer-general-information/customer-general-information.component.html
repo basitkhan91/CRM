@@ -16,32 +16,38 @@
                                                     <div>
                                                         <div class="pull-left" style="margin-top: 4px; margin-right: 15px;">
                                                             <label class="radio-cstm wauto">
-                                                                <input type="radio" [value]="2" checked="checked" name="optradio" [(ngModel)]="generalInformation.customerAffiliationId">
+                                                                <input type="radio" value="2" checked="checked" name="optradio" [(ngModel)]="generalInformation.customerAffiliationId" (change)="selectedCustomerType($event.target.value)">
                                                                 <span class="checkmark"></span> External
                                                             </label>
                                                             <label class="radio-cstm wauto">
-                                                                <input type="radio" [value]="1" name="optradio" [(ngModel)]="generalInformation.customerAffiliationId">
+                                                                <input type="radio" value="1" name="optradio" [(ngModel)]="generalInformation.customerAffiliationId" (change)="selectedCustomerType($event.target.value)">
                                                                 <span class="checkmark"></span> Internal
                                                             </label>
 
                                                             <label class="radio-cstm wauto">
-                                                                <input type="radio" [value]="3" name="optradio" [(ngModel)]="generalInformation.customerAffiliationId">
+                                                                <input type="radio" value="3" name="optradio" [(ngModel)]="generalInformation.customerAffiliationId" (change)="selectedCustomerType($event.target.value)">
                                                                 <span class="checkmark"></span> Affiliate
                                                             </label>
+                                                        </div>
+                                                        <div class="pull-left" style="margin-top: 4px; margin-right: 0px;width:231px;margin-left:27px;">
+                                                            <label>Account Type <span class="clr-red">*</span></label>
+                                                            <select [(ngModel)]="generalInformation.customerTypeId" name="customerTypeId" required [disabled]="disableAccountType">
+                                                                <option *ngFor="let CustomerType of customertypes" [ngValue]="CustomerType.customerTypeId">{{CustomerType.description}}</option>
+                                                            </select>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-
+                                        <hr/>
                                         <div class="form-row" style="margin-left: 13px;">
                                             <div class="col-md-3">
-                                                <div class="form-group">
+                                                <!--<div class="form-group">
                                                     <label>Account Type <span class="clr-red">*</span></label>
                                                     <select [(ngModel)]="generalInformation.customerTypeId" name="customerTypeId" required>
                                                         <option *ngFor="let CustomerType of customertypes" [ngValue]="CustomerType.customerTypeId">{{CustomerType.description}}</option>
                                                     </select>
-                                                </div>
+                                                </div>-->
                                                 <div class="form-group">
                                                     <label>Customer Name <span class="clr-red">*</span></label>
                                                     <div class="inner-addon right-addon inline-block">
@@ -268,11 +274,13 @@
                                                                                [options]="partListForPMA"
                                                                                [filter]="true"
                                                                                itemSize="30"
-                                                                               defaultLabel="Except for Choose"></p-multiSelect>
+                                                                               defaultLabel="Except for Choose"  [selectionLimit]="30"></p-multiSelect>
                                                             </div>
                                                             <div class="col-sm-3">
-                                                                <span style="margin-left:3px;cursor:pointer;"><a class="fa fa-plus-circle fa-lg" (click)="addRestrictPMA()"></a></span>
-                                                            </div>
+                                                                <button class="btn btn-primary" (click)="addRestrictPMA()">
+                                                                    Add
+                                                                </button>
+                        </div>
                                                         </div>
                                                         <div *ngIf="disableRestrictedPMA">
                                                             <p-table class="table-responsive ptable-cus-pma" [value]="generalInformation.restrictedPMAParts" [paginator]="true" [rows]="3" [columns]="restrictHeaders">
@@ -290,7 +298,7 @@
                                                                             {{part[col.field]}}
                                                                         </td>
                                                                         <td>
-                                                                            <button class="btn-delete" (click)="deleteRestirctPMA(i, rowData)" mat-icon-button matTooltip="Delete">
+                                                                            <button class="btn-delete" (click)="openPopupForDeleteRestrictPMA(i, rowData, deleteRestrictPMAContent)" mat-icon-button matTooltip="Delete">
                                                                                 <mat-icon color="warn">delete</mat-icon>
                                                                             </button>
                                                                         </td>
@@ -324,11 +332,14 @@
                                                                                [options]="partListForDER"
                                                                                [filter]="true"
                                                                                itemSize="30"
-                                                                               defaultLabel="Except for Choose"></p-multiSelect>
+                                                                               defaultLabel="Except for Choose"  [selectionLimit]="30"></p-multiSelect>
                                                             </div>
                                                             <div class="col-sm-3">
-                                                                <span style="margin-left:3px;cursor:pointer;"><a class="fa fa-plus-circle fa-lg" (click)="addRestrictBER()"></a></span>
-                                                            </div>
+                                                                <button class="btn btn-primary" (click)="addRestrictBER()">
+                                                                    Add
+                                                                </button>
+
+                                                                        </div>
                                                         </div>
                                                         <div *ngIf="disableRestrictedDER">
                                                             <p-table class="table-responsive ptable-cus-pma overlap" [value]="generalInformation.restrictedDERParts" [paginator]="true" [rows]="3" [columns]="restrictHeaders">
@@ -346,7 +357,7 @@
                                                                             {{part[col.field]}}
                                                                         </td>
                                                                         <td>
-                                                                            <button class="btn-delete" (click)="deleteRestrictDER(i, rowData)" mat-icon-button matTooltip="Delete">
+                                                                            <button class="btn-delete" (click)="openPopupForDeleteRestrictDER(i, rowData, deleteRestrictDERContent)" mat-icon-button matTooltip="Delete">
                                                                                 <mat-icon color="warn">delete</mat-icon>
                                                                             </button>
                                                                         </td>
@@ -630,3 +641,39 @@
         </div>
     </div>
 </div>
+<ng-template #deleteRestrictPMAContent let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title">Are You Sure Want to Delete?</h4>
+        <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <strong>
+            Part Number:
+            <span class="new-label">{{selectedRowForDeleteRestrictPMA.partNumber}}</span>
+        </strong>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-success" (click)="deleteRestirctPMA()">Yes</button>
+        <button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
+    </div>
+</ng-template>
+<ng-template #deleteRestrictDERContent let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title">Are You Sure Want to Delete?</h4>
+        <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <strong>
+            Part Number:
+            <span class="new-label">{{selectedRowForDeleteRestrictDER.partNumber}}</span>
+        </strong>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-success" (click)="deleteRestirctDER()">Yes</button>
+        <button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
+    </div>
+</ng-template>

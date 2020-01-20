@@ -154,6 +154,9 @@ export class AppComponent implements OnInit, AfterViewInit {
                             { label: 'Roles List by Module', routerLink: '/rolesmodule/rolespages/app-roles-list-by-module' },
                             { label: 'Create Role', routerLink: '/rolesmodule/rolespages/app-roles-setup' }]
                     },
+                    {
+                        label: 'Global Settings', routerLink:  'admin/global-settings'
+                    },
                     { label: 'Notifications', routerLink: '/#' }
 
                 ]
@@ -194,7 +197,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                         label: ' Capabilities',
                         items: [
                             { label: 'Capabilities List', routerLink: '/itemmastersmodule/itemmasterpages/app-item-master-capabilities-list' },
-                            { label: 'Capabilities Create', routerLink: '/itemmastersmodule/itemmasterpages/app-item-master-create-capabilities' },
+                            { label: 'Create Capabilities', routerLink: '/itemmastersmodule/itemmasterpages/app-item-master-create-capabilities' },
                             { label: 'Reports & Forms', items: [{ label: 'Capabilities List', routerLink: '/#' }] }]
                     }
 
@@ -239,7 +242,8 @@ export class AppComponent implements OnInit, AfterViewInit {
                             { label: 'Item Aging', routerLink: '/#' },
                             { label: 'Slow Moving Stock', routerLink: '/#' },
                             { label: 'Hot List', routerLink: '/#' },
-                            { label: 'Stock Line Report', command: (event?: any) => { this.stockLineReport(); } }
+                            //{ label: 'Stock Line Report', command: (event?: any) => { this.stockLineReport(); } }
+                            { label: 'Stock Line Report', routerLink: '/stocklinemodule/stocklinepages/app-stock-line-report-view' },
                         ]
                     }]
 
@@ -361,7 +365,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                     },
                     {
                         label: 'Work-order Quote', items: [
-                            { label: 'WO Quote List', routerLink: '/#' },
+                            { label: 'WO Quote List', routerLink: '/workordersmodule/workorderspages/app-work-order-quote-list' },
                             { label: 'Create New WO Quote', routerLink: '/workordersmodule/workorderspages/app-work-order-quote' },
                             { label: 'WO Quote Approvals', routerLink: '/#' }
                         ]
@@ -643,8 +647,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                             { label: 'Vendor Classification', routerLink: '/singlepages/singlepages/app-vendor-classification' },
                             { label: 'Work Scope', routerLink: '/singlepages/singlepages/app-work-scope' },
 
-                            { label: 'Capability Type', routerLink: '/singlepages/singlepages/app-capability-type' },
-
+							{ label: 'Capability Type', routerLink: '/singlepages/singlepages/app-capability-type' },
                         ]
                     },
                     {
@@ -661,6 +664,8 @@ export class AppComponent implements OnInit, AfterViewInit {
                                 ]
                             },
                             { label: 'Asset Status', routerLink: '/singlepages/singlepages/asset-status' },
+                            { label: 'Asset Location', routerLink: '/singlepages/singlepages/asset-location' },
+                            { label: 'Asset Acquisition Type', routerLink: '/singlepages/singlepages/asset-acquisition-type' },
                             { label: 'Depreciation Method', routerLink: '/singlepages/singlepages/app-depriciation-method' },
                             { label: 'Depreciation Convention', routerLink: '/singlepages/singlepages/app-asset-dep-convention-type' },
                             { label: 'Depreciation Intervals', routerLink: '/singlepages/singlepages/app-depreciation-intervals' },

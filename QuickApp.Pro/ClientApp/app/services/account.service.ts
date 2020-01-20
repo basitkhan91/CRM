@@ -222,4 +222,28 @@ export class AccountService
     {
         return this.authService.currentUser;
     }
+
+    //Global Settings 
+    getCountriesList()
+    {
+        return this.accountEndpoint.getCountriesListEndPoint<any>();
+    }
+    getCountrySpecificData(countryId) 
+    {
+        return this.accountEndpoint.getCountrySpecificDataEndPoint<any>(countryId);
+    }
+    getSavedCountryData(masterCompanyId) 
+    {
+        return this.accountEndpoint.getSavedCountryDataEndPoint<any>(masterCompanyId);
+    }
+    getGlobalData(masterCompanyId: number) 
+    {
+        return Observable.forkJoin(
+            this.accountEndpoint.getSavedCountryDataEndPoint<any>(masterCompanyId));
+        // return this.accountEndpoint.getSavedCountryDataEndPoint<any>(masterCompanyId);
+    }
+    saveCountryLevelGlobalSettings(data) 
+    {
+        return this.accountEndpoint.saveCountryLevelGlobalSettingsEndPoint<any>(data);
+    }
 }

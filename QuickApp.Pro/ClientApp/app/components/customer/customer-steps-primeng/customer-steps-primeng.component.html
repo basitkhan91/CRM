@@ -164,7 +164,6 @@
           [editCustomerId]="customerId"
           [customerListOriginal]="customerListOriginal"
          [customerallListOriginal]="customerallListOriginal"
-         
           [countryListOriginal]="countryListOriginal"
           (saveGeneralInformationData)="generalInformationData($event)"
           (editGeneralInformation)="updateInformationData($event)"
@@ -218,6 +217,7 @@
           [editGeneralInformationData]="editGeneralInformationData"
           [savedGeneralInformationData]="savedGeneralInformationData"
           (tab)="changeOfTab($event)"
+ [creditTermsListOriginal]="creditTermsListOriginal"
         ></app-customer-financial-information>
       </div>
     </div>
@@ -229,6 +229,7 @@
           [countryListOriginal]="countryListOriginal"
           [savedGeneralInformationData]="savedGeneralInformationData"
           (tab)="changeOfTab($event)"
+          [selectedCustomerTab]="currentTab"
         ></app-customer-billing-information>
       </div>
     </div>
@@ -241,6 +242,7 @@
           [countryListOriginal]="countryListOriginal"
           [savedGeneralInformationData]="savedGeneralInformationData"
           (tab)="changeOfTab($event)"
+          [selectedCustomerTab]="currentTab"
         ></app-customer-shipping-information>
       </div>
     </div>

@@ -6,6 +6,8 @@ import { EmployeeService } from '../../../services/employee.service';
 import { VendorService } from '../../../services/vendor.service';
 import { getValueFromObjectByKey, getObjectById, editValueAssignByCondition, getObjectByValue } from '../../../generic/autocomplete';
 import { AlertService, MessageSeverity } from '../../../services/alert.service';
+import { LocalStoreManager } from '../../../services/local-store-manager.service';
+import { DBkeys } from '../../../services/db-Keys';
 
 @Component({
     selector: 'app-customer-sales-person',
@@ -27,6 +29,7 @@ export class CustomerSalesPersonComponent implements OnInit {
     customerName: any;
     customerCode: any;
     numberValidate = "^\d+$";
+    globalSettings: any = {};
 
 
     // activeIndex: number;
@@ -139,6 +142,7 @@ export class CustomerSalesPersonComponent implements OnInit {
             this.customerCode = this.savedGeneralInformationData.customerCode;
             this.customerName = this.savedGeneralInformationData.name;
         }
+        this.getGlobalSettings();
 
     }
 
@@ -151,6 +155,7 @@ export class CustomerSalesPersonComponent implements OnInit {
         // public workFlowtService: CustomerService ,
         private authService: AuthService,
         private alertService: AlertService,
+        private localStorage: LocalStoreManager,
     ) {
     }
     salesInfo = {
@@ -160,6 +165,9 @@ export class CustomerSalesPersonComponent implements OnInit {
         saId: "",
         annualRevenuePotential: "",
         annualQuota: "",
+    }
+    getGlobalSettings(){
+        this.globalSettings = this.localStorage.getDataObject<any>(DBkeys.GLOBAL_SETTINGS);
     }
 
     get userName(): string {

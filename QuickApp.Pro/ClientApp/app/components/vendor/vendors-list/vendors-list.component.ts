@@ -166,7 +166,7 @@ export class VendorsListComponent implements OnInit {
 		vendorId:0,
 		updatedBy: '',
         isActive: false,
-        isdelete:false
+        isdeleted:false
 	}
     private isEditMode: boolean = false;
     private isDeleteMode: boolean = false;
@@ -729,7 +729,7 @@ export class VendorsListComponent implements OnInit {
         this.isDeleteMode = true;
         this.updateActiveData.vendorId=this.sourceVendor.vendorId;
         //this.sourceVendor.isdelete = true;
-        this.updateActiveData.isdelete=true;
+        this.updateActiveData.isdeleted=true;
         //this.sourceVendor = content;
         this.updateActiveData.updatedBy = this.userName;
         this.workFlowtService.updatevendorstatus(this.updateActiveData).subscribe(

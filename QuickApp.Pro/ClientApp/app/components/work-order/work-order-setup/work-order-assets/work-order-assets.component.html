@@ -146,6 +146,16 @@
                 </a>
               </td>
               <td>
+                <span data-toggle="modal" data-target="#assetHistory">
+                  <a
+                    class="btn nobg btn-hist-cstm"
+                    (click)="getAuditHistoryById(asset)"
+                    matTooltip="History"
+                    ><i class="fa fa-history"> </i></a
+                ></span>
+              </td>
+
+              <td>
                 <button
                   class="btn-delete ptable-wo-btns"
                   mat-icon-button
@@ -309,6 +319,118 @@
           [isWorkOrder]="isWorkOrder"
         >
         </app-asset-listing>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div id="assetHistory" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-lg">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">
+          &times;
+        </button>
+        <h4 class="modal-title">Work Order Assets History</h4>
+      </div>
+      <div class="modal-body">
+        <div class="table-responsive">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>Asset Name</th>
+                <th>
+                  Asset Type Name
+                </th>
+                <th>Description</th>
+                <th>Quantity</th>
+                <th>CheckIn Date</th>
+                <th>CheckOut Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let audit of assetAuditHistory; let i = index">
+                <td
+                  [ngStyle]="{
+                    color: getColorCodeForHistory(i, 'assetId', audit.assetId)
+                      ? 'black'
+                      : 'red'
+                  }"
+                >
+                  {{ audit.assetId }}
+                </td>
+                <td
+                  [ngStyle]="{
+                    color: getColorCodeForHistory(
+                      i,
+                      'assetTypeName',
+                      audit.assetTypeName
+                    )
+                      ? 'black'
+                      : 'red'
+                  }"
+                >
+                  {{ audit.assetTypeName }}
+                </td>
+                <td
+                  [ngStyle]="{
+                    color: getColorCodeForHistory(
+                      i,
+                      'description',
+                      audit.description
+                    )
+                      ? 'black'
+                      : 'red'
+                  }"
+                >
+                  {{ audit.description }}
+                </td>
+                <td
+                  [ngStyle]="{
+                    color: getColorCodeForHistory(i, 'quantity', audit.quantity)
+                      ? 'black'
+                      : 'red'
+                  }"
+                >
+                  {{ audit.quantity }}
+                </td>
+                <td
+                  [ngStyle]="{
+                    color: getColorCodeForHistory(
+                      i,
+                      'checkedInDate',
+                      audit.checkedInDate
+                    )
+                      ? 'black'
+                      : 'red'
+                  }"
+                >
+                  {{ audit.checkedInDate }}
+                </td>
+                <td
+                  [ngStyle]="{
+                    color: getColorCodeForHistory(
+                      i,
+                      'checkedOutDate',
+                      audit.checkedOutDate
+                    )
+                      ? 'black'
+                      : 'red'
+                  }"
+                >
+                  {{ audit.checkedOutDate }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">

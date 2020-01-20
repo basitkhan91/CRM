@@ -15,11 +15,38 @@ import { EditRoleDialogComponent } from "./edit-role-dialog.component";
 import { RoleEditorComponent } from './role-editor.component';
 import { UserListComponent } from "./user-list.component";
 import { EditUserDialogComponent } from "./edit-user-dialog.component";
+import { GlobalSettingsComponent } from "./global-settings/global-settings.component";
+import { ButtonModule } from "primeng/button";
+import { TableModule } from "primeng/table";
+import { SelectButtonModule } from "primeng/selectbutton";
+import { InputTextModule } from "primeng/inputtext";
+import { MultiSelectModule } from "primeng/multiselect";
+import { InputSwitchModule } from "primeng/inputswitch";
+import { CheckboxModule } from "primeng/checkbox";
+import { AutoCompleteModule } from "primeng/autocomplete";
+import { BreadcrumbModule } from 'primeng/breadcrumb'; //bread crumb
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import {DropdownModule} from 'primeng/dropdown';
+import { AccountService } from "../services/account.service";
+import { GlAccountEndpointService } from "../services/glAccount/glAccount-endpoint.service";
+
 
 @NgModule({
     imports: [
+        FormsModule, 
+        ReactiveFormsModule,
         SharedModule,
-        AdminRoutingModule
+        AdminRoutingModule,
+        TableModule,
+        ButtonModule,
+        SelectButtonModule,
+        InputTextModule,
+        MultiSelectModule,
+        InputSwitchModule,
+        CheckboxModule,
+        AutoCompleteModule,
+        BreadcrumbModule,
+        DropdownModule
     ],
     declarations: [
         AdminComponent,
@@ -27,7 +54,12 @@ import { EditUserDialogComponent } from "./edit-user-dialog.component";
         EditRoleDialogComponent,
         RoleEditorComponent,
         UserListComponent,
-        EditUserDialogComponent
+        EditUserDialogComponent,
+        GlobalSettingsComponent
+    ],
+    providers: [
+        GlAccountEndpointService,
+        AccountService
     ],
     entryComponents: [
         EditUserDialogComponent,

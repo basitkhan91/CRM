@@ -46,7 +46,7 @@ export class WorkOrderListComponent implements OnInit {
         { field: 'estimatedShipDateType', header: 'Est. Ship Date' },
         { field: 'estimatedCompletionDateType', header: 'Shipped Date' },
         { field: 'stageType', header: 'Stage Code' },
-        { field: 'workOrderStatus', header: 'Status' },
+        { field: 'workOrderStatusType', header: 'Status' },
     ]
     selectedColumns = this.headers;
     pageIndex: number = 0;
@@ -154,7 +154,10 @@ export class WorkOrderListComponent implements OnInit {
         } else if (key === 'estimatedCompletionDateType') {
             return this.convertmultipleDates(data['estimatedCompletionDate']);
             // return data['estimatedCompletionDateType'] !== 'Multiple' ? moment(data['estimatedCompletionDate']).format('MM-DD-YYYY') : data['estimatedCompletionDate'];
-        } else {
+        } else if (key === 'workOrderStatusType') {
+            return data['workOrderStatus']
+        }
+        else {
             return data[key]
         }
 
@@ -213,7 +216,7 @@ export class WorkOrderListComponent implements OnInit {
         event.first = pageIndex;
         this.lazyLoadEventData.filters = {
             ...this.lazyLoadEventData.filters,
-            workOrderStatus: this.lazyLoadEventData.filters.workOrderStatus == undefined ? this.currentStatus : this.lazyLoadEventData.filters.workOrderStatus ,
+            workOrderStatus: this.lazyLoadEventData.filters.workOrderStatus == undefined ? this.currentStatus : this.lazyLoadEventData.filters.workOrderStatus,
             viewType: this.viewType
         }
         if (!this.isGlobalFilter) {

@@ -253,7 +253,20 @@ namespace QuickApp.Pro.Controllers
             }
         }
 
-
+        [HttpGet("CreateStockLine/{repairOrderId}")]
+        public IActionResult CreateStockLine(long repairOrderId)
+        {
+            try
+            {
+                unitOfWork.ReceiveRepairOrder.CreateStockLine(repairOrderId);
+                setRepairOrderStatus(repairOrderId);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
         #endregion Public Members
 
         #region Private Methods

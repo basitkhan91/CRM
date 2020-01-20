@@ -140,6 +140,7 @@
                                                     <div class="table-responsive default-bg clear">
                                                         <div class="col-sm-4">
                                                             <p><span class="label"><b>First Name: </b></span><span class="value">{{allEmployeelist.firstName ? allEmployeelist.firstName : '-'}}</span></p>
+                                                            <p><span class="label"><b>Middle Name: </b></span><span class="value">{{allEmployeelist.middleName ? allEmployeelist.middleName : '-'}}</span></p>
                                                             <p><span class="label"><b>Last Name: </b></span><span class="value">{{allEmployeelist.lastName ? allEmployeelist.lastName : '-'}}</span></p>
                                                             <p><span class="label"><b>Employee Id: </b></span><span class="value">{{allEmployeelist.employeeId ? allEmployeelist.employeeId : '-'}}</span></p>
                                                             <p><span class="label"><b>Employee Id (per Payroll): </b></span><span class="value">{{allEmployeelist.employeeIdAsPerPayroll ? allEmployeelist.employeeIdAsPerPayroll : '-'}}</span></p>
@@ -180,12 +181,14 @@
                                                                 <span class="value">{{allEmployeelist.hourlyPay ? allEmployeelist.hourlyPay : '-'}}</span>
                                                             </p>   
                                                             <p><span class="label"><b>Currency: </b></span><span class="value">{{currencyName}}</span></p>
-                                                            <p><span class="label"><b>Leave: </b></span><span class="value">
+                                                            <p><span class="label"><b>Leave Type: </b></span><span class="value">
                                                                 <div *ngFor="let leave of leaveMapArray">
                                                                     <span class="value">{{leave.employeeLeaveTypeId}}</span>
                                                                 </div>
                                                             </span></p>
                                                             <p><span class="label"><b>Employee Certifying Staff?: </b></span><span class="value">{{allEmployeelist.employeeCertifyingStaff ? allEmployeelist.employeeCertifyingStaff : '-'}}</span></p>
+                                                            <!-- <p><span class="label"><b>Supervisor Name: </b></span><span class="value">{{allEmployeelist.employeeCertifyingStaff ? allEmployeelist.employeeCertifyingStaff : '-'}}</span></p> -->
+                                                            
                                                         </div>
                                                     </div>
                                                     </div>

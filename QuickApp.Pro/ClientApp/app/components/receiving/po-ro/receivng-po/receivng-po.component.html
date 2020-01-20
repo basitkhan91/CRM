@@ -263,14 +263,19 @@
                                             <section *ngIf="part.itemMaster != null && part.stockLineCount < part.quantityOrdered">
                                                 <p-inputSwitch *ngIf="part.itemMaster.isSerialized == true" [(ngModel)]="part.itemMaster.isSerialized" pTooltip="Active" tooltipPosition="bottom" onLabel="on" offLabel="off" (onChange)="togglePartSerialized(part)"></p-inputSwitch>
                                                 <p-inputSwitch *ngIf="part.itemMaster.isSerialized == false" [(ngModel)]="part.itemMaster.isSerialized" pTooltip="In Active" tooltipPosition="bottom" onLabel="on" offLabel="off" (onChange)="togglePartSerialized(part)"></p-inputSwitch>
-                                                <p-inputSwitch *ngIf="part.itemMaster.isSerialized == null" [(ngModel)]="part.itemMaster.isSerialized" pTooltip="Active" tooltipPosition="bottom" onLabel="on" offLabel="off" (onChange)="togglePartSerialized(part)"></p-inputSwitch>
+                                                <p-inputSwitch *ngIf="part.itemMaster.isSerialized == null" [(ngModel)]="part.itemMaster.isSerialized" pTooltip="In Active" tooltipPosition="bottom" onLabel="on" offLabel="off" (onChange)="togglePartSerialized(part)"></p-inputSwitch>
                                             </section>
                                         </td>
                                         <td>
                                             <section *ngIf="part.itemMaster != null && part.stockLineCount < part.quantityOrdered">
-                                                <p-inputSwitch *ngIf="part.itemMaster.isTimeLife == true" [(ngModel)]="part.itemMaster.isTimeLife" pTooltip="Active" tooltipPosition="bottom" onLabel="on" offLabel="off" (onChange)="togglePartTimeLife(part)"></p-inputSwitch>
-                                                <p-inputSwitch *ngIf="part.itemMaster.isTimeLife == false" [(ngModel)]="part.itemMaster.isTimeLife" pTooltip="In Active" tooltipPosition="bottom" onLabel="on" offLabel="off" (onChange)="togglePartTimeLife(part)"></p-inputSwitch>
-                                                <p-inputSwitch *ngIf="part.itemMaster.isTimeLife == null" [(ngModel)]="part.itemMaster.isTimeLife" pTooltip="Active" tooltipPosition="bottom" onLabel="on" offLabel="off" (onChange)="togglePartTimeLife(part)"></p-inputSwitch>
+                                                <p-inputSwitch [(ngModel)]="part.itemMaster.isTimeLife" 
+                                                               pTooltip="{{part.itemMaster.isTimeLife == true ? 'Active' : 'In Active'}}" 
+                                                               tooltipPosition="bottom" 
+                                                               onLabel="on" 
+                                                               offLabel="off" 
+                                                               (onChange)="togglePartTimeLife(part, $event)"></p-inputSwitch>
+                                                <!--<p-inputSwitch [(ngModel)]="part.itemMaster.isTimeLife" pTooltip="In Active" tooltipPosition="bottom" onLabel="on" offLabel="off" (onChange)="togglePartTimeLife(part)"></p-inputSwitch>
+                                                <p-inputSwitch [(ngModel)]="part.itemMaster.isTimeLife" pTooltip="In Active" tooltipPosition="bottom" onLabel="on" offLabel="off" (onChange)="togglePartTimeLife(part)"></p-inputSwitch>-->
                                             </section>
                                         </td>
                                         <td style="padding:4px;">

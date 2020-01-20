@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using DAL;
+﻿using DAL;
 using DAL.Common;
 using DAL.Models;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace QuickApp.Pro.Controllers
 {
@@ -899,7 +898,19 @@ namespace QuickApp.Pro.Controllers
             return Ok();
         }
 
+        [HttpPost("woquotelist")]
+        public IActionResult WorkOrderQuoteList([FromBody]Filters<WOQuoteFilters> woQuoteFilters)
+        {
+            var result = unitOfWork.WorkOrderRepository.WorkOrderQuoteList(woQuoteFilters);
+            return Ok(result);
+        }
 
+        [HttpGet("woquoteview")]
+        public IActionResult WorkOrderQuoteView(long workOrderQuoteId)
+        {
+            var result = unitOfWork.WorkOrderRepository.WorkOrderQuoteView(workOrderQuoteId);
+            return Ok(result);
+        }
 
         #endregion
 
