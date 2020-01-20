@@ -17,6 +17,8 @@ namespace QuickApp.Pro.Controllers
             this._unitOfWork = unitOfWork;
         }
 
+        #region Global Settings
+
         [HttpPost("createglobalsettings")]
         public IActionResult CreateGlobalSettings([FromBody] GlobalSettings globalSetting)
         {
@@ -79,5 +81,87 @@ namespace QuickApp.Pro.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        #endregion
+
+        #region Code Prefix
+
+        [HttpPost("createcodeprefix")]
+        public IActionResult CreateCodePrefixes([FromBody] CodePrefixes codePrefixes)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var result = _unitOfWork.GlobalSettingsRepository.CreateCodePrefixes(codePrefixes);
+                    return Ok(result);
+                }
+                else
+                {
+                    return BadRequest(ModelState.Values.FirstOrDefault().Errors);
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("codeprefixebyid")]
+        public IActionResult CodePrefixeById(long codePrefixeId)
+        {
+            try
+            {
+                var result = _unitOfWork.GlobalSettingsRepository.CodePrefixeById(codePrefixeId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("deletecodeprefix")]
+        public IActionResult DeleteCodePrefix(long codePrefixeId, string updatedBy)
+        {
+            try
+            {
+                _unitOfWork.GlobalSettingsRepository.DeleteCodePrefix(codePrefixeId, updatedBy);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("codeprefixstatus")]
+        public IActionResult CodePrefixStatus(long codePrefixeId, bool status, string updatedBy)
+        {
+            try
+            {
+                _unitOfWork.GlobalSettingsRepository.CodePrefixStatus(codePrefixeId, status, updatedBy);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost("codeprefixlist")]
+        public IActionResult GetCodePrefixList([FromBody] Filters<CodePrefixFilters> cpFilters)
+        {
+            try
+            {
+                    var result = _unitOfWork.GlobalSettingsRepository.GetCodePrefixList(cpFilters);
+                    return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        #endregion
     }
 }

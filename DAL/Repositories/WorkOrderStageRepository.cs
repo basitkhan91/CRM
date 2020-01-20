@@ -53,140 +53,116 @@ namespace DAL.Repositories
             }
         }
 
-        public IEnumerable<object> WorkOrderStageList(Filters<WorkOrderStageFilters> woFilters)
+        public IEnumerable<object> WorkOrderStageList()
         {
-            long statusId = 0;
 
-            var open = "open";
-            var canceled = "canceled";
-            var closed = "closed";
-            var all = "all";
-
-            if (!string.IsNullOrEmpty(woFilters.filters.Status))
-            {
-                if (open.Contains(woFilters.filters.Status.ToLower()))
-                {
-                    statusId = 1;
-                }
-                else if (canceled.Contains(woFilters.filters.Status.ToLower()))
-                {
-                    statusId = 3;
-                }
-
-                else if (closed.Contains(woFilters.filters.Status.ToLower()))
-                {
-                    statusId = 2;
-                }
-                else if (all.Contains(woFilters.filters.Status.ToLower()))
-                {
-                    statusId = 0;
-                }
-            }
-
-            if (woFilters.filters.ManagementStructureId == null)
-                woFilters.filters.ManagementStructureId = 0;
-            if (woFilters.filters.Sequence == null)
-                woFilters.filters.Sequence = 0;
 
             try
             {
 
                 var totalRecords = (from stage in _appContext.WorkOrderStage
-                            join status in _appContext.WorkOrderStatus on stage.StatusId equals status.Id
-                            where stage.IsDeleted == false
-                            && stage.Code.Contains(!String.IsNullOrEmpty(woFilters.filters.Code) ? woFilters.filters.Code : stage.Code)
-                            && stage.Description.Contains(!String.IsNullOrEmpty(woFilters.filters.Description) ? woFilters.filters.Description : stage.Description)
-                            && stage.ManagementStructureId == (woFilters.filters.ManagementStructureId > 0 ? woFilters.filters.ManagementStructureId : stage.ManagementStructureId)
-                            && stage.Memo.Contains(!String.IsNullOrEmpty(woFilters.filters.Memo) ? woFilters.filters.Memo : stage.Memo)
-                            && stage.Sequence == (woFilters.filters.Sequence > 0 ? woFilters.filters.Sequence : stage.Sequence)
-                            && stage.Stage.Contains(!String.IsNullOrEmpty(woFilters.filters.Stage) ? woFilters.filters.Stage : stage.Stage)
-                            && stage.StatusId == (statusId > 0 ? statusId : stage.StatusId)
-                            select new
-                            {
-                                stage.WorkOrderStageId
+                                    join status in _appContext.WorkOrderStatus on stage.StatusId equals status.Id
+                                    where stage.IsDeleted == false
+                                    select new
+                                    {
+                                        stage.WorkOrderStageId
+                                    }).Distinct().Count();
 
-                            }).Distinct().Count();
-                
 
                 var list = (from stage in _appContext.WorkOrderStage
                             join status in _appContext.WorkOrderStatus on stage.StatusId equals status.Id
-                            where stage.IsDeleted==false
-                            && stage.Code.Contains(!String.IsNullOrEmpty(woFilters.filters.Code) ? woFilters.filters.Code : stage.Code)
-                            && stage.Description.Contains(!String.IsNullOrEmpty(woFilters.filters.Description) ? woFilters.filters.Description : stage.Description)
-                            && stage.ManagementStructureId == (woFilters.filters.ManagementStructureId > 0 ? woFilters.filters.ManagementStructureId : stage.ManagementStructureId)
-                            && stage.Memo.Contains(!String.IsNullOrEmpty(woFilters.filters.Memo) ? woFilters.filters.Memo : stage.Memo)
-                            && stage.Sequence == (woFilters.filters.Sequence > 0 ? woFilters.filters.Sequence : stage.Sequence)
-                            && stage.Stage.Contains(!String.IsNullOrEmpty(woFilters.filters.Stage) ? woFilters.filters.Stage : stage.Stage)
-                            && stage.StatusId == (statusId > 0 ? statusId : stage.StatusId)
-                            select new
+                            where stage.IsDeleted == false
+                            select new WOStageFilters()
                             {
 
-                                stage.Code,
-                                stage.CreatedBy,
-                                stage.CreatedDate,
-                                stage.Description,
-                                stage.IsActive,
-                                stage.IsDeleted,
-                                stage.ManagementStructureId,
-                                stage.MasterCompanyId,
-                                stage.Memo,
-                                stage.Sequence,
-                                stage.Stage,
-                                stage.StatusId,
+                                Code = stage.Code,
+                                CreatedDate = stage.CreatedDate,
+                                Description = stage.Description,
+                                IsActive = stage.IsActive,
+                                ManagementStrId = stage.ManagementStructureId,
+                                Memo = stage.Memo,
+                                Sequence = stage.Sequence,
+                                Stage = stage.Stage,
+                                StatusId = stage.StatusId,
                                 Status = status.Description,
-                                stage.UpdatedBy,
-                                stage.UpdatedDate,
-                                stage.WorkOrderStageId,
-                                TotalRecords= totalRecords
+                                UpdatedBy = stage.UpdatedBy,
+                                WorkOrderStageId = stage.WorkOrderStageId,
+                                TotalRecords = totalRecords
 
                             }).Distinct().ToList();
 
-
-
-                if (woFilters.SortOrder.HasValue && !string.IsNullOrEmpty(woFilters.SortField))
+                if (list != null && list.Count() > 0)
                 {
-                    if (woFilters.SortOrder == -1)
+                    string level1 = string.Empty;
+                    string level2 = string.Empty;
+                    string level3 = string.Empty;
+                    string level4 = string.Empty;
+
+                    foreach (var item in list)
                     {
-                        switch (woFilters.SortField)
+                        level1 = string.Empty;
+                        level2 = string.Empty;
+                        level3 = string.Empty;
+                        level4 = string.Empty;
+
+                        var mngInfoList = GetManagementStructureCodes(item.ManagementStrId);
+                        if (mngInfoList != null && mngInfoList.Count > 0)
                         {
-                            case "code":
-                                return list.OrderByDescending(p => p.Code).ToList();
-                            case "description":
-                                return list.OrderByDescending(p => p.Description).ToList();
-                            case "managementStructureId":
-                                return list.OrderByDescending(p => p.ManagementStructureId).ToList();
-                            case "memo":
-                                return list.OrderByDescending(p => p.Memo).ToList();
-                            case "sequence":
-                                return list.OrderByDescending(p => p.Sequence).ToList();
-                            case "stage":
-                                return list.OrderByDescending(p => p.Stage).ToList();
-                            case "status":
-                                return list.OrderByDescending(p => p.Status).ToList();
+                            if (mngInfoList.Any(p => p.Level1 == "Level1"))
+                            {
+                                item.LevelId1 = mngInfoList.Where(p=>p.Level1=="Level1").FirstOrDefault().LevelId1;
+                                item.LevelCode1 = mngInfoList.Where(p => p.Level1 == "Level1").FirstOrDefault().LevelCode1;
+                                item.Level1 = "Level1";
+                            }
+                            else
+                            {
+                                item.LevelId1 = 0;
+                                item.LevelCode1 ="";
+                                item.Level1 = "";
+                            }
+
+                            if (mngInfoList.Any(p => p.Level2 == "Level2"))
+                            {
+                                item.LevelId2 = mngInfoList.Where(p => p.Level2 == "Level2").FirstOrDefault().LevelId2;
+                                item.LevelCode2 = mngInfoList.Where(p => p.Level2 == "Level2").FirstOrDefault().LevelCode2;
+                                item.Level2 = "Level2";
+                            }
+                            else
+                            {
+                                item.LevelId2 = 0;
+                                item.LevelCode2 = "";
+                                item.Level2 = "";
+                            }
+
+                            if (mngInfoList.Any(p => p.Level3 == "Level3"))
+                            {
+                                item.LevelId3 = mngInfoList.Where(p => p.Level3 == "Level3").FirstOrDefault().LevelId3;
+                                item.LevelCode3 = mngInfoList.Where(p => p.Level3 == "Level3").FirstOrDefault().LevelCode3;
+                                item.Level3 = "Level3";
+                            }
+                            else
+                            {
+                                item.LevelId3 = 0;
+                                item.LevelCode3 = "";
+                                item.Level3 = "";
+                            }
+
+                            if (mngInfoList.Any(p => p.Level4 == "Level4"))
+                            {
+                                item.LevelId4 = mngInfoList.Where(p => p.Level4 == "Level4").FirstOrDefault().LevelId4;
+                                item.LevelCode4 = mngInfoList.Where(p => p.Level4 == "Level4").FirstOrDefault().LevelCode4;
+                                item.Level4 = "Level4";
+                            }
+                            else
+                            {
+                                item.LevelId4 = 0;
+                                item.LevelCode4 = "";
+                                item.Level4 = "";
+                            }
                         }
-                    }
-                    else
-                    {
-                        switch (woFilters.SortField)
-                        {
-                            case "code":
-                                return list.OrderBy(p => p.Code).ToList();
-                            case "description":
-                                return list.OrderBy(p => p.Description).ToList();
-                            case "managementStructureId":
-                                return list.OrderBy(p => p.ManagementStructureId).ToList();
-                            case "memo":
-                                return list.OrderBy(p => p.Memo).ToList();
-                            case "sequence":
-                                return list.OrderBy(p => p.Sequence).ToList();
-                            case "stage":
-                                return list.OrderBy(p => p.Stage).ToList();
-                            case "status":
-                                return list.OrderBy(p => p.Status).ToList();
-                        }
+
                     }
                 }
-
                 return list;
             }
             catch (Exception)
@@ -211,7 +187,7 @@ namespace DAL.Repositories
                 _appContext.Entry(workOrderStage).Property(p => p.IsDeleted).IsModified = true;
                 _appContext.Entry(workOrderStage).Property(p => p.UpdatedBy).IsModified = true;
                 _appContext.Entry(workOrderStage).Property(p => p.UpdatedDate).IsModified = true;
-                
+
                 _appContext.SaveChanges();
             }
             catch (Exception)
@@ -252,7 +228,7 @@ namespace DAL.Repositories
             {
                 var data = (from stage in _appContext.WorkOrderStage
                             join status in _appContext.WorkOrderStatus on stage.StatusId equals status.Id
-                            where stage.WorkOrderStageId==workOrderStageId
+                            where stage.WorkOrderStageId == workOrderStageId
                             select new
                             {
 
@@ -280,6 +256,102 @@ namespace DAL.Repositories
             {
 
                 throw;
+            }
+        }
+
+        private List<MangStructureInfo> GetManagementStructureCodes(long manmgStrucId)
+        {
+            List<MangStructureInfo> mngInfoList = new List<MangStructureInfo>();
+            MangStructureInfo mangStructureInfo = null;
+            ManagementStructure level4 = null;
+            ManagementStructure level3 = null;
+            ManagementStructure level2 = null;
+            ManagementStructure level1 = null;
+            string level1Code = string.Empty;
+            try
+            {
+                level4 = _appContext.ManagementStructure.Where(p => p.IsDelete != true && p.ManagementStructureId == manmgStrucId).AsNoTracking().FirstOrDefault();
+                if (level4 != null && level4.ParentId > 0)
+                {
+                    level3 = _appContext.ManagementStructure.Where(p => p.IsDelete != true && p.ManagementStructureId == level4.ParentId).AsNoTracking().FirstOrDefault();
+                }
+                if (level3 != null && level3.ParentId > 0)
+                {
+                    level2 = _appContext.ManagementStructure.Where(p => p.IsDelete != true && p.ManagementStructureId == level3.ParentId).AsNoTracking().FirstOrDefault();
+                }
+                if (level2 != null && level2.ParentId > 0)
+                {
+                    level1 = _appContext.ManagementStructure.Where(p => p.IsDelete != true && p.ManagementStructureId == level2.ParentId).AsNoTracking().FirstOrDefault();
+                }
+
+
+                if (level4 != null && level3 != null && level2 != null && level1 != null)
+                {
+                    mangStructureInfo = new MangStructureInfo();
+
+                    mangStructureInfo.Level1 = "Level1";
+                    mangStructureInfo.LevelCode1 = level1.Code;
+                    mangStructureInfo.LevelId1 = level1.ManagementStructureId;
+
+                    mangStructureInfo.Level2 = "Level2";
+                    mangStructureInfo.LevelCode2 = level2.Code;
+                    mangStructureInfo.LevelId2 = level2.ManagementStructureId;
+
+                    mangStructureInfo.Level3 = "Level3";
+                    mangStructureInfo.LevelCode3 = level3.Code;
+                    mangStructureInfo.LevelId3 = level3.ManagementStructureId;
+
+                    mangStructureInfo.Level4 = "Level4";
+                    mangStructureInfo.LevelCode4 = level4.Code;
+                    mangStructureInfo.LevelId4 = level4.ManagementStructureId;
+
+                    mngInfoList.Add(mangStructureInfo);
+                    
+                }
+                else if (level4 != null && level2 != null && level3 != null)
+                {
+                    mangStructureInfo.Level1 = "Level1";
+                    mangStructureInfo.LevelCode1 = level1.Code;
+                    mangStructureInfo.LevelId1 = level1.ManagementStructureId;
+
+                    mangStructureInfo.Level2 = "Level2";
+                    mangStructureInfo.LevelCode2 = level2.Code;
+                    mangStructureInfo.LevelId2 = level2.ManagementStructureId;
+
+                    mangStructureInfo.Level3 = "Level3";
+                    mangStructureInfo.LevelCode3 = level3.Code;
+                    mangStructureInfo.LevelId3 = level3.ManagementStructureId;
+
+                    mngInfoList.Add(mangStructureInfo);
+                }
+                else if (level4 != null && level3 != null)
+                {
+                    mangStructureInfo.Level1 = "Level1";
+                    mangStructureInfo.LevelCode1 = level1.Code;
+                    mangStructureInfo.LevelId1 = level1.ManagementStructureId;
+
+                    mangStructureInfo.Level2 = "Level2";
+                    mangStructureInfo.LevelCode2 = level2.Code;
+                    mangStructureInfo.LevelId2 = level2.ManagementStructureId;
+
+                    mngInfoList.Add(mangStructureInfo);
+                }
+                else if (level4 != null)
+                {
+                    mangStructureInfo.Level1 = "Level1";
+                    mangStructureInfo.LevelCode1 = level1.Code;
+                    mangStructureInfo.LevelId1 = level1.ManagementStructureId;
+
+                    mngInfoList.Add(mangStructureInfo);
+                }
+
+
+
+                return mngInfoList;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
             }
         }
     }

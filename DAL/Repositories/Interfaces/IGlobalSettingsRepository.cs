@@ -8,5 +8,12 @@ namespace DAL.Repositories.Interfaces
         object GetGlobalSettings(int masterCompanyId);
         IEnumerable<object> GetCultureInfos();
         object GetGlobalSettingsInfo(string culture);
+
+
+        CodePrefixes CreateCodePrefixes(CodePrefixes codePrefixes);
+        object CodePrefixeById(long codePrefixeId);
+        void DeleteCodePrefix(long codePrefixeId, string updatedBy);
+        void CodePrefixStatus(long codePrefixeId, bool status, string updatedBy);
+        IEnumerable<object> GetCodePrefixList(Common.Filters<CodePrefixFilters> cpFilters);
     }
 }

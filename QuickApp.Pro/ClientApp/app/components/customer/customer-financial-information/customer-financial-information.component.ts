@@ -28,6 +28,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class CustomerFinancialInformationComponent implements OnInit {
     @Input() savedGeneralInformationData: any;
     @Input() editGeneralInformationData;
+    @Input() creditTermsListOriginal
     @Input() editMode;
     @Output() tab = new EventEmitter();
       taxRatesList: any = [];
@@ -86,6 +87,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
     customerTaxRateMappingId: number;
     isDeleteMode: boolean = false;
     _creditTermList: any[];
+    _creditTermsList: any[];
     _creditTermPercentageList: any;
     _TaxTypeList: any;
     _TaxRateList: any;
@@ -109,6 +111,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
     namecolle: any[] = [];
     modal: NgbModalRef;
     localcollection: any;
+    creditTermData: any;
     formData = new FormData();
     allCustomerFinanceDocumentsList: any = [];
     taxInfoTableColumns: any [] = [
@@ -127,11 +130,13 @@ export class CustomerFinancialInformationComponent implements OnInit {
         private commonservice: CommonService,
         public percentService: PercentService,
         private modalService: NgbModal, private activeModal: NgbActiveModal,
-        private configurations: ConfigurationService
+        private configurations: ConfigurationService,
+        public creditTermService: CreditTermsService
       
 
     ) {
        
+
 
     }
     // taxType
@@ -139,29 +144,36 @@ export class CustomerFinancialInformationComponent implements OnInit {
 
 
     ngOnInit(): void {
+        this.getCreditTermList();
 
+        this.getAllcreditTermList();
         if (this.editMode) {
-
+            
             this.id = this.editGeneralInformationData.customerId
          
             this.savedGeneralInformationData = this.editGeneralInformationData;
             this.customerCode = this.editGeneralInformationData.customerCode;
             this.customerName = this.editGeneralInformationData.name;
-        
+            console.log(this.creditTermData,'editcredit')
+            this.savedGeneralInformationData = {
+                ...this.editGeneralInformationData,
+                creditTermsId: getObjectById('creditTermsId', this.editGeneralInformationData.creditTermsId, this.creditTermsListOriginal)
+            }
+
             if (this.editGeneralInformationData.currency == null || this.editGeneralInformationData.currency == 0) {
                 this.getDefaultCurrency();
             }
             this.getMappedTaxTypeRateDetails();
             this.toGetCustomerFinanceDocumentsList(this.id);
         } else {
+          
             this.id = this.savedGeneralInformationData.customerId;
             this.customerCode = this.savedGeneralInformationData.customerCode;
             this.customerName = this.savedGeneralInformationData.name;
             this.getDefaultCurrency();
         }
 
-          this.getAllcreditTermList();
-        this.getAllDiscountList();
+          this.getAllDiscountList();
         this.getAllTaxList();
         this.getAllCurrency();
         this.getAllPercentage();
@@ -184,6 +196,14 @@ export class CustomerFinancialInformationComponent implements OnInit {
 
         })
        
+    }
+
+     getCreditTermList() {
+        this.creditTermService.getCreditTermsList().subscribe(res => {
+            const respData = res[0];
+            this.creditTermData = respData.columnData;
+            console.log(this.creditTermData,'creditdata')
+                });
     }
     getAllCurrency() {
        
@@ -239,6 +259,16 @@ export class CustomerFinancialInformationComponent implements OnInit {
 
     }
 
+    filterCreditTerm(event) {
+        this._creditTermsList = this.creditTermData;
+
+        const CREDITTERMDATA = [...this.creditTermData.filter(x => {
+            return x.name.toLowerCase().includes(event.query.toLowerCase())
+        })]
+        this._creditTermsList = CREDITTERMDATA;
+    }
+
+    
     checkCreditTermsExists(field, value) {
         
         const exists = validateRecordExistsOrNot(field, value, this.creditTermList)
@@ -438,7 +468,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
     }
     mapTaxTypeandRate() {
         if(this.selectedTaxRates && this.selectedTaxType){ 
-            const index = this.taxTypeRateMapping.findIndex(item=> item.taxType === getValueFromArrayOfObjectById('label', 'value', this.selectedTaxType, this.taxTypeList) && item.taxRate === this.selectedTaxRates);
+            const index = this.taxTypeRateMapping.findIndex(item=> item.taxType === getValueFromArrayOfObjectById('label', 'value', this.selectedTaxType, this.taxTypeList));
             if(index > -1){
                 this.alertService.showMessage(
                     'Duplicate',
@@ -479,7 +509,9 @@ export class CustomerFinancialInformationComponent implements OnInit {
             ...this.savedGeneralInformationData,
             CustomerTaxTypeRateMapping: this.taxTypeRateMapping,
              updatedBy: this.userName,
+             
 
+             creditTermsId: this.savedGeneralInformationData.creditTermsId.creditTermsId
         }, this.id).subscribe(res => {
 
 
@@ -535,6 +567,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
             ...this.addNewIntergration,
             createdBy: this.userName,
             updatedBy: this.userName,
+          
         }
         this.customerService.newMarkUp(data).subscribe(data => {
                   this.alertService.showMessage(

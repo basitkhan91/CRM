@@ -202,11 +202,20 @@
                                                     </span>
                                                 </p>
                                                 <p>
-                                                    <span class="label"><b>Internal/External: </b></span><span class="value">
+                                                    <span class="label"><b>Customer Type: </b></span><span class="value">
                                                         {{
                           viewDataGeneralInformation.accountType
                                                         }}
                                                     </span>
+
+                                                </p>
+                                                <p>
+                                                    <span class="label"><b>Account Type: </b></span><span class="value">
+                                                        {{
+                          viewDataGeneralInformation.type
+                                                        }}
+                                                    </span>
+
                                                 </p>
                                                 <p>
                                                     <span class="label"><b>D/b/a: </b></span><span class="value">
@@ -281,41 +290,39 @@
                                                     </span>
                                                 </p>
                                                 <p>
-                                                    <span class="label"><b>Is Address For Billing: </b></span><span class="value">
-                                                        {{
-                          viewDataGeneralInformation.isAddressForBilling
-                                                        }}
-                                                    </span>
+                                                    <span class="value"><input type="checkbox" name="isIsBillingAddress" [(ngModel)]="viewDataGeneralInformation.isAddressForBilling" disabled><span><b>  Is this Address For Billing </b></span></span>
+
+                                                   
                                                 </p>
 
                                                 <p>
-                                                    <span class="label"><b>Is Address For Shipping: </b></span><span class="value">
-                                                        {{
-                          viewDataGeneralInformation.isAddressForShipping
-                                                        }}
-                                                    </span>
-                                                </p>
-                                                <p>
-                                                    <span class="label"><b>Is Customer Also Vendor: </b></span><span class="value">
-                                                        {{
-                          viewDataGeneralInformation.isCustomerAlsoVendor
-                                                        }}
-                                                    </span>
-                                                </p>
-                                                <p>
-                                                    <span class="label"><b>Is PBH Customer: </b></span><span class="value">
-                                                        {{
-                          viewDataGeneralInformation.isPBHCustomer
-                                                        }}
-                                                    </span>
+                                                    <span class="value"><input type="checkbox" name="isIsShippingAddress" [(ngModel)]="viewDataGeneralInformation.isAddressForShipping" disabled><span><b>  Is this Address For Shipping </b></span></span>
 
-                                                    <span class="label"><b>PBH Customer:</b></span><span class="value">
+                                                   
+                                                </p>
+                                                <p>
+                                                    <span class="value"><input type="checkbox" name="iscustomerAlsoVendor" [(ngModel)]="viewDataGeneralInformation.isCustomerAlsoVendor" disabled><span><b>  Is Customer Also Vendor </b></span></span>
+
+                                                  
+                                                </p>
+                                                <p>
+                                                    <span class="value"><input type="checkbox" name="isPBH" [(ngModel)]="viewDataGeneralInformation.isPBHCustomer" disabled><b>  Is PBH Customer </b></span>
+
+                                                  
+
+                                                   
+
+                                                </p>
+                                                <p>
+                                                    <span class="label" *ngIf="viewDataGeneralInformation.isPBHCustomer"><b>PBH Customer:</b></span><span class="value">
                                                         {{
                           viewDataGeneralInformation.pbhCustomerMemo
                                                         }}
                                                     </span>
-
                                                 </p>
+                                              
+                                            </div>
+                                            <div class="col-sm-6">
                                                 <p>
                                                     <span class="label"><b>Created By: </b></span><span class="value">
                                                         {{
@@ -343,8 +350,6 @@
 
                                                     </span>
                                                 </p>
-                                            </div>
-                                            <div class="col-sm-6">
                                                 <p>
                                                     <span class="label"><b>Classification: </b></span><span class="value">
 
@@ -380,33 +385,35 @@
                                                     </span>
                                                 </p>
                                                 <div>
+                                                    <div *ngIf="viewDataGeneralInformation.restrictPMA">
+                                                        Except for
+                                                        <p-table class="rpo-table-cstm"
+                                                                 [columns]="customerPMAColumns"
+                                                                 [value]="restrictedPMAParts"
+                                                                 [paginator]="true"
+                                                                 [rows]="4"
+                                                                 [first]="first">
+                                                            <ng-template pTemplate="header" let-columns>
+                                                                <tr>
 
-                                                    <p-table class="rpo-table-cstm"
-                                                             [columns]="customerPMAColumns"
-                                                             [value]="restrictedPMAParts"
-                                                             [paginator]="true"
-                                                             [rows]="4"
-                                                             [first]="first">
-                                                        <ng-template pTemplate="header" let-columns>
-                                                            <tr>
+                                                                    <th style="padding: 8px 5px !important;" *ngFor="let col of columns">
+                                                                        {{ col.header }}
+                                                                    </th>
+                                                                </tr>
+                                                            </ng-template>
+                                                            <ng-template pTemplate="body"
+                                                                         let-rowData
+                                                                         let-columns="columns"
+                                                                         let-rowIndex="rowIndex">
+                                                                <tr>
 
-                                                                <th style="padding: 8px 5px !important;" *ngFor="let col of columns">
-                                                                    {{ col.header }}
-                                                                </th>
-                                                            </tr>
-                                                        </ng-template>
-                                                        <ng-template pTemplate="body"
-                                                                     let-rowData
-                                                                     let-columns="columns"
-                                                                     let-rowIndex="rowIndex">
-                                                            <tr>
-
-                                                                <td *ngFor="let col of columns">
-                                                                    {{ rowData[col.field] }}
-                                                                </td>
-                                                            </tr>
-                                                        </ng-template>
-                                                    </p-table>
+                                                                    <td *ngFor="let col of columns">
+                                                                        {{ rowData[col.field] }}
+                                                                    </td>
+                                                                </tr>
+                                                            </ng-template>
+                                                        </p-table>
+                                                    </div>
                                                 </div>
 
                                                 <p>
@@ -414,7 +421,8 @@
                                                         {{viewDataGeneralInformation.restrictBER}}
                                                     </span>
                                                 </p>
-                                                <div>
+                                                <div *ngIf="viewDataGeneralInformation.restrictBER">
+                                                    Except for
                                                     <p-table class="rpo-table-cstm"
                                                              [columns]="customerDERColumns"
                                                              [value]="restrictedDERParts"
