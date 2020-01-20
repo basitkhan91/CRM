@@ -343,7 +343,7 @@ selectedWorkFlowWorkOrderId: number;
       if(mpn.label == this.selectedPartNumber){
         msId = mpn.value.masterPartId;
         this.labor.workFlowWorkOrderId = mpn;
-        this.selectedWorkFlowOrWorkOrder = mpn.value.workOrderWorkFlowId;
+        this.selectedWorkFlowWorkOrderId = mpn.value.workOrderWorkFlowId;
       }
     })
     this.savedWorkOrderData.partNumbers.forEach((pns)=>{
@@ -553,7 +553,7 @@ selectedWorkFlowWorkOrderId: number;
 
   createMaterialQuote(){
     this.materialListPayload.BuildMethodId = this.getBuildMethodId();
-    this.materialListPayload['workflowWorkOrderId'] = this.selectedWorkFlowWorkOrderId;
+    this.materialListPayload['WorkflowWorkOrderId'] = this.selectedWorkFlowWorkOrderId;
     this.materialListPayload.WorkOrderQuoteMaterial = this.materialListQuotation.map(mList=>{
       if(mList.workOrderQuoteDetailsId && mList.workOrderQuoteDetailsId != 0){
         this.materialListPayload.WorkOrderQuoteDetailsId = mList.workOrderQuoteDetailsId
@@ -1006,7 +1006,7 @@ getQuoteTabData() {
 
 }
 getQuoteExclusionListByWorkOrderQuoteId() {
-  this.workOrderService.getQuoteExclusionList(this.selectedWorkFlowOrWorkOrder).subscribe(res => {
+  this.workOrderService.getQuoteExclusionList(this.selectedWorkFlowWorkOrderId).subscribe(res => {
       this.workOrderExclusionsList = res;
       if(res.length > 0){
         this.updateWorkOrderQuoteDetailsId(res[0].workOrderQuoteDetailsId)
@@ -1014,7 +1014,7 @@ getQuoteExclusionListByWorkOrderQuoteId() {
   })
 }
 getQuoteMaterialListByWorkOrderQuoteId() {
-  this.workOrderService.getQuoteMaterialList(this.selectedWorkFlowOrWorkOrder).subscribe(res => {
+  this.workOrderService.getQuoteMaterialList(this.selectedWorkFlowWorkOrderId).subscribe(res => {
       this.materialListQuotation = res;
       if(res.length > 0){
         this.updateWorkOrderQuoteDetailsId(res[0].workOrderQuoteDetailsId)
@@ -1022,7 +1022,7 @@ getQuoteMaterialListByWorkOrderQuoteId() {
   })
 }
  getQuoteChargesListByWorkOrderQuoteId() {
-  this.workOrderService.getQuoteChargesList(this.selectedWorkFlowOrWorkOrder).subscribe(res => {
+  this.workOrderService.getQuoteChargesList(this.selectedWorkFlowWorkOrderId).subscribe(res => {
       this.workOrderChargesList = res;
       if(res.length > 0){
         this.updateWorkOrderQuoteDetailsId(res[0].workOrderQuoteDetailsId)
@@ -1030,7 +1030,7 @@ getQuoteMaterialListByWorkOrderQuoteId() {
   })
 }
  getQuoteLaborListByWorkOrderQuoteId() {
-  this.workOrderService.getQuoteLaborList(this.selectedWorkFlowOrWorkOrder).subscribe(res => {
+  this.workOrderService.getQuoteLaborList(this.selectedWorkFlowWorkOrderId).subscribe(res => {
       if (res) {
           // this.workOrderLaborList = res;
           let wowfId = this.labor.workFlowWorkOrderId;
