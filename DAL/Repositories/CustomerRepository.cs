@@ -577,6 +577,8 @@ namespace DAL.Repositories
                             join ad in _appContext.Address on t.AddressId equals ad.AddressId into add
                             from ad in add.DefaultIfEmpty()
 
+                            join type in _appContext.CustomerType on t.CustomerTypeId equals type.CustomerTypeId into typ
+                            from type in typ.DefaultIfEmpty()
 
                             join Emp in _appContext.Employee on Convert.ToInt32(t.PrimarySalesPersonId) equals Emp.EmployeeId into Emplyee
                             from Emp in Emplyee.DefaultIfEmpty()
@@ -624,6 +626,7 @@ namespace DAL.Repositories
                                 isAddressForBilling = t.IsAddressForBilling,
                                 isAddressForShipping = t.IsAddressForShipping,
                                 customerAffiliationId = vt.CustomerAffiliationId,
+                              Type= type.Description,
                                 customerTypeId = t.CustomerTypeId,
                                 name = t.Name,
                                 customerPhone = t.CustomerPhone,

@@ -43,7 +43,10 @@ export class CustomerContactsComponent implements OnInit {
    
 
 
-
+    totalRecords: any;
+    pageIndex: number = 0;
+    pageSize: number = 10;
+    totalPages: number;
 	contactsListOriginal: any;
 	firstNamesList: any;
 	middleNamesList: any;
@@ -280,8 +283,11 @@ export class CustomerContactsComponent implements OnInit {
 		// get Customer Contatcs 
 		this.customerService.getContacts(this.id).subscribe(res => {
 			this.customerContacts = res[0]
-
-
+            const re=res[0]
+            if (re.length > 0) {
+                this.totalRecords = re.length;
+                this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+            }
 		})
 	}
 

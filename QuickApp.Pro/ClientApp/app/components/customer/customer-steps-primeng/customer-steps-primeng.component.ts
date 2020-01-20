@@ -6,7 +6,7 @@ import { EmployeeService } from '../../../services/employee.service';
 import { AtaMainService } from '../../../services/atamain.service';
 import { MessageSeverity, AlertService } from '../../../services/alert.service';
 import { MenuItem } from 'primeng/api';
-
+import { CreditTermsService } from '../../../services/Credit Terms.service';
 @Component({
 	selector: 'app-customer-create',
 	templateUrl: './customer-steps-primeng.component.html',
@@ -17,7 +17,8 @@ export class CustomerStepsPrimengComponent {
 	activeMenuItem: number = 1;
 	currentTab: string = 'General';
 	savedGeneralInformationData: any;
-	countryListOriginal: any[];
+    countryListOriginal: any[];
+    creditTermsListOriginal: any[];
 	customerId: number;
 	editMode: boolean = false;
     customerListOriginal: { customerId: any; name: any; }[];
@@ -50,7 +51,8 @@ export class CustomerStepsPrimengComponent {
 		private atamain: AtaMainService,
         private alertService: AlertService,
 		private route: Router,
-		location: Location
+        location: Location,
+        public creditTermService: CreditTermsService
 	) {
 		// let currentUrl = this.route.url;
 		// this.customerService.alertChangeObject$.subscribe(value => {
@@ -75,7 +77,9 @@ export class CustomerStepsPrimengComponent {
 		this.getAllCustomers();
 		this.getAllEmployees();
         this.getAllATAChapter();
-		this.getAllCustomersData();
+        this.getAllCustomersData();
+        this.getAllCreditTerms();
+
 		this.breadcrumbs = [
             {label:'Customers'},
             {label: this.editMode ? 'Edit Customer' : 'Create Customer'},
@@ -270,6 +274,17 @@ export class CustomerStepsPrimengComponent {
 		})
 	}
 
+    //getAllCreditTerms() {
+    //    this.customerService.getCountrylist().subscribe(res => {
+    //        this.creditTermsListOriginal = res[0];
+    //    })
+    //}
+     getAllCreditTerms() {
+        this.creditTermService.getCreditTermsList().subscribe(res => {
+            const respData = res[0];
+            this.creditTermsListOriginal = respData.columnData;
+                 });
+    }
 	getAllCustomers() {
 		this.customerService.getCustomers().subscribe(res => {
 			this.customerListOriginal = res[0];
