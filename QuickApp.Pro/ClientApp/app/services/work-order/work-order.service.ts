@@ -238,6 +238,9 @@ export class WorkOrderService {
     assetsCheckOutByWorkOrderAssetsId(assetcheckout) {
         return this.workOrderEndpointService.assetsCheckOutByWorkOrderAssetsId(assetcheckout);
     }
+    assetsHistoryByWorkOrderAssetId(workOrderAssetId){
+        return this.workOrderEndpointService.assetsHistoryByWorkOrderAssetId(workOrderAssetId);
+    }
     deleteWorkOrderAssetByAssetId(workOrderAssetId, updatedBy) {
         return this.workOrderEndpointService.deleteWorkOrderAssetByAssetId(workOrderAssetId, updatedBy);
     }
