@@ -11,6 +11,9 @@ import { WorkOrderService } from '../../../../services/work-order/work-order.ser
 import { CommonService } from '../../../../services/common.service';
 import { WorkFlowtService } from '../../../../services/workflow.service';
 import { CurrencyService } from '../../../../services/currency.service';
+import { listSearchFilterObjectCreation } from '../../../../generic/autocomplete';
+import { Subject } from 'rxjs'
+import { takeUntil } from 'rxjs/operators';
 import * as $ from 'jquery'
 import {
   AlertService,
@@ -36,6 +39,7 @@ export class WorkOrderQuoteListComponent implements OnInit {
 
   @Output() closeView = new EventEmitter();
   private woQuoteList: any[];
+  private onDestroy$: Subject<void> = new Subject<void>();
   pageSize: number = 10;
   headers = [
     { field: 'quoteNumber', header: 'QUOTE NUM' },
@@ -54,11 +58,13 @@ export class WorkOrderQuoteListComponent implements OnInit {
   woQuoteViewData: any;
   constructor(private router: ActivatedRoute,private workOrderService: WorkOrderQuoteService, private commonService: CommonService, private _workflowService: WorkFlowtService, private alertService:AlertService, private workorderMainService: WorkOrderService, private currencyService:CurrencyService, private cdRef: ChangeDetectorRef) {}
   ngOnInit() {
-    this.workOrderService.getWorkOrderQuoteList({"first":0,"rows":100,"sortOrder":1,
+    this.workOrderService.getWorkOrderQuoteList({"first":0,"rows":10,"sortOrder":1,
     "filters":{"quoteStatus":"open"},"globalFilter":null})
     .subscribe(
       (res: any[])=>{
         this.woQuoteList = res;
+        this.totalRecords = res[0].totalRecords;
+        this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
       }
     )
   }
@@ -136,5 +142,25 @@ export class WorkOrderQuoteListComponent implements OnInit {
         this.woQuoteViewData = quoteData;
       }
     )
+  }
+
+  getAllWorkOrderQuoteList(data) {
+      console.log(data);
+      const PagingData = { ...data, filters: listSearchFilterObjectCreation(data.filters) }
+      this.workOrderService.getWorkOrderQuoteList(PagingData).pipe(takeUntil(this.onDestroy$)).subscribe((res: any[]) => {
+          this.woQuoteList = res;
+          if (res.length > 0) {
+              this.totalRecords = res[0].totalRecords;
+              this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+          }
+
+      })
+  }
+  loadData(event) {
+      const pageIndex = parseInt(event.first) / event.rows;;
+      this.pageIndex = pageIndex;
+      this.pageSize = event.rows;
+      event.first = pageIndex;
+      this.getAllWorkOrderQuoteList(event);
   }
 }

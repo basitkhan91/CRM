@@ -12,6 +12,12 @@
     expandableRows="true"
     rowExpandMode="single"
     [lazy]="true"
+    (onLazyLoad)="loadData($event)"
+    [resizableColumns]="true"
+    [reorderableColumns]="true"
+    [totalRecords]="totalRecords"
+    [scrollable]="true"
+    [metaKeySelection]="true"
     scrollHeight="450px">
     <ng-template pTemplate="header" let-columns>
         <tr>
@@ -25,9 +31,8 @@
                 Actions
             </th>
         </tr>
-        <tr>
+        <!-- <tr>
             <th style="width:120px" *ngFor="let col of columns" [ngSwitch]="col.field">
-                <!-- <input type="text" style="width:100%;" pInputText   (keyup)="filterData($event)"> -->
                 <input *ngIf="col.field !== 'openDate' 
                 && col.field !== 'customerRequestDateType'
                 && col.field !== 'promisedDateType'
@@ -41,7 +46,7 @@
                 <input type="date"  *ngIf="col.field == 'estimatedCompletionDateType'" name="estimatedCompletionDate" style="width:100%;" (change)="dt.filter($event.target.value, col.field, 'contains')">
             </th>
             <th style="width:80px;position:sticky"></th>
-        </tr>
+        </tr> -->
     </ng-template>
     <ng-template pTemplate="body"
                      let-rowData
