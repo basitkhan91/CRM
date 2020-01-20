@@ -9,7 +9,8 @@ namespace DAL.Models
         public string CustomerName { get; set; }
         public DateTime? OpenDate { get; set; }
         public string WorkOrderStatus { get; set; }
-        public long WorkOrderStatusId { get; set; }
+        public string WorkOrderStatusType { get; set; }
+        public string WorkOrderStatusId { get; set; }
         public string PartNoType { get; set; }
         public string WorkScopeType { get; set; }
         public string PriorityType { get; set; }
