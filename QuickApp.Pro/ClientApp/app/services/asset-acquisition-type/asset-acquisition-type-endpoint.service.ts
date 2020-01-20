@@ -9,20 +9,19 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import { EndpointFactory } from '../endpoint-factory.service';
 import { ConfigurationService } from '../configuration.service';
-import { AssetLocation } from '../../models/asset-location.model';
+import { AssetAcquisitionType } from '../../models/asset-acquisition-type.model';
 
 @Injectable()
-export class AssetLocationEndpointService extends EndpointFactory {
+export class AssetAcquisitionTypeEndpointService extends EndpointFactory {
 
-    private readonly getAllURL: string = "/api/assetlocation/getAll";
-    private readonly getDeleted: string = "/api/assetlocation/getDeleted";
-    private readonly getByIdURL: string = "/api/assetlocation/getById";
-    private readonly addURL: string = "/api/assetlocation/add";
-    private readonly updateURL: string = "/api/assetlocation/update";
-    private readonly removeByIdURL: string = "/api/assetlocation/removeById";
-    private readonly updateForActive: string = "/api/assetlocation/updateActive";
-    private readonly getAssetAuditById: string = "/api/assetlocation/assetlocationauditdetails";
-    private readonly excelUpload: string = "/api/assetlocation/UploadAssetLocationCustomData";
+    private readonly getAllURL: string = "/api/assetacquisition/getAll";
+    private readonly getByIdURL: string = "/api/assetacquisition/getById";
+    private readonly addURL: string = "/api/assetacquisition/add";
+    private readonly updateURL: string = "/api/assetacquisition/update";
+    private readonly removeByIdURL: string = "/api/assetacquisition/removeById";
+    private readonly updateForActive: string = "/api/assetacquisition/updateActive";
+    private readonly getAssetAuditById: string = "/api/assetacquisition/assetacquisitionauditdetails";
+    private readonly excelUpload: string = "/api/assetacquisition/UploadAssetAcquisitionTypeCustomData";
 
 
     get getAll() { return this.configurations.baseUrl + this.getAllURL; }
@@ -45,15 +44,6 @@ export class AssetLocationEndpointService extends EndpointFactory {
             });
     }
 
-    getAllDeleted<T>(): Observable<T> {
-        let endpointUrl = this.getDeleted;
-
-        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
-            .catch(error => {
-                return this.handleError(error, () => this.getAllDeleted());
-            });
-    }
-
     getAssetById<T>(assetId: number): Observable<T> {
         let endpointUrl = `${this.getById}/${assetId}`;
 
@@ -63,7 +53,7 @@ export class AssetLocationEndpointService extends EndpointFactory {
             });
     }
 
-    addAsset<T>(asset: AssetLocation): Observable<T> {
+    addAsset<T>(asset: AssetAcquisitionType): Observable<T> {
         let endpointUrl = this.add;
 
         return this.http.post<T>(endpointUrl, JSON.stringify(asset), this.getRequestHeaders())
@@ -72,12 +62,12 @@ export class AssetLocationEndpointService extends EndpointFactory {
             });
     }
 
-    updateAsset<T>(assetLocation: AssetLocation): Observable<T> {
+    updateAsset<T>(AssetAcquisitionType: AssetAcquisitionType): Observable<T> {
         let endpointUrl = this.update;
 
-        return this.http.post<T>(endpointUrl, JSON.stringify(assetLocation), this.getRequestHeaders())
+        return this.http.post<T>(endpointUrl, JSON.stringify(AssetAcquisitionType), this.getRequestHeaders())
             .catch(error => {
-                return this.handleError(error, () => this.updateAsset(assetLocation));
+                return this.handleError(error, () => this.updateAsset(AssetAcquisitionType));
             });
     }
 
@@ -99,16 +89,16 @@ export class AssetLocationEndpointService extends EndpointFactory {
             });
     }
 
-    getAssetLocationAuditById<T>(assetId: number): Observable<T> {
+    getAssetAcquisitionTypeAuditById<T>(assetId: number): Observable<T> {
         let endpointUrl = `${this.getAssetAuditById}/${assetId}`;
 
         return this.http.get<T>(endpointUrl, this.getRequestHeaders())
             .catch(error => {
-                return this.handleError(error, () => this.getAssetLocationAuditById(assetId));
+                return this.handleError(error, () => this.getAssetAcquisitionTypeAuditById(assetId));
             });
     }
 
-    AssetLocationCustomUpload(file) {
+    AssetAcquisitionTypeCustomUpload(file) {
         return this.http.post(`${this.configurations.baseUrl}${this.excelUpload}`, file)
 
 

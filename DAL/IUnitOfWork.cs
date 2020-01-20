@@ -264,6 +264,12 @@ namespace DAL
 
         IAssetStatus AssetStatus { get; }
 
+        IAssetLocation AssetLocation { get; }
+		IAssetLocationAudit AssetLocationAudit { get; }
+
+        IAssetAcquisitionType AssetAcquisitionType { get; }
+		IAssetAcquisitionTypeAudit AssetAcquisitionTypeAudit { get; }
+
         IAssetDepConvention AssetDepConvention { get; }
 
         IPublicationTypesRepository PublicationTypesRepository { get; }

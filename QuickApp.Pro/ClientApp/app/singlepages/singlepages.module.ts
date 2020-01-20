@@ -91,9 +91,9 @@ import { AssetStatusEndpointService } from "../services/asset-status/assetstatus
 import { AssetLocationComponent } from "../components/asset-location/asset-location.component";
 import { AssetLocationService } from "../services/asset-location/asset-location.service";
 import { AssetLocationEndpointService } from "../services/asset-location/asset-location-endpoint.service";
-import { AssetAcquistionTypeComponent } from "../components/asset-acquistion-type/asset-acquistion-type.component";
-import { AssetAcquistionTypeService } from "../services/asset-acquistion-type/asset-acquistion-type.service";
-import { AssetAcquistionTypeEndpointService } from "../services/asset-acquistion-type/asset-acquistion-type-endpoint.service";
+import { AssetAcquisitionTypeComponent } from "../components/asset-acquisition-type/asset-acquisition-type.component";
+import { AssetAcquisitionTypeService } from "../services/asset-acquisition-type/asset-acquisition-type.service";
+import { AssetAcquisitionTypeEndpointService } from "../services/asset-acquisition-type/asset-acquisition-type-endpoint.service";
 import { DepriciationMethodComponent } from "../components/depriciation-method/depriciation-method.component";
 import { DepriciationMethodService } from "../services/depriciation-method/depriciation.service";
 import { DepriciationMethodEndpointService } from "../services/depriciation-method/depriciationmethod-endpoint.service";
@@ -241,7 +241,7 @@ import { StageCodeService } from "../services/work-order-stagecode.service";
         CertificationTypeComponent,
         AssetStatusComponent,
         AssetLocationComponent,
-        AssetAcquistionTypeComponent,
+        AssetAcquisitionTypeComponent,
         DisposalTypeComponent,
         DepriciationMethodComponent,
         AssetDepConventionTypeComponent,
@@ -263,8 +263,8 @@ import { StageCodeService } from "../services/work-order-stagecode.service";
         AssetStatusEndpointService,
         AssetLocationService,
         AssetLocationEndpointService,
-        AssetAcquistionTypeService,
-        AssetAcquistionTypeEndpointService,
+        AssetAcquisitionTypeService,
+        AssetAcquisitionTypeEndpointService,
         DepriciationMethodService,
         DepriciationMethodEndpointService,
         DisposalTypeEndpointService,

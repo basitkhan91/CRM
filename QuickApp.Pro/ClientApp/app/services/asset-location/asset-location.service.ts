@@ -23,6 +23,11 @@ export class AssetLocationService {
             this.assetLocationEndpoint.getAllAssets<any>());
     }
 
+    getDeleted() {
+        return Observable.forkJoin(
+            this.assetLocationEndpoint.getAllAssets<any>());
+    }
+
     getById(assetLocationId: number) {
         return Observable.forkJoin(
             this.assetLocationEndpoint.getAssetById<AssetLocation>(assetLocationId)

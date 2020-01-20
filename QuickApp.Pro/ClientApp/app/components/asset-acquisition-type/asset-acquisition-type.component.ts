@@ -1,10 +1,10 @@
 import { fadeInOut } from "../../services/animations";
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { AlertService, MessageSeverity } from "../../services/alert.service";
-import { AssetLocation } from "../../models/asset-location.model";
-import { AssetLocationService } from "../../services/asset-location/asset-location.service";
+import { AssetAcquisitionType } from "../../models/asset-acquisition-type.model";
+import { AssetAcquisitionTypeService } from "../../services/asset-acquisition-type/asset-acquisition-type.service";
 import { NgbModalRef, NgbModal } from "@ng-bootstrap/ng-bootstrap";
-import { AssetLocationAudit} from "../../models/asset-location-audit.model";
+import { AssetAcquisitionTypeAudit} from "../../models/asset-acquisition-type-audit.model";
 import { forEach } from "@angular/router/src/utils/collection";
 import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-screen-audit-details.model";
 import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
@@ -16,19 +16,19 @@ import { AuditHistory } from '../../models/audithistory.model';
 import { ConfigurationService } from '../../services/configuration.service';
 
 @Component({
-    selector: 'asset-location',
-    templateUrl: './asset-location.component.html',
-    styleUrls: ['asset-location.component.scss'],
+    selector: 'asset-acquisition-type',
+    templateUrl: './asset-acquisition-type.component.html',
+    styleUrls: ['asset-acquisition-type.component.scss'],
     animations: [fadeInOut]
 })
-export class AssetLocationComponent implements OnInit {
+export class AssetAcquisitionTypeComponent implements OnInit {
 
-    currentAssetLocation: AssetLocation;
-    dataSource: MatTableDataSource<AssetLocation>;
-    assetLocationToUpdate: AssetLocation;
-    assetLocationToRemove: AssetLocation;
-    assetLocationList: AssetLocation[] = [];
-    assetLocationAuditList: AssetLocationAudit[];
+    currentAssetAcquisitionType: AssetAcquisitionType;
+    dataSource: MatTableDataSource<AssetAcquisitionType>;
+    AssetAcquisitionTypeToUpdate: AssetAcquisitionType;
+    AssetAcquisitionTypeToRemove: AssetAcquisitionType;
+    AssetAcquisitionTypeList: AssetAcquisitionType[] = [];
+    AssetAcquisitionTypeAuditList: AssetAcquisitionTypeAudit[];
     updateMode: boolean;
     selectedData: any;
     formData = new FormData();
@@ -36,7 +36,7 @@ export class AssetLocationComponent implements OnInit {
     private isDeleteMode: boolean = false;
     private isEditMode: boolean = false;
     modal: NgbModalRef;
-    public sourceAction: AssetLocation;
+    public sourceAction: AssetAcquisitionType;
     display: boolean = false;
     modelValue: boolean = false;
     allComapnies: MasterCompany[] = [];
@@ -59,7 +59,7 @@ export class AssetLocationComponent implements OnInit {
     localCollection: any[] = [];
     disableSave: boolean = false;
     isSaving: boolean;
-    assetLocationId: number = 0;
+    AssetAcquisitionTypeId: number = 0;
     private isDelete: boolean = false;
     codeName: string = "";
     allreasn: any[] = [];
@@ -72,31 +72,31 @@ export class AssetLocationComponent implements OnInit {
     totalPages: number;
     displayedColumns = ['Code', 'Name', 'Memo'];
     recordExists: boolean = false;
-    selAssetLocationId: any;
+    selAssetAcquisitionTypeId: any;
     selectedRow: any;
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
-    /** AssetLocation ctor */
+    /** AssetAcquisitionType ctor */
 
     paginatorState: { rows: number; first: number; };
     totalRecords: number;
     first: number;
     rows: number;
     loading: boolean;
-    disposalTypePagination: AssetLocation[];
+    disposalTypePagination: AssetAcquisitionType[];
 
 
-    constructor(private alertService: AlertService, private assetLocationService: AssetLocationService, private modalService: NgbModal, private authService: AuthService, private breadCrumb: SingleScreenBreadcrumbService, private masterComapnyService: MasterComapnyService, private configurations: ConfigurationService) {
+    constructor(private alertService: AlertService, private AssetAcquisitionTypeService: AssetAcquisitionTypeService, private modalService: NgbModal, private authService: AuthService, private breadCrumb: SingleScreenBreadcrumbService, private masterComapnyService: MasterComapnyService, private configurations: ConfigurationService) {
         this.displayedColumns.push('action');
         this.dataSource = new MatTableDataSource();
-        this.sourceAction = new AssetLocation();
+        this.sourceAction = new AssetAcquisitionType();
     
     }
 
     ngOnInit(): void {
         this.loadData();
-        this.breadCrumb.currentUrl = '/singlepages/singlepages/asset-location';
+        this.breadCrumb.currentUrl = '/singlepages/singlepages/asset-acquisition-type';
         this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
     }
 
@@ -108,11 +108,11 @@ export class AssetLocationComponent implements OnInit {
     private loadData() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-        this.assetLocationService.getAll().subscribe(data => {
+        this.AssetAcquisitionTypeService.getAll().subscribe(data => {
             this.allunitData = data[0].columHeaders;
-            this.assetLocationList = data[0].columnData;
-            console.log(this.assetLocationList);
-            this.totalRecords = this.assetLocationList.length;
+            this.AssetAcquisitionTypeList = data[0].columnData;
+            console.log(this.AssetAcquisitionTypeList);
+            this.totalRecords = this.AssetAcquisitionTypeList.length;
             this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
             this.cols = [
                 console.log(this.allunitData),
@@ -150,7 +150,7 @@ export class AssetLocationComponent implements OnInit {
         this.applyFilter(this.dataSource.filter);
     }
 
-    public allWorkFlows: AssetLocation[] = [];
+    public allWorkFlows: AssetAcquisitionType[] = [];
 
     private onHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {
         // debugger;
@@ -189,14 +189,14 @@ export class AssetLocationComponent implements OnInit {
             return data;
         }
     }
-    
+
     eventHandler(event) {
         let value = event.target.value.toLowerCase()
         if (this.selectedreason) {
             console.log(191);
             if (value == this.selectedreason.toLowerCase() &&
-                (this.isEditMode && this.selAssetLocationId != this.selectedRow.assetLocationId || !this.isEditMode)
-            ) {
+                (this.isEditMode && this.selAssetAcquisitionTypeId != this.selectedRow.assetAcquisitionTypeId) || !this.isEditMode)
+            {
                 this.disableSave = true;
                 this.recordExists = true;
             }
@@ -208,11 +208,11 @@ export class AssetLocationComponent implements OnInit {
     }
 
     partnmId(event) {
-        //console.log(event.target.value)
+        console.log(this.allreasn);
         for (let i = 0; i < this.allreasn.length; i++) {
             if (event == this.allreasn[i][0].codeName) {
-                this.selAssetLocationId = this.allreasn[i][0].assetLocationId;
-                if ((this.isEditMode && this.selAssetLocationId != this.selectedRow.assetLocationId) || !this.isEditMode) {
+                this.selAssetAcquisitionTypeId = this.allreasn[i][0].assetAcquisitionTypeId;
+                if ((this.isEditMode && this.selAssetAcquisitionTypeId != this.selectedRow.assetAcquisitionTypeId || !this.isEditMode)) {
                     this.disableSave = true;
                     this.recordExists = true;
                 }
@@ -226,18 +226,18 @@ export class AssetLocationComponent implements OnInit {
         }
     }
 
-    filterAssetLocation(event) {
+    filterAssetAcquisitionType(event) {
         this.localCollection = [];
 
-        for (let i = 0; i < this.assetLocationList.length; i++) {
+        for (let i = 0; i < this.AssetAcquisitionTypeList.length; i++) {
 
-            let codeName = this.assetLocationList[i].code
+            let codeName = this.AssetAcquisitionTypeList[i].code
                 ;
 
-            if (codeName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+            if (codeName != null && codeName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
                 console.log(codeName);
                 this.allreasn.push([{
-                    "assetLocationId": this.assetLocationList[i].assetLocationId,
+                    "AssetAcquisitionTypeId": this.AssetAcquisitionTypeList[i].assetAcquisitionTypeId,
                     "codeName": codeName
                 }]),
                     this.localCollection.push(codeName);
@@ -247,7 +247,7 @@ export class AssetLocationComponent implements OnInit {
     
     resetdepriciationmethod(): void {
         this.updateMode = false;
-        this.currentAssetLocation = new AssetLocation();
+        this.currentAssetAcquisitionType = new AssetAcquisitionType();
     }
 
     open(content) {
@@ -257,7 +257,7 @@ export class AssetLocationComponent implements OnInit {
         this.disableSave = false;
         this.isSaving = true;
         this.loadMasterCompanies();
-        this.sourceAction = new AssetLocation();
+        this.sourceAction = new AssetAcquisitionType();
         this.sourceAction.isActive = true;
 
         this.codeName = "";
@@ -277,7 +277,8 @@ export class AssetLocationComponent implements OnInit {
         this.selectedRow = row;
         this.codeName = row.code;
           
-        this.assetLocationId = this.assetLocationId;
+        this.AssetAcquisitionTypeId = this.sourceAction.assetAcquisitionTypeId;
+        console.log('281', this.sourceAction);
         this.loadMasterCompanies();
         this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
@@ -285,12 +286,12 @@ export class AssetLocationComponent implements OnInit {
         }, () => { console.log('Backdrop click') })
     }
 
-    SaveandEditAssetLocation() {
+    SaveandEditAssetAcquisitionType() {
         // debugger;
 
 
         this.isSaving = true;
-        console.log(this);
+        console.log(this.sourceAction);
 
         const params = <any>{
             createdBy: this.userName,
@@ -298,23 +299,21 @@ export class AssetLocationComponent implements OnInit {
             Code: this.codeName,
             Name: this.sourceAction.name,
             Memo: this.sourceAction.memo,
-            assetLocationId: this.sourceAction.assetLocationId,
+            AssetAcquisitionTypeId: this.sourceAction.assetAcquisitionTypeId,
             IsActive: this.sourceAction.isActive,
             IsDeleted: this.isDelete,
             masterCompanyId: 1
         };
         if (this.isEditMode == false) {
-            this.assetLocationService.add(params).subscribe(
+            this.AssetAcquisitionTypeService.add(params).subscribe(
                 role => this.saveSuccessHelper(role),
                 error => this.saveFailedHelper(error));
-            //this.alertService.showMessage('Success', "Asset Location added successfully.", MessageSeverity.success);
         }
         else {
-            params.assetLocationId = this.sourceAction.assetLocationId;
-            this.assetLocationService.update(params).subscribe(
+            params.assetAcquisitionTypeId = this.sourceAction.assetAcquisitionTypeId;
+            this.AssetAcquisitionTypeService.update(params).subscribe(
                 response => this.saveCompleted(this.sourceAction),
                 error => this.saveFailedHelper(error));
-            //this.alertService.showMessage('Success', "Asset Location updated successfully.", MessageSeverity.success);
         }
 
         this.modal.close();
@@ -322,17 +321,16 @@ export class AssetLocationComponent implements OnInit {
 
     deleteItemAndCloseModel() {
         this.isSaving = true;
-        this.isDelete = true;
         this.sourceAction.updatedBy = this.userName;
-        this.assetLocationService.remove(this.sourceAction.assetLocationId).subscribe(
+        this.AssetAcquisitionTypeService.remove(this.sourceAction.assetAcquisitionTypeId).subscribe(
             response => this.saveCompleted(this.sourceAction),
             error => this.saveFailedHelper(error));
         this.modal.close();
     }
 
-    private saveSuccessHelper(role?: AssetLocation) {
+    private saveSuccessHelper(role?: AssetAcquisitionType) {
         this.isSaving = false;
-        this.alertService.showMessage("Success", `Asset Location added successfully`, MessageSeverity.success);
+        this.alertService.showMessage("Success", `Asset Acquisition Type created successfully`, MessageSeverity.success);
         this.loadData();
         this.alertService.stopLoadingMessage();
     }
@@ -344,14 +342,14 @@ export class AssetLocationComponent implements OnInit {
         this.alertService.showStickyMessage(error, null, MessageSeverity.error);
     }
 
-    private saveCompleted(user?: AssetLocation) {
+    private saveCompleted(user?: AssetAcquisitionType) {
         this.isSaving = false;
         if (this.isDelete == true) {
-            this.alertService.showMessage("Success", `Asset Location deleted successfully`, MessageSeverity.success);
+            this.alertService.showMessage("Success", `Asset Acquisition Type deleted successfully`, MessageSeverity.success);
             this.isDelete = false;
         }
         else {
-            this.alertService.showMessage("Success", `Asset Location updated successfully`, MessageSeverity.success);
+            this.alertService.showMessage("Success", `Asset Acquisition Type updated successfully`, MessageSeverity.success);
         }
         this.loadData();
     }
@@ -367,17 +365,17 @@ export class AssetLocationComponent implements OnInit {
             isActive: rowData.isActive,
             IsDeleted: false,
             masterCompanyId: 1,
-            assetLocationId: rowData.assetLocationId
+            AssetAcquisitionTypeId: rowData.assetAcquisitionTypeId
         };
         if (e.checked == false) {
             this.Active = "In Active";
-            this.assetLocationService.update(params).subscribe(
+            this.AssetAcquisitionTypeService.update(params).subscribe(
                 response => this.saveCompleted(this.sourceAction),
                 error => this.saveFailedHelper(error));
         }
         else {
             this.Active = "Active";
-            this.assetLocationService.update(params).subscribe(
+            this.AssetAcquisitionTypeService.update(params).subscribe(
                 response => this.saveCompleted(this.sourceAction),
                 error => this.saveFailedHelper(error));
         }
@@ -413,12 +411,12 @@ export class AssetLocationComponent implements OnInit {
         }, () => { console.log('Backdrop click') })
     }
     
-    resetAddAssetLocation(): void {
-        this.currentAssetLocation = new AssetLocation();
+     resetAddAssetAcquisitionType(): void {
+        this.currentAssetAcquisitionType = new AssetAcquisitionType();
     }
 
-    resetUpdateAssetLocation(): void {
-        this.assetLocationToUpdate = new AssetLocation();
+    resetUpdateAssetAcquisitionType(): void {
+        this.AssetAcquisitionTypeToUpdate = new AssetAcquisitionType();
     }
 
     dismissModel() {
@@ -429,7 +427,7 @@ export class AssetLocationComponent implements OnInit {
 
  
     getAuditHistoryById(rowData) {
-        this.assetLocationService.getAssetAudit(rowData.assetLocationId).subscribe(res => {
+        this.AssetAcquisitionTypeService.getAssetAudit(rowData.AssetAcquisitionTypeId).subscribe(res => {
             this.auditHistory = res;
         })
     }
@@ -447,7 +445,7 @@ export class AssetLocationComponent implements OnInit {
     }
 
     sampleExcelDownload() {
-        const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=AssetLocation&fileName=AssetLocation.xlsx`;
+        const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=AssetAcquisitionType&fileName=AssetAcquisitionType.xlsx`;
 
         window.location.assign(url);
     }
@@ -459,12 +457,12 @@ export class AssetLocationComponent implements OnInit {
         if (file.length > 0) {
 
             this.formData.append('file', file[0])
-            this.assetLocationService.AssetLocationCustomUpload(this.formData).subscribe(res => {
+            this.AssetAcquisitionTypeService.AssetAcquisitionTypeCustomUpload(this.formData).subscribe(res => {
                 event.target.value = '';
 
                 this.formData = new FormData();
                 this.existingRecordsResponse = res;
-                this.getAssetLocationList();
+                this.getAssetAcquisitionTypeList();
                 this.alertService.showMessage(
                     'Success',
                     `Successfully Uploaded  `,
@@ -479,7 +477,7 @@ export class AssetLocationComponent implements OnInit {
 
     }
 
-    getAssetLocationList() {
+    getAssetAcquisitionTypeList() {
 
         this.loadData();
     }
