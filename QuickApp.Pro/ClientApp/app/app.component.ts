@@ -154,6 +154,9 @@ export class AppComponent implements OnInit, AfterViewInit {
                             { label: 'Roles List by Module', routerLink: '/rolesmodule/rolespages/app-roles-list-by-module' },
                             { label: 'Create Role', routerLink: '/rolesmodule/rolespages/app-roles-setup' }]
                     },
+                    {
+                        label: 'Global Settings', routerLink:  'admin/global-settings'
+                    },
                     { label: 'Notifications', routerLink: '/#' }
 
                 ]
@@ -239,7 +242,8 @@ export class AppComponent implements OnInit, AfterViewInit {
                             { label: 'Item Aging', routerLink: '/#' },
                             { label: 'Slow Moving Stock', routerLink: '/#' },
                             { label: 'Hot List', routerLink: '/#' },
-                            { label: 'Stock Line Report', command: (event?: any) => { this.stockLineReport(); } }
+                            //{ label: 'Stock Line Report', command: (event?: any) => { this.stockLineReport(); } }
+                            { label: 'Stock Line Report', routerLink: '/stocklinemodule/stocklinepages/app-stock-line-report-view' },
                         ]
                     }]
 

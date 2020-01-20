@@ -11,6 +11,7 @@ import { RoleListComponent } from './role-list.component';
 import { UserListComponent } from './user-list.component';
 import { AuthService } from '../services/auth.service';
 import { AuthGuard } from '../services/auth-guard.service';
+import { GlobalSettingsComponent } from './global-settings/global-settings.component';
 
 const adminRoutes: Routes = [
     {
@@ -26,6 +27,11 @@ const adminRoutes: Routes = [
                 path: 'roles',
                 component: RoleListComponent,
                 data: { title: "Admin | Roles" }
+            },
+            {
+                path: 'global-settings',
+                component: GlobalSettingsComponent,
+                data: { title: "Admin | Global Settings" }
             }
         ]
     }

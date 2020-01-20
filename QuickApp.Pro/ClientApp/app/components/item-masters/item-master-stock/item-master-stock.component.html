@@ -933,7 +933,6 @@
                         <p-table [value]="aircraftListDataValues" [rows]="6" [columns]="colsaircraftLD" [scrollable]="true" [style]="{width:'100%'}" [paginator]="true">
                             <ng-template pTemplate="header" let-columns>
                                 <tr>
-                                    <th>Id</th>
                                     <th *ngFor="let col of columns">
                                         {{col.header}}
                                     </th>
@@ -942,7 +941,6 @@
                             </ng-template>
                             <ng-template pTemplate="body" let-i="rowIndex" let-rowData let-columns="columns">
                                 <tr>
-                                    <td>{{i+1}}</td>
                                     <td *ngFor="let col of columns">
                                         {{rowData[col.field]}}
                                     </td>
@@ -1039,7 +1037,6 @@
                         <p-table [value]="ataMappedList" [rows]="6" [columns]="atasub" [scrollable]="true" [style]="{width:'100%'}" [paginator]="true">
                             <ng-template pTemplate="header" let-columns>
                                 <tr>
-                                    <th>Id</th>
                                     <th *ngFor="let col of atasub">
                                         {{col.header}}
                                     </th>
@@ -1048,7 +1045,6 @@
                             </ng-template>
                             <ng-template pTemplate="body" let-i="rowIndex" let-rowData let-columns="columns">
                                 <tr>
-                                    <td>{{i+1}}</td>
                                     <td *ngFor="let col of atasub">
                                         {{rowData[col.field]}}
                                     </td>

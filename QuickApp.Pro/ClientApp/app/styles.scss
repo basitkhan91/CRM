@@ -10025,7 +10025,8 @@ table thead tr th:first-child input, table tr td:first-child input {
     }
 
     .ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button {
-        font-family: Arial, Helvetica, sans-serif;
+        font-family: Roboto;
+        //font-family: Arial, Helvetica, sans-serif;
         font-size: 1em;
     }
 
@@ -12545,7 +12546,7 @@ table thead tr th:first-child input, table tr td:first-child input {
     }
 
     .ui-button.ui-button-text-icon-left {
-        font-family: FontAwesome !important;
+        font-family: FontAwesome;
     }
 
     body .ui-inputswitch.ui-inputswitch-checked .ui-inputswitch-slider {
@@ -13259,13 +13260,20 @@ button {
         border-radius: 4px !important;
         padding: 6px 12px !important;
     }
+    .btn-primary-cstm-sm {
+        color: #fff !important;
+        background-color: #337ab7 !important;
+        border-color: #2e6da4;
+        border-radius: 4px !important;
+        padding: 5px 10px !important;
+    }
 
     .btn-primary-cstm .ui-button-icon-left {
         left: 9%;
         top: 46%;
     }
 
-    .btn-primary-cstm:hover {
+    .btn-primary-cstm:hover, .btn-primary-cstm-sm:hover {
         color: #fff;
         background-color: #286090 !important;
         border-color: #204d74;
@@ -13498,9 +13506,25 @@ button {
         margin: 5px 0;
     }
 
-    .shadow-Box label {
+    .shadow-box-cstm {
+        border-radius: 5px;
+        border: 1px solid #ddd;
+        padding: 5px 10px;
+        margin: 5px 0;
+    }
+
+    .shadow-Box label, .shadow-box-cstm label {
         text-align: left;
         width: 100%;
+    }
+    .shadow-box-cstm p {
+        margin-bottom: 5px;
+    }
+    .tab-header-cstm {
+        margin-top: 10px;
+    }
+    .tab-header-cstm p {
+        margin-bottom: 0;
     }
 
     .mtop20 {
@@ -13816,11 +13840,12 @@ button {
     width: 136px !important;
 }
 .rro-table-cstm {
-    overflow-y: hidden;
+    overflow: hidden;
+    //overflow-y: hidden;
 }
 .rro-table-cstm th {
     width: 110px;
-    padding: 10px 5px !important;
+    padding: 5px 5px !important;
     //padding: 8px 5px !important;
 }
 .rro-table-cstm .ui-table {
@@ -13837,6 +13862,9 @@ button {
 .rro-table-cstm .ui-table-wrapper table {
     position: relative;
     border-collapse: collapse;
+}
+.tab-table-cstm .ui-table {
+    padding-bottom: 50px;
 }
 
 .ata-table-cstm {
@@ -13927,14 +13955,30 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
     color: #295d92 !important;
     margin-left: 6px;
 }
+.po-head-sm {
+    font-weight: bold;
+    font-size: 15px !important;
+    color: #295d92 !important;
+    margin-left: 6px;
+    margin-top: 10px;
+}
+.f-s-15 {
+    font-size: 15px !important;
+}
+.f-s-14 {
+    font-size: 14px !important;
+}
 .p-dropdown-custom-md-Header-table .ui-dropdown {
     width: 136px !important;
 }
 .p-dropdown-custom-sm .ui-dropdown {
     width: 122px !important;
 }
-.p-dropdown-custom-sm .ui-dropdown-trigger {
+.p-dropdown-custom-sm .ui-dropdown-trigger, .p-dropdown-custom-stagecode .ui-dropdown-trigger {
     background-color: #ffffff !important;
+}
+.p-dropdown-custom-stagecode .ui-dropdown {
+    width: 190px !important;
 }
 .pas-table-cstm tr th {
     padding: 8px 4px !important;
@@ -14122,6 +14166,12 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
 }
 .p-dropdown-custom-md-2 .ui-dropdown{
     width: 181px !important;
+}
+.p-dropdown-cus-aircraft .ui-dropdown {
+    width: 100% !important;
+}
+.p-dropdown-cus-aircraft .ui-dropdown label.ui-dropdown-label {
+    font-size: 11px !important;
 }
 
 
@@ -14497,6 +14547,15 @@ p-table tr td .btn i.fa-pencil {
 }
 .pcheckbox-cstm .ui-chkbox-icon {
     font-size: 18px !important;
+}
+.no-records-cstm {
+    text-align: center;
+    margin: 0 6px;
+    border: 1px solid;
+    max-width: calc(100% - 12px);
+}
+button .ui-button-text {
+    font-family: Roboto;
 }
 
 .accountdropdown.ui-dropdown .ui-dropdown-trigger {

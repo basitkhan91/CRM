@@ -114,7 +114,7 @@ namespace DAL.Models
         public string VendorPhone { get; set; }
        
         //public string customertypedesc { get; set; }
-        public Nullable<bool> IsDelete { get; set; }
+        public Nullable<bool> IsDeleted { get; set; }
         [NotMapped]
         public long AttachmentId { get; set; }
 

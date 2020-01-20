@@ -91,7 +91,7 @@ namespace DAL.Repositories
                                 from vc in vcd.DefaultIfEmpty()
                                 join vca in _appContext.VendorCapabiliy on t.capabilityId equals vca.VendorCapabilityId into vcad
                                 from vca in vcad.DefaultIfEmpty()
-                                where (t.IsDelete == false || t.IsDelete == null)
+                                where (t.IsDeleted == false || t.IsDeleted == null)
                                 select new VendorFilters()
                                 {
                                     vendorId = t.VendorId,
@@ -117,7 +117,7 @@ namespace DAL.Repositories
                         from vc in vcd.DefaultIfEmpty()
                         join vca in _appContext.VendorCapabiliy on t.capabilityId equals vca.VendorCapabilityId into vcad
                         from vca in vcad.DefaultIfEmpty()
-                        where (t.IsDelete == false || t.IsDelete == null)
+                        where (t.IsDeleted == false || t.IsDeleted == null)
                         select new VendorFilters()
                         {
                             vendorId=t.VendorId,
@@ -170,7 +170,7 @@ namespace DAL.Repositories
                                     from vc in vcd.DefaultIfEmpty()
                                     join vca in _appContext.VendorCapabiliy on t.capabilityId equals vca.VendorCapabilityId into vcad
                                     from vca in vcad.DefaultIfEmpty()
-                                    where (t.IsDelete == false || t.IsDelete == null)
+                                    where (t.IsDeleted == false || t.IsDeleted == null)
                                       && (t.VendorName.Contains(filterText)
                                       || t.VendorCode.Contains(filterText)
                                       || t.VendorEmail.Contains(filterText)
@@ -196,7 +196,7 @@ namespace DAL.Repositories
                             from vc in vcd.DefaultIfEmpty()
                             join vca in _appContext.VendorCapabiliy on t.capabilityId equals vca.VendorCapabilityId into vcad
                             from vca in vcad.DefaultIfEmpty()
-                            where (t.IsDelete == false || t.IsDelete == null)
+                            where (t.IsDeleted == false || t.IsDeleted == null)
                                     && (t.VendorName.Contains(filterText)
                                     || t.VendorCode.Contains(filterText)
                                     || t.VendorEmail.Contains(filterText)
@@ -241,7 +241,7 @@ namespace DAL.Repositories
                                     from vc in vcd.DefaultIfEmpty()
                                     join vca in _appContext.VendorCapabiliy on t.capabilityId equals vca.VendorCapabilityId into vcad
                                     from vca in vcad.DefaultIfEmpty()
-                                    where (t.IsDelete == false || t.IsDelete == null)
+                                    where (t.IsDeleted == false || t.IsDeleted == null)
                                     select new
                                     {
                                         t.VendorId,
@@ -257,7 +257,7 @@ namespace DAL.Repositories
                             from vc in vcd.DefaultIfEmpty()
                             join vca in _appContext.VendorCapabiliy on t.capabilityId equals vca.VendorCapabilityId into vcad
                             from vca in vcad.DefaultIfEmpty()
-                            where (t.IsDelete == false || t.IsDelete == null)
+                            where (t.IsDeleted == false || t.IsDeleted == null)
                             select new
                             {
                                 t.VendorId,
@@ -299,7 +299,7 @@ namespace DAL.Repositories
                               //from inte in intee.DefaultIfEmpty()
 
 
-                          where (t.IsDelete == false || t.IsDelete == null) && t.VendorId == vendorId
+                          where (t.IsDeleted == false || t.IsDeleted == null) && t.VendorId == vendorId
                           select new
                           {
                               t.VendorId,
@@ -337,7 +337,7 @@ namespace DAL.Repositories
                               t.UpdatedDate,
                               t.IsActive,
                               t.VendorPhone,
-                              t.IsDelete,
+                              t.IsDeleted,
                               t.DiscountId,
                               t.capabilityId,
                               t.VendorParentName,
@@ -422,7 +422,7 @@ namespace DAL.Repositories
 
         public IEnumerable<Vendor> GetVendors()
         {
-            return _appContext.Vendor.Where(c => (c.IsDelete == false || c.IsDelete == null) && (c.IsActive == true)).OrderByDescending(c => c.VendorId).ToList();
+            return _appContext.Vendor.Where(c => (c.IsDeleted == false || c.IsDeleted == null) && (c.IsActive == true)).OrderByDescending(c => c.VendorId).ToList();
         }
 
         public IEnumerable<object> GetVendorsAuditHistory(long vendorId)
@@ -481,7 +481,7 @@ namespace DAL.Repositories
         }
         public IEnumerable<Vendor> GetVendorsLite()
         {
-            return _appContext.Vendor.Where(v => v.IsActive == true && v.IsDelete == false).Select(v => new Vendor { VendorId = v.VendorId, VendorName = v.VendorName }).OrderBy(c => c.VendorName).ToList();
+            return _appContext.Vendor.Where(v => v.IsActive == true && v.IsDeleted == false).Select(v => new Vendor { VendorId = v.VendorId, VendorName = v.VendorName }).OrderBy(c => c.VendorName).ToList();
         }
 
         public IEnumerable<object> GetVendorListDetails(bool isActive)
@@ -504,7 +504,7 @@ namespace DAL.Repositories
                             from vc in vcd.DefaultIfEmpty()
                             join vca in _appContext.VendorCapabiliy on t.capabilityId equals vca.VendorCapabilityId into vcad
                             from vca in vcad.DefaultIfEmpty()
-                            where t.IsDelete != true
+                            where t.IsDeleted != true
                             && t.IsActive == (isActive == true ? true : t.IsActive)
                             select new
                             {
@@ -1290,7 +1290,7 @@ namespace DAL.Repositories
         {
             return _appContext.Vendor.Where(x =>
             (x.IsActive != null && x.IsActive == true) &&
-            (x.IsDelete == null || x.IsDelete == false));
+            (x.IsDeleted == null || x.IsDeleted == false));
         }
 
         public IEnumerable<object> GetVendorBillingAddressAudit(long vendorId, long vendorBillingaddressId)

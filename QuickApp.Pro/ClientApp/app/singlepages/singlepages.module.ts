@@ -115,8 +115,7 @@ import { AssetIntangibleTypeComponent } from "../components/asset-intangible-typ
 import { AssetIntangibleAttributeTypeEndpointService } from "../services/asset-intangible-attribute-type/asset-intangible-attribute-type-endpoint.service";
 import { AssetIntangibleAttributeTypeService } from "../services/asset-intangible-attribute-type/asset-intangible-attribute-type.service";
 import { AssetIntangibleAttributeTypeComponent } from "../components/asset-intangible-attribute-type/asset-intangible-attribute-type.component";
-import { StageCodeEndpointService } from "../services/stage-code/stage-code-endpoint.service";
-import { StageCodeService } from "../services/stage-code/stage-code.service";
+
 import { StageCodeComponent } from "../components/stage-code/stage-code.component";
 import { GLAccountCategoryComponent } from "../components/gl-account-category/gl-account-category.component";
 import { GLAccountCategoryEndpointService } from "../services/gl-account-category/gl-account-category-endpoint.service";
@@ -155,6 +154,9 @@ import { CapsReportComponent } from "../components/caps-report/caps-report.compo
 import { AdjustmentReasonComponent } from "../components/adjustment-reason/adjustment-reason.component";
 import { CapabilityTypeComponent } from "../components/capabilitytype/capability-type.component";
 import { CapabilityTypeService } from "../services/capability-type.service";
+import { StageCodeService } from "../services/work-order-stagecode.service";
+
+
 
 
 @NgModule({
@@ -191,7 +193,7 @@ import { CapabilityTypeService } from "../services/capability-type.service";
         EmployeeExpertiseComponent,
         FindingsComponent,
         AssetIntangibleTypeComponent,
-		AssetIntangibleAttributeTypeComponent,
+        AssetIntangibleAttributeTypeComponent,
         AssetTypeComponent,
         StageCodeComponent,
         GLAccountCategoryComponent,
@@ -230,7 +232,7 @@ import { CapabilityTypeService } from "../services/capability-type.service";
         RfqEngineComponent,
         WarehouseComponent,
         AdjustmentReasonComponent,
-		GLAccountCategoryComponent,
+        GLAccountCategoryComponent,
         ManufacturerComponent,
         VendorcapabilitiesComponent,
         LocationComponent,
@@ -275,10 +277,9 @@ import { CapabilityTypeService } from "../services/capability-type.service";
         AssetTypeEndpointService,
         AssetIntangibleTypeService,
         AssetIntangibleTypeEndpointService,
-		AssetIntangibleAttributeTypeService,
+        AssetIntangibleAttributeTypeService,
         AssetIntangibleAttributeTypeEndpointService,
         StageCodeService,
-        StageCodeEndpointService,
         GLAccountCategoryService,
         GLAccountCategoryEndpointService,
         ExpenditureCategoryService,
@@ -294,11 +295,7 @@ import { CapabilityTypeService } from "../services/capability-type.service";
         PaginationService,
         CommonService,
         VendorProcess1099Service,
-        CapabilityTypeService
-
-      
-       
-        
+        CapabilityTypeService,
     ],
     exports: [
         FlexLayoutModule,

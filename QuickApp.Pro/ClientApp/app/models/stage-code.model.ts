@@ -1,32 +1,24 @@
 ﻿
 export class StageCode {
-    // Note: Using only optional constructor properties without backing store disables typescript's type checking for the type
-    constructor(stageCodeId?: number, gateCode?: string, sequence?: string, memo?: string, description?: string, masterCompanyId?: number, createdBy?: string, createdDate?: Date, updatedDate?: Date, updatedBy?: string, isActive?: boolean, isDelete?: boolean) {
 
-        this.stageCodeId = stageCodeId;
-        this.gateCode = gateCode;
-        this.description = description;
-        this.sequence = sequence;
-		this.memo = memo;
-        this.masterCompanyId = masterCompanyId;
-        this.createdBy = createdBy;
-        this.createdDate = createdDate;
-        this.updatedDate = updatedDate;
-        this.updatedBy = updatedBy;
-		this.isActive = isActive;
-        this.isDelete = isDelete;
+    constructor() {
+
+        this.code = '';
+        this.stage = '';
+        this.sequence = null;
+        this.statusId = null;
+        this.managementStructureId = null;
+        this.description = '';
+        this.memo = '';
     }
 
-    public stageCodeId: number;
-    public gateCode: string;
+    public code: string;
+    public stage: string;
+    public sequence: number;
+    public statusId: number;
+    public managementStructureId: number;
     public description: string;
-    public sequence: string;
-	public memo: string;
-    public masterCompanyId: number;
-    public createdBy: string;
-    public updatedBy: string;
-    public createdDate: Date;
-    public updatedDate: Date;
-	public isActive: boolean;
-    public isDelete: boolean;
+    public memo: string;
+
+
 }

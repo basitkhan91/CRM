@@ -1226,5 +1226,21 @@ namespace QuickApp.Pro.Controllers
             var result = _unitOfWork.stockLineList.StockLineReoprtView(slReportFilter);
             return Ok(result);
         }
+
+        [HttpPost("downloadstocklinereoprt")]
+        public IActionResult DownloadStockLineReoprt([FromBody]Filters<StockLineReportFilter> slReportFilter)
+        {
+            var result = _unitOfWork.stockLineList.StockLineReoprtView(slReportFilter);
+            var stream = new MemoryStream();
+            using (var package = new ExcelPackage(stream))
+            {
+                var workSheet = package.Workbook.Worksheets.Add("Stock Line Report");
+                workSheet.Cells.LoadFromCollection(result, true);
+                package.Save();
+            }
+            stream.Position = 0;
+            string excelName = $"StockLineReport-{DateTime.Now.ToString("ddMMMyyyy")}.xlsx";
+            return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", excelName);
+        }
     }
 }

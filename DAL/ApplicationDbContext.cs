@@ -16,9 +16,11 @@ namespace DAL
         // Test Changes....
         public string CurrentUserId { get; set; }
 
+        public DbSet<CodeTypes> CodeTypes { get; set; }
+        public DbSet<CodePrefixes> CodePrefixes { get; set; }
         public DbSet<GlobalSettings> GlobalSettings { get; set; }
         public DbSet<CustomerContactAudit> CustomerContactAudit { get; set; }
-        
+
         public DbSet<ShippingReference> ShippingReference { get; set; }
         public DbSet<ShippingVia> ShippingVia { get; set; }
         public DbSet<ShippingAccount> ShippingAccount { get; set; }

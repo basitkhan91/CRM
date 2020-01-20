@@ -3,8 +3,22 @@
     <div class="right_col" role="main">
         <div style="">
             <div class="x_content">
+                <div class="col-md-12 tab-header-cstm">        
+                    <div class="col-md-4">
+                        <p class="fs12">
+                        <label class="control-label labels-font-header" style="width: auto;">Customer Name: </label>
+                    <span class="span-header-red" style="text-transform: capitalize"> {{customerName }} </span> </p>
+                    </div>
+                    <div class="col-md-4">
+                        <p class="fs12">
+                        <label class="control-label labels-font-header" style="width: auto;">Customer Code: </label>
+                        <span class="span-header-red" style="text-transform: capitalize"> {{customerCode }} </span> </p>
+                    </div>                            
+                </div>
+                <div class="clear"></div>
+                <hr />
 
-                <div class="form-group col-sm-4 Customer-details-heading" style="display: inline-block;margin: 10px 5px 0 5px;">
+                <!-- <div class="form-group col-sm-4 Customer-details-heading" style="display: inline-block;margin: 10px 5px 0 5px;">
                     <p class="fs10">
                         <label class="control-label w100">Customer Name:</label>
                         {{customerName}}
@@ -17,7 +31,7 @@
                     </p>
                 </div>
 
-                <div class="clear"></div>
+                <div class="clear"></div> -->
                 <form #financialInfoForm="ngForm" class="form-horizontal">
 
 
@@ -54,72 +68,84 @@
                                                 <span class="pull-left">Credit Terms </span><span class="clr-red">*</span>
                                                 <span style="margin-left:3px;cursor:pointer;"><a href="#" class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#addcredit" matTooltip="Add Credit Terms"></a></span>
                                             </label>
-                                            <select name="creditTermsId" [(ngModel)]="savedGeneralInformationData.creditTermsId" required>
-                                                <option *ngFor="let creditTermsId of creditTermList" [ngValue]="creditTermsId.value">{{creditTermsId.label}}</option>
-                                            </select>
-                                        </div>
-                                        <div class="form-group">
-                                            <label>
-                                                <span class="pull-left">Discount %</span>
-                                                <span style="margin-left:3px;cursor:pointer;"><a href="#" class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#addDiscount" matTooltip="Add Discount"></a></span>
-                                            </label>
-                                            <select name="discountId" [(ngModel)]="savedGeneralInformationData.discountId">
-                                                <option *ngFor="let discontValue of discountList" [ngValue]="discontValue.discountId">{{discontValue.discontValue}}</option>
-                                            </select>
-                                        </div>
+                                            <!--<select name="creditTermsId" [(ngModel)]="savedGeneralInformationData.creditTermsId" required>
+        <option *ngFor="let creditTermsId of creditTermList" [ngValue]="creditTermsId.value">{{creditTermsId.label}}</option>
+    </select>-->
+                                        
+                                                <div class="inner-addon right-addon inline-block">
+                                                    <p-autoComplete class="p-autoComplete-ctsm"
+                                                                    name="creditTermsId"
+                                                                    [(ngModel)]="savedGeneralInformationData.creditTermsId"
+                                                                    field="name" [suggestions]="_creditTermsList"
+                                                                    [forceSelection]="true" emptyMessage="No Match Found"
+                                                                    (completeMethod)="filterCreditTerm($event)" [size]="30"
+                                                                    [minLength]="1" [dropdown]="true" required>
+                                                    </p-autoComplete>
+                                                </div>
 
-                                        <div class="form-group">
-                                            <label>Currency <span class="clr-red">*</span></label>
-                                            <select name="generalCurrencyId" [(ngModel)]="savedGeneralInformationData.generalCurrencyId" required>
-                                                <option class="form-control" *ngFor="let currencyName of allCurrencyInfo"
-                                                        [ngValue]="currencyName.currencyId">
-                                                    {{currencyName.symbol}}
-                                                </option>
-                                            </select>
-                                        </div>
-                                      
-                                        <div class="form-group" style="margin-top: 15px;">
-                                            <span class="checkbox-cstm">
+                                            </div>
+                                            <div class="form-group">
                                                 <label>
-                                                    <input type="checkbox" name="isTaxExempt" [(ngModel)]="savedGeneralInformationData.isTaxExempt">
-                                                    <span class="cr"><i class="cr-icon pi pi-check"></i></span>
-                                                    Tax Exempt
+                                                    <span class="pull-left">Discount %</span>
+                                                    <span style="margin-left:3px;cursor:pointer;"><a href="#" class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#addDiscount" matTooltip="Add Discount"></a></span>
                                                 </label>
-                                            </span>
-                                        </div>
-                                        <div class="form-group tax-certificate" *ngIf="savedGeneralInformationData.isTaxExempt">
-                                            <label>Attach Certificate</label>
-                                            <p-fileUpload name="customerTaxExemptFile[]" multiple="multiple" [showCancelButton]="false" [showUploadButton]="false" customUpload="true" (onSelect)="fileUpload($event,'customerTaxExemptFile')">
-                                            </p-fileUpload>
-                                            <div class="table-responsive table-overflow">
-                                                <h4 class="panel-title" style="padding-left: 10px;">Attachment Details:</h4>
-                                                <table class="table table-bordered ">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>File Name</th>
-                                                            <th>Download</th>
-                                                            <th>Delete</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody *ngFor="let f of allCustomerFinanceDocumentsList">
-                                                        <tr *ngIf="f.description == 'customerTaxExemptFile'">
-                                                            <td>{{f.fileName}}</td>
-                                                            <td><a (click)="downloadFileUpload(f)" matTooltip="Download" class="btn nobg btn-cstm"><span><i class="fa fa-download"></i></span></a> </td>
-                                                            <td>
-                                                                <button moduleName="app-customer-edit" requirePermission="canDelete"
-                                                                        class="btn-delete" mat-icon-button matTooltip="Delete"
-                                                                        (click)="CustomerAttachmentDelete(f)">
-                                                                    <mat-icon color="warn">delete</mat-icon>
-                                                                </button>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-
-                                                </table>
+                                                <select name="discountId" [(ngModel)]="savedGeneralInformationData.discountId">
+                                                    <option *ngFor="let discontValue of discountList" [ngValue]="discontValue.discountId">{{discontValue.discontValue}}</option>
+                                                </select>
                                             </div>
 
-                                                  </div>
-                                    </div>
+                                            <div class="form-group">
+                                                <label>Currency <span class="clr-red">*</span></label>
+                                                <select name="generalCurrencyId" [(ngModel)]="savedGeneralInformationData.generalCurrencyId" required>
+                                                    <option class="form-control" *ngFor="let currencyName of allCurrencyInfo"
+                                                            [ngValue]="currencyName.currencyId">
+                                                        {{currencyName.symbol}}
+                                                    </option>
+                                                </select>
+                                            </div>
+
+                                            <div class="form-group" style="margin-top: 15px;">
+                                                <span class="checkbox-cstm">
+                                                    <label>
+                                                        <input type="checkbox" name="isTaxExempt" [(ngModel)]="savedGeneralInformationData.isTaxExempt">
+                                                        <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                                        Tax Exempt
+                                                    </label>
+                                                </span>
+                                            </div>
+                                            <div class="form-group tax-certificate" *ngIf="savedGeneralInformationData.isTaxExempt">
+                                                <label>Attach Certificate</label>
+                                                <p-fileUpload name="customerTaxExemptFile[]" multiple="multiple" [showCancelButton]="false" [showUploadButton]="false" customUpload="true" (onSelect)="fileUpload($event,'customerTaxExemptFile')">
+                                                </p-fileUpload>
+                                                <div class="table-responsive table-overflow">
+                                                    <h4 class="panel-title" style="padding-left: 10px;">Attachment Details:</h4>
+                                                    <table class="table table-bordered ">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>File Name</th>
+                                                                <th>Download</th>
+                                                                <th>Delete</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody *ngFor="let f of allCustomerFinanceDocumentsList">
+                                                            <tr *ngIf="f.description == 'customerTaxExemptFile'">
+                                                                <td>{{f.fileName}}</td>
+                                                                <td><a (click)="downloadFileUpload(f)" matTooltip="Download" class="btn nobg btn-cstm"><span><i class="fa fa-download"></i></span></a> </td>
+                                                                <td>
+                                                                    <button moduleName="app-customer-edit" requirePermission="canDelete"
+                                                                            class="btn-delete" mat-icon-button matTooltip="Delete"
+                                                                            (click)="CustomerAttachmentDelete(f)">
+                                                                        <mat-icon color="warn">delete</mat-icon>
+                                                                    </button>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+
+                                                    </table>
+                                                </div>
+
+                                            </div>
+                                        </div>
 
                                     <div class="col-md-2">
                                         <div class="form-group" style="margin-top: 15px;" *ngIf="savedGeneralInformationData.isCustomerAlsoVendor">
@@ -486,12 +512,12 @@
                         <div class="form-group">
                             <div class="col-sm-12">
                                 <div class="col-sm-4">
-                                    <div class="inner-addon right-addon inline-block">
-
+                                  
                                         <label>Description <span class="clr-red">*</span></label>
-                                        </div>
+                                       
                                     </div>
-                                    <div class="col-sm-5">
+                                <div class="col-sm-5">
+                                    <div class="inner-addon right-addon inline-block">
 
 
                                         <p-autoComplete class="p-dropdown-custom-2" name="description"
@@ -502,7 +528,8 @@
                                                         [size]="30" [minLength]="1" [dropdown]="true" required>
                                         </p-autoComplete>
                                         <div *ngIf="isTaxTypeExists" class="clr-red">Tax Type Already Exists</div>
-
+                                        </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -510,17 +537,19 @@
                         <div class="form-group">
                             <div class="col-sm-12">
                                 <div class="col-sm-4">
+                                    <div class="inner-addon right-addon inline-block">
 
-                                    <label for="description" class="control-label w100">Memo</label>
-                                </div>
-                                <div class="col-sm-5">
-
-                                    <div class="control-data">
-                                        <textarea #memo="ngModel" name="memo" [(ngModel)]="addNewTaxType.memo"></textarea>
-
+                                        <label for="description" class="control-label w100">Memo</label>
                                     </div>
-                                    <div class="clear"></div>
-                                </div>
+                                    </div>
+                                    <div class="col-sm-5">
+
+                                        <div class="control-data">
+                                            <textarea #memo="ngModel" name="memo" [(ngModel)]="addNewTaxType.memo"></textarea>
+
+                                        </div>
+                                        <div class="clear"></div>
+                                    </div>
                                 </div>
                             </div>
 
@@ -534,7 +563,7 @@
                             </div>
                         </div>
 
-            </div>
+            
         </form>
     </div>
 

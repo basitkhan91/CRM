@@ -40,7 +40,7 @@ export class PercentComponent implements OnInit {
     pageSize: number = 10;
     totalPages: number;
     headers = [
-        { field: 'percentValue', header: 'percentValue' }
+        { field: 'percentValue', header: 'Percent' }
     ]
     selectedColumns = this.headers;
     formData = new FormData()

@@ -31,6 +31,8 @@ import { StocklinePagesRoutingModule } from "./stocklinepages-routing.module";
 import { StocklinepagesComponent } from './stocklinepages.component';
 import { StockLineEditComponent } from '../components/stockline/stock-line-edit/stock-line-edit.component';
 import { AuditModule } from "../audit/audit.module";
+import { DropdownModule } from 'primeng/dropdown';
+import { StockLineReportViewComponent } from "../components/stockline/stock-line-report/stock-line-report-view.component";
 
 @NgModule({
 	imports: [
@@ -56,7 +58,8 @@ import { AuditModule } from "../audit/audit.module";
 		StocklinePagesRoutingModule,
 		TreeModule,
 		TreeTableModule,
-		AuditModule
+		AuditModule,
+		DropdownModule
 
 
 	],
@@ -65,7 +68,8 @@ import { AuditModule } from "../audit/audit.module";
 		StockLineSetupComponent,
 		StockAdjustmentComponent,
 		StocklinepagesComponent,
-		StockLineEditComponent,
+        StockLineEditComponent,
+        StockLineReportViewComponent
 	],
 	providers: [
 

@@ -334,21 +334,19 @@ namespace DAL.Repositories
             filters.Add(!string.IsNullOrEmpty(woFilters.filters.EstimatedShipDateType), x => x.EstimatedShipDate.Contains(woFilters.filters.EstimatedShipDateType));
             filters.Add(!string.IsNullOrEmpty(woFilters.filters.EstimatedCompletionDateType), x => x.EstimatedCompletionDate.Contains(woFilters.filters.EstimatedCompletionDateType));
             filters.Add(!string.IsNullOrEmpty(woFilters.filters.StageType), x => x.Stage.ToLower().Contains(woFilters.filters.StageType.ToLower()));
-            filters.Add(statusId > 0, x => x.WorkOrderStatusId == statusId);
+            filters.Add(statusId > 0, x => x.WorkOrderStatusId.Contains(statusId.ToString()));
 
             try
             {
-
-
-
                 if (woFilters.filters.ViewType.ToLower() == "mpn")
                 {
 
                     totalRecords = (from wo in _appContext.WorkOrder
                                     join wop in _appContext.WorkOrderPartNumber on wo.WorkOrderId equals wop.WorkOrderId
+                                    join wowf in _appContext.WorkOrderWorkFlow on wop.ID equals wowf.WorkOrderPartNoId
                                     join cust in _appContext.Customer on wo.CustomerId equals cust.CustomerId
                                     join ca in _appContext.CustomerAffiliation on cust.CustomerAffiliationId equals ca.CustomerAffiliationId
-                                    join wost in _appContext.WorkOrderStatus on wo.WorkOrderStatusId equals wost.Id
+                                    join wost in _appContext.WorkOrderStatus on wop.WorkOrderStatusId equals wost.Id
                                     join im in _appContext.ItemMaster on wop.MasterPartId equals im.ItemMasterId
                                     join ws in _appContext.WorkScope on wop.WorkOrderScopeId equals ws.WorkScopeId
                                     join pr in _appContext.Priority on wop.WorkOrderPriorityId equals pr.PriorityId
@@ -380,18 +378,20 @@ namespace DAL.Repositories
                                         Stage = stage.Stage,
                                         StageType = stage.Stage,
                                         WorkOrderStatus = wost.Description,
+                                        WorkOrderStatusType = wost.Description,
                                         IsActive = wo.IsActive,
                                         CreatedDate = wo.CreatedDate,
-                                        WorkOrderStatusId = wo.WorkOrderStatusId,
+                                        WorkOrderStatusId = wop.WorkOrderStatusId.ToString(),
                                     }
                           ).Distinct()
                           .Paginate(pageNumber, pageSize, sorts, filters).RecordCount;
 
                     var list = (from wo in _appContext.WorkOrder
                                 join wop in _appContext.WorkOrderPartNumber on wo.WorkOrderId equals wop.WorkOrderId
+                                join wowf in _appContext.WorkOrderWorkFlow on wop.ID equals wowf.WorkOrderPartNoId
                                 join cust in _appContext.Customer on wo.CustomerId equals cust.CustomerId
                                 join ca in _appContext.CustomerAffiliation on cust.CustomerAffiliationId equals ca.CustomerAffiliationId
-                                join wost in _appContext.WorkOrderStatus on wo.WorkOrderStatusId equals wost.Id
+                                join wost in _appContext.WorkOrderStatus on wop.WorkOrderStatusId equals wost.Id
                                 join im in _appContext.ItemMaster on wop.MasterPartId equals im.ItemMasterId
                                 join ws in _appContext.WorkScope on wop.WorkOrderScopeId equals ws.WorkScopeId
                                 join pr in _appContext.Priority on wop.WorkOrderPriorityId equals pr.PriorityId
@@ -423,9 +423,10 @@ namespace DAL.Repositories
                                     Stage = stage.Stage,
                                     StageType = stage.Stage,
                                     WorkOrderStatus = wost.Description,
+                                    WorkOrderStatusType = wost.Description,
                                     IsActive = wo.IsActive,
                                     CreatedDate = wo.CreatedDate,
-                                    WorkOrderStatusId = wo.WorkOrderStatusId,
+                                    WorkOrderStatusId = wop.WorkOrderStatusId.ToString(),
                                     TotalRecords = totalRecords,
                                 }
                           ).Distinct()
@@ -435,9 +436,9 @@ namespace DAL.Repositories
                 else
                 {
                     totalRecords = (from wo in _appContext.WorkOrder
+                                  //  join wop in _appContext.WorkOrderPartNumber on wo.WorkOrderId equals wop.WorkOrderId
                                     join cust in _appContext.Customer on wo.CustomerId equals cust.CustomerId
                                     join ca in _appContext.CustomerAffiliation on cust.CustomerAffiliationId equals ca.CustomerAffiliationId
-                                    join wost in _appContext.WorkOrderStatus on wo.WorkOrderStatusId equals wost.Id
                                     where wo.IsDeleted == false
                                     select new WorkOrderFilters()
                                     {
@@ -506,18 +507,30 @@ namespace DAL.Repositories
                                     (wp, ws) => new { wp, ws }).Where(p => p.wp.WorkOrderId == wo.WorkOrderId)
                                     .Select(p => p.ws.Stage)),
 
-                                        WorkOrderStatus = wost.Description,
+                                        WorkOrderStatus = string.Join(",", _appContext.WorkOrderPartNumber.Join(_appContext.WorkOrderStatus,
+                                    wp => wp.WorkOrderStatusId,
+                                    ws => ws.Id,
+                                    (wp, ws) => new { wp, ws }).Where(p => p.wp.WorkOrderId == wo.WorkOrderId)
+                                    .Select(p => p.ws.Description)),
+
+
+                                        // WorkOrderStatus = wost.Description,
                                         IsActive = wo.IsActive,
                                         CreatedDate = wo.CreatedDate,
-                                        WorkOrderStatusId = wo.WorkOrderStatusId,
+
+                                        WorkOrderStatusId = string.Join(",", _appContext.WorkOrderPartNumber.Join(_appContext.WorkOrderStatus,
+                                    wp => wp.WorkOrderStatusId,
+                                    ws => ws.Id,
+                                    (wp, ws) => new { wp, ws }).Where(p => p.wp.WorkOrderId == wo.WorkOrderId)
+                                    .Select(p => p.ws.Id))
                                     }
                           ).Distinct()
                            .Paginate(pageNumber, woFilters.rows, sorts, filters).RecordCount;
 
                     var list = (from wo in _appContext.WorkOrder
+                               // join wop in _appContext.WorkOrderPartNumber on wo.WorkOrderId equals wop.WorkOrderId
                                 join cust in _appContext.Customer on wo.CustomerId equals cust.CustomerId
                                 join ca in _appContext.CustomerAffiliation on cust.CustomerAffiliationId equals ca.CustomerAffiliationId
-                                join wost in _appContext.WorkOrderStatus on wo.WorkOrderStatusId equals wost.Id
                                 where wo.IsDeleted == false
                                 select new WorkOrderFilters()
                                 {
@@ -630,10 +643,29 @@ namespace DAL.Repositories
                                                 (wp, ws) => new { wp, ws }).Where(p => p.wp.WorkOrderId == wo.WorkOrderId)
                                                 .Select(p => p.ws.Stage).FirstOrDefault().ToString(),
 
-                                    WorkOrderStatus = wost.Description,
+                                    WorkOrderStatus = string.Join(",", _appContext.WorkOrderPartNumber.Join(_appContext.WorkOrderStatus,
+                                    wp => wp.WorkOrderStatusId,
+                                    ws => ws.Id,
+                                    (wp, ws) => new { wp, ws }).Where(p => p.wp.WorkOrderId == wo.WorkOrderId)
+                                    .Select(p => p.ws.Description)),
+
+                                    WorkOrderStatusType = _appContext.WorkOrderPartNumber.Where(p => p.WorkOrderId == wo.WorkOrderId).Count() > 1 ? "Multiple"
+                                              : _appContext.WorkOrderPartNumber.Join(_appContext.WorkOrderStatus,
+                                                wp => wp.WorkOrderStatusId,
+                                                ws => ws.Id,
+                                                (wp, ws) => new { wp, ws }).Where(p => p.wp.WorkOrderId == wo.WorkOrderId)
+                                                .Select(p => p.ws.Description).FirstOrDefault().ToString(),
+
+                                    //WorkOrderStatus = wost.Description,
                                     IsActive = wo.IsActive,
                                     CreatedDate = wo.CreatedDate,
-                                    WorkOrderStatusId = wo.WorkOrderStatusId,
+
+                                    WorkOrderStatusId = string.Join(",", _appContext.WorkOrderPartNumber.Join(_appContext.WorkOrderStatus,
+                                    wp => wp.WorkOrderStatusId,
+                                    ws => ws.Id,
+                                    (wp, ws) => new { wp, ws }).Where(p => p.wp.WorkOrderId == wo.WorkOrderId)
+                                    .Select(p => p.ws.Id)),
+
                                     TotalRecords = totalRecords,
                                 }
 
@@ -3591,7 +3623,7 @@ namespace DAL.Repositories
             }
         }
 
-        public IEnumerable<object> GetWorkOrderQuoteExclusions(long WorkOrderQuoteId)
+        public IEnumerable<object> GetWorkOrderQuoteExclusions(long workflowWorkOrderId)
         {
             try
             {
@@ -3602,7 +3634,7 @@ namespace DAL.Repositories
                                                from eo in weeo.DefaultIfEmpty()
                                                join mp in _appContext.Percent on we.MarkUpPercentageId equals mp.PercentId into wemp
                                                from mp in wemp.DefaultIfEmpty()
-                                               where we.IsDeleted == false && wq.WorkOrderQuoteId == WorkOrderQuoteId
+                                               where we.IsDeleted == false && wq.WorkflowWorkOrderId == workflowWorkOrderId
                                                select new
                                                {
                                                    we.CostPlusAmount,
@@ -3707,7 +3739,7 @@ namespace DAL.Repositories
             }
         }
 
-        public IEnumerable<object> GetWorkOrderQuoteFreight(long WorkOrderQuoteId)
+        public IEnumerable<object> GetWorkOrderQuoteFreight(long workflowWorkOrderId)
         {
             try
             {
@@ -3715,7 +3747,7 @@ namespace DAL.Repositories
                                             join wq in _appContext.WorkOrderQuoteDetails on wf.WorkOrderQuoteDetailsId equals wq.WorkOrderQuoteDetailsId
                                             join car in _appContext.Carrier on wf.CarrierId equals car.CarrierId
                                             join sv in _appContext.CustomerShipping on wf.ShipViaId equals sv.CustomerShippingId
-                                            where wf.IsDeleted == false && wq.WorkOrderQuoteId == WorkOrderQuoteId
+                                            where wf.IsDeleted == false && wq.WorkflowWorkOrderId == workflowWorkOrderId
                                             select new
                                             {
                                                 wf.Amount,
@@ -3818,7 +3850,7 @@ namespace DAL.Repositories
             }
         }
 
-        public IEnumerable<object> GetWorkOrderQuoteCharges(long WorkOrderQuoteId)
+        public IEnumerable<object> GetWorkOrderQuoteCharges(long workflowWorkOrderId)
         {
             try
             {
@@ -3827,7 +3859,7 @@ namespace DAL.Repositories
                             join ct in _appContext.ChargesTypes on woc.ChargesTypeId equals ct.Id
                             join v in _appContext.Vendor on woc.VendorId equals v.VendorId into wocv
                             from v in wocv.DefaultIfEmpty()
-                            where woc.IsDeleted == false && wq.WorkOrderQuoteId == WorkOrderQuoteId
+                            where woc.IsDeleted == false && wq.WorkflowWorkOrderId == workflowWorkOrderId
                             select new
                             {
                                 woc.ChargesTypeId,
@@ -3934,7 +3966,7 @@ namespace DAL.Repositories
             }
         }
 
-        public IEnumerable<object> GetWorkOrderQuoteMaterial(long WorkOrderQuoteId)
+        public IEnumerable<object> GetWorkOrderQuoteMaterial(long workflowWorkOrderId)
         {
 
             try
@@ -3946,7 +3978,7 @@ namespace DAL.Repositories
                                               from p in pro.DefaultIfEmpty()
                                               join c in _appContext.Condition on wom.ConditionCodeId equals c.ConditionId
                                               join uom in _appContext.UnitOfMeasure on wom.UnitOfMeasureId equals uom.UnitOfMeasureId
-                                              where wom.IsDeleted == false && wq.WorkOrderQuoteId == WorkOrderQuoteId
+                                              where wom.IsDeleted == false && wq.WorkflowWorkOrderId == workflowWorkOrderId
                                               select new
                                               {
                                                   im.PartNumber,
@@ -4060,7 +4092,7 @@ namespace DAL.Repositories
             }
         }
 
-        public object GetWorkOrderQuoteLabor(long WorkOrderQuoteId)
+        public object GetWorkOrderQuoteLabor(long workflowWorkOrderId)
         {
             try
             {
@@ -4073,7 +4105,7 @@ namespace DAL.Repositories
                                  from exp in lhexp.DefaultIfEmpty()
                                  join emp in _appContext.Employee on lh.EmployeeId equals emp.EmployeeId into lhemp
                                  from emp in lhemp.DefaultIfEmpty()
-                                 where lh.IsDeleted == false && wq.WorkOrderQuoteId == WorkOrderQuoteId
+                                 where lh.IsDeleted == false && wq.WorkflowWorkOrderId == workflowWorkOrderId
                                  select new
                                  {
                                      lh.CreatedBy,

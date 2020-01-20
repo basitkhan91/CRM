@@ -38,7 +38,7 @@ import * as moment from 'moment';
 export class WorkOrderQuoteListComponent implements OnInit {
 
   @Output() closeView = new EventEmitter();
-  private woQuoteList: any[];
+  public woQuoteList: any[];
   private onDestroy$: Subject<void> = new Subject<void>();
   pageSize: number = 10;
   headers = [
