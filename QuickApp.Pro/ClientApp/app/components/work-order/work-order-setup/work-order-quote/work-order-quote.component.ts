@@ -110,6 +110,7 @@ tabQuoteCreated: Object = {
 }
 editData: any;
 editingIndex: number;
+selectedWorkFlowWorkOrderId: number;
 
 
 
@@ -342,6 +343,7 @@ editingIndex: number;
       if(mpn.label == this.selectedPartNumber){
         msId = mpn.value.masterPartId;
         this.labor.workFlowWorkOrderId = mpn;
+        this.selectedWorkFlowOrWorkOrder = mpn.value.workOrderWorkFlowId;
       }
     })
     this.savedWorkOrderData.partNumbers.forEach((pns)=>{
@@ -551,6 +553,7 @@ editingIndex: number;
 
   createMaterialQuote(){
     this.materialListPayload.BuildMethodId = this.getBuildMethodId();
+    this.materialListPayload['workflowWorkOrderId'] = this.selectedWorkFlowWorkOrderId;
     this.materialListPayload.WorkOrderQuoteMaterial = this.materialListQuotation.map(mList=>{
       if(mList.workOrderQuoteDetailsId && mList.workOrderQuoteDetailsId != 0){
         this.materialListPayload.WorkOrderQuoteDetailsId = mList.workOrderQuoteDetailsId
@@ -599,6 +602,7 @@ editingIndex: number;
   }
 
   createLaborQuote(){
+    this.laborPayload['workflowWorkOrderId'] = this.selectedWorkFlowWorkOrderId;
     this.workOrderService.saveLaborListQuote(this.laborPayload)
     .subscribe(
       res => {
@@ -636,6 +640,7 @@ editingIndex: number;
   }
 
   createChargeQuote(data){
+    this.chargesPayload['workflowWorkOrderId'] = this.selectedWorkFlowWorkOrderId;
     this.chargesPayload.BuildMethodId = this.getBuildMethodId();
     this.chargesPayload.WorkOrderQuoteCharges = data.map(charge=>{
       if(charge.workOrderQuoteDetailsId && charge.workOrderQuoteDetailsId != 0){
@@ -681,6 +686,7 @@ editingIndex: number;
     )
   }
   createExclusionsQuote(){
+    this.exclusionsQuotation['workflowWorkOrderId'] = this.selectedWorkFlowWorkOrderId;
     this.workOrderService.saveExclusionsQuote(this.exclusionsQuotation)
     .subscribe(
       res => {
@@ -1000,7 +1006,7 @@ getQuoteTabData() {
 
 }
 getQuoteExclusionListByWorkOrderQuoteId() {
-  this.workOrderService.getQuoteExclusionList(this.quotationHeader['workOrderQuoteId']).subscribe(res => {
+  this.workOrderService.getQuoteExclusionList(this.selectedWorkFlowOrWorkOrder).subscribe(res => {
       this.workOrderExclusionsList = res;
       if(res.length > 0){
         this.updateWorkOrderQuoteDetailsId(res[0].workOrderQuoteDetailsId)
@@ -1008,7 +1014,7 @@ getQuoteExclusionListByWorkOrderQuoteId() {
   })
 }
 getQuoteMaterialListByWorkOrderQuoteId() {
-  this.workOrderService.getQuoteMaterialList(this.quotationHeader['workOrderQuoteId']).subscribe(res => {
+  this.workOrderService.getQuoteMaterialList(this.selectedWorkFlowOrWorkOrder).subscribe(res => {
       this.materialListQuotation = res;
       if(res.length > 0){
         this.updateWorkOrderQuoteDetailsId(res[0].workOrderQuoteDetailsId)
@@ -1016,7 +1022,7 @@ getQuoteMaterialListByWorkOrderQuoteId() {
   })
 }
  getQuoteChargesListByWorkOrderQuoteId() {
-  this.workOrderService.getQuoteChargesList(this.quotationHeader['workOrderQuoteId']).subscribe(res => {
+  this.workOrderService.getQuoteChargesList(this.selectedWorkFlowOrWorkOrder).subscribe(res => {
       this.workOrderChargesList = res;
       if(res.length > 0){
         this.updateWorkOrderQuoteDetailsId(res[0].workOrderQuoteDetailsId)
@@ -1024,7 +1030,7 @@ getQuoteMaterialListByWorkOrderQuoteId() {
   })
 }
  getQuoteLaborListByWorkOrderQuoteId() {
-  this.workOrderService.getQuoteLaborList(this.quotationHeader['workOrderQuoteId']).subscribe(res => {
+  this.workOrderService.getQuoteLaborList(this.selectedWorkFlowOrWorkOrder).subscribe(res => {
       if (res) {
           // this.workOrderLaborList = res;
           let wowfId = this.labor.workFlowWorkOrderId;
