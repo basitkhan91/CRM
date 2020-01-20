@@ -1449,8 +1449,8 @@ namespace DAL.Repositories
                             from im in stlim.DefaultIfEmpty()
                             join cnd in _appContext.Condition on stl.ConditionId equals cnd.ConditionId into stlcnd
                             from cnd in stlcnd.DefaultIfEmpty()
-                            join mnf in _appContext.Manufacturer on stl.ManufacturerId equals mnf.ManufacturerId into stlmnf
-                            from mnf in stlmnf.DefaultIfEmpty()
+                            //join mnf in _appContext.Manufacturer on stl.ManufacturerId equals mnf.ManufacturerId into stlmnf
+                           // from mnf in stlmnf.DefaultIfEmpty()
                             join whs in _appContext.Warehouse on stl.WarehouseId equals whs.WarehouseId into stlwhs
                             from whs in stlwhs.DefaultIfEmpty()
                             join shf in _appContext.Shelf on stl.ShelfId equals shf.ShelfId into stlshf
@@ -1461,6 +1461,8 @@ namespace DAL.Repositories
                             from glc in stlglc.DefaultIfEmpty()
                             join pox in _appContext.PurchaseOrder on stl.PurchaseOrderId equals pox.PurchaseOrderId into stlpox
                             from pox in stlpox.DefaultIfEmpty()
+                            join v in _appContext.Vendor on pox.VendorId equals v.VendorId into poxv
+                            from v in poxv.DefaultIfEmpty()
                             join rox in _appContext.RepairOrder on stl.RepairOrderId equals rox.RepairOrderId into stlrox
                             from rox in stlrox.DefaultIfEmpty()
                             join mpx in _appContext.MasterParts on im.MasterPartId equals mpx.MasterPartId into stlmpx
@@ -1472,8 +1474,8 @@ namespace DAL.Repositories
                                 SerialNumber = stl.SerialNumber == null ? "" : stl.SerialNumber,
                                 StocklineNumber = stl.StockLineNumber == null ? "" : stl.StockLineNumber,
                                 Condition = cnd.Description == null ? "" : cnd.Description,
-                                VendorName = mnf.Name == null ? "" : mnf.Name,
-                                VendorCode = mnf.ManufacturerId == null ? 0 : mnf.ManufacturerId,
+                                VendorName = v.VendorName == null ? "" : v.VendorName,
+                                VendorCode = v.VendorCode == null ? "" : v.VendorCode,
                                 Quantity = stl.Quantity == null ? 0 : stl.Quantity,
                                 QtyAdjusted = 0,
                                 POUnitCost = stl.PurchaseOrderUnitCost == null ? 0 : stl.PurchaseOrderUnitCost,
@@ -1570,7 +1572,7 @@ namespace DAL.Repositories
             filters.Add(!string.IsNullOrEmpty(slReportFilter.filters.stocklineNumber), x => x.stocklineNumber.ToLower().Contains(slReportFilter.filters.stocklineNumber.ToLower()));
             filters.Add(!string.IsNullOrEmpty(slReportFilter.filters.condition), x => x.condition.ToLower().Contains(slReportFilter.filters.condition.ToLower()));
             filters.Add(!string.IsNullOrEmpty(slReportFilter.filters.vendorName), x => x.vendorName.ToLower().Contains(slReportFilter.filters.vendorName.ToLower()));
-            filters.Add(slReportFilter.filters.vendorCode != null && slReportFilter.filters.vendorCode > 0, x => x.vendorCode == slReportFilter.filters.vendorCode);
+            filters.Add(!string.IsNullOrEmpty(slReportFilter.filters.vendorCode), x => x.vendorCode.ToLower().Contains(slReportFilter.filters.vendorCode.ToLower()));
             filters.Add(slReportFilter.filters.quantity != null && slReportFilter.filters.quantity > 0, x => x.quantity == slReportFilter.filters.quantity);
             filters.Add(slReportFilter.filters.qtyAdjusted != null && slReportFilter.filters.qtyAdjusted > 0, x => x.qtyAdjusted == slReportFilter.filters.qtyAdjusted);
             filters.Add(slReportFilter.filters.poUnitCost != null && slReportFilter.filters.poUnitCost > 0, x => x.poUnitCost == slReportFilter.filters.poUnitCost);
@@ -1595,8 +1597,8 @@ namespace DAL.Repositories
                                     from im in stlim.DefaultIfEmpty()
                                     join cnd in _appContext.Condition on stl.ConditionId equals cnd.ConditionId into stlcnd
                                     from cnd in stlcnd.DefaultIfEmpty()
-                                    join mnf in _appContext.Manufacturer on stl.ManufacturerId equals mnf.ManufacturerId into stlmnf
-                                    from mnf in stlmnf.DefaultIfEmpty()
+                                    //join mnf in _appContext.Manufacturer on stl.ManufacturerId equals mnf.ManufacturerId into stlmnf
+                                    //from mnf in stlmnf.DefaultIfEmpty()
                                     join whs in _appContext.Warehouse on stl.WarehouseId equals whs.WarehouseId into stlwhs
                                     from whs in stlwhs.DefaultIfEmpty()
                                     join shf in _appContext.Shelf on stl.ShelfId equals shf.ShelfId into stlshf
@@ -1607,6 +1609,8 @@ namespace DAL.Repositories
                                     from glc in stlglc.DefaultIfEmpty()
                                     join pox in _appContext.PurchaseOrder on stl.PurchaseOrderId equals pox.PurchaseOrderId into stlpox
                                     from pox in stlpox.DefaultIfEmpty()
+                                    join v in _appContext.Vendor on pox.VendorId equals v.VendorId  into poxv
+                                    from v in poxv.DefaultIfEmpty()
                                     join rox in _appContext.RepairOrder on stl.RepairOrderId equals rox.RepairOrderId into stlrox
                                     from rox in stlrox.DefaultIfEmpty()
                                     join mpx in _appContext.MasterParts on im.MasterPartId equals mpx.MasterPartId into stlmpx
@@ -1620,8 +1624,8 @@ namespace DAL.Repositories
                                         serialNumber = stl.SerialNumber == null ? "" : stl.SerialNumber,
                                         stocklineNumber = stl.StockLineNumber == null ? "" : stl.StockLineNumber,
                                         condition = cnd.Description == null ? "" : cnd.Description,
-                                        vendorName = mnf.Name == null ? "" : mnf.Name,
-                                        vendorCode = mnf.ManufacturerId == null ? 0 : mnf.ManufacturerId,
+                                        vendorName = v.VendorName == null ? "" : v.VendorName,
+                                        vendorCode = v.VendorCode == null ? "" : v.VendorCode,
                                         quantity = stl.Quantity == null ? 0 : stl.Quantity,
                                         qtyAdjusted = 0,
                                         poUnitCost = stl.PurchaseOrderUnitCost == null ? 0 : stl.PurchaseOrderUnitCost,
@@ -1646,8 +1650,8 @@ namespace DAL.Repositories
                             from im in stlim.DefaultIfEmpty()
                             join cnd in _appContext.Condition on stl.ConditionId equals cnd.ConditionId into stlcnd
                             from cnd in stlcnd.DefaultIfEmpty()
-                            join mnf in _appContext.Manufacturer on stl.ManufacturerId equals mnf.ManufacturerId into stlmnf
-                            from mnf in stlmnf.DefaultIfEmpty()
+                            //join mnf in _appContext.Manufacturer on stl.ManufacturerId equals mnf.ManufacturerId into stlmnf
+                           // from mnf in stlmnf.DefaultIfEmpty()
                             join whs in _appContext.Warehouse on stl.WarehouseId equals whs.WarehouseId into stlwhs
                             from whs in stlwhs.DefaultIfEmpty()
                             join shf in _appContext.Shelf on stl.ShelfId equals shf.ShelfId into stlshf
@@ -1658,6 +1662,8 @@ namespace DAL.Repositories
                             from glc in stlglc.DefaultIfEmpty()
                             join pox in _appContext.PurchaseOrder on stl.PurchaseOrderId equals pox.PurchaseOrderId into stlpox
                             from pox in stlpox.DefaultIfEmpty()
+                            join v in _appContext.Vendor on pox.VendorId equals v.VendorId into poxv
+                            from v in poxv.DefaultIfEmpty()
                             join rox in _appContext.RepairOrder on stl.RepairOrderId equals rox.RepairOrderId into stlrox
                             from rox in stlrox.DefaultIfEmpty()
                             join mpx in _appContext.MasterParts on im.MasterPartId equals mpx.MasterPartId into stlmpx
@@ -1671,8 +1677,8 @@ namespace DAL.Repositories
                                 serialNumber = stl.SerialNumber == null ? "" : stl.SerialNumber,
                                 stocklineNumber = stl.StockLineNumber == null ? "" : stl.StockLineNumber,
                                 condition = cnd.Description == null ? "" : cnd.Description,
-                                vendorName = mnf.Name == null ? "" : mnf.Name,
-                                vendorCode = mnf.ManufacturerId == null ? 0 : mnf.ManufacturerId,
+                                vendorName = v.VendorName == null ? "" : v.VendorName,
+                                vendorCode = v.VendorCode == null ? "" : v.VendorCode,
                                 quantity = stl.Quantity == null ? 0 : stl.Quantity,
                                 qtyAdjusted = 0,
                                 poUnitCost = stl.PurchaseOrderUnitCost == null ? 0 : stl.PurchaseOrderUnitCost,

@@ -96,6 +96,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="ClientApp\app\admin\file.ts" />
     <None Remove="ClientApp\app\components\actions\actions-editor.component.ts" />
     <None Remove="ClientApp\app\components\capabilitytype\capability-type.component.spec.ts" />
     <None Remove="ClientApp\app\components\capabilitytype\capability-type.component.ts" />
@@ -369,6 +370,7 @@
 
 
   <ItemGroup>
+    <Folder Include="ClientApp\app\admin\NewFolder\" />
     <Folder Include="ClientApp\app\components\NewFolder\" />
     <Folder Include="Logs\" />
     <Folder Include="Views\NewFolder\" />
@@ -389,6 +391,7 @@
 
 
   <ItemGroup>
+    <TypeScriptCompile Include="ClientApp\app\admin\file.ts" />
     <TypeScriptCompile Include="ClientApp\app\components\actions\actions-editor.component.ts" />
     <TypeScriptCompile Include="ClientApp\app\components\capabilitytype\capability-type.component.spec.ts" />
     <TypeScriptCompile Include="ClientApp\app\components\capabilitytype\capability-type.component.ts" />

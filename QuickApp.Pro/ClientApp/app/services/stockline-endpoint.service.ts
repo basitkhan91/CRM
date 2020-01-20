@@ -422,4 +422,20 @@ export class StocklineEndpoint extends EndpointFactory {
         return this.http.get<any>(`${this.configurations.baseUrl}/api/stockline/bindata?shelfId=${shelfId}`, this.getRequestHeaders())
 	}
 
+    getStockLineReportViewList(payload) {
+        return this.http.post(`${this.configurations.baseUrl}/api/stockline/stocklinereoprtview`, payload);
+    }
+
+    downloadStockLineReport() {
+
+        const url = `${this.configurations.baseUrl}/api/stockLine/stocklinereoprt`;
+        window.location.assign(url);
+    }
+
+    //downloadStockLineReport(payload) {
+
+    //    return this.http.post(`${this.configurations.baseUrl}/api/stockline/downloadstocklinereoprt`, payload);
+
+        
+    //}
 }
