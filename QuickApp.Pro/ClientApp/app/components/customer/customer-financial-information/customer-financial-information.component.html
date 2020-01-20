@@ -46,7 +46,9 @@
                                             </select>
                                         </div>
                                         <div class="form-group">
-                                            <label>Credit Limit <span class="clr-red">*</span></label>
+                                            <label>Credit Limit <span class="clr-red">*</span>
+                                                <span style="margin-left:3px;cursor:pointer;"><a href="#" class="fa fa-info-circle fa-lg"  matTooltip="Format: {{globalSettings.creditLimtFormat}}"></a></span>
+                                            </label>
                                             <input class="form-control" type="number" id="" name="creditLimit" [(ngModel)]="savedGeneralInformationData.creditLimit" required>
                                         </div>
                                         <div class="form-group">
@@ -518,15 +520,12 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
 
                         <div class="form-group">
                             <div class="col-sm-12">
                                 <div class="col-sm-4">
-                                    <div class="inner-addon right-addon inline-block">
 
-                                        <label for="description" class="control-label w100">Memo</label>
-                                    </div>
+                                        <label for="description">Memo</label>
                                     </div>
                                     <div class="col-sm-5">
 
@@ -538,8 +537,6 @@
                                     </div>
                                 </div>
                             </div>
-
-
                             </div>
                             <div class="modal-footer">
                                 <button class="btn btn-primary-cstm" data-dismiss="modal" (click)="newTaxTypeAdd()" [disabled]="!addTaxTypes.valid || isTaxTypeExists">Submit</button>
@@ -548,7 +545,7 @@
                                 <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="resetTaxType()">Close</button>
                             </div>
                         </div>
-
+                    </div>
             
         </form>
     </div>
