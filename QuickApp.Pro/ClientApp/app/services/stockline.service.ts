@@ -231,5 +231,11 @@ export class StocklineService {
 		return this.stocklineEndpoint.getBinDataByShelfId(shelfId);
 	}
 	
+    getStockLineReportViewList(payload) {
+        return this.stocklineEndpoint.getStockLineReportViewList(payload);
+    }
 
+    downloadStockLineReport() {
+        return this.stocklineEndpoint.downloadStockLineReport();
+    }
 }

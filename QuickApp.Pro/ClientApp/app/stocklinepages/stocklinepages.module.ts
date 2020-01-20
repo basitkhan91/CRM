@@ -32,6 +32,7 @@ import { StocklinepagesComponent } from './stocklinepages.component';
 import { StockLineEditComponent } from '../components/stockline/stock-line-edit/stock-line-edit.component';
 import { AuditModule } from "../audit/audit.module";
 import { DropdownModule } from 'primeng/dropdown';
+import { StockLineReportViewComponent } from "../components/stockline/stock-line-report/stock-line-report-view.component";
 
 @NgModule({
 	imports: [
@@ -67,7 +68,8 @@ import { DropdownModule } from 'primeng/dropdown';
 		StockLineSetupComponent,
 		StockAdjustmentComponent,
 		StocklinepagesComponent,
-		StockLineEditComponent,
+        StockLineEditComponent,
+        StockLineReportViewComponent
 	],
 	providers: [
 
