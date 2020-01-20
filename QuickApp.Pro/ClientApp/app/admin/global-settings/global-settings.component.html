@@ -1,1 +1,1 @@
-<router-outlet></router-outlet>
+<p-dropdown class="imstock-pddowm imcapes-pddowm" [options]="countriesList" filter="true"  [(ngModel)]="countryItem" name="countryItem" id="countryItem" title="Country" required  placeholder="Select Country" [showClear]="true" (onChange)="getCountrySpecificData($event)"></p-dropdown>

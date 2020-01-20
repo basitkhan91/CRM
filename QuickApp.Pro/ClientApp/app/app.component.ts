@@ -154,6 +154,9 @@ export class AppComponent implements OnInit, AfterViewInit {
                             { label: 'Roles List by Module', routerLink: '/rolesmodule/rolespages/app-roles-list-by-module' },
                             { label: 'Create Role', routerLink: '/rolesmodule/rolespages/app-roles-setup' }]
                     },
+                    {
+                        label: 'General Settings', routerLink:  'admin/global-settings'
+                    },
                     { label: 'Notifications', routerLink: '/#' }
 
                 ]

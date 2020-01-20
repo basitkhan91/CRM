@@ -8,5 +8,11 @@
 export class GlobalSettingsComponent
 {
     countriesList: any = [];
+    countryItem: any;
+
+
+    getCountrySpecificData(event){
+
+    }
 
 }

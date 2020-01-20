@@ -31,7 +31,7 @@ const adminRoutes: Routes = [
             {
                 path: 'global-settings',
                 component: GlobalSettingsComponent,
-                data: { title: "Admin | Roles" }
+                data: { title: "Admin | Global Settings" }
             }
         ]
     }
