@@ -141,7 +141,7 @@ export class SingleComponent {
 				];
 			}
 
-			else if (this.currentUrl == '/singlepages/singlepages/asset-acquistion-type') {
+			else if (this.currentUrl == '/singlepages/singlepages/asset-acquisition-type') {
 				this.items = [
 					{ label: 'Single Screens' },
 					{ label: 'Asset Acquistion Type ' }
@@ -865,7 +865,7 @@ export class SingleComponent {
 				];
 			}
 
-			else if (this.currentUrl == '/singlepages/singlepages/asset-acquistion-type') {
+			else if (this.currentUrl == '/singlepages/singlepages/asset-acquisition-type') {
 				this.items = [
 					{ label: 'Single Screens' },
 					{ label: 'Asset Acquistion Type ' }

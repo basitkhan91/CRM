@@ -9,19 +9,19 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import { EndpointFactory } from '../endpoint-factory.service';
 import { ConfigurationService } from '../configuration.service';
-import { AssetAcquistionType } from '../../models/asset-acquistion-type.model';
+import { AssetAcquisitionType } from '../../models/asset-acquisition-type.model';
 
 @Injectable()
-export class AssetAcquistionTypeEndpointService extends EndpointFactory {
+export class AssetAcquisitionTypeEndpointService extends EndpointFactory {
 
-    private readonly getAllURL: string = "/api/assetacquistion/getAll";
-    private readonly getByIdURL: string = "/api/assetacquistion/getById";
-    private readonly addURL: string = "/api/assetacquistion/add";
-    private readonly updateURL: string = "/api/assetacquistion/update";
-    private readonly removeByIdURL: string = "/api/assetacquistion/removeById";
-    private readonly updateForActive: string = "/api/assetacquistion/updateActive";
-    private readonly getAssetAuditById: string = "/api/assetacquistion/assetacquistionauditdetails";
-    private readonly excelUpload: string = "/api/assetacquistion/UploadAssetAcquistionTypeCustomData";
+    private readonly getAllURL: string = "/api/assetacquisition/getAll";
+    private readonly getByIdURL: string = "/api/assetacquisition/getById";
+    private readonly addURL: string = "/api/assetacquisition/add";
+    private readonly updateURL: string = "/api/assetacquisition/update";
+    private readonly removeByIdURL: string = "/api/assetacquisition/removeById";
+    private readonly updateForActive: string = "/api/assetacquisition/updateActive";
+    private readonly getAssetAuditById: string = "/api/assetacquisition/assetacquisitionauditdetails";
+    private readonly excelUpload: string = "/api/assetacquisition/UploadAssetAcquisitionTypeCustomData";
 
 
     get getAll() { return this.configurations.baseUrl + this.getAllURL; }
@@ -53,7 +53,7 @@ export class AssetAcquistionTypeEndpointService extends EndpointFactory {
             });
     }
 
-    addAsset<T>(asset: AssetAcquistionType): Observable<T> {
+    addAsset<T>(asset: AssetAcquisitionType): Observable<T> {
         let endpointUrl = this.add;
 
         return this.http.post<T>(endpointUrl, JSON.stringify(asset), this.getRequestHeaders())
@@ -62,12 +62,12 @@ export class AssetAcquistionTypeEndpointService extends EndpointFactory {
             });
     }
 
-    updateAsset<T>(assetAcquistionType: AssetAcquistionType): Observable<T> {
+    updateAsset<T>(AssetAcquisitionType: AssetAcquisitionType): Observable<T> {
         let endpointUrl = this.update;
 
-        return this.http.post<T>(endpointUrl, JSON.stringify(assetAcquistionType), this.getRequestHeaders())
+        return this.http.post<T>(endpointUrl, JSON.stringify(AssetAcquisitionType), this.getRequestHeaders())
             .catch(error => {
-                return this.handleError(error, () => this.updateAsset(assetAcquistionType));
+                return this.handleError(error, () => this.updateAsset(AssetAcquisitionType));
             });
     }
 
@@ -89,16 +89,16 @@ export class AssetAcquistionTypeEndpointService extends EndpointFactory {
             });
     }
 
-    getAssetAcquistionTypeAuditById<T>(assetId: number): Observable<T> {
+    getAssetAcquisitionTypeAuditById<T>(assetId: number): Observable<T> {
         let endpointUrl = `${this.getAssetAuditById}/${assetId}`;
 
         return this.http.get<T>(endpointUrl, this.getRequestHeaders())
             .catch(error => {
-                return this.handleError(error, () => this.getAssetAcquistionTypeAuditById(assetId));
+                return this.handleError(error, () => this.getAssetAcquisitionTypeAuditById(assetId));
             });
     }
 
-    AssetAcquistionTypeCustomUpload(file) {
+    AssetAcquisitionTypeCustomUpload(file) {
         return this.http.post(`${this.configurations.baseUrl}${this.excelUpload}`, file)
 
 

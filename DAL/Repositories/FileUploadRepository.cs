@@ -299,6 +299,14 @@ namespace DAL.Repositories
                     UploadAssetStatus(BindCustomData<AssetStatus>(file, "AssetStatusId", moduleName));
                     break;
 
+                case "AssetLocation":
+                    UploadAssetLocation(BindCustomData<AssetLocation>(file, "AssetLocationId", moduleName));
+                    break;
+
+                case "AssetAcquisitionType":
+                    UploadAssetAcquisitionType(BindCustomData<AssetAcquisitionType>(file, "AssetAcquisitionTypeId", moduleName));
+                    break;
+
                 case "DepreciationConvention":
                     UploadAssetDepConv(BindCustomData<AssetDepConvention>(file, "AssetDepConventionId", moduleName));
                     break;
@@ -770,6 +778,40 @@ namespace DAL.Repositories
                 if (!flag)
                 {
                     _appContext.AssetStatus.Add(item);
+                    _appContext.SaveChanges();
+                }
+            }
+        }
+
+        private void UploadAssetAcquisitionType(List<AssetAcquisitionType> AssetAcquisitionTypeList)
+        {
+
+            foreach (var item in AssetAcquisitionTypeList)
+            {
+
+                var flag = _appContext.AssetAcquisitionType.Any(p => p.IsDeleted == false && !string.IsNullOrEmpty(p.Code)
+                && !string.IsNullOrEmpty(p.Code) &&
+                p.Code.ToLower() == item.Code.Trim().ToLower());
+                if (!flag)
+                {
+                    _appContext.AssetAcquisitionType.Add(item);
+                    _appContext.SaveChanges();
+                }
+            }
+        }
+
+        private void UploadAssetLocation(List<AssetLocation> AssetLocationList)
+        {
+
+            foreach (var item in AssetLocationList)
+            {
+
+                var flag = _appContext.AssetLocation.Any(p => p.IsDeleted == false && !string.IsNullOrEmpty(p.Code)
+                && !string.IsNullOrEmpty(p.Code) &&
+                p.Code.ToLower() == item.Code.Trim().ToLower());
+                if (!flag)
+                {
+                    _appContext.AssetLocation.Add(item);
                     _appContext.SaveChanges();
                 }
             }
