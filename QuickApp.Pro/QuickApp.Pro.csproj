@@ -90,11 +90,6 @@
   </Target>
 
   <ItemGroup>
-    <Content Remove="wwwroot\js\data.js" />
-    <Content Remove="wwwroot\js\workflow.js" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Remove="ClientApp\app\admin\file.ts" />
     <None Remove="ClientApp\app\components\actions\actions-editor.component.ts" />
     <None Remove="ClientApp\app\components\capabilitytype\capability-type.component.spec.ts" />
@@ -373,15 +368,6 @@
     <Folder Include="ClientApp\app\components\NewFolder\" />
     <Folder Include="Logs\" />
     <Folder Include="Views\NewFolder\" />
-  </ItemGroup>
-
-
-
-
-  <ItemGroup>
-    <None Include="wwwroot\js\custom.js" />
-    <None Include="wwwroot\js\data.js" />
-    <None Include="wwwroot\js\workflow.js" />
   </ItemGroup>
 
 
