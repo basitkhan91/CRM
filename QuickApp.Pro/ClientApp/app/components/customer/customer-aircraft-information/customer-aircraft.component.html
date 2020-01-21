@@ -34,7 +34,7 @@
     <div class="clear"></div>
     <hr />
 
-    <div class="form-row">
+    <div class="form-row" style="padding: 0 5px;">
       <div class="col-md-2">
         <h4 class="f-s-14" style="margin-top: 26px;">Search Aircraft Information:</h4> 
       </div>
@@ -175,7 +175,7 @@
       <input style="width: 5%;" [(ngModel)]="totalPages" [disabled]="true" pInputText type="text" />
     </ng-template>
   </p-table>
-  <div *ngIf="aircraftListDataValues.length<=0" class="no-records-cstm">
+  <div *ngIf="!(aircraftListDataValues.length > 0)" class="no-records-cstm">
     No Records
   </div>
   <div style="margin-top: 10px;">

@@ -15,5 +15,5 @@ export interface ICharges{
     workflowId:string;
     AllowEdit:boolean;
     IsDeleted:boolean;
-    
+    Order: number;
 }

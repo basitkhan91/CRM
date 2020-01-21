@@ -85,6 +85,8 @@ export class EmployeesListComponent implements OnInit {
     getAllAllStationInfodrpData;
     stationName:any;
     empMemo:any;
+    empShiftType:any;
+    empLeaveType:any;
         
 
     ngOnInit(): void {
@@ -119,6 +121,10 @@ export class EmployeesListComponent implements OnInit {
     tagNameCollection: any[] = [];
     selectedRoleNames:string='';
     gridData = [];  
+    empDetailsData:any;
+    supervisorName:any;
+    empCreatedBy:any;
+    empCreatedDate:any;
   
     /** employees-list ctor */
     constructor(private modalService: NgbModal, private translationService: AppTranslationService, private empService: EmployeeService, private router: Router, private authService: AuthService, private alertService: AlertService, public commonService: CommonService,private configurations: ConfigurationService, public currencyService: CurrencyService, private legalEntityService: LegalEntityService) {
@@ -332,11 +338,11 @@ export class EmployeesListComponent implements OnInit {
         this.alertService.showStickyMessage(error, null, MessageSeverity.error);
     }
     openView(content, row) {
+        this.toGetEmployeeDetailsByEmpId(row.employeeId);
        
-        console.log(row);
         this.toGetEmployeeTrainingDocumentsList(row.employeeId);
         this.loadEmployeeRoles(row.employeeId);
-        this.getManagementStructureData(row.employeeId)
+        this.getManagementStructureData(row.employeeId);
         if (row.managmentLegalEntity != null && row.divmanagmentLegalEntity != null && row.biumanagmentLegalEntity != null && row.compmanagmentLegalEntity != null) {
             this.departname = row.managementStructeInfo.name;
             this.divsioname = row.divmanagmentLegalEntity.name;
@@ -572,14 +578,18 @@ export class EmployeesListComponent implements OnInit {
         this.empService.getStoredEmployeeRoles(empId)
         .subscribe(
             (employeeList: any[])=>{
-                this.employeeRolesList.forEach(mainRole => {
-                    employeeList.forEach(role => {
-                        if(role.roleId == mainRole['id']){
-                            //roles.push(mainRole['name']);
-                            this.selectedRoleNames += mainRole['name'] + ',' ;
-                        }
-                    });                  
-                });               
+                if(this.employeeRolesList != null)
+                {
+                    this.employeeRolesList.forEach(mainRole => {
+                        employeeList.forEach(role => {
+                            if(role.roleId == mainRole['id']){
+                                //roles.push(mainRole['name']);
+                                this.selectedRoleNames += mainRole['name'] + ',' ;
+                            }
+                        });                  
+                    });      
+                }
+                         
             }
 
             
@@ -652,6 +662,19 @@ export class EmployeesListComponent implements OnInit {
 			}
 		}
 		return out
+    }
+
+    toGetEmployeeDetailsByEmpId(employeeId)
+	{       
+        this.empService.toGetEmployeeDetailsByEmpId(employeeId).subscribe(res => {           
+            this.empDetailsData = res;
+            //console.log(this.empDetailsData);
+            this.empShiftType=this.empDetailsData.shiftNames;
+            this.empLeaveType=this.empDetailsData.leaveTypeNames;
+            this.supervisorName=this.empDetailsData.supervisorName;
+            this.empCreatedBy=this.empDetailsData.createdBy;
+            this.empCreatedDate=this.empDetailsData.createdDate;
+        })
     }
 
 

@@ -21,7 +21,7 @@ export class CustomerATAInformationComponent implements OnInit {
     @Input() editGeneralInformationData;
     @Input() editMode;
     @Input() search_ataChapterList;
-    @Input() ataListDataValues;
+    @Input() ataListDataValues = [];
     @Input() contactList;
     @Output() tab = new EventEmitter();
     @Output() refreshCustomerATAMapped = new EventEmitter();

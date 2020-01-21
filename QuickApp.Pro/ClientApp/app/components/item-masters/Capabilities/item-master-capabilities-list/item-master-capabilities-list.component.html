@@ -10,7 +10,7 @@
                             <div class="col-md-12" style="margin-bottom: -10px;">
                                 <h5 class="float-right">
                                         Add Capability
-                                        <a class="plusicon-cstm" href="#" data-toggle="modal" data-target="#capes1" (click)="onAddCapes()"><i class="fa fa-plus-circle fa-lg"></i></a>
+                                        <a #addCapabilityButton class="plusicon-cstm" href="#" data-toggle="modal" data-target="#capes1" (click)="onAddCapes()"><i class="fa fa-plus-circle fa-lg"></i></a>
                                         <!-- <button data-toggle="modal" data-target="#capes1">
                                              Add
                                         </button> -->
@@ -175,7 +175,7 @@
 
                             <td style="width:70px">
 
-                                <button class="btn-delete" type="button" mat-icon-button matTooltip="Delete" (click)="deleteCapability(deleteCapabilityContent, rowData.itemMasterCapesId)">
+                                <button class="btn-delete" type="button" mat-icon-button matTooltip="Delete" (click)="deleteCapability(deleteCapabilityContent, rowData.itemMasterCapesId, rowData.capabilityType)">
                                     <mat-icon color="warn">delete</mat-icon>
                                 </button>
                                 <!-- <span> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openView(viewContent,rowData)" title="View"><i class="fa fa-eye"></i></a> </span>
@@ -1002,15 +1002,16 @@
     <ng-template #deleteCapabilityContent let-c="close" let-d="dismiss" data-backdrop="static">
             <div class="modal-header">
                 <h4 class="modal-title">Are You Sure Want to Delete ?</h4>
+
                 <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <!-- <div class="modal-body">
-                <strong>Item Master Name:
-                    <span class="new-label">{{sourceAction.vendorName}}</span>
+            <div class="modal-body">
+                <strong>Capability Type:
+                    <span class="new-label">{{selectedCapabilityType}}</span>
                 </strong>
-            </div> -->
+            </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary-cstm" (click)="deleteCapability(selectedForDeleteContent, selectedForDeleteCapabilityId)">Yes</button>
                 <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">No</button>

@@ -1,4 +1,4 @@
-﻿import { Component, ViewChild, OnInit, AfterViewInit, Input, ChangeDetectorRef } from '@angular/core';
+﻿import { Component, ViewChild, OnInit, AfterViewInit, Input, ChangeDetectorRef, ElementRef } from '@angular/core';
 import { MatPaginator, MatSort, MatTableDataSource, MatSnackBar, MatDialog } from '@angular/material';
 import { NgForm, FormBuilder, FormGroup, Validators, FormControl, FormArray } from '@angular/forms';
 import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
@@ -28,6 +28,7 @@ import { AtaSubChapter1Service } from '../../../../services/atasubchapter1.servi
 import { WorkOrderService } from '../../../../services/work-order/work-order.service';
 import { CommonService } from '../../../../services/common.service';
 import * as $ from 'jquery';
+import { ItemMasterCreateCapabilitiesComponent } from '../item-master-create-capabilities/item-master-create-capabilities.component';
 
 
 @Component({
@@ -118,6 +119,9 @@ export class ItemMasterCapabilitiesListComponent implements OnInit {
     divisionData: any;
     departmentData: any;
     @Input() isEnableItemMaster: boolean = false;
+    @ViewChild("addCapabilityButton") addCapabilityButton: ElementRef;
+    selectedCapabilityType: any;
+
 
     /** item-master-capabilities-list ctor */
     constructor(private itemMasterService: ItemMasterService,
@@ -162,9 +166,13 @@ export class ItemMasterCapabilitiesListComponent implements OnInit {
     }];*/
 
     ngOnInit() {
-        console.log(this.itemMasterId, "itemMasterIdInList")
-        console.log(this.isEnableItemMaster);
-        
+        if(this.activatedRoute.snapshot.url[0].path == "app-item-master-create-capabilities"){
+            // this.modal = this.modalService.open(this.createCapabilityContent, { size: 'lg'});
+            this.showCapes = true;
+            let el: HTMLElement = this.addCapabilityButton.nativeElement;
+            el.click();
+        }
+
         if(!this.isEnableItemMaster) {
             this.itemMasterService.currentUrl = '/itemmastersmodule/itemmasterpages/app-item-master-capabilities-list';
             this.itemMasterService.bredcrumbObj.next(this.itemMasterService.currentUrl);//Bread Crumb
@@ -189,6 +197,8 @@ export class ItemMasterCapabilitiesListComponent implements OnInit {
         this.getAllATASubChapter();
         this.loadManagementdataForTree();
         this.getCapabilityTypeData();
+
+
 
     }
     get mfgFormArray(): FormArray {
@@ -1286,14 +1296,16 @@ export class ItemMasterCapabilitiesListComponent implements OnInit {
     closeCapesPopup(data) {
         this.closeCapes();
     }
-    deleteCapability(content, capabilityId) {
+    deleteCapability(content, capabilityId, capabilityType) {
         this.selectedForDeleteCapabilityId = capabilityId;
         this.selectedForDeleteContent = content;
+        this.selectedCapabilityType = capabilityType;
         if (this.isDeleteCapabilityPopupOpened == true) {
             this.itemMasterService.deleteCapabilityById(capabilityId, "admin").subscribe(res => {
                 this.loadData()
                 this.dismissModel()
                 this.isDeleteCapabilityPopupOpened = false;
+                this.selectedCapabilityType = "";
                 this.alertService.showMessage("Success", `Action was deleted successfully`, MessageSeverity.success);
                 // return false;
                 // this.itemMasterData = res[0];

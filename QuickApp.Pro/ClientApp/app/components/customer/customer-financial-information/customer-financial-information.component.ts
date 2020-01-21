@@ -195,7 +195,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
     }
 
     getGlobalSettings(){
-        this.globalSettings = this.localStorage.getDataObject<any>(DBkeys.GLOBAL_SETTINGS);
+        this.globalSettings = this.localStorage.getDataObject<any>(DBkeys.GLOBAL_SETTINGS) || {};
     }
 
   

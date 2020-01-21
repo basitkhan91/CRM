@@ -167,7 +167,7 @@ export class CustomerSalesPersonComponent implements OnInit {
         annualQuota: "",
     }
     getGlobalSettings(){
-        this.globalSettings = this.localStorage.getDataObject<any>(DBkeys.GLOBAL_SETTINGS);
+        this.globalSettings = this.localStorage.getDataObject<any>(DBkeys.GLOBAL_SETTINGS) || {};
     }
 
     get userName(): string {
