@@ -80,7 +80,7 @@ export class CustomerAircraftComponent implements OnInit {
     ]
     selectedColumns: any = this.colsaircraftLD;
     dashNumberUnknown: boolean = false;
-    aircraftListDataValues: any;
+    aircraftListDataValues: any[] = [];
     id: number;
     customerCode: any;
     customerName: any;
@@ -558,6 +558,7 @@ export class CustomerAircraftComponent implements OnInit {
 
     getAircraftMappedDataByCustomerId() {
          this.customerService.getMappedAirCraftDetails(this.id).subscribe(res => {
+             console.log(res);             
             this.aircraftListDataValues = res;
             if (this.aircraftListDataValues.length > 0) {
                 this.totalRecords = this.aircraftListDataValues.length;

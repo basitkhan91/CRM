@@ -1331,6 +1331,7 @@ export class AssetCapesComponent implements OnInit {
         this.activeIndex = 2;
         this.assetServices.indexObj.next(this.activeIndex);
         const { assetId } = this.local;
+        this.alertService.showMessage("Success", `Asset capes saved successfully.`, MessageSeverity.success);
         this.route.navigateByUrl(`/assetmodule/assetpages/app-asset-calibration/${assetId}`);
     }
 

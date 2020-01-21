@@ -10,5 +10,6 @@ export interface IExclusion{
       taskId:string;
       workflowId:string;
       AllowEdit:boolean;
-      isDeleted:boolean;
+      isDeleted: boolean;
+      Order: number;
 }

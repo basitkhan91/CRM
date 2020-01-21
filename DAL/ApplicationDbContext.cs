@@ -34,6 +34,10 @@ namespace DAL
         public DbSet<ModuleHierarchyMaster> ModuleHierarchyMaster { get; set; }
         public DbSet<AssetStatus> AssetStatus { get; set; }
         public DbSet<AssetStatusAudit> AssetStatusAudit { get; set; }
+        public DbSet<AssetLocation> AssetLocation { get; set; }
+        public DbSet<AssetLocationAudit> AssetLocationAudit { get; set; }
+        public DbSet<AssetAcquisitionType> AssetAcquisitionType { get; set; }
+        public DbSet<AssetAcquisitionTypeAudit> AssetAcquisitionTypeAudit { get; set; }
         public DbSet<Customer> Customer { get; set; }
         public DbSet<CustomerAudit> CustomerAudit { get; set; }
         public DbSet<ProductCategory> ProductCategories { get; set; }

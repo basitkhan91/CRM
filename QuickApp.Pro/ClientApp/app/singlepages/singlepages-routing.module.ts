@@ -64,7 +64,7 @@ import { LaberAndOverheadCostSetupComponent } from "../components/laber-and-over
 import { CertificationTypeComponent } from "../components/certification-type/certification-type.component";
 import { AssetStatusComponent } from "../components/AssetStatus/asset-status.component";
 import { AssetLocationComponent } from "../components/asset-location/asset-location.component";
-import { AssetAcquistionTypeComponent } from "../components/asset-acquistion-type/asset-acquistion-type.component";
+import { AssetAcquisitionTypeComponent } from "../components/asset-acquisition-type/asset-acquisition-type.component";
 import { DepriciationMethodComponent } from "../components/depriciation-method/depriciation-method.component";
 import { DisposalTypeComponent } from "../components/disposal-type/disposal-type.component";
 import { AssetDepConventionTypeComponent } from "../components/Asset-dep-convention-type/asset-dep-convention-type.component";
@@ -101,8 +101,8 @@ const singlePagesRoutes: Routes = [
                 data: { title: "Asset Location" }
             },
             {
-                path: "asset-acquistion-type",
-                component: AssetAcquistionTypeComponent,
+                path: "asset-acquisition-type",
+                component: AssetAcquisitionTypeComponent,
                 data: { title: "Asset Acquistion Type" }
             },
             {

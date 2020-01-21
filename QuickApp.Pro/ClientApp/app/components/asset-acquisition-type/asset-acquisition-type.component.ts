@@ -1,10 +1,10 @@
 import { fadeInOut } from "../../services/animations";
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { AlertService, MessageSeverity } from "../../services/alert.service";
-import { AssetAcquistionType } from "../../models/asset-acquistion-type.model";
-import { AssetAcquistionTypeService } from "../../services/asset-acquistion-type/asset-acquistion-type.service";
+import { AssetAcquisitionType } from "../../models/asset-acquisition-type.model";
+import { AssetAcquisitionTypeService } from "../../services/asset-acquisition-type/asset-acquisition-type.service";
 import { NgbModalRef, NgbModal } from "@ng-bootstrap/ng-bootstrap";
-import { AssetAcquistionTypeAudit} from "../../models/asset-acquistion-type-audit.model";
+import { AssetAcquisitionTypeAudit} from "../../models/asset-acquisition-type-audit.model";
 import { forEach } from "@angular/router/src/utils/collection";
 import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-screen-audit-details.model";
 import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
@@ -16,19 +16,19 @@ import { AuditHistory } from '../../models/audithistory.model';
 import { ConfigurationService } from '../../services/configuration.service';
 
 @Component({
-    selector: 'asset-acquistion-type',
-    templateUrl: './asset-acquistion-type.component.html',
-    styleUrls: ['asset-acquistion-type.component.scss'],
+    selector: 'asset-acquisition-type',
+    templateUrl: './asset-acquisition-type.component.html',
+    styleUrls: ['asset-acquisition-type.component.scss'],
     animations: [fadeInOut]
 })
-export class AssetAcquistionTypeComponent implements OnInit {
+export class AssetAcquisitionTypeComponent implements OnInit {
 
-    currentAssetAcquistionType: AssetAcquistionType;
-    dataSource: MatTableDataSource<AssetAcquistionType>;
-    assetAcquistionTypeToUpdate: AssetAcquistionType;
-    assetAcquistionTypeToRemove: AssetAcquistionType;
-    assetAcquistionTypeList: AssetAcquistionType[] = [];
-    assetAcquistionTypeAuditList: AssetAcquistionTypeAudit[];
+    currentAssetAcquisitionType: AssetAcquisitionType;
+    dataSource: MatTableDataSource<AssetAcquisitionType>;
+    AssetAcquisitionTypeToUpdate: AssetAcquisitionType;
+    AssetAcquisitionTypeToRemove: AssetAcquisitionType;
+    AssetAcquisitionTypeList: AssetAcquisitionType[] = [];
+    AssetAcquisitionTypeAuditList: AssetAcquisitionTypeAudit[];
     updateMode: boolean;
     selectedData: any;
     formData = new FormData();
@@ -36,7 +36,7 @@ export class AssetAcquistionTypeComponent implements OnInit {
     private isDeleteMode: boolean = false;
     private isEditMode: boolean = false;
     modal: NgbModalRef;
-    public sourceAction: AssetAcquistionType;
+    public sourceAction: AssetAcquisitionType;
     display: boolean = false;
     modelValue: boolean = false;
     allComapnies: MasterCompany[] = [];
@@ -59,7 +59,7 @@ export class AssetAcquistionTypeComponent implements OnInit {
     localCollection: any[] = [];
     disableSave: boolean = false;
     isSaving: boolean;
-    assetAcquistionTypeId: number = 0;
+    AssetAcquisitionTypeId: number = 0;
     private isDelete: boolean = false;
     codeName: string = "";
     allreasn: any[] = [];
@@ -71,29 +71,32 @@ export class AssetAcquistionTypeComponent implements OnInit {
     pageSize: number = 10;
     totalPages: number;
     displayedColumns = ['Code', 'Name', 'Memo'];
+    recordExists: boolean = false;
+    selAssetAcquisitionTypeId: any;
+    selectedRow: any;
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
-    /** AssetAcquistionType ctor */
+    /** AssetAcquisitionType ctor */
 
     paginatorState: { rows: number; first: number; };
     totalRecords: number;
     first: number;
     rows: number;
     loading: boolean;
-    disposalTypePagination: AssetAcquistionType[];
+    disposalTypePagination: AssetAcquisitionType[];
 
 
-    constructor(private alertService: AlertService, private assetAcquistionTypeService: AssetAcquistionTypeService, private modalService: NgbModal, private authService: AuthService, private breadCrumb: SingleScreenBreadcrumbService, private masterComapnyService: MasterComapnyService, private configurations: ConfigurationService) {
+    constructor(private alertService: AlertService, private AssetAcquisitionTypeService: AssetAcquisitionTypeService, private modalService: NgbModal, private authService: AuthService, private breadCrumb: SingleScreenBreadcrumbService, private masterComapnyService: MasterComapnyService, private configurations: ConfigurationService) {
         this.displayedColumns.push('action');
         this.dataSource = new MatTableDataSource();
-        this.sourceAction = new AssetAcquistionType();
+        this.sourceAction = new AssetAcquisitionType();
     
     }
 
     ngOnInit(): void {
         this.loadData();
-        this.breadCrumb.currentUrl = '/singlepages/singlepages/asset-acquistion-type';
+        this.breadCrumb.currentUrl = '/singlepages/singlepages/asset-acquisition-type';
         this.breadCrumb.bredcrumbObj.next(this.breadCrumb.currentUrl);
     }
 
@@ -105,11 +108,11 @@ export class AssetAcquistionTypeComponent implements OnInit {
     private loadData() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-        this.assetAcquistionTypeService.getAll().subscribe(data => {
+        this.AssetAcquisitionTypeService.getAll().subscribe(data => {
             this.allunitData = data[0].columHeaders;
-            this.assetAcquistionTypeList = data[0].columnData;
-            console.log(this.assetAcquistionTypeList);
-            this.totalRecords = this.assetAcquistionTypeList.length;
+            this.AssetAcquisitionTypeList = data[0].columnData;
+            console.log(this.AssetAcquisitionTypeList);
+            this.totalRecords = this.AssetAcquisitionTypeList.length;
             this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
             this.cols = [
                 console.log(this.allunitData),
@@ -147,7 +150,7 @@ export class AssetAcquistionTypeComponent implements OnInit {
         this.applyFilter(this.dataSource.filter);
     }
 
-    public allWorkFlows: AssetAcquistionType[] = [];
+    public allWorkFlows: AssetAcquisitionType[] = [];
 
     private onHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {
         // debugger;
@@ -190,36 +193,51 @@ export class AssetAcquistionTypeComponent implements OnInit {
     eventHandler(event) {
         let value = event.target.value.toLowerCase()
         if (this.selectedreason) {
-            if (value == this.selectedreason.toLowerCase()) {
+            console.log(191);
+            if (value == this.selectedreason.toLowerCase() &&
+                (this.isEditMode && this.selAssetAcquisitionTypeId != this.selectedRow.assetAcquisitionTypeId) || !this.isEditMode)
+            {
                 this.disableSave = true;
+                this.recordExists = true;
             }
             else {
                 this.disableSave = false;
+                this.recordExists = false;
             }
         }
     }
 
     partnmId(event) {
+        console.log(this.allreasn);
         for (let i = 0; i < this.allreasn.length; i++) {
             if (event == this.allreasn[i][0].codeName) {
-                this.disableSave = true;
+                this.selAssetAcquisitionTypeId = this.allreasn[i][0].assetAcquisitionTypeId;
+                if ((this.isEditMode && this.selAssetAcquisitionTypeId != this.selectedRow.assetAcquisitionTypeId || !this.isEditMode)) {
+                    this.disableSave = true;
+                    this.recordExists = true;
+                }
+                else {
+                    this.disableSave = false;
+                    this.recordExists = false;
+                }
                 this.selectedreason = event;
+                console.log(this.allreasn[i][0]);
             }
         }
     }
 
-    filterAssetAcquistionType(event) {
+    filterAssetAcquisitionType(event) {
         this.localCollection = [];
 
-        for (let i = 0; i < this.assetAcquistionTypeList.length; i++) {
+        for (let i = 0; i < this.AssetAcquisitionTypeList.length; i++) {
 
-            let codeName = this.assetAcquistionTypeList[i].code
+            let codeName = this.AssetAcquisitionTypeList[i].code
                 ;
 
-            if (codeName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+            if (codeName != null && codeName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
                 console.log(codeName);
                 this.allreasn.push([{
-                    "assetAcquistionTypeId": this.assetAcquistionTypeList[i].assetAcquistionTypeId,
+                    "AssetAcquisitionTypeId": this.AssetAcquisitionTypeList[i].assetAcquisitionTypeId,
                     "codeName": codeName
                 }]),
                     this.localCollection.push(codeName);
@@ -229,16 +247,17 @@ export class AssetAcquistionTypeComponent implements OnInit {
     
     resetdepriciationmethod(): void {
         this.updateMode = false;
-        this.currentAssetAcquistionType = new AssetAcquistionType();
+        this.currentAssetAcquisitionType = new AssetAcquisitionType();
     }
 
     open(content) {
+        this.recordExists = false;
         this.isDeleteMode = false;
         this.isEditMode = false;
         this.disableSave = false;
         this.isSaving = true;
         this.loadMasterCompanies();
-        this.sourceAction = new AssetAcquistionType();
+        this.sourceAction = new AssetAcquisitionType();
         this.sourceAction.isActive = true;
 
         this.codeName = "";
@@ -249,16 +268,17 @@ export class AssetAcquistionTypeComponent implements OnInit {
     }
 
     openEdit(content, row) {
-
+        this.recordExists = false;
         this.isEditMode = true;
         this.disableSave = false;
         this.isSaving = true;
         this.loadMasterCompanies();
         this.sourceAction = row;
-
+        this.selectedRow = row;
         this.codeName = row.code;
           
-        this.assetAcquistionTypeId = this.assetAcquistionTypeId;
+        this.AssetAcquisitionTypeId = this.sourceAction.assetAcquisitionTypeId;
+        console.log('281', this.sourceAction);
         this.loadMasterCompanies();
         this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
@@ -266,12 +286,12 @@ export class AssetAcquistionTypeComponent implements OnInit {
         }, () => { console.log('Backdrop click') })
     }
 
-    SaveandEditAssetAcquistionType() {
+    SaveandEditAssetAcquisitionType() {
         // debugger;
 
 
         this.isSaving = true;
-        console.log(this);
+        console.log(this.sourceAction);
 
         const params = <any>{
             createdBy: this.userName,
@@ -279,19 +299,19 @@ export class AssetAcquistionTypeComponent implements OnInit {
             Code: this.codeName,
             Name: this.sourceAction.name,
             Memo: this.sourceAction.memo,
-            assetAcquistionTypeId: this.sourceAction.assetAcquistionTypeId,
+            AssetAcquisitionTypeId: this.sourceAction.assetAcquisitionTypeId,
             IsActive: this.sourceAction.isActive,
-            IsDelete: this.isDelete,
+            IsDeleted: this.isDelete,
             masterCompanyId: 1
         };
         if (this.isEditMode == false) {
-            this.assetAcquistionTypeService.add(params).subscribe(
+            this.AssetAcquisitionTypeService.add(params).subscribe(
                 role => this.saveSuccessHelper(role),
                 error => this.saveFailedHelper(error));
         }
         else {
-            params.AssetDisposalTypeId = this.sourceAction.assetAcquistionTypeId;
-            this.assetAcquistionTypeService.update(params).subscribe(
+            params.assetAcquisitionTypeId = this.sourceAction.assetAcquisitionTypeId;
+            this.AssetAcquisitionTypeService.update(params).subscribe(
                 response => this.saveCompleted(this.sourceAction),
                 error => this.saveFailedHelper(error));
         }
@@ -302,15 +322,15 @@ export class AssetAcquistionTypeComponent implements OnInit {
     deleteItemAndCloseModel() {
         this.isSaving = true;
         this.sourceAction.updatedBy = this.userName;
-        this.assetAcquistionTypeService.remove(this.sourceAction.assetAcquistionTypeId).subscribe(
+        this.AssetAcquisitionTypeService.remove(this.sourceAction.assetAcquisitionTypeId).subscribe(
             response => this.saveCompleted(this.sourceAction),
             error => this.saveFailedHelper(error));
         this.modal.close();
     }
 
-    private saveSuccessHelper(role?: AssetAcquistionType) {
+    private saveSuccessHelper(role?: AssetAcquisitionType) {
         this.isSaving = false;
-        this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
+        this.alertService.showMessage("Success", `Asset Acquisition Type created successfully`, MessageSeverity.success);
         this.loadData();
         this.alertService.stopLoadingMessage();
     }
@@ -322,14 +342,14 @@ export class AssetAcquistionTypeComponent implements OnInit {
         this.alertService.showStickyMessage(error, null, MessageSeverity.error);
     }
 
-    private saveCompleted(user?: AssetAcquistionType) {
+    private saveCompleted(user?: AssetAcquisitionType) {
         this.isSaving = false;
         if (this.isDelete == true) {
-            this.alertService.showMessage("Success", `Action was deleted successfully`, MessageSeverity.success);
+            this.alertService.showMessage("Success", `Asset Acquisition Type deleted successfully`, MessageSeverity.success);
             this.isDelete = false;
         }
         else {
-            this.alertService.showMessage("Success", `Action was edited successfully`, MessageSeverity.success);
+            this.alertService.showMessage("Success", `Asset Acquisition Type updated successfully`, MessageSeverity.success);
         }
         this.loadData();
     }
@@ -343,19 +363,19 @@ export class AssetAcquistionTypeComponent implements OnInit {
             Name: rowData.name,
             Memo: rowData.memo,
             isActive: rowData.isActive,
-            IsDelete: false,
+            IsDeleted: false,
             masterCompanyId: 1,
-            assetAcquistionTypeId: rowData.assetAcquistionTypeId
+            AssetAcquisitionTypeId: rowData.assetAcquisitionTypeId
         };
         if (e.checked == false) {
             this.Active = "In Active";
-            this.assetAcquistionTypeService.update(params).subscribe(
+            this.AssetAcquisitionTypeService.update(params).subscribe(
                 response => this.saveCompleted(this.sourceAction),
                 error => this.saveFailedHelper(error));
         }
         else {
             this.Active = "Active";
-            this.assetAcquistionTypeService.update(params).subscribe(
+            this.AssetAcquisitionTypeService.update(params).subscribe(
                 response => this.saveCompleted(this.sourceAction),
                 error => this.saveFailedHelper(error));
         }
@@ -391,12 +411,12 @@ export class AssetAcquistionTypeComponent implements OnInit {
         }, () => { console.log('Backdrop click') })
     }
     
-     resetAddAssetAcquistionType(): void {
-        this.currentAssetAcquistionType = new AssetAcquistionType();
+     resetAddAssetAcquisitionType(): void {
+        this.currentAssetAcquisitionType = new AssetAcquisitionType();
     }
 
-    resetUpdateAssetAcquistionType(): void {
-        this.assetAcquistionTypeToUpdate = new AssetAcquistionType();
+    resetUpdateAssetAcquisitionType(): void {
+        this.AssetAcquisitionTypeToUpdate = new AssetAcquisitionType();
     }
 
     dismissModel() {
@@ -407,7 +427,7 @@ export class AssetAcquistionTypeComponent implements OnInit {
 
  
     getAuditHistoryById(rowData) {
-        this.assetAcquistionTypeService.getAssetAudit(rowData.assetAcquistionTypeId).subscribe(res => {
+        this.AssetAcquisitionTypeService.getAssetAudit(rowData.AssetAcquisitionTypeId).subscribe(res => {
             this.auditHistory = res;
         })
     }
@@ -425,7 +445,7 @@ export class AssetAcquistionTypeComponent implements OnInit {
     }
 
     sampleExcelDownload() {
-        const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=AssetAcquistionType&fileName=AssetAcquistionType.xlsx`;
+        const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=AssetAcquisitionType&fileName=AssetAcquisitionType.xlsx`;
 
         window.location.assign(url);
     }
@@ -437,12 +457,12 @@ export class AssetAcquistionTypeComponent implements OnInit {
         if (file.length > 0) {
 
             this.formData.append('file', file[0])
-            this.assetAcquistionTypeService.AssetAcquistionTypeCustomUpload(this.formData).subscribe(res => {
+            this.AssetAcquisitionTypeService.AssetAcquisitionTypeCustomUpload(this.formData).subscribe(res => {
                 event.target.value = '';
 
                 this.formData = new FormData();
                 this.existingRecordsResponse = res;
-                this.getAssetAcquistionTypeList();
+                this.getAssetAcquisitionTypeList();
                 this.alertService.showMessage(
                     'Success',
                     `Successfully Uploaded  `,
@@ -457,7 +477,7 @@ export class AssetAcquistionTypeComponent implements OnInit {
 
     }
 
-    getAssetAcquistionTypeList() {
+    getAssetAcquisitionTypeList() {
 
         this.loadData();
     }

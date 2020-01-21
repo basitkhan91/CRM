@@ -47,11 +47,11 @@
                             <ng-template pTemplate="header" let-columns>
                                 <tr>
                                         <ng-container *ngFor="let col of columns">
-                                                <th class="text-center" *ngIf="col.field!='level1' && col.field!='level2' && col.field!='level3' && col.field!='level4'"  pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
+                                                <th class="text-center" *ngIf="col.field!='levelCode1' && col.field!='levelCode2' && col.field!='levelCode3' && col.field!='levelCode4'"  pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
                                                         {{col.header}}
                                                         <p-sortIcon [field]="col.field"></p-sortIcon>
                                                 </th>
-                                                <th class="text-center" *ngIf="col.field=='level1'"  colspan="4"  pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
+                                                <th class="text-center" *ngIf="col.field=='levelCode1'"  colspan="4"  pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
                                                    Management Structure
                                                 </th>
                                             </ng-container>
@@ -170,14 +170,16 @@
                                 </label>
                             </div>
                             <div class="col-sm-5">
-                                <input type="text" name="code" class="form-control" #code="ngModel" [(ngModel)]="addNew.code" required>
+                                <input type="text" name="code" class="form-control" #code="ngModel" [(ngModel)]="addNew.code" required (input)="checkStageCodeExistOrNot($event.target.value)">
+                                <div *ngIf="disableSaveForCode" class="clr-red">Already Exists</div>
+                                <div class="clear"></div>
                             </div>
                         </div>
 
                         <div class="col-sm-12">
                             <div class="col-sm-4">
                                 <label for="description" class="control-label">
-                                   Description
+                                   Stage Description
                                 
                                 </label>
                             </div>
@@ -194,7 +196,9 @@
                                 </label>
                             </div>
                             <div class="col-sm-5">
-                                <input type="number" name="sequence" class="form-control" #sequence="ngModel" [(ngModel)]="addNew.sequence" required>
+                                <input type="number" name="sequence" class="form-control" #sequence="ngModel" [(ngModel)]="addNew.sequence" required (input)="checkSequenceExistOrNot($event.target.valueAsNumber)">
+                                <div *ngIf="disableSaveForSequence" class="clr-red">Already Exists</div>
+                                <div class="clear"></div>
                             </div>
                         </div>
 
@@ -311,7 +315,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-primary-cstm" data-dismiss="modal" [disabled]="create.invalid || disableSave" (click)="save();"> {{isEdit ? 'Update' : 'Save' }}</button>
+                <button class="btn btn-primary-cstm" data-dismiss="modal" [disabled]="create.invalid || disableSaveForCode || disableSaveForSequence" (click)="save();"> {{isEdit ? 'Update' : 'Save' }}</button>
                 <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="resetForm()">Close</button>
 
             </div>

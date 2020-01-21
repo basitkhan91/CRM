@@ -3509,7 +3509,11 @@ namespace QuickApp.Pro.Controllers
                 var vendorObject = _unitOfWork.Vendor.GetSingleOrDefault(c => c.VendorId == id);
                 vendor.MasterCompanyId = 1;
                 vendorObject.VendorId = vendor.VendorId;
+
+               
+
                 vendorObject.IsDeleted = vendor.IsDeleted;
+
                 //vendorObject.IsActive = vendor.IsActive;
                 vendorObject.UpdatedDate = DateTime.Now;
                 vendorObject.UpdatedBy = vendor.UpdatedBy;

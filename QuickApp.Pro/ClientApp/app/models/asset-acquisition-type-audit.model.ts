@@ -1,5 +1,5 @@
-﻿export class AssetAcquistionTypeAudit {
-    AssetAcquistionTypeAuditId: number;
+﻿export class AssetAcquisitionTypeAudit {
+    AssetAcquisitionTypeAuditId: number;
     id: number;
     identification: string;
     name: string;

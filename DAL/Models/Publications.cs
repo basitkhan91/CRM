@@ -59,5 +59,6 @@ namespace DAL.Models
         public int? MasterCompanyId { get; set; }
 
         public List<WorkflowPublicationDashNumber> WorkflowPublicationDashNumbers { get; set; }
+        public int? Order { get; set; }
     }
 }

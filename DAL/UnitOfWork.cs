@@ -202,6 +202,11 @@ namespace DAL
         IAssetDepreciationMethod _assetDepreciationMethod;
         IAssetDisposalType _assetDisposalType;
         IAssetStatus _assetStatus;
+        IAssetLocation _assetLocation;
+		IAssetLocationAudit _assetLocationAudit;
+       // IAssetLocationAuditRepository _assetLocationAuditRepository;
+        IAssetAcquisitionType _AssetAcquisitionType;
+		IAssetAcquisitionTypeAudit _AssetAcquisitionTypeAudit;
         IAssetDepConvention _assetDepConvention;
 
         IPublicationTypesRepository _publicationTypesRepository;
@@ -1799,6 +1804,46 @@ namespace DAL
                 if (_assetStatus == null)
                     _assetStatus = new AssetStatusRepository(_context);
                 return _assetStatus;
+            }
+        }
+
+        IAssetLocation IUnitOfWork.AssetLocation
+        {
+            get
+            {
+                if (_assetLocation == null)
+                    _assetLocation = new AssetLocationRepository(_context);
+                return _assetLocation;
+            }
+        }
+		
+		public IAssetLocationAudit AssetLocationAudit
+        {
+            get
+            {
+                if (_assetLocationAudit == null)
+                    _assetLocationAudit = new AssetLocationAuditRepository(_context);
+                return _assetLocationAudit;
+            }
+        }
+
+        IAssetAcquisitionType IUnitOfWork.AssetAcquisitionType
+        {
+            get
+            {
+                if (_AssetAcquisitionType == null)
+                    _AssetAcquisitionType = new AssetAcquisitionTypeRepository(_context);
+                return _AssetAcquisitionType;
+            }
+        }
+		
+		IAssetAcquisitionTypeAudit IUnitOfWork.AssetAcquisitionTypeAudit
+        {
+            get
+            {
+                if (_AssetAcquisitionTypeAudit == null)
+                    _AssetAcquisitionTypeAudit = new AssetAcquisitionTypeAuditRepository(_context);
+                return _AssetAcquisitionTypeAudit;
             }
         }
 

@@ -71,6 +71,9 @@ export class AssetLocationComponent implements OnInit {
     pageSize: number = 10;
     totalPages: number;
     displayedColumns = ['Code', 'Name', 'Memo'];
+    recordExists: boolean = false;
+    selAssetLocationId: any;
+    selectedRow: any;
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
@@ -186,24 +189,39 @@ export class AssetLocationComponent implements OnInit {
             return data;
         }
     }
-
+    
     eventHandler(event) {
         let value = event.target.value.toLowerCase()
         if (this.selectedreason) {
-            if (value == this.selectedreason.toLowerCase()) {
+            console.log(191);
+            if (value == this.selectedreason.toLowerCase() &&
+                (this.isEditMode && this.selAssetLocationId != this.selectedRow.assetLocationId || !this.isEditMode)
+            ) {
                 this.disableSave = true;
+                this.recordExists = true;
             }
             else {
                 this.disableSave = false;
+                this.recordExists = false;
             }
         }
     }
 
     partnmId(event) {
+        //console.log(event.target.value)
         for (let i = 0; i < this.allreasn.length; i++) {
             if (event == this.allreasn[i][0].codeName) {
-                this.disableSave = true;
+                this.selAssetLocationId = this.allreasn[i][0].assetLocationId;
+                if ((this.isEditMode && this.selAssetLocationId != this.selectedRow.assetLocationId) || !this.isEditMode) {
+                    this.disableSave = true;
+                    this.recordExists = true;
+                }
+                else {
+                    this.disableSave = false;
+                    this.recordExists = false;
+                }
                 this.selectedreason = event;
+                console.log(this.allreasn[i][0]);
             }
         }
     }
@@ -233,6 +251,7 @@ export class AssetLocationComponent implements OnInit {
     }
 
     open(content) {
+        this.recordExists = false;
         this.isDeleteMode = false;
         this.isEditMode = false;
         this.disableSave = false;
@@ -249,13 +268,13 @@ export class AssetLocationComponent implements OnInit {
     }
 
     openEdit(content, row) {
-
+        this.recordExists = false;
         this.isEditMode = true;
         this.disableSave = false;
         this.isSaving = true;
         this.loadMasterCompanies();
         this.sourceAction = row;
-
+        this.selectedRow = row;
         this.codeName = row.code;
           
         this.assetLocationId = this.assetLocationId;
@@ -281,19 +300,21 @@ export class AssetLocationComponent implements OnInit {
             Memo: this.sourceAction.memo,
             assetLocationId: this.sourceAction.assetLocationId,
             IsActive: this.sourceAction.isActive,
-            IsDelete: this.isDelete,
+            IsDeleted: this.isDelete,
             masterCompanyId: 1
         };
         if (this.isEditMode == false) {
             this.assetLocationService.add(params).subscribe(
                 role => this.saveSuccessHelper(role),
                 error => this.saveFailedHelper(error));
+            //this.alertService.showMessage('Success', "Asset Location added successfully.", MessageSeverity.success);
         }
         else {
-            params.AssetDisposalTypeId = this.sourceAction.assetLocationId;
+            params.assetLocationId = this.sourceAction.assetLocationId;
             this.assetLocationService.update(params).subscribe(
                 response => this.saveCompleted(this.sourceAction),
                 error => this.saveFailedHelper(error));
+            //this.alertService.showMessage('Success', "Asset Location updated successfully.", MessageSeverity.success);
         }
 
         this.modal.close();
@@ -301,6 +322,7 @@ export class AssetLocationComponent implements OnInit {
 
     deleteItemAndCloseModel() {
         this.isSaving = true;
+        this.isDelete = true;
         this.sourceAction.updatedBy = this.userName;
         this.assetLocationService.remove(this.sourceAction.assetLocationId).subscribe(
             response => this.saveCompleted(this.sourceAction),
@@ -310,7 +332,7 @@ export class AssetLocationComponent implements OnInit {
 
     private saveSuccessHelper(role?: AssetLocation) {
         this.isSaving = false;
-        this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
+        this.alertService.showMessage("Success", `Asset Location added successfully`, MessageSeverity.success);
         this.loadData();
         this.alertService.stopLoadingMessage();
     }
@@ -325,11 +347,11 @@ export class AssetLocationComponent implements OnInit {
     private saveCompleted(user?: AssetLocation) {
         this.isSaving = false;
         if (this.isDelete == true) {
-            this.alertService.showMessage("Success", `Action was deleted successfully`, MessageSeverity.success);
+            this.alertService.showMessage("Success", `Asset Location deleted successfully`, MessageSeverity.success);
             this.isDelete = false;
         }
         else {
-            this.alertService.showMessage("Success", `Action was edited successfully`, MessageSeverity.success);
+            this.alertService.showMessage("Success", `Asset Location updated successfully`, MessageSeverity.success);
         }
         this.loadData();
     }
@@ -343,7 +365,7 @@ export class AssetLocationComponent implements OnInit {
             Name: rowData.name,
             Memo: rowData.memo,
             isActive: rowData.isActive,
-            IsDelete: false,
+            IsDeleted: false,
             masterCompanyId: 1,
             assetLocationId: rowData.assetLocationId
         };
@@ -391,7 +413,7 @@ export class AssetLocationComponent implements OnInit {
         }, () => { console.log('Backdrop click') })
     }
     
-     resetAddAssetLocation(): void {
+    resetAddAssetLocation(): void {
         this.currentAssetLocation = new AssetLocation();
     }
 

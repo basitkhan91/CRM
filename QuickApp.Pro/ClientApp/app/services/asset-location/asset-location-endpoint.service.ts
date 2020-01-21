@@ -15,6 +15,7 @@ import { AssetLocation } from '../../models/asset-location.model';
 export class AssetLocationEndpointService extends EndpointFactory {
 
     private readonly getAllURL: string = "/api/assetlocation/getAll";
+    private readonly getDeleted: string = "/api/assetlocation/getDeleted";
     private readonly getByIdURL: string = "/api/assetlocation/getById";
     private readonly addURL: string = "/api/assetlocation/add";
     private readonly updateURL: string = "/api/assetlocation/update";
@@ -41,6 +42,15 @@ export class AssetLocationEndpointService extends EndpointFactory {
         return this.http.get<T>(endpointUrl, this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.getAllAssets());
+            });
+    }
+
+    getAllDeleted<T>(): Observable<T> {
+        let endpointUrl = this.getDeleted;
+
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getAllDeleted());
             });
     }
 

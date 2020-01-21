@@ -1,8 +1,8 @@
 ﻿import { MasterCompany } from './mastercompany.model';
 
-export class AssetAcquistionType {
+export class AssetAcquisitionType {
     constructor(masterCompany?: MasterCompany,
-        assetAcquistionTypeId?: number,
+        assetAcquisitionTypeId?: number,
         Code?: string,
         Name?: string,
         Memo?: string,
@@ -13,7 +13,7 @@ export class AssetAcquistionType {
         updatedDate?: Date,
         isDelete?: boolean,
         isActive?: boolean) {
-        this.assetAcquistionTypeId = assetAcquistionTypeId;
+        this.assetAcquisitionTypeId = assetAcquisitionTypeId;
         this.code = Code;
         this.name = Name;
         this.memo = Memo;
@@ -26,7 +26,7 @@ export class AssetAcquistionType {
         this.isActive = isActive;
 
     }
-    public assetAcquistionTypeId: number;
+    public assetAcquisitionTypeId: number;
     public code: string;
     public name: string;
     public memo: string;
