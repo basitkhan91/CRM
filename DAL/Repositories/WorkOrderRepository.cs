@@ -53,7 +53,7 @@ namespace DAL.Repositories
                 _appContext.WorkOrder.Add(workOrder);
                 _appContext.SaveChanges();
 
-                UpdateCustomer(workOrder);
+                //UpdateCustomer(workOrder);
 
                 var workOrderSettings = _appContext.WorkOrderSettings.Where(p => p.WorkOrderTypeId == workOrder.WorkOrderTypeId && p.IsActive == true && p.IsDeleted == false).FirstOrDefault();
                 if (workOrderSettings != null)
@@ -117,7 +117,7 @@ namespace DAL.Repositories
                         item.WorkScope = workScope.Description;
                 }
 
-                UpdateCustomer(workOrder);
+               // UpdateCustomer(workOrder);
 
                 workOrder.WorkFlowWorkOrderId = CreateWorkFlowWorkOrderFromWorkFlow(workOrder.PartNumbers, workOrder.WorkOrderId, workOrder.CreatedBy);
 
@@ -3567,7 +3567,8 @@ namespace DAL.Repositories
                                 BuildMethod = qd.BuildMethodId == 1 ? "WF" : (qd.BuildMethodId == 2 ? "WO" : (qd.BuildMethodId == 3 ? "WF" : "Third Party")),
                                 qd.BuildMethodId,
                                 qd.SelectedId,
-                                qd.ReferenceNo
+                                qd.ReferenceNo,
+                                qd.WorkOrderQuoteDetailsId
                             }
                             ).FirstOrDefault();
                 return data;
@@ -3623,7 +3624,7 @@ namespace DAL.Repositories
             }
         }
 
-        public IEnumerable<object> GetWorkOrderQuoteExclusions(long workflowWorkOrderId)
+        public IEnumerable<object> GetWorkOrderQuoteExclusions(long workOrderQuoteDetailsId)
         {
             try
             {
@@ -3634,7 +3635,7 @@ namespace DAL.Repositories
                                                from eo in weeo.DefaultIfEmpty()
                                                join mp in _appContext.Percent on we.MarkUpPercentageId equals mp.PercentId into wemp
                                                from mp in wemp.DefaultIfEmpty()
-                                               where we.IsDeleted == false && wq.WorkflowWorkOrderId == workflowWorkOrderId
+                                               where we.IsDeleted == false && we.WorkOrderQuoteDetailsId == workOrderQuoteDetailsId
                                                select new
                                                {
                                                    we.CostPlusAmount,
@@ -3739,7 +3740,7 @@ namespace DAL.Repositories
             }
         }
 
-        public IEnumerable<object> GetWorkOrderQuoteFreight(long workflowWorkOrderId)
+        public IEnumerable<object> GetWorkOrderQuoteFreight(long workOrderQuoteDetailsId)
         {
             try
             {
@@ -3747,7 +3748,7 @@ namespace DAL.Repositories
                                             join wq in _appContext.WorkOrderQuoteDetails on wf.WorkOrderQuoteDetailsId equals wq.WorkOrderQuoteDetailsId
                                             join car in _appContext.Carrier on wf.CarrierId equals car.CarrierId
                                             join sv in _appContext.CustomerShipping on wf.ShipViaId equals sv.CustomerShippingId
-                                            where wf.IsDeleted == false && wq.WorkflowWorkOrderId == workflowWorkOrderId
+                                            where wf.IsDeleted == false && wf.WorkOrderQuoteDetailsId == workOrderQuoteDetailsId
                                             select new
                                             {
                                                 wf.Amount,
@@ -3850,7 +3851,7 @@ namespace DAL.Repositories
             }
         }
 
-        public IEnumerable<object> GetWorkOrderQuoteCharges(long workflowWorkOrderId)
+        public IEnumerable<object> GetWorkOrderQuoteCharges(long workOrderQuoteDetailsId)
         {
             try
             {
@@ -3859,7 +3860,7 @@ namespace DAL.Repositories
                             join ct in _appContext.ChargesTypes on woc.ChargesTypeId equals ct.Id
                             join v in _appContext.Vendor on woc.VendorId equals v.VendorId into wocv
                             from v in wocv.DefaultIfEmpty()
-                            where woc.IsDeleted == false && wq.WorkflowWorkOrderId == workflowWorkOrderId
+                            where woc.IsDeleted == false && woc.WorkOrderQuoteDetailsId == workOrderQuoteDetailsId
                             select new
                             {
                                 woc.ChargesTypeId,
@@ -3966,7 +3967,7 @@ namespace DAL.Repositories
             }
         }
 
-        public IEnumerable<object> GetWorkOrderQuoteMaterial(long workflowWorkOrderId)
+        public IEnumerable<object> GetWorkOrderQuoteMaterial(long workOrderQuoteDetailsId)
         {
 
             try
@@ -3978,7 +3979,7 @@ namespace DAL.Repositories
                                               from p in pro.DefaultIfEmpty()
                                               join c in _appContext.Condition on wom.ConditionCodeId equals c.ConditionId
                                               join uom in _appContext.UnitOfMeasure on wom.UnitOfMeasureId equals uom.UnitOfMeasureId
-                                              where wom.IsDeleted == false && wq.WorkflowWorkOrderId == workflowWorkOrderId
+                                              where wom.IsDeleted == false && wom.WorkOrderQuoteDetailsId == workOrderQuoteDetailsId
                                               select new
                                               {
                                                   im.PartNumber,
@@ -4092,7 +4093,7 @@ namespace DAL.Repositories
             }
         }
 
-        public object GetWorkOrderQuoteLabor(long workflowWorkOrderId)
+        public object GetWorkOrderQuoteLabor(long workOrderQuoteDetailsId)
         {
             try
             {
@@ -4105,7 +4106,7 @@ namespace DAL.Repositories
                                  from exp in lhexp.DefaultIfEmpty()
                                  join emp in _appContext.Employee on lh.EmployeeId equals emp.EmployeeId into lhemp
                                  from emp in lhemp.DefaultIfEmpty()
-                                 where lh.IsDeleted == false && wq.WorkflowWorkOrderId == workflowWorkOrderId
+                                 where lh.IsDeleted == false && lh.WorkOrderQuoteDetailsId == workOrderQuoteDetailsId
                                  select new
                                  {
                                      lh.CreatedBy,
