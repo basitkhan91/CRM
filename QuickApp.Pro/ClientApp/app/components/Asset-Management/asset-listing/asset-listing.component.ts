@@ -18,6 +18,8 @@ import { DepriciationMethodService } from '../../../services/depriciation-method
 import { DepriciationMethod } from '../../../models/depriciation-method.model';
 import { CommonService } from '../../../services/common.service';
 import { ItemMasterCapabilitiesModel } from '../../../models/itemMasterCapabilities.model';
+import { VendorService } from '../../../services/vendor.service';
+import * as $ from 'jquery'
 
 @Component({
     selector: 'app-asset-listing',
@@ -62,6 +64,7 @@ export class AssetListingComponent implements OnInit {
     assetAcquisitionTypeList: any[];
     GLAccountList: any[] = [];
     allCapesInfo: ItemMasterCapabilitiesModel[] = [];
+    allVendorInfo: Vendor[];
     // comented for asset audit
     //AuditDetails: SingleScreenAuditDetails[];
 
@@ -88,7 +91,7 @@ export class AssetListingComponent implements OnInit {
     selectedCol: { field: string; header: string; }[];
     constructor(private alertService: AlertService, private assetService: AssetService, private _route: Router,
         private modalService: NgbModal, private glAccountService: GlAccountService,
-        public assetattrService1: AssetAttributeTypeService, public assetIntangibleService: AssetIntangibleAttributeTypeService,
+        public assetattrService1: AssetAttributeTypeService, private vendorService: VendorService,public assetIntangibleService: AssetIntangibleAttributeTypeService,
         private vendorEndpointService: VendorEndpointService, private depriciationMethodService: DepriciationMethodService, private commonservice: CommonService,
         private legalEntityServices: LegalEntityService
     ) {
@@ -270,6 +273,22 @@ export class AssetListingComponent implements OnInit {
             console.log(this.depriciationMethodList);
         });
     }
+    private onVendorNameLoad(getVendorList: Vendor[]) {
+        this.allVendorInfo = getVendorList;
+    }
+    private vendorList() {
+        this.vendorService.getWorkFlows().subscribe(
+            results => this.onVendorNameLoad(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
+    }
+
+    getDefaultVendorName(id) {
+        for (let i = 0; i < this.allVendorInfo.length; i++) {
+            if (id == this.allVendorInfo[i].vendorId)
+                return this.allVendorInfo[i].vendorName;
+        }
+    }
     openView(content, row) {
         console.log('row @170 ', row);
         this.assetViewList.entryDate = row.entryDate;
@@ -288,6 +307,7 @@ export class AssetListingComponent implements OnInit {
         this.assetViewList.verificationRequired = row.verificationRequired;
         this.assetViewList.model = row.model;
         this.getAssetAcquisitionTypeList();
+        this.vendorList();
         this.assetViewList.assetAcquisitionTypeId = this.getAssetAcqName(row.assetAcquisitionTypeId);
         this.assetViewList.manufacturerName = row.manufacturerName;
         this.assetViewList.manufacturedDate = row.manufacturedDate;
@@ -302,30 +322,32 @@ export class AssetListingComponent implements OnInit {
         if (row.glAccount) {
             this.assetViewList.glAccountId = row.glAccount.accountName;
         }
-        else { this.assetViewList.glAccountId = "" }
+        else { this.assetViewList.glAccountId = this.getGLAccountName(row.glAccountId) }
         this.assetViewList.calibrationFrequencyMonths = row.calibrationFrequencyMonths;
         this.assetViewList.calibrationFrequencyDays = row.calibrationFrequencyDays;
-        this.assetViewList.calibrationDefaultVendorId = row.calibrationDefaultVendorId;
+        this.assetViewList.calibrationDefaultVendorId = this.getDefaultVendorName(row.calibrationDefaultVendorId);
         this.assetViewList.calibrationDefaultCost = row.calibrationDefaultCost;
-        this.assetViewList.calibrationGlAccountId = row.calibrationGlAccountId;
+        this.assetViewList.calibrationGlAccountId = this.getGLAccountName(row.calibrationGlAccountId);
 
         this.assetViewList.certificationFrequencyMonths = row.certificationFrequencyMonths;
         this.assetViewList.certificationFrequencyDays = row.certificationFrequencyDays;
-        this.assetViewList.certificationDefaultVendorId = row.certificationDefaultVendorId;
+        this.assetViewList.certificationDefaultVendorId = this.getDefaultVendorName(row.certificationDefaultVendorId);
         this.assetViewList.certificationDefaultCost = row.certificationDefaultCost;
-        this.assetViewList.certificationGlAccountId = row.certificationGlAccountId;
+        this.assetViewList.certificationGlAccountId = this.getGLAccountName(row.certificationGlAccountId);
+        this.assetViewList.certificationMemo = row.certificationMemo;
 
         this.assetViewList.inspectionFrequencyMonths = row.inspectionFrequencyMonths;
         this.assetViewList.inspectionFrequencyDays = row.inspectionFrequencyDays;
-        this.assetViewList.inspectionDefaultVendorId = row.inspectionDefaultVendorId;
+        this.assetViewList.inspectionDefaultVendorId = this.getDefaultVendorName(row.inspectionDefaultVendorId);
         this.assetViewList.inspectionDefaultCost = row.inspectionDefaultCost;
-        this.assetViewList.inspectionGlaAccountId = row.inspectionGlaAccountId;
+        this.assetViewList.inspectionGlaAccountId = this.getGLAccountName(row.inspectionGlaAccountId);
 
         this.assetViewList.verificationFrequencyMonths = row.verificationFrequencyMonths;
         this.assetViewList.verificationFrequencyDays = row.verificationFrequencyDays;
-        this.assetViewList.verificationDefaultVendorId = row.verificationDefaultVendorId;
+        this.assetViewList.verificationDefaultVendorId = this.getDefaultVendorName(row.verificationDefaultVendorId);
         this.assetViewList.verificationDefaultCost = row.verificationDefaultCost;
-        this.assetViewList.verificationGlaAccountId = row.verificationGlaAccountId;
+        this.assetViewList.verificationGlaAccountId = this.getGLAccountName(row.verificationGlaAccountId);
+        this.assetViewList.verificationMemo = row.verificationMemo;
 
         this.getInsecGLAccName();
         this.getInspecVendorName();
@@ -378,12 +400,12 @@ export class AssetListingComponent implements OnInit {
         this.assetViewList.assetParentId = row.assetParentId;
         this.assetViewList.memo = row.memo;
         this.assetViewList.assetTypeSingleScreenId = row.assetTypeSingleScreenId;
-        this.assetViewList.assetIsMaintenanceReqd = row.assetIsMaintenanceReqd;
+        this.assetViewList.assetIsMaintenanceReqd = row.assetIsMaintenanceReqd == true ? 'Yes' : 'No';
         this.assetViewList.maintenanceFrequencyMonths = row.maintenanceFrequencyMonths;
-        this.assetViewList.assetMaintenanceIsContract = row.assetMaintenanceIsContract;
-        this.assetViewList.defaultVendorId = row.defaultVendorId;
+        this.assetViewList.assetMaintenanceIsContract = row.assetMaintenanceIsContract == true ? 'Yes' : 'No';
+        this.assetViewList.defaultVendorId = this.getDefaultVendorName(row.defaultVendorId);
         this.assetViewList.maintenanceMemo = row.maintenanceMemo;
-        this.assetViewList.isWarrantyRequired = row.isWarrantyRequired;
+        this.assetViewList.isWarrantyRequired = row.isWarrantyRequired == true ? 'Yes' : 'No';
         this.assetViewList.assetCalibrationMin = row.assetCalibrationMin;
         this.assetViewList.assetCalibrationMinTolerance = row.assetCalibrationMinTolerance;
         this.assetViewList.assetCalibratonMax = row.assetCalibratonMax;
@@ -391,6 +413,13 @@ export class AssetListingComponent implements OnInit {
         this.assetViewList.assetCalibrationExpected = row.assetCalibrationExpected;
         this.assetViewList.assetCalibrationExpectedTolerance = row.assetCalibrationExpectedTolerance;
         this.assetViewList.assetCalibrationMemo = row.assetCalibrationMemo;
+
+        this.assetViewList.warranty = row.warranty == true ? 'Yes' : 'No';
+        this.assetViewList.warrantyCompany = row.warrantyCompany;
+        this.assetViewList.warrantyStartDate = row.warrantyStartDate;
+        this.assetViewList.warrantyEndDate = row.warrantyEndDate;
+        this.assetViewList.warrantyStatus = row.warrantyStatus;
+        this.assetViewList.unexpiredTime = row.unexpiredTime;
 
         if (!this.isWorkOrder) {
 
@@ -473,7 +502,18 @@ export class AssetListingComponent implements OnInit {
             this.assetViewList.isActive = audits[0].isActive;
         }
     }
-
+    openAllCollapse() {
+        $('#step1').collapse('show');
+        $('#step2').collapse('show');
+        $('#step3').collapse('show');
+        $('#step4').collapse('show');
+    }
+    closeAllCollapse() {
+        $('#step1').collapse('hide');
+        $('#step2').collapse('hide');
+        $('#step3').collapse('hide');
+        $('#step4').collapse('hide');
+    }
     getAssetAcquisitionTypeList() {
         this.commonservice.smartDropDownList('AssetAcquisitionType', 'AssetAcquisitionTypeId', 'Name').subscribe(res => {
             this.assetAcquisitionTypeList = res;
