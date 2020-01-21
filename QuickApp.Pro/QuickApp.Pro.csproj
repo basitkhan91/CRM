@@ -90,7 +90,6 @@
   </Target>
 
   <ItemGroup>
-    <Content Remove="wwwroot\js\angular.min.js" />
     <Content Remove="wwwroot\js\data.js" />
     <Content Remove="wwwroot\js\workflow.js" />
   </ItemGroup>
@@ -380,8 +379,6 @@
 
 
   <ItemGroup>
-    <None Include="wwwroot\js\angular.min.js" />
-    <None Include="wwwroot\js\bootstrap.min.js" />
     <None Include="wwwroot\js\custom.js" />
     <None Include="wwwroot\js\data.js" />
     <None Include="wwwroot\js\workflow.js" />

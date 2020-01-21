@@ -397,7 +397,7 @@
                         </div>
                     </div>
                     <div>
-                        <button *ngIf="!workOrderGeneralInformation.isSinglePN" class="btn btn-primary-cstm pull-right" (click)="addMPN()">Add MPN</button>
+                        <button *ngIf="!workOrderGeneralInformation.isSinglePN" class="btn btn-primary pull-right" (click)="addMPN()">Add MPN</button>
                     </div>
                     <div class="table-responsive" style="height: 300px;">
 
@@ -621,9 +621,9 @@
 
                     </div>
                     <div>
-                        <button class="btn btn-primary-cstm pull-right" *ngIf="!showTabsGrid && !isEdit" type="button" [disabled]="!workOrderForm.valid" (click)="saveWorkOrder()">Save</button>
-                        <button class="btn btn-primary-cstm pull-right" *ngIf="isEdit" type="button" [disabled]="!workOrderForm.valid" (click)="saveWorkOrder()">Update</button>
-                        <button *ngIf="showTabsGrid" class="btn btn-primary-cstm pull-right" (click)="createQuote()">{{(workOrderQuoteId)?'Update Quote':'Create Quote'}}</button>
+                        <button class="btn btn-primary pull-right" *ngIf="!showTabsGrid && !isEdit" type="button" [disabled]="!workOrderForm.valid" (click)="saveWorkOrder()">Save</button>
+                        <button class="btn btn-primary pull-right" *ngIf="isEdit" type="button" [disabled]="!workOrderForm.valid" (click)="saveWorkOrder()">Update</button>
+                        <button *ngIf="showTabsGrid" class="btn btn-primary pull-right" (click)="createQuote()">{{(workOrderQuoteId)?'Update Quote':'Create Quote'}}</button>
                     </div>
                 </form>
             </div>

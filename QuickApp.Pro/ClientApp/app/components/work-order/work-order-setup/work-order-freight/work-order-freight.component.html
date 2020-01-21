@@ -3,7 +3,7 @@
     data-target="#addNewFreight"
     data-toggle="modal"
     (click)="createNew()"
-    class="btn btn-primary btn-primary-cstm"
+    class="btn btn-primary btn-primary"
     style="padding: 6px 12px !important;"
   >
     Add Freight
@@ -189,7 +189,7 @@
       </div>
       <div class="modal-footer">
         <button
-          class="btn btn-primary-cstm pull-right"
+          class="btn btn-primary pull-right"
           (click)="saveFreightList()"
         >
           {{ isEdit ? 'Update' : 'Save' }}
@@ -257,7 +257,7 @@
                                                                </tbody>
                                                            </table>
                                                            <button
-                                                             class="btn btn-primary-cstm pull-right"
+                                                             class="btn btn-primary pull-right"
                                                              (click)="saveQuotation()"
                                                              *ngIf = "isQuote"
                                                            >

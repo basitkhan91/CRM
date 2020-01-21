@@ -46,8 +46,8 @@
                                         <i class="fa fa-search"></i>
                                         <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder=" Filter">
                                     </div>
-                                    <button type="button" class="btn-primary-cstm" pButton icon="fa-download" iconPos="left" label="Export  Data" (click)="dt.exportCSV()" matTooltip="Download Data" matTooltipPosition="above" style="padding: 5px 12px !important;"></button>
-                                    <button type="button" class="btn-primary-cstm" pButton icon="fa-download" iconPos="left" label="Export Selected Data" matTooltip="Download Selected Data" matTooltipPosition="above" (click)="dt.exportCSV({selectionOnly:true})" style="padding: 5px 12px !important;"></button>
+                                    <button type="button" class="btn-primary" pButton icon="fa-download" iconPos="left" label="Export  Data" (click)="dt.exportCSV()" matTooltip="Download Data" matTooltipPosition="above" style="padding: 5px 12px !important;"></button>
+                                    <button type="button" class="btn-primary" pButton icon="fa-download" iconPos="left" label="Export Selected Data" matTooltip="Download Selected Data" matTooltipPosition="above" (click)="dt.exportCSV({selectionOnly:true})" style="padding: 5px 12px !important;"></button>
                                 </div>
         
                                 <div class="clear"></div>
@@ -153,7 +153,7 @@
         </strong>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-primary-cstm" (click)="deleteItemAndCloseModel()">Yes</button>
+        <button type="button" class="btn btn-primary" (click)="deleteItemAndCloseModel()">Yes</button>
         <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">No</button>
     </div>
 </ng-template>

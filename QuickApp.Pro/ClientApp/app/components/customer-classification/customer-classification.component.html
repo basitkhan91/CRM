@@ -34,7 +34,7 @@
                                         </label>
                                         &nbsp; &nbsp;
 
-                                        <button class="btn btn-primary-cstm" matTooltip="Download Sample File" matTooltipPosition="above" (click)="sampleExcelDownload()">Sample File Download</button>
+                                        <button class="btn btn-primary" matTooltip="Download Sample File" matTooltipPosition="above" (click)="sampleExcelDownload()">Sample File Download</button>
                                     </div>
 
                                 </div>
@@ -167,7 +167,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-primary-cstm" data-dismiss="modal" [disabled]="disableSave" (click)="editItemAndCloseModel()">{{isEditMode ? 'Update' : 'Save' }}</button>
+                <button class="btn btn-primary" data-dismiss="modal" [disabled]="disableSave" (click)="editItemAndCloseModel()">{{isEditMode ? 'Update' : 'Save' }}</button>
                 <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="dismissModel()">Close</button>
             </div>
         </div>

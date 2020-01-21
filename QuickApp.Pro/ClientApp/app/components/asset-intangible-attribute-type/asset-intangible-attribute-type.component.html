@@ -47,9 +47,9 @@
                                                    selectedItemsLabel="{0} columns selected"
                                                    defaultLabel="Choose Columns">
                                     </p-multiSelect>
-                                    <button type="button" class="btn btn-primary-cstm" matTooltip="Download Data" matTooltipPosition="above"
+                                    <button type="button" class="btn btn-primary" matTooltip="Download Data" matTooltipPosition="above"
                                             pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
-                                    <button type="button" class="btn btn-primary-cstm" matTooltip="Download Selected Data" matTooltipPosition="above"
+                                    <button type="button" class="btn btn-primary" matTooltip="Download Selected Data" matTooltipPosition="above"
                                             pButton icon="fa-download" iconPos="left" label="Export Selected Data" (click)="dt.exportCSV({selectionOnly:true})"></button>
                                     <!--
                                     <div class="excel-upload excel-upload-cstm">
@@ -70,7 +70,7 @@
                                             </span>
                                         </label>
                                         &nbsp; &nbsp;
-                                        <button class="btn btn-primary-cstm" (click)="sampleExcelDownload()" matTooltip="Download Sample File" matTooltipPosition="above">Sample File Download</button>
+                                        <button class="btn btn-primary" (click)="sampleExcelDownload()" matTooltip="Download Sample File" matTooltipPosition="above">Sample File Download</button>
                                     </div>
                                 </div>
 
@@ -449,7 +449,7 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-primary-cstm" data-dismiss="modal"
+                    <button class="btn btn-primary" data-dismiss="modal"
                             [disabled]="IntangibleAttrType.invalid || disableSave || disableForMgmtStructure "
                             (click)="currentModeOfOperation === 2 ? saveNewItem() : updateItem();">
                         {{currentModeOfOperation == 3 ? 'Update' : 'Save' }}
@@ -477,7 +477,7 @@
                     <span class="new-label"></span>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary-cstm" data-dismiss="modal" (click)="deleteItem()">Yes</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="deleteItem()">Yes</button>
                     <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="dismissModal()">No</button>
                 </div>
             </div>

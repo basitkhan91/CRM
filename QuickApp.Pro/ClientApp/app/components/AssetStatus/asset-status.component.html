@@ -20,9 +20,9 @@
                                 <div style="text-align: right;margin-left:-6px !important;">
                                     <p-multiSelect [maxSelectedLabels]="2" [options]="selectedData" optionLabel="header" [(ngModel)]="selectedColumns"
                                                    [style]="{minWidth: '200px'}" style="float:left"></p-multiSelect>
-                                    <button type="button" class="btn btn-primary-cstm" matTooltip="Download Data" matTooltipPosition="above"
+                                    <button type="button" class="btn btn-primary" matTooltip="Download Data" matTooltipPosition="above"
                                             pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
-                                    <button type="button" class="btn btn-primary-cstm" matTooltip="Download Selected Data" matTooltipPosition="above"
+                                    <button type="button" class="btn btn-primary" matTooltip="Download Selected Data" matTooltipPosition="above"
                                             pButton icon="fa-download" iconPos="left" label="Export Selected Data" (click)="dt.exportCSV({selectionOnly:true})"></button>
                                     <div class="excel-upload  excel-upload-cstm">
                                         <input type="file" name="upload[]" id="upload" (change)="customExcelUpload($event)" class="uploaddoc upload-file"
@@ -33,7 +33,7 @@
                                             </span>
                                         </label>
                                         &nbsp; &nbsp;
-                                        <button class="btn btn-primary-cstm" (click)="sampleExcelDownload()" matTooltip="Download Sample File" matTooltipPosition="above">Sample File Download</button>
+                                        <button class="btn btn-primary" (click)="sampleExcelDownload()" matTooltip="Download Sample File" matTooltipPosition="above">Sample File Download</button>
                                     </div>
                                 </div>
                             </ng-template>
@@ -271,7 +271,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
         </form>
     </div>
     <div class="modal-footer">
-        <button class="btn btn-primary-cstm" [disabled]="!userForm.valid || disableSave" (click)="SaveandEditAssetStatus()">{{isEditMode == true ? 'Update' : 'Save' }}</button>
+        <button class="btn btn-primary" [disabled]="!userForm.valid || disableSave" (click)="SaveandEditAssetStatus()">{{isEditMode == true ? 'Update' : 'Save' }}</button>
         <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
     </div>
 </ng-template>

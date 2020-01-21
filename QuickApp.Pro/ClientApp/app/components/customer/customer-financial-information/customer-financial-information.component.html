@@ -259,8 +259,8 @@
                             </div>
 
                         </div>
-                        <button type="button" class="btn btn-primary-cstm pull-right submit-btn" [disabled]="!financialInfoForm.valid" (click)="saveFinancialInformation();">Save & Next</button>
-                        <button type="button" class="btn btn-primary-cstm pull-right submit-btn" (click)="backClick()">Previous</button>
+                        <button type="button" class="btn btn-primary pull-right submit-btn" [disabled]="!financialInfoForm.valid" (click)="saveFinancialInformation();">Save & Next</button>
+                        <button type="button" class="btn btn-primary pull-right submit-btn" (click)="backClick()">Previous</button>
                     </div>
 
                 </form>
@@ -319,7 +319,7 @@
                 </div>
                 <div class="modal-footer">
 
-                    <button class="btn btn-primary-cstm" data-dismiss="modal" (click)="saveMarkUpPercentage()" [disabled]="addNewIntergration.markUpValue ! == '' ">Submit</button>
+                    <button class="btn btn-primary" data-dismiss="modal" (click)="saveMarkUpPercentage()" [disabled]="addNewIntergration.markUpValue ! == '' ">Submit</button>
                     <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="restMarkUpPopUp()">Close</button>
 
                 </div>
@@ -441,7 +441,7 @@
                             </div>
                     <div class="modal-footer">
                       
-                        <button class="btn btn-primary-cstm" data-dismiss="modal" (click)="newCreditTermAdd()" [disabled]="!addCredit.valid || isCreditTermsExists">Submit</button>
+                        <button class="btn btn-primary" data-dismiss="modal" (click)="newCreditTermAdd()" [disabled]="!addCredit.valid || isCreditTermsExists">Submit</button>
 
                         <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="resetCreditTermsPopUp()">Close</button>
                     </div>
@@ -490,7 +490,7 @@
                             </div>
                             <div class="modal-footer">
 
-                                <button class="btn btn-primary-cstm" data-dismiss="modal" (click)="newDiscountAdd()" [disabled]="!discount.valid || isDiscountExists">Submit</button>
+                                <button class="btn btn-primary" data-dismiss="modal" (click)="newDiscountAdd()" [disabled]="!discount.valid || isDiscountExists">Submit</button>
                                 <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="restDiscount()">Close</button>
 
                             </div>
@@ -553,7 +553,7 @@
                             </div>
                             </div>
                             <div class="modal-footer">
-                                <button class="btn btn-primary-cstm" data-dismiss="modal" (click)="newTaxTypeAdd()" [disabled]="!addTaxTypes.valid || isTaxTypeExists">Submit</button>
+                                <button class="btn btn-primary" data-dismiss="modal" (click)="newTaxTypeAdd()" [disabled]="!addTaxTypes.valid || isTaxTypeExists">Submit</button>
 
 
                                 <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="resetTaxType()">Close</button>
@@ -601,7 +601,7 @@
 
                             </div>
                             <div class="modal-footer">
-                                <button class="btn btn-primary-cstm" data-dismiss="modal" (click)="newTaxRateAdd()" [disabled]="!addTaxRates.valid  || isTaxRateExists">Submit</button>
+                                <button class="btn btn-primary" data-dismiss="modal" (click)="newTaxRateAdd()" [disabled]="!addTaxRates.valid  || isTaxRateExists">Submit</button>
 
                                 <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="resetTaxRate()">Close</button>
 
@@ -646,7 +646,7 @@
                         </div>
                         </div>
                     <div class="modal-footer">
-                        <button class="btn btn-primary-cstm" data-dismiss="modal" (click)="newTaxRateAdd()" [disabled]="!admarkup.valid  || isTaxRateExists">Submit</button>
+                        <button class="btn btn-primary" data-dismiss="modal" (click)="newTaxRateAdd()" [disabled]="!admarkup.valid  || isTaxRateExists">Submit</button>
 
                         <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="resetTaxRate()">Close</button>
 

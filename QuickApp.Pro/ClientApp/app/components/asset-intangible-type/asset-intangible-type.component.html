@@ -48,9 +48,9 @@
                                                    selectedItemsLabel="{0} columns selected"
                                                    defaultLabel="Choose Columns">
                                     </p-multiSelect>
-                                    <button type="button" class="btn btn-primary-cstm" pTooltip="Download All Data" tooltipPosition="top"
+                                    <button type="button" class="btn btn-primary" pTooltip="Download All Data" tooltipPosition="top"
                                             pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
-                                    <button type="button" class="btn btn-primary-cstm" pTooltip="Download Selected" tooltipPosition="top"
+                                    <button type="button" class="btn btn-primary" pTooltip="Download Selected" tooltipPosition="top"
                                             pButton icon="fa-download" iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})"></button>
                                     <!--
                                     <div class="excel-upload excel-upload-cstm">
@@ -71,7 +71,7 @@
                                             </span>
                                         </label>
                                         &nbsp; &nbsp;
-                                        <button class="btn btn-primary-cstm" (click)="sampleExcelDownload()" pTooltip="Download Sample File"  tooltipPosition="top">Sample File Download</button>
+                                        <button class="btn btn-primary" (click)="sampleExcelDownload()" pTooltip="Download Sample File"  tooltipPosition="top">Sample File Download</button>
                                     </div>
                                 </div>
 
@@ -266,7 +266,7 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-primary-cstm" data-dismiss="modal"
+                    <button class="btn btn-primary" data-dismiss="modal"
                             [disabled]="AssetIntangibleType.invalid || disableSave "
                             (click)="currentModeOfOperation === 2 ? saveNewItem() : updateItem();"
                             ng-disabled="AssetIntangibleType.$pristine">
@@ -295,7 +295,7 @@
                     <span class="new-label"></span>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary-cstm" data-dismiss="modal" (click)="deleteItem()">Yes</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="deleteItem()">Yes</button>
                     <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="dismissModal()">No</button>
                 </div>
             </div>

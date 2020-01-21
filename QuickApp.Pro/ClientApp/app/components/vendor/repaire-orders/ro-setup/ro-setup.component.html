@@ -245,8 +245,8 @@
 		
 		<p-tabView class="pas-tabview">
 			<p-tabPanel header="Parts List">
-				<button (click)="addPartNumber()" class="btn btn-primary-cstm addpn-btn">Add Part Number</button>
-				<button data-toggle="modal" data-target="#add-multiple-partnum" class="btn btn-primary-cstm addpn-btn" (click)="onAddMultParts()">Add Multiple Part Numbers</button>
+				<button (click)="addPartNumber()" class="btn btn-primary addpn-btn">Add Part Number</button>
+				<button data-toggle="modal" data-target="#add-multiple-partnum" class="btn btn-primary addpn-btn" (click)="onAddMultParts()">Add Multiple Part Numbers</button>
 				<div class="table-responsive pas-table-cstm roview-table-cstm" style="margin-top: 5px;">
 		
 					<table class="table table-bordered " id="po-table">
@@ -682,8 +682,8 @@
 							</div>
 						</div>
 						<div *ngIf="isEditMode" class="form-row">
-							<button *ngIf="!roApproverId" class="btn btn-primary-cstm pull-right" (click)="saveROApproverData()" style="margin-top: 10px;margin-bottom: 20px;">Add</button>
-							<button *ngIf="roApproverId" class="btn btn-primary-cstm pull-right" (click)="updateROApproverData()" style="margin-top: 10px;margin-bottom: 20px;">Update</button>
+							<button *ngIf="!roApproverId" class="btn btn-primary pull-right" (click)="saveROApproverData()" style="margin-top: 10px;margin-bottom: 20px;">Add</button>
+							<button *ngIf="roApproverId" class="btn btn-primary pull-right" (click)="updateROApproverData()" style="margin-top: 10px;margin-bottom: 20px;">Update</button>
 						</div>
 						</div>
 			</p-tabPanel>
@@ -1234,7 +1234,7 @@
 		</p-tabView>
 	
 		<div>
-			<button class="btn btn-primary-cstm pull-right" (click)="saveRepairOrder()" style="margin-top: 10px;margin-bottom: 20px;">{{isEditMode ? 'Update' : 'Save'}}</button> <!--[disabled]="!createPOForm.valid"-->
+			<button class="btn btn-primary pull-right" (click)="saveRepairOrder()" style="margin-top: 10px;margin-bottom: 20px;">{{isEditMode ? 'Update' : 'Save'}}</button> <!--[disabled]="!createPOForm.valid"-->
 		</div>
 	</form>
 	<div class="modal fade" id="vendorCapesView" role="dialog" data-backdrop="static" data-keyboard="false" style="z-index: 10000;">
@@ -1316,7 +1316,7 @@
 						</div>
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-primary-cstm" data-dismiss="modal" (click)="onSaveMemo()">Save</button>
+						<button type="button" class="btn btn-primary" data-dismiss="modal" (click)="onSaveMemo()">Save</button>
 						<button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
 					</div>
 				</div>
@@ -1403,7 +1403,7 @@
 					</form>
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-primary-cstm" data-dismiss="modal" (click)="addAvailableParts()">Add Available Parts</button>
+						<button type="button" class="btn btn-primary" data-dismiss="modal" (click)="addAvailableParts()">Add Available Parts</button>
 						<button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
 					</div>
 				</div>
@@ -1450,8 +1450,8 @@
 									<p-autoComplete field="label" class="pautocomp-cstm" [(ngModel)]="addNewAddress.country" name="country" [suggestions]="countriesList" (completeMethod)="filterCountries($event)"  [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true"></p-autoComplete>
 								</div>
 								<div class="form-group col-md-12" style="margin-top: 8px;">
-									<button type="button" class="btn btn-primary-cstm" [disabled]="!userForm.valid" (click)="saveSplitAddress();" data-dismiss="modal">Save</button>
-									<button type="button" class="btn btn-primary-cstm" [disabled]="!userForm.valid" (click)="saveSplitAddressToPO()" data-dismiss="modal">Save to this PO</button>
+									<button type="button" class="btn btn-primary" [disabled]="!userForm.valid" (click)="saveSplitAddress();" data-dismiss="modal">Save</button>
+									<button type="button" class="btn btn-primary" [disabled]="!userForm.valid" (click)="saveSplitAddressToPO()" data-dismiss="modal">Save to this PO</button>
 								</div>
 		
 							</form>
@@ -1508,8 +1508,8 @@
 									<p-autoComplete field="label" class="pautocomp-cstm" [(ngModel)]="addressFormForShipping.country" name="country" [suggestions]="countriesList" (completeMethod)="filterCountries($event)"  [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true"></p-autoComplete>
 								</div>
 								<div class="form-group col-md-12" style="margin-top: 8px;">
-									<button type="button" class="btn btn-primary-cstm" [disabled]="!addSiteNameForm.valid" (click)="saveShippingAddress(); " data-dismiss="modal">Save</button> <!--resetAddressShippingForm();-->
-									<button type="button" class="btn btn-primary-cstm" [disabled]="!addSiteNameForm.valid" (click)="saveShippingAddressToPO();" data-dismiss="modal">Save to this PO</button>
+									<button type="button" class="btn btn-primary" [disabled]="!addSiteNameForm.valid" (click)="saveShippingAddress(); " data-dismiss="modal">Save</button> <!--resetAddressShippingForm();-->
+									<button type="button" class="btn btn-primary" [disabled]="!addSiteNameForm.valid" (click)="saveShippingAddressToPO();" data-dismiss="modal">Save to this PO</button>
 								</div>
 		
 							</form>
@@ -1572,8 +1572,8 @@
 									<!-- <input type="text" class="form-control col-md-6" name="country" [(ngModel)]="addressFormForBilling.country"> -->
 								</div>
 								<div class="form-group col-md-12" style="margin-top: 8px;">
-									<button type="button" class="btn btn-primary-cstm" [disabled]="!addSiteNameForm.valid" (click)="saveBillingAddress();"  data-dismiss="modal">Save</button>
-									<button type="button" class="btn btn-primary-cstm" [disabled]="!addSiteNameForm.valid" (click)="saveBillingAddressToPO();" data-dismiss="modal">Save to this PO</button>
+									<button type="button" class="btn btn-primary" [disabled]="!addSiteNameForm.valid" (click)="saveBillingAddress();"  data-dismiss="modal">Save</button>
+									<button type="button" class="btn btn-primary" [disabled]="!addSiteNameForm.valid" (click)="saveBillingAddressToPO();" data-dismiss="modal">Save to this PO</button>
 								</div>
 		
 							</form>
@@ -1628,8 +1628,8 @@
 									<input type="text" class="form-control col-md-6" name="shipviamemo" [(ngModel)]="addShipViaFormForShipping.memo">
 								</div>
 								<div class="form-group col-md-12" style="margin-top: 8px;">
-									<button type="button" class="btn btn-primary-cstm"  data-dismiss="modal" [disabled]="!addShipViaForm.valid" (click)="saveShipViaForShipTo(); resetAddressShipViaForm();">Save</button>
-									<button type="button" class="btn btn-primary-cstm" data-dismiss="modal"  [disabled]="!addShipViaForm.valid" (click)="saveShipToShipViaDetailsToPO()">Save to this PO</button>
+									<button type="button" class="btn btn-primary"  data-dismiss="modal" [disabled]="!addShipViaForm.valid" (click)="saveShipViaForShipTo(); resetAddressShipViaForm();">Save</button>
+									<button type="button" class="btn btn-primary" data-dismiss="modal"  [disabled]="!addShipViaForm.valid" (click)="saveShipToShipViaDetailsToPO()">Save to this PO</button>
 								</div>
 		
 							</form>
@@ -1658,7 +1658,7 @@
 						</div>
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-primary-cstm" data-dismiss="modal" (click)="onSaveAddressMemo()">Save</button>
+						<button type="button" class="btn btn-primary" data-dismiss="modal" (click)="onSaveAddressMemo()">Save</button>
 						<button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
 					</div>
 				</div>

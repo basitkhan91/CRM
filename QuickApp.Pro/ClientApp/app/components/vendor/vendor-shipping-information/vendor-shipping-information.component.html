@@ -45,8 +45,8 @@
                                         <i class="fa fa-search"></i>
                                         <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Filter" style="height: 28px !important;">
                                     </div>
-                                    <button type="button" class="btn btn-primary-cstm" matTooltip="Download Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export Data" (click)="dt.exportCSV()" style="padding:5px 10px !important;"></button>
-                                    <button type="button" class="btn btn-primary-cstm" matTooltip="Download Selected Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export Selected Data" (click)="dt.exportCSV({selectionOnly:true})" style="padding:5px 10px !important;"></button>
+                                    <button type="button" class="btn btn-primary" matTooltip="Download Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export Data" (click)="dt.exportCSV()" style="padding:5px 10px !important;"></button>
+                                    <button type="button" class="btn btn-primary" matTooltip="Download Selected Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export Selected Data" (click)="dt.exportCSV({selectionOnly:true})" style="padding:5px 10px !important;"></button>
 
                                 </div>
 
@@ -104,8 +104,8 @@
                     </div>
                 </div>
             </div>
-            <button type="button" class="btn btn-primary-cstm pull-right" (click)="nextClick()">Next</button>
-            <button type="button" class="btn btn-primary-cstm pull-right" (click)="previousClick()">Previous</button>
+            <button type="button" class="btn btn-primary pull-right" (click)="nextClick()">Next</button>
+            <button type="button" class="btn btn-primary pull-right" (click)="previousClick()">Previous</button>
         </div>
     </div>
 </div>
@@ -124,7 +124,7 @@
     </div>
 
     <div class="modal-footer">
-        <button type="button" class="btn btn-primary-cstm" (click)="deleteVendorShippingAddress()">Yes</button>
+        <button type="button" class="btn btn-primary" (click)="deleteVendorShippingAddress()">Yes</button>
         <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">No</button>
     </div>
 </ng-template>
@@ -209,7 +209,7 @@
                 <div class="clear"></div>
             </div>
             <div class="container pull-left">
-                <button class="btn btn-primary-cstm" [disabled]="!userForm.valid" (click)="saveVendorShipViaDetails()">Save</button>
+                <button class="btn btn-primary" [disabled]="!userForm.valid" (click)="saveVendorShipViaDetails()">Save</button>
             </div>
             <div class="clear"></div>
             <hr>
@@ -224,8 +224,8 @@
                             <i class="fa fa-search"></i>
                             <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="tt.filterGlobal($event.target.value, 'contains')" placeholder=" Filter" style="height: 28px !important;">
                         </div>
-                        <!-- <button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" iconPos="left" matTooltip="Download Data" matTooltipPosition="above" label="Export Data" (click)="tt.exportCSV()" style="padding:5px 10px !important;"></button>
-                        <button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" matTooltip="Download Selected Data" matTooltipPosition="above" iconPos="left" label="Export Selected Data" *ngIf="selectedShipViaColumns" (click)="tt.exportCSV({selectionOnly:true})" style="padding:5px 10px !important;"></button> -->
+                        <!-- <button type="button" class="btn btn-primary" pButton icon="fa-download" iconPos="left" matTooltip="Download Data" matTooltipPosition="above" label="Export Data" (click)="tt.exportCSV()" style="padding:5px 10px !important;"></button>
+                        <button type="button" class="btn btn-primary" pButton icon="fa-download" matTooltip="Download Selected Data" matTooltipPosition="above" iconPos="left" label="Export Selected Data" *ngIf="selectedShipViaColumns" (click)="tt.exportCSV({selectionOnly:true})" style="padding:5px 10px !important;"></button> -->
 
                     </div>
 
@@ -422,8 +422,8 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" *ngIf="sourceVendor.vendorId == undefined" class="btn btn-primary-cstm pull-right" (click)="editItemAndCloseModel()" [disabled]="!addShippingForm.valid" data-dismiss="modal">Save</button>
-                        <button type="button" *ngIf="sourceVendor.vendorId != undefined && sourceVendor.vendorId !=0" class="btn btn-primary-cstm pull-right" (click)="editItemAndCloseModel()" [disabled]="!addShippingForm.valid" data-dismiss="modal">Update</button>
+                        <button type="button" *ngIf="sourceVendor.vendorId == undefined" class="btn btn-primary pull-right" (click)="editItemAndCloseModel()" [disabled]="!addShippingForm.valid" data-dismiss="modal">Save</button>
+                        <button type="button" *ngIf="sourceVendor.vendorId != undefined && sourceVendor.vendorId !=0" class="btn btn-primary pull-right" (click)="editItemAndCloseModel()" [disabled]="!addShippingForm.valid" data-dismiss="modal">Update</button>
                         <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
                     </div>
                 </form>

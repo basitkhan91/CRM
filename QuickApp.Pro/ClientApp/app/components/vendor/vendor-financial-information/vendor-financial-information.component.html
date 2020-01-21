@@ -356,9 +356,9 @@
                                  </div>
                             <div class="clear"></div>
                             <hr>
-                            <button type="button" [validate] moduleName="app-vendor-contacts" requirePermission="canAdd" *ngIf="sourceVendor.vendorId == undefined" class="btn btn-primary-cstm pull-right" (click)="editItemAndCloseModel(finInfoForm)">Save</button>
+                            <button type="button" [validate] moduleName="app-vendor-contacts" requirePermission="canAdd" *ngIf="sourceVendor.vendorId == undefined" class="btn btn-primary pull-right" (click)="editItemAndCloseModel(finInfoForm)">Save</button>
 
-                            <button type="button" [validate] moduleName="app-vendor-contacts" requirePermission="canUpdate" *ngIf="sourceVendor.vendorId != undefined && sourceVendor.vendorId !=0" class="btn btn-primary-cstm pull-right" (click)="editItemAndCloseModel(finInfoForm)">Update</button>
+                            <button type="button" [validate] moduleName="app-vendor-contacts" requirePermission="canUpdate" *ngIf="sourceVendor.vendorId != undefined && sourceVendor.vendorId !=0" class="btn btn-primary pull-right" (click)="editItemAndCloseModel(finInfoForm)">Update</button>
 
 
                         </div>
@@ -366,8 +366,8 @@
                     </div>
                 </form>
             </div>
-            <button type="button" class="btn btn-primary-cstm pull-right" (click)="editItemAndCloseModel(finInfoForm,true)">Save & Next</button>
-            <button type="button" class="btn btn-primary-cstm pull-right" (click)="previousClick()">Previous</button>
+            <button type="button" class="btn btn-primary pull-right" (click)="editItemAndCloseModel(finInfoForm,true)">Save & Next</button>
+            <button type="button" class="btn btn-primary pull-right" (click)="previousClick()">Previous</button>
         </div>
     </div>
 </div>
