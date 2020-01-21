@@ -28,7 +28,7 @@ const itemmasterPagesRoutes: Routes = [
 			{ path: "app-item-master-exchange", component: ItemMasterExchangeComponent, data: { title: "Item Master's Exchange" } },
 			{ path: "app-item-master-loan", component: ItemMasterLoanComponent, data: { title: "Item Master's Loan" } },
 			{ path: "app-item-master-capabilities-list", component: ItemMasterCapabilitiesListComponent, data: { title: "Item Master's Capabilities List" } },
-			{ path: "app-item-master-create-capabilities", component: ItemMasterCreateCapabilitiesComponent, data: { title: "Item Master's Capabilities Create" } },
+			{ path: "app-item-master-create-capabilities", component: ItemMasterCapabilitiesListComponent, data: { title: "Item Master's Capabilities Create" } },
 
 		]
 	}

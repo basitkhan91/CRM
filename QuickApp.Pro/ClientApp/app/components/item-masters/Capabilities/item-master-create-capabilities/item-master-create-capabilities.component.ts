@@ -114,7 +114,8 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
         private authService: AuthService,
         public vendorser: VendorService,
         private atasubchapter1service: AtaSubChapter1Service,
-        private activatedRoute: ActivatedRoute
+        private activatedRoute: ActivatedRoute,
+        private _router: Router,
     ) {
         this.itemser.currentUrl = '/itemmastersmodule/itemmasterpages/app-item-master-create-capabilities';
             this.itemser.bredcrumbObj.next(this.itemser.currentUrl);//Bread Crumb
@@ -535,9 +536,7 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
         if (!iMid) {
             iMid = this.itemMasterIDFromPartNumberSelection;
         }
-        // else if(!this.itemMasterIDFromPartNumberSelection){
-        //     iMid = 
-        // }
+
 
         const capesData = [
             ...this.aircraftData.map(x => {
@@ -565,9 +564,14 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
                 'Saved Capes Details Successfully',
                 MessageSeverity.success
             );
+            let iMid = this.activatedRoute.snapshot.paramMap.get('id');
+            if (!iMid) {
+                this._router.navigateByUrl('/itemmastersmodule/itemmasterpages/app-item-master-capabilities-list');
+            }
             
         })
         // this.onCloseCapes();
+        
     }
 
     resetFormData() {
