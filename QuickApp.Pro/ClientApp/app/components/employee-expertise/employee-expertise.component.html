@@ -16,12 +16,12 @@
                             [resizableColumns]="true" [reorderableColumns]="true" [scrollable]="true" [totalRecords]="totalRecords" scrollHeight="450px" >
                             <ng-template pTemplate="caption">
                                 <div style="text-align: right;margin-left:-6px !important;">
-                                    <p-multiSelect [maxSelectedLabels]="2" [options]="headers" optionLabel="header" [(ngModel)]="selectedColumns"
+                                    <p-multiSelect [maxSelectedLabels]="2" [options]="headers" optionLabel="header" [(ngModel)]="selectedColumns" [resetFilterOnHide]="true"
                                                    [style]="{minWidth: '200px'}" style="float:left" (onChange)="columnsChanges()"></p-multiSelect>
                                     <button type="button" class="btn btn-primary-cstm " matTooltip="Download Data" matTooltipPosition="above" pButton icon="fa-download"
                                             iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>                            
 
-                                    <button type="button" class="btn btn-primary-cstm " matTooltip="Download Selected" matTooltipPosition="above" pButton icon="fa-download"
+                                    <button type="button" class="btn btn-primary-cstm " matTooltip="Download Selected Data" matTooltipPosition="above" pButton icon="fa-download"
                                             iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})"></button>
                                     <div class="excel-upload  excel-upload-cstm">
 

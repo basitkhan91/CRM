@@ -644,8 +644,10 @@ namespace DAL.Repositories
                                t.IsHeWorksInShop,
                                t.Memo,
                                JobTitle = jot.Description,
-                               SupervisorName = string.Concat(empsu.FirstName, " ", empsu.MiddleName, " ", empsu.LastName),
+                               //SupervisorName = empsu.FirstName,
+                               SupervisorName = t.SupervisorId != null ? (_appContext.Employee.Where(p=>p.EmployeeId==t.SupervisorId).FirstOrDefault().FirstName):"",
                                CurrencyName = string.Concat(cu.DisplayName, "( ", cu.Symbol, " )"),
+                                                           
 
                                LeaveTypeIds = _appContext.Employee
                                  .Join(_appContext.EmployeeLeaveTypeMapping,
@@ -653,8 +655,8 @@ namespace DAL.Repositories
                                  mp => mp.EmployeeId,
                                  (t, mp) => new { t, mp })
                                 .Join(_appContext.EmployeeLeaveType,
-                                 mp1 => mp1.mp.EmployeeId,
-                                 inte => Convert.ToInt64(inte.EmployeeLeaveTypeId),
+                                 mp1 => mp1.mp.EmployeeLeaveTypeId,
+                                 inte => inte.EmployeeLeaveTypeId,
                                (mp1, inte) => new { mp1, inte })
                                .Where(p => p.mp1.t.EmployeeId == t.EmployeeId)
                                 .Select(p => p.inte.EmployeeLeaveTypeId),
@@ -665,23 +667,24 @@ namespace DAL.Repositories
                                  mp => mp.EmployeeId,
                                  (t, mp) => new { t, mp })
                                 .Join(_appContext.EmployeeLeaveType,
-                                 mp1 => mp1.mp.EmployeeId,
-                                 inte => Convert.ToInt64(inte.EmployeeLeaveTypeId),
+                                 mp1 => mp1.mp.EmployeeLeaveTypeId,
+                                 inte => inte.EmployeeLeaveTypeId,
                                (mp1, inte) => new { mp1, inte })
-                               .Where(p => p.mp1.t.EmployeeId == t.EmployeeId)
+                               .Where(p => p.mp1.mp.EmployeeId == employeeId)
                                 .Select(p => p.inte.Description)),
+                           
 
-                               ShiftIds = _appContext.Employee
-                                 .Join(_appContext.EmployeeShiftMapping,
-                                 t => t.EmployeeId,
-                                 mp => mp.EmployeeId,
-                                 (t, mp) => new { t, mp })
-                                .Join(_appContext.Shift,
-                                 mp1 => mp1.mp.EmployeeId,
-                                 inte => Convert.ToInt64(inte.ShiftId),
-                               (mp1, inte) => new { mp1, inte })
-                               .Where(p => p.mp1.t.EmployeeId == t.EmployeeId)
-                                .Select(p => p.inte.ShiftId),
+                                          ShiftIds = _appContext.Employee
+                                            .Join(_appContext.EmployeeShiftMapping,
+                                            t => t.EmployeeId,
+                                            mp => mp.EmployeeId,
+                                            (t, mp) => new { t, mp })
+                                           .Join(_appContext.Shift,
+                                            mp1 => mp1.mp.ShiftId,
+                                            inte => inte.ShiftId,
+                                          (mp1, inte) => new { mp1, inte })
+                                          .Where(p => p.mp1.t.EmployeeId == t.EmployeeId)
+                                           .Select(p => p.inte.ShiftId),
 
                               ShiftNames = string.Join(",", _appContext.Employee
                                  .Join(_appContext.EmployeeShiftMapping,
@@ -689,11 +692,13 @@ namespace DAL.Repositories
                                  mp => mp.EmployeeId,
                                  (t, mp) => new { t, mp })
                                 .Join(_appContext.Shift,
-                                 mp1 => mp1.mp.EmployeeId,
-                                 inte => Convert.ToInt64(inte.ShiftId),
+                                 mp1 => mp1.mp.ShiftId,
+                                 inte => inte.ShiftId,
                                (mp1, inte) => new { mp1, inte })
                                .Where(p => p.mp1.t.EmployeeId == t.EmployeeId)
                                 .Select(p => p.inte.Description)),
+
+                            
 
                            }).Distinct().FirstOrDefault();
 
