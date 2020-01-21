@@ -3512,7 +3512,7 @@ namespace QuickApp.Pro.Controllers
 
                
 
-                vendorObject.IsDeleted = vendor.IsDelete;
+                vendorObject.IsDeleted = vendor.IsDeleted;
 
                 //vendorObject.IsActive = vendor.IsActive;
                 vendorObject.UpdatedDate = DateTime.Now;
