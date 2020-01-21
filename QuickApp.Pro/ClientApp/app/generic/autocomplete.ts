@@ -28,8 +28,6 @@ export function getObjectById(field: string, id: any, originalData: any) {
 export function getValueFromObjectByKey(field: string, object: any) {
 
     if ((field !== '' && field !== undefined) && (object !== undefined && object !== null)) {
-        console.log(object[field]);
-        console.log('test');
         return object[field];
     }
 }
@@ -138,6 +136,39 @@ export function listSearchFilterObjectCreation(filterData) {
         // })
     }
     return result;
+}
+
+
+export function validateRecordExistsOrNotForInput(currentInput: any, originalData: any, originalDataField: string, editModeDataObject?: any) {
+    // editModeDataObject = undefined;
+    // let validData;
+    // if (editModeDataObject !== undefined) {
+    //     validData = validateRecordExistsOrNotOnEdit(originalDataField, currentInput, editModeDataObject);
+    // } else {
+    //     validData = true;
+    // }
+
+    // if (validData && editModeDataObject != undefined) {
+    if ((currentInput !== '' && currentInput !== undefined) && (originalData !== undefined && originalData.length > 0)) {
+        if (typeof (currentInput) === 'string') {
+            const data = originalData.filter(x => {
+                return x[originalDataField].toLowerCase() === currentInput.toLowerCase().trim()
+            })
+            return data;
+        } else if (typeof (currentInput) === 'number') {
+            const data = originalData.filter(x => {
+
+                return parseInt(x[originalDataField]) === currentInput
+            })
+            return data;
+        }
+
+    } else {
+        return [];
+    }
+    // } else {
+    //     return [];
+    // }
 }
 
 

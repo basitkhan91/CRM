@@ -15,6 +15,7 @@ import { StageCodeService } from '../../services/work-order-stagecode.service';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from "rxjs";
 import { ManagementStructure } from "../../models/managementstructure.model";
+import { validateRecordExistsOrNot, validateRecordExistsOrNotForInput } from "../../generic/autocomplete";
 
 
 @Component({
@@ -59,7 +60,7 @@ export class StageCodeComponent implements OnInit {
 
     private table: Table;
     auditHistory: any[] = [];
-    disableSave: boolean = false;
+    disableSaveForCode: boolean = false;
     taxTypeList: any;
     createdDate: any = "";
     percentageList: any[];
@@ -91,6 +92,7 @@ export class StageCodeComponent implements OnInit {
     businessUnitList: any;
     divisionList: any;
     departmentList: any;
+    disableSaveForSequence: boolean = false;
     constructor(
         private breadCrumb: SingleScreenBreadcrumbService,
         private authService: AuthService,
@@ -204,6 +206,25 @@ export class StageCodeComponent implements OnInit {
     }
 
 
+    checkStageCodeExistOrNot(value) {
+        const exists = validateRecordExistsOrNotForInput(value, this.originalData, 'code', this.selectedRecordForEdit);
+        if (exists.length > 0) {
+            this.disableSaveForCode = true;
+        }
+        else {
+            this.disableSaveForCode = false;
+        }
+    }
+    checkSequenceExistOrNot(value) {
+        const exists = validateRecordExistsOrNotForInput(value, this.originalData, 'sequence', this.selectedRecordForEdit);
+        if (exists.length > 0) {
+            this.disableSaveForSequence = true;
+        }
+        else {
+            this.disableSaveForSequence = false;
+        }
+    }
+
 
 
 
@@ -253,10 +274,11 @@ export class StageCodeComponent implements OnInit {
     edit(rowData) {
         console.log('rowData', rowData);
         this.isEdit = true;
-        this.disableSave = false;
+
         this.addNew = {
             ...rowData,
         };
+        this.selectedRecordForEdit = { ...this.addNew }
         this.addNew = {
             ...this.addNew
         };
