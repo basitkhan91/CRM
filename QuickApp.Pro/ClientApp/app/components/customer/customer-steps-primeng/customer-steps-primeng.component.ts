@@ -29,7 +29,7 @@ export class CustomerStepsPrimengComponent {
 	isDisabledSteps: boolean = false;
 	search_ataChapterList: any;
 	add_ataChapterList: any;
-    ataListDataValues: any;
+    ataListDataValues: any[] = [];
 	contactList: any;
 	breadcrumbs: MenuItem[];
 	// ifvalue: boolean;
