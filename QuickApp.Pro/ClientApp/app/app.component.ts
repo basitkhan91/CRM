@@ -599,6 +599,11 @@ export class AppComponent implements OnInit, AfterViewInit {
                             { label: 'Item Group', routerLink: '/singlepages/singlepages/app-item-group' },
                             { label: 'Item Classification', routerLink: '/singlepages/singlepages/app-item-classification' },
                             { label: 'Manufacturer', routerLink: '/singlepages/singlepages/app-manufacturer' },
+                            { label: 'Site', routerLink: '/singlepages/singlepages/app-site' },
+                            { label: 'WareHouse', routerLink: '/singlepages/singlepages/app-warehouse' },
+                            { label: 'Location', routerLink: '/singlepages/singlepages/app-location' },
+                            { label: 'Shelf', routerLink: '/singlepages/singlepages/app-shelf' },
+                            { label: 'Bin', routerLink: '/singlepages/singlepages/app-bin' },
                         ]
                     },
                     {
