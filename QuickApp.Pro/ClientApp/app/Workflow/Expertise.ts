@@ -11,5 +11,6 @@ export interface IExpertise
     taskId:string;
     workflowId:string;
     AllowEdit:boolean;
-    IsDeleted:boolean;
+    IsDeleted: boolean;
+    Order: number;
 }

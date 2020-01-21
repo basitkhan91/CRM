@@ -8,5 +8,6 @@ export interface  IDirections
       taskId:string;
       workflowId:string;
       AllowEdit:boolean;
-      isDeleted:boolean;
+      isDeleted: boolean;
+      Order: number;
 }
