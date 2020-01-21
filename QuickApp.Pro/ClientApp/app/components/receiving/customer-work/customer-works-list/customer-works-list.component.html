@@ -23,6 +23,7 @@
                         <i class="fa fa-plus-circle fa-lg"></i>
                     </a>
                     </div>
+
                     <!--<span class="help-icon" data-original-title="Help" data-toggle="tooltip"><i class="fa fa-info" data-toggle="modal" data-target="#help-popup"></i></span>-->
                     <p-table #dt [value]="allRecevinginfo" [lazy]="true"
                              (onLazyLoad)="loadData($event)"
@@ -37,12 +38,12 @@
                                 </div>
                                 <button type="button" pButton icon="fa-download" iconPos="left" label="Export  Data" matTooltip="Download Data" matTooltipPosition="above" (click)="dt.exportCSV()"></button>
                                 <button type="button" pButton icon="fa-download" iconPos="left" label="Export Selection Only" matTooltip="Download Selected Data" matTooltipPosition="above"  (click)="dt.exportCSV({selectionOnly:true})"></button>
-                                <div class="excel-upload">
+                                <!--<div class="excel-upload">
                                     <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
                                     <label for="upload">
                                         <span matTooltip="Upload Data (Excel)"><i class="fa fa-upload"></i></span>
                                     </label>
-                                </div>
+                                </div>-->
                             </div>
                         </ng-template>
                         <ng-template pTemplate="header" let-columns>
@@ -122,7 +123,7 @@
     <div class="modal-body">
         <strong>
           Recev. No.:
-            <!--<span class="new-label">{{sourcereceving.receivingCustomerNumber}}</span>-->
+            <span class="new-label">{{sourcereceving.receivingCustomerNumber}}</span>
         </strong>
     </div>
     <div class="modal-footer">
@@ -140,8 +141,7 @@
 
         <div class="modal-body viewform">
             <div id="" class="table-responsive default-bg clear">
-                <p class="lead">Receiving Customer Work</p>
-                <div class="panel-body">
+                  <div class="panel-body">
                     <div class="col-sm-5">
                         <table class="table table-bordered table-striped">
                             <thead>
@@ -177,7 +177,7 @@
                             <p><span class="label"><b>PN Description: </b></span><span class="value">{{showViewProperties.partDescription}}</span></p>
                             <p><span class="label"><b>Change PN: </b></span><span class="value">{{showViewProperties.changePartNumber}}</span></p>
                             <p><span class="label"><b>Parts Cert Num: </b></span><span class="value">{{showViewProperties.partCertificationNumber}}</span></p>
-                            <p><span class="label"><b>Expiration Date: </b></span><span class="value">{{showViewProperties.expirationDate}}</span></p>
+                            <p><span class="label"><b>Expiration Date: </b></span><span class="value">{{showViewProperties.expirationDate | date: 'dd-MM-yyyy h:mm a '}}</span></p>
                             <p><span class="label"><b>QTY : </b></span><span class="value">{{showViewProperties.quantity}}</span></p>
                             <p><span class="label"><b>Condtion : </b></span><span class="value">{{showViewProperties.conditionId}}</span></p>
                             <p><span class="label"><b>Warehouse : </b></span><span class="value">{{showViewProperties.warehouseId}}</span></p>
@@ -190,13 +190,13 @@
                             <p><span class="label"><b>Traceable Name: </b></span><span class="value">{{showViewProperties.traceableTo}}</span></p>
                             <p><span class="label"><b>Obtain From: </b></span><span class="value">{{showViewProperties.obtainFromType}}</span></p>
                             <p><span class="label"><b>Obtain From Name: </b></span><span class="value">{{showViewProperties.obtainFrom}}</span></p>
-                            <p><span class="label"><b>MFG Date: </b></span><span class="value">{{showViewProperties.manufacturingDate}}</span></p>
-                            <p><span class="label"><b>Exp Date: </b></span><span class="value">{{showViewProperties.expirationDate}}</span></p>
+                            <p><span class="label"><b>MFG Date: </b></span><span class="value">{{showViewProperties.manufacturingDate | date: 'dd-MM-yyyy h:mm a '}}</span></p>
+                            <p><span class="label"><b>Exp Date: </b></span><span class="value">{{showViewProperties.expirationDate | date: 'dd-MM-yyyy h:mm a '}}</span></p>
                             <p><span class="label"><b>MFG Trace: </b></span><span class="value">{{showViewProperties.manufacturingTrace}}</span></p>
                             <p><span class="label"><b>MFR Lot #: </b></span><span class="value">{{showViewProperties.manufacturingLotNumber}}</span></p>
 
                             <h4>Time Life</h4>
-                            <p><span class="label"><b>Date: </b></span><span class="value">{{showViewProperties.timeLifeDate}}</span></p>
+                            <p><span class="label"><b>Date: </b></span><span class="value">{{showViewProperties.timeLifeDate |date: 'dd-MM-yyyy h:mm a '}}</span></p>
                             <p><span class="label"><b>Origin: </b></span><span class="value">{{showViewProperties.timeLifeOrigin}}</span></p>
                             <div class="table-responsive form-group col-sm-12" *ngIf="showViewProperties.isTimeLife">
                                 <table class="table table-bordered table-striped">

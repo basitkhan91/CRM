@@ -2,7 +2,7 @@ export class CustomerGeneralInformation {
 
     isAddressForBilling: boolean;
     isAddressForShipping: boolean;
-    customerAffiliationId: number;
+    customerAffiliationId: any;
     customerTypeId: number;
     name: string;
     customerPhone: string;

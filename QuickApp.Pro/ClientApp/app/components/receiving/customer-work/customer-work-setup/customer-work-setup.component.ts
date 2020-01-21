@@ -250,6 +250,8 @@ export class CustomerWorkSetupComponent
             switch (this.sourcereceving.obtainFromType) {
                 case 1: {
                     this.showCustomer1 = true;
+
+
                     break;
                 }
                 case 2: {

@@ -27,7 +27,7 @@ namespace DAL.Repositories
         {
             try
             {
-                var result = _appContext.ATAChapter.Include("MasterCompany").Where(c => c.IsDeleted == false || c.IsDeleted == null).OrderByDescending(c => c.ATAChapterId).ToList();
+                var result = _appContext.ATAChapter.Include("MasterCompany").Where(c => (c.IsDeleted == false || c.IsDeleted == null) &&c.IsActive==true ).OrderByDescending(c => c.ATAChapterId).ToList();
                 return result;
             }
             catch (Exception)
@@ -37,7 +37,20 @@ namespace DAL.Repositories
 
           
         }
+        public IEnumerable<ATAChapter> GetAllATAMainData()
+        {
+            try
+            {
+                var result = _appContext.ATAChapter.Include("MasterCompany").Where(c => c.IsDeleted == false || c.IsDeleted == null).OrderByDescending(c => c.ATAChapterId).ToList();
+                return result;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
 
+
+        }
         public IEnumerable<object> GetATASUBS(long ChID)
         {
             throw new NotImplementedException();

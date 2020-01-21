@@ -162,38 +162,43 @@ export class CustomerGeneralInformationComponent implements OnInit {
                 };
                 this.generalInformation1 = {
                     ...this.editData,
-                  
+
                     country: getObjectById('countries_id', res.country, this.countryListOriginal),
                     customerParentName: getObjectByValue('name', res.customerParentName, this.customerallListOriginal),
                     customerCode: getObjectByValue('customerCode', res.customerCode, this.customerallListOriginal),
 
-                    
+
                 };
 
-                if (this.generalInformation.customerAffiliationId == 1) {
+                if (this.generalInformation.customerAffiliationId == 1 || this.generalInformation.customerAffiliationId == 3) {
                     this.disableAccountType = true;
 
                 }
-               
+
 
             });
 
-        
+
             this.getCustomerIntegrationTypesByCustomerId();
 
-            setTimeout(() => { 
+            setTimeout(() => {
                 this.getCustomerRestrictedPMAByCustomerId();
             }, 1000);
 
-            setTimeout(() => { 
+            setTimeout(() => {
                 this.getCustomerRestrictedDERByCustomerId();
             }, 1000);
 
-            setTimeout(() => { 
+            setTimeout(() => {
                 this.getCustomerClassificationByCustomerId();
             }, 1000);
 
-            
+
+        } else {
+            this.generalInformation = {
+                ...this.generalInformation,
+                customerAffiliationId: String(this.generalInformation.customerAffiliationId)
+            }
         }
     }
 
@@ -329,6 +334,9 @@ export class CustomerGeneralInformationComponent implements OnInit {
         this.restictPMAtempList = [];                            
         }
     }
+
+      
+       
     deleteRestirctPMA() {
 
       
@@ -351,6 +359,8 @@ export class CustomerGeneralInformationComponent implements OnInit {
         }
        
     }
+  
+     
     openPopupForDeleteRestrictPMA(i, rowData, content){
         this.selectedRowForDeleteRestrictPMA = rowData;
         this.selectedRowForDeleteRestrictPMA['index'] = i;
@@ -409,6 +419,8 @@ export class CustomerGeneralInformationComponent implements OnInit {
         this.dismissModel()
         this.partListForDER = [{ label: this.selectedRowForDeleteRestrictDER.partNumber, value: this.selectedRowForDeleteRestrictDER }, ...this.partListForDER];
         this.generalInformation.restrictedDERParts.splice(this.selectedRowForDeleteRestrictDER.index, 1);
+
+        
         if (this.generalInformation.restrictedDERParts.length == 0) {
             this.disableRestrictedDER = false;
         }
@@ -754,7 +766,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
 
     selectedCustomerType(event) {
         console.log(event)
-        if (event == 1) {
+        if (event == 1 || event==3) {
             this.generalInformation.customerTypeId = 3;
             this.disableAccountType = true;
         }
