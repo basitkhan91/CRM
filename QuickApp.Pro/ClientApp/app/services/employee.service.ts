@@ -227,6 +227,11 @@ export class EmployeeService {
     // uploadEmployeeTrainingDoc(action: any) {
     //     return this.employeeEndpoint.uploadEmployeeTrainingDocEndpoint<any>(action);
     // }
+
+    toGetEmployeeDetailsByEmpId(employeeId: any){
+        return this.employeeEndpoint.toGetEmployeeDetailsByEmpIdEndPoint(employeeId);
+    }
+  
     
    
 }
