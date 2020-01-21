@@ -47,7 +47,7 @@
                             <ng-template pTemplate="header" let-columns>
                                 <tr>
                                         <ng-container *ngFor="let col of columns">
-                                                <th class="text-center" *ngIf="col.field!='level1' && col.field!='level2' && col.field!='level3' && col.field!='level4'"  pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
+                                                <th class="text-center" *ngIf="col.field!='levelCode1' && col.field!='levelCode2' && col.field!='levelCode3' && col.field!='levelCode4'"  pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
                                                         {{col.header}}
                                                         <p-sortIcon [field]="col.field"></p-sortIcon>
                                                 </th>
