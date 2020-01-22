@@ -203,7 +203,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
             </div>
           </div>
       
@@ -355,7 +355,7 @@
                 <div class="modal-footer">
                     <button type="button" *ngIf="!isEditButton" class="btn btn-primary pull-right submit-btn" style="text-align:center" [disabled]="!addContactForm.valid ||contactEmail.errors || disablesaveForFirstname || disableSaveMiddleName ||disableSaveLastName" (click)="saveContactInformation()" data-dismiss="modal">Save</button>
                     <button type="button" *ngIf="isEditButton" class="btn btn-primary pull-right submit-btn" style="text-align:center" (click)="updateCustomerContact()" [disabled]="!addContactForm.valid ||contactEmail.errors|| disablesaveForFirstname ||disableSaveMiddleName ||disableSaveLastName" data-dismiss="modal">Update</button>
-                    <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                 </div>
             </form>
         </div>
@@ -398,7 +398,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-danger-cstm"  data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-danger"  data-dismiss="modal">Close</button>
             </div>
           </div>
       
@@ -439,7 +439,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
+                        <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
                     </div>
                 </div>
 
@@ -536,7 +536,7 @@
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">
                         Close
                     </button>
                 </div>

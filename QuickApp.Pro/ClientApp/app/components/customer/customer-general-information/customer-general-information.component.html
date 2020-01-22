@@ -552,7 +552,7 @@
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="addClassification()" [disabled]="isClassificationAlreadyExists ||addCustomerClassification.invalid ">Save</button>
-                    <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="resetClassificationPopUp()">Close</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="resetClassificationPopUp()">Close</button>
                 </div>
             </div>
         </form>
@@ -613,7 +613,7 @@
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="newIntegrationAdd()" [disabled]="!addIntergation.valid || isIntegrationAlreadyExists">Save</button>
-                    <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="resetIntegrationPopUp()">Close</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="resetIntegrationPopUp()">Close</button>
                 </div>
             </div>
 
@@ -636,7 +636,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="onClickPopupSave()">Save</button>
-                <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" >Close</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal" >Close</button>
             </div>
         </div>
     </div>

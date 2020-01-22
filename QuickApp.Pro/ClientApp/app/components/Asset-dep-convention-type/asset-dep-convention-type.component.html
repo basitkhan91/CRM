@@ -176,7 +176,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
             <div class="clear"></div>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" id="" name="" (click)="dismissModel()">Close</button>
+            <button type="button" class="btn btn-danger" data-dismiss="modal" id="" name="" (click)="dismissModel()">Close</button>
         </div>
     </div>
 
@@ -197,7 +197,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-primary" (click)="removeAssetDepConventionType()">Yes</button>
-        <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">No</button>
+        <button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
     </div>
 </ng-template>
 
@@ -279,7 +279,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
     </div>
     <div class="modal-footer">
         <button class="btn btn-primary" [disabled]="!userForm.valid || disableSave" (click)="SaveandEditDepConvension()">Save</button>
-        <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
+        <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
     </div>
 </ng-template>
 
@@ -330,7 +330,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
             </div>
         </div>
 

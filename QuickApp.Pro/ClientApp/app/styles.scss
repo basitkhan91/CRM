@@ -6256,9 +6256,6 @@ div.dt-button-info h2 {
     padding: 0 0 10px
 }
 
-.btn-danger {
-    background-color: #ff5663
-}
 
 .btn-info {
     background-color: #36c6d3
@@ -12678,32 +12675,14 @@ body .ui-table .ui-table-tbody > tr > td a.btn {
     padding: 6px 12px !important;
 }
 
+
 .ui-button-icon-left {
-    left: 9%;
-    top: 46%;
-}
-
-.btn-danger-cstm {
-    color: #fff;
-    background-color: #F8370E !important;
-    border-color: #F8370E;
-    border-radius: 4px !important;
-    padding: 6px 12px !important;
-}
-
-.btn-danger-cstm .ui-button-icon-left {
     left: 9%;
     top: 46%;
 }
 
 .text-area-size {
     width: 94%;
-}
-
-.btn-danger-cstm:hover {
-    color: #fff;
-    background-color: #DC2700 !important;
-    border-color: #DC2700;
 }
 
 .excel-upload-cstm label span {

@@ -136,7 +136,7 @@
 
     <div class="modal-footer">
         <button type="button" class="btn btn-primary" (click)="deleteItemAndCloseModel()">Yes</button>
-        <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">No</button>
+        <button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
     </div>
 </ng-template>
 
@@ -202,7 +202,7 @@
         </div>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
+        <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
     </div>
 </ng-template>
 
@@ -238,7 +238,7 @@
             <div class="clear"></div>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="dismissModel()">Close</button>
+            <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="dismissModel()">Close</button>
         </div>
     </div>
 
@@ -370,7 +370,7 @@
                 <div class="modal-footer">
                     <button type="button" [validate] moduleName="app-vendor-contacts" requirePermission="canAdd" *ngIf="sourceVendor.vendorId == undefined" class="btn btn-primary pull-right submit-btn" (click)="editItemAndCloseModel()" data-dismiss="modal" [disabled]="!addContactForm.valid">Save</button>
                     <button type="button" [validate] moduleName="app-vendor-contacts" requirePermission="canUpdate" *ngIf="sourceVendor.vendorId != undefined && sourceVendor.vendorId !=0" class="btn btn-primary pull-right submit-btn" (click)="editItemAndCloseModel()" data-dismiss="modal" [disabled]="!addContactForm.valid">Update</button>
-                    <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                 </div>
             </form>
         </div>

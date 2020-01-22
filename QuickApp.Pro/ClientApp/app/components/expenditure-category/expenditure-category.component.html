@@ -178,7 +178,7 @@
                     <div class="clear"></div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                 </div>
             </div>
 
@@ -231,7 +231,7 @@
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-primary" data-dismiss="modal" [disabled]="disableSave" (click)="currentModeOfOperation === 2 ? saveNewItem() : updateItem();"> {{currentModeOfOperation == 3 ? 'Update' : 'Save' }}</button>
-                    <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
 
                 </div>
             </div>
@@ -255,7 +255,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="deleteItem()">Yes</button>
-                    <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="dismissModal()">No</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="dismissModal()">No</button>
                 </div>
             </div>
 
@@ -294,7 +294,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="dismissModal()">Close</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="dismissModal()">Close</button>
                 </div>
             </div>
         </div>

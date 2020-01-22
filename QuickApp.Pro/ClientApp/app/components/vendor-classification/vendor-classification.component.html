@@ -141,7 +141,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="deleteConformation('Yes')">Yes</button>
-                <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="deleteConformation('No')">No</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="deleteConformation('No')">No</button>
             </div>
         </div>
 
@@ -204,7 +204,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
             </div>
             <div class="modal-footer">
                 <button class="btn btn-primary" data-dismiss="modal" [disabled]="VendorClassification.invalid || disableSaveForVendorClassification" (click)="saveVendorClassification();"> {{isEdit ? 'Update' : 'Save' }}</button>
-                <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="resetVendorClassificationForm()">Close</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="resetVendorClassificationForm()">Close</button>
 
             </div>
         </div>
@@ -243,7 +243,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
             </div>
         </div>
 
@@ -295,7 +295,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
             </div>
         </div>
 
@@ -357,7 +357,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                 <div class="clear"></div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" id="" name="" (click)="resetViewData()">Close</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal" id="" name="" (click)="resetViewData()">Close</button>
             </div>
         </div>
 
