@@ -1,16 +1,23 @@
 ﻿<div class="modal-header">
-    <button type="button" class="close" (click)="dismissModel()">
+    <button type="button" class="close" style="padding: 0 !important" (click)="dismissModel()">
         &times;
     </button>
-    <h4 class="modal-title">Details of Customer</h4>
-    <div>
-        <button type="button" class="btn btn-success" (click)="ExpandAllCustomerDetailsModel()">Open All</button>
-        <button type="button" class="btn btn-info" (click)="CloseAllCustomerDetailsModel()">Close All</button>
-
+    <div class="col-sm-3">
+        <h4 class="modal-title">Details of Customer</h4>
     </div>
+    <div class="col-sm-3">
+        Customer Name: <span style="color:red">{{viewDataGeneralInformation.name}}</span>
+    </div>
+    <div class="col-sm-3">
+        Customer Code: <span style="color:red">{{viewDataGeneralInformation.customerCode}}</span>
+    </div>    
 </div>
 <div class="modal-body" *ngIf="viewDataGeneralInformation ">
-    <div class="panel-group" id="accordion">
+    <div>
+        <button type="button" class="btn btn-primary" (click)="ExpandAllCustomerDetailsModel()">Open All</button>
+        <button type="button" class="btn btn-secondary" (click)="CloseAllCustomerDetailsModel()">Close All</button>
+    </div>
+    <div class="panel-group mt-2" id="accordion" >
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h4 class="panel-title">
@@ -22,32 +29,40 @@
             </div>
             <div id="step1" class="panel-collapse collapse in show">
                 <div class="panel-body">
-                    <div class="modal-content">
+                    <div class="modal-content p-1">
                         <div class="table-responsive default-bg clear">
                             <div class="col-sm-6">
                                 <p>
-                                    <span class="label"><b>Customer Name: </b></span><span class="value">
+                                    <span class="label"><b>Internal / External / Affiliate: <span class="clr-red">*</span></b></span><span class="value">
+                                        {{
+                            viewDataGeneralInformation.accountType
+                                        }}
+                                    </span>
+                                </p>
+                                <p>
+                                    <span class="label"><b>Account Type: <span class="clr-red">*</span></b></span><span class="value">
+                                        {{
+                            viewDataGeneralInformation.type
+                                        }}
+                                    </span>
+                                </p>
+                                <p>
+                                    <span class="label"><b>Customer Name: <span class="clr-red">*</span></b></span><span class="value">
                                         {{
                           viewDataGeneralInformation.name
                                         }}
                                     </span>
                                 </p>
                                 <p>
-                                    <span class="label"><b>Customer Code: </b></span><span class="value">
+                                    <span class="label"><b>Customer Code: <span class="clr-red">*</span></b></span><span class="value">
                                         {{
                           viewDataGeneralInformation.customerCode
                                         }}
                                     </span>
-                                </p>
+                                </p>                               
+                                
                                 <p>
-                                    <span class="label"><b>Internal/External: </b></span><span class="value">
-                                        {{
-                          viewDataGeneralInformation.accountType
-                                        }}
-                                    </span>
-                                </p>
-                                <p>
-                                    <span class="label"><b>D/b/a: </b></span><span class="value">
+                                    <span class="label"><b>D/B/A: </b></span><span class="value">
                                         {{
                           viewDataGeneralInformation.doingBuinessAsName
                                         }}
@@ -60,9 +75,23 @@
                                         }}
                                     </span>
                                 </p>
+                                <p>
+                                    <span class="label"><b>Phone: <span class="clr-red">*</span></b></span><span class="value">
+                                        {{
+                            viewDataGeneralInformation.customerPhone
+                                        }}
+                                    </span>
+                                </p>
+                                <p>
+                                    <span class="label"><b>Email: <span class="clr-red">*</span></b></span><span class="value">
+                                        {{
+                            viewDataGeneralInformation.email
+                                        }}
+                                    </span>
+                                </p>
 
                                 <p>
-                                    <span class="label"><b>Address 1: </b></span><span class="value">
+                                    <span class="label"><b>Address Line 1:  <span class="clr-red">*</span></b></span><span class="value">
                                         {{
                           viewDataGeneralInformation.address1
                                         }}
@@ -77,44 +106,54 @@
                                 </p>
 
                                 <p>
-                                    <span class="label"><b>City: </b></span><span class="value">
+                                    <span class="label"><b>City: <span class="clr-red">*</span></b></span><span class="value">
                                         {{
                           viewDataGeneralInformation.city
                                         }}
                                     </span>
                                 </p>
                                 <p>
-                                    <span class="label"><b>State/Province: </b></span><span class="value">
+                                    <span class="label"><b>State/Province: <span class="clr-red">*</span></b></span><span class="value">
                                         {{
                           viewDataGeneralInformation.stateOrProvince
                                         }}
                                     </span>
                                 </p>
                                 <p>
-                                    <span class="label"><b>Postal: </b></span><span class="value">
+                                    <span class="label"><b>Postal: <span class="clr-red">*</span></b></span><span class="value">
                                         {{
                           viewDataGeneralInformation.postalCode
                                         }}
                                     </span>
                                 </p>
                                 <p>
-                                    <span class="label"><b>Country: </b></span><span class="value">
+                                    <span class="label"><b>Country: <span class="clr-red">*</span></b></span><span class="value">
                                         {{
                           viewDataGeneralInformation.countryName
                                         }}
                                     </span>
                                 </p>
-                                <p>
-                                    <span class="label"><b>Email: </b></span><span class="value">
-                                        {{
-                          viewDataGeneralInformation.email
-                                        }}
-                                    </span>
-                                </p>
+                                
                             </div>
                             <div class="col-sm-6">
                                 <p>
-                                    <span class="label"><b>Classification: </b></span><span class="value">
+                                    <span class="value"><input type="checkbox" name="isIsBillingAddress" [(ngModel)]="viewDataGeneralInformation.isAddressForBilling" disabled><span><b>  Is this Address For Billing </b></span></span>
+
+                                    
+                                </p>
+
+                                <p>
+                                    <span class="value"><input type="checkbox" name="isIsShippingAddress" [(ngModel)]="viewDataGeneralInformation.isAddressForShipping" disabled><span><b>  Is this Address For Shipping </b></span></span>
+
+                                    
+                                </p>
+                                <p>
+                                    <span class="value"><input type="checkbox" name="iscustomerAlsoVendor" [(ngModel)]="viewDataGeneralInformation.isCustomerAlsoVendor" disabled><span><b>  Is Customer Also Vendor </b></span></span>
+
+                                    
+                                </p>
+                                <p>
+                                    <span class="label"><b>Classification: <span class="clr-red">*</span></b></span><span class="value">
 
                                         {{viewDataclassification}}
 
@@ -123,7 +162,7 @@
                                 <p>
                                     <span class="label"><b>Integration With: </b></span><span class="value">
                                         {{
-                          viewDataGeneralInformation.integrationWith
+                                            viewDataIntegration
                                         }}
                                     </span>
                                 </p>
@@ -143,132 +182,99 @@
                                     </span>
                                 </p>
                                 <p>
-                                    <span class="label"><b>Restrict PMA: </b></span><span class="value">
+                                    <span class="label"><b>URL to Customer site: </b></span><span class="value">
                                         {{
-                          viewDataGeneralInformation.restrictPMAMemo
+                            viewDataGeneralInformation.customerURL
                                         }}
                                     </span>
                                 </p>
-                                <div>
-
-                                    <table class="coustomTable" style="width:100%">
-                                        <tr>
-                                            <th>Part Number</th>
-                                            <th>Memo</th>
-                                        </tr>
-                                        <tr *ngFor="let data of restrictedPMAParts">
-                                            <td>{{data.partNumber}}</td>
-                                            <td>{{data.memo}}</td>
-
-
-                                        </tr>
-                                    </table>
-
-                                    <!--<p-table class="rpo-table-cstm"
-             [columns]="customerPMAColumns"
-             [value]="restrictedPMAParts"
-             [paginator]="true"
-             [rows]="10"
-             [first]="first">
-        <ng-template pTemplate="header" let-columns>
-            <tr>
-
-                <th style="padding: 8px 5px !important;" *ngFor="let col of columns">
-                    {{ col.header }}
-                </th>
-            </tr>
-        </ng-template>
-        <ng-template pTemplate="body"
-                     let-rowData
-                     let-columns="columns"
-                     let-rowIndex="rowIndex">
-            <tr>
-
-                <td *ngFor="let col of columns">
-                    {{ rowData[col.field] }}
-                </td>
-            </tr>
-        </ng-template>
-    </p-table> -->
-                                    <!--<p-table class="table-responsive" [value]="restrictedPMAParts" [paginator]="true" [rows]="3" [columns]="restrictHeaders">
-        <ng-template pTemplate="header" let-columns>
-            <tr>
-                <th *ngFor="let col of columns">
-                    {{col.header}}
-                </th>
-
-            </tr>
-        </ng-template>
-        <ng-template pTemplate="body" let-part let-rowData let-columns="columns" let-i="rowIndex">
-            <tr>
-                <td *ngFor="let col of columns">
-                    {{part[col.field]}}
-                </td>
-
-            </tr>
-        </ng-template>
-    </p-table>-->
+                                <p>
+                                    <span class="label"><b>Restrict PMA: </b></span><span class="value">
+                                        <input type="checkbox" name="restrictPMA" [(ngModel)]="viewDataGeneralInformation.restrictPMA" disabled>
+                                         
+                                    </span>
+                                </p>
+                                
+                                <div *ngIf="viewDataGeneralInformation.restrictPMA == true" >
+                                    <p-table class="table-responsive ptable-cus-pma" [value]="restrictedPMAParts" [paginator]="restrictedPMAParts?.length > 0" [rows]="3" [columns]="customerPMAColumns">
+                                        <ng-template pTemplate="header" let-columns>
+                                            <tr>
+                                                <th *ngFor="let col of columns">
+                                                    {{col.header}}
+                                                </th>
+                                            </tr>
+                                        </ng-template>
+                                        <ng-template pTemplate="body" let-part let-rowData let-columns="columns" let-i="rowIndex">
+                                            <tr>
+                                                <td *ngFor="let col of columns">
+                                                    {{part[col.field]}}
+                                                </td>
+                                            </tr>
+                                        </ng-template>
+                                        <ng-template pTemplate="emptymessage" let-columns *ngIf="restrictedPMAParts?.length == 0">
+                                            <tr>
+                                                <td [attr.colspan]="columns.length">
+                                                    No records found
+                                                </td>
+                                            </tr>
+                                        </ng-template>
+                                    </p-table>    
+                                    <div class="total_records_section" *ngIf="restrictedPMAParts?.length > 0">
+                                        <label  class="footer">No'of records:  <input style="width: 5%;"
+                                            value="{{restrictedPMAParts?.length}}"
+                                            [disabled]="true"
+                                            pInputText
+                                            type="text" /> </label>                                            
+                                    </div>
                                 </div>
 
                                 <p>
                                     <span class="label"><b>Restrict DER: </b></span><span class="value">
-                                        {{
-                          viewDataGeneralInformation.restrictDERMemo
-                                        }}
+                                       <input type="checkbox" name="restrictBER" [(ngModel)]="viewDataGeneralInformation.restrictBER" disabled>
                                     </span>
                                 </p>
                                 <div>
-
-                                    <table class="coustomTable" style="width:100%">
-                                        <tr>
-                                            <th>Part Number</th>
-                                            <th>Memo</th>
-                                        </tr>
-                                        <tr *ngFor="let data of restrictedDERParts">
-                                            <td>{{data.partNumber}}</td>
-                                            <td>{{data.memo}}</td>
-
-
-                                        </tr>
-                                    </table>
-
-
-                                    <!--<p-table class="rpo-table-cstm"
-             [columns]="customerDERColumns"
-             [value]="restrictedDERParts"
-             [paginator]="true"
-             [rows]="10"
-             [first]="first">
-        <ng-template pTemplate="header" let-columns>
-            <tr>
-
-                <th style="padding: 8px 5px !important;" *ngFor="let col of columns">
-                    {{ col.header }}
-                </th>
-            </tr>
-        </ng-template>
-        <ng-template pTemplate="body"
-                     let-rowData
-                     let-columns="columns"
-                     let-rowIndex="rowIndex">
-            <tr>
-
-                <td *ngFor="let col of columns">
-                    {{ rowData[col.field] }}
-                </td>
-            </tr>
-        </ng-template>
-    </p-table>-->
-
-                                </div>
-
-                                <p>
-                                    <span class="label"><b>URL to Customer site: </b></span><span class="value">
-                                        {{
-                          viewDataGeneralInformation.customerURL
-                                        }}
-                                    </span>
-                                </p>
+                                    <p-table #table2 class="table-responsive ptable-cus-pma" [paginator]="restrictedDERParts?.length > 0" [value]="restrictedDERParts"  [rows]="3" [columns]="customerDERColumns">
+                                        <ng-template pTemplate="header" let-columns>
+                                            <tr>
+                                                <th *ngFor="let col of columns">
+                                                    {{col.header}}
+                                                </th>
+                                            </tr>
+                                        </ng-template>
+                                        <ng-template pTemplate="body" let-part let-rowData let-columns="columns" let-i="rowIndex">
+                                            <tr>
+                                                <td *ngFor="let col of columns">
+                                                    {{part[col.field]}}
+                                                </td>
+                                            </tr>
+                                        </ng-template>
+                                        <ng-template pTemplate="emptymessage" let-columns *ngIf="restrictedDERParts?.length == 0">
+                                            <tr>
+                                                <td [attr.colspan]="columns.length" style="color: red; font-weight: bold; text-align: center">
+                                                    No records found
+                                                </td>
+                                            </tr>
+                                        </ng-template>
+                                        <!-- <ng-template pTemplate="summary" let-columns *ngIf="countOfRestrictDerParts > 0">
+                                            <div [ngClass]="{'display-none': restrictedDERParts.length > 0}">
+                                                <label  class="footer" [ngClass]="{'display-none': restrictedDERParts.length > 0}">No'of records:</label>
+                                                <input style="width: 5%;"
+                                                        value="{{restrictedDERParts?.length}}"
+                                                        [disabled]="true"
+                                                        pInputText
+                                                        type="text" />  
+                                            </div>
+                                        </ng-template> -->
+                                    </p-table>        
+                                    <div class="total_records_section" *ngIf="restrictedDERParts?.length > 0">
+                                        <label  class="footer">No'of records: <input style="width: 5%;"
+                                            value="{{restrictedDERParts?.length}}"
+                                            [disabled]="true"
+                                            pInputText
+                                            type="text" />  </label>                                            
+                                    </div>                              
+                                </div>                              
                             </div>
                         </div>
                     </div>
@@ -285,54 +291,44 @@
                 <div class="panel-body">
                     <div class="col-sm-12">
                         <div class="shadow-Box">
-                            <table class="coustomTable" style="width:100%">
-                                <tr>
-                                    <th>Tag</th>
-                                    <th>First Name</th>
-                                    <th>Last Name</th>
-                                    <th>Contact Title</th>
-                                    <th>Email</th>
-                                    <th>Work Phone</th>
-                                    <th>Mobile Phone</th>
-                                    <th>Fax</th>
-                                </tr>
-                                <tr *ngFor="let data of customerContacts">
-                                    <td>{{data.tag}}</td>
-                                    <td>{{data.firstName}}</td>
-                                    <td>{{data.lastName}}</td>
-                                    <td>{{data.contactTitle}}</td>
-                                    <td>{{data.email}}</td>
-                                    <td>{{data.workPhone}}</td>
-                                    <td>{{data.mobilePhone}}</td>
-                                    <td>{{data.fax}}</td>
-                                </tr>
-                            </table>
-                            <!--<p-table #dt class="rro-table-cstm"
-                                         [columns]="customerContactsColumns"
-                                         [value]="customerContacts"
-                                         [paginator]="true"
-                                         [rows]="10"
-                                         [first]="first">
-                                    <ng-template pTemplate="header" let-columns>
-                                        <tr>
-                                            <th style="padding: 8px 5px !important;" *ngFor="let col of columns">
-                                                {{ col.header
-                                            }}
-                                            </th>
-    </tr>
-                                    </ng-template>
-                                    <ng-template pTemplate="body"
-                                                 let-rowData
-                                                 let-columns="columns"
-                                                 let-rowIndex="rowIndex">
-                                        <tr [ngStyle]="{'background-color' : rowData.isDefaultContact === true ? '#79ffe3'  : 'white'  }">
-
-                                            <td *ngFor="let col of columns">
-                                                {{ rowData[col.field] }}
-                                            </td>
-                                        </tr>
-                                    </ng-template>
-                                </p-table> -->
+                            <p-table #table3 class="table-responsive ptable-cus-pma" [paginator]="customerContacts.length > 0" [value]="customerContacts"  [rows]="3" [columns]="contactTableColumns">
+                                <ng-template pTemplate="header" let-columns>
+                                    <tr>
+                                        <th *ngFor="let col of columns">
+                                            {{col.header}}
+                                        </th>
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="body" let-part let-rowData let-columns="columns" let-i="rowIndex">
+                                    <tr>
+                                        <td *ngFor="let col of columns">
+                                            {{part[col.field]}}
+                                        </td>
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="emptymessage" let-columns *ngIf="customerContacts.length == 0">
+                                    <tr>
+                                        <td [attr.colspan]="columns.length" style="color: red; font-weight: bold; text-align: center">
+                                            No records found
+                                        </td>
+                                    </tr>
+                                </ng-template>
+                                <!-- <ng-template pTemplate="summary" let-columns *ngIf="customerContacts.length > 0">
+                                    <label  class="footer">No'of records:</label>
+                                    <input style="width: 5%;"
+                                            [(ngModel)]="table3.totalRecords"
+                                            [disabled]="true"
+                                            pInputText
+                                            type="text" />                                            
+                                </ng-template> -->
+                            </p-table>
+                            <div class="total_records_section" *ngIf="customerContacts?.length > 0">
+                                <label  class="footer">No'of records: <input style="width: 5%;"
+                                    value="{{customerContacts?.length}}"
+                                    [disabled]="true"
+                                    pInputText
+                                    type="text" />  </label>                                            
+                            </div>  
                         </div>
                     </div>
                 </div>
@@ -348,51 +344,44 @@
                 <div class="panel-body">
                     <div class="col-sm-12">
                         <div class="shadow-Box">
-
-                            <table class="coustomTable" style="width:100%">
-                                <tr>
-                                    <th>Aircraft</th>
-                                    <th>Model</th>
-                                    <th>Dash Numbers</th>
-                                    <th>Inventory</th>
-                                    <th>Memo</th>
-                                </tr>
-                                <tr *ngFor="let data of aircraftListDataValues">
-                                    <td>{{data.aircraftType}}</td>
-                                    <td>{{data.aircraftModel}}</td>
-                                    <td>{{data.dashNumber}}</td>
-                                    <td>{{data.inventory}}</td>
-                                    <td>{{data.memo}}</td>
-                                    
-                                </tr>
-                            </table>
-
-                            <!-- <p-table class="rpo-table-cstm"
-                     [columns]="colsaircraftLD"
-                     [value]="aircraftListDataValues"
-                     [paginator]="true"
-                     [rows]="10"
-                     [first]="first">
-        <ng-template pTemplate="header" let-columns>
-            <tr>
-
-                <th style="padding: 8px 5px !important;" *ngFor="let col of columns">
-                    {{ col.header }}
-                </th>
-            </tr>
-        </ng-template>
-        <ng-template pTemplate="body"
-                     let-rowData
-                     let-columns="columns"
-                     let-rowIndex="rowIndex">
-            <tr>
-
-                <td *ngFor="let col of columns">
-                    {{ rowData[col.field] }}
-                </td>
-            </tr>
-        </ng-template>
-    </p-table> -->
+                            <p-table class="table-responsive ptable-cus-pma" [paginator]="aircraftListDataValues.length > 0" [value]="aircraftListDataValues"  [rows]="3" [columns]="colsaircraftLD">
+                                <ng-template pTemplate="header" let-columns>
+                                    <tr>
+                                        <th *ngFor="let col of columns">
+                                            {{col.header}}
+                                        </th>
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="body" let-part let-rowData let-columns="columns" let-i="rowIndex">
+                                    <tr>
+                                        <td *ngFor="let col of columns">
+                                            {{part[col.field]}}
+                                        </td>
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="emptymessage" let-columns *ngIf="aircraftListDataValues.length == 0">
+                                    <tr>
+                                        <td [attr.colspan]="columns.length" style="color: red; font-weight: bold; text-align: center">
+                                            No records found
+                                        </td>
+                                    </tr>
+                                </ng-template>
+                                <!-- <ng-template pTemplate="summary"  *ngIf="aircraftListDataValues.length > 0">
+                                    <label  class="footer">No'of records:</label>
+                                    <input style="width: 5%;"
+                                            [(ngModel)]="aircraftListDataValues.length"
+                                            [disabled]="true"
+                                            pInputText
+                                            type="text" />                                            
+                                </ng-template> -->
+                            </p-table>     
+                            <div class="total_records_section" *ngIf="aircraftListDataValues?.length > 0">
+                                <label  class="footer">No'of records: <input style="width: 5%;"
+                                    value="{{aircraftListDataValues?.length}}"
+                                    [disabled]="true"
+                                    pInputText
+                                    type="text" />  </label>                                            
+                            </div>                       
                         </div>
                     </div>
                 </div>
@@ -407,7 +396,45 @@
                 <div class="panel-body">
                     <div class="col-sm-12">
                         <div class="shadow-Box">
-                            <table class="coustomTable" style="width:100%">
+                            <p-table class="table-responsive ptable-cus-pma" [paginator]="ataListDataValues.length > 0" [value]="ataListDataValues"  [rows]="3" [columns]="ataHeaders">
+                                <ng-template pTemplate="header" let-columns>
+                                    <tr>
+                                        <th *ngFor="let col of columns">
+                                            {{col.header}}
+                                        </th>
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="body" let-part let-rowData let-columns="columns" let-i="rowIndex">
+                                    <tr>
+                                        <td *ngFor="let col of columns">
+                                            {{part[col.field]}}
+                                        </td>
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="emptymessage" let-columns *ngIf="ataListDataValues.length == 0">
+                                    <tr>
+                                        <td [attr.colspan]="columns.length" style="color: red; font-weight: bold; text-align: center">
+                                            No records found
+                                        </td>
+                                    </tr>
+                                </ng-template>
+                                <!-- <ng-template pTemplate="summary"  *ngIf="ataListDataValues.length > 0">
+                                    <label  class="footer">No'of records:</label>
+                                    <input style="width: 5%;"
+                                            [(ngModel)]="ataListDataValues.length"
+                                            [disabled]="true"
+                                            pInputText
+                                            type="text" />                                            
+                                </ng-template> -->
+                            </p-table> 
+                            <div class="total_records_section" *ngIf="ataListDataValues?.length > 0">
+                                <label  class="footer">No'of records: <input style="width: 5%;"
+                                    value="{{ataListDataValues?.length}}"
+                                    [disabled]="true"
+                                    pInputText
+                                    type="text" />  </label>                                            
+                            </div>  
+                            <!-- <table class="coustomTable" style="width:100%">
                                 <tr>
                                     <th>ATA Chapter</th>
                                     <th>ATA Sub-Chapter</th>
@@ -418,7 +445,7 @@
                             
 
                                 </tr>
-                            </table>
+                            </table> -->
 
                             <!--<p-table class="rpo-table-cstm"
              [columns]="ataHeaders"
@@ -461,13 +488,14 @@
                 <div class="panel-body">
                     <div class="col-sm-6">
                         <p><span class="label"><b>MarkUp %: </b></span><span class="value">{{viewDataGeneralInformation.markUpPercentage}}</span></p>
-                        <p><span class="label"><b>Credit Limit:: </b></span><span class="value">{{viewDataGeneralInformation.creditLimit}}</span></p>
-                        <p><span class="label"><b>Credit Terms: </b></span><span class="value">{{viewDataGeneralInformation.creditTermsName}}</span></p>
-                        <p><span class="label"><b>Allow Netting of AP/AR: </b></span><span class="value">{{viewDataGeneralInformation.allowNettingOfAPAR}}</span></p>
-                        <p><span class="label"><b>Allow Partial Billing: </b></span><span class="value">{{viewDataGeneralInformation.allowPartialBilling}}</span></p>
-                        <p><span class="label"><b>Allow ProForma Billing: </b></span><span class="value">{{viewDataGeneralInformation.allowProformaBilling}}</span></p>
+                        <p><span class="label"><b>Credit Limit: <span class="clr-red">*</span> </b></span><span class="value">{{viewDataGeneralInformation.creditLimit}}</span></p>
+                        <p><span class="label"><b>Credit Terms: <span class="clr-red">*</span></b></span><span class="value">{{viewDataGeneralInformation.creditTermsName}}</span></p>
+                        <p><span class="label"><b>Discount %: <span class="clr-red">*</span></b></span><span class="value">{{viewDataGeneralInformation.creditTermsName}}</span></p>
+                        <p><span class="label"><b>Allow Netting of AP/AR: </b></span><span class="value"><input type="checkbox" name="allowNettingOfAPAR" [(ngModel)]="viewDataGeneralInformation.allowNettingOfAPAR" disabled></span></p>
+                        <p><span class="label"><b>Allow Partial Billing: </b></span><span class="value"><input type="checkbox" name="allowPartialBilling" [(ngModel)]="viewDataGeneralInformation.allowPartialBilling" disabled></span></p>
+                        <p><span class="label"><b>Allow ProForma Billing: </b></span><span class="value"><input type="checkbox" name="allowProformaBilling" [(ngModel)]="viewDataGeneralInformation.allowProformaBilling" disabled></span></p>
 
-                        <p><span class="label"><b>Taxable Exempt: </b></span><span class="value">{{viewDataGeneralInformation.isTaxExempt}}</span></p>
+                        <p><span class="label"><b>Taxable Exempt: </b></span><span class="value"><input type="checkbox" name="isTaxExempt" [(ngModel)]="viewDataGeneralInformation.isTaxExempt" disabled></span></p>
                         <!--<p><span class="label"><b>Tax Type: </b></span><span class="value">{{viewDataGeneralInformation.taxTypeName}}</span></p>-->
 
 
@@ -475,12 +503,125 @@
                         <p><span class="label"><b>Tax Rate - Other: </b></span><span class="value">{{viewDataGeneralInformation.taxRateOther}}</span></p>
                     </div>
                     <div class="col-sm-6">
+                            <div >
+                                    <p><span class="label"><b>Taxable Exempt: </b></span><span class="value">{{viewDataGeneralInformation.isTaxExempt}}</span></p>
+                                    <div class="table-responsive table-overflow">
+                                        <p><span class="label"><b>Attachment Details: </b></span></p>
+                                        <p-table class="table-responsive ptable-cus-pma" [paginator]="allCustomerFinanceDocumentsList.length > 0" [value]="allCustomerFinanceDocumentsList"  [rows]="3" [columns]="allCustomerFinanceDocumentsListColumns">
+                                                <ng-template pTemplate="header" let-columns>
+                                                    <tr>
+                                                        <th *ngFor="let col of columns">
+                                                            {{col.header}}
+                                                        </th>
+                                                        <th>
+                                                           Download
+                                                        </th>
+                                                    </tr>
+                                                </ng-template>
+                                                <ng-template pTemplate="body" let-part let-rowData let-columns="columns" let-i="rowIndex">
+                                                    <tr>
+                                                        <td *ngFor="let col of columns">
+                                                            <ng-container *ngIf="col.field!='link'">
+                                                            {{part[col.field]}}
+                                                            </ng-container>
+                                                            
+                                                        </td>
+                                                        <td>
+                                                            <a (click)="downloadFileUpload(part)" matTooltip="Download" class="btn nobg btn-cstm"><span><i class="fa fa-download"></i></span></a>                                                                        
+                                                        </td>
+                                                    </tr>
+                                                </ng-template>
+                                                <ng-template pTemplate="emptymessage" let-columns *ngIf="allCustomerFinanceDocumentsList.length == 0">
+                                                    <tr>
+                                                        <td [attr.colspan]="columns.length" style="color: red; font-weight: bold; text-align: center">
+                                                            No records found
+                                                        </td>
+                                                    </tr>
+                                                </ng-template>
+                                                <!-- <ng-template pTemplate="summary"  *ngIf="allCustomerFinanceDocumentsList.length > 0">
+                                                    <label  class="footer">No'of records:</label>
+                                                    <input style="width: 5%;"
+                                                            [(ngModel)]="allCustomerFinanceDocumentsList.length"
+                                                            [disabled]="true"
+                                                            pInputText
+                                                            type="text" />                                            
+                                                </ng-template> -->
+                                            </p-table> 
+                                            <div class="total_records_section" *ngIf="allCustomerFinanceDocumentsList?.length > 0">
+                                                <label  class="footer">No'of records: <input style="width: 5%;"
+                                                    value="{{allCustomerFinanceDocumentsList?.length}}"
+                                                    [disabled]="true"
+                                                    pInputText
+                                                    type="text" />  </label>                                            
+                                            </div>  
+                                        <!-- <table class="table table-bordered ">
+                                            <thead>
+                                                <tr>
+                                                    <th>File Name</th>
+                                                    <th>Download</th>
+
+                                                </tr>
+                                            </thead>
+                                            <tbody *ngFor="let f of allCustomerFinanceDocumentsList">
+                                                <tr *ngIf="f.description == 'customerTaxExemptFile'">
+                                                    <td>{{f.fileName}}</td>
+                                                    <td><a (click)="downloadFileUpload(f)" matTooltip="Download" class="btn nobg btn-cstm"><span><i class="fa fa-download"></i></span></a> </td>
+
+                                                </tr>
+                                            </tbody>
+
+                                        </table> -->
+
+                                    </div>
+
+
+
+
+                                </div>
                         <!--<p><span class="label"><b>EDI: </b></span><span class="value">{{viewDataGeneralInformation.ediDescription}}</span></p>-->
                         <!--<p><span class="label"><b>Deferred PO: </b></span><span class="value">{{customerVfinanceiewFeilds.customerCode}}</span></p>
     <p><span class="label"><b>Deferred RO: </b></span><span class="value">{{customerViewFeilds.customerCode}}</span></p>-->
-                        <p><span class="label"><b>Currency: </b></span><span class="value">{{viewDataGeneralInformation.currency}}</span></p>
+                        <p><span class="label"><b>Currency: <span class="clr-red">*</span></b></span><span class="value">{{viewDataGeneralInformation.currency}}</span></p>
 
-                        <table class="coustomTable" style="width:100%">
+                        <p-table class="table-responsive ptable-cus-pma" [paginator]="taxTypeRateMapping.length > 0" [value]="taxTypeRateMapping"  [rows]="3" [columns]="taxTypeRateMappingColumns">
+                            <ng-template pTemplate="header" let-columns>
+                                <tr>
+                                    <th *ngFor="let col of columns">
+                                        {{col.header}}
+                                    </th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-part let-rowData let-columns="columns" let-i="rowIndex">
+                                <tr>
+                                    <td *ngFor="let col of columns">
+                                        {{part[col.field]}}
+                                    </td>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="emptymessage" let-columns *ngIf="taxTypeRateMapping.length == 0">
+                                <tr>
+                                    <td [attr.colspan]="columns.length" style="color: red; font-weight: bold; text-align: center">
+                                        No records found
+                                    </td>
+                                </tr>
+                            </ng-template>
+                            <!-- <ng-template pTemplate="summary"  *ngIf="taxTypeRateMapping.length > 0">
+                                <label  class="footer">No'of records:</label>
+                                <input style="width: 5%;"
+                                        [(ngModel)]="taxTypeRateMapping.length"
+                                        [disabled]="true"
+                                        pInputText
+                                        type="text" />                                            
+                            </ng-template> -->
+                        </p-table> 
+                        <div class="total_records_section" *ngIf="taxTypeRateMapping?.length > 0">
+                                <label  class="footer">No'of records: <input style="width: 5%;"
+                                    value="{{taxTypeRateMapping?.length}}"
+                                    [disabled]="true"
+                                    pInputText
+                                    type="text" />  </label>                                            
+                            </div>
+                        <!-- <table class="coustomTable" style="width:100%">
                             <tr>
                                 <th>TaxType</th>
                                 <th>TaxRate</th>
@@ -491,7 +632,7 @@
 
 
                             </tr>
-                        </table>
+                        </table> -->
 
 
                         <!--<p-table [value]="taxTypeRateMapping" [paginator]="true" [rows]="3" *ngIf="taxTypeRateMapping">
@@ -524,8 +665,48 @@
                 <div class="panel-body">
                     <div class="col-sm-12">
                         <div class="shadow-Box">
+                                <p><span class="label"><b>Currency: </b></span><span class="value">{{viewDataGeneralInformation.currency}}</span></p>
 
-                            <table class="coustomTable" style="width:100%">
+                                <p-table class="table-responsive ptable-cus-pma" [paginator]="billingInfoList?.length > 0" [value]="billingInfoList"  [rows]="3" [columns]="billingInfoTableHeaders">
+                                    <ng-template pTemplate="header" let-columns>
+                                        <tr>
+                                            <th *ngFor="let col of columns">
+                                                {{col.header}}
+                                            </th>
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="body" let-part let-rowData let-columns="columns" let-i="rowIndex">
+                                        <tr>
+                                            <td *ngFor="let col of columns">
+                                                {{part[col.field]}}
+                                            </td>
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="emptymessage" let-columns *ngIf="billingInfoList?.length == 0">
+                                        <tr>
+                                            <td [attr.colspan]="columns.length" style="color: red; font-weight: bold; text-align: center">
+                                                No records found
+                                            </td>
+                                        </tr>
+                                    </ng-template>
+                                    <!-- <ng-template pTemplate="summary"  *ngIf="billingInfoList?.length != 0">
+                                        <label  class="footer">No'of records:</label>
+                                        <input style="width: 5%;"
+                                                value="{{billingInfoList?.length}}"
+                                                [disabled]="true"
+                                                pInputText
+                                                type="text" />                                            
+                                    </ng-template> -->
+                                </p-table> 
+                                <div class="total_records_section" *ngIf="billingInfoList?.length > 0">
+                                        <label  class="footer">No'of records: <input style="width: 5%;"
+                                            value="{{billingInfoList?.length}}"
+                                            [disabled]="true"
+                                            pInputText
+                                            type="text" />  </label>                                            
+                                    </div>
+
+                            <!-- <table class="coustomTable" style="width:100%">
                                 <tr>
                                     <th>Site Name</th>
                                     <th>Address1</th>
@@ -544,7 +725,7 @@
                                     <td>{{data.postalCode}}</td>
                                     <td>{{data.countryName}}</td>
                                     </tr>
-                            </table>
+                            </table> -->
 
 
                             <!-- <p-table class="rpo-table-cstm"
@@ -589,8 +770,45 @@
                     <div class="col-sm-12">
                         <h4> Shipping Site Info List </h4>
                         <div class="shadow-Box">
-
-                            <table class="coustomTable" style="width:100%">
+                                <p-table class="table-responsive ptable-cus-pma" [paginator]="domesticShippingData?.length > 0" [value]="domesticShippingData"  [rows]="3" [columns]="domesticShippingHeaders">
+                                        <ng-template pTemplate="header" let-columns>
+                                            <tr>
+                                                <th *ngFor="let col of columns">
+                                                    {{col.header}}
+                                                </th>
+                                            </tr>
+                                        </ng-template>
+                                        <ng-template pTemplate="body" let-part let-rowData let-columns="columns" let-i="rowIndex">
+                                            <tr>
+                                                <td *ngFor="let col of columns">
+                                                    {{part[col.field]}}
+                                                </td>
+                                            </tr>
+                                        </ng-template>
+                                        <ng-template pTemplate="emptymessage" let-columns *ngIf="domesticShippingData?.length == 0">
+                                            <tr>
+                                                <td [attr.colspan]="columns.length" style="color: red; font-weight: bold; text-align: center">
+                                                    No records found
+                                                </td>
+                                            </tr>
+                                        </ng-template>
+                                        <!-- <ng-template pTemplate="summary"  *ngIf="domesticShippingData?.length != 0">
+                                            <label  class="footer">No'of records:</label>
+                                            <input style="width: 5%;"
+                                                    value="{{domesticShippingData?.length}}"
+                                                    [disabled]="true"
+                                                    pInputText
+                                                    type="text" />                                            
+                                        </ng-template> -->
+                                    </p-table> 
+                                    <div class="total_records_section" *ngIf="domesticShippingData?.length > 0">
+                                            <label  class="footer">No'of records: <input style="width: 5%;"
+                                                value="{{domesticShippingData?.length}}"
+                                                [disabled]="true"
+                                                pInputText
+                                                type="text" />  </label>                                            
+                                        </div>
+                            <!-- <table class="coustomTable" style="width:100%">
                                 <tr>
                                     <th>Site Name</th>
                                     <th>Address1</th>
@@ -609,7 +827,7 @@
                                     <td>{{data.postalCode}}</td>
                                     <td>{{data.countryName}}</td>
                                 </tr>
-                            </table>
+                            </table> -->
 
 
                             <!--<p-table class="rpo-table-cstm"
@@ -644,8 +862,46 @@
                     <div class="col-sm-12">
                         <h4> International Shipping Details </h4>
                         <div class="shadow-Box">
+                                <p-table class="table-responsive ptable-cus-pma" [paginator]="internationalShippingData.length > 0" [value]="internationalShippingData"  [rows]="3" [columns]="internationalShippingHeaders">
+                                        <ng-template pTemplate="header" let-columns>
+                                            <tr>
+                                                <th *ngFor="let col of columns">
+                                                    {{col.header}}
+                                                </th>
+                                            </tr>
+                                        </ng-template>
+                                        <ng-template pTemplate="body" let-part let-rowData let-columns="columns" let-i="rowIndex">
+                                            <tr>
+                                                <td *ngFor="let col of columns">
+                                                    {{part[col.field]}}
+                                                </td>
+                                            </tr>
+                                        </ng-template>
+                                        <ng-template pTemplate="emptymessage" let-columns *ngIf="internationalShippingData.length == 0">
+                                            <tr>
+                                                <td [attr.colspan]="columns.length" style="color: red; font-weight: bold; text-align: center">
+                                                    No records found
+                                                </td>
+                                            </tr>
+                                        </ng-template>
+                                        <!-- <ng-template pTemplate="summary"  *ngIf="internationalShippingData.length > 0">
+                                            <label  class="footer">No'of records:</label>
+                                            <input style="width: 5%;"
+                                                    [(ngModel)]="internationalShippingData.length"
+                                                    [disabled]="true"
+                                                    pInputText
+                                                    type="text" />                                            
+                                        </ng-template> -->
+                                    </p-table> 
+                                    <div class="total_records_section" *ngIf="internationalShippingData?.length > 0">
+                                            <label  class="footer">No'of records: <input style="width: 5%;"
+                                                value="{{internationalShippingData?.length}}"
+                                                [disabled]="true"
+                                                pInputText
+                                                type="text" />  </label>                                            
+                                        </div>
 
-                            <table class="coustomTable" style="width:100%">
+                            <!-- <table class="coustomTable" style="width:100%">
                                 <tr>
                                     <th>Export License</th>
                                     <th>Description</th>
@@ -662,7 +918,7 @@
                                     <td>{{data.expirationDate}}</td>
                                     <td>{{data.amount}}</td>
                                 </tr>
-                            </table>
+                            </table> -->
 
 
                             <!--  <p-table class="rpo-table-cstm"
@@ -705,7 +961,7 @@
             <div id="step8" class="panel-collapse collapse">
                 <div class="panel-body">
                     <div class="col-sm-10">
-                        <p><span class="label"><b>Primary Sales Person Name: </b></span><span class="value">{{viewDataGeneralInformation.primarySalesPersonFirstName}}</span></p>
+                        <p><span class="label"><b>Primary Sales Person Name:  <span class="clr-red">*</span></b></span><span class="value">{{viewDataGeneralInformation.primarySalesPersonFirstName}}</span></p>
                         <p><span class="label"><b>Secondary Sales Person Name: </b></span><span class="value">{{viewDataGeneralInformation.secondarySalesPersonName}}</span></p>
                         <p><span class="label"><b>CSR Name: </b></span><span class="value">{{viewDataGeneralInformation.csrName}}</span></p>
                         <p><span class="label"><b>Agent Name: </b></span><span class="value">{{viewDataGeneralInformation.agentName}}</span></p>
@@ -724,8 +980,45 @@
                 <div class="panel-body">
                     <div class="col-sm-12">
                         <div class="shadow-Box">
-
-                            <table class="coustomTable" style="width:100%">
+                                <p-table class="table-responsive ptable-cus-pma" [paginator]="waringInfoList.length > 0" [value]="waringInfoList"  [rows]="3" [columns]="warningHeaders">
+                                        <ng-template pTemplate="header" let-columns>
+                                            <tr>
+                                                <th *ngFor="let col of columns">
+                                                    {{col.header}}
+                                                </th>
+                                            </tr>
+                                        </ng-template>
+                                        <ng-template pTemplate="body" let-part let-rowData let-columns="columns" let-i="rowIndex">
+                                            <tr>
+                                                <td *ngFor="let col of columns">
+                                                    {{part[col.field]}}
+                                                </td>
+                                            </tr>
+                                        </ng-template>
+                                        <ng-template pTemplate="emptymessage" let-columns *ngIf="waringInfoList.length == 0">
+                                            <tr>
+                                                <td [attr.colspan]="columns.length" style="color: red; font-weight: bold; text-align: center">
+                                                    No records found
+                                                </td>
+                                            </tr>
+                                        </ng-template>
+                                        <!-- <ng-template pTemplate="summary"  *ngIf="waringInfoList.length > 0">
+                                            <label  class="footer">No'of records:</label>
+                                            <input style="width: 5%;"
+                                                    [(ngModel)]="waringInfoList.length"
+                                                    [disabled]="true"
+                                                    pInputText
+                                                    type="text" />                                            
+                                        </ng-template> -->
+                                    </p-table> 
+                                    <div class="total_records_section" *ngIf="waringInfoList?.length > 0">
+                                            <label  class="footer">No'of records: <input style="width: 5%;"
+                                                value="{{waringInfoList?.length}}"
+                                                [disabled]="true"
+                                                pInputText
+                                                type="text" />  </label>                                            
+                                        </div>
+                            <!-- <table class="coustomTable" style="width:100%">
                                 <tr>
                                     <th>Module</th>
                                     <th>Warning Message</th>
@@ -736,7 +1029,7 @@
                                     <td>{{data.warningMessage}}</td>
                                     <td>{{data.restrictMessage}}</td>    
                                 </tr>
-                            </table>
+                            </table> -->
 
 
                             <!--  <p-table class="rpo-table-cstm"
@@ -778,8 +1071,45 @@
                 <div class="panel-body">
                     <div class="col-sm-12">
                         <div class="shadow-Box">
-
-                            <table class="coustomTable" style="width:100%">
+                                <p-table class="table-responsive ptable-cus-pma" [paginator]="DocumentsList.length > 0" [value]="DocumentsList"  [rows]="3" [columns]="customerDocumentsColumns">
+                                        <ng-template pTemplate="header" let-columns>
+                                            <tr>
+                                                <th *ngFor="let col of columns">
+                                                    {{col.header}}
+                                                </th>
+                                            </tr>
+                                        </ng-template>
+                                        <ng-template pTemplate="body" let-part let-rowData let-columns="columns" let-i="rowIndex">
+                                            <tr>
+                                                <td *ngFor="let col of columns">
+                                                    {{part[col.field]}}
+                                                </td>
+                                            </tr>
+                                        </ng-template>
+                                        <ng-template pTemplate="emptymessage" let-columns *ngIf="DocumentsList.length == 0">
+                                            <tr>
+                                                <td [attr.colspan]="columns.length" style="color: red; font-weight: bold; text-align: center">
+                                                    No records found
+                                                </td>
+                                            </tr>
+                                        </ng-template>
+                                        <!-- <ng-template pTemplate="summary"  *ngIf="DocumentsList.length != 0">
+                                            <label  class="footer">No'of records:</label>
+                                            <input style="width: 5%;"
+                                                    value="{{DocumentsList?.length}}"
+                                                    [disabled]="true"
+                                                    pInputText
+                                                    type="text" />                                            
+                                        </ng-template> -->
+                                    </p-table>
+                                    <div class="total_records_section" *ngIf="DocumentsList?.length > 0">
+                                            <label  class="footer">No'of records: <input style="width: 5%;"
+                                                value="{{DocumentsList?.length}}"
+                                                [disabled]="true"
+                                                pInputText
+                                                type="text" />  </label>                                            
+                                        </div> 
+                            <!-- <table class="coustomTable" style="width:100%">
                                 <tr>
                                     <th>Name</th>
                                     <th>Description</th>
@@ -792,7 +1122,7 @@
                                     <td>{{data.documents}}</td>
                                     <td>{{data.docMemo}}</td>
                                 </tr>
-                            </table>
+                            </table> -->
 
 
                             <!--<p-table class="rpo-table-cstm"
@@ -830,7 +1160,7 @@
     </div>
 </div>
 <div class="modal-footer">
-    <button type="button" class="btn btn-default" (click)="dismissModel()">
+    <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">
         Close
     </button>
 </div>

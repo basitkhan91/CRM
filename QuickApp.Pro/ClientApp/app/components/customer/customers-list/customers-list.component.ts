@@ -414,7 +414,7 @@ export class CustomersListComponent implements OnInit {
         this.commonService.getRestrictedPartsWithDesc(1, customerId, 'PMA').subscribe(res => {
 
             this.restrictedPMAParts = res;
-
+            console.log(this.restrictedPMAParts, "this.restrictedPMAParts++++")
 
         })
     }

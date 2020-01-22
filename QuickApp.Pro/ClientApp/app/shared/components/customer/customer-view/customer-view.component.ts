@@ -4,6 +4,7 @@ import { CustomerService } from '../../../../services/customer.service';
 import { CommonService } from '../../../../services/common.service';
 import { NgbModal, NgbActiveModal, NgbModalRef, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import * as $ from 'jquery';
+import { ConfigurationService } from '../../../../services/configuration.service';
 
 
 
@@ -17,10 +18,16 @@ import * as $ from 'jquery';
 export class CustomerViewComponent implements OnInit {
 
     @Input() customerId;
-    viewDataGeneralInformation: any[];
+    viewDataGeneralInformation: any = {};
     viewDataclassification: any[];
-    customerContacts: any[];
+    customerContacts: any = [];
     customerContactsColumns: any[];
+    restrictHeaders = [
+        { field: 'partNumber', header: 'PN' },
+        { field: 'partDescription', header: 'Description' },
+        { field: 'manufacturerName', header: 'Manufacturer' },
+
+    ];
     colsaircraftLD: any = [
         { field: "aircraftType", header: "Aircraft" },
         { field: "aircraftModel", header: "Model" },
@@ -78,27 +85,51 @@ export class CustomerViewComponent implements OnInit {
     ];
     customerPMAColumns = [
         { field: 'partNumber', header: 'Part Number' },
-        { field: 'memo', header: 'Memo' },
+        { field: 'partDescription', header: 'Description' },
+        {field:'manufacturerName',header:'Manufacturer'}
     ];
     customerDERColumns = [
         { field: 'partNumber', header: 'Part Number' },
-        { field: 'memo', header: 'Memo' },
+        { field: 'partDescription', header: 'Description' },
+        {field:'manufacturerName',header:'Manufacturer'}
     ];
-    aircraftListDataValues: any[];
-    ataListDataValues: any;
+    contactTableColumns =[
+        { field: 'tag', header: 'Tag' },
+        { field: 'firstName', header: 'First Name' },
+        { field: 'lastName', header: 'Last Name' },
+        { field: 'contactTitle', header: 'Contact Title' },
+        { field: 'email', header: 'Email' },
+        { field: 'workPhone', header: 'Work Phone' },
+        { field: 'mobilePhone', header: 'Mobile Phone' },
+        { field: 'fax', header: 'Fax' },
+
+    ]
+    taxTypeRateMappingColumns =[
+        { field: 'taxType', header: 'Tax Type' },
+        { field: 'taxRate', header: 'Tax Rate' }
+    ]
+    allCustomerFinanceDocumentsListColumns = [
+        { field: 'fileName', header: 'File Name' },
+    ]
+    aircraftListDataValues: any = [];
+    ataListDataValues: any = [];
     billingInfoList: any;
-    waringInfoList: any;
-    DocumentsList: any;
-    domesticShippingData: any[];
-    internationalShippingData: any;
+    waringInfoList: any = [];
+    DocumentsList: any = [];
+    domesticShippingData: any;
+    internationalShippingData: any = [];
 
     filterKeysByValue: object = {};
-    taxTypeRateMapping: any;
-    restrictedPMAParts: any ;
-    restrictedDERParts: any;
+    taxTypeRateMapping: any = [];
+    restrictedPMAParts: any = [];
+    restrictedDERParts: any = [];
     disableRestrictedPMA: boolean = false;
     classificationIds: any[];
-    constructor(public customerService: CustomerService, private commonService: CommonService, private activeModal: NgbActiveModal, ) {
+    viewDataIntegration: any;
+    allCustomerFinanceDocumentsList: any = [];
+    countOfRestrictDerParts: any = 0;
+    countOfRestrictPMAParts: any = 0;
+    constructor(public customerService: CustomerService, private commonService: CommonService, private activeModal: NgbActiveModal, private configurations: ConfigurationService) {
 
 
     }
@@ -130,6 +161,8 @@ export class CustomerViewComponent implements OnInit {
             this.getCustomerRestrictedPMAByCustomerId(customerId);
             this.getCustomerRestrictedDERByCustomerId(customerId);
             this.getCustomerClassificationByCustomerId(customerId);
+            this.getCustomerIntegrationTypesByCustomerId(customerId);
+            this.toGetCustomerFinanceDocumentsList(customerId)
             this.viewDataGeneralInformation = res[0];
            
 
@@ -142,7 +175,7 @@ export class CustomerViewComponent implements OnInit {
       getAllCustomerContact(customerId) {
         // get Customer Contatcs 
          this.customerService.getContacts(customerId).subscribe(res => {
-            this.customerContacts = res[0];
+            this.customerContacts = res[0] || [];
             console.log("resresresres:", res)
             console.log("this.customerContacts:", this.customerContacts);
         })
@@ -151,21 +184,21 @@ export class CustomerViewComponent implements OnInit {
     getAircraftMappedDataByCustomerId(customerId) {
         // const id = this.savedGeneralInformationData.customerId;
          this.customerService.getMappedAirCraftDetails(customerId).subscribe(res => {
-             this.aircraftListDataValues = res;;
+             this.aircraftListDataValues = res || [];
              console.log("this.aircraftListDataValues:", res)
         })
     }
     async getMappedATAByCustomerId(customerId) {
         // const id = this.savedGeneralInformationData.customerId;
         await this.customerService.getATAMappedByCustomerId(customerId).subscribe(res => {
-            this.ataListDataValues = res;
+            this.ataListDataValues = res || [];
             console.log(res);;
             console.log("this.ataListDataValues:", res)
         })
     }
     async getBillingDataById(customerId) {
         await this.customerService.getCustomerBillViaDetails(customerId).subscribe(res => {
-            this.billingInfoList = res[0]
+            this.billingInfoList = res[0] || []
         })
     }
 
@@ -175,7 +208,7 @@ export class CustomerViewComponent implements OnInit {
         // const id = this.savedGeneralInformationData.customerId;
         await this.customerService.getCustomerShipAddressGet(customerId).subscribe(res => {
             console.log(res);
-            this.domesticShippingData = res[0];
+            this.domesticShippingData = res[0] || [];
         })
     }
 
@@ -185,7 +218,7 @@ export class CustomerViewComponent implements OnInit {
 
         await this.customerService.getInternationalShippingByCustomerId(customerId, 0, 20).subscribe(res => {
             console.log(res);
-            this.internationalShippingData = res.paginationList;
+            this.internationalShippingData = res.paginationList || [];
             // this.totalRecordsForInternationalShipping = res.totalRecordsCount;
         })
 
@@ -202,7 +235,7 @@ export class CustomerViewComponent implements OnInit {
                     warningMessage: `${x.t.warningMessage == null ? '' : x.t.warningMessage}`,
                     restrictMessage: `${x.t.restrictMessage == null ? '' : x.t.restrictMessage}`
                 };
-            });
+            }) || [];
 
 
         })
@@ -211,34 +244,33 @@ export class CustomerViewComponent implements OnInit {
     async getCustomerDocumentsByCustomerId(customerId) {
 
         await this.customerService.getDocumentList(customerId).subscribe(res => {
-            this.DocumentsList = res;
+            this.DocumentsList = res || [];
         })
     }
 
     async getMappedTaxTypeRateDetails(customerId) {
 
         await this.customerService.getMappedTaxTypeRateDetails(customerId).subscribe(res => {
-            this.taxTypeRateMapping = res;
+            this.taxTypeRateMapping = res || [];
 
         })
     }
 
-    async getCustomerRestrictedPMAByCustomerId(customerId) {
+     getCustomerRestrictedPMAByCustomerId(customerId) {
 
-        await this.commonService.getRestrictedParts(1, customerId, 'PMA').subscribe(res => {
-
-            this.restrictedPMAParts = res;
-
-
+         this.commonService.getRestrictedPartsWithDesc(1, customerId, 'PMA').subscribe(res => {
+            console.log(res, "pma parts +++++")
+            this.restrictedPMAParts = res || [];
+            
         })
     }
 
 
-    async getCustomerRestrictedDERByCustomerId(customerId) {
+     getCustomerRestrictedDERByCustomerId(customerId) {
 
-        await this.commonService.getRestrictedParts(1, customerId, 'DER').subscribe(res => {
+         this.commonService.getRestrictedPartsWithDesc(1, customerId, 'DER').subscribe(res => {
 
-            this.restrictedDERParts = res;
+            this.restrictedDERParts = res || [];
 
 
         })
@@ -251,6 +283,24 @@ export class CustomerViewComponent implements OnInit {
 
             // console.log(this.generalInformation.customerClassificationIds);
         });
+    }
+
+    getCustomerIntegrationTypesByCustomerId(customerId) {       
+        this.commonService.getIntegrationMapping(customerId, 1).subscribe(res => {
+            this.viewDataIntegration = res.map(x => x.description);
+       });
+    }
+    toGetCustomerFinanceDocumentsList(customerId) {
+        var moduleId = 1;
+        this.customerService.GetCustomerFinanceDocumentsList(customerId, moduleId).subscribe(res => {
+            this.allCustomerFinanceDocumentsList = res;
+            
+        })
+    }
+    downloadFileUpload(rowData) {
+
+        const url = `${this.configurations.baseUrl}/api/FileUpload/downloadattachedfile?filePath=${rowData.link}`;
+        window.location.assign(url);
     }
     dismissModel() {
         //this.isDeleteMode = false;

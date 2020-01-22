@@ -108,7 +108,7 @@
                 </tr>
             </ng-template>
             <ng-template pTemplate="body" let-rowData let-columns="columns">
-                <tr [pSelectableRowDblClick]="rowData" [pSelectableRow]="rowData" pReorderableRowHandle (dblclick)="viewSelectedRowdbl(viewdbl,rowData)">
+                <tr [pSelectableRowDblClick]="rowData" [pSelectableRow]="rowData" pReorderableRowHandle (dblclick)="viewSelectedRow(rowData)">
                     <td style="width:auto"
                         *ngFor="let col of columns"
                         class="ui-resizable-column"
@@ -126,7 +126,7 @@
                             <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="changeStatus(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
                             <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="changeStatus(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
                             <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="changeStatus(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
-                            <span><a class="btn nobg" (click)="viewSelectedRowdbl(viewdbl,rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
+                            <span><a class="btn nobg" (click)="viewSelectedRow(rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
                             <span><a class="btn nobg" (click)="edit(rowData)" matTooltip="Edit"><i class="fa fa-pencil"></i></a> </span>
                             <span><a class="btn nobg" (click)="openContactList(contentcontact,rowData)" matTooltip="Contacts"><i class="fa fa-users"></i></a> </span>
                             <span data-toggle="modal" data-target="#delete"><a class="btn nobg" (click)="delete(content1,rowData)" matTooltip="Delete"><i class="fa fa-trash"></i></a> </span>
