@@ -290,8 +290,20 @@ namespace DAL.Repositories
                                  } : null
                              }
                          }).ToList();
-      
+
             return parts;
+        }
+
+        private int GetStockLineCount(long repairOrderId, long RepairOrderPartRecordId)
+        {
+            var stocklines = _appContext.StockLine.Where(x => x.RepairOrderId == repairOrderId && x.RepairOrderPartRecordId == RepairOrderPartRecordId).ToList();
+            var stocklinesDrafted = _appContext.StockLineDraft.Where(x => x.RepairOrderId == repairOrderId && x.RepairOrderPartRecordId == RepairOrderPartRecordId).ToList();
+            if ((stocklines != null && stocklines.Count > 0) || (stocklinesDrafted != null && stocklinesDrafted.Count > 0))
+            {
+                return (int)stocklines.Sum(x => x.Quantity) + (int)stocklinesDrafted.Sum(x => x.Quantity);
+            }
+
+            return 0;
         }
 
         public object GetReceivingRepairOrderForEdit(long repairOrderId)
@@ -318,7 +330,7 @@ namespace DAL.Repositories
                              PartDescription = itm.PartDescription,
                              QuantityToRepair = part.QuantityOrdered,
                              DiscountPerUnit = part.DiscountPerUnit,
-                             StockLineCount = _appContext.StockLineDraft.Count(x => x.RepairOrderId == repairOrderId && x.RepairOrderPartRecordId == part.RepairOrderPartRecordId),
+                             StockLineCount = GetStockLineCount(repairOrderId, part.RepairOrderPartRecordId),
                              RoPartSplitUserName = emp != null ? emp.FirstName + " " + emp.LastName : "",
                              UomText = uom != null ? uom.ShortName : "",
                              StockLine = _appContext.StockLineDraft.Where(x => x.RepairOrderId == repairOrderId && x.RepairOrderPartRecordId == part.RepairOrderPartRecordId).Select(SL => new
