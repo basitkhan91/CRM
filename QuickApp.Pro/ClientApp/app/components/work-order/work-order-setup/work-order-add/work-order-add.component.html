@@ -227,7 +227,7 @@
                                             <div class="form-group ">
                                                 <label for="customercontact">
                                                     CSR
-                                                    <span class="clr-red">*</span>
+   
                                                 </label>
                                                 <!-- <input type="text" class="form-control wo-input" [(ngModel)]="workOrderGeneralInformation.csr" name="csr" #csr="ngModel" required /> -->
 
@@ -241,7 +241,7 @@
                                                 (completeMethod)="filterCsr($event)"
                                                 (onClear)="clearautoCompleteInput(workOrderGeneralInformation, 'csr' )"
                                                 [size]="30" [minLength]="1"
-                                                [dropdown]="true" class="p-autoComplete-ctsm" required>
+                                                [dropdown]="true" class="p-autoComplete-ctsm" >
                                             </p-autoComplete>
                                                 <!-- <div *ngIf="csr.invalid && (csr.dirty || csr.touched)" class="alert alert-danger alert-danger-cstm">
                                                     <div *ngIf="csr.errors.required">
@@ -286,7 +286,7 @@
                                             <div class="form-group ">
                                                 <label for="employee" style="margin-top: 10px;">
                                                     Employee
-                                                    <span class="clr-red">*</span>
+                                               
                                                 </label>
 
                                                 <p-autoComplete field="label" [(ngModel)]="workOrderGeneralInformation.employeeId"
@@ -299,19 +299,19 @@
                                                                 (completeMethod)="filterEmployee($event)"
                                                                 (onClear)="clearautoCompleteInput(workOrderGeneralInformation, 'employeeId' )"
                                                                 [size]="30" [minLength]="1"
-                                                                [dropdown]="true" class="p-autoComplete-ctsm" required>
+                                                                [dropdown]="true" class="p-autoComplete-ctsm" >
                                                 </p-autoComplete>
-                                                <div *ngIf="employees.invalid && (employees.dirty || employees.touched)" class="alert alert-danger alert-danger-cstm">
+                                                <!-- <div *ngIf="employees.invalid && (employees.dirty || employees.touched)" class="alert alert-danger alert-danger-cstm">
                                                     <div *ngIf="employees.errors.required">
                                                         <small> Employee  is required </small>
                                                     </div>
-                                                </div>
+                                                </div> -->
                                             </div>
                                             <div class="form-group ">
 
                                                 <label for="employee">
                                                     Salesperson
-                                                    <span class="clr-red">*</span>
+                                                   
                                                 </label>
 
                                                 <p-autoComplete field="label" [(ngModel)]="workOrderGeneralInformation.salesPersonId"
@@ -329,11 +329,11 @@
 
 
                                                 </p-autoComplete>
-                                                <div *ngIf="salesPerson.invalid && (salesPerson.dirty || salesPerson.touched)" class="alert alert-danger alert-danger-cstm">
+                                                <!-- <div *ngIf="salesPerson.invalid && (salesPerson.dirty || salesPerson.touched)" class="alert alert-danger alert-danger-cstm">
                                                     <div *ngIf="salesPerson.errors.required">
                                                         <small> SalesPerson  is required </small>
                                                     </div>
-                                                </div>
+                                                </div> -->
                                             </div>
                                         </div>
                                         <div class="col-md-3">
