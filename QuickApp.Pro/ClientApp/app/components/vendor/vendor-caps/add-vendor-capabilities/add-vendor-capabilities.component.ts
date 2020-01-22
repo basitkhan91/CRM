@@ -1314,7 +1314,7 @@ export class AddVendorCapabilitiesComponent implements OnInit{
                 this.dashNumberList = responseData.map(dashnumbers => {
 
                     return {
-                        label: dashnumbers.modelName +' - ' + dashnumbers.dashNumber,
+                        label: dashnumbers.dashNumber,
                         value: dashnumbers.dashNumberId
                     };
                 });
@@ -1412,7 +1412,7 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 			const responseData = dashnumbers;			
             this.loadDashnumber = responseData.map(dashnumbers => {
                 return {
-                    label: dashnumbers.modelName + ' - ' +dashnumbers.dashNumber,
+                    label: dashnumbers.dashNumber,
                     value: dashnumbers.dashNumberId
                 }
             });

@@ -43,6 +43,7 @@
           <label class="fs12" style="width: 100%;">Aircraft </label>
           <p-dropdown
             [options]="manufacturerData"
+            placeholder="Select"
             name="searchAircraft"
             class="p-dropdown-cus-aircraft"
             [(ngModel)]="selectAircraftManfacturer"
@@ -88,7 +89,7 @@
       <div class="col-md-1">
         <div class="form-group">
           <button
-            class="btn btn-primary-sm mtop20"
+            class="btn btn-primary mtop20"
             (click)="searchAircraftInformation()"
                    matTooltip="Search"
           >

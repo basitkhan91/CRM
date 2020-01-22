@@ -56,7 +56,7 @@ export class CustomerShippingInformationComponent implements OnInit {
         { field: 'isPrimary', header: 'Is Primary' },
 
         { field: 'city', header: 'City' },
-        { field: 'stateOrProvince', header: 'State Or Province' },
+        { field: 'stateOrProvince', header: 'State/Provision' },
         { field: 'postalCode', header: 'Postal Code' },
         { field: 'countryName', header: 'Country' }
     ]
@@ -91,6 +91,14 @@ export class CustomerShippingInformationComponent implements OnInit {
     editableRowIndexForIS: any;
     id: number;
     modal: NgbModalRef;
+    totalRecords: any;
+    pageIndex: number = 0;
+    pageSize: number = 10;
+    totalPages: number;
+    totalRecordsInter: any;
+    totalPagesInter: number;
+    totalRecordsShipVia: any;
+    totalPagesShipVia: number;
     // selectedShipVia: any;
     selectedColumnsForInternationShipViaTable = [
         { field: 'shipVia', header: 'Ship Via' },
@@ -142,8 +150,8 @@ export class CustomerShippingInformationComponent implements OnInit {
             if (property == 'selectedCustomerTab') {
 				if(changes[property].currentValue == "Shipping"){
                     this.getDomesticShippingByCustomerId()
-                    this.getInternationalShippingByCustomerId()
-                    this.getShipViaDataByInternationalShippingId()
+    //                this.getInternationalShippingByCustomerId()
+    //                this.getShipViaDataByInternationalShippingId()
 				}
 			 }
 		} 
@@ -213,6 +221,14 @@ export class CustomerShippingInformationComponent implements OnInit {
             console.log(res);
             
             this.domesticShippingData = res[0];
+
+
+            if (res.length > 0) {
+                this.totalRecords = this.domesticShippingData.length;
+                this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+            }
+
+
         })
     }
     // View Details  data
@@ -512,6 +528,7 @@ export class CustomerShippingInformationComponent implements OnInit {
             console.log(res);
             this.internationalShippingData = res.paginationList;
             this.totalRecordsForInternationalShipping = res.totalRecordsCount;
+         
         })
 
 
@@ -710,6 +727,10 @@ export class CustomerShippingInformationComponent implements OnInit {
           
 
             this.demosticShippingViaData = res;
+            if (this.demosticShippingViaData.length > 0) {
+                this.totalRecordsShipVia = this.demosticShippingViaData.length;
+                this.totalPagesShipVia = Math.ceil(this.totalRecords / this.pageSize);
+            }
         })
     }
 

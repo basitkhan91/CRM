@@ -3097,6 +3097,10 @@ input.parsley-error, select.parsley-error, textarea.parsley-error {
     border-radius: 5px !important;
     background-color: #337ab7 !important
 }
+.btn-success{
+    border-radius: 5px !important;
+    background-color: green !important
+}
 
 .btn-danger {
     border-radius: 5px !important;
@@ -8546,7 +8550,7 @@ button.multiselect {
 }
 
 .row-primary, .row-primary td {
-    background-color: #79ffe3 !important;
+    background-color: #eaf2fd !important; //79ffe3
 }
 
 .search-wauto-block {
@@ -12672,13 +12676,13 @@ body .ui-table .ui-table-tbody > tr > td a.btn {
     padding: 6px 12px !important;
 }
 
-.btn-success-cstm {
-    color: #fff !important;
-    background-color: green !important;
-    border-color: #2e6da4;
-    border-radius: 4px !important;
-    padding: 6px 12px !important;
-}
+// .btn-success {
+//     color: #fff !important;
+//     background-color: green !important;
+//     border-color: #2e6da4;
+//     border-radius: 4px !important;
+//     padding: 6px 12px !important;
+// }
 
 
 .ui-button-icon-left {
@@ -13841,6 +13845,9 @@ p-autocomplete .ui-autocomplete input.ui-inputtext {
 
 .p-table-cstm .ui-table .ui-table-tbody > tr > td, .rpo-table-cstm .ui-table .ui-table-tbody > tr > td, .wf-table-cstm .ui-table .ui-table-tbody > tr > td, .ptable-custom .ui-table .ui-table-tbody > tr > td {
     padding: 5px 2px !important; //4px 2px
+}
+.ptable-cus-pma .ui-table .ui-table-tbody > tr {
+    background-color: #fff !important 
 }
 
 .p-table-cstm .ui-table .ui-table-tbody > tr.ui-state-highlight,

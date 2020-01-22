@@ -75,7 +75,7 @@ namespace DAL.Repositories.Interfaces
         bool DeleteVendorAircraft(long id, string updatedBy);
         IEnumerable<object> GetVendorsCheckAuditHistory(long id);
 
-        IEnumerable<object> searchItemAircraftMappingDataByMultiTypeIdModelIDDashID(long VendorCapabilityId, string AircraftTypeId, string AircraftModelId, string DashNumberId);
+        IEnumerable<object> searchItemAircraftMappingDataByMultiTypeIdModelIDDashID(long VendorCapabilityId, string AircraftTypeId, string AircraftModelId, string DashNumberId, string memo);
 
     }
 }
