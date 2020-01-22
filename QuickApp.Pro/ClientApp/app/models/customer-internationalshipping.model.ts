@@ -3,11 +3,11 @@ export class CustomerInternationalShippingModel {
     constructor() {
 
         this.exportLicense = "";
-        this.startDate = new Date();
+        this.startDate = undefined;
         this.amount = null;
         this.isPrimary = false;
         this.description = "";
-        this.expirationDate = new Date();
+        this.expirationDate = undefined;
         this.shipToCountryId = null;
 
 

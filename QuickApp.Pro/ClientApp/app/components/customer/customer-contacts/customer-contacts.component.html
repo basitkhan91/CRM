@@ -230,7 +230,7 @@
                             <div class="form-group">
                                 <label>Prefix</label>
                                 <select name="preifx" [(ngModel)]="contactInformation.prefix">
-                                    <option value="None selected">None selected</option>
+                                    <option value="" selected>None selected</option>
                                     <option value="Dr.">Dr.</option>
                                     <option value="Mr.">Mr.</option>
                                     <option value="Mrs.">Mrs.</option>
@@ -335,7 +335,7 @@
 
                             <div class="form-group">
                                 <label>Memo</label>
-                                   <textarea name="notes" [(ngModel)]="contactInformation.notes" placeholder="Tool Bar"></textarea>
+                                   <textarea name="notes" [(ngModel)]="contactInformation.notes"></textarea>
                             </div>
 
                             <div class="form-group">

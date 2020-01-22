@@ -166,7 +166,7 @@ export class CustomerContactsComponent implements OnInit {
 		this.middleNamesList = [...this.contactsListOriginal.filter(x => {
 
 			if (x.middleName !== null && x.middleName !== "") {
-				return x.middleName.toLowerCase().indexOf(event.query.toLowerCase())
+                return x.middleName.toLowerCase().includes(event.query.toLowerCase())
 			}
 
 		})]
