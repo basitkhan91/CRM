@@ -54,7 +54,7 @@
                                 <i class="fa fa-search"></i>
                                 <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Filter" style="height: 28px !important;">
                             </div>
-                            <button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" iconPos="left" label="Export All Data" matTooltip="Download  Data" matTooltipPosition="above" (click)="dt.exportCSV()" style="padding: 5px 10px !important;"></button>
+                            <button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" iconPos="left" label="Export  Data" matTooltip="Download  Data" matTooltipPosition="above" (click)="dt.exportCSV()" style="padding: 5px 10px !important;"></button>
                             <button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" iconPos="left" label="Export Selected Data" matTooltip="Download Selected Data" matTooltipPosition="above" (click)="dt.exportCSV({selectionOnly:true})" style="padding: 5px 10px !important;"></button>
                             <!--<div class="excel-upload excel-upload-cstm">
     <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
@@ -230,7 +230,7 @@
                             <div class="form-group">
                                 <label>Prefix</label>
                                 <select name="preifx" [(ngModel)]="contactInformation.prefix">
-                                    <option value="None selected">None selected</option>
+                                    <option value="" selected>None selected</option>
                                     <option value="Dr.">Dr.</option>
                                     <option value="Mr.">Mr.</option>
                                     <option value="Mrs.">Mrs.</option>
@@ -335,7 +335,7 @@
 
                             <div class="form-group">
                                 <label>Memo</label>
-                                   <textarea name="notes" [(ngModel)]="contactInformation.notes" placeholder="Tool Bar"></textarea>
+                                   <textarea name="notes" [(ngModel)]="contactInformation.notes"></textarea>
                             </div>
 
                             <div class="form-group">

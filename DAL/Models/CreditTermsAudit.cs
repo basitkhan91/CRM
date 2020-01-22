@@ -8,7 +8,7 @@ namespace DAL.Models
     public class CreditTermsAudit:PasBase
     {
         [Key]
-        public Int16 CreditTermsAuditId { get; set; }
+        public long CreditTermsAuditId { get; set; }
 
         public Int16 CreditTermsId { get; set; }
 

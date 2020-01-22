@@ -438,7 +438,7 @@
             <div class="form-group">
                 <label for="description" class="control-label">Memo</label>
                 <div class="control-data">
-                    <input #memo="ngModel" placeholder="Tool Bar" id="memo" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.memo" minlength="2">
+                    <input #memo="ngModel"  id="memo" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.memo" minlength="2">
                     <div *ngIf="memo.dirty && memo.errors?.required && memo.errors" class="invalid-form-error-message">
                         Memo required.
                     </div>
@@ -592,7 +592,7 @@
 
                     <div class="form-group">
                         <label>Memo</label>
-                        <input class="form-control" [(ngModel)]="addNewIntergation.memo" name="memo" placeholder="Tool Bar">
+                        <input class="form-control" [(ngModel)]="addNewIntergation.memo" name="memo">
                     </div>
 
                     <div class="form-group">
