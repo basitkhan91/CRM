@@ -37,6 +37,14 @@ namespace QuickApp.Pro.Controllers
                return Ok(Mapper.Map<IEnumerable<IntegrationViewModel>>(allIntegrationinfo));
 
             }
+        [HttpGet("GetAll")]
+        [Produces(typeof(List<IntegrationViewModel>))]
+        public IActionResult GetAll()
+        {
+            var allIntegrationinfo = _unitOfWork.Integration.getIntegrationAllData(); //.GetAllCustomersData();
+            return Ok(Mapper.Map<IEnumerable<IntegrationViewModel>>(allIntegrationinfo));
+
+        }
         /// <summary>
         /// Method that gets basic info namely id and name only
         /// </summary>
