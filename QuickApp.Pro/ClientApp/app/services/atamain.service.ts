@@ -41,7 +41,10 @@ export class AtaMainService {
     return Observable.forkJoin(
       this.ataMainEndpoint.getATAMainEndpoint<ATAChapter[]>());
   }
-
+    getAllAtaMainList() {
+        return Observable.forkJoin(
+            this.ataMainEndpoint.getAllATAMainEndpoint<ATAChapter[]>());
+    }
   newATAMain(ataMain) {
     return this.ataMainEndpoint.getNewATAMainEndpoint<ATAChapter>(ataMain);
   }

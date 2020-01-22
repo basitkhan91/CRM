@@ -82,6 +82,7 @@ namespace QuickApp.Pro.Controllers
                 Customerclassbjobject.Memo = customerClassificationViewModel.Memo;
                 Customerclassbjobject.CreatedDate = DateTime.Now;
                 Customerclassbjobject.UpdatedDate = DateTime.Now;
+                Customerclassbjobject.IsDeleted = customerClassificationViewModel.IsDeleted;
                 Customerclassbjobject.CreatedBy = customerClassificationViewModel.CreatedBy;
                 Customerclassbjobject.UpdatedBy = customerClassificationViewModel.UpdatedBy;
                 _unitOfWork.CustomerClassifications.Add(Customerclassbjobject);

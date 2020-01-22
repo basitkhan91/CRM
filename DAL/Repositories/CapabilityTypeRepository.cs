@@ -92,7 +92,7 @@ namespace DAL.Repositories
         {
             var resultData = (from cty in _appContext.CapabilityTypeAudit
                               where cty.CapabilityTypeId == capabilityTypeId
-                              select cty).ToList();
+                              select cty).OrderByDescending(cty => cty.UpdatedDate).ToList();
             return resultData;
 
         }

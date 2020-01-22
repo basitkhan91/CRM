@@ -110,6 +110,9 @@ export class WorkOrderQuoteService {
     getWorkOrderQuoteData(workOrderQuoteId) {
         return this.quoteEndPointService.getWorkOrderQuoteData(workOrderQuoteId);
     }
+    getSavedQuoteDetails(wfwoid){
+        return this.quoteEndPointService.getSavedQuoteDetails(wfwoid);
+    }
 
 
 }

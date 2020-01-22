@@ -12,6 +12,9 @@ export class IntegrationEndpointService extends EndpointFactory {
 
 
     private readonly _integrationUrl: string = "/api/Integration/Get";
+    private readonly _integrationUrlAll: string = "/api/Integration/GetAll";
+
+    
     private readonly _integrationLiteUrl:string="/api/Integration/basic";
 	private readonly _integrationPostUrl: string = "/api/Integration/IntegrationPost";
     private readonly _getAuditById: string = "/api/Integration/audits";
@@ -19,6 +22,7 @@ export class IntegrationEndpointService extends EndpointFactory {
     private readonly _actionsUrlNewAuditHistory: string = "/api/Integration/auditHistoryById";
     private readonly excelUpload: string = "/api/Integration/UploadIntegrationCustomData";
     get integrationUrl() { return this.configurations.baseUrl + this._integrationUrl; }
+    get integrationAllUrl() { return this.configurations.baseUrl + this._integrationUrlAll; }
 
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
 
@@ -30,6 +34,14 @@ export class IntegrationEndpointService extends EndpointFactory {
         return this.http.get<T>(this.integrationUrl, this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.getIntegrationEndpoint());
+            });
+    }
+
+    getAllIntegrationEndpoint<T>(): Observable<T> {
+
+        return this.http.get<T>(this.integrationAllUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getAllIntegrationEndpoint());
             });
     }
     getIntegrationLiteEndpoint<T>(): Observable<T> {

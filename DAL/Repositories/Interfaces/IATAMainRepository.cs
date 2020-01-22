@@ -8,5 +8,6 @@ namespace DAL.Repositories.Interfaces
     public interface IATAMainRepository : IRepository<ATAChapter>
     {
         IEnumerable<ATAChapter> GetAllATAMainnData();
+        IEnumerable<ATAChapter> GetAllATAMainData();
     }
 }

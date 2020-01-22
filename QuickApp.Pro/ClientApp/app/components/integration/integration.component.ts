@@ -130,7 +130,7 @@ export class IntegrationComponent implements OnInit {
     //}
 
     getList() {
-        this.integrationService.getWorkFlows().subscribe(res => {
+        this.integrationService.getAllWorkFlows().subscribe(res => {
             const responseData = res[0];            
             this.originalData = responseData;
             this.totalRecords = responseData.length;
@@ -146,17 +146,17 @@ export class IntegrationComponent implements OnInit {
     }
 
 
-    checkGroupDescriptionExists(field, value) {
-        console.log(this.selectedRecordForEdit);
-        const exists = validateRecordExistsOrNot(field, value, this.originalData, this.selectedRecordForEdit);
-        if (exists.length > 0) {
-            this.disableSaveForDescription = true;
-        }
-        else {
-            this.disableSaveForDescription = false;
-        }
+    //checkGroupDescriptionExists(field, value) {
+    //    console.log(this.selectedRecordForEdit);
+    //    const exists = validateRecordExistsOrNot(field, value, this.originalData, this.selectedRecordForEdit);
+    //    if (exists.length > 0) {
+    //        this.disableSaveForDescription = true;
+    //    }
+    //    else {
+    //        this.disableSaveForDescription = false;
+    //    }
 
-    }
+    //}
     filterDescription(event) {
         this.descriptionList = this.originalData;
 
@@ -166,10 +166,34 @@ export class IntegrationComponent implements OnInit {
         this.descriptionList = descriptionData;
     }
     selectedDescription(object) {
-        const exists = selectedValueValidate('description', object, this.selectedRecordForEdit)
-
-        this.disableSaveForDescription = !exists;
+        if (object.description !== this.selectedRecordForEdit) {
+            const exists = selectedValueValidate('description', object, this.selectedRecordForEdit)
+            this.disableSaveForDescription = !exists;
+        }
+        else {
+            this.disableSaveForDescription = false;
+        }
+      
     }
+    checkGroupDescriptionExists(value) {
+
+        for (let i = 0; i < this.originalData.length; i++) {
+
+            if (value == this.originalData[i].description) {
+                const exists = selectedValueValidate('description', value, this.selectedRecordForEdit)
+
+                this.disableSaveForDescription = !exists;
+
+                return;
+            }
+            else {
+                this.disableSaveForDescription = false;
+            }
+
+        }
+
+    }
+  
 
     save() {
         const data = {
@@ -228,7 +252,7 @@ export class IntegrationComponent implements OnInit {
         console.log(rowData);
         const data = { ...rowData }
         this.integrationService.updateAction(data).subscribe(() => {
-          
+            this.getList();
             this.alertService.showMessage(
                 'Success',
                 `Updated Status Successfully  `,
