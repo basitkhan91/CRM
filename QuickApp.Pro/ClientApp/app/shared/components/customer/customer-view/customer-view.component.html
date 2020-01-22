@@ -213,7 +213,7 @@
                                         </ng-template>
                                         <ng-template pTemplate="emptymessage" let-columns *ngIf="restrictedPMAParts?.length == 0">
                                             <tr>
-                                                <td [attr.colspan]="columns.length">
+                                                <td [attr.colspan]="columns.length" style="color: red; font-weight: bold; text-align: center">
                                                     No records found
                                                 </td>
                                             </tr>
@@ -300,7 +300,7 @@
                                     </tr>
                                 </ng-template>
                                 <ng-template pTemplate="body" let-part let-rowData let-columns="columns" let-i="rowIndex">
-                                    <tr>
+                                    <tr [ngClass]="{'row-primary': part.isDefaultContact === true}">
                                         <td *ngFor="let col of columns">
                                             {{part[col.field]}}
                                         </td>
@@ -533,7 +533,7 @@
                                                 </ng-template>
                                                 <ng-template pTemplate="emptymessage" let-columns *ngIf="allCustomerFinanceDocumentsList.length == 0">
                                                     <tr>
-                                                        <td [attr.colspan]="columns.length" style="color: red; font-weight: bold; text-align: center">
+                                                        <td [attr.colspan]="2" style="color: red; font-weight: bold; text-align: center">
                                                             No records found
                                                         </td>
                                                     </tr>

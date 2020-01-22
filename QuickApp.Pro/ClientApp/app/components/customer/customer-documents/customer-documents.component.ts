@@ -1,4 +1,4 @@
-﻿import { Component, OnInit, AfterViewInit, ViewChild, Output, EventEmitter, Input } from '@angular/core';
+﻿import { Component, OnInit, AfterViewInit, ViewChild, Output, EventEmitter, Input, ElementRef } from '@angular/core';
 import { fadeInOut } from '../../../services/animations';
 import { Params, ActivatedRoute } from '@angular/router';
 import { Router, NavigationExtras } from '@angular/router';
@@ -23,7 +23,8 @@ export class CustomerDocumentsComponent implements OnInit {
 	@Input() savedGeneralInformationData;
 	@Input() editMode;
 	@Input() editGeneralInformationData;
-	@Output() tab = new EventEmitter<any>();
+    @Output() tab = new EventEmitter<any>();
+    @ViewChild('fileUploadInput') fileUploadInput: any;
 	documentInformation = {
 
 		docName: '',
@@ -37,7 +38,10 @@ export class CustomerDocumentsComponent implements OnInit {
 		{ field: 'docDescription', header: 'Description' },
 		{ field: 'documents', header: 'Documents' },
 		{ field: 'docMemo', header: 'Memo' }
-	];
+    ];
+    sourceViewforDocumentListColumns = [
+        { field: 'fileName', header: 'File Name' },
+    ]
 	selectedColumns = this.customerDocumentsColumns;
 	formData = new FormData()
 	// ediData: any;
@@ -85,6 +89,7 @@ export class CustomerDocumentsComponent implements OnInit {
 	// opencontactView(content, row) {
 
 	fileUpload(event) {
+        console.log(event, "event+++")
 		if (event.files.length === 0)
 			return;
 
@@ -152,6 +157,7 @@ export class CustomerDocumentsComponent implements OnInit {
                     `Saved Documents Successfully `,
                     MessageSeverity.success
                 );
+                this.dismissDocumentPopupModel()
             })
         }
         else {
@@ -170,6 +176,7 @@ export class CustomerDocumentsComponent implements OnInit {
                     `Updated Documents Successfully `,
                     MessageSeverity.success
                 );
+                this.dismissDocumentPopupModel()
             })
         }
 
@@ -225,11 +232,15 @@ export class CustomerDocumentsComponent implements OnInit {
         }
         this.modal.close();
     }
-      dismissModel() {
-         this.isDeleteMode = false;
-       
+      dismissModel() {        
+         this.isDeleteMode = false;       
          this.modal.close();
     }
+
+    dismissDocumentPopupModel(){
+        this.fileUploadInput.clear();
+    }
+
     downloadFileUpload(rowData) {
         const url = `${this.configurations.baseUrl}/api/FileUpload/downloadattachedfile?filePath=${rowData.link}`;
         window.location.assign(url);
