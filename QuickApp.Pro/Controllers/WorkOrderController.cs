@@ -695,9 +695,9 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpGet("quoteexclusions")]
-        public IActionResult GetWorkOrderQuoteExclusions(long workOrderQuoteId)
+        public IActionResult GetWorkOrderQuoteExclusions(long workOrderQuoteDetailsId, long buildMethodId)
         {
-            var result = unitOfWork.WorkOrderRepository.GetWorkOrderQuoteExclusions(workOrderQuoteId);
+            var result = unitOfWork.WorkOrderRepository.GetWorkOrderQuoteExclusions(workOrderQuoteDetailsId,  buildMethodId);
             return Ok(result);
         }
 
@@ -739,9 +739,9 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpGet("quotefreights")]
-        public IActionResult GetWorkOrderQuoteFreight(long workOrderQuoteId)
+        public IActionResult GetWorkOrderQuoteFreight(long workOrderQuoteDetailsId, long buildMethodId)
         {
-            var result = unitOfWork.WorkOrderRepository.GetWorkOrderQuoteFreight(workOrderQuoteId);
+            var result = unitOfWork.WorkOrderRepository.GetWorkOrderQuoteFreight(workOrderQuoteDetailsId, buildMethodId);
             return Ok(result);
         }
 
@@ -783,9 +783,9 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpGet("quotecharges")]
-        public IActionResult GetWorkOrderQuoteCharges(long WorkOrderQuoteId)
+        public IActionResult GetWorkOrderQuoteCharges(long workOrderQuoteDetailsId, long buildMethodId)
         {
-            var result = unitOfWork.WorkOrderRepository.GetWorkOrderQuoteCharges(WorkOrderQuoteId);
+            var result = unitOfWork.WorkOrderRepository.GetWorkOrderQuoteCharges(workOrderQuoteDetailsId, buildMethodId);
             return Ok(result);
         }
 
@@ -827,9 +827,9 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpGet("quotematerials")]
-        public IActionResult GetWorkOrderQuoteMaterial(long WorkOrderQuoteId)
+        public IActionResult GetWorkOrderQuoteMaterial(long workOrderQuoteDetailsId, long buildMethodId)
         {
-            var result = unitOfWork.WorkOrderRepository.GetWorkOrderQuoteMaterial(WorkOrderQuoteId);
+            var result = unitOfWork.WorkOrderRepository.GetWorkOrderQuoteMaterial(workOrderQuoteDetailsId, buildMethodId);
             return Ok(result);
         }
 
@@ -871,9 +871,9 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpGet("quotelabor")]
-        public IActionResult GetWorkOrderQuoteLabor(long WorkOrderQuoteId)
+        public IActionResult GetWorkOrderQuoteLabor(long workOrderQuoteDetailsId, long buildMethodId)
         {
-            var result = unitOfWork.WorkOrderRepository.GetWorkOrderQuoteLabor(WorkOrderQuoteId);
+            var result = unitOfWork.WorkOrderRepository.GetWorkOrderQuoteLabor(workOrderQuoteDetailsId, buildMethodId);
             return Ok(result);
         }
 
@@ -894,8 +894,8 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("buildmethoddetails")]
         public IActionResult GetQuoteBuildMethodDetails(long workflowWorkorderId)
         {
-            unitOfWork.WorkOrderRepository.GetQuoteBuildMethodDetails(workflowWorkorderId);
-            return Ok();
+           var result= unitOfWork.WorkOrderRepository.GetQuoteBuildMethodDetails(workflowWorkorderId);
+            return Ok(result);
         }
 
         [HttpPost("woquotelist")]

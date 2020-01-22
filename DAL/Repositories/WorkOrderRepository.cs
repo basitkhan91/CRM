@@ -3481,7 +3481,9 @@ namespace DAL.Repositories
                                           BuildMethodId = qd == null ? 0 : qd.BuildMethodId,
                                           SelectedId = qd == null ? 0 : qd.SelectedId,
                                           ReferenceNo = qd == null ? "" : qd.ReferenceNo,
-
+                                          wq.CustomerId,
+                                          wq.EmployeeId,
+                                          wq.SalesPersonId
                                       }).FirstOrDefault();
                 return workOrderQuote;
             }
@@ -3624,7 +3626,7 @@ namespace DAL.Repositories
             }
         }
 
-        public IEnumerable<object> GetWorkOrderQuoteExclusions(long workOrderQuoteDetailsId)
+        public IEnumerable<object> GetWorkOrderQuoteExclusions(long workOrderQuoteDetailsId, long buildMethodId)
         {
             try
             {
@@ -3636,6 +3638,7 @@ namespace DAL.Repositories
                                                join mp in _appContext.Percent on we.MarkUpPercentageId equals mp.PercentId into wemp
                                                from mp in wemp.DefaultIfEmpty()
                                                where we.IsDeleted == false && we.WorkOrderQuoteDetailsId == workOrderQuoteDetailsId
+                                               && wq.BuildMethodId== buildMethodId
                                                select new
                                                {
                                                    we.CostPlusAmount,
@@ -3740,7 +3743,7 @@ namespace DAL.Repositories
             }
         }
 
-        public IEnumerable<object> GetWorkOrderQuoteFreight(long workOrderQuoteDetailsId)
+        public IEnumerable<object> GetWorkOrderQuoteFreight(long workOrderQuoteDetailsId,long buildMethodId)
         {
             try
             {
@@ -3749,6 +3752,7 @@ namespace DAL.Repositories
                                             join car in _appContext.Carrier on wf.CarrierId equals car.CarrierId
                                             join sv in _appContext.CustomerShipping on wf.ShipViaId equals sv.CustomerShippingId
                                             where wf.IsDeleted == false && wf.WorkOrderQuoteDetailsId == workOrderQuoteDetailsId
+                                            && wq.BuildMethodId == buildMethodId
                                             select new
                                             {
                                                 wf.Amount,
@@ -3851,7 +3855,7 @@ namespace DAL.Repositories
             }
         }
 
-        public IEnumerable<object> GetWorkOrderQuoteCharges(long workOrderQuoteDetailsId)
+        public IEnumerable<object> GetWorkOrderQuoteCharges(long workOrderQuoteDetailsId,long buildMethodId)
         {
             try
             {
@@ -3861,6 +3865,7 @@ namespace DAL.Repositories
                             join v in _appContext.Vendor on woc.VendorId equals v.VendorId into wocv
                             from v in wocv.DefaultIfEmpty()
                             where woc.IsDeleted == false && woc.WorkOrderQuoteDetailsId == workOrderQuoteDetailsId
+                            && wq.BuildMethodId == buildMethodId
                             select new
                             {
                                 woc.ChargesTypeId,
@@ -3967,7 +3972,7 @@ namespace DAL.Repositories
             }
         }
 
-        public IEnumerable<object> GetWorkOrderQuoteMaterial(long workOrderQuoteDetailsId)
+        public IEnumerable<object> GetWorkOrderQuoteMaterial(long workOrderQuoteDetailsId,long buildMethodId)
         {
 
             try
@@ -3980,6 +3985,7 @@ namespace DAL.Repositories
                                               join c in _appContext.Condition on wom.ConditionCodeId equals c.ConditionId
                                               join uom in _appContext.UnitOfMeasure on wom.UnitOfMeasureId equals uom.UnitOfMeasureId
                                               where wom.IsDeleted == false && wom.WorkOrderQuoteDetailsId == workOrderQuoteDetailsId
+                                              && wq.BuildMethodId==buildMethodId
                                               select new
                                               {
                                                   im.PartNumber,
@@ -4045,7 +4051,7 @@ namespace DAL.Repositories
             {
                 if (quoteLabor.WorkOrderQuoteDetailsId > 0)
                 {
-                    if (quoteLabor.WorkOrderQuoteDetailsId > 0)
+                    if (quoteLabor.WorkOrderQuoteLaborHeader!=null && quoteLabor.WorkOrderQuoteLaborHeader.WorkOrderQuoteLaborHeaderId > 0)
                     {
                         var exelabour = _appContext.WorkOrderQuoteLabor.Where(p => p.WorkOrderQuoteLaborHeaderId == quoteLabor.WorkOrderQuoteLaborHeader.WorkOrderQuoteLaborHeaderId).AsNoTracking().ToList();
                         _appContext.WorkOrderQuoteLabor.RemoveRange(exelabour);
@@ -4093,7 +4099,7 @@ namespace DAL.Repositories
             }
         }
 
-        public object GetWorkOrderQuoteLabor(long workOrderQuoteDetailsId)
+        public object GetWorkOrderQuoteLabor(long workOrderQuoteDetailsId,long buildMethodId)
         {
             try
             {
@@ -4107,6 +4113,7 @@ namespace DAL.Repositories
                                  join emp in _appContext.Employee on lh.EmployeeId equals emp.EmployeeId into lhemp
                                  from emp in lhemp.DefaultIfEmpty()
                                  where lh.IsDeleted == false && lh.WorkOrderQuoteDetailsId == workOrderQuoteDetailsId
+                                 && wq.BuildMethodId == buildMethodId
                                  select new
                                  {
                                      lh.CreatedBy,

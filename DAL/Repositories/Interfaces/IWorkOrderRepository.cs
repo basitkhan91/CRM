@@ -70,28 +70,28 @@ namespace DAL.Repositories.Interfaces
 
         WorkOrderQuoteDetails CreateWorkOrderQuoteExclusions(WorkOrderQuoteDetails quoteExclusions);
         WorkOrderQuoteDetails UpdateWorkOrderQuoteExclusions(WorkOrderQuoteDetails quoteExclusions);
-        IEnumerable<object> GetWorkOrderQuoteExclusions(long WorkOrderQuoteId);
+        IEnumerable<object> GetWorkOrderQuoteExclusions(long WorkOrderQuoteId, long buildMethodId);
         void DeleteWorkOrderQuoteExclusion(long exclusionId, string updatedBy);
 
         WorkOrderQuoteDetails CreateWorkOrderQuoteFreight(WorkOrderQuoteDetails quoteFreight);
         WorkOrderQuoteDetails UpdateWorkOrderQuoteFreight(WorkOrderQuoteDetails quoteFreight);
-        IEnumerable<object> GetWorkOrderQuoteFreight(long WorkOrderQuoteId);
+        IEnumerable<object> GetWorkOrderQuoteFreight(long WorkOrderQuoteId, long buildMethodId);
         void DeleteWorkOrderQuoteFreight(long freightId, string updatedBy);
 
         WorkOrderQuoteDetails CreateWorkOrderQuoteCharges(WorkOrderQuoteDetails quoteCharges);
         WorkOrderQuoteDetails UpdateWorkOrderQuoteCharges(WorkOrderQuoteDetails quoteCharges);
-        IEnumerable<object> GetWorkOrderQuoteCharges(long WorkOrderQuoteId);
+        IEnumerable<object> GetWorkOrderQuoteCharges(long WorkOrderQuoteId, long buildMethodId);
         void DeleteWorkOrderQuoteCharges(long workOrderChargeId, string updatedBy);
 
 
         WorkOrderQuoteDetails CreateWorkOrderQuoteMaterial(WorkOrderQuoteDetails quoteMaterials);
         WorkOrderQuoteDetails UpdateWorkOrderQuoteMaterial(WorkOrderQuoteDetails quoteMaterials);
-        IEnumerable<object> GetWorkOrderQuoteMaterial(long WorkOrderQuoteId);
+        IEnumerable<object> GetWorkOrderQuoteMaterial(long WorkOrderQuoteId, long buildMethodId);
         void DeleteWorkOrderQuoteMaterial(long workOrderMaterialsId, string updatedBy);
 
         WorkOrderQuoteDetails CreateWorkOrderQuoteLabor(WorkOrderQuoteDetails quoteLabor);
         WorkOrderQuoteDetails UpdateWorkOrderQuoteLabor(WorkOrderQuoteDetails quoteLabor);
-        object GetWorkOrderQuoteLabor(long WorkOrderQuoteId);
+        object GetWorkOrderQuoteLabor(long WorkOrderQuoteId, long buildMethodId);
         void DeleteWorkOrderQuoteLabor(long workOrderQuoteLaborId, string updatedBy);
 
         object GetWorkOrderQuoteDetails(long workOrderId);
