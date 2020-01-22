@@ -299,7 +299,7 @@ export class AssetAcquisitionTypeComponent implements OnInit {
             Code: this.codeName,
             Name: this.sourceAction.name,
             Memo: this.sourceAction.memo,
-            AssetAcquisitionTypeId: this.sourceAction.assetAcquisitionTypeId,
+            //AssetAcquisitionTypeId: this.sourceAction.assetAcquisitionTypeId,
             IsActive: this.sourceAction.isActive,
             IsDeleted: this.isDelete,
             masterCompanyId: 1

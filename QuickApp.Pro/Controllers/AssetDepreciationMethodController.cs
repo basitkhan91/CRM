@@ -163,6 +163,7 @@ namespace QuickApp.Pro.Controllers
                 assetDepreciationMethod.Name = item.AssetDepreciationMethodName;
                 assetDepreciationMethod.DepreciationMethod = item.AssetDepreciationMethodBasis;
                 assetDepreciationMethod.Memo = item.AssetDepreciationMemo;
+                assetDepreciationMethod.SequenceNo = item.SequenceNo;
                 assetDepreciationMethod.AssetDepreciationMethodId = item.AssetDepreciationMethodId;
                 assetDepreciationMethod.CreatedDate = item.CreatedDate;
                 assetDepreciationMethod.CreatedBy = item.CreatedBy;
