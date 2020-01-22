@@ -214,11 +214,50 @@ export class CustomerWorksListComponent implements OnInit, AfterViewInit{
 
             this.showViewProperties.isCustomerStock = row.isCustomerStock;
 
-            this.showViewProperties.traceableToType = row.traceableToType;
-
+            
             this.showViewProperties.traceableTo = row.traceableTo;
 
-            this.showViewProperties.obtainFromType = row.obtainFromType;
+            switch (parseInt(row.traceableToType)) {
+                case 1: {
+                   this.showViewProperties.traceableToType = 'Customer';
+
+
+                    break;
+                }
+                case 2: {
+                    this.showViewProperties.traceableToType = 'Other';
+                   break;
+                }
+                case 3: {
+                    this.showViewProperties.traceableToType = 'Vendor';
+                   break;
+                }
+                case 4: {
+                    this.showViewProperties.traceableToType = 'Company';
+                       break;
+                }
+            }
+           // this.showViewProperties.obtainFromType = row.obtainFromType;
+            switch (parseInt(row.obtainFromType)) {
+                case 1: {
+                    this.showViewProperties.obtainFromType = 'Customer';
+
+
+                    break;
+                }
+                case 2: {
+                    this.showViewProperties.obtainFromType = 'Other';
+                    break;
+                }
+                case 3: {
+                    this.showViewProperties.obtainFromType = 'Vendor';
+                    break;
+                }
+                case 4: {
+                    this.showViewProperties.obtainFromType = 'Company';
+                    break;
+                }
+            }
             this.showViewProperties.obtainFrom = row.obtainFrom;
             this.showViewProperties.manufacturingDate = row.manufacturingDate;
             this.showViewProperties.expirationDate = row.expirationDate;

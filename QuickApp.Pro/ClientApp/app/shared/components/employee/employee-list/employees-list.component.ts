@@ -30,6 +30,7 @@ import { getValueFromArrayOfObjectById } from '../../../../generic/autocomplete'
 import { ConfigurationService } from '../../../../services/configuration.service';
 import { CurrencyService } from '../../../../services/currency.service';
 import { LegalEntityService } from '../../../../services/legalentity.service';
+import { ItemMasterService } from '../../../../services/itemMaster.service';
 
 
 
@@ -87,7 +88,7 @@ export class EmployeesListComponent implements OnInit {
     empMemo:any;
     empShiftType:any;
     empLeaveType:any;
-        
+    manufacturerData: any;
 
     ngOnInit(): void {
 
@@ -103,6 +104,7 @@ export class EmployeesListComponent implements OnInit {
         this.getAllFrequencyTrainingData();
         this.loadCurrencyData();
         this.getAllStationData();
+        this.getAllAircraftManfacturer();
         //this.loadShiftData();
 
     }
@@ -125,9 +127,10 @@ export class EmployeesListComponent implements OnInit {
     supervisorName:any;
     empCreatedBy:any;
     empCreatedDate:any;
+    aircraftModelName:any;
   
     /** employees-list ctor */
-    constructor(private modalService: NgbModal, private translationService: AppTranslationService, private empService: EmployeeService, private router: Router, private authService: AuthService, private alertService: AlertService, public commonService: CommonService,private configurations: ConfigurationService, public currencyService: CurrencyService, private legalEntityService: LegalEntityService) {
+    constructor(private modalService: NgbModal, private translationService: AppTranslationService, private empService: EmployeeService, private router: Router, private authService: AuthService, private alertService: AlertService, public commonService: CommonService,private configurations: ConfigurationService, public currencyService: CurrencyService, private legalEntityService: LegalEntityService,private itemser: ItemMasterService) {
         this.dataSource = new MatTableDataSource();
         this.translationService.closeCmpny = false;
         this.activeIndex = 0;
@@ -340,6 +343,7 @@ export class EmployeesListComponent implements OnInit {
     openView(content, row) {
         this.toGetEmployeeDetailsByEmpId(row.employeeId);
        
+       console.log(row);
         this.toGetEmployeeTrainingDocumentsList(row.employeeId);
         this.loadEmployeeRoles(row.employeeId);
         this.getManagementStructureData(row.employeeId);
@@ -399,6 +403,7 @@ export class EmployeesListComponent implements OnInit {
             this.stationName="";
         }
 
+
         
         if (row.empSupervisor != null) {
             this.supervisiorname = row.empSupervisor.firstName
@@ -440,6 +445,14 @@ export class EmployeesListComponent implements OnInit {
             this.divisionCode = row.divisonInfo.code;
         }
 
+        if(row.employeetraingInfo != null && row.employeetraingInfo.aircraftModelId > 0)
+        {   
+            this.aircraftModelName = getValueFromArrayOfObjectById('label', 'value', row.employeetraingInfo.aircraftModelId, this.manufacturerData);
+          
+        }
+        else{
+            this.aircraftModelName="";
+        }
 
         //this.jobTypeName = row.jobtype.jobTypeName;
 
@@ -674,7 +687,18 @@ export class EmployeesListComponent implements OnInit {
             this.supervisorName=this.empDetailsData.supervisorName;
             this.empCreatedBy=this.empDetailsData.createdBy;
             this.empCreatedDate=this.empDetailsData.createdDate;
+            
         })
+    }
+
+    getAllAircraftManfacturer() {
+        this.itemser.getAircraft().subscribe(res => {
+            this.manufacturerData = res[0].map(x => {
+                return {
+                    value: x.aircraftTypeId, label: x.description
+                }
+            })
+        });
     }
 
 

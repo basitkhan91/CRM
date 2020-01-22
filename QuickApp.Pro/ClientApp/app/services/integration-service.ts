@@ -43,6 +43,12 @@ export class IntegrationService {
         return Observable.forkJoin(
             this.integrationEndpointService.getIntegrationEndpoint<Integration[]>());
     }
+    getAllWorkFlows() {
+        return Observable.forkJoin(
+            this.integrationEndpointService.getAllIntegrationEndpoint<Integration[]>());
+    }
+
+
 
     newAction(action) {
         return this.integrationEndpointService.getNewActionEndpoint<Integration>(action);

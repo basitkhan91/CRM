@@ -60,7 +60,14 @@ namespace QuickApp.Pro.Controllers
             return Ok(allATAMaininfo);
 
         }
+        [HttpGet("GetAll")]
+        // [Produces(typeof(List<ATAChapterViewModel>))]
+        public IActionResult GetAll()
+        {
+            var allATAMaininfo = _unitOfWork.ATAMains.GetAllATAMainData();
+            return Ok(allATAMaininfo);
 
+        }
         [HttpGet("ataauditHistoryById/{id}")]
         [Produces(typeof(List<ATAChapterAudit>))]
         public IActionResult GetAuditHostoryById(long id)

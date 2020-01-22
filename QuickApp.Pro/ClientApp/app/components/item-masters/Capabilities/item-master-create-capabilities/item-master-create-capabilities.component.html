@@ -70,7 +70,7 @@
 				<button
 				  style="margin-top: 20px;margin-left: 30px;"
 				  type="button"
-				  class="btn btn-primary-cstm"
+				  class="btn btn-primary"
 				  [disabled]="!addCapesForm.valid"
 				  (click)="mapAircraftInformation(); "
 				>
@@ -216,7 +216,7 @@
 			<div class="pull-right" *ngIf="viewTable">
 			  <button
 			  type="button"
-			  class="btn btn-primary-cstm" [disabled]="!capesForm.valid"
+			  class="btn btn-primary" [disabled]="!capesForm.valid"
 			  data-dismiss="modal" style="margin-top: 10px;"
 			  (click)="saveCapability(); "
 			>
@@ -224,7 +224,7 @@
 			</button>
 			<button *ngIf="isEnableCapesList"
 			type="button"
-			class="btn btn-danger-cstm" 
+			class="btn btn-danger" 
 			data-dismiss="modal" style="margin-top: 10px;"
 			(click)="onCloseCapes();"
 		  >
@@ -236,13 +236,13 @@
 				  <div class="modal-footer">
 					<button
 					  type="button"
-					  class="btn btn-primary-cstm"
+					  class="btn btn-primary"
 					  data-dismiss="modal"
 					  (click)="saveAircraft()"
 					>
 					  Save
 					</button>
-					<button type="button" class="btn btn-danger-cstm" data-dismiss="modal">
+					<button type="button" class="btn btn-danger" data-dismiss="modal">
 					  Close
 					</button>
 				  </div>

@@ -137,7 +137,7 @@
 </div>
 <div *ngIf="(isWorkOrder && !isEdit) || (isQuote && !isEdit)" style="float:right">
   <button
-    class="btn btn-primary btn-primary-cstm"
+    class="btn btn-primary btn-primary"
     (click)="saveExclusionsWorkOrder()"
     style="padding: 6px 12px !important;margin-top: 10px;"
   >
@@ -148,7 +148,7 @@
 <div *ngIf="(isWorkOrder && isEdit) || (isQuote && isEdit)" style="float:right">
   <button
     *ngIf="isWorkOrder || isQuote"
-    class="btn btn-primary btn-primary-cstm"
+    class="btn btn-primary btn-primary"
     (click)="updateExclusionsWorkOrder()"
     style="padding: 6px 12px !important;margin-top: 10px;"
   >

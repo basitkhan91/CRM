@@ -154,7 +154,7 @@ export class AtaMainComponent implements OnInit {
     }
 
     getList() {
-        this.atamainService.getAtaMainList().subscribe(res => {
+        this.atamainService.getAllAtaMainList().subscribe(res => {
             //console.log(res)
             const responseData = res[0];
             this.originalData = responseData;

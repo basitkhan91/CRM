@@ -21,8 +21,8 @@
                                         <i class="fa fa-search"></i>
                                         <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder=" Filter">
                                     </div>
-                                    <button type="button" pButton icon="fa-download" iconPos="left" label="Export Data" matTooltip="Download Data" (click)="dt.exportCSV()"></button>
-                                    <button type="button" pButton icon="fa-download" iconPos="left" label="Export Selection Only" matTooltip="Download Selected Data" (click)="dt.exportCSV({selectionOnly:true})"></button>
+                                    <button type="button" pButton icon="fa-download" iconPos="left" label="Export Data"  matTooltipPosition="above" matTooltip="Download Data" (click)="dt.exportCSV()"></button>
+                                    <button type="button" pButton icon="fa-download" iconPos="left" label="Export Selection Only"  matTooltipPosition="above" matTooltip="Download Selected Data" (click)="dt.exportCSV({selectionOnly:true})"></button>
                                     <div class="excel-upload  excel-upload-cstm">
 
                                         <input type="file" name="upload[]" id="upload" (change)="customExcelUpload($event)" class="uploaddoc upload-file"
@@ -34,7 +34,7 @@
                                         </label>
                                         &nbsp; &nbsp;
 
-                                        <button class="btn btn-primary-cstm" matTooltip="Download Sample File" matTooltipPosition="above" (click)="sampleExcelDownload()">Sample File Download</button>
+                                        <button class="btn btn-primary" matTooltip="Download Sample File" matTooltipPosition="above" (click)="sampleExcelDownload()">Sample File Download</button>
                                     </div>
 
                                 </div>
@@ -63,7 +63,17 @@
                                         {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy h:mm:ss a'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy h:mm:ss a'):rowData[col.field]}}
                                     </td>
                                     <td style="width:200px" *ngIf="selectedColumns.length> 0">
-                                        <p-inputSwitch [(ngModel)]="rowData['isActive']" name="isActive{{rowIndex}}" (onChange)="handleChange(rowData,$event)"></p-inputSwitch>
+                                        <!--<p-inputSwitch [(ngModel)]="rowData['isActive']" name="isActive{{rowIndex}}" (onChange)="handleChange(rowData,$event)" matTooltip="edit"></p-inputSwitch>-->
+                                        
+                                        
+                                        <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                                        <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                                        <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+
+
+
+
+
                                         <span data-toggle="modal" data-target="#view">
                                             <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="viewSelectedRow(rowData)" matTooltip="View" data-target="#view">
                                                 <i class="fa fa-eye"></i>
@@ -117,7 +127,12 @@
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
-
+    <div class="modal-body">
+        <strong>
+           Classification Name:
+            <span class="new-label">{{sourceAction.description}}</span>
+        </strong>
+    </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-success" (click)="deleteItemAndCloseModel()">Yes</button>
         <button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
@@ -140,7 +155,7 @@
                                 <label for="name" class="control-label">Classification<span class="clr-red">*</span></label>
                             </div>
                             <div class="col-sm-5">
-                                <p-autoComplete field="description" [(ngModel)]="sourceAction" (onSelect)="selectedClassification($event)" (onKeyUp)="checkIfClassificationExists('description',$event.target.value)" name="description"
+                                <p-autoComplete field="description" [(ngModel)]="sourceAction" (onSelect)="selectedClassification($event)" (onKeyUp)="checkIfClassificationExists($event.target.value)" name="description"
                                                 [suggestions]="localClassificationsCollection" (completeMethod)="filterclassifications($event)" [size]="30" [minLength]="1"
                                                 [dropdown]="true" class="p-autoComplete-ctsm" required>
                                 </p-autoComplete>
@@ -167,8 +182,8 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-primary-cstm" data-dismiss="modal" [disabled]="disableSave" (click)="editItemAndCloseModel()">{{isEditMode ? 'Update' : 'Save' }}</button>
-                <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="dismissModel()">Close</button>
+                <button class="btn btn-primary" data-dismiss="modal" [disabled]="disableSave" (click)="editItemAndCloseModel()">{{isEditMode ? 'Update' : 'Save' }}</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="dismissModel()">Close</button>
             </div>
         </div>
     </div>
@@ -228,6 +243,12 @@
                 <div class="col-sm-12">
                     <p><span class="label"><b class="view-Header">Classification Name: </b></span><span class="value">{{viewRowData.description}}</span></p>
                     <p><span class="label"><b class="view-Header">Memo: </b></span><span class="value">{{viewRowData.memo}}</span></p>
+                    <p>
+                        <span class="label ">
+                            <b class="view-Header">Is Active:</b>
+                        </span>
+                        <span class="value">{{viewRowData.isActive === true ? 'Yes' : 'No'}}</span>
+                    </p>
                     <p><span class="label"><b class="view-Header">Created By: </b></span><span class="value">{{viewRowData.createdBy}}</span></p>
                     <p><span class="label"><b class="view-Header">Created Date: </b></span><span class="value">{{viewRowData.createdDate | date: 'MM/dd/yyyy h:mm:ss a'}}</span></p>
                     <p><span class="label"><b class="view-Header">Updated By: </b></span><span class="value">{{viewRowData.updatedBy}}</span></p>
@@ -237,7 +258,7 @@
                 <div class="clear"></div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" id="" name="" (click)="resetViewData()">Close</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal" id="" name="" (click)="resetViewData()">Close</button>
             </div>
         </div>
     </div>

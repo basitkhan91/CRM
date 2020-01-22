@@ -18,9 +18,9 @@
                          <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder=" Filter">
                      </div>
 
-                     <button type="button" pButton icon="fa-download " class="btn-primary-cstm" iconPos="left"
+                     <button type="button" pButton icon="fa-download " class="btn-primary" iconPos="left"
                      (click)="dt.exportCSV()" label="Export Data" matTooltip="Download Data" matTooltipPosition="above" style="padding: 5px 12px !important;"></button>
-                     <button type="button" pButton icon="fa-download " class="btn-primary-cstm" iconPos="left" label="Export Selected Data" matTooltip="Download Selected Data" matTooltipPosition="above" (click)="dt.exportCSV({selectionOnly:true})"  style="padding: 5px 12px !important;"></button>
+                     <button type="button" pButton icon="fa-download " class="btn-primary" iconPos="left" label="Export Selected Data" matTooltip="Download Selected Data" matTooltipPosition="above" (click)="dt.exportCSV({selectionOnly:true})"  style="padding: 5px 12px !important;"></button>
 
                  </div>
              </ng-template>
@@ -100,8 +100,8 @@
              </div>
 
              <div class="modal-footer">
-                 <button type="button" class="btn btn-primary-cstm" (click)="deleteItemAndCloseModel()">Yes</button>
-                 <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">No</button>
+                 <button type="button" class="btn btn-primary" (click)="deleteItemAndCloseModel()">Yes</button>
+                 <button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
              </div>
          </ng-template>
          
@@ -125,8 +125,8 @@
                             <div class="panel-group" id="accordion">
                                 <div class="panel panel-default">
                                     <div>
-                                        <button type="button" class="btn btn-primary-cstm" data-toggle="collapse" (click)="ExpandAllEmployeeDetailsModel()" >Expand All</button>
-                                        <button type="button" class="btn btn-primary-cstm collapsed" data-toggle="collapse" (click)="CloseAllEmployeerDetailsModel()" >Collapse All</button>
+                                        <button type="button" class="btn btn-primary" data-toggle="collapse" (click)="ExpandAllEmployeeDetailsModel()" >Expand All</button>
+                                        <button type="button" class="btn btn-primary collapsed" data-toggle="collapse" (click)="CloseAllEmployeerDetailsModel()" >Collapse All</button>
                                         <hr />
                                     </div>
                                     <div class="panel-heading">
@@ -174,8 +174,10 @@
                                                                     <span class="value">{{shift.shiftId}}</span>
                                                                 </div> -->
                                                             </span></p>
-                                                            <p><span class="label"><b>Extra Hours: </b></span><span class="value">{{allEmployeelist.allowOvertime ? allEmployeelist.allowOvertime : '-'}}</span></p>
-                                                           
+                                                            <p><span class="label"><b>Extra Hours: </b></span><span class="value"></span></p>
+                                                            <p><span class="label"><b>Allow Overtime: </b></span><span class="value">  <input type="checkbox" name="isallowOvertime" [(ngModel)]="allEmployeelist.allowOvertime" disabled> </span></p>
+                                                            <p><span class="label"><b>Allow Double-Time: </b></span><span class="value"><input type="checkbox" name="isallowDoubleTime" [(ngModel)]="allEmployeelist.allowDoubleTime" disabled></span></p>
+                                                            
                                                             <p>
                                                                 <span *ngIf="allEmployeelist.isHourly == true" class="label"><b>Hourly Pay: </b></span>                                                                
                                                                 <span *ngIf="allEmployeelist.isHourly == false" class="label"><b>Monthly Pay: </b></span>                                                                
@@ -189,7 +191,7 @@
                                                                     <span class="value">{{leave.employeeLeaveTypeId}}</span>
                                                                 </div> -->
                                                             </span></p>
-                                                            <p><span class="label"><b>Employee Certifying Staff?: </b></span><span class="value">{{allEmployeelist.employeeCertifyingStaff ? allEmployeelist.employeeCertifyingStaff : '-'}}</span></p>
+                                                            <p><span class="label"><b>Employee Certifying Staff?: </b></span><span class="value"> <input type="checkbox" name="isemployeeCertifyingStaff" [(ngModel)]="allEmployeelist.employeeCertifyingStaff" disabled> </span></p>
                                                              <p><span class="label"><b>Supervisor Name: </b></span><span class="value">{{supervisorName ? supervisorName : '-'}}</span></p>
                                                              <p><span class="label"><b>Created By: </b></span><span class="value">{{empCreatedBy ? empCreatedBy : '-'}}</span></p>
                                                              <p><span class="label"><b>Created Date: </b></span><span class="value">{{empCreatedDate | date: 'dd/MM/yyyy'}}</span></p>
@@ -216,9 +218,11 @@
                                                         <div class="table-responsive default-bg clear" *ngIf="allEmployeelist.employeeLicensure">
                                                             <div class="col-sm-4">
                                                                 <p><span class="label"><b>Certification #: </b></span><span class="value">{{allEmployeelist.employeeLicensure?.licenseNumber}}</span></p>
+                                                               
                                                                 <p><span class="label"><b>Certification In Force? </b></span><span class="value">{{allEmployeelist.employeeLicensure?.isLicenseInForce}}</span></p>
                                                             </div>
                                                             <div class="col-sm-4">
+                                                                <!-- <p><span class="label"><b> Certification Type: </b></span><span class="value">{{allEmployeelist.employeeLicensure?.licenseNumber}}</span></p> -->
                                                                 <p><span class="label"><b>Certifying Institution: </b></span><span class="value">{{allEmployeelist.employeeLicensure?.certifyingInstitution}}</span></p>                                                                
                                                             </div>
                                                             <div class="col-sm-4">
@@ -243,7 +247,7 @@
                                                         <div>
                                                         <div class="table-responsive default-bg clear" *ngIf="allEmployeelist.employeeTraining">
                                                             <div class="col-sm-4">
-                                                                <p><span class="label"><b>Aircraft Model: </b></span><span class="value">{{allEmployeelist.employeeTraining?.aircraftModelId}}</span></p>
+                                                                <p><span class="label"><b>Aircraft Model: </b></span><span class="value">{{aircraftModelName}}</span></p>
                                                                 <p><span class="label"><b>Training Type: </b></span><span class="value">{{empTrainningInfo}}</span></p> 
                                                                 <p><span class="label"><b>Schedule Date: </b></span><span class="value">{{allEmployeelist.employeeTraining?.scheduleDate | date:'MM-dd-yyyy'}}</span></p> 
                                                                 <p><span class="label"><b>Frequency of Training: </b></span><span class="value">{{frequencyOfTrainingData}}</span></p>
@@ -302,7 +306,7 @@
                                                         <div class="table-responsive default-bg clear" *ngIf="selectedRoleNames">
                                                             <div class="col-sm-6">
                                                                 <p><span class="label"><b>Roles : </b></span><span class="value">{{selectedRoleNames}}</span></p>
-                                                                <p><span class="label"><b>Memo </b></span><span class="value">{{empMemo}}</span></p>
+                                                                <p><span class="label"><b>Memo :</b></span><span class="value">{{empMemo}}</span></p>
                                                             </div>
                                                             <div class="col-sm-6">
                                                                 <p >
@@ -322,7 +326,7 @@
                         </div>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
             </div>
           </div>
       
@@ -366,12 +370,12 @@
                                             <td [ngStyle]="{'color': getColorCodeForHistory(i, 'jobtitle', audit.jobtitle)  ? 'black' : 'red'  }">{{audit.jobtitle}}</td>
                                             <td [ngStyle]="{'color': getColorCodeForHistory(i, 'employeeExpertise', audit.employeeExpertise)  ? 'black' : 'red'  }">{{audit.employeeExpertise}}</td>
                                             <!-- <td [ngStyle]="{'color': getColorCodeForHistory(i, 'jobType', audit.jobType)  ? 'black' : 'red'  }">{{audit.jobType}}</td> -->
-                                            <td [ngStyle]="{'color': getColorCodeForHistory(i, 'startDate', audit.startDate)  ? 'black' : 'red'  }">{{audit.startDate | date: 'dd-MM-yyyy'}}</td>
+                                            <td [ngStyle]="{'color': getColorCodeForHistory(i, 'startDate', audit.startDate)  ? 'black' : 'red'  }">{{audit.startDate | date: 'MM-dd-yyyy'}}</td>
                                             <!-- <td [ngStyle]="{'color': getColorCodeForHistory(i, 'company', audit.company)  ? 'black' : 'red'  }">{{audit.company}}</td> -->
                                             <td [ngStyle]="{'color': getColorCodeForHistory(i, 'payType', audit.payType)  ? 'black' : 'red'  }">{{audit.payType}}</td>
                                             <td [ngStyle]="{'color': getColorCodeForHistory(i, 'isActive', audit.isActive)  ? 'black' : 'red'  }">{{audit.isActive}}</td>
                                         <td >{{audit.updatedBy}}</td>
-                                        <td>{{audit.updatedDate | date: 'dd-MM-yyyy'}}</td>
+                                        <td>{{audit.updatedDate | date: 'MM-dd-yyyy'}}</td>
                                     </tr>
                             </tbody>                        
                         </table>
@@ -384,7 +388,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                 </div>
               </div>
           

@@ -14,8 +14,8 @@
                                 <div style="text-align: right">
                                     <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header" [resetFilterOnHide]="true" 
                                                    selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
-                                    <button type="button" class="btn btn-primary-cstm"  matTooltip="Download Data"  tooltipPosition="top" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export Data" style="padding: 5px 12px !important" (click)="dt.exportCSV()"></button>
-                                    <button type="button" class="btn btn-primary-cstm" matTooltip="Download Selected" matTooltipPosition="above"
+                                    <button type="button" class="btn btn-primary"  matTooltip="Download Data"  tooltipPosition="top" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export Data" style="padding: 5px 12px !important" (click)="dt.exportCSV()"></button>
+                                    <button type="button" class="btn btn-primary" matTooltip="Download Selected" matTooltipPosition="above"
                                             tooltipPosition="top" pButton icon="fa-download" iconPos="left" label="Export Selection Only" style="padding: 5px 12px !important" (click)="dt.exportCSV({selectionOnly:true})"></button>
                                     <div class="excel-upload  excel-upload-cstm">
 
@@ -28,7 +28,7 @@
                                             </span>
                                         </label>
                                         &nbsp; &nbsp;
-                                        <button class="btn btn-primary-cstm" matTooltip="Download Sample file" matTooltipPosition="above"  tooltipPosition="top" (click)="sampleExcelDownload()">Sample File Download</button>
+                                        <button class="btn btn-primary" matTooltip="Download Sample file" matTooltipPosition="above"  tooltipPosition="top" (click)="sampleExcelDownload()">Sample File Download</button>
                                     </div>
                                 </div>
                             </ng-template>
@@ -173,8 +173,8 @@
 
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-primary-cstm" data-dismiss="modal" [disabled]="!userForm.valid || disableSaveForItemDescMsg || disableSaveForItemCodeMsg || disableSaveForEdit " (click)="saveItemClassification()">{{isEditMode ? 'Update' : 'Save'}}</button>
-                    <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="resetItemCForm()">Close</button>
+                    <button class="btn btn-primary" data-dismiss="modal" [disabled]="!userForm.valid || disableSaveForItemDescMsg || disableSaveForItemCodeMsg || disableSaveForEdit " (click)="saveItemClassification()">{{isEditMode ? 'Update' : 'Save'}}</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="resetItemCForm()">Close</button>
                 </div>
             </div>
 
@@ -249,7 +249,7 @@
                 <div class="clear"></div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" id="" name="" (click)="resetViewData()">Close</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal" id="" name="" (click)="resetViewData()">Close</button>
             </div>
         </div>
 
@@ -271,8 +271,8 @@
                 </strong>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary-cstm" data-dismiss="modal" (click)="deleteConformation('Yes')">Yes</button>
-                <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="deleteConformation('No')">No</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="deleteConformation('Yes')">Yes</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="deleteConformation('No')">No</button>
             </div>
         </div>
 
@@ -327,7 +327,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
             </div>
         </div>
 

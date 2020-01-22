@@ -32,7 +32,6 @@ const nonTreeShakableModules = [
     'ng2-toasty',
     'ng2-toasty/bundles/style-material.css',
     'ng2-charts',
-    './ClientApp/app/styles-external.css',
     'jquery'
 
 ];

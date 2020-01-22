@@ -41,6 +41,7 @@ export class CustomerClassificationComponent implements OnInit, AfterViewInit {
     selectedActionName: any;
     disableSave: boolean;
     descritpion: string = "";
+    selectedRecordForEditDesc: string = "";
     customerClassificationId: number =0;
     actionamecolle: any[] = [];
 
@@ -199,12 +200,15 @@ export class CustomerClassificationComponent implements OnInit, AfterViewInit {
         this.descritpion = row.description;
         this.customerClassificationId = row.customerClassificationId;
         this.isActive = row.isActive;
+        this.selectedRecordForEditDesc = row.description;
+
         //this.classificationName = this.sourceAction.description;
         //this.loadMasterCompanies();
         //this.modal = this.modalService.open(content, { size: 'sm' });
         //this.modal.result.then(() => {
         //    console.log('When user closes');
         //}, () => { console.log('Backdrop click') })
+
     }
 
     openHist(content, row) {
@@ -238,49 +242,41 @@ export class CustomerClassificationComponent implements OnInit, AfterViewInit {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
-    checkIfClassificationExists(field, value) {
-        this.descmodified = true;
-        const exists = validateRecordExistsOrNot(field, value, this.allcustomerclassificationInfo, this.sourceAction);
-        if (exists.length > 0)
-            this.disableSave = true;
-        else
-            this.disableSave = false;
+   
+    checkIfClassificationExists(value) {
 
-        //let value = event.target.value.toLowerCase();
-        //if (this.selectedActionName) {
-        //    if (value == this.selectedActionName.toLowerCase()) {
-        //        this.disableSave = true;
-        //    }
-        //    else {
-        //        this.disableSave = false;
-        //    }
-        //}
+        const exists = selectedValueValidate('description', value, this.selectedRecordForEditDesc)
+
+        this.descmodified = true;
+        for (let i = 0; i < this.allcustomerclassificationInfo.length; i++) {
+
+            if (value == this.allcustomerclassificationInfo[i].description) {
+                const exists = selectedValueValidate('description', value, this.selectedRecordForEditDesc)
+
+                this.disableSave = !exists;
+
+                return;
+            }
+            else {
+                this.disableSave = false;
+            }
+
+        }
+
     }
     selectedClassification(event) {
-        //debugger;
-        const exists = selectedValueValidate('description', event, this.sourceAction);
-        this.disableSave = exists;
-        //for (let i = 0; i < this.actionamecolle.length; i++) {
-        //    if (event == this.actionamecolle[i][0].classificationName) {
-        //        //alert("Action Name already Exists");
-        //        this.disableSave = true;
-        //        this.selectedActionName = event;
-        //    }
-        //}
+      
+        if (event.description !== this.selectedRecordForEditDesc) {
+            const exists = selectedValueValidate('description', event, this.selectedRecordForEditDesc)
+            this.disableSave = !exists;
+        }
+        else {
+            this.disableSave = false;
+        }
     }
     filterclassifications(event) {
         this.localClassificationsCollection = [];
-        //for (let i = 0; i < this.allcustomerclassificationInfo.length; i++) {
-        //    let classificationName = this.allcustomerclassificationInfo[i].description;
-        //    if (classificationName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-        //        this.actionamecolle.push([{
-        //            "customerClassificationId": this.allcustomerclassificationInfo[i].customerClassificationId,
-        //            "description": classificationName
-        //        }]),
-        //            this.localClassificationsCollection.push(classificationName);
-        //    }
-        //}
-        this.localClassificationsCollection = [...this.allcustomerclassificationInfo.filter(x => { return x.description.toLowerCase().includes(event.query.toLowerCase()); })];
+              this.localClassificationsCollection = [...this.allcustomerclassificationInfo.filter(x => { return x.description.toLowerCase().includes(event.query.toLowerCase()); })];
     }
     private onHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {
 
@@ -323,25 +319,13 @@ export class CustomerClassificationComponent implements OnInit, AfterViewInit {
         const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=CustomerClassification&fileName=CustomerClassification.xlsx`;
         window.location.assign(url);
     }
-    handleChange(rowData, e) {
-        if (e.checked == false) {
-            this.sourceAction = rowData;
-            this.sourceAction.updatedBy = this.userName;
-            this.Active = "In Active";
-            this.sourceAction.isActive == false;
-            this.CustomerClassificationService.updatecustomerclass(this.sourceAction).subscribe(
+    handleChange(rowData) {
+         this.sourceAction = rowData;
+          this.sourceAction.updatedBy = this.userName;
+             this.CustomerClassificationService.updatecustomerclass(this.sourceAction).subscribe(
                 response => this.saveCompleted(this.sourceAction),
                 error => this.saveFailedHelper(error));
-        }
-        else {
-            this.sourceAction = rowData;
-            this.sourceAction.updatedBy = this.userName;
-            this.Active = "Active";
-            this.sourceAction.isActive == true;
-            this.CustomerClassificationService.updatecustomerclass(this.sourceAction).subscribe(
-                response => this.saveCompleted(this.sourceAction),
-                error => this.saveFailedHelper(error));
-        }
+    
     }
 
 

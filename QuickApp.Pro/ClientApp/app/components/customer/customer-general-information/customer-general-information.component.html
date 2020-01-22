@@ -16,16 +16,16 @@
                                                     <div>
                                                         <div class="pull-left" style="margin-top: 4px; margin-right: 15px;">
                                                             <label class="radio-cstm wauto">
-                                                                <input type="radio" value="2" checked="checked" name="optradio" [(ngModel)]="generalInformation.customerAffiliationId" (change)="selectedCustomerType($event.target.value)">
+                                                                <input type="radio" value=2 checked="checked" name="optradio" [(ngModel)]="generalInformation.customerAffiliationId" (change)="selectedCustomerType($event.target.value)">
                                                                 <span class="checkmark"></span> External
                                                             </label>
                                                             <label class="radio-cstm wauto">
-                                                                <input type="radio" value="1" name="optradio" [(ngModel)]="generalInformation.customerAffiliationId" (change)="selectedCustomerType($event.target.value)">
+                                                                <input type="radio" value=1 name="optradio" [(ngModel)]="generalInformation.customerAffiliationId" (change)="selectedCustomerType($event.target.value)">
                                                                 <span class="checkmark"></span> Internal
                                                             </label>
 
                                                             <label class="radio-cstm wauto">
-                                                                <input type="radio" value="3" name="optradio" [(ngModel)]="generalInformation.customerAffiliationId" (change)="selectedCustomerType($event.target.value)">
+                                                                <input type="radio" value=3 name="optradio" [(ngModel)]="generalInformation.customerAffiliationId" (change)="selectedCustomerType($event.target.value)">
                                                                 <span class="checkmark"></span> Affiliate
                                                             </label>
                                                         </div>
@@ -374,7 +374,7 @@
 
                                         </div>
                                         <div class="form-row pull-right">
-                                            <button type="submit" class="btn btn-primary-cstm submit-btn" [disabled]="!generalInfoForm.valid || isCustomerNameAlreadyExists || disableSaveCustomerName || isCustomerCodeAlreadyExists ||disableSaveParentName" (click)="saveGeneralInformation()">Save &amp; Next</button>
+                                            <button type="submit" class="btn btn-primary submit-btn" [disabled]="!generalInfoForm.valid || isCustomerNameAlreadyExists || disableSaveCustomerName || isCustomerCodeAlreadyExists ||disableSaveParentName" (click)="saveGeneralInformation()">Save &amp; Next</button>
                                         </div>
 
                                     </div>
@@ -551,8 +551,8 @@
 
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary-cstm" data-dismiss="modal" (click)="addClassification()" [disabled]="isClassificationAlreadyExists ||addCustomerClassification.invalid ">Save</button>
-                    <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="resetClassificationPopUp()">Close</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="addClassification()" [disabled]="isClassificationAlreadyExists ||addCustomerClassification.invalid ">Save</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="resetClassificationPopUp()">Close</button>
                 </div>
             </div>
         </form>
@@ -612,8 +612,8 @@
 
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary-cstm" data-dismiss="modal" (click)="newIntegrationAdd()" [disabled]="!addIntergation.valid || isIntegrationAlreadyExists">Save</button>
-                    <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="resetIntegrationPopUp()">Close</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="newIntegrationAdd()" [disabled]="!addIntergation.valid || isIntegrationAlreadyExists">Save</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="resetIntegrationPopUp()">Close</button>
                 </div>
             </div>
 
@@ -635,8 +635,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary-cstm" data-dismiss="modal" (click)="onClickPopupSave()">Save</button>
-                <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" >Close</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="onClickPopupSave()">Save</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal" >Close</button>
             </div>
         </div>
     </div>

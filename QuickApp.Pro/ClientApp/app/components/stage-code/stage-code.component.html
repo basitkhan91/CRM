@@ -18,9 +18,9 @@
                                 <div style="text-align: right;margin-left:-6px !important;">
                                     <p-multiSelect [maxSelectedLabels]="2" [options]="headers" optionLabel="header" [(ngModel)]="selectedColumns"
                                                    [style]="{minWidth: '200px'}" style="float:left" (onChange)="columnsChanges()"></p-multiSelect>
-                                    <button type="button" class="btn btn-primary-cstm " pTooltip="Download All Data" tooltipPosition="top" pButton icon="fa-download"
+                                    <button type="button" class="btn btn-primary " pTooltip="Download All Data" tooltipPosition="top" pButton icon="fa-download"
                                             iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
-                                    <button type="button" class="btn btn-primary-cstm " pTooltip="Download Selected" tooltipPosition="top" pButton icon="fa-download"
+                                    <button type="button" class="btn btn-primary " pTooltip="Download Selected" tooltipPosition="top" pButton icon="fa-download"
                                             iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})"></button>
                                     <div class="excel-upload  excel-upload-cstm">
 
@@ -32,7 +32,7 @@
                                             </span>
                                         </label>
                                         &nbsp; &nbsp;
-                                        <button class="btn btn-primary-cstm" (click)="sampleExcelDownload()"  pTooltip="Download Sample File"  tooltipPosition="top">Sample File Download</button>
+                                        <button class="btn btn-primary" (click)="sampleExcelDownload()"  pTooltip="Download Sample File"  tooltipPosition="top">Sample File Download</button>
                                     </div>
 
                                 </div>
@@ -47,11 +47,11 @@
                             <ng-template pTemplate="header" let-columns>
                                 <tr>
                                         <ng-container *ngFor="let col of columns">
-                                                <th class="text-center" *ngIf="col.field!='level1' && col.field!='level2' && col.field!='level3' && col.field!='level4'"  pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
+                                                <th class="text-center" *ngIf="col.field!='levelCode1' && col.field!='levelCode2' && col.field!='levelCode3' && col.field!='levelCode4'"  pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
                                                         {{col.header}}
                                                         <p-sortIcon [field]="col.field"></p-sortIcon>
                                                 </th>
-                                                <th class="text-center" *ngIf="col.field=='level1'"  colspan="4"  pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
+                                                <th class="text-center" *ngIf="col.field=='levelCode1'"  colspan="4"  pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
                                                    Management Structure
                                                 </th>
                                             </ng-container>
@@ -141,8 +141,8 @@
                 </strong>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary-cstm" data-dismiss="modal" (click)="deleteConformation('Yes')">Yes</button>
-                <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="deleteConformation('No')">No</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="deleteConformation('Yes')">Yes</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="deleteConformation('No')">No</button>
             </div>
         </div>
 
@@ -170,14 +170,16 @@
                                 </label>
                             </div>
                             <div class="col-sm-5">
-                                <input type="text" name="code" class="form-control" #code="ngModel" [(ngModel)]="addNew.code" required>
+                                <input type="text" name="code" class="form-control" #code="ngModel" [(ngModel)]="addNew.code" required (input)="checkStageCodeExistOrNot($event.target.value)">
+                                <div *ngIf="disableSaveForCode" class="clr-red">Already Exists</div>
+                                <div class="clear"></div>
                             </div>
                         </div>
 
                         <div class="col-sm-12">
                             <div class="col-sm-4">
                                 <label for="description" class="control-label">
-                                   Description
+                                   Stage Description
                                 
                                 </label>
                             </div>
@@ -194,7 +196,9 @@
                                 </label>
                             </div>
                             <div class="col-sm-5">
-                                <input type="number" name="sequence" class="form-control" #sequence="ngModel" [(ngModel)]="addNew.sequence" required>
+                                <input type="number" name="sequence" class="form-control" #sequence="ngModel" [(ngModel)]="addNew.sequence" required (input)="checkSequenceExistOrNot($event.target.valueAsNumber)">
+                                <div *ngIf="disableSaveForSequence" class="clr-red">Already Exists</div>
+                                <div class="clear"></div>
                             </div>
                         </div>
 
@@ -311,8 +315,8 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-primary-cstm" data-dismiss="modal" [disabled]="create.invalid || disableSave" (click)="save();"> {{isEdit ? 'Update' : 'Save' }}</button>
-                <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="resetForm()">Close</button>
+                <button class="btn btn-primary" data-dismiss="modal" [disabled]="create.invalid || disableSaveForCode || disableSaveForSequence" (click)="save();"> {{isEdit ? 'Update' : 'Save' }}</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="resetForm()">Close</button>
 
             </div>
         </div>

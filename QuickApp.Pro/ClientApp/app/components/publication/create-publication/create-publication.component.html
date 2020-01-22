@@ -175,7 +175,7 @@
                     <td *ngFor="let col of columns">
                       {{ rowData[col.field] }}
                     </td>
-                    <!-- <td><a routerLink="/{{rowData.link}}" class="btn btn-primary-cstm" download>Download</a></td> -->
+                    <!-- <td><a routerLink="/{{rowData.link}}" class="btn btn-primary" download>Download</a></td> -->
                   </tr>
                   
                 </ng-template>
@@ -185,7 +185,7 @@
       </div>
   
       <div class="pull-right">
-          <button class="btn btn-primary-cstm button-save-cstm-cstm" data-toggle="modal" data-target="#revisionNum" [disabled]="!generalInfoForm.valid" type="submit" (click)="saveGeneralInfo(); ">
+          <button class="btn btn-primary button-save-cstm-cstm" data-toggle="modal" data-target="#revisionNum" [disabled]="!generalInfoForm.valid" type="submit" (click)="saveGeneralInfo(); ">
             Save & Next
           </button>
         </div>               
@@ -285,14 +285,14 @@
           </div>
           <div class="col-md-12">
               <button
-              class="btn btn-primary-cstm pull-right button-save-cstm"
+              class="btn btn-primary pull-right button-save-cstm"
               type="submit"
               (click)="changeOfTab('Aircraft'); "
             >
               Next
             </button>
             <button
-              class="btn btn-primary-cstm pull-right button-save-cstm"
+              class="btn btn-primary pull-right button-save-cstm"
               type="submit"
               (click)="changeOfTab('General')"
             >
@@ -419,14 +419,14 @@
           </div>
           <div class="col-md-12">
               <button
-              class="btn btn-primary-cstm pull-right button-save-cstm"
+              class="btn btn-primary pull-right button-save-cstm"
               type="submit"
               (click)="changeOfTab('Atachapter')"
             >
              Next
             </button>
             <button
-              class="btn btn-primary-cstm pull-right button-save-cstm"
+              class="btn btn-primary pull-right button-save-cstm"
               type="submit"
               (click)="changeOfTab('PnMap')"
             >
@@ -535,13 +535,13 @@
         </div>
         <div class="col-md-12">
             <button
-            class="btn btn-primary-cstm pull-right button-save-cstm"
+            class="btn btn-primary pull-right button-save-cstm"
             type="button"
             [routerLink]="['/singlepages/singlepages/app-publication']">
             Next
           </button>
           <button
-            class="btn btn-primary-cstm pull-right button-save-cstm"
+            class="btn btn-primary pull-right button-save-cstm"
             type="submit"
             (click)="changeOfTab('Aircraft')"
           >
@@ -647,8 +647,8 @@
       </strong>
       </div>
       <div class="modal-footer">
-          <button type="button" class="btn btn-primary-cstm" data-dismiss="modal" (click)="deleteConformation('Yes')">Yes</button>
-          <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="deleteConformation('No')">No</button>
+          <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="deleteConformation('Yes')">Yes</button>
+          <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="deleteConformation('No')">No</button>
       </div>
     </div>
 
@@ -666,8 +666,8 @@
           <p style="font-size: 14px;">Do you want to update <b>RevisionNum</b> from <b>{{sourcePublication.revisionNum}}</b> to <b>{{sourcePublication.revisionNum+1}}</b> ?</p>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary-cstm" data-dismiss="modal" (click)="changeRevisionNum('Yes');">Yes & Save</button>
-          <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="changeRevisionNum('No');">No & Save</button>
+          <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="changeRevisionNum('Yes');">Yes & Save</button>
+          <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="changeRevisionNum('No');">No & Save</button>
         </div>
       </div>
     </div>

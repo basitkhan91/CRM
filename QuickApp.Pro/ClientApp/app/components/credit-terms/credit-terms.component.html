@@ -27,8 +27,8 @@
                                 <div style="text-align: right; margin-left: -6px">
                                     <p-multiSelect [options]="creditTermHeaders" [(ngModel)]="selectedColumns" optionLabel="header"
                                                    [style]="{minWidth: '200px'}" style="float:left" (onChange)="columnsChanges()"></p-multiSelect>
-                                    <button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" iconPos="left" label="Export All Data" pTooltip="Download All Data" tooltipPosition="top" (click)="dt.exportCSV()"></button>
-                                    <button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" iconPos="left" label="Export Selection Only" pTooltip="Download Selected" tooltipPosition="top"
+                                    <button type="button" class="btn btn-primary" pButton icon="fa-download" iconPos="left" label="Export All Data" pTooltip="Download All Data" tooltipPosition="top" (click)="dt.exportCSV()"></button>
+                                    <button type="button" class="btn btn-primary" pButton icon="fa-download" iconPos="left" label="Export Selection Only" pTooltip="Download Selected" tooltipPosition="top"
                                             (click)="dt.exportCSV({selectionOnly:true})"></button>
                                     <div class="excel-upload excel-upload-cstm">
                                         <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected"
@@ -120,8 +120,8 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                     </strong>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary-cstm" data-dismiss="modal" (click)="deleteConformation('Yes')">Yes</button>
-                    <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="deleteConformation('No')">No</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="deleteConformation('Yes')">Yes</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="deleteConformation('No')">No</button>
                 </div>
             </div>
 
@@ -228,8 +228,8 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                             <div class="clear"></div>
                         </div>
                         <div class="modal-footer">
-                            <button class="btn btn-primary-cstm" data-dismiss="modal" [disabled]="!userForm.valid || disableSaveForCreditTerm" (click)="saveCreditTerms();">{{isEditMode ? 'Update' : 'Save'}}</button>
-                            <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="resetCreditTermsForm()">Close</button>
+                            <button class="btn btn-primary" data-dismiss="modal" [disabled]="!userForm.valid || disableSaveForCreditTerm" (click)="saveCreditTerms();">{{isEditMode ? 'Update' : 'Save'}}</button>
+                            <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="resetCreditTermsForm()">Close</button>
                         </div>
                     </form>
                 </div>
@@ -313,7 +313,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                     <div class="clear"></div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" id="" name="" (click)="resetCreditTermsForm()">Close</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" id="" name="" (click)="resetCreditTermsForm()">Close</button>
                 </div>
             </div>
 
@@ -373,7 +373,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                 </div>
             </div>
 
