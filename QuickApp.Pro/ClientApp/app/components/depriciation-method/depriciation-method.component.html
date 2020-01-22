@@ -319,7 +319,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
             </form>
         </div>
         <div class="modal-footer">
-            <button class="btn btn-primary" [disabled]="!userForm.valid || disableSave || disableSaveForSequence" (click)="SaveandEditDepreciationMethod()">Save</button>
+            <button class="btn btn-primary" [disabled]="!userForm.valid || disableSave || disableSaveForSequence" (click)="SaveandEditDepreciationMethod()">{{isEditMode == true ? 'Update' : 'Save' }}</button>
             <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
         </div>
     </ng-template>

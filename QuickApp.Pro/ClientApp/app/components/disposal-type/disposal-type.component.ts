@@ -274,8 +274,8 @@ export class DisposalTypeComponent implements OnInit {
         this.recordExists = false;
         this.isSaving = true;
         this.loadMasterCompanies();
-        this.sourceAction = row;
-        this.selectedRow = row;
+        this.sourceAction = { ...row };
+        this.selectedRow = { ...row };
         
         this.codeName = row.code;
         this.name = row.name;
@@ -310,7 +310,9 @@ export class DisposalTypeComponent implements OnInit {
                 error => this.saveFailedHelper(error));
         }
         else {
+            
             params.AssetDisposalTypeId = this.sourceAction.assetDisposalTypeId;
+            console.log(params);
             this.disposalTypeService.update(params).subscribe(
                 response => this.saveCompleted(this.sourceAction),
                 error => this.saveFailedHelper(error));
@@ -485,12 +487,12 @@ export class DisposalTypeComponent implements OnInit {
 
     onBlurCheck(event, field) {
         console.log(field);
-        console.log(event.target.value);
+        //console.log(event.target.value);
         console.log(this.selectedRow);
         console.log(this.name);
         //console.log(this.code);
         if (this.isEditMode) {
-            if (field == 'name' && this.name != event.target.value) {
+            if (field == 'name' && this.name != event) {
                 console.log('came here 494');
                 this.disableSave = false;
             }
@@ -504,23 +506,26 @@ export class DisposalTypeComponent implements OnInit {
     }
 
     enableSave(event, field) {
+        this.disableSave = false;
+        /*
         console.log('on change triggered', field);
         console.log(this.selectedRow[field]);
-        console.log(event.target.value);
+        console.log(event);
         console.log(this.memo);
         if (this.isEditMode) {
-            if (field == 'memo' && this.memo != event.target.value) {
+            if (field == 'memo' && this.memo != event) {
                 this.disableSave = false;
             }
 
             if (field == 'isActive') {
                 let isActiveChecked = false;
+                console.log(event.target.value);
                 if (event.target.value == 'on')
                     isActiveChecked = true;
                 if (isActiveChecked != this.selectedRow[field])
                     this.disableSave = false;
             }
-        }
+        }*/
     }
 
 }

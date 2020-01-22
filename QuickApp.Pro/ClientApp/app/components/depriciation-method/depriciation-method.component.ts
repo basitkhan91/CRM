@@ -350,7 +350,7 @@ export class DepriciationMethodComponent implements OnInit, AfterViewInit{
         this.isSaving = true;
         this.loadMasterCompanies();
         //this.sourceAction = { ...row, sequenceNo: getObjectById('sequenceNo', row.assetDepreciationMethodId, this.depriciationMethodList) };
-        this.sourceAction = row;
+        this.sourceAction = {...row };
         this.codeName = this.sourceAction.code;
         this.sequenceNo = this.sourceAction.sequenceNo;
         this.loadMasterCompanies();
