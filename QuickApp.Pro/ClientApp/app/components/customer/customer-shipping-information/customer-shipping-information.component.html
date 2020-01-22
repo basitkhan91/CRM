@@ -233,7 +233,7 @@
     <div class="modal-header">
         <h4 class="modal-title" *ngIf="isEditMode">Edit Ship Via Info</h4>
         <h4 class="modal-title" *ngIf="!isEditMode">Add Ship Via Info</h4>
-        <button type="button" class="btn btn-danger-cstm" aria-label="Close" (click)="dismissShipViaModelModel()">
+        <button type="button" class="btn btn-danger" aria-label="Close" (click)="dismissShipViaModelModel()">
             <span aria-hidden="true">&times;</span>
         </button>
 
@@ -357,7 +357,7 @@
             <div class="clear"></div>
             <div class="modal-footer">
                 <button class="btn btn-success" [disabled]="!userForm.valid" (click)="saveCustomerShipViaDetails()">Submit</button>
-                <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
+                <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
             </div>
         </form>
     </div>
@@ -396,7 +396,7 @@
         </div>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
+        <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
     </div>
 </ng-template>
 
@@ -439,7 +439,7 @@
             <div class="modal-footer">
 
                 <button class="btn btn-success">Submit</button>
-                <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
+                <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
             </div>
         </form>
     </div>
@@ -476,7 +476,7 @@
 
             <!-- Modal footer -->
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
             </div>
 
         </div>
@@ -599,7 +599,7 @@
             </div>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
+            <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
         </div>
     </ng-template>
 </div>
@@ -700,7 +700,7 @@
 
             <!-- Modal footer -->
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="closeInternationalModal()">Close</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="closeInternationalModal()">Close</button>
             </div>
 
         </div>
@@ -833,8 +833,8 @@
             </strong>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-success-cstm" (click)="deleteItemAndCloseModel2()">Yes</button>
-            <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">No</button>
+            <button type="button" class="btn btn-success" (click)="deleteItemAndCloseModel2()">Yes</button>
+            <button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
         </div>
     </ng-template>
     <ng-template #contentAuditHistInterShipVia let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static">
@@ -880,7 +880,7 @@
             </div>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
+            <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
         </div>
     </ng-template>
 
@@ -914,7 +914,7 @@
 
                 <!-- Modal footer -->
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="closeInternationalModal()">Close</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="closeInternationalModal()">Close</button>
                 </div>
 
             </div>
@@ -1031,7 +1031,7 @@
                 </p-table>
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="resetShipViaInternational()">Close</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="resetShipViaInternational()">Close</button>
                 </div>
 
             </div>
@@ -1051,8 +1051,8 @@
             </strong>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-success-cstm" (click)="deleteItemAndCloseModel3()">Yes</button>
-            <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">No</button>
+            <button type="button" class="btn btn-success" (click)="deleteItemAndCloseModel3()">Yes</button>
+            <button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
         </div>
     </ng-template>
 </div>
@@ -1084,7 +1084,7 @@
 
             <!-- Modal footer -->
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="closeInternationalModal()">Close</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="closeInternationalModal()">Close</button>
             </div>
 
         </div>
@@ -1120,7 +1120,7 @@
 
             <!-- Modal footer -->
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="closeInternationalModal()">Close</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="closeInternationalModal()">Close</button>
             </div>
 
         </div>
@@ -1156,7 +1156,7 @@
 
             <!-- Modal footer -->
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="closeInternationalModal()">Close</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="closeInternationalModal()">Close</button>
             </div>
 
         </div>
@@ -1176,8 +1176,8 @@
         </strong>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-success-cstm" (click)="deleteItemAndCloseModel()">Yes</button>
-        <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">No</button>
+        <button type="button" class="btn btn-success" (click)="deleteItemAndCloseModel()">Yes</button>
+        <button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
     </div>
 </ng-template>
 <ng-template #deleteContent1 let-c="close" let-d="dismiss" data-backdrop="static">
@@ -1194,8 +1194,8 @@
         </strong>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-success-cstm" (click)="deleteItemAndCloseModel1()">Yes</button>
-        <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">No</button>
+        <button type="button" class="btn btn-success" (click)="deleteItemAndCloseModel1()">Yes</button>
+        <button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
     </div>
 </ng-template>
 <ng-template #contentAuditHist let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static">
@@ -1203,7 +1203,7 @@
     <div class="modal-header">
 
         <h4 class="modal-title">History of Shipping Info</h4>
-        <button type="button" class="btn btn-danger-cstm" aria-label="Close" (click)="dismissModel()">
+        <button type="button" class="btn btn-danger" aria-label="Close" (click)="dismissModel()">
             <span aria-hidden="true">&times;</span>
         </button>
 
@@ -1250,7 +1250,7 @@
         </div>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
+        <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
     </div>
 </ng-template>
 <ng-template #contentAuditHistInter let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static">
@@ -1302,6 +1302,6 @@
         </div>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
+        <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
     </div>
 </ng-template>

@@ -3097,6 +3097,10 @@ input.parsley-error, select.parsley-error, textarea.parsley-error {
     border-radius: 5px !important;
     background-color: #337ab7 !important
 }
+.btn-success{
+    border-radius: 5px !important;
+    background-color: green !important
+}
 
 .btn-danger {
     border-radius: 5px !important;
@@ -12672,13 +12676,13 @@ body .ui-table .ui-table-tbody > tr > td a.btn {
     padding: 6px 12px !important;
 }
 
-.btn-success-cstm {
-    color: #fff !important;
-    background-color: green !important;
-    border-color: #2e6da4;
-    border-radius: 4px !important;
-    padding: 6px 12px !important;
-}
+// .btn-success {
+//     color: #fff !important;
+//     background-color: green !important;
+//     border-color: #2e6da4;
+//     border-radius: 4px !important;
+//     padding: 6px 12px !important;
+// }
 
 
 .ui-button-icon-left {
