@@ -222,6 +222,7 @@ import { StocklineViewComponent } from './shared/components/stockline/stockline-
 import { StocklineHistoryComponent } from './shared/components/stockline/stockline-history/stockline-history.component';
 import { CommonService } from "./services/common.service";
 import { CommonModule } from '@angular/common';
+import { TableModule } from 'primeng/table';
 import { StageCodeService } from './services/work-order-stagecode.service';
 
 @NgModule({
@@ -236,6 +237,7 @@ import { StageCodeService } from './services/work-order-stagecode.service';
         SettingsModule,
         AppRoutingModule,
         CommonModule,
+        TableModule,
         DropdownModule,
         TranslateModule.forRoot({
             loader: {
