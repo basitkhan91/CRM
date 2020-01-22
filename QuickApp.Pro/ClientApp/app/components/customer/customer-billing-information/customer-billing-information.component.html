@@ -410,8 +410,8 @@
                         <th>Country</th>
                         <th>Updated By</th>
                         <th>Last Updated Time</th>
-                        <th>Created By</th>
-                        <th>Created Time</th>
+                        <th>Status</th>
+
 
                     </tr>
                 </thead>
@@ -436,8 +436,8 @@
 
                 <td>{{audit.updatedBy}}</td>
                 <td>{{audit.updatedDate | date: 'dd-MM-yyyy h:mm a '}}</td>
-                <td>{{audit.createdBy}}</td>
-                <td>{{audit.createdDate | date: 'dd-MM-yyyy h:mm a '}}</td>
+                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'isActive', audit.isActive)  ? 'black' : 'red'  }">{{audit.isActive}}</td>
+               
             </tr>
             </table>
         </div>
