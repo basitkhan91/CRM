@@ -319,6 +319,12 @@ namespace DAL.Repositories
                          join uom in _appContext.UnitOfMeasure on part.UOMId equals uom.UnitOfMeasureId
                          into leftUom
                          from uom in leftUom.DefaultIfEmpty()
+                         join stl in _appContext.StockLine on part.RepairOrderPartRecordId equals stl.RepairOrderPartRecordId
+                         into leftStl
+                         from stl in leftStl.ToList()
+                         join stlDraft in _appContext.StockLineDraft on part.RepairOrderPartRecordId equals stlDraft.RepairOrderPartRecordId
+                         into leftStlDraft
+                         from stlDraft in leftStlDraft.ToList()
 
                          where part.RepairOrderId == repairOrderId
                          select new
@@ -330,7 +336,7 @@ namespace DAL.Repositories
                              PartDescription = itm.PartDescription,
                              QuantityToRepair = part.QuantityOrdered,
                              DiscountPerUnit = part.DiscountPerUnit,
-                             StockLineCount = GetStockLineCount(repairOrderId, part.RepairOrderPartRecordId),
+                             StockLineCount = (leftStlDraft.Count() > 0 ? leftStlDraft.Sum(x => x.Quantity) : 0) + (leftStl.Count() > 0 ? leftStl.Sum(x => x.Quantity) : 0),
                              RoPartSplitUserName = emp != null ? emp.FirstName + " " + emp.LastName : "",
                              UomText = uom != null ? uom.ShortName : "",
                              StockLine = _appContext.StockLineDraft.Where(x => x.RepairOrderId == repairOrderId && x.RepairOrderPartRecordId == part.RepairOrderPartRecordId).Select(SL => new
@@ -405,7 +411,7 @@ namespace DAL.Repositories
                                      Name = manf.Name,
                                  } : null
                              }
-                         }).ToList();
+                         }).ToList();           
 
             return parts;
 
