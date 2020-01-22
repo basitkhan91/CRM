@@ -1496,7 +1496,7 @@ namespace DAL.Repositories
             if (AircraftTypeId != null && AircraftModelId != null && myDashNumberId != null && memo != null)
             {
                 var data = (from cam in _appContext.CustomerAircraftMapping
-                            where cam.CustomerId == CustomerId && myAircraftTypeId.Contains(cam.AircraftTypeId) && myAircraftModelId.Contains(cam.AircraftModelId) && myDashNumberId.Contains(cam.DashNumberId) && memo.Contains(cam.Memo) && cam.IsDeleted != true
+                            where cam.CustomerId == CustomerId && myAircraftTypeId.Contains(cam.AircraftTypeId) && myAircraftModelId.Contains(cam.AircraftModelId) && myDashNumberId.Contains(cam.DashNumberId) && cam.Memo.Contains(memo) && cam.IsDeleted != true
                             select new { cam.CustomerAircraftMappingId, cam.CustomerId, cam.AircraftTypeId, cam.AircraftModelId, cam.DashNumberId, cam.DashNumber, cam.AircraftType, cam.AircraftModel, cam.Memo, cam.Inventory, cam.MasterCompanyId }).ToList();
                 var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
                 return uniquedata;
@@ -1509,10 +1509,18 @@ namespace DAL.Repositories
                 var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
                 return uniquedata;
             }
-            else if (AircraftTypeId != null && AircraftModelId != null && myDashNumberId == null)
+            else if (AircraftTypeId != null && AircraftModelId != null && myDashNumberId == null && memo == null)
             {
                 var data = (from cam in _appContext.CustomerAircraftMapping
                             where cam.CustomerId == CustomerId && myAircraftTypeId.Contains(cam.AircraftTypeId) && myAircraftModelId.Contains(cam.AircraftModelId) && cam.IsDeleted != true
+                            select new { cam.CustomerAircraftMappingId, cam.CustomerId, cam.AircraftTypeId, cam.AircraftModelId, cam.DashNumberId, cam.DashNumber, cam.AircraftType, cam.AircraftModel, cam.Memo, cam.Inventory, cam.MasterCompanyId }).ToList();
+                var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
+                return uniquedata;
+            }
+            else if (AircraftTypeId != null && AircraftModelId != null && myDashNumberId == null && memo != null)
+            {
+                var data = (from cam in _appContext.CustomerAircraftMapping
+                            where cam.CustomerId == CustomerId && myAircraftTypeId.Contains(cam.AircraftTypeId) && myAircraftModelId.Contains(cam.AircraftModelId) && cam.Memo.Contains(memo) && cam.IsDeleted != true
                             select new { cam.CustomerAircraftMappingId, cam.CustomerId, cam.AircraftTypeId, cam.AircraftModelId, cam.DashNumberId, cam.DashNumber, cam.AircraftType, cam.AircraftModel, cam.Memo, cam.Inventory, cam.MasterCompanyId }).ToList();
                 var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
                 return uniquedata;
@@ -1521,6 +1529,14 @@ namespace DAL.Repositories
             {
                 var data = (from cam in _appContext.CustomerAircraftMapping
                             where cam.CustomerId == CustomerId && myAircraftTypeId.Contains(cam.AircraftTypeId) && cam.IsDeleted != true
+                            select new { cam.CustomerAircraftMappingId, cam.CustomerId, cam.AircraftTypeId, cam.AircraftModelId, cam.DashNumberId, cam.DashNumber, cam.AircraftType, cam.AircraftModel, cam.Memo, cam.Inventory, cam.MasterCompanyId }).ToList();
+                var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
+                return uniquedata;
+            }
+            else if (AircraftTypeId != null && myAircraftModelId == null && myDashNumberId == null && memo != null)
+            {
+                var data = (from cam in _appContext.CustomerAircraftMapping
+                            where cam.CustomerId == CustomerId && myAircraftTypeId.Contains(cam.AircraftTypeId) && cam.Memo.Contains(memo) && cam.IsDeleted != true
                             select new { cam.CustomerAircraftMappingId, cam.CustomerId, cam.AircraftTypeId, cam.AircraftModelId, cam.DashNumberId, cam.DashNumber, cam.AircraftType, cam.AircraftModel, cam.Memo, cam.Inventory, cam.MasterCompanyId }).ToList();
                 var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
                 return uniquedata;
@@ -1560,7 +1576,7 @@ namespace DAL.Repositories
             else if (AircraftTypeId == null && myAircraftModelId == null && myDashNumberId == null && memo != null)
             {
                 var data = (from cam in _appContext.CustomerAircraftMapping
-                            where cam.CustomerId == CustomerId && memo.Contains(cam.Memo) && cam.IsDeleted != true
+                            where cam.CustomerId == CustomerId && cam.Memo.Contains(memo) && cam.IsDeleted != true
                             select new { cam.CustomerAircraftMappingId, cam.CustomerId, cam.AircraftTypeId, cam.AircraftModelId, cam.DashNumberId, cam.DashNumber, cam.AircraftType, cam.AircraftModel, cam.Memo, cam.Inventory, cam.MasterCompanyId }).ToList();
                 var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
                 return uniquedata;
@@ -1568,7 +1584,7 @@ namespace DAL.Repositories
             else if (myAircraftModelId != null && myDashNumberId != null && memo != null)
             {
                 var data = (from cam in _appContext.CustomerAircraftMapping
-                            where cam.CustomerId == CustomerId && memo.Contains(cam.Memo) && myAircraftModelId.Contains(cam.AircraftModelId) && myDashNumberId.Contains(cam.DashNumberId) && cam.IsDeleted != true
+                            where cam.CustomerId == CustomerId && cam.Memo.Contains(memo) && myAircraftModelId.Contains(cam.AircraftModelId) && myDashNumberId.Contains(cam.DashNumberId) && cam.IsDeleted != true
                             select new { cam.CustomerAircraftMappingId, cam.CustomerId, cam.AircraftTypeId, cam.AircraftModelId, cam.DashNumberId, cam.DashNumber, cam.AircraftType, cam.AircraftModel, cam.Memo, cam.Inventory, cam.MasterCompanyId }).ToList();
                 var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
                 return uniquedata;
@@ -1576,7 +1592,7 @@ namespace DAL.Repositories
             else if (myAircraftModelId != null && memo != null)
             {
                 var data = (from cam in _appContext.CustomerAircraftMapping
-                            where cam.CustomerId == CustomerId && memo.Contains(cam.Memo) && myAircraftModelId.Contains(cam.AircraftModelId) && cam.IsDeleted != true
+                            where cam.CustomerId == CustomerId && cam.Memo.Contains(memo) && myAircraftModelId.Contains(cam.AircraftModelId) && cam.IsDeleted != true
                             select new { cam.CustomerAircraftMappingId, cam.CustomerId, cam.AircraftTypeId, cam.AircraftModelId, cam.DashNumberId, cam.DashNumber, cam.AircraftType, cam.AircraftModel, cam.Memo, cam.Inventory, cam.MasterCompanyId }).ToList();
                 var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
                 return uniquedata;
@@ -1585,7 +1601,7 @@ namespace DAL.Repositories
             else if (myDashNumberId != null && memo != null)
             {
                 var data = (from cam in _appContext.CustomerAircraftMapping
-                            where cam.CustomerId == CustomerId && memo.Contains(cam.Memo) && myDashNumberId.Contains(cam.DashNumberId) && cam.IsDeleted != true
+                            where cam.CustomerId == CustomerId && cam.Memo.Contains(memo) && myDashNumberId.Contains(cam.DashNumberId) && cam.IsDeleted != true
                             select new { cam.CustomerAircraftMappingId, cam.CustomerId, cam.AircraftTypeId, cam.AircraftModelId, cam.DashNumberId, cam.DashNumber, cam.AircraftType, cam.AircraftModel, cam.Memo, cam.Inventory, cam.MasterCompanyId }).ToList();
                 var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
                 return uniquedata;
