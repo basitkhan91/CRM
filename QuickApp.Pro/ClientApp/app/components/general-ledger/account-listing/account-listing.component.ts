@@ -83,7 +83,7 @@ export class AccountListingComponent implements OnInit {
         this.accountListingService.getAll().subscribe(
             datalist=> {
                 this.data = datalist;
-                console.log('data table :', datalist)
+                //console.log('data table :', datalist)
                 if (datalist.length > 0) {
                     this.totalRecords = datalist.filter(items => items).length;
                     this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
@@ -137,8 +137,16 @@ export class AccountListingComponent implements OnInit {
     edit(rowData) {        
         this._route.navigateByUrl(`generalledgermodule/generalledgerpage/app-account-listing-create/${rowData.glAccountId}`);
     }
-    delete(rowData) {
-        console.log('rowData dele :', rowData)      
+
+
+    delete(rowData) {        
+        this.accountListingService.deleteGlAccountById(rowData.glAccountId).subscribe(response => {
+            console.log('response delete :', response)
+            this.getList(rowData)
+        },
+        error => {
+            console.log('error in Delete GL account by Id')
+        })      
     }
 
     globalSearch(value) {
