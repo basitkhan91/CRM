@@ -49,9 +49,9 @@
                                                     <h3 class="add-details-heading" style="padding-top: 10px;"> {{ part.itemMaster?.partNumber }} receiving Qty  {{ (part.currentSLIndex + 1) }} of {{ part.stockLine.length }}</h3>
                                                    
                                                     <div class="pull-right" style="margin-top: -37px;margin-right: 85px;" *ngIf="part.itemMaster?.isSerialized">
-                                                        <i class="fa fa-chevron-left btn btn-primary-cstm btn-ad-icons" (click)="moveStockLinePage('stockline', part.currentSLIndex - 1, part)"></i>
+                                                        <i class="fa fa-chevron-left btn btn-primary btn-ad-icons" (click)="moveStockLinePage('stockline', part.currentSLIndex - 1, part)"></i>
                                                         <input [value]="part.currentSLIndex + 1" type="text" pInputText pKeyFilter="pnum" (keyup)="gotoStockLinePage($event, part)" (focusout)="paginatorFocusOut($event, part)" class="form-control" style="width: 50px;border-radius: 0 !important;" />
-                                                        <i class="fa fa-chevron-right btn btn-primary-cstm btn-ad-icons" (click)="moveStockLinePage('stockline', part.currentSLIndex + 1, part)"></i>
+                                                        <i class="fa fa-chevron-right btn btn-primary btn-ad-icons" (click)="moveStockLinePage('stockline', part.currentSLIndex + 1, part)"></i>
                                                         <p>Page {{part.currentSLIndex + 1}} of {{part.stockLine.length}} Pages</p>
                                                     </div>
                                                 

@@ -7,7 +7,7 @@
                 <li class="breadcrumb-item " aria-current="page">{{typeOfForm}} Work Flow</li>
             </ol>
         </nav>
-        <button class="btn btn-primary-cstm pull-right" (click)="toggle_wf_header=!toggle_wf_header">
+        <button class="btn btn-primary pull-right" (click)="toggle_wf_header=!toggle_wf_header">
             {{toggle_wf_header ? 'See Less' : 'See More...'}}
         </button>
     </div>
@@ -259,8 +259,8 @@
                     </div>
                     <div class="form-row pull-right" *ngIf="!isWorkOrder">
                         <div class="form-group col-md-4" style="margin-top: 15px;">
-                            <button class="btn btn-primary btn-primary-cstm" style="padding: 6px 12px;" *ngIf="!UpdateMode" (click)="addWorkFlow(true)">Save</button>
-                            <button class="btn btn-primary btn-primary-cstm" style="padding: 6px 12px;" *ngIf="UpdateMode" (click)="updateWorkFlow(true)">Update</button>
+                            <button class="btn btn-primary btn-primary" style="padding: 6px 12px;" *ngIf="!UpdateMode" (click)="addWorkFlow(true)">Save</button>
+                            <button class="btn btn-primary btn-primary" style="padding: 6px 12px;" *ngIf="UpdateMode" (click)="updateWorkFlow(true)">Update</button>
                         </div>
                     </div>
                 </div>
@@ -310,7 +310,7 @@
             </div>
             <div class="col-md-2">
                 <div class="form-group">
-                    <button class="btn btn-primary btn-primary-cstm total-wf-cost-btn" style="padding: 6px 12px;" (click)="calculateTotalWorkFlowCost(true)">Calculate Total Work Flow Cost</button>
+                    <button class="btn btn-primary btn-primary total-wf-cost-btn" style="padding: 6px 12px;" (click)="calculateTotalWorkFlowCost(true)">Calculate Total Work Flow Cost</button>
                 </div>
 
                 <!--<div class="form-group">
@@ -480,8 +480,8 @@
                     </div>
                     <div *ngIf="isWorkOrder">
                         <div class="text-right save-work-btn">
-                            <button class="btn btn-primary btn-primary-cstm" data-target="#saveToWorkFlow" data-toggle="modal" style="padding: 6px 12px !important;">Save To Work Flow</button>
-                            <button class="btn btn-primary btn-primary-cstm"  data-target="#saveToWorkOrder" data-toggle="modal"   style="padding: 6px 12px !important;">Save To Work Order Only</button>
+                            <button class="btn btn-primary btn-primary" data-target="#saveToWorkFlow" data-toggle="modal" style="padding: 6px 12px !important;">Save To Work Flow</button>
+                            <button class="btn btn-primary btn-primary"  data-target="#saveToWorkOrder" data-toggle="modal"   style="padding: 6px 12px !important;">Save To Work Order Only</button>
                         </div>
 
                     </div>
@@ -489,13 +489,13 @@
 
                 <div *ngIf="!isWorkOrder">
                     <div class="text-right save-work-btn" *ngIf="isQuote">
-                        <button class="btn btn-primary btn-primary-cstm" (click)="saveBuildFromScratchData()" style="padding: 6px 12px !important;">Save</button>
+                        <button class="btn btn-primary btn-primary" (click)="saveBuildFromScratchData()" style="padding: 6px 12px !important;">Save</button>
                     </div>
                     <div class="text-right save-work-btn" *ngIf="(showMainPage) && (!UpdateMode) && workFlowList.length > 0 && !isQuote">
-                        <button class="btn btn-primary btn-primary-cstm" (click)="addWorkFlow(false)" style="padding: 6px 12px !important;">Save Work Flow</button>
+                        <button class="btn btn-primary btn-primary" (click)="addWorkFlow(false)" style="padding: 6px 12px !important;">Save Work Flow</button>
                     </div>
                     <div class="text-right save-work-btn" *ngIf="(showMainPage) && (UpdateMode) ">
-                        <button class="btn btn-primary btn-primary-cstm" (click)="updateWorkFlow(false)" style="padding: 6px 12px !important;">Update Work Flow Details</button> <!-- add-btn -->
+                        <button class="btn btn-primary btn-primary" (click)="updateWorkFlow(false)" style="padding: 6px 12px !important;">Update Work Flow Details</button> <!-- add-btn -->
                     </div>
                 </div>
                 
@@ -574,8 +574,8 @@
                     </div>
 
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary-cstm" data-dismiss="modal" (click)="saveWorkFlowWorkOrder(true)">Yes</button>
-                        <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">No</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="saveWorkFlowWorkOrder(true)">Yes</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
                     </div>
                 </div>
         
@@ -591,8 +591,8 @@
                         </div>
     
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-primary-cstm" data-dismiss="modal" (click)="saveWorkFlowWorkOrder(false)">Yes</button>
-                            <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">No</button>
+                            <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="saveWorkFlowWorkOrder(false)">Yes</button>
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
                         </div>
                     </div>
             
