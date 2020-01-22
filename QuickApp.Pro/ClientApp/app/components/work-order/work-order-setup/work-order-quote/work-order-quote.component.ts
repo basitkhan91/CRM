@@ -112,6 +112,8 @@ editData: any;
 editingIndex: number;
 selectedWorkFlowWorkOrderId: number;
 workOrderQuoteDetailsId: any;
+historicalWorkOrderId: number = 0;
+woWorkFlowId: number = 0;
 
 
 
@@ -348,9 +350,25 @@ workOrderQuoteDetailsId: any;
         this.workOrderService.getSavedQuoteDetails(this.selectedWorkFlowWorkOrderId)
         .subscribe(
           (res)=>{
-            console.log(res);
             if(res && res['workOrderQuoteDetailsId']){
               this.workOrderQuoteDetailsId = res['workOrderQuoteDetailsId'];
+              this.historicalWorkOrderId = res['selectedId'];
+              this.woWorkFlowId = res['selectedId'];
+              if(res['buildMethodId'] == 1){
+                this.buildMethodSelected('use work flow');
+              }
+              else if(res['buildMethodId'] == 2){
+                this.buildMethodSelected('use historical wos');
+              }
+              else{
+                this.buildMethodSelected('build from scratch');
+              }
+            }
+            else{
+              this.workOrderQuoteDetailsId = 0;
+              this.historicalWorkOrderId = 0;
+              this.woWorkFlowId = 0;
+              this.selectedBuildMethod = "";
             }
           }
         )
@@ -362,7 +380,6 @@ workOrderQuoteDetailsId: any;
         this.laborPayload.IsPMA = this.exclusionPayload.IsPMA = this.chargesPayload.IsPMA = this.materialListPayload.IsPMA = pns['isPMA'];
         this.laborPayload.ItemMasterId = this.exclusionPayload.ItemMasterId = this.chargesPayload.ItemMasterId = this.materialListPayload.ItemMasterId = pns['masterPartId'];
         this.laborPayload.CMMId = this.exclusionPayload.CMMId = this.chargesPayload.CMMId = this.materialListPayload.CMMId = pns['cmmId'];
-        this.laborPayload.SelectedId = this.exclusionPayload.SelectedId = this.chargesPayload.SelectedId = this.materialListPayload.SelectedId = pns['id'];
         this.laborPayload.EstCompDate = this.exclusionPayload.EstCompDate = this.chargesPayload.EstCompDate = this.materialListPayload.EstCompDate = pns['estimatedCompletionDate'];
         this.laborPayload.StatusId = this.exclusionPayload.StatusId = this.chargesPayload.StatusId = this.materialListPayload.StatusId = pns['workOrderStatusId'];
       }
@@ -564,6 +581,7 @@ workOrderQuoteDetailsId: any;
   createMaterialQuote(){
     this.materialListPayload.BuildMethodId = this.getBuildMethodId();
     this.materialListPayload['WorkflowWorkOrderId'] = this.selectedWorkFlowWorkOrderId;
+    this.materialListPayload.SelectedId = (this.selectedBuildMethod == "use work flow")?this.woWorkFlowId:(this.selectedBuildMethod == "use historical wos")?this.historicalWorkOrderId:0;
     this.materialListPayload.WorkOrderQuoteMaterial = this.materialListQuotation.map(mList=>{
       if(mList.workOrderQuoteDetailsId && mList.workOrderQuoteDetailsId != 0){
         this.materialListPayload.WorkOrderQuoteDetailsId = mList.workOrderQuoteDetailsId
@@ -600,8 +618,8 @@ workOrderQuoteDetailsId: any;
       res => {
         this.tabQuoteCreated['materialList'] = true;
         this.materialListQuotation = res.workOrderQuoteMaterial;
-        this.getQuoteMaterialListByWorkOrderQuoteId();
         this.updateWorkOrderQuoteDetailsId(res.workOrderQuoteDetailsId);
+        this.getQuoteMaterialListByWorkOrderQuoteId();
         this.alertService.showMessage(
             this.moduleName,
             'Quotation for material list created successfully',
@@ -613,6 +631,7 @@ workOrderQuoteDetailsId: any;
 
   createLaborQuote(){
     this.laborPayload['workflowWorkOrderId'] = this.selectedWorkFlowWorkOrderId;
+    this.laborPayload['SelectedId'] = (this.selectedBuildMethod == "use work flow")?this.woWorkFlowId:(this.selectedBuildMethod == "use historical wos")?this.historicalWorkOrderId:0;
     this.workOrderService.saveLaborListQuote(this.laborPayload)
     .subscribe(
       res => {
@@ -651,6 +670,7 @@ workOrderQuoteDetailsId: any;
 
   createChargeQuote(data){
     this.chargesPayload['workflowWorkOrderId'] = this.selectedWorkFlowWorkOrderId;
+    this.chargesPayload['SelectedId'] = (this.selectedBuildMethod == "use work flow")?this.woWorkFlowId:(this.selectedBuildMethod == "use historical wos")?this.historicalWorkOrderId:0;
     this.chargesPayload.BuildMethodId = this.getBuildMethodId();
     this.chargesPayload.WorkOrderQuoteCharges = data.map(charge=>{
       if(charge.workOrderQuoteDetailsId && charge.workOrderQuoteDetailsId != 0){
@@ -697,6 +717,7 @@ workOrderQuoteDetailsId: any;
   }
   createExclusionsQuote(){
     this.exclusionsQuotation['workflowWorkOrderId'] = this.selectedWorkFlowWorkOrderId;
+    this.exclusionsQuotation['SelectedId'] = (this.selectedBuildMethod == "use work flow")?this.woWorkFlowId:(this.selectedBuildMethod == "use historical wos")?this.historicalWorkOrderId:0;
     this.workOrderService.saveExclusionsQuote(this.exclusionsQuotation)
     .subscribe(
       res => {
@@ -1018,7 +1039,7 @@ getQuoteTabData() {
 }
 getQuoteExclusionListByWorkOrderQuoteId() {
   if(this.workOrderQuoteDetailsId){
-    this.workOrderService.getQuoteExclusionList(this.workOrderQuoteDetailsId).subscribe(res => {
+    this.workOrderService.getQuoteExclusionList(this.workOrderQuoteDetailsId, (this.selectedBuildMethod == "use work flow")?1:(this.selectedBuildMethod == "use historical wos")?2:3).subscribe(res => {
         this.workOrderExclusionsList = res;
         if(res.length > 0){
           this.updateWorkOrderQuoteDetailsId(res[0].workOrderQuoteDetailsId)
@@ -1028,7 +1049,7 @@ getQuoteExclusionListByWorkOrderQuoteId() {
 }
 getQuoteMaterialListByWorkOrderQuoteId() {
   if(this.workOrderQuoteDetailsId){
-    this.workOrderService.getQuoteMaterialList(this.workOrderQuoteDetailsId).subscribe(res => {
+    this.workOrderService.getQuoteMaterialList(this.workOrderQuoteDetailsId, (this.selectedBuildMethod == "use work flow")?1:(this.selectedBuildMethod == "use historical wos")?2:3).subscribe(res => {
         this.materialListQuotation = res;
         if(res.length > 0){
           this.updateWorkOrderQuoteDetailsId(res[0].workOrderQuoteDetailsId)
@@ -1038,7 +1059,7 @@ getQuoteMaterialListByWorkOrderQuoteId() {
 }
  getQuoteChargesListByWorkOrderQuoteId() {
   if(this.workOrderQuoteDetailsId){
-    this.workOrderService.getQuoteChargesList(this.workOrderQuoteDetailsId).subscribe(res => {
+    this.workOrderService.getQuoteChargesList(this.workOrderQuoteDetailsId, (this.selectedBuildMethod == "use work flow")?1:(this.selectedBuildMethod == "use historical wos")?2:3).subscribe(res => {
         this.workOrderChargesList = res;
         if(res.length > 0){
           this.updateWorkOrderQuoteDetailsId(res[0].workOrderQuoteDetailsId)
@@ -1048,7 +1069,7 @@ getQuoteMaterialListByWorkOrderQuoteId() {
 }
  getQuoteLaborListByWorkOrderQuoteId() {
   if(this.workOrderQuoteDetailsId){
-    this.workOrderService.getQuoteLaborList(this.workOrderQuoteDetailsId).subscribe(res => {
+    this.workOrderService.getQuoteLaborList(this.workOrderQuoteDetailsId, (this.selectedBuildMethod == "use work flow")?1:(this.selectedBuildMethod == "use historical wos")?2:3).subscribe(res => {
         if (res) {
             // this.workOrderLaborList = res;
             let wowfId = this.labor.workFlowWorkOrderId;

@@ -119,49 +119,57 @@ export class WorkOrderChargesComponent implements OnChanges {
 
   getTotalQuantity() {
     let totalQuantity = 0;
-    this.workOrderChargesList.forEach(
-      (material) => {
-        if (material.quantity) {
-          totalQuantity += material.quantity;
+    if(this.workOrderChargesList){
+      this.workOrderChargesList.forEach(
+        (material) => {
+          if (material.quantity) {
+            totalQuantity += material.quantity;
+          }
         }
-      }
-    )
+      )
+    }
     return totalQuantity;
   }
 
   getTotalUnitCost() {
     let total = 0;
-    this.workOrderChargesList.forEach(
-      (material) => {
-        if (material.unitCost) {
-          total += Number(material.unitCost);
+    if(this.workOrderChargesList){
+      this.workOrderChargesList.forEach(
+        (material) => {
+          if (material.unitCost) {
+            total += Number(material.unitCost);
+          }
         }
-      }
-    )
+      )
+    }
     return total;
   }
 
   getChargesCostPlus() {
     let total = 0;
-    this.workOrderChargesList.forEach(
-      (material) => {
-        if (material.chargesCostPlus) {
-          total += material.chargesCostPlus;
+    if(this.workOrderChargesList){
+      this.workOrderChargesList.forEach(
+        (material) => {
+          if (material.chargesCostPlus) {
+            total += material.chargesCostPlus;
+          }
         }
-      }
-    )
+      )
+    }
     return total;
   }
 
   getTotalFixedAmount() {
     let total = 0;
-    this.workOrderChargesList.forEach(
-      (material) => {
-        if (material.fixedAmount) {
-          total += Number(material.fixedAmount);
+    if(this.workOrderChargesList){
+      this.workOrderChargesList.forEach(
+        (material) => {
+          if (material.fixedAmount) {
+            total += Number(material.fixedAmount);
+          }
         }
-      }
-    )
+      )
+    }
     return total;
   }
 

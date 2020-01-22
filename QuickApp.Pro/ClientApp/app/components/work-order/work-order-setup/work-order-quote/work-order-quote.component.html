@@ -300,7 +300,7 @@
       </div>
 
     </div>
-    <div class="table-responsive" *ngIf="selectedBuildMethod == 'use work flow' && !isEdit">
+    <div class="table-responsive" *ngIf="selectedBuildMethod == 'use work flow'">
       <table class="table table-bordered table-striped table-sorting mpn-list-table table-disabled">
         <thead>
           <tr>
@@ -315,7 +315,7 @@
         </thead>
         <tbody>
           <tr class="mpn-row" *ngFor="let buildl of buildWorkOrderList">
-            <td><input type="radio" name="historical-wo-list" class="select-mpn-quote" (click)="getQuoteInfo(buildl)"></td>
+            <td><input type="radio" name="historical-wo-list" class="select-mpn-quote" [(ngModel)]="woWorkFlowId" [value]="buildl.workFlowId" (click)="getQuoteInfo(buildl)" [disabled]="isView"></td>
             <td>{{buildl.customerName}}</td>
             <td>{{buildl.partNumber}}</td>
             <td>{{buildl.partDescription}}</td>
@@ -327,7 +327,7 @@
       </table>
 
     </div>
-    <div class="table-responsive" *ngIf="selectedBuildMethod == 'use historical wos' && !isEdit">
+    <div class="table-responsive" *ngIf="selectedBuildMethod == 'use historical wos'">
       <table class="table table-bordered table-striped table-sorting mpn-list-table table-disabled">
         <thead>
           <tr>
@@ -341,7 +341,7 @@
         </thead>
         <tbody>
           <tr class="mpn-row" *ngFor="let buildl of buildHistoricalList">
-            <td><input type="radio" name="historical-wo-list" class="select-mpn-quote" (click)="getQuoteInfo(buildl)"></td>
+            <td><input type="radio" name="historical-wo-list" class="select-mpn-quote" [(ngModel)]="historicalWorkOrderId" [value]="buildl.workOrderId" (click)="getQuoteInfo(buildl)" [disabled]="isView"></td>
             <td>{{buildl.customerName}}</td>
             <td>{{buildl.partNumber}}</td>
             <td>{{buildl.partDescription}}</td>
@@ -485,7 +485,7 @@
       <button class="btn btn-primary pull-right" (click)="createMaterialQuote()">Save</button>
     </div>
 
-    <div *ngIf="selectedBuildMethod == 'use historical wos' || isEdit">
+    <div *ngIf="selectedBuildMethod == 'use historical wos'">
       <table class="table table-bordered table-striped table-sorting mpn-list-table table-disabled" >
         <thead>
           <tr>
