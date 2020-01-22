@@ -58,7 +58,7 @@ namespace DAL.Repositories
                         where iM.IsActive == true && myMids.Contains(iM.AircraftModelId) && myTids.Contains(iM.AircraftTypeId)
                         select new
                         {
-                            iM.DashNumber,
+                            DashNumber= am.ModelName + " - "+ iM.DashNumber,
                             iM.DashNumberId,
                             at.AircraftTypeId,
                             at.Description,
