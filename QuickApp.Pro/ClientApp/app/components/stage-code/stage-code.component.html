@@ -18,9 +18,9 @@
                                 <div style="text-align: right;margin-left:-6px !important;">
                                     <p-multiSelect [maxSelectedLabels]="2" [options]="headers" optionLabel="header" [(ngModel)]="selectedColumns"
                                                    [style]="{minWidth: '200px'}" style="float:left" (onChange)="columnsChanges()"></p-multiSelect>
-                                    <button type="button" class="btn btn-primary-cstm " pTooltip="Download All Data" tooltipPosition="top" pButton icon="fa-download"
+                                    <button type="button" class="btn btn-primary " pTooltip="Download All Data" tooltipPosition="top" pButton icon="fa-download"
                                             iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
-                                    <button type="button" class="btn btn-primary-cstm " pTooltip="Download Selected" tooltipPosition="top" pButton icon="fa-download"
+                                    <button type="button" class="btn btn-primary " pTooltip="Download Selected" tooltipPosition="top" pButton icon="fa-download"
                                             iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})"></button>
                                     <div class="excel-upload  excel-upload-cstm">
 
@@ -32,7 +32,7 @@
                                             </span>
                                         </label>
                                         &nbsp; &nbsp;
-                                        <button class="btn btn-primary-cstm" (click)="sampleExcelDownload()"  pTooltip="Download Sample File"  tooltipPosition="top">Sample File Download</button>
+                                        <button class="btn btn-primary" (click)="sampleExcelDownload()"  pTooltip="Download Sample File"  tooltipPosition="top">Sample File Download</button>
                                     </div>
 
                                 </div>
@@ -141,7 +141,7 @@
                 </strong>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary-cstm" data-dismiss="modal" (click)="deleteConformation('Yes')">Yes</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="deleteConformation('Yes')">Yes</button>
                 <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="deleteConformation('No')">No</button>
             </div>
         </div>
@@ -315,7 +315,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-primary-cstm" data-dismiss="modal" [disabled]="create.invalid || disableSaveForCode || disableSaveForSequence" (click)="save();"> {{isEdit ? 'Update' : 'Save' }}</button>
+                <button class="btn btn-primary" data-dismiss="modal" [disabled]="create.invalid || disableSaveForCode || disableSaveForSequence" (click)="save();"> {{isEdit ? 'Update' : 'Save' }}</button>
                 <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="resetForm()">Close</button>
 
             </div>

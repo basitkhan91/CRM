@@ -55,8 +55,8 @@
                                 <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder=" Filter" style="height: 28px !important;">
                             </div>
                            
-                            <button type="button" class="btn btn-primary-cstm" matTooltip="Download  Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export  Data" (click)="dt.exportCSV()" style="padding: 5px 10px !important;"></button>
-                            <button type="button" class="btn btn-primary-cstm"  matTooltip="Download Selected Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})" style="padding: 5px 10px !important;"></button>
+                            <button type="button" class="btn btn-primary" matTooltip="Download  Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export  Data" (click)="dt.exportCSV()" style="padding: 5px 10px !important;"></button>
+                            <button type="button" class="btn btn-primary"  matTooltip="Download Selected Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})" style="padding: 5px 10px !important;"></button>
 
                             <div class="excel-upload excel-upload-cstm">
                                 <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
@@ -156,8 +156,8 @@
                                     <i class="fa fa-search"></i>
                                     <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder=" Filter" style="height: 28px !important;">
                                 </div>
-                                <button type="button" class="btn btn-primary-cstm"  matTooltip="Download  Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export  Data" (click)="dt.exportCSV()" style="padding: 5px 10px !important;"></button>
-                                <button type="button" class="btn btn-primary-cstm"  matTooltip="Download Selected Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export Selection Only"  (click)="dt.exportCSV({selectionOnly:true})" style="padding: 5px 10px !important;"></button>
+                                <button type="button" class="btn btn-primary"  matTooltip="Download  Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export  Data" (click)="dt.exportCSV()" style="padding: 5px 10px !important;"></button>
+                                <button type="button" class="btn btn-primary"  matTooltip="Download Selected Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export Selection Only"  (click)="dt.exportCSV({selectionOnly:true})" style="padding: 5px 10px !important;"></button>
 
                                 <div class="excel-upload excel-upload-cstm">
                                     <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
@@ -212,8 +212,8 @@
                 </div>
             </form>
             <div class="clear"></div>
-            <button type="button" class="btn btn-primary-cstm pull-right" (click)="nextClick()">Save & Next</button>
-            <button type="button" class="btn btn-primary-cstm pull-right submit-btn" (click)="backClick()">Previous</button>
+            <button type="button" class="btn btn-primary pull-right" (click)="nextClick()">Save & Next</button>
+            <button type="button" class="btn btn-primary pull-right submit-btn" (click)="backClick()">Previous</button>
         </div>
     </div>
 </div>
@@ -550,7 +550,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary-cstm pull-right" data-dismiss="modal" [disabled]="!addShippingForm.valid" (click)="saveDomesticShipping()">{{isEditDomestic ? 'Update' : 'Save'}}</button>
+                    <button type="button" class="btn btn-primary pull-right" data-dismiss="modal" [disabled]="!addShippingForm.valid" (click)="saveDomesticShipping()">{{isEditDomestic ? 'Update' : 'Save'}}</button>
                     <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
                 </div>
             </form>
@@ -665,7 +665,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary-cstm pull-right" data-dismiss="modal" [disabled]=" !addIShippingForm.valid" (click)="saveInternationalShipping()">{{isEditInternational ? 'Update' : 'Save'}}</button>
+                    <button type="button" class="btn btn-primary pull-right" data-dismiss="modal" [disabled]=" !addIShippingForm.valid" (click)="saveInternationalShipping()">{{isEditInternational ? 'Update' : 'Save'}}</button>
                     <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
                 </div>
             </form>
@@ -754,7 +754,7 @@
                         <div class="col-md-2">
                             <div class="form-group">
                                 <br>
-                                <button type="button" class="btn btn-primary-cstm" [disabled]="!addShippingVia.valid" (click)="saveshipViaDomestic()">{{isEditDomesticShipVia ? 'Update Ship Via' : 'Save Ship Via'}}</button>
+                                <button type="button" class="btn btn-primary" [disabled]="!addShippingVia.valid" (click)="saveshipViaDomestic()">{{isEditDomesticShipVia ? 'Update Ship Via' : 'Save Ship Via'}}</button>
                             </div>
                         </div>
                     </div>
@@ -967,7 +967,7 @@
                         <div class="col-md-2">
                             <div class="form-group">
                                 <br>
-                                <button type="button" class="btn btn-primary-cstm" [disabled]="!addInterShipVia.valid" (click)="saveshipViaInternational()">{{isEditInternationalShipVia ? 'Update Ship Via' : 'Save Ship Via'}}</button>
+                                <button type="button" class="btn btn-primary" [disabled]="!addInterShipVia.valid" (click)="saveshipViaInternational()">{{isEditInternationalShipVia ? 'Update Ship Via' : 'Save Ship Via'}}</button>
                             </div>
                         </div>
                     </div>

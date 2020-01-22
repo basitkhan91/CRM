@@ -43,8 +43,8 @@
                                         <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder=" Filter" style="height: 28px !important;">
                                     </div>
 
-                                    <button type="button" class="btn btn-primary-cstm" matTooltip="Download Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export Data" (click)="dt.exportCSV()" style="padding: 5px 10px !important;"></button>
-                                    <button type="button" class="btn btn-primary-cstm" matTooltip="Download Selected Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})" style="padding: 5px 10px !important;"></button>
+                                    <button type="button" class="btn btn-primary" matTooltip="Download Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export Data" (click)="dt.exportCSV()" style="padding: 5px 10px !important;"></button>
+                                    <button type="button" class="btn btn-primary" matTooltip="Download Selected Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})" style="padding: 5px 10px !important;"></button>
                                     <!-- <div class="excel-upload excel-upload-cstm">
                                         <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
                                         <label for="upload">
@@ -107,8 +107,8 @@
                         </p-table>
                     </div>
 
-                    <button type="button" class="btn btn-primary-cstm pull-left submit-btn" (click)="backClick()">Previous</button>
-                    <button type="button" class="btn btn-primary-cstm pull-right submit-btn" (click)="CreateNewClick()">Create New</button>
+                    <button type="button" class="btn btn-primary pull-left submit-btn" (click)="backClick()">Previous</button>
+                    <button type="button" class="btn btn-primary pull-right submit-btn" (click)="CreateNewClick()">Create New</button>
                 </div>
             </div>
 
@@ -230,7 +230,7 @@
                                     <td *ngFor="let col of columns">
                                         {{ rowData[col.field] }}
                                     </td>
-                                    <td><a class="btn btn-primary-cstm" (click)="downloadFileUpload(rowData)" download>Download</a></td>
+                                    <td><a class="btn btn-primary" (click)="downloadFileUpload(rowData)" download>Download</a></td>
                                 </tr>
 
                             </ng-template>
@@ -301,8 +301,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" *ngIf="!isEditButton" class="btn btn-primary-cstm pull-right submit-btn" style="text-align:center" (click)="saveDocumentInformation()" data-dismiss="modal">Save</button>
-                    <button type="button" *ngIf="isEditButton" class="btn btn-primary-cstm pull-right submit-btn" style="text-align:center" (click)="updateVendorDocument()" data-dismiss="modal">Update</button>
+                    <button type="button" *ngIf="!isEditButton" class="btn btn-primary pull-right submit-btn" style="text-align:center" (click)="saveDocumentInformation()" data-dismiss="modal">Save</button>
+                    <button type="button" *ngIf="isEditButton" class="btn btn-primary pull-right submit-btn" style="text-align:center" (click)="updateVendorDocument()" data-dismiss="modal">Update</button>
                     <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
                 </div>
             </form>

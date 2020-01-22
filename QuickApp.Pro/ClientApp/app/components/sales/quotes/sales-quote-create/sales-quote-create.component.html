@@ -288,8 +288,8 @@
               &nbsp;
             </div>
             <div class="col-md-11 col-sm-11 col-11">
-              <button type="submit" *ngIf="!isEdit" class="btn btn-success pull-right submit-btn btn btn-primary-cstm">Submit</button>
-              <button type="submit" *ngIf="isEdit" class="btn btn-success pull-right submit-btn btn btn-primary-cstm">Update</button>
+              <button type="submit" *ngIf="!isEdit" class="btn btn-success pull-right submit-btn btn btn-primary">Submit</button>
+              <button type="submit" *ngIf="isEdit" class="btn btn-success pull-right submit-btn btn btn-primary">Update</button>
             </div>
           </div>
         </form>
@@ -312,7 +312,7 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary-cstm" data-dismiss="modal" (click)="onSaveDescription()">Save</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="onSaveDescription()">Save</button>
         <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
       </div>
     </div>

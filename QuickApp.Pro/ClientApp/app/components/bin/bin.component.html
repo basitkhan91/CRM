@@ -24,8 +24,8 @@
 										<input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')"
 										 placeholder="Global Filter">
 									</div> -->
-									<button type="button" class="btn btn-primary-cstm " pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
-									<button type="button" class="btn btn-primary-cstm " pButton icon="fa-download" iconPos="left" label="Export Selection Only"
+									<button type="button" class="btn btn-primary " pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
+									<button type="button" class="btn btn-primary " pButton icon="fa-download" iconPos="left" label="Export Selection Only"
 									 (click)="dt.exportCSV({selectionOnly:true})"></button>
                                     <div class="excel-upload  excel-upload-cstm">
                                         <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected"
@@ -36,7 +36,7 @@
                                             </span>
                                         </label>
                                         &nbsp; &nbsp;
-                                        <button class="btn btn-primary-cstm" (click)="sampleExcelDownload()">Sample File Download</button>
+                                        <button class="btn btn-primary" (click)="sampleExcelDownload()">Sample File Download</button>
                                     </div>
 								</div>
 							</ng-template>
@@ -295,7 +295,7 @@
 				</div> -->
 			</div>
 			<div class="modal-footer">
-				<button class="btn btn-primary-cstm" [disabled]="!userForm.valid || disableSaveManufacturer">Save</button>
+				<button class="btn btn-primary" [disabled]="!userForm.valid || disableSaveManufacturer">Save</button>
 				<button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
 			</div>
 		</form>
@@ -318,7 +318,7 @@
 		</strong>
 	</div>
 	<div class="modal-footer">
-		<button type="button" class="btn btn-primary-cstm" (click)="deleteItemAndCloseModel()">Yes</button>
+		<button type="button" class="btn btn-primary" (click)="deleteItemAndCloseModel()">Yes</button>
 		<button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">No</button>
 	</div>
 </ng-template>

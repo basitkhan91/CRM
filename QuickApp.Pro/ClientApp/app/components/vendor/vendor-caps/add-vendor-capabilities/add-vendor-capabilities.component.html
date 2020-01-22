@@ -184,7 +184,7 @@
 							</div>
 						</div>
 						<div class="form-row pull-right">
-							<button type="submit" class="btn btn-primary-cstm submit-btn" [disabled]="!addVendorCapForm.valid" (click)="saveVendorCapsGeneralInfo()">{{isEditMode ? 'Update' : 'Save'}}</button>
+							<button type="submit" class="btn btn-primary submit-btn" [disabled]="!addVendorCapForm.valid" (click)="saveVendorCapsGeneralInfo()">{{isEditMode ? 'Update' : 'Save'}}</button>
 						</div>
 						</form>
 					</p-tabPanel>
@@ -245,7 +245,7 @@
 										</div>
 										<div class="col-md-1 add-new-align">
 											<div class="form-group">
-												<button class="btn btn-primary-cstm mtop20" (click)="searchAircraftInformation()" style="padding: 4px 8px !important;">
+												<button class="btn btn-primary mtop20" (click)="searchAircraftInformation()" style="padding: 4px 8px !important;">
 													<i class="pi pi-search pi-search"></i>
 												</button>
 											</div>
@@ -299,7 +299,7 @@
 									</ng-template>
 							</p-table>
 							<div class="form-row pull-right" *ngIf="!isEnableVendor" style="display: block; margin-right: 0px;">
-								<button type="button" style="float: right; margin: 10px 6px;" class="btn btn-primary-cstm" [routerLink]="[
+								<button type="button" style="float: right; margin: 10px 6px;" class="btn btn-primary" [routerLink]="[
 								'/vendorsmodule/vendorpages/app-vendor-capabilities-list'
 							  ]">Save</button>
 							</div>
@@ -325,7 +325,7 @@
 						</div>
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-primary-cstm" (click)="onSaveDescription()">Save</button>
+						<button type="button" class="btn btn-primary" (click)="onSaveDescription()">Save</button>
 						<button type="button" class="btn btn-danger-cstm" (click)="dismissMemoModel()">Close</button>
 					</div>
 				</div>
@@ -372,7 +372,7 @@
                             </div>
                         </div>
                         <div class="col-md-1">
-                            <button style="margin-top: 20px;" type="button" class="btn btn-primary-cstm" (click)="mapAircraftInformation()">Add</button>
+                            <button style="margin-top: 20px;" type="button" class="btn btn-primary" (click)="mapAircraftInformation()">Add</button>
                         </div>
                     </div>
 
@@ -416,7 +416,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary-cstm" (click)="saveAircraft(); dismissAircraftModel();">Save</button>
+                    <button type="button" class="btn btn-primary" (click)="saveAircraft(); dismissAircraftModel();">Save</button>
                     <button type="button" class="btn btn-danger-cstm" (click)="dismissAircraftModel()">Close</button>
                 </div>
             </div>
@@ -431,7 +431,7 @@
 					<h4 class="modal-title">Are You Sure Want to Delete?</h4>
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-primary-cstm" (click)="deleteAircraftMapped();">Yes</button>
+					<button type="button" class="btn btn-primary" (click)="deleteAircraftMapped();">Yes</button>
 					<button type="button" class="btn btn-danger-cstm" (click)="dismissDeleteModel();">No</button>
 				</div>
 				</div>

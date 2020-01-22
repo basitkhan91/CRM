@@ -9,15 +9,15 @@
 
 
     <div>
-        <button  data-target="#addNewMaterials" data-toggle="modal" class="btn btn-primary btn-primary-cstm" (click)="createNew(); " style="padding: 6px 12px !important;">Add New Material</button>
+        <button  data-target="#addNewMaterials" data-toggle="modal" class="btn btn-primary btn-primary" (click)="createNew(); " style="padding: 6px 12px !important;">Add New Material</button>
 
 
 
-        <button *ngIf="workOrderMaterialList.length > 0" class="btn btn-primary btn-primary-cstm" style="padding: 6px 12px !important;" (click)="partsIssueRI(1)" data-toggle="modal" data-target="#reserve">Reserve </button>
-        <button *ngIf="workOrderMaterialList.length > 0" class="btn btn-primary btn-primary-cstm" style="padding: 6px 12px !important" (click)="partsIssueRI(2)" data-toggle="modal" data-target="#reserve"> Issue </button>
-        <button  *ngIf="workOrderMaterialList.length > 0" class="btn btn-primary btn-primary-cstm" style="padding: 6px 12px !important" (click)="partsIssueRI(3)" data-toggle="modal" data-target="#reserve"> Reserve & Issue </button>
-        <button *ngIf="workOrderMaterialList.length > 0" class="btn btn-primary btn-primary-cstm" style="padding: 6px 12px !important" (click)="partsIssueRI(4)" data-toggle="modal" data-target="#reserve"> UnIssue </button>
-        <button  *ngIf="workOrderMaterialList.length > 0" class="btn btn-primary btn-primary-cstm" style="padding: 6px 12px !important" (click)="partsIssueRI(5)" data-toggle="modal" data-target="#reserve"> UnReserve </button>
+        <button *ngIf="workOrderMaterialList.length > 0" class="btn btn-primary btn-primary" style="padding: 6px 12px !important;" (click)="partsIssueRI(1)" data-toggle="modal" data-target="#reserve">Reserve </button>
+        <button *ngIf="workOrderMaterialList.length > 0" class="btn btn-primary btn-primary" style="padding: 6px 12px !important" (click)="partsIssueRI(2)" data-toggle="modal" data-target="#reserve"> Issue </button>
+        <button  *ngIf="workOrderMaterialList.length > 0" class="btn btn-primary btn-primary" style="padding: 6px 12px !important" (click)="partsIssueRI(3)" data-toggle="modal" data-target="#reserve"> Reserve & Issue </button>
+        <button *ngIf="workOrderMaterialList.length > 0" class="btn btn-primary btn-primary" style="padding: 6px 12px !important" (click)="partsIssueRI(4)" data-toggle="modal" data-target="#reserve"> UnIssue </button>
+        <button  *ngIf="workOrderMaterialList.length > 0" class="btn btn-primary btn-primary" style="padding: 6px 12px !important" (click)="partsIssueRI(5)" data-toggle="modal" data-target="#reserve"> UnReserve </button>
         
  
 
@@ -502,7 +502,7 @@
 
    
             <div class="modal-footer">
-                    <button  class="btn btn-primary btn-primary-cstm" data-dismiss="modal"  (click)="saveRIPart()" [disabled]="!(checkedParts.length>0)" style="padding: 6px 12px !important;">Save </button>
+                    <button  class="btn btn-primary btn-primary" data-dismiss="modal"  (click)="saveRIPart()" [disabled]="!(checkedParts.length>0)" style="padding: 6px 12px !important;">Save </button>
               <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
             </div>
           </div>

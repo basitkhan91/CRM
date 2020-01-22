@@ -696,7 +696,7 @@
                     </div>
                 </div>
                 <div class="form-row pull-right">
-                    <button type="submit" class="btn btn-primary-cstm" (click)="onSaveStockLine()" [disabled]="!stockLineSetupForm.valid || disableMagmtStruct || disableCondition || disableSiteName">{{isEditMode ? 'Update' : 'Save'}}</button>
+                    <button type="submit" class="btn btn-primary" (click)="onSaveStockLine()" [disabled]="!stockLineSetupForm.valid || disableMagmtStruct || disableCondition || disableSiteName">{{isEditMode ? 'Update' : 'Save'}}</button>
                 </div>
             </form>
         </div>
@@ -716,7 +716,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary-cstm" data-dismiss="modal" (click)="onSaveTextAreaInfo()">Save</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="onSaveTextAreaInfo()">Save</button>
                     <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
                 </div>
             </div>

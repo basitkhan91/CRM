@@ -51,7 +51,7 @@
                 </td>
 
                 <td  *ngIf="selectedTab == 'Equivalency'">
-                    <a class="btn btn-primary-cstm" (click)="downloadFileUpload(rowData)" target="_blank" download>{{rowData["fileName"]}}</a>
+                    <a class="btn btn-primary" (click)="downloadFileUpload(rowData)" target="_blank" download>{{rowData["fileName"]}}</a>
                 </td>
                 <td>
                     <button type="button" class="btn btn-danger nobg" (click)="deleteNTAERow(rowData.itemMappingId)">
@@ -131,7 +131,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary-cstm"  (click)="saveAlternate(saveNtaeTabForm)">Save</button>
+                <button type="button" class="btn btn-primary"  (click)="saveAlternate(saveNtaeTabForm)">Save</button>
                 <button #closeAddPopup type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="closeModal()">Close</button>
             </div>
             </form>
