@@ -420,21 +420,21 @@
 
                     <div style="padding-bottom: 7px;">
                         <button type="submit" [validate] moduleName="app-vendor-general-information" requirePermission="canAdd"
-                                class="btn btn-primary-cstm pull-right submit-btn" *ngIf="sourceVendor.vendorId == undefined"
+                                class="btn btn-primary pull-right submit-btn" *ngIf="sourceVendor.vendorId == undefined"
                                 [disabled]="!generalForm.valid || disableSaveVenName || disableSaveVenCode || disableSaveParentName || disablesave"
                                 (click)="editItemAndCloseModel()">
                             Save
                         </button>
 
                         <button type="submit" [validate] moduleName="app-vendor-general-information" requirePermission="canUpdate"
-                                class="btn btn-primary-cstm pull-right submit-btn"
+                                class="btn btn-primary pull-right submit-btn"
                                 *ngIf="sourceVendor.vendorId != undefined && sourceVendor.vendorId !=0"
                                 [disabled]="!generalForm.valid || disableSaveVenName || disableSaveVenCode || disableSaveParentName || disablesave"
                                 (click)="editItemAndCloseModel()">
                             Update
                         </button>
 
-                        <button type="button" class="btn btn-primary-cstm pull-right " (click)="editItemAndCloseModel('goNext')" [disabled]="!generalForm.valid || disableSaveVenderName">
+                        <button type="button" class="btn btn-primary pull-right " (click)="editItemAndCloseModel('goNext')" [disabled]="!generalForm.valid || disableSaveVenderName">
                             Save & Next
                         </button>
                     </div>
@@ -503,10 +503,10 @@
                 <div class="clear"></div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-primary-cstm" [disabled]="disablesaveForClassification">
+                <button class="btn btn-primary" [disabled]="disablesaveForClassification">
                     Save
                 </button>
-                <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">
+                <button type="button" class="btn btn-danger" (click)="dismissModel()">
                     Close
                 </button>
             </div>

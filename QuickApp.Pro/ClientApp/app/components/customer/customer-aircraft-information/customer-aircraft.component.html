@@ -88,7 +88,7 @@
       <div class="col-md-1">
         <div class="form-group">
           <button
-            class="btn btn-primary-cstm-sm mtop20"
+            class="btn btn-primary-sm mtop20"
             (click)="searchAircraftInformation()"
                    matTooltip="Search"
           >
@@ -119,8 +119,8 @@
             <i class="fa fa-search"></i>
             <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Filter" style="height: 28px !important;">
         </div>
-        <button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" iconPos="left" label="Export All Data" matTooltip="Download  Data" matTooltipPosition="above" (click)="dt.exportCSV()" style="padding: 5px 10px !important;"></button>
-        <button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" iconPos="left" label="Export Selected Data" matTooltip="Download Selected Data" matTooltipPosition="above" (click)="dt.exportCSV({selectionOnly:true})" style="padding: 5px 10px !important;"></button>
+        <button type="button" class="btn btn-primary" pButton icon="fa-download" iconPos="left" label="Export All Data" matTooltip="Download  Data" matTooltipPosition="above" (click)="dt.exportCSV()" style="padding: 5px 10px !important;"></button>
+        <button type="button" class="btn btn-primary" pButton icon="fa-download" iconPos="left" label="Export Selected Data" matTooltip="Download Selected Data" matTooltipPosition="above" (click)="dt.exportCSV({selectionOnly:true})" style="padding: 5px 10px !important;"></button>
     </div>
   </ng-template>
 
@@ -181,14 +181,14 @@
   <div style="margin-top: 10px;">
     <button
       type="button"
-      class="btn btn-primary-cstm pull-right submit-btn"
+      class="btn btn-primary pull-right submit-btn"
       (click)="nextClick()"
     >
      Save & Next
     </button>
     <button
       type="button"
-      class="btn btn-primary-cstm pull-right submit-btn"
+      class="btn btn-primary pull-right submit-btn"
       (click)="backClick()"
     >
       Previous
@@ -303,7 +303,7 @@
             <button
               style="margin-top: 20px;"
               type="button"
-              class="btn btn-primary-cstm"
+              class="btn btn-primary"
               (click)="mapAircraftInventory()"
             >
               Add
@@ -378,13 +378,13 @@
       <div class="modal-footer">
         <button
           type="button"
-          class="btn btn-primary-cstm"
+          class="btn btn-primary"
           data-dismiss="modal"
           (click)="saveAircraft()"
         >
           Save
         </button>
-        <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">
           Close
         </button>
       </div>
@@ -423,8 +423,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                     <button type="button"  class="btn btn-primary-cstm pull-right submit-btn" style="text-align:center" (click)="updateCustomerAircraft()"  data-dismiss="modal">Update</button>
-                    <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
+                     <button type="button"  class="btn btn-primary pull-right submit-btn" style="text-align:center" (click)="updateCustomerAircraft()"  data-dismiss="modal">Update</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                 </div>
             </form>
         </div>

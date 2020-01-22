@@ -29,7 +29,7 @@
                                   ><i class="fa fa-plus-circle fa-lg" (click)="addBillingIfo()"></i
                                 ></a>
                               </h4>
-                        <!-- <button type="button" class="btn btn-primary-cstm float-right" data-toggle="modal" data-target="#addBillingInfo" >Add Billing Information</button> -->
+                        <!-- <button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#addBillingInfo" >Add Billing Information</button> -->
                     </div>
                     <div class="clear"></div>
                     <hr />
@@ -47,8 +47,8 @@
                                     <i class="fa fa-search"></i>
                                     <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Filter" style="height: 28px !important;">
                                 </div>
-                                <button type="button" class="btn btn-primary-cstm" matTooltip="Download  Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()" style="padding: 5px 10px !important;"></button>
-                                <button type="button" class="btn btn-primary-cstm" matTooltip="Download Selected Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})"></button>
+                                <button type="button" class="btn btn-primary" matTooltip="Download  Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()" style="padding: 5px 10px !important;"></button>
+                                <button type="button" class="btn btn-primary" matTooltip="Download Selected Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export Selection Only"  (click)="dt.exportCSV({selectionOnly:true})"></button>
 
                                 <div class="excel-upload excel-upload-cstm">
                                     <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
@@ -119,8 +119,8 @@
                     </div> -->
                 </div>
 
-                <button type="button" class="btn btn-primary-cstm pull-right" (click)="nextClick()">Save & Next</button>
-                <button type="button" class="btn btn-primary-cstm pull-right submit-btn" (click)="backClick()">Previous</button>
+                <button type="button" class="btn btn-primary pull-right" (click)="nextClick()">Save & Next</button>
+                <button type="button" class="btn btn-primary pull-right submit-btn" (click)="backClick()">Previous</button>
 
                 <div class="clear"></div>
                 <div class="modal fade success-msg" id="success-popup" role="dialog" data-backdrop="static" data-keyboard="false">
@@ -237,7 +237,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger-cstm" >Close</button>
+                        <button type="button" class="btn btn-danger" >Close</button>
                     </div>
                 </ng-template>
 
@@ -325,8 +325,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary-cstm pull-right" [disabled]="!addBillingForm.valid" (click)="saveBillingInformation()" data-dismiss="modal">{{isEditMode ? 'Update' : 'Save'}}</button>
-                    <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary pull-right" [disabled]="!addBillingForm.valid" (click)="saveBillingInformation()" data-dismiss="modal">{{isEditMode ? 'Update' : 'Save'}}</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                 </div>
             </form>
         </div>

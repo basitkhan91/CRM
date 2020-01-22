@@ -43,9 +43,10 @@ namespace DAL.Repositories
                     part.ItemMaster = _appContext.ItemMaster.Find(part.ItemMasterId);
 
                     var stockLines = _appContext.StockLine.Where(x => x.PurchaseOrderPartRecordId != null && x.PurchaseOrderPartRecordId == part.PurchaseOrderPartRecordId && !x.IsDeleted).ToList();
-                    if (stockLines != null && stockLines.Count > 0)
+                    var stocklinesDrafted = _appContext.StockLineDraft.Where(x => x.PurchaseOrderPartRecordId != null && x.PurchaseOrderPartRecordId == part.PurchaseOrderPartRecordId && !x.IsDeleted).ToList();
+                    if ((stockLines != null && stockLines.Count > 0) || (stocklinesDrafted != null && stocklinesDrafted.Count > 0))
                     {
-                        part.StockLineCount = (long)stockLines.Sum(x => x.Quantity);
+                        part.StockLineCount = (long)stockLines.Sum(x => x.Quantity) + (long)stocklinesDrafted.Sum(x => x.Quantity);
                     }
 
                     if (!part.isParent)
@@ -501,7 +502,8 @@ namespace DAL.Repositories
                 _appContext.StockLine.Add(stockLine);
                 _appContext.SaveChanges();
 
-                if (dstl.TimeLifeDraft != null) {
+                if (dstl.TimeLifeDraft != null)
+                {
                     var timelife = ConvertTimeLifeFromDraft(dstl.TimeLifeDraft);
                     timelife.StockLineId = stockLine.StockLineId;
                     _appContext.TimeLife.Add(timelife);
@@ -977,7 +979,7 @@ namespace DAL.Repositories
                 LastSinceOVH = draftedTimeLife.LastSinceOVH,
                 LastSinceInspection = draftedTimeLife.LastSinceInspection,
                 MasterCompanyId = draftedTimeLife.MasterCompanyId,
-                IsActive = draftedTimeLife.IsActive,                
+                IsActive = draftedTimeLife.IsActive,
                 DetailsNotProvided = draftedTimeLife.DetailsNotProvided,
                 PurchaseOrderId = draftedTimeLife.PurchaseOrderId,
                 PurchaseOrderPartRecordId = draftedTimeLife.PurchaseOrderPartRecordId,

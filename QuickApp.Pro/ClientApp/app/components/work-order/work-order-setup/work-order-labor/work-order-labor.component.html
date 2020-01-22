@@ -334,7 +334,7 @@
                 </td>
                 <td *ngIf="laborForm.hoursorClockorScan !== 1 && laborForm.hoursorClockorScan !== 3">
                   <button
-                    class="btn btn-primary-cstm start-btn"
+                    class="btn btn-primary start-btn"
                     (click)="startandStop(rec)"
                     [disabled]="(rec.startDate && rec.endDate) !== null || !isView"
                   >
@@ -447,6 +447,6 @@
   </div>
 </div>
 
-<button (click)="saveLabor()" class="btn btn-primary-cstm pull-right" *ngIf="!isView">
+<button (click)="saveLabor()" class="btn btn-primary pull-right" *ngIf="!isView">
   Save
 </button>

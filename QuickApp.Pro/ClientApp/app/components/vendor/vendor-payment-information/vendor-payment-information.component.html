@@ -36,8 +36,8 @@
                                                     <i class="fa fa-search"></i>
                                                     <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder=" Filter" style="height: 28px !important;">
                                                 </div>
-                                                <button type="button" class="btn btn-primary-cstm" matTooltip="Download Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export Data" (click)="dt.exportCSV()" style="padding:5px 10px !important;"></button>
-                                                <button type="button" class="btn btn-primary-cstm" matTooltip="Download Selected Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export Selected Data" (click)="dt.exportCSV({selectionOnly:true})" style="padding:5px 10px !important;"></button>
+                                                <button type="button" class="btn btn-primary" matTooltip="Download Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export Data" (click)="dt.exportCSV()" style="padding:5px 10px !important;"></button>
+                                                <button type="button" class="btn btn-primary" matTooltip="Download Selected Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export Selected Data" (click)="dt.exportCSV({selectionOnly:true})" style="padding:5px 10px !important;"></button>
                                                 
                                             </div>            
             
@@ -100,7 +100,7 @@
                                 </div>
                             </div>
                             <!-- <div>
-                                <button type="button" class="btn btn-primary-cstm pull-right" (click)="showDomesticWire()">Go to Domestic Wire</button>
+                                <button type="button" class="btn btn-primary pull-right" (click)="showDomesticWire()">Go to Domestic Wire</button>
                             </div> -->
                         </p-tabPanel>
                         <p-tabPanel header="Domestic Wire">
@@ -169,7 +169,7 @@
                                     </div>
                             </div> 
                             <div class="form-row">
-                                <button type="button" class="btn btn-primary-cstm pull-right" [disabled]="!addDomesticWireForm.valid" (click)="saveDomesticPaymentInfo()">Save</button>
+                                <button type="button" class="btn btn-primary pull-right" [disabled]="!addDomesticWireForm.valid" (click)="saveDomesticPaymentInfo()">Save</button>
                             </div>
                         </form>						
                         </p-tabPanel>
@@ -243,7 +243,7 @@
                                     </div>
                                 </div>
                                 <div class="form-row">
-                                    <button type="button" class="btn btn-primary-cstm pull-right" [disabled]="!addInternationalWireForm.valid" (click)="saveInternationalPaymentInfo()">Save</button>
+                                    <button type="button" class="btn btn-primary pull-right" [disabled]="!addInternationalWireForm.valid" (click)="saveInternationalPaymentInfo()">Save</button>
                                 </div>
                             </form>
                         </p-tabPanel>
@@ -291,14 +291,14 @@
                                 </div>
                             </div>
                             <div class="form-row" style="margin-top: 10px;">
-                                <button type="button" class="btn btn-primary-cstm" (click)="saveDefaultPaymentInfo()">Save</button>
+                                <button type="button" class="btn btn-primary" (click)="saveDefaultPaymentInfo()">Save</button>
                             </div>
                         </p-tabPanel>
                     </p-tabView>
                 </div>
             </div>
-            <button type="button" class="btn btn-primary-cstm pull-right" (click)="nextClick()">Next</button>
-            <button type="button" class="btn btn-primary-cstm pull-right" (click)="previousClick()">Previous</button>
+            <button type="button" class="btn btn-primary pull-right" (click)="nextClick()">Next</button>
+            <button type="button" class="btn btn-primary pull-right" (click)="previousClick()">Previous</button>
         </div>
 
     </div>
@@ -374,7 +374,7 @@
                 <div class="clear"></div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="dismissModel()">Close</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="dismissModel()">Close</button>
             </div>
         </div>
 
@@ -457,9 +457,9 @@
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" *ngIf="sourceVendor.checkPaymentId == undefined" class="btn btn-primary-cstm pull-right" (click)="saveCheckPaymentInfo()" [disabled]="!addPaymentForm.valid" data-dismiss="modal">Save</button>
-                                <button type="button" *ngIf="sourceVendor.checkPaymentId != undefined && sourceVendor.checkPaymentId !=0" class="btn btn-primary-cstm pull-right" (click)="saveCheckPaymentInfo()" [disabled]="!addPaymentForm.valid" data-dismiss="modal">Update</button>
-                                <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
+                                <button type="button" *ngIf="sourceVendor.checkPaymentId == undefined" class="btn btn-primary pull-right" (click)="saveCheckPaymentInfo()" [disabled]="!addPaymentForm.valid" data-dismiss="modal">Save</button>
+                                <button type="button" *ngIf="sourceVendor.checkPaymentId != undefined && sourceVendor.checkPaymentId !=0" class="btn btn-primary pull-right" (click)="saveCheckPaymentInfo()" [disabled]="!addPaymentForm.valid" data-dismiss="modal">Update</button>
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                             </div>
                         </form>
                     </div>
@@ -479,8 +479,8 @@
                         </strong>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-primary-cstm" data-dismiss="modal" (click)="deleteConformation('Yes')">Yes</button>
-                            <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="deleteConformation('No')">No</button>
+                            <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="deleteConformation('Yes')">Yes</button>
+                            <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="deleteConformation('No')">No</button>
                         </div>
                       </div>
                   

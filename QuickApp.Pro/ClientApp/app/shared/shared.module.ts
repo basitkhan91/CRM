@@ -16,6 +16,7 @@ import { QuickAppProMaterialModule } from "../modules/material.module";
 import { PageHeaderComponent } from './page-header.component'
 import { UserEditorComponent } from '../admin/user-editor.component';
 import { AppDialogComponent } from './app-dialog.component';
+import { TableModule } from 'primeng/table';
 
 import { GroupByPipe } from '../pipes/group-by.pipe';
 import { CommonModule } from "@angular/common";

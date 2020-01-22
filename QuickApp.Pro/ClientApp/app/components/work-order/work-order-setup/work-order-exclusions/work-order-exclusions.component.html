@@ -3,7 +3,7 @@
     data-target="#addNewExclusions"
     data-toggle="modal"
     (click)="createNew()"
-    class="btn btn-primary btn-primary-cstm"
+    class="btn btn-primary btn-primary"
     style="padding: 6px 12px !important;"
   >
     Add Exclusions
@@ -49,7 +49,7 @@
         </grd-exclusions>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">
           Close
         </button>
       </div>
@@ -104,7 +104,7 @@
     </ng-template>
   </p-table>
   <button
-    class="btn btn-primary-cstm pull-right"
+    class="btn btn-primary pull-right"
     (click)="saveQuotation()"
     *ngIf="isQuote && !isView"
   >
@@ -167,7 +167,7 @@
                                                                 </tbody>
                                                             </table>
                                                             <button
-                                                              class="btn btn-primary-cstm pull-right"
+                                                              class="btn btn-primary pull-right"
                                                               (click)="saveQuotation()"
                                                               *ngIf = "isQuote && !isView"
                                                             >

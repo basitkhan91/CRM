@@ -48,8 +48,8 @@
                                 <i class="fa fa-search"></i>
                                 <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="capabilityListTable.filterGlobal($event.target.value, 'contains')" placeholder=" Filter">
                             </div>
-                            <button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" iconPos="left" label="Export Data" matTooltip="Download Data" matTooltipPosition="above" style="padding: 5px 12px !important;" (click)="capabilityListTable.exportCSV()"></button>
-                            <button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" iconPos="left" label="Export Selected Data" matTooltip="Download Selected Data" matTooltipPosition="above" style="padding: 5px 12px !important;" (click)="capabilityListTable.exportCSV({selectionOnly:true})"></button>
+                            <button type="button" class="btn btn-primary" pButton icon="fa-download" iconPos="left" label="Export Data" matTooltip="Download Data" matTooltipPosition="above" style="padding: 5px 12px !important;" (click)="capabilityListTable.exportCSV()"></button>
+                            <button type="button" class="btn btn-primary" pButton icon="fa-download" iconPos="left" label="Export Selected Data" matTooltip="Download Selected Data" matTooltipPosition="above" style="padding: 5px 12px !important;" (click)="capabilityListTable.exportCSV({selectionOnly:true})"></button>
                             <!-- <a matTooltip="Add Stock Line" class="btn btn-success nobg" (click)="navigateTogeneralInfo()"><span><i class="fa fa-plus"></i></span></a> -->
                             <!-- <div class="excel-upload">
                                 <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
@@ -234,7 +234,7 @@
             </div>
             </div>
             <!-- <div class="modal-footer">
-              <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
             </div> -->
           </div>
       
@@ -453,7 +453,7 @@
  
                        
                         <div class="col-md-1">
-                            <button style="margin-top: 20px;" type="button" class="btn btn-primary-cstm" (click)="addModels(capabilityForm)">Add</button>
+                            <button style="margin-top: 20px;" type="button" class="btn btn-primary" (click)="addModels(capabilityForm)">Add</button>
                         </div>
                     </div>
  
@@ -544,8 +544,8 @@
                       </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary-cstm" data-dismiss="modal" (click)="saveCapabilities()">Save</button>
-                    <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="dismissModel()">Close</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="saveCapabilities()">Save</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="dismissModel()">Close</button>
                 </div>
             </div>
         </div>
@@ -769,8 +769,8 @@
                       </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary-cstm" data-dismiss="modal" (click)="updateCapabilities()">Update</button>
-                    <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="dismissModel()">Close</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="updateCapabilities()">Update</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="dismissModel()">Close</button>
                 </div>
             </div>
         </div>
@@ -994,7 +994,7 @@
                 </div>
                 <div class="modal-footer">
                    
-                    <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="dismissModel()">Close</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="dismissModel()">Close</button>
                 </div>
             </div>
         </div>
@@ -1013,8 +1013,8 @@
                 </strong>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary-cstm" (click)="deleteCapability(selectedForDeleteContent, selectedForDeleteCapabilityId)">Yes</button>
-                <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">No</button>
+                <button type="button" class="btn btn-primary" (click)="deleteCapability(selectedForDeleteContent, selectedForDeleteCapabilityId)">Yes</button>
+                <button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
             </div>
         </ng-template>
     

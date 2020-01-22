@@ -290,8 +290,20 @@ namespace DAL.Repositories
                                  } : null
                              }
                          }).ToList();
-      
+
             return parts;
+        }
+
+        private int GetStockLineCount(long repairOrderId, long RepairOrderPartRecordId)
+        {
+            var stocklines = _appContext.StockLine.Where(x => x.RepairOrderId == repairOrderId && x.RepairOrderPartRecordId == RepairOrderPartRecordId).ToList();
+            var stocklinesDrafted = _appContext.StockLineDraft.Where(x => x.RepairOrderId == repairOrderId && x.RepairOrderPartRecordId == RepairOrderPartRecordId).ToList();
+            if ((stocklines != null && stocklines.Count > 0) || (stocklinesDrafted != null && stocklinesDrafted.Count > 0))
+            {
+                return (int)stocklines.Sum(x => x.Quantity) + (int)stocklinesDrafted.Sum(x => x.Quantity);
+            }
+
+            return 0;
         }
 
         public object GetReceivingRepairOrderForEdit(long repairOrderId)
@@ -307,6 +319,12 @@ namespace DAL.Repositories
                          join uom in _appContext.UnitOfMeasure on part.UOMId equals uom.UnitOfMeasureId
                          into leftUom
                          from uom in leftUom.DefaultIfEmpty()
+                         join stl in _appContext.StockLine on part.RepairOrderPartRecordId equals stl.RepairOrderPartRecordId
+                         into leftStl
+                         from stl in leftStl.ToList()
+                         join stlDraft in _appContext.StockLineDraft on part.RepairOrderPartRecordId equals stlDraft.RepairOrderPartRecordId
+                         into leftStlDraft
+                         from stlDraft in leftStlDraft.ToList()
 
                          where part.RepairOrderId == repairOrderId
                          select new
@@ -318,7 +336,7 @@ namespace DAL.Repositories
                              PartDescription = itm.PartDescription,
                              QuantityToRepair = part.QuantityOrdered,
                              DiscountPerUnit = part.DiscountPerUnit,
-                             StockLineCount = _appContext.StockLineDraft.Count(x => x.RepairOrderId == repairOrderId && x.RepairOrderPartRecordId == part.RepairOrderPartRecordId),
+                             StockLineCount = (leftStlDraft.Count() > 0 ? leftStlDraft.Sum(x => x.Quantity) : 0) + (leftStl.Count() > 0 ? leftStl.Sum(x => x.Quantity) : 0),
                              RoPartSplitUserName = emp != null ? emp.FirstName + " " + emp.LastName : "",
                              UomText = uom != null ? uom.ShortName : "",
                              StockLine = _appContext.StockLineDraft.Where(x => x.RepairOrderId == repairOrderId && x.RepairOrderPartRecordId == part.RepairOrderPartRecordId).Select(SL => new
@@ -393,7 +411,7 @@ namespace DAL.Repositories
                                      Name = manf.Name,
                                  } : null
                              }
-                         }).ToList();
+                         }).ToList();           
 
             return parts;
 

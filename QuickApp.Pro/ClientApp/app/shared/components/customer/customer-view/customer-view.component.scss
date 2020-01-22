@@ -17,3 +17,32 @@
     border: 1px solid #c8c8c8;
     font-size: 11px !important;
 }
+td {
+    padding: 5px !important;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+th {
+overflow: hidden;
+text-overflow: ellipsis;
+white-space: nowrap;
+}
+:host /deep/ .ui-widget{
+padding: 0px !important;
+}
+
+:host /deep/ .ui-table-summary {
+    margin-right: 0px !important;
+    background: transparent !important
+}
+.display-none {
+    visibility: hidden !important
+}
+.total_records_section label{
+    width: 100%;
+    right: 10px;
+    text-align: right;
+    position: relative;
+    bottom: 34px;
+}
