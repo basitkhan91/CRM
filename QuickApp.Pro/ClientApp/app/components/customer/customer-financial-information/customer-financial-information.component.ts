@@ -1,4 +1,4 @@
-﻿import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+﻿import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from '@angular/core';
 import { fadeInOut } from '../../../services/animations';
 import { CustomerService } from '../../../services/customer.service';
 import { CurrencyService } from '../../../services/currency.service';
@@ -33,6 +33,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
     @Input() creditTermsListOriginal
     @Input() editMode;
     @Output() tab = new EventEmitter();
+    @ViewChild('taxExemptFileUploadInput') taxExemptFileUploadInput: any; 
       taxRatesList: any = [];
     creditTermList: any;
     discountList: any;
@@ -119,6 +120,9 @@ export class CustomerFinancialInformationComponent implements OnInit {
     taxInfoTableColumns: any [] = [
         { field: "taxType", header: "Tax Type" },
         { field: "taxRate", header: "Tax Rate" },
+    ];
+    taxExemptTableColumns: any[] = [
+        { field: "fileName", header: "File Name" }
     ];
     globalSettings: any = {};
  
@@ -534,6 +538,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
             for (var key in vdata) {
                 this.formData.append(key, vdata[key]);
             }
+            this.taxExemptFileUploadInput.clear()
              this.customerService.customerFinanceFileUpload(this.formData).subscribe(res => {
                 this.formData = new FormData();
                 this.toGetCustomerFinanceDocumentsList(this.savedGeneralInformationData.customerId);

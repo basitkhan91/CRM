@@ -8546,7 +8546,7 @@ button.multiselect {
 }
 
 .row-primary, .row-primary td {
-    background-color: #79ffe3 !important;
+    background-color: #eaf2fd !important; //79ffe3
 }
 
 .search-wauto-block {
@@ -13841,6 +13841,9 @@ p-autocomplete .ui-autocomplete input.ui-inputtext {
 
 .p-table-cstm .ui-table .ui-table-tbody > tr > td, .rpo-table-cstm .ui-table .ui-table-tbody > tr > td, .wf-table-cstm .ui-table .ui-table-tbody > tr > td, .ptable-custom .ui-table .ui-table-tbody > tr > td {
     padding: 5px 2px !important; //4px 2px
+}
+.ptable-cus-pma .ui-table .ui-table-tbody > tr {
+    background-color: #fff !important 
 }
 
 .p-table-cstm .ui-table .ui-table-tbody > tr.ui-state-highlight,

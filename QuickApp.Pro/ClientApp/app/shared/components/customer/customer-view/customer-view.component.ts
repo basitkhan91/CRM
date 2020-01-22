@@ -176,8 +176,6 @@ export class CustomerViewComponent implements OnInit {
         // get Customer Contatcs 
          this.customerService.getContacts(customerId).subscribe(res => {
             this.customerContacts = res[0] || [];
-            console.log("resresresres:", res)
-            console.log("this.customerContacts:", this.customerContacts);
         })
     }
 
@@ -185,15 +183,12 @@ export class CustomerViewComponent implements OnInit {
         // const id = this.savedGeneralInformationData.customerId;
          this.customerService.getMappedAirCraftDetails(customerId).subscribe(res => {
              this.aircraftListDataValues = res || [];
-             console.log("this.aircraftListDataValues:", res)
         })
     }
     async getMappedATAByCustomerId(customerId) {
         // const id = this.savedGeneralInformationData.customerId;
         await this.customerService.getATAMappedByCustomerId(customerId).subscribe(res => {
             this.ataListDataValues = res || [];
-            console.log(res);;
-            console.log("this.ataListDataValues:", res)
         })
     }
     async getBillingDataById(customerId) {
@@ -207,7 +202,6 @@ export class CustomerViewComponent implements OnInit {
     async getDomesticShippingByCustomerId(customerId) {
         // const id = this.savedGeneralInformationData.customerId;
         await this.customerService.getCustomerShipAddressGet(customerId).subscribe(res => {
-            console.log(res);
             this.domesticShippingData = res[0] || [];
         })
     }
@@ -217,7 +211,6 @@ export class CustomerViewComponent implements OnInit {
         // const id = this.savedGeneralInformationData.customerId;
 
         await this.customerService.getInternationalShippingByCustomerId(customerId, 0, 20).subscribe(res => {
-            console.log(res);
             this.internationalShippingData = res.paginationList || [];
             // this.totalRecordsForInternationalShipping = res.totalRecordsCount;
         })
@@ -259,7 +252,6 @@ export class CustomerViewComponent implements OnInit {
      getCustomerRestrictedPMAByCustomerId(customerId) {
 
          this.commonService.getRestrictedPartsWithDesc(1, customerId, 'PMA').subscribe(res => {
-            console.log(res, "pma parts +++++")
             this.restrictedPMAParts = res || [];
             
         })
@@ -281,7 +273,6 @@ export class CustomerViewComponent implements OnInit {
         await this.customerService.getCustomerClassificationMapping(customerId).subscribe(res => {
             this.viewDataclassification = res.map(x => x.description);
 
-            // console.log(this.generalInformation.customerClassificationIds);
         });
     }
 
