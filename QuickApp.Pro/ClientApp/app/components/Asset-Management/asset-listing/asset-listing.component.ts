@@ -37,6 +37,7 @@ export class AssetListingComponent implements OnInit {
     assetViewList: any = {};
     currentAsset: any = {};
     modal: NgbModalRef;
+    historyModal: NgbModalRef;
     private isDeleteMode: boolean = false;
     private isEditMode: boolean = false;
     manufacturerId: any;
@@ -65,6 +66,9 @@ export class AssetListingComponent implements OnInit {
     GLAccountList: any[] = [];
     allCapesInfo: ItemMasterCapabilitiesModel[] = [];
     allVendorInfo: Vendor[];
+    historyCols:any[] = [];
+    historyData:any[] = [];
+    selectedAsset:any;
     // comented for asset audit
     //AuditDetails: SingleScreenAuditDetails[];
 
@@ -146,6 +150,15 @@ export class AssetListingComponent implements OnInit {
         ];
 
         this.selectedColumns = this.cols;
+
+         this.historyCols = [
+            { field: 'overview', header: 'Changes Overview',width:'150px' },
+            { field: 'updatedBy', header: 'Last Updated By',width:'100px' },
+            { field: 'updatedTime', header: 'Last Updated Time',width:'100px' },
+           
+           
+        ];
+        
     }
     private onDataLoadFailed(error: any) {
         this.alertService.stopLoadingMessage();
@@ -203,6 +216,13 @@ export class AssetListingComponent implements OnInit {
         this.assetService.listCollection = row;
         const { assetId } = row;
         this._route.navigateByUrl(`assetmodule/assetpages/app-edit-asset/${assetId}`);
+    }
+    openAssetToAdjustment(row) {
+       
+        // this.assetService.currentAssetId = row.assetRecordId;
+        this.assetService.listCollection = row;
+        const { assetId } = row;
+        this._route.navigateByUrl(`assetmodule/assetpages/app-asset-adjustment/${assetId}`);
     }
 
     dismissModel() {
@@ -265,6 +285,22 @@ export class AssetListingComponent implements OnInit {
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
+    }
+    openHistory(content, row) {
+
+        this.assetService.listCollection = row;
+        this.selectedAsset = row.assetId;
+        this.historyData = [
+            { overview: 'Asset Description, Manufacturer', updatedBy: 'Shabbir',updatedTime:'02-01-2019 10:20:50' },
+            { overview: 'UOM, Asset Location', updatedBy: 'Roger A',updatedTime:'02-01-2019 10:20:50' },
+        ];
+        this.historyModal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
+        this.historyModal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+    }
+    dismissHistoryModel() {
+        this.historyModal.close();
     }
 
     loadDepricationMethod() {
