@@ -197,7 +197,7 @@ export class CustomerShippingInformationComponent implements OnInit {
             country: getValueFromObjectByKey('countries_id', this.domesticShippingInfo.country),
             masterCompanyId: 1,
             //isPrimary: false,
-            isActive: true,
+            //isActive: true,
             customerId: this.id
         }
         // create shipping 

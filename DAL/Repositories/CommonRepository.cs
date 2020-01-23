@@ -1066,7 +1066,116 @@ namespace DAL.Repositories
             return list;
         }
 
+        public void CreateHistory(dynamic obj, int moduleId, long referenceId, long addressId, int addressType,bool isFromGenInfo,bool status=false)
+        {
+            ShippingBillingAddressAudit objShipping = new ShippingBillingAddressAudit();
+            objShipping.ModuleId = moduleId;
+            objShipping.ReferenceId = referenceId;
+            objShipping.AddressId = addressId;
+            objShipping.AddressType = addressType;
+           if (isFromGenInfo)
+            {
+                objShipping.SiteName = obj.CustomerCode;
+                objShipping.IsPrimary=true;
 
+
+            }
+            else
+            {
+                objShipping.SiteName = obj.SiteName;
+                objShipping.IsPrimary = obj.IsPrimary;
+
+            }
+            if (status)
+            {
+                objShipping.Line1 = obj.Line1;
+                objShipping.Line2 = obj.Line2;
+
+            }
+            else
+            {
+
+                objShipping.Line1 = obj.Address1;
+                objShipping.Line2 = obj.Address2;
+
+            }
+            objShipping.City = obj.City;
+            objShipping.StateOrProvince = obj.StateOrProvince;
+            objShipping.Country = obj.Country;
+            
+            objShipping.PostalCode = obj.PostalCode;
+            objShipping.MasterCompanyId = obj.MasterCompanyId;
+            objShipping.CreatedDate = DateTime.Now;
+            objShipping.UpdatedDate = DateTime.Now;
+            objShipping.CreatedBy = obj.CreatedBy;
+            objShipping.UpdatedBy = obj.UpdatedBy;
+            objShipping.IsActive = obj.IsActive;
+
+            _appContext.ShippingBillingAddressAudit.Add(objShipping);
+            _appContext.SaveChanges();
+
+
+        }
+        public IEnumerable<object> GetShippingBillingAddressAudit(long referenceId, long addressId,long addressType,int moduleId)
+        {
+           
+            var list = (from vba in _appContext.ShippingBillingAddressAudit
+                        where vba.ReferenceId == referenceId && vba.AddressId == addressId && vba.AddressType==addressType &&vba.ModuleId==moduleId
+                        join c in _appContext.Countries on Convert.ToInt16(vba.Country) equals c.countries_id into conttt
+                        from c in conttt.DefaultIfEmpty()
+
+
+                        select new
+                        {
+                            vba.SiteName,
+                            vba.SBAId,
+                          Address1=  vba.Line1,
+                          Address2=  vba.Line2,
+                            vba.City,
+                            vba.StateOrProvince,
+                            vba.PostalCode,
+                         Country=   c.countries_name,
+                            vba.CreatedDate,
+                            vba.UpdatedBy,
+                            vba.UpdatedDate,
+                            vba.CreatedBy,
+                            vba.IsPrimary,
+                            vba.IsActive
+                        }).OrderByDescending(p => p.UpdatedDate).ToList();
+            return list;
+        }
+        public void CreateContactHistory(dynamic obj, int moduleId, long referenceId, long contactId)
+        {
+            ContactAudit objShipping = new ContactAudit();
+            objShipping.ModuleId = moduleId;
+            objShipping.ReferenceId = referenceId;
+            objShipping.ContactId = contactId; 
+            objShipping.IsDefaultContact = obj.IsDefaultContact;
+            objShipping.FirstName = obj.FirstName;
+            objShipping.LastName = obj.LastName;
+            objShipping.MiddleName = obj.MiddleName;
+            objShipping.ContactTitle = obj.ContactTitle;
+            objShipping.WorkPhone = obj.WorkPhone;
+            objShipping.MobilePhone = obj.MobilePhone;
+            objShipping.Prefix = obj.Prefix;
+            objShipping.Suffix = obj.Suffix;
+            objShipping.AlternatePhone = obj.AlternatePhone;
+            objShipping.WorkPhoneExtn = obj.WorkPhoneExtn;
+            objShipping.Fax = obj.Fax;
+            objShipping.Email = obj.Email;
+            objShipping.WebsiteURL = obj.WebsiteURL;
+            objShipping.MasterCompanyId = obj.MasterCompanyId;
+            objShipping.CreatedDate = DateTime.Now;
+            objShipping.UpdatedDate = DateTime.Now;
+            objShipping.CreatedBy = obj.CreatedBy;
+            objShipping.UpdatedBy = obj.UpdatedBy;
+            objShipping.IsActive = obj.IsActive;
+
+            _appContext.ContactAudit.Add(objShipping);
+            _appContext.SaveChanges();
+
+
+        }
 
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
     }

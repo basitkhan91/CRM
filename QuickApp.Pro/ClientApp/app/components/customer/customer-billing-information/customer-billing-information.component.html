@@ -414,37 +414,39 @@
                         <th>State</th>
                         <th>Postal Code</th>
                         <th>Country</th>
+                        <th>Is Primary</th>
+                        <th>Is Active</th>
+                        <th>Created By</th>
+                        <th>Created Time</th>
+
                         <th>Updated By</th>
                         <th>Last Updated Time</th>
-                        <th>Status</th>
+
 
 
                     </tr>
                 </thead>
-                <!-- <tr *ngFor="let audit of billingauditHisory">
-                    <td>{{audit.siteName}}</td>
-                    <td>{{audit.updatedBy}}</td>
-                    <td>{{audit.updatedDate}}</td>
-                    <td>{{audit.createdBy}}</td>
-                    <td>{{audit.createdDate}}</td>
-
-                </tr> -->
-
-            <tr *ngFor="let audit of billingauditHisory; let i = index;">
-                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'siteName', audit.siteName)  ? 'black' : 'red'  }">{{audit.siteName}}</td>
-                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'line1', audit.line1)  ? 'black' : 'red'  }">{{audit.line1}}</td>
-                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'line2', audit.line2)  ? 'black' : 'red'  }">{{audit.line2}}</td>
-                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'city', audit.city)  ? 'black' : 'red'  }">{{audit.city}}</td>
-                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'stateOrProvince', audit.stateOrProvince)  ? 'black' : 'red'  }">{{audit.stateOrProvince}}</td>
-                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'postalCode', audit.postalCode)  ? 'black' : 'red'  }">{{audit.postalCode}}</td>
-
-                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'country', audit.country)  ? 'black' : 'red'  }">{{audit.country}}</td>
-
-                <td>{{audit.updatedBy}}</td>
-                <td>{{audit.updatedDate | date: 'dd-MM-yyyy h:mm a '}}</td>
-                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'isActive', audit.isActive)  ? 'black' : 'red'  }">{{audit.isActive}}</td>
                
-            </tr>
+
+                <tr *ngFor="let audit of billingauditHisory; let i = index;">
+                    <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'siteName', audit.siteName)  ? 'black' : 'red'  }">{{audit.siteName}}</td>
+                    <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'address1', audit.address1)  ? 'black' : 'red'  }">{{audit.address1}}</td>
+                    <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'address2', audit.address2)  ? 'black' : 'red'  }">{{audit.address2}}</td>
+                    <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'city', audit.city)  ? 'black' : 'red'  }">{{audit.city}}</td>
+                    <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'stateOrProvince', audit.stateOrProvince)  ? 'black' : 'red'  }">{{audit.stateOrProvince}}</td>
+                    <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'postalCode', audit.postalCode)  ? 'black' : 'red'  }">{{audit.postalCode}}</td>
+
+                    <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'country', audit.country)  ? 'black' : 'red'  }">{{audit.country}}</td>
+                    <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'isPrimary', audit.isPrimary)  ? 'black' : 'red'  }">{{audit.isPrimary}}</td>
+
+                    <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'isActive', audit.isActive)  ? 'black' : 'red'  }">{{audit.isActive}}</td>
+                    <td>{{audit.createdBy}}</td>
+                    <td>{{audit.createdDate | date: 'dd-MM-yyyy h:mm a '}}</td>
+
+                    <td>{{audit.updatedBy}}</td>
+                    <td>{{audit.updatedDate | date: 'dd-MM-yyyy h:mm a '}}</td>
+
+                </tr>
             </table>
         </div>
     </div>
