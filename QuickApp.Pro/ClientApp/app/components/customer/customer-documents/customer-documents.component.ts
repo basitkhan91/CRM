@@ -25,6 +25,7 @@ export class CustomerDocumentsComponent implements OnInit {
 	@Input() editGeneralInformationData;
     @Output() tab = new EventEmitter<any>();
     @ViewChild('fileUploadInput') fileUploadInput: any;
+    @Input() customerDataFromExternalComponents : any = {};
 	documentInformation = {
 
 		docName: '',
@@ -60,6 +61,7 @@ export class CustomerDocumentsComponent implements OnInit {
         { field: 'fileName', header: 'File Name' },
         //{ field: 'link', header: 'Action' },
     ];
+    isViewMode: boolean = false;
 	constructor(private router: ActivatedRoute, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public customerService: CustomerService,
         private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private configurations: ConfigurationService) {
 	}
@@ -70,12 +72,20 @@ export class CustomerDocumentsComponent implements OnInit {
 
             this.customerCode = this.editGeneralInformationData.customerCode;
             this.customerName = this.editGeneralInformationData.name;
-
+            this.isViewMode = false;
 
 		} else {
-			this.id = this.savedGeneralInformationData.customerId;
-            this.customerCode = this.savedGeneralInformationData.customerCode;
-            this.customerName = this.savedGeneralInformationData.name;
+            if(this.customerDataFromExternalComponents != {}){
+                this.id = this.customerDataFromExternalComponents.customerId;
+                this.customerCode = this.customerDataFromExternalComponents.customerCode;
+                this.customerName = this.customerDataFromExternalComponents.name;
+                this.isViewMode = true;
+            } else {
+                this.id = this.savedGeneralInformationData.customerId;
+                this.customerCode = this.savedGeneralInformationData.customerCode;
+                this.customerName = this.savedGeneralInformationData.name;
+                this.isViewMode = false;
+            }			
 
         }
         this.getList();
@@ -194,6 +204,7 @@ export class CustomerDocumentsComponent implements OnInit {
         });
 	}
     addDocumentDetails() {
+        this.sourceViewforDocumentList = [];
         this.isEditButton = false;
         this.documentInformation = {
 

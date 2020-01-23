@@ -25,7 +25,7 @@ import { listSearchFilterObjectCreation } from '../../../generic/autocomplete';
 import { CommonService } from '../../../services/common.service';
 import { CustomerViewComponent } from '../../../shared/components/customer/customer-view/customer-view.component';
 import { ConfigurationService } from '../../../services/configuration.service';
-
+import {CustomerShippingInformationComponent } from '../customer-shipping-information/customer-shipping-information-component'
 
 
 
@@ -590,6 +590,24 @@ export class CustomersListComponent implements OnInit {
         }, () => { console.log('Backdrop click') })
         this.loadContactDataData(row.customerId);
     }
+
+    openSitesList(content, row) {
+        this.selectedRow = row;
+        this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+        // this.loadContactDataData(row.customerId);
+    }
+
+    openDocumentsList(content, row){
+        this.selectedRow = row;
+        this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+    }
+
     private loadContactDataData(customerId) {
         this.alertService.startLoadingMessage();
        

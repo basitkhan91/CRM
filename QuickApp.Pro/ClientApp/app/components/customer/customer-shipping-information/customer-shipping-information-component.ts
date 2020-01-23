@@ -27,7 +27,7 @@ export class CustomerShippingInformationComponent implements OnInit {
     @Input() editMode;
     @Output() tab = new EventEmitter();
     @Input() selectedCustomerTab: string = "";
-
+    @Input() customerDataFromExternalComponents : any = {};
 
     domesticShippingInfo = new CustomerShippingModel()
     internationalShippingInfo = new CustomerInternationalShippingModel()
@@ -71,11 +71,11 @@ export class CustomerShippingInformationComponent implements OnInit {
     selectedColumnsForDomesticTable = this.domesticShippingHeaders;
     selectedColumnsForInternationTable = this.internationalShippingHeaders;
    
-    domesticShippingData: any[];
+    domesticShippingData: any[] = [];
     sourceViewforShipping: any;
     isEditDomestic: boolean = false;
     isEditInternational: boolean = false;
-    internationalShippingData: any;
+    internationalShippingData: any[] = [];
     selectedrowsFromDomestic: any;
     selectedrowsFromInternational: any;
     pageIndexForInternational: number = 0;
@@ -119,12 +119,16 @@ export class CustomerShippingInformationComponent implements OnInit {
     selectedRowForDeleteVia: any;
     selectedRowForDeleteInterVia: any;
     selectedColumnsForDomesticShipVia = this.selectedColumnsForInternationShipViaTable;
+    isViewMode: boolean = false;
+    totalRecordsInternationalShipping: any = 0;
+    totalPagesInternationalShipping: number = 0;
 
     constructor(private customerService: CustomerService, private authService: AuthService,
         private alertService: AlertService, private activeModal: NgbActiveModal, private modalService: NgbModal,
     ) { }
 
     ngOnInit() {
+        
         if (this.editMode) {
 
             this.id = this.editGeneralInformationData.customerId;
@@ -132,11 +136,23 @@ export class CustomerShippingInformationComponent implements OnInit {
             this.customerName = this.editGeneralInformationData.name;
             this.getDomesticShippingByCustomerId();
             this.getInternationalShippingByCustomerId();
+            this.isViewMode = false;
 
         } else {
-            this.id = this.savedGeneralInformationData.customerId;
-            this.customerCode = this.savedGeneralInformationData.customerCode;
-            this.customerName = this.savedGeneralInformationData.name;
+           
+            if(this.customerDataFromExternalComponents != {}){
+                this.id = this.customerDataFromExternalComponents.customerId;
+                this.customerCode = this.customerDataFromExternalComponents.customerCode;
+                this.customerName = this.customerDataFromExternalComponents.name;
+                this.isViewMode = true;
+            } else {
+                this.id = this.savedGeneralInformationData.customerId;
+                this.customerCode = this.savedGeneralInformationData.customerCode;
+                this.customerName = this.savedGeneralInformationData.name;
+                this.isViewMode = false;
+            }
+            
+            
             //Added By Vijay For Customer Create time IsShippingAddess is selected checkbox Then list page we are displaying list
             this.getDomesticShippingByCustomerId();
             this.getInternationalShippingByCustomerId();
@@ -528,6 +544,10 @@ export class CustomerShippingInformationComponent implements OnInit {
             console.log(res);
             this.internationalShippingData = res.paginationList;
             this.totalRecordsForInternationalShipping = res.totalRecordsCount;
+            if (this.internationalShippingData.length > 0) {
+                this.totalRecordsInternationalShipping = this.internationalShippingData.length;
+                this.totalPagesInternationalShipping = Math.ceil(this.totalRecordsInternationalShipping / this.pageSize);
+            }
          
         })
 
