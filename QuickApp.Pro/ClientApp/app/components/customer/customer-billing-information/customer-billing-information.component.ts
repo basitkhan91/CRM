@@ -34,7 +34,7 @@ export class CustomerBillingInformationComponent {
 		{ field: 'address2', header: 'Address2' },
 	
 		{ field: 'city', header: 'City' },
-		{ field: 'stateOrProvince', header: 'State/Prov' },
+		{ field: 'stateOrProvince', header: 'State / Prov' },
 		{ field: 'postalCode', header: 'Postal Code' },
 		{ field: 'countryName', header: 'Country' }
 	]

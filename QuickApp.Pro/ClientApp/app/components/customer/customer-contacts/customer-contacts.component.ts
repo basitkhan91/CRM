@@ -62,6 +62,7 @@ export class CustomerContactsComponent implements OnInit {
 	disableSaveMiddleName: boolean;
 	disableSaveLastName: boolean;
 	disablesaveForlastname: boolean;
+
 	customerContactsColumns = [
 		{ field: 'tag', header: 'Tag' },
 		{ field: 'firstName', header: 'First Name' },
@@ -71,7 +72,7 @@ export class CustomerContactsComponent implements OnInit {
 		{ field: 'workPhone', header: 'Work Phone' },
 		{ field: 'mobilePhone', header: 'Mobile Phone' },
 		{ field: 'fax', header: 'Fax' },
-		{ field: 'isDefaultContact', header: 'Primary Contact' },
+		// { field: 'isDefaultContact', header: 'Primary Contact' },
 		{ field: 'notes', header: 'Memo' },
 		{ field: 'updatedDate', header: 'Updated Date' },
 		{ field: 'createdDate', header: 'Created Date' }

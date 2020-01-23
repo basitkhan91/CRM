@@ -78,7 +78,7 @@
                                                     <p-autoComplete class="p-autoComplete-ctsm"
                                                                     name="creditTermsId"
                                                                     [(ngModel)]="savedGeneralInformationData.creditTermsId"
-                                                                    field="name" [suggestions]="_creditTermsList"
+                                                                    field="label" [suggestions]="_creditTermsList"
                                                                     [forceSelection]="true" emptyMessage="No Match Found"
                                                                     (completeMethod)="filterCreditTerm($event)" [size]="30"
                                                                     [minLength]="1" [dropdown]="true" required>

@@ -73,7 +73,7 @@
 
                     <ng-template pTemplate="header" let-columns>
                         <tr>
-
+                                <th style="width: 40px;">Flag</th>
                             <th *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
                                 {{col.header}}
                                 <p-sortIcon [field]="col.field"></p-sortIcon>
@@ -92,8 +92,13 @@
                     </ng-template>
 
                     <ng-template pTemplate="body" let-rowData let-columns="columns" let-i="rowIndex">
-                        <tr [pSelectableRow]="rowData" [pSelectableRowDblClick]="rowData" (dblclick)="viewSelectedRowdbl(viewdbl,rowData)" [ngClass]="{'row-primary': rowData.isDefaultContact === true}">
-
+                        <tr [pSelectableRow]="rowData" [pSelectableRowDblClick]="rowData" (dblclick)="viewSelectedRowdbl(viewdbl,rowData)" >
+                                <td > <span class="flag">
+                                        <i  *ngIf="rowData.isDefaultContact == true"   [ngStyle]="{'color': rowData.isDefaultContact == true ? 'green' : 'none'}"  
+                                         class="fa fa-flag" aria-hidden="true"></i>
+                                         </span>
+                                    
+                                </td>
 
                             <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle style="width:110px">
                                 {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
@@ -313,7 +318,7 @@
                             </div>
                             <div class="form-group">
                                 <label>Web Site</label>
-                                <input class="form-control" type="text" name="websiteURL" #url="ngModel" [(ngModel)]="contactInformation.websiteURL">
+                                <input class="form-control" type="text" name="websiteURL" #url="ngModel" [(ngModel)]="contactInformation.websiteURL" [pattern]="urlPattern">
                                 <div *ngIf="url.errors" [ngClass]="'error'">
                                     <div *ngIf="url.errors.pattern">
                                         <span style="color:red">URL not valid</span>

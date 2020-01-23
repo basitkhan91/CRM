@@ -228,9 +228,9 @@ export class CustomerATAInformationComponent implements OnInit {
                 this.contactIdUrl = '';
                 this.ataSubchapterIdUrl = '';
                 this.ataChapterIdUrl = '';
-                this.search_SelectedContact = [];
-                this.search_SelectedATASubChapter = [];
-                this.search_SelectedATA = [];
+                // this.search_SelectedContact = [];
+                // this.search_SelectedATASubChapter = [];
+                // this.search_SelectedATA = [];
                         });
     }
 

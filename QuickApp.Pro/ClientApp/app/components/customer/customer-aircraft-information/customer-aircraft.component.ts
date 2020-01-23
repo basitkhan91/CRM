@@ -36,7 +36,7 @@ export class CustomerAircraftComponent implements OnInit {
     // selectAircraftManfacturer: any = [];
     selectedAircraftModel = [];
     selectedDashNumbers = [];
-    selectedmemo: any;
+    selectedmemo: any = '';
     viewAircraftData: any;
     modal: NgbModalRef;
     // add craft inventory variables 
