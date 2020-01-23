@@ -19,7 +19,7 @@
                 <div>
                     <div class="col-md-12" style="margin-bottom: -10px;">
                         <!-- <h3 class="po-head pull-left" style="padding: 0 6px;">Billing Information List</h3> -->
-                        <h4 class="float-right">
+                        <h4 class="float-left">
                                 Add Billing Information
                                 <a
                                   class="plusicon-cstm"
@@ -65,20 +65,25 @@
 
                         <ng-template pTemplate="header" let-columns>
                             <tr>
-
+                                <th style="width: 40px;">Flag</th>
                                 <th *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
                                     {{col.header}}
                                     <p-sortIcon [field]="col.field"></p-sortIcon>
                                 </th>
 
-                                <th></th>
+                                <th>Actions</th>
 
                             </tr>
                         </ng-template>
 
                         <ng-template pTemplate="body" let-rowData let-columns="columns">
-                            <tr [pSelectableRow]="rowData" [pSelectableRowDblClick]="rowData" (dblclick)="toggledbldisplay(rowData)" [ngClass]="{'row-primary': rowData.isPrimary === true}">
-
+                            <tr [pSelectableRow]="rowData" [pSelectableRowDblClick]="rowData" (dblclick)="toggledbldisplay(rowData)" >
+                                    <!-- [ngClass]="{'row-primary': rowData.isPrimary === true}" -->
+                                    <td > <span class="flag">
+                                            <i  *ngIf="rowData.isPrimary == true"   [ngStyle]="{'color': rowData.isPrimary == true ? 'green' : 'none'}"  
+                                             class="fa fa-flag" aria-hidden="true"></i>
+                                            </span>
+                                    </td>
 
                                 <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
                                     {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
@@ -292,7 +297,7 @@
                                 <input class="form-control" id="cscity" type="text" name="city" [(ngModel)]="billingInfo.city" required>
                             </div>
                             <div class="form-group">
-                                <label>Bill To State/Prov <span class="clr-red">*</span></label>
+                                <label>Bill To State / Prov <span class="clr-red">*</span></label>
                                 <input class="form-control" id="csstate" type="text" name="stateOrProvince" [(ngModel)]="billingInfo.stateOrProvince" required>
                             </div>
                             <div class="form-group">
@@ -356,7 +361,7 @@
                     <p><span class="label"><b>Bill To Address 2: </b></span><span class="value">{{viewData.address2}}</span></p>
                     <p style="display:none"><span class="label"><b>Bill To Address 3: </b></span><span class="value">{{viewData.address3}}</span></p>
                     <p><span class="label"><b>Bill To City: </b></span><span class="value">{{viewData.city}}</span></p>
-                    <p><span class="label"><b>Bill To State/Prov: </b></span><span class="value">{{viewData.stateOrProvince}}</span></p>
+                    <p><span class="label"><b>Bill To State / Prov: </b></span><span class="value">{{viewData.stateOrProvince}}</span></p>
                     <p><span class="label"><b>Bill To Postal Code :</b></span><span class="value">{{viewData.postalCode}}</span></p>
                     <p><span class="label"><b>Bill To Country: </b></span><span class="value">{{viewData.countryName}}</span></p>
 

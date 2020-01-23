@@ -33,9 +33,9 @@ export class CustomerFinancialInformationComponent implements OnInit {
     @Input() creditTermsListOriginal
     @Input() editMode;
     @Output() tab = new EventEmitter();
-    @ViewChild('taxExemptFileUploadInput') taxExemptFileUploadInput: any; 
-      taxRatesList: any = [];
-    creditTermList: any;
+    @ViewChild('taxExemptFileUploadInput') taxExemptFileUploadInput: any;
+    taxRatesList: any = [];
+
     discountList: any;
     discountList1: any;
 
@@ -63,15 +63,15 @@ export class CustomerFinancialInformationComponent implements OnInit {
 
     taxTyeNew = {
         description: '',
-      
+
         isActive: true,
         isDeleted: false,
         memo: ''
     }
 
     taxRateNew = {
-        taxTypeId:'',
-       taxRateId:0,
+        taxTypeId: '',
+        taxRateId: 0,
         taxRate: '',
         isActive: true,
         isDeleted: false,
@@ -114,10 +114,10 @@ export class CustomerFinancialInformationComponent implements OnInit {
     namecolle: any[] = [];
     modal: NgbModalRef;
     localcollection: any;
-    creditTermData: any;
+
     formData = new FormData();
     allCustomerFinanceDocumentsList: any = [];
-    taxInfoTableColumns: any [] = [
+    taxInfoTableColumns: any[] = [
         { field: "taxType", header: "Tax Type" },
         { field: "taxRate", header: "Tax Rate" },
     ];
@@ -125,7 +125,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
         { field: "fileName", header: "File Name" }
     ];
     globalSettings: any = {};
- 
+
     constructor(public taxtypeser: TaxTypeService, public creditTermsService: CreditTermsService,
         public currencyService: CurrencyService,
         public customerClassificationService: CustomerClassificationService,
@@ -140,10 +140,10 @@ export class CustomerFinancialInformationComponent implements OnInit {
         private configurations: ConfigurationService,
         public creditTermService: CreditTermsService,
         private localStorage: LocalStoreManager,
-      
+
 
     ) {
-       
+
 
 
     }
@@ -152,17 +152,19 @@ export class CustomerFinancialInformationComponent implements OnInit {
 
 
     ngOnInit(): void {
-        this.getCreditTermList();
+        console.log(this.creditTermsListOriginal);
 
-        this.getAllcreditTermList();
+        // this.getCreditTermList();
+
+        // this.getAllcreditTermList();
         if (this.editMode) {
-            
+
             this.id = this.editGeneralInformationData.customerId
-         
+
             this.savedGeneralInformationData = this.editGeneralInformationData;
             this.customerCode = this.editGeneralInformationData.customerCode;
             this.customerName = this.editGeneralInformationData.name;
-            console.log(this.creditTermData,'editcredit')
+
             this.savedGeneralInformationData = {
                 ...this.editGeneralInformationData,
                 creditTermsId: getObjectById('creditTermsId', this.editGeneralInformationData.creditTermsId, this.creditTermsListOriginal)
@@ -174,14 +176,14 @@ export class CustomerFinancialInformationComponent implements OnInit {
             this.getMappedTaxTypeRateDetails();
             this.toGetCustomerFinanceDocumentsList(this.id);
         } else {
-          
+
             this.id = this.savedGeneralInformationData.customerId;
             this.customerCode = this.savedGeneralInformationData.customerCode;
             this.customerName = this.savedGeneralInformationData.name;
             this.getDefaultCurrency();
         }
 
-          this.getAllDiscountList();
+        this.getAllDiscountList();
         this.getAllTaxList();
         this.getAllCurrency();
         this.getAllPercentage();
@@ -190,7 +192,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
         this.getAllDiscountList1();
         this.getAllTaxRates();
         this.getGlobalSettings();
-    
+
     }
 
 
@@ -198,28 +200,27 @@ export class CustomerFinancialInformationComponent implements OnInit {
         return this.authService.currentUser ? this.authService.currentUser.userName : "";
     }
 
-    getGlobalSettings(){
+    getGlobalSettings() {
         this.globalSettings = this.localStorage.getDataObject<any>(DBkeys.GLOBAL_SETTINGS) || {};
     }
 
-  
+
     getAllcreditTermList() {
         this.commonservice.smartDropDownList('CreditTerms', 'CreditTermsId', 'Name').subscribe(res => {
-            this.creditTermList = res;
+            this.creditTermsListOriginal = res;
 
         })
-       
     }
 
-     getCreditTermList() {
-        this.creditTermService.getCreditTermsList().subscribe(res => {
-            const respData = res[0];
-            this.creditTermData = respData.columnData;
-            console.log(this.creditTermData,'creditdata')
-                });
-    }
+    // getCreditTermList() {
+    //     this.creditTermService.getCreditTermsList().subscribe(res => {
+    //         const respData = res[0];
+    //         this.creditTermData = respData.columnData;
+    //         console.log(this.creditTermData, 'creditdata')
+    //     });
+    // }
     getAllCurrency() {
-       
+
         this.currencyService.getCurrencyList().subscribe(res => {
 
             this.allCurrencyInfo = res[0];
@@ -237,54 +238,54 @@ export class CustomerFinancialInformationComponent implements OnInit {
 
     getAllPercentage() {
         this.commonservice.smartDropDownList('[Percent]', 'PercentId', 'PercentValue').subscribe(res => {
-    
-              this.percentageList = res;
+
+            this.percentageList = res;
         })
     }
     getAllTaxRates() {
         this.commonservice.smartDropDownList('[Percent]', 'PercentId', 'PercentValue').subscribe(res => {
 
-               this.taxRatesList = res;
+            this.taxRatesList = res;
         })
     }
-   
+
 
     getTaxRates() {
         this.commonservice.smartDropDownList('[TaxRate]', 'TaxRateId', 'TaxRate').subscribe(res => {
 
-                this.taxRateList = res;
+            this.taxRateList = res;
         })
     }
 
     getAllTaxTypes() {
-             this.commonservice.smartDropDownList('TaxType', 'TaxTypeId', 'Description').subscribe(res => {
-                this.taxTypeList = res;
-                 })
+        this.commonservice.smartDropDownList('TaxType', 'TaxTypeId', 'Description').subscribe(res => {
+            this.taxTypeList = res;
+        })
     }
-    
+
 
     filterCreditTerms(event) {
-        this._creditTermList = this.creditTermList;
+        this._creditTermList = this.creditTermsListOriginal;
 
-        this._creditTermList = [...this.creditTermList.filter(x => {
+        this._creditTermList = [...this.creditTermsListOriginal.filter(x => {
             return x.label.toLowerCase().includes(event.query.toLowerCase())
         })]
 
     }
 
     filterCreditTerm(event) {
-        this._creditTermsList = this.creditTermData;
+        this._creditTermsList = this.creditTermsListOriginal;
 
-        const CREDITTERMDATA = [...this.creditTermData.filter(x => {
-            return x.name.toLowerCase().includes(event.query.toLowerCase())
+        const CREDITTERMDATA = [...this.creditTermsListOriginal.filter(x => {
+            return x.label.toLowerCase().includes(event.query.toLowerCase())
         })]
         this._creditTermsList = CREDITTERMDATA;
     }
 
-    
+
     checkCreditTermsExists(field, value) {
-        
-        const exists = validateRecordExistsOrNot(field, value, this.creditTermList)
+
+        const exists = validateRecordExistsOrNot(field, value, this.creditTermsListOriginal)
         console.log(exists);
         if (exists.length > 0) {
             this.isCreditTermsExists = true;
@@ -297,14 +298,14 @@ export class CustomerFinancialInformationComponent implements OnInit {
         this.isCreditTermsExists = true;
     }
 
-    
+
     filterPercentage(event) {
         console.log(parseInt(event.query));
         this._creditTermPercentageList = this.percentageList;
 
         this._creditTermPercentageList = [...this.percentageList.filter(x => {
             console.log(x);
-      
+
             return x.percentValue.includes(parseInt(event.query))
         })]
     }
@@ -324,9 +325,9 @@ export class CustomerFinancialInformationComponent implements OnInit {
     }
 
 
-   
+
     filterTaxType(event) {
-        
+
         console.log(parseInt(event.query));
         this._TaxTypeList = this.taxTypeList;
 
@@ -334,7 +335,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
             console.log(x);
             return x.label.toLowerCase().includes(event.query.toLowerCase())
 
-          
+
         })]
     }
 
@@ -351,12 +352,12 @@ export class CustomerFinancialInformationComponent implements OnInit {
         })]
     }
 
-    
+
     checkTaxTypeExists(field, value) {
         const exists = validateRecordExistsOrNot(field, value, this.taxTypeList)
         console.log(exists);
         if (exists.length > 0) {
-         
+
             this.isTaxTypeExists = true;
         } else {
             this.isTaxTypeExists = false;
@@ -373,7 +374,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
         }
     }
 
-    
+
     selectedTaxTypes() {
         this.isTaxTypeExists = true;
     }
@@ -382,7 +383,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
         this.isTaxRateExists = true;
     }
 
-    
+
 
 
 
@@ -392,33 +393,33 @@ export class CustomerFinancialInformationComponent implements OnInit {
             this.discountList = res[0];
         })
     }
-   
+
     getAllDiscountList1() {
         this.commonservice.smartDropDownList('[Discount]', 'DiscountId', 'DiscontValue').subscribe(res => {
             this.discountList1 = res;
         })
     }
 
-   
+
 
     filterDiscount(event) {
-     
+
         console.log();
         this._discountList = this.discountList1;
-    
+
 
         this._discountList = [...this.discountList1.filter(x => {
             console.log(x);
             return x.label.includes(event.query.toLowerCase())
 
-           
+
         })]
     }
 
-   
+
 
     checkDiscountExists(field, value) {
-        const exists = validateRecordExistsOrNot(field, value, this.creditTermList)
+        const exists = validateRecordExistsOrNot(field, value, this.creditTermsListOriginal)
         console.log(exists);
         if (exists.length > 0) {
             this.isDiscountExists = true;
@@ -427,13 +428,13 @@ export class CustomerFinancialInformationComponent implements OnInit {
         }
     }
     checkDiscountExistss(value) {
-      
+
         this.isDiscountExists = false;
 
         for (let i = 0; i < this.discountList1.length; i++) {
             if (this.discontValue == this.discountList1[i].label || value == this.discountList[i].label) {
                 this.isDiscountExists = true;
-              
+
                 return;
             }
 
@@ -443,14 +444,14 @@ export class CustomerFinancialInformationComponent implements OnInit {
     selectedDiscount() {
         this.isDiscountExists = true;
     }
-      checkPercentExists(value) {
+    checkPercentExists(value) {
 
         this.isTaxRateExists = false;
 
         for (let i = 0; i < this.percentageList.length; i++) {
             if (this.discontValue == this.percentageList[i].label || value == this.percentageList[i].label) {
                 this.isTaxRateExists = true;
-           
+
                 return;
             }
 
@@ -460,7 +461,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
 
     getAllTaxList() {
         this.taxRateService.getTaxRateList().subscribe(res => {
-               const responseData = res[0];
+            const responseData = res[0];
             this.taxtypesList = responseData.map(x => {
                 return {
                     label: x.taxTypeId, value: x.taxTypeId
@@ -469,20 +470,20 @@ export class CustomerFinancialInformationComponent implements OnInit {
 
         })
     }
-    
+
 
 
     getMappedTaxTypeRateDetails() {
-        
+
         this.customerService.getMappedTaxTypeRateDetails(this.id).subscribe(res => {
             this.taxTypeRateMapping = res;
-                
+
         })
     }
     mapTaxTypeandRate() {
-        if(this.selectedTaxRates && this.selectedTaxType){ 
-            const index = this.taxTypeRateMapping.findIndex(item=> item.taxType === getValueFromArrayOfObjectById('label', 'value', this.selectedTaxType, this.taxTypeList));
-            if(index > -1){
+        if (this.selectedTaxRates && this.selectedTaxType) {
+            const index = this.taxTypeRateMapping.findIndex(item => item.taxType === getValueFromArrayOfObjectById('label', 'value', this.selectedTaxType, this.taxTypeList));
+            if (index > -1) {
                 this.alertService.showMessage(
                     'Duplicate',
                     `Already Exists `,
@@ -496,12 +497,12 @@ export class CustomerFinancialInformationComponent implements OnInit {
                     taxType: getValueFromArrayOfObjectById('label', 'value', this.selectedTaxType, this.taxTypeList),
                     taxRate: this.selectedTaxRates
                 }];
-                
+
                 this.selectedTaxRates = null;
                 this.selectedTaxType = null;
             }
-            
-            
+
+
         }
         console.log(this.taxTypeRateMapping, "this.taxTypeRateMapping+++")
     }
@@ -517,14 +518,14 @@ export class CustomerFinancialInformationComponent implements OnInit {
     }
 
     saveFinancialInformation() {
-       
-         this.customerService.updatefinanceinfo({
+
+        this.customerService.updatefinanceinfo({
             ...this.savedGeneralInformationData,
             CustomerTaxTypeRateMapping: this.taxTypeRateMapping,
-             updatedBy: this.userName,
-             
+            updatedBy: this.userName,
 
-             creditTermsId: this.savedGeneralInformationData.creditTermsId.creditTermsId
+
+            creditTermsId: this.savedGeneralInformationData.creditTermsId.creditTermsId
         }, this.id).subscribe(res => {
 
 
@@ -539,7 +540,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
                 this.formData.append(key, vdata[key]);
             }
             this.taxExemptFileUploadInput.clear()
-             this.customerService.customerFinanceFileUpload(this.formData).subscribe(res => {
+            this.customerService.customerFinanceFileUpload(this.formData).subscribe(res => {
                 this.formData = new FormData();
                 this.toGetCustomerFinanceDocumentsList(this.savedGeneralInformationData.customerId);
             });
@@ -553,7 +554,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
         })
     }
     downloadFileUpload(rowData) {
-     
+
         const url = `${this.configurations.baseUrl}/api/FileUpload/downloadattachedfile?filePath=${rowData.link}`;
         window.location.assign(url);
     }
@@ -572,7 +573,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
 
         this.customerService.GetCustomerAttachmentDelete(attachmentDetailId, updatedBy).subscribe(res => {
             this.toGetCustomerFinanceDocumentsList(this.id);
-        
+
         })
     }
 
@@ -581,10 +582,10 @@ export class CustomerFinancialInformationComponent implements OnInit {
             ...this.addNewIntergration,
             createdBy: this.userName,
             updatedBy: this.userName,
-          
+
         }
         this.customerService.newMarkUp(data).subscribe(data => {
-                  this.alertService.showMessage(
+            this.alertService.showMessage(
                 'Success',
                 `Add MarkUp Sucessfully `,
                 MessageSeverity.success
@@ -674,34 +675,34 @@ export class CustomerFinancialInformationComponent implements OnInit {
 
     }
     newTaxRateAdd() {
-             const data = {
+        const data = {
             ...this.addNewTaxRate, createdBy: this.userName, updatedBy: this.userName, masterCompanyId: 1,
 
             percentValue: editValueAssignByCondition('percentValue', this.addNewTaxRate.taxRate),
 
         };
 
-    
-             this.percentService.newPercentage(data).subscribe(() => {
-                this.resetTaxType();
-                this.getAllTaxTypes();
-                this.getAllTaxRates();
-                this.getAllPercentage();
-                this.addNewTaxRate = { ...this.taxRateNew }
-                
-                this.alertService.showMessage(
-                    'Success',
-                    `Added New Tax Rate  Successfully`,
-                    MessageSeverity.success
-                );
-            })
-     
+
+        this.percentService.newPercentage(data).subscribe(() => {
+            this.resetTaxType();
+            this.getAllTaxTypes();
+            this.getAllTaxRates();
+            this.getAllPercentage();
+            this.addNewTaxRate = { ...this.taxRateNew }
+
+            this.alertService.showMessage(
+                'Success',
+                `Added New Tax Rate  Successfully`,
+                MessageSeverity.success
+            );
+        })
+
     }
 
-        resetTaxType() {
-            this.addNewTaxType = { ...this.taxTyeNew }
+    resetTaxType() {
+        this.addNewTaxType = { ...this.taxTyeNew }
 
-        }
+    }
     resetTaxRate() {
         this.addNewTaxRate = { ...this.taxRateNew }
 
@@ -714,11 +715,11 @@ export class CustomerFinancialInformationComponent implements OnInit {
     }
 
     deleteTaxTypeRate(content, rowData) {
-        
+
         this.isDeleteMode = true;
         this.localcollection = rowData;
         this.selectedRowForDelete = rowData;
-        
+
         this.customerTaxRateMappingId = rowData.customerTaxTypeRateMappingId;
         this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
@@ -727,7 +728,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
     }
 
     deleteItemAndCloseModel() {
-      
+
         let customerTaxRateMappingId = this.customerTaxRateMappingId;
         if (customerTaxRateMappingId > 0) {
 
@@ -761,7 +762,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
         }
 
 
-        
+
     }
     private saveFailedHelper(error: any) {
 
@@ -772,10 +773,10 @@ export class CustomerFinancialInformationComponent implements OnInit {
     dismissModel() {
         this.modal.close();
     }
-    
-   
 
-  
 
-  
+
+
+
+
 } 

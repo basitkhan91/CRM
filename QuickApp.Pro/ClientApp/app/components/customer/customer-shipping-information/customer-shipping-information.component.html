@@ -19,7 +19,7 @@
             <div>
                 <div class="col-md-12" style="margin-bottom: -10px;">
 
-                    <h4 class="float-right">
+                    <h4 class="float-left">
                         Add Shipping Info
                         <a class="plusicon-cstm"
                            data-toggle="modal"
@@ -69,18 +69,23 @@
 
                     <ng-template pTemplate="header" let-columns>
                         <tr>
+                                <th style="width: 40px;">Flag</th>
                             <th *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
                                 {{col.header}}
                                 <p-sortIcon [field]="col.field"></p-sortIcon>
                             </th>
                             <th style="width: 140px;"> Actions</th>
-
-
                         </tr>
                     </ng-template>
 
                     <ng-template pTemplate="body" let-rowData let-columns="columns">
-                        <tr [pSelectableRow]="rowData" [pSelectableRowDblClick]="rowData" (dblclick)="viewSelectedRowdbl(rowData)" [ngClass]="{'row-primary': rowData.isPrimary === true}">
+                        <tr [pSelectableRow]="rowData" [pSelectableRowDblClick]="rowData" (dblclick)="viewSelectedRowdbl(rowData)" >
+                            <td > 
+                                    <span class="flag">
+                                    <i  *ngIf="rowData.isPrimary == true"   [ngStyle]="{'color': rowData.isPrimary == true ? 'green' : 'none'}"  
+                                     class="fa fa-flag" aria-hidden="true"></i>
+                                </span>
+                            </td>
                             <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
                                 {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
                             </td>
@@ -120,9 +125,10 @@
             <div class="clear"></div>
 
             <form class="form-horizontal" style="margin-top: 30px;">
-                <div class="col-md-12" style="margin-bottom: -10px;">
                     <h3 class="po-head pull-left" style="padding: 0 6px;">International Shipping Info</h3>
-                    <h4 class="float-right">
+                <div class="col-md-12" style="margin-bottom: -10px;">
+               
+                    <h4 class="float-left">
                         Add International Shipping Details
                         <a class="plusicon-cstm"
                            data-toggle="modal"
@@ -162,13 +168,8 @@
                                     <i class="fa fa-search"></i>
                                     <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder=" Filter" style="height: 28px !important;">
                                 </div>
-<<<<<<< HEAD
-                                <button type="button" class="btn btn-primary-cstm" matTooltip="Download  Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export  Data" (click)="dt.exportCSV()" style="padding: 5px 10px !important;"></button>
-                                <button type="button" class="btn btn-primary-cstm" matTooltip="Download Selected Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})" style="padding: 5px 10px !important;"></button>
-=======
                                 <button type="button" class="btn btn-primary"  matTooltip="Download  Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export  Data" (click)="dt.exportCSV()" style="padding: 5px 10px !important;"></button>
                                 <button type="button" class="btn btn-primary"  matTooltip="Download Selected Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export Selection Only"  (click)="dt.exportCSV({selectionOnly:true})" style="padding: 5px 10px !important;"></button>
->>>>>>> master
 
                                 <div class="excel-upload excel-upload-cstm">
                                     <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
@@ -181,6 +182,7 @@
 
                         <ng-template pTemplate="header" let-columns>
                             <tr>
+                                    <th style="width: 40px;">Flag</th>
                                 <th *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
                                     {{col.header}}
                                     <p-sortIcon [field]="col.field"></p-sortIcon>
@@ -190,7 +192,14 @@
                         </ng-template>
 
                         <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
-                            <tr [pSelectableRow]="rowData" [pSelectableRowDblClick]="rowData" (dblclick)="viewInterShipping(rowData)" [ngClass]="{'row-primary': rowData.isPrimary === true}">
+                            <tr [pSelectableRow]="rowData" [pSelectableRowDblClick]="rowData" (dblclick)="viewInterShipping(rowData)" >
+                                    <!-- [ngClass]="{'row-primary': rowData.isPrimary === true}" -->
+                                    <td > 
+                                            <span class="flag">
+                                            <i  *ngIf="rowData.isPrimary == true"   [ngStyle]="{'color': rowData.isPrimary == true ? 'green' : 'none'}"  
+                                             class="fa fa-flag" aria-hidden="true"></i>
+                                        </span>
+                                    </td>
                                 <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
                                     {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'expirationDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'startDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
                                 </td>
@@ -221,6 +230,12 @@
 
                         </ng-template>
                       
+                        <!-- <ng-template pTemplate="summary" id="footer">
+                                <label id="footer" class="footer">No'of records:</label>
+                                <input style="width: 5%;" [(ngModel)]="totalRecordsForInternationalShipping" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp;
+                                <label id="footer" class="footer1">Pages Count:</label>
+                                <input style="width: 5%;" [(ngModel)]="totalPagesInter" [disabled]="true" pInputText type="text" />
+                            </ng-template> -->
                     </p-table>
                 </div>
             </form>
@@ -339,6 +354,7 @@
 
                 <ng-template pTemplate="header" let-columns>
                     <tr>
+                            <th style="width: 40px;">Flag</th>
                         <th *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
                             {{col.header}}
                             <p-sortIcon [field]="col.field"></p-sortIcon>
@@ -348,7 +364,13 @@
                 </ng-template>
 
                 <ng-template pTemplate="body" let-rowData let-columns="columns">
-                    <tr [pSelectableRow]="rowData" [ngStyle]="{'background-color' : rowData.isPrimary === true ? '#79ffe3'  : 'white'  }" >
+                    <tr [pSelectableRow]="rowData"  >
+                            <td > 
+                                    <span class="flag">
+                                    <i  *ngIf="rowData.isPrimary == true"   [ngStyle]="{'color': rowData.isPrimary == true ? 'green' : 'none'}"  
+                                     class="fa fa-flag" aria-hidden="true"></i>
+                                </span>
+                            </td>
                         <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
                             {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy h:mm:ss a'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy h:mm:ss a'):rowData[col.field]}}
                         </td>
@@ -478,7 +500,7 @@
                     <p><span class="label"><b>Ship To Address 2: </b></span><span class="value">{{sourceViewforShipping.address2}}</span></p>
                     <p style="display:none"><span class="label"><b>ship To Address 3: </b></span><span class="value">{{sourceViewforShipping.address3}}</span></p>
                     <p><span class="label"><b>Ship To City: </b></span><span class="value">{{sourceViewforShipping.city}}</span></p>
-                    <p><span class="label"><b>Ship To State/Prov: </b></span><span class="value">{{sourceViewforShipping.stateOrProvince}}</span></p>
+                    <p><span class="label"><b>Ship To State / Prov: </b></span><span class="value">{{sourceViewforShipping.stateOrProvince}}</span></p>
                     <p><span class="label"><b>Ship To Postal Code :</b></span><span class="value">{{sourceViewforShipping.postalCode}}</span></p>
                     <p><span class="label"><b>Ship To Country: </b></span><span class="value">{{sourceViewforShipping.countryName}}</span></p>
 
@@ -529,7 +551,7 @@
                         <div class="col-md-3">
 
                             <div class="form-group">
-                                <label>Ship To State/Prov <span class="clr-red">*</span></label>
+                                <label>Ship To State / Prov <span class="clr-red">*</span></label>
                                 <input class="form-control" id="csstate" type="text" name="stateOrProvince" [(ngModel)]="domesticShippingInfo.stateOrProvince" required>
                             </div>
                             <div class="form-group">
@@ -1023,7 +1045,7 @@
                                 {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
                             </td>
                             <td>
-                                <p-inputSwitch [(ngModel)]="rowData['isActive']" name="isActiveIS{{rowIndex}}" (onChange)="updateActiveorInActiveForIS(rowData)"></p-inputSwitch>
+                                <p-inputSwitch [(ngModel)]="rowData['isActive']" name="isActive{{rowIndex}}" (onChange)="updateActiveorInActiveShipViaForIS(rowData)"></p-inputSwitch>
                                 <span data-toggle="modal" data-target="#viewInterVia"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openInterShippingViewVia(rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
 
                                 <button class="btn-edit" mat-icon-button data-toggle="modal"

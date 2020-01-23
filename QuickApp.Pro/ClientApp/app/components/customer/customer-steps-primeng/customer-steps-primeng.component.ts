@@ -7,6 +7,7 @@ import { AtaMainService } from '../../../services/atamain.service';
 import { MessageSeverity, AlertService } from '../../../services/alert.service';
 import { MenuItem } from 'primeng/api';
 import { CreditTermsService } from '../../../services/Credit Terms.service';
+import { CommonService } from '../../../services/common.service';
 @Component({
 	selector: 'app-customer-create',
 	templateUrl: './customer-steps-primeng.component.html',
@@ -17,19 +18,19 @@ export class CustomerStepsPrimengComponent {
 	activeMenuItem: number = 1;
 	currentTab: string = 'General';
 	savedGeneralInformationData: any;
-    countryListOriginal: any[];
-    creditTermsListOriginal: any[];
+	countryListOriginal: any[];
+	creditTermsListOriginal: any[];
 	customerId: number;
 	editMode: boolean = false;
-    customerListOriginal: { customerId: any; name: any; }[];
+	customerListOriginal: { customerId: any; name: any; }[];
 
-    customerallListOriginal: { customerId: any; name: any; }[];
+	customerallListOriginal: { customerId: any; name: any; }[];
 	editGeneralInformationData: any;
 	employeeListOriginal: any[];
 	isDisabledSteps: boolean = false;
 	search_ataChapterList: any;
 	add_ataChapterList: any;
-    ataListDataValues: any[] = [];
+	ataListDataValues: any[] = [];
 	contactList: any;
 	breadcrumbs: MenuItem[];
 	// ifvalue: boolean;
@@ -49,10 +50,11 @@ export class CustomerStepsPrimengComponent {
 		private acRouter: ActivatedRoute,
 		public employeeService: EmployeeService,
 		private atamain: AtaMainService,
-        private alertService: AlertService,
+		private alertService: AlertService,
 		private route: Router,
-        location: Location,
-        public creditTermService: CreditTermsService
+		location: Location,
+		private commonservice: CommonService,
+		public creditTermService: CreditTermsService
 	) {
 		// let currentUrl = this.route.url;
 		// this.customerService.alertChangeObject$.subscribe(value => {
@@ -76,15 +78,15 @@ export class CustomerStepsPrimengComponent {
 		this.getAllCountries();
 		this.getAllCustomers();
 		this.getAllEmployees();
-        this.getAllATAChapter();
-        this.getAllCustomersData();
-        this.getAllCreditTerms();
+		this.getAllATAChapter();
+		this.getAllCustomersData();
+		this.getAllCreditTerms();
 
 		this.breadcrumbs = [
-            {label:'Customers'},
-            {label: this.editMode ? 'Edit Customer' : 'Create Customer'},
-        ];
-        
+			{ label: 'Customers' },
+			{ label: this.editMode ? 'Edit Customer' : 'Create Customer' },
+		];
+
 		// 	this.showComponentPTab = this.customerService.ShowPtab;
 		// 	this.currentUrl = this.route.url;
 		// 	//debugger
@@ -223,21 +225,21 @@ export class CustomerStepsPrimengComponent {
 	changeOfTab(value) {
 		if (value === 'General') {
 			this.currentTab = 'General';
-            this.activeMenuItem = 1;
-            
+			this.activeMenuItem = 1;
+
 		} else if (value === 'Contacts') {
 			this.currentTab = 'Contacts';
-            this.activeMenuItem = 2;
-            
+			this.activeMenuItem = 2;
+
 		} else if (value === 'AircraftInfo') {
 			this.currentTab = 'AircraftInfo';
 			this.activeMenuItem = 3;
 		} else if (value === 'Atachapter') {
 			this.currentTab = 'Atachapter';
-            this.activeMenuItem = 4;
-            this.getMappedContactByCustomerId(this.customerId);
-           
-            
+			this.activeMenuItem = 4;
+			this.getMappedContactByCustomerId(this.customerId);
+
+
 
 		} else if (value === 'Financial') {
 			this.currentTab = 'Financial';
@@ -274,33 +276,36 @@ export class CustomerStepsPrimengComponent {
 		})
 	}
 
-    //getAllCreditTerms() {
-    //    this.customerService.getCountrylist().subscribe(res => {
-    //        this.creditTermsListOriginal = res[0];
-    //    })
-    //}
-     getAllCreditTerms() {
-        this.creditTermService.getCreditTermsList().subscribe(res => {
-            const respData = res[0];
-            this.creditTermsListOriginal = respData.columnData;
-                 });
-    }
+
+	//  getAllCreditTerms() {
+	//     this.creditTermService.getCreditTermsList().subscribe(res => {
+	//         const respData = res[0];
+	//         this.creditTermsListOriginal = respData.columnData;
+	//              });
+	// }
+
+	getAllCreditTerms() {
+		this.commonservice.smartDropDownList('CreditTerms', 'CreditTermsId', 'Name').subscribe(res => {
+			this.creditTermsListOriginal = res;
+
+		})
+	}
 	getAllCustomers() {
 		this.customerService.getCustomers().subscribe(res => {
 			this.customerListOriginal = res[0];
 			console.log(res[0]);
 		})
-    }
+	}
 
-    getAllCustomersData() {
-        this.customerService.getallCustomers().subscribe(res => {
-            this.customerallListOriginal = res[0];
-            console.log(res[0]);
-        })
-    }
+	getAllCustomersData() {
+		this.customerService.getallCustomers().subscribe(res => {
+			this.customerallListOriginal = res[0];
+			console.log(res[0]);
+		})
+	}
 
 
-    getallCustomers
+	getallCustomers
 	async getAllEmployees() {
 		await this.employeeService.getEmployeeList().subscribe(res => {
 			this.employeeListOriginal = res[0];
@@ -335,26 +340,26 @@ export class CustomerStepsPrimengComponent {
 		const data = ATAMappingData;
 		this.customerService.postCustomerATAs(data).subscribe(res => {
 
-            this.getMappedContactByCustomerId(data[0].CustomerId) 
+			this.getMappedContactByCustomerId(data[0].CustomerId)
 			this.getMappedATAByCustomerId(data[0].CustomerId)
 			this.alertService.showMessage(
 				'Success',
 				'Saved ATA Mapped Data Successfully ',
 				MessageSeverity.success
 			);
-        }, error => {
-                this.alertService.showMessage(
-                    'Failed',
-                    error.error,
-                    MessageSeverity.error
-            );
-        })
-        
+		}, error => {
+			this.alertService.showMessage(
+				'Failed',
+				error.error,
+				MessageSeverity.error
+			);
+		})
+
 	}
 
 
-    getMappedATAByCustomerId(customerId) {
-        
+	getMappedATAByCustomerId(customerId) {
+
 		// const id = this.savedGeneralInformationData.customerId;
 		this.customerService.getATAMappedByCustomerId(customerId).subscribe(res => {
 			this.ataListDataValues = res;
@@ -362,22 +367,22 @@ export class CustomerStepsPrimengComponent {
 
 		})
 	}
-    getMappedContactByCustomerId(customerId) {
-    
-        // const id = this.savedGeneralInformationData.customerId;
-        this.customerService.getContactsByCustomerId(customerId).subscribe(res => {
-            //this.contactList = res;
+	getMappedContactByCustomerId(customerId) {
 
-            const responseData: any = res;
-            this.contactList = responseData.map(x => {
-                return {
-                    label: x.firstName, value: x.contactId
-                }
-            })
-            console.log(res);
+		// const id = this.savedGeneralInformationData.customerId;
+		this.customerService.getContactsByCustomerId(customerId).subscribe(res => {
+			//this.contactList = res;
 
-        })
-    }
+			const responseData: any = res;
+			this.contactList = responseData.map(x => {
+				return {
+					label: x.firstName, value: x.contactId
+				}
+			})
+			console.log(res);
+
+		})
+	}
 
 
 

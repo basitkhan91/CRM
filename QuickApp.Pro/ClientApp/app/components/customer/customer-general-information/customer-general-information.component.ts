@@ -54,7 +54,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
     countrycollection: any[];
     allcustomerclassificationInfo;
     integrationOriginalList = [
-        
+
     ];
     allCurrencyInfo: Currency[];
     memoPopupContent: any;
@@ -96,7 +96,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
     // restrictBERList: any;
     restictDERtempList: any = [];
     restictPMAtempList: any = [];
-  
+
     restrictedDERParts: any = [];
     restrictedPMAParts: any = [];
     restrictHeaders = [
@@ -115,15 +115,15 @@ export class CustomerGeneralInformationComponent implements OnInit {
     disableAccountType: boolean = false;
     modal: NgbModalRef;
 
-   
+
 
     constructor(public integrationService: IntegrationService, private modalService: NgbModal, public customerClassificationService: CustomerClassificationService, public ataservice: AtaMainService, private authService: AuthService, private alertService: AlertService,
         public customerService: CustomerService, public itemService: ItemMasterService, public vendorser: VendorService, private currencyService: CurrencyService, private commonService: CommonService) {
 
 
-      
 
-    
+
+
 
     }
 
@@ -202,16 +202,16 @@ export class CustomerGeneralInformationComponent implements OnInit {
         }
     }
 
-   
+
     async  getCustomerClassificationByCustomerId() {
-       
+
         await this.customerService.getCustomerClassificationMapping(this.id).subscribe(res => {
             this.generalInformation.customerClassificationIds = res.map(x => x.customerClassificationId);
             // console.log(this.generalInformation.customerClassificationIds);
         });
     }
 
-   
+
 
     async  getCustomerIntegrationTypesByCustomerId() {
         if (this.id > 0) {
@@ -225,24 +225,24 @@ export class CustomerGeneralInformationComponent implements OnInit {
 
 
     async    getCustomerRestrictedPMAByCustomerId() {
-       
-     //await    this.commonService.getRestrictedParts(1, this.id, 'PMA').subscribe(res => {
+
+        //await    this.commonService.getRestrictedParts(1, this.id, 'PMA').subscribe(res => {
         await this.commonService.getRestrictedPartsWithDesc(1, this.id, 'PMA').subscribe(res => {
-        
-           this.generalInformation.restrictedPMAParts = res;
+
+            this.generalInformation.restrictedPMAParts = res;
             if (this.generalInformation.restrictedPMAParts.length > 0) {
                 this.disableRestrictedPMA = true;
             }
-            
+
 
             this.restictPMAtempList = res.map(x => x.rescrictedPartId);
             this.partListForPMA = this.generalInformation.restrictedPMAParts.reduce((acc, obj) => {
                 return acc.filter(x => x.value.masterPartId !== obj.masterPartId)
-            }, this.partListOriginal) 
-           
+            }, this.partListOriginal)
+
 
         })
-        
+
     }
 
     async getCustomerRestrictedDERByCustomerId() {
@@ -257,7 +257,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
             this.partListForDER = this.generalInformation.restrictedDERParts.reduce((acc, obj) => {
                 return acc.filter(x => x.value.masterPartId !== obj.masterPartId)
             }, this.partListOriginal)
-           
+
 
         })
     }
@@ -267,7 +267,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
         return this.authService.currentUser ? this.authService.currentUser.userName : "";
     }
 
-   
+
 
     getAllPartList() {
         this.itemService.getPrtnumberslistListwithManufacturer().subscribe(res => {
@@ -306,40 +306,46 @@ export class CustomerGeneralInformationComponent implements OnInit {
     }
 
     // async getAllCustomers() {
-   
+
     async getAllCustomerClassification() {
         await this.commonService.smartDropDownList('CustomerClassification', 'CustomerClassificationId', 'Description').subscribe(res => {
             this.allcustomerclassificationInfo = res;
         });
-       
+
     }
     selectedPartForPMA(event) {
         console.log(event)
 
     }
-  
+
 
     addRestrictPMA() {
         if (this.restictPMAtempList.length > 0) {
             this.disableRestrictedPMA = true;
-            for(let i=0; i<this.restictPMAtempList.length; i++){
-                if(this.restictPMAtempList[i] != undefined){
+            for (let i = 0; i < this.restictPMAtempList.length; i++) {
+                if (this.restictPMAtempList[i] != undefined) {
                     this.generalInformation.restrictedPMAParts = [...this.generalInformation.restrictedPMAParts, this.restictPMAtempList[i]];
                 }
             }
-            this.generalInformation.restrictedPMAParts=this.generalInformation.restrictedPMAParts.slice();
+            this.generalInformation.restrictedPMAParts = this.generalInformation.restrictedPMAParts.slice();
             this.partListForPMA = this.generalInformation.restrictedPMAParts.reduce((acc, obj) => {
                 return acc.filter(x => x.value.masterPartId !== obj.masterPartId)
-            }, this.partListOriginal)                
-        this.restictPMAtempList = [];                            
+            }, this.partListOriginal)
+            this.restictPMAtempList = [];
         }
     }
 
-      
-       
+
+
     deleteRestirctPMA() {
 
-      
+        console.log(this.selectedRowForDeleteRestrictPMA);
+
+        // deleteRestirctPMA(i, rowData) {
+        //     this.partListForPMA = [{ label: rowData.partNumber, value: rowData }, ...this.partListForPMA];
+        //     this.generalInformation.restrictedPMAParts.splice(i, 1);
+        // }
+
         if (this.selectedRowForDeleteRestrictPMA.restrictedPartId > 0) {
 
             this.customerService.deleteRestrictedPartsById(this.selectedRowForDeleteRestrictPMA.restrictedPartId, this.userName).subscribe(res => {
@@ -350,28 +356,34 @@ export class CustomerGeneralInformationComponent implements OnInit {
                 );
             })
         }
-        this.dismissModel()
+
+
+        console.log(this.selectedRowForDeleteRestrictPMA);
+
         this.partListForPMA = [{ label: this.selectedRowForDeleteRestrictPMA.partNumber, value: this.selectedRowForDeleteRestrictPMA }, ...this.partListForPMA];
+        console.log(this.partListForPMA);
+
         this.generalInformation.restrictedPMAParts.splice(this.selectedRowForDeleteRestrictPMA.index, 1);
-       
+        this.dismissModel()
+
         if (this.generalInformation.restrictedPMAParts.length == 0) {
             this.disableRestrictedPMA = false;
         }
-       
+
     }
-  
-     
-    openPopupForDeleteRestrictPMA(i, rowData, content){
+
+
+    openPopupForDeleteRestrictPMA(i, rowData, content) {
         this.selectedRowForDeleteRestrictPMA = rowData;
         this.selectedRowForDeleteRestrictPMA['index'] = i;
-        
+
         this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
 
     }
-    openPopupForDeleteRestrictDER(i, rowData, content){
+    openPopupForDeleteRestrictDER(i, rowData, content) {
         this.selectedRowForDeleteRestrictDER = rowData;
         this.selectedRowForDeleteRestrictDER['index'] = i;
-        
+
         this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
 
     }
@@ -385,25 +397,25 @@ export class CustomerGeneralInformationComponent implements OnInit {
 
     }
     checkaddress() {
-       
-        this.generalInformation.isAddressForBilling= true;
-        this.generalInformation.isAddressForShipping= true;
+
+        this.generalInformation.isAddressForBilling = true;
+        this.generalInformation.isAddressForShipping = true;
     }
-    addRestrictBER() {        
+    addRestrictBER() {
         if (this.restictDERtempList.length > 0) {
             this.disableRestrictedDER = true;
-            for(let i=0; i<this.restictDERtempList.length; i++){
-                if(this.restictDERtempList[i] != undefined){
+            for (let i = 0; i < this.restictDERtempList.length; i++) {
+                if (this.restictDERtempList[i] != undefined) {
                     this.generalInformation.restrictedDERParts = [...this.generalInformation.restrictedDERParts, this.restictDERtempList[i]];
                 }
             }
-            this.generalInformation.restrictedDERParts=this.generalInformation.restrictedDERParts.slice();
+            this.generalInformation.restrictedDERParts = this.generalInformation.restrictedDERParts.slice();
             this.partListForDER = this.generalInformation.restrictedDERParts.reduce((acc, obj) => {
                 return acc.filter(x => x.value.masterPartId !== obj.masterPartId)
-            }, this.partListOriginal)                
-        this.restictDERtempList = [];                            
+            }, this.partListOriginal)
+            this.restictDERtempList = [];
         }
-            
+
     }
     deleteRestirctDER() {
         if (this.selectedRowForDeleteRestrictDER.restrictedPartId > 0) {
@@ -420,7 +432,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
         this.partListForDER = [{ label: this.selectedRowForDeleteRestrictDER.partNumber, value: this.selectedRowForDeleteRestrictDER }, ...this.partListForDER];
         this.generalInformation.restrictedDERParts.splice(this.selectedRowForDeleteRestrictDER.index, 1);
 
-        
+
         if (this.generalInformation.restrictedDERParts.length == 0) {
             this.disableRestrictedDER = false;
         }
@@ -433,7 +445,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
 
         this.classificationList = [...this.allcustomerclassificationInfo.filter(x => {
             return x.label.toLowerCase().includes(event.query.toLowerCase());
-            })
+        })
         ];
 
     }
@@ -474,7 +486,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
         if (value == 'PBHCustomer') {
             this.memoPopupContent = this.generalInformation.pbhCustomerMemo;
         }
-              this.memoPopupValue = value;
+        this.memoPopupValue = value;
     }
 
     onClickPopupSave() {
@@ -482,10 +494,10 @@ export class CustomerGeneralInformationComponent implements OnInit {
         if (this.memoPopupValue == 'PBHCustomer') {
             this.generalInformation.pbhCustomerMemo = this.memoPopupContent;
         }
-               this.memoPopupContent = '';
+        this.memoPopupContent = '';
     }
     selectedCustomerName() {
-       
+
         this.isCustomerNameAlreadyExists = true;
     }
     selectedCustomerCode() {
@@ -504,7 +516,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
 
     checkCustomerNameExist(value) {
         this.changeName = true;
-       
+
         this.isCustomerNameAlreadyExists = false;
         this.disableSaveCustomerName = false;
         if (value != this.generalInformation1.name) {
@@ -523,7 +535,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
 
     }
     selectedParentName(event) {
-       
+
         if (this.changeName == false) {
             if (event.name === this.generalInformation1.name) {
                 this.disableSaveParentName = true;
@@ -540,10 +552,10 @@ export class CustomerGeneralInformationComponent implements OnInit {
                 this.disableSaveParentName = false;
             }
         }
-        
+
     }
     checkWithName(event) {
-      
+
         if (this.changeName == false) {
             if (event === this.generalInformation1.name) {
                 this.disableSaveParentName = true;
@@ -562,22 +574,22 @@ export class CustomerGeneralInformationComponent implements OnInit {
         }
     }
     checkCustomerCodeExist(value) {
-     
+
         this.isCustomerCodeAlreadyExists = false;
-     
+
         for (let i = 0; i < this.customerallListOriginal.length; i++) {
             if (this.generalInformation.customerCode == this.customerallListOriginal[i].customerCode || value == this.customerallListOriginal[i].customerCode) {
                 this.isCustomerCodeAlreadyExists = true;
                 // this.disableSave = true;
-            
+
                 return;
             }
 
         }
 
     }
-   
-    
+
+
 
 
 
@@ -592,8 +604,8 @@ export class CustomerGeneralInformationComponent implements OnInit {
 
     }
     saveGeneralInformation() {
-       
-      
+
+
         if (!this.isEdit) {
             this.customerService.newAction({
                 ...this.generalInformation,
@@ -640,13 +652,13 @@ export class CustomerGeneralInformationComponent implements OnInit {
                 //this.generalInformation = new CustomerGeneralInformation();
                 //this.isEdit = true;
                 this.tab.emit('Contacts');
-               
+
                 //this.saveGeneralInformationData.emit(res);
                 this.editGeneralInformation.emit(res);
                 this.id = res.customerId;
                 this.editData = res;
 
-                 this.isEdit = true;
+                this.isEdit = true;
             })
         }
 
@@ -654,7 +666,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
 
     }
     checkClassificationExists(value) {
-    
+
         this.isClassificationAlreadyExists = false;
 
         for (let i = 0; i < this.allcustomerclassificationInfo.length; i++) {
@@ -669,7 +681,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
 
 
     }
-  
+
 
     selectedClassification(object) {
         const exists = selectedValueValidate('label', object, this.selectedClassificationRecordForEdit)
@@ -716,7 +728,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
         })]
     }
     checkIntergationExists(field, value) {
-     
+
         const exists = validateRecordExistsOrNot(field, value, this.integrationOriginalList)
         if (exists.length > 0) {
 
@@ -753,9 +765,9 @@ export class CustomerGeneralInformationComponent implements OnInit {
         this.addNewIntergation = { ...this.intergrationNew }
     }
 
-   
 
-  
+
+
 
     // // Close Model Popup
 
@@ -766,7 +778,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
 
     selectedCustomerType(event) {
         console.log(event)
-        if (event == 1 || event==3) {
+        if (event == 1 || event == 3) {
             this.generalInformation.customerTypeId = 3;
             this.disableAccountType = true;
         }
@@ -774,7 +786,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
             this.disableAccountType = false;
 
         }
-      
+
 
     }
 
