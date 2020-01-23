@@ -538,7 +538,10 @@ export class CustomerFinancialInformationComponent implements OnInit {
             for (var key in vdata) {
                 this.formData.append(key, vdata[key]);
             }
-            this.taxExemptFileUploadInput.clear()
+            console.log(this.taxExemptFileUploadInput, "this.taxExemptFileUploadInput");
+            if(this.taxExemptFileUploadInput){
+                this.taxExemptFileUploadInput.clear()
+            }            
              this.customerService.customerFinanceFileUpload(this.formData).subscribe(res => {
                 this.formData = new FormData();
                 this.toGetCustomerFinanceDocumentsList(this.savedGeneralInformationData.customerId);
