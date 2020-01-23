@@ -69,13 +69,8 @@ export class CustomerShippingInformationComponent implements OnInit {
     ]
     selectedColumnsForDomesticTable = this.domesticShippingHeaders;
     selectedColumnsForInternationTable = this.internationalShippingHeaders;
-<<<<<<< HEAD
-
-    domesticShippingData: any[];
-=======
    
     domesticShippingData: any[] = [];
->>>>>>> master
     sourceViewforShipping: any;
     isEditDomestic: boolean = false;
     isEditInternational: boolean = false;
@@ -548,22 +543,11 @@ export class CustomerShippingInformationComponent implements OnInit {
             console.log(res);
             this.internationalShippingData = res.paginationList;
             this.totalRecordsForInternationalShipping = res.totalRecordsCount;
-<<<<<<< HEAD
-            // if (res.length > 0) {
-            //     console.log(res);
-            //     this.totalRecordsForInternationalShipping = res.totalRecordsCount;
-            //     this.totalPagesInter = Math.ceil(this.totalRecordsForInternationalShipping / this.pageSize);
-            //     console.log(this.totalPagesInter);
-
-            // }
-
-=======
             if (this.internationalShippingData.length > 0) {
                 this.totalRecordsInternationalShipping = this.internationalShippingData.length;
                 this.totalPagesInternationalShipping = Math.ceil(this.totalRecordsInternationalShipping / this.pageSize);
             }
          
->>>>>>> master
         })
 
 
