@@ -192,7 +192,7 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("ATASubChapterByATAChapterId/{id}")]
         public IActionResult getATASubChapterListByATAChapterId(long id)
         {
-            var ataSubChapter = _unitOfWork.Repository<ATASubChapter>().Find(x => x.ATAChapterId == id && x.IsDelete != true);
+            var ataSubChapter = _unitOfWork.Repository<ATASubChapter>().Find(x => x.ATAChapterId == id && x.IsDelete != true && x.IsActive==true);
             return Ok(ataSubChapter);
         }
 

@@ -57,7 +57,7 @@ namespace DAL.Repositories
             var myATAIds = ChapterID.Split(',').Select(n => Convert.ToInt64(n)).ToArray();
             var data = (from iM in _appContext.ATASubChapter
                         join Mc in _appContext.ATAChapter on iM.ATAChapterId equals Mc.ATAChapterId
-                        where myATAIds.Contains(iM.ATAChapterId)
+                        where myATAIds.Contains(iM.ATAChapterId) && iM.IsDelete!=true && iM.IsActive==true
                         select new
                         {
                             iM.ATASubChapterId,
