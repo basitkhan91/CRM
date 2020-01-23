@@ -113,6 +113,12 @@ export class AuthService {
             .map(response => this.processLoginResponse(response, user.rememberMe));
     }
 
+    employeeDetailsByEmpId(id: number){
+        return this.endpointFactory.employeeDetailsByEmpId(id);
+    }
+
+
+
     public checkUserAccessByModuleName(moduleName: string) : boolean {
         let modules : ModuleHierarchyMaster[] = this.getAllModulesNameFromLocalStorage();
         var selectedModules =  modules.filter(function (module) {
@@ -196,6 +202,7 @@ export class AuthService {
 
         let permissions: PermissionValues[] = Array.isArray(decodedAccessToken.permission) ? decodedAccessToken.permission : [decodedAccessToken.permission];
 
+       
         if (!this.isLoggedIn) {
             this.configurations.import(decodedAccessToken.configuration);
         }
@@ -207,8 +214,11 @@ export class AuthService {
             decodedAccessToken.email,
             decodedAccessToken.jobtitle,
             decodedAccessToken.phone_number,
-            Array.isArray(decodedAccessToken.role) ? decodedAccessToken.role : [decodedAccessToken.role]);
+            Array.isArray(decodedAccessToken.role) ? decodedAccessToken.role : [decodedAccessToken.role],
+            decodedAccessToken.employeeId,
+            );
         user.isEnabled = true;
+
 
         this.saveUserDetails(user, permissions, accessToken, refreshToken, accessTokenExpiry, rememberMe);
         this.getUserRolePermissionByUserId(user.id);

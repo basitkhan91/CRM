@@ -102,6 +102,10 @@ export class LoginControlComponent implements OnInit, OnDestroy {
         this.authService.login(this.getUserLogin())
             .subscribe(
             user => {
+                
+                const userLoginDetails = localStorage.getItem('current_user') === null || localStorage.getItem('current_user') == undefined ?    sessionStorage.getItem('current_user')  :  localStorage.getItem('current_user');
+            
+                this.getEmployeeDetailsByEmployeeId(userLoginDetails);
                 setTimeout(() => {
                     this.alertService.stopLoadingMessage();
                     this.isLoading = false;
@@ -140,6 +144,23 @@ export class LoginControlComponent implements OnInit, OnDestroy {
                     this.isLoading = false;
                 }, 500);
             });
+    }
+
+    getEmployeeDetailsByEmployeeId(loginDetails)
+    {
+        console.log(loginDetails);
+        debugger        
+        const {employeeId} = JSON.parse(loginDetails);
+
+        debugger
+        if( parseInt(employeeId) > 0)
+        {
+            debugger
+            this.authService.employeeDetailsByEmpId(parseInt(employeeId)).subscribe(res => {
+                console.log(res);
+            })
+        }
+        
     }
 
 
