@@ -547,7 +547,6 @@ export class CustomerShippingInformationComponent implements OnInit {
                 this.totalRecordsInternationalShipping = this.internationalShippingData.length;
                 this.totalPagesInternationalShipping = Math.ceil(this.totalRecordsInternationalShipping / this.pageSize);
             }
-         
         })
 
 
