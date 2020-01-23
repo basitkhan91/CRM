@@ -1141,7 +1141,7 @@ namespace QuickApp.Pro.Controllers
                          conditionDescription = cp != null ? cp.Description : string.Empty,
                          currencyId = ic != null ? ic.CurrencyId : -1,
                          currencyDescription = ic != null ? ic.DisplayName : string.Empty,
-                         unitCost = item.UnitCost
+                         unitCost = sl.CoreUnitCost
                      };
 
 
