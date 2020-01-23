@@ -147,6 +147,7 @@ namespace DAL
         public DbSet<VendorWarnings> VendorWarning { get; set; }
         public DbSet<CustomerWarning> CustomerWarning { get; set; }
         public DbSet<Employee> Employee { get; set; }
+        //public DbSet<AspNetUsers> AspNetUsers { get; set; }
         public DbSet<EmployeeAudit> EmployeeAudit { get; set; }
         public DbSet<shift> Shift { get; set; }
         public DbSet<Countries> Countries { get; set; }

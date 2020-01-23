@@ -25,8 +25,8 @@
         <th>UOM *</th>
         <th>Unit Cost *</th>
         <th>Extended Cost *</th>
-        <th>Unit Price *</th>
-        <th>Extended Price</th>
+        <th *ngIf="!isQuote">Unit Price *</th>
+        <th *ngIf="!isQuote">Extended Price</th>
         <ng-container *ngIf="isQuote">
           <th>FIXED AMOUNT</th>
         </ng-container>
@@ -164,7 +164,7 @@
             [(ngModel)]="material.extendedCost"
           />
         </td>
-        <td>
+        <td *ngIf="!isQuote">
           <input
             type="text"
             class="form-control"
@@ -177,7 +177,7 @@
             "
           />
         </td>
-        <td>
+        <td *ngIf="!isQuote">
           <input
             type="text"
             class="form-control"
@@ -227,13 +227,12 @@
         <td>&nbsp;</td>
         <td>&nbsp;</td>
         <td>&nbsp;</td>
-        <td>&nbsp;</td>
         <td>{{ workFlow.materialQtySummation }}</td>
         <td>&nbsp;</td>
         <td>&nbsp;</td>
         <td>{{ workFlow.materialExtendedCostSummation }}</td>
-        <td>{{ workFlow.totalMaterialCost }}</td>
-        <td>{{ workFlow.materialExtendedPriceSummation }}</td>
+        <td *ngIf="!isQuote">{{ workFlow.totalMaterialCost }}</td>
+        <td *ngIf="!isQuote">{{ workFlow.materialExtendedPriceSummation }}</td>
         <ng-container *ngIf="isQuote">
           <td>{{ getTotalFixedAmount() }}</td>
         </ng-container>

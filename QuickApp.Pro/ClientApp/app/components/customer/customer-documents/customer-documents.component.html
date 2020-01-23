@@ -86,15 +86,15 @@
                                     </span>
 
                                    
-                                    <button class="btn-edit" mat-icon-button (click)="editCustomerDocument(rowData)" matTooltip="edit" data-toggle="modal" data-target="#addDocumentDetails">
+                                    <button class="btn-edit" mat-icon-button (click)="editCustomerDocument(rowData)" matTooltip="Edit" data-toggle="modal" data-target="#addDocumentDetails">
                                         <mat-icon>edit</mat-icon>
                                     </button>
 
-                                    <button class="btn-delete" mat-icon-button matTooltip="delete" (click)=" openDelete(deleteContent, rowData)">
+                                    <button class="btn-delete" mat-icon-button matTooltip="Delete" (click)=" openDelete(deleteContent, rowData)">
                                         <mat-icon color="warn">delete</mat-icon>
                                     </button>
 
-                                    <button class="btn-history" mat-icon-button matTooltip="history" (click)="openHistory(contentAuditHist,rowData)">
+                                    <button class="btn-history" mat-icon-button matTooltip="History" (click)="openHistory(contentAuditHist,rowData)">
                                         <mat-icon color="green">history</mat-icon>
                                     </button>
 
@@ -197,8 +197,8 @@
                                 <textarea class="form-control" name="description" [(ngModel)]="documentInformation.docDescription" required></textarea>
                             </div>
                             <div class="form-group">
-                                <label>Memo <span class="clr-red">*</span></label>
-                                <textarea class="form-control" name="memo" [(ngModel)]="documentInformation.docMemo" required></textarea>
+                                <label>Memo </label>
+                                <textarea class="form-control" name="memo" [(ngModel)]="documentInformation.docMemo"></textarea>
                             </div>
                         </div>
 

@@ -15,20 +15,20 @@ export class QuoteEndpointService extends EndpointFactory {
     getQuoteIdByWfandWorkOrderId(wfwoId, workOrderId) {
         return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/getworkorderquote?wfwoId=${wfwoId}&workOrderId=${workOrderId}`, this.getRequestHeaders())
     }
-    getQuoteExclusionList(workOrderQuoteId) {
-        return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/quoteexclusions?workOrderQuoteDetailsId=${workOrderQuoteId}`, this.getRequestHeaders())
+    getQuoteExclusionList(workOrderQuoteId, buildMethodId) {
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/quoteexclusions?workOrderQuoteDetailsId=${workOrderQuoteId}&buildMethodId=${buildMethodId}`, this.getRequestHeaders())
     }
-    getQuoteMaterialList(workOrderQuoteId) {
-        return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/quotematerials?workOrderQuoteDetailsId=${workOrderQuoteId}`, this.getRequestHeaders())
+    getQuoteMaterialList(workOrderQuoteId, buildMethodId) {
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/quotematerials?workOrderQuoteDetailsId=${workOrderQuoteId}&buildMethodId=${buildMethodId}`, this.getRequestHeaders())
     }
-    getQuoteFreightsList(workOrderQuoteId) {
-        return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/quotefreights?workOrderQuoteDetailsId=${workOrderQuoteId}`, this.getRequestHeaders())
+    getQuoteFreightsList(workOrderQuoteId, buildMethodId) {
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/quotefreights?workOrderQuoteDetailsId=${workOrderQuoteId}&buildMethodId=${buildMethodId}`, this.getRequestHeaders())
     }
-    getQuoteChargesList(workOrderQuoteId) {
-        return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/quotecharges?workOrderQuoteDetailsId=${workOrderQuoteId}`, this.getRequestHeaders())
+    getQuoteChargesList(workOrderQuoteId, buildMethodId) {
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/quotecharges?workOrderQuoteDetailsId=${workOrderQuoteId}&buildMethodId=${buildMethodId}`, this.getRequestHeaders())
     }
-    getQuoteLaborList(workOrderQuoteId) {
-        return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/quotelabor?workOrderQuoteDetailsId=${workOrderQuoteId}`, this.getRequestHeaders())
+    getQuoteLaborList(workOrderQuoteId, buildMethodId) {
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/quotelabor?workOrderQuoteDetailsId=${workOrderQuoteId}&buildMethodId=${buildMethodId}`, this.getRequestHeaders())
     }
     getWorkOrderQuoteDetail(workOrderId, workFlowWorkOrderId) {
         return this.http.get(`${this.configurations.baseUrl}/api/workorder/getworkorderquote?wfwoId=${workFlowWorkOrderId}&workOrderId=${workOrderId}`);
