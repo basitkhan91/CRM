@@ -15,8 +15,8 @@
       <th><label>QTY *</label></th>
       <th><label>Unit Cost *</label></th>
       <th><label>Extended Cost *</label></th>
-      <th><label>Unit Price</label></th>
-      <th><label>Extended Price</label></th>
+      <th *ngIf="!isQuote"><label>Unit Price</label></th>
+      <th *ngIf="!isQuote"><label>Extended Price</label></th>
       <th><label>Vendor Name</label></th>
       <ng-container *ngIf="isQuote">
         <th>Fixed Amount</th>
@@ -95,7 +95,7 @@
           (input)="calculateExtendedCostSummation()"
         />
       </td>
-      <td>
+      <td *ngIf="!isQuote">
         <input
           type="text"
           pInputText
@@ -106,7 +106,7 @@
           (input)="calculateExtendedPrice(charge)"
         />
       </td>
-      <td>
+      <td *ngIf="!isQuote">
         <input
           type="text"
           pInputText
@@ -148,9 +148,9 @@
       <td>&nbsp;</td>
       <td>{{ workFlow.qtySummation }}</td>
       <td>&nbsp;</td>
-      <td>{{ workFlow.extendedCostSummation }}</td>
+      <td *ngIf="!isQuote">{{ workFlow.extendedCostSummation }}</td>
       <td>&nbsp;</td>
-      <td>{{ workFlow.totalChargesCost }}</td>
+      <td *ngIf="!isQuote">{{ workFlow.totalChargesCost }}</td>
       <td>&nbsp;</td>
       <ng-container *ngIf="isQuote">
         <td>{{ getTotalFixedAmount() }}</td>

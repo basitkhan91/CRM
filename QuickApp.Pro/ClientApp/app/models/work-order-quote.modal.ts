@@ -27,7 +27,7 @@ export class WorkOrderQuote {
     WorkOrderId:number;
     WorkFlowWorkOrderId:number;
     QuoteNumber:number;
-    openDate:Date;
+    openDate:Date = new Date();
     QuoteDueDate:Date;
     ValidForDays:number;
     ExpirationDate:Date;

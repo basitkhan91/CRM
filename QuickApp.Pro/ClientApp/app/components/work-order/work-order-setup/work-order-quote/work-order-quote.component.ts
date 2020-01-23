@@ -153,7 +153,7 @@ woWorkFlowId: number = 0;
   calculateExpiryDate() {
     if(this.validFor && this.quoteDueDate){
       this.expirationDate = new Date();
-      this.expirationDate.setDate(this.quoteDueDate.getDate() + this.validFor);
+      this.expirationDate.setDate(this.quoteForm.openDate.getDate() + this.validFor);
     }
   }
 
@@ -256,6 +256,7 @@ woWorkFlowId: number = 0;
             this.quotationHeader['workOrderQuoteId'] = res.workOrderQuote.workOrderQuoteId;
             this.dso = res.workOrderQuote.dso;
             this.validFor = res.workOrderQuote.validForDays;
+            res.workOrderQuote.openDate = new Date(res.workOrderQuote.openDate);
             this.quoteForm = {...res.workOrderQuote, WorkOrderId: res.workOrderId,
               WorkFlowWorkOrderId: res["workFlowWorkOrderId"], quoteNumber: res.workOrderQuote.quoteNumber, expirationDateStatus: res.workOrderQuote.quoteStatusId};
             this.quoteDueDate = new Date(res.workOrderQuote.quoteDueDate);
@@ -606,7 +607,7 @@ woWorkFlowId: number = 0;
                   "Markup":mList.markup,
                   "MaterialCostPlus":mList.materialCostPlus,
                   "FixedAmount":mList.fixedAmount,
-                  "masterCompanyId":mList.masterCompanyId,
+                  "masterCompanyId":(mList.masterCompanyId == '')?0:mList.masterCompanyId,
               "CreatedBy":"admin",
               "UpdatedBy":"admin",
               "IsActive":true,
@@ -693,7 +694,7 @@ woWorkFlowId: number = 0;
         "ExtendedCost":charge.extendedCost,
         "UnitPrice":charge.unitPrice,
         "ExtendedPrice":charge.extendedPrice,
-        "masterCompanyId":charge.masterCompanyId,
+        "masterCompanyId":(charge.masterCompanyId == "")?0:charge.masterCompanyId,
         "CreatedBy":"admin",
         "UpdatedBy":"admin",
         "IsActive":true,
@@ -705,8 +706,8 @@ woWorkFlowId: number = 0;
       res => {
         this.tabQuoteCreated['charges'] = true;
         this.workOrderChargesList = res.workOrderQuoteCharges;
-        this.getQuoteChargesListByWorkOrderQuoteId();
         this.updateWorkOrderQuoteDetailsId(res.workOrderQuoteDetailsId);
+        this.getQuoteChargesListByWorkOrderQuoteId();
         this.alertService.showMessage(
           this.moduleName,
           'Quotation created  Succesfully',
@@ -892,7 +893,7 @@ saveWorkOrderExclusionsList(data) {
       "MarkUpPercentageId":ex.markupPercentageId,
       "CostPlusAmount":ex.CostPlusAmount,
       "FixedAmount":ex.fixedAmount,
-      "masterCompanyId":ex.masterCompanyId,
+      "masterCompanyId":(ex.masterCompanyId == '')?0:ex.masterCompanyId,
       "CreatedBy":"admin",
       "UpdatedBy":"admin",
       "IsActive":true,
@@ -943,7 +944,9 @@ getExclusionListByWorkOrderId(){
 }
 
 saveWorkOrderChargesList(data){
-  console.log(data);
+  if(!this.workOrderChargesList){
+    this.workOrderChargesList = [];
+  }
   this.workOrderChargesList = [...this.workOrderChargesList, ...data['charges']];
 }
 
@@ -977,7 +980,7 @@ markupChanged(matData){
   try{
     this.markupList.forEach((markup)=>{
       if(markup.value == matData.markupPercentageId){
-        matData.materialCostPlus = (matData.quantity * matData.unitCost) + ( ((matData.quantity * matData.unitCost)/100) *  Number(markup.label))
+        matData.materialCostPlus = Number(matData.extendedCost) + ((Number(matData.extendedCost) / 100) * Number(markup.label))
       }
     })
   }
@@ -987,7 +990,35 @@ markupChanged(matData){
 }
 
 saveBuildFromScratch(data){
-  console.log(data);
+  let materialList = [];
+  let chargesList = [];
+  let exclusionsList = [];
+  let laborList = [];
+  if(data){
+    data.forEach((da)=>{
+      if(da.materialList){
+        if(this.materialListQuotation){
+          this.materialListQuotation = [...this.materialListQuotation, ...da.materialList]
+        }
+        else{
+          this.materialListQuotation = [];
+        }
+      }
+      if(da.charges){
+        chargesList = [...chargesList, ...da.charges];
+      }
+      if(da.expertise){
+        laborList = [...exclusionsList, ...da.expertise];
+      }
+      if(da.exclusions){
+        exclusionsList = [...exclusionsList, ...da.exclusions.map(x => { return { ...x, epn: x.partNumber, epnDescription: x.partDescription } })];
+        // exclusionsList = [...exclusionsList, ...da.exclusions];
+      }
+    })
+    this.createMaterialQuote();
+    this.saveWorkOrderExclusionsList(exclusionsList );
+    this.createChargeQuote(chargesList);
+  }
 }
 
 editMaterialList(matData, index){

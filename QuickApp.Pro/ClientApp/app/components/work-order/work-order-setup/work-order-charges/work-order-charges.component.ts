@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, ChangeDetectorRef, OnChanges } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ChangeDetectorRef, OnChanges, OnInit } from '@angular/core';
 import * as $ from 'jquery'
 import { AlertService, MessageSeverity } from '../../../../services/alert.service';
 import { WorkOrderService } from '../../../../services/work-order/work-order.service';
@@ -12,7 +12,7 @@ import { AuthService } from '../../../../services/auth.service';
 
 })
 /** WorkOrderDocuments component*/
-export class WorkOrderChargesComponent implements OnChanges {
+export class WorkOrderChargesComponent implements OnChanges, OnInit {
   @Input() workOrderChargesList;
   @Input() workFlowObject;
   @Input() isWorkOrder;
@@ -29,8 +29,8 @@ export class WorkOrderChargesComponent implements OnChanges {
     { field: 'quantity', header: 'Quantity' },
     { field: 'unitCost', header: 'Unit Cost' },
     { field: 'extendedCost', header: 'Extented Cost' },
-    { field: 'unitPrice', header: 'Unit Price' },
-    { field: 'extendedPrice', header: 'Extended Price' },
+    // { field: 'unitPrice', header: 'Unit Price' },
+    // { field: 'extendedPrice', header: 'Extended Price' },
     { field: 'vendorName', header: 'vendorName' },
   ]
 
@@ -41,12 +41,17 @@ export class WorkOrderChargesComponent implements OnChanges {
 
   constructor(private workOrderService: WorkOrderService, private authService: AuthService,
     private alertService: AlertService, private cdRef: ChangeDetectorRef) {
-
+      
 
   }
 
   ngOnChanges() {
     console.log(this.markupList);
+  }
+  ngOnInit() {
+    if(!this.isQuote){
+      this.cols = [...this.cols, { field: 'extendedPrice', header: 'Extended Price' }, { field: 'unitPrice', header: 'Unit Price' },]
+    }
   }
 
   get userName(): string {
@@ -108,7 +113,7 @@ export class WorkOrderChargesComponent implements OnChanges {
     try {
       this.markupList.forEach((markup) => {
         if (markup.value == matData.markupPercentageId) {
-          matData.chargesCostPlus = (matData.extendedPrice) + (((matData.extendedPrice) / 100) * Number(markup.label))
+          matData.chargesCostPlus = (matData.extendedCost) + (((matData.extendedCost) / 100) * Number(markup.label))
         }
       })
     }

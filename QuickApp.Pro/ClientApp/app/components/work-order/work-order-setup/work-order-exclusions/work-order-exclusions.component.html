@@ -48,7 +48,7 @@
         >
         </grd-exclusions>
       </div>
-      <div class="modal-footer">
+      <div class="modal-footer" *ngIf="!isQuote">
         <button type="button" class="btn btn-danger" data-dismiss="modal">
           Close
         </button>
@@ -70,7 +70,7 @@
         <th *ngFor="let col of columns">
           {{ col.header }}
         </th>
-        <th>Actions</th>
+        <th colspan="2">Actions</th>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-rowData let-columns="columns">
