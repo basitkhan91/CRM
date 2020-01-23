@@ -17,7 +17,7 @@ CREATE TABLE [dbo].[JournalCategory](
 	[CreatedDate] [datetime2](7) NOT NULL,
 	[UpdatedDate] [datetime2](7) NOT NULL,
 	[IsActive] [bit] NOT NULL,
-	[IsDelete] [bit] NOT NULL,
+	[IsDeleted] [bit] NOT NULL,
  CONSTRAINT [PK_JournalCategory] PRIMARY KEY CLUSTERED 
 (
 	[ID] ASC
