@@ -1823,21 +1823,10 @@ namespace DAL.Repositories
         ///  Added By vijay on 12/11/2019
         /// </summary>
         /// <param name="objCustomer"></param>
-        public void AddCustomerShippingAddress(Customer objCustomer)
+        public long AddCustomerShippingAddress(Customer objCustomer)
         {
-            // CustomerShippingAddress objCustomerShippingAddress = new CustomerShippingAddress();
-            // var shippingaddress = _appContext.CustomerShippingAddress.GetSingleOrDefault(a => a.AddressId == objCustomer.AddressId && a.CustomerId == objCustomer.CustomerId);
-            //var shipping = _appContext.CustomerShippingAddress
-            //         .Where(p => p.AddressId == objCustomer.AddressId && p.CustomerId == objCustomer.CustomerId).FirstOrDefault();
-
-
-
-
-
-            //if (objCustomerShippingAddress.CustomerShippingAddressId > 0)
-            //{
-            //_appContext.CustomerShippingAddress.detch
-            CustomerShippingAddress data = _appContext.CustomerShippingAddress.AsNoTracking().Where(p => p.AddressId == objCustomer.AddressId && p.CustomerId == objCustomer.CustomerId).FirstOrDefault();
+            long shippingAddressId = 0;
+                    CustomerShippingAddress data = _appContext.CustomerShippingAddress.AsNoTracking().Where(p => p.AddressId == objCustomer.AddressId && p.CustomerId == objCustomer.CustomerId).FirstOrDefault();
             //_appContext.CustomerShippingAddress.detach(objCustomerShippingAddress);
             if (data != null)
             {
@@ -1855,6 +1844,9 @@ namespace DAL.Repositories
                     data.IsPrimary = true;
                     data.IsDelete = false;
                     _appContext.CustomerShippingAddress.Update(data);
+                    _appContext.SaveChanges();
+
+                    shippingAddressId = Convert.ToInt64(data.CustomerShippingAddressId);
                 }
             }
             else
@@ -1874,11 +1866,15 @@ namespace DAL.Repositories
                 objCustomerShippingAddress.IsDelete = false;
 
                 _appContext.CustomerShippingAddress.Add(objCustomerShippingAddress);
+                _appContext.SaveChanges();
+                shippingAddressId = Convert.ToInt64(objCustomerShippingAddress.CustomerShippingAddressId);
+
+
             }
 
-            _appContext.SaveChanges();
 
-            // return objCustomerShippingAddress;
+
+            return shippingAddressId;
         }
 
 
@@ -1891,8 +1887,9 @@ namespace DAL.Repositories
         /// Added By vijay on 12/11/2019
         /// </summary>
         /// <param name="objCustomer"></param>
-        public void AddCustomerBillinggAddress(Customer objCustomer)
+        public long AddCustomerBillinggAddress(Customer objCustomer)
         {
+            long billingAddressId = 0;
             CustomerBillingAddress data = _appContext.CustomerBillingAddress.AsNoTracking().Where(p => p.AddressId == objCustomer.AddressId && p.CustomerId == objCustomer.CustomerId).FirstOrDefault();
 
             if (data != null)
@@ -1911,6 +1908,10 @@ namespace DAL.Repositories
                     data.IsActive = true;
                     data.IsDelete = false;
                     _appContext.CustomerBillingAddress.Update(data);
+                    _appContext.SaveChanges();
+
+                    billingAddressId = Convert.ToInt64(data.CustomerBillingAddressId);
+
                 }
             }
             else
@@ -1930,35 +1931,15 @@ namespace DAL.Repositories
                 objCustomerBillingAddress.IsDelete = false;
 
                 _appContext.CustomerBillingAddress.Add(objCustomerBillingAddress);
+                _appContext.SaveChanges();
+
+                billingAddressId = Convert.ToInt64(objCustomerBillingAddress.CustomerBillingAddressId);
+
             }
 
-            _appContext.SaveChanges();
+             return billingAddressId;
 
-            // CustomerBillingAddress objCustomerBillingAddress = new CustomerBillingAddress();
 
-            //objCustomerBillingAddress.CustomerId = objCustomer.CustomerId;
-            //objCustomerBillingAddress.MasterCompanyId = objCustomer.MasterCompanyId;
-            //objCustomerBillingAddress.AddressId = objCustomer.AddressId;
-            //objCustomerBillingAddress.SiteName = objCustomer.CustomerCode;              
-            //objCustomerBillingAddress.CreatedDate = DateTime.Now;
-            //objCustomerBillingAddress.UpdatedDate = DateTime.Now;
-            //objCustomerBillingAddress.CreatedBy = objCustomer.CreatedBy;
-            //objCustomerBillingAddress.UpdatedBy = objCustomer.UpdatedBy;
-            //objCustomerBillingAddress.IsPrimary = true;
-            //objCustomerBillingAddress.IsActive = true;
-            //objCustomerBillingAddress.IsDelete = false;
-
-            //if (objCustomerBillingAddress.CustomerBillingAddressId > 0)
-            //{
-            //    _appContext.CustomerBillingAddress.Update(objCustomerBillingAddress);
-            //}
-            //else
-            //{
-            //    _appContext.CustomerBillingAddress.Add(objCustomerBillingAddress);
-            //}
-
-            //_appContext.SaveChanges();
-            //return objCustomerBillingAddress;
         }
 
 
@@ -2288,6 +2269,8 @@ namespace DAL.Repositories
         {
             try
             {
+             
+
                 CustomerBillingAddress model = new CustomerBillingAddress();
                 model.CustomerBillingAddressId = id;
                 model.UpdatedDate = DateTime.Now;
@@ -2300,6 +2283,9 @@ namespace DAL.Repositories
                 _appContext.Entry(model).Property(x => x.UpdatedBy).IsModified = true;
 
                 _appContext.SaveChanges();
+
+
+              
 
             }
             catch (Exception ex)

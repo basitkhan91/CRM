@@ -163,6 +163,7 @@ namespace DAL
 
         public DbSet<CustomerBillingAddress> CustomerBillingAddress { get; set; }
         public DbSet<CustomerBillingAddressAudit> CustomerBillingAddressAudit { get; set; }
+
         public DbSet<ATAChapter> ATAChapter { get; set; }
 
         public DbSet<AircraftType> AircraftType { get; set; }
@@ -509,8 +510,9 @@ namespace DAL
         public DbSet<EmployeeStation> EmployeeStation { get; set; }
         public DbSet<EmployeeStationAudit> EmployeeStationAudit { get; set; }
         public DbSet<Carrier> Carrier { get; set; }
+        public DbSet<ShippingBillingAddressAudit> ShippingBillingAddressAudit { get; set; }
 
-
+        
 
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {

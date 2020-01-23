@@ -1236,6 +1236,8 @@
                         <th>State</th>
                         <th>Postal Code</th>
                         <th>Country</th>
+                        <th>Is Active</th>
+                        <th>Is Primary</th>
                         <th>Updated By</th>
                         <th>Last Updated Time</th>
                         <th>Created By</th>
@@ -1254,6 +1256,9 @@
                     <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'postalCode', audit.postalCode)  ? 'black' : 'red'  }">{{audit.postalCode}}</td>
 
                     <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'country', audit.country)  ? 'black' : 'red'  }">{{audit.country}}</td>
+                    <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'isActive', audit.isActive)  ? 'black' : 'red'  }">{{audit.isActive}}</td>
+
+                    <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'isPrimary', audit.isPrimary)  ? 'black' : 'red'  }">{{audit.isPrimary}}</td>
 
                     <td>{{audit.updatedBy}}</td>
                     <td>{{audit.updatedDate | date: 'dd-MM-yyyy h:mm a '}}</td>
