@@ -33,6 +33,8 @@ namespace DAL.Core
 
         ///<summary>A property that specifies the configuration/customizations of an entity</summary>
         public const string Configuration = "configuration";
+
+        public const string EmployeeId = "employeeId";
     }
 
 

@@ -39,7 +39,7 @@ namespace DAL.Models
         public string UpdatedBy { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime UpdatedDate { get; set; }
-
+        public long? EmployeeId { get; set; }
 
 
         /// <summary>

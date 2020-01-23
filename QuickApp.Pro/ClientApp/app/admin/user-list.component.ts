@@ -31,6 +31,14 @@ export class UserListComponent implements OnInit, AfterViewInit {
     sourceUser: User;
     loadingIndicator: boolean;
     allRoles: Role[] = [];
+    allUsersData:any=[];
+    vuserListColumns = [
+		{ field: 'userName', header: 'User Name' },
+		{ field: 'fullName', header: 'Full Name' },
+		{ field: 'jobTitle', header: 'Job Title' },
+		{ field: 'email', header: 'Email' }
+	];
+	selectedColumns = this.vuserListColumns;
 
     constructor(
         private alertService: AlertService,
@@ -83,24 +91,37 @@ export class UserListComponent implements OnInit, AfterViewInit {
         this.loadingIndicator = true;
 
         if (this.canViewRoles) {
-            this.accountService.getUsersAndRoles().subscribe(
-                results => this.onDataLoadSuccessful(results[0], results[1]),
-                error => this.onDataLoadFailed(error)
+            this.accountService.getUsersAndRoles().subscribe(  res => {             
+                this.allUsersData = res;     
+                this.alertService.stopLoadingMessage();
+                this.loadingIndicator = false;
+                console.log(this.allUsersData) ;        
+        }
+              
+                // results => this.onDataLoadSuccessful(results[0], results[1]),
+                // error => this.onDataLoadFailed(error)
             );
         }
         else {
-            this.accountService.getUsers().subscribe(
-                users => this.onDataLoadSuccessful(users, this.accountService.currentUser.roles.map(r => new Role(r))),
-                error => this.onDataLoadFailed(error)
+            this.accountService.getUsers().subscribe( res => {             
+                this.allUsersData = res;     
+                this.alertService.stopLoadingMessage();
+                this.loadingIndicator = false;
+                console.log(this.allUsersData)  ;      
+        }
+                // users => this.onDataLoadSuccessful(users, this.accountService.currentUser.roles.map(r => new Role(r))),
+                // error => this.onDataLoadFailed(error)
             );
         }
     }
 
     private onDataLoadSuccessful(users: User[], roles: Role[]) {
+       
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
-        this.dataSource.data = users;
+        this.dataSource.data = users;       
         this.allRoles = roles;
+       
     }
 
     private onDataLoadFailed(error: any) {

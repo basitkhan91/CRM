@@ -33,4 +33,5 @@ export interface AccessToken {
     configuration: string;
     scope: string | string[];
     amr: string[];
+    employeeId: number;
 }

@@ -37,6 +37,9 @@ namespace QuickApp.Pro.Authorization
 
             var claims = principal.Claims.ToList();
             claims = claims.Where(claim => context.RequestedClaimTypes.Contains(claim.Type)).ToList();
+           
+            if (user.EmployeeId != null)
+                claims.Add(new Claim(PropertyConstants.EmployeeId, Convert.ToString(user.EmployeeId)));
 
             if (user.JobTitle != null)
                 claims.Add(new Claim(PropertyConstants.JobTitle, user.JobTitle));
