@@ -31,6 +31,8 @@ import { NotFoundComponent } from "./components/not-found/not-found.component";
 import { AuthService } from './services/auth.service';
 import { AuthGuard } from './services/auth-guard.service';
 import { UnauthorizedAccessComponent } from '../unauthorizedaccess/unauthorized-access.component';
+import { UserEditorComponent } from './admin/user-editor.component';
+import { UserListComponent } from './admin/user-list.component';
 //import { PoRoSetupComponent } from './components/receiving/po-ro/po-ro-setup/po-ro-setup.component';
 //import { PoSetupComponent } from './components/receiving/po-ro/po-setup/po-setup.component';
 //import { ReceivingPoComponent } from './components/receiving/po-ro/receiving-po/receiving-po.component';
@@ -46,6 +48,8 @@ import { UnauthorizedAccessComponent } from '../unauthorizedaccess/unauthorized-
         RouterModule.forRoot([
             { path: "", component: HomeComponent, canActivate: [AuthGuard], data: { title: "Home" } },
             { path: "login", component: LoginComponent, data: { title: "Login" } },
+            { path: "registration", component: UserEditorComponent, data: { title: "Registration" } },
+            { path: "userlist", component: UserListComponent, data: { title: "User List" } },
             { path: "products", component: ProductsComponent, canActivate: [AuthGuard], data: { title: "Products" } },
             { path: "orders", component: OrdersComponent, canActivate: [AuthGuard], data: { title: "Orders" } },
             { path: "settings", component: SettingsComponent, canActivate: [AuthGuard], data: { title: "Settings" } },
