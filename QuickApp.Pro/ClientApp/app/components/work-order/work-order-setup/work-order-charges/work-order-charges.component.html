@@ -41,7 +41,7 @@
           (updateChargesListForWO)="updateChargesList($event)"
         ></grd-charges>
       </div>
-      <div class="modal-footer">
+      <div class="modal-footer" *ngIf="!isQuote">
         <button type="button" class="btn btn-danger" data-dismiss="modal">
           Close
         </button>
@@ -65,8 +65,9 @@
         </th>
         <ng-container *ngIf="isQuote">
           <th *ngIf="costPlusType == 'Mark Up'">MARKUP</th>
-          <th>Cost plus amount</th>
-          <th>Fixed Amount</th>
+          <th>COST PLUS AMOUNT</th>
+          <th>FIXED AMOUNT</th>
+          <th colspan="2">Action</th>
         </ng-container>
         <!-- <th colspan="4" class="text-center" *ngIf="!isView"></th> -->
       </tr>
@@ -79,7 +80,7 @@
         <ng-container *ngIf="isQuote">
           <td *ngIf="costPlusType == 'Mark Up'">
             <select
-              class="form-control wf-pub-id"
+              class="form-control"
               (change)="markupChanged(rowData)"
               [(ngModel)]="rowData.markupPercentageId"
               [disabled]="isView"

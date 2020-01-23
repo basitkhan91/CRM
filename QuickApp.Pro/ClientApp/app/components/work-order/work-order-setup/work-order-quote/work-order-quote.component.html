@@ -10,11 +10,11 @@
             </div>
             <div class="form-group ">
               <label>Open Date <span class="clr-red">*</span> </label>
-              <p-calendar [showIcon]="true" [(ngModel)]="quoteForm.openDate" name="openDate" [disabled]="true"></p-calendar>
+              <p-calendar [showIcon]="true" (onSelect)="calculateExpiryDate()" [(ngModel)]="quoteForm.openDate" name="openDate" [disabled]="isView"></p-calendar>
             </div>
             <div class="form-group ">
               <label>Quote Due Date <span class="clr-red">*</span></label>
-              <p-calendar [showIcon]="true" (onSelect)="calculateExpiryDate()" [(ngModel)]="quoteDueDate" name="QuoteDueDate" aria-readonly [disabled]="isView"></p-calendar>
+              <p-calendar [showIcon]="true"  [(ngModel)]="quoteDueDate" name="QuoteDueDate" aria-readonly [disabled]="isView"></p-calendar>
             </div>
             <div class="form-group ">
               <label> Valid For Days <span class="clr-red">*</span></label>
@@ -191,70 +191,92 @@
       <tr class="mpn-row" style="display: table-row;"
       *ngFor="let workOrderPart of workOrderPartsDetail; let i=index;">
         <td>
-          <input [value]="workOrderPart['partNumber']" readonly/>
+          <label></label>
+          <!-- <input [value]="workOrderPart['partNumber']" readonly/> -->
         </td>
         <td>
-          <input [value]="workOrderPart['partDescription']" readonly/>
+          <label>{{workOrderPart['partDescription']}}</label>
+          <!-- <input [value]="workOrderPart['partDescription']" readonly/> -->
         </td>
         <td>
-          <input [value]="workOrderPart['revisedPartNo']" readonly/>
+          <label>{{workOrderPart['revisedPartNo']}}</label>
+          <!-- <input [value]="workOrderPart['revisedPartNo']" readonly/> -->
         </td>
         <td>
-          <input [value]="workOrderPart['nte']" readonly/>
+          <label>{{workOrderPart['nte']}}</label>
+          <!-- <input [value]="workOrderPart['nte']" readonly/> -->
         </td>
         <td>
-          <input [value]="workOrderPart['condition']" readonly/>
+          <label>{{workOrderPart['condition']}}</label>
+          <!-- <input [value]="workOrderPart['condition']" readonly/> -->
         </td>
         <td>
-          <input [value]="workOrderPart['stockLine']" readonly/>
+          <label>{{workOrderPart['stockLine']}}</label>
+          <!-- <input [value]="workOrderPart['stockLine']" readonly/> -->
         </td>
         <td>
-          <input [value]="workOrderPart['serialNumber']" readonly/>
+          <label>{{workOrderPart['serialNumber']}}</label>
+          <!-- <input [value]="workOrderPart['serialNumber']" readonly/> -->
         </td>
         <td>
-          <input [value]="workOrderPart['workOrderStage']" readonly/>
+          <label>{{workOrderPart['workOrderStage']}}</label>
+          <!-- <input [value]="workOrderPart['workOrderStage']" readonly/> -->
         </td>
         <td>
-          <input [value]="workOrderPart['workOrderStatus']" readonly/>
+          <label>{{workOrderPart['workOrderStatus']}}</label>
+          <!-- <input [value]="workOrderPart['workOrderStatus']" readonly/> -->
         </td>
         <td>
-          <input [value]="workOrderPart['priority']" readonly/>
+          <label>{{workOrderPart['priority']}}</label>
+          <!-- <input [value]="workOrderPart['priority']" readonly/> -->
         </td>
         <td>
-          <input [value]="workOrderPart['customerRequestDate']" readonly/>
+          <label>{{workOrderPart['customerRequestDate']}}</label>
+          <!-- <input [value]="workOrderPart['customerRequestDate']" readonly/> -->
         </td>
         <td>
-          <input [value]="workOrderPart['promisedDate']" readonly/>
+          <label>{{workOrderPart['promisedDate']}}</label>
+          <!-- <input [value]="workOrderPart['promisedDate']" readonly/> -->
         </td>
         <td>
-          <input [value]="workOrderPart['estimatedShipDate']" readonly/>
+          <label>{{workOrderPart['estimatedShipDate']}}</label>
+          <!-- <input [value]="workOrderPart['estimatedShipDate']" readonly/> -->
         </td>
         <td>
-          <input [value]="workOrderPart['estimatedCompletionDate']" readonly/>
+          <label>{{workOrderPart['estimatedCompletionDate']}}</label>
+          <!-- <input [value]="workOrderPart['estimatedCompletionDate']" readonly/> -->
         </td>
         <td>
-          <input [value]="workOrderPart['isDER']" readonly/>
+          <label>{{workOrderPart['isDER']}}</label>
+          <!-- <input [value]="workOrderPart['isDER']" readonly/> -->
         </td>
         <td>
-          <input [value]="workOrderPart['isPMA']" readonly/>
+          <label>{{workOrderPart['isPMA']}}</label>
+          <!-- <input [value]="workOrderPart['isPMA']" readonly/> -->
         </td>
         <td>
-          <input [value]="workOrderPart['firstName']" readonly/>
+          <label>{{workOrderPart['firstName']}}</label>
+          <!-- <input [value]="workOrderPart['firstName']" readonly/> -->
         </td>
         <td>
-          <input [value]="workOrderPart['techStation']" readonly/>
+          <label>{{workOrderPart['techStation']}}</label>
+          <!-- <input [value]="workOrderPart['techStation']" readonly/> -->
         </td>
         <td>
-          <input [value]="workOrderPart['tearDownReport']" readonly/>
+          <label>{{workOrderPart['tearDownReport']}}</label>
+          <!-- <input [value]="workOrderPart['tearDownReport']" readonly/> -->
         </td>
         <td>
-          <input [value]="workOrderPart['tatDaysCurrent']" readonly/>
+          <label>{{workOrderPart['tatDaysCurrent']}}</label>
+          <!-- <input [value]="workOrderPart['tatDaysCurrent']" readonly/> -->
         </td>
         <td>
-          <input [value]="workOrderPart['tatDaysStandard']" readonly/>
+          <label>{{workOrderPart['tatDaysStandard']}}</label>
+          <!-- <input [value]="workOrderPart['tatDaysStandard']" readonly/> -->
         </td>
         <td>
-          <input [value]="workOrderPart['workScope']" readonly/>
+          <label>{{workOrderPart['workScope']}}</label>
+          <!-- <input [value]="workOrderPart['workScope']" readonly/> -->
         </td>
       </tr>
   </tbody>
@@ -300,7 +322,7 @@
       </div>
 
     </div>
-    <div class="table-responsive" *ngIf="selectedBuildMethod == 'use work flow' && !isEdit">
+    <div class="table-responsive" *ngIf="selectedBuildMethod == 'use work flow'">
       <table class="table table-bordered table-striped table-sorting mpn-list-table table-disabled">
         <thead>
           <tr>
@@ -315,7 +337,7 @@
         </thead>
         <tbody>
           <tr class="mpn-row" *ngFor="let buildl of buildWorkOrderList">
-            <td><input type="radio" name="historical-wo-list" class="select-mpn-quote" (click)="getQuoteInfo(buildl)"></td>
+            <td><input type="radio" name="historical-wo-list" class="select-mpn-quote" [(ngModel)]="woWorkFlowId" [value]="buildl.workFlowId" (click)="getQuoteInfo(buildl)" [disabled]="isView"></td>
             <td>{{buildl.customerName}}</td>
             <td>{{buildl.partNumber}}</td>
             <td>{{buildl.partDescription}}</td>
@@ -327,7 +349,7 @@
       </table>
 
     </div>
-    <div class="table-responsive" *ngIf="selectedBuildMethod == 'use historical wos' && !isEdit">
+    <div class="table-responsive" *ngIf="selectedBuildMethod == 'use historical wos'">
       <table class="table table-bordered table-striped table-sorting mpn-list-table table-disabled">
         <thead>
           <tr>
@@ -341,7 +363,7 @@
         </thead>
         <tbody>
           <tr class="mpn-row" *ngFor="let buildl of buildHistoricalList">
-            <td><input type="radio" name="historical-wo-list" class="select-mpn-quote" (click)="getQuoteInfo(buildl)"></td>
+            <td><input type="radio" name="historical-wo-list" class="select-mpn-quote" [(ngModel)]="historicalWorkOrderId" [value]="buildl.workOrderId" (click)="getQuoteInfo(buildl)" [disabled]="isView"></td>
             <td>{{buildl.customerName}}</td>
             <td>{{buildl.partNumber}}</td>
             <td>{{buildl.partDescription}}</td>
@@ -353,7 +375,7 @@
 
     </div>
   </div>
-  <div class="card col-md-12" style="background: #f1f1f1; margin-top: 10px;" *ngIf="(selectedBuildMethod != 'build from scratch' && selectedBuildMethod != '' && selectedWorkFlowOrWorkOrder) || (isEdit && selectedPartNumber != '')">
+  <div class="card col-md-12" style="background: #f1f1f1; margin-top: 10px;" *ngIf="(selectedBuildMethod != 'build from scratch' && selectedBuildMethod != '' && selectedWorkFlowOrWorkOrder) || (isEdit && selectedPartNumber != '' && selectedBuildMethod != 'build from scratch')">
       <div class="form-group ">
         <button type="button" class="btn" [ngClass]="gridActiveTab === 'materialList'?'btn-primary':'btn-light-cstm'" (click)="gridTabChange('materialList');">Material List</button>
         <button type="button" class="btn" [ngClass]="gridActiveTab === 'labor'?'btn-primary':'btn-light-cstm'" (click)="gridTabChange('labor');">Labor</button>
@@ -485,7 +507,7 @@
       <button class="btn btn-primary pull-right" (click)="createMaterialQuote()">Save</button>
     </div>
 
-    <div *ngIf="selectedBuildMethod == 'use historical wos' || isEdit">
+    <div *ngIf="selectedBuildMethod == 'use historical wos'">
       <table class="table table-bordered table-striped table-sorting mpn-list-table table-disabled" >
         <thead>
           <tr>
@@ -1042,9 +1064,6 @@
             [isQuote]="isQuote"
             (saveMaterialListForWO)="saveMaterialListForWO($event)" ></grd-material>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        </div>
       </div>
   
     </div>
@@ -1080,11 +1099,6 @@
             [isQuote]="isQuote"
             (updateChargesListForWO)="updateWorkOrderChargesList($event)"
           ></grd-charges>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-danger" data-dismiss="modal">
-            Close
-          </button>
         </div>
       </div>
     </div>
@@ -1127,11 +1141,6 @@
             (updateExclusionsListForWO)="updateExclusionsList($event)"
           >
           </grd-exclusions>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-danger" data-dismiss="modal">
-            Close
-          </button>
         </div>
       </div>
     </div>
