@@ -122,6 +122,11 @@ export class ChargesCreateComponent implements OnInit, OnChanges {
 
     onChargeTypeChange(event, charge): void {
         var isTypeExist = this.workFlow.charges.filter(x => x.workflowChargeTypeId == charge.workflowChargeTypeId && x.taskId == this.workFlow.taskId);
+        this.chargesTypes.forEach((ct)=>{
+            if(ct.id == charge.workflowChargeTypeId){
+                charge.chargeType = ct.name;
+            }
+        })
         if (isTypeExist.length > 1) {
             event.target.value = '0';
             charge.workflowChargeTypeId = "0";
