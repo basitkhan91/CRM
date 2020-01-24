@@ -158,24 +158,21 @@ export class CreateJournelComponent implements OnInit
     }
 
     private loadBalanceTypes(){
-        this.balanceTypes = [
-            {balanceTypeId:1, balanceTypeName:'Actual'},
-            {balanceTypeId:2, balanceTypeName:'Budget'},
-            {balanceTypeId:3, balanceTypeName:'Forecast'},
-        ];
+        this.journelService.getAllBalanceTypes().subscribe(balanceTypes => {
+            this.balanceTypes = balanceTypes;
+        });
     }
 
     private loadCategoryTypes(){
-        this.categoryTypes = [
-            {categoryId:1, categoryName:'Manual'},
-            {categoryId:2, categoryName:'Adjustment'}
-        ];
+        this.journelService.getAllJournalCategory().subscribe(journalCategory => {
+            this.categoryTypes = journalCategory;
+        });
     }
+
     private loadJournalTypes(){
-        this.journalTypes = [
-            {journalTypeId:1, journalTypeName: 'Standard'},
-            {journalTypeId:2, journalTypeName: 'Intercompany'}
-        ];
+        this.journelService.getAllJournalTypes().subscribe(journalTypes => {
+            this.journalTypes = journalTypes;
+        });
     }
 
     private loadGeneralLedgerList(){

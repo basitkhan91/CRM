@@ -27,6 +27,9 @@ export class JournelsEndpointService extends EndpointFactory {
     private readonly removeJournelByIdURL: string = "/api/journals/removeById";
     private readonly updateJournelForActive: string = "/api/journals/updateActive";
     private readonly getJournelAuditDataById: string = "/api/journals/audits";
+    private readonly allBalanceTypesURL: string = '/api/journals/AllBalanceTypes';
+    private readonly allJournalCategoryURL: string = '/api/journals/AllJournalCategory';
+    private readonly allJournalTypesURL: string = '/api/journals/AllJournalTypes';
 
 
     get getBatchAll() { return this.configurations.baseUrl + this.getAllBatchURL; }
@@ -40,6 +43,9 @@ export class JournelsEndpointService extends EndpointFactory {
     get journelAdd() { return this.configurations.baseUrl + this.addJournelURL; }
     get journelUpdate() { return this.configurations.baseUrl + this.updateJournelURL; }
     get removeByIdjournel() { return this.configurations.baseUrl + this.removeJournelByIdURL; }
+    get allBalanceTypes() { return this.configurations.baseUrl + this.allBalanceTypesURL; }
+    get allJournalCategory() { return this.configurations.baseUrl + this.allJournalCategoryURL; }
+    get allJournalTypes() { return this.configurations.baseUrl + this.allJournalTypesURL; }
 
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
         super(http, configurations, injector);
@@ -171,6 +177,32 @@ export class JournelsEndpointService extends EndpointFactory {
         return this.http.get<T>(endpointUrl, this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.getJournelAuditById(journelId));
+            });
+    }
+
+    getAllBalanceTypes<T>(): Observable<T> {
+        let endpointUrl = this.allBalanceTypes;
+
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getAllBalanceTypes());
+            });
+    }
+
+    getAllJournalCategory<T>(): Observable<T> {
+        let endpointUrl = this.allJournalCategory;
+
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getAllJournalCategory());
+            });
+    }
+
+    getAllJournalTypes<T>(): Observable<T> {
+        let endpointUrl = this.allJournalTypes;
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getAllJournalTypes());
             });
     }
 
