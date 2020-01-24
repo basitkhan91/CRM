@@ -122,4 +122,9 @@ export class ReceivingService {
     createStockLine(purchaseOrderId: number) {
         return this.receivingEndpoing.CreateStockLine(purchaseOrderId);
     }
+
+    CreateStockLineForRepairOrder(repairOrderId: number) {
+        return this.receivingEndpoing.CreateStockLineForRepairOrder(repairOrderId);
+    }
+
 }
