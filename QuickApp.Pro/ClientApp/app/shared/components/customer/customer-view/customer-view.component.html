@@ -196,11 +196,17 @@
                                 </p>
                                 
                                 <div *ngIf="viewDataGeneralInformation.restrictPMA == true" >
-                                    <p-table class="table-responsive ptable-cus-pma" [value]="restrictedPMAParts" [paginator]="restrictedPMAParts?.length > 0" [rows]="3" [columns]="customerPMAColumns">
+                                    <p-table #restrictPMATable class="table-responsive ptable-cus-pma" [value]="restrictedPMAParts" [paginator]="restrictedPMAParts?.length > 0" [rows]="3" [columns]="customerPMAColumns">
                                         <ng-template pTemplate="header" let-columns>
                                             <tr>
-                                                <th *ngFor="let col of columns">
+                                                <th *ngFor="let col of columns"  [pSortableColumn]="col.field">
                                                     {{col.header}}
+                                                    <p-sortIcon [field]="col.field"></p-sortIcon>
+                                                </th>
+                                            </tr>
+                                            <tr>
+                                                <th style="width:auto" *ngFor="let col of columns" [ngSwitch]="col.field">
+                                                    <input style="width:100%;" pInputText type="text" (input)="restrictPMATable.filter($event.target.value, col.field, 'contains')">
                                                 </th>
                                             </tr>
                                         </ng-template>
@@ -233,14 +239,21 @@
                                        <input type="checkbox" name="restrictBER" [(ngModel)]="viewDataGeneralInformation.restrictBER" disabled>
                                     </span>
                                 </p>
-                                <div>
+                                <div *ngIf="viewDataGeneralInformation.restrictBER == true">
                                     <p-table #table2 class="table-responsive ptable-cus-pma" [paginator]="restrictedDERParts?.length > 0" [value]="restrictedDERParts"  [rows]="3" [columns]="customerDERColumns">
                                         <ng-template pTemplate="header" let-columns>
                                             <tr>
-                                                <th *ngFor="let col of columns">
+                                                <th *ngFor="let col of columns" [pSortableColumn]="col.field">
                                                     {{col.header}}
+                                                    <p-sortIcon [field]="col.field"></p-sortIcon>
                                                 </th>
                                             </tr>
+                                            <tr>
+                                                <th style="width:auto" *ngFor="let col of columns" [ngSwitch]="col.field">
+                                                    <input style="width:100%;" pInputText type="text" (input)="table2.filter($event.target.value, col.field, 'contains')">
+                                                </th>
+                                            </tr>
+                                            
                                         </ng-template>
                                         <ng-template pTemplate="body" let-part let-rowData let-columns="columns" let-i="rowIndex">
                                             <tr>
@@ -294,10 +307,16 @@
                             <p-table #table3 class="table-responsive ptable-cus-pma" [paginator]="customerContacts.length > 0" [value]="customerContacts"  [rows]="3" [columns]="contactTableColumns">
                                 <ng-template pTemplate="header" let-columns>
                                     <tr>
-                                        <th *ngFor="let col of columns">
+                                        <th *ngFor="let col of columns" [pSortableColumn]="col.field">
                                             {{col.header}}
+                                            <p-sortIcon [field]="col.field"></p-sortIcon>
                                         </th>
                                     </tr>
+                                    <tr>
+                                            <th style="width:auto" *ngFor="let col of columns" [ngSwitch]="col.field">
+                                                <input style="width:100%;" pInputText type="text" (input)="table3.filter($event.target.value, col.field, 'contains')">
+                                            </th>
+                                        </tr>
                                 </ng-template>
                                 <ng-template pTemplate="body" let-part let-rowData let-columns="columns" let-i="rowIndex">
                                     <tr [ngClass]="{'row-primary': part.isDefaultContact === true}">
@@ -344,13 +363,19 @@
                 <div class="panel-body">
                     <div class="col-sm-12">
                         <div class="shadow-Box">
-                            <p-table class="table-responsive ptable-cus-pma" [paginator]="aircraftListDataValues.length > 0" [value]="aircraftListDataValues"  [rows]="3" [columns]="colsaircraftLD">
+                            <p-table  #aircraftTable class="table-responsive ptable-cus-pma" [paginator]="aircraftListDataValues.length > 0" [value]="aircraftListDataValues"  [rows]="3" [columns]="colsaircraftLD">
                                 <ng-template pTemplate="header" let-columns>
                                     <tr>
-                                        <th *ngFor="let col of columns">
+                                        <th *ngFor="let col of columns"  [pSortableColumn]="col.field">
                                             {{col.header}}
+                                            <p-sortIcon [field]="col.field"></p-sortIcon>
                                         </th>
                                     </tr>
+                                    <tr>
+                                            <th style="width:auto" *ngFor="let col of columns" [ngSwitch]="col.field">
+                                                <input style="width:100%;" pInputText type="text" (input)="aircraftTable.filter($event.target.value, col.field, 'contains')">
+                                            </th>
+                                        </tr>
                                 </ng-template>
                                 <ng-template pTemplate="body" let-part let-rowData let-columns="columns" let-i="rowIndex">
                                     <tr>
@@ -396,13 +421,20 @@
                 <div class="panel-body">
                     <div class="col-sm-12">
                         <div class="shadow-Box">
-                            <p-table class="table-responsive ptable-cus-pma" [paginator]="ataListDataValues.length > 0" [value]="ataListDataValues"  [rows]="3" [columns]="ataHeaders">
+                            <p-table #atainfotable class="table-responsive ptable-cus-pma" [paginator]="ataListDataValues.length > 0" [value]="ataListDataValues"  [rows]="3" [columns]="ataHeaders">
                                 <ng-template pTemplate="header" let-columns>
                                     <tr>
-                                        <th *ngFor="let col of columns">
+                                        <th *ngFor="let col of columns"  [pSortableColumn]="col.field">
                                             {{col.header}}
+                                            <p-sortIcon [field]="col.field"></p-sortIcon>
+
                                         </th>
                                     </tr>
+                                    <tr>
+                                            <th style="width:auto" *ngFor="let col of columns" [ngSwitch]="col.field">
+                                                <input style="width:100%;" pInputText type="text" (input)="atainfotable.filter($event.target.value, col.field, 'contains')">
+                                            </th>
+                                        </tr>
                                 </ng-template>
                                 <ng-template pTemplate="body" let-part let-rowData let-columns="columns" let-i="rowIndex">
                                     <tr>
@@ -507,15 +539,21 @@
                                     <p><span class="label"><b>Taxable Exempt: </b></span><span class="value">{{viewDataGeneralInformation.isTaxExempt}}</span></p>
                                     <div class="table-responsive table-overflow">
                                         <p><span class="label"><b>Attachment Details: </b></span></p>
-                                        <p-table class="table-responsive ptable-cus-pma" [paginator]="allCustomerFinanceDocumentsList.length > 0" [value]="allCustomerFinanceDocumentsList"  [rows]="3" [columns]="allCustomerFinanceDocumentsListColumns">
+                                        <p-table #taxexeptTable class="table-responsive ptable-cus-pma" [paginator]="allCustomerFinanceDocumentsList.length > 0" [value]="allCustomerFinanceDocumentsList"  [rows]="3" [columns]="allCustomerFinanceDocumentsListColumns">
                                                 <ng-template pTemplate="header" let-columns>
                                                     <tr>
-                                                        <th *ngFor="let col of columns">
+                                                        <th *ngFor="let col of columns"  [pSortableColumn]="col.field">
                                                             {{col.header}}
+                                                            <p-sortIcon [field]="col.field"></p-sortIcon>
                                                         </th>
                                                         <th>
                                                            Download
                                                         </th>
+                                                        <tr>
+                                                                <th style="width:auto" *ngFor="let col of columns" [ngSwitch]="col.field">
+                                                                    <input style="width:100%;" pInputText type="text" (input)="taxexeptTable.filter($event.target.value, col.field, 'contains')">
+                                                                </th>
+                                                                <th></th>
                                                     </tr>
                                                 </ng-template>
                                                 <ng-template pTemplate="body" let-part let-rowData let-columns="columns" let-i="rowIndex">
@@ -583,13 +621,20 @@
     <p><span class="label"><b>Deferred RO: </b></span><span class="value">{{customerViewFeilds.customerCode}}</span></p>-->
                         <p><span class="label"><b>Currency: <span class="clr-red">*</span></b></span><span class="value">{{viewDataGeneralInformation.currency}}</span></p>
 
-                        <p-table class="table-responsive ptable-cus-pma" [paginator]="taxTypeRateMapping.length > 0" [value]="taxTypeRateMapping"  [rows]="3" [columns]="taxTypeRateMappingColumns">
+                        <p-table #financialTable class="table-responsive ptable-cus-pma" [paginator]="taxTypeRateMapping.length > 0" [value]="taxTypeRateMapping"  [rows]="3" [columns]="taxTypeRateMappingColumns">
                             <ng-template pTemplate="header" let-columns>
                                 <tr>
-                                    <th *ngFor="let col of columns">
+                                    <th *ngFor="let col of columns" [pSortableColumn]="col.field">
                                         {{col.header}}
+                                        <p-sortIcon [field]="col.field"></p-sortIcon>
+
                                     </th>
                                 </tr>
+                                <tr>
+                                        <th style="width:auto" *ngFor="let col of columns" [ngSwitch]="col.field">
+                                            <input style="width:100%;" pInputText type="text" (input)="financialTable.filter($event.target.value, col.field, 'contains')">
+                                        </th>
+                                    </tr>
                             </ng-template>
                             <ng-template pTemplate="body" let-part let-rowData let-columns="columns" let-i="rowIndex">
                                 <tr>
@@ -667,13 +712,20 @@
                         <div class="shadow-Box">
                                 <!-- <p><span class="label"><b>Currency: </b></span><span class="value">{{viewDataGeneralInformation.currency}}</span></p> -->
 
-                                <p-table class="table-responsive ptable-cus-pma" [paginator]="billingInfoList?.length > 0" [value]="billingInfoList"  [rows]="3" [columns]="billingInfoTableHeaders">
+                                <p-table #billingTable class="table-responsive ptable-cus-pma" [paginator]="billingInfoList?.length > 0" [value]="billingInfoList"  [rows]="3" [columns]="billingInfoTableHeaders">
                                     <ng-template pTemplate="header" let-columns>
                                         <tr>
-                                            <th *ngFor="let col of columns">
+                                            <th *ngFor="let col of columns" [pSortableColumn]="col.field">
                                                 {{col.header}}
+                                                <p-sortIcon [field]="col.field"></p-sortIcon>
+
                                             </th>
                                         </tr>
+                                        <tr>
+                                                <th style="width:auto" *ngFor="let col of columns" [ngSwitch]="col.field">
+                                                    <input style="width:100%;" pInputText type="text" (input)="billingTable.filter($event.target.value, col.field, 'contains')">
+                                                </th>
+                                            </tr>
                                     </ng-template>
                                     <ng-template pTemplate="body" let-part let-rowData let-columns="columns" let-i="rowIndex">
                                         <tr>
@@ -770,13 +822,19 @@
                     <div class="col-sm-12">
                         <h4> Shipping Site Info List </h4>
                         <div class="shadow-Box">
-                                <p-table class="table-responsive ptable-cus-pma" [paginator]="domesticShippingData?.length > 0" [value]="domesticShippingData"  [rows]="3" [columns]="domesticShippingHeaders">
+                                <p-table #domesticShippingTable class="table-responsive ptable-cus-pma" [paginator]="domesticShippingData?.length > 0" [value]="domesticShippingData"  [rows]="3" [columns]="domesticShippingHeaders">
                                         <ng-template pTemplate="header" let-columns>
                                             <tr>
-                                                <th *ngFor="let col of columns">
+                                                <th *ngFor="let col of columns" [pSortableColumn]="col.field">
                                                     {{col.header}}
+                                                    <p-sortIcon [field]="col.field"></p-sortIcon>
                                                 </th>
                                             </tr>
+                                            <tr>
+                                                    <th style="width:auto" *ngFor="let col of columns" [ngSwitch]="col.field">
+                                                        <input style="width:100%;" pInputText type="text" (input)="domesticShippingTable.filter($event.target.value, col.field, 'contains')">
+                                                    </th>
+                                                </tr>
                                         </ng-template>
                                         <ng-template pTemplate="body" let-part let-rowData let-columns="columns" let-i="rowIndex">
                                             <tr>
@@ -862,13 +920,20 @@
                     <div class="col-sm-12">
                         <h4> International Shipping Details </h4>
                         <div class="shadow-Box">
-                                <p-table class="table-responsive ptable-cus-pma" [paginator]="internationalShippingData.length > 0" [value]="internationalShippingData"  [rows]="3" [columns]="internationalShippingHeaders">
+                                <p-table #internationalShippingTable class="table-responsive ptable-cus-pma" [paginator]="internationalShippingData.length > 0" [value]="internationalShippingData"  [rows]="3" [columns]="internationalShippingHeaders">
                                         <ng-template pTemplate="header" let-columns>
                                             <tr>
-                                                <th *ngFor="let col of columns">
+                                                <th *ngFor="let col of columns" [pSortableColumn]="col.field">
                                                     {{col.header}}
+                                                    <p-sortIcon [field]="col.field"></p-sortIcon>
+
                                                 </th>
                                             </tr>
+                                            <tr>
+                                                    <th style="width:auto" *ngFor="let col of columns" [ngSwitch]="col.field">
+                                                        <input style="width:100%;" pInputText type="text" (input)="internationalShippingTable.filter($event.target.value, col.field, 'contains')">
+                                                    </th>
+                                                </tr>
                                         </ng-template>
                                         <ng-template pTemplate="body" let-part let-rowData let-columns="columns" let-i="rowIndex">
                                             <tr>
@@ -876,6 +941,7 @@
                                                     {{part[col.field]}}
                                                 </td>
                                             </tr>
+                                            
                                         </ng-template>
                                         <ng-template pTemplate="emptymessage" let-columns *ngIf="internationalShippingData.length == 0">
                                             <tr>
@@ -980,11 +1046,18 @@
                 <div class="panel-body">
                     <div class="col-sm-12">
                         <div class="shadow-Box">
-                                <p-table class="table-responsive ptable-cus-pma" [paginator]="waringInfoList.length > 0" [value]="waringInfoList"  [rows]="3" [columns]="warningHeaders">
+                                <p-table #warningsTable class="table-responsive ptable-cus-pma" [paginator]="waringInfoList.length > 0" [value]="waringInfoList"  [rows]="3" [columns]="warningHeaders">
                                         <ng-template pTemplate="header" let-columns>
                                             <tr>
-                                                <th *ngFor="let col of columns">
+                                                <th *ngFor="let col of columns"   [pSortableColumn]="col.field">
                                                     {{col.header}}
+                                                    <p-sortIcon [field]="col.field"></p-sortIcon>
+
+                                                </th>
+                                            </tr>
+                                            <tr>
+                                                <th style="width:auto" *ngFor="let col of columns" [ngSwitch]="col.field">
+                                                    <input style="width:100%;" pInputText type="text" (input)="warningsTable.filter($event.target.value, col.field, 'contains')">
                                                 </th>
                                             </tr>
                                         </ng-template>
@@ -1071,13 +1144,20 @@
                 <div class="panel-body">
                     <div class="col-sm-12">
                         <div class="shadow-Box">
-                                <p-table class="table-responsive ptable-cus-pma" [paginator]="DocumentsList.length > 0" [value]="DocumentsList"  [rows]="3" [columns]="customerDocumentsColumns">
+                                <p-table #documentsTable class="table-responsive ptable-cus-pma" [paginator]="DocumentsList.length > 0" [value]="DocumentsList"  [rows]="3" [columns]="customerDocumentsColumns">
                                         <ng-template pTemplate="header" let-columns>
                                             <tr>
-                                                <th *ngFor="let col of columns">
+                                                <th *ngFor="let col of columns"   [pSortableColumn]="col.field">
                                                     {{col.header}}
+                                                    <p-sortIcon [field]="col.field"></p-sortIcon>
+
                                                 </th>
                                             </tr>
+                                            <tr>
+                                                    <th style="width:auto" *ngFor="let col of columns" [ngSwitch]="col.field">
+                                                        <input style="width:100%;" pInputText type="text" (input)="documentsTable.filter($event.target.value, col.field, 'contains')">
+                                                    </th>
+                                                </tr>
                                         </ng-template>
                                         <ng-template pTemplate="body" let-part let-rowData let-columns="columns" let-i="rowIndex">
                                             <tr>
