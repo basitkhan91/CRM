@@ -1,6 +1,8 @@
 ﻿import { Component, OnInit } from '@angular/core';
 import { AssetAttributeType } from '../../../../models/asset-attribute-type.model';
 import { AssetAttributeTypeService } from '../../../../services/asset-attribute-type/asset-attribute-type.service';
+import { AssetLocation } from '../../../../models/asset-location.model';
+import { AssetLocationService } from '../../../../services/asset-location/asset-location.service';
 import { AssetService } from '../../../../services/asset/Assetservice';
 import { LegalEntityService } from '../../../../services/legalentity.service';
 import { AlertService, MessageSeverity } from '../../../../services/alert.service';
@@ -48,8 +50,10 @@ export class CreateAssetComponent implements OnInit {
     allCurrencyInfo: any[] = [];
     allAssetAttrInfo: any[] = [];
     allAssetIntanAttrInfo: any[] = [];
+    allAssetLocations: any[] = [];
     allAssetTypeInfo: any[] = [];
     allIntangibleInfo: any[] = [];
+    allAssetLocationInfo: any[] = [];
     display: boolean = false;
     modelValue: boolean;
     isDepreciable: boolean = true;
@@ -68,6 +72,7 @@ export class CreateAssetComponent implements OnInit {
     updateMode: boolean = false;
     allGlInfo: GlAccount[];
     currentSelectedIntangibleAssetType: any = {};
+    currentSelectedLocation: any = {};
     currentSelectedAssetType: any = {};
     currentSelectedAssetAttributeType: any = {};
     depriciationMethodList: DepriciationMethod[] = [];
@@ -79,12 +84,13 @@ export class CreateAssetComponent implements OnInit {
     GLAccountList: any[] = [];
     AssetId: any;
     static assetService;
-    constructor(private router: ActivatedRoute,private glAccountService: GlAccountService, private intangibleTypeService: AssetIntangibleTypeService, private route: Router, private assetService: AssetService, private legalEntityServices: LegalEntityService, private alertService: AlertService, public itemMasterservice: ItemMasterService,
-        public unitService: UnitOfMeasureService, public currencyService: CurrencyService, public assetTypeService: AssetTypeService, private depriciationMethodService: DepriciationMethodService, private authService: AuthService, public assetattrService1: AssetAttributeTypeService, public assetIntangibleService: AssetIntangibleAttributeTypeService,private commonservice: CommonService,) {
+    constructor(private router: ActivatedRoute, private glAccountService: GlAccountService, private intangibleTypeService: AssetIntangibleTypeService, private route: Router, private assetService: AssetService, private legalEntityServices: LegalEntityService, private alertService: AlertService, public itemMasterservice: ItemMasterService,
+        public unitService: UnitOfMeasureService, public currencyService: CurrencyService, public assetTypeService: AssetTypeService, private depriciationMethodService: DepriciationMethodService, private authService: AuthService, public assetattrService1: AssetAttributeTypeService, public assetIntangibleService: AssetIntangibleAttributeTypeService, private commonservice: CommonService, private assetLocationService: AssetLocationService) {
 
         this.AssetId = this.router.snapshot.params['id'];
 
         this.loadDepricationMethod();
+        this.assetLocationData();
 
             if (this.AssetId) {
                 this.assetService.isEditMode = true;
@@ -239,6 +245,7 @@ export class CreateAssetComponent implements OnInit {
         this.getAmortizationFrequencyList();
         this.getDepreciationFrequencyList();
         this.getAssetAcquisitionTypeList();
+        this.assetLocationData();
 
     }
 
@@ -698,6 +705,32 @@ export class CreateAssetComponent implements OnInit {
         }
     }
 
+    private onAssetLocationLoad(getAssetTypeList: any[]) {
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        this.allAssetLocations = [];
+        console.log('allAssetLocations', getAssetTypeList);
+        //console.log('allAssetLocations', this.allAssetLocations);
+        if (getAssetTypeList) {
+            for (let i = 0; i < getAssetTypeList.length; i++) {
+                //console.log(getAssetTypeList[i].isActive);
+                if (getAssetTypeList[i].isActive == true) {
+                    this.allAssetLocations.push(getAssetTypeList[i]);
+                }
+            }
+        }
+        console.log('getAssetTypeList', getAssetTypeList);
+        this.allAssetLocationInfo = getAssetTypeList;
+        console.log('this.currentAsset.asset_Location', this.currentAsset.asset_Location);
+        this.currentAsset.asset_Location = Number(this.currentAsset.asset_Location);
+        //this.currentAsset.asset_Location = getObjectById('assetLocationId', this.currentAsset.asset_Location, this.allAssetLocations);
+        //console.log('this.currentAsset.asset_Location', this.currentAsset.asset_Location);
+        //this.allIntangibleInfo = getAssetTypeList;
+        if (this.assetService.isEditMode == true && this.currentAsset.asset_Location) {
+            this.getSelectedLocation(this.currentAsset.asset_Location);
+        }
+    }
+
     private onIntangibletypeLoad(getAssetTypeList: any[]) {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
@@ -794,6 +827,15 @@ export class CreateAssetComponent implements OnInit {
         this.loadingIndicator = true;
         this.intangibleTypeService.getAll().subscribe(
             results => this.onIntangibletypeLoad(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
+    }
+
+    private assetLocationData() {
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
+        this.assetLocationService.getAll().subscribe(
+            results => this.onAssetLocationLoad(results[0].columnData),
             error => this.onDataLoadFailed(error)
         );
     }
@@ -1095,6 +1137,13 @@ export class CreateAssetComponent implements OnInit {
 
     }
 
+    getSelectedLocation(selectedObj) {
+        this.currentSelectedLocation = Object.assign({}, this.allAssetLocations.filter(function (location) {
+            return location.assetLocationId == selectedObj;
+        })[0]);;
+
+
+    }
     getSelectedAssetType(selectedAssetObj) {
 
         this.currentSelectedAssetType = Object.assign({}, this.allAssetTypeInfo.filter(function (asset) {
