@@ -37,7 +37,8 @@ export class CustomerBillingInformationComponent {
 		{ field: 'stateOrProvince', header: 'State / Prov' },
 		{ field: 'postalCode', header: 'Postal Code' },
 		{ field: 'countryName', header: 'Country' }
-	]
+    ]
+    selectedColumns = this.billingInfoTableHeaders;
 	viewData: any;
 	id: number;
 	customerCode: any;
