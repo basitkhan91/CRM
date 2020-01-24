@@ -63,5 +63,6 @@ namespace DAL.Repositories.Interfaces
         void CreateHistory(dynamic obj, int moduleId, long referenceId, long addressId, int addressType, bool isFromGenInfo,bool status=false);
         IEnumerable<object> GetShippingBillingAddressAudit(long referenceId, long addressId, long addressType, int moduleId);
         void CreateContactHistory(dynamic obj, int moduleId, long referenceId, long contactId);
+        IEnumerable<object> GetContactAudit(long referenceId, int moduleId, long contactId);
     }
 }

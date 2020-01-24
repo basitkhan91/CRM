@@ -19,6 +19,7 @@ namespace DAL.Models
         public string WorkPhone { get; set; }
         public string MobilePhone { get; set; }
         public string Prefix { get; set; }
+        public string Tag { get; set; }
         public string Suffix { get; set; }
         public string AlternatePhone { get; set; }
         public string WorkPhoneExtn { get; set; }

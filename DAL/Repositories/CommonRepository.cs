@@ -1170,11 +1170,49 @@ namespace DAL.Repositories
             objShipping.CreatedBy = obj.CreatedBy;
             objShipping.UpdatedBy = obj.UpdatedBy;
             objShipping.IsActive = obj.IsActive;
-
+            objShipping.Notes = obj.Notes;
+            objShipping.Tag = obj.Tag;
             _appContext.ContactAudit.Add(objShipping);
             _appContext.SaveChanges();
 
 
+        }
+        public IEnumerable<object> GetContactAudit(long referenceId, int moduleId,long contactId)
+        {
+
+            var list = (from vba in _appContext.ContactAudit
+                        where vba.ReferenceId == referenceId && vba.ModuleId == moduleId  && vba.ContactId==contactId
+                       
+
+            select new
+            {
+              ContactId=vba.ContactId,
+              Notes=vba.Notes,
+            LastName = vba.LastName,
+            FirstName = vba.FirstName,
+            Tag = vba.Tag,
+            MiddleName = vba.MiddleName,
+            ContactTitle = vba.ContactTitle,
+            WorkPhone = vba.WorkPhone,
+            MobilePhone = vba.MobilePhone,
+            Prefix = vba.Prefix,
+            Suffix = vba.Suffix,
+            AlternatePhone = vba.AlternatePhone,
+            WorkPhoneExtn = vba.WorkPhoneExtn,
+            Fax = vba.Fax,
+            Email = vba.Email,
+            WebsiteURL = vba.WebsiteURL,
+            MasterCompanyId = vba.MasterCompanyId,
+            CreatedDate = vba.CreatedDate,
+            UpdatedDate = vba.UpdatedDate,
+            CreatedBy = vba.CreatedBy,
+            UpdatedBy = vba.UpdatedBy,
+            IsActive = vba.IsActive,
+           FullContact =  vba.WorkPhone + " - " + vba.WorkPhoneExtn,
+
+                IsDefaultContact = vba.IsDefaultContact
+        }).OrderByDescending(p => p.UpdatedDate).ToList();
+            return list;
         }
 
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;

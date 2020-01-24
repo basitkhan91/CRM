@@ -553,7 +553,22 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Add Shipping Info</h4>
+
+                <h4 class="modal-title">{{isEditDomestic ? 'Edit' : 'Add' }} Shipping Info   </h4>
+                <div class="col-md-12 shadow-box-cstm">
+                    <div class="col-md-4">
+                        <p class="fs12">
+                            <label class="control-label labels-font-header" style="width: auto;">Customer Name: </label>
+                            <span class="span-header-red" style="text-transform: capitalize"> {{customerName }} </span>
+                        </p>
+                    </div>
+                    <div class="col-md-4">
+                        <p class="fs12">
+                            <label class="control-label labels-font-header" style="width: auto;">Customer Code: </label>
+                            <span class="span-header-red" style="text-transform: capitalize"> {{customerCode }} </span>
+                        </p>
+                    </div>
+                </div>
             </div>
             <form #addShippingForm="ngForm" class="form-horizontal">
                 <div class="modal-body">
@@ -674,7 +689,22 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Add International Shipping Info</h4>
+                <!--<h4 class="modal-title">Add International Shipping Info</h4>-->
+                <h4 class="modal-title">{{isEditInternational ? 'Edit' : 'Add' }}  International Shipping Info</h4>
+                <div class="col-md-12 shadow-box-cstm">
+                    <div class="col-md-4">
+                        <p class="fs12">
+                            <label class="control-label labels-font-header" style="width: auto;">Customer Name: </label>
+                            <span class="span-header-red" style="text-transform: capitalize"> {{customerName }} </span>
+                        </p>
+                    </div>
+                    <div class="col-md-4">
+                        <p class="fs12">
+                            <label class="control-label labels-font-header" style="width: auto;">Customer Code: </label>
+                            <span class="span-header-red" style="text-transform: capitalize"> {{customerCode }} </span>
+                        </p>
+                    </div>
+                </div>
             </div>
             <form #addIShippingForm="ngForm" class="form-horizontal">
                 <div class="modal-body">
@@ -1272,7 +1302,20 @@
         <button type="button" class="btn btn-danger" aria-label="Close" (click)="dismissModel()">
             <span aria-hidden="true">&times;</span>
         </button>
-
+        <div class="col-md-12 shadow-box-cstm">
+            <div class="col-md-4">
+                <p class="fs12">
+                    <label class="control-label labels-font-header" style="width: auto;">Customer Name: </label>
+                    <span class="span-header-red" style="text-transform: capitalize"> {{customerName }} </span>
+                </p>
+            </div>
+            <div class="col-md-4">
+                <p class="fs12">
+                    <label class="control-label labels-font-header" style="width: auto;">Customer Code: </label>
+                    <span class="span-header-red" style="text-transform: capitalize"> {{customerCode }} </span>
+                </p>
+            </div>
+        </div>
 
     </div>
     <div class="modal-body">
@@ -1332,7 +1375,20 @@
         <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
             <span aria-hidden="true">&times;</span>
         </button>
-
+        <div class="col-md-12 shadow-box-cstm">
+            <div class="col-md-4">
+                <p class="fs12">
+                    <label class="control-label labels-font-header" style="width: auto;">Customer Name: </label>
+                    <span class="span-header-red" style="text-transform: capitalize"> {{customerName }} </span>
+                </p>
+            </div>
+            <div class="col-md-4">
+                <p class="fs12">
+                    <label class="control-label labels-font-header" style="width: auto;">Customer Code: </label>
+                    <span class="span-header-red" style="text-transform: capitalize"> {{customerCode }} </span>
+                </p>
+            </div>
+        </div>
 
     </div>
     <div class="modal-body">
