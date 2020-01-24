@@ -1985,7 +1985,7 @@ namespace DAL
             {
                 if (_receiveRepairOrder == null)
                 {
-                    _receiveRepairOrder = new ReceiveRepairOrderRepository(_context,_commonRepository);
+                    _receiveRepairOrder = new ReceiveRepairOrderRepository(_context,CommonRepository);
                 }
                 return _receiveRepairOrder;
             }
