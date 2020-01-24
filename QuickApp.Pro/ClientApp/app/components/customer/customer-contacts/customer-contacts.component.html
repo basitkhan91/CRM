@@ -151,10 +151,24 @@
       
           <!-- Modal content-->
           <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal">&times;</button>
-              <h4 class="modal-title">History of Customer Contact</h4>
-            </div>
+              <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                  <div class="col-md-12 shadow-box-cstm">
+                      <div class="col-md-4">
+                          <p class="fs12">
+                              <label class="control-label labels-font-header" style="width: auto;">Customer Name: </label>
+                              <span class="span-header-red" style="text-transform: capitalize"> {{customerName }} </span>
+                          </p>
+                      </div>
+                      <div class="col-md-4">
+                          <p class="fs12">
+                              <label class="control-label labels-font-header" style="width: auto;">Customer Code: </label>
+                              <span class="span-header-red" style="text-transform: capitalize"> {{customerCode }} </span>
+                          </p>
+                      </div>
+                  </div>
+                  <h4 class="modal-title">History of Customer Contact</h4>
+              </div>
             <div class="modal-body">
                 <div class="table-responsive rro-table-cstm">
                     <table class="table table-bordered" *ngIf="auditHistory.length> 0 else noDatavailable" >
@@ -163,38 +177,60 @@
 
                   
                                 <th>Tag</th>
+                                <th>Prefix</th>
                                 <th>First Name</th>
+                                <th>Middle Name</th>
                                 <th>Last Name</th>
+                                <th>Suffix</th>
                                 <th>Contact Title</th>
                                 <th>Email</th>
                                 <th>Work Phone</th>
                                 <th>Mobile Phone</th>
+                                <th>Alternate Phone</th>
                                 <th>Fax</th>
+                               
+                                <th>Website URL</th>
                                 <th>Primary Contact</th>
-                                <th>Memo</th>
-                                <th>Status</th>
+                               <th>Memo</th>
+                                <th>Is Active</th>
+                                <th>Created By</th>
+                                <th>Created Date</th>
                                 <th>Updated By</th>
                                 <th>Updated Date</th>
                             </tr>
                         </thead>
                         <tbody *ngIf="auditHistory.length> 0" >
-                                <tr *ngFor="let audit of auditHistory; let i = index;">
-                                           
-                                        <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'tag', audit.tag)  ? 'black' : 'red'  }">{{audit.tag}}</td>
-                                         <td [ngStyle]="{'color': getColorCodeForHistory(i, 'firstName', audit.firstName)  ? 'black' : 'red'  }">{{audit.firstName}}</td>
-                                         <td [ngStyle]="{'color': getColorCodeForHistory(i, 'lastName', audit.lastName)  ? 'black' : 'red'  }">{{audit.lastName}}</td>
-                                         <td [ngStyle]="{'color': getColorCodeForHistory(i, 'contactTitle', audit.contactTitle)  ? 'black' : 'red'  }">{{audit.contactTitle}}</td>
-                                         <td [ngStyle]="{'color': getColorCodeForHistory(i, 'email', audit.email)  ? 'black' : 'red'  }">{{audit.email}}</td>
+                            <tr *ngFor="let audit of auditHistory; let i = index;">
 
-                                         <td [ngStyle]="{'color': getColorCodeForHistory(i, 'workPhone', audit.workPhone)  ? 'black' : 'red'  }">{{audit.workPhone}}</td>
-                                         <td [ngStyle]="{'color': getColorCodeForHistory(i, 'mobilePhone', audit.mobilePhone)  ? 'black' : 'red'  }">{{audit.mobilePhone}}</td>
-                                         <td [ngStyle]="{'color': getColorCodeForHistory(i, 'fax', audit.fax)  ? 'black' : 'red'  }">{{audit.fax}}</td>
-                                         <td [ngStyle]="{'color': getColorCodeForHistory(i, 'isDefaultContact', audit.isDefaultContact)  ? 'black' : 'red'  }">{{audit.isDefaultContact}}</td>
-                                         <td [ngStyle]="{'color': getColorCodeForHistory(i, 'notes', audit.notes)  ? 'black' : 'red'  }">{{audit.notes}}</td>
-                                         <td [ngStyle]="{'color': getColorCodeForHistory(i, 'isActive', audit.isActive)  ? 'black' : 'red'  }">{{audit.isActive}}</td>
-                                        <td >{{audit.updatedBy}}</td>
-                                        <td>{{audit.updatedDate | date: 'dd-MM-yyyy h:mm a '}}</td>
-                                    </tr>
+                                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'tag', audit.tag)  ? 'black' : 'red'  }">{{audit.tag}}</td>
+                                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'prefix', audit.prefix)  ? 'black' : 'red'  }">{{audit.prefix}}</td>
+
+                                <td [ngStyle]="{'color': getColorCodeForHistory(i, 'firstName', audit.firstName)  ? 'black' : 'red'  }">{{audit.firstName}}</td>
+                                <td [ngStyle]="{'color': getColorCodeForHistory(i, 'middleName', audit.middleName)  ? 'black' : 'red'  }">{{audit.middleName}}</td>
+
+                                <td [ngStyle]="{'color': getColorCodeForHistory(i, 'lastName', audit.lastName)  ? 'black' : 'red'  }">{{audit.lastName}}</td>
+                                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'suffix', audit.suffix)  ? 'black' : 'red'  }">{{audit.suffix}}</td>
+
+                                <td [ngStyle]="{'color': getColorCodeForHistory(i, 'contactTitle', audit.contactTitle)  ? 'black' : 'red'  }">{{audit.contactTitle}}</td>
+                                <td [ngStyle]="{'color': getColorCodeForHistory(i, 'email', audit.email)  ? 'black' : 'red'  }">{{audit.email}}</td>
+
+                                <td [ngStyle]="{'color': getColorCodeForHistory(i, 'fullContact', audit.fullContact)  ? 'black' : 'red'  }">{{audit.fullContact}}</td>
+                                <td [ngStyle]="{'color': getColorCodeForHistory(i, 'mobilePhone', audit.mobilePhone)  ? 'black' : 'red'  }">{{audit.mobilePhone}}</td>
+                                <td [ngStyle]="{'color': getColorCodeForHistory(i, 'alternatePhone', audit.alternatePhone)  ? 'black' : 'red'  }">{{audit.alternatePhone}}</td>
+
+
+                                <td [ngStyle]="{'color': getColorCodeForHistory(i, 'fax', audit.fax)  ? 'black' : 'red'  }">{{audit.fax}}</td>
+                                <td [ngStyle]="{'color': getColorCodeForHistory(i, 'websiteURL', audit.websiteURL)  ? 'black' : 'red'  }">{{audit.websiteURL}}</td>
+
+                                <td [ngStyle]="{'color': getColorCodeForHistory(i, 'isDefaultContact', audit.isDefaultContact)  ? 'black' : 'red'  }">{{audit.isDefaultContact}}</td>
+                                <td [ngStyle]="{'color': getColorCodeForHistory(i, 'notes', audit.notes)  ? 'black' : 'red'  }">{{audit.notes}}</td>
+                                <td [ngStyle]="{'color': getColorCodeForHistory(i, 'isActive', audit.isActive)  ? 'black' : 'red'  }">{{audit.isActive}}</td>
+                                <td>{{audit.createdBy}}</td>
+                                <td>{{audit.createdDate | date: 'dd-MM-yyyy h:mm a '}}</td>
+
+                                <td>{{audit.updatedBy}}</td>
+                                <td>{{audit.updatedDate | date: 'dd-MM-yyyy h:mm a '}}</td>
+                            </tr>
                         </tbody>
                         
 
@@ -221,7 +257,21 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Add Contact Details</h4>                
+                <div class="col-md-12 shadow-box-cstm">
+                    <div class="col-md-4">
+                        <p class="fs12">
+                            <label class="control-label labels-font-header" style="width: auto;">Customer Name: </label>
+                            <span class="span-header-red" style="text-transform: capitalize"> {{customerName }} </span>
+                        </p>
+                    </div>
+                    <div class="col-md-4">
+                        <p class="fs12">
+                            <label class="control-label labels-font-header" style="width: auto;">Customer Code: </label>
+                            <span class="span-header-red" style="text-transform: capitalize"> {{customerCode }} </span>
+                        </p>
+                    </div>
+                </div>
+                <h4 class="modal-title">{{isEditButton ? 'Edit' : 'Add' }} Contact Details   </h4>
             </div>
             <form #ccForm="ngForm" #addContactForm="ngForm" class="form-horizontal">
                 <div class="modal-body">

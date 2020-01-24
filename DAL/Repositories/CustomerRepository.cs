@@ -2013,6 +2013,34 @@ namespace DAL.Repositories
 
 
                     _appContext.SaveChanges();
+
+
+                    ContactAudit objShipping = new ContactAudit();
+                    objShipping.ModuleId = Convert.ToInt32(ModuleEnum.Customer);
+                    objShipping.ReferenceId = objCustomer.CustomerId;
+                    objShipping.ContactId = Convert.ToInt64(customercontactObj.CustomerContactId);
+                    objShipping.IsDefaultContact = true;
+                    objShipping.FirstName = objCustomer.Name;
+                    objShipping.LastName = "NA";
+
+                    objShipping.WorkPhone = objCustomer.CustomerPhone;
+
+
+                    objShipping.WorkPhoneExtn = objCustomer.CustomerPhoneExt;
+
+                    objShipping.Email = objCustomer.Email;
+
+                    objShipping.MasterCompanyId = 1;
+                    objShipping.CreatedDate = DateTime.Now;
+                    objShipping.UpdatedDate = DateTime.Now;
+                    objShipping.CreatedBy = objCustomer.CreatedBy;
+                    objShipping.UpdatedBy = objCustomer.CreatedBy;
+                    objShipping.IsActive = objCustomer.IsActive;
+
+                    objShipping.Tag = "NA";
+                    _appContext.ContactAudit.Add(objShipping);
+                    _appContext.SaveChanges();
+
                 }
                 // return objCustomerShippingAddress;
             }

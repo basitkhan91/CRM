@@ -516,17 +516,18 @@
                 </thead>
               
 
-            <tr *ngFor="let audit of aircraftauditHisory; let i = index;">
-                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'aircraftType', audit.aircraftType)  ? 'black' : 'red'  }">{{audit.aircraftType}}</td>
-                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'aircraftModel', audit.aircraftModel)  ? 'black' : 'red'  }">{{audit.aircraftModel}}</td>
-                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'inventory', audit.inventory)  ? 'black' : 'red'  }">{{audit.inventory}}</td>
-                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'dashNumber', audit.dashNumber)  ? 'black' : 'red'  }">{{audit.dashNumber}}</td>
-                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'memo', audit.memo)  ? 'black' : 'red'  }">{{audit.memo}}</td>
-                <td>{{audit.updatedBy}}</td>
-                <td>{{audit.updatedDate | date: 'dd-MM-yyyy h:mm a '}}</td>
-                <td>{{audit.createdBy}}</td>
-                <td>{{audit.createdDate | date: 'dd-MM-yyyy h:mm a '}}</td>
-            </tr>
+                <tr *ngFor="let audit of aircraftauditHisory; let i = index;">
+                    <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'aircraftType', audit.aircraftType)  ? 'black' : 'red'  }">{{audit.aircraftType}}</td>
+                    <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'aircraftModel', audit.aircraftModel)  ? 'black' : 'red'  }">{{audit.aircraftModel}}</td>
+                    <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'dashNumber', audit.dashNumber)  ? 'black' : 'red'  }">{{audit.dashNumber}}</td>
+                    <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'inventory', audit.inventory)  ? 'black' : 'red'  }">{{audit.inventory}}</td>
+
+                    <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'memo', audit.memo)  ? 'black' : 'red'  }">{{audit.memo}}</td>
+                    <td>{{audit.updatedBy}}</td>
+                    <td>{{audit.updatedDate | date: 'dd-MM-yyyy h:mm a '}}</td>
+                    <td>{{audit.createdBy}}</td>
+                    <td>{{audit.createdDate | date: 'dd-MM-yyyy h:mm a '}}</td>
+                </tr>
             </table>
         </div>
     </div>

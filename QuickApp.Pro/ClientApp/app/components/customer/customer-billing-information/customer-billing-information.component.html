@@ -257,7 +257,21 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Add Billing Information</h4>
+                <div class="col-md-12 shadow-box-cstm">
+                    <div class="col-md-4">
+                        <p class="fs12">
+                            <label class="control-label labels-font-header" style="width: auto;">Customer Name: </label>
+                            <span class="span-header-red" style="text-transform: capitalize"> {{customerName }} </span>
+                        </p>
+                    </div>
+                    <div class="col-md-4">
+                        <p class="fs12">
+                            <label class="control-label labels-font-header" style="width: auto;">Customer Code: </label>
+                            <span class="span-header-red" style="text-transform: capitalize"> {{customerCode }} </span>
+                        </p>
+                    </div>
+                </div>
+                <h4 class="modal-title">{{isEditMode ? 'Edit' : 'Add' }} Billing Info </h4>
             </div>
             <form #addBillingForm="ngForm" class="form-horizontal">
                 <div class="modal-body">
@@ -404,6 +418,20 @@
             <span aria-hidden="true">&times;</span>
         </button>
 
+        <div class="col-md-12 shadow-box-cstm">
+            <div class="col-md-4">
+                <p class="fs12">
+                    <label class="control-label labels-font-header" style="width: auto;">Customer Name: </label>
+                    <span class="span-header-red" style="text-transform: capitalize"> {{customerName }} </span>
+                </p>
+            </div>
+            <div class="col-md-4">
+                <p class="fs12">
+                    <label class="control-label labels-font-header" style="width: auto;">Customer Code: </label>
+                    <span class="span-header-red" style="text-transform: capitalize"> {{customerCode }} </span>
+                </p>
+            </div>
+        </div>
 
     </div>
     <div class="modal-body">
