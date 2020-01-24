@@ -3,7 +3,7 @@
     data-target="#addNewCharges"
     data-toggle="modal"
     (click)="createNew()"
-    class="btn btn-primary btn-primary-cstm"
+    class="btn btn-primary btn-primary"
     style="padding: 6px 12px !important;"
   >
     Add Charges
@@ -41,8 +41,8 @@
           (updateChargesListForWO)="updateChargesList($event)"
         ></grd-charges>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">
+      <div class="modal-footer" *ngIf="!isQuote">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">
           Close
         </button>
       </div>
@@ -65,8 +65,9 @@
         </th>
         <ng-container *ngIf="isQuote">
           <th *ngIf="costPlusType == 'Mark Up'">MARKUP</th>
-          <th>Cost plus amount</th>
-          <th>Fixed Amount</th>
+          <th>COST PLUS AMOUNT</th>
+          <th>FIXED AMOUNT</th>
+          <th colspan="2">Action</th>
         </ng-container>
         <!-- <th colspan="4" class="text-center" *ngIf="!isView"></th> -->
       </tr>
@@ -79,7 +80,7 @@
         <ng-container *ngIf="isQuote">
           <td *ngIf="costPlusType == 'Mark Up'">
             <select
-              class="form-control wf-pub-id"
+              class="form-control"
               (change)="markupChanged(rowData)"
               [(ngModel)]="rowData.markupPercentageId"
               [disabled]="isView"
@@ -109,7 +110,7 @@
               mat-icon-button
               data-target="#addNewCharges"
               data-toggle="modal"
-              (click)="edit(w, i)"
+              (click)="edit(rowData, i)"
               matTooltip="Edit"
             >
               <mat-icon>edit</mat-icon>
@@ -120,7 +121,7 @@
               class="btn-delete ptable-wo-btns"
               mat-icon-button
               matTooltip="Delete"
-              (click)="delete(w, i)"
+              (click)="delete(rowData, i)"
             >
               <mat-icon color="warn">delete</mat-icon>
             </button>
@@ -146,7 +147,7 @@
     </tfoot>
   </p-table>
   <button
-    class="btn btn-primary-cstm pull-right"
+    class="btn btn-primary pull-right"
     (click)="createChargeQuote()"
     *ngIf="!isView"
   >
@@ -273,7 +274,7 @@
             </tr>
           </tfoot>
         </table>
-        <button class="btn btn-primary-cstm pull-right" (click)="createChargeQuote()" *ngIf="!isView">Save</button>
+        <button class="btn btn-primary pull-right" (click)="createChargeQuote()" *ngIf="!isView">Save</button>
       </div>
     </div>
     <div class="clear"></div>

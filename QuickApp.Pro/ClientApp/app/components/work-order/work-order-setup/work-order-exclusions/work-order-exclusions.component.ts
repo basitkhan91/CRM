@@ -84,6 +84,9 @@ export class WorkOrderExclusionsComponent implements OnInit {
   }
 
   saveExclusionsList(event) {
+    if(!this.workOrderExclusionsList){
+      this.workOrderExclusionsList = [];
+    }
     if (this.isQuote) {
       this.workOrderExclusionsList = [...this.workOrderExclusionsList, ...event['exclusions'].map(x => { return { ...x, epn: x.partNumber, epnDescription: x.partDescription } })];
       $('#addNewExclusions').modal('hide');

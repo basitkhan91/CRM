@@ -130,8 +130,9 @@ namespace DAL.Repositories.Interfaces
                             vba.CreatedDate,
                             vba.UpdatedBy,
                             vba.UpdatedDate,
-                            vba.CreatedBy
-                        }).OrderByDescending(p => p.AuditCustomerBillingAddressId).ToList();
+                            vba.CreatedBy,
+							vba.IsActive
+						}).OrderByDescending(p => p.AuditCustomerBillingAddressId).ToList();
             return list;
         }
 

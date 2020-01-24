@@ -54,3 +54,9 @@ a.fa.fa-plus-circle {
     margin-right: 15px;
   }
 }
+:host /deep/ .ui-table-summary {
+  margin-right: 0px !important;
+}
+.ui-table .ui-paginator-bottom {
+  padding-top: 20px !important;
+}

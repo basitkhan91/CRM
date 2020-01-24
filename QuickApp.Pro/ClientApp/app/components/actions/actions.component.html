@@ -19,9 +19,9 @@
                                 <div style="text-align: right;margin-left:-6px !important; min-height: 30px;">
                                     <p-multiSelect [maxSelectedLabels]="2" [options]="headers" optionLabel="header" [(ngModel)]="selectedColumns" [style]="{minWidth: '200px'}"
                                         style="float:left" (onChange)="columnsChanges()"></p-multiSelect>
-                                    <button type="button" class="btn btn-primary-cstm " pButton icon="fa-download"
+                                    <button type="button" class="btn btn-primary " pButton icon="fa-download"
                                         iconPos="left" label="Export Data" matTooltip="Download Data" matTooltipPosition="above" (click)="dt.exportCSV()" style="padding: 5px 12px !important;"></button>
-                                    <button type="button" class="btn btn-primary-cstm " label="Export Selected Data" matTooltip="Download Selected Data" matTooltipPosition="above" pButton icon="fa-download"
+                                    <button type="button" class="btn btn-primary " label="Export Selected Data" matTooltip="Download Selected Data" matTooltipPosition="above" pButton icon="fa-download"
                                         iconPos="left" (click)="dt.exportCSV({selectionOnly:true})" style="padding: 5px 12px !important;"></button>
                                     <!-- <div class="excel-upload  excel-upload-cstm">
 
@@ -32,7 +32,7 @@
                                             </span>
                                         </label>
                                         &nbsp; &nbsp;
-                                        <button class="btn btn-primary-cstm" matTooltip="Sample File download" (click)="sampleExcelDownload()">Sample File Download
+                                        <button class="btn btn-primary" matTooltip="Sample File download" (click)="sampleExcelDownload()">Sample File Download
                                         </button>
                                     </div> -->
                                 </div>
@@ -122,8 +122,8 @@
                 </strong>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary-cstm" data-dismiss="modal" (click)="deleteConformation('Yes')">Yes</button>
-                <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="deleteConformation('No')">No</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="deleteConformation('Yes')">Yes</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="deleteConformation('No')">No</button>
             </div>
         </div>
 
@@ -187,10 +187,10 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-primary-cstm" data-dismiss="modal" [disabled]="create.invalid || disableSaveGroupId && disableSaveForDescription "
+                <button class="btn btn-primary" data-dismiss="modal" [disabled]="create.invalid || disableSaveGroupId && disableSaveForDescription "
                     (click)="save();">
                     {{isEdit ? 'Update' : 'Save' }}</button>
-                <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="resetForm()">Close</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="resetForm()">Close</button>
 
             </div>
         </div>
@@ -236,7 +236,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
             </div>
         </div>
 
@@ -293,7 +293,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
             </div>
         </div>
 
@@ -364,7 +364,7 @@
                 <div class="clear"></div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" id="" name="" (click)="resetViewData()">Close</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal" id="" name="" (click)="resetViewData()">Close</button>
             </div>
         </div>
 

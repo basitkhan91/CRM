@@ -20,8 +20,8 @@
 								<div style="text-align: right;margin-left:-6px !important;">
 									<p-multiSelect [maxSelectedLabels]="2" [options]="headers" optionLabel="header" [(ngModel)]="selectedColumns" [style]="{minWidth: '200px'}"
 												   style="float:left" (onChange)="columnsChanges()"></p-multiSelect>
-									<button type="button" class="btn btn-primary-cstm " label="Export Data" matTooltip="Download Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" (click)="dt.exportCSV()"></button>
-									<button type="button" class="btn btn-primary-cstm " label="Export Selected Data" matTooltip="Download Selected Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" (click)="dt.exportCSV({selectionOnly:true})"></button>
+									<button type="button" class="btn btn-primary " label="Export Data" matTooltip="Download Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" (click)="dt.exportCSV()"></button>
+									<button type="button" class="btn btn-primary " label="Export Selected Data" matTooltip="Download Selected Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" (click)="dt.exportCSV({selectionOnly:true})"></button>
 									<div class="excel-upload  excel-upload-cstm">
 										<input type="file" name="upload[]" id="upload" (change)="customExcelUpload($event)" class="uploaddoc upload-file"
 											   accept=".xlsx, .xls, .csv">
@@ -104,8 +104,8 @@
 				</strong>
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-primary-cstm" data-dismiss="modal" (click)="deleteConformation('Yes')">Yes</button>
-				<button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="deleteConformation('No')">No</button>
+				<button type="button" class="btn btn-primary" data-dismiss="modal" (click)="deleteConformation('Yes')">Yes</button>
+				<button type="button" class="btn btn-danger" data-dismiss="modal" (click)="deleteConformation('No')">No</button>
 			</div>
 		</div>
 
@@ -164,10 +164,10 @@
 				</form>
 			</div>
 			<div class="modal-footer">
-				<button class="btn btn-primary-cstm" data-dismiss="modal"  (click)="save();">
+				<button class="btn btn-primary" data-dismiss="modal"  (click)="save();">
 					{{isEdit ? 'Update' : 'Save' }}
 				</button>
-				<button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="resetForm()">Close</button>
+				<button type="button" class="btn btn-danger" data-dismiss="modal" (click)="resetForm()">Close</button>
 			</div>
 		</div>
 	</div>

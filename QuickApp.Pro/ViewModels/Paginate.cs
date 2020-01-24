@@ -576,6 +576,7 @@ namespace QuickApp.Pro.ViewModels
     {
         public string Code { get; set; }
         public string Name { get; set; }
+        public Nullable<int> SequenceNo { get; set; }
         public string DepreciationMethod { get; set; }
         public string Memo { get; set; }
         public long? AssetDepreciationMethodId { get; set; }
@@ -600,6 +601,7 @@ namespace QuickApp.Pro.ViewModels
         public string Code { get; set; }
         public string Name { get; set; }
         public string DepreciationMethod { get; set; }
+        public string SequenceNo { get; set; }
         public string Memo { get; set; }
     }
 

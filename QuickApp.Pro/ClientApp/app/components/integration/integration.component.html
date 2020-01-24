@@ -22,10 +22,11 @@
                                     <p-multiSelect [maxSelectedLabels]="2" [options]="headers" optionLabel="header"
                                         [(ngModel)]="selectedColumns" [style]="{minWidth: '200px'}" style="float:left"
                                         (onChange)="columnsChanges()"></p-multiSelect>
-                                    <button type="button" class="btn btn-primary-cstm " matTooltip="Download  Data" matTooltipPosition="above"
+
+                                    <button type="button" class="btn btn-primary" matTooltip="Download  Data" matTooltipPosition="above"
                                          pButton icon="fa-download" iconPos="left"
                                         label="Export Data" (click)="dt.exportCSV()"></button>
-                                    <button type="button" class="btn btn-primary-cstm "  matTooltip="Download Selected" matTooltipPosition="above"
+                                    <button type="button" class="btn btn-primary"  matTooltip="Download Selected" matTooltipPosition="above"
                                          pButton icon="fa-download" iconPos="left"
                                         label="Export Selection Only"
                                         (click)="dt.exportCSV({selectionOnly:true})"></button>
@@ -40,7 +41,7 @@
                                             </span>
                                         </label>
                                         &nbsp; &nbsp;
-                                        <button class="btn btn-primary-cstm" matTooltipPosition="above"  matTooltip="Sample File download" (click)="sampleExcelDownload()">Sample File
+                                        <button class="btn btn-primary" matTooltipPosition="above"  matTooltip="Sample File download" (click)="sampleExcelDownload()">Sample File
                                             Download</button>
                                     </div>
                                 </div>
@@ -141,9 +142,9 @@
                 </strong>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary-cstm" data-dismiss="modal"
+                <button type="button" class="btn btn-primary" data-dismiss="modal"
                     (click)="deleteConformation('Yes')">Yes</button>
-                <button type="button" class="btn btn-danger-cstm" data-dismiss="modal"
+                <button type="button" class="btn btn-danger" data-dismiss="modal"
                     (click)="deleteConformation('No')">No</button>
             </div>
         </div>
@@ -222,10 +223,10 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-primary-cstm" data-dismiss="modal"
+                <button class="btn btn-primary" data-dismiss="modal"
                     [disabled]="create.invalid  || disableSaveForDescription " (click)="save();">
                     {{isEdit ? 'Update' : 'Save' }}</button>
-                <button type="button" class="btn btn-danger-cstm" data-dismiss="modal"
+                <button type="button" class="btn btn-danger" data-dismiss="modal"
                     (click)="resetForm()">Close</button>
 
             </div>
@@ -272,7 +273,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
             </div>
         </div>
 
@@ -333,7 +334,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
             </div>
         </div>
 
@@ -410,7 +411,7 @@
                 <div class="clear"></div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" id="" name=""
+                <button type="button" class="btn btn-danger" data-dismiss="modal" id="" name=""
                     (click)="resetViewData()">Close</button>
             </div>
         </div>

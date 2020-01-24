@@ -57,3 +57,17 @@ a.fa.fa-plus-circle {
 :host /deep/ .ui-autocomplete{
     padding: 0px !important 
 }
+
+.total_records_section label{
+    width: 100%;
+    right: 10px;
+    text-align: right;
+    position: relative;
+    bottom: 34px;
+}
+td {
+    padding: 5px !important;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

@@ -78,7 +78,7 @@
                                                     <p-autoComplete class="p-autoComplete-ctsm"
                                                                     name="creditTermsId"
                                                                     [(ngModel)]="savedGeneralInformationData.creditTermsId"
-                                                                    field="name" [suggestions]="_creditTermsList"
+                                                                    field="label" [suggestions]="_creditTermsList"
                                                                     [forceSelection]="true" emptyMessage="No Match Found"
                                                                     (completeMethod)="filterCreditTerm($event)" [size]="30"
                                                                     [minLength]="1" [dropdown]="true" required>
@@ -104,49 +104,7 @@
                                                         {{currencyName.symbol}}
                                                     </option>
                                                 </select>
-                                            </div>
-
-                                            <div class="form-group" style="margin-top: 15px;">
-                                                <span class="checkbox-cstm">
-                                                    <label>
-                                                        <input type="checkbox" name="isTaxExempt" [(ngModel)]="savedGeneralInformationData.isTaxExempt">
-                                                        <span class="cr"><i class="cr-icon pi pi-check"></i></span>
-                                                        Tax Exempt
-                                                    </label>
-                                                </span>
-                                            </div>
-                                            <div class="form-group tax-certificate" *ngIf="savedGeneralInformationData.isTaxExempt">
-                                                <label>Attach Certificate</label>
-                                                <p-fileUpload name="customerTaxExemptFile[]" multiple="multiple" [showCancelButton]="false" [showUploadButton]="false" customUpload="true" (onSelect)="fileUpload($event,'customerTaxExemptFile')">
-                                                </p-fileUpload>
-                                                <div class="table-responsive table-overflow">
-                                                    <h4 class="panel-title" style="padding-left: 10px;">Attachment Details:</h4>
-                                                    <table class="table table-bordered ">
-                                                        <thead>
-                                                            <tr>
-                                                                <th>File Name</th>
-                                                                <th>Download</th>
-                                                                <th>Delete</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody *ngFor="let f of allCustomerFinanceDocumentsList">
-                                                            <tr *ngIf="f.description == 'customerTaxExemptFile'">
-                                                                <td>{{f.fileName}}</td>
-                                                                <td><a (click)="downloadFileUpload(f)" matTooltip="Download" class="btn nobg btn-cstm"><span><i class="fa fa-download"></i></span></a> </td>
-                                                                <td>
-                                                                    <button moduleName="app-customer-edit" requirePermission="canDelete"
-                                                                            class="btn-delete" mat-icon-button matTooltip="Delete"
-                                                                            (click)="CustomerAttachmentDelete(f)">
-                                                                        <mat-icon color="warn">delete</mat-icon>
-                                                                    </button>
-                                                                </td>
-                                                            </tr>
-                                                        </tbody>
-
-                                                    </table>
-                                                </div>
-
-                                            </div>
+                                            </div>                                           
                                         </div>
 
                                     <div class="col-md-2">
@@ -255,12 +213,96 @@
                                             </p-table>
                                         </div><!--Card of Tax Types-->
                                     </div>
+                                    <div class="col-md-5">
+                                        <div class="form-group" style="margin-top: 15px;">
+                                            <span class="checkbox-cstm">
+                                                <label>
+                                                    <input type="checkbox" name="isTaxExempt" [(ngModel)]="savedGeneralInformationData.isTaxExempt">
+                                                    <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                                    Tax Exempt
+                                                </label>
+                                            </span>
+                                        </div>
+                                        <div class="form-group tax-certificate" *ngIf="savedGeneralInformationData.isTaxExempt">
+                                            <label>Attach Certificate</label>
+                                            <p-fileUpload #taxExemptFileUploadInput name="customerTaxExemptFile[]" multiple="multiple" [showCancelButton]="false" [showUploadButton]="false" customUpload="true" (onSelect)="fileUpload($event,'customerTaxExemptFile')">
+                                            </p-fileUpload>
+                                            <div class="table-responsive table-overflow"  *ngIf="allCustomerFinanceDocumentsList.length > 0">
+                                                <h4 class="panel-title" style="padding-left: 10px;">Attachment Details:</h4>
+                                                <p-table #table3 class="table-responsive ptable-cus-pma" [paginator]="allCustomerFinanceDocumentsList.length > 0" [value]="allCustomerFinanceDocumentsList"  [rows]="3" [columns]="taxExemptTableColumns">
+                                                    <ng-template pTemplate="header" let-columns>
+                                                        <tr>
+                                                            <th >
+                                                                File Name
+                                                            </th>
+                                                            <th >
+                                                                Download
+                                                            </th>
+                                                            <th >
+                                                                Delete
+                                                            </th>
+                                                        </tr>
+                                                    </ng-template>
+                                                    <ng-template pTemplate="body" let-part let-rowData let-columns="columns" let-i="rowIndex">
+                                                        <tr [ngClass]="{'row-primary': part.isDefaultContact === true}">
+                                                            <td *ngFor="let col of columns">
+                                                                <ng-container *ngIf="col.field=='fileName'">
+                                                                    {{part[col.field]}}
+                                                                </ng-container>
+                                                            </td>
+                                                            <td><a (click)="downloadFileUpload(part)" matTooltip="Download" class="btn nobg btn-cstm"><span><i class="fa fa-download"></i></span></a> </td>
+                                                        <td>
+                                                            <button moduleName="app-customer-edit" requirePermission="canDelete"
+                                                                    class="btn-delete" mat-icon-button matTooltip="Delete"
+                                                                    (click)="CustomerAttachmentDelete(part)">
+                                                                <mat-icon color="warn">delete</mat-icon>
+                                                            </button>
+                                                        </td>
+
+                                                        </tr>
+                                                    </ng-template>
+                                                    <ng-template pTemplate="emptymessage" let-columns *ngIf="allCustomerFinanceDocumentsList.length == 0">
+                                                        <tr>
+                                                            <td [attr.colspan]="columns.length" style="color: red; font-weight: bold; text-align: center">
+                                                                No records found
+                                                            </td>
+                                                        </tr>
+                                                    </ng-template>
+
+                                                </p-table>
+
+                                                <!-- <table class="table table-bordered">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>File Name</th>
+                                                            <th>Download</th>
+                                                            <th>Delete</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody *ngFor="let f of allCustomerFinanceDocumentsList">
+                                                        <tr *ngIf="f.description == 'customerTaxExemptFile'">
+                                                            <td>{{f.fileName}}</td>
+                                                            <td><a (click)="downloadFileUpload(f)" matTooltip="Download" class="btn nobg btn-cstm"><span><i class="fa fa-download"></i></span></a> </td>
+                                                            <td>
+                                                                <button moduleName="app-customer-edit" requirePermission="canDelete"
+                                                                        class="btn-delete" mat-icon-button matTooltip="Delete"
+                                                                        (click)="CustomerAttachmentDelete(f)">
+                                                                    <mat-icon color="warn">delete</mat-icon>
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+
+                                                </table> -->
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
                         </div>
-                        <button type="button" class="btn btn-primary-cstm pull-right submit-btn" [disabled]="!financialInfoForm.valid" (click)="saveFinancialInformation();">Save & Next</button>
-                        <button type="button" class="btn btn-primary-cstm pull-right submit-btn" (click)="backClick()">Previous</button>
+                        <button type="button" class="btn btn-primary pull-right submit-btn" [disabled]="!financialInfoForm.valid" (click)="saveFinancialInformation();">Save & Next</button>
+                        <button type="button" class="btn btn-primary pull-right submit-btn" (click)="backClick()">Previous</button>
                     </div>
 
                 </form>
@@ -319,8 +361,8 @@
                 </div>
                 <div class="modal-footer">
 
-                    <button class="btn btn-primary-cstm" data-dismiss="modal" (click)="saveMarkUpPercentage()" [disabled]="addNewIntergration.markUpValue ! == '' ">Submit</button>
-                    <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="restMarkUpPopUp()">Close</button>
+                    <button class="btn btn-primary" data-dismiss="modal" (click)="saveMarkUpPercentage()" [disabled]="addNewIntergration.markUpValue ! == '' ">Submit</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="restMarkUpPopUp()">Close</button>
 
                 </div>
             </div>
@@ -441,9 +483,9 @@
                             </div>
                     <div class="modal-footer">
                       
-                        <button class="btn btn-primary-cstm" data-dismiss="modal" (click)="newCreditTermAdd()" [disabled]="!addCredit.valid || isCreditTermsExists">Submit</button>
+                        <button class="btn btn-primary" data-dismiss="modal" (click)="newCreditTermAdd()" [disabled]="!addCredit.valid || isCreditTermsExists">Submit</button>
 
-                        <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="resetCreditTermsPopUp()">Close</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="resetCreditTermsPopUp()">Close</button>
                     </div>
                         </div>
 
@@ -490,8 +532,8 @@
                             </div>
                             <div class="modal-footer">
 
-                                <button class="btn btn-primary-cstm" data-dismiss="modal" (click)="newDiscountAdd()" [disabled]="!discount.valid || isDiscountExists">Submit</button>
-                                <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="restDiscount()">Close</button>
+                                <button class="btn btn-primary" data-dismiss="modal" (click)="newDiscountAdd()" [disabled]="!discount.valid || isDiscountExists">Submit</button>
+                                <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="restDiscount()">Close</button>
 
                             </div>
                         </div>
@@ -553,10 +595,10 @@
                             </div>
                             </div>
                             <div class="modal-footer">
-                                <button class="btn btn-primary-cstm" data-dismiss="modal" (click)="newTaxTypeAdd()" [disabled]="!addTaxTypes.valid || isTaxTypeExists">Submit</button>
+                                <button class="btn btn-primary" data-dismiss="modal" (click)="newTaxTypeAdd()" [disabled]="!addTaxTypes.valid || isTaxTypeExists">Submit</button>
 
 
-                                <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="resetTaxType()">Close</button>
+                                <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="resetTaxType()">Close</button>
                             </div>
                         </div>
                     </div>
@@ -601,9 +643,9 @@
 
                             </div>
                             <div class="modal-footer">
-                                <button class="btn btn-primary-cstm" data-dismiss="modal" (click)="newTaxRateAdd()" [disabled]="!addTaxRates.valid  || isTaxRateExists">Submit</button>
+                                <button class="btn btn-primary" data-dismiss="modal" (click)="newTaxRateAdd()" [disabled]="!addTaxRates.valid  || isTaxRateExists">Submit</button>
 
-                                <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="resetTaxRate()">Close</button>
+                                <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="resetTaxRate()">Close</button>
 
                             </div>
                         </div>
@@ -646,9 +688,9 @@
                         </div>
                         </div>
                     <div class="modal-footer">
-                        <button class="btn btn-primary-cstm" data-dismiss="modal" (click)="newTaxRateAdd()" [disabled]="!admarkup.valid  || isTaxRateExists">Submit</button>
+                        <button class="btn btn-primary" data-dismiss="modal" (click)="newTaxRateAdd()" [disabled]="!admarkup.valid  || isTaxRateExists">Submit</button>
 
-                        <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="resetTaxRate()">Close</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="resetTaxRate()">Close</button>
 
                     </div>
                 </div>

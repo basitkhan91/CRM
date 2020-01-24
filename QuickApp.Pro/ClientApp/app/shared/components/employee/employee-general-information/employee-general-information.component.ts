@@ -550,22 +550,21 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 
         this.sourceEmployee.startDate = this.empCreationForm.get('startDate').value;
         this.sourceEmployee.SupervisorId = this.supervisorId;
+        
+//debugger
+//this.selectedshiftValues.push(this.sourceEmployee.shifId);
+//this.sourceEmployee.ShiftId = this.selectedshiftValues;
 
-
-        this.selectedshiftValues.push(this.sourceEmployee.shifId);
-
-
-
-        console.log("hourlyPay:" + this.sourceEmployee.hourlyPay);
-        console.log("isHourly:" + this.sourceEmployee.isHourly);
-
-
-        this.sourceEmployee.ShiftId = this.selectedshiftValues;
-
-
-
-
-
+        if(this.sourceEmployee.inMultipleShifts)
+        {            
+            this.sourceEmployee.ShiftId = this.selectedshiftValues;
+        }
+        else{           
+            this.selectedshiftValues= [];
+            this.selectedshiftValues.push(this.sourceEmployee.shifId);
+            this.sourceEmployee.ShiftId = this.selectedshiftValues;
+           
+        }
 
         if (this.hourly) {
 
@@ -736,47 +735,34 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
     }
 
     employeeShifttypeUpdate(empId) {
-        console.log(empId);
-        console.log(this.selectedshiftValues);
-
-        console.log(this.sessionShiftValues);
+        
       //  this.removeEmployeeShiftValues();
         for (var i = 0; i < this.selectedshiftValues.length; i++) {
 
-            var selectedLevae = this.selectedshiftValues[i];
-            console.log("selectedShift" + selectedLevae);
+            var selectedLevae = this.selectedshiftValues[i];           
             var sessionValues = this.sessionShiftValues;
-
             if (sessionValues.indexOf(selectedLevae) !== -1) {
 
                 if (selectedLevae != 0) {
                     this.newShiftValuetobeAdded(selectedLevae);
 
-                }
-              
-                console.log("value shift exists");
+                }              
+               
             } else {
 
                 if (selectedLevae != 0) {
                     this.newShiftValuetobeAdded(selectedLevae);
-                }
-
-            
-                console.log("value shift Does notexists");
+                }              
                 //alert("Value does not exists!")
             };
 
-        }
-
-        console.log("this.selectedshiftValues" + this.selectedshiftValues);
+        }       
 
     }
 
 
     newShiftValuetobeAdded(selectedLevae) {
-
-        console.log("shift value to be added" + selectedLevae)
-
+      
         if (selectedLevae !=null) {
             this.sourceEmployee.ShiftTypeId = selectedLevae;
             this.sourceEmployee.EmployeeId = this.sourceEmployee.employeeId;
@@ -800,12 +786,12 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
   
         this.removeEmployeeLevaes();
        
-        console.log("selectedLevae" + selectedLevae);
+      
 
         for (var i = 0; i < this.selectedLeaveValues.length; i++) {
 
             var selectedLevae = this.selectedLeaveValues[i];
-            console.log("selectedLevae" + selectedLevae);
+          
             var sessionValues = this.sessionLeaveValues;
        
 
@@ -820,11 +806,8 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 
 
         }
-
-        
-        console.log("selectedLeave Value session" +this.sessionLeaveValues);
-        console.log("selectedLeave Value"+this.selectedLeaveValues);
-        console.log(empId);
+       
+       
 
         var arr = this.sessionLeaveValues;
         var check = this.selectedLeaveValues;
@@ -837,7 +820,7 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 
     newValuetobeAdded(selectedLevae) {
 
-        console.log(selectedLevae + "new entity to be added");
+      
 
         this.sourceEmployee.LeaveTypeId = selectedLevae;
         this.sourceEmployee.EmployeeId = this.sourceEmployee.employeeId;
@@ -856,14 +839,10 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 
 
     employeeShifttypeAdd(employeeId) {
-
-
-        console.log("shiftValuesLength:" + this.selectedshiftValues.length);
+      
 
         for (var i = 0; i < this.selectedshiftValues.length; i++) {
-            console.log("i" + i);
-            console.log("this.shiftValues[i]" + this.selectedshiftValues[i]);
-
+          
             var shiftTypeId = this.selectedshiftValues[i];
 
             if (shiftTypeId != null) {
@@ -893,11 +872,9 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 
         this.selectedLeaveValues;
 
-        console.log("Length:" + this.selectedLeaveValues.length);
+       
 
-        for (var i = 0; i < this.selectedLeaveValues.length; i++) {
-            console.log("i" + i);
-            console.log("this.selectedLeaveValues[i]" + this.selectedLeaveValues[i]);
+        for (var i = 0; i < this.selectedLeaveValues.length; i++) {           
 
             var leaveTypeId = this.selectedLeaveValues[i];
 
@@ -971,12 +948,10 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
         //this.sourceEmployee.reser
 
         if (res.employeeId) {
-            this.empId = res.employeeId;
-            console.log(res.employeeId);
+            this.empId = res.employeeId;           
             this.firstName = res.firstName;
             this.lastName = res.lastName;
-
-            console.log(this.empId);
+           
             this.showTitle = 'Employee Added Sucessfully';
 
             ///this.sourceEmployee.reset();
@@ -1038,7 +1013,6 @@ export class EmployeeGeneralInformationComponent implements OnInit, AfterViewIni
 
     //     }
     // }
-
 
 
     ngAfterViewInit() {

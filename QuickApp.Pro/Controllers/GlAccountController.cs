@@ -103,6 +103,16 @@ namespace QuickApp.Pro.Controllers
 
         }
 
+        [HttpDelete("DeleteGLAccount/{id}")]
+        public IActionResult DeleteGLAccount(long id)
+        {
+            var existingResult = unitOfWork.gLAccount.GetSingleOrDefault(c => c.GLAccountId == id);
+            existingResult.IsDelete = true;
+            unitOfWork.gLAccount.Update(existingResult);
+            unitOfWork.SaveChanges();
+            return Ok(id);
+        }
+
         private string GetLedgerName(long? id)
         {
             return unitOfWork.Repository<GLAccountNode>().Find(x => x.GLAccountNodeId == id).FirstOrDefault().LedgerName;

@@ -1496,7 +1496,7 @@ namespace DAL.Repositories
             if (AircraftTypeId != null && AircraftModelId != null && myDashNumberId != null && memo != null)
             {
                 var data = (from cam in _appContext.CustomerAircraftMapping
-                            where cam.CustomerId == CustomerId && myAircraftTypeId.Contains(cam.AircraftTypeId) && myAircraftModelId.Contains(cam.AircraftModelId) && myDashNumberId.Contains(cam.DashNumberId) && memo.Contains(cam.Memo) && cam.IsDeleted != true
+                            where cam.CustomerId == CustomerId && myAircraftTypeId.Contains(cam.AircraftTypeId) && myAircraftModelId.Contains(cam.AircraftModelId) && myDashNumberId.Contains(cam.DashNumberId) && cam.Memo.Contains(memo) && cam.IsDeleted != true
                             select new { cam.CustomerAircraftMappingId, cam.CustomerId, cam.AircraftTypeId, cam.AircraftModelId, cam.DashNumberId, cam.DashNumber, cam.AircraftType, cam.AircraftModel, cam.Memo, cam.Inventory, cam.MasterCompanyId }).ToList();
                 var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
                 return uniquedata;
@@ -1509,10 +1509,18 @@ namespace DAL.Repositories
                 var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
                 return uniquedata;
             }
-            else if (AircraftTypeId != null && AircraftModelId != null && myDashNumberId == null)
+            else if (AircraftTypeId != null && AircraftModelId != null && myDashNumberId == null && memo == null)
             {
                 var data = (from cam in _appContext.CustomerAircraftMapping
                             where cam.CustomerId == CustomerId && myAircraftTypeId.Contains(cam.AircraftTypeId) && myAircraftModelId.Contains(cam.AircraftModelId) && cam.IsDeleted != true
+                            select new { cam.CustomerAircraftMappingId, cam.CustomerId, cam.AircraftTypeId, cam.AircraftModelId, cam.DashNumberId, cam.DashNumber, cam.AircraftType, cam.AircraftModel, cam.Memo, cam.Inventory, cam.MasterCompanyId }).ToList();
+                var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
+                return uniquedata;
+            }
+            else if (AircraftTypeId != null && AircraftModelId != null && myDashNumberId == null && memo != null)
+            {
+                var data = (from cam in _appContext.CustomerAircraftMapping
+                            where cam.CustomerId == CustomerId && myAircraftTypeId.Contains(cam.AircraftTypeId) && myAircraftModelId.Contains(cam.AircraftModelId) && cam.Memo.Contains(memo) && cam.IsDeleted != true
                             select new { cam.CustomerAircraftMappingId, cam.CustomerId, cam.AircraftTypeId, cam.AircraftModelId, cam.DashNumberId, cam.DashNumber, cam.AircraftType, cam.AircraftModel, cam.Memo, cam.Inventory, cam.MasterCompanyId }).ToList();
                 var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
                 return uniquedata;
@@ -1521,6 +1529,14 @@ namespace DAL.Repositories
             {
                 var data = (from cam in _appContext.CustomerAircraftMapping
                             where cam.CustomerId == CustomerId && myAircraftTypeId.Contains(cam.AircraftTypeId) && cam.IsDeleted != true
+                            select new { cam.CustomerAircraftMappingId, cam.CustomerId, cam.AircraftTypeId, cam.AircraftModelId, cam.DashNumberId, cam.DashNumber, cam.AircraftType, cam.AircraftModel, cam.Memo, cam.Inventory, cam.MasterCompanyId }).ToList();
+                var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
+                return uniquedata;
+            }
+            else if (AircraftTypeId != null && myAircraftModelId == null && myDashNumberId == null && memo != null)
+            {
+                var data = (from cam in _appContext.CustomerAircraftMapping
+                            where cam.CustomerId == CustomerId && myAircraftTypeId.Contains(cam.AircraftTypeId) && cam.Memo.Contains(memo) && cam.IsDeleted != true
                             select new { cam.CustomerAircraftMappingId, cam.CustomerId, cam.AircraftTypeId, cam.AircraftModelId, cam.DashNumberId, cam.DashNumber, cam.AircraftType, cam.AircraftModel, cam.Memo, cam.Inventory, cam.MasterCompanyId }).ToList();
                 var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
                 return uniquedata;
@@ -1560,7 +1576,7 @@ namespace DAL.Repositories
             else if (AircraftTypeId == null && myAircraftModelId == null && myDashNumberId == null && memo != null)
             {
                 var data = (from cam in _appContext.CustomerAircraftMapping
-                            where cam.CustomerId == CustomerId && memo.Contains(cam.Memo) && cam.IsDeleted != true
+                            where cam.CustomerId == CustomerId && cam.Memo.Contains(memo) && cam.IsDeleted != true
                             select new { cam.CustomerAircraftMappingId, cam.CustomerId, cam.AircraftTypeId, cam.AircraftModelId, cam.DashNumberId, cam.DashNumber, cam.AircraftType, cam.AircraftModel, cam.Memo, cam.Inventory, cam.MasterCompanyId }).ToList();
                 var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
                 return uniquedata;
@@ -1568,7 +1584,7 @@ namespace DAL.Repositories
             else if (myAircraftModelId != null && myDashNumberId != null && memo != null)
             {
                 var data = (from cam in _appContext.CustomerAircraftMapping
-                            where cam.CustomerId == CustomerId && memo.Contains(cam.Memo) && myAircraftModelId.Contains(cam.AircraftModelId) && myDashNumberId.Contains(cam.DashNumberId) && cam.IsDeleted != true
+                            where cam.CustomerId == CustomerId && cam.Memo.Contains(memo) && myAircraftModelId.Contains(cam.AircraftModelId) && myDashNumberId.Contains(cam.DashNumberId) && cam.IsDeleted != true
                             select new { cam.CustomerAircraftMappingId, cam.CustomerId, cam.AircraftTypeId, cam.AircraftModelId, cam.DashNumberId, cam.DashNumber, cam.AircraftType, cam.AircraftModel, cam.Memo, cam.Inventory, cam.MasterCompanyId }).ToList();
                 var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
                 return uniquedata;
@@ -1576,7 +1592,7 @@ namespace DAL.Repositories
             else if (myAircraftModelId != null && memo != null)
             {
                 var data = (from cam in _appContext.CustomerAircraftMapping
-                            where cam.CustomerId == CustomerId && memo.Contains(cam.Memo) && myAircraftModelId.Contains(cam.AircraftModelId) && cam.IsDeleted != true
+                            where cam.CustomerId == CustomerId && cam.Memo.Contains(memo) && myAircraftModelId.Contains(cam.AircraftModelId) && cam.IsDeleted != true
                             select new { cam.CustomerAircraftMappingId, cam.CustomerId, cam.AircraftTypeId, cam.AircraftModelId, cam.DashNumberId, cam.DashNumber, cam.AircraftType, cam.AircraftModel, cam.Memo, cam.Inventory, cam.MasterCompanyId }).ToList();
                 var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
                 return uniquedata;
@@ -1585,7 +1601,7 @@ namespace DAL.Repositories
             else if (myDashNumberId != null && memo != null)
             {
                 var data = (from cam in _appContext.CustomerAircraftMapping
-                            where cam.CustomerId == CustomerId && memo.Contains(cam.Memo) && myDashNumberId.Contains(cam.DashNumberId) && cam.IsDeleted != true
+                            where cam.CustomerId == CustomerId && cam.Memo.Contains(memo) && myDashNumberId.Contains(cam.DashNumberId) && cam.IsDeleted != true
                             select new { cam.CustomerAircraftMappingId, cam.CustomerId, cam.AircraftTypeId, cam.AircraftModelId, cam.DashNumberId, cam.DashNumber, cam.AircraftType, cam.AircraftModel, cam.Memo, cam.Inventory, cam.MasterCompanyId }).ToList();
                 var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
                 return uniquedata;
@@ -1614,54 +1630,104 @@ namespace DAL.Repositories
             if (ATAChapterId != null && ATASubChapterID != null && contactId != null)
             {
                 var data = (from cATA in _appContext.CustomerContactATAMapping
+                            join cont in _appContext.CustomerContact on cATA.CustomerContactId equals cont.ContactId
+                            join contt in _appContext.Contact on cont.ContactId equals contt.ContactId into conttt
+                            from contt in conttt.DefaultIfEmpty()
+
                             where cATA.CustomerId == customerId && myATAChapterId.Contains(cATA.ATAChapterId) && myATASubChapterID.Contains(cATA.ATASubChapterId) && mycontactID.Contains(cATA.CustomerContactId) && cATA.IsDeleted != true
-                            select new { cATA.CustomerContactATAMappingId, cATA.CustomerId, cATA.ATAChapterId, cATA.ATAChapterCode, cATA.ATAChapterName, cATA.ATASubChapterId, cATA.ATASubChapterDescription }).ToList();
-                var uniquedata = data.GroupBy(item => new { item.ATAChapterId, item.ATASubChapterId }).Select(group => group.First()).ToList();
-                return uniquedata;
+                            select new { cATA.CustomerContactATAMappingId, cATA.CustomerId, cATA.ATAChapterId, cATA.ATAChapterCode, cATA.ATAChapterName, cATA.ATASubChapterId, cATA.ATASubChapterDescription, contt.FirstName ,contt.ContactId}).ToList();
+                //var uniquedata = data.GroupBy(item => new { item.ATAChapterId, item.ATASubChapterId }).Select(group => group.First()).ToList();
+                return data;
+            }
+            else if (ATAChapterId != null && ATASubChapterID == null && contactId == null)
+            {
+                var data = (from cATA in _appContext.CustomerContactATAMapping
+                            join cont in _appContext.CustomerContact on cATA.CustomerContactId equals cont.ContactId
+                            join contt in _appContext.Contact on cont.ContactId equals contt.ContactId into conttt
+                            from contt in conttt.DefaultIfEmpty()
+
+                            where cATA.CustomerId == customerId && myATAChapterId.Contains(cATA.ATAChapterId) && cATA.IsDeleted != true
+                            select new { cATA.CustomerContactATAMappingId, cATA.CustomerId, cATA.ATAChapterId, cATA.ATAChapterCode, cATA.ATAChapterName, cATA.ATASubChapterId, cATA.ATASubChapterDescription, contt.FirstName, contt.ContactId }).ToList();
+                //var uniquedata = data.GroupBy(item => new { item.ATAChapterId, item.ATASubChapterId }).Select(group => group.First()).ToList();
+                return data;
+
             }
             else if (ATAChapterId != null && ATASubChapterID == null && contactId != null)
             {
                 var data = (from cATA in _appContext.CustomerContactATAMapping
+                            join cont in _appContext.CustomerContact on cATA.CustomerContactId equals cont.ContactId
+                            join contt in _appContext.Contact on cont.ContactId equals contt.ContactId into conttt
+                            from contt in conttt.DefaultIfEmpty()
+
                             where cATA.CustomerId == customerId && myATAChapterId.Contains(cATA.ATAChapterId) && mycontactID.Contains(cATA.CustomerContactId) && cATA.IsDeleted != true
-                            select new { cATA.CustomerContactATAMappingId, cATA.CustomerId, cATA.ATAChapterId, cATA.ATAChapterCode, cATA.ATAChapterName, cATA.ATASubChapterId, cATA.ATASubChapterDescription }).ToList();
-                var uniquedata = data.GroupBy(item => new { item.ATAChapterId, item.ATASubChapterId }).Select(group => group.First()).ToList();
-                return uniquedata;
+                            select new { cATA.CustomerContactATAMappingId, cATA.CustomerId, cATA.ATAChapterId, cATA.ATAChapterCode, cATA.ATAChapterName, cATA.ATASubChapterId, cATA.ATASubChapterDescription,contt.FirstName,contt.ContactId }).ToList();
+                //var uniquedata = data.GroupBy(item => new { item.ATAChapterId, item.ATASubChapterId }).Select(group => group.First()).ToList();
+                return data;
 
             }
             else if (ATAChapterId == null && ATASubChapterID != null && contactId != null)
             {
                 var data = (from cATA in _appContext.CustomerContactATAMapping
+                            join cont in _appContext.CustomerContact on cATA.CustomerContactId equals cont.ContactId
+                            join contt in _appContext.Contact on cont.ContactId equals contt.ContactId into conttt
+                            from contt in conttt.DefaultIfEmpty()
+
                             where cATA.CustomerId == customerId && myATASubChapterID.Contains(cATA.ATASubChapterId) && mycontactID.Contains(cATA.CustomerContactId) && cATA.IsDeleted != true
-                            select new { cATA.CustomerContactATAMappingId, cATA.CustomerId, cATA.ATAChapterId, cATA.ATAChapterCode, cATA.ATAChapterName, cATA.ATASubChapterId, cATA.ATASubChapterDescription }).ToList();
-                var uniquedata = data.GroupBy(item => new { item.ATAChapterId, item.ATASubChapterId }).Select(group => group.First()).ToList();
-                return uniquedata;
+                            select new { cATA.CustomerContactATAMappingId, cATA.CustomerId, cATA.ATAChapterId, cATA.ATAChapterCode, cATA.ATAChapterName, cATA.ATASubChapterId, cATA.ATASubChapterDescription , contt.FirstName, contt.ContactId }).ToList();
+                //var uniquedata = data.GroupBy(item => new { item.ATAChapterId, item.ATASubChapterId }).Select(group => group.First()).ToList();
+                return data;
 
             }
             else if (ATAChapterId == null && ATASubChapterID != null && contactId == null)
             {
                 var data = (from cATA in _appContext.CustomerContactATAMapping
+                            join cont in _appContext.CustomerContact on cATA.CustomerContactId equals cont.ContactId
+                            join contt in _appContext.Contact on cont.ContactId equals contt.ContactId into conttt
+                            from contt in conttt.DefaultIfEmpty()
+
                             where cATA.CustomerId == customerId && myATASubChapterID.Contains(cATA.ATASubChapterId) && cATA.IsDeleted != true
-                            select new { cATA.CustomerContactATAMappingId, cATA.CustomerId, cATA.ATAChapterId, cATA.ATAChapterCode, cATA.ATAChapterName, cATA.ATASubChapterId, cATA.ATASubChapterDescription }).ToList();
-                var uniquedata = data.GroupBy(item => new { item.ATAChapterId, item.ATASubChapterId }).Select(group => group.First()).ToList();
-                return uniquedata;
+                            select new { cATA.CustomerContactATAMappingId, cATA.CustomerId, cATA.ATAChapterId, cATA.ATAChapterCode, cATA.ATAChapterName, cATA.ATASubChapterId, cATA.ATASubChapterDescription, contt.FirstName, contt.ContactId }).ToList();
+                //var uniquedata = data.GroupBy(item => new { item.ATAChapterId, item.ATASubChapterId }).Select(group => group.First()).ToList();
+                return data;
 
             }
             else if (ATAChapterId != null && ATASubChapterID != null && contactId == null)
             {
                 var data = (from cATA in _appContext.CustomerContactATAMapping
+                            join cont in _appContext.CustomerContact on cATA.CustomerContactId equals cont.ContactId
+                            join contt in _appContext.Contact on cont.ContactId equals contt.ContactId into conttt
+                            from contt in conttt.DefaultIfEmpty()
+
                             where cATA.CustomerId == customerId && myATAChapterId.Contains(cATA.ATAChapterId) && myATASubChapterID.Contains(cATA.ATASubChapterId) && cATA.IsDeleted != true
-                            select new { cATA.CustomerContactATAMappingId, cATA.CustomerId, cATA.ATAChapterId, cATA.ATAChapterCode, cATA.ATAChapterName, cATA.ATASubChapterId, cATA.ATASubChapterDescription }).ToList();
-                var uniquedata = data.GroupBy(item => new { item.ATAChapterId, item.ATASubChapterId }).Select(group => group.First()).ToList();
-                return uniquedata;
+                            select new { cATA.CustomerContactATAMappingId, cATA.CustomerId, cATA.ATAChapterId, cATA.ATAChapterCode, cATA.ATAChapterName, cATA.ATASubChapterId, cATA.ATASubChapterDescription, contt.FirstName, contt.ContactId }).ToList();
+                //var uniquedata = data.GroupBy(item => new { item.ATAChapterId, item.ATASubChapterId }).Select(group => group.First()).ToList();
+                return data;
+
+            }
+            else if (ATAChapterId == null && ATASubChapterID == null && contactId != null)
+            {
+                var data = (from cATA in _appContext.CustomerContactATAMapping
+                            join cont in _appContext.CustomerContact on cATA.CustomerContactId equals cont.ContactId
+                            join contt in _appContext.Contact on cont.ContactId equals contt.ContactId into conttt
+                            from contt in conttt.DefaultIfEmpty()
+
+                            where cATA.CustomerId == customerId && mycontactID.Contains(cATA.CustomerContactId)  && cATA.IsDeleted != true
+                            select new { cATA.CustomerContactATAMappingId, cATA.CustomerId, cATA.ATAChapterId, cATA.ATAChapterCode, cATA.ATAChapterName, cATA.ATASubChapterId, cATA.ATASubChapterDescription, contt.FirstName, contt.ContactId }).ToList();
+                //var uniquedata = data.GroupBy(item => new { item.ATAChapterId, item.ATASubChapterId }).Select(group => group.First()).ToList();
+                return data;
 
             }
             else
             {
                 var data = (from cATA in _appContext.CustomerContactATAMapping
-                            where cATA.CustomerContactId == customerId && cATA.IsDeleted != true
-                            select new { cATA.CustomerContactATAMappingId, cATA.CustomerId, cATA.ATAChapterId, cATA.ATAChapterCode, cATA.ATAChapterName, cATA.ATASubChapterId, cATA.ATASubChapterDescription }).ToList();
-                var uniquedata = data.GroupBy(item => new { item.ATAChapterId, item.ATASubChapterId }).Select(group => group.First()).ToList();
-                return uniquedata;
+                            join cont in _appContext.CustomerContact on cATA.CustomerContactId equals cont.ContactId
+                            join contt in _appContext.Contact on cont.ContactId equals contt.ContactId into conttt
+                            from contt in conttt.DefaultIfEmpty()
+
+                            where cATA.CustomerId == customerId && cATA.IsDeleted != true
+                            select new { cATA.CustomerContactATAMappingId, cATA.CustomerId, cATA.ATAChapterId, cATA.ATAChapterCode, cATA.ATAChapterName, cATA.ATASubChapterId, cATA.ATASubChapterDescription, contt.FirstName, contt.ContactId }).ToList();
+                //var uniquedata = data.GroupBy(item => new { item.ATAChapterId, item.ATASubChapterId }).Select(group => group.First()).ToList();
+                return data;
 
             }
         }
@@ -1770,21 +1836,10 @@ namespace DAL.Repositories
         ///  Added By vijay on 12/11/2019
         /// </summary>
         /// <param name="objCustomer"></param>
-        public void AddCustomerShippingAddress(Customer objCustomer)
+        public long AddCustomerShippingAddress(Customer objCustomer)
         {
-            // CustomerShippingAddress objCustomerShippingAddress = new CustomerShippingAddress();
-            // var shippingaddress = _appContext.CustomerShippingAddress.GetSingleOrDefault(a => a.AddressId == objCustomer.AddressId && a.CustomerId == objCustomer.CustomerId);
-            //var shipping = _appContext.CustomerShippingAddress
-            //         .Where(p => p.AddressId == objCustomer.AddressId && p.CustomerId == objCustomer.CustomerId).FirstOrDefault();
-
-
-
-
-
-            //if (objCustomerShippingAddress.CustomerShippingAddressId > 0)
-            //{
-            //_appContext.CustomerShippingAddress.detch
-            CustomerShippingAddress data = _appContext.CustomerShippingAddress.AsNoTracking().Where(p => p.AddressId == objCustomer.AddressId && p.CustomerId == objCustomer.CustomerId).FirstOrDefault();
+            long shippingAddressId = 0;
+                    CustomerShippingAddress data = _appContext.CustomerShippingAddress.AsNoTracking().Where(p => p.AddressId == objCustomer.AddressId && p.CustomerId == objCustomer.CustomerId).FirstOrDefault();
             //_appContext.CustomerShippingAddress.detach(objCustomerShippingAddress);
             if (data != null)
             {
@@ -1802,6 +1857,9 @@ namespace DAL.Repositories
                     data.IsPrimary = true;
                     data.IsDelete = false;
                     _appContext.CustomerShippingAddress.Update(data);
+                    _appContext.SaveChanges();
+
+                    shippingAddressId = Convert.ToInt64(data.CustomerShippingAddressId);
                 }
             }
             else
@@ -1821,11 +1879,15 @@ namespace DAL.Repositories
                 objCustomerShippingAddress.IsDelete = false;
 
                 _appContext.CustomerShippingAddress.Add(objCustomerShippingAddress);
+                _appContext.SaveChanges();
+                shippingAddressId = Convert.ToInt64(objCustomerShippingAddress.CustomerShippingAddressId);
+
+
             }
 
-            _appContext.SaveChanges();
 
-            // return objCustomerShippingAddress;
+
+            return shippingAddressId;
         }
 
 
@@ -1838,8 +1900,9 @@ namespace DAL.Repositories
         /// Added By vijay on 12/11/2019
         /// </summary>
         /// <param name="objCustomer"></param>
-        public void AddCustomerBillinggAddress(Customer objCustomer)
+        public long AddCustomerBillinggAddress(Customer objCustomer)
         {
+            long billingAddressId = 0;
             CustomerBillingAddress data = _appContext.CustomerBillingAddress.AsNoTracking().Where(p => p.AddressId == objCustomer.AddressId && p.CustomerId == objCustomer.CustomerId).FirstOrDefault();
 
             if (data != null)
@@ -1858,6 +1921,10 @@ namespace DAL.Repositories
                     data.IsActive = true;
                     data.IsDelete = false;
                     _appContext.CustomerBillingAddress.Update(data);
+                    _appContext.SaveChanges();
+
+                    billingAddressId = Convert.ToInt64(data.CustomerBillingAddressId);
+
                 }
             }
             else
@@ -1877,35 +1944,15 @@ namespace DAL.Repositories
                 objCustomerBillingAddress.IsDelete = false;
 
                 _appContext.CustomerBillingAddress.Add(objCustomerBillingAddress);
+                _appContext.SaveChanges();
+
+                billingAddressId = Convert.ToInt64(objCustomerBillingAddress.CustomerBillingAddressId);
+
             }
 
-            _appContext.SaveChanges();
+             return billingAddressId;
 
-            // CustomerBillingAddress objCustomerBillingAddress = new CustomerBillingAddress();
 
-            //objCustomerBillingAddress.CustomerId = objCustomer.CustomerId;
-            //objCustomerBillingAddress.MasterCompanyId = objCustomer.MasterCompanyId;
-            //objCustomerBillingAddress.AddressId = objCustomer.AddressId;
-            //objCustomerBillingAddress.SiteName = objCustomer.CustomerCode;              
-            //objCustomerBillingAddress.CreatedDate = DateTime.Now;
-            //objCustomerBillingAddress.UpdatedDate = DateTime.Now;
-            //objCustomerBillingAddress.CreatedBy = objCustomer.CreatedBy;
-            //objCustomerBillingAddress.UpdatedBy = objCustomer.UpdatedBy;
-            //objCustomerBillingAddress.IsPrimary = true;
-            //objCustomerBillingAddress.IsActive = true;
-            //objCustomerBillingAddress.IsDelete = false;
-
-            //if (objCustomerBillingAddress.CustomerBillingAddressId > 0)
-            //{
-            //    _appContext.CustomerBillingAddress.Update(objCustomerBillingAddress);
-            //}
-            //else
-            //{
-            //    _appContext.CustomerBillingAddress.Add(objCustomerBillingAddress);
-            //}
-
-            //_appContext.SaveChanges();
-            //return objCustomerBillingAddress;
         }
 
 
@@ -2235,6 +2282,8 @@ namespace DAL.Repositories
         {
             try
             {
+             
+
                 CustomerBillingAddress model = new CustomerBillingAddress();
                 model.CustomerBillingAddressId = id;
                 model.UpdatedDate = DateTime.Now;
@@ -2247,6 +2296,9 @@ namespace DAL.Repositories
                 _appContext.Entry(model).Property(x => x.UpdatedBy).IsModified = true;
 
                 _appContext.SaveChanges();
+
+
+              
 
             }
             catch (Exception ex)

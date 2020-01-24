@@ -35,14 +35,14 @@
                                         <div class="form-group">
                                             <label class="control-label" >Balance Type <strong class="clr-red">*</strong></label>
                                             <select class="form-control" formControlName="journalManualBalanceTypeId" [(ngModel)]="currentManualJournel.journalManualBalanceTypeId">
-                                                <option *ngFor="let balanceType of balanceTypes" [ngValue]="balanceType.balanceTypeId" >{{balanceType.balanceTypeName}}</option>
+                                                <option *ngFor="let balanceType of balanceTypes" [ngValue]="balanceType.id" >{{balanceType.description}}</option>
                                             </select>                    
                                         </div>
 
                                         <div class="form-group">
                                             <label class="control-label" >Category <strong class="clr-red">*</strong></label>
                                             <select class="form-control" formControlName="journalManualCategoryId" [(ngModel)]="currentManualJournel.journalManualCategoryId">
-                                                <option *ngFor="let categoryType of categoryTypes" [ngValue]="categoryType.categoryId" >{{categoryType.categoryName}}</option>
+                                                <option *ngFor="let categoryType of categoryTypes" [ngValue]="categoryType.id" >{{categoryType.description}}</option>
                                             </select>                                            
                                         </div>
 
@@ -52,7 +52,7 @@
                                         <div class="form-group">
                                             <label class="control-label" >Journal Type <strong class="clr-red">*</strong></label>
                                             <select class="form-control" formControlName="journalManualTypeId" [(ngModel)]="currentManualJournel.journalManualTypeId">
-                                                <option *ngFor="let journalType of journalTypes" [ngValue]="journalType.journalTypeId" >{{journalType.journalTypeName}}</option>
+                                                <option *ngFor="let journalType of journalTypes" [ngValue]="journalType.id" >{{journalType.description}}</option>
                                             </select>                                            
                                         </div>
 
@@ -153,15 +153,15 @@
                                 </div>
                             
                                 
-                                <button type="submit" class="btn btn-primary-cstm pull-right " (click)="onSubmit('Post');">
+                                <button type="submit" class="btn btn-primary pull-right " (click)="onSubmit('Post');">
                                     Post
                                 </button>
 
-                                <button type="submit" class="btn btn-primary-cstm pull-right " (click)="onSubmit('Submit For Approval');">
+                                <button type="submit" class="btn btn-primary pull-right " (click)="onSubmit('Submit For Approval');">
                                     Submit For Approval
                                 </button>
                                 
-                                <button type="submit" class="btn btn-primary-cstm pull-right " (click)="onSubmit('Save');">
+                                <button type="submit" class="btn btn-primary pull-right " (click)="onSubmit('Save');">
                                     Save
                                 </button>
                         

@@ -17,9 +17,9 @@
                                 <div style="text-align: right;margin-left:-6px !important;">
                                     <p-multiSelect [maxSelectedLabels]="2" [options]="capabilityTypeHeaders" optionLabel="header" [(ngModel)]="selectedColumns"
                                                    [style]="{minWidth: '200px'}" style="float:left" (onChange)="columnsChanges()"></p-multiSelect>
-                                    <button type="button" class="btn btn-primary-cstm " matTooltip="Download Data" matTooltipPosition="above" pButton icon="fa-download"
+                                    <button type="button" class="btn btn-primary " matTooltip="Download Data" matTooltipPosition="above" pButton icon="fa-download"
                                             iconPos="left" label="Export  Data" (click)="dt.exportCSV()"></button>
-                                    <button type="button" class="btn btn-primary-cstm " matTooltip="Download Selected Data" matTooltipPosition="above" pButton icon="fa-download"
+                                    <button type="button" class="btn btn-primary " matTooltip="Download Selected Data" matTooltipPosition="above" pButton icon="fa-download"
                                             iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})"></button>
 
                                     <div class="excel-upload  excel-upload-cstm">
@@ -33,7 +33,7 @@
                                         </label>
                                         &nbsp; &nbsp;
 
-                                        <button class="btn btn-primary-cstm" matTooltip="Download Sample File" matTooltipPosition="above" (click)="sampleExcelDownload()">Sample File Download</button>
+                                        <button class="btn btn-primary" matTooltip="Download Sample File" matTooltipPosition="above" (click)="sampleExcelDownload()">Sample File Download</button>
                                     </div>
                                 </div>
                             </ng-template>
@@ -185,8 +185,8 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                 </form>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-primary-cstm" data-dismiss="modal" [disabled]="addCapabilityTypeForm.invalid || disableSaveForCapabilityType ||disableSaveForCondition || disableSaveForSequence" (click)="saveCapabilityType();"> {{isEdit ? 'Update' : 'Save' }}</button>
-                <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="resetCapabilityTypeForm()">Close</button>
+                <button class="btn btn-primary" data-dismiss="modal" [disabled]="addCapabilityTypeForm.invalid || disableSaveForCapabilityType ||disableSaveForCondition || disableSaveForSequence" (click)="saveCapabilityType();"> {{isEdit ? 'Update' : 'Save' }}</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="resetCapabilityTypeForm()">Close</button>
 
             </div>
         </div>
@@ -263,7 +263,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                 <div class="clear"></div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" id="" name="" (click)="resetViewData()">Close</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal" id="" name="" (click)="resetViewData()">Close</button>
             </div>
         </div>
 
@@ -284,8 +284,8 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                 </strong>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary-cstm" data-dismiss="modal" (click)="deleteConformation('Yes')">Yes</button>
-                <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="deleteConformation('No')">No</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="deleteConformation('Yes')">Yes</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="deleteConformation('No')">No</button>
             </div>
         </div>
 

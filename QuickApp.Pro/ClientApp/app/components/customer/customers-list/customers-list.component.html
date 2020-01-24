@@ -3,7 +3,7 @@
 <div class="card">
     <div class="card-body">
         <div class="inline-block display-flex">
-            <h3 class="po-head lead">Customer List</h3>
+            <h3 class="po-head lead">Customers List</h3>
             &nbsp;&nbsp;&nbsp;&nbsp;
             <a matTooltip="Create Customer"
                class="plusicon-cstm new-margin"
@@ -56,7 +56,7 @@
                             icon="fa-download"
                             iconPos="left"
                             label="Export Data"
-                            style="left:-10px;"
+                            style="left:-10px; padding: 5px 10px !important;"
                             (click)="dt.exportCSV()"></button>
                     <button type="button"
                             class="btn btn-primary "
@@ -65,7 +65,7 @@
                             icon="fa-download"
                             iconPos="left"
                             label="Export Selected Data"
-                            style="left:-10px;"
+                            style="left:-10px; padding: 5px 10px !important;"
                             (click)="dt.exportCSV({ selectionOnly: true })"></button>
                     <button type="button"
                             class="btn btn-primary "
@@ -74,7 +74,7 @@
                             icon="fa-refresh"
                             iconPos="left"
                             label="Refresh"
-                            style="left:-10px;"
+                            style="left:-10px; padding: 5px 10px !important;"
                             (click)="refreshList();"></button>
                 </div>
             </ng-template>
@@ -95,7 +95,7 @@
                         {{ col.header }}
                         <p-sortIcon [field]="col.field"></p-sortIcon>
                     </th>
-                    <th style="width:150px;position:sticky"
+                    <th style="width:180px;position:sticky"
                         *ngIf="selectedColumns.length > 0">
                         Actions
                     </th>
@@ -108,7 +108,7 @@
                 </tr>
             </ng-template>
             <ng-template pTemplate="body" let-rowData let-columns="columns">
-                <tr [pSelectableRowDblClick]="rowData" [pSelectableRow]="rowData" pReorderableRowHandle (dblclick)="viewSelectedRowdbl(viewdbl,rowData)">
+                <tr [pSelectableRowDblClick]="rowData" [pSelectableRow]="rowData" pReorderableRowHandle (dblclick)="viewSelectedRow(rowData)">
                     <td style="width:auto"
                         *ngFor="let col of columns"
                         class="ui-resizable-column"
@@ -121,14 +121,16 @@
                 : rowData[col.field]
                         }}
                     </td>
-                    <td class="action-icons-cstm" style="width:150px" *ngIf="selectedColumns.length > 0">
+                    <td class="action-icons-cstm" style="width:180px" *ngIf="selectedColumns.length > 0">
                         <div>
                             <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="changeStatus(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
                             <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="changeStatus(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
                             <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="changeStatus(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
-                            <span><a class="btn nobg" (click)="viewSelectedRowdbl(viewdbl,rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
+                            <span><a class="btn nobg" (click)="viewSelectedRow(rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
                             <span><a class="btn nobg" (click)="edit(rowData)" matTooltip="Edit"><i class="fa fa-pencil"></i></a> </span>
                             <span><a class="btn nobg" (click)="openContactList(contentcontact,rowData)" matTooltip="Contacts"><i class="fa fa-users"></i></a> </span>
+                            <span><a class="btn nobg" (click)="openSitesList(sitesContent,rowData)" matTooltip="Sites"><i class="fa fa-map" style="color: red"></i></a> </span>
+                            <span><a class="btn nobg" (click)="openDocumentsList(documentsContent,rowData)" matTooltip="Documents"><i class="fa fa fa-file-pdf-o"></i></a> </span>
                             <span data-toggle="modal" data-target="#delete"><a class="btn nobg" (click)="delete(content1,rowData)" matTooltip="Delete"><i class="fa fa-trash"></i></a> </span>
                             <span data-toggle="modal" data-target="#contentAuditHist"><a class="btn nobg" (click)="getAuditHistoryById(contentAuditHist,rowData)" matTooltip="History"><i class="fa fa-history"></i></a></span>
                          
@@ -877,7 +879,7 @@
 
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" (click)="dismissModel()">
+                    <button type="button" class="btn btn-danger" (click)="dismissModel()">
                         Close
                     </button>
                 </div>
@@ -886,6 +888,38 @@
 
     </div>
 
+</ng-template>
+<ng-template #sitesContent let-c="close" let-d="dismiss" class="modal fade" role="dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" (click)="dismissModel()" data-dismiss="modal" id="" name="">×</button>
+            <h4 class="modal-title"> Sites of {{this.selectedRow['name']}}</h4>
+        </div>
+        <div class="modal-body viewform">
+            <app-customer-shipping-information [customerDataFromExternalComponents]="selectedRow"></app-customer-shipping-information>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-danger" (click)="dismissModel()">
+                Close
+            </button>
+        </div>
+    </div>
+</ng-template>
+<ng-template #documentsContent let-c="close" let-d="dismiss" class="modal fade" role="dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" (click)="dismissModel()" data-dismiss="modal" id="" name="">×</button>
+            <h4 class="modal-title"> Documents of {{this.selectedRow['name']}}</h4>
+        </div>
+        <div class="modal-body viewform">
+            <app-customer-documents [customerDataFromExternalComponents]="selectedRow"></app-customer-documents>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-danger" (click)="dismissModel()">
+                Close
+            </button>
+        </div>
+    </div>
 </ng-template>
 
 <ng-template #contentcontact let-c="close" let-d="dismiss" class="modal fade" role="dialog">
@@ -921,7 +955,7 @@
             </div>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="dismissModel()">Close</button>
+            <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="dismissModel()">Close</button>
         </div>
     </div>
 </ng-template>
@@ -1043,7 +1077,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
             </div>
         </div>
 

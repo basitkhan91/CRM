@@ -19,7 +19,7 @@
                 <div>
                     <div class="col-md-12" style="margin-bottom: -10px;">
                         <!-- <h3 class="po-head pull-left" style="padding: 0 6px;">Billing Information List</h3> -->
-                        <h4 class="float-right">
+                        <h4 class="float-left">
                                 Add Billing Information
                                 <a
                                   class="plusicon-cstm"
@@ -29,7 +29,7 @@
                                   ><i class="fa fa-plus-circle fa-lg" (click)="addBillingIfo()"></i
                                 ></a>
                               </h4>
-                        <!-- <button type="button" class="btn btn-primary-cstm float-right" data-toggle="modal" data-target="#addBillingInfo" >Add Billing Information</button> -->
+                        <!-- <button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#addBillingInfo" >Add Billing Information</button> -->
                     </div>
                     <div class="clear"></div>
                     <hr />
@@ -37,7 +37,7 @@
 
                 <div class="table-responsive">
                     <!--<p class="lead"></p>-->
-                    <p-table #dt class="rro-table-cstm" [value]="billingInfoList" [metaKeySelection]="true" [rows]="10" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[10,20,50,100]" [columns]="billingInfoTableHeaders" selectionMode="multiple"  [resizableColumns]="true" [reorderableColumns]="true">
+                    <p-table #dt class="rro-table-cstm" [value]="billingInfoList" [metaKeySelection]="true" [rows]="10" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[10,20,50,100]" [columns]="billingInfoTableHeaders" selectionMode="multiple" [resizableColumns]="true" [reorderableColumns]="true">
                         <ng-template pTemplate="caption">
 
                             <div style="text-align: right">
@@ -47,8 +47,8 @@
                                     <i class="fa fa-search"></i>
                                     <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Filter" style="height: 28px !important;">
                                 </div>
-                                <button type="button" class="btn btn-primary-cstm" matTooltip="Download  Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()" style="padding: 5px 10px !important;"></button>
-                                <button type="button" class="btn btn-primary-cstm" matTooltip="Download Selected Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export Selection Only"  (click)="dt.exportCSV({selectionOnly:true})"></button>
+                                <button type="button" class="btn btn-primary" matTooltip="Download  Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()" style="padding: 5px 10px !important;"></button>
+                                <button type="button" class="btn btn-primary" matTooltip="Download Selected Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export Selection Only"  (click)="dt.exportCSV({selectionOnly:true})" style="padding: 5px 10px !important;"></button>
 
                                 <div class="excel-upload excel-upload-cstm">
                                     <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
@@ -65,20 +65,25 @@
 
                         <ng-template pTemplate="header" let-columns>
                             <tr>
-
+                                <th style="width: 40px;">Flag</th>
                                 <th *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
                                     {{col.header}}
                                     <p-sortIcon [field]="col.field"></p-sortIcon>
                                 </th>
 
-                                <th></th>
+                                <th>Actions</th>
 
                             </tr>
                         </ng-template>
 
                         <ng-template pTemplate="body" let-rowData let-columns="columns">
-                            <tr [pSelectableRow]="rowData"  [pSelectableRowDblClick]="rowData" (dblclick)="toggledbldisplay(rowData)"  [ngClass]="{'row-primary': rowData.isPrimary === true}">
-
+                            <tr [pSelectableRow]="rowData" [pSelectableRowDblClick]="rowData" (dblclick)="toggledbldisplay(rowData)" >
+                                    <!-- [ngClass]="{'row-primary': rowData.isPrimary === true}" -->
+                                    <td > <span class="flag">
+                                            <i  *ngIf="rowData.isPrimary == true"   [ngStyle]="{'color': rowData.isPrimary == true ? 'green' : 'none'}"  
+                                             class="fa fa-flag" aria-hidden="true"></i>
+                                            </span>
+                                    </td>
 
                                 <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
                                     {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
@@ -107,14 +112,20 @@
 
                             </tr>
                         </ng-template>
+                        <ng-template pTemplate="summary" id="footer">
+                            <label id="footer" class="footer">No'of records:</label>
+                            <input style="width: 5%;" [(ngModel)]="totalRecords" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp;
+                            <label id="footer" class="footer1">Pages Count:</label>
+                            <input style="width: 5%;" [(ngModel)]="totalPages" [disabled]="true" pInputText type="text" />
+                        </ng-template>
                     </p-table>
                     <!-- <div *ngIf="allActions.length<=0" style="text-align:center;border:1px solid">
                         No Records
                     </div> -->
                 </div>
 
-                <button type="button" class="btn btn-primary-cstm pull-right" (click)="nextClick()">Save & Next</button>
-                <button type="button" class="btn btn-primary-cstm pull-right submit-btn" (click)="backClick()">Previous</button>
+                <button type="button" class="btn btn-primary pull-right" (click)="nextClick()">Save & Next</button>
+                <button type="button" class="btn btn-primary pull-right submit-btn" (click)="backClick()">Previous</button>
 
                 <div class="clear"></div>
                 <div class="modal fade success-msg" id="success-popup" role="dialog" data-backdrop="static" data-keyboard="false">
@@ -231,7 +242,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger-cstm" >Close</button>
+                        <button type="button" class="btn btn-danger" >Close</button>
                     </div>
                 </ng-template>
 
@@ -286,7 +297,7 @@
                                 <input class="form-control" id="cscity" type="text" name="city" [(ngModel)]="billingInfo.city" required>
                             </div>
                             <div class="form-group">
-                                <label>Bill To State/Prov <span class="clr-red">*</span></label>
+                                <label>Bill To State / Prov <span class="clr-red">*</span></label>
                                 <input class="form-control" id="csstate" type="text" name="stateOrProvince" [(ngModel)]="billingInfo.stateOrProvince" required>
                             </div>
                             <div class="form-group">
@@ -319,8 +330,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary-cstm pull-right" [disabled]="!addBillingForm.valid" (click)="saveBillingInformation()" data-dismiss="modal">{{isEditMode ? 'Update' : 'Save'}}</button>
-                    <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary pull-right" [disabled]="!addBillingForm.valid" (click)="saveBillingInformation()" data-dismiss="modal">{{isEditMode ? 'Update' : 'Save'}}</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                 </div>
             </form>
         </div>
@@ -350,7 +361,7 @@
                     <p><span class="label"><b>Bill To Address 2: </b></span><span class="value">{{viewData.address2}}</span></p>
                     <p style="display:none"><span class="label"><b>Bill To Address 3: </b></span><span class="value">{{viewData.address3}}</span></p>
                     <p><span class="label"><b>Bill To City: </b></span><span class="value">{{viewData.city}}</span></p>
-                    <p><span class="label"><b>Bill To State/Prov: </b></span><span class="value">{{viewData.stateOrProvince}}</span></p>
+                    <p><span class="label"><b>Bill To State / Prov: </b></span><span class="value">{{viewData.stateOrProvince}}</span></p>
                     <p><span class="label"><b>Bill To Postal Code :</b></span><span class="value">{{viewData.postalCode}}</span></p>
                     <p><span class="label"><b>Bill To Country: </b></span><span class="value">{{viewData.countryName}}</span></p>
 
@@ -408,37 +419,39 @@
                         <th>State</th>
                         <th>Postal Code</th>
                         <th>Country</th>
-                        <th>Updated By</th>
-                        <th>Last Updated Time</th>
+                        <th>Is Primary</th>
+                        <th>Is Active</th>
                         <th>Created By</th>
                         <th>Created Time</th>
 
+                        <th>Updated By</th>
+                        <th>Last Updated Time</th>
+
+
+
                     </tr>
                 </thead>
-                <!-- <tr *ngFor="let audit of billingauditHisory">
-                    <td>{{audit.siteName}}</td>
-                    <td>{{audit.updatedBy}}</td>
-                    <td>{{audit.updatedDate}}</td>
+               
+
+                <tr *ngFor="let audit of billingauditHisory; let i = index;">
+                    <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'siteName', audit.siteName)  ? 'black' : 'red'  }">{{audit.siteName}}</td>
+                    <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'address1', audit.address1)  ? 'black' : 'red'  }">{{audit.address1}}</td>
+                    <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'address2', audit.address2)  ? 'black' : 'red'  }">{{audit.address2}}</td>
+                    <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'city', audit.city)  ? 'black' : 'red'  }">{{audit.city}}</td>
+                    <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'stateOrProvince', audit.stateOrProvince)  ? 'black' : 'red'  }">{{audit.stateOrProvince}}</td>
+                    <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'postalCode', audit.postalCode)  ? 'black' : 'red'  }">{{audit.postalCode}}</td>
+
+                    <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'country', audit.country)  ? 'black' : 'red'  }">{{audit.country}}</td>
+                    <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'isPrimary', audit.isPrimary)  ? 'black' : 'red'  }">{{audit.isPrimary}}</td>
+
+                    <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'isActive', audit.isActive)  ? 'black' : 'red'  }">{{audit.isActive}}</td>
                     <td>{{audit.createdBy}}</td>
-                    <td>{{audit.createdDate}}</td>
+                    <td>{{audit.createdDate | date: 'dd-MM-yyyy h:mm a '}}</td>
 
-                </tr> -->
+                    <td>{{audit.updatedBy}}</td>
+                    <td>{{audit.updatedDate | date: 'dd-MM-yyyy h:mm a '}}</td>
 
-            <tr *ngFor="let audit of billingauditHisory; let i = index;">
-                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'siteName', audit.siteName)  ? 'black' : 'red'  }">{{audit.siteName}}</td>
-                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'line1', audit.line1)  ? 'black' : 'red'  }">{{audit.line1}}</td>
-                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'line2', audit.line2)  ? 'black' : 'red'  }">{{audit.line2}}</td>
-                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'city', audit.city)  ? 'black' : 'red'  }">{{audit.city}}</td>
-                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'stateOrProvince', audit.stateOrProvince)  ? 'black' : 'red'  }">{{audit.stateOrProvince}}</td>
-                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'postalCode', audit.postalCode)  ? 'black' : 'red'  }">{{audit.postalCode}}</td>
-
-                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'country', audit.country)  ? 'black' : 'red'  }">{{audit.country}}</td>
-
-                <td>{{audit.updatedBy}}</td>
-                <td>{{audit.updatedDate | date: 'dd-MM-yyyy h:mm a '}}</td>
-                <td>{{audit.createdBy}}</td>
-                <td>{{audit.createdDate | date: 'dd-MM-yyyy h:mm a '}}</td>
-            </tr>
+                </tr>
             </table>
         </div>
     </div>

@@ -488,6 +488,10 @@ export class CustomerService {
     updateStatusForInternationalShippings(id, status, updatedBy) {
         return this.customerEndpoint.updateStatusForInternationalShipping(id, status, updatedBy)
     }
+    updateStatusForInternationalShippingsVia(id, status, updatedBy) {
+        return this.customerEndpoint.updateStatusForInternationalShippingVia(id, status, updatedBy)
+    }
+
 
     deleteInternationalShipping(id, updatedBy) {
         return this.customerEndpoint.deleteInternationalShipping(id, updatedBy)
@@ -533,8 +537,8 @@ export class CustomerService {
         return this.customerEndpoint.getDeleteDocumentEndpoint(actionId);
     }
 
-    getCustomerContactAuditDetails(customerContactId,customerId) {
-        return this.customerEndpoint.getCustomerContactAuditDetails<any>(customerContactId,customerId)
+    getCustomerContactAuditDetails(customerContactId, customerId) {
+        return this.customerEndpoint.getCustomerContactAuditDetails<any>(customerContactId, customerId)
     }
     getDocumentList(customerId) {
         return this.customerEndpoint.getDocumentList(customerId)
@@ -547,9 +551,9 @@ export class CustomerService {
         return this.customerEndpoint.getShipViaByDomesticShippingId(customerShippingId);
     }
     getCustomerBillingHistory(customerId, customerBillingAddressId) {
-        return this.customerEndpoint.getCustomerBillingHistory(customerId , customerBillingAddressId)
+        return this.customerEndpoint.getCustomerBillingHistory(customerId, customerBillingAddressId)
     }
-    
+
     getCustomerClassificationMapping(customerId) {
         return this.customerEndpoint.getCustomerClassificationMapping(customerId);
     }

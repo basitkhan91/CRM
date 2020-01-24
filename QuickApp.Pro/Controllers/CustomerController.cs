@@ -18,6 +18,7 @@ using Remotion.Linq.Parsing.ExpressionVisitors.Transformation.PredefinedTransfor
 using Spire.Pdf.Exporting.XPS.Schema;
 using Contact = DAL.Models.Contact;
 using Path = System.IO.Path;
+using Microsoft.EntityFrameworkCore;
 
 namespace QuickApp.Pro.Controllers
 {
@@ -352,54 +353,27 @@ namespace QuickApp.Pro.Controllers
                 //Added By Vijay on 12/11/2019 for IsAddressForShipping and IsAddressForBilling as selected as true condition
                 if (actionobject.CustomerId > 0)
                 {
+                   
                     if (Convert.ToBoolean(actionobject.IsAddressForShipping))
                     {
-                        _unitOfWork.Customer.AddCustomerShippingAddress(actionobject);
+                  long ShippingAddressId= _unitOfWork.Customer.AddCustomerShippingAddress(actionobject);
+
+                        _unitOfWork.CommonRepository.CreateHistory(
+                       customerViewModel, Convert.ToInt32(ModuleEnum.Customer), actionobject.CustomerId, ShippingAddressId, Convert.ToInt32(AddressTypeEnum.ShippingAddress), true);
                     }
 
                     if (Convert.ToBoolean(actionobject.IsAddressForBilling))
                     {
-                        _unitOfWork.Customer.AddCustomerBillinggAddress(actionobject);
+                        long BillingAddressId=    _unitOfWork.Customer.AddCustomerBillinggAddress(actionobject);
+                        _unitOfWork.CommonRepository.CreateHistory(
+                    customerViewModel, Convert.ToInt32(ModuleEnum.Customer), actionobject.CustomerId, BillingAddressId, Convert.ToInt32(AddressTypeEnum.BillingAddress),true);
+
                     }
                 }
 
 
 
-                //if (actionobject.IsCustomerAlsoVendor)
-                //{
-                //    DAL.Models.Vendor vendorobject = new DAL.Models.Vendor();
-                //    vt.VendorTypeId = 1;
-                //    vendorobject.VendorId = customerViewModel.CustomerId;
-                //    vendorobject.VendorName = customerViewModel.CustomerParentName;
-                //    vendorobject.LicenseNumber = customerViewModel.LicenseNumber;
-                //    vendorobject.VendorClassificationId = customerViewModel.VendorClassificationId;
-                //    vendorobject.capabilityId = customerViewModel.capabilityId;
-                //    vendorobject.VendorPhone = customerViewModel.VendorPhone;
-                //    vendorobject.VendorTypeId = customerViewModel.VendorTypeId;
-                //    vendorobject.IsPreferredVendor = customerViewModel.IsPreferredVendor;
-                //    vendorobject.Parent = customerViewModel.Parent;
-                //    vendorobject.IsVendorAlsoCustomer = customerViewModel.IsVendorAlsoCustomer;
-                //    vendorobject.VendorEmail = customerViewModel.VendorEmail;
-                //    vendorobject.VendorCode = customerViewModel.VendorCode;
-                //    vendorobject.VendorContractReference = customerViewModel.VendorContractReference;
-                //    vendorobject.DoingBusinessAsName = customerViewModel.DoingBusinessAsName;
-                //    vendorobject.VendorURL = customerViewModel.VendorURL;
-                //    vendorobject.IsCertified = customerViewModel.IsCertified;
-                //    vendorobject.VendorAudit = customerViewModel.VendorAudit;
-                //    vendorobject.MasterCompanyId = customerViewModel.MasterCompanyId;
-                //    vendorobject.IsActive = true;
-                //    vendorobject.CreditTermsId = customerViewModel.CreditTermsId;
-                //    vendorobject.CreatedDate = DateTime.Now;
-                //    vendorobject.UpdatedDate = DateTime.Now;
-                //    vendorobject.CreatedBy = customerViewModel.CreatedBy;
-                //    vendorobject.UpdatedBy = customerViewModel.UpdatedBy;
-                //    //actionobject.vendorc
-                //    AddAddress(customerViewModel);
-                //    vendorobject.AddressId = customerViewModel.AddressId.Value;
-                //    _unitOfWork.Vendor.Add(vendorobject);
-                //    _unitOfWork.SaveChanges();
-                //    return Ok(vendorobject);
-                //}
+              
 
                 if (actionobject.RestrictPMA == true)
                     _unitOfWork.CommonRepository.CreateRestrictedParts(customerViewModel.RestrictedPMAParts, actionobject.CustomerId, Convert.ToInt32(ModuleEnum.Customer));
@@ -414,12 +388,7 @@ namespace QuickApp.Pro.Controllers
 
                 }
 
-                //actionobject.RestrictsPmaLists = customerViewModel.RestrictsPmaList;
-                //_unitOfWork.CommonRepository.CreateRestrictPmaList(actionobject.RestrictsPmaLists, actionobject.CustomerId);
-
-                //actionobject.RestrictsDerLists = customerViewModel.restrictBERList;
-                //_unitOfWork.CommonRepository.CreateRestrictDerList(actionobject.RestrictsDerLists, actionobject.CustomerId);
-
+              
                 if (customerViewModel.CustomerClassificationIds != null)
                 {
                     List<ClassificationMapping> listofEClassificationMappings = customerViewModel
@@ -445,31 +414,7 @@ namespace QuickApp.Pro.Controllers
 
 
                 }
-                //if (customerViewModel.IntegrationPortalId != null)
-                //{
-
-                //    foreach (string s in customerViewModel.IntegrationPortalId)
-                //    {
-                //        if (s != "")
-                //        {
-                //            var integrationTypes = new CustomerIntegrationPortal();
-                //            integrationTypes.IntegrationPortalId = Convert.ToInt32(s);
-                //            integrationTypes.CustomerId = actionobject.CustomerId;
-                //            integrationTypes.MasterCompanyId = 1;
-                //            integrationTypes.CreatedBy = customerViewModel.CreatedBy;
-                //            integrationTypes.UpdatedBy = customerViewModel.UpdatedBy;
-                //            integrationTypes.CreatedDate = DateTime.Now;
-                //            integrationTypes.UpdatedDate = DateTime.Now;
-                //            integrationTypes.IsActive = true;
-                //            _unitOfWork.CustomerIntegrationPortalRepository.Add(integrationTypes);
-                //            _unitOfWork.SaveChanges();
-                //        }
-                //    }
-
-                //}
-
-                // _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, attachmentDetails, actionobject.CustomerId,Convert.ToInt32(DAL.Common.ModuleEnum.Customer), Convert.ToString(DAL.Common.ModuleEnum.Customer), actionobject.CreatedBy, actionobject.MasterCompanyId);
-                if (actionobject.CustomerId > 0)
+                    if (actionobject.CustomerId > 0)
                 {
                     if (Convert.ToBoolean(actionobject.IsCustomerAlsoVendor))
                     {
@@ -666,22 +611,18 @@ namespace QuickApp.Pro.Controllers
             {
                 if (Convert.ToBoolean(actionobject.IsAddressForShipping))
                 {
-                    long? shippingAddressId = 0;
-                    //var shipping =    _context.CustomerShippingAddress
-                    //       .Where(p => p.AddressId == actionobject.AddressId && p.CustomerId == actionobject.CustomerId).FirstOrDefault();
+                         long   ShippingAddressId= _unitOfWork.Customer.AddCustomerShippingAddress(actionobject);
+                    _unitOfWork.CommonRepository.CreateHistory(
+                    customerViewModel, Convert.ToInt32(ModuleEnum.Customer), actionobject.CustomerId, ShippingAddressId, Convert.ToInt32(AddressTypeEnum.ShippingAddress),true);
 
-                    //   var shipping =_unitOfWork.Repository<CustomerShippingAddress>().GetAll().Where(p => p.AddressId == actionobject.AddressId && p.CustomerId == actionobject.CustomerId).FirstOrDefault();
-
-                    //if (shipping!=null)
-                    //{
-                    //    shippingAddressId = shipping.CustomerShippingAddressId;
-                    //}
-                    _unitOfWork.Customer.AddCustomerShippingAddress(actionobject);
                 }
 
                 if (Convert.ToBoolean(actionobject.IsAddressForBilling))
                 {
-                    _unitOfWork.Customer.AddCustomerBillinggAddress(actionobject);
+                    long BillingAddressId = _unitOfWork.Customer.AddCustomerBillinggAddress(actionobject);
+               _unitOfWork.CommonRepository.CreateHistory(
+               customerViewModel, Convert.ToInt32(ModuleEnum.Customer), actionobject.CustomerId, BillingAddressId, Convert.ToInt32(AddressTypeEnum.BillingAddress),true);
+
                 }
             }
             if (actionobject.CustomerId > 0)
@@ -693,15 +634,7 @@ namespace QuickApp.Pro.Controllers
             _unitOfWork.CommonRepository.UpdateRestrictedParts(customerViewModel.RestrictedPMAParts, actionobject.CustomerId, Convert.ToInt32(ModuleEnum.Customer));
             _unitOfWork.CommonRepository.UpdateRestrictedParts(customerViewModel.RestrictedDERParts, actionobject.CustomerId, Convert.ToInt32(ModuleEnum.Customer));
 
-            //_unitOfWork.CommonRepository.UpdateRestrictPmaList(actionobject.RestrictsPmaLists, actionobject.CustomerId);
-
-
-            //actionobject.RestrictsPmaLists = customerViewModel.RestrictsPmaList;
-            //_unitOfWork.CommonRepository.UpdateRestrictPmaList(actionobject.RestrictsPmaLists, actionobject.CustomerId);
-
-            //actionobject.RestrictsDerLists = customerViewModel.restrictBERList;
-            //_unitOfWork.CommonRepository.UpdateRestrictDerList(actionobject.RestrictsDerLists, actionobject.CustomerId);
-
+           
             List<ClassificationMapping> listofEClassificationMappings = customerViewModel.CustomerClassificationIds
                 .Select(item => new ClassificationMapping() { ClasificationId = item.Value }
                 ).ToList();
@@ -882,10 +815,8 @@ namespace QuickApp.Pro.Controllers
             address.CreatedDate = DateTime.Now;
             address.UpdatedDate = DateTime.Now;
             _unitOfWork.Address.Update(address);
-            //_unitOfWork.Repository<Customer>().
-            _unitOfWork.SaveChanges();
-           // customerViewModel.Addressid = address.AddressId.Value;
-            return Ok(ModelState);
+             _unitOfWork.SaveChanges();
+              return Ok(ModelState);
         }
 
 
@@ -1000,8 +931,7 @@ namespace QuickApp.Pro.Controllers
                 contactObj.UpdatedDate = DateTime.Now;
                 contactObj.CreatedBy = contactViewModel.CreatedBy;
                 contactObj.UpdatedBy = contactViewModel.UpdatedBy;
-                //customercontactViewModel.IsDefaultContact = customercontactViewModel.IsDefaultContact;
-                contactObj.WorkPhoneExtn = contactObj.WorkPhoneExtn;
+                 contactObj.WorkPhoneExtn = contactObj.WorkPhoneExtn;
                 _unitOfWork.ContactRepository.Add(contactObj);
 
                 _unitOfWork.SaveChanges();
@@ -1036,10 +966,7 @@ namespace QuickApp.Pro.Controllers
                 {
                     var customerContact = _context.CustomerContact.Where(p => p.CustomerId == CustomerContactViewModel.CustomerId).ToList();
                     
-                    //customerContact.ForEach(p => p.IsDefaultContact = false);
-                   // _unitOfWork.CustomerContact.UpdateRange(customerContact);
-                    //_unitOfWork.SaveChanges();
-                    if (customerContact != null && customerContact.Count > 0)
+                        if (customerContact != null && customerContact.Count > 0)
                     {
                         foreach (var item in customerContact)
                         {
@@ -1056,6 +983,11 @@ namespace QuickApp.Pro.Controllers
 
                 _unitOfWork.CustomerContact.Add(contactObj);
                 _unitOfWork.SaveChanges();
+                //ContactViewModel contactViewModel = new ContactViewModel();
+               
+           
+               // _unitOfWork.CommonRepository.CreateContactHistory(contactViewModel, Convert.ToInt32(ModuleEnum.Customer), Convert.ToInt64(contactObj.CustomerId), Convert.ToInt64(contactObj.CustomerContactId));
+
             }
             return Ok(ModelState);
         }
@@ -1116,10 +1048,7 @@ namespace QuickApp.Pro.Controllers
                         }
                     }
 
-                    //customerContacts.ForEach(p => p.IsDefaultContact = false);
-                    //_context.CustomerContact.UpdateRange(customerContacts);
-                    //_context.SaveChanges();
-                }
+                            }
 
 
                 if (customerContact != null)
@@ -1129,6 +1058,7 @@ namespace QuickApp.Pro.Controllers
                     customerContact.IsDefaultContact = contactViewModel.IsDefaultContact;
                     _unitOfWork.CustomerContact.Update(customerContact);
                     _unitOfWork.SaveChanges();
+                   // _unitOfWork.CommonRepository.CreateContactHistory(contactViewModel, Convert.ToInt32(ModuleEnum.Customer),Convert.ToInt64(customerContact.CustomerId), id);
                 }
 
             }
@@ -1176,43 +1106,7 @@ namespace QuickApp.Pro.Controllers
 
         }
 
-        //[HttpGet("getBillingHistory/{id}", Name = "getBillingHistoryById")]
-        //[Produces(typeof(List<AuditHistory>))]
-
-        //[ApiExplorerSettings(IgnoreApi = true)]
-        //public IActionResult GetBillingAuditHistoryById(long id)
-        //{
-        //    var result = _unitOfWork.AuditHistory.GetAllHistory("CustomerBillingAddress", id); 
-
-
-        //    try
-        //    {
-        //        var resul1 = Mapper.Map<IEnumerable<AuditHistoryViewModel>>(result);
-
-        //        return Ok(resul1);
-        //    }
-        //    catch (Exception ex)
-        //    {
-
-        //        throw;
-        //    }
-        //}
-
-
-        //[HttpDelete("CustomerContact/{id}")]
-        //[Produces(typeof(CustomercontactViewModel))]
-        //public IActionResult DeleteAction(long id)
-        //{
-        //    var existingResult = _unitOfWork.ContactRepository.GetSingleOrDefault(c => c.ContactId == id);
-        //    var existingResultofcustomerContact = _unitOfWork.CustomerContact.GetSingleOrDefault(c => c.ContactId == id);
-        //    _unitOfWork.CustomerContact.Remove(existingResultofcustomerContact);
-        //    _unitOfWork.SaveChanges();
-        //    _unitOfWork.ContactRepository.Remove(existingResult);
-        //    _unitOfWork.SaveChanges();
-
-        //    return Ok(id);
-        //}
-
+      
 
         [HttpDelete("CustomerContact/{id}")]
         [Produces(typeof(CustomercontactViewModel))]
@@ -1272,16 +1166,7 @@ namespace QuickApp.Pro.Controllers
 
                 if (Customershipping.AddressId > 0)
                 {
-                    //var existData = _context.Address.Where(p => p.AddressId == Customershipping.AddressId).FirstOrDefault();
-
-                    //existData.Line1 = Customershipping.Address1;
-                    //existData.Line2 = Customershipping.Address2;
-                    //existData.Line3 = Customershipping.Address3;
-                    //existData.City = Customershipping.City;
-                    //existData.StateOrProvince = Customershipping.StateOrProvince;
-                    //existData.PostalCode = Customershipping.PostalCode;
-                    //existData.Country = Customershipping.Country;
-                    address.CreatedDate = Customershipping.CreatedDate;
+                             address.CreatedDate = Customershipping.CreatedDate;
                     address.AddressId = Customershipping.AddressId;
                     _unitOfWork.Address.Update(address);
                 }
@@ -1321,26 +1206,7 @@ namespace QuickApp.Pro.Controllers
 
         }
 
-        //[HttpPut("customersUpdateforActive/{id}")]
-        //public IActionResult customersUpdateforActive(long id, [FromBody]CustomerViewModel Customershipping)
-        //{
-        //	if (ModelState.IsValid)
-        //	{
-        //		var CustomerObj = _unitOfWork.Customer.GetSingleOrDefault(a => a.CustomerId == id);
-        //		Customershipping.MasterCompanyId = 1;
-        //		//Customershipping.IsActive = true;
-        //		CustomerObj.IsActive = Customershipping.IsActive;
-        //		CustomerObj.UpdatedDate = DateTime.Now;
-        //		CustomerObj.UpdatedBy = Customershipping.UpdatedBy;
-        //		CustomerObj.CustomerId = Customershipping.CustomerId;
-        //		_unitOfWork.Customer.Update(CustomerObj);
-        //		_unitOfWork.SaveChanges();
-        //		return Ok(CustomerObj);
-        //	}
-
-        //	return Ok(ModelState);
-        //}
-
+      
 
         [HttpPost("List")]
         public IActionResult GetList([FromBody] Filters<CustomerFilters> customerFilters)
@@ -1386,25 +1252,7 @@ namespace QuickApp.Pro.Controllers
             return Ok(ModelState);
         }
 
-        //[HttpPut("billingUpdateforActive/{id}")]
-        //public IActionResult billingUpdateforActive(long id, [FromBody]CustomerBillingAddressViewModel cuBillingViewmodel)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        var CustomerBillingObj = _unitOfWork.CustomerBillingInformation.GetSingleOrDefault(a => a.CustomerBillingAddressId == id);
-        //        cuBillingViewmodel.MasterCompanyId = 1;
-        //      // CustomerBillingObj.IsActive = true;
-        //       CustomerBillingObj.IsActive = cuBillingViewmodel.IsActive;
-        //        CustomerBillingObj.UpdatedDate = DateTime.Now;
-        //        CustomerBillingObj.UpdatedBy = cuBillingViewmodel.UpdatedBy;
-        //        CustomerBillingObj.CustomerBillingAddressId = cuBillingViewmodel.CustomerBillingAddressId;
-        //        _unitOfWork.CustomerBillingInformation.Update(CustomerBillingObj);
-        //        _unitOfWork.SaveChanges();
-        //        return Ok(CustomerBillingObj);
-        //    }
-
-        //    return Ok(ModelState);
-        //}
+     
 
         [HttpPut("billingUpdateforActive/{id}")]
         public IActionResult updateAsset([FromBody] CustomerBillingAddress customerBillingAddress)
@@ -1529,6 +1377,9 @@ namespace QuickApp.Pro.Controllers
                 _unitOfWork.SaveChanges();
                 long? venAddressid = CustomerShippingAddressObj.CustomerShippingAddressId;
                 Customershipping.CustomerShippingId = CustomerShippingAddressObj.CustomerShippingAddressId;
+                _unitOfWork.CommonRepository.CreateHistory(
+             Customershipping, Convert.ToInt32(ModuleEnum.Customer),Convert.ToInt64(Customershipping.CustomerId),Convert.ToInt64(Customershipping.CustomerShippingId), Convert.ToInt32(AddressTypeEnum.ShippingAddress),false);
+
                 //updateShipping(vendorshipping, address, venAddressid, CustomerShippingViewModel);
                 return Ok(CustomerShippingAddressObj);
             }
@@ -1788,19 +1639,7 @@ namespace QuickApp.Pro.Controllers
 
             return Ok(ModelState);
         }
-        //[HttpDelete("updateStatusCustomerBilling/{id}")]
-        //[Produces(typeof(CustomerBillingAddressViewModel))]
-        //public IActionResult updateStatusCustomerBilling(long id)
-        //{
-        //    var existingResult = _unitOfWork.CustomerBillingInformation.GetSingleOrDefault(c => c.CustomerBillingAddressId == id);
-        //    var existingResultofcustomerBilling = _unitOfWork.CustomerContact.GetSingleOrDefault(c => c.ContactId == id);
-        //    _unitOfWork.CustomerContact.Remove(existingResultofcustomerBilling);
-        //    _unitOfWork.SaveChanges();
-        //    _unitOfWork.CustomerBillingInformation.Remove(existingResult);
-        //    _unitOfWork.SaveChanges();
-
-        //    return Ok(id);
-        //}
+    
 
         [HttpPut("updateStatusCustomerShipping/{id}")]
         public IActionResult updateStatusCustomerShipping(long id, [FromBody] CustomerShippingViewModel CustomerShippingViewModel)
@@ -1998,6 +1837,10 @@ namespace QuickApp.Pro.Controllers
                 _unitOfWork.Address.Update(addressObj);
                 _unitOfWork.CustomerBillingInformation.Update(checkBillingObj);
                 _unitOfWork.SaveChanges();
+
+                _unitOfWork.CommonRepository.CreateHistory(
+      customerBillingAddressViewModel, Convert.ToInt32(ModuleEnum.Customer), Convert.ToInt64(customerBillingAddressViewModel.CustomerId), Convert.ToInt64(checkBillingObj.CustomerBillingAddressId), Convert.ToInt32(AddressTypeEnum.BillingAddress), false);
+
                 return Ok(checkBillingObj);
             }
             return Ok(ModelState);
@@ -2062,6 +1905,9 @@ namespace QuickApp.Pro.Controllers
                 _unitOfWork.Address.Update(addressObj);
                 _unitOfWork.CustomerShippingAddress.Update(checkBillingObj);
                 _unitOfWork.SaveChanges();
+                _unitOfWork.CommonRepository.CreateHistory(
+          customerBillingAddressViewModel, Convert.ToInt32(ModuleEnum.Customer), Convert.ToInt64(checkBillingObj.CustomerId), Convert.ToInt64(checkBillingObj.CustomerShippingAddressId), Convert.ToInt32(AddressTypeEnum.ShippingAddress), false);
+
                 return Ok(checkBillingObj);
 
 
@@ -2118,6 +1964,9 @@ namespace QuickApp.Pro.Controllers
                 _unitOfWork.SaveChanges();
                 long? venAddressid = CustomerShippingAddressObj.CustomerBillingAddressId;
                 cbs.CustomerBillingAddressId = CustomerShippingAddressObj.CustomerBillingAddressId;
+                _unitOfWork.CommonRepository.CreateHistory(
+          customerBillingAddressViewModel, Convert.ToInt32(ModuleEnum.Customer), Convert.ToInt64(customerBillingAddressViewModel.CustomerId), Convert.ToInt64(CustomerShippingAddressObj.CustomerBillingAddressId), Convert.ToInt32(AddressTypeEnum.BillingAddress),false);
+
                 //updateShipping(vendorshipping, address, venAddressid, customerBillingAddressViewModel);
                 return Ok(CustomerShippingAddressObj);
             }
@@ -2273,18 +2122,9 @@ namespace QuickApp.Pro.Controllers
                 }
             }
             return Ok(customerAircraftModel);
-            // return Ok(ModelState);
+            
         }
-        //[HttpGet("GetAircarftmodelsdata/{id}")]
-        //[Produces(typeof(List<CustomerAircraftModel>))]
-        //public IActionResult GetAircarftmodelsdata(long id, CustomerAircraftModel customerAircraftModel)
-        //{
-
-
-        //    var allseectedaircarftmodels = _unitOfWork.customerAircraftModel.GetSelectedAircraftModeldata(id); //.GetAllCustomersData();
-        //    return Ok(allseectedaircarftmodels);
-
-        //}
+      
 
         #region AircraftInformation
 
@@ -2730,33 +2570,7 @@ namespace QuickApp.Pro.Controllers
 
         }
 
-        //[HttpGet("getMarkUpValues")]
-        //public IActionResult getAll()
-        //{
-        //    var markUpPercentages = _unitOfWork.Repository<MarkUpPercentage>().GetAll().OrderByDescending(x => x.MarkUpPercentageId);
-        //    return Ok(markUpPercentages);
-        //}
-
-        //[HttpPost("addMarkUp")]
-        //public IActionResult addasset([FromBody] MarkUpPercentage markUpPercentage)
-        //{
-        //    if (markUpPercentage != null)
-        //    {
-        //        markUpPercentage.MarkUpPercentageId = 0;
-        //        _context.MarkUpPercentage.Add(markUpPercentage);
-        //        _context.SaveChanges();
-        //    }
-        //    return Ok(markUpPercentage);
-        //}
-
-        //[HttpPut("addMarkUp/{id}")]
-        //public IActionResult updateAsset([FromBody] MarkUpPercentage markUpPercentage)
-        //{
-        //    _unitOfWork.Repository<MarkUpPercentage>().Update(markUpPercentage);
-        //    _unitOfWork.SaveChanges();
-        //    return Ok(markUpPercentage);
-        //}
-
+       
         [HttpGet("getAllCustomers")]
         public IEnumerable<Customer> getAllCustomers()
         {
@@ -3389,7 +3203,10 @@ namespace QuickApp.Pro.Controllers
         [ApiExplorerSettings(IgnoreApi = true)]
         public IActionResult GetAllCustomerBillingAddressAudit(long customerId, long customerBillingaddressId)
         {
-            var allCusBillingDetails = _unitOfWork.CustomerBillingInformation.GetAllCustomerBillingAddressAudit(customerId, customerBillingaddressId);
+            //var allCusBillingDetails = _unitOfWork.CustomerBillingInformation.GetAllCustomerBillingAddressAudit(customerId, customerBillingaddressId);
+            //return Ok(allCusBillingDetails);
+              var allCusBillingDetails=   _unitOfWork.CommonRepository.GetShippingBillingAddressAudit(customerId, customerBillingaddressId, Convert.ToInt32(AddressTypeEnum.BillingAddress), Convert.ToInt32(ModuleEnum.Customer));
+
             return Ok(allCusBillingDetails);
         }
         /// <summary>
@@ -3403,7 +3220,7 @@ namespace QuickApp.Pro.Controllers
         [ApiExplorerSettings(IgnoreApi = true)]
         public IActionResult GetAllCustomerShippingAddressAudit(long customerId, long customerShippingAddressId)
         {
-            var allCusShippingDetails = _unitOfWork.CustomerShippingAddress.GetCustomerShippingAddressAudit(customerId, customerShippingAddressId);
+            var allCusShippingDetails = _unitOfWork.CommonRepository.GetShippingBillingAddressAudit(customerId, customerShippingAddressId, Convert.ToInt32(AddressTypeEnum.ShippingAddress), Convert.ToInt32(ModuleEnum.Customer));
             return Ok(allCusShippingDetails);
         }
 
@@ -3416,13 +3233,99 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("shippingdetailsstatus")]
         public IActionResult CustomerShippingDetailsStatus(long id, bool status, string updatedBy)
         {
+            var data = (from t in _context.CustomerShippingAddress
+                        join ad in _context.Address on t.AddressId equals ad.AddressId
+                        where t.CustomerShippingAddressId == id
+                        select new
+                        {
+                            ad,
+                            t.CustomerId,
+                            SiteName = t.SiteName,
+                            Address1 = ad.Line1,
+                            Address2 = ad.Line2,
+                            City = ad.City,
+                            StateOrProvince = ad.StateOrProvince,
+                            CreatedDate = t.CreatedDate,
+                            CreatedBy = t.CreatedBy,
+                            UpdatedBy = updatedBy,
+                            UpdatedDate = t.UpdatedDate,
+                            ad.AddressId,
+                            Country = ad.Country,
+                            PostalCode = ad.PostalCode,
+                            MasterCompanyId = t.MasterCompanyId,
+                            IsActive = status,
+                            IsPrimary = t.IsPrimary
+                        }).FirstOrDefault();
+
+            ShippingBillingAddressAudit obj = new ShippingBillingAddressAudit();
+            obj.SiteName = data.SiteName;
+            obj.City = data.City;
+            obj.StateOrProvince = data.StateOrProvince;
+            obj.Country = data.Country;
+            obj.Line1 = data.Address1;
+            obj.Line2 = data.Address2;
+            obj.PostalCode = data.PostalCode;
+            obj.StateOrProvince = data.StateOrProvince;
+            obj.MasterCompanyId = Convert.ToInt32(data.MasterCompanyId);
+            obj.IsActive = data.IsActive;
+            obj.CreatedBy = data.CreatedBy;
+            obj.UpdatedBy = data.UpdatedBy;
+            obj.IsPrimary = Convert.ToBoolean(data.IsPrimary);
             _unitOfWork.Customer.CustomerShippingDetailsStatus(id, status, updatedBy);
+
+            _unitOfWork.CommonRepository.CreateHistory(
+            obj, Convert.ToInt32(ModuleEnum.Customer), Convert.ToInt64(data.CustomerId), id, Convert.ToInt32(AddressTypeEnum.ShippingAddress), false, true);
+
+
             return Ok();
         }
         [HttpGet("customersBillingUpdateStatus")]
         public IActionResult CustomerBillingStatus(long id, bool status, string updatedBy)
         {
+            var data = (from t in _context.CustomerBillingAddress
+                        join ad in _context.Address on t.AddressId equals ad.AddressId
+                        where t.CustomerBillingAddressId == id
+                        select new
+                        {
+                            ad,
+                            t.CustomerId,
+                            SiteName=  t.SiteName,
+                            Address1 = ad.Line1,
+                            Address2 = ad.Line2,
+                           City= ad.City,
+                            StateOrProvince=  ad.StateOrProvince,
+                            CreatedDate=   t.CreatedDate,
+                            CreatedBy=    t.CreatedBy,
+                            UpdatedBy= updatedBy,
+                            UpdatedDate=    t.UpdatedDate,
+                            ad.AddressId,
+                            Country=  ad.Country,
+                            PostalCode=  ad.PostalCode,
+                         MasterCompanyId=t.MasterCompanyId,
+                            IsActive= status,
+                            IsPrimary=t.IsPrimary
+                        }).FirstOrDefault();
+
+            ShippingBillingAddressAudit obj = new ShippingBillingAddressAudit();
+            obj.SiteName = data.SiteName;
+            obj.City = data.City;
+            obj.StateOrProvince = data.StateOrProvince;
+            obj.Country = data.Country;
+            obj.Line1 = data.Address1;
+            obj.Line2 = data.Address2;
+            obj.PostalCode = data.PostalCode;
+            obj.StateOrProvince = data.StateOrProvince;
+            obj.MasterCompanyId =Convert.ToInt32(data.MasterCompanyId);
+            obj.IsActive = data.IsActive;
+            obj.CreatedBy = data.CreatedBy;
+            obj.UpdatedBy = data.UpdatedBy;
+            obj.IsPrimary = Convert.ToBoolean(data.IsPrimary);
+            //var data = _context.CustomerBillingAddress.AsNoTracking().Where(p => p.CustomerBillingAddressId == id).FirstOrDefault();
+
             _unitOfWork.Customer.CustomerBillingStatus(id, status, updatedBy);
+            _unitOfWork.CommonRepository.CreateHistory(
+              obj, Convert.ToInt32(ModuleEnum.Customer),Convert.ToInt64(data.CustomerId), id, Convert.ToInt32(AddressTypeEnum.BillingAddress), false,true);
+
             return Ok();
 
         }

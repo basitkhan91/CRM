@@ -17,7 +17,7 @@ CREATE TABLE [dbo].[BalanceType](
 	[CreatedDate] [datetime2](7) NOT NULL,
 	[UpdatedDate] [datetime2](7) NOT NULL,
 	[IsActive] [bit] NOT NULL,
-	[IsDelete] [bit] NOT NULL,
+	[IsDeleted] [bit] NOT NULL,
  CONSTRAINT [PK_BalanceType] PRIMARY KEY CLUSTERED 
 (
 	[ID] ASC

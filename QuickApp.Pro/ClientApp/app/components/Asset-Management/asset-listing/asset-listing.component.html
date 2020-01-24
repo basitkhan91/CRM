@@ -48,9 +48,9 @@
                                                (input)="dt.filterGlobal($event.target.value, 'contains')"
                                                placeholder="Filter">
                                     </div>
-                                    <button type="button" class="btn btn-primary-cstm" matTooltip="Download Data" matTooltipPosition="above"
+                                    <button type="button" class="btn btn-primary" matTooltip="Download Data" matTooltipPosition="above"
                                             pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
-                                    <button type="button" class="btn btn-primary-cstm" matTooltip="Download Selected Data" pTooltip="Download Selected Data" matTooltipPosition="above"
+                                    <button type="button" class="btn btn-primary" matTooltip="Download Selected Data" pTooltip="Download Selected Data" matTooltipPosition="above"
                                             pButton icon="fa-download" iconPos="left" label="Export Selected Data" (click)="dt.exportCSV({selectionOnly:true})"></button>
                                 </div>
                                 <div style="padding-bottom: 1%"><br></div>
@@ -67,13 +67,13 @@
                                         {{col.header}}
                                         <p-sortIcon [field]="col.field"></p-sortIcon>
                                     </th>
-                                    <th style="width:120px;position: sticky;" *ngIf="selectedColumns.length> 0">Actions</th>
+                                    <th style="width:150px;position: sticky;" *ngIf="selectedColumns.length> 0">Actions</th>
                                 </tr>
                                 <tr>
                                     <th style="width:auto" *ngFor="let col of columns" [ngSwitch]="col.field">
                                         <input style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field,'contains')">
                                     </th>
-                                    <th style="width:120px;position: sticky"></th>
+                                    <th style="width:150px;position: sticky"></th>
                                 </tr>
                             </ng-template>
                             <ng-template pTemplate="body" let-rowData let-columns="columns" let-asset>
@@ -82,7 +82,7 @@
                                     <td style="width:auto" *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
                                         {{rowData[col.field]}}
                                     </td>
-                                    <td class="action-icons-cstm" style="width:120px" *ngIf="selectedColumns.length> 0">
+                                    <td class="action-icons-cstm" style="width:150px" *ngIf="selectedColumns.length> 0">
                                         <div>
                                         <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on"
                                                        offLabel="off" (onChange)="toggleIsActive(rowData,$event)"
@@ -95,7 +95,10 @@
                                                        [(ngModel)]="rowData['isActive']"></p-inputSwitch>
                                         <span data-toggle="modal" data-target="#view"><a class="btn nobg btn-view-cstm" (click)="openView(view,rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
                                         <span><a class="btn nobg btn-edit-cstm" (click)="openAssetToEdit(rowData)" matTooltip="Edit"><i class="fa fa-pencil"></i></a> </span>
+                                        <span><a class="btn nobg btn-edit-cstm" (click)="openAssetToAdjustment(rowData)" matTooltip="Asset Adjustment"><i class="fa fa-adjust"></i></a> </span>
+                                        <span><a class="btn nobg btn-delete-cstm" (click)="openHistory(history,rowData)" matTooltip="History"><i class="fa fa-history"></i></a> </span>
                                         <span><a class="btn nobg btn-delete-cstm" (click)="openDelete(content,rowData)" matTooltip="Delete"><i class="fa fa-trash"></i></a> </span>
+                                        
                                         </div>
 
                                         <!-- <span data-toggle="modal" data-target="#view">
@@ -152,10 +155,10 @@
                             </div>
                             <div class="panel-heading">
                                 <h4 class="panel-title">
-                                    <a class="collapsed" data-toggle="collapse" href="#step1">General Information</a>
+                                    <a class="" data-toggle="collapse" href="#step1" aria-expanded="true">General Information</a>
                                 </h4>
                             </div>
-                            <div id="step1" class="panel-collapse collapse in">
+                            <div id="step1" class="panel-collapse collapse in show">
                                 <div class="panel-body">
                                     <div class="col-sm-6">
                                         <p>
@@ -302,7 +305,7 @@
                                     <a class="collapsed" data-toggle="collapse" href="#step3">Calibration</a>
                                 </h4>
                             </div>
-                            <div id="step3">
+                            <div id="step3" class="panel-collapse collapse">
                                 <div class="panel-body">
                                     <div class="col-sm-3" *ngIf="assetViewList.calibrationRequired">
                                         <p>
@@ -498,6 +501,63 @@
         </div>
 
     </ng-template>
+
+    <ng-template #history let-c="close" let-d="dismiss">
+            <div class="modal-header">
+                <h4 class="modal-title">History of Asset "{{selectedAsset}}"</h4>
+                <button type="button" class="close" aria-label="Close" (click)="dismissHistoryModel()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body" style="padding:0;">
+                    <p-table #dt class="rpo-table-cstm rro-table-cstm" 
+                    [value]="historyData"
+                    [columns]="historyCols">
+               
+               <ng-template pTemplate="colgroup" let-columns>
+                   <colgroup>
+                        
+                       <col *ngFor="let col of columns" [ngStyle]="{'width': col.width}">
+                       <col style="width:20px">
+                   </colgroup>
+               </ng-template>
+               <ng-template pTemplate="header" let-columns>
+                   <tr>
+                       
+                       <th *ngFor="let col of columns">
+                           {{col.header}}
+                          
+                       </th>
+                       <th></th>
+                      
+                   </tr>
+                  
+               </ng-template>
+               <ng-template pTemplate="body" let-rowData let-columns="columns" let-asset>
+                   <tr>
+                      
+                       <td>{{ rowData.overview}}</td>
+                       <td>{{ rowData.updatedBy}}</td>
+                       <td>{{ rowData.updatedTime}}</td>
+                       <td>
+                            <span><a class="btn nobg btn-edit-cstm">
+                                    <i class="fa fa-plus-circle fa-lg"></i>
+                            </a></span>
+                       </td>
+              
+                      
+                   </tr>
+                </ng-template>
+                </p-table>
+            </div>
+    
+            <div class="modal-footer">
+                
+                <button type="button" class="btn btn-danger" (click)="dismissHistoryModel()">Close</button>
+            </div>
+    
+        </ng-template>
 
 </div>
 

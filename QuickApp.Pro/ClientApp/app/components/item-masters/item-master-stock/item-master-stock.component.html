@@ -854,8 +854,8 @@
                         <div class="col-sm-6">
                         </div>-->
                         <div class="form-row pull-right">
-                            <button class="btn btn-primary-cstm submit-btn" pButton type="submit" style="height: 30px" >Save &amp; Next</button>
-                            <!-- <button class="btn btn-primary-cstm float-right" pButton type="button" (click)="saveItemMasterGeneralInformation()" icon="pi pi-angle-right" iconPos="right" label="Save & Next" style="padding: 0 !important;"></button> -->
+                            <button class="btn btn-primary submit-btn" pButton type="submit" style="height: 30px" >Save &amp; Next</button>
+                            <!-- <button class="btn btn-primary float-right" pButton type="button" (click)="saveItemMasterGeneralInformation()" icon="pi pi-angle-right" iconPos="right" label="Save & Next" style="padding: 0 !important;"></button> -->
                         </div>
                     <!--/div>-->
                 </div>
@@ -970,9 +970,9 @@
 
                     </div>
                    
-                    <button class="btn btn-primary-cstm pull-right submit-btn"  (click)="moveAtachapter()" type="button" style="height: 30px; width: 100px">Save & Next</button> &nbsp;
+                    <button class="btn btn-primary pull-right submit-btn"  (click)="moveAtachapter()" type="button" style="height: 30px; width: 100px">Save & Next</button> &nbsp;
 
-                    <button class="btn btn-primary-cstm pull-right submit-btn"  type="button" (click)="moveGeneralInfromation(); changeOfTab('General')" style="height: 30px">Previous</button>
+                    <button class="btn btn-primary pull-right submit-btn"  type="button" (click)="moveGeneralInfromation(); changeOfTab('General')" style="height: 30px">Previous</button>
                     
                 </div>
                 <div [ngClass]="{hideTab : currentTab !== 'Atachapter'}">
@@ -1059,9 +1059,9 @@
                         <br />
                     </div>
                     <div>
-                        <button class="btn btn-primary-cstm pull-right submit-btn" (click)="movePurchaseInformation(); changeOfTab('PurchaseSales');" type="button"  style="height: 30px; width: 100px">Save & Next</button> &nbsp;
+                        <button class="btn btn-primary pull-right submit-btn" (click)="movePurchaseInformation(); changeOfTab('PurchaseSales');" type="button"  style="height: 30px; width: 100px">Save & Next</button> &nbsp;
 
-                        <button class="btn btn-primary-cstm pull-right submit-btn"  type="button" (click)="moveAircraftInformation(); changeOfTab('AircraftInfo');" style="height: 30px; width: 100px">Previous</button>
+                        <button class="btn btn-primary pull-right submit-btn"  type="button" (click)="moveAircraftInformation(); changeOfTab('AircraftInfo');" style="height: 30px; width: 100px">Previous</button>
                     </div>
 
                 </div>
@@ -1337,9 +1337,9 @@
 
                         </div>
                         <div>
-                            <button class="btn btn-primary-cstm pull-right submit-btn"  (click)="moveExportInformation()" [disabled]="!purchaseSales.valid" type="submit" style="height: 30px; width: 100px">Save & Next</button> &nbsp;
+                            <button class="btn btn-primary pull-right submit-btn"  (click)="moveExportInformation()" [disabled]="!purchaseSales.valid" type="submit" style="height: 30px; width: 100px">Save & Next</button> &nbsp;
 
-                            <button class="btn btn-primary-cstm pull-right submit-btn"  type="button" (click)="moveAtachapter()" style="height: 30px; width: 100px">Previous</button>
+                            <button class="btn btn-primary pull-right submit-btn"  type="button" (click)="moveAtachapter()" style="height: 30px; width: 100px">Previous</button>
                         </div>
                     </form>
                 </div>
@@ -1588,11 +1588,11 @@
                         <!--<div class="col-sm-12 mt8">-->
                         <div>
 
-                            <button class="btn btn-primary-cstm pull-right submit-btn" type="button" (click)="saveandcreate()" style="height: 30px; width: 115px">Save & Add New</button>
+                            <button class="btn btn-primary pull-right submit-btn" type="button" (click)="saveandcreate()" style="height: 30px; width: 115px">Save & Add New</button>
                             &nbsp;
-                            <button class="btn btn-primary-cstm pull-right submit-btn" type="submit" [disabled]="!exportInformatiom.valid || !isValidClassification" (click)="saveExportInformation()" style="height: 30px; width:80px">save</button>
+                            <button class="btn btn-primary pull-right submit-btn" type="submit" [disabled]="!exportInformatiom.valid || !isValidClassification" (click)="saveExportInformation()" style="height: 30px; width:80px">save</button>
                             &nbsp;
-                            <button class="btn btn-primary-cstm pull-right submit-btn" type="button" (click)="changeOfTab('Exchange')" style="height: 30px; width: 100px">Previous</button>
+                            <button class="btn btn-primary pull-right submit-btn" type="button" (click)="changeOfTab('Exchange')" style="height: 30px; width: 100px">Previous</button>
 
                         </div>
                         <!--</div>-->
@@ -1650,7 +1650,7 @@
                             </div>
                         </div>
                         <div class="col-md-2">
-                            <button style="margin-top: 20px;" type="button" class="btn btn-primary-cstm" (click)="mapAircraftInformation()">Add</button>
+                            <button style="margin-top: 20px;" type="button" class="btn btn-primary" (click)="mapAircraftInformation()">Add</button>
                         </div>
                     </div>
 
@@ -1694,8 +1694,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary-cstm" data-dismiss="modal" (click)="saveAircraft()">Save</button>
-                    <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="saveAircraft()">Save</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
@@ -1740,7 +1740,7 @@
                             </div>
 
                             <div class="col-md-2">
-                                <button style="margin-top: 20px;" type="button" class="btn btn-primary-cstm" (click)="addATAMapping();" data-dismiss="modal">Add</button>
+                                <button style="margin-top: 20px;" type="button" class="btn btn-primary" (click)="addATAMapping();" data-dismiss="modal">Add</button>
                             </div>
                         </div>
                     </form>
@@ -1748,7 +1748,7 @@
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
@@ -1932,11 +1932,11 @@
                 </div>
                 <div class="clear"></div>
                 <div class="modal-footer">
-                    <button class="btn btn-primary-cstm" [disabled]="!userForm.valid || disableSaveConsume || disableSaveStockUOM || disableSavePurchaseUOM"
+                    <button class="btn btn-primary" [disabled]="!userForm.valid || disableSaveConsume || disableSaveStockUOM || disableSavePurchaseUOM"
                             (click)="saveConsumeunitofmeasure()">
                         Save
                     </button>
-                    <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
+                    <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
                 </div>
             </form>
         </div>
@@ -2028,11 +2028,11 @@
             </div>
             <div class="clear"></div>
             <div class="modal-footer">
-                <button class="btn btn-primary-cstm pull-right submit-btn" [disabled]="!itemForm.valid || disableSaveItemClassficationCode || disableClassdesc || disabletypeSave"
+                <button class="btn btn-primary pull-right submit-btn" [disabled]="!itemForm.valid || disableSaveItemClassficationCode || disableClassdesc || disabletypeSave"
                         (click)="saveitemclassification()">
                     Save
                 </button>
-                <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
+                <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
             </div>
         </form>
     </div>
@@ -2101,11 +2101,11 @@
             <div class="clear"></div>
             <div class="modal-footer">
 
-                <button class="btn btn-primary-cstm pull-right submit-btn" [disabled]="!userForm.valid || disableSaveItemGroup"
+                <button class="btn btn-primary pull-right submit-btn" [disabled]="!userForm.valid || disableSaveItemGroup"
                         (click)="saveitemgroup()">
                     Save
                 </button>
-                <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
+                <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
             </div>
         </form>
     </div>
@@ -2170,11 +2170,11 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-primary-cstm pull-right submit-btn" [disabled]="!provisionForm.valid || disableSaveProvision"
+                <button class="btn btn-primary pull-right submit-btn" [disabled]="!provisionForm.valid || disableSaveProvision"
                         (click)="saveprovision()">
                     Save
                 </button>
-                <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
+                <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
             </div>
         </form>
     </div>
@@ -2250,11 +2250,11 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-primary-cstm pull-right submit-btn" [disabled]="!purchaseForm.valid || disableSavePurchaseUOM"
+                    <button class="btn btn-primary pull-right submit-btn" [disabled]="!purchaseForm.valid || disableSavePurchaseUOM"
                             (click)=" savePurchaseunitofmeasure()">
                         Save
                     </button>
-                    <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
+                    <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
                 </div>
             </div>
         </form>
@@ -2331,11 +2331,11 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-primary-cstm pull-right submit-btn" [disabled]="!stockForm.valid || disableSaveStockUOM"
+                    <button class="btn btn-primary pull-right submit-btn" [disabled]="!stockForm.valid || disableSaveStockUOM"
                             (click)=" saveStockunitofmeasure()">
                         Save
                     </button>
-                    <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
+                    <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
                 </div>
             </div>
         </form>
@@ -2413,11 +2413,11 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-primary-cstm" [disabled]="!consumeForm.valid || disableSaveConsume"
+                    <button class="btn btn-primary" [disabled]="!consumeForm.valid || disableSaveConsume"
                             (click)=" saveConsumeunitofmeasure()">
                         Save
                     </button>
-                    <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
+                    <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
                 </div>
             </div>
         </form>
@@ -2816,11 +2816,11 @@
                 <div class="clear"></div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-primary-cstm pull-right" (click)="saveManufacturer()"
+                <button class="btn btn-primary pull-right" (click)="saveManufacturer()"
                         type="submit" [disabled]="!userForm.valid || disableManufacturer">
                     Save
                 </button>
-                <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
+                <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
             </div>
         </form>
     </div>
@@ -2886,8 +2886,8 @@
                 <div class="clear"></div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-primary-cstm" (click)="saveIntegration()" [disabled]="!userForm.valid || disableSave">Save</button>
-                <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
+                <button class="btn btn-primary" (click)="saveIntegration()" [disabled]="!userForm.valid || disableSave">Save</button>
+                <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
             </div>
         </form>
     </div>
@@ -2908,8 +2908,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-success-cstm" data-dismiss="modal">Save</button>
-                <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-success" data-dismiss="modal">Save</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
@@ -2969,8 +2969,8 @@
                 <div class="clear"></div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-primary-cstm" (click)="savepriority()" [disabled]="!priorityForm.valid || disableSave">Save</button>
-                <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
+                <button class="btn btn-primary" (click)="savepriority()" [disabled]="!priorityForm.valid || disableSave">Save</button>
+                <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
             </div>
         </form>
     </div>

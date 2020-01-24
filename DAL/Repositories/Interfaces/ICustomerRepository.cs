@@ -65,8 +65,8 @@ namespace DAL.Repositories.Interfaces
         void UpdateDocumentDetails(CustomerDocumentDetail customerDocument);
         CustomerDocumentDetail GetCustomerDocumentDetailById(long id);
         IEnumerable<object> GetCustomerNameAndCodes(string value);
-        void AddCustomerShippingAddress(Customer objCustomer);
-        void AddCustomerBillinggAddress(Customer objCustomer);
+        long AddCustomerShippingAddress(Customer objCustomer);
+        long AddCustomerBillinggAddress(Customer objCustomer);
     		IEnumerable<object> GetCustomerNameAndCodesByCustomerId(long customerId);
         IEnumerable<object> SearchCustomer(string value, CustomerSearchType searchType);
         void DeleteRestrictedParts(long id, string updatedBy);

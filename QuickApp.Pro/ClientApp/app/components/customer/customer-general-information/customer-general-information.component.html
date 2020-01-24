@@ -111,8 +111,8 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <label>Phone <span class="clr-red">*</span></label>
-                                                    <div class="col-md-12">
-                                                        <div class="col-md-6">
+                                                    <div class="col-md-12 pl-0">
+                                                        <div class="col-md-6 pl-0">
                                                             <input type="text" id="phone" name="phone" #customerPhone="ngModel" class="form-control"  maxlength="20" (keypress)="patternMobilevalidationWithSpl($event)" [(ngModel)]="generalInformation.customerPhone" required>
 
                                                         </div>
@@ -128,8 +128,8 @@
 
 
                                                 </div>
-                                                <div class="form-group">
-                                                    <label>Email <span class="clr-red">*</span></label>
+                                                <div class="form-group" >
+                                                    <label style="margin-top: 15px;">Email <span class="clr-red">*</span></label>
                                                     <input class="form-control" id="email" name="email" [pattern]="emailPattern" #userEmail="ngModel" type="email" pKeyFilter="email" mask="email" [(ngModel)]="generalInformation.email" required>
                                                     <div *ngIf="userEmail.errors" [ngClass]="'error'">
                                                         <div *ngIf="userEmail.errors.pattern">
@@ -243,7 +243,7 @@
                                                </div>
                                                 <div class="form-group" style="clear: both;">
                                                     <label>URL to Customer site</label>
-                                                    <input class="form-control " type="text" id="customerURL" #url="ngModel" name="customerURL" [(ngModel)]="generalInformation.customerURL">
+                                                    <input class="form-control " type="text" id="customerURL" #url="ngModel" [pattern]="urlPattern" name="customerURL" [(ngModel)]="generalInformation.customerURL">
                                                     <div *ngIf="url.errors" [ngClass]="'error'">
                                                         <div *ngIf="url.errors.pattern">
                                                             <span style="color:red">URL not valid</span>
@@ -374,7 +374,7 @@
 
                                         </div>
                                         <div class="form-row pull-right">
-                                            <button type="submit" class="btn btn-primary-cstm submit-btn" [disabled]="!generalInfoForm.valid || isCustomerNameAlreadyExists || disableSaveCustomerName || isCustomerCodeAlreadyExists ||disableSaveParentName" (click)="saveGeneralInformation()">Save &amp; Next</button>
+                                            <button type="submit" class="btn btn-primary submit-btn" [disabled]="!generalInfoForm.valid || isCustomerNameAlreadyExists || disableSaveCustomerName || isCustomerCodeAlreadyExists ||disableSaveParentName" (click)="saveGeneralInformation()">Save &amp; Next</button>
                                         </div>
 
                                     </div>
@@ -438,7 +438,7 @@
             <div class="form-group">
                 <label for="description" class="control-label">Memo</label>
                 <div class="control-data">
-                    <input #memo="ngModel" placeholder="Tool Bar" id="memo" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.memo" minlength="2">
+                    <input #memo="ngModel"  id="memo" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.memo" minlength="2">
                     <div *ngIf="memo.dirty && memo.errors?.required && memo.errors" class="invalid-form-error-message">
                         Memo required.
                     </div>
@@ -551,8 +551,8 @@
 
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary-cstm" data-dismiss="modal" (click)="addClassification()" [disabled]="isClassificationAlreadyExists ||addCustomerClassification.invalid ">Save</button>
-                    <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="resetClassificationPopUp()">Close</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="addClassification()" [disabled]="isClassificationAlreadyExists ||addCustomerClassification.invalid ">Save</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="resetClassificationPopUp()">Close</button>
                 </div>
             </div>
         </form>
@@ -587,12 +587,12 @@
                     </div>
                     <div class="form-group">
                         <label>Intergation</label>
-                        <input class="form-control" [(ngModel)]="addNewIntergation.description" name="description">
+                        <input type="text" class="form-control" [(ngModel)]="addNewIntergation.description" name="description">
                     </div>
 
                     <div class="form-group">
                         <label>Memo</label>
-                        <input class="form-control" [(ngModel)]="addNewIntergation.memo" name="memo" placeholder="Tool Bar">
+                        <input type="text" class="form-control" [(ngModel)]="addNewIntergation.memo" name="memo">
                     </div>
 
                     <div class="form-group">
@@ -612,8 +612,8 @@
 
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary-cstm" data-dismiss="modal" (click)="newIntegrationAdd()" [disabled]="!addIntergation.valid || isIntegrationAlreadyExists">Save</button>
-                    <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="resetIntegrationPopUp()">Close</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="newIntegrationAdd()" [disabled]="!addIntergation.valid || isIntegrationAlreadyExists">Save</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="resetIntegrationPopUp()">Close</button>
                 </div>
             </div>
 
@@ -635,8 +635,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary-cstm" data-dismiss="modal" (click)="onClickPopupSave()">Save</button>
-                <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" >Close</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="onClickPopupSave()">Save</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal" >Close</button>
             </div>
         </div>
     </div>

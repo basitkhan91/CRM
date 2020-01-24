@@ -60,3 +60,9 @@ a.fa.fa-plus-circle {
 //         margin-right: 15px;
 //     }
 // }
+td {
+    padding: 5px !important;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

@@ -1555,21 +1555,25 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
                 this.quoteData = res;
                 this.workOrderQuoteId = res.workOrderQuote.workOrderQuoteId;
                 console.log(this.workOrderQuoteId, res.workOrderQuoteId, res);
-
-                this.getQuoteCostingData();
+                this.quoteService.getSavedQuoteDetails(this.workFlowWorkOrderId)
+                .subscribe(
+                    res=>{
+                        this.getQuoteCostingData(res['buildMethodId']);
+                    }
+                )
             }
 
         })
     }
 
 
-    getQuoteCostingData() {
+    getQuoteCostingData(buildMethodId) {
         // if(this.workOrderQuoteId){
         // this.getQuoteExclusionListByWorkOrderQuoteId();
-        this.getQuoteMaterialListByWorkOrderQuoteId();
-        this.getQuoteFreightsListByWorkOrderQuoteId();
-        this.getQuoteChargesListByWorkOrderQuoteId();
-        this.getQuoteLaborListByWorkOrderQuoteId();
+        this.getQuoteMaterialListByWorkOrderQuoteId(buildMethodId);
+        this.getQuoteFreightsListByWorkOrderQuoteId(buildMethodId);
+        this.getQuoteChargesListByWorkOrderQuoteId(buildMethodId);
+        this.getQuoteLaborListByWorkOrderQuoteId(buildMethodId);
 
         // this.calculateTotalWorkOrderCost();
 
@@ -1584,26 +1588,26 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     //     })
     // }
 
-    async getQuoteMaterialListByWorkOrderQuoteId() {
-        await this.quoteService.getQuoteMaterialList(this.workOrderQuoteId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
+    async getQuoteMaterialListByWorkOrderQuoteId(buildMethodId) {
+        await this.quoteService.getQuoteMaterialList(this.workOrderQuoteId, buildMethodId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
             this.quoteMaterialList = res;
             this.sumOfMaterialList();
         })
     }
-    async getQuoteFreightsListByWorkOrderQuoteId() {
-        await this.quoteService.getQuoteFreightsList(this.workOrderQuoteId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
+    async getQuoteFreightsListByWorkOrderQuoteId(buildMethodId) {
+        await this.quoteService.getQuoteFreightsList(this.workOrderQuoteId, buildMethodId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
             this.quoteFreightsList = res;
 
         })
     }
-    async getQuoteChargesListByWorkOrderQuoteId() {
-        await this.quoteService.getQuoteChargesList(this.workOrderQuoteId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
+    async getQuoteChargesListByWorkOrderQuoteId(buildMethodId) {
+        await this.quoteService.getQuoteChargesList(this.workOrderQuoteId, buildMethodId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
             this.quoteChargesList = res;
             this.sumofCharges();
         })
     }
-    async getQuoteLaborListByWorkOrderQuoteId() {
-        await this.quoteService.getQuoteLaborList(this.workOrderQuoteId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
+    async getQuoteLaborListByWorkOrderQuoteId(buildMethodId) {
+        await this.quoteService.getQuoteLaborList(this.workOrderQuoteId, buildMethodId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
             if (res) {
                 this.quoteLaborList = res.laborList;
                 this.sumofLaborOverHead();

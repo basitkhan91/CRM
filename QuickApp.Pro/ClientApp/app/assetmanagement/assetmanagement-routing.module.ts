@@ -11,6 +11,7 @@ import { AssetGeneralInformationComponent } from '../components/Asset-Management
 import { AssetMaintenanceWarrantyComponent } from '../components/Asset-Management/Asset-pages/asset-maintenance-warranty/asset-maintenance-warranty.component';
 import { CreateAssetComponent } from '../components/Asset-Management/Asset-pages/create-asset/create-asset.component';
 import { ViewAssetComponent } from '../components/Asset-Management/Asset-pages/view-asset/view-asset.component';
+import { AssetAdjustmentComponent } from '../components/Asset-Management/Asset-pages/asset-adjustment/asset-adjustment.component';
 const assetPagesRoutes: Routes = [
     {
         path: 'assetpages',
@@ -24,6 +25,7 @@ const assetPagesRoutes: Routes = [
             { path: "app-create-asset", component: CreateAssetComponent, data: { title: "Asset Create" } },
             { path: "app-edit-asset/:id", component: CreateAssetComponent, data: { title: "Asset Edit" } },
             { path: "app-view-asset", component: ViewAssetComponent, data: { title: "Asset View" } },
+            { path: "app-asset-adjustment/:id", component: AssetAdjustmentComponent, data: { title: "Asset Adjustment" } },
         ]
     }
 ];

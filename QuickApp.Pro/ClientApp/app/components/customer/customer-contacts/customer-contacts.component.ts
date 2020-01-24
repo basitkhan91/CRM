@@ -62,6 +62,7 @@ export class CustomerContactsComponent implements OnInit {
 	disableSaveMiddleName: boolean;
 	disableSaveLastName: boolean;
 	disablesaveForlastname: boolean;
+
 	customerContactsColumns = [
 		{ field: 'tag', header: 'Tag' },
 		{ field: 'firstName', header: 'First Name' },
@@ -71,7 +72,7 @@ export class CustomerContactsComponent implements OnInit {
 		{ field: 'workPhone', header: 'Work Phone' },
 		{ field: 'mobilePhone', header: 'Mobile Phone' },
 		{ field: 'fax', header: 'Fax' },
-		{ field: 'isDefaultContact', header: 'Primary Contact' },
+		// { field: 'isDefaultContact', header: 'Primary Contact' },
 		{ field: 'notes', header: 'Memo' },
 		{ field: 'updatedDate', header: 'Updated Date' },
 		{ field: 'createdDate', header: 'Created Date' }
@@ -166,7 +167,7 @@ export class CustomerContactsComponent implements OnInit {
 		this.middleNamesList = [...this.contactsListOriginal.filter(x => {
 
 			if (x.middleName !== null && x.middleName !== "") {
-				return x.middleName.toLowerCase().indexOf(event.query.toLowerCase())
+                return x.middleName.toLowerCase().includes(event.query.toLowerCase())
 			}
 
 		})]

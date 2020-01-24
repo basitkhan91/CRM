@@ -111,7 +111,7 @@ import { CommonService } from "../services/common.service";
         CommonService
 
     ],
-    entryComponents: [
+    entryComponents: [        
     ]
 })
 export class CustomerPagesModule {

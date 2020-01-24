@@ -54,8 +54,8 @@
                                 <i class="fa fa-search"></i>
                                 <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Filter" style="height: 28px !important;">
                             </div>
-                            <button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" iconPos="left" label="Export All Data" matTooltip="Download  Data" matTooltipPosition="above" (click)="dt.exportCSV()" style="padding: 5px 10px !important;"></button>
-                            <button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" iconPos="left" label="Export Selected Data" matTooltip="Download Selected Data" matTooltipPosition="above" (click)="dt.exportCSV({selectionOnly:true})" style="padding: 5px 10px !important;"></button>
+                            <button type="button" class="btn btn-primary" pButton icon="fa-download" iconPos="left" label="Export All Data" matTooltip="Download  Data" matTooltipPosition="above" (click)="dt.exportCSV()" style="padding: 5px 10px !important;"></button>
+                            <button type="button" class="btn btn-primary" pButton icon="fa-download" iconPos="left" label="Export Selected Data" matTooltip="Download Selected Data" matTooltipPosition="above" (click)="dt.exportCSV({selectionOnly:true})" style="padding: 5px 10px !important;"></button>
                             <!--<div class="excel-upload excel-upload-cstm">
     <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
     <label for="upload">
@@ -73,7 +73,7 @@
 
                     <ng-template pTemplate="header" let-columns>
                         <tr>
-
+                                <th style="width: 40px;">Flag</th>
                             <th *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
                                 {{col.header}}
                                 <p-sortIcon [field]="col.field"></p-sortIcon>
@@ -92,8 +92,13 @@
                     </ng-template>
 
                     <ng-template pTemplate="body" let-rowData let-columns="columns" let-i="rowIndex">
-                        <tr [pSelectableRow]="rowData" [pSelectableRowDblClick]="rowData" (dblclick)="viewSelectedRowdbl(viewdbl,rowData)" [ngClass]="{'row-primary': rowData.isDefaultContact === true}">
-
+                        <tr [pSelectableRow]="rowData" [pSelectableRowDblClick]="rowData" (dblclick)="viewSelectedRowdbl(viewdbl,rowData)" >
+                                <td > <span class="flag">
+                                        <i  *ngIf="rowData.isDefaultContact == true"   [ngStyle]="{'color': rowData.isDefaultContact == true ? 'green' : 'none'}"  
+                                         class="fa fa-flag" aria-hidden="true"></i>
+                                         </span>
+                                    
+                                </td>
 
                             <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle style="width:110px">
                                 {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
@@ -130,8 +135,8 @@
                     No Records
                 </div>
                 <div style="margin-top: 10px;">
-                    <button type="button" class="btn btn-primary-cstm pull-right submit-btn" (click)="nextClick()">Save & Next</button>
-                    <button type="button" class="btn btn-primary-cstm pull-right submit-btn" (click)="backClick()">Previous</button>
+                    <button type="button" class="btn btn-primary pull-right submit-btn" (click)="nextClick()">Save & Next</button>
+                    <button type="button" class="btn btn-primary pull-right submit-btn" (click)="backClick()">Previous</button>
                 </div>
             </div>            
         </div>
@@ -203,7 +208,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
             </div>
           </div>
       
@@ -230,7 +235,7 @@
                             <div class="form-group">
                                 <label>Prefix</label>
                                 <select name="preifx" [(ngModel)]="contactInformation.prefix">
-                                    <option value="None selected">None selected</option>
+                                    <option value="" selected>None selected</option>
                                     <option value="Dr.">Dr.</option>
                                     <option value="Mr.">Mr.</option>
                                     <option value="Mrs.">Mrs.</option>
@@ -313,7 +318,7 @@
                             </div>
                             <div class="form-group">
                                 <label>Web Site</label>
-                                <input class="form-control" type="text" name="websiteURL" #url="ngModel" [(ngModel)]="contactInformation.websiteURL">
+                                <input class="form-control" type="text" name="websiteURL" #url="ngModel" [(ngModel)]="contactInformation.websiteURL" [pattern]="urlPattern">
                                 <div *ngIf="url.errors" [ngClass]="'error'">
                                     <div *ngIf="url.errors.pattern">
                                         <span style="color:red">URL not valid</span>
@@ -335,7 +340,7 @@
 
                             <div class="form-group">
                                 <label>Memo</label>
-                                   <textarea name="notes" [(ngModel)]="contactInformation.notes" placeholder="Tool Bar"></textarea>
+                                   <textarea name="notes" [(ngModel)]="contactInformation.notes"></textarea>
                             </div>
 
                             <div class="form-group">
@@ -353,9 +358,9 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" *ngIf="!isEditButton" class="btn btn-primary-cstm pull-right submit-btn" style="text-align:center" [disabled]="!addContactForm.valid ||contactEmail.errors || disablesaveForFirstname || disableSaveMiddleName ||disableSaveLastName" (click)="saveContactInformation()" data-dismiss="modal">Save</button>
-                    <button type="button" *ngIf="isEditButton" class="btn btn-primary-cstm pull-right submit-btn" style="text-align:center" (click)="updateCustomerContact()" [disabled]="!addContactForm.valid ||contactEmail.errors|| disablesaveForFirstname ||disableSaveMiddleName ||disableSaveLastName" data-dismiss="modal">Update</button>
-                    <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
+                    <button type="button" *ngIf="!isEditButton" class="btn btn-primary pull-right submit-btn" style="text-align:center" [disabled]="!addContactForm.valid ||contactEmail.errors || disablesaveForFirstname || disableSaveMiddleName ||disableSaveLastName" (click)="saveContactInformation()" data-dismiss="modal">Save</button>
+                    <button type="button" *ngIf="isEditButton" class="btn btn-primary pull-right submit-btn" style="text-align:center" (click)="updateCustomerContact()" [disabled]="!addContactForm.valid ||contactEmail.errors|| disablesaveForFirstname ||disableSaveMiddleName ||disableSaveLastName" data-dismiss="modal">Update</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                 </div>
             </form>
         </div>
@@ -398,7 +403,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-danger-cstm"  data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-danger"  data-dismiss="modal">Close</button>
             </div>
           </div>
       
@@ -439,7 +444,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
+                        <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
                     </div>
                 </div>
 
@@ -496,7 +501,7 @@
                             <div class="col-md-2">
                                 <button style="margin-top: 20px;"
                                         type="button"
-                                        class="btn btn-primary-cstm"
+                                        class="btn btn-primary"
                                         (click)="addATAMapping()">
                                     Save
                                 </button>
@@ -536,7 +541,7 @@
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">
                         Close
                     </button>
                 </div>

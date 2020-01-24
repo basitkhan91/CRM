@@ -147,6 +147,7 @@ namespace DAL
         public DbSet<VendorWarnings> VendorWarning { get; set; }
         public DbSet<CustomerWarning> CustomerWarning { get; set; }
         public DbSet<Employee> Employee { get; set; }
+        //public DbSet<AspNetUsers> AspNetUsers { get; set; }
         public DbSet<EmployeeAudit> EmployeeAudit { get; set; }
         public DbSet<shift> Shift { get; set; }
         public DbSet<Countries> Countries { get; set; }
@@ -163,6 +164,7 @@ namespace DAL
 
         public DbSet<CustomerBillingAddress> CustomerBillingAddress { get; set; }
         public DbSet<CustomerBillingAddressAudit> CustomerBillingAddressAudit { get; set; }
+
         public DbSet<ATAChapter> ATAChapter { get; set; }
 
         public DbSet<AircraftType> AircraftType { get; set; }
@@ -375,7 +377,8 @@ namespace DAL
         public DbSet<JournalPeriod> JournalPeriod { get; set; }
         public DbSet<JournalSource> JournalSource { get; set; }
         public DbSet<JournalManual> JournalManual { get; set; }
-
+        public DbSet<BalanceType> BalanceType { get; set; }
+        public DbSet<JournalCategory> JournalCategory { get; set; }
         public DbSet<WorkOrder> WorkOrder { get; set; }
         public DbSet<WorkOrderStatus> WorkOrderStatus { get; set; }
         public DbSet<WorkOrderType> WorkOrderType { get; set; }
@@ -508,8 +511,9 @@ namespace DAL
         public DbSet<EmployeeStation> EmployeeStation { get; set; }
         public DbSet<EmployeeStationAudit> EmployeeStationAudit { get; set; }
         public DbSet<Carrier> Carrier { get; set; }
+        public DbSet<ShippingBillingAddressAudit> ShippingBillingAddressAudit { get; set; }
 
-
+        
 
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
