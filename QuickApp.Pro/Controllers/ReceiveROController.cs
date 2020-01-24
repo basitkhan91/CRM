@@ -267,6 +267,7 @@ namespace QuickApp.Pro.Controllers
                 return BadRequest(ex);
             }
         }
+        
         #endregion Public Members
 
         #region Private Methods

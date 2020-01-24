@@ -1100,7 +1100,7 @@ export class EditRoComponent implements OnInit {
             if (part.stockLine) {
 
                 var timeLife = [];
-                var stockLineToUpdate = part.stockLine.filter(x => x.isEnabled);
+                var stockLineToUpdate = part.stockLine;
 
                 for (var stockLine of stockLineToUpdate) {
 
