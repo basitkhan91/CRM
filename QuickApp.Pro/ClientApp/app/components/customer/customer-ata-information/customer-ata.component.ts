@@ -37,6 +37,7 @@ export class CustomerATAInformationComponent implements OnInit {
         { field: 'ataSubChapterDescription', header: 'ATA Sub-Chapter' }
 
     ]
+    selectedColumns = this.ataHeaders;
      ataChapterIdUrl: string;
     contactIdUrl: string;
     ataSubchapterIdUrl: any;

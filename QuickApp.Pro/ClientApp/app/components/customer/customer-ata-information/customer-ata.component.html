@@ -69,21 +69,47 @@
                     </button>
                 </div>
             </div>
-            <div class="clear"></div>
+            <div class="clear"></div> 
             <p-table
+            #dt
             [rows]="6"
             [value]="ataListDataValues"
             [scrollable]="true"
             [style]="{ width: '100%' }"
             [paginator]="true"
+            [columns]="selectedColumns"
+            [metaKeySelection]="true"
+            [resizableColumns]="true" 
+            [reorderableColumns]="true"
           >
+          <ng-template pTemplate="caption">
+            <div style="text-align: right; min-height: 30px; margin-left: -6px;">
+                <p-multiSelect [options]="ataHeaders" [(ngModel)]="selectedColumns" [ngModelOptions]="{standalone: true}" optionLabel="header"
+                                selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
+                <div class="inner-addon right-addon w200 inline-block g-filter-search-cstm">
+                    <i class="fa fa-search"></i>
+                    <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Filter" style="height: 28px !important;">
+                </div>
+                <button type="button" class="btn btn-primary" pButton icon="fa-download" iconPos="left" label="Export All Data" matTooltip="Download  Data" matTooltipPosition="above" (click)="dt.exportCSV()" style="padding: 5px 10px !important;"></button>
+                <button type="button" class="btn btn-primary" pButton icon="fa-download" iconPos="left" label="Export Selected Data" matTooltip="Download Selected Data" matTooltipPosition="above" (click)="dt.exportCSV({selectionOnly:true})" style="padding: 5px 10px !important;"></button>
+            </div>
+        </ng-template>
             <ng-template pTemplate="header" let-columns>
               <tr>
-                <th *ngFor="let col of ataHeaders">
+                <!-- <th *ngFor="let col of ataHeaders">
                   {{ col.header }}
-                </th>
+                </th> -->
+                <th *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
+                        {{ col.header }} <p-sortIcon [field]="col.field"></p-sortIcon>
+                      </th>
                 <th>Action</th>
               </tr>
+              <tr>
+                <th style="width:auto" *ngFor="let col of columns" [ngSwitch]="col.field">
+                    <input style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field, 'contains')">
+                </th>
+                <th style="width:70px;position:sticky"></th>
+                </tr>
             </ng-template>
             <ng-template
               pTemplate="body"
@@ -92,7 +118,7 @@
               let-columns="columns"
             >
               <tr>
-                <td *ngFor="let col of ataHeaders">
+                <td *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
                   {{ rowData[col.field] }}
                 </td>
                 <td>
@@ -105,6 +131,9 @@
         
                 </td>
               </tr>
+              </ng-template>
+            <ng-template *ngIf="!(ataListDataValues.length > 0)"  class="no-records-cstm">
+                No Records
             </ng-template>
           </p-table>
          

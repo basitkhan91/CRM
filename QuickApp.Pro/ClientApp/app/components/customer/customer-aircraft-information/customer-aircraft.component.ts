@@ -70,7 +70,7 @@ export class CustomerAircraftComponent implements OnInit {
         { field: "DashNumber", header: "Dash Numbers" },
 
     ];
-    colsaircraftLD: any = [
+    colsaircraftLD = [
         { field: "aircraftType", header: "Aircraft" },
         { field: "aircraftModel", header: "Model" },
         { field: "dashNumber", header: "Dash Numbers" },
@@ -78,9 +78,9 @@ export class CustomerAircraftComponent implements OnInit {
         { field: "memo", header: "Memo" }
 
     ]
-    selectedColumns: any = this.colsaircraftLD;
+    selectedColumns = this.colsaircraftLD;
     dashNumberUnknown: boolean = false;
-    aircraftListDataValues: any[] = [];
+    aircraftListDataValues: any = [];
     id: number;
     customerCode: any;
     customerName: any;
