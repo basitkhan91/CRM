@@ -298,7 +298,7 @@ namespace DAL
             get
             {
                 if (_customer == null)
-                    _customer = new CustomerRepository(_context);
+                    _customer = new CustomerRepository(_context,_appSettings);
 
                 return _customer;
             }

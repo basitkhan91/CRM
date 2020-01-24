@@ -8,7 +8,8 @@ using DAL.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using DAL.Models.Enums;  
+using DAL.Models.Enums;
+using Microsoft.AspNetCore.Http;
 
 namespace DAL.Repositories.Interfaces
 {
@@ -88,7 +89,8 @@ namespace DAL.Repositories.Interfaces
        void AddVendorShippingAddress(Customer objCustomer, long vendorId,long addressId);
         void AddVendorBillingAddress(Customer objCustomer, long vendorId, long addressId);
         void AddVendorContact(Customer objCustomer, long vendorId);
-      
+        IEnumerable<object> UploadCustomerBillingAddressCustomData(IFormFile file, long customerId);
+        IEnumerable<object> UploadCustomerShippingAddressCustomData(IFormFile file, long customerId);
     }
 
 }

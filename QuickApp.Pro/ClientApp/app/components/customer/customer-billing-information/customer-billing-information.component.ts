@@ -8,6 +8,9 @@ import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 import { NgbModal, NgbActiveModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { AuditHistory } from '../../../models/audithistory.model';
 import * as $ from 'jquery';
+import { ConfigurationService } from '../../../services/configuration.service';
+import { CommonService } from '../../../services/common.service';
+
 @Component({
 	selector: 'app-customer-billing-information',
 	templateUrl: './customer-billing-information.component.html',
@@ -55,12 +58,13 @@ export class CustomerBillingInformationComponent {
     pageIndex: number = 0;
     pageSize: number = 10;
     totalPages: number;
+    formData = new FormData();
 	
 
-    constructor(public customerService: CustomerService, private authService: AuthService, private alertService: AlertService, private modalService: NgbModal,
-        private activeModal: NgbActiveModal,) {
-		
-	}
+    constructor(public customerService: CustomerService, private authService: AuthService, private alertService: AlertService, private modalService: NgbModal, private configurations: ConfigurationService,
+        private activeModal: NgbActiveModal, private commonService: CommonService, ) {
+
+    }
 
 
 	ngOnInit(): void {
@@ -299,7 +303,35 @@ export class CustomerBillingInformationComponent {
     }
 
 
-	
+    sampleExcelDownload() {
+        const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=CustomerBillingAddress&fileName=CustomerBillingAddress.xlsx`;
+        window.location.assign(url);
+    }
+    customExcelUpload(event) {
+        const file = event.target.files;
+
+        console.log(file);
+        if (file.length > 0) {
+
+            this.formData.append('file', file[0])
+            this.customerService.BillingFileUpload(this.formData, this.id).subscribe(res => {
+                event.target.value = '';
+
+                this.formData = new FormData();
+                this.getBillingDataById();
+                this.alertService.showMessage(
+                    'Success',
+                    `Successfully Uploaded  `,
+                    MessageSeverity.success
+                );
+            })
+
+
+
+        }
+
+    }
+
 
 
 }

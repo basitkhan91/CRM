@@ -625,4 +625,11 @@ export class CustomerService {
     getCustomerDocumentHistory(id) {
         return this.customerEndpoint.getCustomerDocumentAuditHistory(id)
     }
+
+    BillingFileUpload(file, customerId) {
+        return this.customerEndpoint.CustomerBillingFileUpload(file, customerId);
+    }
+    ShippingFileUpload(file, customerId) {
+        return this.customerEndpoint.CustomerShippingFileUpload(file, customerId);
+    }
 }
