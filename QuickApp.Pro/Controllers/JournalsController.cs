@@ -147,6 +147,13 @@ namespace QuickApp.Pro.Controllers
             return Ok(balanceTypes);
         }
 
+        [HttpGet("AllJournalCurrencyTypes")]
+        public IActionResult AllJournalCurrencyTypes()
+        {
+            var journalCurrencyTypes = unitOfWork.Repository<JournalCurrencyType>().GetAll().Where(x => x.IsDeleted != true && x.IsActive == true).OrderByDescending(x => x.ID);
+            return Ok(journalCurrencyTypes);
+        }
+
         [HttpGet("AllJournalCategory")]
         public IActionResult AllJournalCategory()
         {
