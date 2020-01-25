@@ -37,6 +37,8 @@ export class CustomerATAInformationComponent implements OnInit {
         { field: 'ataSubChapterDescription', header: 'ATA Sub-Chapter' }
 
     ]
+    showAdvancedSearchCard : boolean = false;
+    selectedColumns = this.ataHeaders;
      ataChapterIdUrl: string;
     contactIdUrl: string;
     ataSubchapterIdUrl: any;
@@ -286,6 +288,13 @@ export class CustomerATAInformationComponent implements OnInit {
         this.alertService.stopLoadingMessage();
         this.alertService.showStickyMessage("Save Error", "The below errors occured whilst saving your changes:", MessageSeverity.error, error);
         this.alertService.showStickyMessage(error, null, MessageSeverity.error);
+    }
+    enableDisableAdvancedSearch (val){        
+        this.showAdvancedSearchCard = val;
+        this.search_SelectedContact = [];
+        this.search_SelectedATA = [];
+        this.search_SelectedATASubChapter = [];
+        this.getMappedATAByCustomerId();
     }
 
 

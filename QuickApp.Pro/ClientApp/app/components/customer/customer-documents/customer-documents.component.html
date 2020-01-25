@@ -1,41 +1,39 @@
 ﻿
-    <div class="right_col" role="main">
+    <div class="right_col" role="main"  style="padding: 2px 6px;">
         <div >
             <div class="x_content">
                 <div *ngIf="isViewMode == false">
-                    <div class="form-group col-sm-4 Customer-details-heading" style="display: inline-block;margin: 10px 5px 0 5px;">
-                        <p class="fs10">
-                            <label class="control-label w100">Customer Name:</label>
-                            {{customerName}}
-                        </p>
-                    </div>
-                    <div class="form-group col-sm-4 Customer-details-heading" style="display: inline-block;margin: 10px 5px 0 5px;">
-                        <p class="fs10">
-                            <label class="control-label w100">Customer Code:</label>
-                            {{customerCode}}
-                        </p>
-                    </div>
+                    <div class="col-md-12 shadow-box-cstm">        
+                            <div class="col-md-4">
+                                <p class="fs12">
+                                <label class="control-label labels-font-header" style="width: auto;">Customer Name: </label>
+                            <span class="span-header-red" style="text-transform: capitalize"> {{customerName }} </span> </p>
+                            </div>
+                            <div class="col-md-4">
+                                <p class="fs12">
+                                <label class="control-label labels-font-header" style="width: auto;">Customer Code: </label>
+                                <span class="span-header-red" style="text-transform: capitalize"> {{customerCode }} </span> </p>
+                            </div>                            
+                        </div>
                 </div>
-
-                <div class="table-responsive">
-                    <div>
-                        <div class="col-md-12" style="margin-bottom: -10px;">
-                            <h3 class="po-head pull-left" style="padding: 0 6px;">Documents List</h3>
-                            <h4 class="float-right" *ngIf="isViewMode == false">
-                                    Add Documents
-                                    <a
-                                      class="plusicon-cstm"
-                                      href="#"
-                                      data-toggle="modal"
-                                      data-target="#addDocumentDetails"
-                                     (click)="addDocumentDetails()"
-                                       ><i class="fa fa-plus-circle fa-lg"></i
-                                    ></a>
-                                  </h4>
+                <div class="card" style="padding: 10px;">
+                        <div class="col-md-12">
+                            <h4 class="po-head-sm"> <!--class="float-right"-->
+                                Documents List <a *ngIf="isViewMode == false"
+                                class="plusicon-cstm"
+                                href="#"
+                                data-toggle="modal"
+                                data-target="#addDocumentDetails"
+                               (click)="addDocumentDetails()"
+                                 ><i class="fa fa-plus-circle fa-lg"></i
+                              ></a>
+                            </h4>
                         </div>
                         <div class="clear"></div>
                         <hr />
-                    </div>
+
+                <div class="table-responsive">
+
                     <p-table #dt class="rpo-table-cstm" [value]="customerDocumentsData" [metaKeySelection]="true" [rows]="10" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[10,50,100]" 
                     [columns]="selectedColumns" selectionMode="multiple" [resizableColumns]="true" [reorderableColumns]="true">
                         <ng-template pTemplate="caption" *ngIf="isViewMode == false">
@@ -69,6 +67,12 @@
                                 <th *ngIf="isViewMode == false"></th>
 
                             </tr>
+                            <tr>
+                                    <th style="width:auto" *ngFor="let col of columns" [ngSwitch]="col.field">
+                                        <input style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field, 'contains')">
+                                    </th>
+                                    <th *ngIf="isViewMode == false"></th>
+                                </tr>
                         </ng-template>
 
                         <ng-template pTemplate="body" let-rowData let-columns="columns">
@@ -115,11 +119,20 @@
                                 </td>
                             </tr>
                         </ng-template>
+                        <ng-template pTemplate="summary" id="footer">
+                            <label id="footer" class="footer">No'of records:</label>
+                            <input style="width: 5%;" [(ngModel)]="dt.totalRecords" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp;
+                            <!-- <label id="footer" class="footer1">Pages Count:</label>
+                            <input style="width: 5%;" value="{{dt.value.length / dt.rows}}" [disabled]="true" pInputText type="text" /> -->
+                        </ng-template>
+
 
                     </p-table>
                 </div>
-
-                <button type="button" class="btn btn-primary pull-right submit-btn" (click)="backClick()" *ngIf="isViewMode == false">Previous</button>
+                <div style="margin-top:10px">
+                    <button type="button" class="btn btn-primary pull-right submit-btn" (click)="backClick()" *ngIf="isViewMode == false">Previous</button>
+                </div>
+                </div><!--/Card-->
             </div>
         </div>
 
@@ -160,7 +173,7 @@
                         <p><span class="label"><b>Memo: </b></span><span class="value">{{sourceViewforDocument.docMemo}}</span></p>
                          <div class="mt-3">
                             <h4 class="panel-title" >Attachment Details:</h4>
-                            <p-table class="table-responsive ptable-cus-pma" [paginator]="sourceViewforDocumentList.length > 0" [value]="sourceViewforDocumentList"  [rows]="3" [columns]="sourceViewforDocumentListColumns">
+                            <p-table #dt class="table-responsive ptable-cus-pma" [paginator]="sourceViewforDocumentList.length > 0" [value]="sourceViewforDocumentList"  [rows]="3" [columns]="sourceViewforDocumentListColumns">
                                 <ng-template pTemplate="header" let-columns>
                                     <tr>
                                         <th *ngFor="let col of columns">
@@ -169,6 +182,12 @@
                                         <th>
                                            Download
                                         </th>
+                                    </tr>
+                                    <tr>
+                                        <th style="width:auto" *ngFor="let col of columns" [ngSwitch]="col.field">
+                                            <input style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field, 'contains')">
+                                        </th>
+                                        <th></th>
                                     </tr>
                                 </ng-template>
                                 <ng-template pTemplate="body" let-part let-rowData let-columns="columns" let-i="rowIndex">

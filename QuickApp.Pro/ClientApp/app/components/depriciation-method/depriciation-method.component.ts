@@ -127,6 +127,15 @@ export class DepriciationMethodComponent implements OnInit, AfterViewInit{
             ];
             this.selectedData = this.selectedColumns;
             this.alertService.stopLoadingMessage();
+            this.localSequenceList = [];
+            for (let i = 0; i < this.depriciationMethodList.length; i++) {
+                let codeName = this.depriciationMethodList[i].sequenceNo;
+                this.allreasn1.push([{
+                    "sequenceNo": this.depriciationMethodList[i].sequenceNo,
+                    "codeName": codeName
+                }]);
+                this.localSequenceList.push(codeName);
+            }
         });
     }
 
@@ -216,6 +225,7 @@ export class DepriciationMethodComponent implements OnInit, AfterViewInit{
     }
 
     eventHandler1(event) {
+        /*
         let value = event.target.value.toLowerCase();
         if (this.selectedreason1) {
             if (value == this.selectedreason1) {
@@ -224,7 +234,7 @@ export class DepriciationMethodComponent implements OnInit, AfterViewInit{
             else {
                 this.disableSaveForSequence = false;
             }
-        }
+        }*/
     }
 
     partnmId1(event) {
@@ -235,6 +245,23 @@ export class DepriciationMethodComponent implements OnInit, AfterViewInit{
             ) {
                 this.disableSaveForSequence = true;
                 this.selectedreason1 = event;
+                return;
+            }
+        }
+        this.selectedreason1 = "";
+        this.disableSaveForSequence = false;
+    }
+
+    onBlurCheck(event) {
+        console.log(event.target.value);
+        let value = event.target.value;
+        for (let i = 0; i < this.depriciationMethodList.length; i++) {
+            if ((value == this.depriciationMethodList[i].sequenceNo && !this.isEditMode) ||
+                (value == this.depriciationMethodList[i].sequenceNo && this.isEditMode == true
+                && this.depriciationMethodList[i].assetDepreciationMethodId != this.sourceAction.assetDepreciationMethodId)
+            ) {
+                this.disableSaveForSequence = true;
+                this.selectedreason1 = value;
                 return;
             }
         }
@@ -265,7 +292,7 @@ export class DepriciationMethodComponent implements OnInit, AfterViewInit{
                     "sequenceNo": this.depriciationMethodList[i].sequenceNo,
                     "codeName": codeName
                 }]),
-                    this.localSequenceList.push(codeName);
+                this.localSequenceList.push(codeName);
             }
         }
     }
