@@ -3570,8 +3570,7 @@ namespace DAL.Repositories
                                 qd.BuildMethodId,
                                 qd.SelectedId,
                                 qd.ReferenceNo,
-                                qd.WorkOrderQuoteDetailsId,
-                                qd.TaskId
+                                qd.WorkOrderQuoteDetailsId
                             }
                             ).FirstOrDefault();
                 return data;
@@ -5000,7 +4999,7 @@ namespace DAL.Repositories
 
                                     where wo.IsDeleted == false && wo.IsActive == true
                                           && wop.MasterPartId == partId && wop.WorkOrderScopeId == workScopeId
-                                     && wo.WorkOrderStatusId == 2 //Closed
+                                    // && wo.WorkOrderStatusId == 2 //Closed
                                     select new
                                     {
                                         wo.WorkOrderNum,
@@ -5281,7 +5280,6 @@ namespace DAL.Repositories
             {
                 var list = (from im in _appContext.ItemMaster
                             where im.IsActive == true && (im.IsDeleted == false || im.IsDeleted == null)
-                            && im.ItemMasterId== itemMasterId
                             select new
                             {
 

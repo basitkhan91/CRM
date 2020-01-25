@@ -13,7 +13,6 @@ namespace DAL.Repositories.Interfaces
 
         IEnumerable<object> GetCustomerContacts(long id);
         IEnumerable<object> GetVendorContactsAudit(long vendorId, long vendorContactId);
-        IEnumerable<object> GetContactsById(long id);
 
         //  void CreateAction(DAL.Models.Action action);
 

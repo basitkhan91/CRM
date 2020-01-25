@@ -19,7 +19,6 @@ using Spire.Pdf.Exporting.XPS.Schema;
 using Contact = DAL.Models.Contact;
 using Path = System.IO.Path;
 using Microsoft.EntityFrameworkCore;
-using System.Collections;
 
 namespace QuickApp.Pro.Controllers
 {
@@ -984,37 +983,10 @@ namespace QuickApp.Pro.Controllers
 
                 _unitOfWork.CustomerContact.Add(contactObj);
                 _unitOfWork.SaveChanges();
-                Contact data = _context.Contact.AsNoTracking().Where(p => p.ContactId== Convert.ToInt64(CustomerContactViewModel.ContactId)).FirstOrDefault();
-
-                //var data = _unitOfWork.ContactRepository.GetContactsById(Convert.ToInt64(CustomerContactViewModel.ContactId)).FirstOrDefault();
-                ContactAudit obj = new ContactAudit();
-                
-
-                obj.IsDefaultContact = CustomerContactViewModel.IsDefaultContact;
-
-                obj.LastName = data.LastName;
-                obj.FirstName = data.FirstName;
-                obj.Tag = data.Tag;
-                obj.MiddleName =data.MiddleName;
-                obj.ContactTitle = data.ContactTitle;
-                obj.WorkPhone = data.WorkPhone;
-                obj.MobilePhone = data.MobilePhone;
-                obj.Prefix = data.Prefix;
-                obj.Suffix = data.Suffix;
-                obj.AlternatePhone = data.AlternatePhone;
-                obj.WorkPhoneExtn = data.WorkPhoneExtn;
-                obj.Fax = data.Fax;
-                obj.Email = data.Email;
-                obj.Notes = data.Notes;
-                obj.WebsiteURL = data.WebsiteURL;
-                obj.MasterCompanyId = data.MasterCompanyId;
-                obj.CreatedDate = DateTime.Now;
-                obj.UpdatedDate = DateTime.Now;
-                obj.CreatedBy = data.CreatedBy;
-                obj.UpdatedBy = data.UpdatedBy;
-                obj.IsActive = data.IsActive;
-
-                _unitOfWork.CommonRepository.CreateContactHistory(obj, Convert.ToInt32(ModuleEnum.Customer), Convert.ToInt64(contactObj.CustomerId), Convert.ToInt64(contactObj.CustomerContactId));
+                //ContactViewModel contactViewModel = new ContactViewModel();
+               
+           
+               // _unitOfWork.CommonRepository.CreateContactHistory(contactViewModel, Convert.ToInt32(ModuleEnum.Customer), Convert.ToInt64(contactObj.CustomerId), Convert.ToInt64(contactObj.CustomerContactId));
 
             }
             return Ok(ModelState);
@@ -1086,7 +1058,7 @@ namespace QuickApp.Pro.Controllers
                     customerContact.IsDefaultContact = contactViewModel.IsDefaultContact;
                     _unitOfWork.CustomerContact.Update(customerContact);
                     _unitOfWork.SaveChanges();
-                    _unitOfWork.CommonRepository.CreateContactHistory(contactViewModel, Convert.ToInt32(ModuleEnum.Customer),Convert.ToInt64(customerContact.CustomerId), Convert.ToInt64(customerContact.CustomerContactId));
+                   // _unitOfWork.CommonRepository.CreateContactHistory(contactViewModel, Convert.ToInt32(ModuleEnum.Customer),Convert.ToInt64(customerContact.CustomerId), id);
                 }
 
             }
@@ -1101,8 +1073,7 @@ namespace QuickApp.Pro.Controllers
         {
             try
             {
-                // var result = _unitOfWork.CustomerContact.GetCustomerContactAuditDetails(customercontactId,customerId);
-                var result = _unitOfWork.CommonRepository.GetContactAudit(customerId,Convert.ToInt32(ModuleEnum.Customer), customercontactId);
+                var result = _unitOfWork.CustomerContact.GetCustomerContactAuditDetails(customercontactId,customerId);
                 return Ok(result);
             }
             catch (Exception)
@@ -3476,19 +3447,7 @@ namespace QuickApp.Pro.Controllers
 
         }
 
-        [HttpPost("uploadcustomerbillingaddress")]
-        public IActionResult UploadBillingCustomData(long customerId)
-        {
-            var result = _unitOfWork.Customer.UploadCustomerBillingAddressCustomData(Request.Form.Files[0], customerId);
-            return Ok(result);
-        }
-
-        [HttpPost("uploadcustomershippingaddress/")]
-        public IActionResult UploadShippingCustomData(long customerId)
-        {
-            var result = _unitOfWork.Customer.UploadCustomerShippingAddressCustomData(Request.Form.Files[0], customerId);
-            return Ok(result);
-        }
+       
 
     }
 

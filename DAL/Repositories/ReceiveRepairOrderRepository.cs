@@ -319,12 +319,12 @@ namespace DAL.Repositories
                          join uom in _appContext.UnitOfMeasure on part.UOMId equals uom.UnitOfMeasureId
                          into leftUom
                          from uom in leftUom.DefaultIfEmpty()
-                         //join stl in _appContext.StockLine on part.RepairOrderPartRecordId equals stl.RepairOrderPartRecordId
-                         //into leftStl
-                         //from stl in leftStl.ToList()
-                         //join stlDraft in _appContext.StockLineDraft on part.RepairOrderPartRecordId equals stlDraft.RepairOrderPartRecordId
-                         //into leftStlDraft
-                         //from stlDraft in leftStlDraft.ToList()
+                         join stl in _appContext.StockLine on part.RepairOrderPartRecordId equals stl.RepairOrderPartRecordId
+                         into leftStl
+                         from stl in leftStl.ToList()
+                         join stlDraft in _appContext.StockLineDraft on part.RepairOrderPartRecordId equals stlDraft.RepairOrderPartRecordId
+                         into leftStlDraft
+                         from stlDraft in leftStlDraft.ToList()
 
                          where part.RepairOrderId == repairOrderId
                          select new
@@ -335,8 +335,8 @@ namespace DAL.Repositories
                              PartNumber = itm.PartNumber,
                              PartDescription = itm.PartDescription,
                              QuantityToRepair = part.QuantityOrdered,
-                             DiscountPerUnit = part.DiscountPerUnit,                           
-                             StockLineCount = 0,
+                             DiscountPerUnit = part.DiscountPerUnit,
+                             StockLineCount = (leftStlDraft.Count() > 0 ? leftStlDraft.Sum(x => x.Quantity) : 0) + (leftStl.Count() > 0 ? leftStl.Sum(x => x.Quantity) : 0),
                              RoPartSplitUserName = emp != null ? emp.FirstName + " " + emp.LastName : "",
                              UomText = uom != null ? uom.ShortName : "",
                              StockLine = _appContext.StockLineDraft.Where(x => x.RepairOrderId == repairOrderId && x.RepairOrderPartRecordId == part.RepairOrderPartRecordId).Select(SL => new
@@ -394,7 +394,7 @@ namespace DAL.Repositories
                                  TraceableTo = SL.TraceableTo
 
                              }),
-                             TimeLife = _appContext.TimeLifeDraft.Where(x => x.RepairOrderId == repairOrderId && x.RepairOrderPartRecordId == part.RepairOrderPartRecordId),
+                             TimeLife = _appContext.TimeLife.Where(x => x.RepairOrderId == repairOrderId && x.RepairOrderPartRecordId == part.RepairOrderPartRecordId),
                              ItemMaster = new
                              {
                                  PartNumber = itm.PartNumber,
@@ -416,9 +416,8 @@ namespace DAL.Repositories
             return parts;
 
         }
-    //            //var stocklinesDrafted = _appContext.StockLineDraft.Where(x => x.PurchaseOrderPartRecordId != null && x.PurchaseOrderPartRecordId == part.PurchaseOrderPartRecordId && !x.IsDeleted).ToList();
 
-    public void CreateStockLine(long repaireOrderId)
+        public void CreateStockLine(long repaireOrderId)
         {
             var draftedStockLines = _appContext.StockLineDraft.Where(x => x.RepairOrderId == repaireOrderId).OrderBy(x => x.StockLineDraftId).ToList();
 

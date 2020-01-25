@@ -85,16 +85,4 @@ export class JournelService {
     getJournelAudit(journelId: number) {
         return this.journelsEndpoint.getJournelAuditById<any>(journelId);
     }
-
-    getAllBalanceTypes(): any {
-        return this.journelsEndpoint.getAllBalanceTypes();
-    }
-
-    getAllJournalCategory(): any {
-        return this.journelsEndpoint.getAllJournalCategory();
-    }
-
-    getAllJournalTypes(): any {
-        return this.journelsEndpoint.getAllJournalTypes();
-    }
 }

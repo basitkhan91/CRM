@@ -1927,6 +1927,7 @@ namespace QuickApp.Pro.Controllers
 
             if (searchView.partSearchParamters.includeAlternatePartNumber)
             {
+
             }
             else
             {
@@ -1968,8 +1969,7 @@ namespace QuickApp.Pro.Controllers
                                           partNumber = item.PartNumber,
                                           qtyOnHand = stock.QuantityOnHand,
                                           qtyAvailable = stock.QuantityAvailable,
-                                          qtyOnOrder = spop.QuantityOrdered,  
-                                          unitCost = stock.CoreUnitCost
+                                          qtyOnOrder = spop.QuantityOrdered
                                       };
 
 
@@ -1980,8 +1980,7 @@ namespace QuickApp.Pro.Controllers
                             partNumber = g.Key,
                             qtyOnHand = g.Sum(qh => qh.qtyOnHand),
                             qtyAvailable = g.Sum(qh => qh.qtyAvailable),
-                            qtyOnOrder = g.Sum(qh => qh.qtyOnOrder),  
-                            unitCost = g.Max( qh => qh.unitCost )
+                            qtyOnOrder = g.Sum(qh => qh.qtyOnOrder)
                         };
 
             var itemQuantity = query.FirstOrDefault();
@@ -2009,7 +2008,7 @@ namespace QuickApp.Pro.Controllers
                          description = item.PartDescription,
                          conditionType = string.Empty,
                          uomDescription = iu.Description,
-                         unitCost = itemQuantity.unitCost,
+                         unitCost = item.UnitCost,
                          unitListPrice = item.ListPrice,
                          qtyOnHand = itemQuantity.qtyOnHand ?? 0,
                          qtyToOrder = 0,

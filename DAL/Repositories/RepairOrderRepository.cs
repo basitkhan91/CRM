@@ -220,6 +220,8 @@ namespace DAL.Repositories
             if (roFilters.filters == null)
                 roFilters.filters = new RepairOrderFilters();
             var pageNumber = roFilters.first + 1;
+            //var take = roFilters.rows;
+            //var skip = take * (pageNumber - 1);
 
             short statusId = 0;
             long vendorId = 0;
@@ -288,6 +290,10 @@ namespace DAL.Repositories
             filters.Add(!string.IsNullOrEmpty(roFilters.filters.RepairOrderNumber), x => x.RepairOrderNumber.Contains(roFilters.filters.RepairOrderNumber));
             filters.Add(!string.IsNullOrEmpty(roFilters.filters.VendorName), x => x.VendorName.Contains(roFilters.filters.VendorName));
             filters.Add(!string.IsNullOrEmpty(roFilters.filters.VendorCode), x => x.VendorCode.Contains(roFilters.filters.VendorCode));
+            //filters.Add(statusId > 0, x => x.StatusId == statusId);
+            //filters.Add(!string.IsNullOrEmpty(roFilters.filters.ApprovedBy), x => x.ApprovedBy.Contains(roFilters.filters.ApprovedBy));
+            //filters.Add(!string.IsNullOrEmpty(roFilters.filters.RequestedBy), x => x.RequestedBy.Contains(roFilters.filters.RequestedBy));
+
 
             var totalRecords = (from ro in _appContext.RepairOrder
                                 join emp in _appContext.Employee on ro.RequisitionerId equals emp.EmployeeId
@@ -295,6 +301,10 @@ namespace DAL.Repositories
                                 join appr in _appContext.Employee on ro.ApproverId equals appr.EmployeeId into approver
                                 from appr in approver.DefaultIfEmpty()
                                 where ro.IsDeleted == false
+                                      //&& ro.VendorId == (vendorId > 0 ? vendorId : ro.VendorId)
+                                      //&& ro.RepairOrderNumber.Contains(!string.IsNullOrEmpty(roFilters.filters.RepairOrderNumber) ? roFilters.filters.RepairOrderNumber : ro.RepairOrderNumber)
+                                      //&& v.VendorName.Contains(!string.IsNullOrEmpty(roFilters.filters.VendorName) ? roFilters.filters.VendorName : v.VendorName)
+                                      //&& v.VendorCode.Contains(!string.IsNullOrEmpty(roFilters.filters.VendorCode) ? roFilters.filters.VendorCode : v.VendorCode)
                                       && ro.StatusId == (statusId > 0 ? statusId : ro.StatusId)
                                       && emp.FirstName.Contains(!string.IsNullOrEmpty(roFilters.filters.ApprovedBy) ? roFilters.filters.ApprovedBy : emp.FirstName)
                                       && emp.FirstName.Contains(!string.IsNullOrEmpty(roFilters.filters.RequestedBy) ? roFilters.filters.RequestedBy : emp.FirstName)
@@ -313,7 +323,6 @@ namespace DAL.Repositories
                                     ApprovedBy = appr == null ? "" : appr.FirstName,
                                     CreatedDate = ro.CreatedDate,
                                     IsActive = ro.IsActive,
-                                    VendorId=ro.VendorId
 
                                 }).Distinct().Paginate(pageNumber, pageSize, sorts, filters).RecordCount;
                 
@@ -324,6 +333,10 @@ namespace DAL.Repositories
                                    join appr in _appContext.Employee on ro.ApproverId equals appr.EmployeeId into approver
                                    from appr in approver.DefaultIfEmpty()
                                    where ro.IsDeleted == false
+                                   //&& ro.VendorId == (vendorId > 0 ? vendorId : ro.VendorId)
+                                   //&& ro.RepairOrderNumber.Contains(!string.IsNullOrEmpty(roFilters.filters.RepairOrderNumber) ? roFilters.filters.RepairOrderNumber : ro.RepairOrderNumber)
+                                   //&& v.VendorName.Contains(!string.IsNullOrEmpty(roFilters.filters.VendorName) ? roFilters.filters.VendorName : v.VendorName)
+                                   //&& v.VendorCode.Contains(!string.IsNullOrEmpty(roFilters.filters.VendorCode) ? roFilters.filters.VendorCode : v.VendorCode)
                                    && ro.StatusId == (statusId > 0 ? statusId : ro.StatusId)
                                    && emp.FirstName.Contains(!string.IsNullOrEmpty(roFilters.filters.ApprovedBy) ? roFilters.filters.ApprovedBy : emp.FirstName)
                                    && emp.FirstName.Contains(!string.IsNullOrEmpty(roFilters.filters.RequestedBy) ? roFilters.filters.RequestedBy : emp.FirstName)
@@ -342,9 +355,28 @@ namespace DAL.Repositories
                                        ApprovedBy = appr == null ? "" : appr.FirstName,
                                        CreatedDate=ro.CreatedDate,
                                        IsActive=ro.IsActive,
-                                       VendorId=ro.VendorId,
                                        TotalRecords = totalRecords
                                    }).Distinct().Paginate(pageNumber, pageSize, sorts, filters).Results;
+
+            //if (roFilters.filters.OpenDate != null)
+            //{
+            //    if (repairOrderList != null && repairOrderList.Any())
+            //    {
+            //        repairOrderList = repairOrderList
+            //            .Where(x => x.OpenDate == roFilters.filters.OpenDate)
+            //            .ToList();
+            //    }
+            //}
+
+            //if (roFilters.filters.ClosedDate != null)
+            //{
+            //    if (repairOrderList != null && repairOrderList.Any())
+            //    {
+            //        repairOrderList = repairOrderList
+            //            .Where(x => x.ClosedDate == roFilters.filters.ClosedDate)
+            //            .ToList();
+            //    }
+            //}
 
             return repairOrderList;
         }

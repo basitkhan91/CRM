@@ -24,7 +24,6 @@ export class ReceivingEndpointService extends EndpointFactory {
     private readonly _receivePartsUrl: string = "/api/receivingro/receiveParts";
     private readonly _updateStockLinesUrl: string = "/api/receivingro/UpdateStockLines";
     private readonly _createStockLinesUrl: string = "/api/receivingPart/CreateStockLine";
-    private readonly _createStockLinesForRepairOrderUrl: string = "/api/receivingRO/CreateStockLine";
 
     get getAll() { return this.configurations.baseUrl + this.getAllURL; }
     get removeById() { return this.configurations.baseUrl + this.removeByIdURL; }
@@ -238,11 +237,6 @@ export class ReceivingEndpointService extends EndpointFactory {
 
     CreateStockLine(purchaseOrderId: any) {
         let url = `${this.CreateStockLinesURL}/${purchaseOrderId}`;
-        return this.http.get<any>(url);
-    }
-
-    CreateStockLineForRepairOrder(repairOrder: any) {
-        let url = `${this._createStockLinesForRepairOrderUrl}/${repairOrder}`;
         return this.http.get<any>(url);
     }
 }

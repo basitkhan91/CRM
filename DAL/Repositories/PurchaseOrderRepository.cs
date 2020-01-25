@@ -91,6 +91,9 @@ namespace DAL.Repositories
             filters.Add(!string.IsNullOrEmpty(poFilters.filters.PurchaseOrderNumber), x => x.PurchaseOrderNumber.Contains(poFilters.filters.PurchaseOrderNumber));
             filters.Add(!string.IsNullOrEmpty(poFilters.filters.VendorName), x => x.VendorName.Contains(poFilters.filters.VendorName));
             filters.Add(!string.IsNullOrEmpty(poFilters.filters.VendorCode), x => x.VendorCode.Contains(poFilters.filters.VendorCode));
+            //filters.Add(statusId > 0, x => x.StatusId == statusId);
+            //filters.Add(!string.IsNullOrEmpty(poFilters.filters.ApprovedBy), x => x.ApprovedBy.Contains(poFilters.filters.ApprovedBy));
+            
 
             var totalRecords = (from po in _appContext.PurchaseOrder
                                 join emp in _appContext.Employee on po.RequestedBy equals emp.EmployeeId
@@ -98,6 +101,10 @@ namespace DAL.Repositories
                                 join appr in _appContext.Employee on po.ApproverId equals appr.EmployeeId into approver
                                 from appr in approver.DefaultIfEmpty()
                                 where po.IsDeleted == false
+                                //&& po.VendorId == (vendorId > 0 ? vendorId : po.VendorId)
+                                //&& po.PurchaseOrderNumber.Contains(!String.IsNullOrEmpty(poFilters.filters.PurchaseOrderNo) ? poFilters.filters.PurchaseOrderNo : po.PurchaseOrderNumber)
+                                //&& v.VendorName.Contains(!String.IsNullOrEmpty(poFilters.filters.VendorName) ? poFilters.filters.VendorName : v.VendorName)
+                                //&& v.VendorCode.Contains(!String.IsNullOrEmpty(poFilters.filters.VendorCode) ? poFilters.filters.VendorCode : v.VendorCode)
                                 && po.StatusId == (statusId > 0 ? statusId : po.StatusId)
                                 && emp.FirstName.Contains(!String.IsNullOrEmpty(poFilters.filters.ApprovedBy) ? poFilters.filters.ApprovedBy : emp.FirstName)
                                 && po.OpenDate == (poFilters.filters.OpenDate != null ? poFilters.filters.OpenDate : po.OpenDate)
@@ -116,7 +123,6 @@ namespace DAL.Repositories
                                     ApprovedBy = appr == null ? "" : appr.FirstName,
                                     CreatedDate = po.CreatedDate,
                                     IsActive = Convert.ToBoolean(po.IsActive),
-                                    VendorId=po.VendorId
 
                                 }).Distinct()
                                     .Paginate(pageNumber, pageSize, sorts, filters).RecordCount;
@@ -127,6 +133,10 @@ namespace DAL.Repositories
                                      join appr in _appContext.Employee on po.ApproverId equals appr.EmployeeId into approver
                                      from appr in approver.DefaultIfEmpty()
                                      where po.IsDeleted == false
+                                     //&& po.VendorId == (vendorId > 0 ? vendorId : po.VendorId)
+                                     //&& po.PurchaseOrderNumber.Contains(!String.IsNullOrEmpty(poFilters.filters.PurchaseOrderNo) ? poFilters.filters.PurchaseOrderNo : po.PurchaseOrderNumber)
+                                     //&& v.VendorName.Contains(!String.IsNullOrEmpty(poFilters.filters.VendorName) ? poFilters.filters.VendorName : v.VendorName)
+                                     //&& v.VendorCode.Contains(!String.IsNullOrEmpty(poFilters.filters.VendorCode) ? poFilters.filters.VendorCode : v.VendorCode)
                                      && po.StatusId == (statusId > 0 ? statusId : po.StatusId)
                                      && emp.FirstName.Contains(!String.IsNullOrEmpty(poFilters.filters.ApprovedBy) ? poFilters.filters.ApprovedBy : emp.FirstName)
                                      && po.OpenDate == (poFilters.filters.OpenDate != null ? poFilters.filters.OpenDate : po.OpenDate)
@@ -144,9 +154,29 @@ namespace DAL.Repositories
                                          ApprovedBy = appr == null ? "" : appr.FirstName,
                                          CreatedDate = po.CreatedDate,
                                          IsActive = Convert.ToBoolean(po.IsActive),
-                                         VendorId = po.VendorId,
                                          TotalRecords = totalRecords
                                      }).Distinct().Paginate(pageNumber, pageSize, sorts, filters).Results;
+
+            //if (poFilters.filters.OpenDate != null)
+            //{
+            //    if (purchaseOrderList != null && purchaseOrderList.Any())
+            //    {
+            //        purchaseOrderList = purchaseOrderList
+            //            .Where(x => x.OpenDate == poFilters.filters.OpenDate)
+            //            .ToList();
+            //    }
+            //}
+
+            //if (poFilters.filters.ClosedDate != null)
+            //{
+            //    if (purchaseOrderList != null && purchaseOrderList.Any())
+            //    {
+            //        purchaseOrderList = purchaseOrderList
+            //            .Where(x => x.ClosedDate == poFilters.filters.ClosedDate)
+            //            .ToList();
+            //    }
+            //}
+
             return purchaseOrderList;
         }
 

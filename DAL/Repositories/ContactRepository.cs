@@ -128,41 +128,6 @@ namespace DAL.Repositories
                         }).OrderByDescending(c=>c.AuditVendorContactId).ToList();
             return data;
         }
-        public IEnumerable<object> GetContactsById(long id)
-        {
-            var data = (from c in _appContext.Contact
-                       
-                        where c.ContactId == id
-                        // select new { t, ad, vt }).ToList();
-                        select new
-                        {
-                            ContactId=    c.ContactId,
-                            ContactTitle=     c.ContactTitle,
-                            AlternatePhone=    c.AlternatePhone,
-                            CreatedBy=    c.CreatedBy,
-                            UpdatedBy=    c.UpdatedBy,
-                            Email= c.Email,
-                            Tag=  c.Tag,
-                            Fax=   c.Fax,
-                            FirstName=   c.FirstName,
-                            LastName=   c.LastName,
-                            MiddleName=  c.MiddleName,
-                            MobilePhone=    c.MobilePhone,
-                            Notes=   c.Notes,
-                            Prefix=   c.Prefix,
-                            Suffix=   c.Suffix,
-                             WebsiteURL =   c.WebsiteURL,
-                            WorkPhone =   c.WorkPhone,
-                            IsActive=    c.IsActive,
-
-                            CreatedDate=   c.CreatedDate,
-                            UpdatedDate=    c.UpdatedDate,
-                            WorkPhoneExtn=  c.WorkPhoneExtn
-
-                                             }).ToList();
-            return data;
-            //return _appContext.Contact.Include("MasterCompany").OrderByDescending(c => c.ContactId).ToList();
-        }
 
         //Task<Tuple<bool, string[]>> CreateRoleAsync(ApplicationRole role, IEnumerable<string> claims);
 

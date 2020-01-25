@@ -191,7 +191,7 @@ export class AssetAcquisitionTypeComponent implements OnInit {
     }
 
     eventHandler(event) {
-        /*let value = event.target.value.toLowerCase()
+        let value = event.target.value.toLowerCase()
         if (this.selectedreason) {
             console.log(191);
             if (value == this.selectedreason.toLowerCase() &&
@@ -204,7 +204,7 @@ export class AssetAcquisitionTypeComponent implements OnInit {
                 this.disableSave = false;
                 this.recordExists = false;
             }
-        }*/
+        }
     }
 
     partnmId(event) {
@@ -212,8 +212,7 @@ export class AssetAcquisitionTypeComponent implements OnInit {
         for (let i = 0; i < this.allreasn.length; i++) {
             if (event == this.allreasn[i][0].codeName) {
                 this.selAssetAcquisitionTypeId = this.allreasn[i][0].assetAcquisitionTypeId;
-                if ((this.isEditMode && this.selAssetAcquisitionTypeId != this.selectedRow.assetAcquisitionTypeId
-                    || !this.isEditMode)) {
+                if ((this.isEditMode && this.selAssetAcquisitionTypeId != this.selectedRow.assetAcquisitionTypeId || !this.isEditMode)) {
                     this.disableSave = true;
                     this.recordExists = true;
                 }
@@ -274,8 +273,8 @@ export class AssetAcquisitionTypeComponent implements OnInit {
         this.disableSave = false;
         this.isSaving = true;
         this.loadMasterCompanies();
-        this.sourceAction = { ...row };
-        this.selectedRow = { ...row };
+        this.sourceAction = row;
+        this.selectedRow = row;
         this.codeName = row.code;
           
         this.AssetAcquisitionTypeId = this.sourceAction.assetAcquisitionTypeId;
@@ -311,7 +310,7 @@ export class AssetAcquisitionTypeComponent implements OnInit {
                 error => this.saveFailedHelper(error));
         }
         else {
-            params.AssetAcquisitionTypeId = this.sourceAction.assetAcquisitionTypeId;
+            params.assetAcquisitionTypeId = this.sourceAction.assetAcquisitionTypeId;
             this.AssetAcquisitionTypeService.update(params).subscribe(
                 response => this.saveCompleted(this.sourceAction),
                 error => this.saveFailedHelper(error));

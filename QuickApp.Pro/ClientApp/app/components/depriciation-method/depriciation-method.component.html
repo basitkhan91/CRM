@@ -130,19 +130,19 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                 <div class="col-sm-12">
                     <p>
                         <span class="label">
-                            <b>Depreciation Method Code: </b>
+                            <b>Depreciation Code: </b>
                         </span>
                         <span class="value">{{code}}</span>
                     </p>
                     <p>
                         <span class="label">
-                            <b>Depreciation Method Name: </b>
+                            <b>Depreciation Name: </b>
                         </span>
                         <span class="value">{{name}}</span>
                     </p>
                     <p>
                         <span class="label">
-                            <b>Depreciation Method: </b>
+                            <b>Depreciation Basis </b>
                         </span>
                         <span class="value">{{depreciationMethod}}</span>
                     </p>
@@ -246,7 +246,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                     <div class="col-sm-12">
                         <div class="col-sm-5">
                             <label for="shortName" class="control-label">
-                                Depreciation Method Name
+                                Name
                                 <span class="clr-red">*</span>
                             </label>
                         </div>
@@ -281,10 +281,8 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
 
                         </div>
                         <div class="col-sm-5">
-                            <p-autoComplete [(ngModel)]="sequenceNo" name="sequenceNo" 
-                                            (onSelect)="partnmId1($event)"
-                                            (onBlur)="onBlurCheck($event)" (onKeyUp)="eventHandler1($event)" 
-                                            [suggestions]="localSequenceList"
+                            <p-autoComplete [(ngModel)]="sequenceNo" name="sequenceNo" (onSelect)="partnmId1($event)"
+                                            (onKeyUp)="eventHandler1($event)" [suggestions]="localSequenceList"
                                             (completeMethod)="filterSequenceNo($event)" [size]="30"
                                             [minLength]="1" [dropdown]="true" class="p-autoComplete-ctsm" required>
                                 <ng-template let-codeName pTemplate="item">
@@ -347,9 +345,9 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                             <thead>
                                 <tr>
                                     <!-- <th>UMID</th> -->
-                                    <th>Depreciation Method Code</th>
-                                    <th>Depreciation Method Name</th>
-                                    <th>Depreciation Method</th>
+                                    <th>Code</th>
+                                    <th>Name</th>
+                                    <th>DepreciationMethod</th>
                                     <th>Memo</th>
                                     <th>IsActive</th>
                                     <th>Updated By</th>

@@ -374,7 +374,6 @@ namespace DAL
 
         public DbSet<JournalBatch> JournalBatch { get; set; }
         public DbSet<JournalType> JournalType { get; set; }
-        public DbSet<JournalCurrencyType> JournalCurrencyType { get; set; }
         public DbSet<JournalPeriod> JournalPeriod { get; set; }
         public DbSet<JournalSource> JournalSource { get; set; }
         public DbSet<JournalManual> JournalManual { get; set; }

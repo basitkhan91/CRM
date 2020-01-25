@@ -318,7 +318,6 @@ namespace QuickApp.Pro.Controllers
 
         }
 
-        [ApiExplorerSettings(IgnoreApi = true)]
         public IEnumerable<SalesQuoteListView> Filter(IEnumerable<SalesQuoteListView> list, SalesQuoteListView filters)
         {
             var DATE_FORMAT = "MM/dd/yyyy";

@@ -807,6 +807,7 @@ export class ViewRoComponent {
     }
 
     private loadManufacturerData() {
+
         this.manufacturerService.getWorkFlows().subscribe(data => {
             this.allManufacturerInfo = data[0];
         });
@@ -900,14 +901,8 @@ export class ViewRoComponent {
             error => this.onDataLoadFailed(error)
         );
     }
-    
-    CreateRepairOrderStockline() {
-        this.receivingService.CreateStockLineForRepairOrder(this.repairOrderId).subscribe(
-            results => {
-                this.alertService.showMessage(this.pageTitle, "Stockline created successfully.", MessageSeverity.success);
-                return this.route.navigate(['/receivingmodule/receivingpages/app-ro']);
-            },
-            error => this.onDataLoadFailed(error)
-        );
+
+    onSearchRO() {
+        return this.route.navigate(['/receivingmodule/receivingpages/app-ro']);
     }
 }

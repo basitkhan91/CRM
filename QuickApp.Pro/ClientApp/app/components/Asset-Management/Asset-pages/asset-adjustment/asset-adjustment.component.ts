@@ -42,7 +42,7 @@ export class AssetAdjustmentComponent implements OnInit {
     allAssets: any[] = [];
     disableSave: boolean;
     onSelectedId: any;
-    formData = new FormData();
+    formData = new FormData()
 
     constructor(private router: ActivatedRoute,private assetService: AssetService, private vendorService: VendorService, private route: Router,
         private authService: AuthService, private alertService: AlertService, private legalEntityServices: LegalEntityService) {
@@ -356,7 +356,7 @@ export class AssetAdjustmentComponent implements OnInit {
        console.log(file);
        // this.formData.delete(file.name);
     }
-    saveAssetAdjustment() {
+    private saveAssetAdjustment() {
       console.log(this.data);
     }
     backClick() {

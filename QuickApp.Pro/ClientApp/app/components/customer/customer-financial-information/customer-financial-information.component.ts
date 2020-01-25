@@ -164,12 +164,11 @@ export class CustomerFinancialInformationComponent implements OnInit {
             this.savedGeneralInformationData = this.editGeneralInformationData;
             this.customerCode = this.editGeneralInformationData.customerCode;
             this.customerName = this.editGeneralInformationData.name;
-         
+
             this.savedGeneralInformationData = {
                 ...this.editGeneralInformationData,
-                creditTermsId: getObjectById('value', this.editGeneralInformationData.creditTermsId, this.creditTermsListOriginal)
+                creditTermsId: getObjectById('creditTermsId', this.editGeneralInformationData.creditTermsId, this.creditTermsListOriginal)
             }
-          
 
             if (this.editGeneralInformationData.currency == null || this.editGeneralInformationData.currency == 0) {
                 this.getDefaultCurrency();
@@ -519,16 +518,17 @@ export class CustomerFinancialInformationComponent implements OnInit {
     }
 
     saveFinancialInformation() {
-       
 
         this.customerService.updatefinanceinfo({
             ...this.savedGeneralInformationData,
             CustomerTaxTypeRateMapping: this.taxTypeRateMapping,
             updatedBy: this.userName,
-            creditTermsId: this.savedGeneralInformationData.creditTermsId.value
+
+
+            creditTermsId: this.savedGeneralInformationData.creditTermsId.creditTermsId
         }, this.id).subscribe(res => {
 
-           
+
             const vdata = {
                 customerId: this.savedGeneralInformationData.customerId,
                 masterCompanyId: 1,
@@ -617,10 +617,8 @@ export class CustomerFinancialInformationComponent implements OnInit {
                 `Added New Credit Term Successfully `,
                 MessageSeverity.success
             );
-            this.resetCreditTermsPopUp();
-           
+            this.resetCreditTermsPopUp()
             this.savedGeneralInformationData.creditTermsId = data.creditTermsId;
-            console.log(this.savedGeneralInformationData.creditTermsId);
 
         })
     }

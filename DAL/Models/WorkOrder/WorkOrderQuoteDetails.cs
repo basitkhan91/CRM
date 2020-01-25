@@ -25,7 +25,6 @@ namespace DAL.Models
         public long SelectedId { get; set; }
         public string ReferenceNo { get; set; }
         public long? WorkflowWorkOrderId { get; set; }
-        public int? TaskId { get; set; }
         public int MasterCompanyId { get; set; }
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }

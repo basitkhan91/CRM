@@ -102,21 +102,19 @@ export class LoginControlComponent implements OnInit, OnDestroy {
         this.authService.login(this.getUserLogin())
             .subscribe(
             user => {
-              
+                
                 const userLoginDetails = localStorage.getItem('current_user') === null || localStorage.getItem('current_user') == undefined ?    sessionStorage.getItem('current_user')  :  localStorage.getItem('current_user');
             
-                //this.getEmployeeDetailsByEmployeeId(userLoginDetails);
+                this.getEmployeeDetailsByEmployeeId(userLoginDetails);
                 setTimeout(() => {
                     this.alertService.stopLoadingMessage();
                     this.isLoading = false;
                     this.reset();
 
                     if (!this.isModal) {
-                      
                         this.alertService.showMessage("Login", `Welcome ${user.userName}!`, MessageSeverity.success);
                     }
                     else {
-                       
                         this.alertService.showMessage("Login", `Session for ${user.userName} restored!`, MessageSeverity.success);
                         setTimeout(() => {
                             this.alertService.showStickyMessage("Session Restored", "Please try your last operation again", MessageSeverity.default);
@@ -149,11 +147,15 @@ export class LoginControlComponent implements OnInit, OnDestroy {
     }
 
     getEmployeeDetailsByEmployeeId(loginDetails)
-    {        
+    {
+        console.log(loginDetails);
+        debugger        
         const {employeeId} = JSON.parse(loginDetails);
-      
+
+        debugger
         if( parseInt(employeeId) > 0)
-        {           
+        {
+            debugger
             this.authService.employeeDetailsByEmpId(parseInt(employeeId)).subscribe(res => {
                 console.log(res);
             })

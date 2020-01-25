@@ -1,20 +1,9 @@
 ﻿
-    <div class="right_col" role="main" style="padding: 2px 6px">
-        <div >
+    <div class="right_col" role="main">
+        <div  style="">
             <div class="x_content">
-                <div class="col-md-12 shadow-box-cstm">        
-                    <div class="col-md-4">
-                        <p class="fs12">
-                        <label class="control-label labels-font-header" style="width: auto;">Customer Name: </label>
-                    <span class="span-header-red" style="text-transform: capitalize"> {{customerName }} </span> </p>
-                    </div>
-                    <div class="col-md-4">
-                        <p class="fs12">
-                        <label class="control-label labels-font-header" style="width: auto;">Customer Code: </label>
-                        <span class="span-header-red" style="text-transform: capitalize"> {{customerCode }} </span> </p>
-                    </div>                            
-                </div>
-                <!-- <div class="form-group col-sm-4 Customer-details-heading" style="display: inline-block;margin: 10px 5px 0 5px;">
+
+                <div class="form-group col-sm-4 Customer-details-heading" style="display: inline-block;margin: 10px 5px 0 5px;">
                     <p class="fs10">
                         <label class="control-label w100">Customer Name:</label>
                         {{customerName}}
@@ -25,51 +14,30 @@
                         <label class="control-label w100">Customer Code:</label>
                         {{customerCode}}
                     </p>
-                </div> -->
+                </div>
 
-                <div class="card" style="padding: 10px;">
-                    <div>
-                        <div class="col-md-12" style="margin-bottom: -10px;">
-                                <h4 class="po-head-sm">
-                                        Add Billing Information
-                                        <a
-                                    class="plusicon-cstm"
-                                    href="#"
-                                    data-toggle="modal"
-                                    data-target="#addBillingInfo" 
-                                    ><i class="fa fa-plus-circle fa-lg" (click)="addBillingIfo()"></i
-                                    ></a>
-                                    </h4>
-                            <!-- <h3 class="po-head pull-left" style="padding: 0 6px;">Billing Information List</h3> -->
-                            <!-- <h4 class="float-left">
-                                    Add Billing Information
-                                    <a
-                                    class="plusicon-cstm"
-                                    href="#"
-                                    data-toggle="modal"
-                                    data-target="#addBillingInfo" 
-                                    ><i class="fa fa-plus-circle fa-lg" (click)="addBillingIfo()"></i
-                                    ></a>
-                                </h4> -->
-                            <!-- <button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#addBillingInfo" >Add Billing Information</button> -->
-                        </div>
-                        <div class="clear"></div>
-                        <hr />
+                <div>
+                    <div class="col-md-12" style="margin-bottom: -10px;">
+                        <!-- <h3 class="po-head pull-left" style="padding: 0 6px;">Billing Information List</h3> -->
+                        <h4 class="float-left">
+                                Add Billing Information
+                                <a
+                                  class="plusicon-cstm"
+                                  href="#"
+                                  data-toggle="modal"
+                                  data-target="#addBillingInfo" 
+                                  ><i class="fa fa-plus-circle fa-lg" (click)="addBillingIfo()"></i
+                                ></a>
+                              </h4>
+                        <!-- <button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#addBillingInfo" >Add Billing Information</button> -->
                     </div>
+                    <div class="clear"></div>
+                    <hr />
+                </div>
 
-
+                <div class="table-responsive">
                     <!--<p class="lead"></p>-->
-                    <p-table #dt class="rpo-table-cstm rro-table-cstm tab-table-cstm"
-                     [value]="billingInfoList"
-                      [metaKeySelection]="true" 
-                      [rows]="10" 
-                      [paginator]="true" 
-                      [pageLinks]="3" 
-                      [rowsPerPageOptions]="[10,20,50,100]"
-                       [columns]="selectedColumns"
-                        selectionMode="multiple" 
-                        [resizableColumns]="true" 
-                        [reorderableColumns]="true">
+                    <p-table #dt class="rro-table-cstm" [value]="billingInfoList" [metaKeySelection]="true" [rows]="10" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[10,20,50,100]" [columns]="billingInfoTableHeaders" selectionMode="multiple" [resizableColumns]="true" [reorderableColumns]="true">
                         <ng-template pTemplate="caption">
 
                             <div style="text-align: right">
@@ -80,22 +48,16 @@
                                     <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Filter" style="height: 28px !important;">
                                 </div>
                                 <button type="button" class="btn btn-primary" matTooltip="Download  Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()" style="padding: 5px 10px !important;"></button>
-                                <button type="button" class="btn btn-primary" matTooltip="Download Selected Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})" style="padding: 5px 10px !important;"></button>
+                                <button type="button" class="btn btn-primary" matTooltip="Download Selected Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export Selection Only"  (click)="dt.exportCSV({selectionOnly:true})" style="padding: 5px 10px !important;"></button>
 
-                                <div class="excel-upload  excel-upload-cstm">
-
-                                    <input type="file" name="upload[]" id="upload" (change)="customExcelUpload($event)" class="uploaddoc upload-file"
-                                           accept=".xlsx, .xls, .csv">
+                                <div class="excel-upload excel-upload-cstm">
+                                    <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
                                     <label for="upload">
-                                        <span matTooltip="Upload Data (Excel)" matTooltipPosition="above">
-                                            <i class="fa fa-upload"></i>
-                                        </span>
+                                        <span matTooltip="Upload Data (Excel)"><i class="fa fa-upload"></i></span>
                                     </label>
-                                    &nbsp; &nbsp;
 
-                                    <button type="button" class="btn btn-primary" matTooltip="Download Sample File" matTooltipPosition="above" (click)="sampleExcelDownload()">Sample File Download</button>
+
                                 </div>
-
                             </div>
 
 
@@ -108,14 +70,8 @@
                                     {{col.header}}
                                     <p-sortIcon [field]="col.field"></p-sortIcon>
                                 </th>
+
                                 <th>Actions</th>
-                            </tr>
-                                <tr>
-                                    <th></th>
-                                    <th style="width:auto" *ngFor="let col of columns" [ngSwitch]="col.field">
-                                        <input style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field, 'contains')">
-                                    </th>
-                                    <th></th>
 
                             </tr>
                         </ng-template>
@@ -166,13 +122,10 @@
                     <!-- <div *ngIf="allActions.length<=0" style="text-align:center;border:1px solid">
                         No Records
                     </div> -->
-                    <div style="margin-top: 10px;">
-                        <button type="button" class="btn btn-primary pull-right" (click)="nextClick()">Save & Next</button>
-                        <button type="button" class="btn btn-primary pull-right submit-btn" (click)="backClick()">Previous</button>
-                    </div>
                 </div>
 
-                
+                <button type="button" class="btn btn-primary pull-right" (click)="nextClick()">Save & Next</button>
+                <button type="button" class="btn btn-primary pull-right submit-btn" (click)="backClick()">Previous</button>
 
                 <div class="clear"></div>
                 <div class="modal fade success-msg" id="success-popup" role="dialog" data-backdrop="static" data-keyboard="false">
@@ -304,21 +257,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <div class="col-md-12 shadow-box-cstm">
-                    <div class="col-md-4">
-                        <p class="fs12">
-                            <label class="control-label labels-font-header" style="width: auto;">Customer Name: </label>
-                            <span class="span-header-red" style="text-transform: capitalize"> {{customerName }} </span>
-                        </p>
-                    </div>
-                    <div class="col-md-4">
-                        <p class="fs12">
-                            <label class="control-label labels-font-header" style="width: auto;">Customer Code: </label>
-                            <span class="span-header-red" style="text-transform: capitalize"> {{customerCode }} </span>
-                        </p>
-                    </div>
-                </div>
-                <h4 class="modal-title">{{isEditMode ? 'Edit' : 'Add' }} Billing Info </h4>
+                <h4 class="modal-title">Add Billing Information</h4>
             </div>
             <form #addBillingForm="ngForm" class="form-horizontal">
                 <div class="modal-body">
@@ -465,20 +404,6 @@
             <span aria-hidden="true">&times;</span>
         </button>
 
-        <div class="col-md-12 shadow-box-cstm">
-            <div class="col-md-4">
-                <p class="fs12">
-                    <label class="control-label labels-font-header" style="width: auto;">Customer Name: </label>
-                    <span class="span-header-red" style="text-transform: capitalize"> {{customerName }} </span>
-                </p>
-            </div>
-            <div class="col-md-4">
-                <p class="fs12">
-                    <label class="control-label labels-font-header" style="width: auto;">Customer Code: </label>
-                    <span class="span-header-red" style="text-transform: capitalize"> {{customerCode }} </span>
-                </p>
-            </div>
-        </div>
 
     </div>
     <div class="modal-body">

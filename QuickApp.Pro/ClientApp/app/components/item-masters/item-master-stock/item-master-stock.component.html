@@ -437,50 +437,37 @@
                                         </div> -->
 
                                         <div class="col-sm-12">
-                                            <!--<p-fileUpload name="isSchematic[]" multiple="multiple" [showCancelButton]="false" [showUploadButton]="false" customUpload="true" (onSelect)="fileUpload($event,'SchematicFile')">
-
-    </p-fileUpload>-->
-
-                                            <p-fileUpload name="isSchematic[]" #fileuploads multiple="multiple" [showCancelButton]="false" [showUploadButton]="false" customUpload="true"
-                                                          styleClass="asset-adjudtment-upload" (onSelect)="fileUploads($event)">
-
-                                                <ng-template let-file pTemplate="file">
-                                                    <div class="ui-fileupload-row">
-                                                        <div> {{file.name}}</div>
-                                                        <button type="button" class="btn btn-default btn-sm" (click)="removeFile(file,fileuploads)"><mat-icon color="warn">delete</mat-icon></button>
-                                                    </div>
-                                                </ng-template>
+                                            <p-fileUpload name="isSchematic[]" multiple="multiple" [showCancelButton]="false" [showUploadButton]="false" customUpload="true" (onSelect)="fileUpload($event,'SchematicFile')">
+                                               
                                             </p-fileUpload>
 
                                             <div class="form-group">
                                                 <div class="table-responsive table-overflow" *ngIf="allUploadedDocumentsList.length> 0">
-                                                    <h4 class="panel-title">Attachment Details:</h4>
+                                                    <h4 class="panel-title" >Attachment Details:</h4>
                                                     <table class="table table-bordered ">
-                                                        <thead>
-                                                            <tr>
-                                                                <th>File Name</th>
-                                                                <th>Download</th>
-                                                                <th>Delete</th>
-                                                            </tr>
-                                                        </thead>
-
+                                                            <thead>  
+                                                                <tr>
+                                                                            <th>File Name</th>
+                                                                            <th>Download</th>
+                                                                            <th>Delete</th>
+                                                                    </tr>
+                                                            </thead>
+            
                                                         <tbody *ngFor="let f of allUploadedDocumentsList">
-                                                            <tr>
-                                                                <td>{{f.fileName}}</td>
-                                                                <td><a (click)="downloadFileUpload(f)" matTooltip="Download" class="btn nobg btn-cstm"><span><i class="fa fa-download" style="color:black"></i></span></a> </td>
-                                                                <td>
-                                                                    <button class="btn-delete" type="button" mat-icon-button matTooltip="Delete" (click)="getAttachmentDeleteById(f)">
-                                                                        <mat-icon color="warn">delete</mat-icon>
-                                                                    </button>
+                                                                <tr>                                                             
+                                                                    <td>{{f.fileName}}</td>
+                                                                    <td><a (click)="downloadFileUpload(f)" matTooltip="Download" class="btn nobg btn-cstm"><span ><i class="fa fa-download" style="color:black" ></i></span></a> </td>
+                                                                    <td>  <button class="btn-delete" type="button" mat-icon-button matTooltip="Delete" (click)="getAttachmentDeleteById(f)">
+                                                                    <mat-icon color="warn">delete</mat-icon> </button>
                                                                 </td>
-                                                            </tr>
-
+                                                                </tr>
+                                                            
                                                         </tbody>
-
+            
                                                     </table>
                                                 </div>
                                             </div>
-
+                                           
 
                                         </div>
                                     </div>

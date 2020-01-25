@@ -25,7 +25,5 @@
         AssetIntangibleAttributeType,
         ItemMaster,
         NhaTlaAltEquItemMapping,
-        CustomerBillingAddress,
-        CustomerShippingAddress
     }
 }

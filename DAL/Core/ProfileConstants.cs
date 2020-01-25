@@ -35,11 +35,6 @@ namespace DAL.Core
         public const string Configuration = "configuration";
 
         public const string EmployeeId = "employeeId";
-        public const string EntityName = "entityName";
-        public const string DivEntityName = "divEntityName";
-        public const string BiEntityName = "biEntityName";
-        public const string CoEntityName = "coEntityName";
-        public const string ManagementStructureId = "managementStructureId";
     }
 
 

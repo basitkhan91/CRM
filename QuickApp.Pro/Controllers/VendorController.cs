@@ -2081,7 +2081,7 @@ namespace QuickApp.Pro.Controllers
             return Ok(ModelState);
         }
 
-        [ApiExplorerSettings(IgnoreApi = true)]
+        //[ApiExplorerSettings(IgnoreApi = true)]
         public void AddContact(VendorViewModel vendorViewModel)
         {
             try
