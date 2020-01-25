@@ -290,23 +290,36 @@ namespace DAL.Repositories
             }
         }
 
-        public void UpdateRestrictedParts(List<RestrictedParts> restrictedParts, long referenceId, int moduleId)
+        public void UpdateRestrictedParts(List<RestrictedParts> restrictedParts, long referenceId, int moduleId,string partType="")
         {
             try
             {
-
+                               
                 if (restrictedParts != null && restrictedParts.Count > 0)
                 {
+                    var existingrestrictedParts = _appContext.RestrictedParts.Where(p => p.ReferenceId == referenceId && p.ModuleId == moduleId && p.PartType == restrictedParts[0].PartType).ToList();
+
+                    if (existingrestrictedParts.Count > 0)
+                    {
+                        for (var i = 0; i < existingrestrictedParts.Count; i++)
+                        {
+                            _appContext.RestrictedParts.Remove(existingrestrictedParts[i]);
+                            _appContext.SaveChanges();
+                        }
+
+                    }
+
                     foreach (var item in restrictedParts)
                     {
                         // item.PartNumber = GetRestrictedPartName(item.MasterPartId, moduleId);
-                        if (item.RestrictedPartId > 0)
-                        {
+                        //if (item.RestrictedPartId > 0)
+                        //{
 
-                            _appContext.RestrictedParts.Update(item);
-                        }
-                        else
-                        {
+                        //    _appContext.RestrictedParts.Update(item);
+                        //}
+                        //else
+                        //{
+                            item.RestrictedPartId = 0;
                             item.ReferenceId = referenceId;
                             item.ModuleId = moduleId;
                             item.IsActive = true;
@@ -314,9 +327,31 @@ namespace DAL.Repositories
                             item.CreatedDate = item.UpdatedDate = DateTime.Now;
 
                             _appContext.RestrictedParts.Add(item);
-                        }
+                        //}
                         _appContext.SaveChanges();
                     }
+                }
+                else
+                {
+                    if(partType != "")
+                    {
+
+                        var existingrestrictedParts = _appContext.RestrictedParts.Where(p => p.ReferenceId == referenceId && p.ModuleId == moduleId && p.PartType == partType).ToList();
+
+                        if (existingrestrictedParts.Count > 0)
+                        {
+                            for (var i = 0; i < existingrestrictedParts.Count; i++)
+                            {
+                                _appContext.RestrictedParts.Remove(existingrestrictedParts[i]);
+                                _appContext.SaveChanges();
+                            }
+
+                        }
+                    }
+
+                   
+
+
                 }
             }
             catch (Exception ex)
