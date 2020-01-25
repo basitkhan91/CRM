@@ -429,6 +429,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.itemser.currentUrl = '/itemmastersmodule/itemmasterpages/app-item-master-stock';
         this.itemser.bredcrumbObj.next(this.itemser.currentUrl);//Bread Crumb
         this.displayedColumns.push('action');
+        this.formData = new FormData();
         this.dataSource = new MatTableDataSource();
         this.CurrencyData();
         this.sourceItemMaster = {
@@ -3662,6 +3663,21 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
         this.modal.close();
     }
+
+
+    removeFile(file: File, uploader) {
+        const index = uploader.files.indexOf(file);
+        uploader.remove(index);
+    }
+
+    fileUploads(event) {
+        if (event.files.length === 0)
+            return;
+        for (let file of event.files)
+            this.formData.append(file.name, file);
+    }
+
+
     saveintegration() {
         this.isSaving = true;
         if (this.isEditMode == false) {

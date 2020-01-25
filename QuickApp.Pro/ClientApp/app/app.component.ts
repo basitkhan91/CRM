@@ -643,7 +643,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                             { label: 'Priority', routerLink: '/singlepages/singlepages/app-priority' },
                             { label: 'Process 1099', routerLink: '/singlepages/singlepages/app-vendor-process1099' },
                             { label: 'Provision', routerLink: '/singlepages/singlepages/app-provision' },
-                            { label: 'Site', routerLink: '/singlepages/singlepages/app-site' },
+                           // { label: 'Site', routerLink: '/singlepages/singlepages/app-site' },
                             { label: 'Vendor Classification', routerLink: '/singlepages/singlepages/app-vendor-classification' },
                             { label: 'Work Scope', routerLink: '/singlepages/singlepages/app-work-scope' },
 
@@ -677,10 +677,10 @@ export class AppComponent implements OnInit, AfterViewInit {
                     {
                         label: 'Stockline', items: [
                             { label: 'Adjustment Reason', routerLink: '/singlepages/singlepages/app-adjustment-reason' },
-                            { label: 'Ware House', routerLink: '/singlepages/singlepages/app-warehouse' },
-                            { label: 'Location', routerLink: '/singlepages/singlepages/app-location' },
-                            { label: 'Shelf', routerLink: '/singlepages/singlepages/app-shelf' },
-                            { label: 'Bin', routerLink: '/singlepages/singlepages/app-bin' },
+                           // { label: 'Ware House', routerLink: '/singlepages/singlepages/app-warehouse' },
+                           // { label: 'Location', routerLink: '/singlepages/singlepages/app-location' },
+                           // { label: 'Shelf', routerLink: '/singlepages/singlepages/app-shelf' },
+                           // { label: 'Bin', routerLink: '/singlepages/singlepages/app-bin' },
                         ]
                     },
                     {
