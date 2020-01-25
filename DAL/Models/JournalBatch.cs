@@ -17,11 +17,11 @@ namespace DAL.Models
         public long JournalTypeId { get; set; }
         public string JournalPeriodName { get; set; }
         public Int32 LocalCurrencyId { get; set; }
-        public Decimal LocalDebitAmount { get; set; }
-        public Decimal LocalCreditAmount { get; set; }
+        public Decimal? LocalDebitAmount { get; set; }
+        public Decimal? LocalCreditAmount { get; set; }
         public Int32 ReportingCurrencyId { get; set; }
-        public Decimal ReportingDebitAmount { get; set; }
-        public Decimal ReportingCreditAmount { get; set; }
+        public Decimal? ReportingDebitAmount { get; set; }
+        public Decimal? ReportingCreditAmount { get; set; }
         public Nullable<bool> IsReversing { get; set; }
         public Nullable<bool> IsRecurring { get; set; }
         public Int32? MasterCompanyId { get; set; }
