@@ -32,6 +32,27 @@ namespace QuickApp.Pro.Controllers
             _context = context;
         }
 
+        [HttpGet("employeeDetailsById/{employeeId}")]      
+        public IActionResult EmployeeDetailsById(long employeeId)
+        {
+            var empDetails = _unitOfWork.employee.EmployeeDetailsById(employeeId);
+            return Ok(empDetails);
+        }
+
+        [HttpPost("employeelist")]
+        public IActionResult GetEmployeeList([FromBody]Filters<EmployeeFilters> employeeFilters)
+        {
+            var result = _unitOfWork.employee.GetEmployeeList(employeeFilters);
+            return Ok(result);
+        }
+
+        [HttpGet("employeeglobalsearch")]
+        public IActionResult EmployeeGlobalSearch(string filterText, int pageNumber = 0, int pageSize = 10)
+        {
+            var result = _unitOfWork.employee.EmployeeGlobalSearch(filterText, pageNumber, pageSize);
+            return Ok(result);
+        }
+
 
         // GET: api/values
         [HttpGet("Get")]
@@ -43,6 +64,7 @@ namespace QuickApp.Pro.Controllers
 
         }
 
+        
         [HttpGet("GetAllEmployeeInfo")]
         public List<Employee> getAllEmployeeInfo()
         {
@@ -1134,6 +1156,36 @@ namespace QuickApp.Pro.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
+
+        [HttpGet("GetloginUserInfo/{employeeId}")]
+        public IActionResult GetloginUserInfo(long employeeId)
+        {
+            var result = (from e in _context.Employee
+                          //join usr in _context.AspNetUsers on e.EmployeeId equals usr.EmployeeId
+                          join mle in _appContext.ManagementStructure on e.ManagementStructureId equals mle.ManagementStructureId into mainCompanyTree
+                          from mle in mainCompanyTree.DefaultIfEmpty()
+
+                          join divmle in _appContext.ManagementStructure on mle.ParentId equals divmle.ManagementStructureId into mainDivCompany
+                          from divmle in mainDivCompany.DefaultIfEmpty()
+
+                          join biumle in _appContext.ManagementStructure on divmle.ParentId equals biumle.ManagementStructureId into BIUDivCompany
+                          from biumle in BIUDivCompany.DefaultIfEmpty()
+
+                          join compmle in _appContext.ManagementStructure on biumle.ParentId equals compmle.ManagementStructureId into comivCompany
+                          from compmle in comivCompany.DefaultIfEmpty()
+                          where e.EmployeeId == employeeId
+                          select new
+                          {
+                              e.EmployeeId,
+                              UserName= e.FirstName,
+                              managmentLegalEntityName = mle.Name,
+                              divmanagmentLegalEntityName = divmle.Name,
+                              biumanagmentLegalEntityName = biumle.Name,
+                              compmanagmentLegalEntityName = compmle.Name,
+
+                          }).FirstOrDefault();
+            return Ok(result);
         }
 
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;

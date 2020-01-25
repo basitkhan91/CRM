@@ -1,4 +1,4 @@
-﻿import { Component, OnInit, AfterViewInit, ViewChild, Output, EventEmitter, Input } from '@angular/core';
+﻿import { Component, OnInit, AfterViewInit, ViewChild, Output, EventEmitter, Input, ElementRef } from '@angular/core';
 import { fadeInOut } from '../../../services/animations';
 import { Params, ActivatedRoute } from '@angular/router';
 import { Router, NavigationExtras } from '@angular/router';
@@ -12,7 +12,7 @@ import { CustomerContactModel } from '../../../models/customer-contact.model';
 import { MatDialog } from '@angular/material';
 import { getObjectByValue, getObjectById, getValueFromObjectByKey } from '../../../generic/autocomplete';
 import { ConfigurationService } from '../../../services/configuration.service';
-
+import * as $ from 'jquery';
 @Component({
 	selector: 'app-customer-documents',
 	templateUrl: './customer-documents.component.html',
@@ -23,7 +23,9 @@ export class CustomerDocumentsComponent implements OnInit {
 	@Input() savedGeneralInformationData;
 	@Input() editMode;
 	@Input() editGeneralInformationData;
-	@Output() tab = new EventEmitter<any>();
+    @Output() tab = new EventEmitter<any>();
+    @ViewChild('fileUploadInput') fileUploadInput: any;
+    @Input() customerDataFromExternalComponents : any = {};
 	documentInformation = {
 
 		docName: '',
@@ -37,7 +39,10 @@ export class CustomerDocumentsComponent implements OnInit {
 		{ field: 'docDescription', header: 'Description' },
 		{ field: 'documents', header: 'Documents' },
 		{ field: 'docMemo', header: 'Memo' }
-	];
+    ];
+    sourceViewforDocumentListColumns = [
+        { field: 'fileName', header: 'File Name' },
+    ]
 	selectedColumns = this.customerDocumentsColumns;
 	formData = new FormData()
 	// ediData: any;
@@ -56,6 +61,7 @@ export class CustomerDocumentsComponent implements OnInit {
         { field: 'fileName', header: 'File Name' },
         //{ field: 'link', header: 'Action' },
     ];
+    isViewMode: boolean = false;
 	constructor(private router: ActivatedRoute, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public customerService: CustomerService,
         private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private configurations: ConfigurationService) {
 	}
@@ -66,12 +72,20 @@ export class CustomerDocumentsComponent implements OnInit {
 
             this.customerCode = this.editGeneralInformationData.customerCode;
             this.customerName = this.editGeneralInformationData.name;
-
+            this.isViewMode = false;
 
 		} else {
-			this.id = this.savedGeneralInformationData.customerId;
-            this.customerCode = this.savedGeneralInformationData.customerCode;
-            this.customerName = this.savedGeneralInformationData.name;
+            if(this.customerDataFromExternalComponents != {}){
+                this.id = this.customerDataFromExternalComponents.customerId;
+                this.customerCode = this.customerDataFromExternalComponents.customerCode;
+                this.customerName = this.customerDataFromExternalComponents.name;
+                this.isViewMode = true;
+            } else {
+                this.id = this.savedGeneralInformationData.customerId;
+                this.customerCode = this.savedGeneralInformationData.customerCode;
+                this.customerName = this.savedGeneralInformationData.name;
+                this.isViewMode = false;
+            }			
 
         }
         this.getList();
@@ -85,6 +99,7 @@ export class CustomerDocumentsComponent implements OnInit {
 	// opencontactView(content, row) {
 
 	fileUpload(event) {
+        console.log(event, "event+++")
 		if (event.files.length === 0)
 			return;
 
@@ -99,14 +114,18 @@ export class CustomerDocumentsComponent implements OnInit {
             this.sourceViewforDocument = row;
 
         })
-
+        
        
-       
-        this.modal = this.modalService.open(content, { size: 'sm' });
-        this.modal.result.then(() => {
-            console.log('When user closes');
-        }, () => { console.log('Backdrop click') })
+        //this.modal = this.modalService.open(content, { size: 'sm' });
+        //this.modal.result.then(() => {
+        //    console.log('When user closes');
+        //}, () => { console.log('Backdrop click') })
     
+
+    }
+    docviewdblclick(data) {
+        this.sourceViewforDocument = data;
+        $('#docView').modal('show');
 
     }
     toGetUploadDocumentsList(attachmentId, customerId, moduleId) {
@@ -148,6 +167,7 @@ export class CustomerDocumentsComponent implements OnInit {
                     `Saved Documents Successfully `,
                     MessageSeverity.success
                 );
+                this.dismissDocumentPopupModel()
             })
         }
         else {
@@ -166,6 +186,7 @@ export class CustomerDocumentsComponent implements OnInit {
                     `Updated Documents Successfully `,
                     MessageSeverity.success
                 );
+                this.dismissDocumentPopupModel()
             })
         }
 
@@ -183,6 +204,7 @@ export class CustomerDocumentsComponent implements OnInit {
         });
 	}
     addDocumentDetails() {
+        this.sourceViewforDocumentList = [];
         this.isEditButton = false;
         this.documentInformation = {
 
@@ -221,11 +243,15 @@ export class CustomerDocumentsComponent implements OnInit {
         }
         this.modal.close();
     }
-      dismissModel() {
-         this.isDeleteMode = false;
-       
+      dismissModel() {        
+         this.isDeleteMode = false;       
          this.modal.close();
     }
+
+    dismissDocumentPopupModel(){
+        this.fileUploadInput.clear();
+    }
+
     downloadFileUpload(rowData) {
         const url = `${this.configurations.baseUrl}/api/FileUpload/downloadattachedfile?filePath=${rowData.link}`;
         window.location.assign(url);

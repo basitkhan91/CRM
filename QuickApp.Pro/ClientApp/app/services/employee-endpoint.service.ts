@@ -66,6 +66,8 @@ export class EmployeeEndpoint extends EndpointFactory {
 	private readonly _actionsUrlEmployeeMemoUpdate: string = "/api/Employee/employeeupdatememo";
 	private readonly _addEmployeeTrainingFileUpload: string = "/api/Employee/employeeDocumentUpload";
 
+	private readonly _getEmployeeDetailsByEmpId: string = "/api/Employee/employeeDetailsById";
+
     
 
 	get actionsUrl() { return this.configurations.baseUrl + this._actionsUrl; }
@@ -483,6 +485,13 @@ export class EmployeeEndpoint extends EndpointFactory {
 	// 	return this.http.post<T>(`${this._addEmployeeTrainingFileUpload}`, file);
 	// }
 
+	toGetEmployeeDetailsByEmpIdEndPoint<T>(employeeId): Observable<T> {
+		return this.http.get<T>(`${this._getEmployeeDetailsByEmpId}/${employeeId}`, this.getRequestHeaders())
+		.catch(error => {
+			return this.handleError(error, () => this.getEmployeeAuditDetailsEndPoint(employeeId));
+		});
+	}
+	
 
 	
 }

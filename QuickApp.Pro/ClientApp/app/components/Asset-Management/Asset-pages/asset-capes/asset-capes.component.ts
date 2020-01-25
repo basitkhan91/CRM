@@ -115,6 +115,7 @@ export class AssetCapesComponent implements OnInit {
         , private aircraftManufacturerService: AircraftManufacturerService, private aircraftModelService: AircraftModelService) {
 
         this.AssetId = this.router.snapshot.params['id'];
+        this.activeIndex = 1;
         if (this.assetServices.listCollection == undefined) {
             this.GetAssetData(this.AssetId);
         }
@@ -187,6 +188,7 @@ export class AssetCapesComponent implements OnInit {
              this.resetFormArray(element);
          });*/
         this.AssetId = this.router.snapshot.params['id'];
+        console.log('190', this.AssetId);
         if (this.assetServices.listCollection == null) {
             this.GetAssetData(this.AssetId);
         }
@@ -306,7 +308,27 @@ export class AssetCapesComponent implements OnInit {
             error => this.onDataLoadFailed(error)
         );
     }
+    changeOfTab(value) {
+        console.log('invoked');
+        console.log(`Parent master id ${this.AssetId}`);
+        const { assetId } = this.AssetId;
+        if (this.assetServices.isEditMode == true) {
+            if (value === 'General') {
+                this.activeIndex = 0;
+                this.route.navigateByUrl(`assetmodule/assetpages/app-edit-asset/${this.AssetId}`);
+            } else if (value === 'Capes') {
+                this.activeIndex = 1;
+                this.route.navigateByUrl(`/assetmodule/assetpages/app-asset-capes/${this.AssetId}`);
+            } else if (value === 'Calibration') {
+                this.activeIndex = 2;
+                this.route.navigateByUrl(`/assetmodule/assetpages/app-asset-calibration/${this.AssetId}`);
+            } else if (value == "Maintenance") {
+                this.activeIndex = 3;
+                this.route.navigateByUrl(`/assetmodule/assetpages/app-asset-maintenance-warranty/${this.AssetId}`);
+            }
+        }
 
+    }
 
     private onDataLoadFailed(error: any) {
         // alert(error);
@@ -653,7 +675,7 @@ export class AssetCapesComponent implements OnInit {
                     // checks where multi select is empty or not and calls the service
 
                     if (capData.selectedAircraftTypes !== '' && capData.selectedAircraftModelTypes !== '') {
-                        this.dashnumberservices.getDashNumberByModelTypeId(
+                        this.dashnumberservices.getCapesDashNumberByModelTypeId(
                             capData.selectedAircraftModelTypes,
                             capData.selectedAircraftTypes
                         ).subscribe(dashnumbers => {
@@ -899,7 +921,6 @@ export class AssetCapesComponent implements OnInit {
                 console.log(899, this.aircraftData);
             })
         }
-        this.addModels(capdata);
         if (this.selectedAircraftId !== undefined && this.modelUnknown) {
             this.aircraftData = [{
                 AircraftType: this.newValue,
@@ -907,26 +928,26 @@ export class AssetCapesComponent implements OnInit {
                 DashNumber: 'Unknown',
                 AircraftModelId: '',
                 DashNumberId: '',
-                Memo: '',
-                IsChecked: false
+                CapibilityType: capdata.selectedCap,
+                PartNumber: capdata.selectedPartId
             }]
         }
 
-        if (this.selectedAircraftId !== undefined && this.selectedModelId !== undefined && this.dashNumberUnknown) {
+        if (this.selectedAircraftId !== undefined && capdata.selectedModel !== undefined && this.dashNumberUnknown) {
             console.log(915);
-            this.aircraftData = this.selectedModelId.map(x => {
+            this.aircraftData = capdata.selectedModel.map(x => {
                 return {
                     AircraftType: this.newValue,
-                    AircraftModel: x.modelName,
+                    AircraftModel: x.label,
                     DashNumber: 'Unknown',
-                    AircraftModelId: x.aircraftModelId,
+                    AircraftModelId: x.value,
                     DashNumberId: '',
-                    Memo: '',
-                    IsChecked: false
+                    CapibilityType: capdata.selectedCap,
+                    PartNumber: capdata.selectedPartId
                 }
             })
         }
-
+        this.addModels(capdata);
 
 
         console.log(930, this.aircraftData);
@@ -999,7 +1020,10 @@ export class AssetCapesComponent implements OnInit {
                                 this.mfgFormArray.controls[mfgIndex]['divisionlist'] = [];
 
                             }
-
+                            else {
+                                this.mfgFormArray.push(mfObj);
+                                let mfgIndex = this.mfgFormArray.controls.length - 1;
+                            }
                         } else {
                             let mfObj = this.formBuilder.group(capbilitiesObj);
                             let mfgItemExisted = this.checkIsExisted(capData.CapabilityTypeId, element1.value, element2.value, this.mfgFormArray, capData);
@@ -1010,6 +1034,10 @@ export class AssetCapesComponent implements OnInit {
                                 this.mfgFormArray.controls[mfgIndex]['departmentList'] = [];
                                 this.mfgFormArray.controls[mfgIndex]['divisionlist'] = [];
 
+                            }
+                            else {
+                                this.mfgFormArray.push(mfObj);
+                                let mfgIndex = this.mfgFormArray.controls.length - 1;
                             }
                         }
 
@@ -1107,17 +1135,20 @@ export class AssetCapesComponent implements OnInit {
         //let selectedData = event.value;
         console.log(event);
         let selectedData = event.target.value;
+
         console.log('selectedData', selectedData);
         capData.selectedManufacturer = [];
         //this.loadModalsForExistingRecords(capData);
         if (selectedData) {
-            selectedData = selectedData.split(":")[0];
+            selectedData = selectedData.split(":")[1];
             this.selectedAircraftId = selectedData;
+
         }
         console.log('selectedData', selectedData);
         this.manufacturerData.forEach(element2 => {
             if (selectedData == element2.value) {
                 capData.selectedManufacturer.push(element2);
+                this.newValue = element2.label;
             }
         })
         /*
@@ -1276,24 +1307,18 @@ export class AssetCapesComponent implements OnInit {
                 //this.capabilityEditCollection = getSelectedCollection;
                 //this.cunstructFormForEdit()
 
-                if (data[0].aircraftTypeId !== undefined && data[0].aircraftModelId !== undefined && data[0].aircraftDashNumberId !== undefined) {
-                    this.dashnumberservices.getAllDashModels(data[0].aircraftModelId, data[0].aircraftTypeId, data[0].aircraftDashNumberId).subscribe(aircraftdata => {
-                        const responseValue = aircraftdata;
-                        this.aircraftData = responseValue.map(x => {
-                            return {
-                                AircraftType: x.aircraft,
-                                AircraftModel: x.model,
-                                DashNumber: x.dashNumber,
-                                AircraftModelId: x.modelid,
-                                DashNumberId: x.dashNumberId,
-                                CapibilityType: data[0].captypedescription,
-                                PartNumber: data[0].partNumber
-                            }
-                        })
-                    })
-                }
+                this.aircraftData = [{
+                    AircraftType: data[0].manufacturer,
+                    AircraftModel: data[0].modelname,
+                    DashNumber: data[0].dashNumber,
+                    AircraftModelId: data[0].aircraftModelId,
+                    DashNumberId: data[0].aircraftDashNumberId,
+                    CapibilityType: data[0].captypedescription,
+                    PartNumber: data[0].partNumber
+                }]
             }
-        });
+        }
+        );
 
         this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
@@ -1306,6 +1331,7 @@ export class AssetCapesComponent implements OnInit {
         this.activeIndex = 2;
         this.assetServices.indexObj.next(this.activeIndex);
         const { assetId } = this.local;
+        this.alertService.showMessage("Success", `Asset capes saved successfully.`, MessageSeverity.success);
         this.route.navigateByUrl(`/assetmodule/assetpages/app-asset-calibration/${assetId}`);
     }
 

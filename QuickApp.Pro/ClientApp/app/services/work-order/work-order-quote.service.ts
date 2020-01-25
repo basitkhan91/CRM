@@ -86,25 +86,33 @@ export class WorkOrderQuoteService {
     getQuoteIdByWfandWorkOrderId(wfwoId, workOrderId) {
         return this.quoteEndPointService.getQuoteIdByWfandWorkOrderId(wfwoId, workOrderId);
     }
-    getQuoteExclusionList(workOrderQuoteId) {
-        return this.quoteEndPointService.getQuoteExclusionList(workOrderQuoteId);
+    getQuoteExclusionList(workOrderQuoteId, buildMethodId) {
+        return this.quoteEndPointService.getQuoteExclusionList(workOrderQuoteId, buildMethodId);
     }
-    getQuoteMaterialList(workOrderQuoteId) {
-        return this.quoteEndPointService.getQuoteMaterialList(workOrderQuoteId);
+    getQuoteMaterialList(workOrderQuoteId, buildMethodId) {
+        return this.quoteEndPointService.getQuoteMaterialList(workOrderQuoteId, buildMethodId);
     }
-    getQuoteFreightsList(workOrderQuoteId) {
-        return this.quoteEndPointService.getQuoteFreightsList(workOrderQuoteId);
+    getQuoteFreightsList(workOrderQuoteId, buildMethodId) {
+        return this.quoteEndPointService.getQuoteFreightsList(workOrderQuoteId, buildMethodId);
     }
-    getQuoteChargesList(workOrderQuoteId) {
-        return this.quoteEndPointService.getQuoteChargesList(workOrderQuoteId);
+    getQuoteChargesList(workOrderQuoteId, buildMethodId) {
+        return this.quoteEndPointService.getQuoteChargesList(workOrderQuoteId, buildMethodId);
     }
-    getQuoteLaborList(workOrderQuoteId) {
-        return this.quoteEndPointService.getQuoteLaborList(workOrderQuoteId);
+    getQuoteLaborList(workOrderQuoteId, buildMethodId) {
+        return this.quoteEndPointService.getQuoteLaborList(workOrderQuoteId, buildMethodId);
     }
     getWorkOrderQuoteDetail(workOrderId, workFlowWorkOrderId){
         return this.quoteEndPointService.getWorkOrderQuoteDetail(workOrderId, workFlowWorkOrderId)
     }
-
+    getWorkOrderQuoteList(payload){
+        return this.quoteEndPointService.getWorkOrderQuoteList(payload);
+    }
+    getWorkOrderQuoteData(workOrderQuoteId) {
+        return this.quoteEndPointService.getWorkOrderQuoteData(workOrderQuoteId);
+    }
+    getSavedQuoteDetails(wfwoid){
+        return this.quoteEndPointService.getSavedQuoteDetails(wfwoid);
+    }
 
 
 }

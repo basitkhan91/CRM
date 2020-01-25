@@ -1,4 +1,4 @@
-﻿import { Component, Input, OnInit } from '@angular/core';
+﻿import { Component, Input, OnInit, ChangeDetectorRef, OnChanges } from '@angular/core';
 import { Params, ActivatedRoute } from '@angular/router';
 import {
   WorkOrderQuote,
@@ -32,9 +32,12 @@ import {
   styleUrls: ['./work-order-quote.component.scss']
 })
 /** WorkOrderQuote component*/
-export class WorkOrderQuoteComponent implements OnInit {
+export class WorkOrderQuoteComponent implements OnInit, OnChanges {
   @Input() quoteForm: WorkOrderQuote;
+  @Input() quoteListViewData: any = {};
   @Input() workorderid: number = 0;
+  @Input() isView: boolean = false;
+  @Input() isQuoteListView: boolean = false;
   customerName: string;
   creditLimit: any;
   creditTerms: any;
@@ -80,7 +83,7 @@ export class WorkOrderQuoteComponent implements OnInit {
   materialListPayload = new QuoteMaterialList();
   workFlowWorkOrderId: number = 0;
   workOrderId: number = 0;
-  workOrderExclusionsList: Object;
+  workOrderExclusionsList: Object[];
   workOrderMaterialList: any;
   workOrderChargesList: any;
   accountsReceivableBalance: any;
@@ -99,12 +102,25 @@ export class WorkOrderQuoteComponent implements OnInit {
 isQuote: boolean = true;
 editMatData: any[] = [];
 costPlusType: string = "Mark Up";
+tabQuoteCreated: Object = {
+  'materialList': false,
+  'charges': false,
+  'exclusions': false,
+  'labor': false
+}
+editData: any;
+editingIndex: number;
+selectedWorkFlowWorkOrderId: number;
+workOrderQuoteDetailsId: any;
+historicalWorkOrderId: number = 0;
+woWorkFlowId: number = 0;
 
 
 
 
-  constructor(private router: ActivatedRoute,private workOrderService: WorkOrderQuoteService, private commonService: CommonService, private _workflowService: WorkFlowtService, private alertService:AlertService, private workorderMainService: WorkOrderService, private currencyService:CurrencyService) {}
+  constructor(private router: ActivatedRoute,private workOrderService: WorkOrderQuoteService, private commonService: CommonService, private _workflowService: WorkFlowtService, private alertService:AlertService, private workorderMainService: WorkOrderService, private currencyService:CurrencyService, private cdRef: ChangeDetectorRef) {}
   ngOnInit() {
+    console.log(this.isView);
     if(this.quoteForm == undefined){
       this.quoteForm = new WorkOrderQuote();
     }
@@ -127,12 +143,17 @@ costPlusType: string = "Mark Up";
     
   }
 
+  ngOnChanges() {
+    if(this.isQuoteListView){
+      this.quoteForm = new WorkOrderQuote();
+      this.formDataFromViewListData();
+    }
+  }
+
   calculateExpiryDate() {
-    console.log(this.validFor);
-    console.log(this.quoteDueDate);
     if(this.validFor && this.quoteDueDate){
       this.expirationDate = new Date();
-      this.expirationDate.setDate(this.quoteDueDate.getDate() + this.validFor);
+      this.expirationDate.setDate(this.quoteForm.openDate.getDate() + this.validFor);
     }
   }
 
@@ -220,7 +241,8 @@ costPlusType: string = "Mark Up";
       this.quoteForm.WorkOrderId = res.workOrderId;
       this.quoteForm.WorkFlowWorkOrderId = res["workFlowWorkOrderId"];
       this.quoteForm.openDate = new Date(res["openDate"])
-      this.quoteForm.CustomerId = res['customerId'];
+      this.quoteForm.CustomerId = res['customerDetails']['customerId'];
+      this.quoteForm['CustomerPhone'] = res['customerDetails']['customerPhone']
       this.quoteForm.SalesPersonId = res['salesPersonId'];
       this.quoteForm.EmployeeId = res['employeeId'];
       this.quoteForm.masterCompanyId = res['masterCompanyId'];
@@ -235,6 +257,7 @@ costPlusType: string = "Mark Up";
             this.quotationHeader['workOrderQuoteId'] = res.workOrderQuote.workOrderQuoteId;
             this.dso = res.workOrderQuote.dso;
             this.validFor = res.workOrderQuote.validForDays;
+            res.workOrderQuote.openDate = new Date(res.workOrderQuote.openDate);
             this.quoteForm = {...res.workOrderQuote, WorkOrderId: res.workOrderId,
               WorkFlowWorkOrderId: res["workFlowWorkOrderId"], quoteNumber: res.workOrderQuote.quoteNumber, expirationDateStatus: res.workOrderQuote.quoteStatusId};
             this.quoteDueDate = new Date(res.workOrderQuote.quoteDueDate);
@@ -244,6 +267,7 @@ costPlusType: string = "Mark Up";
             this.warnings = res.warnings;
             this.memo = res.memo;
             this.getQuoteTabData();
+            this.setBuildMethod(res.buildMethodId);
 
           }
         }
@@ -308,7 +332,11 @@ costPlusType: string = "Mark Up";
           },
           label: x.partNumber
         }
-      })
+      });
+      if(this.savedWorkOrderData.isSinglePN){
+        this.selectedPartNumber = this.mpnPartNumbersList[0].label;
+        this.partNumberSelected();
+      }
     })
   }
 
@@ -320,6 +348,32 @@ costPlusType: string = "Mark Up";
       if(mpn.label == this.selectedPartNumber){
         msId = mpn.value.masterPartId;
         this.labor.workFlowWorkOrderId = mpn;
+        this.selectedWorkFlowWorkOrderId = mpn.value.workOrderWorkFlowId;
+        this.workOrderService.getSavedQuoteDetails(this.selectedWorkFlowWorkOrderId)
+        .subscribe(
+          (res)=>{
+            if(res && res['workOrderQuoteDetailsId']){
+              this.workOrderQuoteDetailsId = res['workOrderQuoteDetailsId'];
+              this.historicalWorkOrderId = res['selectedId'];
+              this.woWorkFlowId = res['selectedId'];
+              if(res['buildMethodId'] == 1){
+                this.buildMethodSelected('use work flow');
+              }
+              else if(res['buildMethodId'] == 2){
+                this.buildMethodSelected('use historical wos');
+              }
+              else{
+                this.buildMethodSelected('build from scratch');
+              }
+            }
+            else{
+              this.workOrderQuoteDetailsId = 0;
+              this.historicalWorkOrderId = 0;
+              this.woWorkFlowId = 0;
+              this.selectedBuildMethod = "";
+            }
+          }
+        )
       }
     })
     this.savedWorkOrderData.partNumbers.forEach((pns)=>{
@@ -328,7 +382,6 @@ costPlusType: string = "Mark Up";
         this.laborPayload.IsPMA = this.exclusionPayload.IsPMA = this.chargesPayload.IsPMA = this.materialListPayload.IsPMA = pns['isPMA'];
         this.laborPayload.ItemMasterId = this.exclusionPayload.ItemMasterId = this.chargesPayload.ItemMasterId = this.materialListPayload.ItemMasterId = pns['masterPartId'];
         this.laborPayload.CMMId = this.exclusionPayload.CMMId = this.chargesPayload.CMMId = this.materialListPayload.CMMId = pns['cmmId'];
-        this.laborPayload.SelectedId = this.exclusionPayload.SelectedId = this.chargesPayload.SelectedId = this.materialListPayload.SelectedId = pns['id'];
         this.laborPayload.EstCompDate = this.exclusionPayload.EstCompDate = this.chargesPayload.EstCompDate = this.materialListPayload.EstCompDate = pns['estimatedCompletionDate'];
         this.laborPayload.StatusId = this.exclusionPayload.StatusId = this.chargesPayload.StatusId = this.materialListPayload.StatusId = pns['workOrderStatusId'];
       }
@@ -357,6 +410,12 @@ costPlusType: string = "Mark Up";
     this.selectedWorkFlowOrWorkOrder = undefined;
     var partId;
     var workScopeId;
+    if(buildType == 'use work flow'){
+      this.labor.workFloworSpecificTaskorWorkOrder = 'workFlow';
+    }
+    else if(buildType == 'use historical wos'){
+      this.labor.workFloworSpecificTaskorWorkOrder = 'specificTasks';
+    }
     this.mpnPartNumbersList.forEach(element => {
       if(element['label'] == this.selectedPartNumber){
         partId = element['value']['masterPartId'];
@@ -385,83 +444,84 @@ costPlusType: string = "Mark Up";
   }
   gridTabChange(value) {
     this.gridActiveTab = value;
-    if(this.isEdit){
-      switch(value){
-        case 'materialList': {
-          this.getQuoteMaterialListByWorkOrderQuoteId();
-          break;
-        }
-        case 'labor': {
-          for(let task in this.labor.workOrderLaborList[0]){
-            this.labor.workOrderLaborList[0][task] = [];
-          }
-          this.getQuoteLaborListByWorkOrderQuoteId();
-          break;
-        }
-        case 'charges': {
-          this.getQuoteChargesListByWorkOrderQuoteId();
-          break;
-        }
-        case 'exclusions': {
-          this.getQuoteExclusionListByWorkOrderQuoteId();
-          break;
-        }
-      }
+    if((this.isEdit || this.tabQuoteCreated['materialList']) && value == 'materialList'){
+      this.getQuoteMaterialListByWorkOrderQuoteId();
     }
-    if(this.selectedBuildMethod == 'use historical wos' && this.selectedWorkFlowOrWorkOrder){
-        this.clearQuoteData();
-        if(value == 'materialList') {
-          this.workOrderService.getWorkOrderMaterialListForQuote(this.selectedWorkFlowOrWorkOrder.workFlowWorkOrderId)
-          .subscribe(
-            (res: any[]) =>{
-              this.materialListQuotation = res;
-              this.workOrderMaterialList = res;
-            }
-          )
-        }
-        if(value ==  'labor') {
-          this.savedWorkOrderData.workFlowWorkOrderId = 0;
-          this.workOrderService.getWorkOrderLaborListForQuote(this.selectedWorkFlowOrWorkOrder.workFlowWorkOrderId)
-          .subscribe(
-            (res: any) =>{
-              if(res){
-                let laborList = this.labor.workOrderLaborList;
-                this.labor = {...res, workOrderLaborList: laborList};
-                this.taskList.forEach((tl)=>{
-                  res.laborList.forEach((rt)=>{
-                    if(rt['taskId'] == tl['taskId']){
-                      if(this.labor.workOrderLaborList[0][tl['description'].toLowerCase()][0]['expertiseId'] == null && this.labor.workOrderLaborList[0][tl['description'].toLowerCase()][0]['employeeId'] == null){
-                        this.labor.workOrderLaborList[0][tl['description'].toLowerCase()] = [];
-                      }
-                      let labor = {}
-                      labor = {...rt, employeeId: {'label':rt.employeeName, 'value': rt.employeeId}}
-                      this.labor.workOrderLaborList[0][tl['description'].toLowerCase()].push(labor);
-                    }
-                  })
-                })
+    else if((this.isEdit || this.tabQuoteCreated['charges']) && value == 'charges'){
+      this.getQuoteChargesListByWorkOrderQuoteId();
+    }
+    else if((this.isEdit || this.tabQuoteCreated['exclusions']) && value == 'exclusions'){
+      this.getQuoteExclusionListByWorkOrderQuoteId();
+    }
+    else if((this.isEdit || this.tabQuoteCreated['labor']) && value == 'labor'){
+      for(let task in this.labor.workOrderLaborList[0]){
+        this.labor.workOrderLaborList[0][task] = [];
+      }
+      this.getQuoteLaborListByWorkOrderQuoteId();
+    }
+    else{
+      if(this.selectedBuildMethod == 'use historical wos' && this.selectedWorkFlowOrWorkOrder){
+          this.clearQuoteData();
+          if(value == 'materialList') {
+            this.workOrderService.getWorkOrderMaterialListForQuote(this.selectedWorkFlowOrWorkOrder.workFlowWorkOrderId)
+            .subscribe(
+              (res: any[]) =>{
+                this.materialListQuotation = res;
+                this.workOrderMaterialList = res;
               }
-              this.laborQuotation = res;
-            }
-          )
-        }
-        if(value == 'charges') {
-          this.workOrderService.getWorkOrderChargesListForQuote(this.selectedWorkFlowOrWorkOrder.workFlowWorkOrderId)
-          .subscribe(
-            (res: any[]) =>{
-              this.chargesQuotation = res;
-              this.workOrderChargesList = res;
-            }
-          )
-        }
-        if(value == 'exclusions') {
-          this.workOrderService.getWorkOrderExclutionsListForQuote(this.selectedWorkFlowOrWorkOrder.workFlowWorkOrderId)
-          .subscribe(
-            (res: any[]) =>{
-              this.exclusionsQuotation = res;
-              this.workOrderExclusionsList = res;
-            }
-          )
-        }
+            )
+          }
+          if(value ==  'labor') {
+            this.savedWorkOrderData.workFlowWorkOrderId = 0;
+            this.workOrderService.getWorkOrderLaborListForQuote(this.selectedWorkFlowOrWorkOrder.workFlowWorkOrderId)
+            .subscribe(
+              (res: any) =>{
+                if(res){
+                  let laborList = this.labor.workOrderLaborList;
+                  this.labor = {...res, workOrderLaborList: laborList};
+                  if(this.selectedBuildMethod == 'use work flow'){
+                    this.labor.workFloworSpecificTaskorWorkOrder = 'workFlow';
+                  }
+                  else if(this.selectedBuildMethod == 'use historical wos'){
+                    this.labor.workFloworSpecificTaskorWorkOrder = 'specificTasks';
+                  }
+                  this.taskList.forEach((tl)=>{
+                    this.labor.workOrderLaborList[0][tl['description'].toLowerCase()] = [];
+                    res.laborList.forEach((rt)=>{
+                      if(rt['taskId'] == tl['taskId']){
+                        if(this.labor.workOrderLaborList[0][tl['description'].toLowerCase()][0] && this.labor.workOrderLaborList[0][tl['description'].toLowerCase()][0]['expertiseId'] == null && this.labor.workOrderLaborList[0][tl['description'].toLowerCase()][0]['employeeId'] == null){
+                          this.labor.workOrderLaborList[0][tl['description'].toLowerCase()] = [];
+                        }
+                        let labor = {}
+                        labor = {...rt, employeeId: {'label':rt.employeeName, 'value': rt.employeeId}}
+                        this.labor.workOrderLaborList[0][tl['description'].toLowerCase()].push(labor);
+                      }
+                    })
+                  })
+                }
+                this.laborQuotation = res;
+              }
+            )
+          }
+          if(value == 'charges') {
+            this.workOrderService.getWorkOrderChargesListForQuote(this.selectedWorkFlowOrWorkOrder.workFlowWorkOrderId)
+            .subscribe(
+              (res: any[]) =>{
+                this.chargesQuotation = res;
+                this.workOrderChargesList = res;
+              }
+            )
+          }
+          if(value == 'exclusions') {
+            this.workOrderService.getWorkOrderExclutionsListForQuote(this.selectedWorkFlowOrWorkOrder.workFlowWorkOrderId)
+            .subscribe(
+              (res: any[]) =>{
+                this.exclusionsQuotation = res;
+                this.workOrderExclusionsList = res;
+              }
+            )
+          }
+      }
     }
   }
   getQuoteInfo(data) {
@@ -494,7 +554,7 @@ costPlusType: string = "Mark Up";
           this.taskList.forEach((tl)=>{
             res['expertise'].forEach((rt)=>{
               if(rt['taskId'] == tl['taskId']){
-                if(this.labor.workOrderLaborList[0][tl['description'].toLowerCase()][0]['expertiseId'] == null && this.labor.workOrderLaborList[0][tl['description'].toLowerCase()][0]['employeeId'] == null){
+                if(this.labor.workOrderLaborList[0][tl['description'].toLowerCase()][0] && this.labor.workOrderLaborList[0][tl['description'].toLowerCase()][0]['expertiseId'] == null && this.labor.workOrderLaborList[0][tl['description'].toLowerCase()][0]['employeeId'] == null){
                   this.labor.workOrderLaborList[0][tl['description'].toLowerCase()] = [];
                 }
                 let labor = {}
@@ -522,6 +582,8 @@ costPlusType: string = "Mark Up";
 
   createMaterialQuote(){
     this.materialListPayload.BuildMethodId = this.getBuildMethodId();
+    this.materialListPayload['WorkflowWorkOrderId'] = this.selectedWorkFlowWorkOrderId;
+    this.materialListPayload.SelectedId = (this.selectedBuildMethod == "use work flow")?this.woWorkFlowId:(this.selectedBuildMethod == "use historical wos")?this.historicalWorkOrderId:0;
     this.materialListPayload.WorkOrderQuoteMaterial = this.materialListQuotation.map(mList=>{
       if(mList.workOrderQuoteDetailsId && mList.workOrderQuoteDetailsId != 0){
         this.materialListPayload.WorkOrderQuoteDetailsId = mList.workOrderQuoteDetailsId
@@ -546,7 +608,7 @@ costPlusType: string = "Mark Up";
                   "Markup":mList.markup,
                   "MaterialCostPlus":mList.materialCostPlus,
                   "FixedAmount":mList.fixedAmount,
-                  "masterCompanyId":mList.masterCompanyId,
+                  "masterCompanyId":(mList.masterCompanyId == '')?0:mList.masterCompanyId,
               "CreatedBy":"admin",
               "UpdatedBy":"admin",
               "IsActive":true,
@@ -556,9 +618,10 @@ costPlusType: string = "Mark Up";
     this.workOrderService.saveMaterialListQuote(this.materialListPayload)
     .subscribe(
       res => {
+        this.tabQuoteCreated['materialList'] = true;
         this.materialListQuotation = res.workOrderQuoteMaterial;
-        this.getQuoteMaterialListByWorkOrderQuoteId();
         this.updateWorkOrderQuoteDetailsId(res.workOrderQuoteDetailsId);
+        this.getQuoteMaterialListByWorkOrderQuoteId();
         this.alertService.showMessage(
             this.moduleName,
             'Quotation for material list created successfully',
@@ -569,10 +632,13 @@ costPlusType: string = "Mark Up";
   }
 
   createLaborQuote(){
+    this.laborPayload['workflowWorkOrderId'] = this.selectedWorkFlowWorkOrderId;
+    this.laborPayload['SelectedId'] = (this.selectedBuildMethod == "use work flow")?this.woWorkFlowId:(this.selectedBuildMethod == "use historical wos")?this.historicalWorkOrderId:0;
     this.workOrderService.saveLaborListQuote(this.laborPayload)
     .subscribe(
       res => {
         if(res){
+          this.tabQuoteCreated['labor'] = true;
           let laborList = this.labor.workOrderLaborList;
           this.labor = {...res.workOrderQuoteLaborHeader, workOrderLaborList: laborList};
           this.mpnPartNumbersList.forEach((mpn)=>{
@@ -605,6 +671,8 @@ costPlusType: string = "Mark Up";
   }
 
   createChargeQuote(data){
+    this.chargesPayload['workflowWorkOrderId'] = this.selectedWorkFlowWorkOrderId;
+    this.chargesPayload['SelectedId'] = (this.selectedBuildMethod == "use work flow")?this.woWorkFlowId:(this.selectedBuildMethod == "use historical wos")?this.historicalWorkOrderId:0;
     this.chargesPayload.BuildMethodId = this.getBuildMethodId();
     this.chargesPayload.WorkOrderQuoteCharges = data.map(charge=>{
       if(charge.workOrderQuoteDetailsId && charge.workOrderQuoteDetailsId != 0){
@@ -627,7 +695,7 @@ costPlusType: string = "Mark Up";
         "ExtendedCost":charge.extendedCost,
         "UnitPrice":charge.unitPrice,
         "ExtendedPrice":charge.extendedPrice,
-        "masterCompanyId":charge.masterCompanyId,
+        "masterCompanyId":(charge.masterCompanyId == "")?0:charge.masterCompanyId,
         "CreatedBy":"admin",
         "UpdatedBy":"admin",
         "IsActive":true,
@@ -637,9 +705,10 @@ costPlusType: string = "Mark Up";
     this.workOrderService.saveChargesQuote(this.chargesPayload)
     .subscribe(
       res => {
+        this.tabQuoteCreated['charges'] = true;
         this.workOrderChargesList = res.workOrderQuoteCharges;
-        this.getQuoteChargesListByWorkOrderQuoteId();
         this.updateWorkOrderQuoteDetailsId(res.workOrderQuoteDetailsId);
+        this.getQuoteChargesListByWorkOrderQuoteId();
         this.alertService.showMessage(
           this.moduleName,
           'Quotation created  Succesfully',
@@ -649,9 +718,12 @@ costPlusType: string = "Mark Up";
     )
   }
   createExclusionsQuote(){
+    this.exclusionsQuotation['workflowWorkOrderId'] = this.selectedWorkFlowWorkOrderId;
+    this.exclusionsQuotation['SelectedId'] = (this.selectedBuildMethod == "use work flow")?this.woWorkFlowId:(this.selectedBuildMethod == "use historical wos")?this.historicalWorkOrderId:0;
     this.workOrderService.saveExclusionsQuote(this.exclusionsQuotation)
     .subscribe(
       res => {
+        this.tabQuoteCreated['exclusions'] = true;
         this.workOrderExclusionsList = res.workOrderQuoteExclusions;
         this.getExclusionListByWorkOrderId();
         this.updateWorkOrderQuoteDetailsId(res.workOrderQuoteDetailsId);
@@ -677,6 +749,18 @@ costPlusType: string = "Mark Up";
                 console.log(error);
             }
         )
+}
+
+createNew(){
+  // this.isEdit = false;
+  this.editData = undefined;
+}
+edit(rowData, i) {
+  this.editingIndex = i;
+  this.createNew();
+  this.cdRef.detectChanges();
+  this.isEdit = true;
+  this.editData = rowData;
 }
 
 formTaskList(){
@@ -770,6 +854,26 @@ getBuildMethodId(){
   else if(this.selectedBuildMethod === 'display 3rd party') return 4;
 }
 
+setBuildMethod(id){
+  if(id === 1) 
+  {
+    this.selectedBuildMethod='use work flow';
+    // this.buildMethodSelected('use work flow');
+  }
+  else if(id === 2) {
+    this.selectedBuildMethod='use historical wos';
+    // this.buildMethodSelected('use historical wos');
+  }
+  else if(id === 3) {
+    this.selectedBuildMethod='build from scratch';
+    // this.buildMethodSelected('build from scratch');
+  }
+  else if(id === 4) {
+    this.selectedBuildMethod='display 3rd party';
+    // this.buildMethodSelected('display 3rd party');
+  }
+}
+
 saveWorkOrderExclusionsList(data) {
   this.exclusionPayload.BuildMethodId = this.getBuildMethodId();
   this.exclusionPayload.WorkOrderQuoteExclusions = data.map(ex=>{
@@ -790,7 +894,7 @@ saveWorkOrderExclusionsList(data) {
       "MarkUpPercentageId":ex.markupPercentageId,
       "CostPlusAmount":ex.CostPlusAmount,
       "FixedAmount":ex.fixedAmount,
-      "masterCompanyId":ex.masterCompanyId,
+      "masterCompanyId":(ex.masterCompanyId == '')?0:ex.masterCompanyId,
       "CreatedBy":"admin",
       "UpdatedBy":"admin",
       "IsActive":true,
@@ -832,7 +936,7 @@ updateWorkOrderExclusionsList(data) {
 
 getExclusionListByWorkOrderId(){
   if (this.workFlowWorkOrderId !== 0 && this.workOrderId) {
-    this.workorderMainService.getWorkOrderExclusionsList(this.workFlowWorkOrderId, this.workOrderId).subscribe(res => {
+    this.workorderMainService.getWorkOrderExclusionsList(this.workFlowWorkOrderId, this.workOrderId).subscribe((res: any[]) => {
         this.workFlowObject.materialList = [];
         this.workOrderExclusionsList = res;
     })
@@ -841,7 +945,9 @@ getExclusionListByWorkOrderId(){
 }
 
 saveWorkOrderChargesList(data){
-  console.log(data);
+  if(!this.workOrderChargesList){
+    this.workOrderChargesList = [];
+  }
   this.workOrderChargesList = [...this.workOrderChargesList, ...data['charges']];
 }
 
@@ -875,7 +981,7 @@ markupChanged(matData){
   try{
     this.markupList.forEach((markup)=>{
       if(markup.value == matData.markupPercentageId){
-        matData.materialCostPlus = (matData.quantity * matData.unitCost) + ( ((matData.quantity * matData.unitCost)/100) *  Number(markup.label))
+        matData.materialCostPlus = Number(matData.extendedCost) + ((Number(matData.extendedCost) / 100) * Number(markup.label))
       }
     })
   }
@@ -885,7 +991,35 @@ markupChanged(matData){
 }
 
 saveBuildFromScratch(data){
-  console.log(data);
+  let materialList = [];
+  let chargesList = [];
+  let exclusionsList = [];
+  let laborList = [];
+  if(data){
+    data.forEach((da)=>{
+      if(da.materialList){
+        if(this.materialListQuotation){
+          this.materialListQuotation = [...this.materialListQuotation, ...da.materialList]
+        }
+        else{
+          this.materialListQuotation = [];
+        }
+      }
+      if(da.charges){
+        chargesList = [...chargesList, ...da.charges];
+      }
+      if(da.expertise){
+        laborList = [...exclusionsList, ...da.expertise];
+      }
+      if(da.exclusions){
+        exclusionsList = [...exclusionsList, ...da.exclusions.map(x => { return { ...x, epn: x.partNumber, epnDescription: x.partDescription } })];
+        // exclusionsList = [...exclusionsList, ...da.exclusions];
+      }
+    })
+    this.createMaterialQuote();
+    this.saveWorkOrderExclusionsList(exclusionsList );
+    this.createChargeQuote(chargesList);
+  }
 }
 
 editMaterialList(matData, index){
@@ -909,6 +1043,7 @@ checkValidQuote(){
 }
 
 updateWorkOrderQuoteDetailsId(id){
+  this.workOrderQuoteDetailsId = id;
   this.laborPayload.WorkOrderQuoteDetailsId = id;
   this.chargesPayload.WorkOrderQuoteDetailsId = id;
   this.exclusionPayload.WorkOrderQuoteDetailsId = id;
@@ -935,56 +1070,64 @@ getQuoteTabData() {
 
 }
 getQuoteExclusionListByWorkOrderQuoteId() {
-  this.workOrderService.getQuoteExclusionList(this.quotationHeader['workOrderQuoteId']).subscribe(res => {
-      this.workOrderExclusionsList = res;
-      if(res.length > 0){
-        this.updateWorkOrderQuoteDetailsId(res[0].workOrderQuoteDetailsId)
-      }
-  })
+  if(this.workOrderQuoteDetailsId){
+    this.workOrderService.getQuoteExclusionList(this.workOrderQuoteDetailsId, (this.selectedBuildMethod == "use work flow")?1:(this.selectedBuildMethod == "use historical wos")?2:3).subscribe(res => {
+        this.workOrderExclusionsList = res;
+        if(res.length > 0){
+          this.updateWorkOrderQuoteDetailsId(res[0].workOrderQuoteDetailsId)
+        }
+    })
+  }
 }
 getQuoteMaterialListByWorkOrderQuoteId() {
-  this.workOrderService.getQuoteMaterialList(this.quotationHeader['workOrderQuoteId']).subscribe(res => {
-      this.materialListQuotation = res;
-      if(res.length > 0){
-        this.updateWorkOrderQuoteDetailsId(res[0].workOrderQuoteDetailsId)
-      }
-  })
+  if(this.workOrderQuoteDetailsId){
+    this.workOrderService.getQuoteMaterialList(this.workOrderQuoteDetailsId, (this.selectedBuildMethod == "use work flow")?1:(this.selectedBuildMethod == "use historical wos")?2:3).subscribe(res => {
+        this.materialListQuotation = res;
+        if(res.length > 0){
+          this.updateWorkOrderQuoteDetailsId(res[0].workOrderQuoteDetailsId)
+        }
+    })
+  }
 }
  getQuoteChargesListByWorkOrderQuoteId() {
-  this.workOrderService.getQuoteChargesList(this.quotationHeader['workOrderQuoteId']).subscribe(res => {
-      this.workOrderChargesList = res;
-      if(res.length > 0){
-        this.updateWorkOrderQuoteDetailsId(res[0].workOrderQuoteDetailsId)
-      }
-  })
+  if(this.workOrderQuoteDetailsId){
+    this.workOrderService.getQuoteChargesList(this.workOrderQuoteDetailsId, (this.selectedBuildMethod == "use work flow")?1:(this.selectedBuildMethod == "use historical wos")?2:3).subscribe(res => {
+        this.workOrderChargesList = res;
+        if(res.length > 0){
+          this.updateWorkOrderQuoteDetailsId(res[0].workOrderQuoteDetailsId)
+        }
+    })
+  }
 }
  getQuoteLaborListByWorkOrderQuoteId() {
-  this.workOrderService.getQuoteLaborList(this.quotationHeader['workOrderQuoteId']).subscribe(res => {
-      if (res) {
-          // this.workOrderLaborList = res;
-          let wowfId = this.labor.workFlowWorkOrderId;
-          this.laborPayload.WorkOrderQuoteLaborHeader = res;
-          if(res){
-            this.updateWorkOrderQuoteDetailsId(res.workOrderQuoteDetailsId)
-            let laborList = this.labor.workOrderLaborList;
-            this.labor = {...res, workOrderLaborList: laborList};
-            this.labor.workFlowWorkOrderId = wowfId;
-            this.taskList.forEach((tl)=>{
-              res.laborList.forEach((rt)=>{
-                if(rt['taskId'] == tl['taskId']){
-                  if(this.labor.workOrderLaborList[0][tl['description'].toLowerCase()][0] && this.labor.workOrderLaborList[0][tl['description'].toLowerCase()][0]['expertiseId'] == null && this.labor.workOrderLaborList[0][tl['description'].toLowerCase()][0]['employeeId'] == null){
-                    this.labor.workOrderLaborList[0][tl['description'].toLowerCase()] = [];
+  if(this.workOrderQuoteDetailsId){
+    this.workOrderService.getQuoteLaborList(this.workOrderQuoteDetailsId, (this.selectedBuildMethod == "use work flow")?1:(this.selectedBuildMethod == "use historical wos")?2:3).subscribe(res => {
+        if (res) {
+            // this.workOrderLaborList = res;
+            let wowfId = this.labor.workFlowWorkOrderId;
+            this.laborPayload.WorkOrderQuoteLaborHeader = res;
+            if(res){
+              this.updateWorkOrderQuoteDetailsId(res.workOrderQuoteDetailsId)
+              let laborList = this.labor.workOrderLaborList;
+              this.labor = {...res, workOrderLaborList: laborList};
+              this.labor.workFlowWorkOrderId = wowfId;
+              this.taskList.forEach((tl)=>{
+                res.laborList.forEach((rt)=>{
+                  if(rt['taskId'] == tl['taskId']){
+                    if(this.labor.workOrderLaborList[0][tl['description'].toLowerCase()][0] && this.labor.workOrderLaborList[0][tl['description'].toLowerCase()][0]['expertiseId'] == null && this.labor.workOrderLaborList[0][tl['description'].toLowerCase()][0]['employeeId'] == null){
+                      this.labor.workOrderLaborList[0][tl['description'].toLowerCase()] = [];
+                    }
+                    let labor = {}
+                    labor = {...rt, employeeId: {'label':rt.employeeName, 'value': rt.employeeId}}
+                    this.labor.workOrderLaborList[0][tl['description'].toLowerCase()].push(labor);
                   }
-                  let labor = {}
-                  labor = {...rt, employeeId: {'label':rt.employeeName, 'value': rt.employeeId}}
-                  this.labor.workOrderLaborList[0][tl['description'].toLowerCase()].push(labor);
-                }
+                })
               })
-            })
-          }
-      }
+            }
+        }
 
-  })
+    })
+  }
 
 }
 
@@ -1047,5 +1190,61 @@ getEmpData(empId): object{
     }
   )
   return result;
+}
+
+saveExclusionsList(event) {
+  if (this.isQuote) {
+    this.workOrderExclusionsList = [...this.workOrderExclusionsList, ...event['exclusions'].map(x => { return { ...x, epn: x.partNumber, epnDescription: x.partDescription } })];
+    $('#addNewExclusions').modal('hide');
+  }
+}
+
+
+
+updateExclusionsList(event) {
+  if (this.isQuote && this.isEdit) {
+    this.workOrderExclusionsList[this.editingIndex] = event.exclusions[0];
+    $('#addNewExclusions').modal('hide');
+    this.isEdit = false;
+  }
+}
+
+formDataFromViewListData(){
+  if(this.quoteListViewData){
+    this.quoteForm.quoteNumber = this.quoteListViewData.quoteNumber;
+    this.quoteForm.openDate = new Date(this.quoteListViewData.openDate);
+    this.quoteDueDate = new Date(this.quoteListViewData.quoteDueDate);
+    this.validFor = this.quoteListViewData.validForDays;
+    this.expirationDate = new Date(this.quoteListViewData.expirationDate);
+    if(this.quoteListViewData.quoteStatus == "open"){
+      this.quoteForm.expirationDateStatus = 1;
+    }
+    else if(this.quoteListViewData.quoteStatus == "closed"){
+      this.quoteForm.expirationDateStatus = 2;
+    }
+    if(this.quoteListViewData.quoteStatus == "cancelled"){
+      this.quoteForm.expirationDateStatus = 3;
+    }
+    if(this.quoteListViewData.quoteStatus == "delayed"){
+      this.quoteForm.expirationDateStatus = 4;
+    }
+    this.workOrderNumber = this.quoteListViewData.workOrderNum;
+    this.customerName = this.quoteListViewData.customerName;
+    this.customerCode = this.quoteListViewData.customerCode;
+    this.customerContact = this.quoteListViewData.customerContact;
+    this.customerEmail = this.quoteListViewData.customerEmail;
+    this.customerPhone = this.quoteListViewData.customerPhone;
+    this.customerRef = this.quoteListViewData.customerRef;
+    this.accountsReceivableBalance = this.quoteListViewData.arBalance;
+    this.creditLimit = this.quoteListViewData.creditLimit;
+    this.creditTerms = this.quoteListViewData.creditTerms;
+    this.salesPerson = this.quoteListViewData.salesPerson;
+    this.csr = this.quoteListViewData.csr;
+    this.employeeName = this.quoteListViewData.employee;
+    this.currency = this.quoteListViewData.currency;
+    this.dso = this.quoteListViewData.dso;
+    this.warnings = this.quoteListViewData.warnings;
+    this.memo = this.quoteListViewData.memo;
+  }
 }
 }

@@ -69,20 +69,20 @@
           </div>
 
           <div class="form-group">
-            <label for="PublicationDescription">Publication Description <span class="clr-red">*</span></label>
+            <label for="PublicationDescription">Publication Description <span class="clr-red"></span></label>
             <textarea pInputTextarea class="form-control" [maxLength]="256" #pubDescription="ngModel" type="text"
-              name="gDescription" [(ngModel)]="sourcePublication.description" required></textarea>
+              name="gDescription" [(ngModel)]="sourcePublication.description" ></textarea>
           </div>
 
           <div class="form-group">
-            <label for="Publicationtype">Publication Type <span class="clr-red">*</span></label>
+            <label for="Publicationtype">Publication Type : <span class="clr-red">*</span></label>
             <p-dropdown name="gPubType" class="pub-type-select" #pubType="ngModel" placeholder="Select Publication Type"  [options]="publicationTypes" [(ngModel)]="sourcePublication.publicationTypeId" required></p-dropdown>
           </div>
 
 
           <div class="form-group">
-            <label for="asd">Author/Source/Directive <span class="clr-red">*</span></label>
-            <input class="form-control" #pubID="ngModel" type="text" [maxLength]="55" name="gAsd" [(ngModel)]="sourcePublication.asd" required />
+            <label for="asd">Author/Source/Directive <span class="clr-red"></span></label>
+            <input class="form-control" #pubID="ngModel" type="text" [maxLength]="55" name="gAsd" [(ngModel)]="sourcePublication.asd"  />
           </div>
 
           <div class="form-group">
@@ -90,8 +90,8 @@
             <input type="number" name="gSequence" class="form-control" [maxLength]="15" #pubID="ngModel" [(ngModel)]="sourcePublication.sequence" />
           </div>
           <div class="form-group">
-            <label for="Publishedby">Published By <span class="clr-red">*</span></label>
-            <input class="form-control" #pubID="ngModel" [maxLength]="55" type="text" name="gPublishBy" [(ngModel)]="sourcePublication.publishby" required />
+            <label for="Publishedby">Published By <span class="clr-red"></span></label>
+            <input class="form-control" #pubID="ngModel" [maxLength]="55" type="text" name="gPublishBy" [(ngModel)]="sourcePublication.publishby"  />
           </div>
         </div>
 
@@ -131,8 +131,8 @@
             <p-calendar [showIcon]="true" name="gVerifiedDate" [(ngModel)]="sourcePublication.verifiedDate" dateFormat="dd/mm/yy"></p-calendar>
           </div>
           <div class="form-group">
-              <label>Location <span class="clr-red">*</span></label>
-              <input class="form-control" #pubID="ngModel" [maxLength]="55" type="text" name="gLocation" [(ngModel)]="sourcePublication.location" required />
+              <label>Location <span class="clr-red"></span></label>
+              <input class="form-control" #pubID="ngModel" [maxLength]="55" type="text" name="gLocation" [(ngModel)]="sourcePublication.location"  />
           </div>
 
         </div>
@@ -175,7 +175,7 @@
                     <td *ngFor="let col of columns">
                       {{ rowData[col.field] }}
                     </td>
-                    <!-- <td><a routerLink="/{{rowData.link}}" class="btn btn-primary-cstm" download>Download</a></td> -->
+                    <!-- <td><a routerLink="/{{rowData.link}}" class="btn btn-primary" download>Download</a></td> -->
                   </tr>
                   
                 </ng-template>
@@ -185,7 +185,7 @@
       </div>
   
       <div class="pull-right">
-          <button class="btn btn-primary-cstm button-save-cstm-cstm" data-toggle="modal" data-target="#revisionNum" [disabled]="!generalInfoForm.valid" type="submit" (click)="saveGeneralInfo(); ">
+          <button class="btn btn-primary button-save-cstm-cstm" data-toggle="modal" data-target="#revisionNum" [disabled]="!generalInfoForm.valid" type="submit" (click)="saveGeneralInfo(); ">
             Save & Next
           </button>
         </div>               
@@ -215,7 +215,7 @@
                 </div>  
                 <div  class="col-md-4">
                   <p class="fs12">
-                    <label class="control-label labels-font-header" style="width: auto; ">Publication Type</label>
+                    <label class="control-label labels-font-header" style="width: auto; ">Publication Type :</label>
                     <span class="span-header-red"> {{publicationType}} </span></p>
                 </div>                              
               </div>
@@ -255,7 +255,7 @@
               >
                 <ng-template pTemplate="header" let-columns>
                   <tr>
-                    <th>Sl.No</th>
+                    <!-- <th>Sl.No</th> -->
                     <th *ngFor="let col of columns">
                       {{ col.header }}
                     </th>
@@ -269,7 +269,7 @@
                   let-rowIndex="rowIndex"
                 >
                   <tr>
-                    <td>{{ rowIndex + 1 }}</td>
+                    <!-- <td>{{ rowIndex + 1 }}</td> -->
                     <td *ngFor="let col of columns">
                       {{ rowData[col.field] }}
                     </td>
@@ -284,21 +284,22 @@
             </div>
           </div>
           <div class="col-md-12">
+              <button
+              class="btn btn-primary pull-right button-save-cstm"
+              type="submit"
+              (click)="changeOfTab('Aircraft'); "
+            >
+              Next
+            </button>
             <button
-              class="btn btn-primary-cstm pull-left button-save-cstm"
+              class="btn btn-primary pull-right button-save-cstm"
               type="submit"
               (click)="changeOfTab('General')"
             >
               Previous
             </button>
 
-            <button
-              class="btn btn-primary-cstm pull-right button-save-cstm"
-              type="submit"
-              (click)="changeOfTab('Aircraft'); "
-            >
-              Next
-            </button>
+            
           </div>
         </div>
       </div>
@@ -326,7 +327,7 @@
                 </div>  
                 <div  class="col-md-4">
                   <p class="fs12">
-                    <label class="control-label labels-font-header" style="width: auto; ">Publication Type</label>
+                    <label class="control-label labels-font-header" style="width: auto; ">Publication Type:</label>
                     <span class="span-header-red"> {{publicationType}} </span></p>
                 </div>                              
               </div>
@@ -417,21 +418,22 @@
             </div>
           </div>
           <div class="col-md-12">
+              <button
+              class="btn btn-primary pull-right button-save-cstm"
+              type="submit"
+              (click)="changeOfTab('Atachapter')"
+            >
+             Next
+            </button>
             <button
-              class="btn btn-primary-cstm pull-left button-save-cstm"
+              class="btn btn-primary pull-right button-save-cstm"
               type="submit"
               (click)="changeOfTab('PnMap')"
             >
               Previous
             </button>
 
-            <button
-              class="btn btn-primary-cstm pull-right button-save-cstm"
-              type="submit"
-              (click)="changeOfTab('Atachapter')"
-            >
-             Next
-            </button>
+
           </div>
         </div>
       </div>
@@ -457,7 +459,7 @@
                 </div>  
                 <div  class="col-md-4">
                   <p class="fs12">
-                    <label class="control-label labels-font-header" style="width: auto; ">Publication Type</label>
+                    <label class="control-label labels-font-header" style="width: auto; ">Publication Type :</label>
                     <span class="span-header-red"> {{publicationType}} </span></p>
                 </div>                              
               </div>
@@ -532,19 +534,20 @@
           </div>
         </div>
         <div class="col-md-12">
+            <button
+            class="btn btn-primary pull-right button-save-cstm"
+            type="button"
+            [routerLink]="['/singlepages/singlepages/app-publication']">
+            Next
+          </button>
           <button
-            class="btn btn-primary-cstm pull-left button-save-cstm"
+            class="btn btn-primary pull-right button-save-cstm"
             type="submit"
             (click)="changeOfTab('Aircraft')"
           >
             Previous
           </button>
-          <button
-            class="btn btn-primary-cstm pull-right button-save-cstm"
-            type="button"
-            [routerLink]="['/singlepages/singlepages/app-publication']">
-            Next
-          </button>
+
         </div>
       </div>
     </div>
@@ -644,8 +647,8 @@
       </strong>
       </div>
       <div class="modal-footer">
-          <button type="button" class="btn btn-primary-cstm" data-dismiss="modal" (click)="deleteConformation('Yes')">Yes</button>
-          <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="deleteConformation('No')">No</button>
+          <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="deleteConformation('Yes')">Yes</button>
+          <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="deleteConformation('No')">No</button>
       </div>
     </div>
 
@@ -663,8 +666,8 @@
           <p style="font-size: 14px;">Do you want to update <b>RevisionNum</b> from <b>{{sourcePublication.revisionNum}}</b> to <b>{{sourcePublication.revisionNum+1}}</b> ?</p>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary-cstm" data-dismiss="modal" (click)="changeRevisionNum('Yes');">Yes & Save</button>
-          <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="changeRevisionNum('No');">No & Save</button>
+          <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="changeRevisionNum('Yes');">Yes & Save</button>
+          <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="changeRevisionNum('No');">No & Save</button>
         </div>
       </div>
     </div>

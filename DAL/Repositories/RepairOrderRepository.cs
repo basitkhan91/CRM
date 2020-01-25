@@ -1,6 +1,7 @@
 ﻿using DAL.Common;
 using DAL.Models;
 using DAL.Repositories.Interfaces;
+using EntityFrameworkPaginate;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -213,17 +214,45 @@ namespace DAL.Repositories
             return roHistoryList;
         }
 
-        public IEnumerable<object> GetRepairOrderlist(Filters<RepairOrderFilters> roFilters)
+        public IEnumerable<object> GetRepairOrderlist(Common.Filters<RepairOrderFilters> roFilters)
         {
 
             if (roFilters.filters == null)
                 roFilters.filters = new RepairOrderFilters();
             var pageNumber = roFilters.first + 1;
-            var take = roFilters.rows;
-            var skip = take * (pageNumber - 1);
 
             short statusId = 0;
             long vendorId = 0;
+
+            var pageSize = roFilters.rows;
+            string sortColumn = string.Empty;
+            var sorts = new Sorts<RepairOrderFilters>();
+            var filters = new EntityFrameworkPaginate.Filters<RepairOrderFilters>();
+
+            if (string.IsNullOrEmpty(roFilters.SortField))
+            {
+                sortColumn = "CreatedDate";
+                roFilters.SortOrder = -1;
+                sorts.Add(sortColumn == "CreatedDate", x => x.CreatedDate, true);
+            }
+            else
+            {
+                sortColumn = roFilters.SortField;
+            }
+            sortColumn = char.ToUpper(sortColumn[0]) + sortColumn.Substring(1);
+
+            var propertyInfo = typeof(RepairOrderFilters).GetProperty(sortColumn);
+
+            if (roFilters.SortOrder == -1)
+            {
+                sorts.Add(true, x => propertyInfo.GetValue(x, null), true);
+            }
+            else
+            {
+                sorts.Add(true, x => propertyInfo.GetValue(x, null));
+            }
+
+
 
             var open = "open";
             var pending = "pending";
@@ -255,27 +284,39 @@ namespace DAL.Repositories
                 vendorId = roFilters.filters.VendorId.Value;
             }
 
+            filters.Add(vendorId > 0, x => x.VendorId == vendorId);
+            filters.Add(!string.IsNullOrEmpty(roFilters.filters.RepairOrderNumber), x => x.RepairOrderNumber.Contains(roFilters.filters.RepairOrderNumber));
+            filters.Add(!string.IsNullOrEmpty(roFilters.filters.VendorName), x => x.VendorName.Contains(roFilters.filters.VendorName));
+            filters.Add(!string.IsNullOrEmpty(roFilters.filters.VendorCode), x => x.VendorCode.Contains(roFilters.filters.VendorCode));
+
             var totalRecords = (from ro in _appContext.RepairOrder
                                 join emp in _appContext.Employee on ro.RequisitionerId equals emp.EmployeeId
                                 join v in _appContext.Vendor on ro.VendorId equals v.VendorId
                                 join appr in _appContext.Employee on ro.ApproverId equals appr.EmployeeId into approver
                                 from appr in approver.DefaultIfEmpty()
                                 where ro.IsDeleted == false
-                                      && ro.VendorId == (vendorId > 0 ? vendorId : ro.VendorId)
-                                      && ro.RepairOrderNumber.Contains(!string.IsNullOrEmpty(roFilters.filters.RepairOrderNo) ? roFilters.filters.RepairOrderNo : ro.RepairOrderNumber)
-                                      && v.VendorName.Contains(!string.IsNullOrEmpty(roFilters.filters.VendorName) ? roFilters.filters.VendorName : v.VendorName)
-                                      && v.VendorCode.Contains(!string.IsNullOrEmpty(roFilters.filters.VendorCode) ? roFilters.filters.VendorCode : v.VendorCode)
                                       && ro.StatusId == (statusId > 0 ? statusId : ro.StatusId)
                                       && emp.FirstName.Contains(!string.IsNullOrEmpty(roFilters.filters.ApprovedBy) ? roFilters.filters.ApprovedBy : emp.FirstName)
                                       && emp.FirstName.Contains(!string.IsNullOrEmpty(roFilters.filters.RequestedBy) ? roFilters.filters.RequestedBy : emp.FirstName)
                                       && ro.OpenDate == (roFilters.filters.OpenDate != null ? roFilters.filters.OpenDate : ro.OpenDate)
                                      && ro.ClosedDate == (roFilters.filters.ClosedDate != null ? roFilters.filters.ClosedDate : ro.ClosedDate)
-                                select new
+                                select new RepairOrderFilters()
                                 {
-                                    ro.RepairOrderId
+                                    RepairOrderId = ro.RepairOrderId,
+                                    RepairOrderNumber = ro.RepairOrderNumber,
+                                    OpenDate = ro.OpenDate,
+                                    ClosedDate = ro.ClosedDate,
+                                    VendorName = v.VendorName,
+                                    VendorCode = v.VendorCode,
+                                    Status = ro.StatusId == 1 ? "Open" : (ro.StatusId == 2 ? "Pending" : (ro.StatusId == 3 ? "Fulfilling" : "Closed")),
+                                    RequestedBy = emp.FirstName,
+                                    ApprovedBy = appr == null ? "" : appr.FirstName,
+                                    CreatedDate = ro.CreatedDate,
+                                    IsActive = ro.IsActive,
+                                    VendorId=ro.VendorId
 
-                                }).Distinct()
-                .Count();
+                                }).Distinct().Paginate(pageNumber, pageSize, sorts, filters).RecordCount;
+                
 
             var repairOrderList = (from ro in _appContext.RepairOrder
                                    join emp in _appContext.Employee on ro.RequisitionerId equals emp.EmployeeId
@@ -283,53 +324,27 @@ namespace DAL.Repositories
                                    join appr in _appContext.Employee on ro.ApproverId equals appr.EmployeeId into approver
                                    from appr in approver.DefaultIfEmpty()
                                    where ro.IsDeleted == false
-                                   && ro.VendorId == (vendorId > 0 ? vendorId : ro.VendorId)
-                                   && ro.RepairOrderNumber.Contains(!string.IsNullOrEmpty(roFilters.filters.RepairOrderNo) ? roFilters.filters.RepairOrderNo : ro.RepairOrderNumber)
-                                   && v.VendorName.Contains(!string.IsNullOrEmpty(roFilters.filters.VendorName) ? roFilters.filters.VendorName : v.VendorName)
-                                   && v.VendorCode.Contains(!string.IsNullOrEmpty(roFilters.filters.VendorCode) ? roFilters.filters.VendorCode : v.VendorCode)
                                    && ro.StatusId == (statusId > 0 ? statusId : ro.StatusId)
                                    && emp.FirstName.Contains(!string.IsNullOrEmpty(roFilters.filters.ApprovedBy) ? roFilters.filters.ApprovedBy : emp.FirstName)
                                    && emp.FirstName.Contains(!string.IsNullOrEmpty(roFilters.filters.RequestedBy) ? roFilters.filters.RequestedBy : emp.FirstName)
                                    && ro.OpenDate == (roFilters.filters.OpenDate != null ? roFilters.filters.OpenDate : ro.OpenDate)
                                    && ro.ClosedDate == (roFilters.filters.ClosedDate != null ? roFilters.filters.ClosedDate : ro.ClosedDate)
-                                   select new
+                                   select new RepairOrderFilters()
                                    {
-                                       ro.RepairOrderId,
-                                       ro.RepairOrderNumber,
-                                       ro.OpenDate,
-                                       ro.ClosedDate,
-                                       v.VendorName,
-                                       v.VendorCode,
+                                       RepairOrderId = ro.RepairOrderId,
+                                       RepairOrderNumber = ro.RepairOrderNumber,
+                                       OpenDate=ro.OpenDate,
+                                       ClosedDate=ro.ClosedDate,
+                                       VendorName=v.VendorName,
+                                       VendorCode = v.VendorCode,
                                        Status = ro.StatusId == 1 ? "Open" : (ro.StatusId == 2 ? "Pending" : (ro.StatusId == 3 ? "Fulfilling" : "Closed")),
                                        RequestedBy = emp.FirstName,
                                        ApprovedBy = appr == null ? "" : appr.FirstName,
-                                       ro.CreatedDate,
-                                       ro.IsActive,
+                                       CreatedDate=ro.CreatedDate,
+                                       IsActive=ro.IsActive,
+                                       VendorId=ro.VendorId,
                                        TotalRecords = totalRecords
-                                   }).Distinct().OrderByDescending(p => p.CreatedDate)
-                                    .Skip(skip)
-                                   .Take(take)
-                                   .ToList();
-
-            //if (roFilters.filters.OpenDate != null)
-            //{
-            //    if (repairOrderList != null && repairOrderList.Any())
-            //    {
-            //        repairOrderList = repairOrderList
-            //            .Where(x => x.OpenDate == roFilters.filters.OpenDate)
-            //            .ToList();
-            //    }
-            //}
-
-            //if (roFilters.filters.ClosedDate != null)
-            //{
-            //    if (repairOrderList != null && repairOrderList.Any())
-            //    {
-            //        repairOrderList = repairOrderList
-            //            .Where(x => x.ClosedDate == roFilters.filters.ClosedDate)
-            //            .ToList();
-            //    }
-            //}
+                                   }).Distinct().Paginate(pageNumber, pageSize, sorts, filters).Results;
 
             return repairOrderList;
         }

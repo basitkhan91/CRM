@@ -109,7 +109,7 @@ export class ConditionsComponent implements OnInit {
         //console.log(this.addNew);
 
         const value = event.target.value;
-        this.disableSaveForCondition = false;
+        this.disableSaveForConditionMsg = false;
         for (let i = 0; i < this.conditionData.length; i++) {
             let description = this.conditionData[i].description;
             let conditionId = this.conditionData[i].conditionId;
@@ -136,6 +136,7 @@ export class ConditionsComponent implements OnInit {
     resetConditionForm() {
         this.isEditMode = false;
         this.disableSaveForCondition = false;
+        this.disableSaveForConditionMsg = false;
 
         this.selectedRecordForEdit = undefined;
         this.addNewCondition = { ...this.newCondition };
@@ -182,6 +183,12 @@ export class ConditionsComponent implements OnInit {
         this.conditionList = CONDITIONData;
     }
 
+
+    getmemo($event) {
+        this.disableSaveForConditionMsg = false;
+        this.disableSaveForCondition = false;
+    };
+
     checkConditionExists(field, value) {
         for (var i = 0; i < this.conditionData.length; i++) {
             if (value.toLowerCase() == this.conditionData[i].description.toLowerCase()) {
@@ -210,9 +217,10 @@ export class ConditionsComponent implements OnInit {
 
     }
     selectedCondition(object) {
-        const exists = selectedValueValidate('description', object, this.selectedRecordForEdit)      
-
+       
+        const exists = selectedValueValidate('description', object, this.selectedRecordForEdit);
         this.disableSaveForCondition = !exists;
+        this.disableSaveForConditionMsg = !exists;
     }
 
 

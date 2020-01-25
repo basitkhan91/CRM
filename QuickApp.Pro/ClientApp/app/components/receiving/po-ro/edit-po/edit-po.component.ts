@@ -1095,7 +1095,6 @@ export class EditPoComponent implements OnInit {
     editStockLine(stockLine: StockLine) {
         stockLine.isEnabled = !stockLine.isEnabled;
         stockLine.quantityRejected = 0;
-        stockLine.isDeleted = true;
     }
 
     updateStockLine() {
@@ -1105,7 +1104,7 @@ export class EditPoComponent implements OnInit {
             if (part.stockLine) {
 
                 var timeLife = [];
-                var stockLineToUpdate = part.stockLine.filter(x => x.isEnabled);
+                var stockLineToUpdate = part.stockLine;
                 var index = 1;
                 for (var stockLine of stockLineToUpdate) {
 
@@ -1125,7 +1124,7 @@ export class EditPoComponent implements OnInit {
                     }
 
                     for (var tl of part.timeLife) {
-                        if (tl.stockLineId == stockLine.stockLineId) {
+                        if (tl.stockLineDraftId == stockLine.stockLineDraftId) {
                             timeLife.push(tl);
                         }
                     }

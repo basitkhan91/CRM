@@ -5,7 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using DAL.Models;
-
+using DAL.Common;
+using EntityFrameworkPaginate;
+using System.Linq.Expressions;
 namespace DAL.Repositories
 {
     public class ReceivingCustomerWorkRepository : Repository<DAL.Models.ReceivingCustomerWork>, IReceivingCustomerWork
@@ -45,6 +47,9 @@ namespace DAL.Repositories
                               from customer in cus.DefaultIfEmpty()
 
 
+                              join managementStructeInfo in _appContext.ManagementStructure on stl.ManagementStructureId equals managementStructeInfo.ManagementStructureId into managmentCompany
+                              from managementStructeInfo in managmentCompany.DefaultIfEmpty()
+
                               join employee in _appContext.Employee on stl.EmployeeId equals employee.EmployeeId into emp
                               from employee in emp.DefaultIfEmpty()
                               
@@ -54,6 +59,22 @@ namespace DAL.Repositories
 
                               join contact in _appContext.Contact on Convert.ToInt64(stl.ContactId) equals contact.ContactId into con
                               from contact in con.DefaultIfEmpty()
+                              join work in _appContext.WorkOrder on stl.CustomerId equals work.CustomerId into wor
+                              from work in wor.DefaultIfEmpty()
+
+                              join managmentLegalEntity in _appContext.ManagementStructure on stl.ManagementStructureId equals managmentLegalEntity.ManagementStructureId into mainCompanyTree
+                              from managmentLegalEntity in mainCompanyTree.DefaultIfEmpty()
+
+                              join divmanagmentLegalEntity in _appContext.ManagementStructure on managmentLegalEntity.ParentId equals divmanagmentLegalEntity.ManagementStructureId into mainDivCompany
+                              from divmanagmentLegalEntity in mainDivCompany.DefaultIfEmpty()
+
+                              join biumanagmentLegalEntity in _appContext.ManagementStructure on divmanagmentLegalEntity.ParentId equals biumanagmentLegalEntity.ManagementStructureId into BIUDivCompany
+                              from biumanagmentLegalEntity in BIUDivCompany.DefaultIfEmpty()
+
+                              join compmanagmentLegalEntity in _appContext.ManagementStructure on biumanagmentLegalEntity.ParentId equals compmanagmentLegalEntity.ManagementStructureId into comivCompany
+                              from compmanagmentLegalEntity in comivCompany.DefaultIfEmpty()
+
+
                               where stl.IsDeleted !=true
 
                               select new
@@ -129,7 +150,18 @@ namespace DAL.Repositories
                                   ti,
                                   conditionType = co.Description,
                                   im.ItemTypeId,
-                                  stl.ManagementStructureId
+                                  stl.ManagementStructureId,
+                                  work.WorkOrderNum,
+                                  managmentLegalEntity,
+                                  divmanagmentLegalEntity,
+                                  biumanagmentLegalEntity,
+                                  compmanagmentLegalEntity,
+                                  managementStructeInfo,
+
+                                  //work.WorkOrderId
+
+
+                                  WorkOrderId = work.WorkOrderId == null ? 0 : work.WorkOrderId,
 
                               }).ToList();
                 return result;
@@ -141,6 +173,123 @@ namespace DAL.Repositories
             }
         }
 
+        public IEnumerable<object> GetList(Common.Filters<ReceivingCustomerWorkFilter> customerFilters)
+        {
+            if (customerFilters.filters == null)
+                customerFilters.filters = new ReceivingCustomerWorkFilter();
+            var pageNumber = customerFilters.first + 1;
+            var pageSize = customerFilters.rows;
+
+            string sortColumn = string.Empty;
+
+            var sorts = new Sorts<ReceivingCustomerWorkFilter>();
+
+            if (string.IsNullOrEmpty(customerFilters.SortField))
+            {
+                sortColumn = "createdDate";
+                customerFilters.SortOrder = -1;
+                sorts.Add(sortColumn == "createdDate", x => x.createdDate, true);
+            }
+            else
+            {
+                sortColumn = customerFilters.SortField;
+            }
+
+            var propertyInfo = typeof(ReceivingCustomerWorkFilter).GetProperty(sortColumn);
+
+            if (customerFilters.SortOrder == -1)
+            {
+                sorts.Add(true, x => propertyInfo.GetValue(x, null), true);
+            }
+            else
+            {
+                sorts.Add(true, x => propertyInfo.GetValue(x, null));
+            }
+
+
+            var totalRecords = (from stl in _appContext.ReceivingCustomerWork
+
+                                join im in _appContext.ItemMaster on stl.PartNumber equals im.PartNumber
+
+                               join customer in _appContext.Customer on stl.CustomerId equals customer.CustomerId into cus
+                                from customer in cus.DefaultIfEmpty()
+
+
+                                join employee in _appContext.Employee on stl.EmployeeId equals employee.EmployeeId into emp
+                                from employee in emp.DefaultIfEmpty()
+
+
+                                         where (stl.IsDeleted == false || stl.IsDeleted == null)
+
+                                 && im.PartNumber.Contains((!String.IsNullOrEmpty(customerFilters.filters.partNumber) ? customerFilters.filters.partNumber : im.PartNumber))
+                                && stl.ReceivingCustomerNumber.Contains((!String.IsNullOrEmpty(customerFilters.filters.receivingCustomerNumber) ? customerFilters.filters.receivingCustomerNumber : stl.ReceivingCustomerNumber))
+                                 && employee.FirstName.Contains((!String.IsNullOrEmpty(customerFilters.filters.firstName) ? customerFilters.filters.firstName : employee.FirstName))
+                                && customer.Name.Contains((!String.IsNullOrEmpty(customerFilters.filters.name) ? customerFilters.filters.name : customer.Name))
+                                && stl.CustomerReference.Contains((!String.IsNullOrEmpty(customerFilters.filters.customerReference) ? customerFilters.filters.customerReference : stl.CustomerReference))
+                                 && im.PartDescription.Contains((!String.IsNullOrEmpty(customerFilters.filters.partDescription) ? customerFilters.filters.partDescription : im.PartDescription))
+                                // && stl.ChangePartNumber.Contains((!String.IsNullOrEmpty(customerFilters.filters.changePartNumber) ? customerFilters.filters.changePartNumber : stl.ChangePartNumber))
+
+                                 && customerFilters.filters.changePartNumber == null ? string.IsNullOrEmpty(stl.ChangePartNumber) || stl.ChangePartNumber != null :
+                                         stl.ChangePartNumber.Contains(customerFilters.filters.changePartNumber)
+
+                                select new
+                                {
+                                    stl.ReceivingCustomerWorkId,
+                                    OwnerType = stl.OwnerType == null ? 0 : stl.OwnerType,
+                                 
+
+                                }).Distinct().Count();
+
+            var data = (from stl in _appContext.ReceivingCustomerWork
+
+                        join im in _appContext.ItemMaster on stl.PartNumber equals im.PartNumber
+
+
+
+                        join customer in _appContext.Customer on stl.CustomerId equals customer.CustomerId into cus
+                        from customer in cus.DefaultIfEmpty()
+
+
+                        join employee in _appContext.Employee on stl.EmployeeId equals employee.EmployeeId into emp
+                        from employee in emp.DefaultIfEmpty()
+                        where (stl.IsDeleted == false || stl.IsDeleted==null)
+
+                        && im.PartNumber.Contains((!String.IsNullOrEmpty(customerFilters.filters.partNumber) ? customerFilters.filters.partNumber : im.PartNumber))
+                        && stl.ReceivingCustomerNumber.Contains((!String.IsNullOrEmpty(customerFilters.filters.receivingCustomerNumber) ? customerFilters.filters.receivingCustomerNumber : stl.ReceivingCustomerNumber))
+                        && employee.FirstName.Contains((!String.IsNullOrEmpty(customerFilters.filters.firstName) ? customerFilters.filters.firstName : employee.FirstName))
+                        && customer.Name.Contains((!String.IsNullOrEmpty(customerFilters.filters.name) ? customerFilters.filters.name : customer.Name))
+                        && stl.CustomerReference.Contains((!String.IsNullOrEmpty(customerFilters.filters.customerReference) ? customerFilters.filters.customerReference : stl.CustomerReference))
+                        && im.PartDescription.Contains((!String.IsNullOrEmpty(customerFilters.filters.partDescription) ? customerFilters.filters.partDescription : im.PartDescription))
+                    
+                        && customerFilters.filters.changePartNumber == null ? string.IsNullOrEmpty(stl.ChangePartNumber) || stl.ChangePartNumber != null :
+                                         stl.ChangePartNumber.Contains(customerFilters.filters.changePartNumber)
+
+                        select new ReceivingCustomerWorkFilter()
+                        {
+
+                            ReceivingCustomerWorkId =  stl.ReceivingCustomerWorkId,
+
+
+                            firstName=  employee.FirstName,
+                            name=customer.Name,
+                         
+                            partNumber = stl.PartNumber,
+
+                            receivingCustomerNumber=stl.ReceivingCustomerNumber,
+
+                            changePartNumber=    stl.ChangePartNumber,
+                            partDescription = im.PartDescription,
+                            customerReference= stl.CustomerReference,
+                           createdDate= stl.CreatedDate,
+                           isActive= stl.IsActive,
+                           isDeleted= stl.IsDeleted,
+                            totalRecords = totalRecords
+                        }).Distinct()
+                        .Paginate(pageNumber, pageSize, sorts).Results;
+
+
+            return (data);
+        }
         public IEnumerable<object> GetreceivingCustomerWorkById(long receivingCustomerWorkId)
         {
 
@@ -176,6 +325,21 @@ namespace DAL.Repositories
 
                               join employee in _appContext.Employee on stl.EmployeeId equals employee.EmployeeId into emp
                               from employee in emp.DefaultIfEmpty()
+                              join managementStructeInfo in _appContext.ManagementStructure on stl.ManagementStructureId equals managementStructeInfo.ManagementStructureId into managmentCompany
+                              from managementStructeInfo in managmentCompany.DefaultIfEmpty()
+
+
+                              join managmentLegalEntity in _appContext.ManagementStructure on stl.ManagementStructureId equals managmentLegalEntity.ManagementStructureId into mainCompanyTree
+                              from managmentLegalEntity in mainCompanyTree.DefaultIfEmpty()
+
+                              join divmanagmentLegalEntity in _appContext.ManagementStructure on managmentLegalEntity.ParentId equals divmanagmentLegalEntity.ManagementStructureId into mainDivCompany
+                              from divmanagmentLegalEntity in mainDivCompany.DefaultIfEmpty()
+
+                              join biumanagmentLegalEntity in _appContext.ManagementStructure on divmanagmentLegalEntity.ParentId equals biumanagmentLegalEntity.ManagementStructureId into BIUDivCompany
+                              from biumanagmentLegalEntity in BIUDivCompany.DefaultIfEmpty()
+
+                              join compmanagmentLegalEntity in _appContext.ManagementStructure on biumanagmentLegalEntity.ParentId equals compmanagmentLegalEntity.ManagementStructureId into comivCompany
+                              from compmanagmentLegalEntity in comivCompany.DefaultIfEmpty()
 
 
                               join ti in _appContext.TimeLife on stl.TimeLifeCyclesId equals ti.TimeLifeCyclesId into time
@@ -211,10 +375,11 @@ namespace DAL.Repositories
                                   location = l.Name,
                                   warehouse = w.Name,
 
-                                  im.ExpirationDate,
+                                 
+                                  stl.ExpirationDate,
                                   stl.SerialNumber,
                                   conditionId = co == null ? 0 : co.ConditionId,
-                                  //conditionId = co.ConditionId,
+                                 
                                   stl.ChangePartNumber,
                                   partDescription = im.PartDescription,
                                   stl.Quantity,
@@ -240,7 +405,7 @@ namespace DAL.Repositories
                                   locationId = stl.LocationId,
                                   stl.ObtainFrom,
                                   stl.Owner,
-                                  stl.OwnerType,
+                                   OwnerType = stl.OwnerType == null ? 0 : stl.OwnerType,
                                   stl.TraceableTo,
                                   stl.ManufacturerId,
                                   stl.ManufacturingDate,
@@ -254,6 +419,11 @@ namespace DAL.Repositories
                                   w,
                                   l,
                                   ti,
+                                  managmentLegalEntity,
+                                  divmanagmentLegalEntity,
+                                  biumanagmentLegalEntity,
+                                  compmanagmentLegalEntity,
+                                  managementStructeInfo,
                                   conditionType = co.Description,
                                   im.ItemTypeId,
                                   stl.ManagementStructureId
@@ -267,7 +437,173 @@ namespace DAL.Repositories
                 throw ex;
             }
         }
-public IEnumerable<object> GetAllreceivingCustomerWorkAudit(long receivingCustomerWorkId)
+
+         public IEnumerable<object> GetListGlobalFilter(string value, int pageNumber, int pageSize)
+        {
+
+            var pageNumbers = pageNumber + 1;
+            var take = pageSize;
+            var skip = take * (pageNumbers - 1);
+
+            if (!string.IsNullOrEmpty(value))
+            {
+                var totalRecords = (from stl in _appContext.ReceivingCustomerWork
+
+                                    join im in _appContext.ItemMaster on stl.PartNumber equals im.PartNumber
+
+                                    join customer in _appContext.Customer on stl.CustomerId equals customer.CustomerId into cus
+                                    from customer in cus.DefaultIfEmpty()
+
+
+                                    join employee in _appContext.Employee on stl.EmployeeId equals employee.EmployeeId into emp
+                                    from employee in emp.DefaultIfEmpty()
+
+
+
+                                    where stl.IsDeleted != true
+
+
+
+                                 && stl.ReceivingCustomerNumber.Contains(value) || stl.CustomerReference.Contains(value) || im.PartNumber.Contains(value) || stl.ChangePartNumber.Contains(value)
+                                    || customer.Name.Contains(value) || employee.FirstName.Contains(value)
+                                    || im.PartDescription.Contains(value)
+
+                                    select new
+                                    {
+                                        stl.ReceivingCustomerWorkId,
+
+
+                                    }).Count();
+
+                var data = (from stl in _appContext.ReceivingCustomerWork
+
+                            join im in _appContext.ItemMaster on stl.PartNumber equals im.PartNumber
+
+                            join customer in _appContext.Customer on stl.CustomerId equals customer.CustomerId into cus
+                            from customer in cus.DefaultIfEmpty()
+
+
+                            join employee in _appContext.Employee on stl.EmployeeId equals employee.EmployeeId into emp
+                            from employee in emp.DefaultIfEmpty()
+
+
+
+                            where stl.IsDeleted != true
+                                   && stl.ReceivingCustomerNumber.Contains(value) || stl.CustomerReference.Contains(value) || im.PartNumber.Contains(value) || stl.ChangePartNumber.Contains(value)
+                                    || customer.Name.Contains(value) || employee.FirstName.Contains(value)
+                                    || im.PartDescription.Contains(value)
+
+
+
+                            select new
+                            {
+                                stl.ReceivingCustomerWorkId,
+
+
+                                firstName = employee.FirstName,
+                                name = customer.Name,
+                                //customer.CustomerCode,
+                                //contact.WorkPhone,
+
+                                partNumber = stl.PartNumber,
+
+                                receivingCustomerNumber = stl.ReceivingCustomerNumber,
+
+                                ChangePartNumber = stl.ChangePartNumber,
+                                PartDescription = im.PartDescription,
+                                CustomerReference = stl.CustomerReference,
+                                updatedDate = stl.UpdatedDate,
+                                createdDate = stl.CreatedDate,
+                                isActive = stl.IsActive,
+                                isDeleted = stl.IsDeleted,
+                                TotalRecords = totalRecords
+                            }).OrderBy(p => p.updatedDate)
+                                   .Skip(skip)
+                                   .Take(take)
+                                   .ToList();
+
+
+                 
+
+                         
+                return (data);
+            }
+            else
+            {
+                var totalRecords = (from stl in _appContext.ReceivingCustomerWork
+
+                                    join im in _appContext.ItemMaster on stl.PartNumber equals im.PartNumber
+
+                                    join customer in _appContext.Customer on stl.CustomerId equals customer.CustomerId into cus
+                                    from customer in cus.DefaultIfEmpty()
+
+
+                                    join employee in _appContext.Employee on stl.EmployeeId equals employee.EmployeeId into emp
+                                    from employee in emp.DefaultIfEmpty()
+
+
+
+                                    where stl.IsDeleted != true
+
+                                    select new
+                                    {
+                                       stl.ReceivingCustomerWorkId
+
+                                    }).Count();
+
+                var data = (from stl in _appContext.ReceivingCustomerWork
+
+                            join im in _appContext.ItemMaster on stl.PartNumber equals im.PartNumber
+
+                            join customer in _appContext.Customer on stl.CustomerId equals customer.CustomerId into cus
+                            from customer in cus.DefaultIfEmpty()
+
+
+                            join employee in _appContext.Employee on stl.EmployeeId equals employee.EmployeeId into emp
+                            from employee in emp.DefaultIfEmpty()
+
+
+
+                            where stl.IsDeleted != true
+
+
+                    select new
+                            {
+                        stl.ReceivingCustomerWorkId,
+
+
+                        firstName = employee.FirstName,
+                        name = customer.Name,
+                        //customer.CustomerCode,
+                        //contact.WorkPhone,
+
+                        partNumber = stl.PartNumber,
+
+                        receivingCustomerNumber = stl.ReceivingCustomerNumber,
+
+                        ChangePartNumber = stl.ChangePartNumber,
+                        PartDescription = im.PartDescription,
+                        CustomerReference = stl.CustomerReference,
+                        updatedDate=stl.UpdatedDate,
+                        createdDate = stl.CreatedDate,
+                        isActive = stl.IsActive,
+                        isDeleted = stl.IsDeleted,
+                        TotalRecords = totalRecords
+                    }).OrderBy(p => p.updatedDate)
+                                 .Skip(skip)
+                                 .Take(take)
+                                 .ToList();
+
+
+
+                return (data);
+            }
+
+
+        }
+
+
+        public IEnumerable<object> GetAllreceivingCustomerWorkAudit(long receivingCustomerWorkId)
         {
             try
             {
@@ -365,7 +701,7 @@ public IEnumerable<object> GetAllreceivingCustomerWorkAudit(long receivingCustom
                                   locationId = stl.LocationId,
                                   stl.ObtainFrom,
                                   stl.Owner,
-                                  stl.OwnerType,
+                                   OwnerType = stl.OwnerType == null ? 0 : stl.OwnerType,
                                   stl.TraceableTo,
                                   stl.ManufacturerId,
                                   stl.ManufacturingDate,
@@ -447,6 +783,59 @@ public IEnumerable<object> GetAllreceivingCustomerWorkAudit(long receivingCustom
             }
             catch (Exception ex)
             {
+                throw ex;
+            }
+        }
+        public IEnumerable<object> GetReceivingCustomerWorkData(long receivingCustomerWorkId)
+        {
+            try
+            {
+                var result = (from stl in _appContext.ReceivingCustomerWork
+
+                              join im in _appContext.ItemMaster on stl.PartNumber equals im.PartNumber
+                              join customer in _appContext.Customer on stl.CustomerId equals customer.CustomerId into cus
+                              from customer in cus.DefaultIfEmpty()
+                              //join contact in _appContext.Contact on Convert.ToInt64(stl.ContactId) equals contact.ContactId into con
+                              //from contact in con.DefaultIfEmpty()
+                             
+                              where stl.ReceivingCustomerWorkId== receivingCustomerWorkId
+
+                              select new
+                              {
+                                  stl,
+                                  im.ItemMasterId,
+                                  customer.CustomerId,
+                                  customer.CustomerCode,
+                                  customer.CreditTermsId,
+                                  customer.CreditLimit,
+                                  
+                                 
+                                  customer,
+                                    //contact.WorkPhone,
+                                  stl.WorkPhone,
+                                 
+                                  partNumber = stl.PartNumber,
+                                  stl.ReceivingCustomerNumber,
+                                  stl.ChangePartNumber,
+                                  partDescription = im.PartDescription,
+                                  stl.CreatedDate,
+                                  stl.UpdatedDate,
+                                  stl.CreatedBy,
+                                  stl.UpdatedBy,
+                                  stl.CustomerReference,
+                                   stl.IsActive,
+                                   stl.ManufacturerId,
+                                  stl.Manufacturer,
+                                  im.ItemTypeId,
+                                  stl.ManagementStructureId
+                                 
+
+                              }).ToList();
+                return result;
+            }
+            catch (Exception ex)
+            {
+
                 throw ex;
             }
         }

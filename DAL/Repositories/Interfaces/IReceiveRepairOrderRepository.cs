@@ -8,5 +8,6 @@ namespace DAL.Repositories.Interfaces
         int GetLastIdNumber(long repairOrderId, long repairOrderPartId);
         object GetReceivingRepairOrderForView(long repairOrderId);
         object GetReceivingRepairOrderForEdit(long repairOrderId);
+        void CreateStockLine(long repaireOrderId);
     }
 }

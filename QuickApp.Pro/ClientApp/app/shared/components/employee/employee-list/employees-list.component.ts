@@ -29,6 +29,8 @@ import { CommonService } from '../../../../services/common.service';
 import { getValueFromArrayOfObjectById } from '../../../../generic/autocomplete';
 import { ConfigurationService } from '../../../../services/configuration.service';
 import { CurrencyService } from '../../../../services/currency.service';
+import { LegalEntityService } from '../../../../services/legalentity.service';
+import { ItemMasterService } from '../../../../services/itemMaster.service';
 
 
 
@@ -83,7 +85,10 @@ export class EmployeesListComponent implements OnInit {
     currencyName: any;
     getAllAllStationInfodrpData;
     stationName:any;
-        
+    empMemo:any;
+    empShiftType:any;
+    empLeaveType:any;
+    manufacturerData: any;
 
     ngOnInit(): void {
 
@@ -99,6 +104,7 @@ export class EmployeesListComponent implements OnInit {
         this.getAllFrequencyTrainingData();
         this.loadCurrencyData();
         this.getAllStationData();
+        this.getAllAircraftManfacturer();
         //this.loadShiftData();
 
     }
@@ -111,8 +117,20 @@ export class EmployeesListComponent implements OnInit {
     selectedColumns: any[];
     cols: any[];
     modal: NgbModalRef;
+    employeeRolesList: object[];
+    employeeRoleLabel = [];
+    allManagemtninfo: any[];
+    tagNameCollection: any[] = [];
+    selectedRoleNames:string='';
+    gridData = [];  
+    empDetailsData:any;
+    supervisorName:any;
+    empCreatedBy:any;
+    empCreatedDate:any;
+    aircraftModelName:any;
+  
     /** employees-list ctor */
-    constructor(private modalService: NgbModal, private translationService: AppTranslationService, private empService: EmployeeService, private router: Router, private authService: AuthService, private alertService: AlertService, public commonService: CommonService,private configurations: ConfigurationService, public currencyService: CurrencyService) {
+    constructor(private modalService: NgbModal, private translationService: AppTranslationService, private empService: EmployeeService, private router: Router, private authService: AuthService, private alertService: AlertService, public commonService: CommonService,private configurations: ConfigurationService, public currencyService: CurrencyService, private legalEntityService: LegalEntityService,private itemser: ItemMasterService) {
         this.dataSource = new MatTableDataSource();
         this.translationService.closeCmpny = false;
         this.activeIndex = 0;
@@ -120,7 +138,7 @@ export class EmployeesListComponent implements OnInit {
 
     }
     private onDataLoadSuccessful(allWorkFlows: any[]) {
-        //debugger;
+        
         //this.alertService.stopLoadingMessage();
         //this.loadingIndicator = false;
         this.totalRecords = allWorkFlows.length;
@@ -132,13 +150,13 @@ export class EmployeesListComponent implements OnInit {
 
     }
     private onemployeeDataLoadSuccessful(allWorkFlows: any) {
-        console.log(allWorkFlows);
+       
         if (allWorkFlows[0].employeeLeaveTypeMapping != null) {
             this.employeeLeaveType = allWorkFlows[0].employeeLeaveTypeMapping.employeeLeaveTypeId;
             this.shiftId = allWorkFlows[0].employeeShiftMapping.shiftId;
             this.leaveMapArray = allWorkFlows[0].employeeLeaveTypeMapping;
             this.shiftMapArray = allWorkFlows[0].employeeShiftMapping;
-                 
+                           
         // if(this.shiftMapArray.length>0)
         // {
         //     console.log(this.shiftMapArray);
@@ -153,7 +171,7 @@ export class EmployeesListComponent implements OnInit {
   
 
         }
-        //debugger;
+       
         //this.alertService.stopLoadingMessage();
         //this.loadingIndicator = false;
         this.dataSource.data = allWorkFlows;
@@ -323,10 +341,12 @@ export class EmployeesListComponent implements OnInit {
         this.alertService.showStickyMessage(error, null, MessageSeverity.error);
     }
     openView(content, row) {
-
+        this.toGetEmployeeDetailsByEmpId(row.employeeId);
        
+       console.log(row);
         this.toGetEmployeeTrainingDocumentsList(row.employeeId);
-
+        this.loadEmployeeRoles(row.employeeId);
+        this.getManagementStructureData(row.employeeId);
         if (row.managmentLegalEntity != null && row.divmanagmentLegalEntity != null && row.biumanagmentLegalEntity != null && row.compmanagmentLegalEntity != null) {
             this.departname = row.managementStructeInfo.name;
             this.divsioname = row.divmanagmentLegalEntity.name;
@@ -357,11 +377,8 @@ export class EmployeesListComponent implements OnInit {
         else {
             //console.log("no Info Presnts")
         }
+        this.empMemo=row.memo;
       
-        debugger
-        console.log(row)
-        console.log(row.employeetraingInfo)
-        debugger
         if(row.employeetraingInfo != null && row.employeetraingInfo.frequencyOfTrainingId > 0)
         {
             this.frequencyOfTrainingData = getValueFromArrayOfObjectById('label', 'value', row.employeetraingInfo.frequencyOfTrainingId, this.getAllFrequencyTrainingInfodrpData);
@@ -385,6 +402,7 @@ export class EmployeesListComponent implements OnInit {
         else{
             this.stationName="";
         }
+
 
         
         if (row.empSupervisor != null) {
@@ -427,6 +445,14 @@ export class EmployeesListComponent implements OnInit {
             this.divisionCode = row.divisonInfo.code;
         }
 
+        if(row.employeetraingInfo != null && row.employeetraingInfo.aircraftModelId > 0)
+        {   
+            this.aircraftModelName = getValueFromArrayOfObjectById('label', 'value', row.employeetraingInfo.aircraftModelId, this.manufacturerData);
+          
+        }
+        else{
+            this.aircraftModelName="";
+        }
 
         //this.jobTypeName = row.jobtype.jobTypeName;
 
@@ -492,14 +518,14 @@ export class EmployeesListComponent implements OnInit {
         $('#step1').collapse('show');
         $('#step2').collapse('show');
         $('#step3').collapse('show');
-        //$('#step4').collapse('show');      
+        $('#step4').collapse('show');      
     }
     CloseAllEmployeerDetailsModel()
     {
         $('#step1').collapse('hide');
         $('#step2').collapse('hide');
         $('#step3').collapse('hide');
-        //$('#step4').collapse('hide');
+        $('#step4').collapse('hide');
       
     }
 
@@ -557,6 +583,122 @@ export class EmployeesListComponent implements OnInit {
             this.getAllAllStationInfodrpData = res;          
             
         });        
+    }
+
+    getManagementStructureData(empId){
+    
+        //let roles = [];
+        this.empService.getStoredEmployeeRoles(empId)
+        .subscribe(
+            (employeeList: any[])=>{
+                if(this.employeeRolesList != null)
+                {
+                    this.employeeRolesList.forEach(mainRole => {
+                        employeeList.forEach(role => {
+                            if(role.roleId == mainRole['id']){
+                                //roles.push(mainRole['name']);
+                                this.selectedRoleNames += mainRole['name'] + ',' ;
+                            }
+                        });                  
+                    });      
+                }
+                         
+            }
+
+            
+            
+        )
+        this.empService.getStoredEmployeeManagementStructure(empId)
+        .subscribe(
+            (managementStructureList: any[])=>{
+                //console.log(managementStructureList);
+                this.empService.legalEnityList = managementStructureList;
+            }
+        )
+    }
+    
+    loadEmployeeRoles(empId){
+        this.empService.getAllRolesOfEmployee().subscribe(
+            results => {
+                this.employeeRolesList = results;
+                this.employeeRoleLabel = this.employeeRolesList.map((emp)=>{ return emp['name']})
+                this.loadManagementStructure(empId);
+               // console.log(this.employeeRoleLabel);
+            },
+            error => console.log(error)
+        );
+    }
+    loadManagementStructure(empId){
+        this.legalEntityService.getManagemententity().subscribe(
+            (results: any)=>{
+                this.onManagemtntdataLoad(results[0])
+                this.getManagementStructureData(empId);
+            },
+            (error: any)=>{
+                console.log(error);
+            }
+        )
+    }
+
+    private onManagemtntdataLoad(getAtaMainList: any[]) {
+		
+		this.allManagemtninfo = getAtaMainList;
+		for (let i = 0; i < this.allManagemtninfo.length; i++) {
+			if (this.allManagemtninfo[i].tagName != null) {
+				this.tagNameCollection.push(this.allManagemtninfo[i]);
+			}
+		}
+		
+		if (this.allManagemtninfo)
+		{
+			
+            this.gridData = [{
+                data: {
+                    name: "ABC Inc",
+                    isRoot: true
+                },
+                children: this.makeNestedObj(this.allManagemtninfo, null)}];
+           
+		}		
+	
+    }
+    makeNestedObj(arr, parent) {
+		var out = []
+		for (var i in arr) {
+			if (arr[i].parentId == parent) {
+				var children = this.makeNestedObj(arr, arr[i].managementStructureId)
+				arr[i] = { "data": arr[i] };
+				if (children.length) {
+					arr[i].children = children
+				}
+				out.push(arr[i])
+			}
+		}
+		return out
+    }
+
+    toGetEmployeeDetailsByEmpId(employeeId)
+	{       
+        this.empService.toGetEmployeeDetailsByEmpId(employeeId).subscribe(res => {           
+            this.empDetailsData = res;
+            //console.log(this.empDetailsData);
+            this.empShiftType=this.empDetailsData.shiftNames;
+            this.empLeaveType=this.empDetailsData.leaveTypeNames;
+            this.supervisorName=this.empDetailsData.supervisorName;
+            this.empCreatedBy=this.empDetailsData.createdBy;
+            this.empCreatedDate=this.empDetailsData.createdDate;
+            
+        })
+    }
+
+    getAllAircraftManfacturer() {
+        this.itemser.getAircraft().subscribe(res => {
+            this.manufacturerData = res[0].map(x => {
+                return {
+                    value: x.aircraftTypeId, label: x.description
+                }
+            })
+        });
     }
 
 

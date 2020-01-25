@@ -94,8 +94,6 @@ import { AssetIntangibleTypeEndpointService } from './services/asset-intangible-
 import { AssetIntangibleTypeService } from './services/asset-intangible-type/asset-intangible-type.service';
 import { AssetTypeEndpointService } from './services/asset-type/asset-type-endpoint.service';
 import { AssetTypeService } from './services/asset-type/asset-type.service';
-import { StageCodeEndpointService } from './services/stage-code/stage-code-endpoint.service';
-import { StageCodeService } from './services/stage-code/stage-code.service';
 import { GLAccountCategoryEndpointService } from './services/gl-account-category/gl-account-category-endpoint.service';
 import { GLAccountCategoryService } from './services/gl-account-category/gl-account-category.service';
 import { ExpenditureCategoryEndpointService } from './services/expenditure-category/expenditure-category-endpoint.service';
@@ -208,20 +206,26 @@ import { PurchaseOrderEndpoint } from './services/purchase-order-endpoint.servic
 import { GLAccountService } from './services/glAccount.service';
 import { GLAccountEndpoint } from './services/glAccount-endpoint.service';
 import { AssetAttributeTypeService } from './services/asset-attribute-type/asset-attribute-type.service';
+import { AssetLocationService } from './services/asset-location/asset-location.service';
 import { AssetAttributeTypeEndpointService } from './services/asset-attribute-type/asset-attribute-type-endpoint.service';
+import { AssetLocationEndpointService } from './services/asset-location/asset-location-endpoint.service';
 import { AssetIntangibleAttributeTypeService } from './services/asset-intangible-attribute-type/asset-intangible-attribute-type.service';
 import { AssetIntangibleAttributeTypeEndpointService } from './services/asset-intangible-attribute-type/asset-intangible-attribute-type-endpoint.service';
 import { DashNumberService } from './services/dash-number/dash-number.service';
 import { DashNumberEndpointService } from './services/dash-number/dash-number-endpoint.service';
 import { AircraftManufacturerEndpointService } from './services/aircraft-manufacturer/aircraftManufacturer-endpoint.service';
 import { AircraftManufacturerService } from './services/aircraft-manufacturer/aircraftManufacturer.service';
-import { AircraftModelEndpointService } from './services/aircraft-model/aircraft-model-endpoint.service' ;
+import { AircraftModelEndpointService } from './services/aircraft-model/aircraft-model-endpoint.service';
 import { AircraftModelService } from './services/aircraft-model/aircraft-model.service';
 //import { AuditComponent } from "./components/Audit/audit.component";
 import { AccountListingService } from './services/account-listing/account-listing.service'
 import { CustomerViewComponent } from './shared/components/customer/customer-view/customer-view.component';
+import { StocklineViewComponent } from './shared/components/stockline/stockline-view/stockline-view.component';
+import { StocklineHistoryComponent } from './shared/components/stockline/stockline-history/stockline-history.component';
 import { CommonService } from "./services/common.service";
 import { CommonModule } from '@angular/common';
+import { TableModule } from 'primeng/table';
+import { StageCodeService } from './services/work-order-stagecode.service';
 
 @NgModule({
     imports: [
@@ -235,6 +239,7 @@ import { CommonModule } from '@angular/common';
         SettingsModule,
         AppRoutingModule,
         CommonModule,
+        TableModule,
         DropdownModule,
         TranslateModule.forRoot({
             loader: {
@@ -272,7 +277,9 @@ import { CommonModule } from '@angular/common';
         UnauthorizedAccessComponent,
         LoginComponent,
         SpinnerComponent,
-        CustomerViewComponent
+        CustomerViewComponent,
+        StocklineViewComponent,
+        StocklineHistoryComponent
     ],
     providers: [
         { provide: 'BASE_URL', useFactory: getBaseUrl },
@@ -282,6 +289,8 @@ import { CommonModule } from '@angular/common';
         AppTitleService,
         AssetAttributeTypeService,
         AssetAttributeTypeEndpointService,
+        AssetLocationService,
+        AssetLocationEndpointService,
         AssetIntangibleAttributeTypeService,
         AssetIntangibleAttributeTypeEndpointService,
         AppTranslationService,
@@ -336,8 +345,6 @@ import { CommonModule } from '@angular/common';
         AssetIntangibleTypeService,
         AssetTypeEndpointService,
         AssetTypeService,
-        StageCodeService,
-        StageCodeEndpointService,
         GLAccountCategoryService,
         GLAccountCategoryEndpointService,
         ExpenditureCategoryService,
@@ -447,9 +454,10 @@ import { CommonModule } from '@angular/common';
         GLAccountService,
         GLAccountEndpoint,
         AccountListingService,
-        CommonService
+        CommonService,
+        StageCodeService
     ],
-    entryComponents: [LoginDialogComponent, AddTaskDialogComponent, CustomerViewComponent],
+    entryComponents: [LoginDialogComponent, AddTaskDialogComponent, CustomerViewComponent, StocklineViewComponent, StocklineHistoryComponent],
     bootstrap: [AppComponent],
     exports: [CommonModule],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]

@@ -9,7 +9,7 @@
                         <li class="breadcrumb-item " aria-current="page">Receiving RO Grid</li>
                     </ol>
                 </nav>
-                <button class="btn btn-primary-cstm pull-right" (click)="toggle_epo_header=!toggle_epo_header">
+                <button class="btn btn-primary pull-right" (click)="toggle_epo_header=!toggle_epo_header">
                     {{toggle_epo_header ? 'See Less' : 'See More...'}}
                 </button>
             </div>
@@ -407,17 +407,12 @@
                                     <td style="min-width: 106px;">Since OVH {{part.timeLife[stockline_row_index].lastSinceOVH}} hrs</td>
                                     <td style="min-width: 106px;">Since Insp {{part.timeLife[stockline_row_index].lastSinceInspection}} hrs</td>
                                 </ng-container>
-
-
                             </tr>
                         </ng-container>
                     </ng-container>
-
                 </tbody>
             </table>
-
         </div>
-
-        <a class="btn btn-primary-cstm pull-right" (click)="onSearchRO()">Search Another RO</a>
+        <a class="btn btn-primary-cstm pull-right" (click)="CreateRepairOrderStockline()">Create Stock Line</a>
     </div>
 </div>

@@ -172,6 +172,7 @@ namespace DAL
 
         IStockLineList stockLineList { get; }
 
+        ITagType tagType { get; }
         //IStockListAdjustment StockListAdjustment { get; }
 
         ITimeLife timeLife { get; }
@@ -235,6 +236,7 @@ namespace DAL
         //IPurchaseOrderPartRepository PurchaseOrderPartRepository { get; }
         IStocklineIntegrationPortalRepository StocklineIntegrationPortalRepository { get; }
         IWorkOrderRepository WorkOrderRepository { get; }
+        IWorkOrderStageRepository WorkOrderStageRepository { get; }
         ICapabilityTypeRepository capabilityTypeRepository { get; }
         IAssetRepository Asset { get; }
         IAssetAuditRepository AssetAudit { get; }
@@ -261,6 +263,12 @@ namespace DAL
         IAssetDisposalType AssetDisposalType { get; }
 
         IAssetStatus AssetStatus { get; }
+
+        IAssetLocation AssetLocation { get; }
+		IAssetLocationAudit AssetLocationAudit { get; }
+
+        IAssetAcquisitionType AssetAcquisitionType { get; }
+		IAssetAcquisitionTypeAudit AssetAcquisitionTypeAudit { get; }
 
         IAssetDepConvention AssetDepConvention { get; }
 
@@ -293,5 +301,6 @@ namespace DAL
         IMasterSalesOrderQuoteStatusRepository MasterSalesOrderQuoteStatusRepository { get; }
         IEmployeeStationRepository employeeStationRepository { get; }
 
+        IGlobalSettingsRepository GlobalSettingsRepository { get; }
     }
 }

@@ -4,7 +4,7 @@ import { MatPaginator, MatSort, MatTableDataSource, MatDialog, MatIcon } from '@
 import { NgForm, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
-import { TableModule } from 'primeng/table';
+
 import { ButtonModule } from 'primeng/button';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { InputTextModule } from 'primeng/inputtext';
@@ -17,7 +17,9 @@ import { AuditHistory } from '../../../../models/audithistory.model';
 import { AuthService } from '../../../../services/auth.service';
 import { MasterCompany } from '../../../../models/mastercompany.model';
 import { MasterComapnyService } from '../../../../services/mastercompany.service';
-
+import { listSearchFilterObjectCreation } from '../../../../generic/autocomplete';
+import { CommonService } from '../../../../services/common.service';
+import { TableModule, Table } from 'primeng/table';
 @Component({
     selector: 'app-customer-works-list',
     templateUrl: './customer-works-list.component.html',
@@ -32,8 +34,8 @@ export class CustomerWorksListComponent implements OnInit, AfterViewInit{
     loadingIndicator: boolean;
     dataSource: any;
     allRecevinginfo: any[] = [];
-    cols: any[];
-    selectedColumns: { field: string; header: string; }[];
+    //cols: any[];
+   // selectedColumns: { field: string; header: string; }[];
     isSaving: boolean;
     isDeleteMode: boolean;
     sourcereceving: any;
@@ -50,12 +52,37 @@ export class CustomerWorksListComponent implements OnInit, AfterViewInit{
     showViewProperties: any = {};
     selectedColumn: any;
     Active: string = "Active";
-   
-   auditHisory: any[];
-    constructor(private receivingCustomerWorkService: ReceivingCustomerWorkService, private masterComapnyService: MasterComapnyService, private _route: Router, private authService: AuthService, private alertService: AlertService, private modalService: NgbModal) {
+    lazyLoadEventData: any;
+    pageSize: number = 10;
+    pageIndex: number = 0;
+    totalRecords: number = 0;
+    totalPages: number = 0;
+    filteredText: string;
+    private table: Table;
+    auditHisory: any[];
+    public departname: any;
+    public divsioname: any;
+    public biuName: any;
+    public compnayname: any;
+          cols = [
+             
+    { field: 'receivingCustomerNumber', header: 'Recev.No.' },
+    //{ field: 'workOrderNum', header: 'WorkOrderNum' },
+    { field: 'partNumber', header: 'PN' },
+    { field: 'partDescription', header: 'PN Description' },
+
+    { field: 'changePartNumber', header: 'Change Part Number' },
+    { field: 'firstName', header: 'Employee Name' },
+    { field: 'name', header: 'Customer Name' },
+    { field: 'customerReference', header: 'Customer Reference' },
+];
+    selectedColumns = this.cols;
+
+
+    constructor(private receivingCustomerWorkService: ReceivingCustomerWorkService, private masterComapnyService: MasterComapnyService, private _route: Router, private authService: AuthService, private alertService: AlertService, private modalService: NgbModal, private commonService: CommonService) {
         this.dataSource = new MatTableDataSource();
         this.receivingCustomerWorkService.isEditMode = false;
-       // this.loadData();
+       
     }
 
      
@@ -63,8 +90,11 @@ export class CustomerWorksListComponent implements OnInit, AfterViewInit{
     ngAfterViewInit(): void {
     }
     ngOnInit(): void {
-        this.loadData();
-    }
+      
+}
+
+
+
     public navigateTogeneralInfo() {
         this.receivingCustomerWorkService.isEditMode = false;
         this.receivingCustomerWorkService.enableExternal = false;
@@ -76,98 +106,222 @@ export class CustomerWorksListComponent implements OnInit, AfterViewInit{
         this.loadingIndicator = false;
 
     }
+    loadData(event) {
 
-    private loadData() {
+        this.lazyLoadEventData = event;
+        const pageIndex = parseInt(event.first) / event.rows;;
+        this.pageIndex = pageIndex;
+        this.pageSize = event.rows;
+        event.first = pageIndex;
+        this.getList(event)
 
-        this.alertService.startLoadingMessage();
-        this.loadingIndicator = true;
-
-        this.receivingCustomerWorkService.getReceiveCustomerList().subscribe(
-            results => this.onDataLoadSuccessful(results[0]),
-            error => this.onDataLoadFailed(error)
-        );
-
-        this.cols = [
-            
-            { field: 'partNumber', header: 'PN' },
-            { field: 'receivingCustomerNumber', header: 'Recev.No.' },
-            { field: 'changePartNumber', header: 'Change Part Number' },
-            { field: 'firstName', header: 'Employee Name' },
-            { field: 'name', header: 'Customer Name' },
-            { field: 'customerReference', header: 'Customer Reference' },
-        ];
-
-        this.selectedColumns = this.cols;
+        console.log(event);
 
     }
+
+    getList(data) {
+
+        console.log(data.sortField);
+         const PagingData = { ...data, filters: listSearchFilterObjectCreation(data.filters) }
+        this.receivingCustomerWorkService.getCustomerWorkAll(PagingData).subscribe(res => {
+            this.allRecevinginfo = res;
+            if (res.length > 0) {
+                this.totalRecords = res[0].totalRecords;
+                this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+            }
+
+        })
+    }
+   
+
+      
+
+    
     private onDataLoadSuccessful(allWorkFlows: any[]) {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
+
         this.allRecevinginfo = allWorkFlows;
-        console.log(allWorkFlows);
+        console.log(allWorkFlows,'work');
     }
     openEdits(row) {
-        this.receivingCustomerWorkService.isEditMode = true;
-        this.isSaving = true;
-        this.receivingCustomerWorkService.listCollection = row;
-        this._route.navigateByUrl('receivingmodule/receivingpages/app-customer-work-setup');
+    
+        const { receivingCustomerWorkId } = row;
+       
+        this._route.navigateByUrl(`receivingmodule/receivingpages/app-customer-work-setup/edit/${receivingCustomerWorkId}`);
     }
   
     openView(content, row) {
 
-        this.sourceAction = row;
-        if (row.customer) {
-            this.showViewProperties.customerId = row.customer.name;
-        }
-        else { this.customerId = "" }
-        if (row.employee) {
-            this.showViewProperties.employeeId = row.employee.firstName;
-        }
-        else { this.employeeId = "" }
+        const { receivingCustomerWorkId } = row;
 
-        if (row.co) {
-            this.showViewProperties.conditionId = row.co.description;
-        }
-        else { this.conditionId = "" }
-        if (row.si) {
-            this.showViewProperties.siteId = row.si.name;
-        }
-        else { this.siteId = "" }
+        this.receivingCustomerWorkService.getCustomerWorkdataById(receivingCustomerWorkId).subscribe(response => {
 
-        if (row.w) {
-            this.showViewProperties.warehouseId = row.w.name;
-        }
-        else { this.warehouseId = "" }
+            this.receivingCustomerWorkService.listCollection = response[0];
+            row = response[0];
+            this.sourceAction = row;
+            if (row.managmentLegalEntity != null && row.divmanagmentLegalEntity != null && row.biumanagmentLegalEntity != null && row.compmanagmentLegalEntity != null) {
+                this.departname = row.managementStructeInfo.name;
+                this.divsioname = row.divmanagmentLegalEntity.name;
+                this.biuName = row.biumanagmentLegalEntity.name;
+                this.compnayname = row.compmanagmentLegalEntity.name;
 
-        if (row.l) {
-            this.showViewProperties.locationId = row.l.name;
-        }
-        else { this.locationId = "" }
-        if (row.sh) {
-            this.showViewProperties.shelfId = row.sh.name;
-        }
-        else { this.showViewProperties.shelfId = "" }
+            }
+            else if (row.biumanagmentLegalEntity != null && row.divmanagmentLegalEntity != null && row.managmentLegalEntity != null) {
 
-        if (row.bi) {
-            this.showViewProperties.binId = row.bi.name;
-        }
-        else { this.showViewProperties.binId = "" }
-        if (row.ti) {
-            this.showViewProperties.timeLifeCyclesId = row.ti.cyclesRemaining;
-            this.showViewProperties.timeLifeCyclesId = row.ti.cyclesSinceNew;
-            this.showViewProperties.timeLifeCyclesId = row.ti.cyclesSinceOVH;
-            this.showViewProperties.timeLifeCyclesId = row.ti.cyclesSinceInspection;
-            this.showViewProperties.timeLifeCyclesId = row.ti.cyclesSinceRepair;
-            this.showViewProperties.timeLifeCyclesId = row.ti.timeRemaining;
-            this.showViewProperties.timeLifeCyclesId = row.ti.timeSinceNew;
-            this.showViewProperties.timeLifeCyclesId = row.ti.timeSinceOVH;
-            this.showViewProperties.timeLifeCyclesId = row.ti.timeSinceInspection;
-            this.showViewProperties.timeLifeCyclesId = row.ti.lastSinceInspection;
-            this.showViewProperties.timeLifeCyclesId = row.ti.lastSinceOVH;
-            this.showViewProperties.timeLifeCyclesId = row.ti.lastSinceNew;
-            this.showViewProperties.timeLifeCyclesId = row.ti.timeSinceRepair;
-        }
-        else { this.showViewProperties.timeLifeCyclesId = "" }
+                this.divsioname = row.managmentLegalEntity.name;
+                this.biuName = row.divmanagmentLegalEntity.name;
+                this.compnayname = row.biumanagmentLegalEntity.name;
+
+
+
+            }
+            else if (row.divmanagmentLegalEntity != null && row.managmentLegalEntity != null) {
+                this.biuName = row.managmentLegalEntity.name;
+                this.compnayname = row.divmanagmentLegalEntity.name;
+
+
+            }
+            else if (row.managementStructeInfo != null) {
+
+                this.compnayname = row.managmentLegalEntity.name;
+
+            }
+            else {
+                
+            }
+          
+            this.showViewProperties.isTimeLife = row.isTimeLife;
+            this.showViewProperties.receivingCustomerNumber = row.receivingCustomerNumber;
+            this.showViewProperties.customerReference = row.customerReference;
+            this.showViewProperties.contactFirstName = row.contactFirstName;
+            this.showViewProperties.workPhone = row.workPhone;
+
+            this.showViewProperties.partNumber = row.partNumber;
+
+            this.showViewProperties.partDescription = row.partDescription;
+
+            this.showViewProperties.changePartNumber = row.changePartNumber;
+
+            this.showViewProperties.partCertificationNumber = row.partCertificationNumber;
+
+            this.showViewProperties.expirationDate = row.expirationDate;
+
+            this.showViewProperties.quantity = row.quantity;
+            this.showViewProperties.conditionId = row.conditionId;
+
+            this.showViewProperties.owner = row.owner;
+
+            this.showViewProperties.isCustomerStock = row.isCustomerStock;
+
+            
+            this.showViewProperties.traceableTo = row.traceableTo;
+
+            switch (parseInt(row.traceableToType)) {
+                case 1: {
+                   this.showViewProperties.traceableToType = 'Customer';
+
+
+                    break;
+                }
+                case 2: {
+                    this.showViewProperties.traceableToType = 'Other';
+                   break;
+                }
+                case 3: {
+                    this.showViewProperties.traceableToType = 'Vendor';
+                   break;
+                }
+                case 4: {
+                    this.showViewProperties.traceableToType = 'Company';
+                       break;
+                }
+            }
+           // this.showViewProperties.obtainFromType = row.obtainFromType;
+            switch (parseInt(row.obtainFromType)) {
+                case 1: {
+                    this.showViewProperties.obtainFromType = 'Customer';
+
+
+                    break;
+                }
+                case 2: {
+                    this.showViewProperties.obtainFromType = 'Other';
+                    break;
+                }
+                case 3: {
+                    this.showViewProperties.obtainFromType = 'Vendor';
+                    break;
+                }
+                case 4: {
+                    this.showViewProperties.obtainFromType = 'Company';
+                    break;
+                }
+            }
+            this.showViewProperties.obtainFrom = row.obtainFrom;
+            this.showViewProperties.manufacturingDate = row.manufacturingDate;
+            this.showViewProperties.expirationDate = row.expirationDate;
+            this.showViewProperties.manufacturingTrace = row.manufacturingTrace;
+            this.showViewProperties.manufacturingLotNumber = row.manufacturingLotNumber;
+            this.showViewProperties.timeLifeDate = row.timeLifeDate;
+            this.showViewProperties.timeLifeOrigin = row.timeLifeOrigin;
+           
+
+            
+               if (row.customer) {
+                this.showViewProperties.customerId = row.customer.name;
+            }
+            else { this.customerId = "" }
+            if (row.employee) {
+                this.showViewProperties.employeeId = row.employee.firstName;
+            }
+            else { this.employeeId = "" }
+
+            if (row.co) {
+                this.showViewProperties.conditionId = row.co.description;
+            }
+            else { this.conditionId = "" }
+            if (row.si) {
+                this.showViewProperties.siteId = row.si.name;
+            }
+            else { this.siteId = "" }
+
+            if (row.w) {
+                this.showViewProperties.warehouseId = row.w.name;
+            }
+            else { this.warehouseId = "" }
+
+            if (row.l) {
+                this.showViewProperties.locationId = row.l.name;
+            }
+            else { this.locationId = "" }
+            if (row.sh) {
+                this.showViewProperties.shelfId = row.sh.name;
+            }
+            else { this.showViewProperties.shelfId = "" }
+
+            if (row.bi) {
+                this.showViewProperties.binId = row.bi.name;
+            }
+            else { this.showViewProperties.binId = "" }
+            if (this.receivingCustomerWorkService.listCollection.ti) {
+                this.showViewProperties.cyclesRemaining = row.ti.cyclesRemaining;
+                this.showViewProperties.cyclesSinceNew = row.ti.cyclesSinceNew;
+                this.showViewProperties.cyclesSinceOVH = row.ti.cyclesSinceOVH;
+                this.showViewProperties.cyclesSinceInspection = row.ti.cyclesSinceInspection;
+                this.showViewProperties.cyclesSinceRepair = row.ti.cyclesSinceRepair;
+                this.showViewProperties.timeRemaining = row.ti.timeRemaining;
+                this.showViewProperties.timeSinceNew = row.ti.timeSinceNew;
+                this.showViewProperties.timeSinceOVH = row.ti.timeSinceOVH;
+                this.showViewProperties.timeSinceInspection = row.ti.timeSinceInspection;
+                this.showViewProperties.lastSinceInspection = row.ti.lastSinceInspection;
+                this.showViewProperties.lastSinceOVH = row.ti.lastSinceOVH;
+                this.showViewProperties.lastSinceNew = row.ti.lastSinceNew;
+                this.showViewProperties.timeSinceRepair = row.ti.timeSinceRepair;
+            }
+            else { this.showViewProperties.timeLifeCyclesId = "" }
+
+        });
 
         this.loadMasterCompanies();
         this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
@@ -229,8 +383,7 @@ export class CustomerWorksListComponent implements OnInit, AfterViewInit{
         this.sourcereceving.updatedBy = this.userName;
         this.receivingCustomerWorkService.deleteReason(this.sourcereceving.receivingCustomerWorkId, this.userName).subscribe(
 
-        //this.receivingCustomerWorkService.deleteReason(this.sourcereceving.receivingCustomerWorkId).subscribe(
-         response => this.saveCompleted(this.sourcereceving),
+           response => this.saveCompleted(this.sourcereceving),
             error => this.saveFailedHelper(error));
         this.modal.close();
     }
@@ -255,7 +408,7 @@ export class CustomerWorksListComponent implements OnInit, AfterViewInit{
     }
     private saveCompleted(user?: any) {
         this.isSaving = false;
-        this.loadData();
+        this.getList(this.lazyLoadEventData);
         if (this.isDeleteMode == true) {
             this.alertService.showMessage("Success", `Action was deleted successfully`, MessageSeverity.success);
             this.isDeleteMode = false;
@@ -291,9 +444,7 @@ export class CustomerWorksListComponent implements OnInit, AfterViewInit{
 
     }
     openHistory(content, rowData) {
-        //const { customerShippingAddressId } = rowData.customerShippingAddressId;
-        //const { customerShippingId } = rowData.customerShippingId;
-        this.alertService.startLoadingMessage();
+           this.alertService.startLoadingMessage();
 
         this.receivingCustomerWorkService.getAuditHistory(rowData.receivingCustomerWorkId).subscribe(
             results => this.onAuditHistoryLoadSuccessful(results[0], content),
@@ -321,6 +472,28 @@ export class CustomerWorksListComponent implements OnInit, AfterViewInit{
                 return data[i + 1][field] === value
             }
         }
+    }
+    globalSearch(value) {
+        this.pageIndex = 0;
+        this.filteredText = value;
+        this.receivingCustomerWorkService.getGlobalSearch(value, this.pageIndex, this.pageSize).subscribe(res => {
+            this.allRecevinginfo = res;
+            if (res.length > 0) {
+                this.totalRecords = res[0].totalRecords;
+                this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+            }
+        })
+    }
+
+    refreshList() {
+        if (this.filteredText != "" && this.filteredText != null && this.filteredText != undefined) {
+            this.globalSearch(this.filteredText);
+        }
+        else {
+            this.table.reset();
+        }
+      
+
     }
 
     

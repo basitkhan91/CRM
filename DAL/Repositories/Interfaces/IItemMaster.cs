@@ -22,6 +22,9 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<object> getAllItemMasterNonstockdata();
 
         IEnumerable<object> getAllItemMasterequipmentdata();
+        object getAllItemMasterStockdataById(long id);
+        object getAllItemMasterNonstockdataById(long id);
+        object getAllItemMasterequipmentdataById(long id);
         IEnumerable<object> getLegalEntityData();
 
         IEnumerable<object> getRolesData();
@@ -59,5 +62,13 @@ namespace DAL.Repositories.Interfaces
 
 
         IEnumerable<ItemMaster> SearchItemMaster(ItemMaster master);
+
+        IEnumerable<object> GetPartnumberList();
+
+        List<ItemMasterCapes> CreateItemMasterCapes(List<ItemMasterCapes> itemMasterCapes);
+        void DeleteItemMasterCapes(long itemMasterCapesId, string updatedBy);
+        IEnumerable<object> GetItemMasterCapes(Common.Filters<ItemMasterCapesFilters> capesFilters);
+        IEnumerable<object> ItemMasterCapesGlobalSearch(long itemMasterId, string filterText, int pageNumber, int pageSize);
+        IEnumerable<object> ItemMasterData(Common.Filters<ItemMasterDataFilters> capesFilters);
     }
 }

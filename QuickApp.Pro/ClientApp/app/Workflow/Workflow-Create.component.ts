@@ -274,7 +274,12 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
             actionAttributes => {
                 this.actionAttributes = [];
                 for (let attr of actionAttributes) {
-                    this.actionAttributes.push({ Id: attr.actionAttributeId, Name: attr.description })
+                    if(this.isQuote && (attr.description == 'Material List' || attr.description == 'Charges' || attr.description == 'Exclusions' || attr.description == 'Expertise')) {
+                        this.actionAttributes.push({ Id: attr.actionAttributeId, Name: attr.description });
+                    }
+                    else if(!this.isQuote){
+                        this.actionAttributes.push({ Id: attr.actionAttributeId, Name: attr.description });
+                    }
                 }
             },
             error => this.errorMessage = <any>error
@@ -470,7 +475,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
                                     .filter((value, index, self) => self.indexOf(value) === index);
 
 
-                                taskIds = taskIds.sort();
+                                //taskIds = taskIds.sort();
                                 this.currenttaskId = taskIds[0];
                                 this.workFlowActions = [];
                                 for (let actId of taskIds) {
@@ -1571,6 +1576,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
             exclusions: undefined,
             measurements: undefined,
             selectedItems: [],
+            order: this.workFlowList.length + 1
         };
     }
 
@@ -1959,6 +1965,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
                         charge.workflowChargesListId = charge.workflowChargesListId > 0 ? charge.workflowChargesListId : 0;
                         charge.workflowId = workflow.workflowId;
                         charge.taskId = workflow.taskId;
+                        charge.order = workflow.order;
                         this.sourceWorkFlow.charges.push(charge);
                     }
                 }
@@ -1967,6 +1974,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
                         direction.workflowDirectionId = direction.workflowDirectionId > 0 ? direction.workflowDirectionId : 0;
                         direction.workflowId = workflow.workflowId;
                         direction.taskId = workflow.taskId;
+                        direction.order = workflow.order;
                         this.sourceWorkFlow.directions.push(direction);
                     }
                 }
@@ -1975,6 +1983,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
                         equipment.workflowEquipmentListId = equipment.workflowEquipmentListId > 0 ? equipment.workflowEquipmentListId : 0;
                         equipment.workflowId = workflow.workflowId;
                         equipment.taskId = workflow.taskId;
+                        equipment.order = workflow.order;
                         this.sourceWorkFlow.equipments.push(equipment);
                     }
                 }
@@ -1983,6 +1992,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
                         exclusion.workflowExclusionId = exclusion.workflowExclusionId > 0 ? exclusion.workflowExclusionId : 0;
                         exclusion.workflowId = workflow.workflowId;
                         exclusion.taskId = workflow.taskId;
+                        exclusion.order = workflow.order;
                         this.sourceWorkFlow.exclusions.push(exclusion);
                     }
                 }
@@ -1991,6 +2001,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
                         expert.workflowExpertiseListId = expert.workflowExpertiseListId > 0 ? expert.workflowExpertiseListId : 0;
                         expert.workflowId = workflow.workflowId;
                         expert.taskId = workflow.taskId;
+                        expert.order = workflow.order;
                         this.sourceWorkFlow.expertise.push(expert);
                     }
                 }
@@ -1999,6 +2010,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
                         material.workflowMaterialListId = material.workflowMaterialListId > 0 ? material.workflowMaterialListId : 0;
                         material.workflowId = workflow.workflowId;
                         material.taskId = workflow.taskId;
+                        material.order = workflow.order;
                         this.sourceWorkFlow.materialList.push(material);
                     }
                 }
@@ -2007,6 +2019,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
                         measurement.workflowMeasurementId = measurement.workflowMeasurementId > 0 ? measurement.workflowMeasurementId : 0;
                         measurement.workflowId = workflow.workflowId;
                         measurement.taskId = workflow.taskId;
+                        measurement.order = workflow.order;
                         this.sourceWorkFlow.measurements.push(measurement);
                     }
                 }
@@ -2015,6 +2028,7 @@ export class WorkflowCreateTestComponent implements OnInit, OnDestroy {
                         publication.id = publication.id > 0 ? publication.id : 0;
                         publication.workflowId = workflow.workflowId;
                         publication.taskId = workflow.taskId;
+                        publication.order = workflow.order;
                         if (publication.workflowPublicationDashNumbers != undefined) {
                             for (let dashNumber of publication.workflowPublicationDashNumbers) {
 

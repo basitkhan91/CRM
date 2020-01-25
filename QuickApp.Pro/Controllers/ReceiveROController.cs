@@ -101,7 +101,7 @@ namespace QuickApp.Pro.Controllers
 
                         //unitOfWork.Repository<PurchaseOrderPart>().Update(purchaseOrderPart);
 
-                        unitOfWork.Repository<StockLine>().AddRange(receivePart.StockLines);
+                        unitOfWork.Repository<StockLineDraft>().AddRange(receivePart.StockLines);
 
                         unitOfWork.SaveChanges();
 
@@ -110,13 +110,13 @@ namespace QuickApp.Pro.Controllers
                         {
                             if (receivePart.StockLines.Count == 1)
                             {
-                                timeLife.StockLineId = (receivePart.StockLines.Where(x => x.RepairOrderPartRecordId == timeLife.RepairOrderPartRecordId))
-                                .ToArray()[0].StockLineId;
+                                timeLife.StockLineDraftId = (receivePart.StockLines.Where(x => x.RepairOrderPartRecordId == timeLife.RepairOrderPartRecordId))
+                                .ToArray()[0].StockLineDraftId;
                             }
                             else
                             {
-                                timeLife.StockLineId = (receivePart.StockLines.Where(x => x.RepairOrderPartRecordId == timeLife.RepairOrderPartRecordId))
-                                .ToArray()[stockLineIndex].StockLineId;
+                                timeLife.StockLineDraftId = (receivePart.StockLines.Where(x => x.RepairOrderPartRecordId == timeLife.RepairOrderPartRecordId))
+                                .ToArray()[stockLineIndex].StockLineDraftId;
                             }
 
                             timeLife.CreatedDate = DateTime.UtcNow;
@@ -127,7 +127,7 @@ namespace QuickApp.Pro.Controllers
                             stockLineIndex++;
                         }
 
-                        unitOfWork.Repository<TimeLife>().AddRange(receivePart.TimeLife);
+                        unitOfWork.Repository<TimeLifeDraft>().AddRange(receivePart.TimeLife);
 
                         repairOrderId = (long)receivePart.StockLines.FirstOrDefault().RepairOrderId;
 
@@ -137,9 +137,9 @@ namespace QuickApp.Pro.Controllers
                     {
                         foreach (var stockLine in receivePart.StockLines)
                         {
-                            stockLine.StockLineNumber = "STL-" + stockLine.StockLineId.ToString();
-                            stockLine.ControlNumber = "CNT-" + stockLine.StockLineId.ToString();
-                            unitOfWork.Repository<StockLine>().Update(stockLine);
+                            stockLine.StockLineNumber = "STL-" + stockLine.StockLineDraftId.ToString();
+                            stockLine.ControlNumber = "CNT-" + stockLine.StockLineDraftId.ToString();
+                            unitOfWork.Repository<StockLineDraft>().Update(stockLine);
                         }
                     }
                     unitOfWork.SaveChanges();
@@ -189,17 +189,17 @@ namespace QuickApp.Pro.Controllers
                 {
                     foreach (var receivePart in receiveParts)
                     {
-                        var stockLineIds = receivePart.StockLines.Select(s => s.StockLineId).ToArray();
+                        var stockLineIds = receivePart.StockLines.Select(s => s.StockLineDraftId).ToArray();
                         var stockLines = unitOfWork.stockLineList.getStockLinesByIds(stockLineIds);
 
                         if (receivePart.TimeLife != null && receivePart.TimeLife.Count > 0)
                         {
-                            unitOfWork.Repository<TimeLife>().UpdateRange(receivePart.TimeLife);
+                            unitOfWork.Repository<TimeLifeDraft>().UpdateRange(receivePart.TimeLife);
                         }
 
                         foreach (var dbStockLine in stockLines)
                         {
-                            var stockLine = receivePart.StockLines.Where(x => x.StockLineId == dbStockLine.StockLineId).FirstOrDefault();
+                            var stockLine = receivePart.StockLines.Where(x => x.StockLineDraftId == dbStockLine.StockLineDraftId).FirstOrDefault();
                             dbStockLine.ManagementStructureEntityId = stockLine.ManagementStructureEntityId;
                             dbStockLine.SiteId = stockLine.SiteId > 0 ? stockLine.SiteId : null;
                             dbStockLine.WarehouseId = stockLine.WarehouseId > 0 ? stockLine.WarehouseId : null;
@@ -235,7 +235,7 @@ namespace QuickApp.Pro.Controllers
                             
                             dbStockLine.UpdatedDate = DateTime.Now;
                             receivePart.StockLines.Remove(stockLine);
-                            unitOfWork.Repository<StockLine>().Update(dbStockLine);
+                            unitOfWork.Repository<StockLineDraft>().Update(dbStockLine);
                         }
                     }
 
@@ -253,7 +253,21 @@ namespace QuickApp.Pro.Controllers
             }
         }
 
-
+        [HttpGet("CreateStockLine/{repairOrderId}")]
+        public IActionResult CreateStockLine(long repairOrderId)
+        {
+            try
+            {
+                unitOfWork.ReceiveRepairOrder.CreateStockLine(repairOrderId);
+                setRepairOrderStatus(repairOrderId);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+        
         #endregion Public Members
 
         #region Private Methods

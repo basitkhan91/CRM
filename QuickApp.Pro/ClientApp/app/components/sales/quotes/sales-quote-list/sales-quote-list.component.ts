@@ -43,7 +43,10 @@ export class SalesQuoteListComponent implements OnInit {
   sales: any[];
   selected: any;
   modal: NgbModalRef;
+  headers:any[];
   columns: any[];
+  selectedColumns:any[];
+  selectedColumn:any[];
   totalRecords: number = 0;
   totalPages: number = 0;
   pageSize: number = 10;
@@ -105,8 +108,8 @@ export class SalesQuoteListComponent implements OnInit {
   }
 
   initColumns() {
-    this.columns = [
-      { field: "salesQuoteId", header: "Quote number", width: "100px" },
+    this.headers = [
+      { field: "salesQuoteId", header: "Quote number", width: "200px" },
       { field: "quoteDate", header: "Quote Date", width: "200px" },
       { field: "versionNumber", header: "Version Number", width: "200px" },
       { field: "customerName", header: "Customer Name", width: "200px" },
@@ -115,8 +118,9 @@ export class SalesQuoteListComponent implements OnInit {
       { field: "salesPrice", header: "Sales Price", width: "200px" },
       { field: "cost", header: "Cost", width: "200px" },
       { field: "numberOfItems", header: "numberOfItems", width: "200px" },
-      { field: "", header: "actions", width: "200px" }
+     // { field: "", header: "actions", width: "100px" }
     ];
+    this.selectedColumns = this.headers;
   }
 
   initPartColumns() {
@@ -199,7 +203,7 @@ export class SalesQuoteListComponent implements OnInit {
       this.modal.close();
       this.alertService.showMessage(
         "Success",
-        `Asset removed successfully.`,
+        `Quote removed successfully.`,
         MessageSeverity.success
       );
       this.onSearch();
@@ -306,6 +310,10 @@ export class SalesQuoteListComponent implements OnInit {
         partNumberObj.stockLineId = selectedPart.stockLineId;
         partNumberObj.fixRate = selectedPart.fxRate;
         partNumberObj.quantityFromThis = selectedPart.qtyQuoted;
+        partNumberObj.conditionId = selectedPart.conditionId;
+        partNumberObj.conditionDescription = selectedPart.conditionDescription;
+        partNumberObj.currencyId = selectedPart.currencyId;
+        partNumberObj.currencyDescription = selectedPart.currencyDescription;
 
         partNumberObj.partNumber = selectedPart.partNumber;
         partNumberObj.description = selectedPart.partDescription;
@@ -322,8 +330,16 @@ export class SalesQuoteListComponent implements OnInit {
         partNumberObj.masterCompanyId = selectedPart.masterCompanyId;
         partNumberObj.quantityFromThis = selectedPart.qtyQuoted;
         partNumberObj.markUpPercentage = selectedPart.markUpPercentage;
-        partNumberObj.unitCostExtended =
-          selectedPart.unitSalePrice * selectedPart.qtyQuoted;
+        
+        partNumberObj.markupExtended = selectedPart.markupExtended;
+        partNumberObj.method = selectedPart.method;
+        partNumberObj.methodType = selectedPart.methodType;
+        partNumberObj.serialNumber = selectedPart.serialNumber;
+        partNumberObj.marginAmountExtended = selectedPart.marginAmountExtended;
+        partNumberObj.marginPercentagePerUnit = selectedPart.marginPercentage;
+        partNumberObj.markupExtended = selectedPart.markupExtended;
+        partNumberObj.unitCostPerUnit = selectedPart.unitCost;
+        partNumberObj.unitCostExtended = selectedPart.unitCostExtended;
         this.selectedParts.push(partNumberObj);
       }
       console.log(this.salesQuoteView);
@@ -427,28 +443,5 @@ export class SalesQuoteListComponent implements OnInit {
     });
   }
 
-  dblExpandAllCustomerDetailsModel() {
-    $("#step11").collapse("show");
-    $("#step12").collapse("show");
-    $("#step13").collapse("show");
-    $("#step14").collapse("show");
-    $("#step15").collapse("show");
-    $("#step16").collapse("show");
-    $("#step17").collapse("show");
-    $("#step18").collapse("show");
-    $("#step19").collapse("show");
-    $("#step20").collapse("show");
-  }
-  dblCloseAllCustomerDetailsModel() {
-    $("#step11").collapse("hide");
-    $("#step12").collapse("hide");
-    $("#step13").collapse("hide");
-    $("#step14").collapse("hide");
-    $("#step15").collapse("hide");
-    $("#step16").collapse("hide");
-    $("#step17").collapse("hide");
-    $("#step18").collapse("hide");
-    $("#step19").collapse("hide");
-    $("#step20").collapse("hide");
-  }
+
 }

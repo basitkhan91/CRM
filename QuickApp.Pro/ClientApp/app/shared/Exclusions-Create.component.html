@@ -2,14 +2,14 @@
   class="fixed-table-container-inner table-responsive cat4-table"
   style="height:380px;"
 >
-  <div style="width: 1378px; z-index: 1;" *ngIf="!isEdit">
+  <div style="z-index: 1;" *ngIf="!isEdit">
     <span class="cat-heading cat4"
       >Add New Exclusions <i (click)="addRow()" class="fa fa-plus"></i
     ></span>
   </div>
   <table class="table table-bordered table-fixed workflow-table-exclusion">
     <tr>
-      <th><label>S.No</label></th>
+      <!-- <th><label>S.No</label></th> -->
       <th><label>EPN *</label></th>
       <th><label>EPN Description *</label></th>
       <th><label>QTY </label></th>
@@ -24,7 +24,7 @@
       [hidden]="exclusion.isDelete"
       *ngFor="let exclusion of workFlow.exclusions; let i = index"
     >
-      <td>{{ (currentPage - 1) * itemsPerPage + i + 1 }}</td>
+      <!-- <td>{{ (currentPage - 1) * itemsPerPage + i + 1 }}</td> -->
       <td>
         <p-autoComplete
           (onSelect)="onPartSelect($event, exclusion)"
@@ -92,7 +92,7 @@
         <select
           class="form-control custom-select wf-pub-id"
           id="ddlEstimatedOccurance"
-          [(ngModel)]="exclusion.exstimtPercentOccuranceId"
+          [(ngModel)]="exclusion.estimtPercentOccurrance"
         >
           <option value="">select</option>
           <option
@@ -122,7 +122,7 @@
     </tr>
 
     <tr>
-      <td>Total</td>
+      <!-- <td>Total</td> -->
       <td>&nbsp;</td>
       <td>&nbsp;</td>
       <td>{{ workFlow.sumofQty }}</td>
@@ -137,7 +137,7 @@
 </div>
 <div *ngIf="(isWorkOrder && !isEdit) || (isQuote && !isEdit)" style="float:right">
   <button
-    class="btn btn-primary btn-primary-cstm"
+    class="btn btn-primary btn-primary"
     (click)="saveExclusionsWorkOrder()"
     style="padding: 6px 12px !important;margin-top: 10px;"
   >
@@ -148,7 +148,7 @@
 <div *ngIf="(isWorkOrder && isEdit) || (isQuote && isEdit)" style="float:right">
   <button
     *ngIf="isWorkOrder || isQuote"
-    class="btn btn-primary btn-primary-cstm"
+    class="btn btn-primary btn-primary"
     (click)="updateExclusionsWorkOrder()"
     style="padding: 6px 12px !important;margin-top: 10px;"
   >

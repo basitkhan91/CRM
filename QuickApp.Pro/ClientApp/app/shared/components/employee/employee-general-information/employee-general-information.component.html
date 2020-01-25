@@ -71,7 +71,7 @@
                                             Emp Expertise <span class="clr-red">*</span>
                                             <span style="margin-left:3px;cursor:pointer;"><a class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#addEmpExprt" (click)="openemployeeExpertise(contentEdit)"></a></span>
                                         </label>
-                                        <select name="employeeExpertiseId" class="form-control" [formControl]="empCreationForm.controls['employeeExpertiseId']" required>
+                                        <select name="employeeExpertiseId" class="form-control" [formControl]="empCreationForm.controls['employeeExpertiseId']" required (change)="onChangeemployeeExpertiseId($event)" >
                                             <option value ="0">Select Employee Expertise </option>
                                             <ng-container *ngFor="let employeeName of allEmployeeExpertiseInfo">
                                                 <option *ngIf="employeeName.isActive" [ngValue]="employeeName.employeeExpertiseId">{{employeeName.description}}</option>
@@ -313,7 +313,7 @@
                                                 <option *ngFor="let employee of allEmployeeinfo" [ngValue]="employee.employeeId">{{employee.firstName}}</option>
                                             </select>                                    
                                         </div>
-                                        <div class="form-group">
+                                        <!-- <div class="form-group">
                                             <div class="checkbox-cstm" style="margin-top: 10px;">
                                                 <label>
                                                     <input type="checkbox" name="worksInShop-radio" [(ngModel)]="sourceEmployee.isHeWorksInShop">
@@ -321,19 +321,19 @@
                                                     Shop Employee
                                                 </label>
                                             </div>
-                                        </div>
+                                        </div> -->
                                     </div>
                                 </div>             
                         </div>
                     <div style="margin-bottom: 10px;">
-                        <button type="button" [disabled]="!empform.valid" class="btn btn-primary-cstm pull-right" (click)="onSubmit2()">Save & Next</button>
+                        <button type="button" [disabled]="!empform.valid" class="btn btn-primary pull-right" (click)="onSubmit2()">Save & Next</button>
                     </div>
                 </div>
                 
             </form>
             </div>
         </div>
-        <!-- <button type="button" [disabled]="!empCreationForm.valid" class="btn btn-primary-cstm pull-right" (click)="onSubmit2()">Save & Next</button> -->
+        <!-- <button type="button" [disabled]="!empCreationForm.valid" class="btn btn-primary pull-right" (click)="onSubmit2()">Save & Next</button> -->
     </div>
 </div>
 <!-- <div class="pull-right"> &copy; 2018 <a>PAS</a> </div> -->
@@ -451,8 +451,8 @@
         </div> 
         <div class="modal-footer">
 
-                <button class="btn btn-primary-cstm" [disabled]="disableJobType">Save</button>
-                <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
+                <button class="btn btn-primary" [disabled]="disableJobType">Save</button>
+                <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
             </div>
     </form>
     </ng-template>
@@ -586,8 +586,8 @@
                         
     </div>
     <div class="modal-footer">
-        <button class="btn btn-primary-cstm" [disabled]="disableJobTitle">Save</button>
-        <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
+        <button class="btn btn-primary" [disabled]="disableJobTitle">Save</button>
+        <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
     </div>
 </form>
 
@@ -664,8 +664,8 @@
     </div>
     <div class="modal-footer">
 
-            <button class="btn btn-primary-cstm" [disabled]="disableSaveLeaveName">Save</button>
-            <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
+            <button class="btn btn-primary" [disabled]="disableSaveLeaveName">Save</button>
+            <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
         </div>
     </form>
 </ng-template>
@@ -807,8 +807,8 @@
                     
     </div>
     <div class="modal-footer">
-        <button class="btn btn-primary-cstm" [disabled]="disableExpTitle">Save</button>
-        <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
+        <button class="btn btn-primary" [disabled]="disableExpTitle">Save</button>
+        <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
     </div>
 </form>
 

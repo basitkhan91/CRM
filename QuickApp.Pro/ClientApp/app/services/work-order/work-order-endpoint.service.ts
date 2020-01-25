@@ -245,8 +245,17 @@ export class WorkOrderEndpointService extends EndpointFactory {
     }
 
     createWorkOrderFreightList(data){
-        return this.http.post(`${this.configurations.baseUrl}/api/workorder/createworkorderfreight`, JSON.stringify(data), this.getRequestHeaders())
+        return this.http.post(`${this.configurations.baseUrl}/api/workOrder/createworkorderfreight`, JSON.stringify(data), this.getRequestHeaders())
     } 
+
+    updateWorkOrderFreightList(data){
+        return this.http.post(`${this.configurations.baseUrl}/api/workOrder/updateworkorderfreight`, JSON.stringify(data), this.getRequestHeaders())
+
+    }
+    deleteWorkOrderFreightList(workOrderFreightId , updatedBy){
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/deleteworkorderfreight?workOrderFreightId=${workOrderFreightId}&updatedBy=${updatedBy}`, this.getRequestHeaders());
+
+    }
 
 
     getTasks() {
@@ -365,6 +374,11 @@ export class WorkOrderEndpointService extends EndpointFactory {
         // return this.http.post<any>(`${this.configurations.baseUrl}/api/workOrder/saveassetcheckedout?WorkOrderAssetId=${workOrderAssetId}&checkedInById=${employeeId}&checkedInDate=${checkedInDate}&updatedBy=${updatedBy}`)  
         return this.http.post<any>(`${this.configurations.baseUrl}/api/workOrder/saveassetcheckedout`, JSON.stringify(assetcheckout), this.getRequestHeaders());
     }
+
+    assetsHistoryByWorkOrderAssetId(workOrderAssetId){
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/woassethistory?workOrderAssetId=${workOrderAssetId}`, this.getRequestHeaders())
+    }
+    woassethistory
 
     deleteWorkOrderAssetByAssetId(workOrderAssetId, updatedBy) {
         return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/deleteworkorderasset?workOrderAssetId=${workOrderAssetId}&updatedBy=${updatedBy}`, this.getRequestHeaders())

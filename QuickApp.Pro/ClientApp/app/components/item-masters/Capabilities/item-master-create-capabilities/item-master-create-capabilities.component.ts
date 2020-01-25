@@ -1,4 +1,4 @@
-﻿import { Component, ViewChild, OnInit, AfterViewInit, ChangeDetectorRef } from '@angular/core';
+﻿import { Component, ViewChild, OnInit, AfterViewInit, ChangeDetectorRef, Input, Output, EventEmitter } from '@angular/core';
 import { ConditionService } from '../../../../services/condition.service';
 import { Condition } from '../../../../models/condition.model';
 import { fadeInOut } from '../../../../services/animations';
@@ -14,7 +14,15 @@ import { LegalEntityService } from '../../../../services/legalentity.service';
 import { AtaMainService } from '../../../../services/atamain.service';
 import { ATAMain } from '../../../../models/atamain.model';
 import { ItemMasterCapabilitiesModel } from '../../../../models/itemMasterCapabilities.model';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
+import { AircraftModelService } from '../../../../services/aircraft-model/aircraft-model.service';
+import { DashNumberService } from '../../../../services/dash-number/dash-number.service';
+import { CommonService } from '../../../../services/common.service';
+import { WorkOrderService } from '../../../../services/work-order/work-order.service';
+import { getValueFromObjectByKey, getValueFromArrayOfObjectById } from '../../../../generic/autocomplete';
+import { AuthService } from '../../../../services/auth.service';
+import { VendorService } from '../../../../services/vendor.service';
+import { AtaSubChapter1Service } from '../../../../services/atasubchapter1.service';
 
 @Component({
     selector: 'app-item-master-create-capabilities',
@@ -24,1085 +32,596 @@ import { Router } from '@angular/router';
 })
 /** item-master-create-capabilities component*/
 export class ItemMasterCreateCapabilitiesComponent implements OnInit {
-    /** item-master-create-capabilities ctor */
-    matSpinner: boolean;
-    loadingIndicator: boolean;
+    @Input() itemMasterId;
+    manufacturerData: any = [];
+    LoadValues: any;
+    selectedAircraftId: any;
+    modelUnknown = false;
+    dashNumberUnknown = false;
+    dashNumberUrl = '';
+    selectedModelId: any;
+    LoadDashnumber = [];
+    selectedDashnumber = undefined;
+    newDashnumValue: any = [];
+    newModelValue: any = [];
+    viewTable: boolean = false;
+    aircraftData: any;
+    newValue: any;
+    capabilityTypeId: any = [];
+    // ataSubChapaters = [];
+    ataChapters = [];
+    intergationList = [];
+    cmmList = [];
+    employeeList = [];
+    // capesObject = {
+    //     capailityTypeId: null,
+    //     capailityTypeName: '',
+    //     managementStructureId: null,
+    //     description: '',
+    //     ataChapterId: null,
+    //     ataSubChapterId: null,
+    //     entryDate: new Date(),
+    //     cmmId: null,
+    //     integrateWithId: null,
+    //     isVerified: false,
+    //     verifiedById: null,
+    //     verifiedDate: new Date(),
+    //     memo: '',
+    //     companyId: null,
+    //     buId: null,
+    //     divisionId: null,
+    //     departmentId: null,
+    // }
+    // capes = {...this.capesObject};
+    moduleName = 'Capes';
 
-    partCollection: any[];
-    selectedActionName: any;
-    disableSavepartNumber: boolean;
-    sourceItemMasterCap: any = {};
-    disableSavepartDescription: boolean;
-    itemclaColl: any[];
-    descriptionbyPart: any[] = [];
-    allPartnumbersInfo: any[];
-    allManagemtninfo: any[] = [];
-    maincompanylist: any[] = [];
-    bulist: any[];
-    departmentList: any[];
-    divisionlist: any[];
-    manufacturerData: any[] = [];
-    allAircraftinfo: any[];
-    completeAircraftManfacturerData: any[];
-    allaircraftInfo: any[];
-    selectedAircraftTypes: any;
-    selectedAircraftDataModels: any[] = [];
-    enablePopupData: boolean = false;
-    currentVendorModels: any[] = [];
-    selectedModels: any[] = [];
-    allManufacturerInfo: any[];
-    allATAMaininfo1: ATAMain[];
-    ItemMasterId: number = 0;
-    selectedManufacturer: any = [];//To Store selected Aircraft Manufacturer Data
-    selectedModel: any = [];//To Store selected Aircraft Modal Data
-    // itemMasterCreateCapabilitiesModel = new ItemMasterCapabilitiesModel()
-    capabilitiesForm: FormGroup;
-    capabilityEditCollection: any;
-    constructor(public ataservice: AtaMainService, public workFlowtService1: LegalEntityService, private modalService: NgbModal, private alertService: AlertService, public itemser: ItemMasterService,
-        private formBuilder: FormBuilder, private router: Router) {
+    colaircraft: any[] = [
+        // {field: 'capailityTypeName' , header: 'Capability Type' },
+        // {field: 'managementStructureId', header: 'ManagementStructure'},
+        // { field: "AircraftType", header: "Aircraft" },
+        // { field: "AircraftModel", header: "Model" },
+        // { field: "DashNumber", header: "Dash Numbers" },
+        // {field: 'description', header:'Description'},
+        // {field: 'ataChapterId' , header : 'ATA Chapter'},
+        // {field: 'ataSubChapterId', header: 'ATA SubChapter'},
+        // {field: 'entryDate', header: 'EntryDate'},
+        // {field: 'cmmId', header: 'CMM'},
+        // {field: 'integrateWithId', header: 'IntegrateWith'},
+        // {field: 'isVerified', header: 'Verified'},
+        // {field: 'verifiedById', header: 'VerifiedBy'},
+        // {field: 'verifiedDate', header: 'VerifiedDate'},
+        // {field: 'memo', header: 'Memo'},
+
+
+    ];
+    capabalityTypeList: any;
+    legalEntityList: any = [];
+    pnData: any = [];
+    itemMasterIDFromPartNumberSelection: any;
+    @Output() loadCapesList = new EventEmitter<any>();
+    @Output() closeCapesPopup = new EventEmitter<any>();
+    @Input() isEnableCapesList: boolean = false;
+    selectedAircraftName: any;
+    partData: any = {};
+    itemMastersList: any[] = [];
+
+    constructor(public itemser: ItemMasterService,
+        private aircraftModelService: AircraftModelService,
+        private Dashnumservice: DashNumberService,
+        private commonService: CommonService,
+        private workOrderService: WorkOrderService,
+        private alertService: AlertService,
+        private authService: AuthService,
+        public vendorser: VendorService,
+        private atasubchapter1service: AtaSubChapter1Service,
+        private activatedRoute: ActivatedRoute,
+        private _router: Router,
+    ) {
         this.itemser.currentUrl = '/itemmastersmodule/itemmasterpages/app-item-master-create-capabilities';
-        this.itemser.bredcrumbObj.next(this.itemser.currentUrl);//Bread Crumb
+            this.itemser.bredcrumbObj.next(this.itemser.currentUrl);//Bread Crumb
+     }
+    ngOnInit() {
+        console.log(this.itemMasterId, "itemMasterId")
+        this.getCapabilityTypesList();
+        this.getAircraftTypesList();
+        // this.getAtAChapters();
+        // this.getIntergationWithList();
+        // this.getAllEmployees();
+        this.getItemMasterList();
+        this.resetFormData();
 
     }
-
-    capabilityTypeData: any = [{
-        CapabilityTypeId: 1, Description: 'Manufacturing', formArrayName: 'mfgForm', selectedAircraftDataModels: [],
-        selectedAircraftModelTypes: [], selectedAircraftTypes: [], selectedManufacturer: [], selectedModel: []
-    },
-    {
-        CapabilityTypeId: 2, Description: 'Overhaul', formArrayName: 'overhaulForm', selectedAircraftDataModels: []
-        , selectedAircraftModelTypes: [], selectedAircraftTypes: [], selectedManufacturer: [], selectedModel: []
-    },
-    {
-        CapabilityTypeId: 3, Description: 'Distribution', formArrayName: 'distributionForm', selectedAircraftDataModels: [],
-        selectedAircraftModelTypes: [], selectedAircraftTypes: [], selectedManufacturer: [], selectedModel: []
-    },
-    {
-        CapabilityTypeId: 4, Description: 'Certification', formArrayName: 'certificationForm', selectedAircraftDataModels: [],
-        selectedAircraftModelTypes: [], selectedAircraftTypes: [], selectedManufacturer: [], selectedModel: []
-    },
-    {
-        CapabilityTypeId: 5, Description: 'Repair', formArrayName: 'repairForm', selectedAircraftDataModels: [],
-        selectedAircraftModelTypes: [], selectedAircraftTypes: [], selectedManufacturer: [], selectedModel: []
-    },
-    {
-        CapabilityTypeId: 6, Description: 'Exchange', formArrayName: 'exchangeForm', selectedAircraftDataModels: [],
-        selectedAircraftModelTypes: [], selectedAircraftTypes: [], selectedManufacturer: [], selectedModel: []
-    }];
-
-    ngOnInit(): void {
-        this.capabilitiesForm = this.formBuilder.group({
-            mfgForm: this.formBuilder.array([]),
-            overhaulForm: this.formBuilder.array([]),
-            distributionForm: this.formBuilder.array([]),
-            certificationForm: this.formBuilder.array([]),
-            repairForm: this.formBuilder.array([]),
-            exchangeForm: this.formBuilder.array([])
-        });
-        this.capabilityTypeData.forEach(element => {
-            this.resetFormArray(element);
-        });
-        //this.workFlowtService.MatSpinner = true;//App Mat Spinner Testing
-        // debugger;
-        //this.vendorService.currentUrl = '/vendorsmodule/vendorpages/app-add-vendor-capabilitiesn';
-        //this.vendorService.bredcrumbObj.next(this.vendorService.currentUrl);
-
-        this.ptnumberlistdata(); //calling for getting Item Master Parts List Data
-
-        this.loadManagementdata(); // Loading Management Data from Company,BU,DIV,DEP
-
-        this.aircraftManfacturerData();
-
-        this.manufacturerdata();
-        this.atamaindata();
-
-
-
-
-    }
-
-
-
-    get mfgFormArray(): FormArray {
-        return this.capabilitiesForm.get('mfgForm') as FormArray;
-    }
-
-    get overhaulFormArray(): FormArray {
-        return this.capabilitiesForm.get('overhaulForm') as FormArray;
-    }
-
-
-    get distributionFormArray(): FormArray {
-        return this.capabilitiesForm.get('distributionForm') as FormArray;
-    }
-
-    get certificationFormArray(): FormArray {
-        return this.capabilitiesForm.get('certificationForm') as FormArray;
-    }
-
-    get repairFormArray(): FormArray {
-        return this.capabilitiesForm.get('repairForm') as FormArray;
-    }
-
-    get exchangeFormArray(): FormArray {
-        return this.capabilitiesForm.get('exchangeForm') as FormArray;
-    }
-
-
-
-    private atamaindata() {
-        this.alertService.startLoadingMessage();
-        this.loadingIndicator = true;
-
-        this.ataservice.getAtaMainList().subscribe(
-            results => this.onDataLoadATAMainDataSuccessful(results[0]),
-            error => this.onDataLoadFailed(error)
-        );
-    }
-
-    onDataLoadATAMainDataSuccessful(getAtaMainList: any[]) {
-        // alert('success');
-        this.alertService.stopLoadingMessage();
-        this.loadingIndicator = false;
-        //this.dataSource.data = getAtaMainList;
-        this.allATAMaininfo1 = getAtaMainList;
-    }
-
-    private loadManagementdata() {
-        this.alertService.startLoadingMessage();
-        this.loadingIndicator = true;
-
-        this.workFlowtService1.getManagemententity().subscribe(
-            results => this.onManagemtntdataLoad(results[0]),
-            error => this.onDataLoadFailed(error)
-        );
-    }
-
-    //calling for COM,BU,DIV,DEP Data Start
-    private onManagemtntdataLoad(getAtaMainList: any[]) {
-        this.alertService.stopLoadingMessage();
-        this.loadingIndicator = false;
-        //this.dataSource.data = getAtaMainList;
-        this.allManagemtninfo = getAtaMainList;
-
-        for (let i = 0; i < this.allManagemtninfo.length; i++) {
-
-            if (this.allManagemtninfo[i].parentId == null) {
-                this.maincompanylist.push(this.allManagemtninfo[i]);
-
-            }
-        }
-
-        this.sourceItemMasterCap.businessUnitId = "";
-
-        if (this.itemser.capabilityCollection) {
-            this.capabilityEditCollection = this.itemser.capabilityCollection;
-            this.cunstructFormForEdit()
-        }
-    }
-
-
-    getBUList(companyId, formArray) {
-        // this.sourceItemMasterCap.businessUnitId = "";
-        // this.sourceItemMasterCap.managementStructureEntityId = companyId; //Saving Management Structure Id if there Company Id
-
-        // this.bulist = [];
-        formArray.controls['buisinessUnitId'].setValue("");
-        formArray.controls['departmentId'].setValue("");
-        formArray.controls['divisionId'].setValue("");
-        formArray.controls['managementStructureId'].setValue(companyId);
-        formArray.departmentList = [];
-        formArray.divisionlist = [];
-        formArray['buList'] = [];
-        for (let i = 0; i < this.allManagemtninfo.length; i++) {
-            if (this.allManagemtninfo[i].parentId == companyId) {
-                // this.bulist.push(this.allManagemtninfo[i]);
-                formArray['buList'].push(this.allManagemtninfo[i])
-            }
-        }
-
-        this.setValidations(formArray);
-    }
-
-    setValidations(formArray) {
-        //   formArray.controls['divisionId'].clearValidators();
-        //   formArray.controls['departmentId'].clearValidators();
-        formArray.controls['buisinessUnitId'].clearValidators();
-        formArray.updateValueAndValidity();
-        if (formArray['buList'].length == 0) {
-            formArray.controls['buisinessUnitId'].setValidators([Validators.required]);
-            formArray.updateValueAndValidity();
-        }
-
-        // if(formArray['departmentList'].length == 0){
-        //     formArray.controls['departmentId'].setValidators([Validators.required]);
-        //     formArray.updateValueAndValidity();
-        // }
-        // if(formArray['divisionlist'].length == 0){
-        //     formArray.controls['divisionId'].setValidators([Validators.required]);
-        //     formArray.updateValueAndValidity();
-        // }
-    }
-
-    getDepartmentlist(businessUnitId, formArray) {
-        // this.sourceItemMasterCap.managementStructureEntityId = businessUnitId; //Saving Management Structure Id if there businessUnitId
-        // this.sourceItemMasterCap.departmentId = "";
-        formArray.controls['departmentId'].setValue("");
-        formArray.controls['divisionId'].setValue("");
-        formArray.controls['managementStructureId'].setValue(businessUnitId);
-        formArray.departmentList = [];
-        formArray.divisionlist = [];
-        for (let i = 0; i < this.allManagemtninfo.length; i++) {
-            if (this.allManagemtninfo[i].parentId == businessUnitId) {
-                formArray.departmentList.push(this.allManagemtninfo[i]);
-            }
-        }
-
-        this.setValidations(formArray);
-    }
-
-    getDivisionlist(departmentId, formArray) {
-        // this.sourceItemMasterCap.divisionId = "";
-        // this.sourceItemMasterCap.managementStructureEntityId = departmentId; //Saving Management Structure Id if there departmentId
-        formArray.controls['divisionId'].setValue("");
-        formArray.controls['managementStructureId'].setValue(departmentId);
-        formArray.divisionlist = [];
-        for (let i = 0; i < this.allManagemtninfo.length; i++) {
-            if (this.allManagemtninfo[i].parentId == departmentId) {
-                formArray.divisionlist.push(this.allManagemtninfo[i]);
-            }
-        }
-
-        this.setValidations(formArray);
-    }
-    divisionChange(divisionId, formArray) {
-        formArray.controls['managementStructureId'].setValue(divisionId);
-    }
-
-
-    getDivisionChangeManagementCode(divisionId) {
-        // this.sourceItemMasterCap.managementStructureEntityId = divisionId; //Saving Management Structure Id if theredivisionId
-    }
-
-
-    //calling for COM,BU,DIV,DEP Data End
-
-    private ptnumberlistdata() {
-        this.alertService.startLoadingMessage();
-        this.loadingIndicator = true;
-
-        this.itemser.getPrtnumberslistList().subscribe(
-            results => this.onptnmbersSuccessful(results[0]),
-            error => this.onDataLoadFailed(error)
-        );
-    }
-
-    private onptnmbersSuccessful(allWorkFlows: any[]) {
-
-        this.alertService.stopLoadingMessage();
-        this.loadingIndicator = false;
-        //this.dataSource.data = allWorkFlows;
-        this.allPartnumbersInfo = allWorkFlows;
-    }
-
-    private onDataLoadFailed(error: any) {
-        // alert(error);
-        this.alertService.stopLoadingMessage();
-        this.loadingIndicator = false;
-
-    }
-
-    private onpartnumberloadsuccessfull(allWorkFlows: any[]) //getting Part Description
-    {
-
-
-        this.descriptionbyPart = allWorkFlows[0]
-        //this.sourceAction = this.descriptionbyPart;
-        this.sourceItemMasterCap.partDescription = allWorkFlows[0].partDescription;
-
-
-    }
-
-
-    partEventHandler(event) {
-        if (event.target.value != "") {
-            let value = event.target.value.toLowerCase();
-            if (this.selectedActionName) {
-                if (value == this.selectedActionName.toLowerCase()) {
-                    //alert("Action Name already Exists");
-                    this.disableSavepartNumber = true;
-
-                }
-                else {
-                    this.disableSavepartNumber = false;
-                    this.sourceItemMasterCap.partDescription = "";
-                    this.disableSavepartDescription = false;
-                }
-            }
-
-        }
-    }
-
-    partnmId(event) {
-        //
-        if (this.itemclaColl) {
-            for (let i = 0; i < this.itemclaColl.length; i++) {
-                if (event == this.itemclaColl[i][0].partName) {
-                    this.sourceItemMasterCap.partId = this.itemclaColl[i][0].partId;
-                    this.ItemMasterId = this.itemclaColl[i][0].partId;
-                    this.disableSavepartNumber = true;
-                    this.selectedActionName = event;
-                }
-            }
-            this.itemser.getDescriptionbypart(event).subscribe(
-                results => this.onpartnumberloadsuccessfull(results[0]),
-                error => this.onDataLoadFailed(error)
-
-
-            );
-            this.disableSavepartDescription = true;
-        }
-    }
-
-    filterpartItems(event) {
-
-        this.partCollection = [];
-        this.itemclaColl = [];
-        if (this.allPartnumbersInfo) {
-            if (this.allPartnumbersInfo.length > 0) {
-
-                for (let i = 0; i < this.allPartnumbersInfo.length; i++) {
-                    let partName = this.allPartnumbersInfo[i].partNumber;
-                    if (partName) {
-                        if (partName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-                            this.itemclaColl.push([{
-                                "partId": this.allPartnumbersInfo[i].itemMasterId,
-                                "partName": partName
-                            }]),
-
-                                this.partCollection.push(partName);
+    getItemMasterList() {
+
+
+        this.itemser.getItemStockList("Stock").subscribe(res => {
+            console.log(res);
+            let resData = res[0];
+            this.itemMastersList = resData;
+            if (resData) {
+                for (let i = 0; i < resData.length; i++) {
+                    this.pnData.push({
+                        label: resData[i].partNumber, value: resData[i].itemMasterId
+                    })
+                    if(this.itemMasterId){
+                        if(resData[i].itemMasterId == this.itemMasterId){
+                            this.partData = {
+                                partNumber: resData[i].partNumber,
+                                partDescription: resData[i].partDescription,
+                                manufacturerName: resData[i].manufacturer.name
+                            }
                         }
                     }
+                   
                 }
             }
-        }
+
+        })
     }
 
-    private aircraftManfacturerData()
-    {
-        this.alertService.startLoadingMessage();
-        this.loadingIndicator = true;
-
-        this.itemser.getAircraft().subscribe(
-            results => this.onDataLoadaircraftManfacturerSuccessful(results[0]),
-            error => this.onDataLoadFailed(error)
-        );
-
+    get userName(): string {
+        return this.authService.currentUser ? this.authService.currentUser.userName : "";
     }
 
-    private onDataLoadaircraftManfacturerSuccessful(allWorkFlows: any[]) //While oading
-    {
+    getCapabilityTypesList() {
+        this.commonService.smartDropDownList('CapabilityType', 'CapabilityTypeId', 'Description').subscribe(res => {
+            this.capabalityTypeList = res;
+        })
+    }
 
-        this.alertService.stopLoadingMessage();
-        this.loadingIndicator = false;
-        //this.dataSource.data = allWorkFlows;
-        this.allaircraftInfo = allWorkFlows; //Complete Aircraft Data
 
-        this.completeAircraftManfacturerData = allWorkFlows;
 
-        if (this.allaircraftInfo) {
-            if (this.allaircraftInfo.length > 0) {
-                for (let i = 0; i < this.allaircraftInfo.length; i++)
-                    this.manufacturerData.push(
-                        { value: this.allaircraftInfo[i].aircraftTypeId, label: this.allaircraftInfo[i].description },
+    getAircraftTypesList() {
+        this.itemser.getAircraft().subscribe(res => {
+            const allaircraftInfo = res[0];
 
-                    );
+
+            if (allaircraftInfo) {
+                if (allaircraftInfo.length > 0) {
+                    for (let i = 0; i < allaircraftInfo.length; i++)
+                        this.manufacturerData.push(
+                            { value: allaircraftInfo[i].aircraftTypeId, label: allaircraftInfo[i].description },
+                        );
+                }
             }
-
-            //Adding
-
-            //	let valAirCraft = [];
-            //	//we are Passing Customer Id for getting Edit Data and make it check 
-            //	this.itemser.getAircaftManafacturerList(this.sourceItemMaster.itemMasterId)
-            //		.subscribe(results => {
-            //			this.allAircraftManufacturer = results[0];
-            //			if (results != null) {
-            //				for (let i = 0; i < this.allAircraftManufacturer.length; i++) {
-            //					valAirCraft.push(this.allAircraftManufacturer[i].aircraftTypeId);
-            //				}
-            //				this.selectedAircraftTypes = valAirCraft; //if there is Aircraft Data with ItemMasterId that will be Checked 
-            //				console.log(this.selectedAircraftTypes);
-            //			}
-
-            //		},
-            //			error => this.onDataLoadFailed(error)
-            //		);
-
-
-        }
-        if (this.itemser.capabilityCollection)
-        {
-            this.capabilityEditCollection = this.itemser.capabilityCollection;
-            this.cunstructFormForEdit()
-        }
+        })
     }
-    loadModalsForExistingRecords(capData) {
-        if (capData.selectedAircraftTypes.length > 0) {
 
-            let arr = [];
-            capData.selectedAircraftTypes.forEach(element => {
-                arr.push(element);
+    getAircraftModelByManfacturer(value) {
+        // this.newValue = value.originalEvent.target.textContent;
+        let airtCraftObject = this.manufacturerData.find(element => element.value == this.selectedAircraftId);
+        this.selectedAircraftName = airtCraftObject.label;
+        // if (this.newValue) {
+        this.aircraftModelService.getAircraftModelListByManufactureId(this.selectedAircraftId).subscribe(models => {
+
+            const responseValue = models[0];
+            this.LoadValues = responseValue.map(models => {
+                return {
+                    label: models.modelName,
+                    value: models
+                }
             });
-            var selectedvalues = arr.join(",");
-            this.itemser.getAircraftTypes(selectedvalues).subscribe(
-                results => this.onDataLoadaircrafttypeSuccessfulForExisting(results[0], capData),
 
-                error => this.onDataLoadFailed(error)
-            );
+        });
+        this.selectedModelId = undefined;
+        this.selectedDashnumber = undefined;
+    }
+
+    getDashNumberByTypeandModel(value) {
+        this.newModelValue = value.originalEvent.target.textContent;
+        this.dashNumberUrl = this.selectedModelId.reduce((acc, obj) => {
+
+            return `${acc},${obj.aircraftModelId}`
+        }, '')
+        this.dashNumberUrl = this.dashNumberUrl.substr(1);
+        this.Dashnumservice.getDashNumberByModelTypeId(this.dashNumberUrl, this.selectedAircraftId).subscribe(dashnumbers => {
+            const responseData = dashnumbers;
+            this.LoadDashnumber = responseData.map(dashnumbers => {
+                return {
+                    label: dashnumbers.dashNumber,
+                    value: dashnumbers.dashNumberId
+                }
+            });
+            this.filterDashNumberDropdown(this.aircraftData)
+
+        });
+    }
+
+    selectedDashnumbervalue(value) {
+        this.newDashnumValue = value.originalEvent.target.textContent;
+        console.log()
+    }
+
+
+    resetAircraftModelsorDashNumbers() {
+        if (this.modelUnknown) {
+            this.selectedModelId = undefined;
+            this.selectedDashnumber = undefined;
+
+        }
+        if (this.dashNumberUnknown) {
+
+            this.selectedDashnumber = undefined;
+
+        }
+
+    }
+
+    mapAircraftInformation(){
+        this.viewTable = true;
+        // const responseValue = aircraftdata;
+        console.log(this.capabilityTypeId, "this.capabilityTypeId+++")
+            let mappedAircraftData = this.capabilityTypeId.map(x => {
+                console.log(x, "x capid")
+                return {
+                    Memo: '',
+                    IsChecked: false,
+                    // ...this.capes
+
+                    capabilityTypeId: x,
+                    capailityTypeName: getValueFromArrayOfObjectById('label', 'value', x, this.capabalityTypeList),
+                    managementStructureId: null,
+                    description: '',
+                    
+                    entryDate: new Date(),                   
+                    isVerified: false,
+                    verifiedById: null,
+                    verifiedDate: new Date(),
+                    memo: '',
+                    companyId: null,
+                    buId: null,
+                    divisionId: null,
+                    departmentId: null,
+                }
+            })
+            for(let i=0; i<mappedAircraftData.length; i++){
+                this.aircraftData = [...this.aircraftData, mappedAircraftData[i]]
+            }
+            console.log(this.aircraftData, "this.aircarftdata");
+            this.getLegalEntity();
+            this.getAllEmployees();
+            this.filterCapabilityListDropdown(this.aircraftData);
+
+            // this.filterDashNumberDropdown(this.aircraftData);
+    }
+
+    mapAircraftInformationOld() {
+    console.log(this.selectedDashnumber)
+    this.viewTable = true;
+    // Selected All 
+    if (this.selectedAircraftId !== undefined && this.selectedModelId !== undefined && this.selectedDashnumber !== undefined) {
+        this.Dashnumservice.getAllDashModels(this.dashNumberUrl, this.selectedAircraftId, this.selectedDashnumber).subscribe(aircraftdata => {
+            const responseValue = aircraftdata;
+            let mappedAircraftData = responseValue.map(x => {
+                return {
+                    AircraftType: x.aircraft,
+                    aircraftTypeId: this.selectedAircraftId,
+                    AircraftModel: x.model,
+                    DashNumber: x.dashNumber,
+                    AircraftModelId: x.modelid,
+                    DashNumberId: x.dashNumberId,
+                    Memo: '',
+                    IsChecked: false,
+                    // ...this.capes
+
+                    capabilityTypeId: this.capabilityTypeId,
+                    capailityTypeName: getValueFromArrayOfObjectById('label', 'value', this.capabilityTypeId, this.capabalityTypeList),
+                    managementStructureId: null,
+                    description: '',
+                    ataChapterId: null,
+                    ataSubChapterId: null,
+                    entryDate: new Date(),
+                    cmmId: null,
+                    integrateWithId: null,
+                    isVerified: false,
+                    verifiedById: null,
+                    verifiedDate: new Date(),
+                    memo: '',
+                    companyId: null,
+                    buId: null,
+                    divisionId: null,
+                    departmentId: null,
+                }
+            })
+            for(let i=0; i<mappedAircraftData.length; i++){
+                this.aircraftData = [...this.aircraftData, mappedAircraftData[i]]
+            }
+            console.log(this.aircraftData, "this.aircarftdata");
+            this.filterDashNumberDropdown(this.aircraftData);
+
+        })
+    }
+    if (this.selectedAircraftId !== undefined && this.modelUnknown) {
+        let mappedAircraftData  = [{
+            AircraftType: this.newValue,
+            aircraftTypeId: this.selectedAircraftId,
+            AircraftModel: 'Unknown',
+            DashNumber: 'Unknown',
+            AircraftModelId: 0,
+            DashNumberId: 0,
+            Memo: '',
+            IsChecked: false,
+            // ...this.capes
+            capabilityTypeId: this.capabilityTypeId,
+            capailityTypeName: getValueFromArrayOfObjectById('label', 'value', this.capabilityTypeId, this.capabalityTypeList),
+            managementStructureId: null,
+            description: '',
+            ataChapterId: null,
+            ataSubChapterId: null,
+            entryDate: new Date(),
+            cmmId: null,
+            integrateWithId: null,
+            isVerified: false,
+            verifiedById: null,
+            verifiedDate: new Date(),
+            memo: '',
+            companyId: null,
+            buId: null,
+            divisionId: null,
+            departmentId: null,
+        }]
+        for(let i=0; i<mappedAircraftData.length; i++){
+            this.aircraftData = [...this.aircraftData, mappedAircraftData[i]]
         }
     }
 
-    private onDataLoadaircrafttypeSuccessfulForExisting(allWorkFlows: any[], capData) //getting Models Based on Manfacturer Selection
-    {
+    if (this.selectedAircraftId !== undefined && this.selectedModelId !== undefined && this.dashNumberUnknown) {
+        let mappedAircraftData = this.selectedModelId.map(x => {
+            return {
+                AircraftType: this.newValue,
+                aircraftTypeId: this.selectedAircraftId,
+                AircraftModel: x.modelName,
+                DashNumber: 'Unknown',
+                AircraftModelId: x.aircraftModelId,
+                DashNumberId: 0,
+                Memo: '',
+                IsChecked: false,
+                // ...this.capes,
+                capabilityTypeId: this.capabilityTypeId,
+                capailityTypeName: getValueFromArrayOfObjectById('label', 'value', this.capabilityTypeId, this.capabalityTypeList),
+                managementStructureId: null,
+                description: '',
+                ataChapterId: null,
+                ataSubChapterId: null,
+                entryDate: new Date(),
+                cmmId: null,
+                integrateWithId: null,
+                isVerified: false,
+                verifiedById: null,
+                verifiedDate: new Date(),
+                memo: '',
+                companyId: null,
+                buId: null,
+                divisionId: null,
+                departmentId: null,
+            }
+        })
+        for(let i=0; i<mappedAircraftData.length; i++){
+            this.aircraftData = [...this.aircraftData, mappedAircraftData[i]]
+        }
+    }
+    console.log(this.aircraftData, "this.aircraftData+++")
+    this.getPartPublicationByItemMasterId(this.itemMasterId);
+    this.getAtAChapters();
+    this.getIntergationWithList();
+    this.getAllEmployees();
+    this.getLegalEntity();
 
-        this.alertService.stopLoadingMessage();
-        this.loadingIndicator = false;
-        capData.selectedAircraftDataModels = [];
-        allWorkFlows.forEach(element => {
-            for (let z = 0; z < capData.selectedAircraftModelTypes.length; z++) {
-                if (element.aircraftModelId == capData.selectedAircraftModelTypes[z]) {
-                    capData.selectedModel.push({ value: element.aircraftModelId, label: element.modelName, aircraftTypeId: element.aircraftTypeId })
+    }
+
+
+    getDynamicVariableData(variable, index) {
+        return this[variable + index]
+    }
+
+
+
+    async getPartPublicationByItemMasterId(itemMasterId) {
+        this.capabilityTypeId = [];
+        this.aircraftData = [];
+        let iMid = this.activatedRoute.snapshot.paramMap.get('id');
+        if (!iMid) {
+            iMid = this.itemMasterIDFromPartNumberSelection;
+        }
+        for(let i=0; i<this.itemMastersList.length; i++){
+            if(this.itemMastersList[i].itemMasterId == iMid){
+                this.partData = {
+                    partNumber: this.itemMastersList[i].partNumber,
+                    partDescription: this.itemMastersList[i].partDescription,
+                    manufacturerName: this.itemMastersList[i].manufacturer.name
                 }
             }
-            capData.selectedAircraftDataModels.push({ value: element.aircraftModelId, label: element.modelName, aircraftTypeId: element.aircraftTypeId })
-        });
-        this.displayModalNames(capData);
-    }
-    displayModalNames(capData) {
-        switch (capData.formArrayName) {
-            case "mfgForm":
-                this.mfgFormArray.controls.forEach(mfg => {
-                    mfg['controls']['aircraftModelName'].setValue(this.getAirCraftModalName(capData.selectedAircraftDataModels, mfg['controls']['aircraftModelId'].value));
-                    this.mfgFormArray.updateValueAndValidity();
-                });
-                break;
-            case "overhaulForm":
-                this.overhaulFormArray.controls.forEach(orl => {
-                    orl['controls']['aircraftModelName'].setValue(this.getAirCraftModalName(capData.selectedAircraftDataModels, orl['controls']['aircraftModelId'].value));
-                });
-                break;
-            case "distributionForm":
-                this.distributionFormArray.controls.forEach(dist => {
-                    dist['controls']['aircraftModelName'].setValue(this.getAirCraftModalName(capData.selectedAircraftDataModels, dist['controls']['aircraftModelId'].value));
-                });
-                break;
-            case "certificationForm":
-                this.certificationFormArray.controls.forEach(cert => {
-                    cert['controls']['aircraftModelName'].setValue(this.getAirCraftModalName(capData.selectedAircraftDataModels, cert['controls']['aircraftModelId'].value));
-                });
-                break;
-            case "repairForm":
-                this.repairFormArray.controls.forEach(rep => {
-                    rep['controls']['aircraftModelName'].setValue(this.getAirCraftModalName(capData.selectedAircraftDataModels, rep['controls']['aircraftModelId'].value));
-                });
-                break;
-            case "exchangeForm":
-                this.exchangeFormArray.controls.forEach(ex => {
-                    ex['controls']['aircraftModelName'].setValue(this.getAirCraftModalName(capData.selectedAircraftDataModels, ex['controls']['aircraftModelId'].value));
-                });
-                break;
         }
-
-    }
-
-    openModelPopups(capData) {
-
-        //alert(this.itemser.isEditMode);
-        if (this.itemser.isEditMode == false) {
-
-            //Adding for Aircraft manafacturer List Has empty then List Should be null
-            if (capData.selectedAircraftTypes.length > 0) {
-                var arr = capData.selectedAircraftTypes;
-                var selectedvalues = arr.join(",");
-                this.itemser.getAircraftTypes(selectedvalues).subscribe(
-                    results => this.onDataLoadaircrafttypeSuccessful(results[0], capData),
-                    error => this.onDataLoadFailed(error)
-                );
-            }
-            else {
-                this.allAircraftinfo = []; //Making empty if selecting is null
-            }
-        }
-        //if (this.itemser.isEditMode == true)
-        //{
-
-        //	this.modal = this.modalService.open(content, { size: 'sm' });
-        //	this.modal.result.then(() => {
-
-        //		console.log('When user closes');
-        //	}, () => { console.log('Backdrop click') })
-        //	if (this.allAircraftinfo) {
-        //		if (this.allAircraftinfo.length >= 0) {
-        //			this.enablePopupData = true;
-        //			var arr = this.selectedAircraftTypes;
-        //			if (this.selectedAircraftTypes) {
-        //				var selectedvalues = arr.join(",");
-        //				//this.loadData();
-        //				this.itemser.getAircraftTypes(selectedvalues).subscribe(
-        //					results => this.onDataLoadaircrafttypeSuccessful(results[0]),
-        //					error => this.onDataLoadFailed(error)
-
-        //				)
-        //			}
-        //		}
-        //	}
-        //}
-
-    }
-
-    private onDataLoadaircrafttypeSuccessful(allWorkFlows: any[], capData) //getting Models Based on Manfacturer Selection
-    {
-
-        this.alertService.stopLoadingMessage();
-        this.loadingIndicator = false;
-        //this.dataSource.data = allWorkFlows;
-        // this.selectedAircraftDataModels = allWorkFlows; //selected Aircraft Models based on Aircraft Data Selection
-        capData.selectedAircraftDataModels = [];
-        allWorkFlows.forEach(element => {
-            capData.selectedAircraftDataModels.push({ value: element.aircraftModelId, label: element.modelName, aircraftTypeId: element.aircraftTypeId })
-        });
-
-
-        //for Open Model for Edit Data
-        // if (this.itemser.isEditMode == true) //in this we are Making all the Models and Getting Checked if data is thete with Item Master Id 
-        // {
-        //     {
-
-        //         for (let i = 0; i < this.currentVendorModels.length; i++) {
-        //             for (let j = 0; j < this.allAircraftinfo.length; j++) {
-        //                 if (this.currentVendorModels[i].aircraftModelId == this.allAircraftinfo[j].aircraftModelId) {
-        //                     this.allAircraftinfo[j].priority = this.currentVendorModels[i].priority;
-        //                     this.allAircraftinfo[j].checkbox = this.currentVendorModels[i].checkbox;
-
-        //                 }
-
-
-        //             }
+        
+        // await this.workOrderService.getPartPublicationByItemMaster(iMid).subscribe(res => {
+        //     this.cmmList = res.map(x => {
+        //         return {
+        //             value: x.publicationRecordId,
+        //             label: x.publicationId
         //         }
-        //     }
-        // }
-
-
-        // if (this.selectedModels.length > 0)
-        // {
-
-        //     let ischange1 = false;
-        //     if (this.selectedModels.length > 0) {
-        //         this.selectedModels.map((row) => {
-        //             for (let i = 0; i < this.allAircraftinfo.length; i++) {
-        //                 if (this.allAircraftinfo[i].aircraftModelId == row.aircraftModelId) {
-        //                     this.allAircraftinfo[i].priority = row.priority;
-        //                     this.allAircraftinfo[i].checkbox = row.checkbox;
-        //                     ischange1 = true;
-        //                 }
-        //             }
-
-        //         });
-        //     }
-        //     //if (!ischange1) {
-        //     //	this.selectedModels.push(selectedRow);
-        //     //}
-
-        // }
-
+        //     });
+        // })
     }
 
-    private manufacturerdata() {
-        this.alertService.startLoadingMessage();
-        this.loadingIndicator = true;
-
-        this.itemser.getManufacturerList().subscribe(
-            results => this.onmanufacturerSuccessful(results[0]),
-            error => this.onDataLoadFailed(error)
-        );
+    resetVerified(rowData, value) {
+        if (value === false) {
+            rowData.verifiedById = null;
+            rowData.verifiedDate = new Date();
+        }
     }
 
-    private onmanufacturerSuccessful(allWorkFlows: any[]) {
-
-        this.alertService.stopLoadingMessage();
-        this.loadingIndicator = false;
-        //this.dataSource.data = allWorkFlows;
-        this.allManufacturerInfo = allWorkFlows;
-    }
-
-    aircraftModalChange(event, capData) {
-        let selectedData = event.value;
-        capData.selectedModel = [];
-        selectedData.forEach(element1 => {
-            capData.selectedAircraftDataModels.forEach(element2 => {
-                if (element1 == element2.value) {
-                    capData.selectedModel.push(element2);
-                }
-            })
+    getAtAChapters() {
+        this.commonService.smartDropDownList('ATAChapter', 'ATAChapterId', 'ATAChapterName').subscribe(res => {
+            this.ataChapters = res;
         })
     }
-    cunstructFormForEdit() {
-        if (this.manufacturerData.length > 0 && this.allManagemtninfo.length > 0) {
-            this.cunstructItemMastars();
+    getIntergationWithList() {
+        this.commonService.smartDropDownList('IntegrationPortal', 'IntegrationPortalId', 'Description').subscribe(res => {
+            this.intergationList = res;
+        })
+    }
+    async getAllEmployees() {
+        await this.commonService.smartDropDownList('Employee', 'EmployeeId', 'FirstName').subscribe(res => {
+            this.employeeList = res;
+        })
+    }
+
+
+    getLegalEntity() {
+        this.commonService.getLegalEntityList().subscribe(res => {
+            this.legalEntityList = res;
+        })
+    }
+
+
+    selectedLegalEntity(legalEntityId, index) {
+        console.log(index);
+        if (legalEntityId) {
+            this.aircraftData[index].managementStructureId = legalEntityId;
+            this.commonService.getBusinessUnitListByLegalEntityId(legalEntityId).subscribe(res => {
+                this['businessUnitList' + index] = res;
+
+            })
+        }
+
+    }
+    selectedBusinessUnit(businessUnitId, index) {
+        if (businessUnitId) {
+            this.aircraftData[index].managementStructureId = businessUnitId;
+            this.commonService.getDivisionListByBU(businessUnitId).subscribe(res => {
+
+                this['divisionList' + index] = res;
+            })
+        }
+
+    }
+    selectedDivision(divisionUnitId, index) {
+        if (divisionUnitId) {
+            this.aircraftData[index].managementStructureId = divisionUnitId;
+            this.commonService.getDepartmentListByDivisionId(divisionUnitId).subscribe(res => {
+                this['departmentList' + index] = res;
+            })
+        }
+
+    }
+    selectedDepartment(departmentId, index) {
+        if (departmentId) {
+            this.aircraftData[index].managementStructureId = departmentId;
         }
     }
-    cunstructItemMastars() {
-        let mfgData: any = [];
-        this.capabilityEditCollection.forEach(element => {
-            if (element.isDelete != true) {
-                this.ItemMasterId = element.itemMasterId;
-                let index = element.capabilityTypeId - 1;
-                let capData = this.capabilityTypeData[index];
-                let typeIndex = capData.selectedAircraftTypes.indexOf(element.aircraftTypeId);
-                if (typeIndex == -1) {
-                    capData.selectedAircraftTypes.push(element.aircraftTypeId);
-                    capData.selectedManufacturer.push({ value: element.aircraftTypeId, label: this.getAircraftTypeName(element.aircraftTypeId) });
+
+
+
+
+
+    // get subchapter by Id in the add ATA Mapping
+    getATASubChapterByATAChapter(value, index) {
+
+
+        this.atasubchapter1service.getATASubChapterListByATAChapterId(value).subscribe(atasubchapter => {
+            const responseData = atasubchapter[0];
+            console.log(atasubchapter[0]);
+            this["ataSubChapaters" + index] = responseData.map(x => {
+                return {
+                    label: x.description,
+                    value: x.ataChapterId
                 }
-                capData.selectedAircraftModelTypes.push(element.aircraftModelId);
-                // capData.selectedModel.push({ value: element.aircraftModelId, label: this.getAirCraftModalName([], element.aircraftModelId) });
-                this.addExistingData(capData, element)
+            })
+            console.log(this["ataSubChapaters" + index]);
+        })
+    }
+
+    saveCapability() {
+        let iMid = this.activatedRoute.snapshot.paramMap.get('id');
+        if (!iMid) {
+            iMid = this.itemMasterIDFromPartNumberSelection;
+        }
+
+
+        const capesData = [
+            ...this.aircraftData.map(x => {
+                return {
+                    ...x,
+                    aircraftDashNumberId: x.DashNumberId,
+                    itemMasterId: iMid,
+                    masterCompanyId: 1,
+                    createdBy: this.userName,
+                    updatedBy: this.userName,
+                    createdDate: new Date(),
+                    updatedDate: new Date(),
+                    isActive: true,
+                    isDeleted: false
+                }
+            }),
+
+        ]
+        this.itemser.saveItemMasterCapes(capesData).subscribe(res => {
+            this.aircraftData = [];
+            this.resetFormData();
+            this.loadCapesList.emit(true);
+            this.alertService.showMessage(
+                this.moduleName,
+                'Saved Capes Details Successfully',
+                MessageSeverity.success
+            );
+            let iMid = this.activatedRoute.snapshot.paramMap.get('id');
+            if (!iMid) {
+                this._router.navigateByUrl('/itemmastersmodule/itemmasterpages/app-item-master-capabilities-list');
             }
-        });
-        this.capabilityTypeData.forEach(element1 => {
-            if (element1.selectedAircraftModelTypes.length > 0) {
-                this.loadModalsForExistingRecords(element1);
-                // if(this.mfgFormArray)
-            }
-        });
-
+            
+        })
+        // this.onCloseCapes();
+        
     }
 
-    getAircraftTypeName(aircraftTypeId) {
-        let label = "";
-        for (let i = 0; i < this.manufacturerData.length; i++) {
-            if (this.manufacturerData[i].value == aircraftTypeId) {
-                label = this.manufacturerData[i].label
-                break;
-            }
-        }
-        return label;
+    resetFormData() {
+        this.capabilityTypeId  = [] ;
+        this.selectedAircraftId = null;
+        this.selectedAircraftName = "";
+        this.modelUnknown = false;
+        this.selectedModelId = null;
+        this.LoadValues = [];
+        this.dashNumberUnknown = false;
+        this.LoadDashnumber = [];
+        this.newDashnumValue = [];
+        this.newModelValue = [];
+        this.aircraftData  = [];
+        this.viewTable = false;
     }
-    getAirCraftModalName(modalData, modalId) {
-        let label = "";
-        for (let i = 0; i < modalData.length; i++) {
-            if (modalData[i].value == modalId) {
-                label = modalData[i].label
-                break;
-            }
-        }
-        return label;
+    onCloseCapes() {
+        this.closeCapesPopup.emit(true);
     }
-    getExistingRowBuList(companyId, formArray) {
-        for (let i = 0; i < this.allManagemtninfo.length; i++) {
-            if (this.allManagemtninfo[i].parentId == companyId) {
-                // this.bulist.push(this.allManagemtninfo[i]);
-                formArray['buList'].push(this.allManagemtninfo[i])
-            }
-        }
-    }
-
-    getExistingRowDepartmentlist(businessUnitId, formArray) {
-        for (let i = 0; i < this.allManagemtninfo.length; i++) {
-            if (this.allManagemtninfo[i].parentId == businessUnitId) {
-                formArray.departmentList.push(this.allManagemtninfo[i]);
-            }
-        }
-    }
-
-    getExistingRowDivisionlist(departmentId, formArray) {
-        for (let i = 0; i < this.allManagemtninfo.length; i++) {
-            if (this.allManagemtninfo[i].parentId == departmentId) {
-                formArray.divisionlist.push(this.allManagemtninfo[i]);
-            }
-        }
-    }
-    managementStructureData: any = [];
-    setManagementStrucureData(capObj) {
-        this.managementStructureData = [];
-        this.checkMSParents(capObj.managementStructureId);
-        if (this.managementStructureData.length == 4) {
-            capObj.companyId = this.managementStructureData[3];
-            capObj.buisinessUnitId = this.managementStructureData[2];
-            capObj.departmentId = this.managementStructureData[1];
-            capObj.divisionId = this.managementStructureData[0];
-        }
-        if (this.managementStructureData.length == 3) {
-            capObj.companyId = this.managementStructureData[2];
-            capObj.buisinessUnitId = this.managementStructureData[1];
-            capObj.departmentId = this.managementStructureData[0];
-        }
-        if (this.managementStructureData.length == 2) {
-            capObj.companyId = this.managementStructureData[1];
-            capObj.buisinessUnitId = this.managementStructureData[0];
-        }
-        if (this.managementStructureData.length == 1) {
-            capObj.companyId = this.managementStructureData[0];
-        }
-
-    }
-    checkMSParents(msId) {
-        this.managementStructureData.push(msId);
-        for (let a = 0; a < this.allManagemtninfo.length; a++) {
-            if (this.allManagemtninfo[a].managementStructureId == msId) {
-                if (this.allManagemtninfo[a].parentId) {
-                    this.checkMSParents(this.allManagemtninfo[a].parentId);
-                    break;
-                }
-            }
-        }
-
-    }
-    addExistingData(capData, data) {
-        let capbilitiesObj = data;
-        capbilitiesObj.aircraftTypeName = this.getAircraftTypeName(data.aircraftTypeId);
-        capbilitiesObj.aircraftModelName = "";
-        // this.geAircraftModalName(data.aircraftModelId);
-        capbilitiesObj.entryDate = new Date()
-        capbilitiesObj.isVerified = false;
-        capbilitiesObj.isActive = true;
-        capbilitiesObj.verifiedBy = "";
-
-        capbilitiesObj.aircraftManufacturer = this.getAircraftTypeName(data.aircraftTypeId);
-        capbilitiesObj.dateVerified = new Date();
-        this.setManagementStrucureData(capbilitiesObj);
-        // capData.push(data);
-        let mfObj = this.formBuilder.group(capbilitiesObj);
-        switch (capData.formArrayName) {
-            case "mfgForm":
-                this.mfgFormArray.push(mfObj);
-                let mfgIndex = this.mfgFormArray.controls.length - 1;
-                this.mfgFormArray.controls[mfgIndex]['buList'] = [];
-                this.mfgFormArray.controls[mfgIndex]['departmentList'] = [];
-                this.mfgFormArray.controls[mfgIndex]['divisionlist'] = [];
-                if (this.mfgFormArray.controls[mfgIndex]['controls']['companyId'].value) {
-                    this.getExistingRowBuList(this.mfgFormArray.controls[mfgIndex]['controls']['companyId'].value, this.mfgFormArray.controls[mfgIndex]);
-                }
-                if (this.mfgFormArray.controls[mfgIndex]['controls']['buisinessUnitId'].value) {
-                    this.getExistingRowDepartmentlist(this.mfgFormArray.controls[mfgIndex]['controls']['buisinessUnitId'].value, this.mfgFormArray.controls[mfgIndex]);
-                }
-                if (this.mfgFormArray.controls[mfgIndex]['controls']['departmentId'].value) {
-                    this.getExistingRowDivisionlist(this.mfgFormArray.controls[mfgIndex]['controls']['departmentId'].value, this.mfgFormArray.controls[mfgIndex]);
-                }
-
-                break;
-            case "overhaulForm":
-                this.overhaulFormArray.push(mfObj);
-                let overIndex = this.overhaulFormArray.controls.length - 1;
-                this.overhaulFormArray.controls[overIndex]['buList'] = [];
-                this.overhaulFormArray.controls[overIndex]['departmentList'] = [];
-                this.overhaulFormArray.controls[overIndex]['divisionlist'] = [];
-                if (this.overhaulFormArray.controls[overIndex]['controls']['companyId'].value) {
-                    this.getExistingRowBuList(this.overhaulFormArray.controls[overIndex]['controls']['companyId'].value, this.overhaulFormArray.controls[overIndex]);
-                }
-                if (this.overhaulFormArray.controls[overIndex]['controls']['buisinessUnitId'].value) {
-                    this.getExistingRowDepartmentlist(this.overhaulFormArray.controls[overIndex]['controls']['buisinessUnitId'].value, this.overhaulFormArray.controls[overIndex]);
-                }
-                if (this.overhaulFormArray.controls[overIndex]['controls']['departmentId'].value) {
-                    this.getExistingRowDivisionlist(this.overhaulFormArray.controls[overIndex]['controls']['departmentId'].value, this.overhaulFormArray.controls[overIndex]);
-                }
-                break;
-            case "distributionForm":
-                this.distributionFormArray.push(mfObj);
-                let distIndex = this.distributionFormArray.controls.length - 1;
-                this.distributionFormArray.controls[distIndex]['buList'] = [];
-                this.distributionFormArray.controls[distIndex]['departmentList'] = [];
-                this.distributionFormArray.controls[distIndex]['divisionlist'] = [];
-                if (this.distributionFormArray.controls[distIndex]['controls']['companyId'].value) {
-                    this.getExistingRowBuList(this.distributionFormArray.controls[distIndex]['controls']['companyId'].value, this.distributionFormArray.controls[distIndex]);
-                }
-                if (this.distributionFormArray.controls[distIndex]['controls']['buisinessUnitId'].value) {
-                    this.getExistingRowDepartmentlist(this.distributionFormArray.controls[distIndex]['controls']['buisinessUnitId'].value, this.distributionFormArray.controls[distIndex]);
-                }
-                if (this.distributionFormArray.controls[distIndex]['controls']['departmentId'].value) {
-                    this.getExistingRowDivisionlist(this.distributionFormArray.controls[distIndex]['controls']['departmentId'].value, this.distributionFormArray.controls[distIndex]);
-                }
-                break;
-            case "certificationForm":
-                this.certificationFormArray.push(mfObj);
-                let certIndex = this.certificationFormArray.controls.length - 1;
-                this.certificationFormArray.controls[certIndex]['buList'] = [];
-                this.certificationFormArray.controls[certIndex]['departmentList'] = [];
-                this.certificationFormArray.controls[certIndex]['divisionlist'] = [];
-                if (this.certificationFormArray.controls[certIndex]['controls']['companyId'].value) {
-                    this.getExistingRowBuList(this.certificationFormArray.controls[certIndex]['controls']['companyId'].value, this.certificationFormArray.controls[certIndex]);
-                }
-                if (this.certificationFormArray.controls[certIndex]['controls']['buisinessUnitId'].value) {
-                    this.getExistingRowDepartmentlist(this.certificationFormArray.controls[certIndex]['controls']['buisinessUnitId'].value, this.certificationFormArray.controls[certIndex]);
-                }
-                if (this.certificationFormArray.controls[certIndex]['controls']['departmentId'].value) {
-                    this.getExistingRowDivisionlist(this.certificationFormArray.controls[certIndex]['controls']['departmentId'].value, this.certificationFormArray.controls[certIndex]);
-                }
-                break;
-            case "repairForm":
-                this.repairFormArray.push(mfObj);
-                let repIndex = this.repairFormArray.controls.length - 1;
-                this.repairFormArray.controls[repIndex]['buList'] = [];
-                this.repairFormArray.controls[repIndex]['departmentList'] = [];
-                this.repairFormArray.controls[repIndex]['divisionlist'] = [];
-                if (this.repairFormArray.controls[repIndex]['controls']['companyId'].value) {
-                    this.getExistingRowBuList(this.repairFormArray.controls[repIndex]['controls']['companyId'].value, this.repairFormArray.controls[repIndex]);
-                }
-                if (this.repairFormArray.controls[repIndex]['controls']['buisinessUnitId'].value) {
-                    this.getExistingRowDepartmentlist(this.repairFormArray.controls[repIndex]['controls']['buisinessUnitId'].value, this.repairFormArray.controls[repIndex]);
-                }
-                if (this.repairFormArray.controls[repIndex]['controls']['departmentId'].value) {
-                    this.getExistingRowDivisionlist(this.repairFormArray.controls[repIndex]['controls']['departmentId'].value, this.repairFormArray.controls[repIndex]);
-                }
-                break;
-            case "exchangeForm":
-                this.exchangeFormArray.push(mfObj);
-                let excngIndex = this.exchangeFormArray.controls.length - 1;
-                this.exchangeFormArray.controls[excngIndex]['buList'] = [];
-                this.exchangeFormArray.controls[excngIndex]['departmentList'] = [];
-                this.exchangeFormArray.controls[excngIndex]['divisionlist'] = [];
-                if (this.exchangeFormArray.controls[excngIndex]['controls']['companyId'].value) {
-                    this.getExistingRowBuList(this.exchangeFormArray.controls[excngIndex]['controls']['companyId'].value, this.exchangeFormArray.controls[excngIndex]);
-                }
-                if (this.exchangeFormArray.controls[excngIndex]['controls']['buisinessUnitId'].value) {
-                    this.getExistingRowDepartmentlist(this.exchangeFormArray.controls[excngIndex]['controls']['buisinessUnitId'].value, this.exchangeFormArray.controls[excngIndex]);
-                }
-                if (this.exchangeFormArray.controls[excngIndex]['controls']['departmentId'].value) {
-                    this.getExistingRowDivisionlist(this.exchangeFormArray.controls[excngIndex]['controls']['departmentId'].value, this.exchangeFormArray.controls[excngIndex]);
-                }
-                break;
-        }
-    }
-    checkIsExisted(type, modal, myForm, capData) {
-        let itemExisted = false;
-        myForm.controls.forEach(data => {
-            if (data['controls']['aircraftTypeId'].value == type && data['controls']['aircraftModelId'].value == modal) {
-                itemExisted = true;
-                data['controls']['isDelete'].setValue(false);
-            } else {
-                let typeId = data['controls']['aircraftTypeId'].value;
-                let typeIndex = capData.selectedAircraftTypes.indexOf(typeId);
-                if (typeIndex == -1) {
-                    data['controls']['isDelete'].setValue(true);
-                }
-                let modaleId = data['controls']['aircraftModelId'].value;
-                let modalIndex = capData.selectedAircraftModelTypes.indexOf(modaleId);
-                if (modalIndex == -1) {
-                    data['controls']['isDelete'].setValue(true);
-                }
-            }
-
-
-        });
-        return itemExisted;
-    }
-
-
-
-
-    addModels(capData) {
-        this.capabilityTypeData.for
-        let capbilitiesObj = new ItemMasterCapabilitiesModel;
-        // this.resetFormArray(capData);
-        capData.selectedManufacturer.forEach(element1 => {
-            capbilitiesObj.itemMasterId = this.ItemMasterId;
-            capbilitiesObj.aircraftTypeId = element1.value;
-            capbilitiesObj.aircraftTypeName = element1.label;
-            capbilitiesObj.capabilityTypeId = capData.CapabilityTypeId;
-            capbilitiesObj.aircraftManufacturer = element1.label;
-            capData.selectedModel.forEach(element2 => {
-                if (element2.aircraftTypeId == element1.value) {
-                    capbilitiesObj.aircraftModelName = element2.label;
-                    capbilitiesObj.aircraftModelId = element2.value;
-                    let mfObj = this.formBuilder.group(capbilitiesObj);
-                    switch (capData.formArrayName) {
-                        case "mfgForm":
-                            let mfgItemExisted = this.checkIsExisted(element1.value, element2.value, this.mfgFormArray, this.capabilityTypeData[0]);
-                            if (mfgItemExisted == false) {
-                                this.mfgFormArray.push(mfObj);
-                                let mfgIndex = this.mfgFormArray.controls.length - 1;
-                                this.mfgFormArray.controls[mfgIndex]['buList'] = [];
-                                this.mfgFormArray.controls[mfgIndex]['departmentList'] = [];
-                                this.mfgFormArray.controls[mfgIndex]['divisionlist'] = [];
-                            }
-
-
-                            break;
-                        case "overhaulForm":
-                            let oralItemExisted = this.checkIsExisted(element1.value, element2.value, this.overhaulFormArray, this.capabilityTypeData[1]);
-                            if (oralItemExisted == false) {
-                                this.overhaulFormArray.push(mfObj);
-                                let overIndex = this.overhaulFormArray.controls.length - 1;
-                                this.overhaulFormArray.controls[overIndex]['buList'] = [];
-                                this.overhaulFormArray.controls[overIndex]['departmentList'] = [];
-                                this.overhaulFormArray.controls[overIndex]['divisionlist'] = [];
-                            }
-                            break;
-                        case "distributionForm":
-                            let distExisted = this.checkIsExisted(element1.value, element2.value, this.distributionFormArray, this.capabilityTypeData[2]);
-                            if (distExisted == false) {
-                                this.distributionFormArray.push(mfObj);
-                                let distIndex = this.distributionFormArray.controls.length - 1;
-                                this.distributionFormArray.controls[distIndex]['buList'] = [];
-                                this.distributionFormArray.controls[distIndex]['departmentList'] = [];
-                                this.distributionFormArray.controls[distIndex]['divisionlist'] = [];
-                            }
-                            break;
-                        case "certificationForm":
-                            let certExisted = this.checkIsExisted(element1.value, element2.value, this.certificationFormArray, this.capabilityTypeData[3]);
-                            if (certExisted == false) {
-                                this.certificationFormArray.push(mfObj);
-                                let certIndex = this.certificationFormArray.controls.length - 1;
-                                this.certificationFormArray.controls[certIndex]['buList'] = [];
-                                this.certificationFormArray.controls[certIndex]['departmentList'] = [];
-                                this.certificationFormArray.controls[certIndex]['divisionlist'] = [];
-                            }
-                            break;
-                        case "repairForm":
-                            let repairExisted = this.checkIsExisted(element1.value, element2.value, this.repairFormArray, this.capabilityTypeData[4]);
-                            if (repairExisted == false) {
-                                this.repairFormArray.push(mfObj);
-                                let repIndex = this.repairFormArray.controls.length - 1;
-                                this.repairFormArray.controls[repIndex]['buList'] = [];
-                                this.repairFormArray.controls[repIndex]['departmentList'] = [];
-                                this.repairFormArray.controls[repIndex]['divisionlist'] = [];
-                            }
-                            break;
-                        case "exchangeForm":
-                            let exchangeExisted = this.checkIsExisted(element1.value, element2.value, this.exchangeFormArray, this.capabilityTypeData[5]);
-                            if (exchangeExisted == false) {
-                                this.exchangeFormArray.push(mfObj);
-                                let excngIndex = this.exchangeFormArray.controls.length - 1;
-                                this.exchangeFormArray.controls[excngIndex]['buList'] = [];
-                                this.exchangeFormArray.controls[excngIndex]['departmentList'] = [];
-                                this.exchangeFormArray.controls[excngIndex]['divisionlist'] = [];
-                            }
-                            break;
-                    }
-                }
-
+    filterDashNumberDropdown (aircraft){        
+        var props =  ['label', 'value'];
+        var result = this.LoadDashnumber.filter(function(o1){
+            return !aircraft.some(function(o2){
+                return o1.value === o2.DashNumberId;          // assumes unique id
             });
+        }).map(function(o){  
+            return props.reduce(function(newo, name){
+                newo[name] = o[name];
+                return newo;
+            }, {});
         });
-
+        this.LoadDashnumber = result;
+        this.selectedDashnumber = undefined;
+        console.log(this.LoadDashnumber, "this.LoadDashnumber +++")
     }
 
-    resetFormArray(capData) {
-        switch (capData.formArrayName) {
-            case "mfgForm":
-                this.mfgFormArray.controls = [];
-                break;
-            case "overhaulForm":
-                this.overhaulFormArray.controls = [];
-                break;
-            case "distributionForm":
-                this.distributionFormArray.controls = [];
-                break;
-            case "certificationForm":
-                this.certificationFormArray.controls = [];
-                break;
-            case "repairForm":
-                this.repairFormArray.controls = [];
-                break;
-            case "exchangeForm":
-                this.exchangeFormArray.controls = [];
-                break;
-        }
-    }
-
-    manufacturerChange(event, capData) {
-        let selectedData = event.value;
-        capData.selectedManufacturer = [];
-        selectedData.forEach(element1 => {
-            this.manufacturerData.forEach(element2 => {
-                if (element1 == element2.value) {
-                    capData.selectedManufacturer.push(element2);
-                }
-            })
-        })
-    }
-
-    saveCapabilities() {
-        let capbilitiesForm = this.capabilitiesForm.value;
-        let capabilityCollection: any = [];
-        let mfgForm = capbilitiesForm.mfgForm;
-        let overhaulForm = capbilitiesForm.overhaulForm;
-        let distributionForm = capbilitiesForm.distributionForm;
-        let certificationForm = capbilitiesForm.certificationForm;
-        let repairForm = capbilitiesForm.repairForm;
-        let exchangeForm = capbilitiesForm.exchangeForm;
-        mfgForm.forEach(element => {
-            capabilityCollection.push(element);
+    filterCapabilityListDropdown (aircraft){        
+        var props =  ['label', 'value'];
+        var result = this.capabalityTypeList.filter(function(o1){
+            return !aircraft.some(function(o2){
+                return o1.value === o2.capabilityTypeId;          // assumes unique id
+            });
+        }).map(function(o){  
+            return props.reduce(function(newo, name){
+                newo[name] = o[name];
+                return newo;
+            }, {});
         });
-        overhaulForm.forEach(element => {
-            capabilityCollection.push(element);
-        });
-        distributionForm.forEach(element => {
-            capabilityCollection.push(element);
-        });
-        certificationForm.forEach(element => {
-            capabilityCollection.push(element);
-        });
-        repairForm.forEach(element => {
-            capabilityCollection.push(element);
-        });
-        exchangeForm.forEach(element => {
-            capabilityCollection.push(element);
-        });
-
-        this.itemser.saveManfacturerinforcapes(capabilityCollection).subscribe(data11 => {
-            //this.collectionofItemMaster = data11;
-            this.router.navigateByUrl("/itemmastersmodule/itemmasterpages/app-item-master-capabilities-list");
-            // alert("success");
-        })
-
+        this.capabalityTypeList = result;
+        this.capabilityTypeId = undefined;
+        console.log(this.capabalityTypeList, "this.LoadDashnumber +++")
     }
-
-    /**disableAddButton() for diable Add Button*/
-    disableAddButton(item) {
-        let isDisable = false;
-        if (this.ItemMasterId > 0 && (item.selectedAircraftTypes.length > 0 && item.selectedAircraftModelTypes.length > 0)) {
-            isDisable = false;
-        } else {
-            isDisable = true;
-        }
-        return isDisable;
-    }
-
-    addBtnTitle(item) {
-        let addBtnTitle = '';
-        if (this.ItemMasterId < 1) {
-            addBtnTitle = "Please Select PN";
-        } else {
-            if (item.selectedAircraftTypes.length == 0) {
-                addBtnTitle = "Please Select Aircraft Type";
-            } else if (item.selectedAircraftModelTypes.length == 0) {
-                addBtnTitle = "Please Select Aircraft Modal";
-            } else {
-                addBtnTitle = 'Add ' + item.Description;
-            }
-        }
-        return addBtnTitle;
-    }
-
-    disableSaveBtn() {
-        let isDisable = false;
-        let capbilitiesForm = this.capabilitiesForm.value;
-        if (this.ItemMasterId > 0 && (capbilitiesForm.mfgForm.length > 0 || capbilitiesForm.overhaulForm.length || capbilitiesForm.distributionForm.length
-            || capbilitiesForm.certificationForm.length || capbilitiesForm.repairForm.length || capbilitiesForm.exchangeForm.length)) {
-            isDisable = false;
-        } else {
-            isDisable = true;
-        }
-        return isDisable;
-    }
-
-
-    validateForm(form, fieldName: any) {
-        let className = '';
-        if (form.get(fieldName).valid) {
-            // className = "form-validation-success";
-        } else {
-            className = 'form-validation-error';
-        }
-        return className;
-    };
 }

@@ -91,6 +91,10 @@ export class ActionService {
         return this.actionEndpoint.GetExpertiseType<any[]>();
     }
 
+    GetEmployeeExpertiseType() {
+        return this.actionEndpoint.getEmployeeExpertiseType<any[]>();
+    }
+
     getEquipmentAssetType() {
         return this.actionEndpoint.getEquipmentAssetType<IEquipmentAssetType[]>();
     }

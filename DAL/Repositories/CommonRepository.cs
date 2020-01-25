@@ -345,6 +345,9 @@ namespace DAL.Repositories
 
 
                 var data = (from t in _appContext.ItemMaster
+
+                            join atd in _appContext.Manufacturer on t.ManufacturerId equals atd.ManufacturerId
+
                             join rp in _appContext.RestrictedParts on t.ItemMasterId equals rp.MasterPartId
 
                             where rp.IsDeleted == false && rp.ModuleId == moduleId && rp.ReferenceId == referenceId && rp.PartType == partType && rp.PartNumber != null
@@ -364,7 +367,8 @@ namespace DAL.Repositories
                                 rp.UpdatedBy,
                                 rp.IsActive,
                                 rp.IsDeleted,
-                                t.PartDescription
+                                t.PartDescription,
+                                ManufacturerName=atd.Name
                             }).ToList();
                 
                 return data;
@@ -888,18 +892,18 @@ namespace DAL.Repositories
             ManagementStructure level1 = null;
             try
             {
-                level4 = _appContext.ManagementStructure.Where(p => p.IsDelete != true && p.ManagementStructureId == manmgStrucId).FirstOrDefault();
+                level4 = _appContext.ManagementStructure.Where(p => p.IsDelete != null && p.IsDelete != true && p.ManagementStructureId == manmgStrucId).FirstOrDefault();
                 if (level4 != null && level4.ParentId > 0)
                 {
-                    level3 = _appContext.ManagementStructure.Where(p => p.IsDelete != true && p.ManagementStructureId == level4.ParentId).FirstOrDefault();
+                    level3 = _appContext.ManagementStructure.Where(p => p.IsDelete != null && p.IsDelete != true && p.ManagementStructureId == level4.ParentId).FirstOrDefault();
                 }
                 if (level3 != null && level3.ParentId > 0)
                 {
-                    level2 = _appContext.ManagementStructure.Where(p => p.IsDelete != true && p.ManagementStructureId == level3.ParentId).FirstOrDefault();
+                    level2 = _appContext.ManagementStructure.Where(p => p.IsDelete != null && p.IsDelete != true && p.ManagementStructureId == level3.ParentId).FirstOrDefault();
                 }
                 if (level2 != null && level2.ParentId > 0)
                 {
-                    level1 = _appContext.ManagementStructure.Where(p => p.IsDelete != true && p.ManagementStructureId == level2.ParentId).FirstOrDefault();
+                    level1 = _appContext.ManagementStructure.Where(p => p.IsDelete != null && p.IsDelete != true && p.ManagementStructureId == level2.ParentId).FirstOrDefault();
                 }
 
 
@@ -1062,7 +1066,154 @@ namespace DAL.Repositories
             return list;
         }
 
+        public void CreateHistory(dynamic obj, int moduleId, long referenceId, long addressId, int addressType,bool isFromGenInfo,bool status=false)
+        {
+            ShippingBillingAddressAudit objShipping = new ShippingBillingAddressAudit();
+            objShipping.ModuleId = moduleId;
+            objShipping.ReferenceId = referenceId;
+            objShipping.AddressId = addressId;
+            objShipping.AddressType = addressType;
+           if (isFromGenInfo)
+            {
+                objShipping.SiteName = obj.CustomerCode;
+                objShipping.IsPrimary=true;
 
+
+            }
+            else
+            {
+                objShipping.SiteName = obj.SiteName;
+                objShipping.IsPrimary = obj.IsPrimary;
+
+            }
+            if (status)
+            {
+                objShipping.Line1 = obj.Line1;
+                objShipping.Line2 = obj.Line2;
+
+            }
+            else
+            {
+
+                objShipping.Line1 = obj.Address1;
+                objShipping.Line2 = obj.Address2;
+
+            }
+            objShipping.City = obj.City;
+            objShipping.StateOrProvince = obj.StateOrProvince;
+            objShipping.Country = obj.Country;
+            
+            objShipping.PostalCode = obj.PostalCode;
+            objShipping.MasterCompanyId = obj.MasterCompanyId;
+            objShipping.CreatedDate = DateTime.Now;
+            objShipping.UpdatedDate = DateTime.Now;
+            objShipping.CreatedBy = obj.CreatedBy;
+            objShipping.UpdatedBy = obj.UpdatedBy;
+            objShipping.IsActive = obj.IsActive;
+
+            _appContext.ShippingBillingAddressAudit.Add(objShipping);
+            _appContext.SaveChanges();
+
+
+        }
+        public IEnumerable<object> GetShippingBillingAddressAudit(long referenceId, long addressId,long addressType,int moduleId)
+        {
+           
+            var list = (from vba in _appContext.ShippingBillingAddressAudit
+                        where vba.ReferenceId == referenceId && vba.AddressId == addressId && vba.AddressType==addressType &&vba.ModuleId==moduleId
+                        join c in _appContext.Countries on Convert.ToInt16(vba.Country) equals c.countries_id into conttt
+                        from c in conttt.DefaultIfEmpty()
+
+
+                        select new
+                        {
+                            vba.SiteName,
+                            vba.SBAId,
+                          Address1=  vba.Line1,
+                          Address2=  vba.Line2,
+                            vba.City,
+                            vba.StateOrProvince,
+                            vba.PostalCode,
+                         Country=   c.countries_name,
+                            vba.CreatedDate,
+                            vba.UpdatedBy,
+                            vba.UpdatedDate,
+                            vba.CreatedBy,
+                            vba.IsPrimary,
+                            vba.IsActive
+                        }).OrderByDescending(p => p.UpdatedDate).ToList();
+            return list;
+        }
+        public void CreateContactHistory(dynamic obj, int moduleId, long referenceId, long contactId)
+        {
+            ContactAudit objShipping = new ContactAudit();
+            objShipping.ModuleId = moduleId;
+            objShipping.ReferenceId = referenceId;
+            objShipping.ContactId = contactId; 
+            objShipping.IsDefaultContact = obj.IsDefaultContact;
+            objShipping.FirstName = obj.FirstName;
+            objShipping.LastName = obj.LastName;
+            objShipping.MiddleName = obj.MiddleName;
+            objShipping.ContactTitle = obj.ContactTitle;
+            objShipping.WorkPhone = obj.WorkPhone;
+            objShipping.MobilePhone = obj.MobilePhone;
+            objShipping.Prefix = obj.Prefix;
+            objShipping.Suffix = obj.Suffix;
+            objShipping.AlternatePhone = obj.AlternatePhone;
+            objShipping.WorkPhoneExtn = obj.WorkPhoneExtn;
+            objShipping.Fax = obj.Fax;
+            objShipping.Email = obj.Email;
+            objShipping.WebsiteURL = obj.WebsiteURL;
+            objShipping.MasterCompanyId = obj.MasterCompanyId;
+            objShipping.CreatedDate = DateTime.Now;
+            objShipping.UpdatedDate = DateTime.Now;
+            objShipping.CreatedBy = obj.CreatedBy;
+            objShipping.UpdatedBy = obj.UpdatedBy;
+            objShipping.IsActive = obj.IsActive;
+            objShipping.Notes = obj.Notes;
+            objShipping.Tag = obj.Tag;
+            _appContext.ContactAudit.Add(objShipping);
+            _appContext.SaveChanges();
+
+
+        }
+        public IEnumerable<object> GetContactAudit(long referenceId, int moduleId,long contactId)
+        {
+
+            var list = (from vba in _appContext.ContactAudit
+                        where vba.ReferenceId == referenceId && vba.ModuleId == moduleId  && vba.ContactId==contactId
+                       
+
+            select new
+            {
+              ContactId=vba.ContactId,
+              Notes=vba.Notes,
+            LastName = vba.LastName,
+            FirstName = vba.FirstName,
+            Tag = vba.Tag,
+            MiddleName = vba.MiddleName,
+            ContactTitle = vba.ContactTitle,
+            WorkPhone = vba.WorkPhone,
+            MobilePhone = vba.MobilePhone,
+            Prefix = vba.Prefix,
+            Suffix = vba.Suffix,
+            AlternatePhone = vba.AlternatePhone,
+            WorkPhoneExtn = vba.WorkPhoneExtn,
+            Fax = vba.Fax,
+            Email = vba.Email,
+            WebsiteURL = vba.WebsiteURL,
+            MasterCompanyId = vba.MasterCompanyId,
+            CreatedDate = vba.CreatedDate,
+            UpdatedDate = vba.UpdatedDate,
+            CreatedBy = vba.CreatedBy,
+            UpdatedBy = vba.UpdatedBy,
+            IsActive = vba.IsActive,
+           FullContact =  vba.WorkPhone + " - " + vba.WorkPhoneExtn,
+
+                IsDefaultContact = vba.IsDefaultContact
+        }).OrderByDescending(p => p.UpdatedDate).ToList();
+            return list;
+        }
 
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
     }

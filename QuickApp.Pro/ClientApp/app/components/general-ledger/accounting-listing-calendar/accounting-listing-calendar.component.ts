@@ -1,5 +1,7 @@
 ﻿import { Component, ViewChild, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
+import { LazyLoadEvent, SortEvent, MenuItem } from 'primeng/api';
+
 import { fadeInOut } from '../../../services/animations';
 import { AccountCalenderService } from '../../../services/account-calender/accountcalender.service';
 import { AuthService } from '../../../services/auth.service';
@@ -36,6 +38,8 @@ export class AccountingListingCalendarComponent implements OnInit {
     @ViewChild('dt')
     private table: Table;
     lazyLoadEventData: any;
+    home: any;
+    breadcrumbs: MenuItem[];
 
     filterKeysByValue: object = {};
 
@@ -50,7 +54,10 @@ export class AccountingListingCalendarComponent implements OnInit {
     }
    
     ngOnInit() {
-       
+        this.breadcrumbs = [
+            { label: 'Accounting' },
+            { label: 'Account Calendar List' },
+        ];
     }
 
     getCalendarData(data: any) {

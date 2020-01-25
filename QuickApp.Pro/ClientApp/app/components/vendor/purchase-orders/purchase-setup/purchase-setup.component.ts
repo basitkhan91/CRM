@@ -208,6 +208,15 @@ export class PurchaseSetupComponent implements OnInit {
 	shipViaValidCheck: boolean;
 	billToUserTypeValidCheck: boolean;
 	billToSiteNameValidCheck: boolean;
+	vendorCapesGeneralInfo: any = {};
+    aircraftListDataValues: any;
+    colsaircraftLD: any[] = [
+        { field: "aircraft", header: "Aircraft" },
+        { field: "model", header: "Model" },
+        { field: "dashNumber", header: "Dash Numbers" },
+        { field: "memo", header: "Memo" }
+    ];
+	
 
 	constructor(private route: Router,
 		public legalEntityService: LegalEntityService,
@@ -263,13 +272,13 @@ export class PurchaseSetupComponent implements OnInit {
 
 		this.vendorCapesCols = [
 			//{ field: 'vcId', header: 'VCID' },
-			{ field: 'ranking', header: 'Ranking' },
+			{ field: 'vendorRanking', header: 'Ranking' },
 			{ field: 'partNumber', header: 'PN' },
 			{ field: 'partDescription', header: 'PN Description' },
 			{ field: 'capabilityType', header: 'Capability Type' },
 			{ field: 'cost', header: 'Cost' },
 			{ field: 'tat', header: 'TAT' },
-			{ field: 'name', header: 'PN Mfg' },
+			{ field: 'manufacturerName', header: 'PN Mfg' },
 		];
 
 		this.sourcePoApproval.statusId = 1;
@@ -799,32 +808,387 @@ export class PurchaseSetupComponent implements OnInit {
 		return this.authService.currentUser ? this.authService.currentUser.userName : "";
 	}
 
+	//savePurchaseOrder() {
+	//	console.log(this.sourcePoApproval);
+	
+	//	for (let i = 0; i < this.partListData.length; i++) {
+			
+	//		if ( this.partListData[i].partNumberId == undefined || this.partListData[i].partNumberId == "null" ) {
+	//			this.alertService.showMessage('PN ', "Please enter required PN field!", MessageSeverity.error);
+ //               this.managementValidCheck = true;
+	//		}
+	//		if (this.partListData[i].needByDate == undefined || this.partListData[i].needByDate == "null") {
+	//			this.alertService.showMessage('needByDate ', "Please enter required needByDate field!", MessageSeverity.error);
+ //               this.managementValidCheck = true;
+	//		}
+
+
+	//		if (this.partListData[i].conditionId == undefined || this.partListData[i].conditionId == "null") {
+	//			this.alertService.showMessage('condition ', "Please enter required condition field!", MessageSeverity.error);
+ //               this.managementValidCheck = true;
+	//		}
+	//		if (this.partListData[i].quantityOrdered == undefined || this.partListData[i].quantityOrdered == "null") {
+	//			this.alertService.showMessage('quantity Ordered ', "Please enter required quantity Ordered field!", MessageSeverity.error);
+ //               this.managementValidCheck = true;
+	//		}
+
+	//		if (this.partListData[i].functionalCurrencyId == undefined || this.partListData[i].functionalCurrencyId == "null") {
+	//			this.alertService.showMessage('functionalCurrency ', "Please enter required functionalCurrency field!", MessageSeverity.error);
+ //               this.managementValidCheck = true;
+ //           }
+	//		if (this.partListData[i].foreignExchangeRate == undefined || this.partListData[i].foreignExchangeRate == "null") {
+	//			this.alertService.showMessage('foreignExchangeRate  ', "Please enter required foreignExchangeRate field!", MessageSeverity.error);
+ //               this.managementValidCheck = true;
+	//		}
+
+	//		if (this.partListData[i].reportCurrencyId == undefined || this.partListData[i].reportCurrencyId == "null") {
+	//			this.alertService.showMessage('reportCurrency ', "Please enter required reportCurrency field!", MessageSeverity.error);
+ //               this.managementValidCheck = true;
+ //           }
+
+	//		if (this.partListData[i].unitCost == undefined || this.partListData[i].unitCost == "null") {
+	//			this.alertService.showMessage('unitCost ', "Please enter required unitCost field!", MessageSeverity.error);
+ //               this.managementValidCheck = true;
+ //           }
+	//		if (this.partListData[i].discountPercent == undefined || this.partListData[i].discountPercent == "null") {
+	//			this.alertService.showMessage('discount Percent  ', "Please enter required discountPercent field!", MessageSeverity.error);
+ //               this.managementValidCheck = true;
+ //           }
+ //            	}
+        
+
+	//	if (this.createPOForm.invalid)
+	//		//|| this.sourcePoApproval.companyId == "null" || this.sourcePoApproval.shipToUserTypeId == "null" || this.sourcePoApproval.shipToAddressId == "null" || this.sourcePoApproval.shipViaId == "null" || this.sourcePoApproval.billToUserTypeId == "null" || this.sourcePoApproval.billToAddressId == "null")
+ //       {
+	//		// alert('Please enter required fields!');
+	//		//this.alertService.showMessage('Purchase Order', "Please enter required highlighted fields!", MessageSeverity.error);
+	//		//this.inputValidCheck = true;
+
+	//		if (this.sourcePoApproval.openDate == "null" || this.sourcePoApproval.openDate == undefined) {
+	//			this.alertService.showMessage('openDate ', "Please enter required openDate field!", MessageSeverity.error);
+ //               this.managementValidCheck = true;
+	//		}
+	//		if (this.sourcePoApproval.needByDate == "null" || this.sourcePoApproval.needByDate == undefined) {
+	//			this.alertService.showMessage('needByDate ', "Please enter required needByDate field!", MessageSeverity.error);
+ //               this.managementValidCheck = true;
+	//		} 
+	//		if (this.sourcePoApproval.priorityId == "null" || this.sourcePoApproval.priorityId == undefined) {
+	//			this.alertService.showMessage('priority ', "Please enter required priority field!", MessageSeverity.error);
+ //               this.managementValidCheck = true;
+	//		}
+	//		if (this.sourcePoApproval.vendorId == "null" || this.sourcePoApproval.vendorId == undefined) {
+	//			this.alertService.showMessage('vendor Name ', "Please enter required vendor Name field!", MessageSeverity.error);
+ //               this.managementValidCheck = true;
+	//		}
+	//		if (this.sourcePoApproval.vendorCode == "null" || this.sourcePoApproval.vendorCode == undefined) {
+	//			this.alertService.showMessage('vendorCode ', "Please enter required vendorCode field!", MessageSeverity.error);
+ //               this.managementValidCheck = true;
+	//		} 
+
+	//		if (this.sourcePoApproval.vendorContactId == "null" || this.sourcePoApproval.vendorContactId == undefined) {
+	//			this.alertService.showMessage('vendor Contact ', "Please enter required vendorContact field!", MessageSeverity.error);
+ //               this.managementValidCheck = true;
+	//		}
+	//		if (this.sourcePoApproval.requisitionerId == "null" || this.sourcePoApproval.requisitionerId == undefined) {
+	//			this.alertService.showMessage('requisitioner ', "Please enter required requisitioner field!", MessageSeverity.error);
+ //               this.managementValidCheck = true;
+	//		}
+	//		if (this.sourcePoApproval.statusId == "null" || this.sourcePoApproval.statusId == undefined) {
+	//			this.alertService.showMessage('status ', "Please enter required status field!", MessageSeverity.error);
+ //               this.managementValidCheck = true;
+	//		}
+
+	//		//if (this.childDataList.partNNumberId == "null" || this.childDataList.partNNumberId == undefined) {
+ //  //             this.alertService.showMessage('status ', "Please enter required status field!", MessageSeverity.error);
+ //  //             this.managementValidCheck = true;
+ //  //         }
+
+			
+	//		if (this.sourcePoApproval.shipToUserTypeId == 1 && this.sourcePoApproval.shipToContactId == "null" || this.sourcePoApproval.shipToContactId == undefined) {
+	//			this.alertService.showMessage('ship Contact Name ', "Please enter required ship Contact Name  field!", MessageSeverity.error);
+ //               this.managementValidCheck = true;
+	//		}
+
+	//		if (this.sourcePoApproval.shipToUserTypeId == 2 && this.sourcePoApproval.shipToContactId == "null" || this.sourcePoApproval.shipToContactId == undefined) {
+ //               this.alertService.showMessage('Bill Contact Name ', "Please enter required Bill Contact Name  field!", MessageSeverity.error);
+ //               this.managementValidCheck = true;
+ //           }
+
+	//		if (this.sourcePoApproval.companyId == "null" || this.sourcePoApproval.companyId == undefined) {
+	//			this.alertService.showMessage('Legal Entity ', "Please enter required Legal Entity field!", MessageSeverity.error);
+	//			this.managementValidCheck = true;
+	//		}
+	//		if (this.sourcePoApproval.shipToUserTypeId == "null" || this.sourcePoApproval.shipToUserTypeId == undefined) {
+	//			this.alertService.showMessage('shipToUserType ', "Please enter required shipToUserType field!", MessageSeverity.error);
+	//			this.shipToUserTypeValidCheck = true;
+	//		}
+	//		if (this.sourcePoApproval.shipToAddressId == "null" || this.sourcePoApproval.shipToAddressId == undefined) {
+	//			this.alertService.showMessage('shipToAddress ', "Please enter required shipToAddress field!", MessageSeverity.error);
+	//			this.shipToSiteNameValidCheck = true;
+	//		}
+	//		if (this.sourcePoApproval.shipViaId == "null" || this.sourcePoApproval.shipViaId == undefined) {
+	//			this.alertService.showMessage('shipVia ', "Please enter required shipVia field!", MessageSeverity.error);
+	//			this.shipViaValidCheck = true;
+	//		}
+	//		if (this.sourcePoApproval.billToUserTypeId == "null" || this.sourcePoApproval.billToUserTypeId == undefined) {
+	//			this.alertService.showMessage('billToUserType ', "Please enter required billToUserType field!", MessageSeverity.error);
+	//			this.billToUserTypeValidCheck = true;
+	//		}
+	//		if (this.sourcePoApproval.billToAddressId == "null" || this.sourcePoApproval.billToAddressId == undefined) {
+	//			this.alertService.showMessage('billToAddress ', "Please enter required billToAddress field!", MessageSeverity.error);
+	//			this.billToSiteNameValidCheck = true;
+	//		}
+	//	}
+	//	else {
+	//		this.sourcePoApprovalObj = {
+	//			purchaseOrderNumber: this.sourcePoApproval.purchaseOrderNumber,
+	//			openDate: this.datePipe.transform(this.sourcePoApproval.openDate, "MM/dd/yyyy"),//new Date(this.sourcePoApproval.openDate),
+	//			closedDate: this.datePipe.transform(this.sourcePoApproval.closedDate, "MM/dd/yyyy"),
+	//			needByDate: this.datePipe.transform(this.sourcePoApproval.needByDate, "MM/dd/yyyy"),
+	//			priorityId: this.sourcePoApproval.priorityId ? this.getPriorityId(this.sourcePoApproval.priorityId) : 0,
+	//			deferredReceiver: this.sourcePoApproval.deferredReceiver ? this.sourcePoApproval.deferredReceiver : false,
+	//			vendorId: this.sourcePoApproval.vendorId ? this.getVendorId(this.sourcePoApproval.vendorId) : 0,
+	//			//vendorId: 671,
+	//			vendorContactId: this.sourcePoApproval.vendorContactId ? this.getVendorContactId(this.sourcePoApproval.vendorContactId) : 0,
+	//			//vendorContactId: 200,
+	//			vendorContactPhone: this.sourcePoApproval.vendorContactPhone ? this.getVendorContactPhone(this.sourcePoApproval.vendorContactPhone) : '',
+	//			creditLimit: this.sourcePoApproval.creditLimit ? this.sourcePoApproval.creditLimit : '',
+	//			creditTermsId: this.sourcePoApproval.creditTermsId ? this.sourcePoApproval.creditTermsId : 0,
+	//			requisitionerId: this.sourcePoApproval.requisitionerId ? this.getEmployeeId(this.sourcePoApproval.requisitionerId) : 0,
+	//			approverId: this.sourcePoApproval.approverId ? this.getEmployeeId(this.sourcePoApproval.approverId) : 0,
+	//			approvedDate: this.datePipe.transform(this.sourcePoApproval.approvedDate, "MM/dd/yyyy"),
+	//			statusId: this.sourcePoApproval.statusId ? this.sourcePoApproval.statusId : 0,
+	//			resale: this.sourcePoApproval.resale ? this.sourcePoApproval.resale : false,
+	//			managementStructureId: this.sourcePoApproval.managementStructureId ? this.sourcePoApproval.managementStructureId : 0,
+	//			poMemo: this.sourcePoApproval.poMemo ? this.sourcePoApproval.poMemo : '',
+	//			shipToUserTypeId: this.sourcePoApproval.shipToUserTypeId ? parseInt(this.sourcePoApproval.shipToUserTypeId) : 0,
+	//			shipToUserId: this.sourcePoApproval.shipToUserId ? this.getShipToBillToUserId(this.sourcePoApproval.shipToUserId) : 0,
+	//			shipToAddressId: this.sourcePoApproval.shipToAddressId ? this.sourcePoApproval.shipToAddressId : 0,
+	//			//shipToContactId: this.sourcePoApproval.shipToContactId ? this.getShipBillContactId(this.sourcePoApproval.shipToContactId) : 0,
+	//			shipToContactId: this.sourcePoApproval.shipToContactId ? editValueAssignByCondition('contactId', this.sourcePoApproval.shipToContactId) : 0,
+	//			shipViaId: this.sourcePoApproval.shipViaId,
+	//			shippingCost: this.sourcePoApproval.shippingCost,
+	//			handlingCost: this.sourcePoApproval.handlingCost,
+	//			shipVia: this.sourcePoApproval.shipVia,
+	//			shippingAcctNum: this.sourcePoApproval.shippingAcctNum,
+	//			shippingURL: this.sourcePoApproval.shippingURL,
+	//			shippingId: this.sourcePoApproval.shippingId,
+	//			shipToMemo: this.sourcePoApproval.shipToMemo ? this.sourcePoApproval.shipToMemo : '',
+	//			billToUserTypeId: this.sourcePoApproval.billToUserTypeId ? parseInt(this.sourcePoApproval.billToUserTypeId) : 0,
+	//			billToUserId: this.sourcePoApproval.billToUserId ? this.getShipToBillToUserId(this.sourcePoApproval.billToUserId) : 0,
+	//			billToAddressId: this.sourcePoApproval.billToAddressId ? this.sourcePoApproval.billToAddressId : 0,
+	//			//billToContactId: this.sourcePoApproval.billToContactId ? this.getShipBillContactId(this.sourcePoApproval.billToContactId) : 0,
+	//			billToContactId: this.sourcePoApproval.billToContactId ? editValueAssignByCondition('contactId', this.sourcePoApproval.billToContactId) : 0,
+	//			billToMemo: this.sourcePoApproval.billToMemo ? this.sourcePoApproval.billToMemo : '',
+	//			shipToSiteName: this.postSiteNameForShipping(this.sourcePoApproval.shipToUserTypeId, this.sourcePoApproval.shipToAddressId),
+	//			shipToAddress1: this.shipToAddress.address1,
+	//			shipToAddress2: this.shipToAddress.address2,
+	//			// shipToAddress3: this.shipToAddress.address3,
+	//			shipToCity: this.shipToAddress.city,
+	//			shipToStateOrProvince: this.shipToAddress.stateOrProvince,
+	//			shipToPostalCode: this.shipToAddress.postalCode,
+	//			shipToCountry: this.shipToAddress.country,
+	//			billToSiteName: this.postSiteNameForBilling(this.sourcePoApproval.billToUserTypeId, this.sourcePoApproval.billToAddressId),
+	//			billToAddress1: this.billToAddress.address1,
+	//			billToAddress2: this.billToAddress.address2,
+	//			// billToAddress3: this.billToAddress.address3,
+	//			billToCity: this.billToAddress.city,
+	//			billToStateOrProvince: this.billToAddress.stateOrProvince,
+	//			billToPostalCode: this.billToAddress.postalCode,
+	//			billToCountry: this.billToAddress.country,
+	//			shipToSiteId: this.sourcePoApproval.shipToAddressId ? this.sourcePoApproval.shipToAddressId : 0,
+	//			billToSiteId: this.sourcePoApproval.billToAddressId ? this.sourcePoApproval.billToAddressId : 0,
+	//			createdBy: this.userName,
+	//			updatedBy: this.userName
+	//		}
+	//		console.log(this.sourcePoApprovalObj);
+
+	//		// header save 
+	//		if (!this.isEditMode) {
+	//			this.vendorService.savePurchaseorder({ ...this.sourcePoApprovalObj }).subscribe(saveddata => {
+	//				this.route.navigate(['/vendorsmodule/vendorpages/app-polist'])
+	//				this.purchaseOrderId = saveddata.purchaseOrderId;
+	//				this.savedInfo = saveddata;
+	//				console.log(saveddata);
+	//				this.tempVendorId = null;
+	//				this.savePurchaseorderPart(saveddata.purchaseOrderId);
+	//				this.savePOApproverData(saveddata.purchaseOrderId);
+	//			});
+	//		} else {
+	//			const poHeaderEdit = { ...this.sourcePoApprovalObj, purchaseOrderId: parseInt(this.poId) };
+	//			this.vendorService.savePurchaseorder({ ...poHeaderEdit }).subscribe(saveddata => {
+	//				this.route.navigate(['/vendorsmodule/vendorpages/app-polist'])
+	//				this.purchaseOrderId = saveddata.purchaseOrderId;
+	//				this.savedInfo = saveddata;
+	//				console.log(saveddata);
+	//				this.tempVendorId = null;
+	//				this.savePurchaseorderPart(saveddata.purchaseOrderId);
+	//				//this.savePOApproverData(saveddata.purchaseOrderId);
+	//			});
+	//		}
+	//	}
+	//}
+
+
 	savePurchaseOrder() {
 		console.log(this.sourcePoApproval);
 
-		if (this.createPOForm.invalid || this.sourcePoApproval.companyId == "null" || this.sourcePoApproval.shipToUserTypeId == "null" || this.sourcePoApproval.shipToAddressId == "null" || this.sourcePoApproval.shipViaId == "null" || this.sourcePoApproval.billToUserTypeId == "null" || this.sourcePoApproval.billToAddressId == "null") {
-			// alert('Please enter required fields!');
-			this.alertService.showMessage('Purchase Order', "Please enter required highlighted fields!", MessageSeverity.error);
-			this.inputValidCheck = true;
+		for (let i = 0; i < this.partListData.length; i++) {
 
-			if(this.sourcePoApproval.companyId == "null") {
-				this.managementValidCheck = true;
+			var str = "";
+
+			if (this.partListData[i].partNumberId == undefined || this.partListData[i].partNumberId == "null") {
+				str += "    Please enter required PN field!";
+				//  this.validate(pn);
+				//this.alertService.showMessage('PN ', "Please enter required PN field!", MessageSeverity.error);
+				// this.managementValidCheck = true;
 			}
-			if(this.sourcePoApproval.shipToUserTypeId == "null") {
-				this.shipToUserTypeValidCheck = true;
+			if (this.partListData[i].needByDate == undefined || this.partListData[i].needByDate == "null") {
+				str += "    Please enter required needByDate field Grid!";
+				//this.validate(needByDate);
+				//this.alertService.showMessage('needByDate ', "Please enter required needByDate field!", MessageSeverity.error);
+				// this.managementValidCheck = true;
 			}
-			if(this.sourcePoApproval.shipToAddressId == "null") {
-				this.shipToSiteNameValidCheck = true;
+
+
+			if (this.partListData[i].conditionId == undefined || this.partListData[i].conditionId == "null") {
+				str += "    Please enter required condition field!";
+				//this.alertService.showMessage('condition ', "Please enter required condition field!", MessageSeverity.error);
+				//this.managementValidCheck = true;
 			}
-			if(this.sourcePoApproval.shipViaId == "null") {
-				this.shipViaValidCheck = true;
+			if (this.partListData[i].quantityOrdered == undefined || this.partListData[i].quantityOrdered == "null") {
+				str += "    Please enter required quantityOrdered field!";
+				//this.alertService.showMessage('quantity Ordered ', "Please enter required quantity Ordered field!", MessageSeverity.error);
+				// this.managementValidCheck = true;
 			}
-			if(this.sourcePoApproval.billToUserTypeId == "null") {
-				this.billToUserTypeValidCheck = true;
+
+			if (this.partListData[i].functionalCurrencyId == undefined || this.partListData[i].functionalCurrencyId == "null") {
+				str += "    Please enter required functionalCurrency field!";
+				//	this.alertService.showMessage('functionalCurrency ', "Please enter required functionalCurrency field!", MessageSeverity.error);
+				//  this.managementValidCheck = true;
 			}
-			if(this.sourcePoApproval.billToAddressId == "null") {
-				this.billToSiteNameValidCheck = true;
+			if (this.partListData[i].foreignExchangeRate == undefined || this.partListData[i].foreignExchangeRate == "null") {
+				str += "    Please enter required foreignExchangeRate field!";
+				//this.alertService.showMessage('foreignExchangeRate  ', "Please enter required foreignExchangeRate field!", MessageSeverity.error);
+				// this.managementValidCheck = true;
 			}
+
+			if (this.partListData[i].reportCurrencyId == undefined || this.partListData[i].reportCurrencyId == "null") {
+				str += "    Please enter required reportCurrency field!";
+				//this.alertService.showMessage('reportCurrency ', "Please enter required reportCurrency field!", MessageSeverity.error);
+				// this.managementValidCheck = true;
+			}
+
+			if (this.partListData[i].unitCost == undefined || this.partListData[i].unitCost == "null") {
+				str += "    Please enter required unitCost field!";
+				//this.alertService.showMessage('unitCost ', "Please enter required unitCost field!", MessageSeverity.error);
+				// this.managementValidCheck = true;
+			}
+			if (this.partListData[i].discountPercent == undefined || this.partListData[i].discountPercent == "null") {
+				str += "    Please enter required discountPercent field!";
+				//this.alertService.showMessage('discount Percent  ', "Please enter required discountPercent field!", MessageSeverity.error);
+				//  this.managementValidCheck = true;
+			}
+		}
+
+
+
+		if (this.createPOForm.invalid)
+		//|| this.sourcePoApproval.companyId == "null" || this.sourcePoApproval.shipToUserTypeId == "null" || this.sourcePoApproval.shipToAddressId == "null" || this.sourcePoApproval.shipViaId == "null" || this.sourcePoApproval.billToUserTypeId == "null" || this.sourcePoApproval.billToAddressId == "null")
+		{
+			// alert('Please enter required fields!');
+			//this.alertService.showMessage('Purchase Order', "Please enter required highlighted fields!", MessageSeverity.error);
+			//this.inputValidCheck = true;
+
+			if (this.sourcePoApproval.openDate == "null" || this.sourcePoApproval.openDate == undefined) {
+				str += "    Please enter required openDate field!";
+				//this.alertService.showMessage('openDate ', "Please enter required openDate field!", MessageSeverity.error);
+				// this.managementValidCheck = true;
+			}
+			if (this.sourcePoApproval.needByDate == "null" || this.sourcePoApproval.needByDate == undefined) {
+				str += "    Please enter required needByDate field!";
+				//this.alertService.showMessage('needByDate ', "Please enter required needByDate field!", MessageSeverity.error);
+				// this.managementValidCheck = true;
+			}
+			if (this.sourcePoApproval.priorityId == "null" || this.sourcePoApproval.priorityId == undefined) {
+				str += "    Please enter required priority field!";
+				//this.alertService.showMessage('priority ', "Please enter required priority field!", MessageSeverity.error);
+				// this.managementValidCheck = true;
+			}
+			if (this.sourcePoApproval.vendorId == "null" || this.sourcePoApproval.vendorId == undefined) {
+				str += "    Please enter required vendor Name field!";
+				//this.alertService.showMessage('vendor Name ', "Please enter required vendor Name field!", MessageSeverity.error);
+				// this.managementValidCheck = true;
+			}
+			if (this.sourcePoApproval.vendorCode == "null" || this.sourcePoApproval.vendorCode == undefined) {
+				str += "    Please enter required vendorCode field!";
+				//this.alertService.showMessage('vendorCode ', "Please enter required vendorCode field!", MessageSeverity.error);
+				//  this.managementValidCheck = true;
+			}
+
+			if (this.sourcePoApproval.vendorContactId == "null" || this.sourcePoApproval.vendorContactId == undefined) {
+				str += "    Please enter required vendorContact field!";
+				//this.alertService.showMessage('vendor Contact ', "Please enter required vendorContact field!", MessageSeverity.error);
+				// this.managementValidCheck = true;
+			}
+			if (this.sourcePoApproval.requisitionerId == "null" || this.sourcePoApproval.requisitionerId == undefined) {
+				str += "    Please enter required requisitioner field!";
+				//	this.alertService.showMessage('requisitioner ', "Please enter required requisitioner field!", MessageSeverity.error);
+				//   this.managementValidCheck = true;
+			}
+			if (this.sourcePoApproval.statusId == "null" || this.sourcePoApproval.statusId == undefined) {
+				str += "    Please enter required status field!";
+				//this.alertService.showMessage('status ', "Please enter required status field!", MessageSeverity.error);
+				// this.managementValidCheck = true;
+			}
+
+
+
+			if (this.sourcePoApproval.shipToUserTypeId == 1 && this.sourcePoApproval.shipToContactId == "null" || this.sourcePoApproval.shipToContactId == undefined) {
+				str += "    Please enter required ship Contact Name field!";
+				//  this.alertService.showMessage('ship Contact Name ', "Please enter required ship Contact Name  field!", MessageSeverity.error);
+				// this.managementValidCheck = true;
+			}
+
+			if (this.sourcePoApproval.shipToUserTypeId == 2 && this.sourcePoApproval.shipToContactId == "null" || this.sourcePoApproval.shipToContactId == undefined) {
+				str += "    Please enter required Bill Contact Name field!";
+				//  this.alertService.showMessage('Bill Contact Name ', "Please enter required Bill Contact Name  field!", MessageSeverity.error);
+				//  this.managementValidCheck = true;
+			}
+
+			if (this.sourcePoApproval.companyId == "null" || this.sourcePoApproval.companyId == undefined) {
+				str += "    Please enter required Legal Entity field!";
+				//  this.alertService.showMessage('Legal Entity ', "Please enter required Legal Entity field!", MessageSeverity.error);
+				//this.managementValidCheck = true;
+			}
+			if (this.sourcePoApproval.shipToUserTypeId == "null" || this.sourcePoApproval.shipToUserTypeId == undefined) {
+				str += "    Please enter required shipToUserType field!";
+				//  this.alertService.showMessage('shipToUserType ', "Please enter required shipToUserType field!", MessageSeverity.error);
+				//this.shipToUserTypeValidCheck = true;
+			}
+			if (this.sourcePoApproval.shipToAddressId == "null" || this.sourcePoApproval.shipToAddressId == undefined) {
+
+				str += "    Please enter required shipToAddress field!";
+				//   this.alertService.showMessage('shipToAddress ', "Please enter required shipToAddress field!", MessageSeverity.error);
+				//	this.shipToSiteNameValidCheck = true;
+			}
+			if (this.sourcePoApproval.shipViaId == "null" || this.sourcePoApproval.shipViaId == undefined) {
+				str += "    Please enter required shipVia field!";
+				//  this.alertService.showMessage('shipVia ', "Please enter required shipVia field!", MessageSeverity.error);
+				//this.shipViaValidCheck = true;
+			}
+			if (this.sourcePoApproval.billToUserTypeId == "null" || this.sourcePoApproval.billToUserTypeId == undefined) {
+				str += "    Please enter required billToUserType field!";
+				// this.alertService.showMessage('billToUserType ', "Please enter required billToUserType field!", MessageSeverity.error);
+				//this.billToUserTypeValidCheck = true;
+			}
+			if (this.sourcePoApproval.billToAddressId == "null" || this.sourcePoApproval.billToAddressId == undefined) {
+				str += "    Please enter required billToAddress field!";
+				// this.alertService.showMessage('billToAddress ', "Please enter required billToAddress field!", MessageSeverity.error);
+				// var discountPercent = "Please enter required discountPercent field!";this.billToSiteNameValidCheck = true;
+			}
+
+			this.alertService.showMessage(" ", str, MessageSeverity.error);
 		}
 		else {
 			this.sourcePoApprovalObj = {
@@ -2457,15 +2821,38 @@ export class PurchaseSetupComponent implements OnInit {
 		this.sourcePoApproval.vendorCode = getObjectById('vendorId', value.vendorId, this.allActions);
 		this.sourcePoApproval.creditLimit = value.creditLimit;
 		this.sourcePoApproval.creditTermsId = value.creditTermsId;
-		this.sourcePoApproval.creditTerms = getValueFromArrayOfObjectById('name', 'creditTermsId', value.creditTermsId, this.allcreditTermInfo);
-		//this.sourcePoApproval.creditTermsId = getObjectById('creditTermsId', value.creditTermsId, this.allcreditTermInfo);				
+        if (this.sourcePoApproval.creditTerms != undefined) {
+            this.sourcePoApproval.creditTerms = getValueFromArrayOfObjectById('name ',
+                'creditTermsId',
+                value.creditTermsId,
+                this.allcreditTermInfo);
+        }
+        //this.sourcePoApproval.creditTermsId = getObjectById('creditTermsId', value.creditTermsId, this.allcreditTermInfo);				
 	}
 
 	getVendorCapesByID(vendorId) {
-		this.vendorCapesService.getVendorCapesById(vendorId).subscribe(res => {
-			this.vendorCapesInfo = res;
-		})
+
+		const status = 'active';
+
+        if(vendorId != undefined) {
+            this.vendorService.getVendorCapabilityList(status, vendorId).subscribe(                
+               
+                results => this.onDataLoadVendorCapsSuccessful(results[0]),
+                error => this.onDataLoadFailed(error)
+            );
+        }
+
+		// this.vendorCapesService.getVendorCapesById(vendorId).subscribe(res => {
+		// 	this.vendorCapesInfo = res;
+		// })
 	}
+	public onDataLoadVendorCapsSuccessful(allWorkFlows: any[]) {
+       
+      
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;      
+        this.vendorCapesInfo = allWorkFlows;       
+    }
 
 	filterVendorContacts(event) {
 		this.vendorContactsHeader = this.vendorContactList;
@@ -3711,4 +4098,30 @@ export class PurchaseSetupComponent implements OnInit {
 	// 		this.shipToAddress = getObjectById('vendorShippingAddressId', id, this.vendorSelected);
 	// 	}
 	// }
+
+	viewSelectedCapsRow(rowData) {       
+        const {vendorCapabilityId} = rowData;
+        this.getVendorCapabilitiesView(vendorCapabilityId);     
+        this.getVendorCapesAircraftView(vendorCapabilityId);     
+    }
+    getVendorCapabilitiesView(vendorCapesId) {
+		this.vendorCapesService.getVendorCapabilitybyId(vendorCapesId).subscribe(res => {			
+			this.vendorCapesGeneralInfo = res;
+		})
+	}
+
+	getVendorCapesAircraftView(vendorCapesId) {
+		this.vendorCapesService.getVendorAircraftGetDataByCapsId(vendorCapesId).subscribe(res => {          
+            this.aircraftListDataValues = res.map(x => {
+                return {
+                    ...x,
+                    aircraft: x.aircraftType,
+                    model: x.aircraftModel,
+                    dashNumber: x.dashNumber,
+                    memo: x.memo,
+                }
+            })
+		})
+	}
+
 }

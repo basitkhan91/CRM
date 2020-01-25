@@ -34,9 +34,17 @@ namespace QuickApp.Pro.Controllers
             public IActionResult Get(int id)
             {
                 var allIntegrationinfo = _unitOfWork.Integration.getIntegrationData(id); //.GetAllCustomersData();
-                return Ok(Mapper.Map<IEnumerable<IntegrationViewModel>>(allIntegrationinfo));
+               return Ok(Mapper.Map<IEnumerable<IntegrationViewModel>>(allIntegrationinfo));
 
             }
+        [HttpGet("GetAll")]
+        [Produces(typeof(List<IntegrationViewModel>))]
+        public IActionResult GetAll()
+        {
+            var allIntegrationinfo = _unitOfWork.Integration.getIntegrationAllData(); //.GetAllCustomersData();
+            return Ok(Mapper.Map<IEnumerable<IntegrationViewModel>>(allIntegrationinfo));
+
+        }
         /// <summary>
         /// Method that gets basic info namely id and name only
         /// </summary>
@@ -85,7 +93,7 @@ namespace QuickApp.Pro.Controllers
                 integrationobj.PortalUrl = integrationViewModel.PortalUrl;
                 integrationobj.Memo = integrationViewModel.Memo;
                 integrationobj.IsActive = integrationViewModel.IsActive;
-                integrationobj.IsDelete = false;
+                integrationobj.IsDeleted = false;
                 integrationobj.CreatedDate = DateTime.Now;
                 integrationobj.UpdatedDate = DateTime.Now;
                 integrationobj.CreatedBy = integrationViewModel.CreatedBy;
@@ -124,7 +132,7 @@ namespace QuickApp.Pro.Controllers
         public IActionResult DeleteAction(long id)
         {
             var existingResult = _unitOfWork.Integration.GetSingleOrDefault(c => c.IntegrationPortalId == id);
-            existingResult.IsDelete = true;
+            existingResult.IsDeleted = true;
             _unitOfWork.Integration.Update(existingResult);
 
             //_unitOfWork.Integration.Remove(existingResult);

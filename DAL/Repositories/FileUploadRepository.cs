@@ -299,6 +299,14 @@ namespace DAL.Repositories
                     UploadAssetStatus(BindCustomData<AssetStatus>(file, "AssetStatusId", moduleName));
                     break;
 
+                case "AssetLocation":
+                    UploadAssetLocation(BindCustomData<AssetLocation>(file, "AssetLocationId", moduleName));
+                    break;
+
+                case "AssetAcquisitionType":
+                    UploadAssetAcquisitionType(BindCustomData<AssetAcquisitionType>(file, "AssetAcquisitionTypeId", moduleName));
+                    break;
+
                 case "DepreciationConvention":
                     UploadAssetDepConv(BindCustomData<AssetDepConvention>(file, "AssetDepConventionId", moduleName));
                     break;
@@ -335,6 +343,10 @@ namespace DAL.Repositories
                 case "VendorClassification":
                     UploadVendorClassification(BindCustomData<VendorClassification>(file, "VendorClassificationId", moduleName));
                     break;
+                case "CapabilityType":
+                    UploadCapabilityType(BindCustomData<CapabilityType>(file, "CapabilityTypeId", moduleName));
+                    break;
+
                 default:
                     break;
             }
@@ -451,6 +463,19 @@ namespace DAL.Repositories
                                                     if (reader.GetValue(propCount).GetType().Name == "Double" && property.PropertyType.Name == "Int64")
                                                     {
                                                         property.SetValue(model, Convert.ToInt64(reader.GetValue(propCount)));
+                                                    }
+                                                    else if(property.Name.Equals("SequenceNo") && property.PropertyType.Name == "Int32")
+                                                    {
+                                                        var sequenceData = reader.GetValue(propCount);
+                                                        if(sequenceData != null)
+                                                        {
+                                                            property.SetValue(model, Convert.ToInt32(sequenceData));
+                                                        }
+                                                        else
+                                                        {
+                                                            property.SetValue(model, 1);
+                                                        }
+                                                       
                                                     }
                                                     else
                                                         property.SetValue(model, reader.GetValue(propCount));
@@ -699,7 +724,7 @@ namespace DAL.Repositories
             foreach (var item in ataChapterList)
             {
 
-                var flag = _appContext.ATAChapter.Any(p => p.IsDelete == false && p.ATAChapterName.ToLower() == item.ATAChapterName.Trim().ToLower());
+                var flag = _appContext.ATAChapter.Any(p => p.IsDeleted == false && p.ATAChapterName.ToLower() == item.ATAChapterName.Trim().ToLower());
                 if (!flag)
                 {
                     _appContext.ATAChapter.Add(item);
@@ -753,6 +778,40 @@ namespace DAL.Repositories
                 if (!flag)
                 {
                     _appContext.AssetStatus.Add(item);
+                    _appContext.SaveChanges();
+                }
+            }
+        }
+
+        private void UploadAssetAcquisitionType(List<AssetAcquisitionType> AssetAcquisitionTypeList)
+        {
+
+            foreach (var item in AssetAcquisitionTypeList)
+            {
+
+                var flag = _appContext.AssetAcquisitionType.Any(p => p.IsDeleted == false && !string.IsNullOrEmpty(p.Code)
+                && !string.IsNullOrEmpty(p.Code) &&
+                p.Code.ToLower() == item.Code.Trim().ToLower());
+                if (!flag)
+                {
+                    _appContext.AssetAcquisitionType.Add(item);
+                    _appContext.SaveChanges();
+                }
+            }
+        }
+
+        private void UploadAssetLocation(List<AssetLocation> AssetLocationList)
+        {
+
+            foreach (var item in AssetLocationList)
+            {
+
+                var flag = _appContext.AssetLocation.Any(p => p.IsDeleted == false && !string.IsNullOrEmpty(p.Code)
+                && !string.IsNullOrEmpty(p.Code) &&
+                p.Code.ToLower() == item.Code.Trim().ToLower());
+                if (!flag)
+                {
+                    _appContext.AssetLocation.Add(item);
                     _appContext.SaveChanges();
                 }
             }
@@ -848,7 +907,7 @@ namespace DAL.Repositories
             foreach (var item in IntegrationList)
             {
 
-                var flag = _appContext.IntegrationPortal.Any(p => p.IsDelete == false && !string.IsNullOrEmpty(p.Description)
+                var flag = _appContext.IntegrationPortal.Any(p => p.IsDeleted == false && !string.IsNullOrEmpty(p.Description)
                 && !string.IsNullOrEmpty(p.Description) &&
                 p.Description.ToLower() == item.Description.Trim().ToLower());
                 if (!flag)
@@ -939,7 +998,23 @@ namespace DAL.Repositories
             }
         }
 
-        
+        private void UploadCapabilityType(List<CapabilityType> capabilityList)
+        {
+
+            foreach (var item in capabilityList)
+            {
+
+                var flag = _appContext.capabilityType.Any(p => p.IsDeleted == false && (!string.IsNullOrEmpty(p.Description)
+                && p.Description.ToLower() == item.Description.Trim().ToLower())||p.SequenceNo==item.SequenceNo);
+              
+                if (!flag)
+                {
+                    _appContext.capabilityType.Add(item);
+                    _appContext.SaveChanges();
+                }
+            }
+        }
+
 
         private static PropertyInfo[] GetProperties(object obj)
         {

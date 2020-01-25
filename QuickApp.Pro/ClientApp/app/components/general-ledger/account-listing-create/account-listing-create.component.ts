@@ -1,6 +1,8 @@
 import { OnInit, Component } from "@angular/core";
 import { FormBuilder, FormControl, FormGroup, FormArray, Validators } from '@angular/forms';
 import { ActivatedRoute } from "@angular/router";
+import { LazyLoadEvent, SortEvent, MenuItem } from 'primeng/api';
+
 import { fadeInOut } from "../../../services/animations";
 import { AlertService, MessageSeverity } from "../../../services/alert.service";
 import { GlAccount } from "../../../models/GlAccount.model";
@@ -77,6 +79,9 @@ export class AccountListingCreateComponent implements OnInit {
     isAccountTypeExists: boolean = false;
     submittedValue: any;    
 
+    home: any;
+    breadcrumbs: MenuItem[];
+
     balanceTypeCheckBox = [{
         name: 'Actual',
         value: true
@@ -110,7 +115,12 @@ export class AccountListingCreateComponent implements OnInit {
                 this.updateAccountData(this.accountId)
 
              }
-        })        
+        }) 
+
+        this.breadcrumbs = [
+            { label: 'Accounting' },
+            { label: this.editMode ? 'Edit GL Account' : 'Create GL Account' },
+        ];
 
         if (this.glAccountService.glAccountEditCollection == null) {
             this.currentGLAccount = new GlAccount();
@@ -192,11 +202,13 @@ export class AccountListingCreateComponent implements OnInit {
         }
 
         const formValue = {
-          ...this.accountListCreateForm.value,
-          BalanceTypeActual: this.accountListCreateForm.value.balanceTypeCheckBox[0],
-          BalanceTypeBudget: this.accountListCreateForm.value.balanceTypeCheckBox[1],
-          BalanceTypeForecast: this.accountListCreateForm.value.balanceTypeCheckBox[2]
+            ...this.accountListCreateForm.value,
+            ParentId: this.accountListCreateForm.value.ledgerName['id'],
+            BalanceTypeActual: this.accountListCreateForm.value.balanceTypeCheckBox[0],
+            BalanceTypeBudget: this.accountListCreateForm.value.balanceTypeCheckBox[1],
+            BalanceTypeForecast: this.accountListCreateForm.value.balanceTypeCheckBox[2]
         }
+        console.log('formValue :', formValue)
         this.submittedValue = formValue;
 
         if(this.editMode){

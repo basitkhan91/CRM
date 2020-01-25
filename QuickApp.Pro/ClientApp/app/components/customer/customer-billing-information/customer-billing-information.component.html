@@ -1,9 +1,20 @@
 ﻿
-    <div class="right_col" role="main">
-        <div  style="">
+    <div class="right_col" role="main" style="padding: 2px 6px">
+        <div >
             <div class="x_content">
-
-                <div class="form-group col-sm-4 Customer-details-heading" style="display: inline-block;margin: 10px 5px 0 5px;">
+                <div class="col-md-12 shadow-box-cstm">        
+                    <div class="col-md-4">
+                        <p class="fs12">
+                        <label class="control-label labels-font-header" style="width: auto;">Customer Name: </label>
+                    <span class="span-header-red" style="text-transform: capitalize"> {{customerName }} </span> </p>
+                    </div>
+                    <div class="col-md-4">
+                        <p class="fs12">
+                        <label class="control-label labels-font-header" style="width: auto;">Customer Code: </label>
+                        <span class="span-header-red" style="text-transform: capitalize"> {{customerCode }} </span> </p>
+                    </div>                            
+                </div>
+                <!-- <div class="form-group col-sm-4 Customer-details-heading" style="display: inline-block;margin: 10px 5px 0 5px;">
                     <p class="fs10">
                         <label class="control-label w100">Customer Name:</label>
                         {{customerName}}
@@ -14,30 +25,51 @@
                         <label class="control-label w100">Customer Code:</label>
                         {{customerCode}}
                     </p>
-                </div>
+                </div> -->
 
-                <div>
-                    <div class="col-md-12" style="margin-bottom: -10px;">
-                        <!-- <h3 class="po-head pull-left" style="padding: 0 6px;">Billing Information List</h3> -->
-                        <h4 class="float-right">
-                                Add Billing Information
-                                <a
-                                  class="plusicon-cstm"
-                                  href="#"
-                                  data-toggle="modal"
-                                  data-target="#addBillingInfo" 
-                                  ><i class="fa fa-plus-circle fa-lg" (click)="addBillingIfo()"></i
-                                ></a>
-                              </h4>
-                        <!-- <button type="button" class="btn btn-primary-cstm float-right" data-toggle="modal" data-target="#addBillingInfo" >Add Billing Information</button> -->
+                <div class="card" style="padding: 10px;">
+                    <div>
+                        <div class="col-md-12" style="margin-bottom: -10px;">
+                                <h4 class="po-head-sm">
+                                        Add Billing Information
+                                        <a
+                                    class="plusicon-cstm"
+                                    href="#"
+                                    data-toggle="modal"
+                                    data-target="#addBillingInfo" 
+                                    ><i class="fa fa-plus-circle fa-lg" (click)="addBillingIfo()"></i
+                                    ></a>
+                                    </h4>
+                            <!-- <h3 class="po-head pull-left" style="padding: 0 6px;">Billing Information List</h3> -->
+                            <!-- <h4 class="float-left">
+                                    Add Billing Information
+                                    <a
+                                    class="plusicon-cstm"
+                                    href="#"
+                                    data-toggle="modal"
+                                    data-target="#addBillingInfo" 
+                                    ><i class="fa fa-plus-circle fa-lg" (click)="addBillingIfo()"></i
+                                    ></a>
+                                </h4> -->
+                            <!-- <button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#addBillingInfo" >Add Billing Information</button> -->
+                        </div>
+                        <div class="clear"></div>
+                        <hr />
                     </div>
-                    <div class="clear"></div>
-                    <hr />
-                </div>
 
-                <div class="table-responsive">
+
                     <!--<p class="lead"></p>-->
-                    <p-table #dt class="rro-table-cstm" [value]="billingInfoList" [metaKeySelection]="true" [rows]="10" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[10,20,50,100]" [columns]="billingInfoTableHeaders" selectionMode="multiple"  [resizableColumns]="true" [reorderableColumns]="true">
+                    <p-table #dt class="rpo-table-cstm rro-table-cstm tab-table-cstm"
+                     [value]="billingInfoList"
+                      [metaKeySelection]="true" 
+                      [rows]="10" 
+                      [paginator]="true" 
+                      [pageLinks]="3" 
+                      [rowsPerPageOptions]="[10,20,50,100]"
+                       [columns]="selectedColumns"
+                        selectionMode="multiple" 
+                        [resizableColumns]="true" 
+                        [reorderableColumns]="true">
                         <ng-template pTemplate="caption">
 
                             <div style="text-align: right">
@@ -47,17 +79,23 @@
                                     <i class="fa fa-search"></i>
                                     <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Filter" style="height: 28px !important;">
                                 </div>
-                                <button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()" style="padding: 5px 10px !important;"></button>
-                                <button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" iconPos="left" label="Export Selection Only"  (click)="dt.exportCSV({selectionOnly:true})"></button>
+                                <button type="button" class="btn btn-primary" matTooltip="Download  Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()" style="padding: 5px 10px !important;"></button>
+                                <button type="button" class="btn btn-primary" matTooltip="Download Selected Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})" style="padding: 5px 10px !important;"></button>
 
-                                <div class="excel-upload excel-upload-cstm">
-                                    <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                                <div class="excel-upload  excel-upload-cstm">
+
+                                    <input type="file" name="upload[]" id="upload" (change)="customExcelUpload($event)" class="uploaddoc upload-file"
+                                           accept=".xlsx, .xls, .csv">
                                     <label for="upload">
-                                        <span matTooltip="Upload Data (Excel)"><i class="fa fa-upload"></i></span>
+                                        <span matTooltip="Upload Data (Excel)" matTooltipPosition="above">
+                                            <i class="fa fa-upload"></i>
+                                        </span>
                                     </label>
+                                    &nbsp; &nbsp;
 
-
+                                    <button type="button" class="btn btn-primary" matTooltip="Download Sample File" matTooltipPosition="above" (click)="sampleExcelDownload()">Sample File Download</button>
                                 </div>
+
                             </div>
 
 
@@ -65,20 +103,31 @@
 
                         <ng-template pTemplate="header" let-columns>
                             <tr>
-
+                                <th style="width: 40px;">Flag</th>
                                 <th *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
                                     {{col.header}}
                                     <p-sortIcon [field]="col.field"></p-sortIcon>
                                 </th>
-
-                                <th></th>
+                                <th>Actions</th>
+                            </tr>
+                                <tr>
+                                    <th></th>
+                                    <th style="width:auto" *ngFor="let col of columns" [ngSwitch]="col.field">
+                                        <input style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field, 'contains')">
+                                    </th>
+                                    <th></th>
 
                             </tr>
                         </ng-template>
 
                         <ng-template pTemplate="body" let-rowData let-columns="columns">
-                            <tr [pSelectableRow]="rowData" (dblclick)="toggledbldisplay(rowData)"  [ngStyle]="{'background-color' : rowData.isPrimary === true ? '#79ffe3'  : 'white'  }">
-
+                            <tr [pSelectableRow]="rowData" [pSelectableRowDblClick]="rowData" (dblclick)="toggledbldisplay(rowData)" >
+                                    <!-- [ngClass]="{'row-primary': rowData.isPrimary === true}" -->
+                                    <td > <span class="flag">
+                                            <i  *ngIf="rowData.isPrimary == true"   [ngStyle]="{'color': rowData.isPrimary == true ? 'green' : 'none'}"  
+                                             class="fa fa-flag" aria-hidden="true"></i>
+                                            </span>
+                                    </td>
 
                                 <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
                                     {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
@@ -89,7 +138,7 @@
                                     <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="updateActiveorInActiveForBilling(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
                                     <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="updateActiveorInActiveForBilling(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
                                     <!--<span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openView(view,rowData)" title="View"><i class="fa fa-eye"></i></a> </span>-->
-                                    <span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openBillingView(rowData)" title="View"><i class="fa fa-eye"></i></a> </span>
+                                    <span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openBillingView(rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
                                     <button class="btn-edit" mat-icon-button (click)="openEdit(rowData)" matTooltip="edit" data-toggle="modal" data-target="#addBillingInfo">
                                         <mat-icon>edit</mat-icon>
                                     </button>
@@ -107,14 +156,23 @@
 
                             </tr>
                         </ng-template>
+                        <ng-template pTemplate="summary" id="footer">
+                            <label id="footer" class="footer">No'of records:</label>
+                            <input style="width: 5%;" [(ngModel)]="totalRecords" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp;
+                            <label id="footer" class="footer1">Pages Count:</label>
+                            <input style="width: 5%;" [(ngModel)]="totalPages" [disabled]="true" pInputText type="text" />
+                        </ng-template>
                     </p-table>
                     <!-- <div *ngIf="allActions.length<=0" style="text-align:center;border:1px solid">
                         No Records
                     </div> -->
+                    <div style="margin-top: 10px;">
+                        <button type="button" class="btn btn-primary pull-right" (click)="nextClick()">Save & Next</button>
+                        <button type="button" class="btn btn-primary pull-right submit-btn" (click)="backClick()">Previous</button>
+                    </div>
                 </div>
 
-                <button type="button" class="btn btn-primary-cstm pull-right" (click)="nextClick()">Next</button>
-                <button type="button" class="btn btn-primary-cstm pull-right submit-btn" (click)="backClick()">Previous</button>
+                
 
                 <div class="clear"></div>
                 <div class="modal fade success-msg" id="success-popup" role="dialog" data-backdrop="static" data-keyboard="false">
@@ -231,7 +289,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger-cstm" >Close</button>
+                        <button type="button" class="btn btn-danger" >Close</button>
                     </div>
                 </ng-template>
 
@@ -246,7 +304,21 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Add Billing Information</h4>
+                <div class="col-md-12 shadow-box-cstm">
+                    <div class="col-md-4">
+                        <p class="fs12">
+                            <label class="control-label labels-font-header" style="width: auto;">Customer Name: </label>
+                            <span class="span-header-red" style="text-transform: capitalize"> {{customerName }} </span>
+                        </p>
+                    </div>
+                    <div class="col-md-4">
+                        <p class="fs12">
+                            <label class="control-label labels-font-header" style="width: auto;">Customer Code: </label>
+                            <span class="span-header-red" style="text-transform: capitalize"> {{customerCode }} </span>
+                        </p>
+                    </div>
+                </div>
+                <h4 class="modal-title">{{isEditMode ? 'Edit' : 'Add' }} Billing Info </h4>
             </div>
             <form #addBillingForm="ngForm" class="form-horizontal">
                 <div class="modal-body">
@@ -270,12 +342,11 @@
                             </div>
                             <div class="form-group">
                                 <div class="form-group" style="margin-top: 15px; margin-bottom: 20px;">
-                                    <div class="label-cstm" style="margin-right: 10px;">Primary</div>
-                                    <span class="checkbox-cstm">
-                                        <label style="width: 20px;">
+                                      <span class="checkbox-cstm">
+                                        <label>
                                             <input type="checkbox" name="isPrimary" [(ngModel)]="billingInfo.isPrimary">
                                             <span class="cr"><i class="cr-icon pi pi-check"></i></span>
-                                            
+                                            Primary
                                         </label>
                                     </span>
                                 </div>
@@ -287,7 +358,7 @@
                                 <input class="form-control" id="cscity" type="text" name="city" [(ngModel)]="billingInfo.city" required>
                             </div>
                             <div class="form-group">
-                                <label>Bill To State/Prov <span class="clr-red">*</span></label>
+                                <label>Bill To State / Prov <span class="clr-red">*</span></label>
                                 <input class="form-control" id="csstate" type="text" name="stateOrProvince" [(ngModel)]="billingInfo.stateOrProvince" required>
                             </div>
                             <div class="form-group">
@@ -320,8 +391,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary-cstm pull-right" [disabled]="!addBillingForm.valid" (click)="saveBillingInformation()" data-dismiss="modal">{{isEditMode ? 'Update' : 'Save'}}</button>
-                    <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary pull-right" [disabled]="!addBillingForm.valid" (click)="saveBillingInformation()" data-dismiss="modal">{{isEditMode ? 'Update' : 'Save'}}</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                 </div>
             </form>
         </div>
@@ -329,7 +400,7 @@
 </div>
 
 
-<div  *ngIf="viewData" class="modal"id="view" data-backdrop="static">
+<div   id="view" class="modal" data-backdrop="static">
         <div class="modal-dialog">
           <div class="modal-content">
       
@@ -340,7 +411,7 @@
             </div>
       
             <!-- Modal body -->
-            <div class="modal-body">
+            <div class="modal-body" *ngIf="viewData">
                 <div class="col-sm-12">
                     <p><span class="label"><b>Site Name: </b></span><span class="value">{{viewData.siteName}}</span></p>
                     <p><span class="label"><b> Primary: </b></span><span class="value">{{viewData.isPrimary === true ? 'Yes' : 'No'}}</span></p>
@@ -351,7 +422,7 @@
                     <p><span class="label"><b>Bill To Address 2: </b></span><span class="value">{{viewData.address2}}</span></p>
                     <p style="display:none"><span class="label"><b>Bill To Address 3: </b></span><span class="value">{{viewData.address3}}</span></p>
                     <p><span class="label"><b>Bill To City: </b></span><span class="value">{{viewData.city}}</span></p>
-                    <p><span class="label"><b>Bill To State/Prov: </b></span><span class="value">{{viewData.stateOrProvince}}</span></p>
+                    <p><span class="label"><b>Bill To State / Prov: </b></span><span class="value">{{viewData.stateOrProvince}}</span></p>
                     <p><span class="label"><b>Bill To Postal Code :</b></span><span class="value">{{viewData.postalCode}}</span></p>
                     <p><span class="label"><b>Bill To Country: </b></span><span class="value">{{viewData.countryName}}</span></p>
 
@@ -394,6 +465,20 @@
             <span aria-hidden="true">&times;</span>
         </button>
 
+        <div class="col-md-12 shadow-box-cstm">
+            <div class="col-md-4">
+                <p class="fs12">
+                    <label class="control-label labels-font-header" style="width: auto;">Customer Name: </label>
+                    <span class="span-header-red" style="text-transform: capitalize"> {{customerName }} </span>
+                </p>
+            </div>
+            <div class="col-md-4">
+                <p class="fs12">
+                    <label class="control-label labels-font-header" style="width: auto;">Customer Code: </label>
+                    <span class="span-header-red" style="text-transform: capitalize"> {{customerCode }} </span>
+                </p>
+            </div>
+        </div>
 
     </div>
     <div class="modal-body">
@@ -409,37 +494,39 @@
                         <th>State</th>
                         <th>Postal Code</th>
                         <th>Country</th>
-                        <th>Updated By</th>
-                        <th>Last Updated Time</th>
+                        <th>Is Primary</th>
+                        <th>Is Active</th>
                         <th>Created By</th>
                         <th>Created Time</th>
 
+                        <th>Updated By</th>
+                        <th>Last Updated Time</th>
+
+
+
                     </tr>
                 </thead>
-                <!-- <tr *ngFor="let audit of billingauditHisory">
-                    <td>{{audit.siteName}}</td>
-                    <td>{{audit.updatedBy}}</td>
-                    <td>{{audit.updatedDate}}</td>
+               
+
+                <tr *ngFor="let audit of billingauditHisory; let i = index;">
+                    <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'siteName', audit.siteName)  ? 'black' : 'red'  }">{{audit.siteName}}</td>
+                    <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'address1', audit.address1)  ? 'black' : 'red'  }">{{audit.address1}}</td>
+                    <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'address2', audit.address2)  ? 'black' : 'red'  }">{{audit.address2}}</td>
+                    <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'city', audit.city)  ? 'black' : 'red'  }">{{audit.city}}</td>
+                    <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'stateOrProvince', audit.stateOrProvince)  ? 'black' : 'red'  }">{{audit.stateOrProvince}}</td>
+                    <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'postalCode', audit.postalCode)  ? 'black' : 'red'  }">{{audit.postalCode}}</td>
+
+                    <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'country', audit.country)  ? 'black' : 'red'  }">{{audit.country}}</td>
+                    <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'isPrimary', audit.isPrimary)  ? 'black' : 'red'  }">{{audit.isPrimary}}</td>
+
+                    <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'isActive', audit.isActive)  ? 'black' : 'red'  }">{{audit.isActive}}</td>
                     <td>{{audit.createdBy}}</td>
-                    <td>{{audit.createdDate}}</td>
+                    <td>{{audit.createdDate | date: 'dd-MM-yyyy h:mm a '}}</td>
 
-                </tr> -->
+                    <td>{{audit.updatedBy}}</td>
+                    <td>{{audit.updatedDate | date: 'dd-MM-yyyy h:mm a '}}</td>
 
-            <tr *ngFor="let audit of billingauditHisory; let i = index;">
-                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'siteName', audit.siteName)  ? 'black' : 'red'  }">{{audit.siteName}}</td>
-                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'line1', audit.line1)  ? 'black' : 'red'  }">{{audit.line1}}</td>
-                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'line2', audit.line2)  ? 'black' : 'red'  }">{{audit.line2}}</td>
-                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'city', audit.city)  ? 'black' : 'red'  }">{{audit.city}}</td>
-                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'stateOrProvince', audit.stateOrProvince)  ? 'black' : 'red'  }">{{audit.stateOrProvince}}</td>
-                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'postalCode', audit.postalCode)  ? 'black' : 'red'  }">{{audit.postalCode}}</td>
-
-                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'country', audit.country)  ? 'black' : 'red'  }">{{audit.country}}</td>
-
-                <td>{{audit.updatedBy}}</td>
-                <td>{{audit.updatedDate | date: 'dd-MM-yyyy h:mm a '}}</td>
-                <td>{{audit.createdBy}}</td>
-                <td>{{audit.createdDate | date: 'dd-MM-yyyy h:mm a '}}</td>
-            </tr>
+                </tr>
             </table>
         </div>
     </div>

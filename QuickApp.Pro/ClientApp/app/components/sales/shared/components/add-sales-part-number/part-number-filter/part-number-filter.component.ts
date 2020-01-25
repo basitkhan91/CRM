@@ -90,7 +90,11 @@ this.salesQuoteService.getSearchPartObject()
     console.log(this.query);
   }
   calculate() {
-    this.query.partSearchParamters.quantityToQuote = this.query.partSearchParamters.quantityRequested - this.query.partSearchParamters.quantityAlreadyQuoted;
+    let qr = + this.query.partSearchParamters.quantityRequested;
+    if(qr){
+      this.query.partSearchParamters.quantityToQuote = qr - this.query.partSearchParamters.quantityAlreadyQuoted;
+    }
+    
     this.salesQuoteService.updateSearchPartObject(this.query);
   }
   private ptnumberlistdata() {

@@ -1,5 +1,11 @@
-﻿.select-markup {
+﻿.right_col {
+    padding: 2px 6px;
+}
+.select-markup {
     width: 197px !important;
+}
+.card{
+    padding: 10px;
 }
 .x_panel {
     padding: 0 10px;
@@ -47,4 +53,27 @@ a.fa.fa-plus-circle {
         max-width: 44%;
         margin-right: 15px;
     }
+}
+:host /deep/ .ui-autocomplete{
+    padding: 0px !important 
+}
+:host /deep/ .ui-table-wrapper{
+    padding: 0px !important 
+}
+:host /deep/ .ui-table.ui-widget{
+    padding: 0px !important 
+}
+
+.total_records_section label{
+    width: 100%;
+    right: 10px;
+    text-align: right;
+    position: relative;
+    bottom: 34px;
+}
+td {
+    padding: 5px !important;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }

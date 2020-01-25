@@ -88,6 +88,7 @@ export class SalesQuoteCreateComponent implements OnInit {
   id: any;
   selectedApprovers: any[] = [];
   errorMessages: any[] = [];
+  isEdit:boolean = false;
   @ViewChild("errorMessagePop") public errorMessagePop: ElementRef;
   @ViewChild("newSalesQuoteForm") public newSalesQuoteForm: NgForm;
   constructor(
@@ -132,8 +133,13 @@ export class SalesQuoteCreateComponent implements OnInit {
     this.getCustomerWarningsData();
     this.getAccountTypes();
 
-    if (this.id) this.getSalesQuoteInstance(this.id);
-    else this.getNewSalesQuoteInstance(this.customerId);
+    if (this.id) {
+      this.getSalesQuoteInstance(this.id);
+      this.isEdit = true;
+    }else{
+      this.getNewSalesQuoteInstance(this.customerId);
+      this.isEdit = false;
+    } 
   }
   get userName(): string {
     return this.authService.currentUser
@@ -364,6 +370,18 @@ export class SalesQuoteCreateComponent implements OnInit {
       }
     }
   }
+  updateApproverDetails(approver) {
+    if (this.allEmployeeinfo) {
+      for (let i = 0; i < this.allEmployeeinfo.length; i++) {
+          let employeeId = approver.employeeId;
+          if (employeeId == this.allEmployeeinfo[i].employeeId) {
+            approver.firstName = this.allEmployeeinfo[i].firstName;
+            approver.employeeCode = this.allEmployeeinfo[i].employeeCode;
+            approver.email = this.allEmployeeinfo[i].email;
+          }
+      }
+    }
+  }
 
   getSalesQuoteInstance(salesQuoteId: number) {
     this.alertService.startLoadingMessage();
@@ -380,18 +398,23 @@ export class SalesQuoteCreateComponent implements OnInit {
           switch (level) {
             case 1:
               this.approvers[0] = this.salesQuoteView.approverList[i];
+              this.updateApproverDetails(this.approvers[0]);
               break;
             case 2:
               this.approvers[1] = this.salesQuoteView.approverList[i];
+              this.updateApproverDetails(this.approvers[1]);
               break;
             case 3:
               this.approvers[2] = this.salesQuoteView.approverList[i];
+              this.updateApproverDetails(this.approvers[2]);
               break;
             case 4:
               this.approvers[3] = this.salesQuoteView.approverList[i];
+              this.updateApproverDetails(this.approvers[3]);
               break;
             case 5:
               this.approvers[4] = this.salesQuoteView.approverList[i];
+              this.updateApproverDetails(this.approvers[4]);
               break;
           }
           // this.approvers[i].employeeId = this.salesQuoteView.approverList[i].employeeId;
@@ -402,12 +425,16 @@ export class SalesQuoteCreateComponent implements OnInit {
       let partList: any[] = this.salesQuoteView.parts;
 
       for (let i = 0; i < partList.length; i++) {
-        let selectedPart = partList[0];
+        let selectedPart = partList[i];
         let partNumberObj = new PartDetail();
         partNumberObj.itemMasterId = selectedPart.itemMasterId;
         partNumberObj.stockLineId = selectedPart.stockLineId;
         partNumberObj.fixRate = selectedPart.fxRate;
         partNumberObj.quantityFromThis = selectedPart.qtyQuoted;
+        partNumberObj.conditionId = selectedPart.conditionId;
+        partNumberObj.conditionDescription = selectedPart.conditionDescription;
+        partNumberObj.currencyId = selectedPart.currencyId;
+        partNumberObj.currencyDescription = selectedPart.currencyDescription;
 
         partNumberObj.partNumber = selectedPart.partNumber;
         partNumberObj.description = selectedPart.partDescription;
@@ -425,11 +452,20 @@ export class SalesQuoteCreateComponent implements OnInit {
         partNumberObj.masterCompanyId = selectedPart.masterCompanyId;
         partNumberObj.quantityFromThis = selectedPart.qtyQuoted;
         partNumberObj.markUpPercentage = selectedPart.markUpPercentage;
-        partNumberObj.unitCostExtended =
-          selectedPart.unitSalePrice * selectedPart.qtyQuoted;
+        
+        partNumberObj.markupExtended = selectedPart.markupExtended;
+        partNumberObj.method = selectedPart.method;
+        partNumberObj.methodType = selectedPart.methodType;
+        partNumberObj.serialNumber = selectedPart.serialNumber;
+        partNumberObj.marginAmountExtended = selectedPart.marginAmountExtended;
+        partNumberObj.marginPercentagePerUnit = selectedPart.marginPercentage;
+        partNumberObj.markupExtended = selectedPart.markupExtended;
+        partNumberObj.unitCostPerUnit = selectedPart.unitCost;
+        partNumberObj.unitCostExtended = selectedPart.unitCostExtended;
+
         this.selectedParts.push(partNumberObj);
       }
-      console.log(this.salesQuoteView);
+      console.log(this.selectedParts);
 
       this.salesQuote.priorities = this.salesQuoteView.priorities;
       this.salesQuote.leadSources = this.salesQuoteView.leadSources;
@@ -456,6 +492,7 @@ export class SalesQuoteCreateComponent implements OnInit {
       this.salesQuote.customerContactId = this.salesOrderQuoteObj.customerContactId;
       this.salesQuote.customerReferenceName = this.salesOrderQuoteObj.customerReference;
       this.salesQuote.contractReferenceName = this.salesOrderQuoteObj.contractReference;
+      this.salesQuote.quoteApprovedById = this.salesOrderQuoteObj.quoteApprovedById;
 
       this.salesQuote.salesPersonName = getObjectById(
         "employeeId",
@@ -620,7 +657,7 @@ export class SalesQuoteCreateComponent implements OnInit {
     console.log(this.salesOrderQuote);
     this.errorMessages = [];
     let haveError = false;
-    if (this.salesQuote.quoteTypeId < 0) {
+    if (this.salesQuote.quoteTypeId <= 0) {
       this.errorMessages.push("Please select Quote Type");
       haveError = true;
     }
@@ -648,11 +685,11 @@ export class SalesQuoteCreateComponent implements OnInit {
       this.errorMessages.push("Please select Quote Expiry Date");
       haveError = true;
     }
-    if (this.salesQuote.priorityId < 0) {
+    if (this.salesQuote.priorityId <= 0) {
       this.errorMessages.push("Please select Priority Type");
       haveError = true;
     }
-    if (this.salesQuote.accountTypeId < 0) {
+    if (this.salesQuote.accountTypeId <= 0) {
       this.errorMessages.push("Please select Account Type");
       haveError = true;
     }
@@ -757,6 +794,7 @@ export class SalesQuoteCreateComponent implements OnInit {
       this.salesOrderQuote.creditTermId = this.salesQuote.creditLimitTermsId;
       this.salesOrderQuote.restrictPMA = this.salesQuote.restrictPMA;
       this.salesOrderQuote.restrictDER = this.salesQuote.restrictDER;
+     // this.salesOrderQuote.quoteApprovedById = this.salesQuote.quoteApprovedById;
       if (this.salesQuote.approvedDate)
         this.salesOrderQuote.approvedDate = this.salesQuote.approvedDate.toDateString();
       this.salesOrderQuote.currencyId = this.salesQuote.currencyId;
@@ -779,9 +817,10 @@ export class SalesQuoteCreateComponent implements OnInit {
         let partNumberObj = new SalesOrderQuotePart();
         partNumberObj.salesOrderQuotePartId =
           selectedPart.salesOrderQuotePartId;
+        if(selectedPart.method === "Stock Line"){
+            partNumberObj.stockLineId = selectedPart.stockLineId;
+        }             
         partNumberObj.itemMasterId = selectedPart.itemMasterId;
-        partNumberObj.itemMasterId = selectedPart.itemMasterId;
-        partNumberObj.stockLineId = selectedPart.stockLineId;
         partNumberObj.fxRate = selectedPart.fixRate;
         partNumberObj.qtyQuoted = selectedPart.quantityFromThis;
         partNumberObj.unitSalePrice = selectedPart.salesPricePerUnit;
@@ -797,16 +836,22 @@ export class SalesQuoteCreateComponent implements OnInit {
         partNumberObj.unitCost = selectedPart.unitCostPerUnit;
         partNumberObj.methodType =
           selectedPart.method === "Stock Line" ? "S" : "I";
-        partList.push(partNumberObj);
+       
         partNumberObj.salesPriceExtended = selectedPart.salesPriceExtended;
         partNumberObj.markupExtended = selectedPart.markupExtended;
+        partNumberObj.markUpPercentage = selectedPart.markUpPercentage;
+        
         partNumberObj.salesDiscountExtended = selectedPart.salesDiscount;
         partNumberObj.netSalePriceExtended = selectedPart.netSalePriceExtended;
         partNumberObj.unitCostExtended = selectedPart.unitCostExtended;
         partNumberObj.marginAmount = selectedPart.marginAmount;
         partNumberObj.marginAmountExtended = selectedPart.marginAmountExtended;
-        partNumberObj.marginPercentage = selectedPart.marginPercentage;
+        partNumberObj.marginPercentage = selectedPart.marginPercentagePerUnit;
         partNumberObj.conditionId = selectedPart.conditionId;
+        partNumberObj.currencyId = selectedPart.currencyId;
+       
+
+        partList.push(partNumberObj);
       }
       this.salesQuoteView.parts = partList;
 

@@ -21,13 +21,20 @@ namespace DAL.Repositories
 
         public IEnumerable<DAL.Models.IntegrationPortal> getIntegrationData(int id)
         {
-            return _appContext.IntegrationPortal.Where(c => (c.IsDelete == false || c.IsDelete == null)&&c.IsActive==true).OrderByDescending(c => c.IntegrationPortalId).ToList();
+            return _appContext.IntegrationPortal.Where(c => (c.IsDeleted == false || c.IsDeleted == null)&&c.IsActive==true).OrderByDescending(c => c.IntegrationPortalId).ToList();
 
            
         }
+
+        public IEnumerable<DAL.Models.IntegrationPortal> getIntegrationAllData()
+        {
+            return _appContext.IntegrationPortal.Where(c => (c.IsDeleted == false || c.IsDeleted == null)).OrderByDescending(c => c.IntegrationPortalId).ToList();
+
+
+        }
         public IEnumerable<IntegrationPortal> GetIntegrationLite()
         {
-            return _appContext.IntegrationPortal.Where(v => v.IsActive == true && (v.IsDelete == false|| v.IsDelete==null))
+            return _appContext.IntegrationPortal.Where(v => v.IsActive == true && (v.IsDeleted == false|| v.IsDeleted ==null))
                 .Select(v => new IntegrationPortal { IntegrationPortalId = v.IntegrationPortalId,
                 Description = v.Description }).OrderBy(c => c.Description).ToList();
         }

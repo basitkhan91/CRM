@@ -8,11 +8,13 @@ namespace DAL.Repositories.Interfaces
 
     public interface IVendor : IRepository<Vendor>
     {
-        
+
         IEnumerable<object> GetVendorsList(Filters<VendorFilters> vendorFilters);
+        IEnumerable<object> VendorGlobalSearch(string filterText, int pageNumber, int pageSize);
+        object GetVendorDataById(long vendorId);
         IEnumerable<Vendor> GetVendors();
-        IEnumerable<object> GetVendorsAuditHistory(long vendorId);       
-        
+        IEnumerable<object> GetVendorsAuditHistory(long vendorId);
+
         IEnumerable<Vendor> GetVendorsLite();
 
 
@@ -67,13 +69,13 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<object> GetVendorProcessListForFinance(int companyId);
         IEnumerable<object> GetVendorProcessListFromTransaction(long vendorId);
 
-        IEnumerable<VendorCapabilityAircraft> VendorAircraft(VendorCapabilityAircraft[] vendorAircraftMapping);
+        VendorCapabilityAircraft VendorAircraft(VendorCapabilityAircraft vendorAircraftMapping);
         IEnumerable<object> VendorAircraftDataByCapsId(long vendorCapabilityId);
         bool EditVendorAircraft(long id, string memo, string updatedBy);
         bool DeleteVendorAircraft(long id, string updatedBy);
         IEnumerable<object> GetVendorsCheckAuditHistory(long id);
 
-        IEnumerable<object> searchItemAircraftMappingDataByMultiTypeIdModelIDDashID(long VendorCapabilityId, string AircraftTypeId, string AircraftModelId, string DashNumberId);
+        IEnumerable<object> searchItemAircraftMappingDataByMultiTypeIdModelIDDashID(long VendorCapabilityId, string AircraftTypeId, string AircraftModelId, string DashNumberId, string memo);
 
     }
 }

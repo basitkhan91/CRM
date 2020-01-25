@@ -16,5 +16,5 @@ export interface IMaterialList {
     workflowId:string;
     AllowEdit:boolean;
     IsDeleted:boolean;
-
+    Order: number;
 }

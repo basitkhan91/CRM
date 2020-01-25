@@ -251,8 +251,8 @@ export class PoRoCategoryComponent implements OnInit, AfterViewInit {
         this.modal = this.modalService.open(editporoCategoryPopup, { size: 'sm', backdrop: 'static', keyboard: false });
     }
 
-    updateporoCategory(): void {
-        this.currentporoCategory.updatedBy = this.userName;
+    updateStatus(): void {
+        this.poroCategoryToUpdate.updatedBy = this.userName;
         this.poroCategoryService.update(this.poroCategoryToUpdate).subscribe(asset => {
             this.alertService.showMessage("Success", "PO-RO-Category updated successfully.", MessageSeverity.success);
             this.poroCategoryService.getAll().subscribe(assets => {
@@ -292,7 +292,7 @@ export class PoRoCategoryComponent implements OnInit, AfterViewInit {
     toggleIsActive(poroCategory: any, event): void {
         this.poroCategoryToUpdate = poroCategory;
         this.poroCategoryToUpdate.isActive = event.checked == false ? false : true;
-        this.updateporoCategory();
+        this.updateStatus();
     }
 
     handleChangeforPORPIsActive(rowData, e) {

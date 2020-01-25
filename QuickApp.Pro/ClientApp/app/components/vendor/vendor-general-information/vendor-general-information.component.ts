@@ -33,6 +33,7 @@ import { CustomerService } from '../../../services/customer.service';
 import { CommonService } from '../../../services/common.service';
 import { IntegrationService } from '../../../services/integration-service';
 import { ConfigurationService } from '../../../services/configuration.service';
+import { editValueAssignByCondition, getObjectById } from '../../../generic/autocomplete';
 declare const google: any;
 @Component({
     selector: 'app-vendor-general-information',
@@ -155,7 +156,7 @@ export class VendorGeneralInformationComponent implements OnInit, OnDestroy {
         if (this.vendorService.generalCollection) {
             this.local = this.vendorService.generalCollection; 
             this.toGetVendorGeneralDocumentsList(this.local.vendorId);       
-        }        
+        }       
 
 
 
@@ -165,6 +166,7 @@ export class VendorGeneralInformationComponent implements OnInit, OnDestroy {
             this.viewName = "Edit";
             this.local = this.vendorService.listCollection.t;
             this.sourceVendor = this.vendorService.listCollection.t;
+            console.log(this.sourceVendor);
             this.toGetVendorGeneralDocumentsList(this.sourceVendor.vendorId);  
             this.sourceVendor.address1 = this.vendorService.listCollection.address1;
             this.sourceVendor.address2 = this.vendorService.listCollection.address2;
@@ -311,6 +313,10 @@ export class VendorGeneralInformationComponent implements OnInit, OnDestroy {
         this.loadingIndicator = false;
         this.dataSource.data = allWorkFlows;
         this.allCountryinfo = allWorkFlows;
+        console.log(this.vendorService.isEditMode);        
+        if(this.vendorService.isEditMode && this.sourceVendor.country != null) {
+            this.sourceVendor.country = getObjectById('countries_id', this.sourceVendor.country, this.allCountryinfo);
+        }
     }
     //Load Capability Data
     private Capabilitydata() {
@@ -666,7 +672,8 @@ export class VendorGeneralInformationComponent implements OnInit, OnDestroy {
         if (this.sourceVendor.vendorName && this.sourceVendor.vendorCode && this.sourceVendor.vendorEmail && this.sourceVendor.vendorPhone && this.sourceVendor.address1 && this.sourceVendor.city
             && this.sourceVendor.PostalCode && this.sourceVendor.country && this.sourceVendor.vendorClassificationIds) {
 
-
+                this.sourceVendor.country = editValueAssignByCondition('countries_id', this.sourceVendor.country);
+                console.log(this.sourceVendor);  
             if (!this.sourceVendor.vendorId) {
                 this.sourceVendor.createdBy = this.userName;
                 this.sourceVendor.updatedBy = this.userName;
@@ -946,15 +953,22 @@ export class VendorGeneralInformationComponent implements OnInit, OnDestroy {
         }
     }
     filtercountry(event) {
-        this.countrycollection = [];
-        if (this.allCountryinfo.length > 0) {
-            for (let i = 0; i < this.allCountryinfo.length; i++) {
-                let countryName = this.allCountryinfo[i].nice_name;
-                if (countryName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-                    this.countrycollection.push(countryName);
-                }
-            }
-        }
+        //this.countrycollection = [];
+        // if (this.allCountryinfo.length > 0) {
+        //     for (let i = 0; i < this.allCountryinfo.length; i++) {
+        //         let countryName = this.allCountryinfo[i].nice_name;
+        //         if (countryName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+        //             this.countrycollection.push(countryName);
+        //         }
+        //     }
+        // }
+        this.countrycollection = this.allCountryinfo;
+		if (event.query !== undefined && event.query !== null) {
+			const countries = [...this.allCountryinfo.filter(x => {
+				return x.nice_name.toLowerCase().includes(event.query.toLowerCase())
+			})]
+			this.countrycollection = countries;
+		}
     }
 
     parentEventHandler(event) {

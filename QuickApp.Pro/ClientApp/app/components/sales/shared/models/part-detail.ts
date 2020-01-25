@@ -4,7 +4,7 @@ export class PartDetail {
   stockLineNumber: string;
   description: string;
   conditionId: number;
-  conditionType: string;
+  conditionDescription: string;
   classification: string;
   itemClassification: any;
   quantityRequested: number;
@@ -13,6 +13,8 @@ export class PartDetail {
   quantityFromThis: number;
   uom: string;
   currency: any;
+  currencyId: string;
+  currencyDescription: string;
   fixRate: number;
   partType: string;
   markUpPercentage: number;

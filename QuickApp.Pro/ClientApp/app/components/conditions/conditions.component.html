@@ -19,14 +19,14 @@
                                 <div style="text-align: right; margin-left: -6px">
                                     <p-multiSelect [options]="conditionHeaders" [(ngModel)]="selectedColumns" optionLabel="header" 
                                                    [style]="{minWidth: '200px'}" style="float:left" (onChange)="columnsChanges()" ></p-multiSelect>
-                                    <button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" iconPos="left" label="Export All Data" pTooltip="Download All Data" tooltipPosition="top" (click)="dt.exportCSV()"></button>
-                                    <button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" iconPos="left" label="Export Selection Only" pTooltip="Download Selected" tooltipPosition="top"
+                                    <button type="button" class="btn btn-primary" pButton icon="fa-download" iconPos="left" label="Export Data" matTooltip="Download Data" matTooltipPosition="above" tooltipPosition="top" (click)="dt.exportCSV()"></button>
+                                    <button type="button" class="btn btn-primary" pButton icon="fa-download" iconPos="left" label="Export Selection Only" matTooltip="Download Selected" matTooltipPosition="above" tooltipPosition="top"
                                             (click)="dt.exportCSV({selectionOnly:true})"></button>
                                     <div class="excel-upload excel-upload-cstm">
                                         <input type="file" name="upload[]" id="upload" (change)="customExcelUpload($event)" class="uploaddoc upload-file" 
                                                accept=".xlsx, .xls, .csv">
                                         <label for="upload">
-                                            <span pTooltip="Upload Data (Excel)" tooltipPosition="top">
+                                            <span matTooltip="Upload Data (Excel)" tooltipPosition="top" matTooltipPosition="above">
                                                 <i class="fa fa-upload"></i>
                                             </span>
                                         </label>
@@ -54,8 +54,8 @@
                                 </tr>
 
                             </ng-template>
-                            <ng-template pTemplate="body" let-rowData let-columns="columns">
-                                <tr [pSelectableRow]="rowData" pReorderableRowHandle (dblclick)="viewSelectedRow(rowData)">
+                            <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+                                <tr [pSelectableRow]="rowData" pReorderableRowHandle (dblclick)="viewSelectedRow(rowData)" [pSelectableRowIndex]="rowIndex">
                                     <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle data-toggle="modal" data-target="#view">
                                         {{
 col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?
@@ -113,8 +113,8 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                     </strong>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary-cstm" data-dismiss="modal" (click)="deleteConformation('Yes')">Yes</button>
-                    <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="deleteConformation('No')">No</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="deleteConformation('Yes')">Yes</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="deleteConformation('No')">No</button>
                 </div>
             </div>
 
@@ -160,7 +160,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                                     <label for="memo" class="control-label">Memo</label>
                                 </div>
                                 <div class="col-sm-5">
-                                    <textarea #memo="ngModel" id="memo" name="memo" [(ngModel)]="addNewCondition.memo"></textarea>
+                                    <textarea #memo="ngModel" id="memo" name="memo"  (ngModelChange)="getmemo($event)" [(ngModel)]="addNewCondition.memo"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -179,8 +179,8 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                             <div class="clear"></div>
                         </div>
                         <div class="modal-footer">
-                            <button class="btn btn-primary-cstm" data-dismiss="modal" [disabled]="!userForm.valid || disableSaveForCondition" (click)="saveCondition();"> {{isEditMode ? 'Update' : 'Save' }}</button>
-                            <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="resetConditionForm()">Close</button>
+                            <button class="btn btn-primary" data-dismiss="modal" [disabled]="!userForm.valid || disableSaveForCondition" (click)="saveCondition();"> {{isEditMode ? 'Update' : 'Save' }}</button>
+                            <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="resetConditionForm()">Close</button>
                         </div>
                     </form>
                 </div>
@@ -246,7 +246,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                     <div class="clear"></div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" id="" name="" (click)="resetConditionForm()">Close</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" id="" name="" (click)="resetConditionForm()">Close</button>
                 </div>
             </div>
 
@@ -300,7 +300,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                 </div>
             </div>
 

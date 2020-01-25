@@ -16,6 +16,9 @@ namespace DAL
         // Test Changes....
         public string CurrentUserId { get; set; }
 
+        public DbSet<CodeTypes> CodeTypes { get; set; }
+        public DbSet<CodePrefixes> CodePrefixes { get; set; }
+        public DbSet<GlobalSettings> GlobalSettings { get; set; }
         public DbSet<CustomerContactAudit> CustomerContactAudit { get; set; }
 
         public DbSet<ShippingReference> ShippingReference { get; set; }
@@ -31,6 +34,10 @@ namespace DAL
         public DbSet<ModuleHierarchyMaster> ModuleHierarchyMaster { get; set; }
         public DbSet<AssetStatus> AssetStatus { get; set; }
         public DbSet<AssetStatusAudit> AssetStatusAudit { get; set; }
+        public DbSet<AssetLocation> AssetLocation { get; set; }
+        public DbSet<AssetLocationAudit> AssetLocationAudit { get; set; }
+        public DbSet<AssetAcquisitionType> AssetAcquisitionType { get; set; }
+        public DbSet<AssetAcquisitionTypeAudit> AssetAcquisitionTypeAudit { get; set; }
         public DbSet<Customer> Customer { get; set; }
         public DbSet<CustomerAudit> CustomerAudit { get; set; }
         public DbSet<ProductCategory> ProductCategories { get; set; }
@@ -67,6 +74,7 @@ namespace DAL
         public DbSet<VendorCapabiliyAudit> VendorCapabiliyAudit { get; set; }
         public DbSet<Reason> Reason { get; set; }
         public DbSet<CapabilityType> capabilityType { get; set; }
+        public DbSet<CapabilityTypeAudit> CapabilityTypeAudit { get; set; }
 
         public DbSet<ActionAttribute> ActionAttribute { get; set; }
         public DbSet<ActionAttributeAudit> ActionAttributeAudit { get; set; }
@@ -139,6 +147,7 @@ namespace DAL
         public DbSet<VendorWarnings> VendorWarning { get; set; }
         public DbSet<CustomerWarning> CustomerWarning { get; set; }
         public DbSet<Employee> Employee { get; set; }
+        //public DbSet<AspNetUsers> AspNetUsers { get; set; }
         public DbSet<EmployeeAudit> EmployeeAudit { get; set; }
         public DbSet<shift> Shift { get; set; }
         public DbSet<Countries> Countries { get; set; }
@@ -155,6 +164,7 @@ namespace DAL
 
         public DbSet<CustomerBillingAddress> CustomerBillingAddress { get; set; }
         public DbSet<CustomerBillingAddressAudit> CustomerBillingAddressAudit { get; set; }
+
         public DbSet<ATAChapter> ATAChapter { get; set; }
 
         public DbSet<AircraftType> AircraftType { get; set; }
@@ -193,10 +203,13 @@ namespace DAL
         public DbSet<CustomerAffiliation> CustomerAffiliation { get; set; }
 
         public DbSet<StockLine> StockLine { get; set; }
+        public DbSet<StockLineDraft> StockLineDraft { get; set; }
+        public DbSet<TimeLife> TimeLife { get; set; }
+        public DbSet<TimeLifeDraft> TimeLifeDraft { get; set; }
 
         public DbSet<LaborOverloadCost> LaborOverloadCost { get; set; }
         public DbSet<LaborOverloadCostAudit> LaborOverloadCostAudit { get; set; }
-        public DbSet<TimeLife> TimeLife { get; set; }
+
 
         public DbSet<LegalEntity> LegalEntity { get; set; }
 
@@ -317,7 +330,7 @@ namespace DAL
 
         public DbSet<GLAccountClassAudit> GLAccountClassAudit { get; set; }
 
-       
+
         public DbSet<POROCategory> POROCategory { get; set; }
         public DbSet<POROCategoryAudit> POROCategoryAudit { get; set; }
 
@@ -361,10 +374,12 @@ namespace DAL
 
         public DbSet<JournalBatch> JournalBatch { get; set; }
         public DbSet<JournalType> JournalType { get; set; }
+        public DbSet<JournalCurrencyType> JournalCurrencyType { get; set; }
         public DbSet<JournalPeriod> JournalPeriod { get; set; }
         public DbSet<JournalSource> JournalSource { get; set; }
         public DbSet<JournalManual> JournalManual { get; set; }
-
+        public DbSet<BalanceType> BalanceType { get; set; }
+        public DbSet<JournalCategory> JournalCategory { get; set; }
         public DbSet<WorkOrder> WorkOrder { get; set; }
         public DbSet<WorkOrderStatus> WorkOrderStatus { get; set; }
         public DbSet<WorkOrderType> WorkOrderType { get; set; }
@@ -438,7 +453,7 @@ namespace DAL
         public DbSet<Percentage> Percent { get; set; }
         public DbSet<PercentageAudit> PercentAudit { get; set; }
         public DbSet<AssetIntangibleAttributeType> AssetIntangibleAttributeType { get; set; }
-       // public DbSet<Percent> Percent { get; set; }
+        // public DbSet<Percent> Percent { get; set; }
         public DbSet<PurchaseOrderApprover> PurchaseOrderApprover { get; set; }
         public DbSet<PurchaseOrderApproverList> PurchaseOrderApproverList { get; set; }
         public DbSet<POBillingShippingAddress> POBillingShippingAddress { get; set; }
@@ -446,7 +461,7 @@ namespace DAL
         public DbSet<VendorBillingAddress> VendorBillingAddress { get; set; }
         public DbSet<VendorBillingAddressAudit> VendorBillingAddressAudit { get; set; }
         public DbSet<VendorDocumentDetails> VendorDocumentDetails { get; set; }
-        public DbSet<VendorDocumentDetailsAudit> VendorDocumentDetailsAudit { get; set; }        
+        public DbSet<VendorDocumentDetailsAudit> VendorDocumentDetailsAudit { get; set; }
         public DbSet<PurchaseOrderShipVia> PurchaseOrderShipVia { get; set; }
         public DbSet<LegalEntityBillingAddress> LegalEntityBillingAddress { get; set; }
         public DbSet<LegalEntityShippingAddress> LegalEntityShippingAddress { get; set; }
@@ -471,7 +486,7 @@ namespace DAL
         public DbSet<Master1099> Master1099 { get; set; }
         public DbSet<VendorProcess1099> VendorProcess1099 { get; set; }
         public DbSet<VendorCapabilityAircraft> VendorCapabilityAircraft { get; set; }
-        
+
 
 
         public DbSet<WorkOrderQuoteExclusions> WorkOrderQuoteExclusions { get; set; }
@@ -489,7 +504,7 @@ namespace DAL
         public DbSet<Master1099Audit> Master1099Audit { get; set; }
         public DbSet<TagType> TagType { get; set; }
         public DbSet<CustomerAircraftMappingAudit> CustomerAircraftMappingAudit { get; set; }
-        
+
         public DbSet<Models.Sales.MasterSalesOrderQuoteStatus> MasterSalesOrderQuoteStatus { get; set; }
         public DbSet<AuditCustomerContact> AuditCustomerContact { get; set; }
         public DbSet<WorkOrderSettings> WorkOrderSettings { get; set; }
@@ -497,8 +512,9 @@ namespace DAL
         public DbSet<EmployeeStation> EmployeeStation { get; set; }
         public DbSet<EmployeeStationAudit> EmployeeStationAudit { get; set; }
         public DbSet<Carrier> Carrier { get; set; }
+        public DbSet<ShippingBillingAddressAudit> ShippingBillingAddressAudit { get; set; }
 
-
+        
 
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {

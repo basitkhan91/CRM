@@ -46,8 +46,8 @@
                                         <i class="fa fa-search"></i>
                                         <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder=" Filter">
                                     </div>
-                                    <button type="button" class="btn-primary-cstm" pButton icon="fa-download" iconPos="left" label="Export  Data" (click)="dt.exportCSV()" matTooltip="Download Data" matTooltipPosition="above" style="padding: 5px 12px !important;"></button>
-                                    <button type="button" class="btn-primary-cstm" pButton icon="fa-download" iconPos="left" label="Export Selected Data" matTooltip="Download Selected Data" matTooltipPosition="above" (click)="dt.exportCSV({selectionOnly:true})" style="padding: 5px 12px !important;"></button>
+                                    <button type="button" class="btn-primary" pButton icon="fa-download" iconPos="left" label="Export  Data" (click)="dt.exportCSV()" matTooltip="Download Data" matTooltipPosition="above" style="padding: 5px 12px !important;"></button>
+                                    <button type="button" class="btn-primary" pButton icon="fa-download" iconPos="left" label="Export Selected Data" matTooltip="Download Selected Data" matTooltipPosition="above" (click)="dt.exportCSV({selectionOnly:true})" style="padding: 5px 12px !important;"></button>
                                 </div>
         
                                 <div class="clear"></div>
@@ -111,6 +111,23 @@
         
                                 </tr>
                             </ng-template>
+                            <ng-template pTemplate="summary" id="footer">
+                                <div style="text-align: right;">
+                                    <label id="footer" class="footer">No'of records:</label>
+                                    <input style="width: 5%;"
+                                            [(ngModel)]="totalRecords"
+                                            [disabled]="true"
+                                            pInputText
+                                            type="text" />
+                                    &nbsp;&nbsp;
+                                    <label id="footer" class="footer1">Pages Count:</label>
+                                    <input style="width: 5%;"
+                                            [(ngModel)]="totalPages"
+                                            [disabled]="true"
+                                            pInputText
+                                            type="text" />
+                                </div>                    
+                                </ng-template>
                     </p-table>
                 </div>
             </div>
@@ -136,8 +153,8 @@
         </strong>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-primary-cstm" (click)="deleteItemAndCloseModel()">Yes</button>
-        <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">No</button>
+        <button type="button" class="btn btn-primary" (click)="deleteItemAndCloseModel()">Yes</button>
+        <button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
     </div>
 </ng-template>
 
@@ -193,7 +210,7 @@
                 </div>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
+        <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
     </div>
 </ng-template>
 
@@ -236,7 +253,7 @@
                         <p-table class="ptable-custom" [value]="aircraftListDataValues" [rows]="6" [columns]="colsaircraftLD" [scrollable]="true" [style]="{width:'100%'}" [paginator]="true">
                             <ng-template pTemplate="header" let-columns>
                                 <tr>
-                                    <th>Id</th>
+                                    <!-- <th>Id</th> -->
                                     <th *ngFor="let col of columns">
                                         {{col.header}}
                                     </th>
@@ -244,7 +261,7 @@
                             </ng-template>
                             <ng-template pTemplate="body" let-i="rowIndex" let-rowData let-columns="columns">
                                 <tr>
-                                    <td>{{i+1}}</td>
+                                    <!-- <td>{{i+1}}</td> -->
                                     <td *ngFor="let col of columns">
                                         {{rowData[col.field]}}
                                     </td>
@@ -256,7 +273,7 @@
               </div>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
             </div>
           </div>
         </div>

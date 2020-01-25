@@ -1,13 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-
+using System.ComponentModel.DataAnnotations;
 namespace DAL.Models
 {
     public class ContactAudit
     {
-        public long ContactAuditId { get; set; }
-        public long? ContactId { get; set; }
+        [Key]
+        public long AuditContactId { get; set; }
+        public long ModuleId { get; set; }
+        public long ReferenceId { get; set; }
+        public long ContactId { get; set; }
+        public bool? IsDefaultContact { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string MiddleName { get; set; }
@@ -15,6 +19,7 @@ namespace DAL.Models
         public string WorkPhone { get; set; }
         public string MobilePhone { get; set; }
         public string Prefix { get; set; }
+        public string Tag { get; set; }
         public string Suffix { get; set; }
         public string AlternatePhone { get; set; }
         public string WorkPhoneExtn { get; set; }
@@ -25,8 +30,8 @@ namespace DAL.Models
         public int MasterCompanyId { get; set; }
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }
-        public System.DateTime CreatedDate { get; set; }
-        public System.DateTime UpdatedDate { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public DateTime UpdatedDate { get; set; }
         public Nullable<bool> IsActive { get; set; }
     }
 }

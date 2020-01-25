@@ -250,7 +250,8 @@ export class UserEditorComponent implements OnChanges, OnDestroy {
             newPassword: this.isChangePassword ? formModel.password.newPassword : null,
             confirmPassword: this.isChangePassword ? formModel.password.confirmPassword : null,
             isEnabled: formModel.isEnabled,
-            isLockedOut: this.user.isLockedOut
+            isLockedOut: this.user.isLockedOut,
+            employeeId:this.user.employeeId,
         };
     }
 

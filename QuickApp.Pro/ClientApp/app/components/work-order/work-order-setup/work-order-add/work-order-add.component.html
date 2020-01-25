@@ -8,13 +8,13 @@
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item" aria-current="page">Work Order</li>
-                                <li class="breadcrumb-item active" aria-current="page">Create WorkOrder</li>
+                                <li class="breadcrumb-item active" aria-current="page">Create Work Order</li>
                                 <li *ngIf="isSubWorkOrder" class="breadcrumb-item active" aria-current="page">Sub WOrkOrder </li>
                             </ol>
                         </nav>
                         <div class="pheading">
-                            <h4 *ngIf="!isSubWorkOrder" class="page-heading">Work Order Setup</h4>
-                            <h4 *ngIf="isSubWorkOrder" class="page-heading">Sub Work Order Setup</h4>
+                            <h4 *ngIf="!isSubWorkOrder" class="page-heading">Create Work Order </h4>
+                            <h4 *ngIf="isSubWorkOrder" class="page-heading">Create Sub Work Order </h4>
                         </div>
                         <div class="clear"></div>
                         <div class="card">
@@ -71,12 +71,13 @@
                                 <div class="more-details" [hidden]="!isDetailedView">
                                     <div class="col-md-12 row">
                                         <div class="col-md-3 col-offset-3">
-                                            <label style="width: auto;">
+                                            <label style="width: auto;" data-toggle="tooltip" title="Single MPN" >
                                                 <input type="radio" [value]=true name="type" #type="ngModel"
+                                                        
                                                        [(ngModel)]="workOrderGeneralInformation.isSinglePN">
                                                 Single MPN
                                             </label>
-                                            <label style="width: auto;">
+                                            <label style="width: auto;" data-toggle="tooltip" title="Multiple MPN" >
                                                 <input type="radio" [value]=false name="type" #type="ngModel"
                                                        [(ngModel)]="workOrderGeneralInformation.isSinglePN">
                                                 Multiple MPN
@@ -85,26 +86,26 @@
                                         <div class="col-md-6">
 
                                             <label class="control-label col-sm-4 w80">WO Type</label>
-                                            <label style="width: auto;">
+                                            <label style="width: auto;" data-toggle="tooltip" title="Customer">
                                                 <input type="radio" value="1" name="dealer"
                                                        #dealer="ngModel"
                                                        [(ngModel)]="workOrderGeneralInformation.workOrderTypeId"
                                                        (click)="woDealerChange($event.target.value)">
                                                 Customer
                                             </label>
-                                            <label style="width: auto;">
+                                            <label style="width: auto;" data-toggle="tooltip" title="Internal">
                                                 <input type="radio" value="2" name="dealer" #dealer="ngModel" [(ngModel)]="workOrderGeneralInformation.workOrderTypeId"
                                                        (click)="woDealerChange($event.target.value)">
                                                 Internal
                                             </label>
 
-                                            <label style="width: auto;">
+                                            <label style="width: auto;" data-toggle="tooltip" title="Tear Down">
                                                 <input type="radio" value="3" name="dealer" #dealer="ngModel"
                                                        [(ngModel)]="workOrderGeneralInformation.workOrderTypeId"
                                                        (click)="woDealerChange($event.target.value)">
                                                 Tear Down
                                             </label>
-                                            <label style="width: auto;">
+                                            <label style="width: auto;" data-toggle="tooltip" title="Shop Service">
                                                 <input type="radio" value="4" name="dealer" #dealer="ngModel"
                                                        [(ngModel)]="workOrderGeneralInformation.workOrderTypeId"
                                                        (click)="woDealerChange($event.target.value)">
@@ -114,7 +115,7 @@
                                     </div>
                                     <div class="col-sm-3 w500">
                                         <div class="form-group col-sm-12">
-                                            <label class="control-label col-sm-4 w80">WO Type</label>
+                                            <!-- <label class="control-label col-sm-4 w80">WO Type</label> -->
                                             <div class="col-sm-7 w400">
                                                 <div *ngFor="let workOrderType of workOrderTypes">
                                                     <label data-toggle="tooltip" title="External" style="width: auto;">
@@ -179,7 +180,8 @@
                                                                 [size]="30" [minLength]="1"
                                                                 #customerName="ngModel"
                                                                 required
-                                                                [dropdown]="false" class="p-autoComplete-ctsm">
+
+                                                                [dropdown]="true" class="p-autoComplete-ctsm">
 
                                                 </p-autoComplete>
 
@@ -225,7 +227,7 @@
                                             <div class="form-group ">
                                                 <label for="customercontact">
                                                     CSR
-                                                    <span class="clr-red">*</span>
+   
                                                 </label>
                                                 <!-- <input type="text" class="form-control wo-input" [(ngModel)]="workOrderGeneralInformation.csr" name="csr" #csr="ngModel" required /> -->
 
@@ -239,7 +241,7 @@
                                                 (completeMethod)="filterCsr($event)"
                                                 (onClear)="clearautoCompleteInput(workOrderGeneralInformation, 'csr' )"
                                                 [size]="30" [minLength]="1"
-                                                [dropdown]="true" class="p-autoComplete-ctsm" required>
+                                                [dropdown]="true" class="p-autoComplete-ctsm" >
                                             </p-autoComplete>
                                                 <!-- <div *ngIf="csr.invalid && (csr.dirty || csr.touched)" class="alert alert-danger alert-danger-cstm">
                                                     <div *ngIf="csr.errors.required">
@@ -253,7 +255,7 @@
                                             <div class="form-group">
 
                                                 <label for="credit">
-                                                    Credit Terms &amp; Limit
+                                                    Credit Limit &amp; Term
                                                     <span class="clr-red">*</span>
                                                 </label>
                                                 <div class="col-md-12">
@@ -284,7 +286,7 @@
                                             <div class="form-group ">
                                                 <label for="employee" style="margin-top: 10px;">
                                                     Employee
-                                                    <span class="clr-red">*</span>
+                                               
                                                 </label>
 
                                                 <p-autoComplete field="label" [(ngModel)]="workOrderGeneralInformation.employeeId"
@@ -297,19 +299,19 @@
                                                                 (completeMethod)="filterEmployee($event)"
                                                                 (onClear)="clearautoCompleteInput(workOrderGeneralInformation, 'employeeId' )"
                                                                 [size]="30" [minLength]="1"
-                                                                [dropdown]="true" class="p-autoComplete-ctsm" required>
+                                                                [dropdown]="true" class="p-autoComplete-ctsm" >
                                                 </p-autoComplete>
-                                                <div *ngIf="employees.invalid && (employees.dirty || employees.touched)" class="alert alert-danger alert-danger-cstm">
+                                                <!-- <div *ngIf="employees.invalid && (employees.dirty || employees.touched)" class="alert alert-danger alert-danger-cstm">
                                                     <div *ngIf="employees.errors.required">
                                                         <small> Employee  is required </small>
                                                     </div>
-                                                </div>
+                                                </div> -->
                                             </div>
                                             <div class="form-group ">
 
                                                 <label for="employee">
                                                     Salesperson
-                                                    <span class="clr-red">*</span>
+                                                   
                                                 </label>
 
                                                 <p-autoComplete field="label" [(ngModel)]="workOrderGeneralInformation.salesPersonId"
@@ -322,16 +324,16 @@
                                                                 (completeMethod)="filterSalesPerson($event)"
                                                                 (onClear)="clearautoCompleteInput(workOrderGeneralInformation, 'salesPersonId' )"
                                                                 [size]="30" [minLength]="1"
-                                                                [dropdown]="true" class="p-autoComplete-ctsm" required>
+                                                                [dropdown]="true" class="p-autoComplete-ctsm" >
 
 
 
                                                 </p-autoComplete>
-                                                <div *ngIf="salesPerson.invalid && (salesPerson.dirty || salesPerson.touched)" class="alert alert-danger alert-danger-cstm">
+                                                <!-- <div *ngIf="salesPerson.invalid && (salesPerson.dirty || salesPerson.touched)" class="alert alert-danger alert-danger-cstm">
                                                     <div *ngIf="salesPerson.errors.required">
                                                         <small> SalesPerson  is required </small>
                                                     </div>
-                                                </div>
+                                                </div> -->
                                             </div>
                                         </div>
                                         <div class="col-md-3">
@@ -395,7 +397,7 @@
                         </div>
                     </div>
                     <div>
-                        <button *ngIf="!workOrderGeneralInformation.isSinglePN" class="btn btn-primary-cstm pull-right" (click)="addMPN()">Add MPN</button>
+                        <button *ngIf="!workOrderGeneralInformation.isSinglePN" class="btn btn-primary pull-right" (click)="addMPN()">Add MPN</button>
                     </div>
                     <div class="table-responsive" style="height: 300px;">
 
@@ -619,9 +621,9 @@
 
                     </div>
                     <div>
-                        <button class="btn btn-primary-cstm pull-right" *ngIf="!showTabsGrid && !isEdit" type="button" [disabled]="!workOrderForm.valid" (click)="saveWorkOrder()">Save</button>
-                        <button class="btn btn-primary-cstm pull-right" *ngIf="isEdit" type="button" [disabled]="!workOrderForm.valid" (click)="saveWorkOrder()">Update</button>
-                        <button *ngIf="showTabsGrid" class="btn btn-primary-cstm pull-right" (click)="createQuote()">{{(workOrderQuoteId)?'Update Quote':'Create Quote'}}</button>
+                        <button class="btn btn-primary pull-right" *ngIf="!showTabsGrid && !isEdit" type="button" [disabled]="!workOrderForm.valid" (click)="saveWorkOrder()">Save</button>
+                        <button class="btn btn-primary pull-right" *ngIf="isEdit" type="button" [disabled]="!workOrderForm.valid" (click)="saveWorkOrder()">Update</button>
+                        <button *ngIf="showTabsGrid" class="btn btn-primary pull-right" (click)="createQuote()">{{(workOrderQuoteId)?'Update Quote':'Create Quote'}}</button>
                     </div>
                 </form>
             </div>
@@ -866,9 +868,9 @@
 
                     </div>
 
-                    <div *ngIf="quote" [ngClass]="{hidedata : gridActiveTab !== 'quote' }">
+                    <!-- <div *ngIf="quote" [ngClass]="{hidedata : gridActiveTab !== 'quote' }">
                         <app-work-order-quote [quoteForm]="quote"></app-work-order-quote>
-                    </div>
+                    </div> -->
 
 
 
@@ -922,11 +924,11 @@
                         <app-work-order-documents [documentForm]="documents"></app-work-order-documents>
                     </div>
                     <div *ngIf="gridActiveTab == 'quote'">
-                        <div *ngIf="!workOrderQuoteId" class="no-quote">
+                        <div *ngIf="workOrderQuoteId == undefined" class="no-quote">
                             Quote not yet created
                         </div>
-                        <div *ngIf="workOrderQuoteId">
-                            <app-work-order-quote [workorderid]="workOrderId"></app-work-order-quote>
+                        <div *ngIf="workOrderQuoteId != undefined">
+                            <app-work-order-quote [workorderid]="workOrderId" isView="true"></app-work-order-quote>
                         </div>
                     </div>
 
@@ -954,6 +956,8 @@
                         [workOrderFreightList]="workOrderFreightList" 
                         [savedWorkOrderData]="savedWorkOrderData"
                         (saveFreightListForWO)="saveWorkOrderFreightsList($event)"
+                        (updateFreightListForWo)="updateWorkOrderFreightsList($event)"
+                        (refreshData)="getFreightListByWorkOrderId()"
                         ></app-work-order-freight>
                     </div>
 

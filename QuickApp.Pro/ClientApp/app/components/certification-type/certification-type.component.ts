@@ -176,7 +176,12 @@ export class CertificationTypeComponent implements OnInit {
 		// this.selectedColumns = this.cols;
 	}
 
-
+    getmemo($event) {
+		
+			this.disableSaveCertificationMsg = false;
+            this.disableSaveCertification = false;
+        
+    }
 
 	get userName(): string {
 		return this.authService.currentUser ? this.authService.currentUser.userName : "";
@@ -318,7 +323,7 @@ export class CertificationTypeComponent implements OnInit {
 				this.getList();
 				this.alertService.showMessage(
 					'Success',
-					`Added  Updated New Certification Successfully  `,
+					`Updated  Certification Successfully  `,
 					MessageSeverity.success
 				);
 			})

@@ -20,6 +20,7 @@ import { BreadcrumbModule } from 'primeng/breadcrumb';
 
 import { GMapModule } from 'primeng/gmap';
 import { CalendarModule } from 'primeng/calendar';
+import { FileUploadModule } from 'primeng/fileupload';
 
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { AssetmanagementComponent } from "./assetmanagement.component";
@@ -37,6 +38,7 @@ import { AssetEndpoint } from "../services/asset/Asset-endpoint.service";
 import { CommonService } from '../services/common.service';
 import { AuditModule } from "../audit/audit.module";
 import { ViewAssetComponent } from "../components/Asset-Management/Asset-pages/view-asset/view-asset.component";
+import { AssetAdjustmentComponent } from '../components/Asset-Management/Asset-pages/asset-adjustment/asset-adjustment.component';
 @NgModule({
     imports: [
         FlexLayoutModule,
@@ -55,6 +57,7 @@ import { ViewAssetComponent } from "../components/Asset-Management/Asset-pages/v
         AutoCompleteModule,
         GMapModule
         , RadioButtonModule,
+        FileUploadModule,
         CalendarModule, StepsModule, BreadcrumbModule, DialogModule,
         AuditModule
     ],
@@ -67,7 +70,8 @@ import { ViewAssetComponent } from "../components/Asset-Management/Asset-pages/v
         AssetMaintenanceWarrantyComponent,
         CreateAssetComponent,
         AssetStepsComponent,
-        ViewAssetComponent
+        ViewAssetComponent,
+        AssetAdjustmentComponent
     ],
     providers: [AssetService,
         AssetEndpoint,

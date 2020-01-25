@@ -19,8 +19,11 @@ export class ATAMainEndpoint extends EndpointFactory {
     private readonly getMultiATAUrl: string = "/api/ATAMain/GetMultiATASUBSBYATAMainID";
     private readonly deleteATAURL: string = "/api/ATAMain/deleteATAMAIN";
     private readonly excelUpload: string = "/api/ATAMain/UploadataChapterCustomData";
+    private readonly _actionsUrlAll: string = "/api/ATAMain/GetAll";
+
     
     get actionsUrl() { return this.configurations.baseUrl + this._actionsUrl; }
+    get actionsUrlAll() { return this.configurations.baseUrl + this._actionsUrlAll; }
 
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
 
@@ -32,6 +35,14 @@ export class ATAMainEndpoint extends EndpointFactory {
         return this.http.get<T>(this.actionsUrl, this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.getATAMainEndpoint());
+            });
+    }
+
+    getAllATAMainEndpoint<T>(): Observable<T> {
+
+        return this.http.get<T>(this.actionsUrlAll, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getAllATAMainEndpoint());
             });
     }
     getNewATAMainEndpoint<T>(userObject: any): Observable<T> {

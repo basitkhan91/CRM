@@ -19,7 +19,7 @@
             <div class="col-md-2 column">
               <div class="form-group">
                 <label>Quote Type <span class="clr-red">*</span></label>
-                <select name="quoteType" [(ngModel)]="salesQuote.quoteTypeId" required>
+                <select name="quoteTypeId" [(ngModel)]="salesQuote.quoteTypeId" required>
                   <option *ngFor="let type of salesQuote.salesQuoteTypes" [ngValue]="type.id">{{ type.name }}</option>
                 </select>
               </div>
@@ -53,7 +53,7 @@
               </div>
               <div class="form-group">
                 <label>Priority<span class="clr-red">*</span></label>
-                <select name="priority" [(ngModel)]="salesQuote.priorityId" required>
+                <select name="priorityId" [(ngModel)]="salesQuote.priorityId" required>
                   <option *ngFor="let p of salesQuote.priorities" [ngValue]="p.priorityId">{{ p.description }}</option>
                 </select>
               </div>
@@ -61,7 +61,7 @@
             <div class="col-md-2 column-seperator">
               <div class="form-group">
                 <label>Account Type <span class="clr-red">*</span></label>
-                <select name="quoteType" required [(ngModel)]="salesQuote.accountTypeId">
+                <select name="accountTypeId" required [(ngModel)]="salesQuote.accountTypeId">
                     <option *ngFor="let accountType of accountTypes" [ngValue]="accountType.customerTypeId">{{ accountType.description }}</option>
                 </select>
               </div>
@@ -191,7 +191,7 @@
                   <input type="text" pInputText name="creditLimit" [(ngModel)]="salesQuote.creditLimit" />
                 </div>
                 <div class="col-md-7">
-                  <select name="quoteType" [(ngModel)]="salesQuote.creditLimitTermsId">
+                  <select name="creditLimitTermsId" [(ngModel)]="salesQuote.creditLimitTermsId">
                       <option value='-1'>--Select</option>
                     <option *ngFor="let ct of creditTerms" [ngValue]="ct.value">{{ ct.label }}</option>
                   </select>
@@ -227,7 +227,7 @@
             <div class="col-md-2 column column-seperator">
               <div class="form-group">
                 <label>Quote Approved By</label>
-                <select name="approvedBy" required>
+                <select name="quoteApprovedById" [(ngModel)]="salesQuote.quoteApprovedById">
                   <option value='-1'>--Select</option>
                   <option *ngFor="let employee of selectedApprovers" [ngValue]="employee.employeeId">
                       {{employee.firstName}}
@@ -288,7 +288,8 @@
               &nbsp;
             </div>
             <div class="col-md-11 col-sm-11 col-11">
-              <button type="submit" class="btn btn-success pull-right submit-btn btn btn-primary-cstm">Submit</button>
+              <button type="submit" *ngIf="!isEdit" class="btn btn-success pull-right submit-btn btn btn-primary">Submit</button>
+              <button type="submit" *ngIf="isEdit" class="btn btn-success pull-right submit-btn btn btn-primary">Update</button>
             </div>
           </div>
         </form>
@@ -311,8 +312,8 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary-cstm" data-dismiss="modal" (click)="onSaveDescription()">Save</button>
-        <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="onSaveDescription()">Save</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
       </div>
     </div>
   </div>
@@ -320,7 +321,7 @@
 
 <ng-template #errorMessagePop let-c="close" let-d="dismiss">
   <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal">&times;</button>
+    <button type="button" class="close" data-dismiss="modal" (click)="closeErrorMessage()">&times;</button>
     <h4 class="modal-title"> Please Enter (*) Mandatory Fields</h4>
   </div>
   <div class="modal-body">
@@ -328,7 +329,7 @@
   </div>
   <div class="modal-footer">
    
-    <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="closeErrorMessage()">Close</button>
+    <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="closeErrorMessage()">Close</button>
   </div>
 </ng-template>
 

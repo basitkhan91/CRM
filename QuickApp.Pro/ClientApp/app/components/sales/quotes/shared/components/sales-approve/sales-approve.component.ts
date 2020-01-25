@@ -17,10 +17,15 @@ export class SalesApproveComponent {
   salesOrderQuote: ISalesOrderQuote;
   approvers: any[];
   allEmployeeinfo: any[] = [];
-  employeeList: any[] = [];
+  employeeList: any[]=[];
   
   constructor(public employeeService: EmployeeService,private salesQuoteService: SalesQuoteService,private authService: AuthService) {
     this.approvers = [];
+    this.employeeList[0] = [];
+    this.employeeList[1] = [];
+    this.employeeList[2] = [];
+    this.employeeList[3] = [];
+    this.employeeList[4] = [];
  
   }
   ngOnInit(): void {
@@ -55,6 +60,11 @@ export class SalesApproveComponent {
   
   private onempDataLoadSuccessful(getEmployeeCerficationList: any[]) {
     this.allEmployeeinfo = getEmployeeCerficationList;
+    this.employeeList[0] = getEmployeeCerficationList;
+    this.employeeList[1] = getEmployeeCerficationList;
+    this.employeeList[2] = getEmployeeCerficationList;
+    this.employeeList[3] = getEmployeeCerficationList;
+    this.employeeList[4] = getEmployeeCerficationList;
   }
   private onDataLoadFailed(error: any) {
     // alert(error);
@@ -68,8 +78,12 @@ export class SalesApproveComponent {
         for (let i = 0; i < this.allEmployeeinfo.length; i++) {
             if (approver.employeeId == this.allEmployeeinfo[i].employeeId) {
               //approver.level = this.allEmployeeinfo[i].managementStructureId;
+              this.employeeList[index+1] = this.employeeListByLevel(this.employeeList[index],approver.employeeId);
               approver.level = index+1;
               approver.masterCompanyId = this.allEmployeeinfo[i].masterCompanyId;
+              approver.firstName = this.allEmployeeinfo[i].firstName;
+              approver.employeeCode = this.allEmployeeinfo[i].employeeCode;
+              approver.email = this.allEmployeeinfo[i].email;
               approver.statusId = 1;
               approver.createdBy=this.userName;
               approver.updatedBy=this.userName;
@@ -79,7 +93,19 @@ export class SalesApproveComponent {
           }
         }
         console.log(approver);
+  }
+
+  employeeListByLevel(employeeList,employeeId){
+    let employees = [];
+    for (let i = 0; i < employeeList.length; i++) {
+      if (employeeId != employeeList[i].employeeId) {
+        employees.push(employeeList[i]);
       }
+    }
+
+    return employees;
+
+  }
   
 
 }

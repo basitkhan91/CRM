@@ -1,714 +1,252 @@
-﻿<div class="x_content">
-
-	<h4 class="page-heading clr-green">Item Master Capabilities</h4>
-	<div class="clear"></div>
-
-	<div action="#" method="post" id="" name="" class="form-horizontal ro-grid-form mtop10">
-
-		<div class="modal-body">
-
-			<div class="col-sm-6 w350">
-				<label class="label col-sm-2 w100">Item Category</label>
-				<div class="col-sm-8 ">
-					<label class="w60 disabled"><input type="radio" name="item-category" value="stock" checked="checked"
-							disabled=""> Stock</label>
-					<label class="w90 disabled"><input type="radio" name="item-category" value="equipment" disabled="">
-						Equipment</label>
-				</div>
-			</div>
-			<div class="col-xs-3 w250">
-				<div class="col-sm-6 w350">
-					<div class="form-group col-sm-12">
-						<label for="customerName" class="control-label col-sm-4">PN <strong
-								style="color:red">*</strong></label>
-
-
-						<p-autoComplete [(ngModel)]="ItemMasterId" (onKeyUp)=partEventHandler($event)
-							(onSelect)="partnmId($event)" [ngModelOptions]="{standalone: true}"
-							[suggestions]="partCollection" (completeMethod)="filterpartItems($event)" [size]="30"
-							[minLength]="1" [dropdown]="true">
-							<ng-template let-partName pTemplate="part">
-								<div class="ui-helper-clearfix">{{partName}}</div>
-							</ng-template>
-						</p-autoComplete>
-
-
+﻿﻿<!-- <div
+  id="ModalDashNumber"
+  class="modal fade custom-popup"
+  role="dialog"
+  data-backdrop="static"
+  data-keyboard="false"
+>
+  <div class="modal-dialog modal-full">
+ 
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">×</button>
+        <h4 class="modal-title">Add Aircraft Info</h4>
+      </div> 
+      <div class="modal-body">-->
+				<div class="card mb-3">
+					<div class="col-sm-12  font-padding">
+							<div class="col-sm-2">
+									PN: <span style="color:red">{{partData.partNumber}}</span>
+							</div>
+							<div class="col-sm-4">
+									PN Description: <span style="color:red">{{partData.partDescription}}</span>
+							</div>
+							<!-- <div class="col-sm-3">
+									Alternate PN: <span style="color:red">{{alternatePn}}</span>
+							</div> -->
+							<div class="col-sm-3">
+									Manufacturer: <span style="color:red">{{partData.manufacturerName}}</span>
+							</div>
 					</div>
 				</div>
-				<div class="col-sm-6 w250">
-					<span class="label"><b>PN Description:{{sourceItemMasterCap.partDescription}} </b></span>
+
+		<form #addCapesForm="ngForm">        
+			<div class="form-row">
+			  <div class="col-md-2" *ngIf="itemMasterId == undefined">
+				<div class="form-group">
+					<label class="popup-plusicon-cstm">Part Number <strong class="clr-red">*</strong> </label>
+					<p-dropdown class="imstock-pddowm imcapes-pddowm" [options]="pnData" filter="true"  [(ngModel)]="itemMasterIDFromPartNumberSelection" name="itemMasterIDFromPartNumberSelection" id="partNumber" title="Part Number" required  placeholder="Select Part Number" [showClear]="true" (onChange)="getPartPublicationByItemMasterId(itemMasterIDFromPartNumberSelection)"></p-dropdown>
 				</div>
+			  </div>
+			  <div class="col-md-3">
+				<div class="form-group">
+					<label class="popup-plusicon-cstm">Capability <span class="clr-red">*</span>
+						<a
+					  data-dismiss="modal" style="margin-left: 3px;"
+					  [routerLink]="['/singlepages/singlepages/app-capability-type']"
+					  ><i class="fa fa-plus-circle fa-lg"></i></a>
+					</label>
+				  <!-- <p-dropdown multipl
+					class="imstock-pddowm imcapes-pddowm"
+					name="capabilityTypeId"
+					[options]="capabalityTypeList"
+					[(ngModel)]="capabilityTypeId"
+					placeholder="Select Capability"
+					[showClear]="true" [required]="true"
+					></p-dropdown> -->
+					<p-multiSelect
+					[maxSelectedLabels]="2"
+					class="imstock-pmselect"
+					[options]="capabalityTypeList"
+					[(ngModel)]="capabilityTypeId"
+					name="capabilityTypeId"					
+					></p-multiSelect>
+				
+				</div>
+			  </div>
+			
+			  
+			  <div class="col-md-2">
+				<button
+				  style="margin-top: 20px;margin-left: 30px;"
+				  type="button"
+				  class="btn btn-primary"
+				  [disabled]="!addCapesForm.valid"
+				  (click)="mapAircraftInformation(); "
+				>
+				  Add
+				</button>
+			  </div>
 			</div>
-
-			<!--<div class="col-xs-5 ">
-					<p>
-						
-						
-					</p>
-				</div>-->
-
-			<div id="" class="table-responsive default-bg clear">
-				<form [formGroup]="capabilitiesForm">
-					<table class="table table-bordered table-striped table-sorting">
-						<thead>
-							<tr>
-								<th>Capability Types</th>
-								<th>Company</th>
-								<th>BU</th>
-								<th>Dep</th>
-								<th>Division</th>
-								<th>Manufacturer</th>
-								<th>Aircraft Manufacturer</th>
-								<th>Model</th>
-								<th>Description</th>
-								<th>ATA Chapter</th>
-								<th>Entry Date</th>
-								<th>CMM ID</th>
-								<th>Verified</th>
-								<th>Verified By</th>
-								<th>Date Verified</th>
-								<th>Memo</th>
-								<th class="events3"></th>
-							</tr>
-						</thead>
-						<tbody *ngFor="let cap of capabilityTypeData;let a=index" [formArrayName]="cap.formArrayName">
-
-							<tr style="background: #a5a5a5;">
-								<td style="color: #fff; font-weight: bold;">{{cap.Description}}</td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td>
-									<div class="input-group">
-										<p-multiSelect [options]="manufacturerData"
-											[ngModelOptions]="{standalone: true}"
-											[(ngModel)]="cap.selectedAircraftTypes" [panelStyle]="{minWidth:'12em'}"
-											(onChange)="manufacturerChange($event,cap)">
-										</p-multiSelect>
-									</div>
-								</td>
-								<td>
-									<div class="input-group">
-										<p-multiSelect [options]="cap.selectedAircraftDataModels"
-											[ngModelOptions]="{standalone: true}"
-											[(ngModel)]="cap.selectedAircraftModelTypes"
-											[panelStyle]="{minWidth:'12em'}" (click)="openModelPopups(cap)"
-											(onChange)="aircraftModalChange($event,cap)">
-										</p-multiSelect>
-									</div>
-								</td>
-								<td [matTooltip]="addBtnTitle(cap)"><button class="btn btn-warning"
-										(click)="addModels(cap)" [disabled]="disableAddButton(cap)"><i
-											class="fa fa-plus clr-white"></i></button></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-							</tr>
-							<!-- <tbody formArrayName="mfgForm"> -->
-							<!-- MfgForm Start -->
-							<ng-container *ngIf="cap.formArrayName == 'mfgForm'">
-								<ng-container *ngFor="let item of mfgFormArray.controls;let i=index"
-									[formGroupName]="i">
-									<tr *ngIf="mfgFormArray.controls[i].controls['isDelete'].value != true">
-										<td></td>
-										<td>
-											<select formControlName="companyId"
-												[ngClass]="validateForm(mfgFormArray.controls[i],'companyId')"
-												(change)="getBUList(mfgFormArray.controls[i].controls['companyId'].value,mfgFormArray.controls[i])">
-												<option *ngFor="let ataName of maincompanylist"
-													[ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
-											</select>
-										</td>
-										<td>
-											<select formControlName="buisinessUnitId"
-												[ngClass]="validateForm(mfgFormArray.controls[i],'buisinessUnitId')"
-												(change)="getDepartmentlist(mfgFormArray.controls[i].controls['buisinessUnitId'].value, mfgFormArray.controls[i])">
-												<option *ngFor="let ataName of mfgFormArray.controls[i].buList"
-													[ngValue]="ataName.managementStructureId">
-													{{ataName.code}}</option>
-											</select>
-										</td>
-										<td>
-											<select formControlName="departmentId"
-												[ngClass]="validateForm(mfgFormArray.controls[i],'departmentId')"
-												(change)="getDivisionlist(mfgFormArray.controls[i].controls['departmentId'].value, mfgFormArray.controls[i])">
-												<option
-													*ngFor="let ataName of  mfgFormArray.controls[i].departmentList "
-													[ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
-											</select>
-										</td>
-										<td>
-											<select formControlName="divisionId"
-												[ngClass]="validateForm(mfgFormArray.controls[i],'divisionId')"
-												(change)="divisionChange(mfgFormArray.controls[i].controls['divisionId'].value, mfgFormArray.controls[i])">
-												<option *ngFor="let ataName of mfgFormArray.controls[i].divisionlist "
-													[ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
-											</select>
-										</td>
-										<td>
-											<div class="input-group">
-												<select formControlName="manufacturerId">
-													<option *ngFor="let name of allManufacturerInfo"
-														[ngValue]="name.manufacturerId">{{name.name}}</option>
-												</select>
-											</div>
-										</td>
-										<td><input type="text" formControlName="aircraftTypeName" disabled="true" />
-										</td>
-										<td><input type="text" formControlName="aircraftModelName" disabled="true" />
-										</td>
-										<td><input type="text" class="form-control w100" formControlName="description">
-										</td>
-										<td>
-											<div class="input-group">
-												<select formControlName="ataChapterId">
-													<option *ngFor="let ataName of allATAMaininfo1"
-														[ngValue]="ataName.ataChapterId">{{ataName.ataChapterName}}
-													</option>
-												</select>
-											</div>
-										</td>
-										<td><input type="date" class="form-control datepicker w70 hasDatepicker"
-												id="dp1552359556396" formControlName="entryDate"></td>
-										<td><input type="text" class="form-control"></td>
-										<td><input type="checkbox" class="form-control" formControlName="isVerified">
-										</td>
-										<td><input type="text" class="form-control w70" formControlName="verifiedBy">
-										</td>
-										<td><input type="date" class="form-control datepicker w70 hasDatepicker"
-												id="dp1552359556397" formControlName="dateVerified"></td>
-										<td><input type="text" class="form-control w100" formControlName="memo"></td>
-										<td>
-											<span data-toggle="tooltip" class="status" title="" data-placement="right"
-												data-original-title="Active">
-												<div class="toggle btn btn-success" data-toggle="toggle"
-													style="width: 30px; height: 19px;"><input type="checkbox"
-														formControlName="isActive" data-toggle="toggle" data-width="30"
-														id="toggle-one" data-on="<i class='fa fa-check'></i>"
-														data-off="<i class='fa fa-times'></i>" data-onstyle="success"
-														data-offstyle="danger">
-													<div class="toggle-group"><label
-															class="btn btn-success toggle-on"><i
-																class="fa fa-check"></i></label><label
-															class="btn btn-danger active toggle-off"><i
-																class="fa fa-times"></i></label><span
-															class="toggle-handle btn btn-default"></span></div>
-												</div>
-											</span> <span data-toggle="modal" data-target="#history"><a href="#"
-													class="btn btn-success nobg" data-toggle="tooltip" title=""
-													data-original-title="History"><i
-														class="fa fa-history"></i></a></span>
-											<span data-toggle="modal" data-target="#delete"><a href="#"
-													class="btn btn-success nobg" data-toggle="tooltip" title=""
-													data-original-title="Delete"><i class="fa fa-trash"></i></a></span>
-										</td>
-									</tr>
-								</ng-container>
-							</ng-container>
-							<!-- MfgForm End -->
-
-							<!-- overhaulForm Start *ngIf="cap.formArrayName == 'overhaulForm'" -->
-							<ng-container *ngIf="cap.formArrayName == 'overhaulForm'">
-									<ng-container  *ngFor="let item of overhaulFormArray.controls;let j=index" [formGroupName]="j">
-									<tr *ngIf="overhaulFormArray.controls[j].controls['isDelete'].value != true">
-									<td></td>
-									<td>
-										<select formControlName="companyId"
-											[ngClass]="validateForm(overhaulFormArray.controls[j],'companyId')"
-											(change)="getBUList(overhaulFormArray.controls[j].controls['companyId'].value,overhaulFormArray.controls[j])">
-											<option *ngFor="let ataName of maincompanylist"
-												[ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
-										</select>
-									</td>
-									<td>
-										<select formControlName="buisinessUnitId"
-											[ngClass]="validateForm(overhaulFormArray.controls[j],'buisinessUnitId')"
-											(change)="getDepartmentlist(overhaulFormArray.controls[j].controls['buisinessUnitId'].value,overhaulFormArray.controls[j])">
-											<option *ngFor="let ataName of overhaulFormArray.controls[j].buList"
-												[ngValue]="ataName.managementStructureId">
-												{{ataName.code}}</option>
-										</select>
-									</td>
-									<td>
-										<select formControlName="departmentId"
-											[ngClass]="validateForm(overhaulFormArray.controls[j],'departmentId')"
-											(change)="getDivisionlist(overhaulFormArray.controls[j].controls['departmentId'].value,overhaulFormArray.controls[j])">
-											<option
-												*ngFor="let ataName of overhaulFormArray.controls[j].departmentList "
-												[ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
-										</select>
-									</td>
-									<td>
-										<select formControlName="divisionId"
-											[ngClass]="validateForm(overhaulFormArray.controls[j],'divisionId')"
-											(change)="divisionChange(overhaulFormArray.controls[i].controls['divisionId'].value, overhaulFormArray.controls[i])">
-											<option *ngFor="let ataName of overhaulFormArray.controls[j].divisionlist "
-												[ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
-										</select>
-									</td>
-									<td>
-										<div class="input-group">
-											<select formControlName="manufacturerId">
-												<option *ngFor="let name of allManufacturerInfo"
-													[ngValue]="name.manufacturerId">{{name.name}}</option>
-											</select>
-										</div>
-									</td>
-									<td><input type="text" formControlName="aircraftTypeName" disabled="true" /></td>
-									<td><input type="text" formControlName="aircraftModelName" disabled="true" /></td>
-									<td><input type="text" class="form-control w100" formControlName="description"></td>
-									<td>
-										<div class="input-group">
-											<select formControlName="ataChapterId">
-												<option *ngFor="let ataName of allATAMaininfo1"
-													[ngValue]="ataName.ataChapterId">{{ataName.ataChapterName}}</option>
-											</select>
-										</div>
-									</td>
-									<td><input type="date" class="form-control datepicker w70 hasDatepicker"
-											id="dp1552359556396" formControlName="entryDate"></td>
-									<td><input type="text" class="form-control"></td>
-									<td><input type="checkbox" class="form-control" formControlName="isVerified"></td>
-									<td><input type="text" class="form-control w70" formControlName="verifiedBy"></td>
-									<td><input type="date" class="form-control datepicker w70 hasDatepicker"
-											id="dp1552359556397" formControlName="dateVerified"></td>
-									<td><input type="text" class="form-control w100" formControlName="memo"></td>
-									<td>
-										<span data-toggle="tooltip" class="status" title="" data-placement="right"
-											data-original-title="Active">
-											<div class="toggle btn btn-success" data-toggle="toggle"
-												style="width: 30px; height: 19px;"><input type="checkbox"
-													formControlName="isActive" data-toggle="toggle" data-width="30"
-													id="toggle-one" data-on="<i class='fa fa-check'></i>"
-													data-off="<i class='fa fa-times'></i>" data-onstyle="success"
-													data-offstyle="danger">
-												<div class="toggle-group"><label class="btn btn-success toggle-on"><i
-															class="fa fa-check"></i></label><label
-														class="btn btn-danger active toggle-off"><i
-															class="fa fa-times"></i></label><span
-														class="toggle-handle btn btn-default"></span></div>
-											</div>
-										</span> <span data-toggle="modal" data-target="#history"><a href="#"
-												class="btn btn-success nobg" data-toggle="tooltip" title=""
-												data-original-title="History"><i class="fa fa-history"></i></a></span>
-										<span data-toggle="modal" data-target="#delete"><a href="#"
-												class="btn btn-success nobg" data-toggle="tooltip" title=""
-												data-original-title="Delete"><i class="fa fa-trash"></i></a></span>
-									</td>
-								</tr>
-							</ng-container>
-							</ng-container>
-							<!-- overhaulForm End -->
-
-
-
-							<!-- distributionForm Start *ngIf="cap.formArrayName == 'distributionForm'" -->
-							<ng-container *ngIf="cap.formArrayName == 'distributionForm'">
-								<ng-container *ngFor="let item of distributionFormArray.controls;let k=index" [formGroupName]="k">
-									<tr *ngIf="distributionFormArray.controls[k].controls['isDelete'].value != true">
-									<td></td>
-									<td>
-										<select formControlName="companyId"
-											[ngClass]="validateForm(distributionFormArray.controls[k],'companyId')"
-											(change)="getBUList(distributionFormArray.controls[k].controls['companyId'].value,distributionFormArray.controls[k])">
-											<option *ngFor="let ataName of maincompanylist"
-												[ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
-										</select>
-									</td>
-									<td>
-										<select formControlName="buisinessUnitId"
-											[ngClass]="validateForm(distributionFormArray.controls[k],'buisinessUnitId')"
-											(change)="getDepartmentlist(distributionFormArray.controls[k].controls['buisinessUnitId'].value,distributionFormArray.controls[k])">
-											<option *ngFor="let ataName of distributionFormArray.controls[k].buList"
-												[ngValue]="ataName.managementStructureId">
-												{{ataName.code}}</option>
-										</select>
-									</td>
-									<td>
-										<select formControlName="departmentId"
-											[ngClass]="validateForm(distributionFormArray.controls[k],'departmentId')"
-											(change)="getDivisionlist(distributionFormArray.controls[k].controls['departmentId'].value,distributionFormArray.controls[k])">
-											<option
-												*ngFor="let ataName of distributionFormArray.controls[k].departmentList "
-												[ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
-										</select>
-									</td>
-									<td>
-										<select formControlName="divisionId"
-											[ngClass]="validateForm(distributionFormArray.controls[k],'divisionId')"
-											(change)="divisionChange(distributionFormArray.controls[i].controls['divisionId'].value, distributionFormArray.controls[i])">
-											<option
-												*ngFor="let ataName of distributionFormArray.controls[k].divisionlist "
-												[ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
-										</select>
-									</td>
-									<td>
-										<div class="input-group">
-											<select formControlName="manufacturerId">
-												<option *ngFor="let name of allManufacturerInfo"
-													[ngValue]="name.manufacturerId">{{name.name}}</option>
-											</select>
-										</div>
-									</td>
-									<td><input type="text" formControlName="aircraftTypeName" disabled="true" /></td>
-									<td><input type="text" formControlName="aircraftModelName" disabled="true" /></td>
-									<td><input type="text" class="form-control w100" formControlName="description"></td>
-									<td>
-										<div class="input-group">
-											<select formControlName="ataChapterId">
-												<option *ngFor="let ataName of allATAMaininfo1"
-													[ngValue]="ataName.ataChapterId">{{ataName.ataChapterName}}</option>
-											</select>
-										</div>
-									</td>
-									<td><input type="date" class="form-control datepicker w70 hasDatepicker"
-											id="dp1552359556396" formControlName="entryDate"></td>
-									<td><input type="text" class="form-control"></td>
-									<td><input type="checkbox" class="form-control" formControlName="isVerified"></td>
-									<td><input type="text" class="form-control w70" formControlName="verifiedBy"></td>
-									<td><input type="date" class="form-control datepicker w70 hasDatepicker"
-											id="dp1552359556397" formControlName="dateVerified"></td>
-									<td><input type="text" class="form-control w100" formControlName="memo"></td>
-									<td>
-										<span data-toggle="tooltip" class="status" title="" data-placement="right"
-											data-original-title="Active">
-											<div class="toggle btn btn-success" data-toggle="toggle"
-												style="width: 30px; height: 19px;"><input type="checkbox"
-													formControlName="isActive" data-toggle="toggle" data-width="30"
-													id="toggle-one" data-on="<i class='fa fa-check'></i>"
-													data-off="<i class='fa fa-times'></i>" data-onstyle="success"
-													data-offstyle="danger">
-												<div class="toggle-group"><label class="btn btn-success toggle-on"><i
-															class="fa fa-check"></i></label><label
-														class="btn btn-danger active toggle-off"><i
-															class="fa fa-times"></i></label><span
-														class="toggle-handle btn btn-default"></span></div>
-											</div>
-										</span> <span data-toggle="modal" data-target="#history"><a href="#"
-												class="btn btn-success nobg" data-toggle="tooltip" title=""
-												data-original-title="History"><i class="fa fa-history"></i></a></span>
-										<span data-toggle="modal" data-target="#delete"><a href="#"
-												class="btn btn-success nobg" data-toggle="tooltip" title=""
-												data-original-title="Delete"><i class="fa fa-trash"></i></a></span>
-									</td>
-								</tr>
-							</ng-container>
-							</ng-container>
-							<!-- distributionForm End -->
-
-							<!-- certificationForm Start *ngIf="cap.formArrayName == 'certificationForm'" -->
-							<ng-container *ngIf="cap.formArrayName == 'certificationForm'">
-									<ng-container *ngFor="let item of certificationFormArray.controls;let l=index"
-									[formGroupName]="l">
-									<tr *ngIf="certificationFormArray.controls[l].controls['isDelete'].value != true">
-									<td></td>
-									<td>
-										<select formControlName="companyId"
-											[ngClass]="validateForm(certificationFormArray.controls[l],'companyId')"
-											(change)="getBUList(certificationFormArray.controls[l].controls['companyId'].value,certificationFormArray.controls[l])">
-											<option *ngFor="let ataName of maincompanylist"
-												[ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
-										</select>
-									</td>
-									<td>
-										<select formControlName="buisinessUnitId"
-											[ngClass]="validateForm(certificationFormArray.controls[l],'buisinessUnitId')"
-											(change)="getDepartmentlist(certificationFormArray.controls[l].controls['buisinessUnitId'].value,certificationFormArray.controls[l])">
-											<option *ngFor="let ataName of certificationFormArray.controls[l].buList"
-												[ngValue]="ataName.managementStructureId">
-												{{ataName.code}}</option>
-										</select>
-									</td>
-									<td>
-										<select formControlName="departmentId"
-											[ngClass]="validateForm(certificationFormArray.controls[l],'departmentId')"
-											(change)="getDivisionlist(certificationFormArray.controls[l].controls['departmentId'].value,certificationFormArray.controls[l])">
-											<option
-												*ngFor="let ataName of certificationFormArray.controls[l].departmentList "
-												[ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
-										</select>
-									</td>
-									<td>
-										<select formControlName="divisionId"
-											[ngClass]="validateForm(certificationFormArray.controls[l],'divisionId')"
-											(change)="divisionChange(certificationFormArray.controls[i].controls['divisionId'].value, certificationFormArray.controls[i])">
-											<option
-												*ngFor="let ataName of certificationFormArray.controls[l].divisionlist "
-												[ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
-										</select>
-									</td>
-									<td>
-										<div class="input-group">
-											<select formControlName="manufacturerId">
-												<option *ngFor="let name of allManufacturerInfo"
-													[ngValue]="name.manufacturerId">{{name.name}}</option>
-											</select>
-										</div>
-									</td>
-									<td><input type="text" formControlName="aircraftTypeName" disabled="true" /></td>
-									<td><input type="text" formControlName="aircraftModelName" disabled="true" /></td>
-									<td><input type="text" class="form-control w100" formControlName="description"></td>
-									<td>
-										<div class="input-group">
-											<select formControlName="ataChapterId">
-												<option *ngFor="let ataName of allATAMaininfo1"
-													[ngValue]="ataName.ataChapterId">{{ataName.ataChapterName}}</option>
-											</select>
-										</div>
-									</td>
-									<td><input type="date" class="form-control datepicker w70 hasDatepicker"
-											id="dp1552359556396" formControlName="entryDate"></td>
-									<td><input type="text" class="form-control"></td>
-									<td><input type="checkbox" class="form-control" formControlName="isVerified"></td>
-									<td><input type="text" class="form-control w70" formControlName="verifiedBy"></td>
-									<td><input type="date" class="form-control datepicker w70 hasDatepicker"
-											id="dp1552359556397" formControlName="dateVerified"></td>
-									<td><input type="text" class="form-control w100" formControlName="memo"></td>
-									<td>
-										<span data-toggle="tooltip" class="status" title="" data-placement="right"
-											data-original-title="Active">
-											<div class="toggle btn btn-success" data-toggle="toggle"
-												style="width: 30px; height: 19px;"><input type="checkbox"
-													formControlName="isActive" data-toggle="toggle" data-width="30"
-													id="toggle-one" data-on="<i class='fa fa-check'></i>"
-													data-off="<i class='fa fa-times'></i>" data-onstyle="success"
-													data-offstyle="danger">
-												<div class="toggle-group"><label class="btn btn-success toggle-on"><i
-															class="fa fa-check"></i></label><label
-														class="btn btn-danger active toggle-off"><i
-															class="fa fa-times"></i></label><span
-														class="toggle-handle btn btn-default"></span></div>
-											</div>
-										</span> <span data-toggle="modal" data-target="#history"><a href="#"
-												class="btn btn-success nobg" data-toggle="tooltip" title=""
-												data-original-title="History"><i class="fa fa-history"></i></a></span>
-										<span data-toggle="modal" data-target="#delete"><a href="#"
-												class="btn btn-success nobg" data-toggle="tooltip" title=""
-												data-original-title="Delete"><i class="fa fa-trash"></i></a></span>
-									</td>
-								</tr>
-							</ng-container>
-							</ng-container>
-							<!-- certificationForm End -->
-
-
-							<!-- repairForm Start *ngIf="cap.formArrayName == 'repairForm'" -->
-							<ng-container *ngIf="cap.formArrayName == 'repairForm'">
-								<ng-container *ngFor="let item of repairFormArray.controls;let m=index" [formGroupName]="m">
-									<tr *ngIf="repairFormArray.controls[m].controls['isDelete'].value != true">
-									<td></td>
-									<td>
-										<select formControlName="companyId"
-											[ngClass]="validateForm(repairFormArray.controls[m],'companyId')"
-											(change)="getBUList(repairFormArray.controls[m].controls['companyId'].value,repairFormArray.controls[m])">
-											<option *ngFor="let ataName of maincompanylist"
-												[ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
-										</select>
-									</td>
-									<td>
-										<select formControlName="buisinessUnitId"
-											[ngClass]="validateForm(repairFormArray.controls[m],'buisinessUnitId')"
-											(change)="getDepartmentlist(repairFormArray.controls[m].controls['buisinessUnitId'].value,repairFormArray.controls[m])">
-											<option *ngFor="let ataName of repairFormArray.controls[m].buList"
-												[ngValue]="ataName.managementStructureId">
-												{{ataName.code}}</option>
-										</select>
-									</td>
-									<td>
-										<select formControlName="departmentId"
-											[ngClass]="validateForm(repairFormArray.controls[m],'departmentId')"
-											(change)="getDivisionlist(repairFormArray.controls[m].controls['departmentId'].value,repairFormArray.controls[m])">
-											<option *ngFor="let ataName of repairFormArray.controls[m].departmentList "
-												[ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
-										</select>
-									</td>
-									<td>
-										<select formControlName="divisionId"
-											[ngClass]="validateForm(repairFormArray.controls[m],'divisionId')"
-											(change)="divisionChange(repairFormArray.controls[i].controls['divisionId'].value, repairFormArray.controls[i])">
-											<option *ngFor="let ataName of repairFormArray.controls[m].divisionlist "
-												[ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
-										</select>
-									</td>
-									<td>
-										<div class="input-group">
-											<select formControlName="manufacturerId">
-												<option *ngFor="let name of allManufacturerInfo"
-													[ngValue]="name.manufacturerId">{{name.name}}</option>
-											</select>
-											<!-- <a href="manufacturer.html" target="_blank" class="add-icon"><i
-														class="fa fa-plus"></i></a> -->
-										</div>
-									</td>
-									<td><input type="text" formControlName="aircraftTypeName" disabled="true" /></td>
-									<td><input type="text" formControlName="aircraftModelName" disabled="true" /></td>
-									<td><input type="text" class="form-control w100" formControlName="description"></td>
-									<td>
-										<div class="input-group">
-											<select formControlName="ataChapterId">
-												<option *ngFor="let ataName of allATAMaininfo1"
-													[ngValue]="ataName.ataChapterId">{{ataName.ataChapterName}}</option>
-											</select>
-											<!-- <a href="add-ata.html" target="_blank" class="add-icon"><i
-														class="fa fa-plus"></i></a> -->
-										</div>
-									</td>
-									<td><input type="date" class="form-control datepicker w70 hasDatepicker"
-											id="dp1552359556396" formControlName="entryDate"></td>
-									<td><input type="text" class="form-control"></td>
-									<td><input type="checkbox" class="form-control" formControlName="isVerified"></td>
-									<td><input type="text" class="form-control w70" formControlName="verifiedBy"></td>
-									<td><input type="date" class="form-control datepicker w70 hasDatepicker"
-											id="dp1552359556397" formControlName="dateVerified"></td>
-									<td><input type="text" class="form-control w100" formControlName="memo"></td>
-									<td>
-										<span data-toggle="tooltip" class="status" title="" data-placement="right"
-											data-original-title="Active">
-											<div class="toggle btn btn-success" data-toggle="toggle"
-												style="width: 30px; height: 19px;"><input type="checkbox"
-													formControlName="isActive" data-toggle="toggle" data-width="30"
-													id="toggle-one" data-on="<i class='fa fa-check'></i>"
-													data-off="<i class='fa fa-times'></i>" data-onstyle="success"
-													data-offstyle="danger">
-												<div class="toggle-group"><label class="btn btn-success toggle-on"><i
-															class="fa fa-check"></i></label><label
-														class="btn btn-danger active toggle-off"><i
-															class="fa fa-times"></i></label><span
-														class="toggle-handle btn btn-default"></span></div>
-											</div>
-										</span> <span data-toggle="modal" data-target="#history"><a href="#"
-												class="btn btn-success nobg" data-toggle="tooltip" title=""
-												data-original-title="History"><i class="fa fa-history"></i></a></span>
-										<span data-toggle="modal" data-target="#delete"><a href="#"
-												class="btn btn-success nobg" data-toggle="tooltip" title=""
-												data-original-title="Delete"><i class="fa fa-trash"></i></a></span>
-									</td>
-								</tr>
-							</ng-container>
-							</ng-container>
-							<!-- repairForm End -->
-
-
-							<!-- exchangeForm Start *ngIf="cap.formArrayName == 'exchangeForm'" -->
-							<ng-container *ngIf="cap.formArrayName == 'exchangeForm'">
-								<ng-container *ngFor="let item of exchangeFormArray.controls;let n=index" [formGroupName]="n">
-									<tr *ngIf="exchangeFormArray.controls[n].controls['isDelete'].value != true">
-									<td></td>
-									<td>
-										<select formControlName="companyId"
-											[ngClass]="validateForm(exchangeFormArray.controls[n],'companyId')"
-											(change)="getBUList(exchangeFormArray.controls[n].controls['companyId'].value,exchangeFormArray.controls[n])">
-											<option *ngFor="let ataName of maincompanylist"
-												[ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
-										</select>
-									</td>
-									<td>
-										<select formControlName="buisinessUnitId"
-											[ngClass]="validateForm(exchangeFormArray.controls[n],'buisinessUnitId')"
-											(change)="getDepartmentlist(exchangeFormArray.controls[n].controls['buisinessUnitId'].value,exchangeFormArray.controls[n])">
-											<option *ngFor="let ataName of exchangeFormArray.controls[n].buList"
-												[ngValue]="ataName.managementStructureId">
-												{{ataName.code}}</option>
-										</select>
-									</td>
-									<td>
-										<select formControlName="departmentId"
-											[ngClass]="validateForm(exchangeFormArray.controls[n],'departmentId')"
-											(change)="getDivisionlist(exchangeFormArray.controls[n].controls['departmentId'].value,exchangeFormArray.controls[n])">
-											<option *ngFor="let ataName of exchangeFormArray.controls[n].departmentList"
-												[ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
-										</select>
-									</td>
-									<td>
-										<select formControlName="divisionId"
-											[ngClass]="validateForm(exchangeFormArray.controls[n],'divisionId')"
-											(change)="divisionChange(exchangeFormArray.controls[i].controls['divisionId'].value, exchangeFormArray.controls[i])">
-											<option *ngFor="let ataName of exchangeFormArray.controls[n].divisionlist "
-												[ngValue]="ataName.managementStructureId">{{ataName.code}}</option>
-										</select>
-									</td>
-									<td>
-										<div class="input-group">
-											<select formControlName="manufacturerId">
-												<option *ngFor="let name of allManufacturerInfo"
-													[ngValue]="name.manufacturerId">{{name.name}}</option>
-											</select>
-										</div>
-									</td>
-									<td><input type="text" formControlName="aircraftTypeName" disabled="true" /></td>
-									<td><input type="text" formControlName="aircraftModelName" disabled="true" /></td>
-									<td><input type="text" class="form-control w100" formControlName="description"></td>
-									<td>
-										<div class="input-group">
-											<select formControlName="ataChapterId">
-												<option *ngFor="let ataName of allATAMaininfo1"
-													[ngValue]="ataName.ataChapterId">{{ataName.ataChapterName}}</option>
-											</select>
-										</div>
-									</td>
-									<td><input type="date" class="form-control datepicker w70 hasDatepicker"
-											id="dp1552359556396" formControlName="entryDate"></td>
-									<td><input type="text" class="form-control"></td>
-									<td><input type="checkbox" class="form-control" formControlName="isVerified"></td>
-									<td><input type="text" class="form-control w70" formControlName="verifiedBy"></td>
-									<td><input type="date" class="form-control datepicker w70 hasDatepicker"
-											id="dp1552359556397" formControlName="dateVerified"></td>
-									<td><input type="text" class="form-control w100" formControlName="memo"></td>
-									<td>
-										<span data-toggle="tooltip" class="status" title="" data-placement="right"
-											data-original-title="Active">
-											<div class="toggle btn btn-success" data-toggle="toggle"
-												style="width: 30px; height: 19px;"><input type="checkbox"
-													formControlName="isActive" data-toggle="toggle" data-width="30"
-													id="toggle-one" data-on="<i class='fa fa-check'></i>"
-													data-off="<i class='fa fa-times'></i>" data-onstyle="success"
-													data-offstyle="danger">
-												<div class="toggle-group"><label class="btn btn-success toggle-on"><i
-															class="fa fa-check"></i></label><label
-														class="btn btn-danger active toggle-off"><i
-															class="fa fa-times"></i></label><span
-														class="toggle-handle btn btn-default"></span></div>
-											</div>
-										</span> <span data-toggle="modal" data-target="#history"><a href="#"
-												class="btn btn-success nobg" data-toggle="tooltip" title=""
-												data-original-title="History"><i class="fa fa-history"></i></a></span>
-										<span data-toggle="modal" data-target="#delete"><a href="#"
-												class="btn btn-success nobg" data-toggle="tooltip" title=""
-												data-original-title="Delete"><i class="fa fa-trash"></i></a></span>
-									</td>
-								</tr>
-							</ng-container>
-							</ng-container>
-							<!-- distributionForm End -->
-						</tbody>
-					</table>
-				</form>
-				<div class="clear"></div>
-				<br>
+			</form>
+			
+			<form #capesForm="ngForm">
+			<div class="card" *ngIf="viewTable">
+			  <p-table
+				class="rpo-table-cstm pub-ptable-cstm itemcapes-ptable"
+				[value]="aircraftData"
+				
+				[columns]="colaircraft"
+				[scrollable]="true"
+				[style]="{ width: '100%' }"
+				[paginator]="false"
+			  >
+				<ng-template pTemplate="header" let-columns>
+				  <tr>
+					<th style="width: 130px;text-align: center;">Capability Type</th>
+					<th style="width: 520px;text-align: center;" colspan="4">Managment Structure <span class="clr-red">*</span></th>
+					<th style="width: 130px;text-align: center;" *ngFor="let col of columns">
+					  {{ col.header }}
+					</th>
+					<th style="width: 130px;text-align: center;">Verified</th>
+					<th style="width: 130px;text-align: center;">Verified By</th>
+					<th style="width: 130px;text-align: center;">Verified Date</th>
+					<th style="width: 130px;text-align: center;">Memo</th>
+				  </tr>
+				</ng-template>
+				<ng-template
+				  pTemplate="body"
+				  let-row_no="rowIndex"
+				  let-rowData
+				  let-columns="columns"
+				>
+				<ng-container> <!--*ngFor="let rowData of aircraftData; let row_no = index;"-->
+				  <tr>            
+					<td style="width: 130px;">{{ rowData.capailityTypeName }}</td>
+					<td style="width: 130px;">
+					  <p-dropdown
+					  placeholder="Select"
+					  name="company{{row_no}}"
+					  #companyId="ngModel"
+					  [options]="legalEntityList"
+					  class="p-dropdown-custom-sm"
+					  (onChange)="selectedLegalEntity($event.value, row_no)"
+					  [(ngModel)]="rowData.companyId"
+					  [required]="true"
+					>
+					</p-dropdown>
+					</td>
+					<td style="width: 130px;">
+					  <p-dropdown
+					  placeholder="Select"
+					  name="bu{{row_no}}"
+					  #bu="ngModel"
+					  [options]="getDynamicVariableData('businessUnitList',row_no)"
+					  class="p-dropdown-custom-sm"
+					  (onChange)="selectedBusinessUnit($event.value, row_no)"
+					  [(ngModel)]="rowData.buId"
+					>
+					</p-dropdown>
+					</td>
+					<td style="width: 130px;">
+					  <p-dropdown
+					  placeholder="Select"
+					  name="division{{row_no}}"
+					  #division="ngModel"
+					  [options]="getDynamicVariableData('divisionList',row_no)"
+					  class="p-dropdown-custom-sm"
+					  (onChange)="selectedDivision($event.value, row_no)"
+					  [(ngModel)]="rowData.divisionId"
+					>
+					</p-dropdown>
+					</td>
+					<td style="width: 130px;">
+					  <p-dropdown
+					  placeholder="Select"
+					  name="department{{row_no}}"
+					  #department="ngModel"
+					  [options]="getDynamicVariableData('departmentList',row_no)"
+					  class="p-dropdown-custom-sm"
+					  (onChange)="selectedDepartment($event.value, row_no)"
+					  [(ngModel)]="rowData.departmentId"
+					>
+				  </p-dropdown>
+					</td>
+			
+				
+					<td style="width: 130px;text-align: center;">
+					  <p-checkbox
+					  	class="pcheckbox-cstm"
+						name="isverified{{row_no}}"
+						binary="false"
+						[(ngModel)]="rowData.isVerified"
+						(onChange)="resetVerified(rowData, $event)"
+					
+					  ></p-checkbox>
+					</td>
+					<td style="width: 130px;">
+					  <p-dropdown
+						class="p-dropdown-custom-sm"
+						[options]="employeeList"
+						placeholder="Select"
+						[disabled]="!rowData.isVerified"
+						[required]="rowData.isVerified"
+						name="employeeList{{row_no}}"
+						[(ngModel)]="rowData.verifiedById"
+					  ></p-dropdown>
+					</td>
+					<td style="width: 130px;">
+					  <p-calendar
+					  	class="pcal-item-capes"
+						[(ngModel)]="rowData.verifiedDate"
+						[disabled]="!rowData.isVerified"
+						[required]="rowData.isVerified"
+						name="verifiedDate{{row_no}}"
+						[showIcon]="true"
+					  ></p-calendar>
+					</td>
+			
+					<!-- <td *ngFor="let col of columns">
+					  {{ rowData[col.field] }}
+					</td> -->
+					<td style="width: 130px;">
+					  <input
+						type="text"
+						class="form-control input-value"
+						[(ngModel)]="rowData.memo"
+						name="memo{{row_no}}"
+					  />
+					</td>
+				  
+				  </tr></ng-container>
+				</ng-template>
+			  </p-table>
+			  
 			</div>
-
-		</div>
-		<div class="col-sm-4">
-
-
-		</div>
-		<div class="col-sm-4">
-
-
-
-		</div>
-		<div class="clear"></div>
-		<hr>
-		<button type="submit" class="btn btn-success pull-right submit-btn" (click)="saveCapabilities()"
-			[disabled]="disableSaveBtn()">Save</button>
-		<div class="clear"></div>
-	</div>
-	<div class="pull-right"> © 2019 <a href="#">PAS</a> </div>
-</div>
+			<div class="pull-right" *ngIf="viewTable">
+			  <button
+			  type="button"
+			  class="btn btn-primary" [disabled]="!capesForm.valid"
+			  data-dismiss="modal" style="margin-top: 10px;"
+			  (click)="saveCapability(); "
+			>
+			  Save
+			</button>
+			<button *ngIf="isEnableCapesList"
+			type="button"
+			class="btn btn-danger" 
+			data-dismiss="modal" style="margin-top: 10px;"
+			(click)="onCloseCapes();"
+		  >
+			Close
+		  </button>
+			</div>
+			</form>
+			<!-- </div>
+				  <div class="modal-footer">
+					<button
+					  type="button"
+					  class="btn btn-primary"
+					  data-dismiss="modal"
+					  (click)="saveAircraft()"
+					>
+					  Save
+					</button>
+					<button type="button" class="btn btn-danger" data-dismiss="modal">
+					  Close
+					</button>
+				  </div>
+				</div>
+			  </div>
+			</div> -->
+			

@@ -10,15 +10,15 @@
             </div>
             <div class="form-group ">
               <label>Open Date <span class="clr-red">*</span> </label>
-              <p-calendar [showIcon]="true" [(ngModel)]="quoteForm.openDate" name="openDate" [disabled]="true"></p-calendar>
+              <p-calendar [showIcon]="true" (onSelect)="calculateExpiryDate()" [(ngModel)]="quoteForm.openDate" name="openDate" [disabled]="isView"></p-calendar>
             </div>
             <div class="form-group ">
               <label>Quote Due Date <span class="clr-red">*</span></label>
-              <p-calendar [showIcon]="true" (onSelect)="calculateExpiryDate()" [(ngModel)]="quoteDueDate" name="QuoteDueDate" aria-readonly></p-calendar>
+              <p-calendar [showIcon]="true"  [(ngModel)]="quoteDueDate" name="QuoteDueDate" aria-readonly [disabled]="isView"></p-calendar>
             </div>
             <div class="form-group ">
               <label> Valid For Days <span class="clr-red">*</span></label>
-              <input class="form-control" (change)="calculateExpiryDate()" type="number" [(ngModel)]="validFor" name="ValidForDays" />
+              <input class="form-control" (change)="calculateExpiryDate()" type="number" [(ngModel)]="validFor" name="ValidForDays" [disabled]="isView"/>
             </div>
             <div class="form-group ">
               <label> Expiration Date <span class="clr-red">*</span></label>
@@ -26,8 +26,8 @@
             </div>
 
             <div class="form-group">
-              <label> Quotation Status <span class="clr-red">*</span></label>
-              <select [(ngModel)]="quoteForm.expirationDateStatus" name="ExpDateStatus">
+              <label> Quote Status <span class="clr-red">*</span></label>
+              <select [(ngModel)]="quoteForm.expirationDateStatus" name="ExpDateStatus" [disabled]="isView">
                 <option value=1>Open</option>
                 <option value=2>Closed</option>
                 <option value=3>Cancelled</option>
@@ -73,7 +73,7 @@
             <div class="form-group ">
               <label for="accountsReceivableBalance">AR Balance
               </label>
-              <input class="form-control" type="number" [(ngModel)]="accountsReceivableBalance" name="accountsReceivableBalance"/>
+              <input class="form-control" type="number" [(ngModel)]="accountsReceivableBalance" name="accountsReceivableBalance" [disabled]="isView"/>
             </div>
             
           </div>
@@ -115,14 +115,15 @@
               <label for="Currency">Currency
                 <span class="clr-red">*</span>
               </label>
-              <select [(ngModel)]="currency" name="Currency">
+              <select [(ngModel)]="currency" name="Currency" [disabled]="isView" *ngIf="!isQuoteListView">
                 <option value="">Select Currency</option>
                 <option *ngFor="let cur of currencyList" [value]="cur.value">{{cur.label}}</option>
               </select>
+              <input class="form-control" type="text" [(ngModel)]="currency" name="Currency" *ngIf="isQuoteListView" [disabled]="isView"/>
             </div>
             <div class="form-group ">
               <label> DSO <span class="clr-red">*</span></label>
-              <input class="form-control" type="text" [(ngModel)]="dso" name="DSO" />
+              <input class="form-control" type="text" [(ngModel)]="dso" name="DSO" [disabled]="isView"/>
             </div>
             
           </div>
@@ -138,21 +139,21 @@
       <div class="col-md-4">
           <label for="warnings">Warnings
           </label>
-          <textarea class="form-control" [(ngModel)]="warnings" name="warnings"></textarea>
+          <textarea class="form-control" [(ngModel)]="warnings" name="warnings" [disabled]="isView"></textarea>
       </div>
       <div class="col-md-4">
           <label for="memo">Memo
           </label>
-          <textarea class="form-control" [(ngModel)]="memo" name="memo"></textarea>
+          <textarea class="form-control" [(ngModel)]="memo" name="memo" [disabled]="isView"></textarea>
       </div>
     </div>
-    <div class="col-md-12">
-      <button class="btn btn-primary-cstm pull-right" (click)="saveQuoteDetails()" [disabled]="checkValidQuote()">{{quotationHeader && quotationHeader.workOrderQuoteId?'Update':'Save'}}</button>
+    <div class="col-md-12" *ngIf="!isView && !isQuoteListView">
+      <button class="btn btn-primary pull-right" (click)="saveQuoteDetails()" [disabled]="checkValidQuote()">{{quotationHeader && quotationHeader.workOrderQuoteId?'Update':'Save'}}</button>
     </div>
   </div>
 </div>
 
-<div class="table-responsive" style="height: 300px;">
+<div class="table-responsive" style="height: 300px;" *ngIf="!isQuoteListView">
   <table class="table table-bordered table-striped table-fixed table-sorting mpn-list-table"
   id="mpn-list-table">
   <thead>
@@ -190,70 +191,92 @@
       <tr class="mpn-row" style="display: table-row;"
       *ngFor="let workOrderPart of workOrderPartsDetail; let i=index;">
         <td>
-          <input [value]="workOrderPart['partNumber']" readonly/>
+          <label></label>
+          <!-- <input [value]="workOrderPart['partNumber']" readonly/> -->
         </td>
         <td>
-          <input [value]="workOrderPart['partDescription']" readonly/>
+          <label>{{workOrderPart['partDescription']}}</label>
+          <!-- <input [value]="workOrderPart['partDescription']" readonly/> -->
         </td>
         <td>
-          <input [value]="workOrderPart['revisedPartNo']" readonly/>
+          <label>{{workOrderPart['revisedPartNo']}}</label>
+          <!-- <input [value]="workOrderPart['revisedPartNo']" readonly/> -->
         </td>
         <td>
-          <input [value]="workOrderPart['nte']" readonly/>
+          <label>{{workOrderPart['nte']}}</label>
+          <!-- <input [value]="workOrderPart['nte']" readonly/> -->
         </td>
         <td>
-          <input [value]="workOrderPart['condition']" readonly/>
+          <label>{{workOrderPart['condition']}}</label>
+          <!-- <input [value]="workOrderPart['condition']" readonly/> -->
         </td>
         <td>
-          <input [value]="workOrderPart['stockLine']" readonly/>
+          <label>{{workOrderPart['stockLine']}}</label>
+          <!-- <input [value]="workOrderPart['stockLine']" readonly/> -->
         </td>
         <td>
-          <input [value]="workOrderPart['serialNumber']" readonly/>
+          <label>{{workOrderPart['serialNumber']}}</label>
+          <!-- <input [value]="workOrderPart['serialNumber']" readonly/> -->
         </td>
         <td>
-          <input [value]="workOrderPart['workOrderStage']" readonly/>
+          <label>{{workOrderPart['workOrderStage']}}</label>
+          <!-- <input [value]="workOrderPart['workOrderStage']" readonly/> -->
         </td>
         <td>
-          <input [value]="workOrderPart['workOrderStatus']" readonly/>
+          <label>{{workOrderPart['workOrderStatus']}}</label>
+          <!-- <input [value]="workOrderPart['workOrderStatus']" readonly/> -->
         </td>
         <td>
-          <input [value]="workOrderPart['priority']" readonly/>
+          <label>{{workOrderPart['priority']}}</label>
+          <!-- <input [value]="workOrderPart['priority']" readonly/> -->
         </td>
         <td>
-          <input [value]="workOrderPart['customerRequestDate']" readonly/>
+          <label>{{workOrderPart['customerRequestDate']}}</label>
+          <!-- <input [value]="workOrderPart['customerRequestDate']" readonly/> -->
         </td>
         <td>
-          <input [value]="workOrderPart['promisedDate']" readonly/>
+          <label>{{workOrderPart['promisedDate']}}</label>
+          <!-- <input [value]="workOrderPart['promisedDate']" readonly/> -->
         </td>
         <td>
-          <input [value]="workOrderPart['estimatedShipDate']" readonly/>
+          <label>{{workOrderPart['estimatedShipDate']}}</label>
+          <!-- <input [value]="workOrderPart['estimatedShipDate']" readonly/> -->
         </td>
         <td>
-          <input [value]="workOrderPart['estimatedCompletionDate']" readonly/>
+          <label>{{workOrderPart['estimatedCompletionDate']}}</label>
+          <!-- <input [value]="workOrderPart['estimatedCompletionDate']" readonly/> -->
         </td>
         <td>
-          <input [value]="workOrderPart['isDER']" readonly/>
+          <label>{{workOrderPart['isDER']}}</label>
+          <!-- <input [value]="workOrderPart['isDER']" readonly/> -->
         </td>
         <td>
-          <input [value]="workOrderPart['isPMA']" readonly/>
+          <label>{{workOrderPart['isPMA']}}</label>
+          <!-- <input [value]="workOrderPart['isPMA']" readonly/> -->
         </td>
         <td>
-          <input [value]="workOrderPart['firstName']" readonly/>
+          <label>{{workOrderPart['firstName']}}</label>
+          <!-- <input [value]="workOrderPart['firstName']" readonly/> -->
         </td>
         <td>
-          <input [value]="workOrderPart['techStation']" readonly/>
+          <label>{{workOrderPart['techStation']}}</label>
+          <!-- <input [value]="workOrderPart['techStation']" readonly/> -->
         </td>
         <td>
-          <input [value]="workOrderPart['tearDownReport']" readonly/>
+          <label>{{workOrderPart['tearDownReport']}}</label>
+          <!-- <input [value]="workOrderPart['tearDownReport']" readonly/> -->
         </td>
         <td>
-          <input [value]="workOrderPart['tatDaysCurrent']" readonly/>
+          <label>{{workOrderPart['tatDaysCurrent']}}</label>
+          <!-- <input [value]="workOrderPart['tatDaysCurrent']" readonly/> -->
         </td>
         <td>
-          <input [value]="workOrderPart['tatDaysStandard']" readonly/>
+          <label>{{workOrderPart['tatDaysStandard']}}</label>
+          <!-- <input [value]="workOrderPart['tatDaysStandard']" readonly/> -->
         </td>
         <td>
-          <input [value]="workOrderPart['workScope']" readonly/>
+          <label>{{workOrderPart['workScope']}}</label>
+          <!-- <input [value]="workOrderPart['workScope']" readonly/> -->
         </td>
       </tr>
   </tbody>
@@ -264,13 +287,13 @@
 
 <br>
 
-<div class="card" *ngIf="quoteForm.quoteNumber && quoteForm.quoteNumber != ''">
+<div class="card" *ngIf="quoteForm.quoteNumber && quoteForm.quoteNumber != '' && !isQuoteListView">
   <div class="card-body">
 
     <div class="col-md-12">
 
       <div>
-        <div class="col-md-3">
+        <div class="col-md-3" *ngIf="!savedWorkOrderData.isSinglePN">
           <div class="form-group ">
             <label class="fs12">MPN
             </label>
@@ -280,29 +303,23 @@
             </select>
           </div>
         </div>
-        <div class="col-md-3">
-          <div class="form-group ">
-            <label class="fs12">PN Description
-            </label> IDG
-          </div>
-        </div>
       </div>
     </div>
 
-    <div class="col-md-12" *ngIf="selectedPartNumber != '' && !isEdit">
+    <div class="col-md-12" *ngIf="selectedPartNumber != ''">
       <div class="form-group ">
         <label class="fs12">Build Method:
         </label>
-        <button type="button" [ngClass]="selectedBuildMethod === 'use work flow'?'btn-primary-cstm':'btn-light-cstm'" (click)="buildMethodSelected('use work flow')">Use Work Flow</button>
-        <button type="button" [ngClass]="selectedBuildMethod === 'use historical wos'?'btn-primary-cstm':'btn-light-cstm'" (click)="buildMethodSelected('use historical wos')">Use Historical WOs</button>
-        <button type="button" [ngClass]="selectedBuildMethod === 'build from scratch'?'btn-primary-cstm':'btn-light-cstm'" (click)="buildMethodSelected('build from scratch')">Build From Scratch</button>
-        <button type="button" [ngClass]="selectedBuildMethod === 'display 3rd party'?'btn-primary-cstm':'btn-light-cstm'" data-toggle="modal" data-target="#quote-details" (click)="buildMethodSelected('display 3rd party')">Display 3rd
-          Party Pricing</button>
+        <button type="button" [ngClass]="selectedBuildMethod === 'use work flow'?'btn-primary':'btn-light-cstm'" (click)="buildMethodSelected('use work flow')">Use Work Flow</button>
+        <button type="button" [ngClass]="selectedBuildMethod === 'use historical wos'?'btn-primary':'btn-light-cstm'" (click)="buildMethodSelected('use historical wos')">Use Historical WOs</button>
+        <button type="button" [ngClass]="selectedBuildMethod === 'build from scratch'?'btn-primary':'btn-light-cstm'" (click)="buildMethodSelected('build from scratch')">Build From Scratch</button>
+        <!-- <button type="button" [ngClass]="selectedBuildMethod === 'display 3rd party'?'btn-primary':'btn-light-cstm'" data-toggle="modal" data-target="#quote-details" (click)="buildMethodSelected('display 3rd party')">Display 3rd
+          Party Pricing</button> -->
       </div>
 
-      <div class="table-responsive" *ngIf="selectedBuildMethod == 'build from scratch'">
+      <!-- <div class="table-responsive" *ngIf="selectedBuildMethod == 'build from scratch'">
         <wf-create [isQuote]="isQuote" (saveData)="saveBuildFromScratch($event)"></wf-create>
-      </div>
+      </div> -->
 
     </div>
     <div class="table-responsive" *ngIf="selectedBuildMethod == 'use work flow'">
@@ -320,7 +337,7 @@
         </thead>
         <tbody>
           <tr class="mpn-row" *ngFor="let buildl of buildWorkOrderList">
-            <td><input type="radio" name="historical-wo-list" class="select-mpn-quote" (click)="getQuoteInfo(buildl)"></td>
+            <td><input type="radio" name="historical-wo-list" class="select-mpn-quote" [(ngModel)]="woWorkFlowId" [value]="buildl.workFlowId" (click)="getQuoteInfo(buildl)" [disabled]="isView"></td>
             <td>{{buildl.customerName}}</td>
             <td>{{buildl.partNumber}}</td>
             <td>{{buildl.partDescription}}</td>
@@ -346,7 +363,7 @@
         </thead>
         <tbody>
           <tr class="mpn-row" *ngFor="let buildl of buildHistoricalList">
-            <td><input type="radio" name="historical-wo-list" class="select-mpn-quote" (click)="getQuoteInfo(buildl)"></td>
+            <td><input type="radio" name="historical-wo-list" class="select-mpn-quote" [(ngModel)]="historicalWorkOrderId" [value]="buildl.workOrderId" (click)="getQuoteInfo(buildl)" [disabled]="isView"></td>
             <td>{{buildl.customerName}}</td>
             <td>{{buildl.partNumber}}</td>
             <td>{{buildl.partDescription}}</td>
@@ -358,20 +375,20 @@
 
     </div>
   </div>
-  <div class="card col-md-12" style="background: #f1f1f1; margin-top: 10px;" *ngIf="(selectedBuildMethod != 'build from scratch' && selectedBuildMethod != '' && selectedWorkFlowOrWorkOrder) || (isEdit && selectedPartNumber != '')">
+<div class="card col-md-12" style="background: #f1f1f1; margin-top: 10px;" *ngIf="(selectedBuildMethod != '' && selectedWorkFlowOrWorkOrder) || (isEdit && selectedPartNumber != '') || selectedBuildMethod == 'build from scratch'">
       <div class="form-group ">
-        <button type="button" class="btn" [ngClass]="gridActiveTab === 'materialList'?'btn-primary-cstm':'btn-light-cstm'" (click)="gridTabChange('materialList');">Material List</button>
-        <button type="button" class="btn" [ngClass]="gridActiveTab === 'labor'?'btn-primary-cstm':'btn-light-cstm'" (click)="gridTabChange('labor');">Labor</button>
-        <button type="button" class="btn" [ngClass]="gridActiveTab === 'charges'?'btn-primary-cstm':'btn-light-cstm'" (click)="gridTabChange('charges');">Charges</button>
-        <button type="button" class="btn" [ngClass]="gridActiveTab === 'exclusions'?'btn-primary-cstm':'btn-light-cstm'" (click)="gridTabChange('exclusions');">Exclusions</button>
+        <button type="button" class="btn" [ngClass]="gridActiveTab === 'materialList'?'btn-primary':'btn-light-cstm'" (click)="gridTabChange('materialList');">Material List</button>
+        <button type="button" class="btn" [ngClass]="gridActiveTab === 'labor'?'btn-primary':'btn-light-cstm'" (click)="gridTabChange('labor');">Labor</button>
+        <button type="button" class="btn" [ngClass]="gridActiveTab === 'charges'?'btn-primary':'btn-light-cstm'" (click)="gridTabChange('charges');">Charges</button>
+        <button type="button" class="btn" [ngClass]="gridActiveTab === 'exclusions'?'btn-primary':'btn-light-cstm'" (click)="gridTabChange('exclusions');">Exclusions</button>
       </div>
   </div>
 
   <div class="table-responsive" *ngIf="gridActiveTab === 'materialList'">
-    <div>
-        <button  data-target="#addNewMaterials" data-toggle="modal" class="btn btn-primary btn-primary-cstm"  style="padding: 6px 12px !important;">Add New Material</button>
+    <div *ngIf="!isView">
+        <button  data-target="#addNewMaterials" data-toggle="modal" class="btn btn-primary btn-primary"  style="padding: 6px 12px !important;">Add New Material</button>
     </div>
-    <div *ngIf="selectedBuildMethod == 'use work flow'">
+    <div *ngIf="selectedBuildMethod == 'use work flow' || selectedBuildMethod == 'build from scratch'">
       <table class="table table-bordered table-striped table-sorting mpn-list-table table-disabled" >
         <thead>
           <tr>
@@ -384,6 +401,7 @@
                       label="Mark Up"
                       value="Mark Up"
                       [(ngModel)]="costPlusType"
+                      [disabled]="isView"
                     ></p-radioButton>
                     <p-radioButton
                       class="p-radiobutton-label-horizontal col-width"
@@ -391,10 +409,11 @@
                       value="Cost Plus"
                       label="Cost Plus"
                       [(ngModel)]="costPlusType"
+                      [disabled]="isView"
                     ></p-radioButton>
                   </div>
               </td>
-              <td colspan="2">&nbsp;</td>
+              <td colspan="2" *ngIf="!isView">&nbsp;</td>
           </tr>
           <tr>
             <th>MC PN</th>
@@ -410,8 +429,8 @@
             <th *ngIf="costPlusType == 'Mark Up'">MARKUP</th>
             <th>COST PLUS AMOUNT</th>
             <th>FIXED AMOUNT</th>
-            <th></th>
-            <th></th>
+            <th *ngIf="!isView"></th>
+            <th *ngIf="!isView"></th>
           </tr>
         </thead>
         <tbody>
@@ -428,17 +447,17 @@
               <td>{{matQuotation.unitCost}}</td>
               <td>{{matQuotation.quantity * matQuotation.unitCost}}</td>
               <td *ngIf="costPlusType == 'Mark Up'">
-                  <select class="form-control custom-select wf-pub-id" (change)="markupChanged(charge)" [(ngModel)]="matQuotation.markupPercentageId">
+                  <select class="form-control wf-pub-id" (change)="markupChanged(matQuotation)" [(ngModel)]="matQuotation.markupPercentageId" [disabled]="isView">
                     <option value="">Select</option>
                     <option *ngFor="let markUp of markupList" [value]="markUp.value">{{markUp.label}}</option>
                   </select>
               </td>
               <td *ngIf="costPlusType == 'Mark Up'">{{ matQuotation.materialCostPlus }}</td>
               <td *ngIf="costPlusType == 'Cost Plus'">
-                <input type="number" [(ngModel)]="matQuotation.materialCostPlus"/>
+                <input type="number" [(ngModel)]="matQuotation.materialCostPlus" [disabled]="isView"/>
               </td>
               <td>{{matQuotation.fixedAmount}}</td>
-              <td>
+              <td *ngIf="!isView">
                   <button
                     class="btn-edit ptable-wo-btns"
                     mat-icon-button
@@ -450,7 +469,7 @@
                     <mat-icon>edit</mat-icon>
                   </button>
               </td>
-              <td>
+              <td *ngIf="!isView">
                   <button
                     class="btn-delete ptable-wo-btns"
                     mat-icon-button
@@ -480,15 +499,15 @@
             <td></td>
             <td>{{getMaterialCostPlus()}}</td>
             <td>{{getTotalFixedAmount()}}</td>
-            <td></td>
-            <td></td>
+            <td *ngIf="!isView"></td>
+            <td *ngIf="!isView"></td>
           </tr>
         </tfoot>
       </table>
-      <button class="btn btn-primary-cstm pull-right" (click)="createMaterialQuote()">Save</button>
+      <button class="btn btn-primary pull-right" (click)="createMaterialQuote()">Save</button>
     </div>
 
-    <div *ngIf="selectedBuildMethod == 'use historical wos' || isEdit">
+    <div *ngIf="selectedBuildMethod == 'use historical wos'">
       <table class="table table-bordered table-striped table-sorting mpn-list-table table-disabled" >
         <thead>
           <tr>
@@ -501,6 +520,7 @@
                       label="Mark Up"
                       value="Mark Up"
                       [(ngModel)]="costPlusType"
+                      [disabled]="isView"
                     ></p-radioButton>
                     <p-radioButton
                       class="p-radiobutton-label-horizontal col-width"
@@ -508,6 +528,7 @@
                       value="Cost Plus"
                       label="Cost Plus"
                       [(ngModel)]="costPlusType"
+                      [disabled]="isView"
                     ></p-radioButton>
                   </div>
               </td>
@@ -527,8 +548,8 @@
             <th *ngIf="costPlusType == 'Mark Up'">MARKUP</th>
             <th>COST PLUS AMOUNT</th>
             <th>FIXED AMOUNT</th>
-            <th></th>
-            <th></th>
+            <th *ngIf="!isView"></th>
+            <th *ngIf="!isView"></th>
           </tr>
         </thead>
         <tbody>
@@ -544,17 +565,17 @@
             <td>{{matQuotation.unitCost}}</td>
             <td>{{matQuotation.quantity * matQuotation.unitCost}}</td>
             <td *ngIf="costPlusType == 'Mark Up'">
-                <select class="form-control custom-select wf-pub-id" (change)="markupChanged(matQuotation)" [(ngModel)]="matQuotation.markupPercentageId">
+                <select class="form-control wf-pub-id" (change)="markupChanged(matQuotation)" [(ngModel)]="matQuotation.markupPercentageId" [disabled]="isView">
                   <option value="">Select</option>
                   <option *ngFor="let markUp of markupList" [value]="markUp.value">{{markUp.label}}</option>
                 </select>
             </td>
             <td *ngIf="costPlusType == 'Mark Up'">{{ matQuotation.materialCostPlus }}</td>
             <td *ngIf="costPlusType == 'Cost Plus'">
-              <input type="number" [(ngModel)]="matQuotation.materialCostPlus"/>
+              <input type="number" [(ngModel)]="matQuotation.materialCostPlus" [disabled]="isView"/>
             </td>
             <td>{{matQuotation.fixedAmount}}</td>
-            <td>
+            <td *ngIf="!isView">
                 <button
                   class="btn-edit ptable-wo-btns"
                   mat-icon-button
@@ -566,7 +587,7 @@
                   <mat-icon>edit</mat-icon>
                 </button>
             </td>
-            <td>
+            <td *ngIf="!isView">
                 <button
                   class="btn-delete ptable-wo-btns"
                   mat-icon-button
@@ -595,17 +616,28 @@
             <td></td>
             <td>{{getMaterialCostPlus()}}</td>
             <td>{{getTotalFixedAmount()}}</td>
-            <td></td>
-            <td></td>
+            <td *ngIf="!isView"></td>
+            <td *ngIf="!isView"></td>
           </tr>
         </tfoot>
       </table>
-      <button class="btn btn-primary-cstm pull-right" (click)="createMaterialQuote()">Save</button>
+      <button class="btn btn-primary pull-right" (click)="createMaterialQuote()" *ngIf="!isView">Save</button>
     </div>
    
   </div>
 
   <div class="table-responsive" *ngIf="gridActiveTab === 'exclusions'">
+      <div *ngIf="!isView">
+        <button
+          data-target="#addNewExclusions"
+          data-toggle="modal"
+          (click)="createNew()"
+          class="btn btn-primary btn-primary"
+          style="padding: 6px 12px !important;"
+        >
+          Add Exclusions
+        </button>
+      </div>
       <app-work-order-exclusions [workFlowObject]="workFlowObject" 
       [isWorkOrder]="isWorkOrder"
        [workOrderExclusionsList]="workOrderExclusionsList" 
@@ -614,18 +646,30 @@
       [markupList]="markupList"
       (refreshData)="getExclusionListByWorkOrderId()"
       [isQuote]="isQuote"
+      [isView]="isView"
     ></app-work-order-exclusions> 
 
   </div>
 
   <div class="table-responsive" *ngIf="gridActiveTab === 'labor'">
       <app-work-order-labor [taskList]="taskList" [laborForm]="labor" [workOrderLaborList]="workOrderLaborList" [workOrderWorkFlowOriginalData]="workOrderWorkFlowOriginalData" [savedWorkOrderData]="savedWorkOrderData" 
-      (saveworkOrderLabor)="saveworkOrderLabor($event)" [isQuote]="isQuote" [markupList]="markupList"
+      (saveworkOrderLabor)="saveworkOrderLabor($event)" [isQuote]="isQuote" [markupList]="markupList" [isView]="isView" [isEdit]="isEdit"
       ></app-work-order-labor>
 
   </div>
 
   <div class="table-responsive" *ngIf="gridActiveTab === 'charges'">
+      <div *ngIf="!isView">
+        <button
+          data-target="#addNewCharges"
+          data-toggle="modal"
+          (click)="createNew()"
+          class="btn btn-primary btn-primary"
+          style="padding: 6px 12px !important;"
+        >
+          Add Charges
+        </button>
+      </div>
     <app-work-order-charges [workFlowObject]="workFlowObject" 
                           isWorkOrder="false"
                            [workOrderChargesList]="workOrderChargesList" 
@@ -635,6 +679,7 @@
                         (refreshData)="getChargesListByWorkOrderId()" 
                         [isQuote]="isQuote"
                         [markupList]="markupList"
+                        [isView]="isView"
                         ></app-work-order-charges>
   </div>
 
@@ -1001,30 +1046,104 @@
     </div>
   </div> 
   <div id="addNewMaterials" class="modal fade" role="dialog" data-backdrop="static">
-      <div class="modal-dialog modal-lg">
-    
-        <!-- Modal content-->
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h4 class="modal-title">Add Material</h4>
-          </div>
-          <div class="modal-body">
-              <grd-material 
-              [isEdit]="editMatData.length>0"
-              [editData]="editMatData"
-              [isWorkOrder]="isWorkOrder" 
-              [workFlow]="workFlowObject" 
-              [markupList]="markupList"
-              [isQuote]="isQuote"
-              (saveMaterialListForWO)="saveMaterialListForWO($event)" ></grd-material>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-          </div>
+    <div class="modal-dialog modal-lg">
+  
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Add Material</h4>
         </div>
-    
+        <div class="modal-body">
+            <grd-material 
+            [isEdit]="editMatData.length>0"
+            [editData]="editMatData"
+            [isWorkOrder]="isWorkOrder" 
+            [workFlow]="workFlowObject" 
+            [markupList]="markupList"
+            [isQuote]="isQuote"
+            (saveMaterialListForWO)="saveMaterialListForWO($event)" ></grd-material>
+        </div>
+      </div>
+  
+    </div>
+  </div>
+
+  <div id="addNewCharges" class="modal fade" role="dialog" data-backdrop="static">
+    <div class="modal-dialog modal-lg">
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">
+            &times;
+          </button>
+          <h4 class="modal-title">Charges</h4>
+        </div>
+        <div class="modal-body">
+          <grd-charges
+            *ngIf="!isEdit"
+            [workFlow]="workFlowObject"
+            [isWorkOrder]="isWorkOrder"
+            [isQuote]="isQuote"
+            [markupList]="markupList"
+            (saveChargesListForWO)="saveWorkOrderChargesList($event)"
+          ></grd-charges>
+  
+          <grd-charges
+            *ngIf="isEdit && editData"
+            [isEdit]="isEdit"
+            [editData]="editData"
+            [workFlow]="workFlowObject"
+            [isWorkOrder]="isWorkOrder"
+            [markupList]="markupList"
+            [isQuote]="isQuote"
+            (updateChargesListForWO)="updateWorkOrderChargesList($event)"
+          ></grd-charges>
+        </div>
       </div>
     </div>
+  </div>
+
+  <div
+  id="addNewExclusions"
+  class="modal fade"
+  role="dialog"
+  data-backdrop="static"
+>
+    <div class="modal-dialog modal-lg">
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">
+            &times;
+          </button>
+          <h4 class="modal-title">Exclusions</h4>
+        </div>
+        <div class="modal-body">
+          <grd-exclusions
+            *ngIf="!isEdit"
+            [isQuote]="isQuote"
+            [workFlow]="workFlowObject"
+            [isWorkOrder]="isWorkOrder"
+            [markupList]="markupList"
+            (saveExclusionsListForWO)="saveExclusionsList($event)"
+          >
+          </grd-exclusions>
+
+          <grd-exclusions
+            *ngIf="isEdit && editData"
+            [isQuote]="isQuote"
+            [isEdit]="isEdit"
+            [editData]="editData"
+            [workFlow]="workFlowObject"
+            [isWorkOrder]="isWorkOrder"
+            [markupList]="markupList"
+            (updateExclusionsListForWO)="updateExclusionsList($event)"
+          >
+          </grd-exclusions>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 

@@ -18,6 +18,7 @@ export interface IPublication {
     workflowId: string;
     AllowEdit: boolean;
     IsDeleted: boolean;
+    Order: number;
     //isDelete: boolean;
     workflowPublicationDashNumbers: IDashNumbers[];
 

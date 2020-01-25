@@ -311,7 +311,7 @@
                       [minLength]="1"
                       #customerName="ngModel"
                       required
-                      [dropdown]="false"
+                      [dropdown]="true"
                       class="p-autoComplete-ctsm"
                     >
                     </p-autoComplete>
@@ -337,7 +337,7 @@
                       [minLength]="1"
                       #customerName="ngModel"
                       required
-                      [dropdown]="false"
+                      [dropdown]="true"
                       class="p-autoComplete-ctsm"
                     >
                     </p-autoComplete>
@@ -1036,8 +1036,8 @@
       </div>
 
       <div style="float: right;">
-        <button class="btn btn-primary-cstm pull-right"  *ngIf="!isEditBilling" (click)="saveWorkOrderBilling()">Save</button>
-        <button class="btn btn-primary-cstm pull-right"  *ngIf="isEditBilling" (click)="updateWorkOrderBilling()">Update</button>
+        <button class="btn btn-primary pull-right"  *ngIf="!isEditBilling" (click)="saveWorkOrderBilling()">Save</button>
+        <button class="btn btn-primary pull-right"  *ngIf="isEditBilling" (click)="updateWorkOrderBilling()">Update</button>
       </div>
     </form>
   </div>
@@ -1099,7 +1099,7 @@
                                                     <td>{{m.matMarkup}}</td>
                                                     <td>{{m.totalPartsCost}}</td>
                                                     <td>{{m.markup}}</td>
-                                                    <td>{{m.costPlusAmount}}</td>
+                                                    <td>{{m.materialCostPlus}}</td>
                                                     <td>{{m.fixedAmount}}</td>
                                                 </tr>
                                             </tbody>
@@ -1129,6 +1129,7 @@
                                                     <th class="text-center">Extented Cost</th>
                                                     <th class="text-center">Unit Price</th>
                                                     <th class="text-center">Extended Price</th>
+                                                    <th class="text-center">Cost Plus</th>
                                                     <th class="text-center">vendorName</th>
                                                 </tr> 
                                             </thead>
@@ -1142,6 +1143,7 @@
                                                     <td>{{w.extendedCost}}</td>
                                                     <td>{{w.unitPrice}}</td>
                                                     <td>{{w.extendedPrice}}</td>
+                                                    <td>{{w.chargesCostPlus}}</td>
                                                     <td>{{w.vendorName}}</td>
                                                 </tr> 
                                             </tbody>

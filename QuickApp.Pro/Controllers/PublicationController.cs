@@ -38,15 +38,12 @@ namespace QuickApp.Pro.Controllers
         }
 
         // GET: api/values
-        [HttpGet("getpublicationslist")]
+        [HttpPost("getpublicationslist")]
         [Produces(typeof(List<PublicationViewModel>))]
-        public IActionResult Get(string publicationId = "", string description = "", string publicationType = "", string publishedBy = "", string employee = "", string location = "", int pageNumber = 0, int pageSize = 10)
+        public IActionResult Get([FromBody] Filters<PublicationFilters> pubFilters)
         {
-            //var allpublicationinfo = _unitOfWork.Publication.GetPublications(); //.GetAllCustomersData();
-            var allpublicationinfo = _unitOfWork.Publication.GetPublicationsList(publicationId, description, publicationType, publishedBy, employee, location, pageNumber, pageSize); //.GetAllCustomersData();
-
+            var allpublicationinfo = _unitOfWork.Publication.GetPublicationsList(pubFilters);
             return Ok((allpublicationinfo));
-
         }
 
         [HttpGet("GetPublicationById/{id}")]
@@ -529,7 +526,15 @@ namespace QuickApp.Pro.Controllers
         public IActionResult PublicationView(long publicationRecordId)
         {
             var allpublicationinfo = _unitOfWork.Publication.PublicationView(publicationRecordId);
-            return Ok((allpublicationinfo));
+
+			if (allpublicationinfo != null)
+			{
+				return Ok((allpublicationinfo));
+			}else
+			{
+				return NotFound();
+			}
+          
 
         }
 

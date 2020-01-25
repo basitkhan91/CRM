@@ -23,6 +23,8 @@ export class WorkOrderLaborComponent implements OnInit, OnChanges {
   @Input() taskList: any;
   @Input() isQuote = false;
   @Input() markupList;
+  @Input() isView: boolean = false;
+  @Input() isEdit: boolean = false;
 
     totalHours: number;
   workOrderWorkFlowList: any;
@@ -61,6 +63,11 @@ console.log(this.workOrderLaborList);
     this.getAllEmployees();
     this.getAllExpertiseType();
     this.id = this.savedWorkOrderData.workOrderId;
+    if(this.isView || this.isEdit){
+      for(let task of this.taskList){
+        this.calculateTaskHours(task);
+      }
+    }
   }
 
   ngOnChanges(){
@@ -85,6 +92,11 @@ console.log(this.workOrderLaborList);
       this.laborForm.employeeId = this.workOrderLaborList['employeeId'];
       this.laborForm.isTaskCompletedByOne = this.workOrderLaborList['isTaskCompletedByOne'];
         this.laborForm.expertiseId = this.workOrderLaborList['expertiseId'];
+    }
+    if(this.isView || this.isEdit){
+      for(let task of this.taskList){
+        this.calculateTaskHours(task);
+      }
     }
   }
 
@@ -444,6 +456,53 @@ console.log(this.workOrderLaborList);
     return total;
   }
 
+  getTotalLaborOHCost(taskList){
+    let total = 0;
+    for(let labor of taskList){
+      if(labor.directLaborOHCost){
+        total += labor.directLaborOHCost;
+      }
+    }
+    return total;
+  }
+
+  getTotalCostPlus(taskList){
+    let total = 0;
+    for(let labor of taskList){
+      if(labor.labourCostPlus){
+        total += labor.labourCostPlus;
+      }
+    }
+    return total;
+  }
+
+  getTotalHours(taskList){
+    let total = 0;
+    for(let labor of taskList){
+      if(labor.labourCostPlus){
+        total += labor.labourCostPlus;
+      }
+    }
+    return total;
+  }
+
+  calculateTotalHours(){
+    this.laborForm.totalWorkHours = 0;
+    for(let task of this.taskList){
+      if(task.totalWorkHours){
+        this.laborForm.totalWorkHours += task.totalWorkHours;
+      }
+    }
+  }
+
+  calculateTaskHours(task){
+    task.totalWorkHours = 0;
+    if(this.laborForm.workOrderLaborList[0] && this.laborForm.workOrderLaborList[0][task.description.toLowerCase()]){
+      for(let taskData of this.laborForm.workOrderLaborList[0][task.description.toLowerCase()]){
+        task.totalWorkHours += taskData.hours;
+      }
+    }
+  }
   // tasks : this.laborForm.tasks[0][keysArray[i]].map(x => {
   //   return {
   //     ...x,

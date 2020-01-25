@@ -9,26 +9,28 @@
   </div>
   <table class="table table-bordered table-fixed workflow-table-charges">
     <tr>
-      <th><label>S.No</label></th>
+      <!-- <th><label>S.No</label></th> -->
       <th><label>Type *</label></th>
       <th><label>Description</label></th>
       <th><label>QTY *</label></th>
       <th><label>Unit Cost *</label></th>
       <th><label>Extended Cost *</label></th>
-      <th><label>Unit Price</label></th>
-      <th><label>Extended Price</label></th>
+      <th *ngIf="!isQuote"><label>Unit Price</label></th>
+      <th *ngIf="!isQuote"><label>Extended Price</label></th>
       <th><label>Vendor Name</label></th>
       <ng-container *ngIf="isQuote">
         <th>Fixed Amount</th>
       </ng-container>
-      <th><label style="text-align: left;">Actions </label></th>
+      <th *ngIf="!isQuote || !isEdit">
+        <label style="text-align: left;">Actions </label>
+      </th>
     </tr>
     <tr
       class="charge-tr"
       [hidden]="charge.isDelete"
       *ngFor="let charge of workFlow.charges; let i = index"
     >
-      <td>{{ (currentPage - 1) * itemsPerPage + i + 1 }}</td>
+      <!-- <td>{{ (currentPage - 1) * itemsPerPage + i + 1 }}</td> -->
       <td>
         <select
           class="form-control custom-select wf-pub-id"
@@ -93,7 +95,7 @@
           (input)="calculateExtendedCostSummation()"
         />
       </td>
-      <td>
+      <td *ngIf="!isQuote">
         <input
           type="text"
           pInputText
@@ -104,7 +106,7 @@
           (input)="calculateExtendedPrice(charge)"
         />
       </td>
-      <td>
+      <td *ngIf="!isQuote">
         <input
           type="text"
           pInputText
@@ -130,49 +132,48 @@
         </p-autoComplete>
       </td>
       <ng-container *ngIf="isQuote">
-          <td><input [(ngModel)]="charge.fixedAmount" /></td>
+        <td><input [(ngModel)]="charge.fixedAmount" /></td>
       </ng-container>
-      <td>
+      <td *ngIf="!isQuote || !isEdit">
         <button class="btn btn-danger nobg" (click)="deleteRow(i)">
           <i class="fa fa-trash"></i>
         </button>
       </td>
     </tr>
     <tr *ngIf="workFlow.charges.length > 0">
-      <td>
+      <!-- <td>
         <b>Total : </b>
-      </td>
+      </td> -->
       <td>&nbsp;</td>
       <td>&nbsp;</td>
       <td>{{ workFlow.qtySummation }}</td>
       <td>&nbsp;</td>
-      <td>{{ workFlow.extendedCostSummation }}</td>
+      <td *ngIf="!isQuote">{{ workFlow.extendedCostSummation }}</td>
       <td>&nbsp;</td>
-      <td>{{ workFlow.totalChargesCost }}</td>
+      <td *ngIf="!isQuote">{{ workFlow.totalChargesCost }}</td>
       <td>&nbsp;</td>
       <ng-container *ngIf="isQuote">
-        <td>{{getTotalFixedAmount()}}</td>
+        <td>{{ getTotalFixedAmount() }}</td>
       </ng-container>
-      <td>&nbsp;</td>
+      <td *ngIf="!isQuote || !isEdit">&nbsp;</td>
     </tr>
   </table>
-
 </div>
 <div *ngIf="isWorkOrder && !isEdit" style="float:right">
   <button
     *ngIf="isWorkOrder"
-    class="btn btn-primary btn-primary-cstm"
+    class="btn btn-primary btn-primary"
     (click)="saveChargesWorkOrder()"
     style="padding: 6px 12px !important;margin-top: 10px;"
   >
-    {{isQuote?'Add':'Save'}}
+    {{ isQuote ? 'Add' : 'Save' }}
   </button>
 </div>
 
 <div *ngIf="isWorkOrder && isEdit" style="float:right">
   <button
     *ngIf="isWorkOrder"
-    class="btn btn-primary btn-primary-cstm"
+    class="btn btn-primary btn-primary"
     (click)="updateChargesWorkOrder()"
     style="padding: 6px 12px !important;margin-top: 10px;"
   >

@@ -24,6 +24,7 @@ export class AccountListingService extends EndpointFactory {
    private readonly getLedgerNamesUrl: string = "/api/ManagementStrcture/LedgerNames";
    private readonly getLeafNodeUrl: string = "/api/nodesetup/getAllLeafNode";
     private readonly getEntitiesByParentIdUrl: string = "/api/Legalentity/childentitiesbyparentid";
+    private readonly deleteglIdUrl: string = "/api/GlAccount/DeleteGLAccount";
 
    get createGlAccountUri() { return this.configurations.baseUrl + this.createGlAccountUrl; }
    get updateGlAccountUri() { return this.configurations.baseUrl + this.updateGlAccountUrl; }
@@ -33,6 +34,7 @@ export class AccountListingService extends EndpointFactory {
    get getLedgerNamesUri() { return this.configurations.baseUrl + this.getLedgerNamesUrl; }
    get getLeafNodeUri() { return this.configurations.baseUrl + this.getLeafNodeUrl; }
     get getEntitiesByParentIdUri() { return this.configurations.baseUrl + this.getEntitiesByParentIdUrl; }
+    get deleteglIdUri() { return this.configurations.baseUrl + this.deleteglIdUrl; }
 
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
 
@@ -96,5 +98,15 @@ export class AccountListingService extends EndpointFactory {
         //return Observable.forkJoin(this.accountListEndpointservice.getData<any[]>());
     }
 
+    public deleteGlAccountById(accountId): Observable<any> {         
+        //return this.http.get(`${this.deleteglIdUri}/${accountId}`).pipe(map((response: any) => response));     
+
+        let deleteglIdUrl = `${this.deleteglIdUri}/${accountId}`;
+
+        return this.http.delete(deleteglIdUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.deleteGlAccountById(accountId));
+            });
+    }
     
 }

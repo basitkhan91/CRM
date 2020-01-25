@@ -29,7 +29,7 @@ import { BinService } from '../../../../services/bin.service';
 import { SiteService } from '../../../../services/site.service';
 import { Site } from '../../../../models/site.model';
 import { LegalEntityService } from '../../../../services/legalentity.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { getValueFromObjectByKey, getObjectByValue, getValueFromArrayOfObjectById, getObjectById, editValueAssignByCondition } from '../../../../generic/autocomplete';
 import { CommonService } from '../../../../services/common.service';
 
@@ -125,48 +125,48 @@ export class CustomerWorkSetupComponent
     customerContactList: any[];
     tempPOHeaderAddress: any = {};
     sourcePoApproval: any = {};
-	ngOnInit(): void {
-		this.sourcereceving.isCustomerStock = true;
+    ngOnInit(): void {
+       this.sourcereceving.isCustomerStock = true;
 
 		this.employeedata();
 		this.loadData();
 		this.ptnumberlistdata();
 		this.Receveingcustomerlist();
 		this.loadDataForCondition();
-		// this.customerList();
 		this.loadItemmasterData();
 		this.vendorList();
         this.loadSiteData();
         this.loadDataCustomerconct();
-       // this.loadManagementdata();
-        //this.loadManagementdataForTree();
-        this.loadLegalEntityData();
+            this.loadLegalEntityData();
         if (!this.sourcereceving.receivingCustomerWorkId) {
             this.sourcereceving.receivingCustomerNumber = 'Creating';
         }
 
 	}
 
-    constructor(private _route: Router, public workFlowtService: CustomerService, private conditionService: ConditionService, public workFlowtService1: LegalEntityService, private siteService: SiteService, private binService: BinService, private vendorservice: VendorService, public employeeService: EmployeeService, private alertService: AlertService, public itemser: ItemMasterService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, public receivingCustomerWorkService: ReceivingCustomerWorkService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private customerservices: CustomerService, private commonService: CommonService,) {
+    constructor(private _route: Router, public workFlowtService: CustomerService, private conditionService: ConditionService, public workFlowtService1: LegalEntityService, private siteService: SiteService, private binService: BinService, private vendorservice: VendorService, public employeeService: EmployeeService, private alertService: AlertService, public itemser: ItemMasterService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, public receivingCustomerWorkService: ReceivingCustomerWorkService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private customerservices: CustomerService, private commonService: CommonService, private _actRoute: ActivatedRoute, ) {
         this.dataSource = new MatTableDataSource();
         this.customerList();
         this.loadManagementdata();
-        //this.loadManagementdataForTree();
-        this.getAllCustomerContact(this.receivingCustomerWorkService.listCollection.customer.customerId);
-        //if (this.receivingCustomerWorkService.listCollection == null) {
-        //    this.receivingCustomerWorkService.listCollection = {};
-        //}
-        if (this.receivingCustomerWorkService.listCollection != null && this.receivingCustomerWorkService.isEditMode == true) {
+         this.sourcereceving.receivingCustomerWorkId = this._actRoute.snapshot.params['id'];
+
+     
+        this.receivingCustomerWorkService.getCustomerWorkdataById(this.sourcereceving.receivingCustomerWorkId).subscribe(response => {
+          
+            this.receivingCustomerWorkService.listCollection = response[0];
+        
+            this.getAllCustomerContact(this.receivingCustomerWorkService.listCollection.customer.customerId);
+
+        if (this.receivingCustomerWorkService.listCollection != null) {
 
             this.showLable = true;
             this.sourcereceving = this.receivingCustomerWorkService.listCollection;
             console.log(this.sourcereceving,'edit')
             this.sourcereceving.serialNumber = this.receivingCustomerWorkService.listCollection.serialNumber;
-            this.sourcereceving.customerContactId = this.sourcereceving.contactId;// { contactId: this.receivingCustomerWorkService.listCollection.contactId, contactTitle: this.receivingCustomerWorkService.listCollection.contactTitle }
-            //this.sourcereceving.managementStructureId = this.receivingCustomerWorkService.listCollection.managementstructureId;// { contactId: this.receivingCustomerWorkService.listCollection.contactId, contactTitle: this.receivingCustomerWorkService.listCollection.contactTitle }
-
-            //this.sourcereceving.customerContactId = { contactId: this.receivingCustomerWorkService.listCollection.contactId, contactTitle: this.receivingCustomerWorkService.listCollection.contactTitle }
-            this.sourcereceving.workPhone = this.receivingCustomerWorkService.listCollection.workPhone;
+            this.sourcereceving.customerContactId = this.sourcereceving.contactId;
+              this.sourcereceving.obtainFromType = parseInt(this.receivingCustomerWorkService.listCollection.obtainFromType);
+                this.sourcereceving.traceableToType = parseInt(this.receivingCustomerWorkService.listCollection.traceableToType);
+    this.sourcereceving.workPhone = this.receivingCustomerWorkService.listCollection.workPhone;
 
             if (this.receivingCustomerWorkService.listCollection.customer) {
                 this.sourcereceving.customerId = this.receivingCustomerWorkService.listCollection.customer.customerId;
@@ -182,8 +182,7 @@ export class CustomerWorkSetupComponent
                 this.sourcereceving.employeeId = this.receivingCustomerWorkService.listCollection.employee.employeeId;
                 this.sourcereceving.firstName = this.receivingCustomerWorkService.listCollection.employee.firstName;
             }
-            //this.sourcereceving.timeLifeCyclesId = this.collectionofstockLineTimeLife.timeLifeCyclesId;
-            if (this.receivingCustomerWorkService.listCollection.ti) {
+              if (this.receivingCustomerWorkService.listCollection.ti) {
                 this.sourceTimeLife = this.receivingCustomerWorkService.listCollection.ti;
             }
             if (this.sourcereceving.serialNumber) {
@@ -251,6 +250,8 @@ export class CustomerWorkSetupComponent
             switch (this.sourcereceving.obtainFromType) {
                 case 1: {
                     this.showCustomer1 = true;
+
+
                     break;
                 }
                 case 2: {
@@ -309,9 +310,8 @@ export class CustomerWorkSetupComponent
             if (this.receivingCustomerWorkService.listCollection.managementStructureId != 'undefined') {
                 this.sourcereceving.companyId = this.getManagementStructureDetails(this.receivingCustomerWorkService.listCollection.managementStructureId);
                           }
-             //this.sourcereceving = this.tempPOHeaderAddress;
-        }
-        
+              }
+        }); 
 	}
 
 	sourcereceving: any = {};
@@ -392,13 +392,13 @@ export class CustomerWorkSetupComponent
 		this.dataSource.filter = filterValue;
 	}
 	private onDataMasterCompaniesLoadSuccessful(allComapnies: MasterCompany[]) {
-		// alert('success');
+		
 		this.alertService.stopLoadingMessage();
 		this.loadingIndicator = false;
 		this.allComapnies = allComapnies;
 	}
 	private onDataLoadFailed(error: any) {
-		// alert(error);
+		
 		this.alertService.stopLoadingMessage();
 		this.loadingIndicator = false;
 
@@ -413,12 +413,13 @@ export class CustomerWorkSetupComponent
     
     saveCustomerwork() {
         this.sourcereceving.isActive = true;
+        console.log(this.sourcereceving);
         if (!(this.sourcereceving.partNumber && this.sourcereceving.partDescription && this.sourcereceving.siteId && this.sourcereceving.customerId) ) {
             this.display = true;
             this.modelValue = true;
         }
         if ((this.sourcereceving.partNumber && this.sourcereceving.partDescription && this.sourcereceving.siteId && this.sourcereceving.customerId)) {
-
+           
             this.isSaving = true;
 
             if (!this.sourcereceving.receivingCustomerWorkId) {
@@ -457,28 +458,30 @@ export class CustomerWorkSetupComponent
                             role => this.saveSuccessHelper(role),
                             error => this.saveFailedHelper(error));
                     }
-                  //  this.sourcereceving = {};
+                 
                     this._route.navigateByUrl('receivingmodule/receivingpages/app-customer-works-list');
                     this.sourcereceving = {};
                 }
             }
 
             else {
-               
+                console.log(this.sourcereceving, 'edit');
+                this.sourcereceving.contactId = this.sourcereceving.customerContactId;
+
                 if ((this.sourcereceving.isTimeLife) && (this.sourcereceving.timeLifeCyclesId == null || this.sourcereceving.timeLifeCyclesId == undefined)) {
-                 
+
                     this.receivingCustomerWorkService.newStockLineTimeLife(this.sourceTimeLife).subscribe(data => {
                         this.collectionofstockLine = data;
                         this.sourcereceving.timeLifeCyclesId = data.timeLifeCyclesId;
-                        this.sourcereceving.contactId = this.sourcereceving.customerContactId;
                         this.value = 1;
-                        if (data != null) {
-                            this.receivingCustomerWorkService.updateReason(this.sourcereceving).subscribe(
-                                response => this.saveCompleted(this.sourcereceving),
-                                error => this.saveFailedHelper(error));
-                        }
+                        this.receivingCustomerWorkService.updateReason(this.sourcereceving).subscribe(
+                            response => this.saveCompleted(this.sourcereceving),
+                            error => this.saveFailedHelper(error));
+
+
                     })
                 }
+
                 else {
                    
                     this.sourcereceving.contactId = this.sourcereceving.customerContactId;
@@ -493,9 +496,7 @@ export class CustomerWorkSetupComponent
                 }
 
               
-                //this._route.navigateByUrl('receivingmodule/receivingpages/app-customer-works-list');
-                this.sourcereceving = {};
-            }
+                          }
         }
     }
 
@@ -504,16 +505,14 @@ export class CustomerWorkSetupComponent
         this.sourcereceving.updatedBy = this.userName;
         this.receivingCustomerWorkService.deleteReason(this.sourcereceving.receivingCustomerWorkId, this.userName).subscribe(
 
-   //     this.receivingCustomerWorkService.deleteReason(this.sourcereceving.receivingCustomerWorkId).subscribe(
-			response => this.saveCompleted(this.sourceAction),
+ 			response => this.saveCompleted(this.sourceAction),
 			error => this.saveFailedHelper(error));
 		this.modal.close();
 	}
 	dismissModel() {
 		this.isDeleteMode = false;
 		this.isEditMode = false;
-		//this.modal.close();
-	}
+			}
 
 	private saveCompleted(user?: any) {
 		this.isSaving = false;
@@ -564,7 +563,7 @@ export class CustomerWorkSetupComponent
 	}
 
 	private onDataLoadrecevingSuccessful(getEmployeeCerficationList: any[]) {
-		// alert('success');
+	
 		this.alertService.stopLoadingMessage();
 		this.loadingIndicator = false;
 		this.dataSource.data = getEmployeeCerficationList;
@@ -587,10 +586,8 @@ export class CustomerWorkSetupComponent
 	}
 
 	private onempDataLoadSuccessful(getEmployeeCerficationList: any[]) {
-		// alert('success');
 		this.alertService.stopLoadingMessage();
 		this.loadingIndicator = false;
-		//this.dataSource.data = getEmployeeCerficationList;
 		this.allEmployeeinfo = getEmployeeCerficationList;
 	}
 
@@ -926,8 +923,8 @@ export class CustomerWorkSetupComponent
 		this.allWareHouses = [];
 		this.allLocations = [];
 		this.allShelfs = [];
-		this.allBins = [];
-		this.sourcereceving.warehouseId = 0
+        this.allBins = [];
+        this.sourcereceving.warehouseId = null
 		this.sourcereceving.locationId = 0;
 		this.sourcereceving.shelfId = 0;
 		this.sourcereceving.binId = 0;
@@ -1045,9 +1042,7 @@ export class CustomerWorkSetupComponent
             for (let i = 0; i < this.allCustomer.length; i++) {
                 if (event == this.allCustomer[i].name) {
                     this.sourcereceving.customerId = this.allCustomer[i].customerId;
-                    //this.sourcereceving.customerCode = this.allCustomer[i].customerCode;
-                    //this.sourcereceving.customerCode = getObjectById('customerId', this.sourcereceving.customerId, this.allCustomer[i]);
-                    this.sourcereceving.customerCode = { customerId: this.sourcereceving.customerId, customerCode: this.allCustomer[i].customerCode }
+                        this.sourcereceving.customerCode = { customerId: this.sourcereceving.customerId, customerCode: this.allCustomer[i].customerCode }
 
                     this.selectedActionName = event;
                     this.getAllCustomerContact(this.allCustomer[i].customerId);
@@ -1092,16 +1087,12 @@ export class CustomerWorkSetupComponent
                     this.selectedActionName = event;
                 }
             }
-            //this.customerservices.getDescriptionbypart(event).subscribe(
-            //    results => this.oncustomernumberloadsuccessfull(results[0]),
-            //    error => this.onDataLoadFailed(error)
-            //);
+          
         }
     }
 
     private oncustomernumberloadsuccessfull(allWorkFlows: any[]) {
-      // this.sourcereceving.customerReference = this.allCustomer[i][0].contractReference;
-        
+         
     }
     loadLegalEntityData() {
         this.alertService.startLoadingMessage();

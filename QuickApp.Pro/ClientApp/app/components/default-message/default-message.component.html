@@ -19,9 +19,9 @@
                                 <div style="text-align: right; margin-left: -6px;">
                                     <p-multiSelect [options]="cols" [maxSelectedLabels]="1"  [(ngModel)]="selectedColumns" optionLabel="header" selectedItemsLabel="{0} columns selected"
                                         [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
-                                    <button type="button" class="btn btn-primary-cstm " pTooltip="Download Selected" tooltipPosition="top" pButton icon="fa-download"
+                                    <button type="button" class="btn btn-primary " pTooltip="Download Selected" tooltipPosition="top" pButton icon="fa-download"
                                         iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
-                                    <button type="button" class="btn btn-primary-cstm " pTooltip="Download All Data" tooltipPosition="top" pButton icon="fa-download"
+                                    <button type="button" class="btn btn-primary " pTooltip="Download All Data" tooltipPosition="top" pButton icon="fa-download"
                                         iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})"></button>
                                     <div class="excel-upload  excel-upload-cstm">
                                         <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected"
@@ -124,8 +124,8 @@
         </strong>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-primary-cstm" (click)="deleteItemAndCloseModel()">Yes</button>
-        <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">No</button>
+        <button type="button" class="btn btn-primary" (click)="deleteItemAndCloseModel()">Yes</button>
+        <button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
     </div>
 
 </ng-template>
@@ -194,8 +194,8 @@
             <div class="clear"></div>
             <div class="modal-footer">
 
-                <button class="btn btn-primary-cstm" [disabled]="!userForm.valid || disableSave">Save</button>
-                <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
+                <button class="btn btn-primary" [disabled]="!userForm.valid || disableSave">Save</button>
+                <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
             </div>
         </form>
     </div>
@@ -238,7 +238,7 @@
         </div>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
+        <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
     </div>
 </ng-template>
 
@@ -297,7 +297,7 @@
             <div class="clear"></div>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" id="" name="" (click)="dismissModel()">Close</button>
+            <button type="button" class="btn btn-danger" data-dismiss="modal" id="" name="" (click)="dismissModel()">Close</button>
         </div>
     </div>
 

@@ -63,6 +63,8 @@ import { VendorcapabilitiesComponent } from "../components/vendorcapabilities/ve
 import { LaberAndOverheadCostSetupComponent } from "../components/laber-and-overhead-cost-setup/laber-and-overhead-cost-setup.component";
 import { CertificationTypeComponent } from "../components/certification-type/certification-type.component";
 import { AssetStatusComponent } from "../components/AssetStatus/asset-status.component";
+import { AssetLocationComponent } from "../components/asset-location/asset-location.component";
+import { AssetAcquisitionTypeComponent } from "../components/asset-acquisition-type/asset-acquisition-type.component";
 import { DepriciationMethodComponent } from "../components/depriciation-method/depriciation-method.component";
 import { DisposalTypeComponent } from "../components/disposal-type/disposal-type.component";
 import { AssetDepConventionTypeComponent } from "../components/Asset-dep-convention-type/asset-dep-convention-type.component";
@@ -80,6 +82,7 @@ import { JobTypeComponent } from '../components/job-type/job-type.component';
 import { VendorProcess1099Component } from "../components/vendor-process1099/vendor-process1099.component";
 import { CapsReportComponent } from "../components/caps-report/caps-report.component";
 import { StockAdjustmentComponent } from "../components/stockline/stock-adjustment/stock-adjustment.component";
+import { CapabilityTypeComponent } from "../components/capabilitytype/capability-type.component";
 
 
 const singlePagesRoutes: Routes = [
@@ -91,6 +94,16 @@ const singlePagesRoutes: Routes = [
                 path: "asset-status",
                 component: AssetStatusComponent,
                 data: { title: "Asset Status" }
+            },
+            {
+                path: "asset-location",
+                component: AssetLocationComponent,
+                data: { title: "Asset Location" }
+            },
+            {
+                path: "asset-acquisition-type",
+                component: AssetAcquisitionTypeComponent,
+                data: { title: "Asset Acquistion Type" }
             },
             {
                 path: "app-tasks",
@@ -420,6 +433,11 @@ const singlePagesRoutes: Routes = [
                 path: "app-caps-report",
                 component: CapsReportComponent,
                 data: { title: "Caps Report" }
+            },
+            {
+                path: "app-capability-type",
+                component: CapabilityTypeComponent,
+                data: { title: "Capability Type" }
             },
         ]
     }

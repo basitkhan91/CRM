@@ -199,6 +199,14 @@ namespace QuickApp.Pro.Controllers
             var result = unitOfWork.DashNumberRepository.GetDashNoByID(Mid, Tid);
             return Ok(result);
         }
+
+        [HttpGet("GetCapesDashNoBy_Model_TypeID/{Mid}/{Tid}")]
+        public IActionResult GetCapesDashNumb(string Mid, string Tid)
+        {
+            var result = unitOfWork.DashNumberRepository.GetCapesDashNoByID(Mid, Tid);
+            return Ok(result);
+        }
+
         [HttpGet("getDashListBy_MUTLI_MID_TID_DID/{Mid}/{Tid}/{Did}")]
         public IActionResult GetDashNumbMutli(string Mid, string Tid, string Did)
         {

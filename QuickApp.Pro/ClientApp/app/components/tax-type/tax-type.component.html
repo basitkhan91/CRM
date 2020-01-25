@@ -18,9 +18,9 @@
                                 <div style="text-align: right;margin-left:-6px">
                                     <p-multiSelect  [maxSelectedLabels]="2" [options]="headers"  optionLabel="header" [(ngModel)]="selectedColumns"  
                                         [style]="{minWidth: '200px'}"  style="float:left" (onChange)="columnsChanges()"  ></p-multiSelect>
-                                     <button type="button" class="btn btn-primary-cstm" pTooltip="Download All Data" matTooltipPosition="above" tooltipPosition="top" pButton icon="fa-download"
+                                     <button type="button" class="btn btn-primary" pTooltip="Download All Data" matTooltipPosition="above" tooltipPosition="top" pButton icon="fa-download"
                                         iconPos="left" label="Export Data" (click)="dt.exportCSV()"></button>
-                                    <button type="button" class="btn btn-primary-cstm" pTooltip="Download Selected" matTooltipPosition="above" tooltipPosition="top" pButton icon="fa-download"
+                                    <button type="button" class="btn btn-primary" pTooltip="Download Selected" matTooltipPosition="above" tooltipPosition="top" pButton icon="fa-download"
                                         iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})"></button> 
                                     <div class="excel-upload  excel-upload-cstm">
                                         
@@ -32,7 +32,7 @@
                                             </span>
                                         </label>
                                         &nbsp; &nbsp;
-                                        <button class="btn btn-primary-cstm" (click)="sampleExcelDownload()" matTooltipPosition="above" pTooltip="Download Sample File" tooltipPosition="top" >Sample File Download</button>
+                                        <button class="btn btn-primary" (click)="sampleExcelDownload()" matTooltipPosition="above" pTooltip="Download Sample File" tooltipPosition="top" >Sample File Download</button>
                                     </div>
                                     
                                 </div>
@@ -125,8 +125,8 @@
         </strong>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-primary-cstm" data-dismiss="modal" (click)="deleteConformation('Yes')">Yes</button>
-            <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="deleteConformation('No')">No</button>
+            <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="deleteConformation('Yes')">Yes</button>
+            <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="deleteConformation('No')">No</button>
         </div>
       </div>
   
@@ -170,7 +170,7 @@
                             <label for="description" class="control-label">Memo</label>
                         </div>
                         <div class="col-sm-5">
-                            <textarea class="text-item" #memo="ngModel" id="memo" name="memodescription" [(ngModel)]="addNew.memo" minlength="2"></textarea>
+                            <textarea class="text-item" #memo="ngModel" id="memo" name="memodescription" [(ngModel)]="addNew.memo" minlength="2" (ngModelChange)="getChange()"></textarea>
                         </div>
                     </div>
                 </div>
@@ -178,7 +178,7 @@
                     <div class="col-sm-6">
                         <div class="checkbox-cstm">
                             <label>
-                                <input type="checkbox" name="isActive" [(ngModel)]="addNew.isActive">
+                                <input type="checkbox" name="isActive" [(ngModel)]="addNew.isActive" (ngModelChange)="getChange()">
                                 <span class="cr">
                                     <i class="cr-icon pi pi-check"></i>
                                 </span>
@@ -191,8 +191,8 @@
            </form>
         </div>
         <div class="modal-footer">
-            <button class="btn btn-primary-cstm"  data-dismiss="modal" [disabled]="create.invalid || disableSaveTaxtype" (click)="save();"> {{isEdit ? 'Update' : 'Save' }}</button>
-            <button type="button" class="btn btn-danger-cstm"  data-dismiss="modal" (click)="resetForm()">Close</button>
+            <button class="btn btn-primary"  data-dismiss="modal" [disabled]="create.invalid || disableSaveTaxtype" (click)="save();"> {{isEdit ? 'Update' : 'Save' }}</button>
+            <button type="button" class="btn btn-danger"  data-dismiss="modal" (click)="resetForm()">Close</button>
     
         </div>
       </div>
@@ -237,7 +237,7 @@
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                  <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
+                                  <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                                 </div>
                               </div>
                           
@@ -289,7 +289,7 @@
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                  <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
+                                  <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                                 </div>
                               </div>
                           
@@ -351,7 +351,7 @@
             <div class="clear"></div>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" id="" name="" (click)="resetViewData()">Close</button>
+            <button type="button" class="btn btn-danger" data-dismiss="modal" id="" name="" (click)="resetViewData()">Close</button>
         </div>
     </div>
 

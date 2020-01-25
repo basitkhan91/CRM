@@ -44,12 +44,12 @@
                                     </div>
                                 </div>
                                 <div class="col-md-2">
-                                    <button class="btn btn-primary-cstm" style="margin-top: 18px;" (click)="onSearchAircraftInfoAtaChapter()">Search</button>
-                                    <button class="btn btn-primary-cstm" style="margin-top: 18px;" (click)="onReset()">Reset</button>
+                                    <button class="btn btn-primary" style="margin-top: 18px;" (click)="onSearchAircraftInfoAtaChapter()">Search</button>
+                                    <button class="btn btn-primary" style="margin-top: 18px;" (click)="onReset()">Reset</button>
                                 </div>
                             </div>            
             
-                            <p-table #dt class="rpo-table-cstm rro-table-cstm pub-ptable-cstm" [first]="0" [rows]="pagesize" [value]="allpublicationInfo"  [metaKeySelection]="true" [paginator]="true"  [pageLinks]="3" [rowsPerPageOptions]="[10,20,50,100]" [columns]="selectedColumns" selectionMode="multiple" [resizableColumns]="true" [reorderableColumns]="true"  [totalRecords]="totalRecords" (onLazyLoad)="publicationPagination($event)" [lazy]="true"> <!--onPage-->
+                            <p-table #dt class="rpo-table-cstm rro-table-cstm pub-ptable-cstm" [first]="0" [rows]="pagesize" [value]="allpublicationInfo"  [metaKeySelection]="true" [paginator]="true"  [pageLinks]="3" [rowsPerPageOptions]="[10,20,50,100]" [columns]="selectedColumns" selectionMode="multiple" [resizableColumns]="true" [reorderableColumns]="true"  [totalRecords]="totalRecords" (onLazyLoad)="publicationPagination($event)" [lazy]="true" scrollHeight="450px">
                                 <ng-template pTemplate="caption">
             
                                     <div style="text-align: right;min-height: 30px;">
@@ -59,8 +59,8 @@
                                             <i class="fa fa-search"></i>
                                             <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Global Filter">
                                         </div> -->
-                                        <button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" iconPos="left" label="Export Data" matTooltip="Download Data" matTooltipPosition="above" (click)="dt.exportCSV()" style="padding: 5px 12px !important;"></button>
-                                        <button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" iconPos="left" label="Export Selected Data" matTooltip="Download Selected Data" matTooltipPosition="above" (click)="dt.exportCSV({selectionOnly:true})" style="padding: 5px 12px !important;"></button>
+                                        <button type="button" class="btn btn-primary" pButton icon="fa-download" iconPos="left" label="Export Data" matTooltip="Download Data" matTooltipPosition="above" (click)="dt.exportCSV()" style="padding: 5px 12px !important;"></button>
+                                        <button type="button" class="btn btn-primary" pButton icon="fa-download" iconPos="left" label="Export Selected Data" matTooltip="Download Selected Data" matTooltipPosition="above" (click)="dt.exportCSV({selectionOnly:true})" style="padding: 5px 12px !important;"></button>
                                         <!-- <a (click)="open(contentEdit)" matTooltip="Add Publication" class="btn btn-success nobg"><span><i class="fa fa-plus"></i></span></a> -->
                                         <!-- <a [routerLink]="['/singlepages/singlepages/app-create-publication']" matTooltip="Add Publication" class="btn btn-success nobg btn-cstm"><span><i class="fa fa-plus"></i></span></a> -->
                                         <!-- <div class="excel-upload excel-upload-cstm">
@@ -77,9 +77,15 @@
                                                 </span>
                                             </label>
                                             &nbsp; &nbsp;
-                                            <button class="btn btn-primary-cstm" (click)="sampleExcelDownload()" >Sample File Download</button>
+                                            <button class="btn btn-primary" (click)="sampleExcelDownload()" >Sample File Download</button>
                                         </div> -->
                                     </div>                        
+                                </ng-template>
+
+                                <ng-template pTemplate="colgroup" let-columns>
+                                    <colgroup>
+                                        <col *ngFor="let col of columns">
+                                    </colgroup>
                                 </ng-template>
 
                                 <ng-template pTemplate="header" let-columns>
@@ -98,7 +104,19 @@
                                                 <input style="width:100%;" name="descriptionInput" pInputText type="text" (keyup)="onChangeInputField($event.target.value, 'description')">
                                             </th> -->
                                         <th style="width:120px" *ngFor="let col of columns" [ngSwitch]="col.field">
-                                            <input style="width:100%;" pInputText type="text" (keyup)="onChangeInputField($event.target.value, col.field)">
+
+
+                                            <input  *ngIf="col.field !== 'revisionDate' 
+                                            && col.field !== 'nextReviewDate'
+                                            && col.field !== 'expirationDate'
+                                            && col.field !== 'verifiedDate'
+                                            " 
+                                             style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field, 'contains');" [ngModel]="inputValue">
+
+                                            <input type="date" *ngIf="col.field == 'revisionDate'" name="revisionDate" style="width:100%;" (change)="dt.filter($event.target.value, col.field, 'contains')" [ngModel]="inputValue">
+                                            <input type="date" *ngIf="col.field == 'nextReviewDate'" name="nextReviewDate" style="width:100%;" (change)="dt.filter($event.target.value, col.field, 'contains')" [ngModel]="inputValue">
+                                            <input type="date" *ngIf="col.field == 'expirationDate'" name="expirationDate" style="width:100%;" (change)="dt.filter($event.target.value, col.field, 'contains')" [ngModel]="inputValue">
+                                            <input type="date" *ngIf="col.field == 'verifiedDate'" name="verifiedDate" style="width:100%;" (change)="dt.filter($event.target.value, col.field, 'contains')" [ngModel]="inputValue">
                                         </th>
                                         <!-- <th style="width:120px" *ngFor="let col of columns" [ngSwitch]="col.field">
                                             <input style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field,'contains')">
@@ -108,10 +126,21 @@
                                 </ng-template>
             
                                 <ng-template pTemplate="body" let-rowData let-columns="columns">
-                                    <tr [pSelectableRow]="rowData">
+                                    <tr [pSelectableRow]="rowData" [pSelectableRowDblClick]="rowData" pReorderableRowHandle (dblclick)="viewSelectedRowdbl(rowData)">
                         
                                         <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
-                                            {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy h:mm:ss a'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy h:mm:ss a'):rowData[col.field]}}
+                                            {{col.field == 'revisionDate'?  
+                                            (rowData[col.field] | date: 'MM/dd/yyyy')
+                                            :rowData[col.field] && col.field == 'nextReviewDate'?  
+                                            (rowData[col.field] | date: 'MM/dd/yyyy ')
+                                            :rowData[col.field] && col.field == 'nextReviewDate'?  
+                                            (rowData[col.field] | date: 'MM/dd/yyyy ')
+                                            :rowData[col.field] && col.field == 'expirationDate'?  
+                                            (rowData[col.field] | date: 'MM/dd/yyyy ')
+                                            :rowData[col.field] && col.field == 'verifiedDate'?  
+                                            (rowData[col.field] | date: 'MM/dd/yyyy ')
+                                            :rowData[col.field]
+                                        }}
                                         </td>
             
                                         <td>
@@ -164,10 +193,15 @@
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
+    <div class="modal-body">
+        <strong>Pub ID:
+          <span class="new-label">{{selectedRowforDelete.publicationId}}</span>
+      </strong>
+      </div>
 
     <div class="modal-footer">
-        <button type="button" class="btn btn-primary-cstm" (click)="deleteItemAndCloseModel()">Yes</button>
-        <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">No</button>
+        <button type="button" class="btn btn-primary" (click)="deleteItemAndCloseModel()">Yes</button>
+        <button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
     </div>
 
 </ng-template>
@@ -182,19 +216,14 @@
               <h4 class="modal-title">History of Publication</h4>
             </div>
             <div class="modal-body" *ngIf="auditHistory">
-                <div class="table-responsive rro-table-cstm">
-                    <table class="table table-bordered" *ngIf="auditHistory.length> 0 else noDatavailable">
+                <div class="table-responsive">
+                    <table class="table table-bordered pubHistory-table" *ngIf="auditHistory.length> 0 else noDatavailable">
                         <thead>
                             <tr>
-                                <th>Publication ID</th>
-                                <th>Description</th>
-                                <th>Publication Type</th>
-                                <th>Published By</th>
-                                <th>Employee</th>
-                                <th>Location</th>
+                                <th *ngFor="let x of cols">{{x.header}}</th>
                                 <th>IsActive</th>
                                 <th>Updated By</th>
-                                <th>Updated Time</th>
+                                <th>Updated Date</th>
                             </tr>
                         </thead>
                         <tbody class="audithistory-cstm"> <!--*ngIf="auditHistory.length> 0"-->
@@ -204,11 +233,17 @@
                                         <td [ngStyle]="{'color': getColorCodeForHistory(i, 'description', audit.description)  ? 'black' : 'red'  }">{{audit.description}}</td>
                                         <td [ngStyle]="{'color': getColorCodeForHistory(i, 'publicationType', audit.publicationType)  ? 'black' : 'red'  }">{{audit.publicationType}}</td>
                                         <td [ngStyle]="{'color': getColorCodeForHistory(i, 'publishby', audit.publishby)  ? 'black' : 'red'  }">{{audit.publishby}}</td>
-                                        <td [ngStyle]="{'color': getColorCodeForHistory(i, 'employeeName', audit.employeeName)  ? 'black' : 'red'  }">{{audit.employeeName}}</td>
+                                        <td [ngStyle]="{'color': getColorCodeForHistory(i, 'revisionDate', audit.revisionDate)  ? 'black' : 'red'  }">{{audit.revisionDate  | date: 'MM/dd/yyyy'}}</td>
+                                        <td [ngStyle]="{'color': getColorCodeForHistory(i, 'revisionNum', audit.revisionNum)  ? 'black' : 'red'  }">{{audit.revisionNum}}</td>
+                                        <td [ngStyle]="{'color': getColorCodeForHistory(i, 'nextReviewDate', audit.nextReviewDate)  ? 'black' : 
+                                        'red'  }">{{audit.nextReviewDate  | date: 'MM/dd/yyyy'}}</td>
+                                        <td [ngStyle]="{'color': getColorCodeForHistory(i, 'expirationDate', audit.expirationDate)  ? 'black' : 'red'  }">{{audit.expirationDate  | date: 'MM/dd/yyyy'}}</td>
                                         <td [ngStyle]="{'color': getColorCodeForHistory(i, 'location', audit.location)  ? 'black' : 'red'  }">{{audit.location}}</td>
+                                        <td [ngStyle]="{'color': getColorCodeForHistory(i, 'verifiedBy', audit.verifiedBy)  ? 'black' : 'red'  }">{{audit.verifiedBy}}</td>
+                                        <td [ngStyle]="{'color': getColorCodeForHistory(i, 'verifiedDate', audit.verifiedDate)  ? 'black' : 'red'  }">{{audit.verifiedDate  | date: 'MM/dd/yyyy'}}</td>
                                         <td [ngStyle]="{'color': getColorCodeForHistory(i, 'isActive', audit.isActive)  ? 'black' : 'red'  }">{{audit.isActive}}</td>
                                     <td >{{audit.updatedBy}}</td>
-                                    <td>{{audit.updatedDate | date: 'dd-MM-yyyy h:mm a '}}</td>
+                                    <td>{{audit.updatedDate  | date: 'MM/dd/yyyy'}}</td>
                                 </tr>
                         </tbody>                        
                     </table>
@@ -221,7 +256,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
             </div>
           </div>
       
@@ -245,8 +280,8 @@
                             <div class="panel-group" id="accordion">
                                 <div class="panel panel-default">
                                     <div>
-                                        <button type="button" class="btn btn-primary-cstm" data-toggle="collapse" (click)="openAllCollapse()" >Open All</button>
-                                        <button type="button" class="btn btn-primary-cstm collapsed" data-toggle="collapse" (click)="closeAllCollapse()" >Close All</button>
+                                        <button type="button" class="btn btn-primary" data-toggle="collapse" (click)="openAllCollapse()" >Open All</button>
+                                        <button type="button" class="btn btn-primary collapsed" data-toggle="collapse" (click)="closeAllCollapse()" >Close All</button>
                                         <hr />
                                     </div>
                                     <div class="panel-heading">
@@ -281,7 +316,7 @@
                                                             
                                                         </div>
                                                     </div>
-                                                    <div>
+                                                     <div>
                                                         <h4 class="panel-title" style="padding-left: 10px;">Attachment Details:</h4>
                                                         <p-table
                                                             class="rpo-table-cstm"
@@ -311,12 +346,12 @@
                                                                 <td *ngFor="let col of columns">
                                                                 {{ rowData[col.field] }}
                                                                 </td>
-                                                                <td><a class="btn btn-primary-cstm" (click)="downloadFileUpload(rowData)" download>Download</a></td> <!--routerLink="/{{rowData.link}}"-->
+                                                                <td><a class="btn btn-primary" (click)="downloadFileUpload(rowData)" download>Download</a></td> 
                                                             </tr>
                                                             
                                                             </ng-template>
                                                         </p-table>
-                                                        </div>
+                                                        </div> 
                                                     </div>
                                                 </div>
                                             </div>
@@ -478,7 +513,7 @@
                         </div>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
             </div>
           </div>
       

@@ -169,6 +169,13 @@ export class WorkOrderService {
         return this.workOrderEndpointService.createWorkOrderFreightList(data);
     }
 
+    updateWorkOrderFreightList(data){
+        return this.workOrderEndpointService.updateWorkOrderFreightList(data);
+    }
+    deleteWorkOrderFreightList(workOrderFreightId , updatedBy){
+        return this.workOrderEndpointService. deleteWorkOrderFreightList(workOrderFreightId , updatedBy);
+    }
+
     getAllTasks() {
         return this.workOrderEndpointService.getTasks();
     }
@@ -230,6 +237,9 @@ export class WorkOrderService {
     }
     assetsCheckOutByWorkOrderAssetsId(assetcheckout) {
         return this.workOrderEndpointService.assetsCheckOutByWorkOrderAssetsId(assetcheckout);
+    }
+    assetsHistoryByWorkOrderAssetId(workOrderAssetId){
+        return this.workOrderEndpointService.assetsHistoryByWorkOrderAssetId(workOrderAssetId);
     }
     deleteWorkOrderAssetByAssetId(workOrderAssetId, updatedBy) {
         return this.workOrderEndpointService.deleteWorkOrderAssetByAssetId(workOrderAssetId, updatedBy);

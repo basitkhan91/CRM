@@ -18,7 +18,7 @@ import { ItemGroupService } from '../../services/item-group.service';
 import { AuditHistory } from '../../models/audithistory.model';
 import { MenuItem, LazyLoadEvent } from 'primeng/api';//bread crumb;
 import { ConfigurationService } from '../../services/configuration.service';
-
+import { editValueAssignByCondition, selectedValueValidate, getObjectById } from '../../generic/autocomplete';
 
 @Component({
     selector: 'app-depriciation-method',
@@ -49,12 +49,14 @@ export class DepriciationMethodComponent implements OnInit, AfterViewInit{
     name: any = "";
     depreciationMethod: any = "";
     memo: any = "";
+    sequenceNo: any;
     createdBy: any = "";
     updatedBy: any = "";
     createdDate: any = "";
     updatedDate: any = "";
     selectedColumns: any[];
     allreasn: any[] = [];
+    allreasn1: any[] = [];
     HasAuditDetails: boolean;
     loadingIndicator: boolean;
     displayedColumns = ['Code', 'Name', 'DepreciationMethod', 'Memo'];
@@ -62,11 +64,13 @@ export class DepriciationMethodComponent implements OnInit, AfterViewInit{
     selectedColumn: any;
     memoPopupText: string;
     selectedreason: any;
+    selectedreason1: any;
     memoNotes: string = 'This is  memo';
     AuditDetails: SingleScreenAuditDetails[];
     allunitData: any;
     code_Name: any = "";
     localCollection: any[] = [];
+    localSequenceList: any[] = [];
     disableSave: boolean = false;
     isSaving: boolean;
     existingRecordsResponse: Object;
@@ -76,6 +80,9 @@ export class DepriciationMethodComponent implements OnInit, AfterViewInit{
     pageSize: number = 10;
     totalPages: number;
     codeName: string = "";
+    sequenceList: any;
+    disableSaveForSequence: boolean = false;
+    disableSaveForCondition: boolean;
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
@@ -120,6 +127,15 @@ export class DepriciationMethodComponent implements OnInit, AfterViewInit{
             ];
             this.selectedData = this.selectedColumns;
             this.alertService.stopLoadingMessage();
+            this.localSequenceList = [];
+            for (let i = 0; i < this.depriciationMethodList.length; i++) {
+                let codeName = this.depriciationMethodList[i].sequenceNo;
+                this.allreasn1.push([{
+                    "sequenceNo": this.depriciationMethodList[i].sequenceNo,
+                    "codeName": codeName
+                }]);
+                this.localSequenceList.push(codeName);
+            }
         });
     }
 
@@ -195,11 +211,62 @@ export class DepriciationMethodComponent implements OnInit, AfterViewInit{
 
     partnmId(event) {
         for (let i = 0; i < this.allreasn.length; i++) {
-            if (event == this.allreasn[i][0].codeName) {
+            //if (event == this.allreasn[i][0].codeName) {
+            if ((event == this.allreasn[i][0].codeName && !this.isEditMode) ||
+                (event == this.allreasn[i][0].codeName && this.isEditMode == true
+                    && this.allreasn[i][0].assetDepreciationMethodId != this.sourceAction.assetDepreciationMethodId)
+            ) {
                 this.disableSave = true;
                 this.selectedreason = event;
+                return;
             }
         }
+        this.disableSave = false;
+    }
+
+    eventHandler1(event) {
+        /*
+        let value = event.target.value.toLowerCase();
+        if (this.selectedreason1) {
+            if (value == this.selectedreason1) {
+                this.disableSaveForSequence = true;
+            }
+            else {
+                this.disableSaveForSequence = false;
+            }
+        }*/
+    }
+
+    partnmId1(event) {
+        for (let i = 0; i < this.allreasn1.length; i++) {
+            if ((event == this.allreasn1[i][0].codeName && !this.isEditMode) ||
+                (event == this.allreasn1[i][0].codeName && this.isEditMode == true
+                    && this.allreasn1[i][0].assetDepreciationMethodId != this.sourceAction.assetDepreciationMethodId)
+            ) {
+                this.disableSaveForSequence = true;
+                this.selectedreason1 = event;
+                return;
+            }
+        }
+        this.selectedreason1 = "";
+        this.disableSaveForSequence = false;
+    }
+
+    onBlurCheck(event) {
+        console.log(event.target.value);
+        let value = event.target.value;
+        for (let i = 0; i < this.depriciationMethodList.length; i++) {
+            if ((value == this.depriciationMethodList[i].sequenceNo && !this.isEditMode) ||
+                (value == this.depriciationMethodList[i].sequenceNo && this.isEditMode == true
+                && this.depriciationMethodList[i].assetDepreciationMethodId != this.sourceAction.assetDepreciationMethodId)
+            ) {
+                this.disableSaveForSequence = true;
+                this.selectedreason1 = value;
+                return;
+            }
+        }
+        this.selectedreason1 = "";
+        this.disableSaveForSequence = false;
     }
 
     filterDepreciationMethod(event) {
@@ -214,6 +281,64 @@ export class DepriciationMethodComponent implements OnInit, AfterViewInit{
                     this.localCollection.push(codeName);
             }
         }
+    }
+
+    filterSequenceNo(event) {
+        this.localSequenceList = [];
+        for (let i = 0; i < this.depriciationMethodList.length; i++) {
+            let codeName = this.depriciationMethodList[i].sequenceNo;
+            if (codeName.toString().indexOf(event.query.toLowerCase()) == 0) {
+                this.allreasn1.push([{
+                    "sequenceNo": this.depriciationMethodList[i].sequenceNo,
+                    "codeName": codeName
+                }]),
+                this.localSequenceList.push(codeName);
+            }
+        }
+    }
+
+    filterSequence(event) {
+        this.sequenceList = this.depriciationMethodList;
+
+        const capabilityTypeData = [...this.depriciationMethodList.filter(x => {
+            if (x.sequenceNo !== null && x.sequenceNo !== 0 && x.sequenceNo != undefined) {
+
+                //if (x.sequenceNo == event)
+                //    return x;
+                x.sequenceNo = x.sequenceNo
+                return x.sequenceNo.toString().toLowerCase().includes((event.query.toLowerCase()))
+            }
+        })]
+        this.sequenceList = capabilityTypeData;
+
+    }
+
+    selectedSequence(object) {
+        const exists = selectedValueValidate('sequenceNo', object, this.sourceAction)
+        this.disableSaveForSequence = !exists;
+    }
+
+    checkSequenceExists(value) {
+
+
+        this.disableSaveForSequence = false;
+        for (let i = 0; i < this.depriciationMethodList.length; i++) {
+
+            if ((this.isEditMode == true && this.sourceAction.sequenceNo == this.depriciationMethodList[i].sequenceNo
+                && this.sourceAction.assetDepreciationMethodId != this.depriciationMethodList[i].assetDepreciationMethodId)
+                || (value == this.depriciationMethodList[i].sequenceNo && !this.isEditMode) 
+            )
+            {
+                this.disableSaveForSequence = true;
+
+                return;
+            }
+
+        }
+
+    } getChange() {
+        this.disableSaveForCondition = false;
+
     }
       
     resetdepriciationmethod(): void {
@@ -232,9 +357,12 @@ export class DepriciationMethodComponent implements OnInit, AfterViewInit{
         this.disableSave = false;
         this.isSaving = true;
         this.loadMasterCompanies();
+        this.disableSaveForCondition = false;
+        this.disableSaveForSequence = false;
         this.sourceAction = new DepriciationMethod();
         this.sourceAction.isActive = true;
         this.codeName = "";
+        this.sequenceNo = "";
         this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
@@ -244,10 +372,14 @@ export class DepriciationMethodComponent implements OnInit, AfterViewInit{
     openEdit(content, row) {
         this.isEditMode = true;
         this.disableSave = false;
+        this.disableSaveForCondition = true;
+        this.disableSaveForSequence = false;
         this.isSaving = true;
         this.loadMasterCompanies();
-        this.sourceAction = row;
+        //this.sourceAction = { ...row, sequenceNo: getObjectById('sequenceNo', row.assetDepreciationMethodId, this.depriciationMethodList) };
+        this.sourceAction = {...row };
         this.codeName = this.sourceAction.code;
+        this.sequenceNo = this.sourceAction.sequenceNo;
         this.loadMasterCompanies();
         this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
@@ -264,6 +396,7 @@ export class DepriciationMethodComponent implements OnInit, AfterViewInit{
             AssetDepreciationMethodCode: this.codeName,
             AssetDepreciationMethodName: this.sourceAction.name,
             AssetDepreciationMemo: this.sourceAction.memo,
+            SequenceNo: this.sequenceNo,
             AssetDepreciationMethodBasis: this.sourceAction.depreciationMethod,
             IsActive: this.sourceAction.isActive,
             IsDeleted: this.isDelete,
@@ -302,6 +435,7 @@ export class DepriciationMethodComponent implements OnInit, AfterViewInit{
             AssetDepreciationMethodCode: rowData.code,
             AssetDepreciationMethodName: rowData.name,
             AssetDepreciationMemo: rowData.memo,
+            SequenceNo: rowData.sequenceNo,
             AssetDepreciationMethodBasis: rowData.depreciationMethod,
             IsActive: rowData.isActive,
             IsDeleted: this.isDelete,
@@ -354,6 +488,7 @@ export class DepriciationMethodComponent implements OnInit, AfterViewInit{
         this.name = row.name;
         this.depreciationMethod = row.depreciationMethod;
         this.memo = row.memo;
+        this.sequenceNo = row.sequenceNo;
         this.createdBy = row.createdBy;
         this.updatedBy = row.updatedBy;
         this.createdDate = row.createdDate;

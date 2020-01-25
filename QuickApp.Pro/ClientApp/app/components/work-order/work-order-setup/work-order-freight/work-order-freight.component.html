@@ -3,11 +3,58 @@
     data-target="#addNewFreight"
     data-toggle="modal"
     (click)="createNew()"
-    class="btn btn-primary btn-primary-cstm"
+    class="btn btn-primary btn-primary"
     style="padding: 6px 12px !important;"
   >
     Add Freight
   </button>
+</div>
+
+<div>
+  <p-table
+    [columns]="cols"
+    [value]="workOrderFreightList"
+    [lazy]="false"
+    [paginator]="true"
+    [rows]="10"
+    [paginator]="true"
+  >
+    <ng-template pTemplate="header" let-columns>
+      <tr>
+        <th *ngFor="let col of columns">
+          {{ col.header }}
+        </th>
+        <th>Action</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-rowData let-columns="columns">
+      <tr>
+        <td *ngFor="let col of columns">
+          {{ rowData[col.field] }}
+        </td>
+        <td class="btn-spaces">
+          <button
+            class="btn-edit ptable-wo-btns"
+            mat-icon-button
+            data-target="#addNewFreight"
+            data-toggle="modal"
+            (click)="edit(rowData)"
+            matTooltip="Edit"
+          >
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button
+            class="btn-delete ptable-wo-btns"
+            mat-icon-button
+            matTooltip="Delete"
+            (click)="delete(rowData)"
+          >
+            <mat-icon color="warn">delete</mat-icon>
+          </button>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
 </div>
 
 <div id="addNewFreight" class="modal fade" role="dialog">
@@ -21,14 +68,14 @@
         <h4 class="modal-title">Add New Freight</h4>
       </div>
       <div class="modal-body">
-        <div>
+        <div *ngIf="!isEdit">
           <span class="cat-heading cat4 ng-star-inserted">
             Add New Freight
             <i class="fa fa-plus" (click)="addNewRow()"></i>
           </span>
         </div>
         <div class="tab-content">
-          <div class="table-responsive table-overflow">
+          <div class="table-responsive table-overflow" style="height: 300px;">
             <table class="table table-bordered ">
               <thead>
                 <tr>
@@ -110,7 +157,7 @@
                   </td>
                   <td>
                     <input
-                      type="text"
+                      type="number"
                       name="amount{{ i }}"
                       #amount="ngModel"
                       [(ngModel)]="f.amount"
@@ -122,7 +169,7 @@
                       type="checkbox"
                       name="fixed{{ i }}"
                       #fixed="ngModel"
-                      [(ngModel)]="f.fixed"
+                      [(ngModel)]="f.isFixedFreight"
                     />
                   </td>
                   <td>
@@ -141,13 +188,13 @@
         </div>
       </div>
       <div class="modal-footer">
-            <button
-            class="btn btn-primary-cstm pull-right"
-            (click)="saveFreightList()"
-          >
-            Save
-          </button>
-        <button type="button" class="btn btn-default" data-dismiss="modal">
+        <button
+          class="btn btn-primary pull-right"
+          (click)="saveFreightList()"
+        >
+          {{ isEdit ? 'Update' : 'Save' }}
+        </button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal">
           Close
         </button>
       </div>
@@ -210,7 +257,7 @@
                                                                </tbody>
                                                            </table>
                                                            <button
-                                                             class="btn btn-primary-cstm pull-right"
+                                                             class="btn btn-primary pull-right"
                                                              (click)="saveQuotation()"
                                                              *ngIf = "isQuote"
                                                            >

@@ -31,8 +31,8 @@
                                             <i class="fa fa-search"></i>
                                             <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder=" Filter" style="height: 28px !important;">
                                         </div>
-                                        <button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" iconPos="left" label="Export Data" matTooltip="Download Data" matTooltipPosition="above" (click)="dt.exportCSV()" style="padding: 5px 12px !important;"></button>
-                                        <button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" iconPos="left" label="Export Selected Data" matTooltip="Download Selected Data" matTooltipPosition="above" *ngIf="selectedColumn" (click)="dt.exportCSV({selectionOnly:true})" style="padding: 5px 12px !important;"></button>
+                                        <button type="button" class="btn btn-primary" pButton icon="fa-download" iconPos="left" label="Export Data" matTooltip="Download Data" matTooltipPosition="above" (click)="dt.exportCSV()" style="padding: 5px 12px !important;"></button>
+                                        <button type="button" class="btn btn-primary" pButton icon="fa-download" iconPos="left" label="Export Selected Data" matTooltip="Download Selected Data" matTooltipPosition="above" (click)="dt.exportCSV({selectionOnly:true})" style="padding: 5px 12px !important;"></button>
 
                                         <!-- <div class="excel-upload excel-upload-cstm">
                                             <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
@@ -44,11 +44,12 @@
                                 </ng-template>
                                 <ng-template pTemplate="header" let-columns>
                                     <tr>
-                                        <th *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
+                                        <th *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field" style="width: auto !important;">
                                             {{col.header}}
                                             <p-sortIcon [field]="col.field"></p-sortIcon>
                                         </th>
-                                        <th style="width: 135px;"></th>
+                                        <!--<th style="width: auto !important"></th>-->
+                                        <th></th>
                                     </tr>
                                     <tr>
                                         <th *ngFor="let col of columns" [ngSwitch]="col.field">
@@ -133,7 +134,7 @@
                                     <li class="breadcrumb-item active" aria-current="page" style="font-size: 16px;margin-top: 3px;">Work Flow Details</li>
                                 </ol>
                             </nav>
-                            <button class="btn btn-primary-cstm pull-right" (click)="toggle_wf_header=!toggle_wf_header">
+                            <button class="btn btn-primary pull-right" (click)="toggle_wf_header=!toggle_wf_header">
                                 {{toggle_wf_header ? 'See Less' : 'See More...'}}
                             </button>
                         </div>
@@ -312,8 +313,8 @@
 
                     <div>
                         <hr />
-                        <button type="button" class="btn btn-primary-cstm" (click)="onOpenAll()">Open All</button>
-                        <button type="button" class="btn btn-primary-cstm" (click)="onCloseAll()">Close All</button>
+                        <button type="button" class="btn btn-primary" (click)="onOpenAll()">Open All</button>
+                        <button type="button" class="btn btn-primary" (click)="onCloseAll()">Close All</button>
                         <hr />
                     </div>
 
@@ -868,7 +869,7 @@
                     <li class="breadcrumb-item active" aria-current="page" style="font-size: 16px;margin-top: 3px;">Work Flow Details</li>
                 </ol>
             </nav>
-            <button class="btn btn-primary-cstm pull-right" (click)="toggle_wf_header=!toggle_wf_header">
+            <button class="btn btn-primary pull-right" (click)="toggle_wf_header=!toggle_wf_header">
                 {{toggle_wf_header ? 'See Less' : 'See More...'}}
             </button>
         </div>
@@ -1047,8 +1048,8 @@
 
     <div>
         <hr />
-        <button type="button" class="btn btn-primary-cstm" (click)="onOpenAll()">Open All</button>
-        <button type="button" class="btn btn-primary-cstm" (click)="onCloseAll()">Close All</button>
+        <button type="button" class="btn btn-primary" (click)="onOpenAll()">Open All</button>
+        <button type="button" class="btn btn-primary" (click)="onCloseAll()">Close All</button>
         <hr />
     </div>
 

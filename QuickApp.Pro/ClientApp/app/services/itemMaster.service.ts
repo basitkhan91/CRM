@@ -89,9 +89,9 @@ export class ItemMasterService {
             this.itemMasterEndpoint.getitemMasterEndpoint<any[]>());
     }
 
-    getItemMasterCapsList() {
+    getItemMasterCapsList(data) {
         return Observable.forkJoin(
-            this.itemMasterEndpoint.getitemMasterCapsDataEndpoint<any[]>());
+            this.itemMasterEndpoint.getitemMasterCapsDataEndpoint<any[]>(data));
     }
 
     getAircaftManafacturerList(itemid: any) {
@@ -283,10 +283,7 @@ export class ItemMasterService {
     }
     newItemMasterAircarftClass(action: any) {
         return this.itemMasterEndpoint.getNewitemAircraftEndpoint<any>(action);
-    }
-    newIVendorAircarftClass(action: any) {
-        return this.itemMasterEndpoint.getNewitemVendorAircraftEndpoint<any>(action);
-    }
+    }    
     newItemMasterATAClass(action: any) {
         return this.itemMasterEndpoint.getNewitemATAEndpoint<any>(action);
     }
@@ -329,10 +326,7 @@ export class ItemMasterService {
     }
     deleteItemMasterAir(ItemMasterAirMappingId: number) {
         return this.itemMasterEndpoint.deleteitemMasterMappedAirEndpoint<any>(ItemMasterAirMappingId);
-    }
-    deleteAirCraft(ItemMasterAirMappingId: number,updatedBy:string) {        
-        return this.itemMasterEndpoint.deleteAirCraftEndpoint<any>(ItemMasterAirMappingId,updatedBy);
-    }
+    }    
     deleteItemMasterPurcSale(ItemMasterPurcSaleId: number) {
         return this.itemMasterEndpoint.deleteitemMasterMappedPurcSaleEndpoint<any>(ItemMasterPurcSaleId);
     }
@@ -398,5 +392,15 @@ export class ItemMasterService {
     getequivalencypartlist(data: any) {
         return this.itemMasterEndpoint.getequivalencypartlist<any>(data);
     }
+    getPrtnumberslistListwithManufacturer() {
+        return Observable.forkJoin(
+            this.itemMasterEndpoint.getPartnumberswithManufacturerEndpoint<any>());
+    }
 
+    saveItemMasterCapes(data){
+        return this.itemMasterEndpoint.saveItemMasterCapes(data)
+    }
+    deleteCapabilityById(capabilityId, user) {
+        return this.itemMasterEndpoint.deleteCapabilityById<any>(capabilityId, user);
+    }
 }

@@ -1,4 +1,7 @@
-﻿.x_panel {
+﻿.right_col {
+    padding: 2px 6px;
+}
+.x_panel {
     padding: 0 10px;
     background-color: #fff;
 }
@@ -59,4 +62,7 @@ a.fa.fa-plus-circle {
         max-width: 44%;
         margin-right: 15px;
     }
+}
+th{
+    text-align:center;
 }

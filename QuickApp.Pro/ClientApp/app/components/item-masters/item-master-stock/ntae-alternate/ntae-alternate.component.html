@@ -1,5 +1,5 @@
 ﻿<div class="card">
-    <div class="col-sm-12 font-padding">
+    <div class="col-sm-12 font-padding" style="padding-left: 10px; margin-bottom: 10px">
         <div class="col-sm-2">
             PN: <span style="color:red">{{itemMasterData.partNumber}}</span>
         </div>
@@ -10,130 +10,48 @@
             Manufacturer: <span style="color:red">{{itemMasterData.manufacturerName}}</span>
         </div>
     </div>
-    <div class="col-md-12">
-        <div class="col-md-12 ">
-            <div class="shadow-Box">
-                <div class="col-sm-12">
-                    <h4 class="float-left">{{selectedTab}}</h4>
-                    <h4 class="float-right">
-                        Add New
-                        <a class="plusicon-cstm" href="#" data-toggle="modal" data-target="#alternateModalPopup"><i class="fa fa-plus-circle fa-lg"></i></a>
-                    </h4>
-                </div>
-                <div class="col-md-2">
-                    <div class="form-group ">
-                        <label class="fs12">PN</label>
-                        <p-autoComplete id="MappingPNumber" title="Part Number" [(ngModel)]="filterItemMaster.MappingPNumber"
-                        [suggestions]="filterPNData" (completeMethod)="filetrDropdownValues($event, 'PN')" 
-                         (onSelect)="partnmId($event)"
-                                                         [ngModelOptions]="{standalone: true}"
-                                                        [size]="30" [minLength]="1"
-                                                        [dropdown]="true" class="autocomplete-customer">
-                                            <ng-template let-partName pTemplate="part">
-                                                <div class="ui-helper-clearfix">{{partName}}</div>
-                                            </ng-template>
-                                        </p-autoComplete>
-                    </div>
-                </div>
-                <div class="col-md-2">
-                    <div class="form-group">
-                        <label class="fs12">
-                            PN DESCRIPTION
-                        </label>
-                        <input type="text" class="ui-inputtext"  name="description" [(ngModel)]="filterItemMaster.Description" > 
-                        <!-- <p-autoComplete id="partDescription" title="PN Description" [(ngModel)]="filterItemMaster.Description"
-                        [suggestions]="filterDiscriptionData" (completeMethod)="filetrDropdownValues($event, 'Description')"
-                        
-                                                         [ngModelOptions]="{standalone: true}"
-                                                      [size]="30" [minLength]="1"
-                                                        [dropdown]="true" class="autocomplete-customer">
-                                            <ng-template let-partName pTemplate="part">
-                                                <div class="ui-helper-clearfix">{{partName}}</div>
-                                            </ng-template>
-                                        </p-autoComplete> -->
-                    </div>
-                </div>
-                <div class="col-md-2">
-                    <div class="form-group">
-                        <label class="fs12">MANUFCTURER </label>
-                        <!-- <p-autoComplete id="manufacturer"
-                        [suggestions]="filterManufacturerData"
-                        title="MANUFCTURER" [(ngModel)]="filterItemMaster.ManufacturerId" (completeMethod)="filetrDropdownValues($event, 'Manufacturer')"
-                                                        
-                                                         [ngModelOptions]="{standalone: true}"
-                                                        [size]="30" [minLength]="1"
-                                                        [dropdown]="true" class="autocomplete-customer">
-                                            <ng-template let-partName pTemplate="part">
-                                                <div class="ui-helper-clearfix">{{partName}}</div>
-                                            </ng-template>
-                                        </p-autoComplete> -->
-                        <select  required name="ManufacturerId"
-                                [(ngModel)]="filterItemMaster.ManufacturerId" id="manufacturerId" title="Manufacturer Id" >
-                            <ng-container *ngFor="let manufacturer of allManufacturerInfo">
-                                <option [ngValue]="manufacturer.manufacturerId" *ngIf="manufacturer.isActive">
-                                    {{manufacturer.name}}
-                                </option>
-                            </ng-container>
-                        </select>
-                    </div>
-                </div>
-                <div class="col-md-2" *ngIf="selectedTab == 'Equivalency'">
-                    <div class="form-group">
-                        <label class="fs12">Item Classication </label>
-                        <!-- <p-autoComplete id="manufacturer"
-                        [suggestions]="filterManufacturerData"
-                        title="MANUFCTURER" [(ngModel)]="filterItemMaster.ManufacturerId" (completeMethod)="filetrDropdownValues($event, 'Manufacturer')"
-                                                        
-                                                            [ngModelOptions]="{standalone: true}"
-                                                        [size]="30" [minLength]="1"
-                                                        [dropdown]="true" class="autocomplete-customer">
-                                            <ng-template let-partName pTemplate="part">
-                                                <div class="ui-helper-clearfix">{{partName}}</div>
-                                            </ng-template>
-                                        </p-autoComplete> -->
-                        <!-- <select  required name="ManufacturerId"
-                                [(ngModel)]="filterItemMaster.itemClassificationId" id="itemClassificationId" title="Item Classification" >
-                            <ng-container *ngFor="let manufacturer of allManufacturerInfo">
-                                <option [ngValue]="manufacturer.manufacturerId" *ngIf="manufacturer.isActive">
-                                    {{manufacturer.name}}
-                                </option>
-                            </ng-container>
-                        </select> -->
-                        <p-dropdown class="imstock-pddowm" [options]="filterPartItemClassificationData" filter="true" [ngModelOptions]="{standalone: true}" [(ngModel)]="filterItemMaster.itemClassificationId" id="itemClassificationId" placeholder="Select Aircraft" [showClear]="true"></p-dropdown>
-                    </div>
-                </div>
-                
-                <div class="col-md-1">
-                    <div class="form-group">
-                        <button type="button" class="btn btn-primary mtop20" (click)="getNtaeData(false)">
-                            <i class="pi pi-search pi-search"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="clear"></div>
-            </div>
-        </div>
+    <div class="col-md-12">           
+        <div class="inline-block display-flex">
+            <br>
+            <h5 class="po-head lead">{{selectedTab}}</h5> &nbsp;&nbsp; <a class="plusicon-cstm" href="#" data-toggle="modal" data-target="#alternateModalPopup" matTooltip="Add {{selectedTab}}" tooltipPosition="top" matTooltipPosition="above"><i class="fa fa-plus-circle fa-lg"></i></a></div>
+        <!-- <div class="col-sm-12">
+            <h4 class="float-left">{{selectedTab}}</h4>
+            <h4 class="float-right">
+                Add New
+                <a class="plusicon-cstm" href="#" data-toggle="modal" data-target="#alternateModalPopup"><i class="fa fa-plus-circle fa-lg"></i></a>
+            </h4>
+        </div> -->
     </div>
 </div>
 
 <div class="card">
-    <p-table [value]="ntaeData" [rows]="10" [columns]="ntaeTableColumns" [scrollable]="true" [style]="{width:'100%'}" [paginator]="true">
+    <p-table #ntaeDataTable [value]="ntaeData" [rows]="10" [columns]="ntaeTableColumns" [scrollable]="true" [style]="{width:'100%'}" [paginator]="true">
+
         <ng-template pTemplate="header" let-columns>
             <tr>
                 <th *ngFor="let col of columns">
                     {{col.header}}
                 </th>
-                <th *ngIf="selectedTab == 'Equivalency'">Attachment</th>
+                <th *ngIf="selectedTab == 'Equivalency'">Download</th>
                 <th>Action</th>
             </tr>
+            <tr>
+                    <th *ngFor="let col of columns" [ngSwitch]="col.field">
+                        <input style="width:100%;" pInputText type="text" (input)="ntaeDataTable.filter($event.target.value, col.field, col.filterMatchMode)">
+
+                    </th>
+                    <th *ngIf="selectedTab == 'Equivalency'"></th>
+                    <th></th>
+                </tr>
         </ng-template>
         <ng-template pTemplate="body" let-i="rowIndex" let-rowData let-columns="columns">
             <tr>
                 <td *ngFor="let col of columns">
                     {{rowData[col.field]}}
                 </td>
+
                 <td  *ngIf="selectedTab == 'Equivalency'">
-                    <a class="btn btn-primary-cstm" (click)="downloadFileUpload(rowData)" target="_blank" download>Download</a>
+                    <a class="btn btn-primary" (click)="downloadFileUpload(rowData)" target="_blank" download>{{rowData["fileName"]}}</a>
                 </td>
                 <td>
                     <button type="button" class="btn btn-danger nobg" (click)="deleteNTAERow(rowData.itemMappingId)">
@@ -162,7 +80,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label class="popup-plusicon-cstm">PN <strong class="clr-red">*</strong> </label>
-                            <p-dropdown class="imstock-pddowm" [options]="pnData" filter="true"  [(ngModel)]="alternateData.MappingItemMasterId" name="MappingItemMasterId" id="MappingItemMasterId" title="Part Number" required (onChange)="bindPartDataInPopup($event)" placeholder="Select Aircraft" [showClear]="true"></p-dropdown>
+                            <p-dropdown class="imstock-pddowm" [options]="pnData" filter="true"  [(ngModel)]="alternateData.MappingItemMasterId" name="MappingItemMasterId" id="MappingItemMasterId" title="Part Number" required (onChange)="bindPartDataInPopup($event)" placeholder="Select Part Number" [showClear]="true"></p-dropdown>
                         </div>
                     </div>
                 </div>
@@ -213,8 +131,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary-cstm"  (click)="saveAlternate(saveNtaeTabForm)">Save</button>
-                <button #closeAddPopup type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="closeModal()">Close</button>
+                <button type="button" class="btn btn-primary"  (click)="saveAlternate(saveNtaeTabForm)">Save</button>
+                <button #closeAddPopup type="button" class="btn btn-danger" data-dismiss="modal" (click)="closeModal()">Close</button>
             </div>
             </form>
         </div>

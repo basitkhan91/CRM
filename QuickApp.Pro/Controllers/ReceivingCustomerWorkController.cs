@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using DAL;
+using DAL.Common;
 using DAL.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -40,6 +41,13 @@ namespace QuickApp.Pro.Controllers
 
         }
 
+        [HttpPost("List")]
+        public IActionResult GetList([FromBody] Filters<ReceivingCustomerWorkFilter> customerFilters)
+        {
+            var result = _unitOfWork.receivingCustomerWork.GetList(customerFilters);
+            return Ok(result);
+
+        }
         [HttpGet("GetAudit")]
         [Produces(typeof(List<ReceivingCustomerWorkViewModel>))]
         public IActionResult GetAudit(long receivingCustomerWorkId)
@@ -121,10 +129,11 @@ namespace QuickApp.Pro.Controllers
 
             return Ok(ModelState);
         }
+      
+
         [HttpGet("receivingCustomerWorkById/{receivingCustomerWorkId}")]
         [Produces(typeof(List<ReceivingCustomerWorkViewModel>))]
-
-        private IActionResult GetReceivingCustomerWorkById(long receivingCustomerWorkId)
+        public IActionResult GetReceivingCustomerWorkById(long receivingCustomerWorkId)
         {
                  var result = _unitOfWork.receivingCustomerWork.GetreceivingCustomerWorkById(receivingCustomerWorkId); //GetAllSite Information
             return Ok(result);
@@ -330,6 +339,23 @@ namespace QuickApp.Pro.Controllers
             return Ok();
         }
 
+        [HttpGet("ReceivingCustomerByIdForWorkOrder")]
+        [Produces(typeof(List<ReceivingCustomerWorkViewModel>))]
+
+        public IActionResult GetReceivingCustomerWorkData(long id)
+        {
+            var result = _unitOfWork.receivingCustomerWork.GetReceivingCustomerWorkData(id); //GetAllSite Information
+            return Ok(result);
+        }
+
+
+        [HttpGet("ListGlobalSearch")]
+
+        public IActionResult GetListGlobalFilter(string value, int pageNumber, int pageSize)
+        {
+            var result = _unitOfWork.receivingCustomerWork.GetListGlobalFilter(value, pageNumber, pageSize);
+            return Ok(result);
+        }
     }
 
 }

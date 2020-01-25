@@ -20,6 +20,8 @@ import { Vendor } from '../../../models/vendor.model';
 import { Router, ActivatedRoute, Params, NavigationExtras } from '@angular/router';
 import $ from "jquery";
 import { ConfigurationService } from '../../../services/configuration.service';
+import { VendorCapabilitiesService } from '../../../services/vendorcapabilities.service';
+import { MenuItem } from 'primeng/api';
 
 @Component({
     selector: 'app-vendors-list',
@@ -114,6 +116,19 @@ export class VendorsListComponent implements OnInit {
     selectedPOColumns: any[];
     selectedPOColumn: any[];
     isAllowNettingAPAR: boolean = false;
+    vendorStatus: boolean = false;
+    isIsBillingAddress: boolean = false;
+    isIsShippingAddress: boolean = false;
+    vendorcreatedBy:any;
+    vendorCreatedDate:any;
+    vendorIntegration:any;
+    edi: boolean = false;
+    aeroExchange: boolean = false;
+    ediDescription:any;
+    aeroExchangeDesc:any;
+    vendorProcess1099Data: any;
+    checkedCheckboxesList : any = [];
+
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
@@ -124,10 +139,8 @@ export class VendorsListComponent implements OnInit {
     allComapnies: MasterCompany[] = [];
     private isSaving: boolean;
     public sourceVendor: any = {};
-    public domesticSaveObj: Object = {
-    }
-    public internationalSaveObj: Object = {
-    }
+    public domesticSaveObj: any= {};
+    public internationalSaveObj: any= {};
     public sourceAction: any = [];
     public auditHisory: AuditHistory[] = [];
     private bodyText: string;
@@ -153,7 +166,7 @@ export class VendorsListComponent implements OnInit {
 		vendorId:0,
 		updatedBy: '',
         isActive: false,
-        isdelete:false
+        isdeleted:false
 	}
     private isEditMode: boolean = false;
     private isDeleteMode: boolean = false;
@@ -162,11 +175,31 @@ export class VendorsListComponent implements OnInit {
     isEnableROList: boolean = true;
     vendorId: number;
     isActive: boolean = true;
+    defaultPaymentData:any = {};
+    internationalwithVendor: any[];
+	defaultwithVendor: any[];
+    domesticWithVedor: any[];
+    paymentTypeName:any;
+    allvendorCapsList: any[] = [];
+    selectedCapsColumns:any[];
+    capsCols:any[];
+    vendorCapesGeneralInfo: any = {};
+    aircraftListDataValues: any;
+    colsaircraftLD: any[] = [
+        { field: "aircraft", header: "Aircraft" },
+        { field: "model", header: "Model" },
+        { field: "dashNumber", header: "Dash Numbers" },
+        { field: "memo", header: "Memo" }
+    ];
+    breadcrumbs: MenuItem[];
+	
+    sourceViewforDocument: any;
+	sourceViewforDocumentList: any = [];
     // purchaseOrderData: any;
     // poPageSize: number = 10;
     // poPageIndex: number = 0;
 
-    constructor(private router: ActivatedRoute, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService,private configurations: ConfigurationService) {
+    constructor(private router: ActivatedRoute, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService,private configurations: ConfigurationService,private vendorCapesService: VendorCapabilitiesService) {
         this.local = this.workFlowtService.financeCollection;
         this.dataSource = new MatTableDataSource();
         this.workFlowtService.listCollection = null;
@@ -179,6 +212,11 @@ export class VendorsListComponent implements OnInit {
         this.workFlowtService.ShowPtab = false;
         this.workFlowtService.alertObj.next(this.workFlowtService.ShowPtab);
         this.isVendorList = true;
+
+        this.breadcrumbs = [
+            {label:'Vendors'},
+            {label:'Vendors List'},
+        ];
 
         // this.poCols = [
         //     { field: 'purchaseOrderNumber', header: 'PO Num' },
@@ -448,7 +486,7 @@ export class VendorsListComponent implements OnInit {
             { field: 'city', header: 'City' },
             { field: 'stateOrProvince', header: 'State/Prov' },
             { field: 'postalCode', header: 'Postal Code' },
-            { field: 'country', header: 'Country' }
+            { field: 'countryName', header: 'Country' }
         ];
 
         this.selectedShippingColumns = this.shippingCol;
@@ -470,7 +508,7 @@ export class VendorsListComponent implements OnInit {
             { field: 'city', header: 'City' },
             { field: 'stateOrProvince', header: 'State/Prov' },
             { field: 'postalCode', header: 'Postal Code' },
-            { field: 'country', header: 'Country' }
+            { field: 'countryName', header: 'Country' }
         ];
 
         this.selectedBillingColumns = this.billingCol;
@@ -571,7 +609,7 @@ export class VendorsListComponent implements OnInit {
             { field: 'city', header: 'City' },
             { field: 'stateOrProvince', header: 'State/Prov' },
             { field: 'postalCode', header: 'Postal Code' },
-            { field: 'country', header: 'Country' }
+            { field: 'countryName', header: 'Country' }
         ];
         this.selectedPaymentColumns = this.paymentcols;
     }
@@ -583,7 +621,12 @@ export class VendorsListComponent implements OnInit {
     }
 
     openView(content, row) {     
-        this.toGetVendorGeneralDocumentsList(row.vendorId)  
+        this.loadVendorCapsData(row.vendorId);  
+        this.toGetVendorGeneralDocumentsList(row.vendorId);
+        this.getVendorProcess1099FromTransaction(row.vendorId);
+        this.getDomesticWithVendorId(row.vendorId);
+        this.InternatioalWithVendorId(row.vendorId);
+        this.DefaultWithVendorId(row.vendorId);
         this.vendorCode = row.vendorCode;
         this.vendorName = row.vendorName;
         this.vendorTypeId = row.t.vendorTypeId;
@@ -615,7 +658,7 @@ export class VendorsListComponent implements OnInit {
         this.city = row.city;
         this.stateOrProvince = row.stateOrProvince;
         this.postalCode = row.postalCode;
-        this.country = row.country;
+        this.country = row.countryName;
         this.vendorPhoneNo = row.t.vendorPhone;
         this.vendorPhoneExt = row.t.vendorPhoneExt;
         this.vendorEmail = row.vendorEmail;
@@ -627,9 +670,21 @@ export class VendorsListComponent implements OnInit {
         this.capabilityId = row.capabilityId;
         this.vendorCapabilityName=row.vendorCapabilityName;
         this.vendorURL = row.t.vendorURL;
-        this.creditlimit = row.t.creditLimit;        
+        this.creditlimit = row.t.creditLimit;
         this.discountLevel = row.discountLevel;
-        this.is1099Required = row.t.is1099Required;
+        this.is1099Required = row.t.is1099Required;       
+        this.vendorStatus= row.t.isActive;
+        this.edi = row.t.edi;
+        this.aeroExchange = row.t.aeroExchange;
+        this.ediDescription = row.t.ediDescription;
+        this.aeroExchangeDesc = row.t.aeroExchangeDescription;
+        
+        this.isIsBillingAddress= row.t.isAddressForBilling;
+        this.isIsShippingAddress= row.t.isAddressForShipping;	
+        this.vendorcreatedBy= row.t.createdBy;
+        this.vendorCreatedDate= row.t.createdDate;
+        this.vendorIntegration= row.integrationPortalNames; 	
+			
 
         this.isCertified= row.t.isCertified;
         this.isVendorAudit= row.t.vendorAudit;
@@ -674,7 +729,7 @@ export class VendorsListComponent implements OnInit {
         this.isDeleteMode = true;
         this.updateActiveData.vendorId=this.sourceVendor.vendorId;
         //this.sourceVendor.isdelete = true;
-        this.updateActiveData.isdelete=true;
+        this.updateActiveData.isdeleted=true;
         //this.sourceVendor = content;
         this.updateActiveData.updatedBy = this.userName;
         this.workFlowtService.updatevendorstatus(this.updateActiveData).subscribe(
@@ -834,6 +889,7 @@ export class VendorsListComponent implements OnInit {
 
         $('#step9').collapse('show');
         $('#step10').collapse('show');
+        //$('#step11').collapse('show');
     }
     CloseAllVenodrDetailsModel()
     {
@@ -847,6 +903,7 @@ export class VendorsListComponent implements OnInit {
 
         $('#step9').collapse('hide');
         $('#step10').collapse('hide');
+        //$('#step11').collapse('hide');
     }
 
     gotoCreatePO(rowData) {
@@ -879,6 +936,182 @@ export class VendorsListComponent implements OnInit {
     resetVendorId() {
         this.vendorId = null;
     }
+
+    public getVendorProcess1099FromTransaction(vendorId) {
+        
+       // this.alertService.startLoadingMessage();
+        //this.loadingIndicator = true;
+        this.workFlowtService.getVendorProcess1099DataFromTransaction(vendorId).subscribe(res => {
+            if(res[0].length != 0) {
+                this.vendorProcess1099Data = res[0].map(x => {
+                    return {
+                        ...x                       
+                        
+                    }
+                });
+               
+                for(let j=0; j<this.vendorProcess1099Data.length; j++){
+                    if(this.vendorProcess1099Data[j].isDefaultRadio == true || this.vendorProcess1099Data[j].isDefaultRadio == "true"){
+                        this.vendorProcess1099Data[j].isDefaultRadio = this.vendorProcess1099Data[j].description
+                    }
+                    if(this.vendorProcess1099Data[j].isDefaultCheck == true){
+                        this.checkedCheckboxesList.push(j);
+                    }
+                }
+              
+            } 
+            
+        })
+
+
+    }
+
+
+
+    public getDomesticWithVendorId(vendorId) {
+	
+		this.workFlowtService.getDomesticvedor(vendorId).subscribe(          
+            // res => {
+            //     if(res[0].length>0)
+            //     {
+            //         this.domesticSaveObj = res[0][0];
+            //         console.log(this.domesticSaveObj);
+            //         console.log(this.domesticSaveObj.aba);
+            //     }             
+               
+            // }    
+            results => this.onDomestciLoad(results[0]),
+			error => this.onDataLoadFailed(error)      
+           
+		);
+    }
+    private onDomestciLoad(allWorkFlows: any) {			
+       
+        this.domesticWithVedor = allWorkFlows;
+		if (this.domesticWithVedor.length > 0) {
+            this.domesticSaveObj = allWorkFlows[0];
+		}
+	}
+    
+    
+	public InternatioalWithVendorId(vendorId) {
+	
+		this.workFlowtService.getInternationalWire(vendorId).subscribe(
+			// res => {
+            //     if(res[0].length>0)
+            //     {
+            //     this.internationalSaveObj = res[0][0];
+            //     console.log(this.internationalSaveObj);
+            //     }
+            // }
+            results => this.onInternatioalLoad(results[0]),
+			error => this.onDataLoadFailed(error)      
+		);
+    }
+    
+    public onInternatioalLoad(allWorkFlows: any) {
+  
+    this.internationalwithVendor = allWorkFlows;
+		if (this.internationalwithVendor.length > 0) {
+            this.internationalSaveObj = allWorkFlows[0];           
+		}
+	}
+
+	public DefaultWithVendorId(vendorId) {
+		
+		this.workFlowtService.getDefaultlist(vendorId).subscribe(
+			res => {
+                this.defaultPaymentData = res[0];
+                if(this.defaultPaymentData != null && this.defaultPaymentData.paymentType != null)
+                {
+                    this.paymentTypeName=this.defaultPaymentData.paymentType;     
+                }                        
+            }
+		);
+    }
+    
+    public loadVendorCapsData(vendorId)
+    {
+       
+        const status = 'active';
+
+        if(vendorId != undefined) {
+            this.workFlowtService.getVendorCapabilityList(status, vendorId).subscribe(
+                
+                // res => {
+                //     this.allvendorCapsList = res[0];
+                //     console.log(this.allvendorCapsList);        
+                // }
+                results => this.onDataLoadVendorCapsSuccessful(results[0]),
+                error => this.onDataLoadFailed(error)
+            );
+        }
+
+        // To display the values in header and column name values
+        this.capsCols = [
+            { field: 'vendorCode', header: 'Vendor Code' },
+            { field: 'vendorName', header: 'Vendor Name' },
+            //{ field: 'capabilityType', header: 'Caps Type' },      
+            { field: 'capabilityType', header: 'Vendor Caps' },
+            { field: 'partNumber', header: 'PN' },
+            { field: 'partDescription', header: 'PN Description' },                
+            { field: 'vendorRanking', header: ' Vendor Ranking' },
+            { field: 'tat', header: 'TAT' },
+        ];
+
+        this.selectedCapsColumns = this.capsCols;
+
+    }
+
+    public onDataLoadVendorCapsSuccessful(allWorkFlows: any[]) {
+       
+        // alert('success');
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        this.dataSource.data = allWorkFlows;
+        this.allvendorCapsList = allWorkFlows;
+        console.log(this.allvendorCapsList);
+    }
+
+    viewSelectedCapsRow(rowData) {       
+        const {vendorCapabilityId} = rowData;
+        this.getVendorCapabilitiesView(vendorCapabilityId);     
+        this.getVendorCapesAircraftView(vendorCapabilityId);     
+    }
+    getVendorCapabilitiesView(vendorCapesId) {
+		this.vendorCapesService.getVendorCapabilitybyId(vendorCapesId).subscribe(res => {			
+			this.vendorCapesGeneralInfo = res;
+		})
+	}
+
+	getVendorCapesAircraftView(vendorCapesId) {
+		this.vendorCapesService.getVendorAircraftGetDataByCapsId(vendorCapesId).subscribe(res => {          
+            this.aircraftListDataValues = res.map(x => {
+                return {
+                    ...x,
+                    aircraft: x.aircraftType,
+                    model: x.aircraftModel,
+                    dashNumber: x.dashNumber,
+                    memo: x.memo,
+                }
+            })
+		})
+    }
+    
+    viewFileSelectedCapsRow(rowData)
+    {
+        this.sourceViewforDocument=rowData;
+        this.toGetUploadDocumentsList(rowData.attachmentId, rowData.vendorId,3);
+    }
+    
+  	toGetUploadDocumentsList(attachmentId, vendorId,moduleId)
+	{
+		this.workFlowtService.toGetUploadDocumentsList(attachmentId, vendorId,moduleId).subscribe(res => {
+            this.sourceViewforDocumentList = res;           
+		})
+	}
+
+
 
 
 }

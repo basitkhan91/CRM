@@ -13,6 +13,7 @@ import { Currency } from '../../../../../models/currency.model';
 import { CurrencyService } from '../../../../../services/currency.service';
 import { AccountListingService } from '../../../../../services/account-listing/account-listing.service';
 import { FormControl, Validators, FormGroup, FormBuilder } from '@angular/forms';
+import { pulloutRequiredFieldsOfForm } from '../../../../../../app/validations/form.validator';
 
 @Component({
     selector: 'app-create-journel',
@@ -58,6 +59,7 @@ export class CreateJournelComponent implements OnInit
     ledgerNames: any[];
     ledgerName: string;
     formSubmitted: boolean = false;
+    listOfErrors: any = [];
 
     /** create-journel ctor */
     constructor(public legalService: LegalEntityService,
@@ -140,6 +142,9 @@ export class CreateJournelComponent implements OnInit
     onSubmit(type: string){
         this.formSubmitted = true;
         if(!this.journalForm.valid){
+            this.listOfErrors = pulloutRequiredFieldsOfForm(this.journalForm);
+            this.display = true;
+            this.modelValue = true;
             console.log('Form control has not been passed. please check.');
             console.log(this);
             return false;
@@ -153,30 +158,28 @@ export class CreateJournelComponent implements OnInit
     }
 
     private loadBalanceTypes(){
-        this.balanceTypes = [
-            {balanceTypeId:1, balanceTypeName:'Actual'},
-            {balanceTypeId:2, balanceTypeName:'Budget'},
-            {balanceTypeId:3, balanceTypeName:'Forecast'},
-        ];
+        this.journelService.getAllBalanceTypes().subscribe(balanceTypes => {
+            this.balanceTypes = balanceTypes;
+        });
     }
 
     private loadCategoryTypes(){
-        this.categoryTypes = [
-            {categoryId:1, categoryName:'Manual'},
-            {categoryId:2, categoryName:'Adjustment'}
-        ];
+        this.journelService.getAllJournalCategory().subscribe(journalCategory => {
+            this.categoryTypes = journalCategory;
+        });
     }
+
     private loadJournalTypes(){
-        this.journalTypes = [
-            {journalTypeId:1, journalTypeName: 'Standard'},
-            {journalTypeId:2, journalTypeName: 'Intercompany'}
-        ];
+        this.journelService.getAllJournalTypes().subscribe(journalTypes => {
+            this.journalTypes = journalTypes;
+        });
     }
 
     private loadGeneralLedgerList(){
         this.generalLedgerList = [];
-        this.accountListingService.getAll().subscribe(
+        this.accountListingService.getLedgerData().subscribe(
             datalist=> {
+                console.log(datalist);
                 this.generalLedgerList = datalist;                
             },
             error => {

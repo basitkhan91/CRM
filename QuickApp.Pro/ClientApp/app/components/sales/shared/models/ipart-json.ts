@@ -2,10 +2,12 @@ export interface IPartJson {
     selected:boolean;
     method:string;
     itemId:number;
+    stockLineId: number;
     partNumber: string;
     alternatePartId:number;
     description: string;
-    conditionType: string;
+    conditionId: number;
+    conditionDescription: string;
     stockLineNumber:string;
     uomDescription:string;
     qtyAvailable:number;

@@ -533,6 +533,11 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
         //     this.display = true;
         //     this.modelValue = true;
         // }
+        if(this.sourceVendor.country != null)
+        {
+            this.sourceVendor.country="99";
+        }
+       
         if (!this.creditTermName) {
             this.showCreditTearms = true;
         }

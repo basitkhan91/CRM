@@ -48,12 +48,20 @@ namespace QuickApp.Pro.Controllers
             return Ok(result);
         }
 
-        //[HttpGet("vendorglobalsearch")]
-        //public IActionResult VendorGlobalSearch(string filterText, int pageNumber = 0, int pageSize = 10)
-        //{
-        //    var result = _unitOfWork.Vendor.VendorGlobalSearch(filterText, pageNumber, pageSize);
-        //    return Ok(result);
-        //}
+        [HttpGet("vendorglobalsearch")]
+        public IActionResult VendorGlobalSearch(string filterText, int pageNumber = 0, int pageSize = 10)
+        {
+            var result = _unitOfWork.Vendor.VendorGlobalSearch(filterText, pageNumber, pageSize);
+            return Ok(result);
+        }
+
+        [HttpGet("getvendordatabyid/{vendorId}")]
+        public IActionResult GetVendorDataById(long vendorId)
+        {
+            var allVendorlistDetails = _unitOfWork.Vendor.GetVendorDataById(vendorId);
+            return Ok(allVendorlistDetails);
+
+        }
 
         // GET: api/values
         [HttpGet("Get")]
@@ -269,7 +277,30 @@ namespace QuickApp.Pro.Controllers
         [Produces(typeof(List<VendorViewModel>))]
         public IActionResult GetVendorDefault(long vendorId)
         {
-            var vendorDtails = _context.VendorPayment.Where(a => a.VendorId == vendorId).FirstOrDefault(); //.GetAllCustomersData();
+            var vendorDtails = (from vp in _context.VendorPayment
+                                join vpm in _context.VendorPaymentMethod on vp.DefaultPaymentMethod equals vpm.VendorPaymentMethodId into vpmm
+                                from vpm in vpmm.DefaultIfEmpty()
+                                where (vp.VendorId == vendorId)
+                                select new
+                                {
+                                    vp.BankAddressId,
+                                    vp.BankName,
+                                    vp.CreatedBy,
+                                    vp.CreatedDate,
+                                    vp.DefaultPaymentMethod,
+                                    vp.IsActive,
+                                    vp.MasterCompanyId,
+                                    vp.UpdatedBy,
+                                    vp.UpdatedDate,
+                                    vp.Vendor,
+                                    vp.VendorId,
+                                    vp.VendorPaymentId,
+                                    PaymentType = vpm.Description
+                                }).FirstOrDefault();
+
+
+
+            //var vendorDtails = _context.VendorPayment.Where(a => a.VendorId == vendorId).FirstOrDefault(); //.GetAllCustomersData();
             return Ok(vendorDtails);
 
         }
@@ -1599,7 +1630,7 @@ namespace QuickApp.Pro.Controllers
                                 data.CreatedBy = actionobject.CreatedBy;
                                 data.UpdatedBy = actionobject.UpdatedBy;
                                 data.IsActive = actionobject.IsActive;
-                                //data.IsPrimary = true;
+                                data.IsPrimary = true;
                                 data.IsDelete = false;
                                 _unitOfWork.VendorShippingAddress.Update(data);
                             }
@@ -1617,7 +1648,7 @@ namespace QuickApp.Pro.Controllers
                             objVendorrShippingAddress.CreatedBy = actionobject.CreatedBy;
                             objVendorrShippingAddress.UpdatedBy = actionobject.UpdatedBy;
                             objVendorrShippingAddress.IsActive = actionobject.IsActive;
-                            //objVendorrShippingAddress.IsPrimary = true;
+                            objVendorrShippingAddress.IsPrimary = true;
                             objVendorrShippingAddress.IsDelete = false;
 
                             _context.VendorShippingAddress.Add(objVendorrShippingAddress);
@@ -1668,6 +1699,96 @@ namespace QuickApp.Pro.Controllers
                         }
 
                         _context.SaveChanges();
+                    }
+
+                    if (Convert.ToBoolean(actionobject.IsVendorAlsoCustomer))
+                    {
+                        DAL.Models.Customer customerObject = new DAL.Models.Customer();
+
+                        customerObject.CustomerAffiliationId = vendorViewModel.VendorTypeId;
+                        customerObject.CurrencyId = vendorViewModel.CurrencyId;
+                        customerObject.CreditTermsId = vendorViewModel.CreditTermsId;
+                        customerObject.Name = vendorViewModel.VendorName;
+                        customerObject.Parent = 0;
+                        customerObject.Email = vendorViewModel.VendorEmail; ;
+                        customerObject.CustomerPhone = vendorViewModel.VendorPhone;
+                        customerObject.CustomerPhoneExt = vendorViewModel.VendorPhoneExt;
+                        //customerObject.AnnualQuota = vendorViewModel.AnnualQuota;
+                        //customerObject.AnnualRevenuePotential = vendorViewModel.AnnualRevenuePotential;
+                        customerObject.CustomerParentName = vendorViewModel.VendorParentName;
+                        //customerObject.ScanDocuments = vendorViewModel.ScanDocuments;
+                        //customerObject.PBHCustomerMemo = vendorViewModel.PBHCustomerMemo;
+                        //customerObject.RestrictPMA = vendorViewModel.RestrictPMA;
+                        customerObject.IsAddressForBilling = vendorViewModel.IsAddressForBilling;
+                        customerObject.IsAddressForShipping = vendorViewModel.IsAddressForShipping;
+                        //customerObject.EDI = vendorViewModel.EDI;
+                        //customerObject.IsAeroExchange = vendorViewModel.IsAeroExchange;
+                        customerObject.AeroExchangeDescription = vendorViewModel.AeroExchangeDescription;
+                        customerObject.EDIDescription = vendorViewModel.EDIDescription;
+                        if (vendorViewModel.IsAllowNettingAPAR != null)
+                        {
+                            customerObject.AllowNettingOfAPAR = vendorViewModel.IsAllowNettingAPAR;
+                        }
+                        else
+                        {
+                            customerObject.AllowNettingOfAPAR = false;
+                        }
+
+                        //customerObject.CustomerClassificationId = 0;
+                        //customerObject.RestrictBERMemo = vendorViewModel.RestrictBERMemo;
+                        var CustClassficationData = _context.CustomerClassification.Where(p => p.IsActive == true).OrderBy(p => p.CustomerClassificationId).FirstOrDefault();
+
+                        if (CustClassficationData != null)
+                        {
+                            customerObject.CustomerClassificationId = CustClassficationData.CustomerClassificationId;
+                        }
+
+                        //if (vendorViewModel.CustomerClassificationIds != null)
+                        //{ 
+                        //    customerObject.CustomerClassificationId = vendorViewModel.CustomerClassificationIds[0] ?? null; 
+                        //}
+
+                        customerObject.CustomerTypeId = vendorViewModel.VendorTypeId;
+                        //customerObject.CustomerType = CustomerType;
+                        customerObject.IsCustomerAlsoVendor = vendorViewModel.IsVendorAlsoCustomer;
+                        //customerObject.IsPBHCustomer = vendorViewModel.IsPBHCustomer;
+                        customerObject.CustomerCode = vendorViewModel.VendorCode;
+                        //customerObject.ContractReference = vendorViewModel.ContractReference;
+                        //customerObject.DoingBuinessAsName = vendorViewModel.DoingBuinessAsName;
+                        customerObject.CustomerURL = vendorViewModel.VendorURL;
+                        //customerObject.CustomerClassification = vendorViewModel.CustomerClassification;
+                        //customerObject.CustomerAddress = vendorViewModel.CustomerAddress;
+                        //customerObject.RestrictBER = vendorViewModel.RestrictBER;
+                        //customerObject.RestrictPMA = vendorViewModel.RestrictPMA;
+                        //customerObject.CustomerBillingAddress = vendorViewModel.CustomerBillingAddress;
+                        //customerObject.RestrictPMAMemo = vendorViewModel.RestrictPMAMemo;
+                        customerObject.MasterCompanyId = vendorViewModel.MasterCompanyId;
+
+                        //customerObject.ATAChapterId = vendorViewModel.ATAChapterId;
+                        //customerObject.GeneralCurrencyId = vendorViewModel.CurrencyId;
+                        //customerObject.ataSubChapterId = vendorViewModel.ataSubChapterId;
+                        customerObject.CreatedDate = DateTime.Now;
+                        customerObject.UpdatedDate = DateTime.Now;
+                        customerObject.CreatedBy = vendorViewModel.CreatedBy;
+                        customerObject.UpdatedBy = vendorViewModel.UpdatedBy;
+                        customerObject.IsActive = true;
+                        customerObject.IsDeleted = false;
+                        customerObject.AddressId = actionobject.AddressId;
+                        _context.Customer.Add(customerObject);
+                        _context.SaveChanges();
+
+                        if (customerObject.CustomerId > 0)
+                        {
+                            if (Convert.ToBoolean(customerObject.IsAddressForShipping))
+                            {
+                                _unitOfWork.Customer.AddCustomerShippingAddress(customerObject);
+                            }
+
+                            if (Convert.ToBoolean(customerObject.IsAddressForBilling))
+                            {
+                                _unitOfWork.Customer.AddCustomerBillinggAddress(customerObject);
+                            }
+                        }
                     }
                 }
 
@@ -1960,7 +2081,7 @@ namespace QuickApp.Pro.Controllers
             return Ok(ModelState);
         }
 
-        //[ApiExplorerSettings(IgnoreApi = true)]
+        [ApiExplorerSettings(IgnoreApi = true)]
         public void AddContact(VendorViewModel vendorViewModel)
         {
             try
@@ -3388,7 +3509,11 @@ namespace QuickApp.Pro.Controllers
                 var vendorObject = _unitOfWork.Vendor.GetSingleOrDefault(c => c.VendorId == id);
                 vendor.MasterCompanyId = 1;
                 vendorObject.VendorId = vendor.VendorId;
-                vendorObject.IsDelete = vendor.IsDelete;
+
+               
+
+                vendorObject.IsDeleted = vendor.IsDeleted;
+
                 //vendorObject.IsActive = vendor.IsActive;
                 vendorObject.UpdatedDate = DateTime.Now;
                 vendorObject.UpdatedBy = vendor.UpdatedBy;
@@ -3428,10 +3553,19 @@ namespace QuickApp.Pro.Controllers
                 vendorCapability.MasterCompanyId = 1;
                 vendorCapability.IsActive = true;
                 vendorCapability.CreatedDate = DateTime.Now;
-
-                _unitOfWork.Repository<VendorCapabiliy>().Add(vendorCapability);
-                updateRanking(Convert.ToInt32(vendorCapability.VendorRanking));
-                _unitOfWork.SaveChanges();
+                if(vendorCapability.VendorCapabilityId >0)
+                {
+                    _unitOfWork.Repository<VendorCapabiliy>().Update(vendorCapability);
+                    updateRanking(Convert.ToInt32(vendorCapability.VendorRanking));
+                    _unitOfWork.SaveChanges();
+                }
+                else
+                {
+                    _unitOfWork.Repository<VendorCapabiliy>().Add(vendorCapability);
+                    updateRanking(Convert.ToInt32(vendorCapability.VendorRanking));
+                    _unitOfWork.SaveChanges();
+                }
+             
                 //_context.VendorCapabiliy.Add(caps);
 
                 //_context.SaveChanges();
@@ -3488,7 +3622,34 @@ namespace QuickApp.Pro.Controllers
         {
             if (ModelState.IsValid)
             {
-                var aircraft = _unitOfWork.Vendor.VendorAircraft(vendorAircraftMapping);
+                try
+                {
+                    for (int i = 0; i < vendorAircraftMapping.Length; i++)
+                    {
+                        var aircraftData = _unitOfWork.Repository<VendorCapabilityAircraft>().GetSingleOrDefault(c => c.AircraftTypeId == Convert.ToInt32(vendorAircraftMapping[i].AircraftTypeId) && (c.AircraftModelId == vendorAircraftMapping[i].AircraftModelId) && (c.DashNumberId == vendorAircraftMapping[i].DashNumberId) && (c.CapabilityId == vendorAircraftMapping[i].CapabilityId) && (c.VendorId == vendorAircraftMapping[i].VendorId));
+                        if (aircraftData == null)
+                        {
+                            
+                            var aircraft = _unitOfWork.Vendor.VendorAircraft(vendorAircraftMapping[i]);
+                            //_unitOfWork.VendorCapabilityAircraft.Add(vendorAircraftMapping[i]);
+                            //        _appContext.SaveChanges();
+
+                        }
+                        else
+                        {
+                            return BadRequest("Record already exist with these details");
+                        }
+                    }
+                   
+
+                    //var aircraft = _unitOfWork.Vendor.VendorAircraft(vendorAircraftMapping);
+                }
+                catch (Exception ex)
+                {
+                    throw;
+                }
+
+
             }
             else
             {
@@ -4150,9 +4311,9 @@ namespace QuickApp.Pro.Controllers
 
         [HttpGet("searchForGetAirCraftByVendorCapsId/{vendorCapabilityId}")]
 
-        public IActionResult orAirMappedMultiDashId(long vendorCapabilityId, string aircraftTypeID, string aircraftModelID, string dashNumberId)
+        public IActionResult orAirMappedMultiDashId(long vendorCapabilityId, string aircraftTypeID, string aircraftModelID, string dashNumberId,string memo)
         {
-            var result = _unitOfWork.Vendor.searchItemAircraftMappingDataByMultiTypeIdModelIDDashID(vendorCapabilityId, aircraftTypeID, aircraftModelID, dashNumberId);
+            var result = _unitOfWork.Vendor.searchItemAircraftMappingDataByMultiTypeIdModelIDDashID(vendorCapabilityId, aircraftTypeID, aircraftModelID, dashNumberId, memo);
 
             if (result == null)
             {
@@ -4171,7 +4332,7 @@ namespace QuickApp.Pro.Controllers
             var allTaxrateInfo = _context.Vendor.Include("Manufacturer").Include("Provision").Include("Priority")
                 .Include("ItemClassification").Include("Currency").Include("ExportClassification")
                     .Where(a => a.VendorTypeId == 1
-                                && (a.IsDelete == true || a.IsDelete == null) || a.VendorTypeId == 1 && (a.IsDelete == true || a.IsDelete == null))
+                                && (a.IsDeleted == true || a.IsDeleted == null) || a.VendorTypeId == 1 && (a.IsDeleted == true || a.IsDeleted == null))
                                     .ToList();
             return Ok(allTaxrateInfo);
 

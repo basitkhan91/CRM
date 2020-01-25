@@ -13,15 +13,24 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<object> GetAllCompanyData();
         IEnumerable<object> GetAllStockLineAdjustmentlistData(long id);
         IEnumerable<object> GetBinByShelfIdAdjustmentBeforeChange(long id);
-        IEnumerable<Object> GetList(Filters<StockLineListFilters> stockLineFilters);
         IEnumerable<Object> GetListGlobalFilter(string value, int pageNumber, int pageSize);
 
         IEnumerable<object>  GetAllStockLineIntegrationPortalData(long id);
+        IEnumerable<object> GetAllIntegrationPortalData();
         IEnumerable<object> getStocklineDataById(long id);
+        IEnumerable<object> getStocklineDetailsById(long id);
         IEnumerable<object>  GetAllTimeLifeData(long id);
         void StocklineStatus(long StocklineId, bool status, string updatedBy);
-        IEnumerable<StockLine> getStockLinesByIds(long[] ids);
+        IEnumerable<StockLineDraft> getStockLinesByIds(long[] ids);
         void CreateStockLine(StockLine model);
         IEnumerable<StockLineReport> GenerateStockLineReoprt();
+        IEnumerable<object> StockLineReoprtView(Filters<StockLineReportFilter> slReportFilter);
+
+
+        IEnumerable<object> GetAllWarehouseData(long siteId);
+        IEnumerable<object> GetAllLocationData(long warehouseId);
+        IEnumerable<object> GetAllShelfData(long locationId);
+        IEnumerable<object> GetAllBinData(long shelfId);
+
     }
 }

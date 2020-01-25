@@ -3,7 +3,7 @@
 // www.ebenmonney.com/quickapp-pro
 // ===============================
 
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { Router, NavigationExtras } from "@angular/router";
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
@@ -21,6 +21,8 @@ import { UserLogin } from '../models/user-login.model';
 import { Permission, PermissionNames, PermissionValues } from '../models/permission.model';
 import { UserRole, ModuleHierarchyMaster, RolePermission } from '../components/user-role/ModuleHierarchyMaster.model';
 import { UserRoleService } from '../components/user-role/user-role-service';
+import { AccountService } from './account.service';
+// import { AccountService } from "../services/account.service";
 
 @Injectable()
 export class AuthService {
@@ -111,6 +113,12 @@ export class AuthService {
             .map(response => this.processLoginResponse(response, user.rememberMe));
     }
 
+    employeeDetailsByEmpId(id: number){
+        return this.endpointFactory.employeeDetailsByEmpId(id);
+    }
+
+
+
     public checkUserAccessByModuleName(moduleName: string) : boolean {
         let modules : ModuleHierarchyMaster[] = this.getAllModulesNameFromLocalStorage();
         var selectedModules =  modules.filter(function (module) {
@@ -194,6 +202,7 @@ export class AuthService {
 
         let permissions: PermissionValues[] = Array.isArray(decodedAccessToken.permission) ? decodedAccessToken.permission : [decodedAccessToken.permission];
 
+       
         if (!this.isLoggedIn) {
             this.configurations.import(decodedAccessToken.configuration);
         }
@@ -205,13 +214,17 @@ export class AuthService {
             decodedAccessToken.email,
             decodedAccessToken.jobtitle,
             decodedAccessToken.phone_number,
-            Array.isArray(decodedAccessToken.role) ? decodedAccessToken.role : [decodedAccessToken.role]);
+            Array.isArray(decodedAccessToken.role) ? decodedAccessToken.role : [decodedAccessToken.role],
+            decodedAccessToken.employeeId,
+            );
         user.isEnabled = true;
+
 
         this.saveUserDetails(user, permissions, accessToken, refreshToken, accessTokenExpiry, rememberMe);
         this.getUserRolePermissionByUserId(user.id);
         this.loadAllModulesNameToLocalStorage();
         this.reevaluateLoginStatus(user);
+        this.loadGlobalSettings();
 
         return user;
     }
@@ -239,6 +252,12 @@ export class AuthService {
         this.userRoleService.getAllModuleHierarchies().subscribe(result => {
             this.localStorage.saveSyncedSessionData(result[0], DBkeys.Module_Hierarchy);
         });
+    }
+
+    public loadGlobalSettings(){
+        this.userRoleService.getGlobalData(DBkeys.MASTER_COMPANY_ID).subscribe(results => {
+            return this.localStorage.savePermanentData(results[0], DBkeys.GLOBAL_SETTINGS)
+        })
     }
 
     public getAllModulesNameFromLocalStorage() : ModuleHierarchyMaster[] {
@@ -269,6 +288,7 @@ export class AuthService {
         this.localStorage.deleteData(DBkeys.USER_PERMISSIONS);
         this.localStorage.deleteData(DBkeys.CURRENT_USER);
         this.localStorage.deleteData(DBkeys.User_Role_Permission);
+        this.localStorage.deleteData(DBkeys.GLOBAL_SETTINGS);
         this.configurations.clearLocalChanges();
 
         this.reevaluateLoginStatus();

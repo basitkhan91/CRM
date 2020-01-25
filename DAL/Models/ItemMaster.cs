@@ -50,7 +50,7 @@ namespace DAL.Models
         public long? ExportUomId { get; set; }
         public long? SoldUnitOfMeasureId { get; set; }
         public int? LeadTimeDays { get; set; }
-        public int? LeadTimeHours { get; set; }
+       // public int? LeadTimeHours { get; set; }
         public int? ReorderPoint { get; set; }
         public int? ReorderQuantiy { get; set; }
         public int? MinimumOrderQuantity { get; set; }
@@ -173,6 +173,14 @@ namespace DAL.Models
         public int? oemPNId { get; set; } 
         public  long? RepairUnitOfMeasureId { get; set; }
         public long? RevisedPartId { get; set; }
+        public long? SiteId { get; set; }
+        public long? WarehouseId { get; set; }
+        public long? LocationId { get; set; }
+        public long? ShelfId { get; set; }
+        public long? BinId { get; set; }
+
+
+
 
 
         public virtual Manufacturer Manufacturer { get;set;}

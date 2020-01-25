@@ -4,6 +4,7 @@ export class DepriciationMethod {
     constructor(masterCompany?: MasterCompany,
         assetDepreciationMethodId?: number,
         Code?: string,
+        sequenceNo?: number,
         Name?: string,        
         DepreciationMethod?: string,
         Memo?: string,
@@ -17,6 +18,7 @@ export class DepriciationMethod {
         this.assetDepreciationMethodId = assetDepreciationMethodId;
         this.code = Code;
         this.name = Name;
+        this.sequenceNo = sequenceNo;
         this.depreciationMethod = DepreciationMethod;
         this.memo = Memo;
         this.masterCompanyId = masterCompanyId;
@@ -40,5 +42,6 @@ export class DepriciationMethod {
     public updatedDate: Date;
     public isDeleted: boolean;
     public isActive: boolean;
+    public sequenceNo: number;
 
 }

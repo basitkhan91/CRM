@@ -15,7 +15,7 @@ namespace DAL.Repositories
         public IEnumerable<DAL.Models.AircraftDashNumber> GetDashNumbers()
         {
             return _appContext.AircraftDashNumber.Include("AircraftType").Include("AircraftModel").Where(c => (c.IsDeleted == false || c.IsDeleted == null)).OrderByDescending(c => c.AircraftModelId).ToList();
-            
+
 
         }
 
@@ -29,7 +29,7 @@ namespace DAL.Repositories
         public IEnumerable<object> getDashListByIDS(string Mid, long Tid, string Did)
         {
             long[] myMids = Mid.Split(',').Select(n => Convert.ToInt64(n)).ToArray();
-			long[] myDids = Did.Split(',').Select(x => Convert.ToInt64(x)).ToArray();
+            long[] myDids = Did.Split(',').Select(x => Convert.ToInt64(x)).ToArray();
             var data = (from iM in _appContext.AircraftDashNumber
                         join at in _appContext.AircraftType on iM.AircraftTypeId equals at.AircraftTypeId
                         join am in _appContext.AircraftModel on iM.AircraftModelId equals am.AircraftModelId
@@ -38,8 +38,8 @@ namespace DAL.Repositories
                         {
                             aircraft = at.Description,
                             model = am.ModelName,
-                            typeid=at.AircraftTypeId,
-                            modelid=am.AircraftModelId,
+                            typeid = at.AircraftTypeId,
+                            modelid = am.AircraftModelId,
                             iM.DashNumber,
                             iM.DashNumberId,
                             iM.Memo
@@ -55,7 +55,35 @@ namespace DAL.Repositories
             var data = (from iM in _appContext.AircraftDashNumber
                         join at in _appContext.AircraftType on iM.AircraftTypeId equals at.AircraftTypeId
                         join am in _appContext.AircraftModel on iM.AircraftModelId equals am.AircraftModelId
-                        where myMids.Contains(iM.AircraftModelId) && myTids.Contains(iM.AircraftTypeId)
+                        where iM.IsActive == true && myMids.Contains(iM.AircraftModelId) && myTids.Contains(iM.AircraftTypeId)
+                        select new
+                        {
+                            DashNumber= am.ModelName + " - "+ iM.DashNumber,
+                            iM.DashNumberId,
+                            at.AircraftTypeId,
+                            at.Description,
+                            am.AircraftModelId,
+                            am.ModelName,
+                            iM.Memo,
+                            iM.MasterCompanyId
+
+
+                        }).ToList();
+            return data;
+            throw new NotImplementedException();
+        }
+
+
+        public IEnumerable<object> GetCapesDashNoByID(string Mid, string Tid)
+        {
+            long[] myMids = Mid.Split(',').Select(n => Convert.ToInt64(n)).ToArray();
+            long[] myTids = Tid.Split(',').Select(n => Convert.ToInt64(n)).ToArray();
+            var data = (from iM in _appContext.AircraftDashNumber
+                        join at in _appContext.AircraftType on iM.AircraftTypeId equals at.AircraftTypeId
+                        join am in _appContext.AircraftModel on iM.AircraftModelId equals am.AircraftModelId
+                        join ac in _appContext.AssetCapes on iM.DashNumberId equals ac.AircraftDashNumberId into airmodel
+                        from ac in airmodel.DefaultIfEmpty()
+                        where myMids.Contains(iM.AircraftModelId) && myTids.Contains(iM.AircraftTypeId) && ac.AircraftDashNumberId != iM.DashNumberId
                         select new
                         {
                             iM.DashNumber,
@@ -66,7 +94,7 @@ namespace DAL.Repositories
                             am.ModelName,
                             iM.Memo,
                             iM.MasterCompanyId
-                            
+
 
                         }).ToList();
             return data;

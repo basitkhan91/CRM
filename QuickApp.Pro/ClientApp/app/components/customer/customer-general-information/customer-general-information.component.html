@@ -16,32 +16,38 @@
                                                     <div>
                                                         <div class="pull-left" style="margin-top: 4px; margin-right: 15px;">
                                                             <label class="radio-cstm wauto">
-                                                                <input type="radio" [value]="2" checked="checked" name="optradio" [(ngModel)]="generalInformation.customerAffiliationId">
+                                                                <input type="radio" value=2 checked="checked" name="optradio" [(ngModel)]="generalInformation.customerAffiliationId" (change)="selectedCustomerType($event.target.value)">
                                                                 <span class="checkmark"></span> External
                                                             </label>
                                                             <label class="radio-cstm wauto">
-                                                                <input type="radio" [value]="1" name="optradio" [(ngModel)]="generalInformation.customerAffiliationId">
+                                                                <input type="radio" value=1 name="optradio" [(ngModel)]="generalInformation.customerAffiliationId" (change)="selectedCustomerType($event.target.value)">
                                                                 <span class="checkmark"></span> Internal
                                                             </label>
 
                                                             <label class="radio-cstm wauto">
-                                                                <input type="radio" [value]="3" name="optradio" [(ngModel)]="generalInformation.customerAffiliationId">
+                                                                <input type="radio" value=3 name="optradio" [(ngModel)]="generalInformation.customerAffiliationId" (change)="selectedCustomerType($event.target.value)">
                                                                 <span class="checkmark"></span> Affiliate
                                                             </label>
+                                                        </div>
+                                                        <div class="pull-left" style="margin-top: 4px; margin-right: 0px;width:231px;margin-left:27px;">
+                                                            <label>Account Type <span class="clr-red">*</span></label>
+                                                            <select [(ngModel)]="generalInformation.customerTypeId" name="customerTypeId" required [disabled]="disableAccountType">
+                                                                <option *ngFor="let CustomerType of customertypes" [ngValue]="CustomerType.customerTypeId">{{CustomerType.description}}</option>
+                                                            </select>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-
+                                        <hr/>
                                         <div class="form-row" style="margin-left: 13px;">
                                             <div class="col-md-3">
-                                                <div class="form-group">
+                                                <!--<div class="form-group">
                                                     <label>Account Type <span class="clr-red">*</span></label>
                                                     <select [(ngModel)]="generalInformation.customerTypeId" name="customerTypeId" required>
                                                         <option *ngFor="let CustomerType of customertypes" [ngValue]="CustomerType.customerTypeId">{{CustomerType.description}}</option>
                                                     </select>
-                                                </div>
+                                                </div>-->
                                                 <div class="form-group">
                                                     <label>Customer Name <span class="clr-red">*</span></label>
                                                     <div class="inner-addon right-addon inline-block">
@@ -105,8 +111,8 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <label>Phone <span class="clr-red">*</span></label>
-                                                    <div class="col-md-12">
-                                                        <div class="col-md-6">
+                                                    <div class="col-md-12 pl-0">
+                                                        <div class="col-md-6 pl-0">
                                                             <input type="text" id="phone" name="phone" #customerPhone="ngModel" class="form-control"  maxlength="20" (keypress)="patternMobilevalidationWithSpl($event)" [(ngModel)]="generalInformation.customerPhone" required>
 
                                                         </div>
@@ -122,8 +128,8 @@
 
 
                                                 </div>
-                                                <div class="form-group">
-                                                    <label>Email <span class="clr-red">*</span></label>
+                                                <div class="form-group" >
+                                                    <label style="margin-top: 15px;">Email <span class="clr-red">*</span></label>
                                                     <input class="form-control" id="email" name="email" [pattern]="emailPattern" #userEmail="ngModel" type="email" pKeyFilter="email" mask="email" [(ngModel)]="generalInformation.email" required>
                                                     <div *ngIf="userEmail.errors" [ngClass]="'error'">
                                                         <div *ngIf="userEmail.errors.pattern">
@@ -215,13 +221,14 @@
                                                     </div>
                                                 </div>
                                                 <div class="form-group" style="margin-top: 15px;clear: both;">
-                                                    <div class="label-cstm">PBH Customer</div>
-                                                    <span class="checkbox-cstm">
-                                                        <label style="width: 20px;">
+                                                    <span class="checkbox-cstm" style="margin-left: 0;">
+                                                        <label>
                                                             <input type="checkbox" name="isPBHCustomer" [(ngModel)]="generalInformation.isPBHCustomer">
                                                             <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                                            PBH Customer
                                                         </label>
                                                     </span>
+                                                   
                                                     <div class="rpma-input memo-popup-cstm" *ngIf="generalInformation.isPBHCustomer">
                                                         <span pTooltip="{{generalInformation.pbhCustomerMemo}}" tooltipPosition="top"><input type="text" name="pbhCustomerMemo" pInputText class="form-control" value="{{generalInformation.pbhCustomerMemo}}" disabled /></span>
                                                         <i class="fa fa-info-circle fa-lg" data-toggle="modal" data-target="#memo-popup" pTooltip="{{generalInformation.pbhCustomerMemo}}" tooltipPosition="top" (click)="onClickPBHCustomer('PBHCustomer')"></i>
@@ -236,7 +243,7 @@
                                                </div>
                                                 <div class="form-group" style="clear: both;">
                                                     <label>URL to Customer site</label>
-                                                    <input class="form-control " type="text" id="customerURL" #url="ngModel" name="customerURL" [(ngModel)]="generalInformation.customerURL">
+                                                    <input class="form-control " type="text" id="customerURL" #url="ngModel" [pattern]="urlPattern" name="customerURL" [(ngModel)]="generalInformation.customerURL">
                                                     <div *ngIf="url.errors" [ngClass]="'error'">
                                                         <div *ngIf="url.errors.pattern">
                                                             <span style="color:red">URL not valid</span>
@@ -247,14 +254,14 @@
                                             <div class="col-md-3">
 
                                                 <div class="form-group" style="margin-top: 15px;clear: both;">
-                                                    <div class="label-cstm">Restrict PMA</div>
-
-                                                    <span class="checkbox-cstm">
-                                                        <label style="width: 20px;">
+                                                    <span class="checkbox-cstm" style="margin-left: 0;">
+                                                        <label>
                                                             <input type="checkbox" id="rpma" name="rpma" [(ngModel)]="generalInformation.restrictPMA">
                                                             <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                                            Restrict PMA
                                                         </label>
                                                     </span>
+                                                  
 
 
 
@@ -262,22 +269,24 @@
                                                         <div><span style="margin-left:5px;">Except for</span></div>
                                                         <div class="col-sm-12">
                                                             <div class="col-sm-9">
-                                                                <p-multiSelect name="isRestrict"
+                                                                <p-multiSelect name="isRestrictPMA"
                                                                                [(ngModel)]="restictPMAtempList"
                                                                                [options]="partListForPMA"
                                                                                [filter]="true"
                                                                                itemSize="30"
-                                                                               defaultLabel="Except for Choose"></p-multiSelect>
+                                                                               defaultLabel="Except for Choose"  [selectionLimit]="30"></p-multiSelect>
                                                             </div>
                                                             <div class="col-sm-3">
-                                                                <span style="margin-left:3px;cursor:pointer;"><a class="fa fa-plus-circle fa-lg" (click)="addRestrictPMA()"></a></span>
-                                                            </div>
+                                                                <button class="btn btn-primary" (click)="addRestrictPMA()">
+                                                                    Add
+                                                                </button>
+                        </div>
                                                         </div>
                                                         <div *ngIf="disableRestrictedPMA">
                                                             <p-table class="table-responsive ptable-cus-pma" [value]="generalInformation.restrictedPMAParts" [paginator]="true" [rows]="3" [columns]="restrictHeaders">
                                                                 <ng-template pTemplate="header" let-columns>
                                                                     <tr>
-                                                                        <th *ngFor="let col of columns">
+                                                                        <th *ngFor="let col of columns" pTooltip={{col.header}}>
                                                                             {{col.header}}
                                                                         </th>
                                                                         <th>Actions</th>
@@ -285,11 +294,11 @@
                                                                 </ng-template>
                                                                 <ng-template pTemplate="body" let-part let-rowData let-columns="columns" let-i="rowIndex">
                                                                     <tr>
-                                                                        <td *ngFor="let col of columns">
+                                                                        <td *ngFor="let col of columns" pTooltip={{part[col.field]}}>
                                                                             {{part[col.field]}}
                                                                         </td>
                                                                         <td>
-                                                                            <button class="btn-delete" (click)="deleteRestirctPMA(i, rowData)" mat-icon-button matTooltip="Delete">
+                                                                            <button class="btn-delete" (click)="openPopupForDeleteRestrictPMA(i, rowData, deleteRestrictPMAContent)" mat-icon-button matTooltip="Delete">
                                                                                 <mat-icon color="warn">delete</mat-icon>
                                                                             </button>
                                                                         </td>
@@ -304,36 +313,39 @@
                                                 </div>
 
                                                 <div class="form-group" style="margin-top: 15px;clear: both;">
-                                                    <div class="label-cstm" style="margin-top: 15px">Restrict DER</div>
-                                                    <span class="checkbox-cstm" style="margin-top: 15px">
-                                                        <label style="width: 20px;">
+                                                    <span class="checkbox-cstm" style="margin-left: 0;">
+                                                        <label>
                                                             <input type="checkbox" id="rber" name="rber" [(ngModel)]="generalInformation.restrictBER">
-                                                            <span class="cr" style="margin-top: 15px"><i class="cr-icon pi pi-check"></i></span>
+                                                            <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                                            Restrict DER
                                                         </label>
                                                     </span>
-
+                                                   
 
 
                                                     <div class="table-small" *ngIf="generalInformation.restrictBER">
                                                         <div><span style="margin-left:5px;">Except for</span></div>
                                                         <div class="col-sm-12">
                                                             <div class="col-sm-9">
-                                                                <p-multiSelect name="isRestrict"
+                                                                <p-multiSelect name="isRestrictDER"
                                                                                [(ngModel)]="restictDERtempList"
                                                                                [options]="partListForDER"
                                                                                [filter]="true"
                                                                                itemSize="30"
-                                                                               defaultLabel="Except for Choose"></p-multiSelect>
+                                                                               defaultLabel="Except for Choose"  [selectionLimit]="30"></p-multiSelect>
                                                             </div>
                                                             <div class="col-sm-3">
-                                                                <span style="margin-left:3px;cursor:pointer;"><a class="fa fa-plus-circle fa-lg" (click)="addRestrictBER()"></a></span>
-                                                            </div>
+                                                                <button class="btn btn-primary" (click)="addRestrictBER()">
+                                                                    Add
+                                                                </button>
+
+                                                                        </div>
                                                         </div>
                                                         <div *ngIf="disableRestrictedDER">
-                                                            <p-table class="table-responsive ptable-cus-pma" [value]="generalInformation.restrictedDERParts" [paginator]="true" [rows]="3" [columns]="restrictHeaders">
+                                                            <p-table class="table-responsive ptable-cus-pma overlap" [value]="generalInformation.restrictedDERParts" [paginator]="true" [rows]="3" [columns]="restrictHeaders">
                                                                 <ng-template pTemplate="header" let-columns>
                                                                     <tr>
-                                                                        <th *ngFor="let col of columns">
+                                                                        <th *ngFor="let col of columns" pTooltip={{col.header}}>
                                                                             {{col.header}}
                                                                         </th>
                                                                         <th>Actions</th>
@@ -341,11 +353,11 @@
                                                                 </ng-template>
                                                                 <ng-template pTemplate="body" let-part let-rowData let-columns="columns" let-i="rowIndex">
                                                                     <tr>
-                                                                        <td *ngFor="let col of columns" style="text-overflow:ellipsis;" pTooltip={{part[col.field]}}>
+                                                                        <td *ngFor="let col of columns" pTooltip={{part[col.field]}}>
                                                                             {{part[col.field]}}
                                                                         </td>
                                                                         <td>
-                                                                            <button class="btn-delete" (click)="deleteRestrictDER(i, rowData)" mat-icon-button matTooltip="Delete">
+                                                                            <button class="btn-delete" (click)="openPopupForDeleteRestrictDER(i, rowData, deleteRestrictDERContent)" mat-icon-button matTooltip="Delete">
                                                                                 <mat-icon color="warn">delete</mat-icon>
                                                                             </button>
                                                                         </td>
@@ -362,7 +374,7 @@
 
                                         </div>
                                         <div class="form-row pull-right">
-                                            <button type="submit" class="btn btn-primary-cstm submit-btn" [disabled]="!generalInfoForm.valid || isCustomerNameAlreadyExists || disableSaveCustomerName || isCustomerCodeAlreadyExists ||disableSaveParentName" (click)="saveGeneralInformation()">Save &amp; Next</button>
+                                            <button type="submit" class="btn btn-primary submit-btn" [disabled]="!generalInfoForm.valid || isCustomerNameAlreadyExists || disableSaveCustomerName || isCustomerCodeAlreadyExists ||disableSaveParentName" (click)="saveGeneralInformation()">Save &amp; Next</button>
                                         </div>
 
                                     </div>
@@ -426,7 +438,7 @@
             <div class="form-group">
                 <label for="description" class="control-label">Memo</label>
                 <div class="control-data">
-                    <input #memo="ngModel" placeholder="Tool Bar" id="memo" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.memo" minlength="2">
+                    <input #memo="ngModel"  id="memo" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.memo" minlength="2">
                     <div *ngIf="memo.dirty && memo.errors?.required && memo.errors" class="invalid-form-error-message">
                         Memo required.
                     </div>
@@ -539,8 +551,8 @@
 
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary-cstm" data-dismiss="modal" (click)="addClassification()" [disabled]="isClassificationAlreadyExists ||addCustomerClassification.invalid ">Save</button>
-                    <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="resetClassificationPopUp()">Close</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="addClassification()" [disabled]="isClassificationAlreadyExists ||addCustomerClassification.invalid ">Save</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="resetClassificationPopUp()">Close</button>
                 </div>
             </div>
         </form>
@@ -575,12 +587,12 @@
                     </div>
                     <div class="form-group">
                         <label>Intergation</label>
-                        <input class="form-control" [(ngModel)]="addNewIntergation.description" name="description">
+                        <input type="text" class="form-control" [(ngModel)]="addNewIntergation.description" name="description">
                     </div>
 
                     <div class="form-group">
                         <label>Memo</label>
-                        <input class="form-control" [(ngModel)]="addNewIntergation.memo" name="memo" placeholder="Tool Bar">
+                        <input type="text" class="form-control" [(ngModel)]="addNewIntergation.memo" name="memo">
                     </div>
 
                     <div class="form-group">
@@ -600,8 +612,8 @@
 
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary-cstm" data-dismiss="modal" (click)="newIntegrationAdd()" [disabled]="!addIntergation.valid || isIntegrationAlreadyExists">Save</button>
-                    <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="resetIntegrationPopUp()">Close</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="newIntegrationAdd()" [disabled]="!addIntergation.valid || isIntegrationAlreadyExists">Save</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="resetIntegrationPopUp()">Close</button>
                 </div>
             </div>
 
@@ -623,9 +635,45 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary-cstm" data-dismiss="modal" (click)="onClickPopupSave()">Save</button>
-                <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" >Close</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="onClickPopupSave()">Save</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal" >Close</button>
             </div>
         </div>
     </div>
 </div>
+<ng-template #deleteRestrictPMAContent let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title">Are You Sure Want to Delete?</h4>
+        <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <strong>
+            Part Number:
+            <span class="new-label">{{selectedRowForDeleteRestrictPMA.partNumber}}</span>
+        </strong>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-success" (click)="deleteRestirctPMA()">Yes</button>
+        <button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
+    </div>
+</ng-template>
+<ng-template #deleteRestrictDERContent let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title">Are You Sure Want to Delete?</h4>
+        <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <strong>
+            Part Number:
+            <span class="new-label">{{selectedRowForDeleteRestrictDER.partNumber}}</span>
+        </strong>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-success" (click)="deleteRestirctDER()">Yes</button>
+        <button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
+    </div>
+</ng-template>

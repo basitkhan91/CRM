@@ -245,11 +245,11 @@ namespace QuickApp.Pro.Controllers
 
 
         [HttpPost("users")]
-        [Authorize(Authorization.Policies.ManageAllUsersPolicy)]
+        //[Authorize(Authorization.Policies.ManageAllUsersPolicy)]
         public async Task<IActionResult> Register([FromBody] UserEditViewModel user)
         {
-            if (!(await _authorizationService.AuthorizeAsync(this.User, Tuple.Create(user.Roles, new string[] { }), Authorization.Policies.AssignAllowedRolesPolicy)).Succeeded)
-                return new ChallengeResult();
+            //if (!(await _authorizationService.AuthorizeAsync(this.User, Tuple.Create(user.Roles, new string[] { }), Authorization.Policies.AssignAllowedRolesPolicy)).Succeeded)
+            //    return new ChallengeResult();
 
 
             if (ModelState.IsValid)

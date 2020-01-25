@@ -1,21 +1,24 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DAL.Models
 {
-    public class WorkOrderStage : PasBase
+    public class WorkOrderStage 
     {
-        public Int64 ID { get; set; }
-        public string Description { get; set; }
+        [Key]
+        public Int64 WorkOrderStageId { get; set; }
         public string Code { get; set; }
+        public string Stage { get; set; }
         public int Sequence { get; set; }
-        public long? ManagementStructureId { get; set; }
-        public string ETC { get; set; }
+        public long StatusId { get; set; }
+        public long ManagementStructureId { get; set; }
+        public string Description { get; set; }
         public string Memo { get; set; }
         public int MasterCompanyId { get; set; }
+        public string CreatedBy { get; set; }
+        public string UpdatedBy { get; set; }
+        public DateTime UpdatedDate { get; set; }
+        public DateTime CreatedDate { get; set; }
         public bool IsActive { get; set; }
         public bool IsDeleted { get; set; }
     }

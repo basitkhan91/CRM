@@ -26,6 +26,8 @@ namespace DAL.Repositories
         {
             var data = (from c in _appContext.CheckPayment
                         join ad in _appContext.Address on c.AddressId equals ad.AddressId
+                        join cont in _appContext.Countries on Convert.ToInt32(ad.Country) equals cont.countries_id into country
+                        from cont in country.DefaultIfEmpty()
                         join vc in _appContext.VendorCheckPayment on c.CheckPaymentId equals vc.CheckPaymentId
                         where vc.VendorId==id
                         // select new { t, ad, vt }).ToList();
@@ -38,6 +40,7 @@ namespace DAL.Repositories
                             ad.StateOrProvince,
                             ad.AddressId,
                             ad.Country,
+                            CountryName = cont.countries_name,
                             ad.PostalCode,
                             vc.IsActive,
                             c.SiteName,

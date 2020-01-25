@@ -119,4 +119,12 @@ export class ReceivingService {
         return this.receivingEndpoing.updateStockLine<any>(receiveParts);
     }
 
+    createStockLine(purchaseOrderId: number) {
+        return this.receivingEndpoing.CreateStockLine(purchaseOrderId);
+    }
+
+    CreateStockLineForRepairOrder(repairOrderId: number) {
+        return this.receivingEndpoing.CreateStockLineForRepairOrder(repairOrderId);
+    }
+
 }

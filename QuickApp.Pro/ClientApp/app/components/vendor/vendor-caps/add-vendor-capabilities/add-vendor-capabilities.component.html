@@ -11,7 +11,7 @@
 		<div class="card-body">
 			<p-tabView class="pas-tabview">
 					<p-tabPanel header="General Info" [selected]="selectedGeneralInfo">
-						<h4 class="po-head">{{isEditMode ? 'Edit' : 'Create'}} General Information</h4>
+						<h4 class="po-head">{{isEditMode ? 'Edit' : 'Create'}} Vendor Caps</h4>
 						<div class="row" style="padding: 0 5px;" *ngIf="isEnableVendor">
                             <div class="col-md-4" *ngIf="vendorName">
                                 <label class="fs12" style="width: auto;">Vendor Name : </label>
@@ -108,6 +108,11 @@
 											</div>
 									</div> -->
 								</div>
+								<div class="form-group memo-popup-cstm" style="margin-top: 12px;">
+									<label>Cap Description</label>
+									<span pTooltip="{{sourceVendorCap.capabilityDescription}}" tooltipPosition="top"><input type="text" name="capabilityDescription" pInputText class="form-control" value="{{sourceVendorCap.capabilityDescription}}" disabled /></span>
+									<i class="fa fa-info-circle fa-lg" data-toggle="modal" data-target="#add-description" pTooltip="{{sourceVendorCap.capabilityDescription}}" tooltipPosition="top" (click)="onAddDescription('capDesc')"></i>
+								</div>
 								<!-- <div class="form-group">
 									<label>Capability Type <span class="clr-red">*</span></label>
 									<p-multiSelect [options]="capabilityTypeList" name="capabilityType" [(ngModel)]="sourceVendorCap.capabilityTypes" [panelStyle]="{minWidth:'12em'}" #capabilityType="ngModel" required></p-multiSelect>
@@ -147,30 +152,30 @@
 									</div>
 								</div>
 								<div class="form-group" style="margin-top: 15px;">
-									<label>Cost <span class="clr-red">*</span></label>
-									<input class="form-control" type="number" name="cost" pKeyFilter="pint" [(ngModel)]="sourceVendorCap.cost" #cost="ngModel" required>
-									<div *ngIf="cost.invalid && (cost.dirty || cost.touched)" class="alert alert-danger alert-danger-cstm">
+									<label>Cost</label>
+									<input class="form-control" type="number" name="cost" pKeyFilter="pint" [(ngModel)]="sourceVendorCap.cost">
+									<!-- <div *ngIf="cost.invalid && (cost.dirty || cost.touched)" class="alert alert-danger alert-danger-cstm">
 											<div *ngIf="cost.errors.required">
 												<small> Cost is required </small>
 											</div>
-									</div> 
+									</div>  -->
 								</div>
 							</div>
 							<div class="col-md-3">
 								<div class="form-group">
-									<label>TAT (Days) <span class="clr-red">*</span></label>
-									<input class="form-control" type="number" name="tat" pKeyFilter="pint" maxlength="5" [(ngModel)]="sourceVendorCap.tat" #tat="ngModel" required>
-									<div *ngIf="tat.invalid && (tat.dirty || tat.touched)" class="alert alert-danger alert-danger-cstm">
+									<label>TAT (Days)</label>
+									<input class="form-control" type="text" name="tat" pKeyFilter="pint" maxlength="5" [(ngModel)]="sourceVendorCap.tat">
+									<!-- <div *ngIf="tat.invalid && (tat.dirty || tat.touched)" class="alert alert-danger alert-danger-cstm">
 											<div *ngIf="tat.errors.required">
 												<small> TAT is required </small>
 											</div>
-									</div> 
+									</div>  -->
 								</div>
-								<div class="form-group memo-popup-cstm" style="margin-top: 12px;">
+								<!-- <div class="form-group memo-popup-cstm" style="margin-top: 12px;">
 									<label>Cap Description</label>
 									<span pTooltip="{{sourceVendorCap.capabilityDescription}}" tooltipPosition="top"><input type="text" name="capabilityDescription" pInputText class="form-control" value="{{sourceVendorCap.capabilityDescription}}" disabled /></span>
 									<i class="fa fa-info-circle fa-lg" data-toggle="modal" data-target="#add-description" pTooltip="{{sourceVendorCap.capabilityDescription}}" tooltipPosition="top" (click)="onAddDescription('capDesc')"></i>
-								</div>
+								</div> -->
 								<div class="form-group memo-popup-cstm" style="margin-top: 12px;">
 									<label>Memo</label>
 									<span pTooltip="{{sourceVendorCap.memo}}" tooltipPosition="top"><input type="text" name="memo" pInputText class="form-control" value="{{sourceVendorCap.memo}}" disabled /></span>
@@ -179,7 +184,7 @@
 							</div>
 						</div>
 						<div class="form-row pull-right">
-							<button type="submit" class="btn btn-primary-cstm submit-btn" [disabled]="!addVendorCapForm.valid" (click)="saveVendorCapsGeneralInfo()">{{isEditMode ? 'Update' : 'Save'}}</button>
+							<button type="submit" class="btn btn-primary submit-btn" [disabled]="!addVendorCapForm.valid" (click)="saveVendorCapsGeneralInfo()">{{isEditMode ? 'Update' : 'Save'}}</button>
 						</div>
 						</form>
 					</p-tabPanel>
@@ -207,7 +212,7 @@
 											<h4 class="float-left">Search Aircraft Information</h4>
 											<h4 class="float-right">
 												Add Aircraft Information
-												<a class="plusicon-cstm" href="#" data-toggle="modal" data-target="#ModalDashNumber"><i class="fa fa-plus-circle fa-lg"></i></a>
+												<a class="plusicon-cstm" href="#" data-toggle="modal" data-target="#ModalDashNumber"><i class="fa fa-plus-circle fa-lg" (click)="onAddAircraftInfo()"></i></a>
 											</h4>
 										</div>
 										<div class="col-md-3">
@@ -235,12 +240,12 @@
 										<div class="col-md-2">
 											<div class="form-group">
 												<label class="fs12">Memo </label>
-												<input type="text" style="height: 27px !important" pInputText />
+												<input type="text" style="height: 27px !important" [(ngModel)]="memoUrl" [ngModelOptions]="{standalone: true}" pInputText />
 											</div>
 										</div>
 										<div class="col-md-1 add-new-align">
 											<div class="form-group">
-												<button class="btn btn-primary-cstm mtop20" (click)="searchAircraftInformation()" style="padding: 4px 8px !important;">
+												<button class="btn btn-primary mtop20" (click)="searchAircraftInformation()" style="padding: 4px 8px !important;">
 													<i class="pi pi-search pi-search"></i>
 												</button>
 											</div>
@@ -255,7 +260,7 @@
 							<p-table class="ptable-custom" [value]="aircraftListDataValues" [rows]="6" [columns]="colsaircraftLD" [scrollable]="true" [style]="{width:'100%'}" [paginator]="true">
 								<ng-template pTemplate="header" let-columns>
 									<tr>
-										<th>Id</th>
+										<!-- <th>Id</th> -->
 										<th *ngFor="let col of columns">
 											{{col.header}}
 										</th>
@@ -264,7 +269,7 @@
 								</ng-template>
 								<ng-template pTemplate="body" let-i="rowIndex" let-rowData let-columns="columns">
 									<tr>
-										<td>{{i+1}}</td>
+										<!-- <td>{{i+1}}</td> -->
 										<td *ngFor="let col of columns">
 											{{rowData[col.field]}}
 										</td>
@@ -275,9 +280,26 @@
 										</td>
 									</tr>
 								</ng-template>
+								<ng-template pTemplate="summary" id="footer">
+									<div style="text-align: right;">
+										<label id="footer" class="footer">No'of records:</label>
+										<input style="width: 5%;"
+												[(ngModel)]="totalRecords"
+												[disabled]="true"
+												pInputText
+												type="text" />
+										&nbsp;&nbsp;
+										<label id="footer" class="footer1">Pages Count:</label>
+										<input style="width: 5%;"
+												[(ngModel)]="totalPages"
+												[disabled]="true"
+												pInputText
+												type="text" />
+									</div>                    
+									</ng-template>
 							</p-table>
 							<div class="form-row pull-right" *ngIf="!isEnableVendor" style="display: block; margin-right: 0px;">
-								<button type="button" style="float: right; margin: 10px 6px;" class="btn btn-primary-cstm" [routerLink]="[
+								<button type="button" style="float: right; margin: 10px 6px;" class="btn btn-primary" [routerLink]="[
 								'/vendorsmodule/vendorpages/app-vendor-capabilities-list'
 							  ]">Save</button>
 							</div>
@@ -289,7 +311,7 @@
 	</div>
 </div>
 
-	<div class="modal fade" id="add-description" role="dialog" data-backdrop="static" data-keyboard="false">
+	<div class="modal fade aircraft-info-popup" id="add-description" role="dialog" data-backdrop="static" data-keyboard="false">
 			<div class="modal-dialog modal-sm" style="max-width: 400px !important;">
 				<div class="modal-content">
 					<div class="modal-header">
@@ -303,14 +325,14 @@
 						</div>
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-primary-cstm" (click)="onSaveDescription()">Save</button>
-						<button type="button" class="btn btn-danger-cstm" (click)="dismissMemoModel()">Close</button>
+						<button type="button" class="btn btn-primary" (click)="onSaveDescription()">Save</button>
+						<button type="button" class="btn btn-danger" (click)="dismissMemoModel()">Close</button>
 					</div>
 				</div>
 			</div>
 		</div>
 
-		<div id="ModalDashNumber" class="modal fade custom-popup" role="dialog" data-backdrop="static" data-keyboard="false">
+		<div id="ModalDashNumber" class="modal fade custom-popup aircraft-info-popup" role="dialog" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog modal-full">
             <div class="modal-content">
                 <div class="modal-header">
@@ -350,7 +372,7 @@
                             </div>
                         </div>
                         <div class="col-md-1">
-                            <button style="margin-top: 20px;" type="button" class="btn btn-primary-cstm" (click)="mapAircraftInformation()">Add</button>
+                            <button style="margin-top: 20px;" type="button" class="btn btn-primary" (click)="mapAircraftInformation()">Add</button>
                         </div>
                     </div>
 
@@ -360,7 +382,7 @@
                         <p-table class="p-table-cstm" [value]="aircraftData" [rows]="6" [columns]="colaircraft" [scrollable]="true" [style]="{width:'100%'}" [paginator]="true">
                             <ng-template pTemplate="header" let-columns>
                                 <tr>
-                                    <th></th>
+                                    <!-- <th></th> -->
                                     <th *ngFor="let col of columns">
                                         {{col.header}}
                                     </th>
@@ -370,7 +392,7 @@
                             </ng-template>
                             <ng-template pTemplate="body" let-i="rowIndex" let-rowData let-columns="columns">
                                 <tr>
-                                    <td>
+                                    <!-- <td>
                                         <span class="checkbox-cstm">
                                             <label style="width: 10px;">
                                                 <input type="checkbox" [(ngModel)]="rowData.IsChecked">
@@ -378,37 +400,39 @@
                                                 <span class="cr"><i class="cr-icon pi pi-check"></i></span>
                                             </label>
                                         </span>
-                                    </td>
+                                    </td> -->
 
                                     <td *ngFor="let col of columns">
                                         {{rowData[col.field]}}
                                     </td>
                                     <td>
-                                        <input type="text" class="form-control input-value" [(ngModel)]="rowData.Memo" name="Memo" [disabled]="!rowData.IsChecked" />
-                                    </td>
+                                        <!-- <input type="text" class="form-control input-value" [(ngModel)]="rowData.Memo" name="Memo" [disabled]="!rowData.IsChecked" /> -->
+										<input type="text" class="form-control input-value" [(ngModel)]="rowData.Memo" name="Memo" />
+									</td>
                                 </tr>
-                            </ng-template>
+							</ng-template>
+							
                         </p-table>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary-cstm" (click)="saveAircraft(); dismissAircraftModel();">Save</button>
-                    <button type="button" class="btn btn-danger-cstm" (click)="dismissAircraftModel()">Close</button>
+                    <button type="button" class="btn btn-primary" (click)="saveAircraft(); dismissAircraftModel();">Save</button>
+                    <button type="button" class="btn btn-danger" (click)="dismissAircraftModel()">Close</button>
                 </div>
             </div>
         </div>
 		</div>
 		
-		<div class="modal fade" id="aircraftDelete" role="dialog" data-backdrop="static" data-keyboard="false">
+		<div class="modal fade aircraft-info-popup" id="aircraftDelete" role="dialog" data-backdrop="static" data-keyboard="false">
 			<div class="modal-dialog modal-sm">
 				<div class="modal-content">
 				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<button type="button" class="close" (click)="dismissDeleteModel();">&times;</button>
 					<h4 class="modal-title">Are You Sure Want to Delete?</h4>
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-primary-cstm" data-dismiss="modal" (click)="deleteAircraftMapped();">Yes</button>
-					<button type="button" class="btn btn-danger-cstm" data-dismiss="modal">No</button>
+					<button type="button" class="btn btn-primary" (click)="deleteAircraftMapped();">Yes</button>
+					<button type="button" class="btn btn-danger" (click)="dismissDeleteModel();">No</button>
 				</div>
 				</div>
 			</div>

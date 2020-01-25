@@ -46,8 +46,8 @@
                                         <i class="fa fa-search"></i>
                                         <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder=" Filter" style="height: 28px !important;">
                                     </div>
-                                    <button type="button" class="btn btn-primary-cstm" matTooltip="Download Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export Data" (click)="dt.exportCSV()" style="padding:5px 10px !important;"></button>
-                                    <button type="button" class="btn btn-primary-cstm" matTooltip="Download Selected Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export Selected Data" (click)="dt.exportCSV({selectionOnly:true})" style="padding:5px 10px !important;"></button>
+                                    <button type="button" class="btn btn-primary" matTooltip="Download Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export Data" (click)="dt.exportCSV()" style="padding:5px 10px !important;"></button>
+                                    <button type="button" class="btn btn-primary" matTooltip="Download Selected Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export Selected Data" (click)="dt.exportCSV({selectionOnly:true})" style="padding:5px 10px !important;"></button>
 
                                 </div>
 
@@ -186,10 +186,10 @@
                                     </div>
                                 </div>
                                 <div class="clear"></div>
-                                <button type="button"    moduleName="app-vendor-Billing-information"  *ngIf="sourceVendor.vendorId == undefined" class="btn btn-primary-cstm pull-right" (click)="editItemAndCloseModel()">Save</button>
+                                <button type="button"    moduleName="app-vendor-Billing-information"  *ngIf="sourceVendor.vendorId == undefined" class="btn btn-primary pull-right" (click)="editItemAndCloseModel()">Save</button>
 
 
-                                <button type="button"  moduleName="app-vendor-Billing-information" requirePermission="canUpdate" [disabled]="disablesave" *ngIf="sourceVendor.vendorId != undefined && sourceVendor.vendorId !=0" class="btn btn-primary-cstm pull-right" (click)="editItemAndCloseModel()">Update</button>
+                                <button type="button"  moduleName="app-vendor-Billing-information" requirePermission="canUpdate" [disabled]="disablesave" *ngIf="sourceVendor.vendorId != undefined && sourceVendor.vendorId !=0" class="btn btn-primary pull-right" (click)="editItemAndCloseModel()">Update</button>
 
                                 <div class="clear"></div>
                                 <hr />
@@ -204,8 +204,8 @@
                     </form> -->
                 </div>
             </div>
-            <button type="button" class="btn btn-primary-cstm pull-right" (click)="nextClick()">Next</button>
-            <button type="button" class="btn btn-primary-cstm pull-right" (click)="previousClick()">Previous</button>
+            <button type="button" class="btn btn-primary pull-right" (click)="nextClick()">Next</button>
+            <button type="button" class="btn btn-primary pull-right" (click)="previousClick()">Previous</button>
         </div>
     </div>
 </div>
@@ -425,7 +425,7 @@
         </div>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
+        <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
     </div>
 </ng-template>
 
@@ -450,7 +450,7 @@
             <div class="clear"></div>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="dismissModel()">Close</button>
+            <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="dismissModel()">Close</button>
         </div>
     </div>
 
@@ -515,11 +515,11 @@
                                 <div class="form-group">
                                     <label>Bill To Country <span class="clr-red">*</span></label>
                                     <div class="inner-addon right-addon inline-block" style="width: 100%">
-                                        <p-autoComplete class="pautocomp-cstm" (onSelect)="onCountrieselected($event)" (onKeyUp)=eventCountryHandler($event) [(ngModel)]="sourceVendor.country" [ngModelOptions]="{standalone: true}" [suggestions]="countrycollection" (completeMethod)="filtercountry($event)" [size]="30"
+                                        <p-autoComplete field="nice_name" class="pautocomp-cstm" (onSelect)="onCountrieselected($event)" (onKeyUp)=eventCountryHandler($event) [(ngModel)]="sourceVendor.country" [ngModelOptions]="{standalone: true}" [suggestions]="countrycollection" (completeMethod)="filtercountry($event)" [size]="30"
                                             [minLength]="1" [dropdown]="true">
-                                            <ng-template let-nice_name pTemplate="item">
+                                            <!-- <ng-template let-nice_name pTemplate="item">
                                                 <div class="ui-helper-clearfix">{{nice_name}}</div>
-                                            </ng-template>
+                                            </ng-template> -->
                                         </p-autoComplete>
                                     </div>
                                     <!-- <div *ngIf="disablesave" style="color:red">Please Select From DropDown</div> -->
@@ -528,9 +528,9 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" *ngIf="sourceVendor.vendorId == undefined" class="btn btn-primary-cstm pull-right" (click)="editItemAndCloseModel()" [disabled]="!addBillingForm.valid" data-dismiss="modal">Save</button>
-                        <button type="button" *ngIf="sourceVendor.vendorId != undefined && sourceVendor.vendorId !=0" class="btn btn-primary-cstm pull-right" (click)="editItemAndCloseModel()" [disabled]="!addBillingForm.valid" data-dismiss="modal">Update</button>
-                        <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
+                        <button type="button" *ngIf="sourceVendor.vendorId == undefined" class="btn btn-primary pull-right" (click)="editItemAndCloseModel()" [disabled]="!addBillingForm.valid" data-dismiss="modal">Save</button>
+                        <button type="button" *ngIf="sourceVendor.vendorId != undefined && sourceVendor.vendorId !=0" class="btn btn-primary pull-right" (click)="editItemAndCloseModel()" [disabled]="!addBillingForm.valid" data-dismiss="modal">Update</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                     </div>
                 </form>
             </div>
@@ -550,8 +550,8 @@
                 </strong>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary-cstm" data-dismiss="modal" (click)="deleteConformation('Yes')">Yes</button>
-                    <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="deleteConformation('No')">No</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="deleteConformation('Yes')">Yes</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="deleteConformation('No')">No</button>
                 </div>
               </div>
           

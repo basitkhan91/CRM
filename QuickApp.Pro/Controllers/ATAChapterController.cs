@@ -60,7 +60,14 @@ namespace QuickApp.Pro.Controllers
             return Ok(allATAMaininfo);
 
         }
+        [HttpGet("GetAll")]
+        // [Produces(typeof(List<ATAChapterViewModel>))]
+        public IActionResult GetAll()
+        {
+            var allATAMaininfo = _unitOfWork.ATAMains.GetAllATAMainData();
+            return Ok(allATAMaininfo);
 
+        }
         [HttpGet("ataauditHistoryById/{id}")]
         [Produces(typeof(List<ATAChapterAudit>))]
         public IActionResult GetAuditHostoryById(long id)
@@ -108,7 +115,7 @@ namespace QuickApp.Pro.Controllers
                     ataMainobject.Memo = ataMainViewModel.Memo;
                     ataMainobject.MasterCompanyId = 1;
                     ataMainobject.IsActive = true;
-                    ataMainobject.IsDelete = false;
+                    ataMainobject.IsDeleted = false;
                     ataMainobject.CreatedDate = DateTime.Now;
                     ataMainobject.UpdatedDate = DateTime.Now;
                     ataMainobject.CreatedBy = ataMainViewModel.CreatedBy;
@@ -163,7 +170,7 @@ namespace QuickApp.Pro.Controllers
             try
             {
                 var existingResult = _unitOfWork.ATAChapter.GetSingleOrDefault(c => c.ATAChapterId == id);
-                existingResult.IsDelete = true;
+                existingResult.IsDeleted = true;
                 existingResult.UpdatedDate = DateTime.Now;
                 _unitOfWork.ATAChapter.Update(existingResult);
                 //_unitOfWork.ATAMains.Remove(existingResult);

@@ -23,6 +23,7 @@ import { WorkOrderDocumentsComponent } from '../components/work-order/work-order
 import { WorkOrderAnalysisComponent } from '../components/work-order/work-order-setup/work-order-analysis/work-order-analysis.component';
 import { WorkOrderBillingComponent } from '../components/work-order/work-order-setup/work-order-billing/work-order-billing.component';
 import { WorkOrderQuoteComponent } from '../components/work-order/work-order-setup/work-order-quote/work-order-quote.component';
+import { WorkOrderQuoteListComponent } from '../components/work-order/work-order-setup/work-order-quote-list/work-order-quote-list.component';
 import { WorkOrderShippingComponent } from '../components/work-order/work-order-setup/work-order-shipping/work-order-shipping.component';
 import { WorkOrderListComponent } from '../components/work-order/work-order-list/work-order-list.component';
 import { WorkOrderLaborComponent } from '../components/work-order/work-order-setup/work-order-labor/work-order-labor.component';
@@ -114,6 +115,7 @@ import { WorkOrderFreightComponent } from '../components/work-order/work-order-s
     WorkOrderAnalysisComponent,
     WorkOrderBillingComponent,
     WorkOrderQuoteComponent,
+    WorkOrderQuoteListComponent,
     WorkOrderShippingComponent,
     WorkOrderListComponent,
     DirectLabourComponent,

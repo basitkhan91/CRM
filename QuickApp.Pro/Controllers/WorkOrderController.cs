@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using DAL;
+﻿using DAL;
 using DAL.Common;
 using DAL.Models;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace QuickApp.Pro.Controllers
 {
@@ -696,9 +695,9 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpGet("quoteexclusions")]
-        public IActionResult GetWorkOrderQuoteExclusions(long workOrderQuoteId)
+        public IActionResult GetWorkOrderQuoteExclusions(long workOrderQuoteDetailsId, long buildMethodId)
         {
-            var result = unitOfWork.WorkOrderRepository.GetWorkOrderQuoteExclusions(workOrderQuoteId);
+            var result = unitOfWork.WorkOrderRepository.GetWorkOrderQuoteExclusions(workOrderQuoteDetailsId,  buildMethodId);
             return Ok(result);
         }
 
@@ -740,9 +739,9 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpGet("quotefreights")]
-        public IActionResult GetWorkOrderQuoteFreight(long workOrderQuoteId)
+        public IActionResult GetWorkOrderQuoteFreight(long workOrderQuoteDetailsId, long buildMethodId)
         {
-            var result = unitOfWork.WorkOrderRepository.GetWorkOrderQuoteFreight(workOrderQuoteId);
+            var result = unitOfWork.WorkOrderRepository.GetWorkOrderQuoteFreight(workOrderQuoteDetailsId, buildMethodId);
             return Ok(result);
         }
 
@@ -784,9 +783,9 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpGet("quotecharges")]
-        public IActionResult GetWorkOrderQuoteCharges(long WorkOrderQuoteId)
+        public IActionResult GetWorkOrderQuoteCharges(long workOrderQuoteDetailsId, long buildMethodId)
         {
-            var result = unitOfWork.WorkOrderRepository.GetWorkOrderQuoteCharges(WorkOrderQuoteId);
+            var result = unitOfWork.WorkOrderRepository.GetWorkOrderQuoteCharges(workOrderQuoteDetailsId, buildMethodId);
             return Ok(result);
         }
 
@@ -828,9 +827,9 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpGet("quotematerials")]
-        public IActionResult GetWorkOrderQuoteMaterial(long WorkOrderQuoteId)
+        public IActionResult GetWorkOrderQuoteMaterial(long workOrderQuoteDetailsId, long buildMethodId)
         {
-            var result = unitOfWork.WorkOrderRepository.GetWorkOrderQuoteMaterial(WorkOrderQuoteId);
+            var result = unitOfWork.WorkOrderRepository.GetWorkOrderQuoteMaterial(workOrderQuoteDetailsId, buildMethodId);
             return Ok(result);
         }
 
@@ -872,9 +871,9 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpGet("quotelabor")]
-        public IActionResult GetWorkOrderQuoteLabor(long WorkOrderQuoteId)
+        public IActionResult GetWorkOrderQuoteLabor(long workOrderQuoteDetailsId, long buildMethodId)
         {
-            var result = unitOfWork.WorkOrderRepository.GetWorkOrderQuoteLabor(WorkOrderQuoteId);
+            var result = unitOfWork.WorkOrderRepository.GetWorkOrderQuoteLabor(workOrderQuoteDetailsId, buildMethodId);
             return Ok(result);
         }
 
@@ -892,7 +891,26 @@ namespace QuickApp.Pro.Controllers
             return Ok();
         }
 
+        [HttpGet("buildmethoddetails")]
+        public IActionResult GetQuoteBuildMethodDetails(long workflowWorkorderId)
+        {
+           var result= unitOfWork.WorkOrderRepository.GetQuoteBuildMethodDetails(workflowWorkorderId);
+            return Ok(result);
+        }
 
+        [HttpPost("woquotelist")]
+        public IActionResult WorkOrderQuoteList([FromBody]Filters<WOQuoteFilters> woQuoteFilters)
+        {
+            var result = unitOfWork.WorkOrderRepository.WorkOrderQuoteList(woQuoteFilters);
+            return Ok(result);
+        }
+
+        [HttpGet("woquoteview")]
+        public IActionResult WorkOrderQuoteView(long workOrderQuoteId)
+        {
+            var result = unitOfWork.WorkOrderRepository.WorkOrderQuoteView(workOrderQuoteId);
+            return Ok(result);
+        }
 
         #endregion
 

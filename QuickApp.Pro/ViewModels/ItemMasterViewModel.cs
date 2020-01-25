@@ -126,7 +126,7 @@ namespace QuickApp.Pro.ViewModels
 
         public int? LeadTimeDays { get; set; }
 
-        public int? LeadTimeHours { get; set; }
+        // public int? LeadTimeHours { get; set; } 
 
         public int? ReorderPoint { get; set; }
 
@@ -373,6 +373,11 @@ namespace QuickApp.Pro.ViewModels
         public int? oemPNId { get; set; }
         public string[] IntegrationPortalId { get; set; }
         public long? RevisedPartId { get; set; }
+        public long? SiteId { get; set; }
+        public long? WarehouseId { get; set; }
+        public long? LocationId { get; set; }
+        public long? ShelfId { get; set; }
+        public long? BinId { get; set; }
         public class ItemMasterViewModelValidator : AbstractValidator<ItemMasterViewModel>
         {
             public ItemMasterViewModelValidator()

@@ -47,6 +47,7 @@ export class VendorCapabilitiesListComponent implements OnInit{
     capabilityauditHisory: any[];
     vendorCapesGeneralInfo: any = {};
     aircraftListDataValues: any;
+    status:string = "active";
     colsaircraftLD: any[] = [
         { field: "aircraft", header: "Aircraft" },
         { field: "model", header: "Model" },
@@ -57,6 +58,9 @@ export class VendorCapabilitiesListComponent implements OnInit{
     @Input() isEnableVendor: boolean;
     @Input() vendorId: number = 0;
     @Output() vendorCapabilityId = new EventEmitter<any>();
+    totalRecords: number = 0;
+	totalPages: number = 0;
+	pageSize: number = 10;
 
     constructor(private vendorService: VendorService, private modalService: NgbModal, private authService: AuthService, private _route: Router, private alertService: AlertService, private vendorCapesService: VendorCapabilitiesService)
     {
@@ -65,7 +69,7 @@ export class VendorCapabilitiesListComponent implements OnInit{
 
     ngOnInit()
     {
-        this.loadData();
+        this.loadData(this.status);
          if(!this.vendorId) {
             this.activeIndex = 0;
             this.vendorService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-capabilities-list';
@@ -86,9 +90,9 @@ export class VendorCapabilitiesListComponent implements OnInit{
     {
     }
 
-    private loadData()
+    private loadData(status)
     {
-        const status = 'active';
+        //const status = 'active';
 
         if(this.vendorId != undefined) {
             this.vendorService.getVendorCapabilityList(status, this.vendorId).subscribe(
@@ -101,10 +105,10 @@ export class VendorCapabilitiesListComponent implements OnInit{
         this.cols = [
             { field: 'vendorCode', header: 'Vendor Code' },
             { field: 'vendorName', header: 'Vendor Name' },
-            { field: 'capabilityDescription', header: 'Vendor Caps' },
+            { field: 'capabilityType', header: 'Vendor Caps' },
             { field: 'partNumber', header: 'PN' },
             { field: 'partDescription', header: 'PN Description' },
-            { field: 'capabilityType', header: 'Caps Type' },            
+            //{ field: 'capabilityType', header: 'Caps Type' },            
             { field: 'vendorRanking', header: ' Vendor Ranking' },
             { field: 'tat', header: 'TAT' },
         ];
@@ -119,10 +123,16 @@ export class VendorCapabilitiesListComponent implements OnInit{
         this.loadingIndicator = false;
         this.dataSource.data = allWorkFlows;
         this.allvendorCapsList = allWorkFlows;
-        console.log(this.allvendorCapsList);
+
+        if (this.allvendorCapsList.length > 0) {
+            this.totalRecords = this.allvendorCapsList.length;
+            this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+        }
+        //console.log(this.allvendorCapsList);
     }
 
     getVenCapesListByStatus(status) {
+        this.status=status;
         this.vendorService.getVendorCapabilityList(status, this.vendorId).subscribe(
             results => this.onDataLoadSuccessful(results[0]),
             error => this.onDataLoadFailed(error)
@@ -202,7 +212,7 @@ export class VendorCapabilitiesListComponent implements OnInit{
             this.alertService.showMessage("Success", `Action was edited successfully`, MessageSeverity.success);
         }
 
-        this.loadData();
+        this.loadData(this.status);
         //this.itemclass();
     }
     private saveFailedHelper(error: any) {

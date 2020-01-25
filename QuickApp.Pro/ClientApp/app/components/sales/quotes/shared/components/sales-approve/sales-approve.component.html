@@ -11,13 +11,17 @@
   <div class="col-md-2">
     <select [(ngModel)]="approver.employeeId" name="shipToSiteName" (change)="onApproverSelect(approver,i)" required>
         <option>--Select</option>
-        <option *ngFor="let employee of allEmployeeinfo" [ngValue]="employee.employeeId">
+        <option *ngFor="let employee of employeeList[i]" [ngValue]="employee.employeeId">
           {{employee.firstName}}
           </option>
       </select>
-  </div>
+  </div> 
   <div class="col-md-8">
-    
+    <div class="sales-quote-approver-info" *ngIf="approver.employeeId">
+      <p><span class="label">Name: </span><span>{{approver.firstName}}</span></p>
+      <p><span class="label">Code: </span><span>{{approver.employeeCode}}</span></p>
+      <p><span class="label">Email: </span><span>{{approver.email}}</span></p>
+    </div>
   </div>
 </div>
 

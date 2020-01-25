@@ -90,13 +90,10 @@
   </Target>
 
   <ItemGroup>
-    <Content Remove="wwwroot\js\angular.min.js" />
-    <Content Remove="wwwroot\js\data.js" />
-    <Content Remove="wwwroot\js\workflow.js" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <None Remove="ClientApp\app\admin\file.ts" />
     <None Remove="ClientApp\app\components\actions\actions-editor.component.ts" />
+    <None Remove="ClientApp\app\components\capabilitytype\capability-type.component.spec.ts" />
+    <None Remove="ClientApp\app\components\capabilitytype\capability-type.component.ts" />
     <None Remove="ClientApp\app\components\caps-report\caps-report.component.spec.ts" />
     <None Remove="ClientApp\app\components\caps-report\caps-report.component.ts" />
     <None Remove="ClientApp\app\components\vendor-process1099\vendor-process1099.component.spec.ts" />
@@ -134,6 +131,7 @@
     <None Remove="ClientApp\app\services\atasubchapter1.service.ts" />
     <None Remove="ClientApp\app\services\atasubchapter2-endpoint.service.ts" />
     <None Remove="ClientApp\app\services\atasubchapter2.service.ts" />
+    <None Remove="ClientApp\app\services\capability-type.service.ts" />
     <None Remove="ClientApp\app\services\gl-cash-flow-classification-endpoint.service.ts" />
     <None Remove="ClientApp\app\services\gl-cash-flow-classification.service.ts" />
     <None Remove="ClientApp\app\services\itemMaster-endpoint.service.ts" />
@@ -366,6 +364,8 @@
 
 
   <ItemGroup>
+    <Folder Include="ClientApp\app\admin\NewFolder\" />
+    <Folder Include="ClientApp\app\components\NewFolder\" />
     <Folder Include="Logs\" />
     <Folder Include="Views\NewFolder\" />
   </ItemGroup>
@@ -374,18 +374,10 @@
 
 
   <ItemGroup>
-    <None Include="wwwroot\js\angular.min.js" />
-    <None Include="wwwroot\js\bootstrap.min.js" />
-    <None Include="wwwroot\js\custom.js" />
-    <None Include="wwwroot\js\data.js" />
-    <None Include="wwwroot\js\workflow.js" />
-  </ItemGroup>
-
-
-
-
-  <ItemGroup>
+    <TypeScriptCompile Include="ClientApp\app\admin\file.ts" />
     <TypeScriptCompile Include="ClientApp\app\components\actions\actions-editor.component.ts" />
+    <TypeScriptCompile Include="ClientApp\app\components\capabilitytype\capability-type.component.spec.ts" />
+    <TypeScriptCompile Include="ClientApp\app\components\capabilitytype\capability-type.component.ts" />
     <TypeScriptCompile Include="ClientApp\app\components\caps-report\caps-report.component.spec.ts" />
     <TypeScriptCompile Include="ClientApp\app\components\caps-report\caps-report.component.ts" />
     <TypeScriptCompile Include="ClientApp\app\components\vendor-process1099\vendor-process1099.component.spec.ts" />
@@ -423,6 +415,7 @@
     <TypeScriptCompile Include="ClientApp\app\services\atasubchapter1.service.ts" />
     <TypeScriptCompile Include="ClientApp\app\services\atasubchapter2-endpoint.service.ts" />
     <TypeScriptCompile Include="ClientApp\app\services\atasubchapter2.service.ts" />
+    <TypeScriptCompile Include="ClientApp\app\services\capability-type.service.ts" />
     <TypeScriptCompile Include="ClientApp\app\services\gl-cash-flow-classification-endpoint.service.ts" />
     <TypeScriptCompile Include="ClientApp\app\services\gl-cash-flow-classification.service.ts" />
     <TypeScriptCompile Include="ClientApp\app\services\itemMaster-endpoint.service.ts" />

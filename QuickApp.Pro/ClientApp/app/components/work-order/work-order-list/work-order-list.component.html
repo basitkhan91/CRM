@@ -8,7 +8,7 @@
     <div class="inline-block display-flex">
         <h3 class="po-head lead">WorkOrder List</h3>
         &nbsp;&nbsp;&nbsp;&nbsp;
-        <a matTooltip="Create WorkOrder"
+        <a matTooltip="Create Work Order"
            class="plusicon-cstm new-margin"
            [routerLink]="[
             '/workordersmodule/workorderspages/app-work-order-add'
@@ -20,31 +20,47 @@
     <div class="form-row status-radio">
         <div class="col-md-8">
             <div class="form-group">
-                <label style="float:left; width:auto; margin-right:20px; padding-top:3px;">Status:</label>
+
+                    <label class="radiobtn-label">View:</label>
+                    <div class="pull-left" style="margin-top: 4px; margin-right: 15px;">
+                            <label class="radio-cstm wauto">
+                                <input type="radio" name="viewType" class="form-control" value="mpn" [(ngModel)]="viewType" (click)="changeOfStatus('','mpn')">
+                                <span class="checkmark"></span>MPN View
+                            </label>
+                    </div>
+                    <div class="pull-left" style="margin-top: 4px; margin-right: 15px;">
+                            <label class="radio-cstm wauto">
+                                <input type="radio" name="viewType" class="form-control" value="wp" [(ngModel)]="viewType" (click)="changeOfStatus('','wp')">
+                                <span class="checkmark"></span>WP View
+                            </label>
+                    </div>
+
+                <label class="radiobtn-label" style="margin-left: 50px;">Status:</label>
                 <div class="pull-left" style="margin-top: 4px; margin-right: 15px;">
                     <label class="radio-cstm wauto">
-                        <input type="radio" name="woStatus" class="form-control" value="open" [(ngModel)]="currentStatus" (click)="changeOfStatus('open')">
+                        <input type="radio" name="woStatus" class="form-control" value="open" [(ngModel)]="currentStatus" (click)="changeOfStatus('open', '')">
                         <span class="checkmark"></span>Open
                     </label>
                 </div>
                 <div class="pull-left" style="margin-top: 4px; margin-right: 15px;">
                     <label class="radio-cstm wauto">
-                        <input type="radio" name="woStatus" class="form-control" value="closed" [(ngModel)]="currentStatus" (click)="changeOfStatus('closed')">
+                        <input type="radio" name="woStatus" class="form-control" value="closed" [(ngModel)]="currentStatus" (click)="changeOfStatus('closed', '')">
                         <span class="checkmark"></span>Closed
                     </label>
                 </div>
                 <div class="pull-left" style="margin-top: 4px; margin-right: 15px;">
                     <label class="radio-cstm wauto">
-                        <input type="radio" name="woStatus" class="form-control" value="canceled" [(ngModel)]="currentStatus" (click)="changeOfStatus('canceled')">
+                        <input type="radio" name="woStatus" class="form-control" value="canceled" [(ngModel)]="currentStatus" (click)="changeOfStatus('canceled', '')">
                         <span class="checkmark"></span>Cancelled
                     </label>
                 </div>
                 <div class="pull-left" style="margin-top: 4px; margin-right: 15px;">
                     <label class="radio-cstm wauto">
-                        <input type="radio" name="woStatus" class="form-control" value="all" [(ngModel)]="currentStatus" (click)="changeOfStatus('all')">
+                        <input type="radio" name="woStatus" class="form-control" value="all" [(ngModel)]="currentStatus" (click)="changeOfStatus('all', '')">
                         <span class="checkmark"></span>All
                     </label>
                 </div>
+
 
             </div>
         </div>
@@ -66,8 +82,10 @@
              [resizableColumns]="true"
              [reorderableColumns]="true"
              [totalRecords]="totalRecords"
-
-             [dataKey]="workOrderPartListDataKeys">
+             [scrollable]="true"
+             [metaKeySelection]="true"
+             [dataKey]="workOrderPartListDataKeys"
+             scrollHeight="450px">
         <ng-template pTemplate="caption">
             <div style="text-align: right;margin-left:-6px !important;min-height: 30px;">
                 <p-multiSelect [maxSelectedLabels]="2"
@@ -88,14 +106,14 @@
                            placeholder=" Filter" />
                 </div>
                 <button type="button"
-                        class="btn btn-primary-cstm "
+                        class="btn btn-primary "
                         pButton
                         icon="fa-download"
                         iconPos="left"
                         label="Export Data" matTooltip="Download Data" matTooltipPosition="above"
                         (click)="dt.exportCSV()"></button>
                 <button type="button"
-                        class="btn btn-primary-cstm "
+                        class="btn btn-primary "
                         pButton
                         icon="fa-download"
                         iconPos="left"
@@ -127,6 +145,11 @@
                 </div> -->
             </div>
         </ng-template>
+        <ng-template pTemplate="colgroup" let-columns>
+            <colgroup>
+                <col *ngFor="let col of columns" style="width:140px">
+            </colgroup>
+        </ng-template>
         <ng-template pTemplate="header" let-columns>
             <tr>
 
@@ -135,7 +158,7 @@
                     {{ col.header }}
                     <p-sortIcon [field]="col.field"></p-sortIcon>
                 </th>
-                <th style="position:sticky" *ngIf="selectedColumns.length > 0">
+                <th style="width:80px;position:sticky" *ngIf="selectedColumns.length > 0">
                     Actions
                 </th>
             </tr>
@@ -143,18 +166,18 @@
                 <th style="width:120px" *ngFor="let col of columns" [ngSwitch]="col.field">
                     <!-- <input type="text" style="width:100%;" pInputText   (keyup)="filterData($event)"> -->
                     <input *ngIf="col.field !== 'openDate' 
-                    && col.field !== 'customerRequestDate'
-                    && col.field !== 'promisedDate'
-                    && col.field !== 'estimatedShipDate'
-                    && col.field !== 'estimatedCompletionDate'" 
+                    && col.field !== 'customerRequestDateType'
+                    && col.field !== 'promisedDateType'
+                    && col.field !== 'estimatedShipDateType'
+                    && col.field !== 'estimatedCompletionDateType'" 
                     style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field, 'contains'); fieldSearch($event.target.value, col.field , 'contains' )">
                     <input type="date" *ngIf="col.field == 'openDate'" name="openDate" style="width:100%;" (change)="dt.filter($event.target.value, col.field, 'contains')">
-                    <input type="date"  *ngIf="col.field == 'customerRequestDate'" name="customerRequestDate" style="width:100%;" (change)="dt.filter($event.target.value, col.field, 'contains')">
-                    <input type="date"  *ngIf="col.field == 'promisedDate'" name="promisedDate" style="width:100%;" (change)="dt.filter($event.target.value, col.field, 'contains')">
-                    <input type="date" *ngIf="col.field == 'estimatedShipDate'" name="estimatedShipDate" style="width:100%;" (change)="dt.filter($event.target.value, col.field, 'contains')">
-                    <input type="date"  *ngIf="col.field == 'estimatedCompletionDate'" name="estimatedCompletionDate" style="width:100%;" (change)="dt.filter($event.target.value, col.field, 'contains')">
+                    <input type="date"  *ngIf="col.field == 'customerRequestDateType'" name="customerRequestDate" style="width:100%;" (change)="dt.filter($event.target.value, col.field, 'contains')">
+                    <input type="date"  *ngIf="col.field == 'promisedDateType'" name="promisedDate" style="width:100%;" (change)="dt.filter($event.target.value, col.field, 'contains')">
+                    <input type="date" *ngIf="col.field == 'estimatedShipDateType'" name="estimatedShipDate" style="width:100%;" (change)="dt.filter($event.target.value, col.field, 'contains')">
+                    <input type="date"  *ngIf="col.field == 'estimatedCompletionDateType'" name="estimatedCompletionDate" style="width:100%;" (change)="dt.filter($event.target.value, col.field, 'contains')">
                 </th>
-                <th style="width:200px;position:sticky"></th>
+                <th style="width:80px;position:sticky"></th>
             </tr>
         </ng-template>
         <ng-template pTemplate="body"
@@ -162,6 +185,8 @@
                      let-rowIndex="rowIndex"
                      let-expanded="expanded"
                      let-columns="columns">
+
+          
             <tr class="ui-widget-header">
                 <!--  <td>
                    <a [pRowToggler]="rowData">
@@ -177,54 +202,72 @@
                    </a>
 
                  </td> -->
-                <td *ngFor="let col of columns" style="text-overflow: ellipsis; " pTooltip={{rowData[col.field]}}>
-                    {{
-          col.field == 'openDate'
-            ? (rowData[col.field] | date: 'MM/dd/yyyy')
-            : rowData[col.field] && col.field == 'updatedDate'
-            ? (rowData[col.field] | date: 'MM/dd/yyyy')
-            : rowData[col.field]
-                    }}
+                 <!-- [ngStyle]="{'color': convertDate(col.field , rowData)   == 'Multiple' ? 'green' : 'red'  }" -->
+                <td *ngFor="let col of columns" style="text-overflow: ellipsis; " [pTooltip]="mouseOverData(col.field,  rowData)" 
+                [ngStyle]="{'color': getColorCodeForMultiple(rowData)}"
+                
+                > 
+                {{convertDate(col.field , rowData)}}
+                    
                 </td>
 
-                <td style="width:200px" *ngIf="selectedColumns.length > 0">
-                    <p-inputSwitch [(ngModel)]="rowData['isActive']"
+                <td style="width:80px" *ngIf="selectedColumns.length > 0">
+                    <!-- <p-inputSwitch [(ngModel)]="rowData['isActive']"
                                    name="isActive{{ rowIndex }}"
-                                   (onChange)="changeStatus(rowData)"></p-inputSwitch>
-
-                    <span data-toggle="modal" data-target="#viewWorkOrder">
+                                   (onChange)="changeStatus(rowData)"></p-inputSwitch> -->
+                    <span data-toggle="modal" data-target="#viewWorkOrder"><a class="btn nobg btn-view-cstm" (click)="view(rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
+                    <span><a class="btn nobg btn-edit-cstm" (click)="edit(rowData)" matTooltip="Edit"><i class="fa fa-pencil"></i></a> </span>
+                    <span data-toggle="modal" data-target="#contentHist"><a class="btn nobg btn-hist-cstm"  matTooltip="History"><i class="fa fa-history"></i></a></span>
+                    <!-- <span data-toggle="modal" data-target="#viewWorkOrder">
                         <a class="btn btn-info boxed-float-btn nobg"
                            data-toggle="tooltip"
                            (click)="view(rowData)">
                             <i class="fa fa-eye"></i>
                         </a>
-                    </span>
-                    <button class="btn-edit ptable-wo-btns"
+                    </span> -->
+                    <!-- <button class="btn-edit ptable-wo-btns"
                             mat-icon-button
                             (click)="edit(rowData)"
                             matTooltip="Edit">
                         <mat-icon>edit</mat-icon>
-                    </button>
+                    </button> -->
 
-                    <button class="btn-delete ptable-wo-btns"
+                    <!-- <button class="btn-delete ptable-wo-btns"
                             mat-icon-button
                             matTooltip="Delete"
                             data-target="#delete"
                             data-toggle="modal"
                             (click)="delete(rowData)">
                         <mat-icon color="warn">delete</mat-icon>
-                    </button>
-                    <button class="btn-history ptable-wo-btns"
+                    </button> -->
+                    <!-- <button class="btn-history ptable-wo-btns"
                             mat-icon-button
                             matTooltip="History"
                             data-target="#contentHist"
                             data-toggle="modal"
                             (click)="getAuditHistoryById(rowData)">
                         <mat-icon color="green">history</mat-icon>
-                    </button>
+                    </button> -->
                 </td>
             </tr>
+            
         </ng-template>
+
+        <ng-template pTemplate="summary" id="footer">
+                <label id="footer" class="footer">No'of records:</label>
+                <input style="width: 5%;"
+                       [(ngModel)]="totalRecords"
+                       [disabled]="true"
+                       pInputText
+                       type="text" />
+                &nbsp;&nbsp;
+                <label id="footer" class="footer1">Pages Count:</label>
+                <input style="width: 5%;"
+                       [(ngModel)]="totalPages"
+                       [disabled]="true"
+                       pInputText
+                       type="text" />
+            </ng-template>
         <!-- <ng-template pTemplate="rowexpansion" let-rowData let-rowIndex="rowIndex">
           <tr>
 
@@ -241,7 +284,7 @@
                 <button type="button" class="close" data-dismiss="modal" (click)="closeView.emit(false)">
                     &times;
                 </button>
-                <h4 class="modal-title">WorkOrder View</h4>
+                <h4 class="modal-title">Work Order View</h4>
             </div>
 
             <div class="card-body" *ngIf="viewWorkOrderHeader">
@@ -330,9 +373,9 @@
                                 </div>
                                 <div class="col-sm-3">
                                     <p>
-                                        <span class="label"><b>Credit Terms & Limit: </b></span><span class="value">
-                                            {{ viewWorkOrderHeader.creditTerm }} &
-                                            {{ viewWorkOrderHeader.creditLimit }}
+                                        <span class="label"><b> Credit Limit &amp; Term: </b></span><span class="value">
+                                                 {{ viewWorkOrderHeader.creditLimit }}  & {{ viewWorkOrderHeader.creditTerm }}  
+                                         
                                         </span>
                                     </p>
                                     <p>
@@ -975,7 +1018,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="closeView.emit(false)">
+                <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="closeView.emit(false)">
                     Close
                 </button>
             </div>

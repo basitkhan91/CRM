@@ -16,6 +16,7 @@ using ExcelDataReader;
 using System.IO;
 using System.Net.Http.Headers;
 using Microsoft.Extensions.Options;
+using EntityFrameworkPaginate;
 
 namespace DAL.Repositories
 {
@@ -529,68 +530,111 @@ namespace DAL.Repositories
             }
         }
 
-        public IEnumerable<object> GetPublicationsList(string publicationId, string description, string publicationType, string publishedBy, string employee, string location, int pageNumber, int pageSize)
+        public IEnumerable<object> GetPublicationsList(Common.Filters<PublicationFilters> pubFilters)
         {
             try
             {
+                if (pubFilters.filters == null)
+                    pubFilters.filters = new PublicationFilters();
+                var pageNumber = pubFilters.first + 1;
+                var pageSize = pubFilters.rows;
+                int? revisionNo = 0;
 
-                pageNumber = pageNumber + 1;
-                var take = pageSize;
-                var skip = take * (pageNumber - 1);
+                string sortColumn = string.Empty;
+                var sorts = new Sorts<PublicationFilters>();
+                var filters = new EntityFrameworkPaginate.Filters<PublicationFilters>();
+
+                if (pubFilters.filters.RevisionNum != null)
+                    revisionNo = pubFilters.filters.RevisionNum;
+
+                if (string.IsNullOrEmpty(pubFilters.SortField))
+                {
+                    sortColumn = "createdDate";
+                    pubFilters.SortOrder = -1;
+                    sorts.Add(sortColumn == "createdDate", x => x.CreatedDate, true);
+                }
+                else
+                {
+                    sortColumn = pubFilters.SortField;
+                }
+
+                sortColumn = char.ToUpper(sortColumn[0]) + sortColumn.Substring(1);
+
+                var propertyInfo = typeof(PublicationFilters).GetProperty(sortColumn);
+
+                if (pubFilters.SortOrder == -1)
+                {
+                    sorts.Add(true, x => propertyInfo.GetValue(x, null), true);
+                }
+                else
+                {
+                    sorts.Add(true, x => propertyInfo.GetValue(x, null));
+                }
+
+                filters.Add(!string.IsNullOrEmpty(pubFilters.filters.PublicationId), x => x.PublicationId.ToLower().Contains(pubFilters.filters.PublicationId.ToLower()));
+                filters.Add(!string.IsNullOrEmpty(pubFilters.filters.Description), x => x.Description.ToLower().Contains(pubFilters.filters.Description.ToLower()));
+                filters.Add(!string.IsNullOrEmpty(pubFilters.filters.PublicationType), x => x.PublicationType.ToLower().Contains(pubFilters.filters.PublicationType.ToLower()));
+                filters.Add(!string.IsNullOrEmpty(pubFilters.filters.PublishedBy), x => x.PublishedBy.ToLower().Contains(pubFilters.filters.PublishedBy.ToLower()));
+                filters.Add(pubFilters.filters.RevisionDate != null, x => x.RevisionDate== pubFilters.filters.RevisionDate);
+                filters.Add(revisionNo > 0, x => x.RevisionNum == revisionNo);
+                filters.Add(pubFilters.filters.NextReviewDate != null, x => x.NextReviewDate == pubFilters.filters.NextReviewDate);
+                filters.Add(pubFilters.filters.ExpirationDate != null, x => x.ExpirationDate == pubFilters.filters.ExpirationDate);
+                filters.Add(!string.IsNullOrEmpty(pubFilters.filters.Location), x => x.Location.ToLower().Contains(pubFilters.filters.Location.ToLower()));
+                filters.Add(pubFilters.filters.VerifiedDate != null, x => x.VerifiedDate == pubFilters.filters.VerifiedDate);
+
 
                 var totalRecords = (from p in _appContext.Publication
                                     join pt in _appContext.PublicationType on p.PublicationTypeId equals pt.PublicationTypeId
-                                    //join e in _appContext.Employee on p.EmployeeId equals e.EmployeeId
                                     join e in _appContext.Employee on p.EmployeeId equals e.EmployeeId into emp
                                     from e in emp.DefaultIfEmpty()
                                     where p.IsDeleted == false
-                                    && p.PublicationId.Contains(!String.IsNullOrEmpty(publicationId) ? publicationId : p.PublicationId)
-                                    && p.Description.Contains(!String.IsNullOrEmpty(description) ? description : p.Description)
-                                    && pt.Name.Contains(!string.IsNullOrEmpty(publicationType) ? publicationType : pt.Name)
-                                    && p.Publishby.Contains(!String.IsNullOrEmpty(publishedBy) ? publishedBy : p.Publishby)
-                                    &&(e.FirstName == null || e.FirstName.Contains(!string.IsNullOrEmpty(employee) ? employee : e.FirstName))
-                                    
-                                    && p.Location == (!String.IsNullOrEmpty(location) ? location : p.Location)
-                                    select new
+                                    && (e.FirstName == null || e.FirstName.Contains(!string.IsNullOrEmpty(pubFilters.filters.VerifiedBy) ? pubFilters.filters.VerifiedBy : e.FirstName))
+                                    select new PublicationFilters()
                                     {
-                                        p.PublicationRecordId
+                                        PublicationRecordId = p.PublicationRecordId,
+                                        PublicationId = p.PublicationId,
+                                        Description = p.Description,
+                                        PublicationType = pt.Name,
+                                        PublishedBy = p.Publishby,
+                                        RevisionDate = p.RevisionDate,
+                                        RevisionNum = p.RevisionNum,
+                                        NextReviewDate = p.NextReviewDate,
+                                        ExpirationDate = p.ExpirationDate,
+                                        Location = p.Location,
+                                        VerifiedBy = e.FirstName == null ? "" : e.FirstName,
+                                        VerifiedDate = p.VerifiedDate,
+                                        CreatedDate = p.CreatedDate,
+                                        IsActive = p.IsActive,
                                     }
                           ).Distinct()
-                          .Count();
+                          .Paginate(pageNumber, pageSize, sorts, filters).RecordCount;
 
                 var list = (from p in _appContext.Publication
                             join pt in _appContext.PublicationType on p.PublicationTypeId equals pt.PublicationTypeId
-                            // join e in _appContext.Employee on p.EmployeeId equals e.EmployeeId
                             join e in _appContext.Employee on p.EmployeeId equals e.EmployeeId into emp
                             from e in emp.DefaultIfEmpty()
                             where p.IsDeleted == false
-                            && p.PublicationId.Contains(!String.IsNullOrEmpty(publicationId) ? publicationId : p.PublicationId)
-                            && p.Description.Contains(!String.IsNullOrEmpty(description) ? description : p.Description)
-                            && pt.Name.Contains(!string.IsNullOrEmpty(publicationType) ? publicationType : pt.Name)
-                            && p.Publishby.Contains(!String.IsNullOrEmpty(publishedBy) ? publishedBy : p.Publishby)
-                            //&&  e.FirstName.Contains(!string.IsNullOrEmpty(employee) ? employee : e.FirstName)
-
-                            && (e.FirstName == null || e.FirstName.Contains(!string.IsNullOrEmpty(employee) ? employee : e.FirstName))
-
-                            && p.Location == (!String.IsNullOrEmpty(location) ? location : p.Location)
-                            select new
+                            && (e.FirstName == null || e.FirstName.Contains(!string.IsNullOrEmpty(pubFilters.filters.VerifiedBy) ? pubFilters.filters.VerifiedBy : e.FirstName))
+                            select new PublicationFilters()
                             {
-                                p.PublicationRecordId,
-                                p.PublicationId,
-                                p.Description,
+                                PublicationRecordId = p.PublicationRecordId,
+                                PublicationId = p.PublicationId,
+                                Description = p.Description,
                                 PublicationType = pt.Name,
-                                p.Publishby,
-                                p.Location,
-                                 p.IsActive,
-                                p.CreatedDate,
-                                EmployeeName = e.FirstName==null ?"":e.FirstName,
+                                PublishedBy = p.Publishby,
+                                RevisionDate = p.RevisionDate,
+                                RevisionNum = p.RevisionNum,
+                                NextReviewDate = p.NextReviewDate,
+                                ExpirationDate = p.ExpirationDate,
+                                Location = p.Location,
+                                VerifiedBy = e.FirstName == null ? "" : e.FirstName,
+                                VerifiedDate = p.VerifiedDate,
+                                CreatedDate = p.CreatedDate,
+                                IsActive = p.IsActive,
                                 TotalRecords = totalRecords
                             }
                           ).Distinct()
-                          .OrderByDescending(p => p.CreatedDate)
-                          .Skip(skip)
-                          .Take(take)
-                          .ToList();
+                          .Paginate(pageNumber, pageSize, sorts,filters).Results;
 
                 return list;
             }
@@ -647,7 +691,13 @@ namespace DAL.Repositories
                                          Location = p.Location,
                                          IsActive = p.IsActive,
                                          UpdatedDate = p.UpdatedDate,
-                                         EmployeeName = e.FirstName + ' ' + e.LastName
+                                         EmployeeName = e.FirstName + ' ' + e.LastName,
+                                         RevisionDate = p.RevisionDate,
+                                         RevisionNum = p.RevisionNum,
+                                         NextReviewDate = p.NextReviewDate,
+                                         ExpirationDate = p.ExpirationDate,
+                                         VerifiedBy = p.VerifiedBy,
+                                         VerifiedDate = p.VerifiedDate,
                                      })
                                      .Distinct()
                                      .OrderByDescending(p => p.UpdatedDate)
@@ -673,7 +723,13 @@ namespace DAL.Repositories
                                               Location = p.Location,
                                               IsActive = p.IsActive,
                                               UpdatedDate = p.UpdatedDate,
-                                              EmployeeName = e.FirstName + ' ' + e.LastName
+                                              EmployeeName = e.FirstName + ' ' + e.LastName,
+                                              RevisionDate = p.RevisionDate,
+                                              RevisionNum = p.RevisionNum,
+                                              NextReviewDate = p.NextReviewDate,
+                                              ExpirationDate = p.ExpirationDate,
+                                              VerifiedBy = p.VerifiedBy,
+                                              VerifiedDate = p.VerifiedDate,
                                           })
                              .Distinct()
                              .OrderByDescending(p => p.UpdatedDate)
@@ -874,37 +930,64 @@ namespace DAL.Repositories
         {
             try
             {
-                var result = _appContext.Publication
-                     .Join(_appContext.PublicationType,
-                                p => p.PublicationTypeId,
-                                pt => pt.PublicationTypeId,
-                                (p, pt) => new { p, pt })
-                      .Join(_appContext.Employee,
-                             p1 => p1.p.EmployeeId,
-                             e => e.EmployeeId,
-                             (p1, e) => new { p1, e })
-                      .Select(p => new
-                      {
-                          PublicationRecordId = p.p1.p.PublicationRecordId,
-                          EntryDate = p.p1.p.EntryDate,
-                          PublicationId = p.p1.p.PublicationId,
-                          Description = p.p1.p.Description,
-                          PublicationType = p.p1.pt.Name,
-                          ASD = p.p1.p.ASD,
-                          Sequence = p.p1.p.Sequence,
-                          Publishby = p.p1.p.Publishby,
-                          Location = p.p1.p.Location,
-                          RevisionDate = p.p1.p.RevisionDate,
-                          ExpirationDate = p.p1.p.ExpirationDate,
-                          NextReviewDate = p.p1.p.NextReviewDate,
-                          VerifiedBy = p.p1.p.VerifiedBy,
-                          VerifiedDate = p.p1.p.VerifiedDate,
-                          EmployeeName = p.e.FirstName + ' ' + p.e.LastName,
-                          RevisionNum = p.p1.p.RevisionNum,
-                          AttachmentDetails = GetAttachmentDetails(publicationRecordId)
-                      })
-                 .Where(p => p.PublicationRecordId == publicationRecordId)
-                 .FirstOrDefault();
+                var result = (from pb in _appContext.Publication
+                              join pbt in _appContext.PublicationType on pb.PublicationTypeId equals pbt.PublicationTypeId into pbtt
+                              from pbt in pbtt.DefaultIfEmpty()
+                              join em in _appContext.Employee on pb.EmployeeId equals em.EmployeeId into emm
+                              from em in emm.DefaultIfEmpty()
+                              select new
+                              {
+                                  PublicationRecordId = pb.PublicationRecordId,
+                                  EntryDate = pb.EntryDate,
+                                  PublicationId = pb.PublicationId,
+                                  Description = pb.Description,
+                                  PublicationType = pbt.Name,
+                                  ASD = pb.ASD,
+                                  Sequence = pb.Sequence,
+                                  Publishby = pb.Publishby,
+                                  Location = pb.Location,
+                                  RevisionDate = pb.RevisionDate,
+                                  ExpirationDate = pb.ExpirationDate,
+                                  NextReviewDate = pb.NextReviewDate,
+                                  VerifiedBy = pb.VerifiedBy,
+                                  VerifiedDate = pb.VerifiedDate,
+                                  EmployeeName = em.FirstName + ' ' + em.LastName,
+                                  RevisionNum = pb.RevisionNum,
+                                  AttachmentDetails = GetAttachmentDetails(publicationRecordId)
+                              }).Where(p => p.PublicationRecordId == publicationRecordId)
+                           .FirstOrDefault();
+
+                //var result = _appContext.Publication
+                //     .Join(_appContext.PublicationType,
+                //                p => p.PublicationTypeId,
+                //                pt => pt.PublicationTypeId,
+                //                (p, pt) => new { p, pt })
+                //      .Join(_appContext.Employee,
+                //             p1 => p1.p.EmployeeId,
+                //             e => e.EmployeeId,
+                //             (p1, e) => new { p1, e })
+                //      .Select(p => new
+                //      {
+                //          PublicationRecordId = p.p1.p.PublicationRecordId,
+                //          EntryDate = p.p1.p.EntryDate,
+                //          PublicationId = p.p1.p.PublicationId,
+                //          Description = p.p1.p.Description,
+                //          PublicationType = p.p1.pt.Name,
+                //          ASD = p.p1.p.ASD,
+                //          Sequence = p.p1.p.Sequence,
+                //          Publishby = p.p1.p.Publishby,
+                //          Location = p.p1.p.Location,
+                //          RevisionDate = p.p1.p.RevisionDate,
+                //          ExpirationDate = p.p1.p.ExpirationDate,
+                //          NextReviewDate = p.p1.p.NextReviewDate,
+                //          VerifiedBy = p.p1.p.VerifiedBy,
+                //          VerifiedDate = p.p1.p.VerifiedDate,
+                //          EmployeeName = p.e.FirstName + ' ' + p.e.LastName,
+                //          RevisionNum = p.p1.p.RevisionNum,
+                //          AttachmentDetails = GetAttachmentDetails(publicationRecordId)
+                //      })
+                // .Where(p => p.PublicationRecordId == publicationRecordId)
+                // .FirstOrDefault();
                 return result;
 
             }

@@ -88,6 +88,12 @@ import { CertificationTypeComponent } from "../components/certification-type/cer
 import { AssetStatusComponent } from "../components/AssetStatus/asset-status.component";
 import { AssetStatusService } from "../services/asset-status/asset-status.service";
 import { AssetStatusEndpointService } from "../services/asset-status/assetstatus-endpoint.service";
+import { AssetLocationComponent } from "../components/asset-location/asset-location.component";
+import { AssetLocationService } from "../services/asset-location/asset-location.service";
+import { AssetLocationEndpointService } from "../services/asset-location/asset-location-endpoint.service";
+import { AssetAcquisitionTypeComponent } from "../components/asset-acquisition-type/asset-acquisition-type.component";
+import { AssetAcquisitionTypeService } from "../services/asset-acquisition-type/asset-acquisition-type.service";
+import { AssetAcquisitionTypeEndpointService } from "../services/asset-acquisition-type/asset-acquisition-type-endpoint.service";
 import { DepriciationMethodComponent } from "../components/depriciation-method/depriciation-method.component";
 import { DepriciationMethodService } from "../services/depriciation-method/depriciation.service";
 import { DepriciationMethodEndpointService } from "../services/depriciation-method/depriciationmethod-endpoint.service";
@@ -109,8 +115,7 @@ import { AssetIntangibleTypeComponent } from "../components/asset-intangible-typ
 import { AssetIntangibleAttributeTypeEndpointService } from "../services/asset-intangible-attribute-type/asset-intangible-attribute-type-endpoint.service";
 import { AssetIntangibleAttributeTypeService } from "../services/asset-intangible-attribute-type/asset-intangible-attribute-type.service";
 import { AssetIntangibleAttributeTypeComponent } from "../components/asset-intangible-attribute-type/asset-intangible-attribute-type.component";
-import { StageCodeEndpointService } from "../services/stage-code/stage-code-endpoint.service";
-import { StageCodeService } from "../services/stage-code/stage-code.service";
+
 import { StageCodeComponent } from "../components/stage-code/stage-code.component";
 import { GLAccountCategoryComponent } from "../components/gl-account-category/gl-account-category.component";
 import { GLAccountCategoryEndpointService } from "../services/gl-account-category/gl-account-category-endpoint.service";
@@ -147,6 +152,11 @@ import { VendorProcess1099Component } from "../components/vendor-process1099/ven
 import { VendorProcess1099Service } from "../services/vendorprocess1099.service";
 import { CapsReportComponent } from "../components/caps-report/caps-report.component";
 import { AdjustmentReasonComponent } from "../components/adjustment-reason/adjustment-reason.component";
+import { CapabilityTypeComponent } from "../components/capabilitytype/capability-type.component";
+import { CapabilityTypeService } from "../services/capability-type.service";
+import { StageCodeService } from "../services/work-order-stagecode.service";
+
+
 
 
 @NgModule({
@@ -183,7 +193,7 @@ import { AdjustmentReasonComponent } from "../components/adjustment-reason/adjus
         EmployeeExpertiseComponent,
         FindingsComponent,
         AssetIntangibleTypeComponent,
-		AssetIntangibleAttributeTypeComponent,
+        AssetIntangibleAttributeTypeComponent,
         AssetTypeComponent,
         StageCodeComponent,
         GLAccountCategoryComponent,
@@ -222,7 +232,7 @@ import { AdjustmentReasonComponent } from "../components/adjustment-reason/adjus
         RfqEngineComponent,
         WarehouseComponent,
         AdjustmentReasonComponent,
-		GLAccountCategoryComponent,
+        GLAccountCategoryComponent,
         ManufacturerComponent,
         VendorcapabilitiesComponent,
         LocationComponent,
@@ -230,6 +240,8 @@ import { AdjustmentReasonComponent } from "../components/adjustment-reason/adjus
         ShelfComponent,
         CertificationTypeComponent,
         AssetStatusComponent,
+        AssetLocationComponent,
+        AssetAcquisitionTypeComponent,
         DisposalTypeComponent,
         DepriciationMethodComponent,
         AssetDepConventionTypeComponent,
@@ -239,7 +251,8 @@ import { AdjustmentReasonComponent } from "../components/adjustment-reason/adjus
         DashnumberComponent,
         PaginationComponent,
         VendorProcess1099Component,
-        CapsReportComponent
+        CapsReportComponent,
+        CapabilityTypeComponent
     ],
     providers: [
         PercentService,
@@ -248,6 +261,10 @@ import { AdjustmentReasonComponent } from "../components/adjustment-reason/adjus
         AssetStatusService,
         AssetStatusEndpointService,
         AssetStatusEndpointService,
+        AssetLocationService,
+        AssetLocationEndpointService,
+        AssetAcquisitionTypeService,
+        AssetAcquisitionTypeEndpointService,
         DepriciationMethodService,
         DepriciationMethodEndpointService,
         DisposalTypeEndpointService,
@@ -260,10 +277,9 @@ import { AdjustmentReasonComponent } from "../components/adjustment-reason/adjus
         AssetTypeEndpointService,
         AssetIntangibleTypeService,
         AssetIntangibleTypeEndpointService,
-		AssetIntangibleAttributeTypeService,
+        AssetIntangibleAttributeTypeService,
         AssetIntangibleAttributeTypeEndpointService,
         StageCodeService,
-        StageCodeEndpointService,
         GLAccountCategoryService,
         GLAccountCategoryEndpointService,
         ExpenditureCategoryService,
@@ -278,11 +294,8 @@ import { AdjustmentReasonComponent } from "../components/adjustment-reason/adjus
         DashNumberEndpointService,
         PaginationService,
         CommonService,
-        VendorProcess1099Service
-
-      
-       
-        
+        VendorProcess1099Service,
+        CapabilityTypeService,
     ],
     exports: [
         FlexLayoutModule,

@@ -185,6 +185,7 @@ namespace DAL
 
         IDashNumberRepository dashNumberRepository;
         IWorkOrderRepository workOrderRepository;
+        IWorkOrderStageRepository workOrderStageRepository;
         //IPurchaseOrderPartRepository _purchaseOrderPartRepository;
 
         ICommonRepository _commonRepository;
@@ -201,6 +202,11 @@ namespace DAL
         IAssetDepreciationMethod _assetDepreciationMethod;
         IAssetDisposalType _assetDisposalType;
         IAssetStatus _assetStatus;
+        IAssetLocation _assetLocation;
+		IAssetLocationAudit _assetLocationAudit;
+       // IAssetLocationAuditRepository _assetLocationAuditRepository;
+        IAssetAcquisitionType _AssetAcquisitionType;
+		IAssetAcquisitionTypeAudit _AssetAcquisitionTypeAudit;
         IAssetDepConvention _assetDepConvention;
 
         IPublicationTypesRepository _publicationTypesRepository;
@@ -218,9 +224,11 @@ namespace DAL
         ISalesOrderQuoteApproverList _salesOrderQuoteApproverListRepository;
 
         ISalesOrderQuotePartRepository _salesOrderQuotePartRepository;
-
+        ITagType _tagTypeRepository;
         IMasterSalesOrderQuoteStatusRepository _masterSalesOrderQuoteStatusRepository;
         IEmployeeStationRepository _employeeStationRepository;
+        IGlobalSettingsRepository _globalSettingsRepository;
+
 
 
         public UnitOfWork(ApplicationDbContext context, IOptions<AppSettings> appSettings)
@@ -290,7 +298,7 @@ namespace DAL
             get
             {
                 if (_customer == null)
-                    _customer = new CustomerRepository(_context);
+                    _customer = new CustomerRepository(_context,_appSettings);
 
                 return _customer;
             }
@@ -1718,6 +1726,16 @@ namespace DAL
                 return workOrderRepository;
             }
         }
+
+        public IWorkOrderStageRepository WorkOrderStageRepository
+        {
+            get
+            {
+                if (workOrderStageRepository == null)
+                    workOrderStageRepository = new WorkOrderStageRepository(_context);
+                return workOrderStageRepository;
+            }
+        }
         IAssetCapes IUnitOfWork.AssetCapes
         {
             get
@@ -1786,6 +1804,46 @@ namespace DAL
                 if (_assetStatus == null)
                     _assetStatus = new AssetStatusRepository(_context);
                 return _assetStatus;
+            }
+        }
+
+        IAssetLocation IUnitOfWork.AssetLocation
+        {
+            get
+            {
+                if (_assetLocation == null)
+                    _assetLocation = new AssetLocationRepository(_context);
+                return _assetLocation;
+            }
+        }
+		
+		public IAssetLocationAudit AssetLocationAudit
+        {
+            get
+            {
+                if (_assetLocationAudit == null)
+                    _assetLocationAudit = new AssetLocationAuditRepository(_context);
+                return _assetLocationAudit;
+            }
+        }
+
+        IAssetAcquisitionType IUnitOfWork.AssetAcquisitionType
+        {
+            get
+            {
+                if (_AssetAcquisitionType == null)
+                    _AssetAcquisitionType = new AssetAcquisitionTypeRepository(_context);
+                return _AssetAcquisitionType;
+            }
+        }
+		
+		IAssetAcquisitionTypeAudit IUnitOfWork.AssetAcquisitionTypeAudit
+        {
+            get
+            {
+                if (_AssetAcquisitionTypeAudit == null)
+                    _AssetAcquisitionTypeAudit = new AssetAcquisitionTypeAuditRepository(_context);
+                return _AssetAcquisitionTypeAudit;
             }
         }
 
@@ -1927,7 +1985,7 @@ namespace DAL
             {
                 if (_receiveRepairOrder == null)
                 {
-                    _receiveRepairOrder = new ReceiveRepairOrderRepository(_context,_commonRepository);
+                    _receiveRepairOrder = new ReceiveRepairOrderRepository(_context,CommonRepository);
                 }
                 return _receiveRepairOrder;
             }
@@ -1964,6 +2022,16 @@ namespace DAL
             }
         }
 
+        public ITagType tagType
+        {
+            get
+            {
+                if (_tagTypeRepository == null)
+                    _tagTypeRepository = new TagTypeRepository(_context);
+                return _tagTypeRepository;
+            }
+        }
+
         public IMasterSalesOrderQuoteStatusRepository MasterSalesOrderQuoteStatusRepository
         {
             get
@@ -1984,6 +2052,19 @@ namespace DAL
                 return _employeeStationRepository;
             }
         }
+
+        public IGlobalSettingsRepository GlobalSettingsRepository
+        {
+            get
+            {
+                if (_globalSettingsRepository == null)
+                    _globalSettingsRepository = new GlobalSettingsRepository(_context);
+
+                return _globalSettingsRepository;
+            }
+        }
+
+
     }
 }
 

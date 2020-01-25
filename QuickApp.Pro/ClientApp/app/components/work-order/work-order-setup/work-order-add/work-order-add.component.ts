@@ -44,7 +44,7 @@ import { WorkOrderQuoteService } from '../../../../services/work-order/work-orde
 import { CustomerViewComponent } from '../../../../shared/components/customer/customer-view/customer-view.component';
 import { Subject } from 'rxjs'
 import { takeUntil } from 'rxjs/operators';
-import { Freight } from '../../../../models/work-order-freight.model';
+// import { Freight } from '../../../../models/work-order-freight.model';
 
 @Component({
     selector: 'app-work-order-add',
@@ -1001,7 +1001,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
             this.workFlowObject.materialList = [];
             this.alertService.showMessage(
                 this.moduleName,
-                'update Work Order MaterialList  Succesfully',
+                'Update Work Order MaterialList  Succesfully',
                 MessageSeverity.success
             );
             this.getMaterialListByWorkOrderId();
@@ -1256,7 +1256,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
                         for (let task of this.taskList) {
 
                             if (task.taskId == labList['taskId']) {
-                                if (this.labor.workOrderLaborList[0][task.description.toLowerCase()][0]['expertiseId'] == undefined || this.labor.workOrderLaborList[0][task.description.toLowerCase()][0]['expertiseId'] == null) {
+                                if (this.labor.workOrderLaborList[0][task.description.toLowerCase()][0] && (this.labor.workOrderLaborList[0][task.description.toLowerCase()][0]['expertiseId'] == undefined || this.labor.workOrderLaborList[0][task.description.toLowerCase()][0]['expertiseId'] == null)) {
                                     this.labor.workOrderLaborList[0][task.description.toLowerCase()].splice(0, 1);
                                 }
                                 let taskData = new AllTasks()
@@ -1281,12 +1281,12 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
                 console.log(this.workOrderLaborList);
             })
         }
-        if(this.workOrderGeneralInformation.isSinglePN == true){
+        if (this.workOrderGeneralInformation.isSinglePN == true) {
             this.labor['employeeId'] = this.workOrderGeneralInformation.partNumbers[0]['technicianId'];
         }
-        else{
-            this.workOrderGeneralInformation.partNumbers.forEach(pn=>{
-                if(pn['id'] == this.workOrderPartNumberId){
+        else {
+            this.workOrderGeneralInformation.partNumbers.forEach(pn => {
+                if (pn['id'] == this.workOrderPartNumberId) {
                     this.labor['employeeId'] = pn['technicianId'];
                 }
             })
@@ -1302,7 +1302,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
             this.getChargesListByWorkOrderId();
         } else if (value === 'exclusions') {
             this.getExclusionListByWorkOrderId();
-        } else if(value === 'freight'){
+        } else if (value === 'freight') {
             this.getFreightListByWorkOrderId();
         }
     }
@@ -1379,7 +1379,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
 
 
 
-    getFreightListByWorkOrderId(){
+    getFreightListByWorkOrderId() {
         if (this.workFlowWorkOrderId !== 0 && this.workOrderId) {
             this.workOrderService.getWorkOrderFrieghtsList(this.workFlowWorkOrderId, this.workOrderId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
                 this.workOrderFreightList = res;
@@ -1388,18 +1388,24 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
         }
     }
 
-    saveWorkOrderFreightsList(data){
+    saveWorkOrderFreightsList(data) {
         const freightsArr = data.map(x => {
             return {
                 ...x,
                 masterCompanyId: 1,
                 isActive: true,
-                workOrderId: this.workOrderId, workFlowWorkOrderId: this.workFlowWorkOrderId,
+                isDeleted: false,
+                createdDate: new Date(),
+                updatedDate: new Date(),
+                createdBy: this.userName,
+                updatedBy: this.userName,
+                workOrderId: this.workOrderId,
+                workFlowWorkOrderId: this.workFlowWorkOrderId,
                 estimtPercentOccurranceId: x.estimtPercentOccurrance
             }
         });
         this.workOrderService.createWorkOrderFreightList(freightsArr).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
-          this.freight = [];
+            this.freight = [];
             this.alertService.showMessage(
                 this.moduleName,
                 'Saved Work Order Freight  Succesfully',
@@ -1407,6 +1413,32 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
             );
             this.getFreightListByWorkOrderId();
         })
+    }
+
+    updateWorkOrderFreightsList(data) {
+        const freightsArr = data.map(x => {
+            return {
+                ...x,
+                masterCompanyId: 1,
+                isActive: true,
+                isDeleted: false,
+
+                createdBy: this.userName,
+                updatedBy: this.userName,
+                workOrderId: this.workOrderId, workFlowWorkOrderId: this.workFlowWorkOrderId,
+                estimtPercentOccurranceId: x.estimtPercentOccurrance
+            }
+        });
+        this.workOrderService.updateWorkOrderFreightList(freightsArr).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
+            this.freight = [];
+            this.alertService.showMessage(
+                this.moduleName,
+                'Updated Work Order Freight  Succesfully',
+                MessageSeverity.success
+            );
+            this.getFreightListByWorkOrderId();
+        })
+
     }
 
 
@@ -1523,21 +1555,25 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
                 this.quoteData = res;
                 this.workOrderQuoteId = res.workOrderQuote.workOrderQuoteId;
                 console.log(this.workOrderQuoteId, res.workOrderQuoteId, res);
-
-                this.getQuoteCostingData();
+                this.quoteService.getSavedQuoteDetails(this.workFlowWorkOrderId)
+                .subscribe(
+                    res=>{
+                        this.getQuoteCostingData(res['buildMethodId']);
+                    }
+                )
             }
 
         })
     }
 
 
-    getQuoteCostingData() {
+    getQuoteCostingData(buildMethodId) {
         // if(this.workOrderQuoteId){
         // this.getQuoteExclusionListByWorkOrderQuoteId();
-        this.getQuoteMaterialListByWorkOrderQuoteId();
-        this.getQuoteFreightsListByWorkOrderQuoteId();
-        this.getQuoteChargesListByWorkOrderQuoteId();
-        this.getQuoteLaborListByWorkOrderQuoteId();
+        this.getQuoteMaterialListByWorkOrderQuoteId(buildMethodId);
+        this.getQuoteFreightsListByWorkOrderQuoteId(buildMethodId);
+        this.getQuoteChargesListByWorkOrderQuoteId(buildMethodId);
+        this.getQuoteLaborListByWorkOrderQuoteId(buildMethodId);
 
         // this.calculateTotalWorkOrderCost();
 
@@ -1552,26 +1588,26 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     //     })
     // }
 
-    async getQuoteMaterialListByWorkOrderQuoteId() {
-        await this.quoteService.getQuoteMaterialList(this.workOrderQuoteId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
+    async getQuoteMaterialListByWorkOrderQuoteId(buildMethodId) {
+        await this.quoteService.getQuoteMaterialList(this.workOrderQuoteId, buildMethodId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
             this.quoteMaterialList = res;
             this.sumOfMaterialList();
         })
     }
-    async getQuoteFreightsListByWorkOrderQuoteId() {
-        await this.quoteService.getQuoteFreightsList(this.workOrderQuoteId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
+    async getQuoteFreightsListByWorkOrderQuoteId(buildMethodId) {
+        await this.quoteService.getQuoteFreightsList(this.workOrderQuoteId, buildMethodId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
             this.quoteFreightsList = res;
 
         })
     }
-    async getQuoteChargesListByWorkOrderQuoteId() {
-        await this.quoteService.getQuoteChargesList(this.workOrderQuoteId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
+    async getQuoteChargesListByWorkOrderQuoteId(buildMethodId) {
+        await this.quoteService.getQuoteChargesList(this.workOrderQuoteId, buildMethodId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
             this.quoteChargesList = res;
             this.sumofCharges();
         })
     }
-    async getQuoteLaborListByWorkOrderQuoteId() {
-        await this.quoteService.getQuoteLaborList(this.workOrderQuoteId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
+    async getQuoteLaborListByWorkOrderQuoteId(buildMethodId) {
+        await this.quoteService.getQuoteLaborList(this.workOrderQuoteId, buildMethodId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
             if (res) {
                 this.quoteLaborList = res.laborList;
                 this.sumofLaborOverHead();

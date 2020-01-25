@@ -45,8 +45,8 @@
                                         <i class="fa fa-search"></i>
                                         <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Filter" style="height: 28px !important;">
                                     </div>
-                                    <button type="button" class="btn btn-primary-cstm" matTooltip="Download Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export Data" (click)="dt.exportCSV()" style="padding:5px 10px !important;"></button>
-                                    <button type="button" class="btn btn-primary-cstm" matTooltip="Download Selected Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export Selected Data" (click)="dt.exportCSV({selectionOnly:true})" style="padding:5px 10px !important;"></button>
+                                    <button type="button" class="btn btn-primary" matTooltip="Download Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export Data" (click)="dt.exportCSV()" style="padding:5px 10px !important;"></button>
+                                    <button type="button" class="btn btn-primary" matTooltip="Download Selected Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export Selected Data" (click)="dt.exportCSV({selectionOnly:true})" style="padding:5px 10px !important;"></button>
 
                                 </div>
 
@@ -104,8 +104,8 @@
                     </div>
                 </div>
             </div>
-            <button type="button" class="btn btn-primary-cstm pull-right" (click)="nextClick()">Next</button>
-            <button type="button" class="btn btn-primary-cstm pull-right" (click)="previousClick()">Previous</button>
+            <button type="button" class="btn btn-primary pull-right" (click)="nextClick()">Next</button>
+            <button type="button" class="btn btn-primary pull-right" (click)="previousClick()">Previous</button>
         </div>
     </div>
 </div>
@@ -124,8 +124,8 @@
     </div>
 
     <div class="modal-footer">
-        <button type="button" class="btn btn-primary-cstm" (click)="deleteVendorShippingAddress()">Yes</button>
-        <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">No</button>
+        <button type="button" class="btn btn-primary" (click)="deleteVendorShippingAddress()">Yes</button>
+        <button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
     </div>
 </ng-template>
 
@@ -209,7 +209,7 @@
                 <div class="clear"></div>
             </div>
             <div class="container pull-left">
-                <button class="btn btn-primary-cstm" [disabled]="!userForm.valid" (click)="saveVendorShipViaDetails()">Save</button>
+                <button class="btn btn-primary" [disabled]="!userForm.valid" (click)="saveVendorShipViaDetails()">Save</button>
             </div>
             <div class="clear"></div>
             <hr>
@@ -224,8 +224,8 @@
                             <i class="fa fa-search"></i>
                             <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="tt.filterGlobal($event.target.value, 'contains')" placeholder=" Filter" style="height: 28px !important;">
                         </div>
-                        <!-- <button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" iconPos="left" matTooltip="Download Data" matTooltipPosition="above" label="Export Data" (click)="tt.exportCSV()" style="padding:5px 10px !important;"></button>
-                        <button type="button" class="btn btn-primary-cstm" pButton icon="fa-download" matTooltip="Download Selected Data" matTooltipPosition="above" iconPos="left" label="Export Selected Data" *ngIf="selectedShipViaColumns" (click)="tt.exportCSV({selectionOnly:true})" style="padding:5px 10px !important;"></button> -->
+                        <!-- <button type="button" class="btn btn-primary" pButton icon="fa-download" iconPos="left" matTooltip="Download Data" matTooltipPosition="above" label="Export Data" (click)="tt.exportCSV()" style="padding:5px 10px !important;"></button>
+                        <button type="button" class="btn btn-primary" pButton icon="fa-download" matTooltip="Download Selected Data" matTooltipPosition="above" iconPos="left" label="Export Selected Data" *ngIf="selectedShipViaColumns" (click)="tt.exportCSV({selectionOnly:true})" style="padding:5px 10px !important;"></button> -->
 
                     </div>
 
@@ -273,7 +273,7 @@
             </p-table>
             <div class="clear"></div>
             <div class="modal-footer">                
-                <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
+                <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
             </div>
         </form>
     </div>
@@ -325,7 +325,7 @@
         </div>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
+        <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
     </div>
 </ng-template>
 
@@ -350,7 +350,7 @@
             <div class="clear"></div>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="dismissModel()">Close</button>
+            <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="dismissModel()">Close</button>
         </div>
     </div>
 
@@ -410,10 +410,10 @@
                                 <div class="form-group">
                                     <label>Ship To Country <span class="clr-red">*</span></label>
                                     <div class="inner-addon right-addon inline-block" style="width: 100%">
-                                        <p-autoComplete class="pautocomp-cstm" name="shiptocountry" (onSelect)="onCountrieselected($event)" (onKeyUp)=eventCountryHandler($event) [(ngModel)]="sourceVendor.country" [suggestions]="countrycollection" (completeMethod)="filtercountry($event)" [size]="30" [minLength]="1" [dropdown]="true" [forceSelection]="true" required>
-                                            <ng-template let-nice_name pTemplate="item">
+                                        <p-autoComplete field="nice_name" class="pautocomp-cstm" name="shiptocountry" (onSelect)="onCountrieselected($event)" (onKeyUp)=eventCountryHandler($event) [(ngModel)]="sourceVendor.country" [suggestions]="countrycollection" (completeMethod)="filtercountry($event)" [size]="30" [minLength]="1" [dropdown]="true" [forceSelection]="true" required>
+                                            <!-- <ng-template let-nice_name pTemplate="item">
                                                 <div class="ui-helper-clearfix">{{nice_name}}</div>
-                                            </ng-template>
+                                            </ng-template> -->
                                         </p-autoComplete>
                                     </div>
                                     <!-- <div *ngIf="disablesave" style="color:red">Please Select Country</div> -->
@@ -422,9 +422,9 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" *ngIf="sourceVendor.vendorId == undefined" class="btn btn-primary-cstm pull-right" (click)="editItemAndCloseModel()" [disabled]="!addShippingForm.valid" data-dismiss="modal">Save</button>
-                        <button type="button" *ngIf="sourceVendor.vendorId != undefined && sourceVendor.vendorId !=0" class="btn btn-primary-cstm pull-right" (click)="editItemAndCloseModel()" [disabled]="!addShippingForm.valid" data-dismiss="modal">Update</button>
-                        <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
+                        <button type="button" *ngIf="sourceVendor.vendorId == undefined" class="btn btn-primary pull-right" (click)="editItemAndCloseModel()" [disabled]="!addShippingForm.valid" data-dismiss="modal">Save</button>
+                        <button type="button" *ngIf="sourceVendor.vendorId != undefined && sourceVendor.vendorId !=0" class="btn btn-primary pull-right" (click)="editItemAndCloseModel()" [disabled]="!addShippingForm.valid" data-dismiss="modal">Update</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                     </div>
                 </form>
             </div>
@@ -464,7 +464,7 @@
                                             <td [ngStyle]="{'color': getColorCodeForHistory(i, 'city', audit.city)  ? 'black' : 'red'  }">{{audit.city}}</td>
                                             <td [ngStyle]="{'color': getColorCodeForHistory(i, 'stateOrProvince', audit.stateOrProvince)  ? 'black' : 'red'  }">{{audit.stateOrProvince}}</td>
                                             <td [ngStyle]="{'color': getColorCodeForHistory(i, 'postalCode', audit.postalCode)  ? 'black' : 'red'  }">{{audit.postalCode}}</td>
-                                            <td [ngStyle]="{'color': getColorCodeForHistory(i, 'country', audit.country)  ? 'black' : 'red'  }">{{audit.country}}</td>
+                                            <td [ngStyle]="{'color': getColorCodeForHistory(i, 'countryName', audit.countryName)  ? 'black' : 'red'  }">{{audit.country}}</td>
                                             <td [ngStyle]="{'color': getColorCodeForHistory(i, 'isActive', audit.isActive)  ? 'black' : 'red'  }">{{audit.isActive}}</td>
                                         <td >{{audit.updatedBy}}</td>
                                         <td>{{audit.updatedDate | date: 'dd-MM-yyyy h:mm a '}}</td>
@@ -480,7 +480,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                 </div>
               </div>
           

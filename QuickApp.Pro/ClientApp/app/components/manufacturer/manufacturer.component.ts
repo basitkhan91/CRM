@@ -578,6 +578,12 @@ export class ManufacturerComponent implements OnInit {
         this.getManufacturerList();
     }
 
+    getmemo($event) {
+         
+            this.disableSaveForShortName = false;
+            this.disableSaveForUOM = false;
+    }
+
     customExcelUpload(event) {
         const file = event.target.files;
 

@@ -102,7 +102,7 @@ export class CustomerEndpoint extends EndpointFactory {
     private readonly _getATAMappedByCustomerId: string = "/api/Customer/getCustomerATAMapped";
     private readonly _getContactsByCustomerId: string = "/api/Customer/GetCustomerContacts";
 
-    
+
     private readonly _deleteATAMappedByContactId: string = "/api/Customer/DeleteCustomerContactATAMapping"
     private readonly _CustomerAtaSearchUrl: string = '/api/Customer/searchGetCustomerATAMappedByMultiATAIDATASubID';
 
@@ -123,7 +123,7 @@ export class CustomerEndpoint extends EndpointFactory {
     private readonly _addRemoveDetails: string = '/api/Customer/customerDocumentDelete';
 
     private readonly _deleteCustomerDocuments: string = '/api/Customer/deleteCustomerDocuments';
-    
+
     private readonly _customerContactHistory: string = '/api/Customer/customercontactauditdetails'
     private readonly _customerGlobalSearch: string = '/api/Customer/ListGlobalSearch'
     private readonly _customerGetWarning: string = '/api/Customer/GetCustomerWarnings';
@@ -137,7 +137,7 @@ export class CustomerEndpoint extends EndpointFactory {
     private readonly _shippingDetailsStatus: string = '/api/Customer/shippingdetailsstatus';
     private readonly _shippingdetailsviastatus: string = '/api/Customer/shippingdetailsviastatus'
 
-    
+
 
     private readonly _customersBillingUpdateforActive: string = '/api/Customer/customersBillingUpdateStatus'
     private readonly _getCustomerDocumentAttachmentslist: string = "/api/FileUpload/getattachmentdetails";
@@ -154,8 +154,10 @@ export class CustomerEndpoint extends EndpointFactory {
     private readonly _customerShipViaHistory: string = "/api/Customer/GetShipViaAudit"
     private readonly _customerInterShipViaHistory: string = "/api/Customer/getauditshippingviadetailsbyid"
     private readonly _getCustomerDocumentHistory: string = "/api/Customer/getCustomerDocumentAudit"
+    private readonly excelUpload: string = "/api/Customer/uploadcustomerbillingaddress"
+    private readonly excelUploadShipping: string = "/api/Customer/uploadcustomershippingaddress"
 
-    
+
     get globalSearch() { return this.configurations.baseUrl + this.getGlobalCustomer; }
     get paginate() { return this.configurations.baseUrl + this.getCustomer; }
     get customerBillAddressUrl() { return this.configurations.baseUrl + this._customerBillAddressUrl; }
@@ -214,7 +216,7 @@ export class CustomerEndpoint extends EndpointFactory {
     get deleteTaxTypeRateMapped() { return this.configurations.baseUrl + this._deleteTaxTypeRateMapped }
     get domesticShipVia() { return this.configurations.baseUrl + this._addShipViaDetails }
     get customerclassificationMapUrl() { return this.configurations.baseUrl + this._customerclassificationMapUrl; }
-    
+
     get deleteInternationalShippingViaMapUrl() { return this.configurations.baseUrl + this._deleteInternationalShippingViaMapUrl; }
     get deleteRestrictedParts() { return this.configurations.baseUrl + this._deleteRestrictedParts; }
     get ShippingDetailsStatus() { return this.configurations.baseUrl + this._shippingDetailsStatus }
@@ -224,8 +226,8 @@ export class CustomerEndpoint extends EndpointFactory {
     get customersBillingUpdateforActive() { return this.configurations.baseUrl + this._customersBillingUpdateforActive }
     get deleteShipVia() { return this.configurations.baseUrl + this._deleteShipVia; }
     get deleteCustomerDocuments() { return this.configurations.baseUrl + this._addRemoveDetails; }
-  
-    
+
+
 
 
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
@@ -285,7 +287,7 @@ export class CustomerEndpoint extends EndpointFactory {
 
 
 
-    getCustomerContactAuditDetails<T>(customerContactId,customerId) {
+    getCustomerContactAuditDetails<T>(customerContactId, customerId) {
 
 
         return this.http.get<T>(`${this.configurations.baseUrl}${this._customerContactHistory}?customerContactId=${customerContactId}&customerId=${customerId}`, this.getRequestHeaders())
@@ -394,6 +396,10 @@ export class CustomerEndpoint extends EndpointFactory {
                 return this.handleError(error, () => this.updateStatusForInternationalShipping(id, status, updatedBy));
             });
     }
+    updateStatusForInternationalShippingVia(id, status, updatedBy) {
+        return this.http.get(`${this.configurations.baseUrl}/api/customer/shippingviadetailsstatus?id=${id}&status=${status}&updatedBy=${updatedBy}`)
+
+    }
 
     getInternationalShippingByCustomerId<T>(customerId, pageIndex, pageSize) {
         return this.http.get<T>(`${this.InternationalShippingList}?customerId=${customerId}&pageNumber=${pageIndex}&pageSize=${pageSize}`)
@@ -425,7 +431,7 @@ export class CustomerEndpoint extends EndpointFactory {
 
     postCustomerATA(postData): any {
         return this.http.post<any>(this.getCustomerATAPosttUrl, JSON.stringify(postData), this.getRequestHeaders())
-            
+
     }
 
     getNewitemAircraftEndpoint<T>(userObject: any): Observable<T> {
@@ -886,12 +892,16 @@ export class CustomerEndpoint extends EndpointFactory {
                 return this.handleError(error, () => this.getCustomerShipViaDetails(roleObject));
             });
     }
-    deleteContact<T>(contactId: any): Observable<T> {
-        let endpointUrl = `${this._deleteContactUrl}/${contactId}`;
-        return this.http.delete<T>(endpointUrl, this.getRequestHeaders())
-            .catch(error => {
-                return this.handleError(error, () => this.getDeleteCustomerEndpoint(contactId));
-            });
+    //deleteContact<T>(contactId: any,updatedBy:string): Observable<T> {
+    //    let endpointUrl = `${this._deleteContactUrl}/${contactId}`;
+    //    return this.http.delete<T>(endpointUrl, this.getRequestHeaders())
+    //        .catch(error => {
+    //            return this.handleError(error, () => this.deleteContact(contactId,updatedBy));
+    //        });
+    //}
+
+    deleteContact(id, updatedBy) {
+        return this.http.delete(`${this._deleteContactUrl}/${id}?updatedBy=${updatedBy}`, this.getRequestHeaders())
     }
 
     updateBillingViainfo<T>(roleObject: any, customerId: any): Observable<T> {
@@ -1303,20 +1313,20 @@ export class CustomerEndpoint extends EndpointFactory {
             .catch(error => {
                 return this.handleError(error, () => this.updateStatusForShippingDetails(id, status, updatedBy));
             });
-    }  
+    }
     Shippingdetailsviastatus<T>(id, status, updatedBy) {
         return this.http.get<T>(`${this.shippingdetailsviastatus}?id=${id}&status=${status}&updatedBy=${updatedBy}`)
             .catch(error => {
                 return this.handleError(error, () => this.Shippingdetailsviastatus(id, status, updatedBy));
             });
-    }  
+    }
 
     CustomersBillingUpdateforActive<T>(id, status, updatedBy) {
         return this.http.get<T>(`${this.customersBillingUpdateforActive}?id=${id}&status=${status}&updatedBy=${updatedBy}`)
             .catch(error => {
                 return this.handleError(error, () => this.CustomersBillingUpdateforActive(id, status, updatedBy));
             });
-    }  
+    }
     GetUploadDocumentsList(attachmentId, customerId, moduleId) {
         return this.http.get<any>(`${this._getCustomerDocumentAttachmentslist}?attachmentId=${attachmentId}&referenceId=${customerId}&moduleId=${moduleId}`, this.getRequestHeaders())
     }
@@ -1383,6 +1393,17 @@ export class CustomerEndpoint extends EndpointFactory {
     }
     getCustomerDocumentAuditHistory(id) {
         return this.http.get<any>(`${this._getCustomerDocumentHistory}/${id}`, this.getRequestHeaders())
+    }
+
+    CustomerBillingFileUpload(file, customerId) {
+        return this.http.post(`${this.configurations.baseUrl}${this.excelUpload}?customerId=${customerId}`, file)
+
+
+    }
+    CustomerShippingFileUpload(file, customerId) {
+        return this.http.post(`${this.configurations.baseUrl}${this.excelUploadShipping}?customerId=${customerId}`, file)
+
+
     }
 }
 

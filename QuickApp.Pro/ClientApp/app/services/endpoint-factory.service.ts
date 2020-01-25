@@ -52,6 +52,11 @@ export class EndpointFactory {
         return this.http.post<T>(this.loginUrl, params, { headers: header });
     }
 
+    employeeDetailsByEmpId(id){       
+            const url = `${this.configurations.baseUrl}/api/Employee/GetloginUserInfo/${id}`;
+        return this.http.get<any>(url,this.getRequestHeaders());
+    }
+
     getRefreshLoginEndpoint<T>(): Observable<T> {
         let header = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' });
 

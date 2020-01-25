@@ -14,8 +14,8 @@
                                 <div style="text-align: right">
                                     <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header" [resetFilterOnHide]="true" 
                                                    selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
-                                    <button type="button" class="btn btn-primary-cstm"  pTooltip="Download All Data"  tooltipPosition="top" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export All Data" style="padding: 5px 12px !important" (click)="dt.exportCSV()"></button>
-                                    <button type="button" class="btn btn-primary-cstm" pTooltip="Download Selected" matTooltipPosition="above"
+                                    <button type="button" class="btn btn-primary"  matTooltip="Download Data"  tooltipPosition="top" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export Data" style="padding: 5px 12px !important" (click)="dt.exportCSV()"></button>
+                                    <button type="button" class="btn btn-primary" matTooltip="Download Selected" matTooltipPosition="above"
                                             tooltipPosition="top" pButton icon="fa-download" iconPos="left" label="Export Selection Only" style="padding: 5px 12px !important" (click)="dt.exportCSV({selectionOnly:true})"></button>
                                     <div class="excel-upload  excel-upload-cstm">
 
@@ -23,12 +23,12 @@
                                                class="uploaddoc upload-file"
                                                accept=".xlsx, .xls, .csv">
                                         <label for="upload">
-                                            <span pTooltip="Upload Data (Excel)" matTooltipPosition="above" tooltipPosition="top">
+                                            <span matTooltip="Upload Data (Excel)" matTooltipPosition="above" tooltipPosition="top">
                                                 <i class="fa fa-upload"></i>
                                             </span>
                                         </label>
                                         &nbsp; &nbsp;
-                                        <button class="btn btn-primary-cstm" pTooltip="Download Sample file" matTooltipPosition="above"  tooltipPosition="top" (click)="sampleExcelDownload()">Sample File Download</button>
+                                        <button class="btn btn-primary" matTooltip="Download Sample file" matTooltipPosition="above"  tooltipPosition="top" (click)="sampleExcelDownload()">Sample File Download</button>
                                     </div>
                                 </div>
                             </ng-template>
@@ -48,7 +48,7 @@
                                 </tr>
                             </ng-template>
                             <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
-                                <tr [pSelectableRow]="rowData">
+                                <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
                                     <td style="width:200px" *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
                                         {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy h:mm:ss a'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy h:mm:ss a'):rowData[col.field]}}
                                     </td>
@@ -100,62 +100,61 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title" *ngIf="isEditMode">Edit Item classification</h4>
-                    <h4 class="modal-title" *ngIf="!isEditMode">Add Item classification</h4>
+                    <h4 class="modal-title" *ngIf="isEditMode">Edit Item Classification</h4>
+                    <h4 class="modal-title" *ngIf="!isEditMode">Add Item Classification</h4>
                 </div>
                 <div class="modal-body">
 
                     <div class="form-group">
                         <div class="col-sm-12">
-                            <div class="col-sm-4">
+                            <div class="col-sm-6">
                                 <label for="name" class="control-label control-item">Item Classification ID <span class="clr-red">*</span></label>
                             </div>
                             <div class="col-sm-5">
                                 <p-autoComplete field="itemClassificationCode" name="code" 
                                                 (onSelect)="selectedItemCode($event)" 
-                                                (onBlur)="onBlurcode($event)"
-                                                (onKeyUp)="checkItemCodeExists('itemClassificationCode', $event.target.value)" 
+                                              
+                                                (onKeyUp)="checkItemCodeExists($event.target.value)" 
                                                 [(ngModel)]="addNewItemClassification.itemClassificationCode" 
                                                 [suggestions]="itemClassificationList" (completeMethod)="filterItemCode($event)" 
-                                                [size]="30" [minLength]="1" [dropdown]="true" class="p-autoComplete-ctsm" required>
+                                                [size]="30" [minLength]="1" [dropdown]="true" class="p-autoComplete-ctsm" required (ngModelChange)="getmemo()">
                                 </p-autoComplete>
                                 <div *ngIf="disableSaveForItemCodeMsg" class="clr-red">Already Exists</div>
                             </div>
                         </div>
                         <div class="col-sm-12">
-                            <div class="col-sm-4">
+                            <div class="col-sm-6">
                                 <label for="netDays" class="control-label control-item">
                                     Item Classification Description <span class="clr-red">*</span>
                                 </label>
                             </div>
                             <div class="col-sm-5">
                                 <p-autoComplete field="description" (onSelect)="selectedItemDesc($event)" name="classficationDesc" 
-                                                (onKeyUp)="checkItemDescExists('description', $event.target.value)"
-                                                (onBlur)="onBlurDesc($event)"
-                                                [(ngModel)]="addNewItemClassification.description"
+                                                (onKeyUp)="checkItemDescExists($event.target.value)"
+                                                 [(ngModel)]="addNewItemClassification.description"
                                                 [suggestions]="itemClassificationDescList" (completeMethod)="filterItemDesc($event)" 
-                                                [size]="30" class="p-autoComplete-ctsm p-autocomp-ctsm" [minLength]="1" [dropdown]="true" required>
+                                                [size]="30" class="p-autoComplete-ctsm p-autocomp-ctsm" [minLength]="1" [dropdown]="true" required (ngModelChange)="getmemo()">
                                 </p-autoComplete>
                                 <div *ngIf="disableSaveForItemDescMsg" class="clr-red">Already Exists</div>
                             </div>
                         </div>
                         <div class="col-sm-12">
-                            <div class="col-sm-4">
+                            <div class="col-sm-6">
                                 <label class="control-label control-item">Item Type <span class="clr-red">*</span></label>
                             </div>
                             <div class="col-sm-5">
-                                <select class="form-control" name="itemType" [(ngModel)]="addNewItemClassification.itemType">
+                                <select class="form-control" name="itemType" [(ngModel)]="addNewItemClassification.itemType" (ngModelChange)="getmemo()" required>
                                     <option value="Stock">Stock</option>
                                     <option value="Non Stock">Non Stock</option>
                                 </select>
                             </div>
                         </div>
                         <div class="col-sm-12">
-                            <div class="col-sm-4">
+                            <div class="col-sm-6">
                                 <label for="description" class="control-label control-item">Memo</label>
                             </div>
                             <div class="col-sm-5">
-                                <textarea class="text-item" #memo="ngModel" id="memo" name="memodescription"
+                                <textarea class="text-item" #memo="ngModel" id="memo" name="memodescription" (ngModelChange)="getmemo()"
                                           [(ngModel)]="addNewItemClassification.memo" minlength="2"></textarea>
                             </div>
                         </div>
@@ -164,7 +163,7 @@
                         <div class="col-sm-6">
                             <div class="checkbox-cstm">
                                 <label>
-                                    <input type="checkbox" name="isActive" #isActive="ngModel" checked id="isActive" [(ngModel)]="addNewItemClassification.isActive">
+                                    <input type="checkbox" name="isActive" #isActive="ngModel" checked id="isActive" [(ngModel)]="addNewItemClassification.isActive" (ngModelChange)="getmemo()">
                                     <span class="cr"><i class="cr-icon pi pi-check"></i></span>
                                     Active
                                 </label>
@@ -174,8 +173,8 @@
 
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-primary-cstm" data-dismiss="modal" [disabled]="!userForm.valid || disableSaveForItemDesc || disableSaveForItemCode" (click)="saveItemClassification()">{{isEditMode ? 'Update' : 'Save'}}</button>
-                    <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="resetItemCForm()">Close</button>
+                    <button class="btn btn-primary" data-dismiss="modal" [disabled]="!userForm.valid || disableSaveForItemDescMsg || disableSaveForItemCodeMsg || disableSaveForEdit " (click)="saveItemClassification()">{{isEditMode ? 'Update' : 'Save'}}</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="resetItemCForm()">Close</button>
                 </div>
             </div>
 
@@ -250,7 +249,7 @@
                 <div class="clear"></div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" id="" name="" (click)="resetViewData()">Close</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal" id="" name="" (click)="resetViewData()">Close</button>
             </div>
         </div>
 
@@ -272,8 +271,8 @@
                 </strong>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary-cstm" data-dismiss="modal" (click)="deleteConformation('Yes')">Yes</button>
-                <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="deleteConformation('No')">No</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="deleteConformation('Yes')">Yes</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="deleteConformation('No')">No</button>
             </div>
         </div>
 
@@ -328,7 +327,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
             </div>
         </div>
 

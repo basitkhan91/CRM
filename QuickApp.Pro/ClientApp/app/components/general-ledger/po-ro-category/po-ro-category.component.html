@@ -20,20 +20,16 @@
 								<div style="text-align: right;margin-left:-6px !important;">
 									<p-multiSelect [maxSelectedLabels]="2" [options]="headers" optionLabel="header" [(ngModel)]="selectedColumns" [style]="{minWidth: '200px'}"
 												   style="float:left" (onChange)="columnsChanges()"></p-multiSelect>
-									<button type="button" class="btn btn-primary-cstm " pTooltip="Download All Data" pButton icon="fa-download"
-											iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
-									<button type="button" class="btn btn-primary-cstm " pTooltip="Download Selected" pButton icon="fa-download"
-											iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})"></button>
+									<button type="button" class="btn btn-primary " label="Export Data" matTooltip="Download Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" (click)="dt.exportCSV()"></button>
+									<button type="button" class="btn btn-primary " label="Export Selected Data" matTooltip="Download Selected Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" (click)="dt.exportCSV({selectionOnly:true})"></button>
 									<div class="excel-upload  excel-upload-cstm">
-
-										<input type="file" name="upload[]" id="upload" (change)="customExcelUpload($event)" class="uploaddoc upload-file" accept=".xlsx, .xls, .csv">
+										<input type="file" name="upload[]" id="upload" (change)="customExcelUpload($event)" class="uploaddoc upload-file"
+											   accept=".xlsx, .xls, .csv">
 										<label for="upload">
-											<span matTooltip="Upload Data (Excel)">
+											<span matTooltip="Upload Data (Excel)" matTooltipPosition="above">
 												<i class="fa fa-upload"></i>
 											</span>
 										</label>
-										&nbsp; &nbsp;
-										<button class="btn btn-primary-cstm" matTooltip="Sample File Download" (click)="sampleExcelDownload()">Sample File Download</button>
 									</div>
 								</div>
 							</ng-template>
@@ -65,7 +61,7 @@
 										}}
 									</td>
 									<td style="width:200px" *ngIf="selectedColumns.length> 0">
-										<p-inputSwitch [(ngModel)]="rowData['isActive']" matTooltip="Update" name="isActive{{rowIndex}}" (onChange)="changeStatus(rowData)"></p-inputSwitch>
+										<p-inputSwitch [(ngModel)]="rowData['isActive']" matTooltip="Update" name="isActive{{rowIndex}}" (onChange)="toggleIsActive(rowData,$event)"></p-inputSwitch>
 										<button class="btn-edit" mat-icon-button (click)="edit(rowData)" data-target="#add" data-toggle="modal" matTooltip="Edit">
 											<mat-icon>edit</mat-icon>
 										</button>
@@ -108,8 +104,8 @@
 				</strong>
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-primary-cstm" data-dismiss="modal" (click)="deleteConformation('Yes')">Yes</button>
-				<button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="deleteConformation('No')">No</button>
+				<button type="button" class="btn btn-primary" data-dismiss="modal" (click)="deleteConformation('Yes')">Yes</button>
+				<button type="button" class="btn btn-danger" data-dismiss="modal" (click)="deleteConformation('No')">No</button>
 			</div>
 		</div>
 
@@ -121,7 +117,7 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal">&times;</button>
-				<h4 class="modal-title">{{isEdit ? 'Edit' : 'Add' }} {{addNew.categoryName}} PO-RO Category </h4>
+				<h4 class="modal-title">{{isEdit ? 'Edit' : 'Add' }} PO-RO Category </h4>
 			</div>
 			<div class="modal-body">
 				<form #create="ngForm">
@@ -168,10 +164,10 @@
 				</form>
 			</div>
 			<div class="modal-footer">
-				<button class="btn btn-primary-cstm" data-dismiss="modal"  (click)="save();">
+				<button class="btn btn-primary" data-dismiss="modal"  (click)="save();">
 					{{isEdit ? 'Update' : 'Save' }}
 				</button>
-				<button type="button" class="btn btn-danger-cstm" data-dismiss="modal" (click)="resetForm()">Close</button>
+				<button type="button" class="btn btn-danger" data-dismiss="modal" (click)="resetForm()">Close</button>
 			</div>
 		</div>
 	</div>

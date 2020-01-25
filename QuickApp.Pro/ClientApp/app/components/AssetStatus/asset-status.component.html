@@ -7,7 +7,7 @@
                         <div class="inline-block display-flex">
                             <h3 class="po-head lead"> Asset Status</h3>
                             &nbsp;&nbsp;
-                            <a class="plusicon-cstm new-margin" pTooltip="Add Asset Status" tooltipPosition="right" (click)="open(contentEdit)">
+                            <a class="plusicon-cstm new-margin" matTooltip="Add Asset Status" matTooltipPosition="right" (click)="open(contentEdit)">
                                 <i class="fa fa-plus-circle fa-lg"></i>
                             </a>
                         </div>
@@ -20,20 +20,20 @@
                                 <div style="text-align: right;margin-left:-6px !important;">
                                     <p-multiSelect [maxSelectedLabels]="2" [options]="selectedData" optionLabel="header" [(ngModel)]="selectedColumns"
                                                    [style]="{minWidth: '200px'}" style="float:left"></p-multiSelect>
-                                    <button type="button" class="btn btn-primary-cstm " pTooltip="Download All Data" tooltipPosition="top" pButton icon="fa-download"
-                                            iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
-                                    <button type="button" class="btn btn-primary-cstm " pTooltip="Download Selected Data" tooltipPosition="top" pButton icon="fa-download"
-                                            iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})"></button>
+                                    <button type="button" class="btn btn-primary" matTooltip="Download Data" matTooltipPosition="above"
+                                            pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
+                                    <button type="button" class="btn btn-primary" matTooltip="Download Selected Data" matTooltipPosition="above"
+                                            pButton icon="fa-download" iconPos="left" label="Export Selected Data" (click)="dt.exportCSV({selectionOnly:true})"></button>
                                     <div class="excel-upload  excel-upload-cstm">
                                         <input type="file" name="upload[]" id="upload" (change)="customExcelUpload($event)" class="uploaddoc upload-file"
                                                accept=".xlsx, .xls, .csv">
                                         <label for="upload">
-                                            <span matTooltip="Upload Data (Excel)">
+                                            <span matTooltip="Upload Data (Excel)" matTooltipPosition="above">
                                                 <i class="fa fa-upload"></i>
                                             </span>
                                         </label>
                                         &nbsp; &nbsp;
-                                        <button class="btn btn-primary-cstm" (click)="sampleExcelDownload()" pTooltip="Download Sample File"  tooltipPosition="top">Sample File Download</button>
+                                        <button class="btn btn-primary" (click)="sampleExcelDownload()" matTooltip="Download Sample File" matTooltipPosition="above">Sample File Download</button>
                                     </div>
                                 </div>
                             </ng-template>
@@ -161,7 +161,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
             <div class="clear"></div>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-danger-cstm" data-dismiss="modal" id="" name="" (click)="dismissModel()">Close</button>
+            <button type="button" class="btn btn-danger" data-dismiss="modal" id="" name="" (click)="dismissModel()">Close</button>
         </div>
     </div>
 
@@ -271,8 +271,8 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
         </form>
     </div>
     <div class="modal-footer">
-        <button class="btn btn-primary-cstm" [disabled]="!userForm.valid || disableSave" (click)="SaveandEditAssetStatus()">{{isEditMode == true ? 'Update' : 'Save' }}</button>
-        <button type="button" class="btn btn-danger-cstm" (click)="dismissModel()">Close</button>
+        <button class="btn btn-primary" [disabled]="!userForm.valid || disableSave" (click)="SaveandEditAssetStatus()">{{isEditMode == true ? 'Update' : 'Save' }}</button>
+        <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
     </div>
 </ng-template>
 
@@ -323,7 +323,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
             </div>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-danger-cstm" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
         </div>
     </div>
 

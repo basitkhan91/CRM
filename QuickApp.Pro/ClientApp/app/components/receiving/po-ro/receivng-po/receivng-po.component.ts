@@ -20,7 +20,7 @@ import { BinService } from '../../../../services/bin.service';
 import { ManufacturerService } from '../../../../services/manufacturer.service';
 import { StocklineService } from '../../../../services/stockline.service';
 import { ReceivingService } from '../../../../services/receiving/receiving.service';
-import { PurchaseOrder, PurchaseOrderPart, StockLine, DropDownData, TimeLife, ReceiveParts } from './PurchaseOrder.model';
+import { PurchaseOrder, PurchaseOrderPart, StockLine, StockLineDraft, DropDownData, TimeLife, ReceiveParts, TimeLifeDraft } from './PurchaseOrder.model';
 import { ManagementStructure } from './managementstructure.model';
 import { Dropdown } from 'primeng/dropdown';
 import { AccountService } from '../../../../services/account.service';
@@ -38,6 +38,7 @@ import { Console } from '@angular/core/src/console';
 import { ShippingService } from '../../../../services/shipping/shipping-service';
 import { forEach } from '@angular/router/src/utils/collection';
 import { TagTypeService } from '../../../../services/tagtype.service';
+import { getValueFromObjectByKey, getValueFromArrayOfObjectById } from '../../../../generic/autocomplete';
 @Component({
     selector: 'app-receivng-po',
     templateUrl: './receivng-po.component.html',
@@ -98,6 +99,7 @@ export class ReceivngPoComponent implements OnInit {
     traceabletocustomer: boolean = false;
     traceabletoother: boolean = false;
     traceabletovendor: boolean = false;
+    creditTermsList: any = [];
     //showGrid: boolean;
     //userName: any;
     //collectionofstockLine: any;
@@ -192,6 +194,7 @@ export class ReceivngPoComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.getAllCreditTerms();
         this.receivingService.purchaseOrderId = this._actRoute.snapshot.queryParams['purchaseorderid'];
         this.receivingService.getPurchaseOrderDataById(this.receivingService.purchaseOrderId).subscribe(
             results => {
@@ -206,7 +209,6 @@ export class ReceivngPoComponent implements OnInit {
 
         this.poStatus = [];
 
-        this.getAllCreditTerms();
         this.getAllPriority();
         this.getStatus();
     }
@@ -224,8 +226,8 @@ export class ReceivngPoComponent implements OnInit {
                         part.timeLifeList = [];
 
                         for (var i = 0; i < part.stocklineListObj.length; i++) {
-                            let timeLife: TimeLife = new TimeLife();
-                            timeLife.timeLifeCyclesId = 0;
+                            let timeLife: TimeLifeDraft = new TimeLifeDraft();
+                            timeLife.timeLifeDraftCyclesId = 0;
                             timeLife.purchaseOrderId = part.purchaseOrderId;
                             timeLife.purchaseOrderPartRecordId = part.purchaseOrderPartRecordId;
                             timeLife.cyclesRemaining = '';
@@ -350,8 +352,16 @@ export class ReceivngPoComponent implements OnInit {
     private loadPurchaseOrderData(purchaseOrder: PurchaseOrder) {
         //if (this.receivingService.selectedPurchaseorderCollection != undefined) {
         //this.purchaseOrderData = this.receivingService.selectedPurchaseorderCollection;
-
-        this.purchaseOrderData = purchaseOrder;
+        this.purchaseOrderData = {
+            ...purchaseOrder,
+            creditLimit: getValueFromObjectByKey('creditLimit', purchaseOrder.vendor),
+            terms: getValueFromObjectByKey('creditTermsId', purchaseOrder.vendor),
+            priorityId: getValueFromObjectByKey('priorityId', purchaseOrder.purchaseOderPart[0].purchaseOrder),
+            dateApproved: new Date(purchaseOrder.dateApproved).toLocaleDateString()
+        };
+        if (this.purchaseOrderData.terms) {
+            this.purchaseOrderData.terms = getValueFromArrayOfObjectById('name', 'creditTermsId', this.purchaseOrderData.terms, this.creditTermsList)
+        }
         this.getManagementStructure().subscribe(
             results => {
                 this.managementStructureSuccess(this.purchaseOrderData.managementStructureId, results[0]);
@@ -437,7 +447,7 @@ export class ReceivngPoComponent implements OnInit {
         return this.legalEntityService.getManagemententity();
     }
 
-    private setStockLineManagementStructure(managementStructureId: number, stockLine: StockLine) {
+    private setStockLineManagementStructure(managementStructureId: number, stockLine: StockLineDraft) {
         let stockLineManagementStructureHierarchy: ManagementStructure[][] = [[]];
         let stockLineSelectedManagementStructureHierarchy: ManagementStructure[] = [];
 
@@ -623,6 +633,7 @@ export class ReceivngPoComponent implements OnInit {
     private getAllCreditTerms() {
         this.creditTermsService.getCreditTermsList().subscribe(
             results => {
+                this.creditTermsList = results[0].columnData;                
                 this.poCreditTermInfo = [];
                 for (let creditTerm of results[0]) {
                     var dropdown = new DropDownData();
@@ -690,8 +701,8 @@ export class ReceivngPoComponent implements OnInit {
 
             if (part.itemMaster.isTimeLife) {
                 for (var i = 0; i < quantity; i++) {
-                    let timeLife: TimeLife = new TimeLife();
-                    timeLife.timeLifeCyclesId = 0;
+                    let timeLife: TimeLifeDraft = new TimeLifeDraft();
+                    timeLife.timeLifeDraftCyclesId = 0;
                     timeLife.purchaseOrderId = part.purchaseOrderId;
                     timeLife.purchaseOrderPartRecordId = part.purchaseOrderPartRecordId;
                     timeLife.cyclesRemaining = '';
@@ -748,14 +759,14 @@ export class ReceivngPoComponent implements OnInit {
 
         if (part.itemMaster.isSerialized) {
             for (var i = 0; i < part.quantityActuallyReceived; i++) {
-                let stockLine: StockLine = new StockLine();
+                let stockLine: StockLineDraft = new StockLineDraft();
                 this.setStockLineManagementStructure(part.managementStructureId, stockLine);
                 stockLine.purchaseOrderId = part.purchaseOrderId;
                 stockLine.purchaseOrderPartRecordId = part.purchaseOrderPartRecordId;
                 stockLine.itemMasterId = part.itemMaster.itemMasterId;
                 stockLine.partNumber = part.itemMaster.partNumber;
                 stockLine.quantity = 1;
-                stockLine.stockLineId = 0;
+                stockLine.stockLineDraftId = 0;
                 stockLine.createdDate = new Date();
                 stockLine.manufacturerId = part.itemMaster.manufacturerId;
                 stockLine.visible = false;
@@ -773,7 +784,7 @@ export class ReceivngPoComponent implements OnInit {
                 stockLine.purchaseOrderUnitCost = 0;
                 stockLine.purchaseOrderExtendedCost = part.unitCost;
                 stockLine.currentDate = new Date();
-                stockLine.obtainFromType = 3;
+                stockLine.obtainFromType = 3; // default is vendor and set the value from purchase order.
                 stockLine.obtainFrom = this.purchaseOrderData.vendor.vendorId.toString();
                 stockLine.obtainFromObject = this.VendorList.find(x => x.Key == this.purchaseOrderData.vendor.vendorId.toString());
 
@@ -796,14 +807,14 @@ export class ReceivngPoComponent implements OnInit {
             }
         }
         else {
-            let stockLine: StockLine = new StockLine();
+            let stockLine: StockLineDraft = new StockLineDraft();
             this.setStockLineManagementStructure(part.managementStructureId, stockLine);
             stockLine.purchaseOrderId = part.purchaseOrderId;
             stockLine.purchaseOrderPartRecordId = part.purchaseOrderPartRecordId;
             stockLine.partNumber = part.itemMaster.partNumber;
             stockLine.itemMasterId = part.itemMaster.itemMasterId;
             stockLine.quantity = part.quantityActuallyReceived;
-            stockLine.stockLineId = 0;
+            stockLine.stockLineDraftId = 0;
             stockLine.createdDate = new Date();
             stockLine.manufacturerId = part.itemMaster.manufacturerId;
             stockLine.visible = false;
@@ -824,6 +835,12 @@ export class ReceivngPoComponent implements OnInit {
             stockLine.obtainFromType = 3;
             stockLine.obtainFrom = this.purchaseOrderData.vendor.vendorId.toString();
             stockLine.obtainFromObject = this.VendorList.find(x => x.Key == this.purchaseOrderData.vendor.vendorId.toString());
+            if (this.purchaseOrderData.billToUserType == 1 || this.purchaseOrderData.billToUserType == 2) {
+                stockLine.ownerType = this.purchaseOrderData.billToUserType == 2 ? 3 : this.purchaseOrderData.billToUserType;
+                stockLine.owner = this.purchaseOrderData.billToUserId.toString();
+                stockLine.ownerObject = stockLine.ownerType == 1 ? this.CustomerList.find(x => x.Key == this.purchaseOrderData.billToUserId.toString())
+                    : this.VendorList.find(x => x.Key == this.purchaseOrderData.billToUserId.toString());
+            }
 
             if (part.itemMaster != undefined) {
                 stockLine.purchaseOrderUnitCost = part.unitCost;
@@ -985,7 +1002,7 @@ export class ReceivngPoComponent implements OnInit {
         );
     }
 
-    getStockLineSite(stockLine: StockLine): void {
+    getStockLineSite(stockLine: StockLineDraft): void {
         stockLine.SiteList = [];
         stockLine.siteId = 0;
         stockLine.WareHouseList = [];
@@ -1138,7 +1155,7 @@ export class ReceivngPoComponent implements OnInit {
 
     onChangeTimeLife(part: PurchaseOrderPart) {
         part.timeLifeList[part.currentTLIndex].detailsNotProvided = part.detailsNotProvided;
-        part.timeLifeList[part.currentTLIndex].timeLifeCyclesId = 0;
+        part.timeLifeList[part.currentTLIndex].timeLifeDraftCyclesId = 0;
         part.timeLifeList[part.currentTLIndex].purchaseOrderId = part.purchaseOrderId;
         part.timeLifeList[part.currentTLIndex].purchaseOrderPartRecordId = part.purchaseOrderPartRecordId;
         part.timeLifeList[part.currentTLIndex].cyclesRemaining = '';
@@ -1418,8 +1435,10 @@ export class ReceivngPoComponent implements OnInit {
 
         this.itemmaster.updateItemMasterSerialized(part.itemMasterId, part.itemMaster.isSerialized).subscribe(
             result => {
+                var obj = part.stocklineListObj[this.currentSLIndex];
                 part.stocklineListObj = [];
                 this.createStockLineItems(part);
+                part.stocklineListObj[0] = obj;
                 var childParts = this.purchaseOrderData.purchaseOderPart.filter(x => x.itemMaster.partNumber == part.itemMaster.partNumber && !x.itemMaster.isParent);
                 for (let childPart of childParts) {
                     childPart.itemMaster.isSerialized = part.itemMaster.isSerialized;
@@ -1432,11 +1451,14 @@ export class ReceivngPoComponent implements OnInit {
             });
     }
 
-    togglePartTimeLife(part: PurchaseOrderPart): void {
+    togglePartTimeLife(part: PurchaseOrderPart, event) {
 
-        if (part.itemMaster.isTimeLife == null) {
-            part.itemMaster.isTimeLife == false;
+        if ((part.itemMaster.isSerialized == null || part.itemMaster.isSerialized == false) && part.itemMaster.isTimeLife == true) {
+            part.itemMaster.isTimeLife = false;
+            this.alertService.showMessage(this.pageTitle, "Part is not serialized, please make the part serialzed before making it timeLife.", MessageSeverity.error);
+            return false;
         }
+
 
         this.itemmaster.updateItemMasterTimeLife(part.itemMasterId, part.itemMaster.isTimeLife).subscribe(
             result => {
@@ -1447,8 +1469,8 @@ export class ReceivngPoComponent implements OnInit {
                         part.currentSERIndex = 0;
                         part.currentTLIndex = 0;
                         for (var i = 0; i < part.quantityActuallyReceived; i++) {
-                            let timeLife: TimeLife = new TimeLife();
-                            timeLife.timeLifeCyclesId = 0;
+                            let timeLife: TimeLifeDraft = new TimeLifeDraft();
+                            timeLife.timeLifeDraftCyclesId = 0;
                             timeLife.purchaseOrderId = part.purchaseOrderId;
                             timeLife.purchaseOrderPartRecordId = part.purchaseOrderPartRecordId;
                             timeLife.cyclesRemaining = '';

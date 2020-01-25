@@ -13,13 +13,13 @@ import { AuditHistory } from '../../../models/audithistory.model';
 import { MasterCompany } from '../../../models/mastercompany.model';
 import { Customer } from '../../../models/customer.model';
 import { TableModule, Table } from 'primeng/table';
+import { LazyLoadEvent, SortEvent, MenuItem } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { InputTextModule } from 'primeng/inputtext';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { Router } from '@angular/router';
-import { Globals } from '../../../globals'
-import { LazyLoadEvent, SortEvent } from 'primeng/api';
+import { Globals } from '../../../globals';
 import { listSearchFilterObjectCreation } from '../../../generic/autocomplete';
 import { AccountListingService } from '../../../services/account-listing/account-listing.service'
 
@@ -29,21 +29,21 @@ import { AccountListingService } from '../../../services/account-listing/account
     templateUrl: './account-listing.component.html',
     styleUrls: ['./account-listing.component.scss']
 })
+
 /** Account List component*/
-export class AccountListingComponent implements OnInit {
-  
+export class AccountListingComponent implements OnInit {  
 
     totalRecords: number = 0;
     totalPages: number = 0;
     headers = [
         { field: 'ledgerName', header: 'Ledger Name' },
-        { field: 'oldAccountCode', header: 'Old GL Account Code' },
-        { field: 'accountCode', header: 'GL Account Code' },
-        { field: 'accountName', header: 'Account Name' },
-        //{ field: 'entities', header: 'Share With Entities' },
-        { field: 'leafleafNodeNameName', header: 'Leaf Node Name' },
+        { field: 'oldAccountCode', header: 'Old Account Code' },
+        { field: 'accountCode', header: 'Account Code' },
+        { field: 'accountName', header: 'Account Name' },     
+        { field: 'accountType', header: 'Account Type' },
+        { field: 'accountDescription', header: 'Account Description' },
         { field: 'isActive', header: 'Active' },
-
+        { field: 'leafNodeName', header: 'Leaf Node Name' }        
     ]
     selectedColumns = this.headers;
     data: any;
@@ -52,10 +52,11 @@ export class AccountListingComponent implements OnInit {
     first = 0;
     @ViewChild('dt')
     private table: Table;
-    lazyLoadEventData: any;    
-   
+    lazyLoadEventData: any;   
     filterKeysByValue: object = {};
-
+    home: any;
+    breadcrumbs: MenuItem[];
+    filteredText: string;
 
     constructor(private _route: Router,
         private authService: AuthService,
@@ -70,17 +71,19 @@ export class AccountListingComponent implements OnInit {
 
     }
     ngOnInit() {
-        
+        this.breadcrumbs = [
+            { label: 'Accounting' },
+            { label: 'GL Account List' },
+        ];
     }
 
     getList(data) {
-        // this.filterObjectCreate(data.filters);
-        const PagingData = { ...data, filters: listSearchFilterObjectCreation(data.filters) }       
-      
+       
+        const PagingData = { ...data, filters: listSearchFilterObjectCreation(data.filters) }    
         this.accountListingService.getAll().subscribe(
             datalist=> {
                 this.data = datalist;
-                console.log('data table :', datalist)
+                //console.log('data table :', datalist)
                 if (datalist.length > 0) {
                     this.totalRecords = datalist.filter(items => items).length;
                     this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
@@ -91,7 +94,6 @@ export class AccountListingComponent implements OnInit {
             }
         );
 
-
     }
 
     get userName(): string {
@@ -101,8 +103,13 @@ export class AccountListingComponent implements OnInit {
     columnsChanges() {
         this.refreshList();
     }
-    refreshList() {       
-        this.table.reset();  
+    refreshList() {
+        if (this.filteredText != "" && this.filteredText != null && this.filteredText != undefined) {
+            this.globalSearch(this.filteredText);
+        }
+        else {
+            this.table.reset();
+        }        
     }
     
     loadData(event) {
@@ -119,86 +126,32 @@ export class AccountListingComponent implements OnInit {
     filterData(data) {
         console.log(data);
     }
+
     changeStatus(rowData) {
         this.customerService.updateActionforActive(rowData, this.userName).subscribe(res => {
             this.alertService.showMessage("Success", `Successfully Updated Status`, MessageSeverity.success);
         })
 
     }
+
     edit(rowData) {        
         this._route.navigateByUrl(`generalledgermodule/generalledgerpage/app-account-listing-create/${rowData.glAccountId}`);
     }
-    delete(rowData) {
-        console.log('rowData dele :', rowData)      
+
+
+    delete(rowData) {        
+        this.accountListingService.deleteGlAccountById(rowData.glAccountId).subscribe(response => {
+            console.log('response delete :', response)
+            this.getList(rowData)
+        },
+        error => {
+            console.log('error in Delete GL account by Id')
+        })      
     }
 
-    /*
-    viewSelectedRow(rowData) {
-        const { customerId } = rowData;
-        this.customerService.getCustomerdataById(customerId).subscribe(res => {
-            this.viewDataGeneralInformation = res[0];
-        })
-        this.getAllCustomerContact(customerId);
-        this.getAircraftMappedDataByCustomerId(customerId);
-        this.getMappedATAByCustomerId(customerId);
-        this.getBillingDataById(customerId);
-        this.getDomesticShippingByCustomerId(customerId);
-        this.getInternationalShippingByCustomerId(customerId);
-
-    }
-
-    getAllCustomerContact(customerId) {
-        // get Customer Contatcs 
-        this.customerService.getContacts(customerId).subscribe(res => {
-            this.customerContacts = res[0]
-        })
-    }
-
-    getAircraftMappedDataByCustomerId(customerId) {
-        // const id = this.savedGeneralInformationData.customerId;
-        this.customerService.getMappedAirCraftDetails(customerId).subscribe(res => {
-            this.aircraftListDataValues = res;
-        })
-    }
-    getMappedATAByCustomerId(customerId) {
-        // const id = this.savedGeneralInformationData.customerId;
-        this.customerService.getATAMappedByCustomerId(customerId).subscribe(res => {
-            this.ataListDataValues = res;
-            console.log(res);
-
-        })
-    }
-    getBillingDataById(customerId) {
-        this.customerService.getCustomerBillViaDetails(customerId).subscribe(res => {
-            this.billingInfoList = res[0]
-        })
-    }
-
-
-    // get domestic shipping by customer Id 
-    getDomesticShippingByCustomerId(customerId) {
-        // const id = this.savedGeneralInformationData.customerId;
-        this.customerService.getCustomerShipAddressGet(customerId).subscribe(res => {
-            console.log(res);
-            this.domesticShippingData = res[0];
-        })
-    }
-
-    getInternationalShippingByCustomerId(customerId) {
-
-        // const id = this.savedGeneralInformationData.customerId;
-
-        this.customerService.getInternationalShippingByCustomerId(customerId, 0, 20).subscribe(res => {
-            console.log(res);
-            this.internationalShippingData = res.paginationList;
-            // this.totalRecordsForInternationalShipping = res.totalRecordsCount;
-        })
-
-
-
-    }*/
     globalSearch(value) {
         this.pageIndex = 0;
+        this.filteredText = value;
         this.customerService.getGlobalSearch(value, this.pageIndex, this.pageSize).subscribe(res => {
             this.data = res;
             if (res.length > 0) {

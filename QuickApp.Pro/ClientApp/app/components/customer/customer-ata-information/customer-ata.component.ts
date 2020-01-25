@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit, AfterViewInit, Input, EventEmitter, Output } from '@angular/core';
+import { Component, ViewChild, OnInit, SimpleChanges, AfterViewInit, Input, EventEmitter, Output } from '@angular/core';
 import { AtaSubChapter1Service } from '../../../services/atasubchapter1.service';
 import { AtaMainService } from '../../../services/atamain.service';
 import { getValueFromObjectByKey, getObjectByValue, getValueFromArrayOfObjectById } from '../../../generic/autocomplete';
@@ -21,35 +21,29 @@ export class CustomerATAInformationComponent implements OnInit {
     @Input() editGeneralInformationData;
     @Input() editMode;
     @Input() search_ataChapterList;
-    @Input() ataListDataValues;
+    @Input() ataListDataValues = [];
     @Input() contactList;
     @Output() tab = new EventEmitter();
     @Output() refreshCustomerATAMapped = new EventEmitter();
-    // LoadAtachapter: any = [];
-    // ataMainchapter: any;
-    // atasubchapter: any;
-    // add_ataSubChapterList: any;
-    ataChapter: any;
+       ataChapter: any;
     atasubchapterValues: any;
     ataChapterList: { value: any; label: string; }[];
-    // add_SelectedModels: any;
-    // add_SelectedId: any;
-    search_SelectedATA = []
+     search_SelectedATA = []
     search_SelectedContact = []
     search_SelectedATASubChapter = []
     ataHeaders = [
         { field: 'firstName', header: 'Contact' },
         { field: 'ataChapterName', header: 'ATA Chapter' },
         { field: 'ataSubChapterDescription', header: 'ATA Sub-Chapter' }
-        
+
     ]
-    // ataListDataValues: any;
-    ataChapterIdUrl: string;
+    showAdvancedSearchCard : boolean = false;
+    selectedColumns = this.ataHeaders;
+     ataChapterIdUrl: string;
     contactIdUrl: string;
     ataSubchapterIdUrl: any;
     search_ataSubChapterList: any;
-    // search_ataChapterList: { value: number; label: string; }[];
-    id: number;
+     id: number;
     contactid: number;
     searchATAParams: string;
     customerName: any;
@@ -59,8 +53,8 @@ export class CustomerATAInformationComponent implements OnInit {
     public sourceCustomer: any = {}
     customerContactATAMappingId: number;
     selectedRowForDelete: any;
-    //contactList: any;
-    constructor(
+    @Input() selectedTab: string = "";
+      constructor(
         private atasubchapter1service: AtaSubChapter1Service,
         private atamain: AtaMainService,
         private authService: AuthService,
@@ -68,12 +62,13 @@ export class CustomerATAInformationComponent implements OnInit {
         private alertService: AlertService,
         private modalService: NgbModal,
         private activeModal: NgbActiveModal,
-    ) { }
+    ) {
+    }
 
     ngOnInit() {
         if (this.editMode) {
             this.id = this.editGeneralInformationData.customerId;
-           
+
 
             this.customerCode = this.editGeneralInformationData.customerCode;
             this.customerName = this.editGeneralInformationData.name;
@@ -84,37 +79,17 @@ export class CustomerATAInformationComponent implements OnInit {
             this.customerName = this.savedGeneralInformationData.name;
         }
 
-        // this.getAllATAChapter();
-        this.getAllATASubChapter();
-        this.getContactsByCustomerId();
-        // this.ataChapter = this.LoadAtachapter;
-
+           this.getAllATASubChapter();
+    
     }
+  
 
     get userName(): string {
         return this.authService.currentUser ? this.authService.currentUser.userName : "";
     }
 
-    // getAllATAChapter() {
-    //     this.atamain.getAtaMainList().subscribe(res => {
-    //         const responseData = res[0];
-    //         // used to get the complete object in the value 
-    //         this.ataChapterList = responseData.map(x => {
-    //             return {
-    //                 value: x,
-    //                 label: x.ataChapterName
-    //             }
-
-    //         })
-    //         // used to get the id for the value 
-    //         this.search_ataChapterList = responseData.map(x => {
-    //             return {
-    //                 value: x.ataChapterId,
-    //                 label: x.ataChapterName
-    //             }
-    //         })
-    //     });
-    // }
+   
+   
 
     // get all subchapters
     getAllATASubChapter() {
@@ -126,61 +101,14 @@ export class CustomerATAInformationComponent implements OnInit {
                 }
             })
             // making copy for the subchapters in both add and seach 
-            // this.add_ataSubChapterList = ataSubChapter;
-            this.search_ataSubChapterList = ataSubChapter;
+                 this.search_ataSubChapterList = ataSubChapter;
         })
 
 
     }
 
-    // // get subchapter by Id in the add ATA Mapping
-    // getATASubChapterByATAChapter() {
-    //     const selectedATAId = getValueFromObjectByKey('ataChapterId', this.add_SelectedId)
-    //     this.atasubchapter1service.getATASubChapterListByATAChapterId(selectedATAId).subscribe(atasubchapter => {
-    //         const responseData = atasubchapter[0];
-    //         this.add_ataSubChapterList = responseData.map(x => {
-    //             return {
-    //                 label: x.description,
-    //                 value: x
-    //             }
-    //         })
-    //     })
-    // }
-    // // post the ata Mapping 
-    // async addATAMapping() {
-    //     // const id = this.savedGeneralInformationData.customerId;
-    //     const ataMappingData = this.add_SelectedModels.map(x => {
-    //         return {
-    //             CustomerId: this.id,
-    //             ATAChapterId: getValueFromObjectByKey('ataChapterId', this.add_SelectedId),
-    //             ATASubChapterId: x.ataSubChapterId,
-    //             ATAChapterCode: getValueFromObjectByKey('ataChapterCode', this.add_SelectedId),
-    //             ATAChapterName: getValueFromObjectByKey('ataChapterName', this.add_SelectedId),
-    //             ATASubChapterDescription: x.description,
-    //             MasterCompanyId: x.masterCompanyId,
-    //             CreatedBy: this.userName,
-    //             UpdatedBy: this.userName,
-    //             CreatedDate: new Date(),
-    //             UpdatedDate: new Date(),
-    //             IsDeleted: false,
-    //         }
-    //     })
-
-    //     this.customerService.postCustomerATAs(ataMappingData).subscribe(res => {
-    //         this.add_SelectedModels = undefined;
-    //         this.add_SelectedId = undefined;
-    //         this.alertService.showMessage(
-    //             'Success',
-    //             'Saved ATA Mapped Data Successfully ',
-    //             MessageSeverity.success
-    //         );
-    //         this.getMappedATAByCustomerId();
-    //     })
-
-    // }
     // get mapped ata by customer id 
     getMappedATAByCustomerId() {
-        // const id = this.savedGeneralInformationData.customerId;
         this.customerService.getATAMappedByCustomerId(this.id).subscribe(res => {
             this.ataListDataValues = res;
             console.log(res);
@@ -243,7 +171,7 @@ export class CustomerATAInformationComponent implements OnInit {
     }
 
     getContactsByCustomerId() {
-        this.customerService.getContactsByCustomerId(this.id).subscribe(res => {
+         this.customerService.getContactsByCustomerId(this.id).subscribe(res => {
             const responseData: any = res;
                 this.contactList = responseData.map(x => {
                     return {
@@ -291,8 +219,7 @@ export class CustomerATAInformationComponent implements OnInit {
         }
 
         console.log(this.searchATAParams);
-        // const ItemMasterID = this.isEdit === true ? this.itemMasterId : this.collectionofItemMaster.itemMasterId;
-        this.customerService
+         this.customerService
             .searchATAMappedByMultiATAIDATASUBIDByCustomerId(
                 this.id,
                 this.searchATAParams,
@@ -303,36 +230,13 @@ export class CustomerATAInformationComponent implements OnInit {
                 this.contactIdUrl = '';
                 this.ataSubchapterIdUrl = '';
                 this.ataChapterIdUrl = '';
-                this.search_SelectedContact = [];
-                this.search_SelectedATASubChapter = [];
-                this.search_SelectedATA = [];
-                // .map(x => {
-                //     return {
-                //         ataChapterName: x.ataChapterName,
-                //         ataSubChapterDescription: x.ataSubChapterDescription,
-                //         ataChapterCode: x.ataChapterCode,
-                //         ataSubChapterId: x.ataSubChapterId,
-                //         ataChapterId: x.ataChapterId
-                //     };
-                // });
-            });
+                // this.search_SelectedContact = [];
+                // this.search_SelectedATASubChapter = [];
+                // this.search_SelectedATA = [];
+                        });
     }
 
 
-
-
-
-    //deleteATAMapping(rowData) {
-    //    this.customerService.deleteATAMappedByContactId(rowData.customerContactATAMappingId).subscribe(res => {
-    //        this.refreshCustomerATAMapped.emit(this.id);
-    //        this.alertService.showMessage(
-    //            'Success',
-    //            'Successfully Deleted ATA Mapped Data',
-    //            MessageSeverity.success
-    //        );
-    //        this.getMappedATAByCustomerId();
-    //    })
-    //}
 
     nextClick() {
         this.tab.emit('Financial');
@@ -384,6 +288,13 @@ export class CustomerATAInformationComponent implements OnInit {
         this.alertService.stopLoadingMessage();
         this.alertService.showStickyMessage("Save Error", "The below errors occured whilst saving your changes:", MessageSeverity.error, error);
         this.alertService.showStickyMessage(error, null, MessageSeverity.error);
+    }
+    enableDisableAdvancedSearch (val){        
+        this.showAdvancedSearchCard = val;
+        this.search_SelectedContact = [];
+        this.search_SelectedATA = [];
+        this.search_SelectedATASubChapter = [];
+        this.getMappedATAByCustomerId();
     }
 
 

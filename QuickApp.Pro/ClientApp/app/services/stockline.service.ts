@@ -199,6 +199,10 @@ export class StocklineService {
 		return this.stocklineEndpoint.getPurchaseOrderUnitCostEndpoint(POId);
 	}
 
+	getAllTagTypes() {
+		return this.stocklineEndpoint.getAllTagTypes();
+	}
+
 	getRepairOrderUnitCost(ROId: any) {
 		return this.stocklineEndpoint.getRepairOrderUnitCostEndpoint(ROId);
 	}
@@ -213,5 +217,25 @@ export class StocklineService {
 
 	getStockLineDetailsByStockLineId(stockLineId) {
         return this.stocklineEndpoint.getStockLineDetailsByStockLineId(stockLineId);
+	}
+	getWareHouseDataBySiteId(siteId){
+		return this.stocklineEndpoint.getWareHouseDataBySiteId(siteId);
+	}
+	getLocationDataByWarehouseId(warehouseId){
+		return this.stocklineEndpoint.getLocationDataByWarehouseId(warehouseId);
+	}
+	getShelfDataByLocationId(locationId){
+		return this.stocklineEndpoint.getShelfDataByLocationId(locationId);
+	}
+	getBinDataByShelfId(shelfId){
+		return this.stocklineEndpoint.getBinDataByShelfId(shelfId);
+	}
+	
+    getStockLineReportViewList(payload) {
+        return this.stocklineEndpoint.getStockLineReportViewList(payload);
+    }
+
+    downloadStockLineReport() {
+        return this.stocklineEndpoint.downloadStockLineReport();
     }
 }
