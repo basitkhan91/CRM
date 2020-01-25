@@ -850,6 +850,7 @@ textarea {
     }
 }
 
+
 @media (max-width:1024px) {
     #interface, .tab_5_clear, .tab_6_clear {
         clear: both;
@@ -14728,10 +14729,14 @@ p-table tr td .btn i.fa-pencil {
 }
 
 .no-records-cstm {
-    text-align: center;
-    margin: 0 6px;
-    border: 1px solid;
-    max-width: calc(100% - 12px);
+    // text-align: center;
+    // margin: 0 6px;
+    // border: 1px solid;
+    // max-width: calc(100% - 12px);
+    color: red !important; 
+    font-weight: bold; 
+    text-align: 
+    center
 }
 
 button .ui-button-text {

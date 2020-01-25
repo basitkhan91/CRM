@@ -88,6 +88,7 @@ export class CustomerAircraftComponent implements OnInit {
     totalRecords: any;
     totalPages: number;
     pageSize: number = 10;
+    showAdvancedSearchCard : boolean = false;
 
     constructor(private route: ActivatedRoute, private itemser: ItemMasterService,
         private aircraftModelService: AircraftModelService,
@@ -340,10 +341,10 @@ export class CustomerAircraftComponent implements OnInit {
                 this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
             }
 
-            this.aircraftManfacturerIdsUrl = '';
-            this.aircraftModelsIdUrl = '';
-            this.dashNumberIdUrl = '';
-            this.selectedmemo = '';
+            // this.aircraftManfacturerIdsUrl = '';
+            // this.aircraftModelsIdUrl = '';
+            // this.dashNumberIdUrl = '';
+            // this.selectedmemo = '';
             // this.selectAircraftManfacturer = '';
             // this.selectedAircraftModel = [];
             // this.selectedDashNumbers = [];
@@ -501,16 +502,25 @@ export class CustomerAircraftComponent implements OnInit {
 
 
     }
+    openAddInventoryPopup(content){
+        this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+    }
 
-    async saveAircraft() {
-        const inventoryData = this.inventoryData.filter(x => {
-            if (x.IsChecked) {
-                return x;
-            }
-        })
+     saveAircraft() {
+        // const inventoryData = this.inventoryData.filter(x => {
+        //     if (x.IsChecked) {
+        //         return x;
+        //     }
+        // })
+        //Inventory
+        console.log(this.inventoryData, "this.inventoryData+");
 
-        const data = inventoryData.map(obj => {
-            delete obj['IsChecked']
+            
+                 const data = this.inventoryData.map(obj => {
+            // delete obj['IsChecked']
             return {
                 ...obj,
                 DashNumberId: obj.DashNumber === 'Unknown' ? null : obj.DashNumberId,
@@ -523,7 +533,7 @@ export class CustomerAircraftComponent implements OnInit {
 
             }
         })
-        await this.customerService.postCustomerAircrafts(data).subscribe(res => {
+         this.customerService.postCustomerAircrafts(data).subscribe(res => {
 
             this.alertService.showMessage(
                 'Success',
@@ -537,6 +547,7 @@ export class CustomerAircraftComponent implements OnInit {
             this.add_SelectedDashNumber = undefined;
             this.dashNumberUnknown = false;
             this.modelUnknown = false;
+            this.dismissModel();
             this.getAircraftMappedDataByCustomerId()
         }, error => {
             this.alertService.showMessage(
@@ -553,6 +564,16 @@ export class CustomerAircraftComponent implements OnInit {
             this.getAircraftMappedDataByCustomerId()
 
         })
+            // } else {
+            //     this.alertService.showMessage(
+            //         'Warn',
+            //         'Inventory should be greater then 0',
+            //         MessageSeverity.warn
+            //     );
+            // }
+       
+
+       
     }
 
     getAircraftMappedDataByCustomerId() {
@@ -650,6 +671,19 @@ export class CustomerAircraftComponent implements OnInit {
         this.alertService.stopLoadingMessage();
         this.alertService.showStickyMessage("Save Error", "The below errors occured whilst saving your changes:", MessageSeverity.error, error);
         this.alertService.showStickyMessage(error, null, MessageSeverity.error);
+    }
+
+    enableDisableAdvancedSearch (val){        
+        this.showAdvancedSearchCard = val;
+        // this.search_SelectedContact = [];
+        // this.search_SelectedATA = [];
+        // this.search_SelectedATASubChapter = [];
+        // this.getMappedATAByCustomerId();
+        this.aircraftManfacturerIdsUrl = '';
+        this.aircraftModelsIdUrl = '';
+        this.dashNumberIdUrl = '';
+        this.selectedmemo = '';
+        this.getAircraftMappedDataByCustomerId();
     }
 
 
