@@ -9,7 +9,7 @@ namespace DAL.Models
     public class AssetAcquisitionType : PasBase,IAudit
     {
         [Key]
-        public byte AssetAcquisitionTypeId { get; set; }
+        public long AssetAcquisitionTypeId { get; set; }
 
         [Required(ErrorMessage= "Code Is Required.")]
         public string Code { get; set; }

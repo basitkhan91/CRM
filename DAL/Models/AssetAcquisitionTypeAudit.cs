@@ -9,7 +9,7 @@ namespace DAL.Models
     {
         [Key]
         public long AssetAcquisitionTypeAuditId { get; set; }
-        public byte AssetAcquisitionTypeId { get; set; }
+        public long AssetAcquisitionTypeId { get; set; }
         public string Code { get; set; }
         public string Name { get; set; }
         public string Memo { get; set; }
