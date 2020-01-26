@@ -223,7 +223,7 @@
                                                 <div class="form-group" style="margin-top: 15px;clear: both;">
                                                     <span class="checkbox-cstm" style="margin-left: 0;">
                                                         <label>
-                                                            <input type="checkbox" name="isPBHCustomer" [(ngModel)]="generalInformation.isPBHCustomer">
+                                                            <input type="checkbox" name="isPBHCustomer" [(ngModel)]="generalInformation.isPBHCustomer" (change)="restrictPBHClick($event)">
                                                             <span class="cr"><i class="cr-icon pi pi-check"></i></span>
                                                             PBH Customer
                                                         </label>
@@ -256,7 +256,7 @@
                                                 <div class="form-group" style="margin-top: 15px;clear: both;">
                                                     <span class="checkbox-cstm" style="margin-left: 0;">
                                                         <label>
-                                                            <input type="checkbox" id="rpma" name="rpma" [(ngModel)]="generalInformation.restrictPMA">
+                                                            <input type="checkbox" id="rpma" name="rpma" [(ngModel)]="generalInformation.restrictPMA"  (change)="restrictPMAClick($event)">
                                                             <span class="cr"><i class="cr-icon pi pi-check"></i></span>
                                                             Restrict PMA
                                                         </label>
@@ -315,7 +315,7 @@
                                                 <div class="form-group" style="margin-top: 15px;clear: both;">
                                                     <span class="checkbox-cstm" style="margin-left: 0;">
                                                         <label>
-                                                            <input type="checkbox" id="rber" name="rber" [(ngModel)]="generalInformation.restrictBER">
+                                                            <input type="checkbox" id="rber" name="rber" [(ngModel)]="generalInformation.restrictBER" (change)="restrictDERClick($event)">
                                                             <span class="cr"><i class="cr-icon pi pi-check"></i></span>
                                                             Restrict DER
                                                         </label>

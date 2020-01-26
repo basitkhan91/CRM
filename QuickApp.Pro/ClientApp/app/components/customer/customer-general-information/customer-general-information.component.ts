@@ -317,9 +317,35 @@ export class CustomerGeneralInformationComponent implements OnInit {
         console.log(event)
 
     }
+    restrictPMAClick(event: any)
+    {       
+      if(!this.generalInformation.restrictPMA)
+      {       
+        this.generalInformation.restrictedPMAParts=[];
+      }        
+    }
+
+    restrictDERClick(event: any)
+    {
+     
+      if(!this.generalInformation.restrictBER)
+      {        
+        this.generalInformation.restrictedDERParts=[];
+      }        
+    }
+    
+    restrictPBHClick(event: any)
+    {       
+      if(!this.generalInformation.isPBHCustomer)
+      {       
+        this.generalInformation.pbhCustomerMemo="";
+      }        
+    }
+    
 
 
     addRestrictPMA() {
+       
         if (this.restictPMAtempList.length > 0) {
             this.disableRestrictedPMA = true;
             for (let i = 0; i < this.restictPMAtempList.length; i++) {

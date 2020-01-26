@@ -28,7 +28,7 @@ namespace DAL.Models
         public Nullable<bool> VerificationRequired { get; set; }
         public Nullable<bool> IsDepreciable { get; set; }
         public Nullable<bool> IsIntangible { get; set; }
-        public Nullable<byte> AssetAcquisitionTypeId { get; set; }
+        public Nullable<long> AssetAcquisitionTypeId { get; set; }
         public Nullable<long> ManufacturerId { get; set; }
         public Nullable<System.DateTime> ManufacturedDate { get; set; }
 
