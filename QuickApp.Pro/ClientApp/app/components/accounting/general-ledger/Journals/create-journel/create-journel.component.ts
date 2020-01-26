@@ -43,6 +43,7 @@ export class CreateJournelComponent implements OnInit
     EmployeeNamecoll: any[] = [];
     maincompanylist: any[] = [];
     allManagemtninfo: any[] = [];
+    currencyTypes: any[] = [];
 
     currentManualJournel: JournalManual;
     manualJournelToUpdate: JournalManual;
@@ -112,6 +113,7 @@ export class CreateJournelComponent implements OnInit
         this.loadGeneralLedgerList();
         this.Add();
         this.formInitialise();
+        this.loadJournalCurrencyTypes();
         console.log(this);
     }
     gLAccountId;
@@ -187,6 +189,18 @@ export class CreateJournelComponent implements OnInit
             }
         );
     }
+
+    private loadJournalCurrencyTypes(){
+        this.journelService.getJournalCurrencyTypes().subscribe(
+            datalist => {
+                this.currencyTypes = datalist;
+            },
+            error => {
+                console.log('error while fetching journal currency types');
+            }
+        );
+    }
+
     get userName(): string
     {
         return this.authService.currentUser ? this.authService.currentUser.userName : "";
