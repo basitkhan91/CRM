@@ -375,12 +375,30 @@
 
     </div>
   </div>
-<div class="card col-md-12" style="background: #f1f1f1; margin-top: 10px;" *ngIf="(selectedBuildMethod != '' && selectedWorkFlowOrWorkOrder) || (isEdit && selectedPartNumber != '') || selectedBuildMethod == 'build from scratch'">
+  <div *ngIf="selectedBuildMethod == 'build from scratch'">
+    <div class="col-sm-1">
+        <strong> <label> Task </label></strong>
+    </div>
+    <div class="col-sm-2">
+        <div class="inner-addon inline-block display-flex">
+            <select class="form-control custom-select"
+                    [(ngModel)]="currenttaskId">
+                <option value="0">Select</option>
+                <option *ngFor="let action of this.taskList"
+                        value={{action.taskId}}>
+                    {{action.description}}
+                </option>
+            </select>
+          </div>
+    </div>
+  </div>
+  <div class="card col-md-12" style="background: #f1f1f1; margin-top: 10px;" *ngIf="selectedBuildMethod != ''">
       <div class="form-group ">
         <button type="button" class="btn" [ngClass]="gridActiveTab === 'materialList'?'btn-primary':'btn-light-cstm'" (click)="gridTabChange('materialList');">Material List</button>
         <button type="button" class="btn" [ngClass]="gridActiveTab === 'labor'?'btn-primary':'btn-light-cstm'" (click)="gridTabChange('labor');">Labor</button>
         <button type="button" class="btn" [ngClass]="gridActiveTab === 'charges'?'btn-primary':'btn-light-cstm'" (click)="gridTabChange('charges');">Charges</button>
         <button type="button" class="btn" [ngClass]="gridActiveTab === 'exclusions'?'btn-primary':'btn-light-cstm'" (click)="gridTabChange('exclusions');">Exclusions</button>
+        <button type="button" class="btn" [ngClass]="gridActiveTab === 'freight'?'btn-primary':'btn-light-cstm'" (click)="gridTabChange('freight');">Freight</button>
       </div>
   </div>
 
@@ -649,6 +667,16 @@
       [isView]="isView"
     ></app-work-order-exclusions> 
 
+  </div>
+  <div class="wf-label-cstm" *ngIf="gridActiveTab === 'freight'">
+      <app-work-order-freight [freightForm]="freight" 
+      [isQuote]="isQuote"
+      [workOrderFreightList]="workOrderFreightList" 
+      [savedWorkOrderData]="savedWorkOrderData"
+      (saveFreightListForWO)="saveWorkOrderFreightsList($event)"
+      (updateFreightListForWo)="updateWorkOrderFreightsList($event)"
+      (refreshData)="getFreightListByWorkOrderId()"
+      ></app-work-order-freight>
   </div>
 
   <div class="table-responsive" *ngIf="gridActiveTab === 'labor'">
@@ -1118,6 +1146,48 @@
             &times;
           </button>
           <h4 class="modal-title">Exclusions</h4>
+        </div>
+        <div class="modal-body">
+          <grd-exclusions
+            *ngIf="!isEdit"
+            [isQuote]="isQuote"
+            [workFlow]="workFlowObject"
+            [isWorkOrder]="isWorkOrder"
+            [markupList]="markupList"
+            (saveExclusionsListForWO)="saveExclusionsList($event)"
+          >
+          </grd-exclusions>
+
+          <grd-exclusions
+            *ngIf="isEdit && editData"
+            [isQuote]="isQuote"
+            [isEdit]="isEdit"
+            [editData]="editData"
+            [workFlow]="workFlowObject"
+            [isWorkOrder]="isWorkOrder"
+            [markupList]="markupList"
+            (updateExclusionsListForWO)="updateExclusionsList($event)"
+          >
+          </grd-exclusions>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div
+  id="addNewFreight"
+  class="modal fade"
+  role="dialog"
+  data-backdrop="static"
+>
+    <div class="modal-dialog modal-lg">
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">
+            &times;
+          </button>
+          <h4 class="modal-title">Freight</h4>
         </div>
         <div class="modal-body">
           <grd-exclusions
