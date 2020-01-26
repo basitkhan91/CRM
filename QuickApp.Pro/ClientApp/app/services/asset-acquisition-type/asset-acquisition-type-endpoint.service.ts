@@ -20,7 +20,7 @@ export class AssetAcquisitionTypeEndpointService extends EndpointFactory {
     private readonly updateURL: string = "/api/assetacquisition/update";
     private readonly removeByIdURL: string = "/api/assetacquisition/removeById";
     private readonly updateForActive: string = "/api/assetacquisition/updateActive";
-    private readonly getAssetAuditById: string = "/api/assetacquisition/assetacquisitionauditdetails";
+    private readonly getAssetAuditById: string = "/api/assetacquisition/audits";
     private readonly excelUpload: string = "/api/assetacquisition/UploadAssetAcquisitionTypeCustomData";
 
 
