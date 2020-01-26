@@ -105,6 +105,7 @@ export class DisposalTypeComponent implements OnInit {
         this.loadingIndicator = true;
         this.disposalTypeService.getAll().subscribe(data => {
             this.allunitData = data[0].columHeaders;
+            this.allunitData[0].header = 'Asset Disposal Type';
             this.disposalTypeList = data[0].columnData;
             console.log(this.disposalTypeList);
             this.totalRecords = this.disposalTypeList.length;

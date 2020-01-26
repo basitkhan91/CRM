@@ -42,7 +42,8 @@ namespace DAL.Repositories
                             modelid = am.AircraftModelId,
                             iM.DashNumber,
                             iM.DashNumberId,
-                            iM.Memo
+                            iM.Memo,
+                            iM.IsActive
 
                         }).ToList();
             return data;
@@ -83,7 +84,7 @@ namespace DAL.Repositories
                         join am in _appContext.AircraftModel on iM.AircraftModelId equals am.AircraftModelId
                         join ac in _appContext.AssetCapes on iM.DashNumberId equals ac.AircraftDashNumberId into airmodel
                         from ac in airmodel.DefaultIfEmpty()
-                        where myMids.Contains(iM.AircraftModelId) && myTids.Contains(iM.AircraftTypeId) && ac.AircraftDashNumberId != iM.DashNumberId
+                        where myMids.Contains(iM.AircraftModelId) && myTids.Contains(iM.AircraftTypeId) && ac.AircraftDashNumberId != iM.DashNumberId && iM.IsActive == true
                         select new
                         {
                             iM.DashNumber,
@@ -93,8 +94,8 @@ namespace DAL.Repositories
                             am.AircraftModelId,
                             am.ModelName,
                             iM.Memo,
-                            iM.MasterCompanyId
-
+                            iM.MasterCompanyId,
+                            iM.IsActive
 
                         }).ToList();
             return data;
@@ -117,7 +118,8 @@ namespace DAL.Repositories
                             modelid = am.AircraftModelId,
                             iM.DashNumber,
                             iM.DashNumberId,
-                            iM.Memo
+                            iM.Memo,
+                            iM.IsActive
 
                         }).ToList();
             return data;
