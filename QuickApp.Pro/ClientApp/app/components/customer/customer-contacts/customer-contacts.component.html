@@ -128,7 +128,12 @@
                                 </td>
 
                             <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle style="width:110px">
-                                {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
+                                <ng-container *ngIf="col.field!='workPhone'">
+                                    {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
+                                </ng-container>
+                                <ng-container *ngIf="col.field=='workPhone'">
+                                    {{part.workPhone}} - {{part.workPhoneExtn}}
+                                </ng-container> 
                             </td>
 
                             <td style="width:140px" *ngIf="selectedColumns.length > 0">
