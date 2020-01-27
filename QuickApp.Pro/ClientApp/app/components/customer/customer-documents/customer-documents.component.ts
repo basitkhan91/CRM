@@ -62,6 +62,11 @@ export class CustomerDocumentsComponent implements OnInit {
         //{ field: 'link', header: 'Action' },
     ];
     isViewMode: boolean = false;
+    totalRecords: number = 0;
+    pageIndex: number = 0;
+    pageSize: number = 10;
+    totalPages: number = 0;
+
 	constructor(private router: ActivatedRoute, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public customerService: CustomerService,
         private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private configurations: ConfigurationService) {
 	}
@@ -137,7 +142,11 @@ export class CustomerDocumentsComponent implements OnInit {
     }
 	getList() {
 		this.customerService.getDocumentList(this.id).subscribe(res => {
-			this.customerDocumentsData = res;
+            this.customerDocumentsData = res;
+            if (this.customerDocumentsData.length > 0) {
+                this.totalRecords = this.customerDocumentsData.length;
+                this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+            }
 		})
 	}
 	saveDocumentInformation() {

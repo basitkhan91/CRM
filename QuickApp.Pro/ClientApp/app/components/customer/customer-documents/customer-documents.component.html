@@ -67,6 +67,7 @@
                                     Documents
                                 </th>
 
+                                <th *ngIf="isViewMode == false">Actions</th>
 
                 
                                 </ng-container>
@@ -90,9 +91,7 @@
                                     {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
                                 </td>
                                 <td *ngIf="col.field == 'documents'">
-                                    <!-- <ng-container *ngFor="let x of rowData.attachmentDetails">
-{{x.link}}
-                                    </ng-container> -->
+
                                     <tr *ngFor="let x of rowData.attachmentDetails">
                                         <a class="filelink" (click)="downloadFileUpload(x)"> {{x.fileName}},</a>
                                     </tr>
@@ -100,7 +99,7 @@
                                 </td>
                                 </ng-container>
 
-                                <td *ngIf="isViewMode == false">
+                                <td class="text-center" *ngIf="isViewMode == false">
 
                                     <!--<span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openDocument(view,rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>-->
                                     <span>
@@ -138,7 +137,11 @@
                         </ng-template>
                         <ng-template pTemplate="summary" id="footer">
                             <label id="footer" class="footer">No'of records:</label>
-                            <input style="width: 5%;" [(ngModel)]="dt.totalRecords" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp;
+                            <input style="width: 5%;" [(ngModel)]="totalRecords" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp;
+                            <label id="footer" class="footer1">Pages Count:</label>
+                            <input style="width: 5%;" [(ngModel)]="totalPages" [disabled]="true" pInputText type="text" />
+                            <!-- <label id="footer" class="footer">No'of records:</label>
+                            <input style="width: 5%;" [(ngModel)]="dt.totalRecords" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp; -->
                             <!-- <label id="footer" class="footer1">Pages Count:</label>
                             <input style="width: 5%;" value="{{dt.value.length / dt.rows}}" [disabled]="true" pInputText type="text" /> -->
                         </ng-template>
