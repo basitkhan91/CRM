@@ -97,4 +97,8 @@ export class JournelService {
     getAllJournalTypes(): any {
         return this.journelsEndpoint.getAllJournalTypes();
     }
+
+    getJournalCurrencyTypes(): any {
+        return this.journelsEndpoint.getJournalCurrencyTypes();
+    }
 }
