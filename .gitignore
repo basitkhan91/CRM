@@ -71,3 +71,5 @@ Obj/
 QuickApp.Pro/appsettings.Development.json
 QuickApp.Pro/appsettings.Development.json
 QuickApp.Pro/appsettings.Development.json
+.vscode/launch.json
+.vscode/tasks.json
