@@ -1955,7 +1955,7 @@ namespace QuickApp.Pro.Controllers
                         
 
                         if(restrictedParts.Any()){
-                            partDetails = partDetails.Where( p => !restrictedParts.Any( rp=> rp.MasterPartId == p.partId)).ToList<SearchPartView>();
+                            partDetails = partDetails.Where( p => !restrictedParts.Any( rp=> rp.ItemMasterId == p.partId)).ToList<SearchPartView>();
                         }
                     }
                 }
