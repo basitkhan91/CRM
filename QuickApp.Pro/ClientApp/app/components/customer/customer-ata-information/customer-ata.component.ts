@@ -284,6 +284,9 @@ export class CustomerATAInformationComponent implements OnInit {
         }
         this.modal.close();
     }
+    getPageCount(totalNoofRecords, pageSize) {
+		return Math.ceil(totalNoofRecords / pageSize)
+	}
     private saveCompleted(user?: any) {
 
         if (this.isDeleteMode == true) {

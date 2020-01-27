@@ -557,6 +557,12 @@ export class CustomerShippingInformationComponent implements OnInit {
 
     }
 
+    
+	getPageCount(totalNoofRecords, pageSize) {
+		return Math.ceil(totalNoofRecords / pageSize)
+	}
+	
+
     internationalShippingPagination(event: { first: any; rows: number }) {
         const pageIndex = parseInt(event.first) / event.rows;
         this.pageIndexForInternational = pageIndex;
