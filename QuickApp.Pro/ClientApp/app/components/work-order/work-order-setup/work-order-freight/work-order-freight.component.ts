@@ -111,16 +111,24 @@ export class WorkOrderFreightComponent implements OnInit {
     }
 
     delete(rowData) {
-        const { workOrderFreightId } = rowData;
-
-        this.workOrderService.deleteWorkOrderFreightList(workOrderFreightId, this.userName).subscribe(res => {
-            this.refreshData.emit();
-            this.alertService.showMessage(
-                '',
-                'Deleted WorkOrder Freight Successfully',
-                MessageSeverity.success
-            );
-        })
+        if(this.isQuote){
+            rowData.isDeleted = true;
+            this.saveFreightListForWO.emit(this.freightForm);
+            $('#addNewFreight').modal('hide');
+            this.isEdit = false;
+        }
+        else{
+            const { workOrderFreightId } = rowData;
+    
+            this.workOrderService.deleteWorkOrderFreightList(workOrderFreightId, this.userName).subscribe(res => {
+                this.refreshData.emit();
+                this.alertService.showMessage(
+                    '',
+                    'Deleted WorkOrder Freight Successfully',
+                    MessageSeverity.success
+                );
+            })
+        }
 
     }
 
