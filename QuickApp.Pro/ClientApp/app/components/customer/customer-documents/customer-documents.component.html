@@ -137,13 +137,10 @@
                         </ng-template>
                         <ng-template pTemplate="summary" id="footer">
                             <label id="footer" class="footer">No'of records:</label>
-                            <input style="width: 5%;" [(ngModel)]="totalRecords" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp;
+                            <input style="width: 5%;" [(ngModel)]="dt._totalRecords" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp;
                             <label id="footer" class="footer1">Pages Count:</label>
-                            <input style="width: 5%;" [(ngModel)]="totalPages" [disabled]="true" pInputText type="text" />
-                            <!-- <label id="footer" class="footer">No'of records:</label>
-                            <input style="width: 5%;" [(ngModel)]="dt.totalRecords" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp; -->
-                            <!-- <label id="footer" class="footer1">Pages Count:</label>
-                            <input style="width: 5%;" value="{{dt.value.length / dt.rows}}" [disabled]="true" pInputText type="text" /> -->
+                           
+                            <input style="width: 5%;" [ngModel]="getPageCount(dt._totalRecords,pageSize)" [disabled]="true" pInputText type="text" />
                         </ng-template>
 
 
@@ -188,9 +185,9 @@
                 </div>
                 <div class="modal-body" *ngIf="sourceViewforDocument">
                     <div class="col-sm-12">
-                        <p><span class="label"><b>Name: </b></span><span class="value">{{sourceViewforDocument.docName}}</span></p>
-                        <p><span class="label"><b>Description: </b></span><span class="value">{{sourceViewforDocument.docDescription}}</span></p>
-                        <p><span class="label"><b>Memo: </b></span><span class="value">{{sourceViewforDocument.docMemo}}</span></p>
+                        <p><span class="label"><b>Name<span class="clr-red">*</span> : </b></span><span class="value">{{sourceViewforDocument.docName}}</span></p>
+                        <p><span class="label"><b>Description<span class="clr-red">*</span> : </b></span><span class="value">{{sourceViewforDocument.docDescription}}</span></p>
+                        <p><span class="label"><b>Memo : </b></span><span class="value">{{sourceViewforDocument.docMemo}}</span></p>
                          <div class="mt-3">
                             <h4 class="panel-title" >Attachment Details:</h4>
                             <p-table #dt class="table-responsive ptable-cus-pma" [paginator]="sourceViewforDocumentList.length > 0" [value]="sourceViewforDocumentList"  [rows]="3" [columns]="sourceViewforDocumentListColumns">

@@ -143,9 +143,10 @@
                         </ng-template>
                         <ng-template pTemplate="summary" id="footer">
                             <label id="footer" class="footer">No'of records:</label>
-                            <input style="width: 5%;" [(ngModel)]="totalRecords" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp;
+                            <input style="width: 5%;" [(ngModel)]="domestictable._totalRecords" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp;
                             <label id="footer" class="footer1">Pages Count:</label>
-                            <input style="width: 5%;" [(ngModel)]="totalPages" [disabled]="true" pInputText type="text" />
+                           
+                            <input style="width: 5%;" [ngModel]="getPageCount(domestictable._totalRecords,pageSize)" [disabled]="true" pInputText type="text" />
                         </ng-template>
                     </p-table>
                 </div>
@@ -281,9 +282,10 @@
                         </ng-template>                       
                         <ng-template pTemplate="summary" id="footer">
                             <label id="footer" class="footer">No'of records:</label>
-                            <input style="width: 5%;" [(ngModel)]="totalRecordsInternationalShipping" name="totalRecordsInternationalShipping" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp;
+                            <input style="width: 5%;" [(ngModel)]="intlShippingTable._totalRecords" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp;
                             <label id="footer" class="footer1">Pages Count:</label>
-                            <input style="width: 5%;" [(ngModel)]="totalPagesInternationalShipping" name="totalPagesInternationalShipping" [disabled]="true" pInputText type="text" />
+                           
+                            <input style="width: 5%;" [ngModel]="getPageCount(intlShippingTable._totalRecords,pageSize)" [disabled]="true" pInputText type="text" />
                         </ng-template>
                       
                         <!-- <ng-template pTemplate="summary" id="footer">
@@ -554,14 +556,14 @@
             <!-- Modal body -->
             <div class="modal-body" *ngIf="sourceViewforShipping">
                 <div class="col-sm-12">
-                    <p><span class="label"><b>Site Name: </b></span><span class="value">{{sourceViewforShipping.siteName}}</span></p>
-                    <p><span class="label"><b>Ship To Address 1: </b></span><span class="value">{{sourceViewforShipping.address1}}</span></p>
+                    <p><span class="label"><b>Site Name<span class="clr-red">*</span> : </b></span><span class="value">{{sourceViewforShipping.siteName}}</span></p>
+                    <p><span class="label"><b>Ship To Address 1<span class="clr-red">*</span> :   </b></span><span class="value">{{sourceViewforShipping.address1}}</span></p>
                     <p><span class="label"><b>Ship To Address 2: </b></span><span class="value">{{sourceViewforShipping.address2}}</span></p>
                     <p style="display:none"><span class="label"><b>ship To Address 3: </b></span><span class="value">{{sourceViewforShipping.address3}}</span></p>
-                    <p><span class="label"><b>Ship To City: </b></span><span class="value">{{sourceViewforShipping.city}}</span></p>
-                    <p><span class="label"><b>Ship To State / Prov: </b></span><span class="value">{{sourceViewforShipping.stateOrProvince}}</span></p>
-                    <p><span class="label"><b>Ship To Postal Code :</b></span><span class="value">{{sourceViewforShipping.postalCode}}</span></p>
-                    <p><span class="label"><b>Ship To Country: </b></span><span class="value">{{sourceViewforShipping.countryName}}</span></p>
+                    <p><span class="label"><b>Ship To City<span class="clr-red">*</span> : </b></span><span class="value">{{sourceViewforShipping.city}}</span></p>
+                    <p><span class="label"><b>Ship To State / Prov<span class="clr-red">*</span> : </b></span><span class="value">{{sourceViewforShipping.stateOrProvince}}</span></p>
+                    <p><span class="label"><b>Ship To Postal Code <span class="clr-red">*</span> : </b></span><span class="value">{{sourceViewforShipping.postalCode}}</span></p>
+                    <p><span class="label"><b>Ship To Country<span class="clr-red">*</span> : </b></span><span class="value">{{sourceViewforShipping.countryName}}</span></p>
 
 
                     <div class="clear"></div>
@@ -685,6 +687,7 @@
                             <th>Ship Via</th>
                             <th>Shipping Account Info</th>
                             <th>Memo</th>
+                            <th>IsActive</th>
                             <th>Updated By</th>
                             <th>Last Updated Time</th>
                             <th>Created By</th>
@@ -698,7 +701,7 @@
                         <td [ngStyle]="{'color':  getColorCodeForShipViaHistory(i, 'shipVia', audit.shipVia)  ? 'black' : 'red'  }">{{audit.shipVia}}</td>
                         <td [ngStyle]="{'color':  getColorCodeForShipViaHistory(i, 'shippingAccountInfo', audit.shippingAccountInfo)  ? 'black' : 'red'  }">{{audit.shippingAccountInfo}}</td>
                         <td [ngStyle]="{'color':  getColorCodeForShipViaHistory(i, 'memo', audit.memo)  ? 'black' : 'red'  }">{{audit.memo}}</td>
-                       
+                        <td [ngStyle]="{'color':  getColorCodeForShipViaHistory(i, 'isActive', audit.isActive)  ? 'black' : 'red'  }">{{audit.isActive}}</td>
                         <td>{{audit.updatedBy}}</td>
                         <td>{{audit.updatedDate | date: 'dd-MM-yyyy h:mm a '}}</td>
                         <td>{{audit.createdBy}}</td>
@@ -1030,7 +1033,7 @@
                         <p><span class="label"><b>Expiration Date: </b></span><span class="value">{{sourceViewforInterShipping.expirationDate | date:'dd-MM-yyyy'}}</span></p>
 
                         <p><span class="label"><b>Amount: </b></span><span class="value">{{sourceViewforInterShipping.amount}}</span></p>
-                        <p><span class="label"><b>Country: </b></span><span class="value">{{sourceViewforInterShipping.shipToCountry}}</span></p>
+                        <p><span class="label"><b>Country<span class="clr-red">*</span> : </b></span><span class="value">{{sourceViewforInterShipping.shipToCountry}}</span></p>
 
                         <div class="clear"></div>
                     </div>
@@ -1201,7 +1204,7 @@
                     <p><span class="label"><b>Expiration Date: </b></span><span class="value">{{sourceViewforInterShipping.expirationDate | date:'dd-MM-yyyy'}}</span></p>
 
                     <p><span class="label"><b>Amount: </b></span><span class="value">{{sourceViewforInterShipping.amount}}</span></p>
-                    <p><span class="label"><b>Country: </b></span><span class="value">{{sourceViewforInterShipping.shipToCountry}}</span></p>
+                    <p><span class="label"><b>Country<span class="clr-red">*</span> : </b></span><span class="value">{{sourceViewforInterShipping.shipToCountry}}</span></p>
 
                     <div class="clear"></div>
                 </div>

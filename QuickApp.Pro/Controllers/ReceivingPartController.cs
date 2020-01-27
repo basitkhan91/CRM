@@ -289,17 +289,7 @@ namespace QuickApp.Pro.Controllers
 
                     }
 
-                    foreach (var receivePart in receiveParts)
-                    {
-                        foreach (var stockLine in receivePart.StockLines)
-                        {
-                            stockLine.StockLineNumber = "STL-" + stockLine.StockLineDraftId.ToString();
-                            stockLine.ControlNumber = "CNT-" + stockLine.StockLineDraftId.ToString();
-                            unitOfWork.Repository<StockLineDraft>().Update(stockLine);
-                        }
-                    }
                     unitOfWork.SaveChanges();
-
                 }
                 else
                 {

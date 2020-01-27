@@ -128,21 +128,10 @@ namespace QuickApp.Pro.Controllers
                         }
 
                         unitOfWork.Repository<TimeLifeDraft>().AddRange(receivePart.TimeLife);
-
-                        repairOrderId = (long)receivePart.StockLines.FirstOrDefault().RepairOrderId;
+                        unitOfWork.SaveChanges();
 
                     }
 
-                    foreach (var receivePart in receiveParts)
-                    {
-                        foreach (var stockLine in receivePart.StockLines)
-                        {
-                            stockLine.StockLineNumber = "STL-" + stockLine.StockLineDraftId.ToString();
-                            stockLine.ControlNumber = "CNT-" + stockLine.StockLineDraftId.ToString();
-                            unitOfWork.Repository<StockLineDraft>().Update(stockLine);
-                        }
-                    }
-                    unitOfWork.SaveChanges();
 
                     setRepairOrderStatus(repairOrderId);
                 }

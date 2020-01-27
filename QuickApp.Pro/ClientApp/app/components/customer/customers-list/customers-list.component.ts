@@ -277,6 +277,9 @@ export class CustomersListComponent implements OnInit {
     filterData(data) {
         console.log(data);
     }
+    getPageCount(totalNoofRecords, pageSize) {
+		return Math.ceil(totalNoofRecords / pageSize)
+	}
     changeStatus(rowData) {
 
         this.customerService.updateActionforActive(rowData, this.userName).subscribe(res => {
