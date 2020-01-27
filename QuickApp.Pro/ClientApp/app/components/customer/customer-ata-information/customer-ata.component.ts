@@ -54,6 +54,11 @@ export class CustomerATAInformationComponent implements OnInit {
     customerContactATAMappingId: number;
     selectedRowForDelete: any;
     @Input() selectedTab: string = "";
+    totalRecords: number = 0;
+    pageIndex: number = 0;
+    pageSize: number = 10;
+    totalPages: number = 0;
+
       constructor(
         private atasubchapter1service: AtaSubChapter1Service,
         private atamain: AtaMainService,
@@ -112,6 +117,10 @@ export class CustomerATAInformationComponent implements OnInit {
         this.customerService.getATAMappedByCustomerId(this.id).subscribe(res => {
             this.ataListDataValues = res;
             console.log(res);
+            if (res.length > 0) {
+                this.totalRecords = res.length;
+                this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+            }
 
         })
     }
@@ -226,6 +235,10 @@ export class CustomerATAInformationComponent implements OnInit {
             )
             .subscribe(res => {
                 this.ataListDataValues = res;
+                if (res.length > 0) {
+                    this.totalRecords = res.length;
+                    this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+                }
 
                 this.contactIdUrl = '';
                 this.ataSubchapterIdUrl = '';

@@ -14668,6 +14668,7 @@ p-table .ui-table-summary {
 
 p-table .ui-table-summary label {
     width: 100px;
+    margin-right: -20px;
 }
 
 p-table .ui-table-summary label.footer {
@@ -14741,6 +14742,10 @@ p-table tr td .btn i.fa-pencil {
 
 button .ui-button-text {
     font-family: Roboto;
+}
+body .ui-fileupload .ui-fileupload-buttonbar .ui-button {
+    padding: 0;
+    border: none;
 }
 
 .accountdropdown.ui-dropdown .ui-dropdown-trigger {
