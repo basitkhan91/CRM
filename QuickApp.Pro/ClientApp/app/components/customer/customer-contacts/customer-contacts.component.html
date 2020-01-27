@@ -128,7 +128,12 @@
                                 </td>
 
                             <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle style="width:110px">
-                                {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
+                                <ng-container *ngIf="col.field!='workPhone'">
+                                    {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
+                                </ng-container>
+                                <ng-container *ngIf="col.field=='workPhone'">
+                                    {{rowData.workPhone}} - {{rowData.workPhoneExtn}}
+                                </ng-container> 
                             </td>
 
                             <td style="width:140px" *ngIf="selectedColumns.length > 0">
@@ -458,17 +463,17 @@
             </div>
             <div class="modal-body">
                 <div class="col-sm-12">
-                    <p><span class="label"><b>Tag:  <span style="color:red"></span> </b></span><span class="value">{{sourceViewforContact.tag}}</span></p>
+                    <p><span class="label"><b>Tag<span class="clr-red">*</span>: </b></span><span class="value">{{sourceViewforContact.tag}}</span></p>
                     <p><span class="label"><b>Prefix: </b></span><span class="value">{{sourceViewforContact.prefix}}</span></p>
-                    <p><span class="label"><b>First Name: <span style="color:red"></span></b></span><span class="value">{{sourceViewforContact.firstName}}</span></p>
+                    <p><span class="label"><b>First Name<span class="clr-red">*</span>: </b></span><span class="value">{{sourceViewforContact.firstName}}</span></p>
                     <p><span class="label"><b>Middle Name: </b></span><span class="value">{{sourceViewforContact.middleName}}</span></p>
-                    <p><span class="label"><b>Last Name: <span style="color:red"></span></b></span><span class="value">{{sourceViewforContact.lastName}}</span></p>
+                    <p><span class="label"><b>Last Name<span class="clr-red">*</span>:</b></span><span class="value">{{sourceViewforContact.lastName}}</span></p>
                     <p><span class="label"><b>Suffix: </b></span><span class="value">{{sourceViewforContact.suffix}}</span></p>
                     <p><span class="label"><b>Title: </b></span><span class="value">{{sourceViewforContact.contactTitle}}</span></p>
-                    <p><span class="label"><b>Work Phone: <span style="color:red"></span></b></span><span class="value">{{sourceViewforContact.workPhone}}</span></p>
+                    <p><span class="label"><b>Work Phone<span class="clr-red">*</span>: </b></span><span class="value">{{sourceViewforContact.workPhone}} - {{sourceViewforContact.workPhoneExtn}}</span></p>
                     <p><span class="label"><b>Primary Contact </b></span><span class="value">{{sourceViewforContact.isDefaultContact}}</span></p>
 
-                    <p><span class="label"><b>Email: <span style="color:red"></span></b></span><span class="value">{{sourceViewforContact.email}}</span></p>
+                    <p><span class="label"><b>Email<span class="clr-red">*</span>:</b></span><span class="value">{{sourceViewforContact.email}}</span></p>
                     <p><span class="label"><b>WebSite: </b></span><span class="value">{{sourceViewforContact.websiteURL}}</span></p>
                     <p><span class="label"><b>Mobile Phone: </b></span><span class="value">{{sourceViewforContact.mobilePhone}}</span></p>
                     <p><span class="label"><b>Alternate Phone:</b></span><span class="value">{{sourceViewforContact.alternatePhone}}</span></p>
@@ -499,17 +504,17 @@
                     </div>
                     <div class="modal-body">
                         <div class="col-sm-12">
-                            <p><span class="label"><b>Tag: <span style="color:red"></span></b></span><span class="value">{{sourceViewforContact.tag}}</span></p>
+                            <p><span class="label"><b>Tag<span class="clr-red">*</span> : </b></span><span class="value">{{sourceViewforContact.tag}}</span></p>
                             <p><span class="label"><b>Prefix: </b></span><span class="value">{{sourceViewforContact.prefix}}</span></p>
-                            <p><span class="label"><b>First Name: <span style="color:red"></span></b></span><span class="value">{{sourceViewforContact.firstName}}</span></p>
+                            <p><span class="label"><b>First Name<span class="clr-red">*</span>: </b></span><span class="value">{{sourceViewforContact.firstName}}</span></p>
                             <p><span class="label"><b>Middle Name: </b></span><span class="value">{{sourceViewforContact.middleName}}</span></p>
-                            <p><span class="label"><b>Last Name: <span style="color:red"></span></b></span><span class="value">{{sourceViewforContact.lastName}}</span></p>
+                            <p><span class="label"><b>Last Name<span class="clr-red">*</span>: </b></span><span class="value">{{sourceViewforContact.lastName}}</span></p>
                             <p><span class="label"><b>Suffix: </b></span><span class="value">{{sourceViewforContact.suffix}}</span></p>
                             <p><span class="label"><b>Title: </b></span><span class="value">{{sourceViewforContact.contactTitle}}</span></p>
-                            <p><span class="label"><b>Work Phone: <span style="color:red"></span> </b></span><span class="value">{{sourceViewforContact.workPhone}}</span></p>
-                            <p><span class="label"><b>Primary Contact </b></span><span class="value">{{sourceViewforContact.isDefaultContact}}</span></p>
+                            <p><span class="label"><b>Work Phone<span class="clr-red">*</span>: </b></span><span class="value">{{sourceViewforContact.workPhone}} - {{sourceViewforContact.workPhoneExtn}}</span></p>
+                            <p><span class="label"><b>Primary Contact: </b></span><span class="value">{{sourceViewforContact.isDefaultContact}}</span></p>
 
-                            <p><span class="label"><b>Email: <span style="color:red"></span></b></span><span class="value">{{sourceViewforContact.email}}</span></p>
+                            <p><span class="label"><b>Email<span class="clr-red">*</span>: </b></span><span class="value">{{sourceViewforContact.email}}</span></p>
                             <p><span class="label"><b>WebSite: </b></span><span class="value">{{sourceViewforContact.websiteURL}}</span></p>
                             <p><span class="label"><b>Mobile Phone: </b></span><span class="value">{{sourceViewforContact.mobilePhone}}</span></p>
                             <p><span class="label"><b>Alternate Phone:</b></span><span class="value">{{sourceViewforContact.alternatePhone}}</span></p>
@@ -540,8 +545,9 @@
                 <div class="modal-body">
                     <form>
                         <div class="form-row">
-                            <div class="col-md-3">
+                            <div class="col-md-5">
                                 <div class="form-group">
+                                    <div class="col-md-12">
                                     <label class="popup-plusicon-cstm">
                                         ATA Chapter
                                         <a data-dismiss="modal"
@@ -549,16 +555,19 @@
                                             <i class="fa fa-plus-circle fa-lg"></i>
                                         </a>
                                     </label>
+                                    </div>
+                                    <div class="col-md-12">
                                     <p-dropdown name="ataPopUp"
                                                 placeholder="Select ATA Chapter"
-                                                class="p-dropdown-custom-md"
+                                                class="p-dropdown-custom-md p-dropdown-cus-fullwidth"
                                                 [(ngModel)]="add_SelectedId"
                                                 (onChange)="getATASubChapterByATAChapter()"
                                                 [options]="add_ataChapterList"></p-dropdown>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div class="col-md-4">
+                            <div class="col-md-5">
                                 <div class="form-group">
                                     <label class="popup-plusicon-cstm"
                                            style="width: 170px !important;">

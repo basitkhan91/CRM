@@ -6,10 +6,10 @@
         <h4 class="modal-title">Details of Customer</h4>
     </div>
     <div class="col-sm-3">
-        Customer Name: <span style="color:red">{{viewDataGeneralInformation.name}}</span>
+        Customer Name<span style="color:red"> : {{viewDataGeneralInformation.name}}</span>
     </div>
     <div class="col-sm-3">
-        Customer Code: <span style="color:red">{{viewDataGeneralInformation.customerCode}}</span>
+        Customer Code<span style="color:red"> : {{viewDataGeneralInformation.customerCode}}</span>
     </div>    
 </div>
 <div class="modal-body" *ngIf="viewDataGeneralInformation ">
@@ -79,7 +79,7 @@
                                     <span class="label"><b>Phone: <span class="clr-red">*</span></b></span><span class="value">
                                         {{
                             viewDataGeneralInformation.customerPhone
-                                        }}
+                                        }} - {{viewDataGeneralInformation.customerPhoneExt}}
                                     </span>
                                 </p>
                                 <p>
@@ -307,12 +307,16 @@
                             <p-table #table3 class="table-responsive ptable-cus-pma" [paginator]="customerContacts.length > 0" [value]="customerContacts"  [rows]="pageSize" [columns]="contactTableColumns">
                                 <ng-template pTemplate="header" let-columns>
                                     <tr>
+                                            <th style="width: 40px;">Flag</th>
+
                                         <th *ngFor="let col of columns" [pSortableColumn]="col.field">
                                             {{col.header}}
                                             <p-sortIcon [field]="col.field"></p-sortIcon>
                                         </th>
                                     </tr>
                                     <tr>
+                                            <th></th>
+
                                             <th style="width:auto" *ngFor="let col of columns" [ngSwitch]="col.field">
                                                 <input style="width:100%;" pInputText type="text" (input)="table3.filter($event.target.value, col.field, 'contains')">
                                             </th>
@@ -320,14 +324,28 @@
                                 </ng-template>
                                 <ng-template pTemplate="body" let-part let-rowData let-columns="columns" let-i="rowIndex">
                                     <tr [ngClass]="{'row-primary': part.isDefaultContact === true}">
-                                        <td *ngFor="let col of columns">
-                                            {{part[col.field]}}
+                                        <td > <span class="flag">
+                                            <i  *ngIf="rowData.isDefaultContact == true"   [ngStyle]="{'color': rowData.isDefaultContact == true ? 'green' : 'none'}"  
+                                                class="fa fa-flag" aria-hidden="true"></i>
+                                                </span>
+                                        
+                                         </td>
+                                        <td *ngFor="let col of columns" >
+                                                <ng-container *ngIf="col.field!='workPhone'">
+                                                    {{part[col.field]}}
+                                                </ng-container>
+                                                <ng-container *ngIf="col.field=='workPhone'">
+                                                        {{part.workPhone}} - {{part.workPhoneExtn}}
+                                                    </ng-container>
                                         </td>
+                                        <!-- <td *ngFor="let col of columns">
+                                                {{part[col.field]}}
+                                            </td> -->
                                     </tr>
                                 </ng-template>
                                 <ng-template pTemplate="emptymessage" let-columns *ngIf="customerContacts.length == 0">
                                     <tr>
-                                        <td [attr.colspan]="columns.length" style="color: red; font-weight: bold; text-align: center">
+                                        <td [attr.colspan]="columns.length+1" style="color: red; font-weight: bold; text-align: center">
                                             No records found
                                         </td>
                                     </tr>
@@ -591,6 +609,7 @@
                                 <p-table #billingTable class="table-responsive ptable-cus-pma" [paginator]="billingInfoList?.length > 0" [value]="billingInfoList"  [rows]="pageSize" [columns]="billingInfoTableHeaders">
                                     <ng-template pTemplate="header" let-columns>
                                         <tr>
+                                                <th style="width: 40px;">Flag</th>
                                             <th *ngFor="let col of columns" [pSortableColumn]="col.field">
                                                 {{col.header}}
                                                 <p-sortIcon [field]="col.field"></p-sortIcon>
@@ -598,6 +617,8 @@
                                             </th>
                                         </tr>
                                         <tr>
+                                                <th></th>
+
                                                 <th style="width:auto" *ngFor="let col of columns" [ngSwitch]="col.field">
                                                     <input style="width:100%;" pInputText type="text" (input)="billingTable.filter($event.target.value, col.field, 'contains')">
                                                 </th>
@@ -605,6 +626,11 @@
                                     </ng-template>
                                     <ng-template pTemplate="body" let-part let-rowData let-columns="columns" let-i="rowIndex">
                                         <tr>
+                                                <td > <span class="flag">
+                                                        <i  *ngIf="rowData.isPrimary == true"   [ngStyle]="{'color': rowData.isPrimary == true ? 'green' : 'none'}"  
+                                                         class="fa fa-flag" aria-hidden="true"></i>
+                                                        </span>
+                                                </td>
                                             <td *ngFor="let col of columns">
                                                 {{part[col.field]}}
                                             </td>
@@ -612,7 +638,7 @@
                                     </ng-template>
                                     <ng-template pTemplate="emptymessage" let-columns *ngIf="billingInfoList?.length == 0">
                                         <tr>
-                                            <td [attr.colspan]="columns.length" style="color: red; font-weight: bold; text-align: center">
+                                            <td [attr.colspan]="columns.length+1" style="color: red; font-weight: bold; text-align: center">
                                                 No records found
                                             </td>
                                         </tr>
@@ -644,12 +670,16 @@
                                 <p-table #domesticShippingTable class="table-responsive ptable-cus-pma" [paginator]="domesticShippingData?.length > 0" [value]="domesticShippingData"  [rows]="pageSize"  [columns]="domesticShippingHeaders">
                                         <ng-template pTemplate="header" let-columns>
                                             <tr>
+                                                    <th style="width: 40px;">Flag</th>
+
                                                 <th *ngFor="let col of columns" [pSortableColumn]="col.field">
                                                     {{col.header}}
                                                     <p-sortIcon [field]="col.field"></p-sortIcon>
                                                 </th>
                                             </tr>
                                             <tr>
+                                                    <th></th>
+
                                                     <th style="width:auto" *ngFor="let col of columns" [ngSwitch]="col.field">
                                                         <input style="width:100%;" pInputText type="text" (input)="domesticShippingTable.filter($event.target.value, col.field, 'contains')">
                                                     </th>
@@ -657,6 +687,12 @@
                                         </ng-template>
                                         <ng-template pTemplate="body" let-part let-rowData let-columns="columns" let-i="rowIndex">
                                             <tr>
+                                                    <td > 
+                                                            <span class="flag">
+                                                            <i  *ngIf="rowData.isPrimary == true"   [ngStyle]="{'color': rowData.isPrimary == true ? 'green' : 'none'}"  
+                                                            class="fa fa-flag" aria-hidden="true"></i>
+                                                        </span>
+                                                    </td>
                                                 <td *ngFor="let col of columns">
                                                     {{part[col.field]}}
                                                 </td>
@@ -664,7 +700,7 @@
                                         </ng-template>
                                         <ng-template pTemplate="emptymessage" let-columns *ngIf="domesticShippingData?.length == 0">
                                             <tr>
-                                                <td [attr.colspan]="columns.length" style="color: red; font-weight: bold; text-align: center">
+                                                <td [attr.colspan]="columns.length+1" style="color: red; font-weight: bold; text-align: center">
                                                     No records found
                                                 </td>
                                             </tr>
@@ -686,6 +722,8 @@
                                 <p-table #internationalShippingTable class="table-responsive ptable-cus-pma" [paginator]="internationalShippingData.length > 0" [value]="internationalShippingData"  [rows]="pageSize"  [columns]="internationalShippingHeaders">
                                         <ng-template pTemplate="header" let-columns>
                                             <tr>
+                                                    <th style="width: 40px;">Flag</th>
+
                                                 <th *ngFor="let col of columns" [pSortableColumn]="col.field">
                                                     {{col.header}}
                                                     <p-sortIcon [field]="col.field"></p-sortIcon>
@@ -693,6 +731,8 @@
                                                 </th>
                                             </tr>
                                             <tr>
+                                                    <th></th>
+
                                                     <th style="width:auto" *ngFor="let col of columns" [ngSwitch]="col.field">
                                                         <input style="width:100%;" pInputText type="text" (input)="internationalShippingTable.filter($event.target.value, col.field, 'contains')">
                                                     </th>
@@ -700,6 +740,12 @@
                                         </ng-template>
                                         <ng-template pTemplate="body" let-part let-rowData let-columns="columns" let-i="rowIndex">
                                             <tr>
+                                                    <td > 
+                                                            <span class="flag">
+                                                            <i  *ngIf="rowData.isPrimary == true"   [ngStyle]="{'color': rowData.isPrimary == true ? 'green' : 'none'}"  
+                                                             class="fa fa-flag" aria-hidden="true"></i>
+                                                        </span>
+                                                    </td>
                                                 <td *ngFor="let col of columns">
                                                     {{part[col.field]}}
                                                 </td>
@@ -708,7 +754,7 @@
                                         </ng-template>
                                         <ng-template pTemplate="emptymessage" let-columns *ngIf="internationalShippingData.length == 0">
                                             <tr>
-                                                <td [attr.colspan]="columns.length" style="color: red; font-weight: bold; text-align: center">
+                                                <td [attr.colspan]="columns.length+1" style="color: red; font-weight: bold; text-align: center">
                                                     No records found
                                                 </td>
                                             </tr>

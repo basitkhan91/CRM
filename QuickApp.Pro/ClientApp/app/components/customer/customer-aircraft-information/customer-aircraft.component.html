@@ -244,7 +244,7 @@
                         ><i class="fa fa-plus-circle fa-lg"></i></a
                     ></label>
                     <p-dropdown
-                      class="imstock-pddowm"
+                      class="p-dropdown-cus-fullwidth"
                       [options]="manufacturerData"
                       filter="true"
                       [ngModelOptions]="{ standalone: true }"
@@ -654,7 +654,7 @@
 
                     <p><span class="label"><b>Model: </b></span><span class="value">{{viewAircraftData.aircraftModel}}</span></p>
                     <p><span class="label"><b>Dash Numbers: </b></span><span class="value">{{viewAircraftData.dashNumber}}</span></p>
-                    <p style="display:none"><span class="label"><b>Inventory: </b></span><span class="value">{{viewAircraftData.inventory}}</span></p>
+                    <p><span class="label"><b>Inventory <span style="color:red">*</span>:  </b></span><span class="value">{{viewAircraftData.inventory}}</span></p>
 
                     <p><span class="label"><b>Memo: </b></span><span class="value">{{viewAircraftData.memo}}</span></p>
 
