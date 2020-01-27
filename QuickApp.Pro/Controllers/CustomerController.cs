@@ -1372,18 +1372,21 @@ namespace QuickApp.Pro.Controllers
                 CustomerShippingAddressObj.UpdatedDate = DateTime.Now;
                 CustomerShippingAddressObj.CreatedBy = Customershipping.CreatedBy;
                 CustomerShippingAddressObj.UpdatedBy = Customershipping.UpdatedBy;
-                
+
+
+
                 if (Customershipping.IsPrimary == true)
                 {
-                    var shippingAddress = _context.CustomerShippingAddress.Where(p => p.CustomerId == Customershipping.CustomerId).ToList();
-                    if (shippingAddress != null && shippingAddress.Count > 0)
+                    CustomerShippingAddress shippingAddress = new CustomerShippingAddress();
+                    shippingAddress = _context.CustomerShippingAddress.Where(p => p.CustomerId == Customershipping.CustomerId && p.IsPrimary == true).FirstOrDefault();
+
+                    if (shippingAddress != null && shippingAddress.CustomerShippingAddressId != Customershipping.CustomerShippingAddressId)
                     {
-                        foreach (var item in shippingAddress)
-                        {
-                            item.IsPrimary = false;
-                            _context.CustomerShippingAddress.Update(item);
-                            _context.SaveChanges();
-                        }
+                        shippingAddress.IsPrimary = false;
+                        _context.CustomerShippingAddress.Update(shippingAddress);
+                        _context.SaveChanges();
+                        _unitOfWork.CommonRepository.CreateHistory(
+             shippingAddress, Convert.ToInt32(ModuleEnum.Customer), Convert.ToInt64(Customershipping.CustomerId), Convert.ToInt64(shippingAddress.CustomerShippingAddressId), Convert.ToInt32(AddressTypeEnum.ShippingAddress), false);
                     }
                 }
 
@@ -1924,15 +1927,27 @@ namespace QuickApp.Pro.Controllers
 
                 if (customerBillingAddressViewModel.IsPrimary == true)
                 {
-                    var shippingAddress = _context.CustomerShippingAddress.Where(p => p.CustomerId == customerBillingAddressViewModel.CustomerId).ToList();
-                    if (shippingAddress != null && shippingAddress.Count > 0)
+                    //var shippingAddress = _context.CustomerShippingAddress.Where(p => p.CustomerId == customerBillingAddressViewModel.CustomerId).ToList();
+                    //if (shippingAddress != null && shippingAddress.Count > 0)
+                    //{
+                    //    foreach (var item in shippingAddress)
+                    //    {
+                    //        item.IsPrimary = false;
+                    //        _context.CustomerShippingAddress.Update(item);
+                    //        _context.SaveChanges();
+                    //    }
+                    //}
+
+                    CustomerShippingAddress shippingAddress = new CustomerShippingAddress();
+                    shippingAddress = _context.CustomerShippingAddress.Where(p => p.CustomerId == customerBillingAddressViewModel.CustomerId && p.IsPrimary == true).FirstOrDefault();
+
+                    if (shippingAddress != null && shippingAddress.CustomerShippingAddressId != customerBillingAddressViewModel.CustomerShippingAddressId)
                     {
-                        foreach (var item in shippingAddress)
-                        {
-                            item.IsPrimary = false;
-                            _context.CustomerShippingAddress.Update(item);
-                            _context.SaveChanges();
-                        }
+                        shippingAddress.IsPrimary = false;
+                        _context.CustomerShippingAddress.Update(shippingAddress);
+                        _context.SaveChanges();
+                        _unitOfWork.CommonRepository.CreateHistory(
+             shippingAddress, Convert.ToInt32(ModuleEnum.Customer), Convert.ToInt64(customerBillingAddressViewModel.CustomerId), Convert.ToInt64(shippingAddress.CustomerShippingAddressId), Convert.ToInt32(AddressTypeEnum.ShippingAddress), false);
                     }
                 }
                 // addressObj.RecordCreateDate = DateTime.Now;
