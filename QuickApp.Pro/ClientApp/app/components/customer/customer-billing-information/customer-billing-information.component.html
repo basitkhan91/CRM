@@ -413,18 +413,18 @@
             <!-- Modal body -->
             <div class="modal-body" *ngIf="viewData">
                 <div class="col-sm-12">
-                    <p><span class="label"><b>Site Name: </b></span><span class="value">{{viewData.siteName}}</span></p>
+                    <p><span class="label"><b>Site Name<span class="clr-red">*</span> : </b></span><span class="value">{{viewData.siteName}}</span></p>
                     <p><span class="label"><b> Primary: </b></span><span class="value">{{viewData.isPrimary === true ? 'Yes' : 'No'}}</span></p>
 
                     <p><span class="label"><b>In Active: </b></span><span class="value">{{viewData.isActive === true ? 'Yes' : 'No'}}</span></p>
 
-                    <p><span class="label"><b>Bill To Address 1: </b></span><span class="value">{{viewData.address1}}</span></p>
+                    <p><span class="label"><b>Bill To Address 1<span class="clr-red">*</span> : </b></span><span class="value">{{viewData.address1}}</span></p>
                     <p><span class="label"><b>Bill To Address 2: </b></span><span class="value">{{viewData.address2}}</span></p>
                     <p style="display:none"><span class="label"><b>Bill To Address 3: </b></span><span class="value">{{viewData.address3}}</span></p>
-                    <p><span class="label"><b>Bill To City: </b></span><span class="value">{{viewData.city}}</span></p>
-                    <p><span class="label"><b>Bill To State / Prov: </b></span><span class="value">{{viewData.stateOrProvince}}</span></p>
-                    <p><span class="label"><b>Bill To Postal Code :</b></span><span class="value">{{viewData.postalCode}}</span></p>
-                    <p><span class="label"><b>Bill To Country: </b></span><span class="value">{{viewData.countryName}}</span></p>
+                    <p><span class="label"><b>Bill To City<span class="clr-red">*</span> :  </b></span><span class="value">{{viewData.city}}</span></p>
+                    <p><span class="label"><b>Bill To State / Prov<span class="clr-red">*</span> :  </b></span><span class="value">{{viewData.stateOrProvince}}</span></p>
+                    <p><span class="label"><b>Bill To Postal Code<span class="clr-red">*</span> : </b></span><span class="value">{{viewData.postalCode}}</span></p>
+                    <p><span class="label"><b>Bill To Country<span class="clr-red">*</span> : </b></span><span class="value">{{viewData.countryName}}</span></p>
 
                     <div class="clear"></div>
                 </div>

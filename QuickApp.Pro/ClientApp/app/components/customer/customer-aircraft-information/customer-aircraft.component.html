@@ -190,6 +190,13 @@
         </td>
       </tr>
     </ng-template>
+    <ng-template pTemplate="emptymessage" let-columns *ngIf="aircraftListDataValues?.length == 0">
+        <tr>
+            <td [attr.colspan]="6" style="color: red; font-weight: bold; text-align: center">
+                No records found
+            </td>
+        </tr>
+    </ng-template>
     <ng-template pTemplate="summary" id="footer">
       <label id="footer" class="footer">No'of records:</label>
       <input style="width: 5%;" [(ngModel)]="totalRecords" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp;
@@ -197,9 +204,9 @@
       <input style="width: 5%;" [(ngModel)]="totalPages" [disabled]="true" pInputText type="text" />
     </ng-template>
   </p-table>
-  <div *ngIf="!(aircraftListDataValues.length > 0)" class="no-records-cstm">
+  <!-- <div *ngIf="!(aircraftListDataValues.length > 0)" class="no-records-cstm">
     No Records
-  </div>
+  </div> -->
   <div style="margin-top: 10px;">
     <button
       type="button"
@@ -236,7 +243,7 @@
                         ><i class="fa fa-plus-circle fa-lg"></i></a
                     ></label>
                     <p-dropdown
-                      class="imstock-pddowm"
+                      class="p-dropdown-cus-fullwidth"
                       [options]="manufacturerData"
                       filter="true"
                       [ngModelOptions]="{ standalone: true }"
@@ -646,7 +653,7 @@
 
                     <p><span class="label"><b>Model: </b></span><span class="value">{{viewAircraftData.aircraftModel}}</span></p>
                     <p><span class="label"><b>Dash Numbers: </b></span><span class="value">{{viewAircraftData.dashNumber}}</span></p>
-                    <p style="display:none"><span class="label"><b>Inventory: </b></span><span class="value">{{viewAircraftData.inventory}}</span></p>
+                    <p><span class="label"><b>Inventory <span style="color:red">*</span>:  </b></span><span class="value">{{viewAircraftData.inventory}}</span></p>
 
                     <p><span class="label"><b>Memo: </b></span><span class="value">{{viewAircraftData.memo}}</span></p>
 

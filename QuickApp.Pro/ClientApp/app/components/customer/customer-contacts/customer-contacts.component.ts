@@ -74,9 +74,9 @@ export class CustomerContactsComponent implements OnInit {
 		{ field: 'mobilePhone', header: 'Mobile Phone' },
 		{ field: 'fax', header: 'Fax' },
 		// { field: 'isDefaultContact', header: 'Primary Contact' },
-		{ field: 'notes', header: 'Memo' },
-		{ field: 'updatedDate', header: 'Updated Date' },
-		{ field: 'createdDate', header: 'Created Date' }
+		// { field: 'notes', header: 'Memo' },
+		// { field: 'updatedDate', header: 'Updated Date' },
+		// { field: 'createdDate', header: 'Created Date' }
 	];
 	selectedColumns = this.customerContactsColumns;
 	selectedColumn: any;
