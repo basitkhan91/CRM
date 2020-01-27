@@ -1927,7 +1927,7 @@ namespace DAL.Repositories
                     data.UpdatedBy = objCustomer.UpdatedBy;
                     data.IsPrimary = true;
                     data.IsActive = true;
-                    data.IsDelete = false;
+                    data.IsDeleted = false;
                     _appContext.CustomerBillingAddress.Update(data);
                     _appContext.SaveChanges();
 
@@ -1949,7 +1949,7 @@ namespace DAL.Repositories
                 objCustomerBillingAddress.UpdatedBy = objCustomer.UpdatedBy;
                 objCustomerBillingAddress.IsPrimary = true;
                 objCustomerBillingAddress.IsActive = true;
-                objCustomerBillingAddress.IsDelete = false;
+                objCustomerBillingAddress.IsDeleted = false;
 
                 _appContext.CustomerBillingAddress.Add(objCustomerBillingAddress);
                 _appContext.SaveChanges();
@@ -2691,7 +2691,7 @@ namespace DAL.Repositories
                                         bill.MasterCompanyId = 1;
                                         bill.CustomerId = customerId;
                                         bill.IsActive = true;
-                                        bill.IsDelete = false;
+                                        bill.IsDeleted = false;
                                         bill.IsPrimary = false;
                                         bill.AddressId = addr.AddressId;
                                         bill.CreatedBy = bill.UpdatedBy = "System";
