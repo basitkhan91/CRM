@@ -67,14 +67,27 @@
                                 <i class="fa fa-search"></i>
                                 <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Filter" style="height: 28px !important;">
                             </div>
-                            <button type="button" class="btn btn-primary" pButton icon="fa-download" iconPos="left" label="Export All Data" matTooltip="Download  Data" matTooltipPosition="above" (click)="dt.exportCSV()" style="padding: 5px 10px !important;"></button>
+                            <button type="button" class="btn btn-primary" pButton icon="fa-download" iconPos="left" label="Export  Data" matTooltip="Download  Data" matTooltipPosition="above" (click)="dt.exportCSV()" style="padding: 5px 10px !important;"></button>
                             <button type="button" class="btn btn-primary" pButton icon="fa-download" iconPos="left" label="Export Selected Data" matTooltip="Download Selected Data" matTooltipPosition="above" (click)="dt.exportCSV({selectionOnly:true})" style="padding: 5px 10px !important;"></button>
                             <!--<div class="excel-upload excel-upload-cstm">
-    <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
-    <label for="upload">
-        <span matTooltip="Upload Data (Excel)"><i class="fa fa-upload"></i></span>
-    </label>
-</div>-->
+        <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+        <label for="upload">
+            <span matTooltip="Upload Data (Excel)"><i class="fa fa-upload"></i></span>
+        </label>
+    </div>-->
+                            <div class="excel-upload  excel-upload-cstm">
+                                <button name="download" id="download" type="button" class="btn btn-primary" matTooltip="Download Sample File" matTooltipPosition="above" (click)="sampleExcelDownloadForContact()" style="padding: 5px 10px !important;">Sample File Download</button>
+
+                                <input type="file" name="upload3[]" id="upload3" (change)="customContactExcelUpload($event)" class="uploaddoc upload-file"
+                                       accept=".xlsx, .xls, .csv">
+                                <label for="upload3">
+                                    <span matTooltip="Upload Data (Excel)" matTooltipPosition="above">
+                                        <i class="fa fa-upload"></i>
+                                    </span>
+                                </label>
+                                &nbsp; &nbsp;
+
+                            </div>
                         </div>
                     </ng-template>
 

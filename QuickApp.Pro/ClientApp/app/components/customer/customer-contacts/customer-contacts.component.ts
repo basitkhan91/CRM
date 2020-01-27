@@ -19,7 +19,8 @@ import { AtaSubChapter1Service } from '../../../services/atasubchapter1.service'
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 
 import { emailPattern, urlPattern } from '../../../validations/validation-pattern';
-
+import { ConfigurationService } from '../../../services/configuration.service';
+import { CommonService } from '../../../services/common.service';
 
 @Component({
 	selector: 'app-customer-contacts',
@@ -42,7 +43,7 @@ export class CustomerContactsComponent implements OnInit {
 	@Output() refreshCustomerContactMapped = new EventEmitter();
    
 
-
+    formData = new FormData();
     totalRecords: any;
     pageIndex: number = 0;
     pageSize: number = 10;
@@ -119,7 +120,9 @@ export class CustomerContactsComponent implements OnInit {
 		public customerService: CustomerService,
 		private dialog: MatDialog,
 		private atasubchapter1service: AtaSubChapter1Service,
-		private masterComapnyService: MasterComapnyService) {
+        private masterComapnyService: MasterComapnyService,
+        private configurations: ConfigurationService,
+        private commonService: CommonService,) {
 	}
 
 	ngOnInit() {
@@ -576,6 +579,35 @@ export class CustomerContactsComponent implements OnInit {
 		}
 
 	}
+    sampleExcelDownloadForContact() {
+        const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=CustomerContact&fileName=CustomerContact.xlsx`;
+        window.location.assign(url);
+    }
+    customContactExcelUpload(event) {
+        const file = event.target.files;
+
+        console.log(file);
+        if (file.length > 0) {
+
+            this.formData.append('file', file[0])
+            this.customerService.ContactUpload(this.formData, this.id).subscribe(res => {
+                event.target.value = '';
+
+                this.formData = new FormData();
+                this.getAllContacts();
+                this.getAllCustomerContact();
+                this.alertService.showMessage(
+                    'Success',
+                    `Successfully Uploaded  `,
+                    MessageSeverity.success
+                );
+            })
+
+
+
+        }
+
+    }
 
 	
 }
