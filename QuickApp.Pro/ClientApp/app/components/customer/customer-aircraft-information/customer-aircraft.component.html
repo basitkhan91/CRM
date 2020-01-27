@@ -347,7 +347,7 @@
                         <th *ngFor="let col of columns">
                           {{ col.header }}
                         </th>
-                        <th>Inventory</th>
+                        <th>Inventory <span style="color:red">*</span></th>
                         <th>Memo</th>
                       </tr>
                     </ng-template>
@@ -366,9 +366,9 @@
                           <input
                             type="number"
                             class="form-control input-value"
-                            [(ngModel)]="rowData.Inventory"
+                            [(ngModel)]="rowData.Inventory" (blur)="inventoryValidation($event)"
                             name="Inventory{{row_no}}"
-                            [required]="true"
+                            [required]="true" [minlength]="1"
                           />
                         </td>
                         <td>
