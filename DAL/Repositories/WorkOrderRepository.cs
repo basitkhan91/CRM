@@ -1013,6 +1013,7 @@ namespace DAL.Repositories
                     workOrder.CustomerDetails = new CustomerDetails();
 
                     workOrder.CSR = workOrder.CustomerDetails.CSRName = customer.PrimarySalesPersonId;
+
                     workOrder.CustomerDetails.CustomerRef = customer.ContractReference;
                     workOrder.CustomerDetails.CustomerName = customer.Name;
                     workOrder.CustomerDetails.CreditLimit = customer.CreditLimit;
@@ -1069,7 +1070,7 @@ namespace DAL.Repositories
                                        join sp in _appContext.Employee on wo.SalesPersonId equals sp.EmployeeId
                                        join ws in _appContext.WorkOrderStatus on wo.WorkOrderStatusId equals ws.Id
                                        join wf in _appContext.WorkOrderWorkFlow on wo.WorkOrderId equals wf.WorkOrderId
-                                       join ps in _appContext.Employee on c.PrimarySalesPersonId equals Convert.ToString(ps.EmployeeId) into cps
+                                       join ps in _appContext.Employee on c.PrimarySalesPersonId equals ps.EmployeeId into cps
                                        from ps in cps.DefaultIfEmpty()
                                        where wo.WorkOrderId == workOrderId
                                        select new
@@ -4385,7 +4386,7 @@ namespace DAL.Repositories
                             from ct in custct.DefaultIfEmpty()
                             join sp in _appContext.Employee on wo.SalesPersonId equals sp.EmployeeId into wosp
                             from sp in wosp.DefaultIfEmpty()
-                            join csr in _appContext.Employee on cust.PrimarySalesPersonId equals Convert.ToString(csr.EmployeeId) into custcsr
+                            join csr in _appContext.Employee on cust.PrimarySalesPersonId equals csr.EmployeeId into custcsr
                             from csr in custcsr.DefaultIfEmpty()
                             join emp in _appContext.Employee on wo.EmployeeId equals emp.EmployeeId into woemp
                             from emp in woemp.DefaultIfEmpty()
@@ -4801,7 +4802,7 @@ namespace DAL.Repositories
                             join ct in _appContext.CreditTerms on cust.CreditTermsId equals ct.CreditTermsId
                             join sv in _appContext.ShippingVia on bi.ShipViaId equals sv.ShippingViaId into bisv
                             from sv in bisv.DefaultIfEmpty()
-                            join ps in _appContext.Employee on cust.PrimarySalesPersonId equals Convert.ToString(ps.EmployeeId) into custps
+                            join ps in _appContext.Employee on cust.PrimarySalesPersonId equals ps.EmployeeId into custps
                             from ps in custps.DefaultIfEmpty()
                             where bi.WorkOrderId == WorkOrderId && bi.WorkOrderPartNoId == workOrderPartNoId
                             select new
@@ -7573,7 +7574,7 @@ namespace DAL.Repositories
         {
             Customer customer = new Customer();
             customer.CustomerId = workOrder.CustomerId;
-            customer.PrimarySalesPersonId = workOrder.CSR;
+            //customer.PrimarySalesPersonId = workOrder.CSR;
             customer.ContractReference = workOrder.CustomerReference;
             customer.CreditTermsId = workOrder.CreditTermsId;
             customer.CreditLimit = workOrder.CreditLimit;

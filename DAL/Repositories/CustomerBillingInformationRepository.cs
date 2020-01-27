@@ -23,7 +23,7 @@ namespace DAL.Repositories.Interfaces
                         join ad in _appContext.Address on v.AddressId equals ad.AddressId
                         join c in _appContext.Countries on ad.Country equals Convert.ToString(c.countries_id) into adc
                         from c in adc.DefaultIfEmpty()
-                        where ((v.IsDelete == null || v.IsDelete == false) && (v.CustomerId == id))
+                        where ((v.IsDeleted == null || v.IsDeleted == false) && (v.CustomerId == id))
 
                         // select new { t, ad, vt }).ToList();
                         select new
@@ -42,7 +42,7 @@ namespace DAL.Repositories.Interfaces
                             v.UpdatedDate,
                             v.CustomerId,
                             v.IsActive,
-                            v.IsDelete,
+                            v.IsDeleted,
                             v.IsPrimary,
                             Country = c.countries_id,
                             CountryName=c.countries_name
@@ -77,7 +77,7 @@ namespace DAL.Repositories.Interfaces
                             v.UpdatedDate,
                             v.CustomerId,
                             v.IsActive,
-                            v.IsDelete,
+                            v.IsDeleted,
                             v.IsPrimary,
                             Country = c.countries_name
                         }).ToList();

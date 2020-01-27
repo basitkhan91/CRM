@@ -121,11 +121,11 @@ namespace QuickApp.Pro.ViewModels
         public string AeroExchangeDescription { get; set; }
         public string PrimarySalesPersonFirstName { get; set; }
 
-        public string PrimarySalesPersonId { get; set; }
+        public long? PrimarySalesPersonId { get; set; }
 
         public string SecondarySalesPersonName { get; set; }
 
-        public string SecondarySalesPersonId { get; set; }
+        public long? SecondarySalesPersonId { get; set; }
 
         public string AnnualRevenuePotential { get; set; }
 

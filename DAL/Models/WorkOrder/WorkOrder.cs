@@ -76,7 +76,7 @@ namespace DAL.Models
         [NotMapped]
         public string CustomerReference { get; set; }
         [NotMapped]
-        public string CSR { get; set; }
+        public long? CSR { get; set; }
 
     }
 
@@ -88,7 +88,7 @@ namespace DAL.Models
         public short? CreditTermsId { get; set; }
         public string CustomerContact { get; set; }
         public string CustomerRef { get; set; }
-        public string CSRName { get; set; }
+        public long? CSRName { get; set; }
         public string CustomerEmail { get;set;}
         public string CustomerPhone {get; set; }
     }
