@@ -14666,12 +14666,17 @@ p-table .ui-table-summary {
     margin-right: -12px;
 }
 
-p-table .ui-table-summary label {
-    width: 100px;
-}
+
 
 p-table .ui-table-summary label.footer {
     margin-left: 44%;
+}
+p-table .ui-table-summary label {
+    width: 100px;
+    text-align: right;
+    padding-right: 8px;
+    margin-right: 0;
+    // margin-right: -20px !important;
 }
 
 p-table .ui-table-summary input {
@@ -14742,6 +14747,16 @@ p-table tr td .btn i.fa-pencil {
 button .ui-button-text {
     font-family: Roboto;
 }
+body .ui-fileupload .ui-fileupload-buttonbar .ui-button {
+    padding: 0;
+    border: none;
+}
+.ui-fileupload-content .ui-fileupload-row .ui-button {
+    padding: 11px;
+    height: 24px;
+    border: none;
+    font-size: 12px;
+}
 
 .accountdropdown.ui-dropdown .ui-dropdown-trigger {
     background-color: #337ab7 !important;
@@ -14782,4 +14797,8 @@ button .ui-button-text {
 }
 span.flag{
     margin-left: 10px !important;
+}
+.filelink{
+    color: blue !important;
+    text-decoration: underline !important;
 }

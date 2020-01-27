@@ -36,7 +36,22 @@ namespace DAL.Repositories
                             v.DocName,
                             v.UpdatedDate,
                             v.IsActive,
-                            v.IsDeleted
+                            v.IsDeleted,
+                            //AttachmentDetails = (from vdd in _appContext.VendorDocumentDetails
+                            //                     join atd in _appContext.AttachmentDetails on v.AttachmentId equals atd.AttachmentId into atdd
+                            //                     from atd in atdd.DefaultIfEmpty()
+                            //                     where vdd.VendorId == v.VendorId
+                            //                     select atd).ToList()
+
+                            AttachmentDetails = _appContext.VendorDocumentDetails
+                     .Join(_appContext.AttachmentDetails,
+                           custDoc => custDoc.AttachmentId,
+                           atd => atd.AttachmentId,
+                           (custDoc, atd) => new { atd.AttachmentDetailId, atd.AttachmentId, atd.FileName, atd.Link, atd.IsActive, atd.Description,atd.IsDeleted }
+                          ).Where(p => p.AttachmentId == v.AttachmentId && p.IsActive == true && p.IsDeleted == false)
+
+
+
                         }).OrderByDescending(p=>p.UpdatedDate).ToList();
             return data;
 

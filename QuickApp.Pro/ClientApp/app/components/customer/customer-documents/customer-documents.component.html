@@ -45,12 +45,12 @@
                                 </div>
                                 <button type="button" class="btn btn-primary" pButton icon="fa-download" matTooltip="Download  Data" matTooltipPosition="above" iconPos="left" label="Export  Data" (click)="dt.exportCSV()" style="padding: 5px 10px !important;"></button>
                                 <button type="button" class="btn btn-primary" pButton icon="fa-download" matTooltip="Download Selected Data" matTooltipPosition="above" iconPos="left" label="Export Selection Only"  (click)="dt.exportCSV({selectionOnly:true})" style="padding: 5px 10px !important;"></button>
-                                <div class="excel-upload excel-upload-cstm">
+                                <!-- <div class="excel-upload excel-upload-cstm">
                                     <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
                                     <label for="upload">
                                         <span matTooltip="Upload Data (Excel)"><i class="fa fa-upload"></i></span>
                                     </label>
-                                </div>
+                                </div> -->
                             </div>
 
 
@@ -58,14 +58,20 @@
 
                         <ng-template pTemplate="header" let-columns>
                             <tr>
-
-                                <th *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
+                                 <ng-container *ngFor="let col of columns">
+                                <th  *ngIf="col.field !== 'documents'" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
                                     {{col.header}}
                                     <p-sortIcon [field]="col.field"></p-sortIcon>
                                 </th>
+                                <th *ngIf="col.field == 'documents'">
+                                    Documents
+                                </th>
 
+                                <th *ngIf="isViewMode == false">Actions</th>
+
+                
+                                </ng-container>
                                 <th *ngIf="isViewMode == false"></th>
-
                             </tr>
                             <tr>
                                     <th style="width:auto" *ngFor="let col of columns" [ngSwitch]="col.field">
@@ -76,14 +82,24 @@
                         </ng-template>
 
                         <ng-template pTemplate="body" let-rowData let-columns="columns">
+
+
                             <tr [pSelectableRow]="rowData"  [pSelectableRowDblClick]="rowData" (dblclick)="docviewdblclick(rowData)">
 
-
-                                <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
+                                <ng-container *ngFor="let col of columns">
+                                <td  *ngIf="col.field !== 'documents'" class="ui-resizable-column" pReorderableRowHandle>
                                     {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
                                 </td>
+                                <td *ngIf="col.field == 'documents'">
 
-                                <td *ngIf="isViewMode == false">
+                                    <tr *ngFor="let x of rowData.attachmentDetails">
+                                        <a class="filelink" (click)="downloadFileUpload(x)"> {{x.fileName}},</a>
+                                    </tr>
+
+                                </td>
+                                </ng-container>
+
+                                <td class="text-center" *ngIf="isViewMode == false">
 
                                     <!--<span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openDocument(view,rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>-->
                                     <span>
@@ -121,7 +137,11 @@
                         </ng-template>
                         <ng-template pTemplate="summary" id="footer">
                             <label id="footer" class="footer">No'of records:</label>
-                            <input style="width: 5%;" [(ngModel)]="dt.totalRecords" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp;
+                            <input style="width: 5%;" [(ngModel)]="totalRecords" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp;
+                            <label id="footer" class="footer1">Pages Count:</label>
+                            <input style="width: 5%;" [(ngModel)]="totalPages" [disabled]="true" pInputText type="text" />
+                            <!-- <label id="footer" class="footer">No'of records:</label>
+                            <input style="width: 5%;" [(ngModel)]="dt.totalRecords" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp; -->
                             <!-- <label id="footer" class="footer1">Pages Count:</label>
                             <input style="width: 5%;" value="{{dt.value.length / dt.rows}}" [disabled]="true" pInputText type="text" /> -->
                         </ng-template>

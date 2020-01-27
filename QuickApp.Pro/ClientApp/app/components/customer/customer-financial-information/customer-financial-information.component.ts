@@ -126,6 +126,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
     ];
     globalSettings: any = {};
     _discountListForDropdown: any = [];
+    selectedRowFileForDelete: any;
 
     constructor(public taxtypeser: TaxTypeService, public creditTermsService: CreditTermsService,
         public currencyService: CurrencyService,
@@ -165,12 +166,12 @@ export class CustomerFinancialInformationComponent implements OnInit {
             this.savedGeneralInformationData = this.editGeneralInformationData;
             this.customerCode = this.editGeneralInformationData.customerCode;
             this.customerName = this.editGeneralInformationData.name;
-         
+
             this.savedGeneralInformationData = {
                 ...this.editGeneralInformationData,
                 creditTermsId: getObjectById('value', this.editGeneralInformationData.creditTermsId, this.creditTermsListOriginal)
             }
-          
+
 
             if (this.editGeneralInformationData.currency == null || this.editGeneralInformationData.currency == 0) {
                 this.getDefaultCurrency();
@@ -546,7 +547,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
     }
 
     saveFinancialInformation() {
-       
+
 
         this.customerService.updatefinanceinfo({
             ...this.savedGeneralInformationData,
@@ -555,7 +556,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
             creditTermsId: this.savedGeneralInformationData.creditTermsId.value
         }, this.id).subscribe(res => {
 
-           
+
             const vdata = {
                 customerId: this.savedGeneralInformationData.customerId,
                 masterCompanyId: 1,
@@ -567,10 +568,10 @@ export class CustomerFinancialInformationComponent implements OnInit {
                 this.formData.append(key, vdata[key]);
             }
             console.log(this.taxExemptFileUploadInput, "this.taxExemptFileUploadInput");
-            if(this.taxExemptFileUploadInput){
+            if (this.taxExemptFileUploadInput) {
                 this.taxExemptFileUploadInput.clear()
-            }            
-             this.customerService.customerFinanceFileUpload(this.formData).subscribe(res => {
+            }
+            this.customerService.customerFinanceFileUpload(this.formData).subscribe(res => {
                 this.formData = new FormData();
                 this.toGetCustomerFinanceDocumentsList(this.savedGeneralInformationData.customerId);
             });
@@ -597,15 +598,29 @@ export class CustomerFinancialInformationComponent implements OnInit {
         })
     }
 
-    CustomerAttachmentDelete(rowData) {
-        let attachmentDetailId = rowData.attachmentDetailId;
-        let updatedBy = this.userName;
-
-        this.customerService.GetCustomerAttachmentDelete(attachmentDetailId, updatedBy).subscribe(res => {
-            this.toGetCustomerFinanceDocumentsList(this.id);
-
-        })
+    deleteFile(rowData) {
+        this.selectedRowFileForDelete = rowData;
     }
+    deleteConformationForFile(value) {
+
+        // let attachmentDetailId = rowData.attachmentDetailId;
+        // let updatedBy = this.userName;
+        if (value === 'Yes') {
+            this.customerService.GetCustomerAttachmentDelete(this.selectedRowFileForDelete.attachmentDetailId, this.userName).subscribe(res => {
+                this.alertService.showMessage(
+                    'Success',
+                    `deleted File`,
+                    MessageSeverity.success
+                );
+                this.toGetCustomerFinanceDocumentsList(this.id);
+
+            })
+        } else {
+            this.selectedRowFileForDelete = undefined;
+        }
+
+    }
+
 
     saveMarkUpPercentage() {
         const data = {
@@ -645,7 +660,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
                 MessageSeverity.success
             );
             this.resetCreditTermsPopUp();
-           
+
             this.savedGeneralInformationData.creditTermsId = data.creditTermsId;
             console.log(this.savedGeneralInformationData.creditTermsId);
 

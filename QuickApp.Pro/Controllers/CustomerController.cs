@@ -3483,11 +3483,23 @@ namespace QuickApp.Pro.Controllers
             return Ok(result);
         }
 
-        [HttpPost("uploadcustomershippingaddress/")]
+        [HttpPost("uploadcustomershippingaddress")]
         public IActionResult UploadShippingCustomData(long customerId)
         {
             var result = _unitOfWork.Customer.UploadCustomerShippingAddressCustomData(Request.Form.Files[0], customerId);
             return Ok(result);
+        }
+        [HttpPost("uploadcustomerinternationalshipping")]
+        public IActionResult UploadInternationalCustomData(long customerId)
+        {
+           _unitOfWork.Customer.UploadCustomerInternationalCustomData(Request.Form.Files[0], customerId);
+            return Ok();
+        }
+        [HttpPost("uploadcustomercontacts")]
+        public IActionResult UploadContactsCustomData(long customerId)
+        {
+            _unitOfWork.Customer.UploadCustomerContactsCustomData(Request.Form.Files[0], customerId);
+            return Ok();
         }
 
     }

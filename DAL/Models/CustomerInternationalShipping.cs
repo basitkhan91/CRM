@@ -17,7 +17,7 @@ namespace DAL.Models
         public bool IsPrimary { get; set; }
         public string Description { get; set; }
         public DateTime ExpirationDate { get; set; }
-        public long ShipToCountryId { get; set; }
+        public Int16 ShipToCountryId { get; set; }
         public int MasterCompanyId { get; set; }
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }
