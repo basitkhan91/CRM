@@ -25,5 +25,6 @@ namespace DAL.Models
         public DateTime? UpdatedDate { get; set; }
         public bool? IsDeleted { get; set; }
         public int? Inventory { get; set; }
+        public bool IsActive { get; set; }
     }
 }
