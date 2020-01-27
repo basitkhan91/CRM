@@ -67,14 +67,27 @@
                                 <i class="fa fa-search"></i>
                                 <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Filter" style="height: 28px !important;">
                             </div>
-                            <button type="button" class="btn btn-primary" pButton icon="fa-download" iconPos="left" label="Export All Data" matTooltip="Download  Data" matTooltipPosition="above" (click)="dt.exportCSV()" style="padding: 5px 10px !important;"></button>
+                            <button type="button" class="btn btn-primary" pButton icon="fa-download" iconPos="left" label="Export  Data" matTooltip="Download  Data" matTooltipPosition="above" (click)="dt.exportCSV()" style="padding: 5px 10px !important;"></button>
                             <button type="button" class="btn btn-primary" pButton icon="fa-download" iconPos="left" label="Export Selected Data" matTooltip="Download Selected Data" matTooltipPosition="above" (click)="dt.exportCSV({selectionOnly:true})" style="padding: 5px 10px !important;"></button>
                             <!--<div class="excel-upload excel-upload-cstm">
-    <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
-    <label for="upload">
-        <span matTooltip="Upload Data (Excel)"><i class="fa fa-upload"></i></span>
-    </label>
-</div>-->
+        <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+        <label for="upload">
+            <span matTooltip="Upload Data (Excel)"><i class="fa fa-upload"></i></span>
+        </label>
+    </div>-->
+                            <div class="excel-upload  excel-upload-cstm">
+                                <button name="download" id="download" type="button" class="btn btn-primary" matTooltip="Download Sample File" matTooltipPosition="above" (click)="sampleExcelDownloadForContact()" style="padding: 5px 10px !important;">Sample File Download</button>
+
+                                <input type="file" name="upload3[]" id="upload3" (change)="customContactExcelUpload($event)" class="uploaddoc upload-file"
+                                       accept=".xlsx, .xls, .csv">
+                                <label for="upload3">
+                                    <span matTooltip="Upload Data (Excel)" matTooltipPosition="above">
+                                        <i class="fa fa-upload"></i>
+                                    </span>
+                                </label>
+                                &nbsp; &nbsp;
+
+                            </div>
                         </div>
                     </ng-template>
 
@@ -362,7 +375,7 @@
                             <div class="form-group" style="width:300px;margin-top:20px;">
                                 <label>Work Phone <span class="clr-red" style="margin-right:110px;">*</span></label>
                                 <div class="col-md-12">
-                                    <input class="form-control" type="text"  name="workPhone" [(ngModel)]="contactInformation.workPhone" style="width: calc(62% - 63px) !important;" (keypress)="patternMobilevalidationWithSpl($event)">
+                                    <input class="form-control" type="text"  name="workPhone" [(ngModel)]="contactInformation.workPhone" style="width: calc(62% - 63px) !important;" (keypress)="patternMobilevalidationWithSpl($event)"  maxlength="20">
                                     -
                                     <input class="form-control" type="text" name="workPhoneExtn" [(ngModel)]="contactInformation.workPhoneExtn" style="width: calc(62% - 63px) !important;">
                                 </div>
@@ -391,15 +404,15 @@
                             </div>
                             <div class="form-group">
                                 <label>Mobile Phone</label>
-                                <input class="form-control"  type="text" name="mobilePhone" [(ngModel)]="contactInformation.mobilePhone" (keypress)="patternMobilevalidationWithSpl($event)">
+                                <input class="form-control"  type="text" name="mobilePhone" [(ngModel)]="contactInformation.mobilePhone" (keypress)="patternMobilevalidationWithSpl($event)"  maxlength="20">
                             </div>
                             <div class="form-group">
                                 <label>Alternate Phone</label>
-                                <input class="form-control"  type="text" name="alternatePhone" [(ngModel)]="contactInformation.alternatePhone" (keypress)="patternMobilevalidationWithSpl($event)">
+                                <input class="form-control"  type="text" name="alternatePhone" [(ngModel)]="contactInformation.alternatePhone" (keypress)="patternMobilevalidationWithSpl($event)" maxlength="20">
                             </div>
                             <div class="form-group">
                                 <label>Fax</label>
-                                <input class="form-control" pKeyFilter="pint" type="text" name="fax" [(ngModel)]="contactInformation.fax">
+                                <input class="form-control" pKeyFilter="pint" type="text" name="fax" [(ngModel)]="contactInformation.fax"  maxlength="20">
                             </div>
 
                             <div class="form-group">
@@ -444,17 +457,17 @@
             </div>
             <div class="modal-body">
                 <div class="col-sm-12">
-                    <p><span class="label"><b>Tag: </b></span><span class="value">{{sourceViewforContact.tag}}</span></p>
+                    <p><span class="label"><b>Tag:  <span style="color:red"></span> </b></span><span class="value">{{sourceViewforContact.tag}}</span></p>
                     <p><span class="label"><b>Prefix: </b></span><span class="value">{{sourceViewforContact.prefix}}</span></p>
-                    <p><span class="label"><b>First Name: </b></span><span class="value">{{sourceViewforContact.firstName}}</span></p>
+                    <p><span class="label"><b>First Name: <span style="color:red"></span></b></span><span class="value">{{sourceViewforContact.firstName}}</span></p>
                     <p><span class="label"><b>Middle Name: </b></span><span class="value">{{sourceViewforContact.middleName}}</span></p>
-                    <p><span class="label"><b>Last Name: </b></span><span class="value">{{sourceViewforContact.lastName}}</span></p>
+                    <p><span class="label"><b>Last Name: <span style="color:red"></span></b></span><span class="value">{{sourceViewforContact.lastName}}</span></p>
                     <p><span class="label"><b>Suffix: </b></span><span class="value">{{sourceViewforContact.suffix}}</span></p>
                     <p><span class="label"><b>Title: </b></span><span class="value">{{sourceViewforContact.contactTitle}}</span></p>
-                    <p><span class="label"><b>Work Phone: </b></span><span class="value">{{sourceViewforContact.workPhone}}</span></p>
+                    <p><span class="label"><b>Work Phone: <span style="color:red"></span></b></span><span class="value">{{sourceViewforContact.workPhone}}</span></p>
                     <p><span class="label"><b>Primary Contact </b></span><span class="value">{{sourceViewforContact.isDefaultContact}}</span></p>
 
-                    <p><span class="label"><b>Email: </b></span><span class="value">{{sourceViewforContact.email}}</span></p>
+                    <p><span class="label"><b>Email: <span style="color:red"></span></b></span><span class="value">{{sourceViewforContact.email}}</span></p>
                     <p><span class="label"><b>WebSite: </b></span><span class="value">{{sourceViewforContact.websiteURL}}</span></p>
                     <p><span class="label"><b>Mobile Phone: </b></span><span class="value">{{sourceViewforContact.mobilePhone}}</span></p>
                     <p><span class="label"><b>Alternate Phone:</b></span><span class="value">{{sourceViewforContact.alternatePhone}}</span></p>
@@ -485,17 +498,17 @@
                     </div>
                     <div class="modal-body">
                         <div class="col-sm-12">
-                            <p><span class="label"><b>Tag: </b></span><span class="value">{{sourceViewforContact.tag}}</span></p>
+                            <p><span class="label"><b>Tag: <span style="color:red"></span></b></span><span class="value">{{sourceViewforContact.tag}}</span></p>
                             <p><span class="label"><b>Prefix: </b></span><span class="value">{{sourceViewforContact.prefix}}</span></p>
-                            <p><span class="label"><b>First Name: </b></span><span class="value">{{sourceViewforContact.firstName}}</span></p>
+                            <p><span class="label"><b>First Name: <span style="color:red"></span></b></span><span class="value">{{sourceViewforContact.firstName}}</span></p>
                             <p><span class="label"><b>Middle Name: </b></span><span class="value">{{sourceViewforContact.middleName}}</span></p>
-                            <p><span class="label"><b>Last Name: </b></span><span class="value">{{sourceViewforContact.lastName}}</span></p>
+                            <p><span class="label"><b>Last Name: <span style="color:red"></span></b></span><span class="value">{{sourceViewforContact.lastName}}</span></p>
                             <p><span class="label"><b>Suffix: </b></span><span class="value">{{sourceViewforContact.suffix}}</span></p>
                             <p><span class="label"><b>Title: </b></span><span class="value">{{sourceViewforContact.contactTitle}}</span></p>
-                            <p><span class="label"><b>Work Phone: </b></span><span class="value">{{sourceViewforContact.workPhone}}</span></p>
+                            <p><span class="label"><b>Work Phone: <span style="color:red"></span> </b></span><span class="value">{{sourceViewforContact.workPhone}}</span></p>
                             <p><span class="label"><b>Primary Contact </b></span><span class="value">{{sourceViewforContact.isDefaultContact}}</span></p>
 
-                            <p><span class="label"><b>Email: </b></span><span class="value">{{sourceViewforContact.email}}</span></p>
+                            <p><span class="label"><b>Email: <span style="color:red"></span></b></span><span class="value">{{sourceViewforContact.email}}</span></p>
                             <p><span class="label"><b>WebSite: </b></span><span class="value">{{sourceViewforContact.websiteURL}}</span></p>
                             <p><span class="label"><b>Mobile Phone: </b></span><span class="value">{{sourceViewforContact.mobilePhone}}</span></p>
                             <p><span class="label"><b>Alternate Phone:</b></span><span class="value">{{sourceViewforContact.alternatePhone}}</span></p>

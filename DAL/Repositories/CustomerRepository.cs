@@ -1927,7 +1927,7 @@ namespace DAL.Repositories
                     data.UpdatedBy = objCustomer.UpdatedBy;
                     data.IsPrimary = true;
                     data.IsActive = true;
-                    data.IsDelete = false;
+                    data.IsDeleted = false;
                     _appContext.CustomerBillingAddress.Update(data);
                     _appContext.SaveChanges();
 
@@ -1949,7 +1949,7 @@ namespace DAL.Repositories
                 objCustomerBillingAddress.UpdatedBy = objCustomer.UpdatedBy;
                 objCustomerBillingAddress.IsPrimary = true;
                 objCustomerBillingAddress.IsActive = true;
-                objCustomerBillingAddress.IsDelete = false;
+                objCustomerBillingAddress.IsDeleted = false;
 
                 _appContext.CustomerBillingAddress.Add(objCustomerBillingAddress);
                 _appContext.SaveChanges();
@@ -2691,7 +2691,7 @@ namespace DAL.Repositories
                                         bill.MasterCompanyId = 1;
                                         bill.CustomerId = customerId;
                                         bill.IsActive = true;
-                                        bill.IsDelete = false;
+                                        bill.IsDeleted = false;
                                         bill.IsPrimary = false;
                                         bill.AddressId = addr.AddressId;
                                         bill.CreatedBy = bill.UpdatedBy = "System";
@@ -2824,7 +2824,198 @@ namespace DAL.Repositories
             }
             return obj;
         }
+        public void UploadCustomerInternationalCustomData(IFormFile file, long customerId)
+        {
+            string countryName = string.Empty;
+            List<object> obj = new List<object>();
+
+            int count = 0;
+            try
+            {
+                
+                CustomerInternationalShipping ship;
+
+                string fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+                string filePath = Path.Combine(AppSettings.CustomUploadFilePath, Convert.ToString(ModuleEnum.CustomerInternationalShippingAddress), DateTime.Now.ToString("yyyy-MM-dd hh-mm-ss"));
+
+                if (!Directory.Exists(filePath))
+                {
+                    Directory.CreateDirectory(filePath);
+                }
+
+                string fullPath = Path.Combine(filePath, fileName);
 
 
+                using (var stream = File.Open(fullPath, FileMode.Create))
+                {
+                    file.CopyTo(stream);
+                    {
+                        using (var reader = ExcelReaderFactory.CreateReader(stream))
+                        {
+                            do
+                            {
+                                while (reader.Read())
+                                {
+                                    if (count > 0 &&  reader.GetValue(4) != null)
+                                    {
+
+                                        ship = new CustomerInternationalShipping();
+                                        if (reader.GetValue(0) != null)
+                                            ship.ExportLicense = Convert.ToString(reader.GetValue(0));
+                                        if (reader.GetValue(1) != null && reader.GetValue(1).GetType().Name == "DateTime")
+                                            ship.StartDate = Convert.ToDateTime(reader.GetValue(1));
+                                        if (reader.GetValue(2) != null)
+                                            ship.Description = Convert.ToString(reader.GetValue(2));
+                                        if (reader.GetValue(3) != null && reader.GetValue(3).GetType().Name == "DateTime")
+                                            ship.ExpirationDate = Convert.ToDateTime(reader.GetValue(3));
+                                        if (reader.GetValue(5) != null && reader.GetValue(5).GetType().Name == "Double")
+                                            ship.Amount = Convert.ToDecimal(reader.GetValue(5));
+
+                                        if (reader.GetValue(4) != null)
+                                            countryName = Convert.ToString(reader.GetValue(4));
+                                        var country = _appContext.Countries.Where(p => p.countries_name == countryName).FirstOrDefault();
+                                        if (country != null)
+                                        {
+                                            ship.ShipToCountryId = country.countries_id;
+
+
+
+                                            ship.MasterCompanyId = 1;
+                                            ship.IsActive = true;
+                                            ship.IsDeleted = false;
+                                            ship.IsPrimary = false;
+                                            ship.CustomerId = customerId;
+                                            ship.CreatedBy = ship.UpdatedBy = "System";
+                                            ship.UpdatedDate = ship.CreatedDate = DateTime.Now;
+
+                                            _appContext.CustomerInternationalShipping.Add(ship);
+                                            _appContext.SaveChanges();
+
+                                        }
+                                      
+
+
+                                    }
+
+
+                                    count++;
+                                }
+                            } while (reader.NextResult());
+
+                        }
+                    }
+                }
+              
+            }
+            catch (Exception ex)
+            {
+
+            }
+            
+        }
+
+        public void UploadCustomerContactsCustomData(IFormFile file, long customerId)
+        {
+            string countryName = string.Empty;
+            List<object> obj = new List<object>();
+
+            int count = 0;
+            try
+            {
+                Contact cont;
+                CustomerContact cCont;
+
+                string fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+                string filePath = Path.Combine(AppSettings.CustomUploadFilePath, Convert.ToString(ModuleEnum.CustomerContact), DateTime.Now.ToString("yyyy-MM-dd hh-mm-ss"));
+
+                if (!Directory.Exists(filePath))
+                {
+                    Directory.CreateDirectory(filePath);
+                }
+
+                string fullPath = Path.Combine(filePath, fileName);
+
+
+                using (var stream = File.Open(fullPath, FileMode.Create))
+                {
+                    file.CopyTo(stream);
+                    {
+                        using (var reader = ExcelReaderFactory.CreateReader(stream))
+                        {
+                            do
+                            {
+                                while (reader.Read())
+                                {
+                                    if (count > 0 && reader.GetValue(0) != null && reader.GetValue(3) != null && reader.GetValue(2) != null && reader.GetValue(4) != null && reader.GetValue(5) != null && reader.GetValue(6) != null)
+                                    {
+
+                                        cont = new Contact();
+                                        cCont = new CustomerContact();
+                                        if (reader.GetValue(0) != null)
+                                            cont.Tag = Convert.ToString(reader.GetValue(0));
+                                        if (reader.GetValue(1) != null)
+                                            cont.Prefix = Convert.ToString(reader.GetValue(1));
+                                        if (reader.GetValue(2) != null)
+                                            cont.FirstName = Convert.ToString(reader.GetValue(2));
+                                        if (reader.GetValue(3) != null)
+                                            cont.MiddleName = Convert.ToString(reader.GetValue(3));
+                                        if (reader.GetValue(4) != null)
+                                            cont.LastName = Convert.ToString(reader.GetValue(4));
+                                        if (reader.GetValue(5) != null)
+                                            cont.ContactTitle = Convert.ToString(reader.GetValue(5));
+
+                                        if (reader.GetValue(6) != null)
+                                            cont.Email = Convert.ToString(reader.GetValue(6));
+                                        if (reader.GetValue(7) != null)
+                                            cont.WorkPhone = Convert.ToString(reader.GetValue(7));
+                                        if (reader.GetValue(8) != null)
+                                            cont.WorkPhoneExtn = Convert.ToString(reader.GetValue(8));
+                                        if (reader.GetValue(9) != null)
+                                            cont.MobilePhone = Convert.ToString(reader.GetValue(9));
+                                        if (reader.GetValue(10) != null)
+                                            cont.AlternatePhone = Convert.ToString(reader.GetValue(10));
+                                        if (reader.GetValue(11) != null)
+                                            cont.Fax = Convert.ToString(reader.GetValue(11));
+                                        if (reader.GetValue(12) != null)
+                                            cont.Notes = Convert.ToString(reader.GetValue(12));
+
+
+                                        cont.IsActive = true;
+                                        cont.MasterCompanyId = 1;
+                                        cont.CreatedBy = cont.UpdatedBy = "System";
+                                        cont.UpdatedDate = cont.CreatedDate = DateTime.Now;
+
+                                        _appContext.Contact.Add(cont);
+                                        _appContext.SaveChanges();
+
+
+                                        cCont.MasterCompanyId = 1;
+                                        cCont.CustomerId = customerId;
+                                        cCont.IsActive = true;
+                                        cCont.IsDeleted = false;
+                                        cCont.IsDefaultContact = false;
+                                        cCont.ContactId = cont.ContactId;
+                                        cCont.CreatedBy = cCont.UpdatedBy = "System";
+                                        cCont.UpdatedDate = cCont.CreatedDate = DateTime.Now;
+                                        _appContext.CustomerContact.Add(cCont);
+                                        _appContext.SaveChanges();
+                                    }
+
+
+                                    count++;
+                                }
+                            } while (reader.NextResult());
+
+                        }
+                    }
+                }
+                
+            }
+            catch (Exception ex)
+            {
+
+            }
+           
+        }
     }
 }

@@ -632,4 +632,10 @@ export class CustomerService {
     ShippingFileUpload(file, customerId) {
         return this.customerEndpoint.CustomerShippingFileUpload(file, customerId);
     }
+    InternationalShippingUpload(file, customerId) {
+        return this.customerEndpoint.CustomerInternationalShippingFileUpload(file, customerId);
+    }
+   ContactUpload(file, customerId) {
+       return this.customerEndpoint.CustomerContactFileUpload(file, customerId);
+    }
 }

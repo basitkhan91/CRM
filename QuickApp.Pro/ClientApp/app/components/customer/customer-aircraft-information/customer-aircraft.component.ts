@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ItemMasterService } from '../../../services/itemMaster.service';
 
@@ -26,6 +26,7 @@ export class CustomerAircraftComponent implements OnInit {
     // @Input() editCustomerId;
     @Input() editMode;
     @Output() tab = new EventEmitter();
+    @ViewChild("aircraftForm")  aircraftForm : any;
     // aircraft Type used for both 
     manufacturerData: { value: any; label: any; }[];
     // search Variables
@@ -508,8 +509,27 @@ export class CustomerAircraftComponent implements OnInit {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
+    inventoryValidation(event){
+        console.log(event.target.value, "event.target.value");
+        if(event.target.value > 0){
+            return true;
+        } else {
+            this.alertService.showMessage(
+                'Warn',
+                'Inventory should be greater then 0',
+                MessageSeverity.warn
+            );
+            event.target.value = undefined;
 
-     saveAircraft() {
+        }
+    }
+
+     saveAircraft(form) {
+        // this.alertService.showMessage(
+        //             'Warn',
+        //             'Inventory should be greater then 0',
+        //             MessageSeverity.warn
+        //         );
         // const inventoryData = this.inventoryData.filter(x => {
         //     if (x.IsChecked) {
         //         return x;
@@ -517,21 +537,19 @@ export class CustomerAircraftComponent implements OnInit {
         // })
         //Inventory
         console.log(this.inventoryData, "this.inventoryData+");
+        const data = this.inventoryData.map(obj => {
+        // delete obj['IsChecked']
+        return {
+            ...obj,
+            DashNumberId: obj.DashNumber === 'Unknown' ? null : obj.DashNumberId,
+            AircraftModelId: obj.AircraftModel === 'Unknown' ? null : obj.AircraftModelId,
+            CustomerId: this.id,
+            MasterCompanyId: 1,
+            createdBy: this.userName,
+            updatedBy: this.userName,
+            IsDeleted: false,
 
-            
-                 const data = this.inventoryData.map(obj => {
-            // delete obj['IsChecked']
-            return {
-                ...obj,
-                DashNumberId: obj.DashNumber === 'Unknown' ? null : obj.DashNumberId,
-                AircraftModelId: obj.AircraftModel === 'Unknown' ? null : obj.AircraftModelId,
-                CustomerId: this.id,
-                MasterCompanyId: 1,
-                createdBy: this.userName,
-                updatedBy: this.userName,
-                IsDeleted: false,
-
-            }
+        }
         })
          this.customerService.postCustomerAircrafts(data).subscribe(res => {
 

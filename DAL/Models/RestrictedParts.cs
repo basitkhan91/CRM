@@ -10,7 +10,7 @@ namespace DAL.Models
         public long RestrictedPartId { get; set; }
         public long ModuleId { get; set; }
         public long? ReferenceId { get; set; }
-        public long MasterPartId { get; set; }
+        public long ItemMasterId { get; set; }
         public string Memo { get; set; }
         public string PartNumber { get; set; }
         public string PartType { get; set; } 

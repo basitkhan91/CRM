@@ -14666,13 +14666,17 @@ p-table .ui-table-summary {
     margin-right: -12px;
 }
 
-p-table .ui-table-summary label {
-    width: 100px;
-    margin-right: -20px;
-}
+
 
 p-table .ui-table-summary label.footer {
     margin-left: 44%;
+}
+p-table .ui-table-summary label {
+    width: 100px;
+    text-align: right;
+    padding-right: 8px;
+    margin-right: 0;
+    // margin-right: -20px !important;
 }
 
 p-table .ui-table-summary input {
@@ -14793,4 +14797,8 @@ body .ui-fileupload .ui-fileupload-buttonbar .ui-button {
 }
 span.flag{
     margin-left: 10px !important;
+}
+.filelink{
+    color: blue !important;
+    text-decoration: underline !important;
 }
