@@ -66,12 +66,12 @@
                                 <th *ngIf="col.field == 'documents'">
                                     Documents
                                 </th>
-
-                                <th *ngIf="isViewMode == false">Actions</th>
+<!-- 
+                                <th *ngIf="isViewMode == false">Actions</th> -->
 
                 
                                 </ng-container>
-                                <th *ngIf="isViewMode == false"></th>
+                                <th *ngIf="isViewMode == false">Actions</th>
                             </tr>
                             <tr>
                                     <th style="width:auto" *ngFor="let col of columns" [ngSwitch]="col.field">
