@@ -42,7 +42,12 @@ namespace DAL.Repositories
                     v.DocName,
                     v.UpdatedDate,
                     v.IsActive,
-                    v.IsDeleted
+                    v.IsDeleted,
+                    AttachmentDetails= _appContext.CustomerDocumentDetails
+                     .Join(_appContext.AttachmentDetails,
+                           custDoc => custDoc.AttachmentId,
+                           atd => atd.AttachmentId,
+                           (custDoc, atd) => new { atd.AttachmentDetailId,atd.AttachmentId,atd.FileName,atd.Link,atd.IsActive,atd.Description })
                 }).ToList();
             return data;
 
