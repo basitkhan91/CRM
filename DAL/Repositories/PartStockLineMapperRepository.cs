@@ -46,7 +46,8 @@ namespace DAL.Repositories
                     var stocklinesDrafted = _appContext.StockLineDraft.Where(x => x.PurchaseOrderPartRecordId != null && x.PurchaseOrderPartRecordId == part.PurchaseOrderPartRecordId && !x.IsDeleted).ToList();
                     if ((stockLines != null && stockLines.Count > 0) || (stocklinesDrafted != null && stocklinesDrafted.Count > 0))
                     {
-                        part.StockLineCount = (long)stockLines.Sum(x => x.Quantity) + (long)stocklinesDrafted.Sum(x => x.Quantity);
+                        part.StockLineCount = (long)stockLines.Sum(x => x.Quantity);
+                        part.DraftedStockLineCount = (long)stocklinesDrafted.Sum(x => x.Quantity);
                     }
 
                     if (!part.isParent)
@@ -513,6 +514,17 @@ namespace DAL.Repositories
                 _appContext.StockLineDraft.Remove(dstl);
                 _appContext.SaveChanges();
             }
+
+            var stockLines = _appContext.StockLine.Where(x => x.PurchaseOrderId == purchaseOrderId).ToList();
+
+            foreach (var stl in stockLines)
+            {
+                stl.StockLineNumber = "STL-" + stl.StockLineId.ToString();
+                stl.ControlNumber = "CNT-" + stl.StockLineId.ToString();
+                _appContext.StockLine.Update(stl);
+            }
+
+            _appContext.SaveChanges();
         }
 
         #region REPAIR ORDER

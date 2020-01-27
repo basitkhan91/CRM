@@ -357,10 +357,10 @@
                             <tr *ngIf="part.stockLine.length > 0">
                                 <!--part.stockLine != null-->
                                 <th></th>
-                                <th>Stock Line</th>
+                                <!--<th>Stock Line</th>-->
                                 <th>PN</th>
                                 <th>PN Description</th>
-                                <th>Control Num</th>
+                                <!--<th>Control Num</th>-->
                                 <th>ID</th>
                                 <th>Cond</th>
                                 <th colspan="2">Serial Num</th>
@@ -409,10 +409,10 @@
                             </tr>
                             <tr *ngFor="let SL of part.stockLine;let stockline_row_index=index">
                                 <td><a href="javascript:void(0);" data-toggle="tooltip" title="" class="btn boxed-float-btn nobg edit" data-original-title="Edit"><i class="fa fa-edit" (click)="editStockLine(SL)"></i></a></td>
-                                <td>{{SL.stockLineNumber}}</td>
+                                <!--<td>{{SL.stockLineNumber}}</td>-->
                                 <td>{{part.itemMaster.partNumber}}</td>
                                 <td>{{part.itemMaster.partDescription}}</td>
-                                <td>{{SL.controlNumber}}</td>
+                                <!--<td>{{SL.controlNumber}}</td>-->
                                 <td>{{SL.idNumber}}</td>
                                 <td>
                                     <select class="form-control"
