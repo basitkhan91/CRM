@@ -166,7 +166,7 @@ namespace DAL.Models
         public bool? IsActive { get; set; }
         public bool? IsDeleted { get; set; }
         public long? MarkUpPercentageId { get; set; }
-        public long? GeneralCurrencyId { get; set; }
+        public int? GeneralCurrencyId { get; set; }
 
         //public bool? IsAddressForBillingAndShipping { get; set; }
 
