@@ -218,8 +218,8 @@
                                     <th>Line no</th>
                                     <th>PN</th>
                                     <th>Qty Ordered </th>
+                                    <th>Qty Drafted</th>
                                     <th>Qty Received</th>
-
                                     <th>Qty Rejected</th>
                                     <th>Qty Backordered </th>
                                     <th>Status</th>
@@ -247,10 +247,13 @@
                                         <td>
                                             {{part?.quantityOrdered}}
                                         </td>
-
+                                        <td>
+                                            {{part.draftedStockLineCount}}
+                                        </td>
                                         <td>
                                             {{part.stockLineCount}}
                                         </td>
+
 
                                         <td>{{part.quantityRejected}}</td>
                                         <td>
@@ -268,14 +271,14 @@
                                         </td>
                                         <td>
                                             <section *ngIf="part.itemMaster != null && part.stockLineCount < part.quantityOrdered">
-                                                <p-inputSwitch [(ngModel)]="part.itemMaster.isTimeLife" 
-                                                               pTooltip="{{part.itemMaster.isTimeLife == true ? 'Active' : 'In Active'}}" 
-                                                               tooltipPosition="bottom" 
-                                                               onLabel="on" 
-                                                               offLabel="off" 
+                                                <p-inputSwitch [(ngModel)]="part.itemMaster.isTimeLife"
+                                                               pTooltip="{{part.itemMaster.isTimeLife == true ? 'Active' : 'In Active'}}"
+                                                               tooltipPosition="bottom"
+                                                               onLabel="on"
+                                                               offLabel="off"
                                                                (onChange)="togglePartTimeLife(part, $event)"></p-inputSwitch>
                                                 <!--<p-inputSwitch [(ngModel)]="part.itemMaster.isTimeLife" pTooltip="In Active" tooltipPosition="bottom" onLabel="on" offLabel="off" (onChange)="togglePartTimeLife(part)"></p-inputSwitch>
-                                                <p-inputSwitch [(ngModel)]="part.itemMaster.isTimeLife" pTooltip="In Active" tooltipPosition="bottom" onLabel="on" offLabel="off" (onChange)="togglePartTimeLife(part)"></p-inputSwitch>-->
+            <p-inputSwitch [(ngModel)]="part.itemMaster.isTimeLife" pTooltip="In Active" tooltipPosition="bottom" onLabel="on" offLabel="off" (onChange)="togglePartTimeLife(part)"></p-inputSwitch>-->
                                             </section>
                                         </td>
                                         <td style="padding:4px;">
