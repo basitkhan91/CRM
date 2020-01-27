@@ -572,7 +572,7 @@
                                                         pKeyFilter="num"
                                                         (onSelect)="selectedDiscount()"
                                                         (onKeyUp)="checkDiscountExistss($event)"
-                                                        [suggestions]="_discountList" field="label" (completeMethod)="filterDiscount($event)"
+                                                        [suggestions]="_discountListForDropdown" field="label" (completeMethod)="filterDiscount($event)"
                                                         [size]="30" [minLength]="1" [dropdown]="true" required>
                                         </p-autoComplete>
                                         <div *ngIf="isDiscountExists" class="clr-red">Entry Already Exists</div>

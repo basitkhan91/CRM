@@ -125,6 +125,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
         { field: "fileName", header: "File Name" }
     ];
     globalSettings: any = {};
+    _discountListForDropdown: any = [];
     selectedRowFileForDelete: any;
 
     constructor(public taxtypeser: TaxTypeService, public creditTermsService: CreditTermsService,
@@ -393,6 +394,13 @@ export class CustomerFinancialInformationComponent implements OnInit {
     getAllDiscountList() {
         this.customerService.getDiscountList().subscribe(res => {
             this.discountList = res[0];
+            console.log(this.discountList, "this.discuontList++++")
+            for(let i=0; i<this.discountList.length; i++){
+                this._discountListForDropdown.push({label: this.discountList[i].discontValue.toString(), value: this.discountList[i].discontValue})
+            }
+            console.log(this._discountListForDropdown, "this._discountListForDropdown++++")
+
+            
         })
     }
 
@@ -407,10 +415,19 @@ export class CustomerFinancialInformationComponent implements OnInit {
     filterDiscount(event) {
 
         console.log();
-        this._discountList = this.discountList1;
+        // this._discountList = this.discountList1;
 
 
-        this._discountList = [...this.discountList1.filter(x => {
+        // this._discountList = [...this.discountList1.filter(x => {
+        //     console.log(x);
+        //     return x.label.includes(event.query.toLowerCase())
+
+
+        // })]
+        this._discountListForDropdown = this._discountListForDropdown;
+
+
+        this._discountListForDropdown = [...this._discountListForDropdown.filter(x => {
             console.log(x);
             return x.label.includes(event.query.toLowerCase())
 
@@ -431,10 +448,20 @@ export class CustomerFinancialInformationComponent implements OnInit {
     }
     checkDiscountExistss(value) {
 
+        // this.isDiscountExists = false;
+
+        // for (let i = 0; i < this.discountList1.length; i++) {
+        //     if (this.discontValue == this.discountList1[i].label || value == this.discountList[i].label) {
+        //         this.isDiscountExists = true;
+
+        //         return;
+        //     }
+
+        // }
         this.isDiscountExists = false;
 
-        for (let i = 0; i < this.discountList1.length; i++) {
-            if (this.discontValue == this.discountList1[i].label || value == this.discountList[i].label) {
+        for (let i = 0; i < this._discountListForDropdown.length; i++) {
+            if (this.discontValue == this._discountListForDropdown[i].label || value == this._discountListForDropdown[i].label) {
                 this.isDiscountExists = true;
 
                 return;
