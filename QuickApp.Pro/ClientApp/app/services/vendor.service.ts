@@ -815,6 +815,10 @@ export class VendorService {
         return this.actionEndpoint.getVendorCapabilityByVendorId(vendorId);
       }
 
+      getVendorDataById(vendorId){
+        return this.actionEndpoint.getVendorDataById(vendorId);
+      }
+
       
 
       
