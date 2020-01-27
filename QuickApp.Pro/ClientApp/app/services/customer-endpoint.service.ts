@@ -156,7 +156,8 @@ export class CustomerEndpoint extends EndpointFactory {
     private readonly _getCustomerDocumentHistory: string = "/api/Customer/getCustomerDocumentAudit"
     private readonly excelUpload: string = "/api/Customer/uploadcustomerbillingaddress"
     private readonly excelUploadShipping: string = "/api/Customer/uploadcustomershippingaddress"
-
+    private readonly excelUploadInterShipping: string = "/api/Customer/uploadcustomerinternationalshipping"
+    private readonly excelUploadContact: string = "/api/Customer/uploadcustomercontacts"
 
     get globalSearch() { return this.configurations.baseUrl + this.getGlobalCustomer; }
     get paginate() { return this.configurations.baseUrl + this.getCustomer; }
@@ -1402,6 +1403,16 @@ export class CustomerEndpoint extends EndpointFactory {
     }
     CustomerShippingFileUpload(file, customerId) {
         return this.http.post(`${this.configurations.baseUrl}${this.excelUploadShipping}?customerId=${customerId}`, file)
+
+
+    }
+    CustomerInternationalShippingFileUpload(file, customerId) {
+        return this.http.post(`${this.configurations.baseUrl}${this.excelUploadInterShipping}?customerId=${customerId}`, file)
+
+
+    }
+    CustomerContactFileUpload(file, customerId) {
+        return this.http.post(`${this.configurations.baseUrl}${this.excelUploadContact}?customerId=${customerId}`, file)
 
 
     }

@@ -91,6 +91,8 @@ namespace DAL.Repositories.Interfaces
         void AddVendorContact(Customer objCustomer, long vendorId);
         IEnumerable<object> UploadCustomerBillingAddressCustomData(IFormFile file, long customerId);
         IEnumerable<object> UploadCustomerShippingAddressCustomData(IFormFile file, long customerId);
+        void UploadCustomerInternationalCustomData(IFormFile file, long customerId);
+        void UploadCustomerContactsCustomData(IFormFile file, long customerId);
     }
 
 }
