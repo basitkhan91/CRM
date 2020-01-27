@@ -23,6 +23,11 @@ export class WorkOrderFreightComponent implements OnInit {
     @Output() saveFreightListForWO = new EventEmitter();
     @Output() updateFreightListForWo = new EventEmitter();
     @Output() refreshData = new EventEmitter();
+    
+    @Input() isWorkOrder;
+    @Input() isQuote = false;
+    @Input() markupList;
+    @Input() isView: boolean = false;
     customerId: any;
     shipViaList: any;
     carrierList: any;
@@ -89,11 +94,17 @@ export class WorkOrderFreightComponent implements OnInit {
     }
     saveFreightList() {
         if (this.isEdit) {
-            this.updateFreightListForWo.emit(this.freightForm);
-            $('#addNewFreight').modal('hide');
-            this.isEdit = false;
+            if(this.isQuote){
+                this.saveFreightListForWO.emit(this.freightForm);
+                $('#addNewFreight').modal('hide');
+                this.isEdit = false;
+            }
+            else{
+                this.updateFreightListForWo.emit(this.freightForm);
+                $('#addNewFreight').modal('hide');
+                this.isEdit = false;
+            }
         } else {
-
             this.saveFreightListForWO.emit(this.freightForm);
             $('#addNewFreight').modal('hide');
         }

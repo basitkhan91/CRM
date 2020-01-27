@@ -72,6 +72,10 @@ export class WorkOrderQuoteService {
         return this.workOrderEndpointService.saveMaterialListQuote(data);
     }
 
+    saveFreightsListQuote(data) {
+        return this.workOrderEndpointService.saveFreightsListQuote(data);
+    }
+
     saveLaborListQuote(data) {
         return this.workOrderEndpointService.saveLaborListQuote(data);
     }
