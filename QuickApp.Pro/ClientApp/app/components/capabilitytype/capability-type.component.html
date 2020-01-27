@@ -5,7 +5,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="inline-block display-flex">
-                            <h3 class="po-head lead">Capability Type</h3>
+                            <h3 class="po-head lead">Vendor Capability Type</h3>
                             <a style="margin-left:5px;" class="plusicon-cstm new-margin" matTooltip="Add Capability Type" matTooltipPosition="above" (click)="resetCapabilityTypeForm()" data-target="#addCapabilityType" data-toggle="modal">
                                 <i class="fa fa-plus-circle fa-lg"></i>
                             </a>
@@ -109,7 +109,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">{{isEdit ? 'Edit' : 'Add' }} Capability Type  </h4>
+                <h4 class="modal-title">{{isEdit ? 'Edit' : 'Add' }} Vendor Capability Type  </h4>
             </div>
             <div class="modal-body">
                 <form #addCapabilityTypeForm="ngForm">
@@ -117,7 +117,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                         <div class="col-sm-12">
                             <div class="col-sm-4">
                                 <label for="description" class="control-label">
-                                    Capability Type
+                                   Vendor Capability Type
                                     <span class="clr-red">*</span>
                                 </label>
                             </div>
@@ -199,13 +199,13 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" id="" name="" (click)="resetViewData()">×</button>
-                <h4 class="modal-title">Capability Type</h4>
+                <h4 class="modal-title">Vendor Capability Type</h4>
             </div>
             <div class="modal-body viewform ">
                 <div class="col-sm-12">
                     <p>
                         <span class="label ">
-                            <b class="view-Header">Capability Type: </b>
+                            <b class="view-Header">Vendor Capability Type: </b>
                         </span>
                         <span class="value">{{ viewRowData.description}}</span>
                     </p>
@@ -279,7 +279,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
             </div>
             <div class="modal-body">
                 <strong>
-                   Capability Type:
+                  Vendor Capability Type:
                     <span class="new-label">{{selectedRowforDelete.description}}</span>
                 </strong>
             </div>
@@ -303,7 +303,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                     <table class="table table-bordered" *ngIf="auditHistory.length> 0 else noDatavailable">
                         <thead>
                             <tr>
-                                 <th>Capability Type</th>
+                                 <th>Vendor Capability Type</th>
                                 <th>Description</th>
                                 <th>Sequence</th>
                                 <th>Memo</th>
