@@ -14747,6 +14747,12 @@ body .ui-fileupload .ui-fileupload-buttonbar .ui-button {
     padding: 0;
     border: none;
 }
+.ui-fileupload-content .ui-fileupload-row .ui-button {
+    padding: 11px;
+    height: 24px;
+    border: none;
+    font-size: 12px;
+}
 
 .accountdropdown.ui-dropdown .ui-dropdown-trigger {
     background-color: #337ab7 !important;
