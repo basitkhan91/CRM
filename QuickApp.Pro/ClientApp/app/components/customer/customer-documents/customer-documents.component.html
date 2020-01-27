@@ -58,14 +58,19 @@
 
                         <ng-template pTemplate="header" let-columns>
                             <tr>
-
-                                <th *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
+                                 <ng-container *ngFor="let col of columns">
+                                <th  *ngIf="col.field !== 'documents'" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
                                     {{col.header}}
                                     <p-sortIcon [field]="col.field"></p-sortIcon>
                                 </th>
+                                <th *ngIf="col.field == 'documents'">
+                                    Documents
+                                </th>
 
+
+                
+                                </ng-container>
                                 <th *ngIf="isViewMode == false"></th>
-
                             </tr>
                             <tr>
                                     <th style="width:auto" *ngFor="let col of columns" [ngSwitch]="col.field">
@@ -76,12 +81,24 @@
                         </ng-template>
 
                         <ng-template pTemplate="body" let-rowData let-columns="columns">
+
+
                             <tr [pSelectableRow]="rowData"  [pSelectableRowDblClick]="rowData" (dblclick)="docviewdblclick(rowData)">
 
-
-                                <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
+                                <ng-container *ngFor="let col of columns">
+                                <td  *ngIf="col.field !== 'documents'" class="ui-resizable-column" pReorderableRowHandle>
                                     {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
                                 </td>
+                                <td *ngIf="col.field == 'documents'">
+                                    <!-- <ng-container *ngFor="let x of rowData.attachmentDetails">
+{{x.link}}
+                                    </ng-container> -->
+                                    <tr *ngFor="let x of rowData.attachmentDetails">
+                                        <a class="filelink" (click)="downloadFileUpload(x)"> {{x.fileName}},</a>
+                                    </tr>
+
+                                </td>
+                                </ng-container>
 
                                 <td *ngIf="isViewMode == false">
 
