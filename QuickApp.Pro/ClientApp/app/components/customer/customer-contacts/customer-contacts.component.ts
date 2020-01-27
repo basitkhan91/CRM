@@ -13,7 +13,7 @@ import { MasterComapnyService } from '../../../services/mastercompany.service';
 import { CustomerService } from '../../../services/customer.service';
 import { CustomerContactModel } from '../../../models/customer-contact.model';
 import { MatDialog } from '@angular/material';
-import { getObjectByValue, getObjectById, getValueFromObjectByKey, editValueAssignByCondition } from '../../../generic/autocomplete';
+import { getObjectByValue, getPageCount, getObjectById, getValueFromObjectByKey, editValueAssignByCondition } from '../../../generic/autocomplete';
 import { AtaSubChapter1Service } from '../../../services/atasubchapter1.service';
 
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
@@ -41,13 +41,14 @@ export class CustomerContactsComponent implements OnInit {
 	@Output() refreshCustomerATAMapped = new EventEmitter();
 	@Output() refreshCustomerATAByCustomerId = new EventEmitter();
 	@Output() refreshCustomerContactMapped = new EventEmitter();
-   
 
-    formData = new FormData();
-    totalRecords: any;
-    pageIndex: number = 0;
-    pageSize: number = 10;
-    totalPages: number;
+
+	formData = new FormData();
+	totalRecords: any;
+	pageIndex: number = 0;
+	pageSize: number = 10;
+	totalPages: number;
+
 	contactsListOriginal: any;
 	firstNamesList: any;
 	middleNamesList: any;
@@ -83,8 +84,8 @@ export class CustomerContactsComponent implements OnInit {
 	ediData: any;
 	isEditButton: boolean = false;
 	id: number;
-    contactId: number;
-    customerContactId: number;
+	contactId: number;
+	customerContactId: number;
 	contactATAId: number;
 	customerCode: any;
 	customerName: any;
@@ -120,9 +121,12 @@ export class CustomerContactsComponent implements OnInit {
 		public customerService: CustomerService,
 		private dialog: MatDialog,
 		private atasubchapter1service: AtaSubChapter1Service,
-        private masterComapnyService: MasterComapnyService,
-        private configurations: ConfigurationService,
-        private commonService: CommonService,) {
+		private masterComapnyService: MasterComapnyService,
+		private configurations: ConfigurationService,
+		private commonService: CommonService,
+
+	) {
+
 	}
 
 	ngOnInit() {
@@ -136,8 +140,8 @@ export class CustomerContactsComponent implements OnInit {
 		} else {
 			this.id = this.savedGeneralInformationData.customerId;
 			this.customerCode = this.savedGeneralInformationData.customerCode;
-            this.customerName = this.savedGeneralInformationData.name;
-            this.getAllCustomerContact();
+			this.customerName = this.savedGeneralInformationData.name;
+			this.getAllCustomerContact();
 
 		}
 
@@ -150,7 +154,9 @@ export class CustomerContactsComponent implements OnInit {
 	get userName(): string {
 		return this.authService.currentUser ? this.authService.currentUser.userName : "";
 	}
-
+	getPageCount(totalNoofRecords, pageSize) {
+		return Math.ceil(totalNoofRecords / pageSize)
+	}
 	getAllContacts() {
 		this.customerService.getContactsFirstName().subscribe(res => {
 			this.contactsListOriginal = res[0];
@@ -170,7 +176,7 @@ export class CustomerContactsComponent implements OnInit {
 		this.middleNamesList = [...this.contactsListOriginal.filter(x => {
 
 			if (x.middleName !== null && x.middleName !== "") {
-                return x.middleName.toLowerCase().includes(event.query.toLowerCase())
+				return x.middleName.toLowerCase().includes(event.query.toLowerCase())
 			}
 
 		})]
@@ -213,8 +219,8 @@ export class CustomerContactsComponent implements OnInit {
 					// get all contacts
 					this.getAllContacts();
 					// get Customer Contatcs 
-                    this.getAllCustomerContact();
-                    this.refreshCustomerContactMapped.emit(this.id);
+					this.getAllCustomerContact();
+					this.refreshCustomerContactMapped.emit(this.id);
 
 					this.alertService.showMessage(
 						'Success',
@@ -225,7 +231,7 @@ export class CustomerContactsComponent implements OnInit {
 		})
 	}
 
-	
+
 
 	viewSelectedRow(rowData) {
 		this.sourceViewforContact = rowData;
@@ -287,11 +293,11 @@ export class CustomerContactsComponent implements OnInit {
 		// get Customer Contatcs 
 		this.customerService.getContacts(this.id).subscribe(res => {
 			this.customerContacts = res[0]
-            const re=res[0]
-            if (re.length > 0) {
-                this.totalRecords = re.length;
-                this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
-            }
+			const re = res[0]
+			// if (re.length > 0) {
+			//     this.totalRecords = re.length;
+			//     this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+			// }
 		})
 	}
 
@@ -309,7 +315,7 @@ export class CustomerContactsComponent implements OnInit {
 				MessageSeverity.success
 			);
 		});
-		
+
 
 	}
 
@@ -321,23 +327,23 @@ export class CustomerContactsComponent implements OnInit {
 		this.sourceViewforContact = '';
 		this.isDeleteMode = true;
 
-        this.contactId = rowData.contactId;
-        this.customerContactId = rowData.customerContactId
+		this.contactId = rowData.contactId;
+		this.customerContactId = rowData.customerContactId
 		this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
 		this.modal.result.then(() => {
 			console.log('When user closes');
 		}, () => { console.log('Backdrop click') })
 	}
 	deleteItemAndCloseModel() {
-        let contactId = this.contactId;
-        let customerContactId = this.customerContactId;
+		let contactId = this.contactId;
+		let customerContactId = this.customerContactId;
 		if (contactId > 0) {
 
-            this.customerService.deleteContact(customerContactId, this.userName).subscribe(
+			this.customerService.deleteContact(customerContactId, this.userName).subscribe(
 				response => {
 					this.saveCompleted(this.sourceCustomer);
-                    this.refreshCustomerATAByCustomerId.emit(this.id)
-                    this.refreshCustomerContactMapped.emit(this.id);
+					this.refreshCustomerATAByCustomerId.emit(this.id)
+					this.refreshCustomerContactMapped.emit(this.id);
 
 
 				},
@@ -415,7 +421,7 @@ export class CustomerContactsComponent implements OnInit {
 
 		this.refreshCustomerContactMapped.emit(this.id);
 
-	
+
 
 
 	}
@@ -433,7 +439,7 @@ export class CustomerContactsComponent implements OnInit {
 		})
 	}
 
-	
+
 
 	deleteATAMapped(content, rowData) {
 
@@ -531,7 +537,7 @@ export class CustomerContactsComponent implements OnInit {
 		this.disableSaveLastName = true;
 
 	}
-	
+
 	checkfirstNameExist(value) {
 
 		this.disablesaveForFirstname = false;
@@ -579,37 +585,37 @@ export class CustomerContactsComponent implements OnInit {
 		}
 
 	}
-    sampleExcelDownloadForContact() {
-        const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=CustomerContact&fileName=CustomerContact.xlsx`;
-        window.location.assign(url);
-    }
-    customContactExcelUpload(event) {
-        const file = event.target.files;
+	sampleExcelDownloadForContact() {
+		const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=CustomerContact&fileName=CustomerContact.xlsx`;
+		window.location.assign(url);
+	}
+	customContactExcelUpload(event) {
+		const file = event.target.files;
 
-        console.log(file);
-        if (file.length > 0) {
+		console.log(file);
+		if (file.length > 0) {
 
-            this.formData.append('file', file[0])
-            this.customerService.ContactUpload(this.formData, this.id).subscribe(res => {
-                event.target.value = '';
+			this.formData.append('file', file[0])
+			this.customerService.ContactUpload(this.formData, this.id).subscribe(res => {
+				event.target.value = '';
 
-                this.formData = new FormData();
-                this.getAllContacts();
-                this.getAllCustomerContact();
-                this.alertService.showMessage(
-                    'Success',
-                    `Successfully Uploaded  `,
-                    MessageSeverity.success
-                );
-            })
+				this.formData = new FormData();
+				this.getAllContacts();
+				this.getAllCustomerContact();
+				this.alertService.showMessage(
+					'Success',
+					`Successfully Uploaded  `,
+					MessageSeverity.success
+				);
+			})
 
 
 
-        }
+		}
 
-    }
+	}
 
-	
+
 }
 
 

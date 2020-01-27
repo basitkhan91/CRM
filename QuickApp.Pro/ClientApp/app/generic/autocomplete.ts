@@ -139,6 +139,10 @@ export function listSearchFilterObjectCreation(filterData) {
     return result;
 }
 
+export function getPageCount(totalNoofRecords?, pageSize?) {
+    return Math.ceil(totalNoofRecords / pageSize)
+}
+
 
 export function validateRecordExistsOrNotForInput(currentInput: any, originalData: any, originalDataField: string, editModeDataObject?: any) {
 

@@ -22,6 +22,7 @@ export class CustomerViewComponent implements OnInit {
     viewDataclassification: any[];
     customerContacts: any = [];
     customerContactsColumns: any[];
+    pageSize : number = 5;
     restrictHeaders = [
         { field: 'partNumber', header: 'PN' },
         { field: 'partDescription', header: 'Description' },
@@ -171,6 +172,10 @@ export class CustomerViewComponent implements OnInit {
 
 
     }
+    
+	getPageCount(totalNoofRecords, pageSize) {
+		return Math.ceil(totalNoofRecords / pageSize)
+	}
 
       getAllCustomerContact(customerId) {
         // get Customer Contatcs 

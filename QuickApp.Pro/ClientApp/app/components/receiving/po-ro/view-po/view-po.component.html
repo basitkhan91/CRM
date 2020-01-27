@@ -228,10 +228,10 @@
 
                         <ng-container>
                             <tr *ngIf="part.stockLine.length > 0"> <!--part.stockLine != null-->
-                                <th>Stock Line</th>
+                                <!--<th>Stock Line</th>-->
                                 <th>PN</th>
                                 <th>PN Description</th>
-                                <th>Control Num</th>
+                                <!--<th>Control Num</th>-->
                                 <th>ID</th>
                                 <th>Cond</th>
                                 <th colspan="2">Serial Num</th>
@@ -277,10 +277,10 @@
                                 <th colspan="5">Last</th>
                             </tr>
                             <tr *ngFor="let SL of part.stockLine;let stockline_row_index=index">
-                                <td>{{SL.stockLineNumber}}</td>
+                                <!--<td>{{SL.stockLineNumber}}</td>-->
                                 <td>{{part.itemMaster.partNumber}}</td>
                                 <td>{{part.itemMaster.partDescription}}</td>
-                                <td>{{SL.controlNumber}}</td>
+                                <!--<td>{{SL.controlNumber}}</td>-->
                                 <td>{{SL.idNumber}}</td>
                                 <td>{{SL.conditionText}}</td>
                                 <td colspan="2">{{SL.serialNumber}}</td>

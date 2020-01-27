@@ -13,6 +13,7 @@ import { getObjectByValue, getObjectById, getValueFromObjectByKey } from '../../
 import { VendorService } from '../../../services/vendor.service';
 import { ConfigurationService } from '../../../services/configuration.service';
 import { AuditHistory } from '../../../models/audithistory.model';
+import * as $ from 'jquery';
 
 @Component({
 	selector: 'app-vendor-documents',
@@ -182,15 +183,23 @@ export class VendorDocumentsComponent implements OnInit {
 		})
 	
 			
-		this.modal = this.modalService.open(content, { size: 'sm' });
-           this.modal.result.then(() => {
-            console.log('When user closes');
-        }, () => { console.log('Backdrop click') })
+		// this.modal = this.modalService.open(content, { size: 'sm' });
+        //    this.modal.result.then(() => {
+        //     console.log('When user closes');
+        // }, () => { console.log('Backdrop click') })
 		//console.log(this.sourceViewforDocument);
-		//this.getListById(row.vendorDocumentDetailId);
-		
-        
+		//this.getListById(row.vendorDocumentDetailId);        
 	}
+
+	openViewOnDblClick(row) {
+		this.workFlowtService.toGetUploadDocumentsList(row.attachmentId, row.vendorId,3).subscribe(res => {
+			this.sourceViewforDocumentList = res;	
+			this.sourceViewforDocument = row;
+		});
+		$('#view').modal('show');
+	}
+
+
 	openDelete(content, row) {
         this.isEditMode = false;
         this.isDeleteMode = true;

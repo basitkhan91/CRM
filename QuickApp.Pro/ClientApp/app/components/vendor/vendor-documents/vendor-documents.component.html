@@ -70,8 +70,7 @@
                             </ng-template>
 
                             <ng-template pTemplate="body" let-rowData let-columns="columns">
-                                <tr [pSelectableRow]="rowData">
-
+                                <tr [pSelectableRow]="rowData" [pSelectableRowDblClick]="rowData" pReorderableRowHandle (dblclick)="openViewOnDblClick(rowData)">
 
                                     <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
                                         {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
@@ -199,7 +198,10 @@
                             </tr>
                             <tr *ngFor="let f of sourceViewforDocumentList ">
                                 <td>{{f.fileName}}</td>
-                                <td><a class="btn btn-success btn-tbl-file-download" (click)="downloadFileUpload(f)" download>Download</a>  </td>
+                                <td>
+                                    <a (click)="downloadFileUpload(f)" matTooltip="Download" class="btn nobg btn-cstm"><span><i class="fa fa-download"></i></span></a>
+                                    <!-- <a class="btn btn-success btn-tbl-file-download" (click)="downloadFileUpload(f)" download>Download</a>   -->
+                                </td>
 
 
                             </tr>

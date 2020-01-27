@@ -167,12 +167,16 @@ export class CustomerBillingInformationComponent {
             this.billingInfoList = res[0]
 
 
-            if (res.length > 0) {
-                this.totalRecords = this.billingInfoList.length;
-                this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
-            }
+            // if (res.length > 0) {
+            //     this.totalRecords = this.billingInfoList.length;
+            //     this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+            // }
 
 		})
+    }
+    
+	getPageCount(totalNoofRecords, pageSize) {
+		return Math.ceil(totalNoofRecords / pageSize)
 	}
 
 	openBillingView(data) {

@@ -1681,4 +1681,8 @@ export class VendorEndpointService extends EndpointFactory {
 	return this.http.get<any>(`${this.configurations.baseUrl}/api/Vendor/getVendorCapabilityByVendorId?vendorId=${vendorId}`)
 	}
 
+	getVendorDataById(vendorId) {
+		return this.http.get<any>(`${this.configurations.baseUrl}/api/Vendor/getvendordatabyid/${vendorId}`)
+	}
+
 }

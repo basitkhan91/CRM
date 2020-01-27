@@ -53,37 +53,37 @@ export class VendorsListComponent implements OnInit {
     mobilePhone: number;
     fax: any = "";
     vendorTypeId: any = "";
-    description: any = "";
-    doingBusinessAsName: any = "";
-    parent: any = "";
-    vendorParentName: any = "";
-    address1: any = "";
-    address2: any = "";
+    // description: any = "";
+    // doingBusinessAsName: any = "";
+    // parent: any = "";
+    // vendorParentName: any = "";
+    // address1: any = "";
+    // address2: any = "";
     //address3: any = "";
-    city: any = "";
-    stateOrProvince: any = "";
-    postal: any = "";
-    country: any = "";
-    classificationName: any = "";
-    isPreferredVendor: any = "";
-    vendorContractReference: any = "";
-    licenseNumber: any = "";
-    capabilityId: any = "";
-    vendorCapabilityName: any = "";
-    vendorURL: any = "";
-    postalCode: any = "";
-    vendorClassificationId: any = "";
-    vendorClassificationName: any = "";
+    // city: any = "";
+    // stateOrProvince: any = "";
+    // postal: any = "";
+    // country: any = "";
+    // classificationName: any = "";
+    // isPreferredVendor: any = "";
+    // vendorContractReference: any = "";
+    // licenseNumber: any = "";
+    // capabilityId: any = "";
+    // vendorCapabilityName: any = "";
+    // vendorURL: any = "";
+    // postalCode: any = "";
+    // vendorClassificationId: any = "";
+    // vendorClassificationName: any = "";
     creditlimit: any = "";
     creditTermsId: any = "";
     currencyId: any = "";
     discountLevel: any = "";
-    vendorPhoneNo: any = "";
-    vendorPhoneExt: any = "";
+    // vendorPhoneNo: any = "";
+    // vendorPhoneExt: any = "";
     is1099Required: any = "";      
     isCertified: boolean = false;
-    isVendorAudit: boolean = false;
-    isVendorCustomer:any="";
+    // isVendorAudit: boolean = false;
+    // isVendorCustomer:any="";
     showGeneralData: boolean = true;
     showcontactdata: boolean = true;
     showfinancialdata: boolean = true;
@@ -115,7 +115,7 @@ export class VendorsListComponent implements OnInit {
     poCols: any = [];
     selectedPOColumns: any[];
     selectedPOColumn: any[];
-    isAllowNettingAPAR: boolean = false;
+    // isAllowNettingAPAR: boolean = false;
     vendorStatus: boolean = false;
     isIsBillingAddress: boolean = false;
     isIsShippingAddress: boolean = false;
@@ -194,7 +194,8 @@ export class VendorsListComponent implements OnInit {
     breadcrumbs: MenuItem[];
 	
     sourceViewforDocument: any;
-	sourceViewforDocumentList: any = [];
+    sourceViewforDocumentList: any = [];
+    vendorData: any = {};
     // purchaseOrderData: any;
     // poPageSize: number = 10;
     // poPageIndex: number = 0;
@@ -621,80 +622,22 @@ export class VendorsListComponent implements OnInit {
     }
 
     openView(content, row) {     
+
+        this.workFlowtService.getVendorDataById(row.vendorId).subscribe(res => {
+            console.log(res);
+            this.vendorData = res;
+        });
+
         this.loadVendorCapsData(row.vendorId);  
         this.toGetVendorGeneralDocumentsList(row.vendorId);
         this.getVendorProcess1099FromTransaction(row.vendorId);
         this.getDomesticWithVendorId(row.vendorId);
         this.InternatioalWithVendorId(row.vendorId);
         this.DefaultWithVendorId(row.vendorId);
-        this.vendorCode = row.vendorCode;
-        this.vendorName = row.vendorName;
-        this.vendorTypeId = row.t.vendorTypeId;
-        this.description=row.description;
-        console.log(this.vendorClassificationName);
-        this.doingBusinessAsName = row.t.doingBusinessAsName;
-        this.parent = row.t.parent;
-
-        console.log(row);
-      
-        this.vendorParentName=row.t.vendorParentName;
-        if (row.currency) {
-            this.currencyId = row.currency.symbol;
-        }
-        else {
-            this.currencyId = row.currencyId;
-        }
-
-        if (row.creditterms) {
-            this.creditTermsId = row.creditterms.name;
-        }
-        else {
-            this.creditTermsId = row.creditTermsId;
-        }
-       
-        this.address1 = row.address1;
-        this.address2 = row.address2;
-       // this.address3 = row.address3;
-        this.city = row.city;
-        this.stateOrProvince = row.stateOrProvince;
-        this.postalCode = row.postalCode;
-        this.country = row.countryName;
-        this.vendorPhoneNo = row.t.vendorPhone;
-        this.vendorPhoneExt = row.t.vendorPhoneExt;
-        this.vendorEmail = row.vendorEmail;
-        //this.vendorClassificationId = row.t.vendorClassificationId;
-        this.vendorClassificationName = row.classificationName;
-        this.vendorContractReference = row.t.vendorContractReference;
-        this.isPreferredVendor = row.t.isPreferredVendor;
-        this.licenseNumber = row.t.licenseNumber;
-        this.capabilityId = row.capabilityId;
-        this.vendorCapabilityName=row.vendorCapabilityName;
-        this.vendorURL = row.t.vendorURL;
-        this.creditlimit = row.t.creditLimit;
-        this.discountLevel = row.discountLevel;
-        this.is1099Required = row.t.is1099Required;       
-        this.vendorStatus= row.t.isActive;
-        this.edi = row.t.edi;
-        this.aeroExchange = row.t.aeroExchange;
-        this.ediDescription = row.t.ediDescription;
-        this.aeroExchangeDesc = row.t.aeroExchangeDescription;
-        
-        this.isIsBillingAddress= row.t.isAddressForBilling;
-        this.isIsShippingAddress= row.t.isAddressForShipping;	
-        this.vendorcreatedBy= row.t.createdBy;
-        this.vendorCreatedDate= row.t.createdDate;
-        this.vendorIntegration= row.integrationPortalNames; 	
-			
-
-        this.isCertified= row.t.isCertified;
-        this.isVendorAudit= row.t.vendorAudit;
-        this.isVendorCustomer= row.t.isVendorAlsoCustomer;
-        this.isAllowNettingAPAR= row.t.isAllowNettingAPAR;
-
         this.loadContactDataData(row.vendorId);
         this.loadPayamentData(row.vendorId);
         this.loadShippingData(row.vendorId);
-        this.loadBillingData(row.vendorId);
+        // this.loadBillingData(row.vendorId);
         this.loadWarningsData(row.vendorId);
         this.loadMemosData(row.vendorId);
         this.loadVendorDocumentsData(row.vendorId);
@@ -702,7 +645,73 @@ export class VendorsListComponent implements OnInit {
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
+        $('#step1').collapse('show');
+
+    //     this.vendorCode = row.vendorCode;
+    //     this.vendorName = row.vendorName;
+    //     this.vendorTypeId = row.t.vendorTypeId;
+    //     this.description=row.description;
+    //     console.log(this.vendorClassificationName);
+    //     this.doingBusinessAsName = row.t.doingBusinessAsName;
+    //     this.parent = row.t.parent;
+
+    //     console.log(row);
+      
+    //     this.vendorParentName=row.t.vendorParentName;
+    //     if (row.currency) {
+    //         this.currencyId = row.currency.symbol;
+    //     }
+    //     else {
+    //         this.currencyId = row.currencyId;
+    //     }
+
+    //     if (row.creditterms) {
+    //         this.creditTermsId = row.creditterms.name;
+    //     }
+    //     else {
+    //         this.creditTermsId = row.creditTermsId;
+    //     }
+       
+    //     this.address1 = row.address1;
+    //     this.address2 = row.address2;
+    //    // this.address3 = row.address3;
+    //     this.city = row.city;
+    //     this.stateOrProvince = row.stateOrProvince;
+    //     this.postalCode = row.postalCode;
+    //     this.country = row.countryName;
+    //     this.vendorPhoneNo = row.t.vendorPhone;
+    //     this.vendorPhoneExt = row.t.vendorPhoneExt;
+    //     this.vendorEmail = row.vendorEmail;
+    //     //this.vendorClassificationId = row.t.vendorClassificationId;
+    //     this.vendorClassificationName = row.classificationName;
+    //     this.vendorContractReference = row.t.vendorContractReference;
+    //     this.isPreferredVendor = row.t.isPreferredVendor;
+    //     this.licenseNumber = row.t.licenseNumber;
+    //     this.capabilityId = row.capabilityId;
+    //     this.vendorCapabilityName=row.vendorCapabilityName;
+    //     this.vendorURL = row.t.vendorURL;
+    //     this.creditlimit = row.t.creditLimit;
+    //     this.discountLevel = row.discountLevel;
+    //     this.is1099Required = row.t.is1099Required;       
+    //     this.vendorStatus= row.t.isActive;
+    //     this.edi = row.t.edi;
+    //     this.aeroExchange = row.t.aeroExchange;
+    //     this.ediDescription = row.t.ediDescription;
+    //     this.aeroExchangeDesc = row.t.aeroExchangeDescription;
+        
+    //     this.isIsBillingAddress= row.t.isAddressForBilling;
+    //     this.isIsShippingAddress= row.t.isAddressForShipping;	
+    //     this.vendorcreatedBy= row.t.createdBy;
+    //     this.vendorCreatedDate= row.t.createdDate;
+    //     this.vendorIntegration= row.integrationPortalNames; 	
+			
+
+    //     this.isCertified= row.t.isCertified;
+    //     this.isVendorAudit= row.t.vendorAudit;
+    //     this.isVendorCustomer= row.t.isVendorAlsoCustomer;
+    //     this.isAllowNettingAPAR= row.t.isAllowNettingAPAR;        
     }
+
     openHelpText(content) {
         this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
