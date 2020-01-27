@@ -1651,7 +1651,7 @@ namespace QuickApp.Pro.Controllers
                 // addressObj.IsActive = CustomerShippingViewModel.AddressStatus;
                 checkPaymentObj.IsActive = CustomerShippingViewModel.IsActive;
                 checkPaymentObj.MasterCompanyId = 1;
-                checkPaymentObj.IsDelete = true;
+                checkPaymentObj.IsDeleted = true;
                 checkPaymentObj.UpdatedDate = DateTime.Now;
                 //checkPaymentObj.CreatedBy = CustomerShippingViewModel.CreatedBy;
                 checkPaymentObj.UpdatedBy = CustomerShippingViewModel.UpdatedBy;
