@@ -4,24 +4,25 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DAL.Models
 {
-    public class LegalEntityBillingAddress : TempAddress
+    public class LegalEntityDocumentDetail
     {
         [Key]
-        public long LegalEntityBillingAddressId { get; set; }
+        public long LegalEntityDocumentDetailId { get; set; }
+      
         public long LegalEntityId { get; set; }
-		[ForeignKey("AddressId")]
-		public long? AddressId { get; set; }
-        public string SiteName { get; set; }
-        public bool? IsPrimary { get; set; }
-        [ForeignKey("MasterCompanyId")]
-        public int MasterCompanyId { get; set; }
+       
+      
+        public long AttachmentId { get; set; }
+        public int? MasterCompanyId { get; set; }
+        public string DocName { get; set; }
+        public string DocMemo { get; set; }
+        public string DocDescription { get; set; }
+
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime UpdatedDate { get; set; }
         public bool IsActive { get; set; }
         public bool IsDeleted { get; set; }
-
-		public virtual Address Address { get; set; }
     }
 }
