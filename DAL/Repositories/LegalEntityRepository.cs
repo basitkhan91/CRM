@@ -1,17 +1,25 @@
-﻿using DAL.Models;
+﻿using DAL.Common;
+using DAL.Models;
 using DAL.Repositories.Interfaces;
+using ExcelDataReader;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Text;
 
 namespace DAL.Repositories
 {
     class LegalEntityRepository : Repository<DAL.Models.LegalEntity>, ILegalEntity
     {
-        public LegalEntityRepository(ApplicationDbContext context) : base(context)
-        { }
+        public LegalEntityRepository(ApplicationDbContext context, IOptions<AppSettings> settings) : base(context)
+        {
+            AppSettings = settings.Value;
+        }
 
         public IEnumerable<object> GetParentEntities()
         {
@@ -628,9 +636,385 @@ namespace DAL.Repositories
                 throw ex;
             }
         }
-        //Task<Tuple<bool, string[]>> CreateRoleAsync(ApplicationRole role, IEnumerable<string> claims);
-                
 
+        private AppSettings AppSettings { get; set; }
+
+        public IEnumerable<object> GetLegalEntityInternationalShippingAuditHistoryByid(long legalEntityId, long internationalShippingId)
+        {
+            {
+
+                var data = (from c in _appContext.LegalEntityInternationalShippingAudit
+                            where c.LegalEntityId == legalEntityId && c.InternationalShippingId == internationalShippingId
+                            select new
+                            {
+                                c.InternationalShippingId,
+                                c.AuditInternationalShippingId,
+                                c.LegalEntityId,
+                                c.ExportLicense,
+                                c.StartDate,
+                                c.ExpirationDate,
+                                c.Amount,
+                                c.Description,
+                                c.IsPrimary,
+                                c.CreatedBy,
+                                c.UpdatedBy,
+                                c.UpdatedDate,
+                                c.CreatedDate,
+
+                                c.MasterCompanyId
+                            }).OrderByDescending(c => c.UpdatedDate).ToList();
+                return data;
+            }
+        }
+        public IEnumerable<object> UploadLegalEntityBillingAddressCustomData(IFormFile file, long legalEntityId)
+        {
+            string legalEntityName = string.Empty;
+            List<object> obj = new List<object>();
+
+            int count = 0;
+            try
+            {
+                Address addr;
+                LegalEntityBillingAddress bill;
+
+                string fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+                string filePath = Path.Combine(AppSettings.CustomUploadFilePath, Convert.ToString(ModuleEnum.CustomerBillingAddress), DateTime.Now.ToString("yyyy-MM-dd hh-mm-ss"));
+
+                if (!Directory.Exists(filePath))
+                {
+                    Directory.CreateDirectory(filePath);
+                }
+                string fullPath = Path.Combine(filePath, fileName);
+                using (var stream = File.Open(fullPath, FileMode.Create))
+                {
+                    file.CopyTo(stream);
+                    {
+                        using (var reader = ExcelReaderFactory.CreateReader(stream))
+                        {
+                            do
+                            {
+                                while (reader.Read())
+                                {
+                                    if (count > 0 && reader.GetValue(0) != null && reader.GetValue(3) != null && reader.GetValue(2) != null && reader.GetValue(4) != null && reader.GetValue(5) != null && reader.GetValue(6) != null)
+                                    {
+
+                                        addr = new Address();
+                                        bill = new LegalEntityBillingAddress();
+                                        if (reader.GetValue(0) != null)
+                                            addr.Line1 = Convert.ToString(reader.GetValue(0));
+                                        if (reader.GetValue(1) != null)
+                                            addr.Line2 = Convert.ToString(reader.GetValue(1));
+                                        if (reader.GetValue(2) != null)
+                                            addr.City = Convert.ToString(reader.GetValue(2));
+                                        if (reader.GetValue(3) != null)
+                                            addr.StateOrProvince = Convert.ToString(reader.GetValue(3));
+                                        if (reader.GetValue(4) != null)
+                                            addr.PostalCode = Convert.ToString(reader.GetValue(4));
+
+                                        if (reader.GetValue(5) != null)
+                                            legalEntityName = Convert.ToString(reader.GetValue(5));
+                                        var country = _appContext.Countries.Where(p => p.countries_name == legalEntityName).FirstOrDefault();
+                                        if (country != null)
+                                        {
+                                            addr.Country = country.countries_id.ToString();
+                                        }
+                                        addr.MasterCompanyId = 1;
+                                        addr.IsActive = true;
+                                        addr.CreatedBy = addr.UpdatedBy = "System";
+                                        addr.UpdatedDate = addr.CreatedDate = DateTime.Now;
+                                        _appContext.Address.Add(addr);
+                                        _appContext.SaveChanges();
+
+                                        if (reader.GetValue(6) != null)
+                                            bill.SiteName = Convert.ToString(reader.GetValue(6));
+
+                                        bill.MasterCompanyId = 1;
+                                        bill.LegalEntityId = legalEntityId;
+                                        bill.IsActive = true;
+                                        bill.IsDeleted = false;
+                                        bill.IsPrimary = false;
+                                        bill.AddressId = addr.AddressId;
+                                        bill.CreatedBy = bill.UpdatedBy = "System";
+                                        bill.UpdatedDate = bill.CreatedDate = DateTime.Now;
+                                        _appContext.LegalEntityBillingAddress.Add(bill);
+                                        _appContext.SaveChanges();
+                                    }
+                                    count++;
+                                }
+                            } while (reader.NextResult());
+
+                        }
+                    }
+                }
+                return obj;
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return obj;
+        }
+        public IEnumerable<object> UploadLegalEntityShippingAddressCustomData(IFormFile file, long legalEntityId)
+        {
+            string countryName = string.Empty;
+            List<object> obj = new List<object>();
+
+            int count = 0;
+            try
+            {
+                Address addr;
+                LegalEntityShippingAddress ship;
+
+                string fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+                string filePath = Path.Combine(AppSettings.CustomUploadFilePath, Convert.ToString(ModuleEnum.CustomerShippingAddress), DateTime.Now.ToString("yyyy-MM-dd hh-mm-ss"));
+
+                if (!Directory.Exists(filePath))
+                {
+                    Directory.CreateDirectory(filePath);
+                }
+
+                string fullPath = Path.Combine(filePath, fileName);
+
+
+                using (var stream = File.Open(fullPath, FileMode.Create))
+                {
+                    file.CopyTo(stream);
+                    {
+                        using (var reader = ExcelReaderFactory.CreateReader(stream))
+                        {
+                            do
+                            {
+                                while (reader.Read())
+                                {
+                                    if (count > 0 && reader.GetValue(0) != null && reader.GetValue(3) != null && reader.GetValue(2) != null && reader.GetValue(4) != null && reader.GetValue(5) != null && reader.GetValue(6) != null)
+                                    {
+
+                                        addr = new Address();
+                                        ship = new LegalEntityShippingAddress();
+                                        if (reader.GetValue(0) != null)
+                                            addr.Line1 = Convert.ToString(reader.GetValue(0));
+                                        if (reader.GetValue(1) != null)
+                                            addr.Line2 = Convert.ToString(reader.GetValue(1));
+                                        if (reader.GetValue(2) != null)
+                                            addr.City = Convert.ToString(reader.GetValue(2));
+                                        if (reader.GetValue(3) != null)
+                                            addr.StateOrProvince = Convert.ToString(reader.GetValue(3));
+                                        if (reader.GetValue(4) != null)
+                                            addr.PostalCode = Convert.ToString(reader.GetValue(4));
+
+                                        if (reader.GetValue(5) != null)
+                                            countryName = Convert.ToString(reader.GetValue(5));
+                                        var country = _appContext.Countries.Where(p => p.countries_name == countryName).FirstOrDefault();
+                                        if (country != null)
+                                        {
+                                            addr.Country = country.countries_id.ToString();
+                                        }
+                                        addr.MasterCompanyId = 1;
+                                        addr.IsActive = true;
+                                        addr.CreatedBy = addr.UpdatedBy = "System";
+                                        addr.UpdatedDate = addr.CreatedDate = DateTime.Now;
+
+                                        _appContext.Address.Add(addr);
+                                        _appContext.SaveChanges();
+                                        if (reader.GetValue(6) != null)
+                                            ship.SiteName = Convert.ToString(reader.GetValue(6));
+                                        ship.MasterCompanyId = 1;
+                                        ship.LegalEntityId = legalEntityId;
+                                        ship.IsActive = true;
+                                        ship.IsDeleted = false;
+                                        ship.IsPrimary = false;
+                                        ship.AddressId = addr.AddressId;
+                                        ship.CreatedBy = ship.UpdatedBy = "System";
+                                        ship.UpdatedDate = ship.CreatedDate = DateTime.Now;
+                                        _appContext.LegalEntityShippingAddress.Add(ship);
+                                        _appContext.SaveChanges();
+                                    }
+                                    count++;
+                                }
+                            } while (reader.NextResult());
+                        }
+                    }
+                }
+                return obj;
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return obj;
+        }
+        public void UploadLegalEntityInternationalCustomData(IFormFile file, long legalEntityId)
+        {
+            string countryName = string.Empty;
+            List<object> obj = new List<object>();
+
+            int count = 0;
+            try
+            {
+                LegalEntityInternationalShipping ship;
+                string fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+                string filePath = Path.Combine(AppSettings.CustomUploadFilePath, Convert.ToString(ModuleEnum.CustomerInternationalShippingAddress), DateTime.Now.ToString("yyyy-MM-dd hh-mm-ss"));
+
+                if (!Directory.Exists(filePath))
+                {
+                    Directory.CreateDirectory(filePath);
+                }
+
+                string fullPath = Path.Combine(filePath, fileName);
+                using (var stream = File.Open(fullPath, FileMode.Create))
+                {
+                    file.CopyTo(stream);
+                    {
+                        using (var reader = ExcelReaderFactory.CreateReader(stream))
+                        {
+                            do
+                            {
+                                while (reader.Read())
+                                {
+                                    if (count > 0 && reader.GetValue(4) != null)
+                                    {
+
+                                        ship = new LegalEntityInternationalShipping();
+                                        if (reader.GetValue(0) != null)
+                                            ship.ExportLicense = Convert.ToString(reader.GetValue(0));
+                                        if (reader.GetValue(1) != null && reader.GetValue(1).GetType().Name == "DateTime")
+                                            ship.StartDate = Convert.ToDateTime(reader.GetValue(1));
+                                        if (reader.GetValue(2) != null)
+                                            ship.Description = Convert.ToString(reader.GetValue(2));
+                                        if (reader.GetValue(3) != null && reader.GetValue(3).GetType().Name == "DateTime")
+                                            ship.ExpirationDate = Convert.ToDateTime(reader.GetValue(3));
+                                        if (reader.GetValue(5) != null && reader.GetValue(5).GetType().Name == "Double")
+                                            ship.Amount = Convert.ToDecimal(reader.GetValue(5));
+
+                                        if (reader.GetValue(4) != null)
+                                            countryName = Convert.ToString(reader.GetValue(4));
+                                        var country = _appContext.Countries.Where(p => p.countries_name == countryName).FirstOrDefault();
+                                        if (country != null)
+                                        {
+                                            ship.ShipToCountryId = country.countries_id;
+                                            ship.MasterCompanyId = 1;
+                                            ship.IsActive = true;
+                                            ship.IsDeleted = false;
+                                            ship.IsPrimary = false;
+                                            ship.LegalEntityId = legalEntityId;
+                                            ship.CreatedBy = ship.UpdatedBy = "System";
+                                            ship.UpdatedDate = ship.CreatedDate = DateTime.Now;
+                                            _appContext.LegalEntityInternationalShipping.Add(ship);
+                                            _appContext.SaveChanges();
+                                        }
+                                    }
+                                    count++;
+                                }
+                            } while (reader.NextResult());
+
+                        }
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+        }
+        public void UploadLegalEntityContactsCustomData(IFormFile file, long legalEntityId)
+        {
+            string countryName = string.Empty;
+            List<object> obj = new List<object>();
+            int count = 0;
+
+            try
+            {
+                Contact cont;
+                LegalEntityContact legalCont;
+
+                string fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+                string filePath = Path.Combine(AppSettings.CustomUploadFilePath, Convert.ToString(Common.ModuleEnum.CustomerContact), DateTime.Now.ToString("yyyy-MM-dd hh-mm-ss"));
+
+                if (!Directory.Exists(filePath))
+                {
+                    Directory.CreateDirectory(filePath);
+                }
+
+                string fullPath = Path.Combine(filePath, fileName);
+
+
+                using (var stream = File.Open(fullPath, FileMode.Create))
+                {
+                    file.CopyTo(stream);
+                    {
+                        using (var reader = ExcelReaderFactory.CreateReader(stream))
+                        {
+                            do
+                            {
+                                while (reader.Read())
+                                {
+                                    if (count > 0 && reader.GetValue(0) != null && reader.GetValue(3) != null && reader.GetValue(2) != null && reader.GetValue(4) != null && reader.GetValue(5) != null && reader.GetValue(6) != null)
+                                    {
+
+                                        cont = new Contact();
+                                        legalCont = new LegalEntityContact();
+                                        if (reader.GetValue(0) != null)
+                                            cont.Tag = Convert.ToString(reader.GetValue(0));
+                                        if (reader.GetValue(1) != null)
+                                            cont.Prefix = Convert.ToString(reader.GetValue(1));
+                                        if (reader.GetValue(2) != null)
+                                            cont.FirstName = Convert.ToString(reader.GetValue(2));
+                                        if (reader.GetValue(3) != null)
+                                            cont.MiddleName = Convert.ToString(reader.GetValue(3));
+                                        if (reader.GetValue(4) != null)
+                                            cont.LastName = Convert.ToString(reader.GetValue(4));
+                                        if (reader.GetValue(5) != null)
+                                            cont.ContactTitle = Convert.ToString(reader.GetValue(5));
+
+                                        if (reader.GetValue(6) != null)
+                                            cont.Email = Convert.ToString(reader.GetValue(6));
+                                        if (reader.GetValue(7) != null)
+                                            cont.WorkPhone = Convert.ToString(reader.GetValue(7));
+                                        if (reader.GetValue(8) != null)
+                                            cont.WorkPhoneExtn = Convert.ToString(reader.GetValue(8));
+                                        if (reader.GetValue(9) != null)
+                                            cont.MobilePhone = Convert.ToString(reader.GetValue(9));
+                                        if (reader.GetValue(10) != null)
+                                            cont.AlternatePhone = Convert.ToString(reader.GetValue(10));
+                                        if (reader.GetValue(11) != null)
+                                            cont.Fax = Convert.ToString(reader.GetValue(11));
+                                        if (reader.GetValue(12) != null)
+                                            cont.Notes = Convert.ToString(reader.GetValue(12));
+
+                                        cont.IsActive = true;
+                                        cont.MasterCompanyId = 1;
+                                        cont.CreatedBy = cont.UpdatedBy = "System";
+                                        cont.UpdatedDate = cont.CreatedDate = DateTime.Now;
+                                        _appContext.Contact.Add(cont);
+                                        _appContext.SaveChanges();
+                                        legalCont.MasterCompanyId = 1;
+                                        legalCont.LegalEntityId = legalEntityId;
+                                        legalCont.IsActive = true;
+                                        legalCont.IsDeleted = false;
+                                        legalCont.IsDefaultContact = false;
+                                        legalCont.ContactId = legalCont.ContactId;
+                                        legalCont.CreatedBy = legalCont.UpdatedBy = "System";
+                                        legalCont.UpdatedDate = legalCont.CreatedDate = DateTime.Now;
+                                        _appContext.LegalEntityContact.Add(legalCont);
+                                        _appContext.SaveChanges();
+                                    }
+                                    count++;
+                                }
+                            } while (reader.NextResult());
+
+                        }
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+        }
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
 
     }

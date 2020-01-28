@@ -1,4 +1,5 @@
 ﻿using DAL.Models;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -7,6 +8,11 @@ namespace DAL.Repositories.Interfaces
 {
   public  interface ILegalEntity : IRepository<LegalEntity>
     {
+        void UploadLegalEntityContactsCustomData(IFormFile file, long legalEntityId);
+        void UploadLegalEntityInternationalCustomData(IFormFile file, long legalEntityId);
+        IEnumerable<object> UploadLegalEntityShippingAddressCustomData(IFormFile file, long legalEntityId);
+        IEnumerable<object> UploadLegalEntityBillingAddressCustomData(IFormFile file, long legalEntityId);
+        IEnumerable<object> GetLegalEntityInternationalShippingAuditHistoryByid(long legalEntityId, long InternationalShippingId);
         IEnumerable<object> GetAllLegalEntityData();
         IEnumerable<object> GetParentEntities();  
         long CreateLegalEntityBillingAddress(LegalEntityBillingAddress billingAddress);
