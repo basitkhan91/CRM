@@ -352,6 +352,9 @@ export class CustomerAircraftComponent implements OnInit {
         });
 
     }
+    getPageCount(totalNoofRecords, pageSize) {
+		return Math.ceil(totalNoofRecords / pageSize)
+	}
 
 
     // add Inventory pop Functions

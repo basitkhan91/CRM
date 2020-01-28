@@ -13506,6 +13506,11 @@ body .ui-datepicker table td > a.ui-state-active {
     border: 1px solid #ddd;
     padding: 10px;
     margin: 5px 0;
+    background-color: #fff;;
+}
+
+.popup-blur {
+    background: rgba(0, 0, 0, 0.3);
 }
 
 .shadow-box-cstm {
@@ -14108,6 +14113,13 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
 .ptable-cus-pma .ui-table-wrapper {
     padding: 0 !important;
 }
+.ptable-cus-pma .ui-table-summary {
+    margin-top: 3px;
+    background-color: #fff;
+    color: #333333;
+    border: 1px solid #fff !important;
+    padding: 0.571em 1em;
+}
 
 .multi-general p-multiselect[_ngcontent-c234] {
     width: 207px !important;
@@ -14269,6 +14281,9 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
 }
 
 .p-dropdown-cus-aircraft .ui-dropdown {
+    width: 100% !important;
+}
+.p-dropdown-cus-fullwidth .ui-dropdown {
     width: 100% !important;
 }
 
@@ -14693,6 +14708,12 @@ p-table tr th input[type="text"], p-table tr th input[type="date"] {
 
 p-table tr td .btn i.fa-pencil {
     color: #0252b1;
+}
+.p-t-10 {
+    padding-top: 10px;
+}
+.full-width {
+    width: 100%;
 }
 
 .itemcapes-ptable .ui-table-scrollable-body {

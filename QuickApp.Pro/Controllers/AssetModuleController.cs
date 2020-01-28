@@ -212,57 +212,59 @@ namespace QuickApp.Pro.Controllers
 
         //capes Saving//
         [HttpPost("Mancapespost")]
-        public IActionResult addCapes([FromBody] List<Capability> capabilities)
+        public IActionResult addCapes([FromBody] List<AssetCapes> capabilities)
         {
             if (ModelState.IsValid)
             {
                 for (var i = 0; i < capabilities.Count(); i++)
                 {
-                    AssetCapes assetcapes = new AssetCapes();
-                    //capabilities[i].IsActive = true;
-                    if (capabilities[i].ItemMasterId == null)
-                    {
-                        capabilities[i].ItemMasterId = null;
-                        assetcapes.ItemMasterId = null;
-                    }
-                    capabilities[i].MasterCompanyId = 1;
-                    assetcapes.MasterCompanyId = 1;
-                    capabilities[i].CreatedDate = DateTime.Now;
-                    assetcapes.CreatedDate = DateTime.Now;
-                    capabilities[i].UpdatedDate = DateTime.Now;
-                    assetcapes.UpdatedDate = DateTime.Now;
-                    if (capabilities[i].CapabilityId > 0)
-                    {
-                        capabilities[i].UpdatedDate = DateTime.Now;
+                    _unitOfWork.Repository<AssetCapes>().Add(capabilities[i]);
+                    _unitOfWork.SaveChanges();
+                    //AssetCapes assetcapes = new AssetCapes();
+                    ////capabilities[i].IsActive = true;
+                    //if (capabilities[i].ItemMasterId == null)
+                    //{
+                    //    capabilities[i].ItemMasterId = null;
+                    //    assetcapes.ItemMasterId = null;
+                    //}
+                    //capabilities[i].MasterCompanyId = 1;
+                    //assetcapes.MasterCompanyId = 1;
+                    //capabilities[i].CreatedDate = DateTime.Now;
+                    //assetcapes.CreatedDate = DateTime.Now;
+                    //capabilities[i].UpdatedDate = DateTime.Now;
+                    //assetcapes.UpdatedDate = DateTime.Now;
+                    //if (capabilities[i].CapabilityId > 0)
+                    //{
+                    //    capabilities[i].UpdatedDate = DateTime.Now;
 
-                        _unitOfWork.Repository<Capability>().Update(capabilities[i]);
-                        _unitOfWork.SaveChanges();
+                    //    _unitOfWork.Repository<Capability>().Update(capabilities[i]);
+                    //    _unitOfWork.SaveChanges();
 
-                        _unitOfWork.Repository<AssetCapes>().Update(assetcapes);
-                        _unitOfWork.SaveChanges();
-                    }
-                    else
-                    {
-                        _unitOfWork.Repository<Capability>().Add(capabilities[i]);
-                        _unitOfWork.SaveChanges();
+                    //    _unitOfWork.Repository<AssetCapes>().Update(assetcapes);
+                    //    _unitOfWork.SaveChanges();
+                    //}
+                    //else
+                    //{
+                    //    _unitOfWork.Repository<Capability>().Add(capabilities[i]);
+                    //    _unitOfWork.SaveChanges();
 
-                        assetcapes.AssetRecordId = capabilities[i].AssetRecordId;
-                        assetcapes.CapabilityId = (int)capabilities[i].CapabilityTypeId;
-                        assetcapes.MasterCompanyId = capabilities[i].MasterCompanyId;
-                        assetcapes.CreatedBy = "1";
-                        assetcapes.UpdatedBy = "1";
-                        assetcapes.CreatedDate = DateTime.Today;
-                        assetcapes.UpdatedDate = DateTime.Today;
-                        assetcapes.IsActive = capabilities[i].IsActive;
-                        assetcapes.IsDelete = capabilities[i].IsDelete;
-                        assetcapes.AircraftTypeId = capabilities[i].AircraftTypeId;
-                        assetcapes.AircraftModelId = capabilities[i].AircraftModelId;
-                        assetcapes.AircraftDashNumberId = capabilities[i].AircraftDashNumberId;
-                        assetcapes.ItemMasterId = capabilities[i].ItemMasterId;
-                        _unitOfWork.Repository<AssetCapes>().Add(assetcapes);
-                        _unitOfWork.SaveChanges();
-                    }
-                   
+                    //    assetcapes.AssetRecordId = capabilities[i].AssetRecordId;
+                    //    assetcapes.CapabilityId = (int)capabilities[i].CapabilityTypeId;
+                    //    assetcapes.MasterCompanyId = capabilities[i].MasterCompanyId;
+                    //    assetcapes.CreatedBy = "1";
+                    //    assetcapes.UpdatedBy = "1";
+                    //    assetcapes.CreatedDate = DateTime.Today;
+                    //    assetcapes.UpdatedDate = DateTime.Today;
+                    //    assetcapes.IsActive = capabilities[i].IsActive;
+                    //    assetcapes.IsDelete = capabilities[i].IsDelete;
+                    //    assetcapes.AircraftTypeId = capabilities[i].AircraftTypeId;
+                    //    assetcapes.AircraftModelId = capabilities[i].AircraftModelId;
+                    //    assetcapes.AircraftDashNumberId = capabilities[i].AircraftDashNumberId;
+                    //    assetcapes.ItemMasterId = capabilities[i].ItemMasterId;
+                    //    _unitOfWork.Repository<AssetCapes>().Add(assetcapes);
+                    //    _unitOfWork.SaveChanges();
+                    //}
+
                 }
             }
             return Ok();

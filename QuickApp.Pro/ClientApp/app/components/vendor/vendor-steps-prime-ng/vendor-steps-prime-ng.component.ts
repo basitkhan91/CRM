@@ -6,9 +6,9 @@ import { Router, ActivatedRoute, Params, NavigationExtras } from '@angular/route
 import { VendorService } from '../../../services/vendor.service';
 
 @Component({
-    selector: 'app-vendor-steps-prime-ng',
-    templateUrl: './vendor-steps-prime-ng.component.html',
-    styleUrls: ['./vendor-steps-prime-ng.component.scss']
+	selector: 'app-vendor-steps-prime-ng',
+	templateUrl: './vendor-steps-prime-ng.component.html',
+	styleUrls: ['./vendor-steps-prime-ng.component.scss']
 })
 /** vendor-steps-primeNG component*/
 export class VendorStepsPrimeNgComponent implements OnInit {
@@ -16,96 +16,96 @@ export class VendorStepsPrimeNgComponent implements OnInit {
 	ifvalue: boolean;
 	generalcollection: any;
 	collection: any;
-    currentUrl: any;
+	currentUrl: any;
 	isDisabledSteps = false;
 
 	items: MenuItem[];
 
 	msgs: Message[] = [];
 
-    	
+
 	showComponentPTab: boolean;
 
 	constructor(private router: ActivatedRoute, private route: Router, private vendorService: VendorService) {
 		//debugger;
-        this.vendorService.stepData$.subscribe(value => {
-            this.changeStep(value);
-        });
-		
-		
-    }
+		// this.vendorService.stepData$.subscribe(value => {
+		//     this.changeStep(value);
+		// });
 
 
-    changeStep(value) {	
+	}
+
+
+	changeStep(value) {
 		console.log(this.vendorService.listCollection);
-			
-        if (value == 'General Information') {
-            //	this.showComponentPTab = this.vendorService.ShowPtab;
-            this.activeMenuItem = 1;
-            this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-general-information');
-        }
+
+		if (value == 'General Information') {
+			//	this.showComponentPTab = this.vendorService.ShowPtab;
+			this.activeMenuItem = 1;
+			this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-general-information');
+		}
 
 		else if (value == 'Capabilities') {
 
-		
-            this.activeMenuItem = 2;
-            this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-capes');
-        }
-        else if (value == 'Contacts') {
 
-            this.activeMenuItem = 3;
-            this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-contacts');
-        }
-        else if (value == 'Financial Information') {
+			this.activeMenuItem = 2;
+			this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-capes');
+		}
+		else if (value == 'Contacts') {
 
-            this.activeMenuItem = 4;
-            this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-financial-information');
-        }
-        else if (value == 'Payment Information') {
+			this.activeMenuItem = 3;
+			this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-contacts');
+		}
+		else if (value == 'Financial Information') {
 
-            this.activeMenuItem = 5;
-            this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-payment-information');
-        }
-        else if (value == 'Shipping Information') {
+			this.activeMenuItem = 4;
+			this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-financial-information');
+		}
+		else if (value == 'Payment Information') {
 
-            this.activeMenuItem = 6;
-            this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-shipping-information');
+			this.activeMenuItem = 5;
+			this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-payment-information');
+		}
+		else if (value == 'Shipping Information') {
+
+			this.activeMenuItem = 6;
+			this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-shipping-information');
 		}
 		else if (value == 'Billing Information') {
 
 			this.activeMenuItem = 7;
-            this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-billing-information');
+			this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-billing-information');
 		}
-        else if (value == 'Warnings') {
+		else if (value == 'Warnings') {
 
-            this.activeMenuItem = 8;
-            this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-warnings');
-        }
-        else if (value == 'Memos') {
+			this.activeMenuItem = 8;
+			this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-warnings');
+		}
+		else if (value == 'Memos') {
 
-            this.activeMenuItem = 9;
-            this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-memo');
+			this.activeMenuItem = 9;
+			this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-memo');
 		}
 		else if (value == 'Documents') {
 
-            this.activeMenuItem = 10;
-            this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-documents');
+			this.activeMenuItem = 10;
+			this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-documents');
 		}
-		else{
-				this.activeMenuItem = 1;
-				this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-general-information');
+		else {
+			this.activeMenuItem = 1;
+			this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-general-information');
 		}
-		
-    }
 
-    ngOnInit() {
-        if (this.vendorService.isEditMode) {
+	}
 
-				this.isDisabledSteps = true;
-		
-        }
+	ngOnInit() {
+		if (this.vendorService.isEditMode) {
+
+			this.isDisabledSteps = true;
+
+		}
 		//alert('ngInit');
-		
+
 
 		//this.items = [{
 		//	label: 'General Information',

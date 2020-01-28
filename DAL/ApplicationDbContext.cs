@@ -515,8 +515,9 @@ namespace DAL
         public DbSet<EmployeeStationAudit> EmployeeStationAudit { get; set; }
         public DbSet<Carrier> Carrier { get; set; }
         public DbSet<ShippingBillingAddressAudit> ShippingBillingAddressAudit { get; set; }
+        public DbSet<DocumentsAudit> DocumentsAudit { get; set; }
 
-        
+
 
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {

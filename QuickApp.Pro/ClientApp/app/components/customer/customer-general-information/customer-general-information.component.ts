@@ -114,6 +114,9 @@ export class CustomerGeneralInformationComponent implements OnInit {
     selectedRowForDeleteRestrictDER: any = {};
     disableAccountType: boolean = false;
     modal: NgbModalRef;
+    parentCustomer = [];
+    parentCustomerOriginal = []
+
 
 
 
@@ -142,6 +145,8 @@ export class CustomerGeneralInformationComponent implements OnInit {
         // this.getAllClassification();
         this.getAllIntegrations()
 
+        console.log(this.customerListOriginal);
+
         if (this.isEdit) {
             this.customerService.getCustomerdataById(this.id).subscribe(response => {
                 console.log(response);
@@ -150,6 +155,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
 
                 this.editGeneralInformation.emit(res);
                 this.editData = res;
+                this.parentCustomerList(this.id);
 
                 this.generalInformation = {
                     ...this.editData,
@@ -199,6 +205,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
                 ...this.generalInformation,
                 customerAffiliationId: String(this.generalInformation.customerAffiliationId)
             }
+            this.parentCustomerOriginal = this.customerListOriginal;
         }
     }
 
@@ -317,35 +324,29 @@ export class CustomerGeneralInformationComponent implements OnInit {
         console.log(event)
 
     }
-    restrictPMAClick(event: any)
-    {       
-      if(!this.generalInformation.restrictPMA)
-      {       
-        this.generalInformation.restrictedPMAParts=[];
-      }        
+    restrictPMAClick(event: any) {
+        if (!this.generalInformation.restrictPMA) {
+            this.generalInformation.restrictedPMAParts = [];
+        }
     }
 
-    restrictDERClick(event: any)
-    {
-     
-      if(!this.generalInformation.restrictBER)
-      {        
-        this.generalInformation.restrictedDERParts=[];
-      }        
+    restrictDERClick(event: any) {
+
+        if (!this.generalInformation.restrictBER) {
+            this.generalInformation.restrictedDERParts = [];
+        }
     }
-    
-    restrictPBHClick(event: any)
-    {       
-      if(!this.generalInformation.isPBHCustomer)
-      {       
-        this.generalInformation.pbhCustomerMemo="";
-      }        
+
+    restrictPBHClick(event: any) {
+        if (!this.generalInformation.isPBHCustomer) {
+            this.generalInformation.pbhCustomerMemo = "";
+        }
     }
-    
+
 
 
     addRestrictPMA() {
-       
+
         if (this.restictPMAtempList.length > 0) {
             this.disableRestrictedPMA = true;
             for (let i = 0; i < this.restictPMAtempList.length; i++) {
@@ -484,6 +485,26 @@ export class CustomerGeneralInformationComponent implements OnInit {
             return x.name.toLowerCase().includes(event.query.toLowerCase())
         })]
     }
+
+
+    parentCustomerList(id) {
+        console.log(id);
+        console.log(this.customerListOriginal);
+
+        this.parentCustomerOriginal = [... this.customerallListOriginal.filter(x => {
+            if (x.customerId != id) {
+                return x;
+            }
+        })]
+        console.log(this.parentCustomerOriginal);
+
+    }
+
+
+
+    // filterParentCustomer(event){
+
+    // }
     filterCustomerCode(event) {
         this.customerCodes = this.customerallListOriginal;
         this.customerCodes = [...this.customerallListOriginal.filter(x => {
@@ -492,9 +513,9 @@ export class CustomerGeneralInformationComponent implements OnInit {
 
     }
     filterCustomerParentNames(event) {
-        this.customerNames = this.customerListOriginal;
+        this.parentCustomer = this.parentCustomerOriginal;
 
-        this.customerNames = [...this.customerListOriginal.filter(x => {
+        this.parentCustomer = [...this.parentCustomerOriginal.filter(x => {
             return x.name.toLowerCase().includes(event.query.toLowerCase())
         })]
 
@@ -541,6 +562,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
     }
 
     checkCustomerNameExist(value) {
+
         this.changeName = true;
 
         this.isCustomerNameAlreadyExists = false;

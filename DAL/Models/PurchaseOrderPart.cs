@@ -73,6 +73,8 @@ namespace DAL.Models
         [NotMapped]
         public long StockLineCount { get; set; }
         [NotMapped]
+        public long DraftedStockLineCount { get; set; }
+        [NotMapped]
         public List<PurchaseOrderSplitParts> PurchaseOrderSplitParts { get; set; }
         [NotMapped]
         public string PartNumber { get; set; }

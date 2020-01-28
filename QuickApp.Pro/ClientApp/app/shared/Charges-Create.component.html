@@ -132,7 +132,7 @@
         </p-autoComplete>
       </td>
       <ng-container *ngIf="isQuote">
-        <td><input [(ngModel)]="charge.fixedAmount" /></td>
+        <td><input type="number" [(ngModel)]="charge.fixedAmount" /></td>
       </ng-container>
       <td *ngIf="!isQuote || !isEdit">
         <button class="btn btn-danger nobg" (click)="deleteRow(i)">

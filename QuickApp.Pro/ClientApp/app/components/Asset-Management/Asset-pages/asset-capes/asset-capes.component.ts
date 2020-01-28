@@ -24,6 +24,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AircraftModelService } from '../../../../services/aircraft-model/aircraft-model.service';
 import { AircraftManufacturerService } from '../../../../services/aircraft-manufacturer/aircraftManufacturer.service';
 import { DropdownModule } from 'primeng/dropdown';
+import { AuthService } from '../../../../services/auth.service';
 
 @Component({
     selector: 'app-asset-capes',
@@ -111,7 +112,7 @@ export class AssetCapesComponent implements OnInit {
     LoadValues: any[] = [];
 
     constructor(private router: ActivatedRoute, private modalService: NgbModal, private alertService: AlertService, public itemMasterService: ItemMasterService, private route: Router,
-        private assetServices: AssetService, private dashnumberservices: DashNumberService, private formBuilder: FormBuilder, private commonservice: CommonService
+        private assetServices: AssetService, private dashnumberservices: DashNumberService, private authService: AuthService, private formBuilder: FormBuilder, private commonservice: CommonService
         , private aircraftManufacturerService: AircraftManufacturerService, private aircraftModelService: AircraftModelService) {
 
         this.AssetId = this.router.snapshot.params['id'];
@@ -915,7 +916,19 @@ export class AssetCapesComponent implements OnInit {
                         AircraftModelId: x.modelid,
                         DashNumberId: x.dashNumberId,
                         CapibilityType: capdata.selectedCap,
-                        PartNumber: capdata.selectedPartId
+                        PartNumber: capdata.selectedPartId,
+                        CapabilityId: capdata.CapabilityTypeId,
+                        ItemMasterId: this.itemMasterId,
+                        AircraftTypeId: capdata.selectedAircraftTypes,
+                        AircraftDashNumberId: x.dashNumberId,
+                        AssetRecordId: this.currentAsset.assetRecordId,
+                        MasterCompanyId: 1,
+                        CreatedBy: this.userName,
+                        UpdatedBy: this.userName,
+                        CreatedDate: new Date(),
+                        UpdatedDate: new Date(),
+                        isActive: true,
+                        isDelete: false
                     }
                 });
                 console.log(899, this.aircraftData);
@@ -929,7 +942,19 @@ export class AssetCapesComponent implements OnInit {
                 AircraftModelId: '',
                 DashNumberId: '',
                 CapibilityType: capdata.selectedCap,
-                PartNumber: capdata.selectedPartId
+                PartNumber: capdata.selectedPartId,
+                CapabilityId: capdata.CapabilityTypeId,
+                ItemMasterId: this.itemMasterId,
+                AircraftTypeId: capdata.selectedAircraftTypes,
+                AircraftDashNumberId: null,
+                AssetRecordId: this.currentAsset.assetRecordId,
+                MasterCompanyId: 1,
+                CreatedBy: this.userName,
+                UpdatedBy: this.userName,
+                CreatedDate: new Date(),
+                UpdatedDate: new Date(),
+                isActive: true,
+                isDelete: false
             }]
         }
 
@@ -943,11 +968,23 @@ export class AssetCapesComponent implements OnInit {
                     AircraftModelId: x.value,
                     DashNumberId: '',
                     CapibilityType: capdata.selectedCap,
-                    PartNumber: capdata.selectedPartId
+                    PartNumber: capdata.selectedPartId,
+                    CapabilityId: capdata.CapabilityTypeId,
+                    ItemMasterId: this.itemMasterId,
+                    AircraftTypeId: capdata.selectedAircraftTypes,
+                    AircraftDashNumberId: null,
+                    AssetRecordId: this.currentAsset.assetRecordId,
+                    MasterCompanyId: 1,
+                    CreatedBy: this.userName,
+                    UpdatedBy: this.userName,
+                    CreatedDate: new Date(),
+                    UpdatedDate: new Date(),
+                    isActive: true,
+                    isDelete: false
                 }
             })
         }
-        this.addModels(capdata);
+        //this.addModels(capdata);
 
 
         console.log(930, this.aircraftData);
@@ -1161,47 +1198,67 @@ export class AssetCapesComponent implements OnInit {
         })*/
     }
 
-    saveCapabilities() {
-        let capbilitiesForm = this.capabilitiesForm.value;
-        let capabilityCollection: any = [];
-        let mfgForm = capbilitiesForm.mfgForm;
-        let overhaulForm = capbilitiesForm.overhaulForm;
-        let distributionForm = capbilitiesForm.distributionForm;
-        let certificationForm = capbilitiesForm.certificationForm;
-        let repairForm = capbilitiesForm.repairForm;
-        let exchangeForm = capbilitiesForm.exchangeForm;
-        mfgForm.forEach(element => {
-            //element.capabilityTypeId = 1;
-            element.assetRecordId = this.currentAsset.assetRecordId;
-            capabilityCollection.push(element);
-        });
-        overhaulForm.forEach(element => {
-            element.capabilityTypeId = 2;
-            element.assetRecordId = this.currentAsset.assetRecordId;
-            capabilityCollection.push(element);
-        });
-        distributionForm.forEach(element => {
-            element.capabilityTypeId = 3;
-            element.assetRecordId = this.currentAsset.assetRecordId;
-            capabilityCollection.push(element);
-        });
-        certificationForm.forEach(element => {
-            element.capabilityTypeId = 4;
-            element.assetRecordId = this.currentAsset.assetRecordId;
-            capabilityCollection.push(element);
-        });
-        repairForm.forEach(element => {
-            element.capabilityTypeId = 5;
-            element.assetRecordId = this.currentAsset.assetRecordId;
-            capabilityCollection.push(element);
-        });
-        exchangeForm.forEach(element => {
-            element.capabilityTypeId = 6;
-            element.assetRecordId = this.currentAsset.assetRecordId;
-            capabilityCollection.push(element);
-        });
+    get userName(): string {
+        return this.authService.currentUser ? this.authService.currentUser.userName : "";
+    }
 
-        this.assetServices.saveManfacturerinforcapes(capabilityCollection).subscribe(data11 => {
+    //saveCapabilities() {
+    //    let capbilitiesForm = this.capabilitiesForm.value;
+    //    let capabilityCollection: any = [];
+    //    let mfgForm = capbilitiesForm.mfgForm;
+    //    let overhaulForm = capbilitiesForm.overhaulForm;
+    //    let distributionForm = capbilitiesForm.distributionForm;
+    //    let certificationForm = capbilitiesForm.certificationForm;
+    //    let repairForm = capbilitiesForm.repairForm;
+    //    let exchangeForm = capbilitiesForm.exchangeForm;
+    //    mfgForm.forEach(element => {
+    //        //element.capabilityTypeId = 1;
+    //        element.assetRecordId = this.currentAsset.assetRecordId;
+    //        capabilityCollection.push(element);
+    //    });
+    //    overhaulForm.forEach(element => {
+    //        element.capabilityTypeId = 2;
+    //        element.assetRecordId = this.currentAsset.assetRecordId;
+    //        capabilityCollection.push(element);
+    //    });
+    //    distributionForm.forEach(element => {
+    //        element.capabilityTypeId = 3;
+    //        element.assetRecordId = this.currentAsset.assetRecordId;
+    //        capabilityCollection.push(element);
+    //    });
+    //    certificationForm.forEach(element => {
+    //        element.capabilityTypeId = 4;
+    //        element.assetRecordId = this.currentAsset.assetRecordId;
+    //        capabilityCollection.push(element);
+    //    });
+    //    repairForm.forEach(element => {
+    //        element.capabilityTypeId = 5;
+    //        element.assetRecordId = this.currentAsset.assetRecordId;
+    //        capabilityCollection.push(element);
+    //    });
+    //    exchangeForm.forEach(element => {
+    //        element.capabilityTypeId = 6;
+    //        element.assetRecordId = this.currentAsset.assetRecordId;
+    //        capabilityCollection.push(element);
+    //    });
+
+    //    this.assetServices.saveManfacturerinforcapes(capabilityCollection).subscribe(data11 => {
+    //        this.alertService.showMessage("Success", `Asset capes saved successfully.`, MessageSeverity.success);
+    //        let data: any = {
+    //            selectedCap: "", CapabilityTypeId: 0, selectedPartId: [], selectedAircraftDataModels: [],
+    //            selectedAircraftModelTypes: [], selectedAircraftTypes: [], selectedManufacturer: [], selectedModel: [], selectedDashNumbers: [], selectedDashNumbers2: []
+    //        };
+    //        this.capabilityForm = data;
+    //        this.loadCapesData();
+    //    })
+    //    this.mfgFormArray.controls = [];
+    //    this.modal.close();
+    //}
+
+    saveCapabilities() {
+        const responseValue = this.aircraftData;
+
+        this.assetServices.saveManfacturerinforcapes(responseValue).subscribe(data11 => {
             this.alertService.showMessage("Success", `Asset capes saved successfully.`, MessageSeverity.success);
             let data: any = {
                 selectedCap: "", CapabilityTypeId: 0, selectedPartId: [], selectedAircraftDataModels: [],

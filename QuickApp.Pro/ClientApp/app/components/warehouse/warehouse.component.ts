@@ -111,7 +111,7 @@ export class WarehouseComponent implements OnInit, AfterViewInit{
     warehouseName: any;
 	AuditDetails: any[];
 	HasAuditDetails: boolean;
-	AuditHistoryTitle: string = 'History of Ware House'
+	AuditHistoryTitle: string = 'History of WareHouse'
 	formData:FormData = null;
 	uploadedRecords: Object = null
 	ngOnInit(): void
