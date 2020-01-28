@@ -96,7 +96,7 @@
                                                             <p-autoComplete class="autocomp-customer-cstm"
                                                                             name="parentName"
                                                                             [(ngModel)]="generalInformation.customerParentName"
-                                                                            field="name" [suggestions]="customerNames"
+                                                                            field="name" [suggestions]="parentCustomer"
                                                                             [forceSelection]="true" emptyMessage="No Match Found"
                                                                             (completeMethod)="filterCustomerParentNames($event)" [size]="30"
                                                                             (onSelect)="selectedParentName($event)"
