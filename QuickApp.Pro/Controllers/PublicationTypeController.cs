@@ -10,12 +10,12 @@ using Microsoft.AspNetCore.Mvc;
 namespace QuickApp.Pro.Controllers
 {
     [Route("api/[controller]")]
-    public class PublicationTypesController : Controller
+    public class PublicationTypeController : Controller
     {
 
         private IUnitOfWork _unitOfWork;
         private readonly ApplicationDbContext _context;
-        public PublicationTypesController(IUnitOfWork unitOfWork, ApplicationDbContext context)
+        public PublicationTypeController(IUnitOfWork unitOfWork, ApplicationDbContext context)
         {
             _unitOfWork = unitOfWork;
             _context = context;
@@ -23,9 +23,9 @@ namespace QuickApp.Pro.Controllers
 
         // GET: api/values
         [HttpGet("publicationtypeslist")]
-        public IActionResult GetPublicationTypesList(string name = "",string description="",string memo="", int pageNumber = 0, int pageSize = 10)
+        public IActionResult GetPublicationTypesList()
         {
-            var allpublicationinfo = _unitOfWork.PublicationTypesRepository.GetPublicationTypesList(name, description,memo, pageNumber, pageSize);
+            var allpublicationinfo = _unitOfWork.PublicationTypeRepository.GetPublicationTypesList();
 
             return Ok((allpublicationinfo));
 
@@ -34,7 +34,7 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("publicationtypebyid")]
         public IActionResult GetPublicationTypeById(long publicationTypeId)
         {
-            var allpublicationinfo = _unitOfWork.PublicationTypesRepository.GetPublicationTypeById(publicationTypeId);
+            var allpublicationinfo = _unitOfWork.PublicationTypeRepository.GetPublicationTypeById(publicationTypeId);
             return Ok((allpublicationinfo));
 
         }
@@ -44,8 +44,8 @@ namespace QuickApp.Pro.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = _unitOfWork.PublicationTypesRepository.CreatePublicationType(publicationType);
-                return Ok(publicationType);
+                var result = _unitOfWork.PublicationTypeRepository.CreatePublicationType(publicationType);
+                return Ok(result);
             }
             return Ok(ModelState);
         }
@@ -56,7 +56,7 @@ namespace QuickApp.Pro.Controllers
             if (ModelState.IsValid)
             {
                 IDictionary<string, object> keyValuePairs = new Dictionary<string, object>();
-                var dbResult =(PublicationType) _unitOfWork.PublicationTypesRepository.GetPublicationTypeById(publicationType.PublicationTypeId);
+                var dbResult =(PublicationType) _unitOfWork.PublicationTypeRepository.GetPublicationTypeById(publicationType.PublicationTypeId);
                 dbResult = _unitOfWork.CommonRepository.UpdateEntity(publicationType, dbResult, ref keyValuePairs);
                 if (keyValuePairs != null && keyValuePairs.Count > 0)
                 {
@@ -82,7 +82,7 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("deletepublicationtype")]
         public IActionResult DeletePublicationType(long publicationTypeId, string updatedBy)
         {
-            _unitOfWork.PublicationTypesRepository.DeletePublicationType(publicationTypeId, updatedBy);
+            _unitOfWork.PublicationTypeRepository.DeletePublicationType(publicationTypeId, updatedBy);
             return Ok();
 
         }
@@ -90,7 +90,7 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("publicationtypestatus")]
         public IActionResult PublicationTypeStatus(long publicationTypeId,bool status, string updatedBy)
         {
-            _unitOfWork.PublicationTypesRepository.PublicationTypeStatus(publicationTypeId, status, updatedBy);
+            _unitOfWork.PublicationTypeRepository.PublicationTypeStatus(publicationTypeId, status, updatedBy);
             return Ok();
 
         }
@@ -98,7 +98,7 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("publicationtypehistory")]
         public IActionResult PublicationTypeHistory(long publicationTypeId)
         {
-           var result= _unitOfWork.PublicationTypesRepository.PublicationTypeHistory(publicationTypeId);
+           var result= _unitOfWork.PublicationTypeRepository.PublicationTypeHistory(publicationTypeId);
             return Ok(result);
 
         }
@@ -106,7 +106,7 @@ namespace QuickApp.Pro.Controllers
         [HttpPost("uploadpublicationtypecustomdata")]
         public IActionResult UploadCustomData()
         {
-            var result = _unitOfWork.PublicationTypesRepository.UploadCustomData(Request.Form.Files[0]);
+            var result = _unitOfWork.PublicationTypeRepository.UploadCustomData(Request.Form.Files[0]);
             return Ok(result);
         }
     }

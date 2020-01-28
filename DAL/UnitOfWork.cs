@@ -209,7 +209,7 @@ namespace DAL
 		IAssetAcquisitionTypeAudit _AssetAcquisitionTypeAudit;
         IAssetDepConvention _assetDepConvention;
 
-        IPublicationTypesRepository _publicationTypesRepository;
+        IPublicationTypeRepository _publicationTypeRepository;
         ICommunicationRepository _communicationRepository;
         IPercentageRepository _percentageRepository;
 
@@ -1887,13 +1887,13 @@ namespace DAL
             }
         }
 
-        public IPublicationTypesRepository PublicationTypesRepository
+        public IPublicationTypeRepository PublicationTypeRepository
         {
             get
             {
-                if (_publicationTypesRepository == null)
-                    _publicationTypesRepository = new PublicationTypesRepository(_context, _appSettings);
-                return _publicationTypesRepository;
+                if (_publicationTypeRepository == null)
+                    _publicationTypeRepository = new PublicationTypeRepository(_context, _appSettings);
+                return _publicationTypeRepository;
             }
         }
 
