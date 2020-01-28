@@ -1,4 +1,4 @@
-﻿import { Component, OnInit, AfterViewInit, ViewChild, Output, EventEmitter, Input } from '@angular/core';
+﻿import { Component, OnInit, AfterViewInit, ViewChild, Output, EventEmitter, Input, SimpleChanges } from '@angular/core';
 import { fadeInOut } from '../../../services/animations';
 
 import { Params, ActivatedRoute } from '@angular/router';
@@ -29,7 +29,7 @@ import { CommonService } from '../../../services/common.service';
 })
 /** CustomerEdit component*/
 export class CustomerContactsComponent implements OnInit {
-	@Input() savedGeneralInformationData;
+	@Input() savedGeneralInformationData: any = {};
 	@Input() editMode;
 	@Input() editGeneralInformationData;
 
@@ -41,6 +41,7 @@ export class CustomerContactsComponent implements OnInit {
 	@Output() refreshCustomerATAMapped = new EventEmitter();
 	@Output() refreshCustomerATAByCustomerId = new EventEmitter();
 	@Output() refreshCustomerContactMapped = new EventEmitter();
+    @Input() customerDataFromExternalComponents : any = {};
 
 
 	formData = new FormData();
@@ -110,6 +111,9 @@ export class CustomerContactsComponent implements OnInit {
 	auditHistory: any[] = [];
 	@ViewChild('ATAADD') myModal;
 	originalATASubchapterData: any = [];
+	isViewMode: boolean = false;
+
+	
 
 	constructor(private router: ActivatedRoute,
 
@@ -137,20 +141,49 @@ export class CustomerContactsComponent implements OnInit {
 			this.customerCode = this.editGeneralInformationData.customerCode;
 			this.customerName = this.editGeneralInformationData.name;
 			console.log(this.id);
+			this.isViewMode = false;
+
 
 			this.getAllCustomerContact()
 		} else {
+			if(this.customerDataFromExternalComponents != {}){
+                this.id = this.customerDataFromExternalComponents.customerId;
+                this.customerCode = this.customerDataFromExternalComponents.customerCode;
+				this.customerName = this.customerDataFromExternalComponents.name;
+				this.getAllCustomerContact();
+                this.isViewMode = true;
+            } else {
+			
 			this.id = this.savedGeneralInformationData.customerId;
 			this.customerCode = this.savedGeneralInformationData.customerCode;
 			this.customerName = this.savedGeneralInformationData.name;
 			this.getAllCustomerContact();
-
+			this.isViewMode = false;
+			}
 		}
 
 		this.getAllContacts();
 		// this.getATACustomerContactMapped();
 
 	}
+	
+	ngOnChanges(changes: SimpleChanges) {
+		for (let property in changes) {
+             if (property == 'customerDataFromExternalComponents') {
+
+                if(changes[property].currentValue != {}){
+                    this.id = this.customerDataFromExternalComponents.customerId;
+                    this.customerCode = this.customerDataFromExternalComponents.customerCode;
+                    this.customerName = this.customerDataFromExternalComponents.name;
+					this.getAllCustomerContact();
+                    this.isViewMode = true;
+    
+                  } 
+                }
+		} 
+
+      }
+
 
 
 	get userName(): string {

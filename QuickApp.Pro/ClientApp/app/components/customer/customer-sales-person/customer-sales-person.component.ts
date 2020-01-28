@@ -20,7 +20,7 @@ export class CustomerSalesPersonComponent implements OnInit {
     @Input() savedGeneralInformationData;
     @Input() editGeneralInformationData;
     @Input() editMode;
-    @Input() employeeListOriginal;
+    @Input() employeeListOriginal: any = [];
     @Output() tab = new EventEmitter();
     employeeList: any[];
     employeeTypeList: any[];

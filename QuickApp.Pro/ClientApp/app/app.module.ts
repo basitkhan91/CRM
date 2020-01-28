@@ -226,6 +226,7 @@ import { CommonService } from "./services/common.service";
 import { CommonModule } from '@angular/common';
 import { TableModule } from 'primeng/table';
 import { StageCodeService } from './services/work-order-stagecode.service';
+import { CustomerPagesModule } from './customerpages/customerpages.module';
 
 @NgModule({
     imports: [
@@ -241,6 +242,7 @@ import { StageCodeService } from './services/work-order-stagecode.service';
         CommonModule,
         TableModule,
         DropdownModule,
+        CustomerPagesModule,
         TranslateModule.forRoot({
             loader: {
                 provide: TranslateLoader,

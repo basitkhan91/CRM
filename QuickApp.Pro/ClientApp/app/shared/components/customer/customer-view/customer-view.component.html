@@ -303,7 +303,9 @@
             <div id="step2" class="panel-collapse  collapse">
                 <div class="panel-body">
                     <div class="col-sm-12">
-                        <div class="shadow-Box">
+                        <app-customer-contacts [customerDataFromExternalComponents]="viewDataGeneralInformation"></app-customer-contacts>
+
+                        <!-- <div class="shadow-Box">
                             <p-table #table3 class="table-responsive ptable-cus-pma" [paginator]="customerContacts.length > 0" [value]="customerContacts"  [rows]="pageSize" [columns]="contactTableColumns">
                                 <ng-template pTemplate="header" let-columns>
                                     <tr>
@@ -338,9 +340,6 @@
                                                         {{part.workPhone}} - {{part.workPhoneExtn}}
                                                     </ng-container>
                                         </td>
-                                        <!-- <td *ngFor="let col of columns">
-                                                {{part[col.field]}}
-                                            </td> -->
                                     </tr>
                                 </ng-template>
                                 <ng-template pTemplate="emptymessage" let-columns *ngIf="customerContacts.length == 0">
@@ -360,7 +359,7 @@
 
                             </p-table>
  
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>
@@ -374,7 +373,8 @@
             <div id="step3" class="panel-collapse  collapse">
                 <div class="panel-body">
                     <div class="col-sm-12">
-                        <div class="shadow-Box">
+                        <app-customer-aircraft [customerDataFromExternalComponents]="viewDataGeneralInformation"></app-customer-aircraft>
+                        <!-- <div class="shadow-Box">
                             <p-table  #aircraftTable class="table-responsive ptable-cus-pma" [paginator]="aircraftListDataValues.length > 0" [value]="aircraftListDataValues" [rows]="pageSize"  [columns]="colsaircraftLD">
                                 <ng-template pTemplate="header" let-columns>
                                     <tr>
@@ -411,7 +411,7 @@
                                     <input style="width: 5%;" [ngModel]="getPageCount(aircraftTable._totalRecords,pageSize)" [disabled]="true" pInputText type="text" />
                                 </ng-template>
                             </p-table>     
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>
@@ -597,8 +597,9 @@
             <div id="step6" class="panel-collapse  collapse">
                 <div class="panel-body">
                     <div class="col-sm-12">
-                        <div class="shadow-Box">
-                                <!-- <p><span class="label"><b>Currency: </b></span><span class="value">{{viewDataGeneralInformation.currency}}</span></p> -->
+                        <app-customer-billing-information [customerDataFromExternalComponents]="viewDataGeneralInformation"></app-customer-billing-information>
+
+                        <!-- <div class="shadow-Box">
 
                                 <p-table #billingTable class="table-responsive ptable-cus-pma" [paginator]="billingInfoList?.length > 0" [value]="billingInfoList"  [rows]="pageSize" [columns]="billingInfoTableHeaders">
                                     <ng-template pTemplate="header" let-columns>
@@ -645,7 +646,7 @@
                                         <input style="width: 5%;" [ngModel]="getPageCount(billingTable._totalRecords,pageSize)" [disabled]="true" pInputText type="text" />
                                     </ng-template>
                                 </p-table> 
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>
@@ -658,7 +659,9 @@
             </div>
             <div id="step7" class="panel-collapse  collapse">
                 <div class="panel-body">
-                    <div class="col-sm-12">
+                    <app-customer-shipping-information [customerDataFromExternalComponents]="viewDataGeneralInformation"></app-customer-shipping-information>
+
+                    <!-- <div class="col-sm-12">
                         <h4> Shipping Site Info List </h4>
                         <div class="shadow-Box">
                                 <p-table #domesticShippingTable class="table-responsive ptable-cus-pma" [paginator]="domesticShippingData?.length > 0" [value]="domesticShippingData"  [rows]="pageSize"  [columns]="domesticShippingHeaders">
@@ -762,7 +765,7 @@
                                             </ng-template>
                                     </p-table> 
                         </div>
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </div>
@@ -843,8 +846,9 @@
             <div id="step10" class="panel-collapse  collapse">
                 <div class="panel-body">
                     <div class="col-sm-12">
-                        <div class="shadow-Box">
-                            <app-customer-documents></app-customer-documents>
+                        <div>
+                            <!-- <app-employees-list></app-employees-list> -->
+                            <app-customer-documents [customerDataFromExternalComponents]="viewDataGeneralInformation"></app-customer-documents>
                                 <!-- <p-table #documentsTable class="table-responsive ptable-cus-pma" [paginator]="DocumentsList.length > 0" [value]="DocumentsList" [rows]="pageSize"  [columns]="customerDocumentsColumns">
                                         <ng-template pTemplate="header" let-columns>
                                                 <tr>

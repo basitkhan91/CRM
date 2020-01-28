@@ -1,4 +1,4 @@
-﻿import { Component, OnInit, AfterViewInit, ViewChild, Input } from '@angular/core';
+﻿import { Component, OnInit, AfterViewInit, ViewChild, Input, ContentChildren } from '@angular/core';
 import { fadeInOut } from '../../../../services/animations';
 import { CustomerService } from '../../../../services/customer.service';
 import { CommonService } from '../../../../services/common.service';

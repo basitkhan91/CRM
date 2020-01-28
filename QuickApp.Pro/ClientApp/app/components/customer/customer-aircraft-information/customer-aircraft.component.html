@@ -1,5 +1,5 @@
 <div style="padding: 2px 6px;">
-  <div class="col-md-12 shadow-box-cstm">        
+  <div class="col-md-12 shadow-box-cstm"  *ngIf="isViewMode == false">        
     <div class="col-md-4">
         <p class="fs12">
         <label class="control-label labels-font-header" style="width: auto;">Customer Name: </label>
@@ -21,7 +21,7 @@
 <div class="card" style="width: calc(100% - 12px); margin: 6px; padding: 10px;">
     <div class="col-md-12">
     <h4 class="po-head-sm">
-        Add Inventory
+         Inventory
         <!-- <a
           class="plusicon-cstm"
           href="#"
@@ -30,7 +30,7 @@
           data-target="#addInventory"
           ><i class="fa fa-plus-circle fa-lg"></i
         ></a> -->
-        <a
+        <a  *ngIf="isViewMode == false"
           class="plusicon-cstm"
           href="javascript:void(0)"
           matTooltip="Add Inventory" matTooltipPosition="above"
@@ -42,7 +42,7 @@
       <hr />
       </div>
       
-  <div  class="advance-search-card" *ngIf="showAdvancedSearchCard == true">    
+  <div  class="advance-search-card" *ngIf="showAdvancedSearchCard == true &&  isViewMode == false">    
 
 
     <div class="form-row" style="padding: 0 5px;">
@@ -127,7 +127,7 @@
     selectionMode="multiple"
 
   >
-  <ng-template pTemplate="caption">
+  <ng-template pTemplate="caption"  *ngIf="isViewMode == false">
     <div style="text-align: right; min-height: 30px; margin-left: -6px;">
         <p-multiSelect [options]="colsaircraftLD" [(ngModel)]="selectedColumns" [ngModelOptions]="{standalone: true}" optionLabel="header"
                        selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
@@ -178,7 +178,7 @@
         <td *ngFor="let col of columns" pResizableColumn pReorderableColumn>
           {{ rowData[col.field] }}
         </td>
-        <td style="width:70px" *ngIf="selectedColumns.length > 0">
+        <td style="width:70px" *ngIf="selectedColumns.length > 0 && isViewMode == false">
             <span data-toggle="modal" data-target="#viewAircraft"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openAircraftView(rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
 
            
@@ -188,6 +188,13 @@
 
 
         </td>
+        <td style="width:70px" *ngIf="selectedColumns.length > 0 && isViewMode == true">
+          <span data-toggle="modal" data-target="#viewAircraft"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openAircraftView(rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
+          <span data-toggle="modal" data-target="#contentAuditHist"><a class="btn nobg" (click)="getCustomerAircraftHistory(contentAuditHist,rowData)" matTooltip="History"><i class="fa fa-history"></i></a></span>
+
+
+      </td>
+
       </tr>
     </ng-template>
 
@@ -208,7 +215,7 @@
 
   </p-table>
 
-  <div style="margin-top: 10px;">
+  <div style="margin-top: 10px;"  *ngIf="isViewMode == false">
     <button
       type="button"
       class="btn btn-primary pull-right submit-btn"

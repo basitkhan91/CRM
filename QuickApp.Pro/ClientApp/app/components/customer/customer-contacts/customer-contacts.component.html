@@ -1,7 +1,7 @@
 ﻿<div class="right_col" role="main">
     <div>
         <div class="x_content">
-            <div class="col-md-12 shadow-box-cstm">        
+            <div class="col-md-12 shadow-box-cstm"   *ngIf="isViewMode == false">        
                 <div class="col-md-4">
                     <p class="fs12">
                     <label class="control-label labels-font-header" style="width: auto;">Customer Name: </label>
@@ -33,7 +33,7 @@
                     <div class="col-md-12">
                         <h4 class="po-head-sm"> <!--class="float-right"-->
                             Contacts
-                            <a class="plusicon-cstm"
+                            <a class="plusicon-cstm"   *ngIf="isViewMode == false"
                                 href="#"
                                 data-toggle="modal" matTooltip="Add Contact" matTooltipPosition="above"
                                 data-target="#addContactDetails" 
@@ -59,7 +59,7 @@
                          [reorderableColumns]="true"
                           [scrollable]="true" 
                           scrollHeight="450px">
-                    <ng-template pTemplate="caption">
+                    <ng-template pTemplate="caption"   *ngIf="isViewMode == false">
                         <div style="text-align: right; min-height: 30px; margin-left: -6px;">
                             <p-multiSelect [options]="customerContactsColumns" [(ngModel)]="selectedColumns" [ngModelOptions]="{standalone: true}" optionLabel="header"
                                            selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
@@ -150,7 +150,7 @@
                                 </ng-container> 
                             </td>
 
-                            <td style="width:140px" *ngIf="selectedColumns.length > 0">
+                            <td style="width:140px" *ngIf="selectedColumns.length > 0  && isViewMode == false">
                                 <p-inputSwitch name="isActive{{i}}" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
                                 <span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="viewSelectedRow(rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
 
@@ -164,6 +164,13 @@
 
                                 <span data-toggle="modal" data-target="#contentHist"><a class="btn nobg" (click)="getAuditHistoryById(rowData)" matTooltip="History"><i class="fa fa-history"></i></a></span>
                                 </td>
+                                <td style="width:140px" *ngIf="selectedColumns.length > 0  && isViewMode == true">
+                                    <span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="viewSelectedRow(rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
+    
+
+    
+                                    <span data-toggle="modal" data-target="#contentHist"><a class="btn nobg" (click)="getAuditHistoryById(rowData)" matTooltip="History"><i class="fa fa-history"></i></a></span>
+                                    </td>
 
                             </tr>
                         </ng-template>
@@ -181,7 +188,7 @@
                 <div *ngIf="customerContacts.length<=0" class="no-records-cstm">
                     No Records
                 </div>
-                <div style="margin-top: 10px;">
+                <div style="margin-top: 10px;"   *ngIf="isViewMode == false">
                     <button type="button" class="btn btn-primary pull-right submit-btn" (click)="nextClick()">Save & Next</button>
                     <button type="button" class="btn btn-primary pull-right submit-btn" (click)="backClick()">Previous</button>
                 </div>

@@ -130,6 +130,9 @@
                                     <button class="btn btn-danger nobg" data-toggle="tooltip" matTooltip="Add Ship Via" data-original-title="View Shipping Via Information">
                                         <i class="fa fa-truck" data-target="#addDomesticShipVia" data-toggle="modal" (click)="selectedDomesticForShipVia(rowData)"></i>
                                     </button>
+                                    <button class="btn-history" mat-icon-button matTooltip="history" (click)="openShipaddressHistory(contentAuditHist,rowData)">
+                                        <mat-icon color="green">history</mat-icon>
+                                    </button>
                                 </td>
 
                             </tr>
@@ -267,6 +270,9 @@
                                     <span data-toggle="modal" data-target="#viewInter"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openInterShippingView(rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
                                     <button class="btn btn-danger nobg" data-toggle="tooltip" matTooltip="Add Ship Via " data-original-title="View Shipping Via Info">
                                         <i class="fa fa-truck" data-target="#addInternationShipVia" data-toggle="modal" (click)="selectedInternationalShipForShipVia(rowData)"></i>
+                                    </button>
+                                    <button class="btn-history" mat-icon-button matTooltip="history" (click)="openInterShippingHistory(contentAuditHistInter,rowData)">
+                                        <mat-icon color="green">history</mat-icon>
                                     </button>
                                 </td>
 
