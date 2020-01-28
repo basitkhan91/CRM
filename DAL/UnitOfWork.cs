@@ -1225,7 +1225,7 @@ namespace DAL
             get
             {
                 if (_legalEntity == null)
-                    _legalEntity = new LegalEntityRepository(_context);
+                    _legalEntity = new LegalEntityRepository(_context, _appSettings);
                 return _legalEntity;
 
             }
