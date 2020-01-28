@@ -13506,6 +13506,7 @@ body .ui-datepicker table td > a.ui-state-active {
     border: 1px solid #ddd;
     padding: 10px;
     margin: 5px 0;
+    background-color: #fff;;
 }
 
 .shadow-box-cstm {
@@ -14696,6 +14697,12 @@ p-table tr th input[type="text"], p-table tr th input[type="date"] {
 
 p-table tr td .btn i.fa-pencil {
     color: #0252b1;
+}
+.p-t-10 {
+    padding-top: 10px;
+}
+.full-width {
+    width: 100%;
 }
 
 .itemcapes-ptable .ui-table-scrollable-body {
