@@ -472,7 +472,7 @@ export class SingleComponent {
             else if (this.currentUrl == '/singlepages/singlepages/app-capability-type') {
                 this.items = [
                     { label: 'Single Screens' },
-                    { label: 'Capability Type' }
+					{ label: 'Vendor Capability Type' }
                 ];
             }
 		}
@@ -654,7 +654,7 @@ export class SingleComponent {
 			else if (this.currentUrl == '/singlepages/singlepages/app-publication') {
 				this.items = [
 					{ label: 'Publication' },
-					{ label: 'list' }
+					{ label: 'List' }
 				];
 			}
 
@@ -930,7 +930,7 @@ export class SingleComponent {
             else if (this.currentUrl == '/singlepages/singlepages/app-capability-type') {
                 this.items = [
                     { label: 'Single Screens' },
-                    { label: 'Capability Type' }
+                    { label: 'Vendor Capability Type' }
                 ];
             }
 		}
