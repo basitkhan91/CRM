@@ -318,7 +318,10 @@ export class CapabilityTypeComponent implements OnInit {
         }
     }
 
-    
+    getPageCount(totalNoofRecords, pageSize) {
+		
+		return Math.ceil(totalNoofRecords / pageSize)
+	}
 
 
 
