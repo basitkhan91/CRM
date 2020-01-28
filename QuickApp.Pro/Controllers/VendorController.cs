@@ -3553,8 +3553,9 @@ namespace QuickApp.Pro.Controllers
                 vendorCapability.MasterCompanyId = 1;
                 vendorCapability.IsActive = true;
                 vendorCapability.CreatedDate = DateTime.Now;
-                if(vendorCapability.VendorCapabilityId >0)
-                {
+                vendorCapability.UpdatedDate = DateTime.Now;
+                if (vendorCapability.VendorCapabilityId >0)
+                {                    
                     _unitOfWork.Repository<VendorCapabiliy>().Update(vendorCapability);
                     updateRanking(Convert.ToInt32(vendorCapability.VendorRanking));
                     _unitOfWork.SaveChanges();
@@ -3745,7 +3746,8 @@ namespace QuickApp.Pro.Controllers
             disc.IsActive = vendorCapability.IsActive;
             disc.IsPMA = vendorCapability.IsPMA;
             disc.IsDER = vendorCapability.IsDER;
-
+            disc.UpdatedBy = vendorCapability.UpdatedBy;
+            disc.UpdatedDate = DateTime.Now;
             _unitOfWork.Repository<VendorCapabiliy>().Update(disc);
 
 

@@ -12,46 +12,29 @@ using System.Net.Http.Headers;
 
 namespace DAL.Repositories
 {
-    public class PublicationTypesRepository : Repository<PublicationType>, IPublicationTypesRepository
+    public class PublicationTypeRepository : Repository<PublicationType>, IPublicationTypeRepository
     {
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
         private AppSettings AppSettings { get; set; }
-        public PublicationTypesRepository(ApplicationDbContext context, IOptions<AppSettings> settings) : base(context)
+        public PublicationTypeRepository(ApplicationDbContext context, IOptions<AppSettings> settings) : base(context)
         {
             AppSettings = settings.Value;
         }
 
-        public GetData<PublicationType> GetPublicationTypesList(string name,string description,string memo, int pageNumber, int pageSize)
+        public IEnumerable<object> GetPublicationTypesList()
         {
             try
             {
-                GetData<PublicationType> getData = new GetData<PublicationType>();
-                PublicationType publicationType;
-                getData.PaginationList = new List<PublicationType>();
-
-                pageNumber = pageNumber + 1;
-                var take = pageSize;
-                var skip = take * (pageNumber - 1);
-
-                getData.TotalRecordsCount = (from pt in _appContext.PublicationType
+                var totalRecords = (from pt in _appContext.PublicationType
                                              where pt.IsDeleted == false
-                                                   && pt.Name.Contains(!String.IsNullOrEmpty(name) ? name : pt.Name)
-                                                   && pt.Description.Contains(!String.IsNullOrEmpty(description) ? description : pt.Description)
-                                                   && pt.Memo.Contains(!String.IsNullOrEmpty(memo) ? memo : pt.Memo)
                                              select new
                                              {
                                                  pt.PublicationTypeId
                                              }
                                              ).Count();
 
-
-
-                var result = (from pt in _appContext.PublicationType
+                var list = (from pt in _appContext.PublicationType
                               where pt.IsDeleted == false
-                                    && pt.Name.Contains(!String.IsNullOrEmpty(name) ? name : pt.Name)
-                                    && pt.Name.Contains(!String.IsNullOrEmpty(name) ? name : pt.Name)
-                                    && pt.Description.Contains(!String.IsNullOrEmpty(description) ? description : pt.Description)
-                                    && pt.Memo.Contains(!String.IsNullOrEmpty(memo) ? memo : pt.Memo)
                               select new
                               {
                                   pt.PublicationTypeId,
@@ -60,32 +43,12 @@ namespace DAL.Repositories
                                   pt.Memo,
                                   pt.IsActive,
                                   pt.CreatedDate,
-                                  pt.CreatedBy,
-                                  pt.UpdatedDate
+                                 TotalRecords= totalRecords
                               })
-                             .OrderByDescending(p => p.UpdatedDate)
-                             .Skip(skip)
-                             .Take(take)
+                              .Distinct()
+                             .OrderByDescending(p => p.CreatedDate)
                              .ToList();
-
-                if (result != null && result.Count > 0)
-                {
-
-                    foreach (var item in result)
-                    {
-                        publicationType = new PublicationType();
-                        publicationType.PublicationTypeId = item.PublicationTypeId;
-                        publicationType.Name = item.Name;
-                        publicationType.Description = item.Description;
-                        publicationType.Memo = item.Memo;
-                        publicationType.IsActive = item.IsActive;
-                        publicationType.CreatedDate = item.CreatedDate;
-                        publicationType.CreatedBy = item.CreatedBy;
-                        getData.PaginationList.Add(publicationType);
-                    }
-                }
-
-                return getData;
+                return list;
             }
             catch (Exception ex)
             {
@@ -93,7 +56,7 @@ namespace DAL.Repositories
             }
         }
 
-        public long CreatePublicationType(PublicationType publicationType)
+        public PublicationType CreatePublicationType(PublicationType publicationType)
         {
             try
             {
@@ -102,7 +65,7 @@ namespace DAL.Repositories
                 publicationType.IsActive = true;
                 _appContext.PublicationType.Add(publicationType);
                 _appContext.SaveChanges();
-                return publicationType.PublicationTypeId;
+                return publicationType;
             }
             catch (Exception ex)
             {
@@ -118,7 +81,17 @@ namespace DAL.Repositories
                               where pt.PublicationTypeId == publicationTypeId
                               select new
                               {
-                                  pt
+                                  pt.CreatedBy,
+                                  pt.CreatedDate,
+                                  pt.Description,
+                                  pt.IsActive,
+                                  pt.IsDeleted,
+                                  pt.MasterCompanyId,
+                                  pt.Memo,
+                                  pt.Name,
+                                  pt.PublicationTypeId,
+                                  pt.UpdatedBy,
+                                  pt.UpdatedDate
                               })
                               .FirstOrDefault();
                 return result;

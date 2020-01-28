@@ -196,6 +196,7 @@ export class VendorsListComponent implements OnInit {
     sourceViewforDocument: any;
     sourceViewforDocumentList: any = [];
     vendorData: any = {};
+    viewPageSize: number = 5;
     // purchaseOrderData: any;
     // poPageSize: number = 10;
     // poPageIndex: number = 0;
@@ -1084,6 +1085,12 @@ export class VendorsListComponent implements OnInit {
         this.getVendorCapabilitiesView(vendorCapabilityId);
         this.getVendorCapesAircraftView(vendorCapabilityId);
     }
+
+    viewSelectedCapsRowonDbl(rowData) {
+        this.viewSelectedCapsRow(rowData);
+        $('#vendorCapesView').modal('show');
+    }
+
     getVendorCapabilitiesView(vendorCapesId) {
         this.vendorCapesService.getVendorCapabilitybyId(vendorCapesId).subscribe(res => {
             this.vendorCapesGeneralInfo = res;
@@ -1113,6 +1120,10 @@ export class VendorsListComponent implements OnInit {
         this.workFlowtService.toGetUploadDocumentsList(attachmentId, vendorId, moduleId).subscribe(res => {
             this.sourceViewforDocumentList = res;
         })
+    }
+
+    getPageCount(totalNoofRecords, viewPageSize) {
+        return Math.ceil(totalNoofRecords / viewPageSize)
     }
 
 
