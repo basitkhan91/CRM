@@ -71,7 +71,8 @@ export class WorkOrderChargesComponent implements OnChanges, OnInit {
   }
   delete(rowData, i) {
     if (this.isQuote) {
-      this.workOrderChargesList[i].isDeleted = true;
+      rowData.isDeleted = true;
+      // this.workOrderChargesList[i].isDeleted = true;
     } else {
       console.log(rowData);
 

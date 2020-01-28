@@ -67,7 +67,8 @@ export class WorkOrderExclusionsComponent implements OnInit {
   }
   delete(rowData, i) {
     if (this.isQuote) {
-      this.workOrderExclusionsList[i].isDeleted = true;
+      rowData.isDeleted = true;
+      // this.workOrderExclusionsList[i].isDeleted = true;
     }
     else {
       const { workOrderExclusionsId } = rowData;

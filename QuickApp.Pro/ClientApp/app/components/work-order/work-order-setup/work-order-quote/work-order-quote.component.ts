@@ -247,10 +247,10 @@ workOrderFreightList = [];
       this.quoteForm.WorkOrderId = res.workOrderId;
       this.quoteForm.WorkFlowWorkOrderId = res["workFlowWorkOrderId"];
       this.quoteForm.openDate = new Date(res["openDate"])
-      this.quoteForm.CustomerId = res['customerDetails']['customerId'];
+      this.quoteForm['customerId'] = res['customerDetails']['customerId'];
       this.quoteForm['CustomerPhone'] = res['customerDetails']['customerPhone']
-      this.quoteForm.SalesPersonId = res['salesPersonId'];
-      this.quoteForm.EmployeeId = res['employeeId'];
+      this.quoteForm['salesPersonId'] = res['salesPersonId'];
+      this.quoteForm['employeeId'] = res['employeeId'];
       this.quoteForm.masterCompanyId = res['masterCompanyId'];
       this.quoteForm.creditTermsandLimit = res.customerDetails.creditLimit;
       this.workOrderService.getWorkOrderQuoteDetail(res.workOrderId, res["workFlowWorkOrderId"])
@@ -628,7 +628,13 @@ workOrderFreightList = [];
     .subscribe(
       (res)=>{
         this.tabQuoteCreated['freight'] = true;
+        this.updateWorkOrderQuoteDetailsId(res.workOrderQuoteDetailsId);
         this.getQuoteFreightListByWorkOrderQuoteId();
+        this.alertService.showMessage(
+          this.moduleName,
+          'Quotation for Freights created successfully',
+          MessageSeverity.success
+        );
       }
     )
   }
@@ -961,6 +967,7 @@ saveWorkOrderExclusionsList(data) {
   this.workOrderService.saveExclusionsQuote(this.exclusionPayload)
     .subscribe(
       res => {
+        this.updateWorkOrderQuoteDetailsId(res.workOrderQuoteExclusions[0].workOrderQuoteDetailsId)
         this.alertService.showMessage(
           this.moduleName,
           'Quotation created  Succesfully',

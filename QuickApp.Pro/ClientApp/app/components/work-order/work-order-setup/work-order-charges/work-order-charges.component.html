@@ -64,16 +64,16 @@
           {{ col.header }}
         </th>
         <ng-container *ngIf="isQuote">
-          <th *ngIf="costPlusType == 'Mark Up'">MARKUP</th>
-          <th>COST PLUS AMOUNT</th>
-          <th>FIXED AMOUNT</th>
+          <th *ngIf="costPlusType == 'Mark Up'">Mark Up</th>
+          <th>Cost Plus Amount</th>
+          <th>Fixed Amount</th>
           <th colspan="2">Action</th>
         </ng-container>
         <!-- <th colspan="4" class="text-center" *ngIf="!isView"></th> -->
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-rowData let-columns="columns">
-      <tr>
+      <tr *ngIf="!rowData['isDeleted']">
         <td *ngFor="let col of columns">
           {{ rowData[col.field] }}
         </td>

@@ -74,7 +74,7 @@
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-rowData let-columns="columns">
-      <tr>
+      <tr *ngIf="!rowData['isDeleted']">
         <td *ngFor="let col of columns">
           {{ rowData[col.field] }}
         </td>
