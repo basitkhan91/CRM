@@ -22,7 +22,7 @@ export class CustomerViewComponent implements OnInit {
     viewDataclassification: any[];
     customerContacts: any = [];
     customerContactsColumns: any[];
-    pageSize : number = 5;
+    pageSize: number = 5;
     restrictHeaders = [
         { field: 'partNumber', header: 'PN' },
         { field: 'partDescription', header: 'Description' },
@@ -87,14 +87,14 @@ export class CustomerViewComponent implements OnInit {
     customerPMAColumns = [
         { field: 'partNumber', header: 'Part Number' },
         { field: 'partDescription', header: 'Description' },
-        {field:'manufacturerName',header:'Manufacturer'}
+        { field: 'manufacturerName', header: 'Manufacturer' }
     ];
     customerDERColumns = [
         { field: 'partNumber', header: 'Part Number' },
         { field: 'partDescription', header: 'Description' },
-        {field:'manufacturerName',header:'Manufacturer'}
+        { field: 'manufacturerName', header: 'Manufacturer' }
     ];
-    contactTableColumns =[
+    contactTableColumns = [
         { field: 'tag', header: 'Tag' },
         { field: 'firstName', header: 'First Name' },
         { field: 'lastName', header: 'Last Name' },
@@ -105,7 +105,7 @@ export class CustomerViewComponent implements OnInit {
         { field: 'fax', header: 'Fax' },
 
     ]
-    taxTypeRateMappingColumns =[
+    taxTypeRateMappingColumns = [
         { field: 'taxType', header: 'Tax Type' },
         { field: 'taxRate', header: 'Tax Rate' }
     ]
@@ -114,7 +114,7 @@ export class CustomerViewComponent implements OnInit {
     ]
     aircraftListDataValues: any = [];
     ataListDataValues: any = [];
-    billingInfoList: any;
+    billingInfoList: any = [];
     waringInfoList: any = [];
     DocumentsList: any = [];
     domesticShippingData: any;
@@ -165,29 +165,29 @@ export class CustomerViewComponent implements OnInit {
             this.getCustomerIntegrationTypesByCustomerId(customerId);
             this.toGetCustomerFinanceDocumentsList(customerId)
             this.viewDataGeneralInformation = res[0];
-           
+
 
         })
-       // this.openStep1();
+        // this.openStep1();
 
 
     }
-    
-	getPageCount(totalNoofRecords, pageSize) {
-		return Math.ceil(totalNoofRecords / pageSize)
-	}
 
-      getAllCustomerContact(customerId) {
+    getPageCount(totalNoofRecords, pageSize) {
+        return Math.ceil(totalNoofRecords / pageSize)
+    }
+
+    getAllCustomerContact(customerId) {
         // get Customer Contatcs 
-         this.customerService.getContacts(customerId).subscribe(res => {
+        this.customerService.getContacts(customerId).subscribe(res => {
             this.customerContacts = res[0] || [];
         })
     }
 
     getAircraftMappedDataByCustomerId(customerId) {
         // const id = this.savedGeneralInformationData.customerId;
-         this.customerService.getMappedAirCraftDetails(customerId).subscribe(res => {
-             this.aircraftListDataValues = res || [];
+        this.customerService.getMappedAirCraftDetails(customerId).subscribe(res => {
+            this.aircraftListDataValues = res || [];
         })
     }
     async getMappedATAByCustomerId(customerId) {
@@ -254,18 +254,18 @@ export class CustomerViewComponent implements OnInit {
         })
     }
 
-     getCustomerRestrictedPMAByCustomerId(customerId) {
+    getCustomerRestrictedPMAByCustomerId(customerId) {
 
-         this.commonService.getRestrictedPartsWithDesc(1, customerId, 'PMA').subscribe(res => {
+        this.commonService.getRestrictedPartsWithDesc(1, customerId, 'PMA').subscribe(res => {
             this.restrictedPMAParts = res || [];
-            
+
         })
     }
 
 
-     getCustomerRestrictedDERByCustomerId(customerId) {
+    getCustomerRestrictedDERByCustomerId(customerId) {
 
-         this.commonService.getRestrictedPartsWithDesc(1, customerId, 'DER').subscribe(res => {
+        this.commonService.getRestrictedPartsWithDesc(1, customerId, 'DER').subscribe(res => {
 
             this.restrictedDERParts = res || [];
 
@@ -281,16 +281,16 @@ export class CustomerViewComponent implements OnInit {
         });
     }
 
-    getCustomerIntegrationTypesByCustomerId(customerId) {       
+    getCustomerIntegrationTypesByCustomerId(customerId) {
         this.commonService.getIntegrationMapping(customerId, 1).subscribe(res => {
             this.viewDataIntegration = res.map(x => x.description);
-       });
+        });
     }
     toGetCustomerFinanceDocumentsList(customerId) {
         var moduleId = 1;
         this.customerService.GetCustomerFinanceDocumentsList(customerId, moduleId).subscribe(res => {
             this.allCustomerFinanceDocumentsList = res;
-            
+
         })
     }
     downloadFileUpload(rowData) {
