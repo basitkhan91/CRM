@@ -13,7 +13,7 @@ import { MasterComapnyService } from '../../../services/mastercompany.service';
 import { CustomerService } from '../../../services/customer.service';
 import { CustomerContactModel } from '../../../models/customer-contact.model';
 import { MatDialog } from '@angular/material';
-import { getObjectByValue, getPageCount, getObjectById, getValueFromObjectByKey, editValueAssignByCondition } from '../../../generic/autocomplete';
+import { getObjectByValue, getPageCount, getObjectById, getValueFromObjectByKey, editValueAssignByCondition, getValueFromArrayOfObjectById } from '../../../generic/autocomplete';
 import { AtaSubChapter1Service } from '../../../services/atasubchapter1.service';
 
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
@@ -66,6 +66,7 @@ export class CustomerContactsComponent implements OnInit {
 	disablesaveForlastname: boolean;
 
 	customerContactsColumns = [
+		{ field: 'isDefaultContact', header: 'Primary Contact' },
 		{ field: 'tag', header: 'Tag' },
 		{ field: 'firstName', header: 'First Name' },
 		{ field: 'lastName', header: 'Last Name' },
@@ -74,7 +75,6 @@ export class CustomerContactsComponent implements OnInit {
 		{ field: 'workPhone', header: 'Work Phone' },
 		{ field: 'mobilePhone', header: 'Mobile Phone' },
 		{ field: 'fax', header: 'Fax' },
-		// { field: 'isDefaultContact', header: 'Primary Contact' },
 		// { field: 'notes', header: 'Memo' },
 		// { field: 'updatedDate', header: 'Updated Date' },
 		// { field: 'createdDate', header: 'Created Date' }
@@ -109,6 +109,7 @@ export class CustomerContactsComponent implements OnInit {
 	ataListDataValues = []
 	auditHistory: any[] = [];
 	@ViewChild('ATAADD') myModal;
+	originalATASubchapterData: any = [];
 
 	constructor(private router: ActivatedRoute,
 
@@ -120,7 +121,7 @@ export class CustomerContactsComponent implements OnInit {
 		private alertService: AlertService,
 		public customerService: CustomerService,
 		private dialog: MatDialog,
-		private atasubchapter1service: AtaSubChapter1Service,
+		public atasubchapter1service: AtaSubChapter1Service,
 		private masterComapnyService: MasterComapnyService,
 		private configurations: ConfigurationService,
 		private commonService: CommonService,
@@ -130,6 +131,7 @@ export class CustomerContactsComponent implements OnInit {
 	}
 
 	ngOnInit() {
+		console.log(this.add_ataChapterList, "add_ataChapterList+++")
 		if (this.editMode) {
 			this.id = this.editGeneralInformationData.customerId;
 			this.customerCode = this.editGeneralInformationData.customerCode;
@@ -362,7 +364,7 @@ export class CustomerContactsComponent implements OnInit {
 		this.selectedContact = rowData;
 		this.ataListDataValues = [];
 		this.add_ataSubChapterList = '';
-
+		this.getOriginalATASubchapterList()
 		this.getATACustomerContactMapped();
 
 
@@ -379,12 +381,14 @@ export class CustomerContactsComponent implements OnInit {
 		const selectedATAId = getValueFromObjectByKey('ataChapterId', this.add_SelectedId)
 		this.atasubchapter1service.getATASubChapterListByATAChapterId(selectedATAId).subscribe(atasubchapter => {
 			const responseData = atasubchapter[0];
+			console.log(this.add_ataSubChapterList, "this.add_ataSubChapterList++++=")
 			this.add_ataSubChapterList = responseData.map(x => {
 				return {
-					label: x.description,
+					label: x.ataSubChapterCode + ' - ' + x.description,
 					value: x
 				}
 			})
+
 		})
 	}
 	// post the ata Mapping 
@@ -431,11 +435,22 @@ export class CustomerContactsComponent implements OnInit {
 
 
 	}
+	async getOriginalATASubchapterList() {
+		this.atasubchapter1service.getAtaSubChapter1List().subscribe(res => {
+			const responseData = res[0];
+			this.originalATASubchapterData = responseData;			
+		})
+
+	}
 
 	async getATACustomerContactMapped() {
 		this.customerService.getATAMappedByContactId(this.selectedContact.contactId).subscribe(res => {
 			console.log(res);
 			this.ataListDataValues = res;
+			for(let i=0; i<this.ataListDataValues.length; i++){
+				this.ataListDataValues[i]['ataChapterName'] = this.ataListDataValues[i]['ataChapterCode'] + ' - ' +this.ataListDataValues[i]['ataChapterName']
+				this.ataListDataValues[i]['ataSubChapterDescription'] = getValueFromArrayOfObjectById('ataSubChapterCode', 'ataSubChapterId', this.ataListDataValues[i]['ataSubChapterId'], this.originalATASubchapterData) + ' - ' +this.ataListDataValues[i]['ataSubChapterDescription']
+			}
 		})
 	}
 

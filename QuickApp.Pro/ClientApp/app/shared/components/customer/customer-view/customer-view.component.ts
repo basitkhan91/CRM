@@ -5,6 +5,7 @@ import { CommonService } from '../../../../services/common.service';
 import { NgbModal, NgbActiveModal, NgbModalRef, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import * as $ from 'jquery';
 import { ConfigurationService } from '../../../../services/configuration.service';
+import { EmployeeService } from '../../../../services/employee.service';
 
 
 
@@ -130,7 +131,9 @@ export class CustomerViewComponent implements OnInit {
     allCustomerFinanceDocumentsList: any = [];
     countOfRestrictDerParts: any = 0;
     countOfRestrictPMAParts: any = 0;
-    constructor(public customerService: CustomerService, private commonService: CommonService, private activeModal: NgbActiveModal, private configurations: ConfigurationService) {
+    employeeListOriginal: any = [];
+    constructor(public customerService: CustomerService, private commonService: CommonService, private activeModal: NgbActiveModal, private configurations: ConfigurationService, 		public employeeService: EmployeeService
+        ) {
 
 
     }
@@ -150,6 +153,7 @@ export class CustomerViewComponent implements OnInit {
         let customerId = this.customerId;
         this.customerService.getCustomerdataById(customerId).subscribe(res => {
 
+            this.getAllEmployees();
             this.getAllCustomerContact(customerId);
             this.getAircraftMappedDataByCustomerId(customerId);
             this.getMappedATAByCustomerId(customerId);
@@ -166,12 +170,27 @@ export class CustomerViewComponent implements OnInit {
             this.toGetCustomerFinanceDocumentsList(customerId)
             this.viewDataGeneralInformation = res[0];
            
-
         })
        // this.openStep1();
 
 
     }
+	async getAllEmployees() {
+		await this.employeeService.getEmployeeList().subscribe(res => {
+            this.employeeListOriginal = res[0];
+            const primarySName1 = this.employeeListOriginal.find(x=>x.employeeId == this.viewDataGeneralInformation.primarySalesPersonId)
+            this.viewDataGeneralInformation.primarySalesPersonFirstName = primarySName1.firstName + " " + primarySName1.lastName
+            const secondarySName1 = this.employeeListOriginal.find(x=>x.employeeId == this.viewDataGeneralInformation.secondarySalesPersonId)
+            this.viewDataGeneralInformation.secondarySalesPersonName =  secondarySName1.firstName + " " + secondarySName1.lastName
+            const csrName1 = this.employeeListOriginal.find(x=>x.employeeId == this.viewDataGeneralInformation.csrId)
+            this.viewDataGeneralInformation.csrName =  csrName1.firstName + " " + csrName1.lastName
+            const saName1 = this.employeeListOriginal.find(x=>x.employeeId == this.viewDataGeneralInformation.saId)
+            this.viewDataGeneralInformation.agentName = saName1.firstName + " " + saName1.lastName
+            
+
+            
+		})
+	}
     
 	getPageCount(totalNoofRecords, pageSize) {
 		return Math.ceil(totalNoofRecords / pageSize)
