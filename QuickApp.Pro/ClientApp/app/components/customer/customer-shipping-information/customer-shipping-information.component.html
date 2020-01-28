@@ -1435,6 +1435,7 @@
                         <th>Expiration Date</th>
                         <th>Amount</th>
                         <th>Is Primary</th>
+                        <th>Is Active</th>
                         <th>Updated By</th>
                         <th>Last Updated Time</th>
                         <th>Created By</th>
@@ -1451,6 +1452,7 @@
                     <td [ngStyle]="{'color':  getColorCodeForInterHistory(i, 'expirationDate', audit.expirationDate)  ? 'black' : 'red'  }">{{audit.expirationDate}}</td>
                     <td [ngStyle]="{'color':  getColorCodeForInterHistory(i, 'amount', audit.amount)  ? 'black' : 'red'  }">{{audit.amount}}</td>
                     <td [ngStyle]="{'color':  getColorCodeForInterHistory(i, 'isPrimary', audit.isPrimary)  ? 'black' : 'red'  }">{{audit.isPrimary}}</td>
+                    <td [ngStyle]="{'color':  getColorCodeForInterHistory(i, 'isActive', audit.isActive)  ? 'black' : 'red'  }">{{audit.isActive}}</td>
 
                     <td>{{audit.updatedBy}}</td>
                     <td>{{audit.updatedDate | date: 'dd-MM-yyyy h:mm a '}}</td>
