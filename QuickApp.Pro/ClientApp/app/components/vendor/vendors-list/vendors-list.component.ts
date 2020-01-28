@@ -90,17 +90,17 @@ export class VendorsListComponent implements OnInit {
     allContacts: any[] = [];
     allpayments: any[] = [];
     selectedPaymentColumns: any[];
-    allShippings: any[];  
+    allShippings: any[] = [];  
     shippingCol: any[];
     selectedShippingColumns: any[];
     selectedRow: any;
-    billingInfoList: any[];
+    billingInfoList: any[] = [];
     selectedBillingColumns: any[];
     billingCol: any[];
-    warningInfoList: any[];
+    warningInfoList: any[] = [];
     selectedWarningColumns: any[];
     warninggCol: any[];
-    allVendorPOROList: any[];
+    allVendorPOROList: any[] = [];
     memoCols:any[];
     vendorDocumentsData: any=[];
     vendorDocumentsColumns :any[];    
@@ -638,7 +638,7 @@ export class VendorsListComponent implements OnInit {
         this.loadContactDataData(row.vendorId);
         this.loadPayamentData(row.vendorId);
         this.loadShippingData(row.vendorId);
-        // this.loadBillingData(row.vendorId);
+        this.loadBillingData(row.vendorId);
         this.loadWarningsData(row.vendorId);
         this.loadMemosData(row.vendorId);
         this.loadVendorDocumentsData(row.vendorId);
@@ -899,7 +899,7 @@ export class VendorsListComponent implements OnInit {
 
         $('#step9').collapse('show');
         $('#step10').collapse('show');
-        //$('#step11').collapse('show');
+        $('#step11').collapse('show');
     }
     CloseAllVenodrDetailsModel()
     {
@@ -913,7 +913,7 @@ export class VendorsListComponent implements OnInit {
 
         $('#step9').collapse('hide');
         $('#step10').collapse('hide');
-        //$('#step11').collapse('hide');
+        $('#step11').collapse('hide');
     }
 
     gotoCreatePO(rowData) {
@@ -1114,10 +1114,14 @@ export class VendorsListComponent implements OnInit {
 		})
     }
     
-    viewFileSelectedCapsRow(rowData)
-    {
+    viewFileSelectedCapsRow(rowData) {
         this.sourceViewforDocument=rowData;
         this.toGetUploadDocumentsList(rowData.attachmentId, rowData.vendorId,3);
+    }
+
+    viewSelectedDocsRowonDbl(rowData) {
+        this.viewFileSelectedCapsRow(rowData);
+        $('#fileDocview').modal('show');
     }
     
   	toGetUploadDocumentsList(attachmentId, vendorId,moduleId)
