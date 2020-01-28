@@ -17,7 +17,7 @@ import { MessageSeverity, AlertService } from '../../../services/alert.service';
 import { VendorService } from '../../../services/vendor.service';
 import { MasterComapnyService } from '../../../services/mastercompany.service';
 import { Vendor } from '../../../models/vendor.model';
-import { Router, NavigationExtras } from '@angular/router';
+import { Router, NavigationExtras, ActivatedRoute } from '@angular/router';
 import { VendorClassification } from '../../../models/vendorclassification.model';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
@@ -42,7 +42,7 @@ declare const google: any;
     animations: [fadeInOut]
 })
 /** anys component*/
-export class VendorGeneralInformationComponent implements OnInit, OnDestroy {
+export class VendorGeneralInformationComponent implements OnInit {
     disableSaveVenderName: boolean;
     disableSaveVenderCode: boolean;
     VendorCodesColl: any[] = [];
@@ -139,88 +139,180 @@ export class VendorGeneralInformationComponent implements OnInit, OnDestroy {
     //@ViewChild('f') form: any;
     formData = new FormData();
     allVendorGeneralDocumentsList: any = [];
- 
+    sourceVendor: any = {};
 
-    constructor(public vendorclassificationService: VendorClassificationService, private http: HttpClient, private changeDetectorRef: ChangeDetectorRef, private router: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, public customerser: CustomerService, private alertService: AlertService, public vendorService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, public commonService: CommonService,public integrationService: IntegrationService,private configurations: ConfigurationService) {
+    constructor(public vendorclassificationService: VendorClassificationService,
+        private http: HttpClient,
+        private changeDetectorRef: ChangeDetectorRef,
+        private router: Router,
+        private authService: AuthService,
+        private modalService: NgbModal,
+        private activeModal: NgbActiveModal,
+        private _fb: FormBuilder,
+        public customerser: CustomerService,
+        private alertService: AlertService,
+        public vendorService: VendorService,
+        private dialog: MatDialog,
+        private masterComapnyService: MasterComapnyService,
+        public commonService: CommonService,
+        public integrationService: IntegrationService,
+        private acRouter: ActivatedRoute,
+        private configurations: ConfigurationService) {
         this.dataSource = new MatTableDataSource();
-       
-       
-        if(this.vendorService.listCollection !== undefined){
-            this.vendorService.isEditMode = true;
+
+        const vendorId = this.acRouter.snapshot.params['id'];
+
+        if (vendorId) {
+            this.vendorService.getVendorDataById(vendorId).subscribe(res => {
+                // this.isEditMode = true;
+                // this.vendorService.isEditMode = true;
+                // this.isSaving = true;
+                this.sourceVendor = res;
+                // this.workFlowtService.isReset = true;
+                // // this.loadMasterCompanies();
+
+                this.vendorService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-general-information/edit';
+                this.vendorService.bredcrumbObj.next(this.vendorService.currentUrl);
+                this.vendorService.ShowPtab = true;
+                this.vendorService.alertObj.next(this.vendorService.ShowPtab);
+
+                this.vendorService.indexObj.next(0);
+
+                this.vendorService.listCollection = this.sourceVendor;
+                this.vendorService.enableExternal = true;
+                if (this.vendorService.listCollection !== undefined) {
+                    this.vendorService.isEditMode = true;
+                }
+
+
+
+
+                // if (this.local) {
+                //     this.vendorService.contactCollection = this.local;
+                // }
+                // if (this.vendorService.generalCollection) {
+                //     this.local = this.vendorService.generalCollection;
+                //     this.toGetVendorGeneralDocumentsList(this.local.vendorId);
+                // }
+
+
+
+                if (this.vendorService.listCollection != null && this.vendorService.isEditMode == true) {
+
+                    this.showLable = true;
+                    this.viewName = "Edit";
+
+                    this.local = this.vendorService.listCollection;
+
+                    this.sourceVendor = this.vendorService.listCollection;
+                    console.log(this.sourceVendor);
+                    this.toGetVendorGeneralDocumentsList(this.sourceVendor.vendorId);
+                    this.sourceVendor.address1 = this.vendorService.listCollection.address1;
+                    this.sourceVendor.address2 = this.vendorService.listCollection.address2;
+                    this.sourceVendor.address3 = this.vendorService.listCollection.address3;
+                    this.sourceVendor.city = this.vendorService.listCollection.city;
+                    this.sourceVendor.country = this.vendorService.listCollection.country;
+                    this.sourceVendor.stateOrProvince = this.vendorService.listCollection.stateOrProvince;
+                    this.sourceVendor.PostalCode = this.vendorService.listCollection.postalCode;
+
+                }
+                if (this.customerser.isCustomerAlsoVendor == true) {
+                    this.sourceVendor = this.customerser.localCollectiontoVendor;
+                    this.sourceVendor.vendorEmail = this.customerser.localCollectiontoVendor.email;
+                    this.sourceVendor.vendorPhone = this.customerser.localCollectiontoVendor.customerPhone;
+                    this.sourceVendor.vendorName = this.customerser.localCollectiontoVendor.name;
+                    this.sourceVendor.vendorCode = this.customerser.localCollectiontoVendor.customerCode;
+                    this.sourceVendor.doingBusinessAsName = this.customerser.localCollectiontoVendor.doingBuinessAsName;
+                    this.sourceVendor.PostalCode = this.customerser.localCollectiontoVendor.postalCode;
+                }
+
+                //if(!this.vendorService.isEditMode)
+                //{            
+                //    if(this.viewName == "Create")
+                //    {
+                //        this.vendorService.listCollection=[];
+                //        this.local=[];
+                //        this.sourceVendor="";
+                //        this.vendorService.isEditMode=false;
+                //    }         
+
+                //}        
+
+                // if(this.viewName == "Create")
+                // {
+                //     alert(this.viewName);
+                //     this.form.reset();
+                // }
+                // else{
+                //     alert(this.viewName);
+
+                // }
+            })
+        } else {
+
+            this.vendorService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-general-information';
+            this.vendorService.bredcrumbObj.next(this.vendorService.currentUrl);
+            this.vendorService.ShowPtab = true;
+            this.vendorService.alertObj.next(this.vendorService.ShowPtab);
+
+            this.vendorService.indexObj.next(0);
+
+            this.sourceVendor.vendorTypeId = 2;
+            this.sourceVendor.vendorTypeId = 1;
+            if (this.vendorService.isEditMode == false) {
+                this.sourceVendor.vendorTypeId = 2;
+                this.viewName = "Create";
+                this.sourceVendor.isAddressForBilling = true;
+                this.sourceVendor.isAddressForShipping = true;
+
+            }
+            if (this.vendorService.enableExternal == false) {
+                this.sourceVendor.vendorTypeId = 2;
+            }
+
+            if (this.vendorService.generalCollection) {
+                this.sourceVendor = this.vendorService.generalCollection;
+            }
+
+            // this.integrationCols = [
+            //     { field: '145.com', header: '145.com' },
+            //     { field: 'Aeroxchange', header: 'Aeroxchange' },
+            //     { field: 'AvRef', header: 'AvRef' },
+            //     { field: 'ILS', header: 'ILS' },
+            //     { field: 'partsBase', header: 'Parts base' },
+            // ];
+            if (!this.intSelectedColumns) {
+                this.intSelectedColumns = this.cols;
+            }
+            // this.CreateVendorOnClick();
+            //console.log(this.sourceVendor, this.isEditMode, this.viewName, "vendor Information ");
+
+            if (!this.vendorService.isReset) {
+                if (this.viewName != "Edit") {
+                    this.sourceVendor = {};
+                    this.sourceVendor.vendorTypeId = 2;
+                    this.sourceVendor.isAddressForBilling = true;
+                    this.sourceVendor.isAddressForShipping = true;
+                }
+            }
+            console.log(this.vendorService.listCollection);
         }
-       
-
-        if (this.local) {
-            this.vendorService.contactCollection = this.local;
-        }
-        if (this.vendorService.generalCollection) {
-            this.local = this.vendorService.generalCollection; 
-            this.toGetVendorGeneralDocumentsList(this.local.vendorId);       
-        }       
 
 
-
-        if (this.vendorService.listCollection != null && this.vendorService.isEditMode == true) {
-           
-            this.showLable = true;
-            this.viewName = "Edit";
-            this.local = this.vendorService.listCollection.t;
-            this.sourceVendor = this.vendorService.listCollection.t;
-            console.log(this.sourceVendor);
-            this.toGetVendorGeneralDocumentsList(this.sourceVendor.vendorId);  
-            this.sourceVendor.address1 = this.vendorService.listCollection.address1;
-            this.sourceVendor.address2 = this.vendorService.listCollection.address2;
-            this.sourceVendor.address3 = this.vendorService.listCollection.address3;
-            this.sourceVendor.city = this.vendorService.listCollection.city;
-            this.sourceVendor.country = this.vendorService.listCollection.country;
-            this.sourceVendor.stateOrProvince = this.vendorService.listCollection.stateOrProvince;
-            this.sourceVendor.PostalCode = this.vendorService.listCollection.postalCode;
-
-        }
-        if (this.customerser.isCustomerAlsoVendor == true) {
-            this.sourceVendor = this.customerser.localCollectiontoVendor;
-            this.sourceVendor.vendorEmail = this.customerser.localCollectiontoVendor.email;
-            this.sourceVendor.vendorPhone = this.customerser.localCollectiontoVendor.customerPhone;
-            this.sourceVendor.vendorName = this.customerser.localCollectiontoVendor.name;
-            this.sourceVendor.vendorCode = this.customerser.localCollectiontoVendor.customerCode;
-            this.sourceVendor.doingBusinessAsName = this.customerser.localCollectiontoVendor.doingBuinessAsName;
-            this.sourceVendor.PostalCode = this.customerser.localCollectiontoVendor.postalCode;
-        }
-
-        //if(!this.vendorService.isEditMode)
-        //{            
-        //    if(this.viewName == "Create")
-        //    {
-        //        this.vendorService.listCollection=[];
-        //        this.local=[];
-        //        this.sourceVendor="";
-        //        this.vendorService.isEditMode=false;
-        //    }         
-
-        //}        
-
-        // if(this.viewName == "Create")
-        // {
-        //     alert(this.viewName);
-        //     this.form.reset();
-        // }
-        // else{
-        //     alert(this.viewName);
-
-        // }
     }
 
     ngOnInit(): void {
-        
-        this.sourceVendor.vendorTypeId = 2;
-      
-        this.matSpinner = false;
-        this.vendorService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-general-information';
-        this.vendorService.bredcrumbObj.next(this.vendorService.currentUrl);
-        this.vendorService.ShowPtab = true;
-        this.vendorService.alertObj.next(this.vendorService.ShowPtab);
-        this.activeIndex = 0;
-        this.vendorService.indexObj.next(this.activeIndex);
+
+
+        // this.sourceVendor.vendorTypeId = 2;
+
+        // this.matSpinner = false;
+        // this.vendorService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-general-information';
+        // this.vendorService.bredcrumbObj.next(this.vendorService.currentUrl);
+        // this.vendorService.ShowPtab = true;
+        // this.vendorService.alertObj.next(this.vendorService.ShowPtab);
+        // this.activeIndex = 0;
+        // this.vendorService.indexObj.next(this.activeIndex);
         this.loadData();
         this.Capabilitydata();
         this.countrylist();
@@ -231,55 +323,56 @@ export class VendorGeneralInformationComponent implements OnInit, OnDestroy {
         this.getAllIntegrations();
         this.getVendorIntegrationByVendorrId();
 
-        this.options = {
-            center: { lat: 36.890257, lng: 30.707417 },
-            zoom: 12
-        };
-        this.sourceVendor.vendorTypeId = 1;
-        if (this.vendorService.isEditMode == false) {
-            this.sourceVendor.vendorTypeId = 2;
-            this.viewName = "Create";
-            this.sourceVendor.isAddressForBilling = true;
-            this.sourceVendor.isAddressForShipping = true;
-           
-        }
-        if (this.vendorService.enableExternal == false) {
-            this.sourceVendor.vendorTypeId = 2;
-        }
+        // this.options = {
+        //     center: { lat: 36.890257, lng: 30.707417 },
+        //     zoom: 12
+        // };
+        //     this.sourceVendor.vendorTypeId = 1;
+        //     if (this.vendorService.isEditMode == false) {
+        //         this.sourceVendor.vendorTypeId = 2;
+        //         this.viewName = "Create";
+        //         this.sourceVendor.isAddressForBilling = true;
+        //         this.sourceVendor.isAddressForShipping = true;
 
-        if (this.vendorService.generalCollection) {
-            this.sourceVendor = this.vendorService.generalCollection;
-        }
+        //     }
+        //     if (this.vendorService.enableExternal == false) {
+        //         this.sourceVendor.vendorTypeId = 2;
+        //     }
 
-        // this.integrationCols = [
-        //     { field: '145.com', header: '145.com' },
-        //     { field: 'Aeroxchange', header: 'Aeroxchange' },
-        //     { field: 'AvRef', header: 'AvRef' },
-        //     { field: 'ILS', header: 'ILS' },
-        //     { field: 'partsBase', header: 'Parts base' },
-        // ];
-        if (!this.intSelectedColumns) {
-            this.intSelectedColumns = this.cols;
-        }
-        this.CreateVendorOnClick();
-        //console.log(this.sourceVendor, this.isEditMode, this.viewName, "vendor Information ");
-       
-        if (!this.vendorService.isReset) {   
-            if(this.viewName !="Edit")
-            {
-                this.sourceVendor = {};
-                this.sourceVendor.vendorTypeId = 2;
-                this.sourceVendor.isAddressForBilling = true;
-                this.sourceVendor.isAddressForShipping = true;
-            }            
-        }
-        console.log(this.vendorService.listCollection);        
+        //     if (this.vendorService.generalCollection) {
+        //         this.sourceVendor = this.vendorService.generalCollection;
+        //     }
+
+        //     // this.integrationCols = [
+        //     //     { field: '145.com', header: '145.com' },
+        //     //     { field: 'Aeroxchange', header: 'Aeroxchange' },
+        //     //     { field: 'AvRef', header: 'AvRef' },
+        //     //     { field: 'ILS', header: 'ILS' },
+        //     //     { field: 'partsBase', header: 'Parts base' },
+        //     // ];
+        //     if (!this.intSelectedColumns) {
+        //         this.intSelectedColumns = this.cols;
+        //     }
+        //     // this.CreateVendorOnClick();
+        //     //console.log(this.sourceVendor, this.isEditMode, this.viewName, "vendor Information ");
+
+        //     if (!this.vendorService.isReset) {
+        //         if (this.viewName != "Edit") {
+        //             this.sourceVendor = {};
+        //             this.sourceVendor.vendorTypeId = 2;
+        //             this.sourceVendor.isAddressForBilling = true;
+        //             this.sourceVendor.isAddressForShipping = true;
+        //         }
+        //     }
+        //     console.log(this.vendorService.listCollection);
+        // }
+        // ngOnDestroy(): void {
+        //     this.sourceVendor = {};
+        //     this.vendorService.isReset = false;
+        // }
+
     }
-    ngOnDestroy(): void {
-        this.sourceVendor = {};
-        this.vendorService.isReset = false;
-    }
-    sourceVendor: any = {};
+
     closethis() {
         this.closeCmpny = false;
     }
@@ -313,8 +406,8 @@ export class VendorGeneralInformationComponent implements OnInit, OnDestroy {
         this.loadingIndicator = false;
         this.dataSource.data = allWorkFlows;
         this.allCountryinfo = allWorkFlows;
-        console.log(this.vendorService.isEditMode);        
-        if(this.vendorService.isEditMode && this.sourceVendor.country != null) {
+        console.log(this.vendorService.isEditMode);
+        if (this.vendorService.isEditMode && this.sourceVendor.country != null) {
             this.sourceVendor.country = getObjectById('countries_id', this.sourceVendor.country, this.allCountryinfo);
         }
     }
@@ -450,44 +543,42 @@ export class VendorGeneralInformationComponent implements OnInit, OnDestroy {
     async getAllVendorClassification() {
         await this.commonService.smartDropDownList('VendorClassification', 'VendorClassificationId', 'ClassificationName').subscribe(res => {
             this.allvendorclassificationInfo = res;
-        });        
+        });
     }
 
     async  getVendorClassificationByVendorrId() {
-       if(this.sourceVendor.vendorId >0)
-       {
-        await this.commonService.getClassificationMapping(this.sourceVendor.vendorId,3).subscribe(res => {
-            this.sourceVendor.vendorClassificationIds = res.map(x => x.vendorClassificationId);
-            
-        });
-       }
-       
+        if (this.sourceVendor.vendorId > 0) {
+            await this.commonService.getClassificationMapping(this.sourceVendor.vendorId, 3).subscribe(res => {
+                this.sourceVendor.vendorClassificationIds = res.map(x => x.vendorClassificationId);
+
+            });
+        }
+
     }
 
-   async getAllIntegrations() {
+    async getAllIntegrations() {
         await this.integrationService.getWorkFlows().subscribe(res => {
             const responseData = res[0]
-             this.integrationOriginalList = responseData.map(x => {
+            this.integrationOriginalList = responseData.map(x => {
                 return {
                     label: x.description, value: x.integrationPortalId
                 }
-            })          
+            })
 
         })
     }
 
 
     async  getVendorIntegrationByVendorrId() {
-       if(this.sourceVendor.vendorId >0)
-       {
-        await this.commonService.getIntegrationMapping(this.sourceVendor.vendorId,3).subscribe(res => {
-            this.sourceVendor.integrationPortalIds = res.map(x => x.integrationPortalId);
-            
-        });
-       }
-       
+        if (this.sourceVendor.vendorId > 0) {
+            await this.commonService.getIntegrationMapping(this.sourceVendor.vendorId, 3).subscribe(res => {
+                this.sourceVendor.integrationPortalIds = res.map(x => x.integrationPortalId);
+
+            });
+        }
+
     }
-    
+
 
     //Load Vendor Data
     private loadDataVendorData() {
@@ -626,7 +717,7 @@ export class VendorGeneralInformationComponent implements OnInit, OnDestroy {
         this.isEditMode = true;
         this.isSaving = true;
         this.sourceVendor = row;
-        this.loadMasterCompanies();      
+        this.loadMasterCompanies();
         this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
@@ -660,7 +751,7 @@ export class VendorGeneralInformationComponent implements OnInit, OnDestroy {
         this.sourceVendor = row;
     }
     editItemAndCloseModel(goNxt?: any) {
-      
+
         this.isSaving = true;
         this.isEditMode = true;
         if (!(this.sourceVendor.vendorName && this.sourceVendor.vendorCode && this.sourceVendor.vendorEmail && this.sourceVendor.vendorPhone && this.sourceVendor.address1 && this.sourceVendor.city
@@ -672,8 +763,8 @@ export class VendorGeneralInformationComponent implements OnInit, OnDestroy {
         if (this.sourceVendor.vendorName && this.sourceVendor.vendorCode && this.sourceVendor.vendorEmail && this.sourceVendor.vendorPhone && this.sourceVendor.address1 && this.sourceVendor.city
             && this.sourceVendor.PostalCode && this.sourceVendor.country && this.sourceVendor.vendorClassificationIds) {
 
-                this.sourceVendor.country = editValueAssignByCondition('countries_id', this.sourceVendor.country);
-                console.log(this.sourceVendor);  
+            this.sourceVendor.country = editValueAssignByCondition('countries_id', this.sourceVendor.country);
+            console.log(this.sourceVendor);
             if (!this.sourceVendor.vendorId) {
                 this.sourceVendor.createdBy = this.userName;
                 this.sourceVendor.updatedBy = this.userName;
@@ -682,16 +773,16 @@ export class VendorGeneralInformationComponent implements OnInit, OnDestroy {
                 if (this.sourceVendor.parent == false || this.sourceVendor.parent == null) {
                     this.sourceVendor.vendorParentName = '';
                 }
-                
+
                 this.vendorService.newAction(this.sourceVendor).subscribe(data => {
-                  
-                    const vdata = {                           
-                        vendorId:data.vendorId,
+
+                    const vdata = {
+                        vendorId: data.vendorId,
                         masterCompanyId: 1,
                         createdBy: this.userName,
                         updatedBy: this.userName
                     }
-            
+
                     for (var key in vdata) {
                         this.formData.append(key, vdata[key]);
                     }
@@ -719,8 +810,8 @@ export class VendorGeneralInformationComponent implements OnInit, OnDestroy {
                         this.vendorService.isVendorAlsoCustomer = this.sourceVendor.isVendorAlsoCustomer;
                         this.vendorService.localCollectiontoCustomer = this.sourceVendor;
                     }
-                    this.viewName="Edit";
-                    this.vendorService.isEditMode=true;
+                    this.viewName = "Edit";
+                    this.vendorService.isEditMode = true;
                     this.activeIndex = 0;
                     this.vendorService.indexObj.next(this.activeIndex);
                     this.savesuccessCompleted(this.sourceVendor, goNxt);
@@ -732,19 +823,19 @@ export class VendorGeneralInformationComponent implements OnInit, OnDestroy {
                 if (this.sourceVendor.parent == false || this.sourceVendor.parent == null) {
                     this.sourceVendor.vendorParentName = '';
                 }
-         
-              
-            const {vendorContact,address, ...newSourceVendor} = this.sourceVendor;
-           
+
+
+                const { vendorContact, address, ...newSourceVendor } = this.sourceVendor;
+
                 this.vendorService.updateVendorDetails(newSourceVendor).subscribe(
-                    data => {                       
-                        const vdata = {                           
+                    data => {
+                        const vdata = {
                             vendorId: this.sourceVendor.vendorId,
                             masterCompanyId: 1,
                             createdBy: this.userName,
                             updatedBy: this.userName
                         }
-                
+
                         for (var key in vdata) {
                             this.formData.append(key, vdata[key]);
                         }
@@ -757,7 +848,7 @@ export class VendorGeneralInformationComponent implements OnInit, OnDestroy {
                         this.sourceVendor.updatedBy = this.userName;
                         this.localCollection = data;
                         this.sourceVendor = data;
-                       
+
                         this.sourceVendor.address1 = data.address.line1;
                         this.sourceVendor.address2 = data.address.line2;
                         this.sourceVendor.address3 = data.address.line3;
@@ -778,7 +869,7 @@ export class VendorGeneralInformationComponent implements OnInit, OnDestroy {
         }
         else {
         }
-        
+
 
     }
 
@@ -797,8 +888,8 @@ export class VendorGeneralInformationComponent implements OnInit, OnDestroy {
     CreateVendorOnClick() {
         this.activeIndex = 1;
         this.vendorService.indexObj.next(this.activeIndex);
-        this.vendorService.changeStep('General Information');
-        this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-general-information');
+        // this.vendorService.changeStep('General Information');
+        // this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-general-information');
     }
 
     dismissModel() {
@@ -963,12 +1054,12 @@ export class VendorGeneralInformationComponent implements OnInit, OnDestroy {
         //     }
         // }
         this.countrycollection = this.allCountryinfo;
-		if (event.query !== undefined && event.query !== null) {
-			const countries = [...this.allCountryinfo.filter(x => {
-				return x.nice_name.toLowerCase().includes(event.query.toLowerCase())
-			})]
-			this.countrycollection = countries;
-		}
+        if (event.query !== undefined && event.query !== null) {
+            const countries = [...this.allCountryinfo.filter(x => {
+                return x.nice_name.toLowerCase().includes(event.query.toLowerCase())
+            })]
+            this.countrycollection = countries;
+        }
     }
 
     parentEventHandler(event) {
@@ -1014,7 +1105,7 @@ export class VendorGeneralInformationComponent implements OnInit, OnDestroy {
             }
         }
     }
-    
+
     eventClassificationHandler(event) {
         if (event.target.value != "") {
             let value = event.target.value.toLowerCase();
@@ -1039,52 +1130,49 @@ export class VendorGeneralInformationComponent implements OnInit, OnDestroy {
 
     patternMobilevalidationWithSpl(event: any) {
         const pattern = /[0-9\+\-()\ ]/;
-    
+
         let inputChar = String.fromCharCode(event.charCode);
         if (event.keyCode != 8 && !pattern.test(inputChar)) {
-          event.preventDefault();
+            event.preventDefault();
         }
-        
-      }
 
-      fileUpload(event,fileType) {               
-		if (event.files.length === 0)
-			return;
+    }
 
-        for (let file of event.files)
-        {        // console.log(fileType);   
+    fileUpload(event, fileType) {
+        if (event.files.length === 0)
+            return;
+
+        for (let file of event.files) {        // console.log(fileType);   
             this.formData.append(fileType, file);
             console.log(this.formData);
         }
-			
+
     }
 
-    toGetVendorGeneralDocumentsList(vendorId)
-	{       
-        var moduleId=3;
-        this.vendorService.GetVendorGeneralDocumentsList(vendorId,moduleId).subscribe(res => {
-			this.allVendorGeneralDocumentsList = res;
-			console.log(this.allVendorGeneralDocumentsList);
-		})
+    toGetVendorGeneralDocumentsList(vendorId) {
+        var moduleId = 3;
+        this.vendorService.GetVendorGeneralDocumentsList(vendorId, moduleId).subscribe(res => {
+            this.allVendorGeneralDocumentsList = res;
+            console.log(this.allVendorGeneralDocumentsList);
+        })
     }
-    downloadFileUpload(rowData) {	
+    downloadFileUpload(rowData) {
         const url = `${this.configurations.baseUrl}/api/FileUpload/downloadattachedfile?filePath=${rowData.link}`;
-		window.location.assign(url);       
+        window.location.assign(url);
     }
 
-    VendorAttachmentDelete(rowData)
-    {
-       let  attachmentDetailId=rowData.attachmentDetailId;
-       let updatedBy=this.userName;
+    VendorAttachmentDelete(rowData) {
+        let attachmentDetailId = rowData.attachmentDetailId;
+        let updatedBy = this.userName;
 
-        this.vendorService.GetVendorAttachmentDelete(attachmentDetailId,updatedBy).subscribe(res => {
-			//this.allVendorGeneralDocumentsList = res;
+        this.vendorService.GetVendorAttachmentDelete(attachmentDetailId, updatedBy).subscribe(res => {
+            //this.allVendorGeneralDocumentsList = res;
             //console.log(this.allVendorGeneralDocumentsList);
             this.toGetVendorGeneralDocumentsList(this.sourceVendor.vendorId)
-		})
+        })
     }
-    
-   
-    
+
+
+
 
 }

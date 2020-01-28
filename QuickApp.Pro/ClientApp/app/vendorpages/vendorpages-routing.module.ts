@@ -45,6 +45,7 @@ const vendorPagesRoutes: Routes = [
 		children: [
 			{ path: "app-vendors-list", component: VendorsListComponent, canActivate: [RolesGuardService], data: { name: ['app-vendors-list'], title: "Vendor's List" } },
 			{ path: "app-vendor-general-information", component: VendorGeneralInformationComponent, canActivate: [RolesGuardService], data: { isTab: true, name: ['app-vendor-general-information'], title: "Vendor's General Information" } },
+			{ path: "app-vendor-general-information/edit/:id", component: VendorGeneralInformationComponent, canActivate: [RolesGuardService], data: { isTab: true, name: ['app-vendor-general-information'], title: "Vendor's General Information" } },
 			{ path: "app-vendor-contacts", component: VendorContactsComponent, canActivate: [RolesGuardService], data: { isTab: true, name: ['app-vendor-contacts'], title: "Vendor's Contact" } },
 			{ path: "app-vendor-capes", component: VendorCapesComponent, data: { name: ['app-vendor-capes'], title: "Vendor Capabilities" } },
 			{ path: "app-vendor-financial-information", component: VendorFinancialInformationComponent, canActivate: [RolesGuardService], data: { isTab: true, name: ['app-vendor-financial-information'], title: "Vendor's Financial Information" } },
