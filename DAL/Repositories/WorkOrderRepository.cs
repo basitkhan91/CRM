@@ -1986,6 +1986,8 @@ namespace DAL.Repositories
                             join ct in _appContext.ChargesTypes on woc.ChargesTypeId equals ct.Id
                             join v in _appContext.Vendor on woc.VendorId equals v.VendorId into wocv
                             from v in wocv.DefaultIfEmpty()
+                            join ts in _appContext.Task on woc.TaskId equals ts.TaskId into wocts
+                            from ts in wocts.DefaultIfEmpty()
                             where woc.IsDeleted == false && woc.WorkFlowWorkOrderId == wfwoId
                             select new
                             {
@@ -2016,7 +2018,8 @@ namespace DAL.Repositories
                                 woc.WorkFlowWorkOrderId,
                                 woc.WorkOrderChargesId,
                                 woc.WorkOrderId,
-                                WorkflowChargeTypeId = woc.ChargesTypeId
+                                WorkflowChargeTypeId = woc.ChargesTypeId,
+                                TaskName=ts==null?"":ts.Description
                             }
                           ).Distinct().ToList();
                 return list;
@@ -2120,11 +2123,12 @@ namespace DAL.Repositories
                 var workOrderAssetsList = (from wa in _appContext.WorkOrderAssets
                                            join a in _appContext.Asset on wa.AssetRecordId equals a.AssetRecordId
                                            join at in _appContext.AssetType on a.AssetTypeId equals at.AssetTypeId
+                                           join ts in _appContext.Task on wa.TaskId equals ts.TaskId into wats
+                                           from ts in wats.DefaultIfEmpty()
                                            where wa.IsDeleted == false && wa.WorkFlowWorkOrderId == wfwoId
                                            select new
                                            {
                                                wa.AssetRecordId,
-
                                                wa.WorkOrderAssetId,
                                                AssetId = a.AssetId,
                                                a.Description,
@@ -2139,8 +2143,9 @@ namespace DAL.Repositories
                                                wa.CheckedInDate,
                                                wa.CheckedOutById,
                                                wa.CheckedOutDate,
-                                               wa.CheckInOutStatus
-
+                                               wa.CheckInOutStatus,
+                                               wa.TaskId,
+                                               TaskName=ts==null?"":ts.Description
                                            }).Distinct().ToList();
 
                 return workOrderAssetsList;
@@ -2398,7 +2403,7 @@ namespace DAL.Repositories
                                                    we.SourceId,
                                                    Source = we.SourceId == 0 ? "" : (we.SourceId == 1 ? "Manual" : "Workflow"),
                                                    we.TaskId,
-                                                   Task = task.Description == null ? "" : task.Description,
+                                                   TaskName = task == null ? "" : task.Description,
                                                    we.UnitCost,
                                                    we.UpdatedBy,
                                                    we.UpdatedDate,
@@ -2626,6 +2631,8 @@ namespace DAL.Repositories
                                               from sh in shf.DefaultIfEmpty()
                                               join bi in _appContext.Bin on sl.BinId equals bi.BinId into bin
                                               from bi in bin.DefaultIfEmpty()
+                                              join ts in _appContext.Task on wom.TaskId equals ts.TaskId into womts
+                                              from ts in womts.DefaultIfEmpty()
                                               where wom.IsDeleted == false && wom.WorkFlowWorkOrderId == wfwoId
                                               select new
                                               {
@@ -2681,7 +2688,9 @@ namespace DAL.Repositories
                                                   im.ItemClassificationId,
                                                   im.PurchaseUnitOfMeasureId,
                                                   wom.Memo,
-                                                  wom.IsDeferred
+                                                  wom.IsDeferred,
+                                                  wom.TaskId,
+                                                  TaskName=ts==null?"":ts.Description
                                               }).Distinct().ToList();
 
                 return workOrderMaterialsList;
@@ -3585,6 +3594,7 @@ namespace DAL.Repositories
         }
 
 
+
         public WorkOrderQuoteDetails CreateWorkOrderQuoteExclusions(WorkOrderQuoteDetails quoteExclusions)
         {
             try
@@ -3639,6 +3649,8 @@ namespace DAL.Repositories
                                                from eo in weeo.DefaultIfEmpty()
                                                join mp in _appContext.Percent on we.MarkUpPercentageId equals mp.PercentId into wemp
                                                from mp in wemp.DefaultIfEmpty()
+                                               join ts in _appContext.Task on we.TaskId equals ts.TaskId into wets
+                                               from ts in wets.DefaultIfEmpty()
                                                where we.IsDeleted == false && we.WorkOrderQuoteDetailsId == workOrderQuoteDetailsId
                                                && wq.BuildMethodId== buildMethodId
                                                select new
@@ -3668,6 +3680,8 @@ namespace DAL.Repositories
                                                    we.UpdatedDate,
                                                    we.WorkOrderQuoteDetailsId,
                                                    we.WorkOrderQuoteExclusionsId,
+                                                   we.TaskId,
+                                                   TaskName=ts==null?"":ts.Description
                                                }).Distinct()
                              .ToList();
                 return workOrderExclusionsList;
@@ -3779,7 +3793,8 @@ namespace DAL.Repositories
                                                 ShipViaName = sv.ShipVia,
                                                 CarrierName = car.Description,
                                                 wf.MarkupPercentageId,
-                                                wf.FreightCostPlus
+                                                wf.FreightCostPlus,
+                                                
                                             }).Distinct().ToList();
 
                 return workOrderFreightList;
@@ -3866,6 +3881,8 @@ namespace DAL.Repositories
                             join ct in _appContext.ChargesTypes on woc.ChargesTypeId equals ct.Id
                             join v in _appContext.Vendor on woc.VendorId equals v.VendorId into wocv
                             from v in wocv.DefaultIfEmpty()
+                            join ts in _appContext.Task on woc.TaskId equals ts.TaskId into wocts
+                            from ts in wocts.DefaultIfEmpty()
                             where woc.IsDeleted == false && woc.WorkOrderQuoteDetailsId == workOrderQuoteDetailsId
                             && wq.BuildMethodId == buildMethodId
                             select new
@@ -3897,6 +3914,8 @@ namespace DAL.Repositories
                                 woc.WorkOrderQuoteChargesId,
                                 WorkflowChargeTypeId = woc.ChargesTypeId,
                                 woc.ChargesCostPlus,
+                                woc.TaskId,
+                                TaskName = ts == null ? "" : ts.Description
                             }
                           ).Distinct().ToList();
                 return list;
@@ -3986,6 +4005,8 @@ namespace DAL.Repositories
                                               from p in pro.DefaultIfEmpty()
                                               join c in _appContext.Condition on wom.ConditionCodeId equals c.ConditionId
                                               join uom in _appContext.UnitOfMeasure on wom.UnitOfMeasureId equals uom.UnitOfMeasureId
+                                              join ts in _appContext.Task on wom.TaskId equals ts.TaskId into womts
+                                              from ts in womts.DefaultIfEmpty()
                                               where wom.IsDeleted == false && wom.WorkOrderQuoteDetailsId == workOrderQuoteDetailsId
                                               && wq.BuildMethodId==buildMethodId
                                               select new
@@ -4010,7 +4031,9 @@ namespace DAL.Repositories
                                                   wom.WorkOrderQuoteDetailsId,
                                                   wom.WorkOrderQuoteMaterialId,
                                                   wom.ItemClassificationId,
-                                                  wom.ItemMasterId
+                                                  wom.ItemMasterId,
+                                                  wom.TaskId,
+                                                  TaskName = ts == null ? "" : ts.Description
                                               }).Distinct().ToList();
 
                 return workOrderMaterialsList;
@@ -4207,6 +4230,8 @@ namespace DAL.Repositories
                 throw;
             }
         }
+
+
 
         public IEnumerable<object> WorkOrderQuoteList(Common.Filters<WOQuoteFilters> woQuoteFilters)
         {
