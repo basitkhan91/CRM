@@ -275,7 +275,7 @@ export class CustomerDocumentsComponent implements OnInit {
         //const { customerShippingId } = rowData.customerShippingId;
         this.alertService.startLoadingMessage();
 
-        this.customerService.getCustomerDocumentHistory(rowData.customerDocumentDetailId).subscribe(
+        this.customerService.getCustomerDocumentHistory(rowData.customerDocumentDetailId, this.id).subscribe(
             results => this.onAuditHistoryLoadSuccessful(results, content),
             error => this.saveFailedHelper(error));
     }

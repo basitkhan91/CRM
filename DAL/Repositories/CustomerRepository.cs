@@ -1862,7 +1862,7 @@ namespace DAL.Repositories
                     data.CreatedBy = objCustomer.CreatedBy;
                     data.UpdatedBy = objCustomer.UpdatedBy;
                     data.IsActive = objCustomer.IsActive;
-                    data.IsPrimary = true;
+                   // data.IsPrimary = true;
                     data.IsDelete = false;
                     _appContext.CustomerShippingAddress.Update(data);
                     _appContext.SaveChanges();

@@ -20,6 +20,7 @@ using Contact = DAL.Models.Contact;
 using Path = System.IO.Path;
 using Microsoft.EntityFrameworkCore;
 using System.Collections;
+using System.Net.Http.Headers;
 
 namespace QuickApp.Pro.Controllers
 {
@@ -3051,6 +3052,9 @@ namespace QuickApp.Pro.Controllers
                 CustomerDocumentDetail objCustomerDocumentDetail = new CustomerDocumentDetail();
                 if (ModelState.IsValid)
                 {
+
+                    long attachmentId=0;
+                    long documentDeatailId = 0;
                     if (Request.Form == null)
                         return BadRequest($"{nameof(objCustomerDocumentDetail)} cannot be null");
 
@@ -3061,7 +3065,7 @@ namespace QuickApp.Pro.Controllers
                         var customerDocObj = _unitOfWork.Customer.GetCustomerDocumentDetailById(CustomerDocumentDetailId);
                         //objVendorDocumentDetail.MasterCompanyId = 1;      
                         customerDocObj.CustomerId = Convert.ToInt64(Request.Form["CustomerId"]);
-
+                        customerDocObj.UpdatedDate = DateTime.Now;
                         customerDocObj.UpdatedBy = Request.Form["UpdatedBy"];
                         customerDocObj.DocName = Request.Form["DocName"];
                         customerDocObj.DocMemo = Request.Form["DocMemo"];
@@ -3070,16 +3074,20 @@ namespace QuickApp.Pro.Controllers
                         {
                             customerDocObj.AttachmentId = _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, objCustomerDocumentDetail.CustomerId,
                               Convert.ToInt32(ModuleEnum.Customer), Convert.ToString(ModuleEnum.Customer), customerDocObj.UpdatedBy, customerDocObj.MasterCompanyId, customerDocObj.AttachmentId);
-
-                        }
+                             }
                         else
                         {
                             customerDocObj.AttachmentId = _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, objCustomerDocumentDetail.CustomerId,
-                                 Convert.ToInt32(ModuleEnum.Customer), Convert.ToString(ModuleEnum.Customer), customerDocObj.UpdatedBy, customerDocObj.MasterCompanyId);
+                      
+                                Convert.ToInt32(ModuleEnum.Customer), Convert.ToString(ModuleEnum.Customer), customerDocObj.UpdatedBy, customerDocObj.MasterCompanyId);
+                      
                         }
 
                         _unitOfWork.CreateDocumentDetails.Update(customerDocObj);
                         _unitOfWork.SaveChanges();
+                        attachmentId = customerDocObj.AttachmentId;
+                        documentDeatailId = customerDocObj.CustomerDocumentDetailId;
+
                     }
                     else
                     {
@@ -3087,6 +3095,8 @@ namespace QuickApp.Pro.Controllers
                         objCustomerDocumentDetail.MasterCompanyId = 1;
                         objCustomerDocumentDetail.CreatedBy = Request.Form["CreatedBy"];
                         objCustomerDocumentDetail.UpdatedBy = Request.Form["UpdatedBy"];
+                        objCustomerDocumentDetail.CreatedDate = DateTime.Now;
+                        objCustomerDocumentDetail.UpdatedDate = DateTime.Now;
                         objCustomerDocumentDetail.DocName = Request.Form["DocName"];
                         objCustomerDocumentDetail.DocMemo = Request.Form["DocMemo"];
                         objCustomerDocumentDetail.DocDescription = Request.Form["DocDescription"];
@@ -3096,28 +3106,47 @@ namespace QuickApp.Pro.Controllers
                                                                                 Convert.ToInt32(ModuleEnum.Customer), Convert.ToString(ModuleEnum.Customer), objCustomerDocumentDetail.UpdatedBy, objCustomerDocumentDetail.MasterCompanyId);
                         _unitOfWork.CreateDocumentDetails.Add(objCustomerDocumentDetail);
                         _unitOfWork.SaveChanges();
+                        documentDeatailId = objCustomerDocumentDetail.CustomerDocumentDetailId;
+
+                        attachmentId = objCustomerDocumentDetail.AttachmentId;
+
+
                     }
 
+                    if (attachmentId != null)
+                    {
+                        var data = _context.AttachmentDetails.AsNoTracking().Where(p => p.AttachmentId == attachmentId).OrderByDescending(p=>p.UpdatedDate).FirstOrDefault();
+                        if (data != null)
+                        {
+                            DocumentsAudit obj = new DocumentsAudit();
+
+                            obj.UpdatedDate = obj.CreatedDate = DateTime.Now;
+                            obj.CreatedBy = obj.UpdatedBy = Request.Form["UpdatedBy"];
+                            obj.MasterCompanyId = 1;
+                            obj.ModuleId = Convert.ToInt32(ModuleEnum.Customer);
+                            obj.ReferenceId = Convert.ToInt64(Request.Form["CustomerId"]);
+                            obj.AttachmentId = documentDeatailId;
+                            obj.DocDescription = Request.Form["DocDescription"];
+                            obj.DocMemo = Request.Form["DocMemo"];
+                            obj.DocName = Request.Form["DocName"];
+                            obj.FileName = data.FileName;
+                            obj.Link = data.Link;
+                            obj.Description = data.Description;
+                            obj.IsActive = true;
 
 
+
+
+                            _context.DocumentsAudit.Add(obj);
+                            _context.SaveChanges();
+                        }
+                    }
                     return Ok(objCustomerDocumentDetail);
                 }
 
 
 
-                //objCustomerDocumentDetail.CustomerId = Convert.ToInt64(Request.Form["CustomerId"]);
-                //objCustomerDocumentDetail.MasterCompanyId = 1;
-                //objCustomerDocumentDetail.UpdatedBy = Request.Form["UpdatedBy"];
-                //objCustomerDocumentDetail.DocName = Request.Form["DocName"];
-                //objCustomerDocumentDetail.DocMemo = Request.Form["DocMemo"];
-                //objCustomerDocumentDetail.DocDescription = Request.Form["DocDescription"];
-                //objCustomerDocumentDetail.AttachmentId = _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, objCustomerDocumentDetail.CustomerId,
-                //                                                    Convert.ToInt32(ModuleEnum.Customer), Convert.ToString(ModuleEnum.Customer), objCustomerDocumentDetail.UpdatedBy, objCustomerDocumentDetail.MasterCompanyId);
-                // _unitOfWork.CreateDocumentDetails.Add(objCustomerDocumentDetail);
-                //_unitOfWork.SaveChanges();
-
-                //return Ok(objCustomerDocumentDetail);
-
+             
                 return Ok(ModelState);
             }
             catch (Exception ex)
@@ -3147,8 +3176,35 @@ namespace QuickApp.Pro.Controllers
                 objCustomerDocumentDetail.DocDescription = Request.Form["DocDescription"];
                 objCustomerDocumentDetail.AttachmentId = _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, objCustomerDocumentDetail.CustomerId,
                     Convert.ToInt32(ModuleEnum.Customer), Convert.ToString(ModuleEnum.Customer), objCustomerDocumentDetail.UpdatedBy, objCustomerDocumentDetail.MasterCompanyId);
+               
                 _unitOfWork.CreateDocumentDetails.Update(objCustomerDocumentDetail);
                 _unitOfWork.SaveChanges();
+
+                AttachmentDetails data = _context.AttachmentDetails.AsNoTracking().Where(p => p.AttachmentId == objCustomerDocumentDetail.AttachmentId).FirstOrDefault();
+                if (data != null)
+                {
+                    DocumentsAudit obj = new DocumentsAudit();
+
+                    obj.UpdatedDate = obj.CreatedDate = DateTime.Now;
+                    obj.CreatedBy = obj.UpdatedBy = Request.Form["UpdatedBy"];
+                    obj.MasterCompanyId = 1;
+                    obj.ModuleId = Convert.ToInt32(ModuleEnum.Customer);
+                    obj.ReferenceId = Convert.ToInt64(Request.Form["CustomerId"]);
+                    obj.DocDescription = Request.Form["DocDescription"];
+                    obj.DocMemo = Request.Form["DocMemo"];
+                    obj.DocName = Request.Form["DocName"];
+                    obj.FileName = data.FileName;
+                    obj.Link = data.Link;
+                    obj.Description = data.Description;
+                    obj.IsActive = true;
+                    obj.AttachmentId = objCustomerDocumentDetail.CustomerDocumentDetailId;
+
+
+
+
+                    _context.DocumentsAudit.Add(obj);
+                    _context.SaveChanges();
+                }
 
                 return Ok(objCustomerDocumentDetail);
             }
@@ -3180,11 +3236,11 @@ namespace QuickApp.Pro.Controllers
             return Ok(id);
         }
 
-        [HttpGet("getCustomerDocumentAudit/{id}")]
+        [HttpGet("getCustomerDocumentAudit")]
         [Produces(typeof(CustomerDocumentDetailAudit))]
-        public IActionResult GetCustomerDocumentDetailAudit(long id)
+        public IActionResult GetCustomerDocumentDetailAudit(long id,long customerId)
         {
-            var allvendorsDoc = _unitOfWork.Customer.GetCustomerDocumentDetailsAudit(id);
+            var allvendorsDoc = _unitOfWork.CreateDocumentDetails.GetAllAudotHistoryById(id,customerId, Convert.ToInt32(ModuleEnum.Customer));
             return Ok(allvendorsDoc);
 
         }

@@ -79,7 +79,49 @@ namespace DAL.Repositories
 
 
         }
+        public IEnumerable<object> GetAllAudotHistoryById(long Id,long customerId,int moduleId)
+        {
 
+            var data = (from v in _appContext.DocumentsAudit
+                        where v.AttachmentId == Id && v.ReferenceId == customerId && v.ModuleId==moduleId
+                        select new
+                        {
+                             v.AttachmentId,
+                            v.MasterCompanyId,
+                            v.CreatedBy,
+                            v.UpdatedBy,
+                            v.CreatedDate,
+                            v.DocDescription,
+                            v.DocMemo,
+                            v.DocName,
+                            v.UpdatedDate,
+                            v.IsActive,
+                          
+                            v.FileName,
+                            v.Link,
+                            v.Description
+                            //                    AttachmentDetails = _appContext.CustomerDocumentDetails
+                            //.Join(_appContext.AttachmentDetails,
+                            //      custDoc => custDoc.AttachmentId,
+                            //      atd => atd.AttachmentId,
+                            //      (custDoc, atd) => new
+                            //      {
+                            //          atd.AttachmentDetailId,
+                            //          atd.AttachmentId,
+                            //          atd.FileName,
+                            //          atd.Link,
+                            //          atd.IsActive,
+                            //          atd.Description,
+                            //          atd
+                            //      .IsDeleted
+                            //      }
+                            // ).
+
+
+
+                        }).OrderByDescending(p => p.UpdatedDate).ToList();
+            return data;
+        }
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
     }
 }
