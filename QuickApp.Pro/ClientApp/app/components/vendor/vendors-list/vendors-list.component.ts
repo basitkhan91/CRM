@@ -90,20 +90,20 @@ export class VendorsListComponent implements OnInit {
     allContacts: any[] = [];
     allpayments: any[] = [];
     selectedPaymentColumns: any[];
-    allShippings: any[];
+    allShippings: any[] = [];  
     shippingCol: any[];
     selectedShippingColumns: any[];
     selectedRow: any;
-    billingInfoList: any[];
+    billingInfoList: any[] = [];
     selectedBillingColumns: any[];
     billingCol: any[];
-    warningInfoList: any[];
+    warningInfoList: any[] = [];
     selectedWarningColumns: any[];
     warninggCol: any[];
-    allVendorPOROList: any[];
-    memoCols: any[];
-    vendorDocumentsData: any = [];
-    vendorDocumentsColumns: any[];
+    allVendorPOROList: any[] = [];
+    memoCols:any[];
+    vendorDocumentsData: any=[];
+    vendorDocumentsColumns :any[];    
     totalRecords: number = 0;
     totalPages: number = 0;
     pageSize: number = 10;
@@ -571,13 +571,13 @@ export class VendorsListComponent implements OnInit {
             this.vendorDocumentsData = res;
         });
 
-        this.vendorDocumentsColumns = [
-            { field: 'docName', header: 'Name' },
-            { field: 'docDescription', header: 'Description' },
-            //{ field: 'documents', header: 'Documents' },
-            { field: 'docMemo', header: 'Memo' }
-        ];
-    }
+    this.vendorDocumentsColumns = [
+		{ field: 'docName', header: 'Name' },
+		{ field: 'docDescription', header: 'Description' },
+		{ field: 'documents', header: 'Documents' },
+		{ field: 'docMemo', header: 'Memo' }
+	];
+   }
 
     private onBillingDataLoadSuccessful(allWorkFlows: any[]) {
         this.alertService.stopLoadingMessage();
@@ -640,7 +640,7 @@ export class VendorsListComponent implements OnInit {
         this.loadContactDataData(row.vendorId);
         this.loadPayamentData(row.vendorId);
         this.loadShippingData(row.vendorId);
-        // this.loadBillingData(row.vendorId);
+        this.loadBillingData(row.vendorId);
         this.loadWarningsData(row.vendorId);
         this.loadMemosData(row.vendorId);
         this.loadVendorDocumentsData(row.vendorId);
@@ -900,7 +900,7 @@ export class VendorsListComponent implements OnInit {
 
         $('#step9').collapse('show');
         $('#step10').collapse('show');
-        //$('#step11').collapse('show');
+        $('#step11').collapse('show');
     }
     CloseAllVenodrDetailsModel() {
         $('#step1').collapse('hide');
@@ -913,7 +913,7 @@ export class VendorsListComponent implements OnInit {
 
         $('#step9').collapse('hide');
         $('#step10').collapse('hide');
-        //$('#step11').collapse('hide');
+        $('#step11').collapse('hide');
     }
 
     gotoCreatePO(rowData) {
@@ -1108,20 +1108,26 @@ export class VendorsListComponent implements OnInit {
                     memo: x.memo,
                 }
             })
-        })
+		})
     }
-
+    
     viewFileSelectedCapsRow(rowData) {
-        this.sourceViewforDocument = rowData;
-        this.toGetUploadDocumentsList(rowData.attachmentId, rowData.vendorId, 3);
+        this.sourceViewforDocument=rowData;
+        this.toGetUploadDocumentsList(rowData.attachmentId, rowData.vendorId,3);
     }
 
-    toGetUploadDocumentsList(attachmentId, vendorId, moduleId) {
-        this.workFlowtService.toGetUploadDocumentsList(attachmentId, vendorId, moduleId).subscribe(res => {
-            this.sourceViewforDocumentList = res;
-        })
+    viewSelectedDocsRowonDbl(rowData) {
+        this.viewFileSelectedCapsRow(rowData);
+        $('#fileDocview').modal('show');
     }
-
+    
+  	toGetUploadDocumentsList(attachmentId, vendorId,moduleId)
+	{
+		this.workFlowtService.toGetUploadDocumentsList(attachmentId, vendorId,moduleId).subscribe(res => {
+            this.sourceViewforDocumentList = res;           
+		})
+    }
+    
     getPageCount(totalNoofRecords, viewPageSize) {
         return Math.ceil(totalNoofRecords / viewPageSize)
     }
