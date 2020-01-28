@@ -542,13 +542,7 @@
                                                     <input style="width: 5%;" [ngModel]="getPageCount(taxexeptTable._totalRecords,pageSize)" [disabled]="true" pInputText type="text" />
                                                 </ng-template>
                                             </p-table> 
-
-
                                     </div>
-
-
-
-
                                 </div>
                    
                         <p><span class="label"><b>Currency: <span class="clr-red">*</span></b></span><span class="value">{{viewDataGeneralInformation.currency}}</span></p>
@@ -636,7 +630,7 @@
                                             </td>
                                         </tr>
                                     </ng-template>
-                                    <ng-template pTemplate="emptymessage" let-columns *ngIf="billingInfoList?.length == 0">
+                                    <ng-template pTemplate="emptymessage" let-columns *ngIf="billingInfoList.length == 0">
                                         <tr>
                                             <td [attr.colspan]="columns.length+1" style="color: red; font-weight: bold; text-align: center">
                                                 No records found
@@ -852,6 +846,50 @@
                         <div class="shadow-Box">
                                 <p-table #documentsTable class="table-responsive ptable-cus-pma" [paginator]="DocumentsList.length > 0" [value]="DocumentsList" [rows]="pageSize"  [columns]="customerDocumentsColumns">
                                         <ng-template pTemplate="header" let-columns>
+                                                <tr>
+                                                     <ng-container *ngFor="let col of columns">
+                                                    <th  *ngIf="col.field !== 'documents'" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
+                                                        {{col.header}}
+                                                        <p-sortIcon [field]="col.field"></p-sortIcon>
+                                                    </th>
+                                                    <th *ngIf="col.field == 'documents'">
+                                                        Documents
+                                                    </th>
+                                                    </ng-container>
+
+                                                </tr>
+                                                <tr>
+                                                        <th style="width:auto" *ngFor="let col of columns" [ngSwitch]="col.field">
+                                                            <input style="width:100%;" pInputText type="text" (input)="documentsTable.filter($event.target.value, col.field, 'contains')">
+                                                        </th>
+                                                    </tr>
+                                            </ng-template>
+                    
+                                            <ng-template pTemplate="body" let-rowData let-columns="columns">
+                    
+                    
+                                                <tr >
+                    
+                                                    <ng-container *ngFor="let col of columns">
+                                                    <td  *ngIf="col.field !== 'documents'" class="ui-resizable-column" pReorderableRowHandle>
+                                                        {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
+                                                    </td>
+                                                    <td *ngIf="col.field == 'documents'">
+                    
+                                                        <tr *ngFor="let x of rowData.attachmentDetails">
+                                                            <a class="filelink" (click)="downloadFileUpload(x)"> {{x.fileName}},</a>
+                                                        </tr>
+                    
+                                                    </td>
+                                                    </ng-container>
+ 
+                    
+                                                </tr>
+                                            </ng-template>    
+                                    
+                                    
+                                    
+                                    <!-- <ng-template pTemplate="header" let-columns>
                                             <tr>
                                                 <th *ngFor="let col of columns"   [pSortableColumn]="col.field">
                                                     {{col.header}}
@@ -866,12 +904,15 @@
                                                 </tr>
                                         </ng-template>
                                         <ng-template pTemplate="body" let-part let-rowData let-columns="columns" let-i="rowIndex">
+                                           
+                                           
+                                           
                                             <tr>
                                                 <td *ngFor="let col of columns">
                                                     {{part[col.field]}}
                                                 </td>
                                             </tr>
-                                        </ng-template>
+                                        </ng-template> -->
                                         <ng-template pTemplate="emptymessage" let-columns *ngIf="DocumentsList.length == 0">
                                             <tr>
                                                 <td [attr.colspan]="columns.length" style="color: red; font-weight: bold; text-align: center">

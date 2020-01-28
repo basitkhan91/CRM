@@ -14109,6 +14109,13 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
 .ptable-cus-pma .ui-table-wrapper {
     padding: 0 !important;
 }
+.ptable-cus-pma .ui-table-summary {
+    margin-top: 3px;
+    background-color: #fff;
+    color: #333333;
+    border: 1px solid #fff !important;
+    padding: 0.571em 1em;
+}
 
 .multi-general p-multiselect[_ngcontent-c234] {
     width: 207px !important;
