@@ -1241,11 +1241,15 @@
 
                                                 <ng-template pTemplate="header" let-columns>
                                                     <tr>
-                                                        <th *ngFor="let col of columns" pResizableColumn
-                                                    pReorderableColumn [pSortableColumn]="col.field">
-                                                        {{ col.header }}
-                                                        <p-sortIcon [field]="col.field"></p-sortIcon>
-                                                        </th>
+                                                        <ng-container *ngFor="let col of columns">
+                                                            <th  *ngIf="col.field !== 'documents'" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
+                                                                {{col.header}}
+                                                                <p-sortIcon [field]="col.field"></p-sortIcon>
+                                                            </th>
+                                                            <th *ngIf="col.field == 'documents'">
+                                                                Documents
+                         
+                                                            </ng-container>
                                                         <th>Action</th>
                                                     </tr>
                                                     <tr>
@@ -1260,9 +1264,18 @@
                                                              let-columns="columns"
                                                              let-rowIndex="rowIndex">
                                                     <tr [pSelectableRowDblClick]="rowData" [pSelectableRow]="rowData" pReorderableRowHandle (dblclick)="viewSelectedDocsRowonDbl(rowData)">
-                                                        <td *ngFor="let col of columns">
-                                                            {{ rowData[col.field] }}
-                                                        </td>
+                                                        <ng-container *ngFor="let col of columns">
+                                                            <td  *ngIf="col.field !== 'documents'" class="ui-resizable-column" pReorderableRowHandle>
+                                                                {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
+                                                            </td>
+                                                            <td *ngIf="col.field == 'documents'">
+                            
+                                                                <tr *ngFor="let x of rowData.attachmentDetails">
+                                                                    <a class="filelink" (click)="downloadFileUpload(x)"> {{x.fileName}},</a>
+                                                                </tr>
+                            
+                                                            </td>
+                                                            </ng-container>
                                                         <td class="text-center"><span>
                                                             <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="viewFileSelectedCapsRow(rowData)" data-target="#fileDocview" data-toggle="modal" matTooltip="View" >
                                                                 <i class="fa fa-eye"></i>
@@ -1477,8 +1490,8 @@
             </div>
             <div class="modal-body" *ngIf="sourceViewforDocument">
                 <div class="col-sm-12">
-                    <p><span class="label"><b>Name: </b></span><span class="value">{{sourceViewforDocument.docName}}</span></p>
-                    <p><span class="label"><b>Description: </b></span><span class="value">{{sourceViewforDocument.docDescription}}</span></p>
+                    <p><span class="label"><b>Name: <span class="text-danger">*</span> </b></span><span class="value">{{sourceViewforDocument.docName}}</span></p>
+                    <p><span class="label"><b>Description: <span class="text-danger">*</span> </b></span><span class="value">{{sourceViewforDocument.docDescription}}</span></p>
                     <p><span class="label"><b>Memo: </b></span><span class="value">{{sourceViewforDocument.docMemo}}</span></p>
                    
                     <div class="table-responsive table-overflow">

@@ -572,7 +572,7 @@ export class VendorsListComponent implements OnInit {
     this.vendorDocumentsColumns = [
 		{ field: 'docName', header: 'Name' },
 		{ field: 'docDescription', header: 'Description' },
-		//{ field: 'documents', header: 'Documents' },
+		{ field: 'documents', header: 'Documents' },
 		{ field: 'docMemo', header: 'Memo' }
 	];
    }
