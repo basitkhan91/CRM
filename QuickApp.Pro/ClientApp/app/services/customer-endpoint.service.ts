@@ -1392,8 +1392,8 @@ export class CustomerEndpoint extends EndpointFactory {
     getCustomerInterShipViaHistory(customerId, internationalShippingId, shippingViaDetailsId) {
         return this.http.get(`${this.configurations.baseUrl}/${this._customerInterShipViaHistory}?customerId=${customerId}&internationalShippingId=${internationalShippingId}&shippingViaDetailsId=${shippingViaDetailsId}`)
     }
-    getCustomerDocumentAuditHistory(id) {
-        return this.http.get<any>(`${this._getCustomerDocumentHistory}/${id}`, this.getRequestHeaders())
+    getCustomerDocumentAuditHistory(id, customerId) {
+        return this.http.get<any>(`${this._getCustomerDocumentHistory}?id=${id}&customerId=${customerId}`, this.getRequestHeaders())
     }
 
     CustomerBillingFileUpload(file, customerId) {

@@ -368,8 +368,9 @@
                 <thead>
                     <tr>
                         <th>Document Name</th>
-                        <th>Memo</th>
                         <th>Description</th>
+                        <th>Memo</th>
+                    <th>File Name</th>
                         <th>Updated By</th>
                         <th>Last Updated Time</th>
                         <th>Created By</th>
@@ -383,6 +384,8 @@
                         <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'docName', audit.docName)  ? 'black' : 'red'  }">{{audit.docName}}</td>
                         <td [ngStyle]="{'color': getColorCodeForHistory(i, 'docDescription', audit.docDescription)  ? 'black' : 'red'  }">{{audit.docDescription}}</td>
                         <td [ngStyle]="{'color': getColorCodeForHistory(i, 'docMemo', audit.docMemo)  ? 'black' : 'red'  }">{{audit.docMemo}}</td>
+                        <td [ngStyle]="{'color': getColorCodeForHistory(i, 'fileName', audit.fileName)  ? 'black' : 'red'  }">{{audit.fileName}}</td>
+
                         <td>{{audit.updatedBy}}</td>
                         <td>{{audit.updatedDate | date: 'dd-MM-yyyy h:mm a '}}</td>
                         <td>{{audit.createdBy}}</td>
