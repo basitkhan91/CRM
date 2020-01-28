@@ -323,6 +323,11 @@ namespace DAL.Repositories
                           from vc in vcd.DefaultIfEmpty()
                           join vca in _appContext.VendorCapabiliy on t.capabilityId equals vca.VendorCapabilityId into vcad
                           from vca in vcad.DefaultIfEmpty()
+                          join cr in _appContext.CreditTerms on t.CreditTermsId equals cr.CreditTermsId into crr
+                          from cr in crr.DefaultIfEmpty()
+                          join cu in _appContext.Currency on t.CurrencyId equals cu.CurrencyId into cuu
+                          from cu in cuu.DefaultIfEmpty()
+
                               //join inte in _appContext.IntegrationPortalMapping on t.VendorId equals inte.ReferenceId into intee 
                               //from inte in intee.DefaultIfEmpty()
 
@@ -382,6 +387,8 @@ namespace DAL.Repositories
                               ad.StateOrProvince,
                               ad.PostalCode,
                               Country = cont.countries_name,
+                              CreditTerms = cr.Name,
+                              currency = cu.Symbol,
 
                               //vc.ClassificationName,
                               VendorCapabilityName = vca.capabilityDescription,
@@ -414,7 +421,7 @@ namespace DAL.Repositories
                                 mp => mp.ReferenceId,
                                 (v, mp) => new { v, mp })
                                .Join(_appContext.IntegrationPortal,
-                                mp1 => mp1.mp.ReferenceId,
+                                mp1 => mp1.mp.IntegrationPortalId,
                                 inte => Convert.ToInt64(inte.IntegrationPortalId),
                               (mp1, inte) => new { mp1, inte })
                               .Where(p => p.mp1.v.VendorId == t.VendorId)
@@ -425,24 +432,12 @@ namespace DAL.Repositories
                                 mp => mp.ReferenceId,
                                 (v, mp) => new { v, mp })
                                .Join(_appContext.IntegrationPortal,
-                                mp1 => mp1.mp.ReferenceId,
+                                mp1 => mp1.mp.IntegrationPortalId,
                                 inte => Convert.ToInt64(inte.IntegrationPortalId),
                               (mp1, inte) => new { mp1, inte })
                               .Where(p => p.mp1.v.VendorId == t.VendorId)
                                .Select(p => p.inte.Description)),
-
-                              //IntegrationPortalIds1 = (from v in _appContext.Vendor
-                              //                        join ipm in _appContext.IntegrationPortalMapping on v.VendorId equals ipm.ReferenceId into vipm
-                              //                        from ipm in vipm.DefaultIfEmpty()
-                              //                        join ip in _appContext.IntegrationPortal on ipm.ReferenceId equals Convert.ToInt64(ip.IntegrationPortalId) into ipmip
-                              //                        from ip in ipmip.DefaultIfEmpty()
-                              //                        where ipm.ReferenceId == t.VendorId && ipm.ModuleId == Convert.ToInt32(ModuleEnum.Vendor)
-                              //                        select new
-                              //                        {
-                              //                            IntegrationPortalId = ip == null ? 0 : ip.IntegrationPortalId
-                              //                        }).ToList()
-
-
+                          
                           }).FirstOrDefault();
             return result;
         }
