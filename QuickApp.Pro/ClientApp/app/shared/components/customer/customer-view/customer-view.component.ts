@@ -132,8 +132,8 @@ export class CustomerViewComponent implements OnInit {
     countOfRestrictDerParts: any = 0;
     countOfRestrictPMAParts: any = 0;
     employeeListOriginal: any = [];
-    constructor(public customerService: CustomerService, private commonService: CommonService, private activeModal: NgbActiveModal, private configurations: ConfigurationService, 		public employeeService: EmployeeService
-        ) {
+    constructor(public customerService: CustomerService, private commonService: CommonService, private activeModal: NgbActiveModal, private configurations: ConfigurationService, public employeeService: EmployeeService
+    ) {
 
 
     }
@@ -179,26 +179,23 @@ export class CustomerViewComponent implements OnInit {
         return Math.ceil(totalNoofRecords / pageSize)
     }
 
-	async getAllEmployees() {
-		await this.employeeService.getEmployeeList().subscribe(res => {
+    async getAllEmployees() {
+        await this.employeeService.getEmployeeList().subscribe(res => {
             this.employeeListOriginal = res[0];
-            const primarySName1 = this.employeeListOriginal.find(x=>x.employeeId == this.viewDataGeneralInformation.primarySalesPersonId)
+            const primarySName1 = this.employeeListOriginal.find(x => x.employeeId == this.viewDataGeneralInformation.primarySalesPersonId)
             this.viewDataGeneralInformation.primarySalesPersonFirstName = primarySName1.firstName + " " + primarySName1.lastName
-            const secondarySName1 = this.employeeListOriginal.find(x=>x.employeeId == this.viewDataGeneralInformation.secondarySalesPersonId)
-            this.viewDataGeneralInformation.secondarySalesPersonName =  secondarySName1.firstName + " " + secondarySName1.lastName
-            const csrName1 = this.employeeListOriginal.find(x=>x.employeeId == this.viewDataGeneralInformation.csrId)
-            this.viewDataGeneralInformation.csrName =  csrName1.firstName + " " + csrName1.lastName
-            const saName1 = this.employeeListOriginal.find(x=>x.employeeId == this.viewDataGeneralInformation.saId)
+            const secondarySName1 = this.employeeListOriginal.find(x => x.employeeId == this.viewDataGeneralInformation.secondarySalesPersonId)
+            this.viewDataGeneralInformation.secondarySalesPersonName = secondarySName1.firstName + " " + secondarySName1.lastName
+            const csrName1 = this.employeeListOriginal.find(x => x.employeeId == this.viewDataGeneralInformation.csrId)
+            this.viewDataGeneralInformation.csrName = csrName1.firstName + " " + csrName1.lastName
+            const saName1 = this.employeeListOriginal.find(x => x.employeeId == this.viewDataGeneralInformation.saId)
             this.viewDataGeneralInformation.agentName = saName1.firstName + " " + saName1.lastName
-            
 
-            
-		})
-	}
-    
-	getPageCount(totalNoofRecords, pageSize) {
-		return Math.ceil(totalNoofRecords / pageSize)
-	}
+
+
+        })
+    }
+
 
 
     getAllCustomerContact(customerId) {
