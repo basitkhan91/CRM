@@ -155,8 +155,25 @@
           <td colspan="6" *ngIf="laborForm.hoursorClockorScan == 3">
             &nbsp;
           </td>
-          <td colspan="3">
-              <div class="form-group" style="color: #fff;">
+          <td colspan="3" style="display: flex;">
+              <div class="form-group" style="text-align: center;">
+                <p-radioButton
+                  class="p-radiobutton-label-horizontal"
+                  name="costPlusType"
+                  label="Mark Up"
+                  value="Mark Up"
+                  [(ngModel)]="laborForm.costPlusType"
+                  [disabled]="isView"
+                ></p-radioButton>
+                <div style="display: flex;">
+                  <label>Mat Mark Up %</label>
+                  <select class="form-control wf-pub-id" (change)="markupChanged({}, 'all')" [(ngModel)]="overAllMarkup" [disabled]="isView || laborForm['costPlusType'] != 'Mark Up'">
+                    <option value="">Select</option>
+                    <option *ngFor="let markUp of markupList" [value]="markUp.value">{{markUp.label}}</option>
+                  </select>
+                </div>
+              </div>
+              <!-- <div class="form-group" style="color: #fff;">
                 <p-radioButton
                   class="p-radiobutton-label-horizontal"
                   name="costPlusType"
@@ -173,10 +190,19 @@
                   [(ngModel)]="laborForm.costPlusType"
                   [disabled]="isView"
                 ></p-radioButton>
-              </div>
+              </div> -->
           </td>
-          <td colspan="2">
-            &nbsp;
+          <td colspan="4">
+            <div>
+              <p-radioButton
+                class="p-radiobutton-label-horizontal col-width"
+                name="costPlusType"
+                value="Fixed Mat Price"
+                label="Fixed Mat Price"
+                [(ngModel)]="laborForm.costPlusType"
+                [disabled]="isView"
+              ></p-radioButton>
+            </div>
           </td>
         </tr>
         <tr>
@@ -214,8 +240,9 @@
             <th>
               Direct Labor OH Cost
             </th>
-            <th *ngIf="laborForm.costPlusType == 'Mark Up'">Mark Up</th>
-            <th>Cost Plus Amount</th>
+            <th>Mark Up</th>
+            <th tooltop="Time & Materials">T&M Amount</th>
+            <th>Fixed Amount</th>
           </ng-container>
           <th class="text-center" style="padding: 7px 53px !important;">
             Memo
@@ -280,7 +307,7 @@
                       [(ngModel)]="rec.expertiseId"
                     ></p-dropdown> -->
 
-                    <select [(ngModel)]="rec.expertiseId" style="width: 130px;" [disabled]="isView">
+                    <select [(ngModel)]="rec.expertiseId" style="width: 130px;" [disabled]="isView || laborForm['costPlusType'] != 'Mark Up'">
                       <option>Select</option>
                       <ng-container *ngFor="let exp of expertiseTypeList">
                         <option [value]="exp.value">{{exp.label}}</option> 
@@ -384,15 +411,16 @@
                   <td>
                     <input type="number" [(ngModel)]="rec.directLaborOHCost" [disabled]="isView"/>
                   </td>
-                  <td *ngIf="laborForm.costPlusType == 'Mark Up'">
+                  <td>
                       <!-- <input [(ngModel)]="matQuotation.markup" /> -->
-                    <select class="form-control" (change)="markupChanged(rec)" [(ngModel)]="rec.markupPercentageId" style="width: 130px;" [disabled]="isView">
+                    <select class="form-control" (change)="markupChanged(rec, 'row')" [(ngModel)]="rec.markupPercentageId" style="width: 130px;" [disabled]="isView || laborForm['costPlusType'] != 'Mark Up'">
                       <option value="">Select</option>
                       <option *ngFor="let markUp of markupList" [value]="markUp.value">{{markUp.label}}</option>
                     </select>
                   </td>
+                  <td>{{ rec.labourCostPlus }}</td>
                   <td>
-                      <input type="number" [(ngModel)]="rec.labourCostPlus" [readonly]="laborForm.costPlusType == 'Mark Up'"/>
+                    <input type="number" [(ngModel)]="rec.fixedAmount" [disabled]="laborForm['costPlusType'] != 'Fixed Mat Price'"/>
                   </td>
                 </ng-container>
                 <td>

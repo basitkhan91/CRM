@@ -25,6 +25,7 @@ namespace DAL.Models
         public long? EmployeeId { get; set; }
         public long? ExpertiseId { get; set; }
         public decimal? TotalWorkHours { get; set; }
+        public string MarkupFixedPrice { get; set; }
         public int? MasterCompanyId { get; set; }
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }

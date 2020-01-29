@@ -2,7 +2,7 @@
     <div class="right_col" role="main" style="padding: 2px 6px">
         <div >
             <div class="x_content">
-                <div class="col-md-12 shadow-box-cstm">        
+                <div class="col-md-12 shadow-box-cstm"  *ngIf="isViewMode == false">        
                     <div class="col-md-4">
                         <p class="fs12">
                         <label class="control-label labels-font-header" style="width: auto;">Customer Name: </label>
@@ -31,8 +31,8 @@
                     <div>
                         <div class="col-md-12" style="margin-bottom: -10px;">
                                 <h4 class="po-head-sm">
-                                        Add Billing Information
-                                        <a
+                                         Billing Information
+                                        <a *ngIf="isViewMode == false"
                                     class="plusicon-cstm"
                                     href="#"
                                     data-toggle="modal"
@@ -70,7 +70,7 @@
                         selectionMode="multiple" 
                         [resizableColumns]="true" 
                         [reorderableColumns]="true">
-                        <ng-template pTemplate="caption">
+                        <ng-template pTemplate="caption"  *ngIf="isViewMode == false">
 
                             <div style="text-align: right">
                                 <p-multiSelect [options]="billingInfoTableHeaders" [(ngModel)]="selectedColumns" [ngModelOptions]="{standalone: true}" optionLabel="header"
@@ -133,12 +133,12 @@
                                     {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
                                 </td>
 
-                                <td>
+                                <td  *ngIf="isViewMode == false">
                                     <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="updateActiveorInActiveForBilling(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
                                     <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="updateActiveorInActiveForBilling(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
                                     <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="updateActiveorInActiveForBilling(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
                                     <!--<span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openView(view,rowData)" title="View"><i class="fa fa-eye"></i></a> </span>-->
-                                    <span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openBillingView(rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
+                                    <span data-toggle="modal" data-target="#viewBilling"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openBillingView(rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
                                     <button class="btn-edit" mat-icon-button (click)="openEdit(rowData)" matTooltip="edit" data-toggle="modal" data-target="#addBillingInfo">
                                         <mat-icon>edit</mat-icon>
                                     </button>
@@ -146,6 +146,17 @@
                                     <button class="btn-delete" mat-icon-button matTooltip="delete" (click)="deleteBillingInfo(deleteContent,rowData)">
                                         <mat-icon color="warn">delete</mat-icon>
                                     </button>
+
+                                    <!--<button (click)="openShipVia(contentShipVia,rowData)" data-target="#VShipVia" class="btn btn-danger nobg" data-toggle="tooltip" title="" data-original-title="View Shipping Via Information"><i class="fa fa-truck"></i></button>-->
+                                    <button class="btn-history" mat-icon-button matTooltip="history" (click)="getCustomerBillingHistory(contentAuditHist,rowData)">
+                                        <mat-icon color="green">history</mat-icon>
+                                    </button>
+
+                                </td>
+                                <td  *ngIf="isViewMode == true">
+                                   
+                                    <span data-toggle="modal" data-target="#viewBilling"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openBillingView(rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
+                                    
 
                                     <!--<button (click)="openShipVia(contentShipVia,rowData)" data-target="#VShipVia" class="btn btn-danger nobg" data-toggle="tooltip" title="" data-original-title="View Shipping Via Information"><i class="fa fa-truck"></i></button>-->
                                     <button class="btn-history" mat-icon-button matTooltip="history" (click)="getCustomerBillingHistory(contentAuditHist,rowData)">
@@ -167,7 +178,7 @@
                     <!-- <div *ngIf="allActions.length<=0" style="text-align:center;border:1px solid">
                         No Records
                     </div> -->
-                    <div style="margin-top: 10px;">
+                    <div style="margin-top: 10px;" *ngIf="isViewMode == false">
                         <button type="button" class="btn btn-primary pull-right" (click)="nextClick()">Save & Next</button>
                         <button type="button" class="btn btn-primary pull-right submit-btn" (click)="backClick()">Previous</button>
                     </div>
@@ -401,7 +412,7 @@
 </div>
 
 
-<div   id="view" class="modal" data-backdrop="static">
+<div   id="viewBilling" class="modal" data-backdrop="static">
         <div class="modal-dialog">
           <div class="modal-content">
       
