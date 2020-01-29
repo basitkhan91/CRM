@@ -182,6 +182,9 @@ export class VendorEndpointService extends EndpointFactory {
 	private readonly _updateVendorBillingAddressStatus: string = "/api/Vendor/vendorbillingaddressstatus";
 	private readonly _vendorListsUrl: string = "/api/Vendor/vendorlist";
 	
+    private readonly excelUploadBilling: string = "/api/Vendor/uploadvendorbillingaddress"
+    private readonly excelUploadShipping: string = "/api/Vendor/uploadvendorshippingaddress" 
+    private readonly excelUploadContact: string = "/api/Vendor/uploadvendorrcontacts"
 	
 
 	get capabilityTypeListUrl() { return this.configurations.baseUrl + this._capabilityListUrl; }
@@ -1696,5 +1699,17 @@ export class VendorEndpointService extends EndpointFactory {
 	vendorListGlobalSearch(filterText, pageNumber, pageSize, isActive) {
 		return this.http.get<any>(`${this.configurations.baseUrl}/api/Vendor/vendorglobalsearch?filterText=${filterText}&pageNumber=${pageNumber}&pageSize=${pageSize}&isActive=${isActive}`)
 	  }
+	VendorBillingFileUpload(file, vendorId) {
+        return this.http.post(`${this.configurations.baseUrl}${this.excelUploadBilling}?vendorId=${vendorId}`, file)
+
+    }
+    VendorShippingFileUpload(file, vendorId) {
+        return this.http.post(`${this.configurations.baseUrl}${this.excelUploadShipping}?vendorId=${vendorId}`, file)
+    }
+   
+    VendorContactFileUpload(file, vendorId) {
+        return this.http.post(`${this.configurations.baseUrl}${this.excelUploadContact}?vendorId=${vendorId}`, file)
+
+    }
 
 }

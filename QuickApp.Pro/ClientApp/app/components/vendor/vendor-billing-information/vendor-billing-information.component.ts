@@ -23,6 +23,7 @@ import { GMapModule } from 'primeng/gmap';
 import { Router } from '@angular/router';
 import * as $ from 'jquery';
 import { getObjectById, editValueAssignByCondition } from '../../../generic/autocomplete';
+import { ConfigurationService } from '../../../services/configuration.service';
 declare const google: any;
 @Component({
     selector: 'app-vendor-billing-information',
@@ -68,6 +69,7 @@ export class VendorBillingInformationComponent {
     country: any;
     selectedShipVia: any;
     shipviacollection: any[];
+    formData = new FormData();
     ngOnInit(): void {
         this.workFlowtService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-billing-information';
         this.workFlowtService.bredcrumbObj.next(this.workFlowtService.currentUrl);
@@ -117,12 +119,16 @@ export class VendorBillingInformationComponent {
     private isDeleteMode: boolean = false;
     isEditBillingInfo: boolean = false;
     selectedRowforDelete: any;
+    totalRecords: number = 0;
+    pageIndex: number = 0;
+    pageSize: number = 10;
+    totalPages: number = 0;
 
     constructor(private http: HttpClient, private router: Router,
         private authService: AuthService, private modalService: NgbModal, 
         private activeModal: NgbActiveModal, private _fb: FormBuilder, 
         private alertService: AlertService, 
-        public workFlowtService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
+        public workFlowtService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private configurations: ConfigurationService) {
             if(this.workFlowtService.listCollection !== undefined){
                 this.workFlowtService.isEditMode = true;
             }
@@ -539,7 +545,7 @@ export class VendorBillingInformationComponent {
     }
 
     updateVendorBillingAddress(updateObj: any) {
-        debugger;
+      
         this.workFlowtService.updateVendorBillingAddressDetails(updateObj, this.local.vendorId).subscribe(data => {
             this.vendorbillingAddressdetails = data;
             this.workFlowtService.newBillingAddWithAddress(this.sourceVendor, this.vendorbillingAddressdetails.vendorBillingAddressId).subscribe(data => {
@@ -782,6 +788,36 @@ export class VendorBillingInformationComponent {
         this.sourceVendor = {};
         this.isEditBillingInfo = false;
     }
+
+    sampleExcelDownload() {
+        const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=VendorBillingAddress&fileName=VendorBillingInfo.xlsx`;
+        window.location.assign(url);
+    }
+
+    customExcelUpload(event) {
+        const file = event.target.files;
+       
+        if (file.length > 0) {
+            this.formData.append('file', file[0])
+            this.workFlowtService.BillingFileUpload(this.formData, this.local.vendorId).subscribe(res => {
+                event.target.value = '';
+
+                this.formData = new FormData();
+                this.loadData();
+
+                this.alertService.showMessage(
+                    'Success',
+                    `Successfully Uploaded  `,
+                    MessageSeverity.success
+                );
+            })
+        }
+    }
+
+    getPageCount(totalNoofRecords, pageSize) {
+		return Math.ceil(totalNoofRecords / pageSize)
+	}
+
 
 }
 

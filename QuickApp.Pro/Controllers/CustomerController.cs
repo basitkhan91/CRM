@@ -362,10 +362,7 @@ namespace QuickApp.Pro.Controllers
 
 
 
-
-                       // _unitOfWork.CommonRepository.CreateHistory(
-                       //customerViewModel, Convert.ToInt32(ModuleEnum.Customer), actionobject.CustomerId, ShippingAddressId, Convert.ToInt32(AddressTypeEnum.ShippingAddress), true);
-                    }
+           }
 
                     if (Convert.ToBoolean(actionobject.IsAddressForBilling))
                     {
@@ -972,10 +969,12 @@ namespace QuickApp.Pro.Controllers
                         customerContact.UpdatedDate = DateTime.Now;
                             _context.CustomerContact.Update(customerContact);
                             _context.SaveChanges();
-                        CreateContactHistory(Convert.ToInt64(customerContact.ContactId), Convert.ToBoolean(customerContact.IsDefaultContact), Convert.ToInt64(customerContact.CustomerId), Convert.ToInt64(customerContact.CustomerContactId));
+                     
 
-                      
-                        
+
+                        _unitOfWork.CommonRepository.ContactsHistory(Convert.ToInt64(customerContact.CustomerId), Convert.ToInt32(ModuleEnum.Customer), Convert.ToInt64(customerContact.CustomerContactId), CustomerContactViewModel.UpdatedBy);
+
+
                     }
 
 
@@ -985,46 +984,13 @@ namespace QuickApp.Pro.Controllers
 
                 _unitOfWork.CustomerContact.Add(contactObj);
                 _unitOfWork.SaveChanges();
-                CreateContactHistory(Convert.ToInt64(contactObj.ContactId), Convert.ToBoolean(contactObj.IsDefaultContact), Convert.ToInt64(contactObj.CustomerId), Convert.ToInt64(contactObj.CustomerContactId));
-                //var data = _unitOfWork.ContactRepository.GetContactsById(Convert.ToInt64(CustomerContactViewModel.ContactId)).FirstOrDefault();
+                _unitOfWork.CommonRepository.ContactsHistory(Convert.ToInt64(contactObj.CustomerId), Convert.ToInt32(ModuleEnum.Customer), Convert.ToInt64(contactObj.CustomerContactId), CustomerContactViewModel.UpdatedBy);
 
+            
             }
             return Ok(ModelState);
         }
-        private void CreateContactHistory(long contactId,bool isDefault,long customerId,long customerContactId)
-        {
-            Contact data;
-            ContactAudit obj = new ContactAudit();
-            data = _context.Contact.AsNoTracking().Where(p => p.ContactId == contactId).FirstOrDefault();
-
-
-            obj.IsDefaultContact = isDefault;
-
-            obj.LastName = data.LastName;
-            obj.FirstName = data.FirstName;
-            obj.Tag = data.Tag;
-            obj.MiddleName = data.MiddleName;
-            obj.ContactTitle = data.ContactTitle;
-            obj.WorkPhone = data.WorkPhone;
-            obj.MobilePhone = data.MobilePhone;
-            obj.Prefix = data.Prefix;
-            obj.Suffix = data.Suffix;
-            obj.AlternatePhone = data.AlternatePhone;
-            obj.WorkPhoneExtn = data.WorkPhoneExtn;
-            obj.Fax = data.Fax;
-            obj.Email = data.Email;
-            obj.Notes = data.Notes;
-            obj.WebsiteURL = data.WebsiteURL;
-            obj.MasterCompanyId = data.MasterCompanyId;
-            obj.CreatedDate = DateTime.Now;
-            obj.UpdatedDate = DateTime.Now;
-            obj.CreatedBy = data.CreatedBy;
-            obj.UpdatedBy = data.UpdatedBy;
-            obj.IsActive = data.IsActive;
-
-            _unitOfWork.CommonRepository.CreateContactHistory(obj, Convert.ToInt32(ModuleEnum.Customer), customerId, customerContactId);
-
-        }
+       
         [HttpPut("CustomerContactPost/{id}")]
         public IActionResult updateContact(long id, [FromBody] ContactViewModel contactViewModel, CustomercontactViewModel customercontactView)
         {
@@ -1078,39 +1044,9 @@ namespace QuickApp.Pro.Controllers
                         customerContacts.UpdatedDate = DateTime.Now;
                             _context.CustomerContact.Update(customerContacts);
                             _context.SaveChanges();
-                        Contact data = _context.Contact.AsNoTracking().Where(p => p.ContactId == Convert.ToInt64(customerContacts.ContactId)).FirstOrDefault();
 
-                        //var data = _unitOfWork.ContactRepository.GetContactsById(Convert.ToInt64(CustomerContactViewModel.ContactId)).FirstOrDefault();
-                        ContactAudit obj = new ContactAudit();
+                        _unitOfWork.CommonRepository.ContactsHistory(Convert.ToInt64(customerContacts.CustomerId), Convert.ToInt32(ModuleEnum.Customer), Convert.ToInt64(customerContacts.CustomerContactId), contactViewModel.UpdatedBy);
 
-
-                        obj.IsDefaultContact = false;
-
-                        obj.LastName = data.LastName;
-                        obj.FirstName = data.FirstName;
-                        obj.Tag = data.Tag;
-                        obj.MiddleName = data.MiddleName;
-                        obj.ContactTitle = data.ContactTitle;
-                        obj.WorkPhone = data.WorkPhone;
-                        obj.MobilePhone = data.MobilePhone;
-                        obj.Prefix = data.Prefix;
-                        obj.Suffix = data.Suffix;
-                        obj.AlternatePhone = data.AlternatePhone;
-                        obj.WorkPhoneExtn = data.WorkPhoneExtn;
-                        obj.Fax = data.Fax;
-                        obj.Email = data.Email;
-                        obj.Notes = data.Notes;
-                        obj.WebsiteURL = data.WebsiteURL;
-                        obj.MasterCompanyId = data.MasterCompanyId;
-                        obj.CreatedDate = DateTime.Now;
-                        obj.UpdatedDate = DateTime.Now;
-                        obj.CreatedBy = data.CreatedBy;
-                        obj.UpdatedBy = data.UpdatedBy;
-                        obj.IsActive = data.IsActive;
-
-                        _unitOfWork.CommonRepository.CreateContactHistory(obj, Convert.ToInt32(ModuleEnum.Customer), Convert.ToInt64(customerContact.CustomerId), Convert.ToInt64(customerContacts.CustomerContactId));
-
-                        
                     }
 
                 }
@@ -1121,9 +1057,12 @@ namespace QuickApp.Pro.Controllers
                     customerContact.UpdatedDate = DateTime.Now;
                     customerContact.UpdatedBy = contactViewModel.UpdatedBy;
                     customerContact.IsDefaultContact = contactViewModel.IsDefaultContact;
+                    customerContact.IsActive = contactViewModel.IsActive;
                     _unitOfWork.CustomerContact.Update(customerContact);
                     _unitOfWork.SaveChanges();
-                    _unitOfWork.CommonRepository.CreateContactHistory(contactViewModel, Convert.ToInt32(ModuleEnum.Customer), Convert.ToInt64(customerContact.CustomerId), Convert.ToInt64(customerContact.CustomerContactId));
+                     _unitOfWork.CommonRepository.ContactsHistory(Convert.ToInt64(customerContact.CustomerId), Convert.ToInt32(ModuleEnum.Customer), Convert.ToInt64(customerContact.CustomerContactId), contactViewModel.UpdatedBy);
+
+
                 }
 
             }
@@ -1138,8 +1077,7 @@ namespace QuickApp.Pro.Controllers
         {
             try
             {
-                // var result = _unitOfWork.CustomerContact.GetCustomerContactAuditDetails(customercontactId,customerId);
-                var result = _unitOfWork.CommonRepository.GetContactAudit(customerId, Convert.ToInt32(ModuleEnum.Customer), customercontactId);
+                    var result = _unitOfWork.CommonRepository.GetContactAudit(customerId, Convert.ToInt32(ModuleEnum.Customer), customercontactId);
                 return Ok(result);
             }
             catch (Exception)

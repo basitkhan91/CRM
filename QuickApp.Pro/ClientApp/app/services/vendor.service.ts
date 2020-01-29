@@ -827,6 +827,17 @@ export class VendorService {
     vendorListGlobalSearch(filterText, pageNumber, pageSize, isActive) {
         return this.actionEndpoint.vendorListGlobalSearch(filterText, pageNumber, pageSize, isActive);
       }
+      BillingFileUpload(file, vendorId) {
+        return this.actionEndpoint.VendorBillingFileUpload(file, vendorId);
+    }
+    ShippingFileUpload(file, vendorId) {
+        return this.actionEndpoint.VendorShippingFileUpload(file, vendorId);
+    }
+   
+   ContactUpload(file, vendorId) {
+       return this.actionEndpoint.VendorContactFileUpload(file, vendorId);
+    }
+      
 
       
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, EventEmitter, Output, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output, ViewChild, SimpleChanges } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ItemMasterService } from '../../../services/itemMaster.service';
 
@@ -21,12 +21,14 @@ import * as $ from 'jquery';
 })
 /** CustomerEdit component*/
 export class CustomerAircraftComponent implements OnInit {
-    @Input() savedGeneralInformationData;
+    @Input() savedGeneralInformationData: any = {};
     @Input() editGeneralInformationData;
     // @Input() editCustomerId;
     @Input() editMode;
     @Output() tab = new EventEmitter();
     @ViewChild("aircraftForm")  aircraftForm : any;
+    @Input() customerDataFromExternalComponents : any = {};
+
     // aircraft Type used for both 
     manufacturerData: { value: any; label: any; }[];
     // search Variables
@@ -90,6 +92,8 @@ export class CustomerAircraftComponent implements OnInit {
     totalPages: number;
     pageSize: number = 10;
     showAdvancedSearchCard : boolean = false;
+    isViewMode: boolean = false;
+
 
     constructor(private route: ActivatedRoute, private itemser: ItemMasterService,
         private aircraftModelService: AircraftModelService,
@@ -106,10 +110,22 @@ export class CustomerAircraftComponent implements OnInit {
             this.customerCode = this.editGeneralInformationData.customerCode;
             this.customerName = this.editGeneralInformationData.name;
             this.getAircraftMappedDataByCustomerId();
+            this.isViewMode = false;
+
         } else {
+            if(this.customerDataFromExternalComponents != {}){
+                this.id = this.customerDataFromExternalComponents.customerId;
+                this.customerCode = this.customerDataFromExternalComponents.customerCode;
+				this.customerName = this.customerDataFromExternalComponents.name;
+				this.getAircraftMappedDataByCustomerId();
+                this.isViewMode = true;
+            } else {
             this.id = this.savedGeneralInformationData.customerId;
             this.customerCode = this.savedGeneralInformationData.customerCode;
             this.customerName = this.savedGeneralInformationData.name;
+            this.isViewMode = false;
+            }
+
         }
 
         this.route.data.subscribe(data => {
@@ -119,6 +135,23 @@ export class CustomerAircraftComponent implements OnInit {
         this.getAllAircraftModels();
         this.getAllDashNumbers();
 
+
+    }
+    ngOnChanges(changes: SimpleChanges) {
+       
+        for (let property in changes) {
+            if (property == 'customerDataFromExternalComponents') {
+
+            if(changes[property].currentValue != {}){
+                this.id = this.customerDataFromExternalComponents.customerId;
+                this.customerCode = this.customerDataFromExternalComponents.customerCode;
+                this.customerName = this.customerDataFromExternalComponents.name;
+                this.getAircraftMappedDataByCustomerId();
+                this.isViewMode = true;
+
+              } 
+            }
+        }
 
     }
 

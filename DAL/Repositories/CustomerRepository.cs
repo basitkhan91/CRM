@@ -2123,31 +2123,11 @@ namespace DAL.Repositories
                     _appContext.SaveChanges();
 
 
-                    ContactAudit objShipping = new ContactAudit();
-                    objShipping.ModuleId = Convert.ToInt32(ModuleEnum.Customer);
-                    objShipping.ReferenceId = objCustomer.CustomerId;
-                    objShipping.ContactId = Convert.ToInt64(customercontactObj.CustomerContactId);
-                    objShipping.IsDefaultContact = true;
-                    objShipping.FirstName = objCustomer.Name;
-                    objShipping.LastName = "NA";
+                   
+                    CommonRepository commonRepository = new CommonRepository(_appContext);
 
-                    objShipping.WorkPhone = objCustomer.CustomerPhone;
+                    commonRepository.ContactsHistory(Convert.ToInt64(objCustomer.CustomerId), Convert.ToInt32(ModuleEnum.Customer), Convert.ToInt64(customercontactObj.CustomerContactId), objCustomer.UpdatedBy);
 
-
-                    objShipping.WorkPhoneExtn = objCustomer.CustomerPhoneExt;
-
-                    objShipping.Email = objCustomer.Email;
-
-                    objShipping.MasterCompanyId = 1;
-                    objShipping.CreatedDate = DateTime.Now;
-                    objShipping.UpdatedDate = DateTime.Now;
-                    objShipping.CreatedBy = objCustomer.CreatedBy;
-                    objShipping.UpdatedBy = objCustomer.CreatedBy;
-                    objShipping.IsActive = objCustomer.IsActive;
-
-                    objShipping.Tag = "NA";
-                    _appContext.ContactAudit.Add(objShipping);
-                    _appContext.SaveChanges();
 
                 }
                 // return objCustomerShippingAddress;
@@ -2660,6 +2640,9 @@ namespace DAL.Repositories
             {
 
                 var data = (from c in _appContext.CustomerInternationalShippingAudit
+                            join cont in _appContext.Countries on c.ShipToCountryId equals cont.countries_id into country
+                            from cont in country.DefaultIfEmpty()
+
                             where c.CustomerId == customerId && c.InternationalShippingId== internationalShippingId
                             select new
                             {
@@ -2677,6 +2660,7 @@ namespace DAL.Repositories
                                 c.UpdatedDate,
                                 c.CreatedDate,
                                 c.IsActive,
+                               countryName=cont.countries_name,
                                
                                 c.MasterCompanyId
                             }).OrderByDescending(c => c.UpdatedDate).ToList();
@@ -2724,6 +2708,7 @@ namespace DAL.Repositories
         {
             string countryName = string.Empty;
             List<object> obj = new List<object>();
+            CommonRepository commonRepository = new CommonRepository(_appContext);
 
             int count = 0;
             try
@@ -2774,34 +2759,85 @@ namespace DAL.Repositories
                                         if (country != null)
                                         {
                                             addr.Country = country.countries_id.ToString();
+
+
+
+                                            addr.MasterCompanyId = 1;
+                                            addr.IsActive = true;
+
+                                            addr.CreatedBy = addr.UpdatedBy = "System";
+                                            addr.UpdatedDate = addr.CreatedDate = DateTime.Now;
+
+                                            _appContext.Address.Add(addr);
+                                            _appContext.SaveChanges();
+
+
+                                            if (reader.GetValue(6) != null)
+                                                bill.SiteName = Convert.ToString(reader.GetValue(6));
+                                            var custShipping = _appContext.CustomerBillingAddress.AsNoTracking().Where(p => p.IsPrimary == true && p.CustomerId == customerId).FirstOrDefault();
+
+                                               
+                                                if (custShipping != null)
+                                                {
+                                                if (reader.GetValue(7) != null)
+                                                {
+                                                    if (reader.GetValue(7).ToString().ToLower() == "yes")
+                                                    {
+                                                        bill.IsPrimary = true;
+
+                                                        custShipping.IsPrimary = false;
+
+                                                        CustomerBillingAddress ba = new CustomerBillingAddress();
+
+                                                        ba.CustomerBillingAddressId = custShipping.CustomerBillingAddressId;
+                                                        ba.UpdatedDate = DateTime.Now;
+                                                        ba.UpdatedBy = "System";
+                                                        ba.IsPrimary = false;
+
+
+                                                        _appContext.Entry(ba).State = EntityState.Detached;
+                                                        _appContext.CustomerBillingAddress.Attach(ba);
+                                                        _appContext.Entry(ba).Property(x => x.IsPrimary).IsModified = true;
+                                                        _appContext.Entry(ba).Property(x => x.UpdatedDate).IsModified = true;
+                                                        _appContext.Entry(ba).Property(x => x.UpdatedBy).IsModified = true;
+                                                        //_appContext.CustomerBillingAddress.Update(custShipping);
+                                                        _appContext.SaveChanges();
+
+                                                        commonRepository.ShippingBillingAddressHistory(Convert.ToInt64(customerId), Convert.ToInt32(ModuleEnum.Customer), Convert.ToInt64(custShipping.CustomerBillingAddressId), Convert.ToInt32(AddressTypeEnum.BillingAddress), "System");
+                                                        _appContext.Entry(ba).State = EntityState.Detached;
+
+                                                    }
+                                                    else
+                                                    {
+                                                        bill.IsPrimary = false;
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    bill.IsPrimary = false;
+                                                }
+                                                
+                                            }
+                                            else
+                                            {
+                                                bill.IsPrimary = true;
+                                            }
+                                            bill.MasterCompanyId = 1;
+                                            bill.CustomerId = customerId;
+                                            bill.IsActive = true;
+                                            bill.IsDeleted = false;
+
+                                            bill.AddressId = addr.AddressId;
+                                            bill.CreatedBy = bill.UpdatedBy = "System";
+                                            bill.UpdatedDate = bill.CreatedDate = DateTime.Now;
+
+                                            _appContext.Entry(bill).State = EntityState.Detached;
+
+                                            _appContext.CustomerBillingAddress.Add(bill);
+                                            _appContext.SaveChanges();
+                                            commonRepository.ShippingBillingAddressHistory(Convert.ToInt64(customerId), Convert.ToInt32(ModuleEnum.Customer), Convert.ToInt64(bill.CustomerBillingAddressId), Convert.ToInt32(AddressTypeEnum.BillingAddress), "System");
+                                            _appContext.Entry(bill).State = EntityState.Detached;
                                         }
-
-
-                                        addr.MasterCompanyId = 1;
-                                        addr.IsActive = true;
-
-                                        addr.CreatedBy = addr.UpdatedBy = "System";
-                                        addr.UpdatedDate = addr.CreatedDate = DateTime.Now;
-
-                                        _appContext.Address.Add(addr);
-                                        _appContext.SaveChanges();
-
-
-                                        if (reader.GetValue(6) != null)
-                                            bill.SiteName = Convert.ToString(reader.GetValue(6));
-
-                                        bill.MasterCompanyId = 1;
-                                        bill.CustomerId = customerId;
-                                        bill.IsActive = true;
-                                        bill.IsDeleted = false;
-                                        bill.IsPrimary = false;
-                                        bill.AddressId = addr.AddressId;
-                                        bill.CreatedBy = bill.UpdatedBy = "System";
-                                        bill.UpdatedDate = bill.CreatedDate = DateTime.Now;
-                                        _appContext.CustomerBillingAddress.Add(bill);
-                                        _appContext.SaveChanges();
-
-
 
 
                                     }
@@ -2828,6 +2864,7 @@ namespace DAL.Repositories
         {
             string countryName = string.Empty;
             List<object> obj = new List<object>();
+            CommonRepository commonRepository = new CommonRepository(_appContext);
 
             int count = 0;
             try
@@ -2878,35 +2915,86 @@ namespace DAL.Repositories
                                         if (country != null)
                                         {
                                             addr.Country = country.countries_id.ToString();
+
+
+
+                                            addr.MasterCompanyId = 1;
+                                            addr.IsActive = true;
+
+                                            addr.CreatedBy = addr.UpdatedBy = "System";
+                                            addr.UpdatedDate = addr.CreatedDate = DateTime.Now;
+
+                                            _appContext.Address.Add(addr);
+                                            _appContext.SaveChanges();
+
+
+                                            if (reader.GetValue(6) != null)
+                                                ship.SiteName = Convert.ToString(reader.GetValue(6));
+                                            var custShipping = _appContext.CustomerShippingAddress.AsNoTracking().Where(p => p.IsPrimary == true && p.CustomerId == customerId).FirstOrDefault();
+
+                                         
+                                            if (custShipping != null)
+                                            {
+                                                if (reader.GetValue(7) != null)
+                                                {
+                                                    if (reader.GetValue(7).ToString().ToLower() == "yes")
+                                                    {
+                                                        ship.IsPrimary = true;
+
+                                                        custShipping.IsPrimary = false;
+
+                                                        CustomerShippingAddress ba = new CustomerShippingAddress();
+
+                                                        ba.CustomerShippingAddressId = custShipping.CustomerShippingAddressId;
+                                                        ba.UpdatedDate = DateTime.Now;
+                                                        ba.UpdatedBy = "System";
+                                                        ba.IsPrimary = false;
+
+
+                                                        _appContext.Entry(ba).State = EntityState.Detached;
+                                                        _appContext.CustomerShippingAddress.Attach(ba);
+                                                        _appContext.Entry(ba).Property(x => x.IsPrimary).IsModified = true;
+                                                        _appContext.Entry(ba).Property(x => x.UpdatedDate).IsModified = true;
+                                                        _appContext.Entry(ba).Property(x => x.UpdatedBy).IsModified = true;
+                                                        //_appContext.CustomerBillingAddress.Update(custShipping);
+                                                        _appContext.SaveChanges();
+
+                                                        commonRepository.ShippingBillingAddressHistory(Convert.ToInt64(customerId), Convert.ToInt32(ModuleEnum.Customer), Convert.ToInt64(custShipping.CustomerShippingAddressId), Convert.ToInt32(AddressTypeEnum.ShippingAddress), "System");
+                                                        _appContext.Entry(ba).State = EntityState.Detached;
+
+                                                    }
+                                                    else
+                                                    {
+                                                        ship.IsPrimary = false;
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    ship.IsPrimary = false;
+                                                }
+
+                                            }
+                                            else
+                                            {
+                                                ship.IsPrimary = true;
+                                            }
+                                            ship.MasterCompanyId = 1;
+                                            ship.CustomerId = customerId;
+                                            ship.IsActive = true;
+                                            ship.IsDelete = false;
+                                           
+                                            ship.AddressId = addr.AddressId;
+                                            ship.CreatedBy = ship.UpdatedBy = "System";
+                                            ship.UpdatedDate = ship.CreatedDate = DateTime.Now;
+                                            _appContext.Entry(ship).State = EntityState.Detached;
+
+                                            _appContext.CustomerShippingAddress.Add(ship);
+                                            _appContext.SaveChanges();
+
+                                            commonRepository.ShippingBillingAddressHistory(Convert.ToInt64(customerId), Convert.ToInt32(ModuleEnum.Customer), Convert.ToInt64(ship.CustomerShippingAddressId), Convert.ToInt32(AddressTypeEnum.ShippingAddress), "System");
+                                            _appContext.Entry(ship).State = EntityState.Detached;
+
                                         }
-
-
-                                        addr.MasterCompanyId = 1;
-                                        addr.IsActive = true;
-
-                                        addr.CreatedBy = addr.UpdatedBy = "System";
-                                        addr.UpdatedDate = addr.CreatedDate = DateTime.Now;
-
-                                        _appContext.Address.Add(addr);
-                                        _appContext.SaveChanges();
-
-
-                                        if (reader.GetValue(6) != null)
-                                            ship.SiteName = Convert.ToString(reader.GetValue(6));
-
-                                        ship.MasterCompanyId = 1;
-                                        ship.CustomerId = customerId;
-                                        ship.IsActive = true;
-                                        ship.IsDelete = false;
-                                        ship.IsPrimary = false;
-                                        ship.AddressId = addr.AddressId;
-                                        ship.CreatedBy = ship.UpdatedBy = "System";
-                                        ship.UpdatedDate = ship.CreatedDate = DateTime.Now;
-                                        _appContext.CustomerShippingAddress.Add(ship);
-                                        _appContext.SaveChanges();
-
-
-
 
                                     }
 
@@ -2980,18 +3068,65 @@ namespace DAL.Repositories
                                         {
                                             ship.ShipToCountryId = country.countries_id;
 
+                                            var custShipping = _appContext.CustomerInternationalShipping.AsNoTracking().Where(p => p.IsPrimary == true && p.CustomerId == customerId).FirstOrDefault();
 
+
+                                            if (custShipping != null)
+                                            {
+                                                if (reader.GetValue(6) != null)
+                                                {
+                                                    if (reader.GetValue(6).ToString().ToLower() == "yes")
+                                                    {
+                                                        ship.IsPrimary = true;
+
+                                                        custShipping.IsPrimary = false;
+
+                                                        CustomerInternationalShipping ba = new CustomerInternationalShipping();
+
+                                                        ba.InternationalShippingId = custShipping.InternationalShippingId;
+                                                        ba.UpdatedDate = DateTime.Now;
+                                                        ba.UpdatedBy = "System";
+                                                        ba.IsPrimary = false;
+
+
+                                                        _appContext.Entry(ba).State = EntityState.Detached;
+                                                        _appContext.CustomerInternationalShipping.Attach(ba);
+                                                        _appContext.Entry(ba).Property(x => x.IsPrimary).IsModified = true;
+                                                        _appContext.Entry(ba).Property(x => x.UpdatedDate).IsModified = true;
+                                                        _appContext.Entry(ba).Property(x => x.UpdatedBy).IsModified = true;
+                                                        //_appContext.CustomerBillingAddress.Update(custShipping);
+                                                        _appContext.SaveChanges();
+
+                                                                _appContext.Entry(ba).State = EntityState.Detached;
+
+                                                    }
+                                                    else
+                                                    {
+                                                        ship.IsPrimary = false;
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    ship.IsPrimary = false;
+                                                }
+
+                                            }
+                                            else
+                                            {
+                                                ship.IsPrimary = true;
+                                            }
 
                                             ship.MasterCompanyId = 1;
                                             ship.IsActive = true;
                                             ship.IsDeleted = false;
-                                            ship.IsPrimary = false;
+                                            //ship.IsPrimary = false;
                                             ship.CustomerId = customerId;
                                             ship.CreatedBy = ship.UpdatedBy = "System";
                                             ship.UpdatedDate = ship.CreatedDate = DateTime.Now;
-
+                                            _appContext.Entry(ship).State = EntityState.Detached;
                                             _appContext.CustomerInternationalShipping.Add(ship);
                                             _appContext.SaveChanges();
+                                            _appContext.Entry(ship).State = EntityState.Detached;
 
                                         }
                                       
@@ -3020,6 +3155,7 @@ namespace DAL.Repositories
         {
             string countryName = string.Empty;
             List<object> obj = new List<object>();
+            CommonRepository commonRepository = new CommonRepository(_appContext);
 
             int count = 0;
             try
@@ -3048,7 +3184,7 @@ namespace DAL.Repositories
                             {
                                 while (reader.Read())
                                 {
-                                    if (count > 0 && reader.GetValue(0) != null && reader.GetValue(3) != null && reader.GetValue(2) != null && reader.GetValue(4) != null && reader.GetValue(5) != null && reader.GetValue(6) != null)
+                                    if (count > 0 && reader.GetValue(0) != null &&reader.GetValue(2) != null && reader.GetValue(4) != null && reader.GetValue(7) != null && reader.GetValue(8) != null)
                                     {
 
                                         cont = new Contact();
@@ -3064,22 +3200,27 @@ namespace DAL.Repositories
                                         if (reader.GetValue(4) != null)
                                             cont.LastName = Convert.ToString(reader.GetValue(4));
                                         if (reader.GetValue(5) != null)
-                                            cont.ContactTitle = Convert.ToString(reader.GetValue(5));
+                                            cont.Suffix = Convert.ToString(reader.GetValue(5));
 
                                         if (reader.GetValue(6) != null)
-                                            cont.Email = Convert.ToString(reader.GetValue(6));
+                                            cont.ContactTitle = Convert.ToString(reader.GetValue(6));
+
                                         if (reader.GetValue(7) != null)
-                                            cont.WorkPhone = Convert.ToString(reader.GetValue(7));
+                                            cont.Email = Convert.ToString(reader.GetValue(7));
                                         if (reader.GetValue(8) != null)
-                                            cont.WorkPhoneExtn = Convert.ToString(reader.GetValue(8));
+                                            cont.WorkPhone = Convert.ToString(reader.GetValue(8));
                                         if (reader.GetValue(9) != null)
-                                            cont.MobilePhone = Convert.ToString(reader.GetValue(9));
+                                            cont.WorkPhoneExtn = Convert.ToString(reader.GetValue(9));
                                         if (reader.GetValue(10) != null)
-                                            cont.AlternatePhone = Convert.ToString(reader.GetValue(10));
+                                            cont.MobilePhone = Convert.ToString(reader.GetValue(10));
                                         if (reader.GetValue(11) != null)
-                                            cont.Fax = Convert.ToString(reader.GetValue(11));
+                                            cont.AlternatePhone = Convert.ToString(reader.GetValue(11));
                                         if (reader.GetValue(12) != null)
-                                            cont.Notes = Convert.ToString(reader.GetValue(12));
+                                            cont.Fax = Convert.ToString(reader.GetValue(12));
+                                        if (reader.GetValue(13) != null)
+                                            cont.Notes = Convert.ToString(reader.GetValue(13));
+                                        if (reader.GetValue(14) != null)
+                                            cont.WebsiteURL = Convert.ToString(reader.GetValue(14));
 
 
                                         cont.IsActive = true;
@@ -3089,18 +3230,70 @@ namespace DAL.Repositories
 
                                         _appContext.Contact.Add(cont);
                                         _appContext.SaveChanges();
+                                        var custContact = _appContext.CustomerContact.AsNoTracking().Where(p => p.IsDefaultContact == true && p.CustomerId == customerId).FirstOrDefault();
+
+
+                                        if (custContact != null)
+                                        {
+                                            if (reader.GetValue(15) != null)
+                                            {
+                                                if (reader.GetValue(15).ToString().ToLower() == "yes")
+                                                {
+                                                    cCont.IsDefaultContact = true;
+
+                                                    custContact.IsDefaultContact = false;
+
+                                                    CustomerContact ba = new CustomerContact();
+
+                                                    ba.CustomerContactId = custContact.CustomerContactId;
+                                                    ba.UpdatedDate = DateTime.Now;
+                                                    ba.UpdatedBy = "System";
+                                                    ba.IsDefaultContact = false;
+
+
+                                                    _appContext.Entry(ba).State = EntityState.Detached;
+                                                    _appContext.CustomerContact.Attach(ba);
+                                                    _appContext.Entry(ba).Property(x => x.IsDefaultContact).IsModified = true;
+                                                    _appContext.Entry(ba).Property(x => x.UpdatedDate).IsModified = true;
+                                                    _appContext.Entry(ba).Property(x => x.UpdatedBy).IsModified = true;
+                                                    //_appContext.CustomerBillingAddress.Update(custShipping);
+                                                    _appContext.SaveChanges();
+                                                    commonRepository.ContactsHistory(Convert.ToInt64(customerId), Convert.ToInt32(ModuleEnum.Customer), Convert.ToInt64(custContact.CustomerContactId), "System");
+
+                                                    _appContext.Entry(ba).State = EntityState.Detached;
+
+                                                }
+                                                else
+                                                {
+                                                    cCont.IsDefaultContact = false;
+                                                }
+                                            }
+                                            else
+                                            {
+                                                cCont.IsDefaultContact = false;
+                                            }
+
+                                        }
+                                        else
+                                        {
+                                            cCont.IsDefaultContact = true;
+                                        }
 
 
                                         cCont.MasterCompanyId = 1;
                                         cCont.CustomerId = customerId;
                                         cCont.IsActive = true;
                                         cCont.IsDeleted = false;
-                                        cCont.IsDefaultContact = false;
+                                        //cCont.IsDefaultContact = false;
                                         cCont.ContactId = cont.ContactId;
                                         cCont.CreatedBy = cCont.UpdatedBy = "System";
                                         cCont.UpdatedDate = cCont.CreatedDate = DateTime.Now;
+                                        _appContext.Entry(cCont).State = EntityState.Detached;
                                         _appContext.CustomerContact.Add(cCont);
                                         _appContext.SaveChanges();
+                                        commonRepository.ContactsHistory(Convert.ToInt64(customerId), Convert.ToInt32(ModuleEnum.Customer), Convert.ToInt64(cCont.CustomerContactId), "System");
+
+                                        _appContext.Entry(cCont).State = EntityState.Detached;
                                     }
 
 
@@ -3120,59 +3313,5 @@ namespace DAL.Repositories
            
         }
 
-        private void ShippingBillingAddressHistory(CustomerShippingAddress shippingAddress, long referenceId, int moduleId, long billingShippingId, int addressType, string updatedBy)
-        {
-            ShippingBillingAddressAudit audit = new ShippingBillingAddressAudit();
-            long? addressId = 0;
-
-            if (moduleId == Convert.ToInt32(ModuleEnum.Customer))
-            {
-                if (addressType == Convert.ToInt32(AddressTypeEnum.ShippingAddress))
-                {
-
-                    // var shippingAddress = _appContext.CustomerShippingAddress.Where(p => p.CustomerShippingAddressId == billingShippingId).AsNoTracking().FirstOrDefault();
-                    
-                    audit.AddressId = Convert.ToInt64(shippingAddress.CustomerShippingAddressId);
-                    audit.AddressType = Convert.ToInt32(AddressTypeEnum.ShippingAddress);
-                    audit.IsPrimary = Convert.ToBoolean(shippingAddress.IsPrimary);
-                    audit.IsActive = Convert.ToBoolean(shippingAddress.IsActive);
-                    audit.MasterCompanyId = Convert.ToInt32(shippingAddress.MasterCompanyId);
-                    audit.ModuleId = moduleId;
-                    audit.ReferenceId = referenceId;
-                    audit.SiteName = shippingAddress.SiteName;
-                    audit.CreatedBy = audit.UpdatedBy = updatedBy;
-                    audit.CreatedDate = audit.UpdatedDate = DateTime.Now;
-                    addressId = shippingAddress.AddressId;
-
-                }
-                else
-                {
-                    var billingAddress = _appContext.CustomerBillingAddress.AsNoTracking().Where(p => p.CustomerBillingAddressId == billingShippingId).FirstOrDefault();
-                    audit.AddressId = Convert.ToInt64(billingAddress.CustomerBillingAddressId);
-                    audit.AddressType = Convert.ToInt32(AddressTypeEnum.BillingAddress);
-                    audit.IsPrimary = Convert.ToBoolean(billingAddress.IsPrimary);
-                    audit.IsActive = Convert.ToBoolean(billingAddress.IsActive);
-                    audit.MasterCompanyId = Convert.ToInt32(billingAddress.MasterCompanyId);
-                    audit.ModuleId = moduleId;
-                    audit.ReferenceId = referenceId;
-                    audit.SiteName = billingAddress.SiteName;
-                    audit.CreatedBy = audit.UpdatedBy = updatedBy;
-                    audit.CreatedDate = audit.UpdatedDate = DateTime.Now;
-                    addressId = billingAddress.AddressId;
-                }
-            }
-
-            var addr = _appContext.Address.AsNoTracking().Where(p => p.AddressId == addressId).FirstOrDefault();
-
-            audit.Line1 = addr.Line1;
-            audit.Line2 = addr.Line2;
-            audit.City = addr.City;
-            audit.StateOrProvince = addr.StateOrProvince;
-            audit.Country = addr.Country;
-            audit.PostalCode = addr.PostalCode;
-
-            _appContext.ShippingBillingAddressAudit.Add(audit);
-            _appContext.SaveChanges();
-        }
-    }
+      }
 }

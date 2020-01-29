@@ -20,7 +20,7 @@ export class CustomerSalesPersonComponent implements OnInit {
     @Input() savedGeneralInformationData;
     @Input() editGeneralInformationData;
     @Input() editMode;
-    @Input() employeeListOriginal;
+    @Input() employeeListOriginal: any = [];
     @Output() tab = new EventEmitter();
     employeeList: any[];
     employeeTypeList: any[];
@@ -115,6 +115,9 @@ export class CustomerSalesPersonComponent implements OnInit {
     ngOnInit() {
 
         if (this.editMode) {
+            for(let i=0; i<this.employeeListOriginal.length; i++){
+                this.employeeListOriginal[i]["fullName"] = this.employeeListOriginal[i]["firstName"] + " " + this.employeeListOriginal[i]["lastName"]
+            }
 
             console.log(this.editGeneralInformationData);
 
@@ -176,9 +179,10 @@ export class CustomerSalesPersonComponent implements OnInit {
 
     filteremployee(event, type) {
 
-
+       
 
         this.employeeList = this.employeeListOriginal;
+
 
         const employeeTypeList = [...this.employeeListOriginal.filter(x => {
             return x.jobTitle.includes(type)
@@ -190,7 +194,7 @@ export class CustomerSalesPersonComponent implements OnInit {
         //})]
 
         const employeeListData = [...this.employeeTypeList.filter(x => {
-            return x.firstName.toLowerCase().includes(event.query.toLowerCase())
+            return x.fullName.toLowerCase().includes(event.query.toLowerCase())
         })]
 
         this.employeeList = employeeListData;

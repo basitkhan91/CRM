@@ -71,13 +71,13 @@
 
                 
                                 </ng-container>
-                                <th *ngIf="isViewMode == false">Actions</th>
+                                <th>Actions</th>
                             </tr>
                             <tr>
                                     <th style="width:auto" *ngFor="let col of columns" [ngSwitch]="col.field">
                                         <input style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field, 'contains')">
                                     </th>
-                                    <th *ngIf="isViewMode == false"></th>
+                                    <th></th>
                                 </tr>
                         </ng-template>
 
@@ -116,6 +116,22 @@
                                     <button class="btn-delete" mat-icon-button matTooltip="Delete" (click)=" openDelete(deleteContent, rowData)">
                                         <mat-icon color="warn">delete</mat-icon>
                                     </button>
+
+                                    <button class="btn-history" mat-icon-button matTooltip="History" (click)="openHistory(contentAuditHist,rowData)">
+                                        <mat-icon color="green">history</mat-icon>
+                                    </button>
+
+                                </td>
+                                <td class="text-center" *ngIf="isViewMode == true">
+
+                                    <!--<span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openDocument(view,rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>-->
+                                    <span>
+                                        <a class="btn btn-info boxed-float-btn nobg" data-toggle="modal" data-target="#docView" (click)="openDocument(view,rowData)" matTooltip="View">
+                                            <i class="fa fa-eye"></i>
+                                        </a>
+                                    </span>
+
+
 
                                     <button class="btn-history" mat-icon-button matTooltip="History" (click)="openHistory(contentAuditHist,rowData)">
                                         <mat-icon color="green">history</mat-icon>

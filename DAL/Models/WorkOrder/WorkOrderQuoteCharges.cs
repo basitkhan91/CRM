@@ -26,6 +26,7 @@ namespace DAL.Models
         public decimal? ExtendedPrice { get; set; }
         public decimal? ChargesCostPlus { get; set; }
         public long? TaskId { get; set; }
+        public string MarkupFixedPrice { get; set; }
         public int MasterCompanyId { get; set; }
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }
