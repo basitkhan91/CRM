@@ -815,6 +815,20 @@ export class VendorService {
         return this.actionEndpoint.getVendorCapabilityByVendorId(vendorId);
       }
 
+      getVendorDataById(vendorId){
+        return this.actionEndpoint.getVendorDataById(vendorId);
+      }
+
+      BillingFileUpload(file, vendorId) {
+        return this.actionEndpoint.VendorBillingFileUpload(file, vendorId);
+    }
+    ShippingFileUpload(file, vendorId) {
+        return this.actionEndpoint.VendorShippingFileUpload(file, vendorId);
+    }
+   
+   ContactUpload(file, vendorId) {
+       return this.actionEndpoint.VendorContactFileUpload(file, vendorId);
+    }
       
 
       

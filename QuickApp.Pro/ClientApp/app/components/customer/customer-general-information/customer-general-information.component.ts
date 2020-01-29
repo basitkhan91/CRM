@@ -114,6 +114,9 @@ export class CustomerGeneralInformationComponent implements OnInit {
     selectedRowForDeleteRestrictDER: any = {};
     disableAccountType: boolean = false;
     modal: NgbModalRef;
+    parentCustomer = [];
+    parentCustomerOriginal = []
+
 
 
 
@@ -142,6 +145,8 @@ export class CustomerGeneralInformationComponent implements OnInit {
         // this.getAllClassification();
         this.getAllIntegrations()
 
+        console.log(this.customerListOriginal);
+
         if (this.isEdit) {
             this.customerService.getCustomerdataById(this.id).subscribe(response => {
                 console.log(response);
@@ -150,6 +155,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
 
                 this.editGeneralInformation.emit(res);
                 this.editData = res;
+                this.parentCustomerList(this.id);
 
                 this.generalInformation = {
                     ...this.editData,
@@ -199,6 +205,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
                 ...this.generalInformation,
                 customerAffiliationId: String(this.generalInformation.customerAffiliationId)
             }
+            this.parentCustomerOriginal = this.customerListOriginal;
         }
     }
 
@@ -233,11 +240,13 @@ export class CustomerGeneralInformationComponent implements OnInit {
             if (this.generalInformation.restrictedPMAParts.length > 0) {
                 this.disableRestrictedPMA = true;
             }
-
+            for(let i=0; i<this.generalInformation.restrictedPMAParts.length; i++){
+                this.generalInformation.restrictedPMAParts[i]['itemMasterId'] = this.generalInformation.restrictedPMAParts[i]['masterPartId']
+            }
 
             this.restictPMAtempList = res.map(x => x.rescrictedPartId);
             this.partListForPMA = this.generalInformation.restrictedPMAParts.reduce((acc, obj) => {
-                return acc.filter(x => x.value.masterPartId !== obj.masterPartId)
+                return acc.filter(x => x.value.itemMasterId !== obj.masterPartId)
             }, this.partListOriginal)
 
 
@@ -253,9 +262,12 @@ export class CustomerGeneralInformationComponent implements OnInit {
             if (this.generalInformation.restrictedDERParts.length > 0) {
                 this.disableRestrictedDER = true;
             }
-            this.restictDERtempList = res.map(x => x.itemMasterId);
+            for(let i=0; i<this.generalInformation.restrictedDERParts.length; i++){
+                this.generalInformation.restrictedDERParts[i]['itemMasterId'] = this.generalInformation.restrictedDERParts[i]['masterPartId']
+            }
+            this.restictDERtempList = res.map(x => x.rescrictedPartId);
             this.partListForDER = this.generalInformation.restrictedDERParts.reduce((acc, obj) => {
-                return acc.filter(x => x.value.masterPartId !== obj.masterPartId)
+                return acc.filter(x => x.value.itemMasterId !== obj.masterPartId)
             }, this.partListOriginal)
 
 
@@ -275,7 +287,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
 
             this.partListOriginal = data.map(x => {
                 return {
-                    label: x.partNumber, value: { masterPartId: x.itemMasterId, partNumber: x.partNumber, memo: x.memo, createdBy: this.userName, updatedBy: this.userName, partDescription: x.partDescription, manufacturerName: x.manufacturerName }
+                    label: x.partNumber, value: { masterPartId: x.itemMasterId, itemMasterId: x.itemMasterId, partNumber: x.partNumber, memo: x.memo, createdBy: this.userName, updatedBy: this.userName, partDescription: x.partDescription, manufacturerName: x.manufacturerName }
                 }
             })
             this.partListForPMA = [...this.partListOriginal];
@@ -317,9 +329,32 @@ export class CustomerGeneralInformationComponent implements OnInit {
         console.log(event)
 
     }
+    restrictPMAClick(event: any) {
+        if (!this.generalInformation.restrictPMA) {
+            this.generalInformation.restrictedPMAParts = [];
+        }
+    }
+
+    restrictDERClick(event: any) {
+
+        if (!this.generalInformation.restrictBER) {
+            this.generalInformation.restrictedDERParts = [];
+        }
+    }
+
+    restrictPBHClick(event: any) {
+        if (!this.generalInformation.isPBHCustomer) {
+            this.generalInformation.pbhCustomerMemo = "";
+        }
+    }
+
 
 
     addRestrictPMA() {
+        if(this.generalInformation.restrictedPMAParts ==  undefined){
+            this.generalInformation.restrictedPMAParts = []
+        }
+
         if (this.restictPMAtempList.length > 0) {
             this.disableRestrictedPMA = true;
             for (let i = 0; i < this.restictPMAtempList.length; i++) {
@@ -329,7 +364,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
             }
             this.generalInformation.restrictedPMAParts = this.generalInformation.restrictedPMAParts.slice();
             this.partListForPMA = this.generalInformation.restrictedPMAParts.reduce((acc, obj) => {
-                return acc.filter(x => x.value.masterPartId !== obj.masterPartId)
+                return acc.filter(x => x.value.itemMasterId !== obj.masterPartId)
             }, this.partListOriginal)
             this.restictPMAtempList = [];
         }
@@ -371,8 +406,6 @@ export class CustomerGeneralInformationComponent implements OnInit {
         }
 
     }
-
-
     openPopupForDeleteRestrictPMA(i, rowData, content) {
         this.selectedRowForDeleteRestrictPMA = rowData;
         this.selectedRowForDeleteRestrictPMA['index'] = i;
@@ -402,6 +435,9 @@ export class CustomerGeneralInformationComponent implements OnInit {
         this.generalInformation.isAddressForShipping = true;
     }
     addRestrictBER() {
+        if(this.generalInformation.restrictedDERParts ==  undefined){
+            this.generalInformation.restrictedDERParts = []
+        }
         if (this.restictDERtempList.length > 0) {
             this.disableRestrictedDER = true;
             for (let i = 0; i < this.restictDERtempList.length; i++) {
@@ -411,7 +447,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
             }
             this.generalInformation.restrictedDERParts = this.generalInformation.restrictedDERParts.slice();
             this.partListForDER = this.generalInformation.restrictedDERParts.reduce((acc, obj) => {
-                return acc.filter(x => x.value.masterPartId !== obj.masterPartId)
+                return acc.filter(x => x.value.itemMasterId !== obj.masterPartId)
             }, this.partListOriginal)
             this.restictDERtempList = [];
         }
@@ -458,6 +494,26 @@ export class CustomerGeneralInformationComponent implements OnInit {
             return x.name.toLowerCase().includes(event.query.toLowerCase())
         })]
     }
+
+
+    parentCustomerList(id) {
+        console.log(id);
+        console.log(this.customerListOriginal);
+
+        this.parentCustomerOriginal = [... this.customerallListOriginal.filter(x => {
+            if (x.customerId != id) {
+                return x;
+            }
+        })]
+        console.log(this.parentCustomerOriginal);
+
+    }
+
+
+
+    // filterParentCustomer(event){
+
+    // }
     filterCustomerCode(event) {
         this.customerCodes = this.customerallListOriginal;
         this.customerCodes = [...this.customerallListOriginal.filter(x => {
@@ -466,9 +522,9 @@ export class CustomerGeneralInformationComponent implements OnInit {
 
     }
     filterCustomerParentNames(event) {
-        this.customerNames = this.customerListOriginal;
+        this.parentCustomer = this.parentCustomerOriginal;
 
-        this.customerNames = [...this.customerListOriginal.filter(x => {
+        this.parentCustomer = [...this.parentCustomerOriginal.filter(x => {
             return x.name.toLowerCase().includes(event.query.toLowerCase())
         })]
 
@@ -515,6 +571,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
     }
 
     checkCustomerNameExist(value) {
+
         this.changeName = true;
 
         this.isCustomerNameAlreadyExists = false;

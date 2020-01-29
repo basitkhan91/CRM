@@ -126,6 +126,10 @@ export class AssetMaintenanceWarrantyComponent implements OnInit {
     }
 
     saveWarrenty() {
+        delete this.currentMaintenance.assetType;
+        delete this.currentMaintenance.currency;
+        delete this.currentMaintenance.manufacturer;
+        delete this.currentMaintenance.unitOfMeasure;
         if (!this.currentMaintenance.assetRecordId) {
             this.currentMaintenance.createdBy = this.userName;
             this.currentMaintenance.updatedBy = this.userName;

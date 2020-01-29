@@ -178,13 +178,14 @@
                                     </div> 
                                     <div class="inline-block display-flex spacing-label">
                                         <label class="control-label">
-                                            Item Group
-                                            <span style="margin-left:3px;margin-top:5px;cursor:pointer;"  matTooltip="Add Item Group"  tooltipPosition="top" matTooltipPosition="above"><i class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#addCustomerClass" (click)="item(contentEdits)"></i></span>
+                                            Item Group  <strong class="clr-red">*</strong>
+                                            <span style="margin-left:3px;margin-top:5px;cursor:pointer;" matTooltip="Add Item Group" tooltipPosition="top" matTooltipPosition="above"><i class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#addCustomerClass" (click)="item(contentEdits)"></i></span>
                                         </label>
 
                                     </div>
                                     <div>
-                                        <select [ngModelOptions]="{standalone: true}" class="select-drop"
+                                        <!--<select [ngModelOptions]="{standalone: true}" required class="select-drop"-->
+                                        <select name="itemGroupId" required class="select-drop"
                                                 [(ngModel)]="sourceItemMaster.itemGroupId">
                                             <ng-container *ngFor="let itemGroupName of allitemgroupobjInfo">
                                                 <option [ngValue]="itemGroupName.itemGroupId" *ngIf="itemGroupName.isActive">

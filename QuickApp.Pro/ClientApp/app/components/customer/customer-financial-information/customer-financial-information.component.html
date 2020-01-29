@@ -182,7 +182,7 @@
                                                     </div>
                                                 </div><!--/Form-row for Add Tax Info-->                                           
                                                 
-                                                <p-table #taxInfoTable [value]="taxTypeRateMapping" [paginator]="true" [rows]="3" [columns]="taxInfoTableColumns" *ngIf="taxTypeRateMapping.length>0">
+                                                <p-table #taxInfoTable class="rpo-table-cstm" [value]="taxTypeRateMapping" [paginator]="true" [rows]="3" [columns]="taxInfoTableColumns" *ngIf="taxTypeRateMapping.length>0">
                                                     <ng-template pTemplate="header" let-columns>
                                                         <tr>
                                                             <th *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
@@ -281,7 +281,8 @@
                                                             <td>
                                                                 <button moduleName="app-customer-edit" requirePermission="canDelete"
                                                                         class="btn-delete" mat-icon-button matTooltip="Delete"
-                                                                        (click)="CustomerAttachmentDelete(part)">
+                                                                        data-target="#delete" data-toggle="modal"  (click)="deleteFile(rowData)"
+                                                                        >
                                                                     <mat-icon color="warn">delete</mat-icon>
                                                                 </button>
                                                             </td>
@@ -338,6 +339,28 @@
         </div>
     </div>
 
+
+
+    <div  *ngIf="selectedRowFileForDelete" #delete id="delete"  class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                  <h4 class="modal-title">Are You Sure Want to Delete ?</h4>
+                </div>
+                <div class="modal-body">
+                  <strong>File:
+                    <span class="new-label">{{selectedRowFileForDelete.fileName}}</span>
+                </strong>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="deleteConformationForFile('Yes')">Yes</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="deleteConformationForFile('No')">No</button>
+                </div>
+              </div>
+          
+            </div>
+          </div>
 
     <div class="modal fade success-msg" id="success-popup" role="dialog" data-backdrop="static">
         <div class="modal-dialog modal-sm popup-timeout">
@@ -549,7 +572,7 @@
                                                         pKeyFilter="num"
                                                         (onSelect)="selectedDiscount()"
                                                         (onKeyUp)="checkDiscountExistss($event)"
-                                                        [suggestions]="_discountList" field="label" (completeMethod)="filterDiscount($event)"
+                                                        [suggestions]="_discountListForDropdown" field="label" (completeMethod)="filterDiscount($event)"
                                                         [size]="30" [minLength]="1" [dropdown]="true" required>
                                         </p-autoComplete>
                                         <div *ngIf="isDiscountExists" class="clr-red">Entry Already Exists</div>

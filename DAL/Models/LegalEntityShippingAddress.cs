@@ -11,7 +11,7 @@ namespace DAL.Models
         public long LegalEntityId { get; set; }
         public string SiteName { get; set; }
 		[ForeignKey("AddressId")]
-		public long AddressId { get; set; }
+		public long? AddressId { get; set; }
         public string ExportLicenseNumber { get; set; }
         public string Description { get; set; }
         public DateTime? StartDate { get; set; }

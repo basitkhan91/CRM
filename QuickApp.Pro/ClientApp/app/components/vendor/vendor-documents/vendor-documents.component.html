@@ -1,43 +1,47 @@
-﻿﻿<div class="card">
-    <div class="card-body">
-        <div class="right_col" role="main">
+﻿﻿
+
+
+        <div class="right_col" role="main"  style="padding: 2px 6px;">
             <div>
                 <div class="x_content">
-                    <div class="form-group col-sm-4 vendor-details-heading marginr50" style="display: inline-block;margin: 10px 5px 0 5px;">
-                        <p class="fs10">
-                            <label class="control-label w100">Vendor Name:</label>
-                            {{local?.vendorName}}
-                        </p>
-                    </div>
-                    <div class="form-group col-sm-4 vendor-details-heading" style="display: inline-block;margin: 10px 5px 0 5px;">
-                        <p class="fs10">
-                            <label class="control-label w100">Vendor Code:</label>
-                            {{local?.vendorCode}}
-                        </p>
-                    </div>
-                    <h4 class="page-heading clr-green"> Vendor Documents</h4>
-
-                    <div class="table-responsive">
-                        <div>
-                            <div class="col-md-12" style="margin-bottom: -10px;">
-                                <h4 class="float-right">
-                                    Add Documents
-                                    <a class="plusicon-cstm"
-                                       href="#"
-                                       data-toggle="modal"
-                                       data-target="#addDocumentDetails">
-                                        <i class="fa fa-plus-circle fa-lg"></i>
-                                    </a>
-                                </h4>
-                            </div>
-                            <div class="clear"></div>
-                            <hr />
+                    <div class="card" style="padding: 5px;">
+                    <div class="col-md-12 shadow-box-cstm">        
+                        <div class="col-md-4">
+                            <p class="fs12">
+                            <label class="control-label labels-font-header" style="width: auto;">Vendor Name: </label>
+                        <span class="span-header-red" style="text-transform: capitalize"> {{local?.vendorName }} </span> </p>
                         </div>
-                        <p-table #dt class="rpo-table-cstm rro-table-cstm" [value]="vendorDocumentsData" [metaKeySelection]="true" [rows]="10" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[10,50,100]"
+                        <div class="col-md-4">
+                            <p class="fs12">
+                            <label class="control-label labels-font-header" style="width: auto;">Vendor Code: </label>
+                            <span class="span-header-red" style="text-transform: capitalize"> {{local?.vendorCode }} </span> </p>
+                        </div>                            
+                    </div>
+                  
+                    <div class="card" style="padding: 10px;">
+
+                        <div class="col-md-12">
+                            <h4 class="float-left">
+                                Documents List
+                                <a class="plusicon-cstm"
+                                   href="#"
+                                   data-toggle="modal"
+                                   data-target="#addDocumentDetails">
+                                    <i class="fa fa-plus-circle fa-lg"></i>
+                                </a>
+                            </h4>
+                        </div>
+                        <div class="clear"></div>
+                        <hr />
+
+                    <div>
+                        
+                        <p-table #dt class="rpo-table-cstm rro-table-cstm" [value]="vendorDocumentsData" [metaKeySelection]="true" [rows]="10" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[10,20,50,100]"
                                  [columns]="selectedColumns" selectionMode="multiple" [resizableColumns]="true" [reorderableColumns]="true">
                             <ng-template pTemplate="caption">
                                 <div style="text-align: right">
                                     <p-multiSelect [options]="vendorDocumentsColumns" [(ngModel)]="selectedColumns" [ngModelOptions]="{standalone: true}" optionLabel="header" selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
+                                                                      
                                     <div class="inner-addon right-addon w200 inline-block g-filter-search-cstm">
                                         <i class="fa fa-search"></i>
                                         <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder=" Filter" style="height: 28px !important;">
@@ -57,27 +61,50 @@
                             </ng-template>
 
                             <ng-template pTemplate="header" let-columns>
+
                                 <tr>
+                                    <ng-container *ngFor="let col of columns">
+                                   <th  *ngIf="col.field !== 'documents'" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
+                                       {{col.header}}
+                                       <p-sortIcon [field]="col.field"></p-sortIcon>
+                                   </th>
+                                   <th *ngIf="col.field == 'documents'">
+                                       Documents
 
-                                    <th *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
-                                        {{col.header}}
-                                        <p-sortIcon [field]="col.field"></p-sortIcon>
+                                   </ng-container>
+                                   <th>Actions</th>
+                               </tr>
+                               <tr>
+                               
+                                <tr>
+                                    <th style="width:auto" *ngFor="let col of columns" [ngSwitch]="col.field">
+                                        <input style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field, 'contains')">
                                     </th>
-
                                     <th></th>
-
                                 </tr>
                             </ng-template>
 
                             <ng-template pTemplate="body" let-rowData let-columns="columns">
-                                <tr [pSelectableRow]="rowData">
+                                <tr [pSelectableRow]="rowData" [pSelectableRowDblClick]="rowData" pReorderableRowHandle (dblclick)="openViewOnDblClick(rowData)">
+                                    <ng-container *ngFor="let col of columns">
+                                        <td  *ngIf="col.field !== 'documents'" class="ui-resizable-column" pReorderableRowHandle>
+                                            {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
+                                        </td>
+                                        <td *ngIf="col.field == 'documents'">
+        
+                                            <tr *ngFor="let x of rowData.attachmentDetails">
+                                                <a class="filelink" (click)="downloadFileUpload(x)"> {{x.fileName}},</a>
+                                            </tr>
+        
+                                        </td>
+                                        </ng-container>
 
 
-                                    <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
+                                    <!-- <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
                                         {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
-                                    </td>
+                                    </td> -->
 
-                                    <td>
+                                    <td class="text-center" *ngIf="isViewMode == false">
                                         <span data-toggle="modal" data-target="#view">
                                             <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openView(view,rowData)" matTooltip="View">
                                                 <i class="fa fa-eye"></i>
@@ -103,18 +130,42 @@
                                 </tr>
                             </ng-template>
 
+                            <ng-template pTemplate="emptymessage" let-columns *ngIf="vendorDocumentsData?.length == 0">
+                                <tr>
+                                    <td [attr.colspan]="5"  *ngIf="isViewMode == false" style="color: red; font-weight: bold; text-align: center">
+                                        No records found
+                                    </td>
+                                    <td [attr.colspan]="4"  *ngIf="isViewMode == true" style="color: red; font-weight: bold; text-align: center">
+                                        No records found
+                                    </td>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="summary" id="footer">
+                                <label id="footer" class="footer">No'of records:</label>
+                                <input style="width: 5%;" [(ngModel)]="dt._totalRecords" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp;
+                                <label id="footer" class="footer1">Pages Count:</label>
+                               
+                                <input style="width: 5%;" [ngModel]="getPageCount(dt._totalRecords,pageSize)" [disabled]="true" pInputText type="text" />
+                            </ng-template>
 
                         </p-table>
                     </div>
 
-                    <button type="button" class="btn btn-primary pull-left submit-btn" (click)="backClick()">Previous</button>
+                    <div>
+                        
                     <button type="button" class="btn btn-primary pull-right submit-btn" (click)="CreateNewClick()">Create New</button>
+                    <button type="button" class="btn btn-primary pull-right submit-btn" (click)="backClick()">Previous</button>
+                    </div>
+              
+                
+                     </div>
+                
+                    </div>
                 </div>
             </div>
 
         </div>
-    </div>
-</div>
+
 <ng-template #deleteContent let-c="close" let-d="dismiss" data-backdrop="static">
     <div class="modal-header">
         <h4 class="modal-title">Are You Sure Want to Delete?</h4>
@@ -176,7 +227,75 @@
     </div>
 </ng-template>
 
-<div id="view" #view class="modal fade" role="dialog" data-backdrop="static">
+
+<div id="view" class="modal fade" role="dialog" data-backdrop="static">
+    <div class="modal-dialog">
+       
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Details of Vendor Document</h4>
+        </div>
+        <div class="modal-body" *ngIf="sourceViewforDocument">
+            <div class="col-sm-12">
+                <p><span class="label"><b>Name<span class="clr-red">*</span> : </b></span><span class="value">{{sourceViewforDocument.docName}}</span></p>
+                <p><span class="label"><b>Description<span class="clr-red">*</span> : </b></span><span class="value">{{sourceViewforDocument.docDescription}}</span></p>
+                <p><span class="label"><b>Memo : </b></span><span class="value">{{sourceViewforDocument.docMemo}}</span></p>
+                 <div class="mt-3">
+                    <h4 class="panel-title" >Attachment Details:</h4>
+                    <p-table #dt class="table-responsive ptable-cus-pma" [paginator]="sourceViewforDocumentList.length > 0" [value]="sourceViewforDocumentList"  [rows]="3" [columns]="sourceViewforDocumentListColumns">
+                        <ng-template pTemplate="header" let-columns>
+                            <tr>
+                                <th *ngFor="let col of columns">
+                                    {{col.header}}
+                                </th>
+                                <th>
+                                   Download
+                                </th>
+                            </tr>
+                            <tr>
+                                <th style="width:auto" *ngFor="let col of columns" [ngSwitch]="col.field">
+                                    <input style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field, 'contains')">
+                                </th>
+                                <th></th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-part let-rowData let-columns="columns" let-i="rowIndex">
+                            <tr>
+                                <td *ngFor="let col of columns">
+                                    <ng-container *ngIf="col.field=='fileName'">
+                                    {{part[col.field]}}
+                                    </ng-container>
+                                    
+                                </td>
+                                <td>
+                                    <a (click)="downloadFileUpload(part)" matTooltip="Download" class="btn nobg btn-cstm"><span><i class="fa fa-download"></i></span></a>
+                                </td>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="emptymessage" let-columns *ngIf="sourceViewforDocumentList.length == 0">
+                            <tr>
+                                <td [attr.colspan]="2" style="color: red; font-weight: bold; text-align: center">
+                                    No records found
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </p-table> 
+                  
+                 
+                </div>
+                <div class="clear"></div>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+  
+    </div>
+  </div>
+<!-- 
+<div id="view1" class="modal fade" role="dialog" data-backdrop="static">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -185,11 +304,10 @@
             </div>
             <div class="modal-body" *ngIf="sourceViewforDocument">
                 <div class="col-sm-12">
-                    <p><span class="label"><b>Name: </b></span><span class="value">{{sourceViewforDocument.docName}}</span></p>
-                    <p><span class="label"><b>Description: </b></span><span class="value">{{sourceViewforDocument.docMemo}}</span></p>
-                    <p><span class="label"><b>Memo: </b></span><span class="value">{{sourceViewforDocument.docDescription}}</span></p>
+                    <p><span class="label"><b>Name <span class="clr-red">*</span> : </b></span><span class="value">{{sourceViewforDocument.docName}}</span></p>
+                    <p><span class="label"><b>Description <span class="clr-red">*</span> : </b></span><span class="value">{{sourceViewforDocument.docMemo}}</span></p>
+                    <p><span class="label"><b>Memo : </b></span><span class="value">{{sourceViewforDocument.docDescription}}</span></p>
 
-                    <!-- <p><span class="label"><b>Attachments: </b></span><span class="value"></span></p> -->
                     <div class="table-responsive table-overflow">
                         <h4 class="panel-title" style="padding-left: 10px;">Attachment Details:</h4>
                         <table class="table table-bordered ">
@@ -199,53 +317,25 @@
                             </tr>
                             <tr *ngFor="let f of sourceViewforDocumentList ">
                                 <td>{{f.fileName}}</td>
-                                <td><a class="btn btn-success btn-tbl-file-download" (click)="downloadFileUpload(f)" download>Download</a>  </td>
-
-
+                                <td>
+                                    <a (click)="downloadFileUpload(f)" matTooltip="Download" class="btn nobg btn-cstm"><span><i class="fa fa-download"></i></span></a>
+                                </td>
                             </tr>
-
                         </table>
-
-                        <!-- <p-table class="rpo-table-cstm"
-                                 [columns]="headersforAttachment"
-                                 [value]="sourceViewforDocumentList"
-                                 [paginator]="true"
-                                 [rows]="10"
-                                 [first]="first">
-                            <ng-template pTemplate="header" let-columns>
-                                <tr>
-                                    <th>Sl.No</th>
-                                    <th style="padding: 8px 5px !important;" *ngFor="let col of columns">
-                                        {{ col.header }}
-                                    </th>
-                                    <th>Action</th>
-                                </tr>
-                            </ng-template>
-                            <ng-template pTemplate="body"
-                                         let-rowData
-                                         let-columns="columns"
-                                         let-rowIndex="rowIndex">
-                                <tr>
-                                    <td>{{ rowIndex + 1 }}</td>
-                                    <td *ngFor="let col of columns">
-                                        {{ rowData[col.field] }}
-                                    </td>
-                                    <td><a class="btn btn-primary" (click)="downloadFileUpload(rowData)" download>Download</a></td>
-                                </tr>
-
-                            </ng-template>
-                        </p-table> -->
+                      
                     </div>
                     <div class="clear"></div>
                 </div>
             </div>
+
+           
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
             </div>
         </div>
 
     </div>
-</div>
+</div> -->
 
 <div class="modal fade" id="addDocumentDetails" role="dialog" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-sm">
@@ -266,11 +356,11 @@
                             </div>
                             <div class="form-group">
                                 <label>Description <span class="clr-red">*</span></label>
-                                <textarea class="form-control" name="description" [(ngModel)]="documentInformation.docMemo" required></textarea>
+                                <textarea class="form-control" name="description" [(ngModel)]="documentInformation.docDescription" required></textarea>
                             </div>
                             <div class="form-group">
-                                <label>Memo <span class="clr-red">*</span></label>
-                                <textarea class="form-control" name="memo" [(ngModel)]="documentInformation.docDescription" required></textarea>
+                                <label>Memo </label>
+                                <textarea class="form-control" name="memo" [(ngModel)]="documentInformation.docMemo" required></textarea>
                             </div>
                         </div>
 
@@ -280,7 +370,7 @@
                                 <p-fileUpload name="fileupload[]" multiple="multiple" [showCancelButton]="false" [showUploadButton]="false" customUpload="true" (onSelect)="fileUpload($event)"></p-fileUpload>
                             </div>
                         </div>
-                        <div class="table-responsive table-overflow">
+                        <!-- <div class="table-responsive table-overflow">
                             <h4 class="panel-title" style="padding-left: 10px;">Attachment Details:</h4>
                             <table class="table table-bordered ">
                                 <tr>
@@ -289,14 +379,49 @@
                                 </tr>
                                 <tr *ngFor="let f of sourceViewforDocumentList ">
                                     <td>{{f.fileName}}</td>
-                                    <td><a class="btn btn-success btn-tbl-file-download" (click)="downloadFileUpload(f)" download>Download</a>  </td>
-
+                                    <td><a class="btn nobg btn-cstm" (click)="downloadFileUpload(f)"> <span><i class="fa fa-download"></i></span> </a>  </td>
 
                                 </tr>
 
                             </table>
-                        </div>
+                        </div> -->
 
+                        <div class="table-responsive table-overflow" *ngIf="sourceViewforDocumentList.length > 0">
+                            <h4 class="panel-title" style="padding-left: 10px;">Attachment Details:</h4>
+                            <p-table class="table-responsive ptable-cus-pma" [paginator]="sourceViewforDocumentList.length > 0" [value]="sourceViewforDocumentList"  [rows]="3" [columns]="sourceViewforDocumentListColumns">
+                                    <ng-template pTemplate="header" let-columns>
+                                        <tr>
+                                            <th *ngFor="let col of columns">
+                                                {{col.header}}
+                                            </th>
+                                            <th>
+                                               Download
+                                            </th>
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="body" let-part let-rowData let-columns="columns" let-i="rowIndex">
+                                        <tr>
+                                            <td *ngFor="let col of columns">
+                                                <ng-container *ngIf="col.field=='fileName'">
+                                                {{part[col.field]}}
+                                                </ng-container>
+                                                
+                                            </td>
+                                            <td>
+                                                <a (click)="downloadFileUpload(part)" matTooltip="Download" class="btn nobg btn-cstm"><span><i class="fa fa-download"></i></span></a>
+                                            </td>
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="emptymessage" let-columns *ngIf="sourceViewforDocumentList.length == 0">
+                                        <tr>
+                                            <td [attr.colspan]="2" style="color: red; font-weight: bold; text-align: center">
+                                                No records found
+                                            </td>
+                                        </tr>
+                                    </ng-template>
+                                </p-table>  
+                           
+                        </div>
 
                     </div>
                 </div>

@@ -1,4 +1,4 @@
-﻿import { Component, OnInit, AfterViewInit, ViewChild, Output, EventEmitter, Input } from '@angular/core';
+﻿import { Component, OnInit, AfterViewInit, ViewChild, Output, EventEmitter, Input, SimpleChanges } from '@angular/core';
 import { fadeInOut } from '../../../services/animations';
 
 import { Params, ActivatedRoute } from '@angular/router';
@@ -13,13 +13,14 @@ import { MasterComapnyService } from '../../../services/mastercompany.service';
 import { CustomerService } from '../../../services/customer.service';
 import { CustomerContactModel } from '../../../models/customer-contact.model';
 import { MatDialog } from '@angular/material';
-import { getObjectByValue, getObjectById, getValueFromObjectByKey, editValueAssignByCondition } from '../../../generic/autocomplete';
+import { getObjectByValue, getPageCount, getObjectById, getValueFromObjectByKey, editValueAssignByCondition, getValueFromArrayOfObjectById } from '../../../generic/autocomplete';
 import { AtaSubChapter1Service } from '../../../services/atasubchapter1.service';
 
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 
 import { emailPattern, urlPattern } from '../../../validations/validation-pattern';
-
+import { ConfigurationService } from '../../../services/configuration.service';
+import { CommonService } from '../../../services/common.service';
 
 @Component({
 	selector: 'app-customer-contacts',
@@ -28,7 +29,7 @@ import { emailPattern, urlPattern } from '../../../validations/validation-patter
 })
 /** CustomerEdit component*/
 export class CustomerContactsComponent implements OnInit {
-	@Input() savedGeneralInformationData;
+	@Input() savedGeneralInformationData: any = {};
 	@Input() editMode;
 	@Input() editGeneralInformationData;
 
@@ -40,13 +41,15 @@ export class CustomerContactsComponent implements OnInit {
 	@Output() refreshCustomerATAMapped = new EventEmitter();
 	@Output() refreshCustomerATAByCustomerId = new EventEmitter();
 	@Output() refreshCustomerContactMapped = new EventEmitter();
-   
+    @Input() customerDataFromExternalComponents : any = {};
 
 
-    totalRecords: any;
-    pageIndex: number = 0;
-    pageSize: number = 10;
-    totalPages: number;
+	formData = new FormData();
+	totalRecords: any;
+	pageIndex: number = 0;
+	pageSize: number = 10;
+	totalPages: number;
+
 	contactsListOriginal: any;
 	firstNamesList: any;
 	middleNamesList: any;
@@ -64,6 +67,7 @@ export class CustomerContactsComponent implements OnInit {
 	disablesaveForlastname: boolean;
 
 	customerContactsColumns = [
+		{ field: 'isDefaultContact', header: 'Primary Contact' },
 		{ field: 'tag', header: 'Tag' },
 		{ field: 'firstName', header: 'First Name' },
 		{ field: 'lastName', header: 'Last Name' },
@@ -72,18 +76,17 @@ export class CustomerContactsComponent implements OnInit {
 		{ field: 'workPhone', header: 'Work Phone' },
 		{ field: 'mobilePhone', header: 'Mobile Phone' },
 		{ field: 'fax', header: 'Fax' },
-		// { field: 'isDefaultContact', header: 'Primary Contact' },
-		{ field: 'notes', header: 'Memo' },
-		{ field: 'updatedDate', header: 'Updated Date' },
-		{ field: 'createdDate', header: 'Created Date' }
+		// { field: 'notes', header: 'Memo' },
+		// { field: 'updatedDate', header: 'Updated Date' },
+		// { field: 'createdDate', header: 'Created Date' }
 	];
 	selectedColumns = this.customerContactsColumns;
 	selectedColumn: any;
 	ediData: any;
 	isEditButton: boolean = false;
 	id: number;
-    contactId: number;
-    customerContactId: number;
+	contactId: number;
+	customerContactId: number;
 	contactATAId: number;
 	customerCode: any;
 	customerName: any;
@@ -107,6 +110,10 @@ export class CustomerContactsComponent implements OnInit {
 	ataListDataValues = []
 	auditHistory: any[] = [];
 	@ViewChild('ATAADD') myModal;
+	originalATASubchapterData: any = [];
+	isViewMode: boolean = false;
+
+	
 
 	constructor(private router: ActivatedRoute,
 
@@ -118,36 +125,73 @@ export class CustomerContactsComponent implements OnInit {
 		private alertService: AlertService,
 		public customerService: CustomerService,
 		private dialog: MatDialog,
-		private atasubchapter1service: AtaSubChapter1Service,
-		private masterComapnyService: MasterComapnyService) {
+		public atasubchapter1service: AtaSubChapter1Service,
+		private masterComapnyService: MasterComapnyService,
+		private configurations: ConfigurationService,
+		private commonService: CommonService,
+
+	) {
+
 	}
 
 	ngOnInit() {
+		console.log(this.add_ataChapterList, "add_ataChapterList+++")
 		if (this.editMode) {
 			this.id = this.editGeneralInformationData.customerId;
 			this.customerCode = this.editGeneralInformationData.customerCode;
 			this.customerName = this.editGeneralInformationData.name;
 			console.log(this.id);
+			this.isViewMode = false;
+
 
 			this.getAllCustomerContact()
 		} else {
+			if(this.customerDataFromExternalComponents != {}){
+                this.id = this.customerDataFromExternalComponents.customerId;
+                this.customerCode = this.customerDataFromExternalComponents.customerCode;
+				this.customerName = this.customerDataFromExternalComponents.name;
+				this.getAllCustomerContact();
+                this.isViewMode = true;
+            } else {
+			
 			this.id = this.savedGeneralInformationData.customerId;
 			this.customerCode = this.savedGeneralInformationData.customerCode;
-            this.customerName = this.savedGeneralInformationData.name;
-            this.getAllCustomerContact();
-
+			this.customerName = this.savedGeneralInformationData.name;
+			this.getAllCustomerContact();
+			this.isViewMode = false;
+			}
 		}
 
 		this.getAllContacts();
 		// this.getATACustomerContactMapped();
 
 	}
+	
+	ngOnChanges(changes: SimpleChanges) {
+		for (let property in changes) {
+             if (property == 'customerDataFromExternalComponents') {
+
+                if(changes[property].currentValue != {}){
+                    this.id = this.customerDataFromExternalComponents.customerId;
+                    this.customerCode = this.customerDataFromExternalComponents.customerCode;
+                    this.customerName = this.customerDataFromExternalComponents.name;
+					this.getAllCustomerContact();
+                    this.isViewMode = true;
+    
+                  } 
+                }
+		} 
+
+      }
+
 
 
 	get userName(): string {
 		return this.authService.currentUser ? this.authService.currentUser.userName : "";
 	}
-
+	getPageCount(totalNoofRecords, pageSize) {
+		return Math.ceil(totalNoofRecords / pageSize)
+	}
 	getAllContacts() {
 		this.customerService.getContactsFirstName().subscribe(res => {
 			this.contactsListOriginal = res[0];
@@ -167,7 +211,7 @@ export class CustomerContactsComponent implements OnInit {
 		this.middleNamesList = [...this.contactsListOriginal.filter(x => {
 
 			if (x.middleName !== null && x.middleName !== "") {
-                return x.middleName.toLowerCase().includes(event.query.toLowerCase())
+				return x.middleName.toLowerCase().includes(event.query.toLowerCase())
 			}
 
 		})]
@@ -210,8 +254,8 @@ export class CustomerContactsComponent implements OnInit {
 					// get all contacts
 					this.getAllContacts();
 					// get Customer Contatcs 
-                    this.getAllCustomerContact();
-                    this.refreshCustomerContactMapped.emit(this.id);
+					this.getAllCustomerContact();
+					this.refreshCustomerContactMapped.emit(this.id);
 
 					this.alertService.showMessage(
 						'Success',
@@ -222,7 +266,7 @@ export class CustomerContactsComponent implements OnInit {
 		})
 	}
 
-	
+
 
 	viewSelectedRow(rowData) {
 		this.sourceViewforContact = rowData;
@@ -284,11 +328,11 @@ export class CustomerContactsComponent implements OnInit {
 		// get Customer Contatcs 
 		this.customerService.getContacts(this.id).subscribe(res => {
 			this.customerContacts = res[0]
-            const re=res[0]
-            if (re.length > 0) {
-                this.totalRecords = re.length;
-                this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
-            }
+			const re = res[0]
+			// if (re.length > 0) {
+			//     this.totalRecords = re.length;
+			//     this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+			// }
 		})
 	}
 
@@ -306,7 +350,7 @@ export class CustomerContactsComponent implements OnInit {
 				MessageSeverity.success
 			);
 		});
-		
+
 
 	}
 
@@ -318,23 +362,23 @@ export class CustomerContactsComponent implements OnInit {
 		this.sourceViewforContact = '';
 		this.isDeleteMode = true;
 
-        this.contactId = rowData.contactId;
-        this.customerContactId = rowData.customerContactId
+		this.contactId = rowData.contactId;
+		this.customerContactId = rowData.customerContactId
 		this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
 		this.modal.result.then(() => {
 			console.log('When user closes');
 		}, () => { console.log('Backdrop click') })
 	}
 	deleteItemAndCloseModel() {
-        let contactId = this.contactId;
-        let customerContactId = this.customerContactId;
+		let contactId = this.contactId;
+		let customerContactId = this.customerContactId;
 		if (contactId > 0) {
 
-            this.customerService.deleteContact(customerContactId, this.userName).subscribe(
+			this.customerService.deleteContact(customerContactId, this.userName).subscribe(
 				response => {
 					this.saveCompleted(this.sourceCustomer);
-                    this.refreshCustomerATAByCustomerId.emit(this.id)
-                    this.refreshCustomerContactMapped.emit(this.id);
+					this.refreshCustomerATAByCustomerId.emit(this.id)
+					this.refreshCustomerContactMapped.emit(this.id);
 
 
 				},
@@ -353,7 +397,7 @@ export class CustomerContactsComponent implements OnInit {
 		this.selectedContact = rowData;
 		this.ataListDataValues = [];
 		this.add_ataSubChapterList = '';
-
+		this.getOriginalATASubchapterList()
 		this.getATACustomerContactMapped();
 
 
@@ -370,12 +414,14 @@ export class CustomerContactsComponent implements OnInit {
 		const selectedATAId = getValueFromObjectByKey('ataChapterId', this.add_SelectedId)
 		this.atasubchapter1service.getATASubChapterListByATAChapterId(selectedATAId).subscribe(atasubchapter => {
 			const responseData = atasubchapter[0];
+			console.log(this.add_ataSubChapterList, "this.add_ataSubChapterList++++=")
 			this.add_ataSubChapterList = responseData.map(x => {
 				return {
-					label: x.description,
+					label: x.ataSubChapterCode + ' - ' + x.description,
 					value: x
 				}
 			})
+
 		})
 	}
 	// post the ata Mapping 
@@ -412,7 +458,7 @@ export class CustomerContactsComponent implements OnInit {
 
 		this.refreshCustomerContactMapped.emit(this.id);
 
-	
+
 
 
 	}
@@ -422,15 +468,26 @@ export class CustomerContactsComponent implements OnInit {
 
 
 	}
+	async getOriginalATASubchapterList() {
+		this.atasubchapter1service.getAtaSubChapter1List().subscribe(res => {
+			const responseData = res[0];
+			this.originalATASubchapterData = responseData;			
+		})
+
+	}
 
 	async getATACustomerContactMapped() {
 		this.customerService.getATAMappedByContactId(this.selectedContact.contactId).subscribe(res => {
 			console.log(res);
 			this.ataListDataValues = res;
+			for(let i=0; i<this.ataListDataValues.length; i++){
+				this.ataListDataValues[i]['ataChapterName'] = this.ataListDataValues[i]['ataChapterCode'] + ' - ' +this.ataListDataValues[i]['ataChapterName']
+				this.ataListDataValues[i]['ataSubChapterDescription'] = getValueFromArrayOfObjectById('ataSubChapterCode', 'ataSubChapterId', this.ataListDataValues[i]['ataSubChapterId'], this.originalATASubchapterData) + ' - ' +this.ataListDataValues[i]['ataSubChapterDescription']
+			}
 		})
 	}
 
-	
+
 
 	deleteATAMapped(content, rowData) {
 
@@ -528,7 +585,7 @@ export class CustomerContactsComponent implements OnInit {
 		this.disableSaveLastName = true;
 
 	}
-	
+
 	checkfirstNameExist(value) {
 
 		this.disablesaveForFirstname = false;
@@ -576,8 +633,37 @@ export class CustomerContactsComponent implements OnInit {
 		}
 
 	}
+	sampleExcelDownloadForContact() {
+		const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=CustomerContact&fileName=CustomerContact.xlsx`;
+		window.location.assign(url);
+	}
+	customContactExcelUpload(event) {
+		const file = event.target.files;
 
-	
+		console.log(file);
+		if (file.length > 0) {
+
+			this.formData.append('file', file[0])
+			this.customerService.ContactUpload(this.formData, this.id).subscribe(res => {
+				event.target.value = '';
+
+				this.formData = new FormData();
+				this.getAllContacts();
+				this.getAllCustomerContact();
+				this.alertService.showMessage(
+					'Success',
+					`Successfully Uploaded  `,
+					MessageSeverity.success
+				);
+			})
+
+
+
+		}
+
+	}
+
+
 }
 
 

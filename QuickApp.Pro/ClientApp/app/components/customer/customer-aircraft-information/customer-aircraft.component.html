@@ -1,5 +1,5 @@
 <div style="padding: 2px 6px;">
-  <div class="col-md-12 shadow-box-cstm">        
+  <div class="col-md-12 shadow-box-cstm"  *ngIf="isViewMode == false">        
     <div class="col-md-4">
         <p class="fs12">
         <label class="control-label labels-font-header" style="width: auto;">Customer Name: </label>
@@ -21,7 +21,7 @@
 <div class="card" style="width: calc(100% - 12px); margin: 6px; padding: 10px;">
     <div class="col-md-12">
     <h4 class="po-head-sm">
-        Add Inventory
+         Inventory
         <!-- <a
           class="plusicon-cstm"
           href="#"
@@ -30,7 +30,7 @@
           data-target="#addInventory"
           ><i class="fa fa-plus-circle fa-lg"></i
         ></a> -->
-        <a
+        <a  *ngIf="isViewMode == false"
           class="plusicon-cstm"
           href="javascript:void(0)"
           matTooltip="Add Inventory" matTooltipPosition="above"
@@ -42,7 +42,7 @@
       <hr />
       </div>
       
-  <div  class="advance-search-card" *ngIf="showAdvancedSearchCard == true">    
+  <div  class="advance-search-card" *ngIf="showAdvancedSearchCard == true &&  isViewMode == false">    
 
 
     <div class="form-row" style="padding: 0 5px;">
@@ -127,7 +127,7 @@
     selectionMode="multiple"
 
   >
-  <ng-template pTemplate="caption">
+  <ng-template pTemplate="caption"  *ngIf="isViewMode == false">
     <div style="text-align: right; min-height: 30px; margin-left: -6px;">
         <p-multiSelect [options]="colsaircraftLD" [(ngModel)]="selectedColumns" [ngModelOptions]="{standalone: true}" optionLabel="header"
                        selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
@@ -178,7 +178,7 @@
         <td *ngFor="let col of columns" pResizableColumn pReorderableColumn>
           {{ rowData[col.field] }}
         </td>
-        <td style="width:70px" *ngIf="selectedColumns.length > 0">
+        <td style="width:70px" *ngIf="selectedColumns.length > 0 && isViewMode == false">
             <span data-toggle="modal" data-target="#viewAircraft"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openAircraftView(rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
 
            
@@ -188,19 +188,34 @@
 
 
         </td>
+        <td style="width:70px" *ngIf="selectedColumns.length > 0 && isViewMode == true">
+          <span data-toggle="modal" data-target="#viewAircraft"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openAircraftView(rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
+          <span data-toggle="modal" data-target="#contentAuditHist"><a class="btn nobg" (click)="getCustomerAircraftHistory(contentAuditHist,rowData)" matTooltip="History"><i class="fa fa-history"></i></a></span>
+
+
+      </td>
+
       </tr>
     </ng-template>
-    <ng-template pTemplate="summary" id="footer">
-      <label id="footer" class="footer">No'of records:</label>
-      <input style="width: 5%;" [(ngModel)]="totalRecords" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp;
-      <label id="footer" class="footer1">Pages Count:</label>
-      <input style="width: 5%;" [(ngModel)]="totalPages" [disabled]="true" pInputText type="text" />
-    </ng-template>
+
+    <ng-template pTemplate="emptymessage" let-columns *ngIf="aircraftListDataValues?.length == 0">
+      <tr>               
+          <td [attr.colspan]="6"  class="no-records-cstm">
+              No records found
+          </td>
+      </tr>
+  </ng-template>
+  <ng-template pTemplate="summary" id="footer">
+    <label id="footer" class="footer">No'of records:</label>
+    <input style="width: 5%;" [(ngModel)]="dt._totalRecords" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp;
+    <label id="footer" class="footer1">Pages Count:</label>
+   
+    <input style="width: 5%;" [ngModel]="getPageCount(dt._totalRecords,pageSize)" [disabled]="true" pInputText type="text" />
+</ng-template>
+
   </p-table>
-  <div *ngIf="!(aircraftListDataValues.length > 0)" class="no-records-cstm">
-    No Records
-  </div>
-  <div style="margin-top: 10px;">
+
+  <div style="margin-top: 10px;"  *ngIf="isViewMode == false">
     <button
       type="button"
       class="btn btn-primary pull-right submit-btn"
@@ -236,7 +251,7 @@
                         ><i class="fa fa-plus-circle fa-lg"></i></a
                     ></label>
                     <p-dropdown
-                      class="imstock-pddowm"
+                      class="p-dropdown-cus-fullwidth"
                       [options]="manufacturerData"
                       filter="true"
                       [ngModelOptions]="{ standalone: true }"
@@ -339,7 +354,7 @@
                     [columns]="colaircraft"
                     [scrollable]="true"
                     [style]="{ width: '100%' }"
-                    [paginator]="true"
+                    [paginator]="false"
                   >
                     <ng-template pTemplate="header" let-columns>
                       <tr>
@@ -347,7 +362,7 @@
                         <th *ngFor="let col of columns">
                           {{ col.header }}
                         </th>
-                        <th>Inventory</th>
+                        <th>Inventory <span style="color:red">*</span></th>
                         <th>Memo</th>
                       </tr>
                     </ng-template>
@@ -366,9 +381,9 @@
                           <input
                             type="number"
                             class="form-control input-value"
-                            [(ngModel)]="rowData.Inventory"
+                            [(ngModel)]="rowData.Inventory" (blur)="inventoryValidation($event)"
                             name="Inventory{{row_no}}"
-                            [required]="true"
+                            [required]="true" [minlength]="1"
                           />
                         </td>
                         <td>
@@ -646,7 +661,7 @@
 
                     <p><span class="label"><b>Model: </b></span><span class="value">{{viewAircraftData.aircraftModel}}</span></p>
                     <p><span class="label"><b>Dash Numbers: </b></span><span class="value">{{viewAircraftData.dashNumber}}</span></p>
-                    <p style="display:none"><span class="label"><b>Inventory: </b></span><span class="value">{{viewAircraftData.inventory}}</span></p>
+                    <p><span class="label"><b>Inventory <span style="color:red">*</span>:  </b></span><span class="value">{{viewAircraftData.inventory}}</span></p>
 
                     <p><span class="label"><b>Memo: </b></span><span class="value">{{viewAircraftData.memo}}</span></p>
 

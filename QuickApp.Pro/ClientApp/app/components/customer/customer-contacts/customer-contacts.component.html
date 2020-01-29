@@ -1,7 +1,7 @@
 ﻿<div class="right_col" role="main">
     <div>
         <div class="x_content">
-            <div class="col-md-12 shadow-box-cstm">        
+            <div class="col-md-12 shadow-box-cstm"   *ngIf="isViewMode == false">        
                 <div class="col-md-4">
                     <p class="fs12">
                     <label class="control-label labels-font-header" style="width: auto;">Customer Name: </label>
@@ -33,7 +33,7 @@
                     <div class="col-md-12">
                         <h4 class="po-head-sm"> <!--class="float-right"-->
                             Contacts
-                            <a class="plusicon-cstm"
+                            <a class="plusicon-cstm"   *ngIf="isViewMode == false"
                                 href="#"
                                 data-toggle="modal" matTooltip="Add Contact" matTooltipPosition="above"
                                 data-target="#addContactDetails" 
@@ -59,7 +59,7 @@
                          [reorderableColumns]="true"
                           [scrollable]="true" 
                           scrollHeight="450px">
-                    <ng-template pTemplate="caption">
+                    <ng-template pTemplate="caption"   *ngIf="isViewMode == false">
                         <div style="text-align: right; min-height: 30px; margin-left: -6px;">
                             <p-multiSelect [options]="customerContactsColumns" [(ngModel)]="selectedColumns" [ngModelOptions]="{standalone: true}" optionLabel="header"
                                            selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
@@ -67,14 +67,27 @@
                                 <i class="fa fa-search"></i>
                                 <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Filter" style="height: 28px !important;">
                             </div>
-                            <button type="button" class="btn btn-primary" pButton icon="fa-download" iconPos="left" label="Export All Data" matTooltip="Download  Data" matTooltipPosition="above" (click)="dt.exportCSV()" style="padding: 5px 10px !important;"></button>
+                            <button type="button" class="btn btn-primary" pButton icon="fa-download" iconPos="left" label="Export  Data" matTooltip="Download  Data" matTooltipPosition="above" (click)="dt.exportCSV()" style="padding: 5px 10px !important;"></button>
                             <button type="button" class="btn btn-primary" pButton icon="fa-download" iconPos="left" label="Export Selected Data" matTooltip="Download Selected Data" matTooltipPosition="above" (click)="dt.exportCSV({selectionOnly:true})" style="padding: 5px 10px !important;"></button>
                             <!--<div class="excel-upload excel-upload-cstm">
-    <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
-    <label for="upload">
-        <span matTooltip="Upload Data (Excel)"><i class="fa fa-upload"></i></span>
-    </label>
-</div>-->
+        <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+        <label for="upload">
+            <span matTooltip="Upload Data (Excel)"><i class="fa fa-upload"></i></span>
+        </label>
+    </div>-->
+                            <div class="excel-upload  excel-upload-cstm">
+                                <button name="download" id="download" type="button" class="btn btn-primary" matTooltip="Download Sample File" matTooltipPosition="above" (click)="sampleExcelDownloadForContact()" style="padding: 5px 10px !important;">Sample File Download</button>
+
+                                <input type="file" name="upload3[]" id="upload3" (change)="customContactExcelUpload($event)" class="uploaddoc upload-file"
+                                       accept=".xlsx, .xls, .csv">
+                                <label for="upload3">
+                                    <span matTooltip="Upload Data (Excel)" matTooltipPosition="above">
+                                        <i class="fa fa-upload"></i>
+                                    </span>
+                                </label>
+                                &nbsp; &nbsp;
+
+                            </div>
                         </div>
                     </ng-template>
 
@@ -86,10 +99,18 @@
 
                     <ng-template pTemplate="header" let-columns>
                         <tr>
-                                <th style="width: 40px;">Flag</th>
+                                <!-- <th style="width: 40px;">Flag</th> -->
                             <th *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
+                                <ng-container *ngIf="col.field=='isDefaultContact'">
+                                    Flag
+                                </ng-container>
+                                <ng-container *ngIf="col.field!='isDefaultContact'">
+
                                 {{col.header}}
                                 <p-sortIcon [field]="col.field"></p-sortIcon>
+                                </ng-container>
+                                
+
                             </th>
                             <th style="width:140px;position:sticky" *ngIf="selectedColumns.length > 0">
                                
@@ -97,7 +118,7 @@
                             </th>                          
                         </tr>
                         <tr>
-                            <th></th>
+                            <!-- <th></th> -->
                             <th style="width:auto" *ngFor="let col of columns" [ngSwitch]="col.field">
                                 <input style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field, 'contains')">
                             </th>
@@ -107,18 +128,29 @@
 
                     <ng-template pTemplate="body" let-rowData let-columns="columns" let-i="rowIndex">
                         <tr [pSelectableRow]="rowData" [pSelectableRowDblClick]="rowData" (dblclick)="viewSelectedRowdbl(viewdbl,rowData)" >
-                                <td > <span class="flag">
+                                <!-- <td > <span class="flag">
                                         <i  *ngIf="rowData.isDefaultContact == true"   [ngStyle]="{'color': rowData.isDefaultContact == true ? 'green' : 'none'}"  
                                          class="fa fa-flag" aria-hidden="true"></i>
                                          </span>
                                     
-                                </td>
+                                </td> -->
 
                             <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle style="width:110px">
-                                {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
+                                <ng-container *ngIf="col.field!='workPhone' && col.field!='isDefaultContact'">
+                                    {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
+                                </ng-container>
+                                <ng-container *ngIf="col.field=='workPhone'">
+                                    {{rowData.workPhone}} - {{rowData.workPhoneExtn}}
+                                </ng-container> 
+                                <ng-container *ngIf="col.field=='isDefaultContact'">
+                                    <span class="flag">
+                                        <i  *ngIf="rowData.isDefaultContact == true"   [ngStyle]="{'color': rowData.isDefaultContact == true ? 'green' : 'none'}"  
+                                         class="fa fa-flag" aria-hidden="true"></i>
+                                    </span>
+                                </ng-container> 
                             </td>
 
-                            <td style="width:140px" *ngIf="selectedColumns.length > 0">
+                            <td style="width:140px" *ngIf="selectedColumns.length > 0  && isViewMode == false">
                                 <p-inputSwitch name="isActive{{i}}" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
                                 <span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="viewSelectedRow(rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
 
@@ -132,14 +164,22 @@
 
                                 <span data-toggle="modal" data-target="#contentHist"><a class="btn nobg" (click)="getAuditHistoryById(rowData)" matTooltip="History"><i class="fa fa-history"></i></a></span>
                                 </td>
+                                <td style="width:140px" *ngIf="selectedColumns.length > 0  && isViewMode == true">
+                                    <span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="viewSelectedRow(rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
+    
+
+    
+                                    <span data-toggle="modal" data-target="#contentHist"><a class="btn nobg" (click)="getAuditHistoryById(rowData)" matTooltip="History"><i class="fa fa-history"></i></a></span>
+                                    </td>
 
                             </tr>
                         </ng-template>
                         <ng-template pTemplate="summary" id="footer">
                             <label id="footer" class="footer">No'of records:</label>
-                            <input style="width: 5%;" [(ngModel)]="totalRecords" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp;
+                            <input style="width: 5%;" [(ngModel)]="dt._totalRecords" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp;
                             <label id="footer" class="footer1">Pages Count:</label>
-                            <input style="width: 5%;" [(ngModel)]="totalPages" [disabled]="true" pInputText type="text" />
+                           
+                            <input style="width: 5%;" [ngModel]="getPageCount(dt._totalRecords,pageSize)" [disabled]="true" pInputText type="text" />
                         </ng-template>
 
 
@@ -148,7 +188,7 @@
                 <div *ngIf="customerContacts.length<=0" class="no-records-cstm">
                     No Records
                 </div>
-                <div style="margin-top: 10px;">
+                <div style="margin-top: 10px;"   *ngIf="isViewMode == false">
                     <button type="button" class="btn btn-primary pull-right submit-btn" (click)="nextClick()">Save & Next</button>
                     <button type="button" class="btn btn-primary pull-right submit-btn" (click)="backClick()">Previous</button>
                 </div>
@@ -267,18 +307,18 @@
 
 
 <div class="modal fade" id="addContactDetails" role="dialog" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog modal-sm">
+    <div class="modal-dialog modal-md">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                 <div class="col-md-12 shadow-box-cstm">
-                    <div class="col-md-4">
+                    <div class="col-md-6">
                         <p class="fs12">
                             <label class="control-label labels-font-header" style="width: auto;">Customer Name: </label>
                             <span class="span-header-red" style="text-transform: capitalize"> {{customerName }} </span>
                         </p>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-6">
                         <p class="fs12">
                             <label class="control-label labels-font-header" style="width: auto;">Customer Code: </label>
                             <span class="span-header-red" style="text-transform: capitalize"> {{customerCode }} </span>
@@ -311,12 +351,12 @@
                                 <div class="inner-addon right-addon inline-block" style="width: 100%">
                                       <p-autoComplete class="autocomp-customer-cstm"
                                         [(ngModel)]="contactInformation.firstName"  name="firstName" field="firstName" [suggestions]="firstNamesList" (completeMethod)="filterFirstNames($event)" [size]="30"
-                                        [minLength]="1" [dropdown]="true" [inputStyle]="{'width': '100%'}"  (onSelect)="onFirstNameSelected()" (onKeyUp)=checkfirstNameExist($event.target.value) required>
+                                        [minLength]="1" [dropdown]="true" [inputStyle]="{'width': '100%'}"  required>
 
 
                         </p-autoComplete> 
                                 </div>
-                                 <div *ngIf="disablesaveForFirstname" class="clr-red">Entry Already Exists</div> 
+                                 <!-- <div *ngIf="disablesaveForFirstname" class="clr-red">Entry Already Exists</div>  -->
                             
                             </div>
                             <div class="form-group">
@@ -324,12 +364,12 @@
                                 <div class="inner-addon right-addon inline-block" style="width: 100%">
                                      <p-autoComplete class="autocomp-customer-cstm" [(ngModel)]="contactInformation.middleName"
                                         name="middleName"  [suggestions]="middleNamesList" field="middleName" (completeMethod)="filterMiddleNames($event)" [size]="30"
-                                        [minLength]="1" [dropdown]="true" [inputStyle]="{'width': '100%'}" (onSelect)="onMiddleNameSelected()" (onKeyUp)=checkmiddleNameExist($event.target.value)>
+                                        [minLength]="1" [dropdown]="true" [inputStyle]="{'width': '100%'}">
 
                         </p-autoComplete> 
                                 </div>
 
-                                 <div *ngIf="disableSaveMiddleName" class="clr-red">Entry Already Exists</div> 
+                                 <!-- <div *ngIf="disableSaveMiddleName" class="clr-red">Entry Already Exists</div>  -->
                             </div>
                             <div class="form-group">
                                 <label>Last Name <span class="clr-red">*</span></label>
@@ -337,10 +377,10 @@
                                               <p-autoComplete class="autocomp-customer-cstm"  [(ngModel)]="contactInformation.lastName"
                          name="lastName" [suggestions]="lastNamesList" field="lastName" (completeMethod)="filterLastNames($event)"
 
-                                        [size]="30" [minLength]="1" [dropdown]="true" [inputStyle]="{'width': '100%'}" required (onSelect)="onLastNameSelected()" (onKeyUp)=checklastNameExist($event.target.value)>
+                                        [size]="30" [minLength]="1" [dropdown]="true" [inputStyle]="{'width': '100%'}" required >
 
                         </p-autoComplete> 
-                                     <div *ngIf="disableSaveLastName" class="clr-red">Entry Already Exists</div> 
+                                     <!-- <div *ngIf="disableSaveLastName" class="clr-red">Entry Already Exists</div>  -->
                                 </div>
                              
                             </div>
@@ -362,9 +402,9 @@
                             <div class="form-group" style="width:300px;margin-top:20px;">
                                 <label>Work Phone <span class="clr-red" style="margin-right:110px;">*</span></label>
                                 <div class="col-md-12">
-                                    <input class="form-control" type="text"  name="workPhone" [(ngModel)]="contactInformation.workPhone" style="width: calc(62% - 63px) !important;" (keypress)="patternMobilevalidationWithSpl($event)">
+                                    <input class="form-control" type="text" required  name="workPhone" [(ngModel)]="contactInformation.workPhone" style="width: calc(62% - 63px) !important;" (keypress)="patternMobilevalidationWithSpl($event)"  maxlength="20">
                                     -
-                                    <input class="form-control" type="text" name="workPhoneExtn" [(ngModel)]="contactInformation.workPhoneExtn" style="width: calc(62% - 63px) !important;">
+                                    <input class="form-control" type="text" name="workPhoneExtn" [(ngModel)]="contactInformation.workPhoneExtn" style="width: calc(43% - 63px) !important;">
                                 </div>
                             </div>
                         </div>
@@ -391,15 +431,15 @@
                             </div>
                             <div class="form-group">
                                 <label>Mobile Phone</label>
-                                <input class="form-control"  type="text" name="mobilePhone" [(ngModel)]="contactInformation.mobilePhone" (keypress)="patternMobilevalidationWithSpl($event)">
+                                <input class="form-control"  type="text" name="mobilePhone" [(ngModel)]="contactInformation.mobilePhone" (keypress)="patternMobilevalidationWithSpl($event)"  maxlength="20">
                             </div>
                             <div class="form-group">
                                 <label>Alternate Phone</label>
-                                <input class="form-control"  type="text" name="alternatePhone" [(ngModel)]="contactInformation.alternatePhone" (keypress)="patternMobilevalidationWithSpl($event)">
+                                <input class="form-control"  type="text" name="alternatePhone" [(ngModel)]="contactInformation.alternatePhone" (keypress)="patternMobilevalidationWithSpl($event)" maxlength="20">
                             </div>
                             <div class="form-group">
                                 <label>Fax</label>
-                                <input class="form-control" pKeyFilter="pint" type="text" name="fax" [(ngModel)]="contactInformation.fax">
+                                <input class="form-control" pKeyFilter="pint" type="text" name="fax" [(ngModel)]="contactInformation.fax"  maxlength="20">
                             </div>
 
                             <div class="form-group">
@@ -444,17 +484,17 @@
             </div>
             <div class="modal-body">
                 <div class="col-sm-12">
-                    <p><span class="label"><b>Tag: </b></span><span class="value">{{sourceViewforContact.tag}}</span></p>
+                    <p><span class="label"><b>Tag<span class="clr-red">*</span>: </b></span><span class="value">{{sourceViewforContact.tag}}</span></p>
                     <p><span class="label"><b>Prefix: </b></span><span class="value">{{sourceViewforContact.prefix}}</span></p>
-                    <p><span class="label"><b>First Name: </b></span><span class="value">{{sourceViewforContact.firstName}}</span></p>
+                    <p><span class="label"><b>First Name<span class="clr-red">*</span>: </b></span><span class="value">{{sourceViewforContact.firstName}}</span></p>
                     <p><span class="label"><b>Middle Name: </b></span><span class="value">{{sourceViewforContact.middleName}}</span></p>
-                    <p><span class="label"><b>Last Name: </b></span><span class="value">{{sourceViewforContact.lastName}}</span></p>
+                    <p><span class="label"><b>Last Name<span class="clr-red">*</span>:</b></span><span class="value">{{sourceViewforContact.lastName}}</span></p>
                     <p><span class="label"><b>Suffix: </b></span><span class="value">{{sourceViewforContact.suffix}}</span></p>
                     <p><span class="label"><b>Title: </b></span><span class="value">{{sourceViewforContact.contactTitle}}</span></p>
-                    <p><span class="label"><b>Work Phone: </b></span><span class="value">{{sourceViewforContact.workPhone}}</span></p>
+                    <p><span class="label"><b>Work Phone<span class="clr-red">*</span>: </b></span><span class="value">{{sourceViewforContact.workPhone}} - {{sourceViewforContact.workPhoneExtn}}</span></p>
                     <p><span class="label"><b>Primary Contact </b></span><span class="value">{{sourceViewforContact.isDefaultContact}}</span></p>
 
-                    <p><span class="label"><b>Email: </b></span><span class="value">{{sourceViewforContact.email}}</span></p>
+                    <p><span class="label"><b>Email<span class="clr-red">*</span>:</b></span><span class="value">{{sourceViewforContact.email}}</span></p>
                     <p><span class="label"><b>WebSite: </b></span><span class="value">{{sourceViewforContact.websiteURL}}</span></p>
                     <p><span class="label"><b>Mobile Phone: </b></span><span class="value">{{sourceViewforContact.mobilePhone}}</span></p>
                     <p><span class="label"><b>Alternate Phone:</b></span><span class="value">{{sourceViewforContact.alternatePhone}}</span></p>
@@ -485,17 +525,17 @@
                     </div>
                     <div class="modal-body">
                         <div class="col-sm-12">
-                            <p><span class="label"><b>Tag: </b></span><span class="value">{{sourceViewforContact.tag}}</span></p>
+                            <p><span class="label"><b>Tag<span class="clr-red">*</span> : </b></span><span class="value">{{sourceViewforContact.tag}}</span></p>
                             <p><span class="label"><b>Prefix: </b></span><span class="value">{{sourceViewforContact.prefix}}</span></p>
-                            <p><span class="label"><b>First Name: </b></span><span class="value">{{sourceViewforContact.firstName}}</span></p>
+                            <p><span class="label"><b>First Name<span class="clr-red">*</span>: </b></span><span class="value">{{sourceViewforContact.firstName}}</span></p>
                             <p><span class="label"><b>Middle Name: </b></span><span class="value">{{sourceViewforContact.middleName}}</span></p>
-                            <p><span class="label"><b>Last Name: </b></span><span class="value">{{sourceViewforContact.lastName}}</span></p>
+                            <p><span class="label"><b>Last Name<span class="clr-red">*</span>: </b></span><span class="value">{{sourceViewforContact.lastName}}</span></p>
                             <p><span class="label"><b>Suffix: </b></span><span class="value">{{sourceViewforContact.suffix}}</span></p>
                             <p><span class="label"><b>Title: </b></span><span class="value">{{sourceViewforContact.contactTitle}}</span></p>
-                            <p><span class="label"><b>Work Phone: </b></span><span class="value">{{sourceViewforContact.workPhone}}</span></p>
-                            <p><span class="label"><b>Primary Contact </b></span><span class="value">{{sourceViewforContact.isDefaultContact}}</span></p>
+                            <p><span class="label"><b>Work Phone<span class="clr-red">*</span>: </b></span><span class="value">{{sourceViewforContact.workPhone}} - {{sourceViewforContact.workPhoneExtn}}</span></p>
+                            <p><span class="label"><b>Primary Contact: </b></span><span class="value">{{sourceViewforContact.isDefaultContact}}</span></p>
 
-                            <p><span class="label"><b>Email: </b></span><span class="value">{{sourceViewforContact.email}}</span></p>
+                            <p><span class="label"><b>Email<span class="clr-red">*</span>: </b></span><span class="value">{{sourceViewforContact.email}}</span></p>
                             <p><span class="label"><b>WebSite: </b></span><span class="value">{{sourceViewforContact.websiteURL}}</span></p>
                             <p><span class="label"><b>Mobile Phone: </b></span><span class="value">{{sourceViewforContact.mobilePhone}}</span></p>
                             <p><span class="label"><b>Alternate Phone:</b></span><span class="value">{{sourceViewforContact.alternatePhone}}</span></p>
@@ -526,8 +566,9 @@
                 <div class="modal-body">
                     <form>
                         <div class="form-row">
-                            <div class="col-md-3">
+                            <div class="col-md-5">
                                 <div class="form-group">
+                                    <div class="col-md-12">
                                     <label class="popup-plusicon-cstm">
                                         ATA Chapter
                                         <a data-dismiss="modal"
@@ -535,16 +576,19 @@
                                             <i class="fa fa-plus-circle fa-lg"></i>
                                         </a>
                                     </label>
+                                    </div>
+                                    <div class="col-md-12">
                                     <p-dropdown name="ataPopUp"
                                                 placeholder="Select ATA Chapter"
-                                                class="p-dropdown-custom-md"
+                                                class="p-dropdown-custom-md p-dropdown-cus-fullwidth"
                                                 [(ngModel)]="add_SelectedId"
                                                 (onChange)="getATASubChapterByATAChapter()"
                                                 [options]="add_ataChapterList"></p-dropdown>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div class="col-md-4">
+                            <div class="col-md-5">
                                 <div class="form-group">
                                     <label class="popup-plusicon-cstm"
                                            style="width: 170px !important;">
@@ -642,7 +686,7 @@
         <div class="modal-body">
             <strong>
                 AtaChapter Name:
-                <span class="new-label">{{selectedAtappedRowforDelete.ataChapterName}}</span>
+                <span class="new-label">{{selectedAtappedRowforDelete.ataChapterCode}} - {{selectedAtappedRowforDelete.ataChapterName}}</span>
             </strong>
         </div>
         <div class="modal-footer">

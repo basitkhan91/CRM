@@ -58,15 +58,6 @@ export class WorkOrderQuoteListComponent implements OnInit {
   woQuoteViewData: any;
   constructor(private router: ActivatedRoute,private workOrderService: WorkOrderQuoteService, private commonService: CommonService, private _workflowService: WorkFlowtService, private alertService:AlertService, private workorderMainService: WorkOrderService, private currencyService:CurrencyService, private cdRef: ChangeDetectorRef) {}
   ngOnInit() {
-    this.workOrderService.getWorkOrderQuoteList({"first":0,"rows":10,"sortOrder":1,
-    "filters":{"quoteStatus":"open"},"globalFilter":null})
-    .subscribe(
-      (res: any[])=>{
-        this.woQuoteList = res;
-        this.totalRecords = res[0].totalRecords;
-        this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
-      }
-    )
   }
   getColorCodeForMultiple(data) {
     return data['partNoType'] === 'Multiple' ? 'green' : 'black';

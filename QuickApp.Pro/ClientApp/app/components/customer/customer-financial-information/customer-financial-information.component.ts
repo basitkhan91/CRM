@@ -125,6 +125,8 @@ export class CustomerFinancialInformationComponent implements OnInit {
         { field: "fileName", header: "File Name" }
     ];
     globalSettings: any = {};
+    _discountListForDropdown: any = [];
+    selectedRowFileForDelete: any;
 
     constructor(public taxtypeser: TaxTypeService, public creditTermsService: CreditTermsService,
         public currencyService: CurrencyService,
@@ -164,12 +166,12 @@ export class CustomerFinancialInformationComponent implements OnInit {
             this.savedGeneralInformationData = this.editGeneralInformationData;
             this.customerCode = this.editGeneralInformationData.customerCode;
             this.customerName = this.editGeneralInformationData.name;
-         
+
             this.savedGeneralInformationData = {
                 ...this.editGeneralInformationData,
                 creditTermsId: getObjectById('value', this.editGeneralInformationData.creditTermsId, this.creditTermsListOriginal)
             }
-          
+
 
             if (this.editGeneralInformationData.currency == null || this.editGeneralInformationData.currency == 0) {
                 this.getDefaultCurrency();
@@ -392,6 +394,13 @@ export class CustomerFinancialInformationComponent implements OnInit {
     getAllDiscountList() {
         this.customerService.getDiscountList().subscribe(res => {
             this.discountList = res[0];
+            console.log(this.discountList, "this.discuontList++++")
+            for(let i=0; i<this.discountList.length; i++){
+                this._discountListForDropdown.push({label: this.discountList[i].discontValue.toString(), value: this.discountList[i].discontValue})
+            }
+            console.log(this._discountListForDropdown, "this._discountListForDropdown++++")
+
+            
         })
     }
 
@@ -406,10 +415,19 @@ export class CustomerFinancialInformationComponent implements OnInit {
     filterDiscount(event) {
 
         console.log();
-        this._discountList = this.discountList1;
+        // this._discountList = this.discountList1;
 
 
-        this._discountList = [...this.discountList1.filter(x => {
+        // this._discountList = [...this.discountList1.filter(x => {
+        //     console.log(x);
+        //     return x.label.includes(event.query.toLowerCase())
+
+
+        // })]
+        this._discountListForDropdown = this._discountListForDropdown;
+
+
+        this._discountListForDropdown = [...this._discountListForDropdown.filter(x => {
             console.log(x);
             return x.label.includes(event.query.toLowerCase())
 
@@ -430,10 +448,20 @@ export class CustomerFinancialInformationComponent implements OnInit {
     }
     checkDiscountExistss(value) {
 
+        // this.isDiscountExists = false;
+
+        // for (let i = 0; i < this.discountList1.length; i++) {
+        //     if (this.discontValue == this.discountList1[i].label || value == this.discountList[i].label) {
+        //         this.isDiscountExists = true;
+
+        //         return;
+        //     }
+
+        // }
         this.isDiscountExists = false;
 
-        for (let i = 0; i < this.discountList1.length; i++) {
-            if (this.discontValue == this.discountList1[i].label || value == this.discountList[i].label) {
+        for (let i = 0; i < this._discountListForDropdown.length; i++) {
+            if (this.discontValue == this._discountListForDropdown[i].label || value == this._discountListForDropdown[i].label) {
                 this.isDiscountExists = true;
 
                 return;
@@ -519,7 +547,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
     }
 
     saveFinancialInformation() {
-       
+
 
         this.customerService.updatefinanceinfo({
             ...this.savedGeneralInformationData,
@@ -528,7 +556,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
             creditTermsId: this.savedGeneralInformationData.creditTermsId.value
         }, this.id).subscribe(res => {
 
-           
+
             const vdata = {
                 customerId: this.savedGeneralInformationData.customerId,
                 masterCompanyId: 1,
@@ -540,10 +568,10 @@ export class CustomerFinancialInformationComponent implements OnInit {
                 this.formData.append(key, vdata[key]);
             }
             console.log(this.taxExemptFileUploadInput, "this.taxExemptFileUploadInput");
-            if(this.taxExemptFileUploadInput){
+            if (this.taxExemptFileUploadInput) {
                 this.taxExemptFileUploadInput.clear()
-            }            
-             this.customerService.customerFinanceFileUpload(this.formData).subscribe(res => {
+            }
+            this.customerService.customerFinanceFileUpload(this.formData).subscribe(res => {
                 this.formData = new FormData();
                 this.toGetCustomerFinanceDocumentsList(this.savedGeneralInformationData.customerId);
             });
@@ -570,15 +598,29 @@ export class CustomerFinancialInformationComponent implements OnInit {
         })
     }
 
-    CustomerAttachmentDelete(rowData) {
-        let attachmentDetailId = rowData.attachmentDetailId;
-        let updatedBy = this.userName;
-
-        this.customerService.GetCustomerAttachmentDelete(attachmentDetailId, updatedBy).subscribe(res => {
-            this.toGetCustomerFinanceDocumentsList(this.id);
-
-        })
+    deleteFile(rowData) {
+        this.selectedRowFileForDelete = rowData;
     }
+    deleteConformationForFile(value) {
+
+        // let attachmentDetailId = rowData.attachmentDetailId;
+        // let updatedBy = this.userName;
+        if (value === 'Yes') {
+            this.customerService.GetCustomerAttachmentDelete(this.selectedRowFileForDelete.attachmentDetailId, this.userName).subscribe(res => {
+                this.alertService.showMessage(
+                    'Success',
+                    `deleted File`,
+                    MessageSeverity.success
+                );
+                this.toGetCustomerFinanceDocumentsList(this.id);
+
+            })
+        } else {
+            this.selectedRowFileForDelete = undefined;
+        }
+
+    }
+
 
     saveMarkUpPercentage() {
         const data = {
@@ -618,7 +660,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
                 MessageSeverity.success
             );
             this.resetCreditTermsPopUp();
-           
+
             this.savedGeneralInformationData.creditTermsId = data.creditTermsId;
             console.log(this.savedGeneralInformationData.creditTermsId);
 

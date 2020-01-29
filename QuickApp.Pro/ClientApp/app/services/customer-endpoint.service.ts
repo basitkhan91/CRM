@@ -156,7 +156,8 @@ export class CustomerEndpoint extends EndpointFactory {
     private readonly _getCustomerDocumentHistory: string = "/api/Customer/getCustomerDocumentAudit"
     private readonly excelUpload: string = "/api/Customer/uploadcustomerbillingaddress"
     private readonly excelUploadShipping: string = "/api/Customer/uploadcustomershippingaddress"
-
+    private readonly excelUploadInterShipping: string = "/api/Customer/uploadcustomerinternationalshipping"
+    private readonly excelUploadContact: string = "/api/Customer/uploadcustomercontacts"
 
     get globalSearch() { return this.configurations.baseUrl + this.getGlobalCustomer; }
     get paginate() { return this.configurations.baseUrl + this.getCustomer; }
@@ -249,7 +250,7 @@ export class CustomerEndpoint extends EndpointFactory {
     }
 
     getDocumentList(customerId) {
-        return this.http.get(`${this.configurations.baseUrl}/api/Customer//getCustomerDocumentDetail/${customerId}`, this.getRequestHeaders())
+        return this.http.get(`${this.configurations.baseUrl}/api/Customer/getCustomerDocumentDetail/${customerId}`, this.getRequestHeaders())
     }
 
     postDomesticShipVia<T>(postData) {
@@ -1391,8 +1392,8 @@ export class CustomerEndpoint extends EndpointFactory {
     getCustomerInterShipViaHistory(customerId, internationalShippingId, shippingViaDetailsId) {
         return this.http.get(`${this.configurations.baseUrl}/${this._customerInterShipViaHistory}?customerId=${customerId}&internationalShippingId=${internationalShippingId}&shippingViaDetailsId=${shippingViaDetailsId}`)
     }
-    getCustomerDocumentAuditHistory(id) {
-        return this.http.get<any>(`${this._getCustomerDocumentHistory}/${id}`, this.getRequestHeaders())
+    getCustomerDocumentAuditHistory(id, customerId) {
+        return this.http.get<any>(`${this._getCustomerDocumentHistory}?id=${id}&customerId=${customerId}`, this.getRequestHeaders())
     }
 
     CustomerBillingFileUpload(file, customerId) {
@@ -1402,6 +1403,16 @@ export class CustomerEndpoint extends EndpointFactory {
     }
     CustomerShippingFileUpload(file, customerId) {
         return this.http.post(`${this.configurations.baseUrl}${this.excelUploadShipping}?customerId=${customerId}`, file)
+
+
+    }
+    CustomerInternationalShippingFileUpload(file, customerId) {
+        return this.http.post(`${this.configurations.baseUrl}${this.excelUploadInterShipping}?customerId=${customerId}`, file)
+
+
+    }
+    CustomerContactFileUpload(file, customerId) {
+        return this.http.post(`${this.configurations.baseUrl}${this.excelUploadContact}?customerId=${customerId}`, file)
 
 
     }

@@ -30,6 +30,7 @@ export class JournelsEndpointService extends EndpointFactory {
     private readonly allBalanceTypesURL: string = '/api/journals/AllBalanceTypes';
     private readonly allJournalCategoryURL: string = '/api/journals/AllJournalCategory';
     private readonly allJournalTypesURL: string = '/api/journals/AllJournalTypes';
+    private readonly allJournalCurrencyTypesURL: string = '/api/Journals/AllJournalCurrencyTypes';
 
 
     get getBatchAll() { return this.configurations.baseUrl + this.getAllBatchURL; }
@@ -46,6 +47,7 @@ export class JournelsEndpointService extends EndpointFactory {
     get allBalanceTypes() { return this.configurations.baseUrl + this.allBalanceTypesURL; }
     get allJournalCategory() { return this.configurations.baseUrl + this.allJournalCategoryURL; }
     get allJournalTypes() { return this.configurations.baseUrl + this.allJournalTypesURL; }
+    get allJournalCurrencyTypes() { return this.configurations.baseUrl + this.allJournalCurrencyTypesURL;  }
 
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
         super(http, configurations, injector);
@@ -204,6 +206,15 @@ export class JournelsEndpointService extends EndpointFactory {
             .catch(error => {
                 return this.handleError(error, () => this.getAllJournalTypes());
             });
+    }
+
+    getJournalCurrencyTypes<T>(): Observable<T> {
+        let endpointUrl = this.allJournalCurrencyTypes;
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getJournalCurrencyTypes());
+            });
+
     }
 
 }

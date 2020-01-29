@@ -191,11 +191,12 @@ export class AssetAcquisitionTypeComponent implements OnInit {
     }
 
     eventHandler(event) {
-        /*let value = event.target.value.toLowerCase()
+        let value = event.target.value.toLowerCase()
         if (this.selectedreason) {
             console.log(191);
             if (value == this.selectedreason.toLowerCase() &&
-                (this.isEditMode && this.selAssetAcquisitionTypeId != this.selectedRow.assetAcquisitionTypeId) || !this.isEditMode)
+                ((this.isEditMode && this.selAssetAcquisitionTypeId != this.selectedRow.assetAcquisitionTypeId)
+                || !this.isEditMode ) )
             {
                 this.disableSave = true;
                 this.recordExists = true;
@@ -204,27 +205,50 @@ export class AssetAcquisitionTypeComponent implements OnInit {
                 this.disableSave = false;
                 this.recordExists = false;
             }
-        }*/
+        }
     }
 
-    partnmId(event) {
-        console.log(this.allreasn);
+    onBlurCheck(event) {
+        //console.log(this.allreasn);
+        console.log(event);
         for (let i = 0; i < this.allreasn.length; i++) {
-            if (event == this.allreasn[i][0].codeName) {
-                this.selAssetAcquisitionTypeId = this.allreasn[i][0].assetAcquisitionTypeId;
-                if ((this.isEditMode && this.selAssetAcquisitionTypeId != this.selectedRow.assetAcquisitionTypeId
+            this.selectedreason = event.target.value;
+            this.recordExists = false;
+            if (event.target.value == this.allreasn[i][0].codeName) {
+                this.selAssetAcquisitionTypeId = this.allreasn[i][0].AssetAcquisitionTypeId;
+                if ((this.isEditMode && this.selAssetAcquisitionTypeId != this.AssetAcquisitionTypeId
                     || !this.isEditMode)) {
                     this.disableSave = true;
                     this.recordExists = true;
+                    return;
                 }
-                else {
-                    this.disableSave = false;
-                    this.recordExists = false;
-                }
-                this.selectedreason = event;
                 console.log(this.allreasn[i][0]);
             }
         }
+        this.disableSave = false;
+        this.recordExists = false;
+    }
+
+    partnmId(event) {
+        //console.log(this.allreasn);
+        console.log(event);
+        for (let i = 0; i < this.allreasn.length; i++) {
+            if (event == this.allreasn[i][0].codeName) {
+                this.selectedreason = event;
+                this.recordExists = false;
+                console.log(this.allreasn[i][0]);
+                this.selAssetAcquisitionTypeId = this.allreasn[i][0].AssetAcquisitionTypeId;
+                if ((this.isEditMode && this.selAssetAcquisitionTypeId != this.AssetAcquisitionTypeId
+                    || !this.isEditMode)) {
+                    this.disableSave = true;
+                    this.recordExists = true;
+                    return;
+                }
+                console.log(this.allreasn[i][0]);
+            }
+        }
+        this.disableSave = false;
+        this.recordExists = false;
     }
 
     filterAssetAcquisitionType(event) {
@@ -271,7 +295,7 @@ export class AssetAcquisitionTypeComponent implements OnInit {
     openEdit(content, row) {
         this.recordExists = false;
         this.isEditMode = true;
-        this.disableSave = false;
+        this.disableSave = true;
         this.isSaving = true;
         this.loadMasterCompanies();
         this.sourceAction = { ...row };
@@ -428,8 +452,10 @@ export class AssetAcquisitionTypeComponent implements OnInit {
 
  
     getAuditHistoryById(rowData) {
-        this.AssetAcquisitionTypeService.getAssetAudit(rowData.AssetAcquisitionTypeId).subscribe(res => {
-            this.auditHistory = res;
+        this.AssetAcquisitionTypeService.getAssetAudit(rowData.assetAcquisitionTypeId).subscribe(res => {
+            console.log(res);
+            console.log(res[0].result);
+            this.auditHistory = res[0].result;
         })
     }
 
@@ -481,5 +507,12 @@ export class AssetAcquisitionTypeComponent implements OnInit {
     getAssetAcquisitionTypeList() {
 
         this.loadData();
+    }
+
+    enableSave() {
+        if (!this.recordExists)
+            this.disableSave = false;
+        else
+            this.disableSave = true;
     }
 }

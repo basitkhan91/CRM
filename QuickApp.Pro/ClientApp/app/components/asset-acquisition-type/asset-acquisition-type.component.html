@@ -216,14 +216,17 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                             <!--<p-autoComplete field="code" [(ngModel)]="codeName" (onSelect)="partnmId($event)" (onKeyUp)="eventHandler('code', $event.target.value)" name="code"
                                             [suggestions]="localCollection" (completeMethod)="filterDisposalType($event)" [size]="30" [minLength]="1"
                                             [dropdown]="true" class="p-autoComplete-ctsm" required>-->
-                            <p-autoComplete [(ngModel)]="codeName" name="codeName" (onSelect)="partnmId($event)" (onKeyUp)="eventHandler($event)" [suggestions]="localCollection" (completeMethod)="filterAssetAcquisitionType($event)" [size]="30"
+                            <p-autoComplete [(ngModel)]="codeName" name="codeName" (onSelect)="partnmId($event)" 
+                                            (onKeyUp)="eventHandler($event)" [suggestions]="localCollection" 
+                                            (completeMethod)="filterAssetAcquisitionType($event)" [size]="30"
+                                            (onBlur)="onBlurCheck($event)"
                                             [minLength]="1" [dropdown]="true" class="p-autoComplete-ctsm" required>
                                 <ng-template let-codeName pTemplate="item">
                                     <div class="ui-helper-clearfix">{{codeName}}</div>
                                 </ng-template>
 
                             </p-autoComplete>
-                            <div *ngIf="disableSave" class="clr-red">Already Exists</div>
+                            <div *ngIf="recordExists && codeName" class="clr-red">Already Exists</div>
                             <div class="clear"></div>
                         </div>
                     </div>
@@ -235,7 +238,9 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                             </label>
                         </div>
                         <div class="col-sm-5">
-                            <input type="text" name="name" class="form-control" required #Name="ngModel" [(ngModel)]="sourceAction.name" minlength="2">
+                            <input type="text" name="name" class="form-control" required #Name="ngModel" 
+                                   [(ngModel)]="sourceAction.name" minlength="2"
+                                   (ngModelChange)="enableSave()">
                             <div *ngIf="Name.dirty && Name.errors?.required && Name.errors" class="invalid-form-error-message">
                                 Acquisition Type required.
                             </div>
@@ -251,7 +256,9 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
                             <label for="AssetAcquisitionTypeMemo" class="control-label">Memo</label>
                         </div>
                         <div class="col-sm-5">
-                            <textarea class="text-item" #memo="ngModel" id="memo" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.memo" minlength="2"></textarea>
+                            <textarea class="text-item" #memo="ngModel" id="memo" 
+                                      [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.memo" minlength="2"
+                                      (ngModelChange)="enableSave()"></textarea>
                         </div>
                         <div class="clear"></div>
                     </div>

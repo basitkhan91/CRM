@@ -134,7 +134,7 @@ namespace DAL.Models
         public string PrimarySalesPersonFirstName { get; set; }
 
 
-        public string PrimarySalesPersonId { get; set; }
+        public long? PrimarySalesPersonId { get; set; }
 
 
         public string AnnualRevenuePotential { get; set; }
@@ -147,7 +147,7 @@ namespace DAL.Models
 
         public string SecondarySalesPersonName { get; set; }
 
-        public string SecondarySalesPersonId { get; set; }
+        public long? SecondarySalesPersonId { get; set; }
 
 
         public string CSRName { get; set; }
@@ -165,8 +165,8 @@ namespace DAL.Models
 
         public bool? IsActive { get; set; }
         public bool? IsDeleted { get; set; }
-        public Int32? MarkUpPercentageId { get; set; }
-        public long? GeneralCurrencyId { get; set; }
+        public long? MarkUpPercentageId { get; set; }
+        public int? GeneralCurrencyId { get; set; }
 
         //public bool? IsAddressForBillingAndShipping { get; set; }
 

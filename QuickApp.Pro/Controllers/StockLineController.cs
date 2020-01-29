@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using QuickApp.Pro.ViewModels.SalesViews; 
 
 namespace QuickApp.Pro.Controllers
 {
@@ -1111,25 +1112,53 @@ namespace QuickApp.Pro.Controllers
                 return BadRequest(new Exception("Invalid request parameter, partId not passed"));
             }
 
-            IEnumerable<object> result = null;
+            IEnumerable<object> results = GetPartDetails(searchView.partSearchParamters.partId, searchView.partSearchParamters.conditionId);
 
-            if (searchView.partSearchParamters.includeAlternatePartNumber)
+            if(results.Any() && searchView.partSearchParamters.includeAlternatePartNumber)
             {
-
+                results = results.Concat(GetMappedPartNumbers(searchView)); 
             }
-            else
-            {
-                result = GetPartDetails(searchView);
-            }
-
-
+           
             var pageCount = (searchView.first / searchView.rows) + 1;
 
             var searchData = new GetSearchData<object>();
 
-            searchData.Data = DAL.Common.PaginatedList<object>.Create(result.AsQueryable<object>(), pageCount, searchView.rows);
+            searchData.Data = DAL.Common.PaginatedList<object>.Create(results.AsQueryable<object>(), pageCount, searchView.rows);
 
             return Ok(searchData);
+        }
+
+        private IEnumerable<object> GetMappedPartNumbers(ItemMasterSearchViewModel searchView)
+        {
+            IEnumerable<object> results = Enumerable.Empty<object>();
+
+             if (searchView.partSearchParamters.includeAlternatePartNumber)
+            {
+                var alternatePartNumbers  =  
+                (from mp in _context.Nha_Tla_Alt_Equ_ItemMapping 
+                join im in _context.ItemMaster on mp.ItemMasterId equals im.ItemMasterId
+                where mp.ItemMasterId == searchView.partSearchParamters.partId.Value
+                        && mp.IsActive 
+                        && im.IsActive.HasValue && im.IsActive.Value
+                        && mp.MappingType  == 1
+                        && im.MasterCompanyId == 1
+                        && mp.MasterCompanyId == 1
+                select new MappedPartsView{ 
+                    ItemMasterId = im.ItemMasterId,
+                    PartNumber = im.PartNumber,
+                    MappingItemMasterId = mp.MappingItemMasterId
+                }).ToList<MappedPartsView>();
+
+                if(alternatePartNumbers.Any())
+                {
+                    foreach(var pn in alternatePartNumbers)
+                    {
+                      results = results.Concat(GetPartDetails(pn.MappingItemMasterId, searchView.partSearchParamters.conditionId, pn.PartNumber));
+                    }
+                }
+            }
+
+            return results;
         }
 
         [HttpGet("warehousedata")]
@@ -1168,11 +1197,11 @@ namespace QuickApp.Pro.Controllers
         }
 
 
-        private IEnumerable<object> GetPartDetails(ItemMasterSearchViewModel searchView)
+        private IEnumerable<object> GetPartDetails(long? partId, long? conditionId, string alternateFor = "")
         {
             var result = Enumerable.Empty<object>();
 
-            var condition = _context.Condition.Where(c => c.ConditionId == searchView.partSearchParamters.conditionId).FirstOrDefault();
+            var condition = _context.Condition.Where(c => c.ConditionId == conditionId).FirstOrDefault();
 
             result = from item in _context.ItemMaster
                      join sl in _context.StockLine on item.ItemMasterId equals sl.ItemMasterId
@@ -1185,8 +1214,8 @@ namespace QuickApp.Pro.Controllers
                      where item.IsActive.HasValue && item.IsActive.Value == true
                             && (item.IsDeleted.HasValue && !item.IsDeleted == true || !item.IsDeleted.HasValue)
                             && (item.MasterCompanyId.HasValue && item.MasterCompanyId.Value == 1)
-                            && item.ItemMasterId == searchView.partSearchParamters.partId
-                            && sl.ConditionId == searchView.partSearchParamters.conditionId
+                            && item.ItemMasterId == partId
+                            && sl.ConditionId == conditionId
                      select new
                      {
                          methodType = "S",
@@ -1195,7 +1224,7 @@ namespace QuickApp.Pro.Controllers
                          stockLineId = sl.StockLineId,
                          partNumber = item.PartNumber,
                          alternatePartId = item.PartAlternatePartId,
-                         alternateFor = string.Empty,
+                         alternateFor = alternateFor,
                          description = item.PartDescription,
                          conditionType = string.Empty,
                          stockLineNumber = sl.StockLineNumber,

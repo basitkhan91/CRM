@@ -38,6 +38,7 @@ export class WorkOrderChargesComponent implements OnChanges, OnInit {
   editData: any;
   editingIndex: number;
   costPlusType: string = "Mark Up";
+  overAllMarkup: any;
 
   constructor(private workOrderService: WorkOrderService, private authService: AuthService,
     private alertService: AlertService, private cdRef: ChangeDetectorRef) {
@@ -71,7 +72,8 @@ export class WorkOrderChargesComponent implements OnChanges, OnInit {
   }
   delete(rowData, i) {
     if (this.isQuote) {
-      this.workOrderChargesList[i].isDeleted = true;
+      rowData.isDeleted = true;
+      // this.workOrderChargesList[i].isDeleted = true;
     } else {
       console.log(rowData);
 
@@ -109,13 +111,25 @@ export class WorkOrderChargesComponent implements OnChanges, OnInit {
     this.createQuote.emit(this.workOrderChargesList);
   }
 
-  markupChanged(matData) {
+  markupChanged(matData, type) {
     try {
-      this.markupList.forEach((markup) => {
-        if (markup.value == matData.markupPercentageId) {
-          matData.chargesCostPlus = (matData.extendedCost) + (((matData.extendedCost) / 100) * Number(markup.label))
+      this.markupList.forEach((markup)=>{
+        if(type == 'row' && markup.value == matData.markupPercentageId){
+          matData.chargesCostPlus = Number(matData.extendedCost) + ((Number(matData.extendedCost) / 100) * Number(markup.label))
+        }
+        else if(type == 'all' && markup.value == this.overAllMarkup){
+          this.workOrderChargesList.forEach((mData)=>{
+            mData.markupPercentageId = this.overAllMarkup;
+            mData.chargesCostPlus = Number(mData.extendedCost) + ((Number(mData.extendedCost) / 100) * Number(markup.label))
+          })
         }
       })
+
+      // this.markupList.forEach((markup) => {
+      //   if (markup.value == matData.markupPercentageId) {
+      //     matData.chargesCostPlus = (matData.extendedCost) + (((matData.extendedCost) / 100) * Number(markup.label))
+      //   }
+      // })
     }
     catch (e) {
       console.log(e);

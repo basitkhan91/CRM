@@ -468,6 +468,10 @@ export class WorkOrderEndpointService extends EndpointFactory {
         return this.http.post<any>(`${this.configurations.baseUrl}/api/workorder/createquotematerials`, JSON.stringify(data), this.getRequestHeaders());
     }
 
+    saveFreightsListQuote(data) {
+        return this.http.post<any>(`${this.configurations.baseUrl}/api/workorder/createquotefreight`, JSON.stringify(data), this.getRequestHeaders());
+    }
+
     saveLaborListQuote(data) {
         return this.http.post<any>(`${this.configurations.baseUrl}/api/workorder/createquotelabor`, JSON.stringify(data), this.getRequestHeaders());
     }

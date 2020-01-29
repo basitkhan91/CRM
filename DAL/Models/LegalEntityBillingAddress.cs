@@ -10,7 +10,7 @@ namespace DAL.Models
         public long LegalEntityBillingAddressId { get; set; }
         public long LegalEntityId { get; set; }
 		[ForeignKey("AddressId")]
-		public long AddressId { get; set; }
+		public long? AddressId { get; set; }
         public string SiteName { get; set; }
         public bool? IsPrimary { get; set; }
         [ForeignKey("MasterCompanyId")]

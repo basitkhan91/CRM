@@ -408,8 +408,10 @@ namespace DAL
         public DbSet<AssetCapes> AssetCapes { get; set; }
         public DbSet<AssetCapesAudit> AssetCapesAudit { get; set; }
 
+        public DbSet<LegalEntityInternationalShipping> LegalEntityInternationalShipping { get; set; }
         public DbSet<CustomerInternationalShipping> CustomerInternationalShipping { get; set; }
         public DbSet<CustomerInternationalShippingAudit> CustomerInternationalShippingAudit { get; set; }
+        public DbSet<LegalEntityInternationalShippingAudit> LegalEntityInternationalShippingAudit { get; set; }
         public DbSet<ShippingViaDetails> ShippingViaDetails { get; set; }
         public DbSet<ShippingViaDetailsAudit> ShippingViaDetailsAudit { get; set; }
 
@@ -513,8 +515,9 @@ namespace DAL
         public DbSet<EmployeeStationAudit> EmployeeStationAudit { get; set; }
         public DbSet<Carrier> Carrier { get; set; }
         public DbSet<ShippingBillingAddressAudit> ShippingBillingAddressAudit { get; set; }
+        public DbSet<DocumentsAudit> DocumentsAudit { get; set; }
 
-        
+
 
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {

@@ -13,6 +13,7 @@ import { getObjectByValue, getObjectById, getValueFromObjectByKey } from '../../
 import { VendorService } from '../../../services/vendor.service';
 import { ConfigurationService } from '../../../services/configuration.service';
 import { AuditHistory } from '../../../models/audithistory.model';
+import * as $ from 'jquery';
 
 @Component({
 	selector: 'app-vendor-documents',
@@ -34,16 +35,20 @@ export class VendorDocumentsComponent implements OnInit {
 	vendorDocumentsData: any = [];
 	vendorDocumentsColumns = [
 		{ field: 'docName', header: 'Name' },
-		{ field: 'docDescription', header: 'Memo' },
-		//{ field: 'documents', header: 'Documents' },
-		{ field: 'docMemo', header: 'Description' }
+		{ field: 'docDescription', header: 'Description' },		
+		{ field: 'documents', header: 'Documents' },
+		{ field: 'docMemo', header: 'Memo' },
+		
 	];
 	selectedColumns = this.vendorDocumentsColumns;
 
 	headersforAttachment = [
         { field: 'fileName', header: 'File Name' },
         //{ field: 'link', header: 'Action' },
-    ];
+	];
+	sourceViewforDocumentListColumns = [
+        { field: 'fileName', header: 'File Name' },
+    ]
 	formData = new FormData()
 	// ediData: any;
 	isEditButton: boolean = false;
@@ -61,12 +66,22 @@ export class VendorDocumentsComponent implements OnInit {
 	modal: NgbModalRef;
     public auditHisory: AuditHistory[] = [];
     loadingIndicator: boolean;
-    documentauditHisory: any[];
+	documentauditHisory: any[];
+	isViewMode: boolean = false;
+    totalRecords: number = 0;
+    pageIndex: number = 0;
+    pageSize: number = 10;
+    totalPages: number = 0;
 	constructor(public workFlowtService: VendorService,private router: ActivatedRoute, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService,
 		private dialog: MatDialog, private masterComapnyService: MasterComapnyService,private configurations: ConfigurationService) {
+			
 			if(this.workFlowtService.listCollection !== undefined){
 				this.workFlowtService.isEditMode = true;
+				this.isViewMode = false;
 			}
+			else{
+				this.isViewMode = true;;
+			}		
 			
 			if (this.workFlowtService.listCollection && this.workFlowtService.isEditMode == true) {
 			
@@ -182,15 +197,23 @@ export class VendorDocumentsComponent implements OnInit {
 		})
 	
 			
-		this.modal = this.modalService.open(content, { size: 'sm' });
-           this.modal.result.then(() => {
-            console.log('When user closes');
-        }, () => { console.log('Backdrop click') })
+		// this.modal = this.modalService.open(content, { size: 'sm' });
+        //    this.modal.result.then(() => {
+        //     console.log('When user closes');
+        // }, () => { console.log('Backdrop click') })
 		//console.log(this.sourceViewforDocument);
-		//this.getListById(row.vendorDocumentDetailId);
-		
-        
+		//this.getListById(row.vendorDocumentDetailId);        
 	}
+
+	openViewOnDblClick(row) {
+		this.workFlowtService.toGetUploadDocumentsList(row.attachmentId, row.vendorId,3).subscribe(res => {
+			this.sourceViewforDocumentList = res;	
+			this.sourceViewforDocument = row;
+		});
+		$('#view').modal('show');
+	}
+
+
 	openDelete(content, row) {
         this.isEditMode = false;
         this.isDeleteMode = true;
@@ -288,7 +311,11 @@ export class VendorDocumentsComponent implements OnInit {
                 return data[i + 1][field] === value
             }
         }
-    }
+	}
+	
+	getPageCount(totalNoofRecords, pageSize) {
+		return Math.ceil(totalNoofRecords / pageSize)
+	}
 
    
 }

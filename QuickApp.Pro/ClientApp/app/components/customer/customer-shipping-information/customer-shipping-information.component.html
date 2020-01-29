@@ -50,20 +50,27 @@
 
                             <div style="text-align: right">
                                 <p-multiSelect [options]="domesticShippingHeaders" [(ngModel)]="selectedColumnsForDomesticTable" name="domesticShiipingTable" optionLabel="header"
-                                            selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
+                                               selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
                                 <div class="inner-addon right-addon w200 inline-block g-filter-search-cstm">
                                     <i class="fa fa-search"></i>
                                     <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="domestictable.filterGlobal($event.target.value, 'contains')" placeholder=" Filter" style="height: 28px !important;">
                                 </div>
-                            
-                                <button type="button" class="btn btn-primary" matTooltip="Download  Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export  Data" (click)="domestictable.exportCSV()" style="padding: 5px 10px !important;"></button>
-                                <button type="button" class="btn btn-primary"  matTooltip="Download Selected Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})" style="padding: 5px 10px !important;"></button>
 
-                                <div class="excel-upload excel-upload-cstm">
-                                    <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
-                                    <label for="upload">
-                                        <span matTooltip="Upload Data (Excel)"><i class="fa fa-upload"></i></span>
+                                <button type="button" class="btn btn-primary" matTooltip="Download  Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export  Data" (click)="domestictable.exportCSV()" style="padding: 5px 10px !important;"></button>
+                                <button type="button" class="btn btn-primary" matTooltip="Download Selected Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})" style="padding: 5px 10px !important;"></button>
+
+                                <div class="excel-upload  excel-upload-cstm">
+                                    <button type="button" class="btn btn-primary" matTooltip="Download Sample File" matTooltipPosition="above" (click)="sampleExcelDownload()" style="padding: 5px 10px !important;">Sample File Download</button>
+
+                                    <input type="file" name="upload1[]" id="upload1" (change)="customShippingExcelUpload($event)" class="uploaddoc upload-file"
+                                           accept=".xlsx, .xls, .csv">
+                                    <label for="upload1">
+                                        <span matTooltip="Upload Data (Excel)" matTooltipPosition="above">
+                                            <i class="fa fa-upload"></i>
+                                        </span>
                                     </label>
+                                    &nbsp; &nbsp;
+
                                 </div>
                             </div>
                         </ng-template>
@@ -123,6 +130,9 @@
                                     <button class="btn btn-danger nobg" data-toggle="tooltip" matTooltip="Add Ship Via" data-original-title="View Shipping Via Information">
                                         <i class="fa fa-truck" data-target="#addDomesticShipVia" data-toggle="modal" (click)="selectedDomesticForShipVia(rowData)"></i>
                                     </button>
+                                    <button class="btn-history" mat-icon-button matTooltip="history" (click)="openShipaddressHistory(contentAuditHist,rowData)">
+                                        <mat-icon color="green">history</mat-icon>
+                                    </button>
                                 </td>
 
                             </tr>
@@ -136,9 +146,10 @@
                         </ng-template>
                         <ng-template pTemplate="summary" id="footer">
                             <label id="footer" class="footer">No'of records:</label>
-                            <input style="width: 5%;" [(ngModel)]="totalRecords" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp;
+                            <input style="width: 5%;" [(ngModel)]="domestictable._totalRecords" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp;
                             <label id="footer" class="footer1">Pages Count:</label>
-                            <input style="width: 5%;" [(ngModel)]="totalPages" [disabled]="true" pInputText type="text" />
+                           
+                            <input style="width: 5%;" [ngModel]="getPageCount(domestictable._totalRecords,pageSize)" [disabled]="true" pInputText type="text" />
                         </ng-template>
                     </p-table>
                 </div>
@@ -184,14 +195,22 @@
                                     <i class="fa fa-search"></i>
                                     <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="intlShippingTable.filterGlobal($event.target.value, 'contains')" placeholder=" Filter" style="height: 28px !important;">
                                 </div>
-                                <button type="button" class="btn btn-primary"  matTooltip="Download  Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export  Data" (click)="intlShippingTable.exportCSV()" style="padding: 5px 10px !important;"></button>
-                                <button type="button" class="btn btn-primary"  matTooltip="Download Selected Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export Selection Only"  (click)="intlShippingTable.exportCSV({selectionOnly:true})" style="padding: 5px 10px !important;"></button>
+                                <button type="button" class="btn btn-primary" matTooltip="Download  Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export  Data" (click)="intlShippingTable.exportCSV()" style="padding: 5px 10px !important;"></button>
+                                <button type="button" class="btn btn-primary" matTooltip="Download Selected Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export Selection Only" (click)="intlShippingTable.exportCSV({selectionOnly:true})" style="padding: 5px 10px !important;"></button>
 
-                                <div class="excel-upload excel-upload-cstm">
-                                    <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
-                                    <label for="upload">
-                                        <span matTooltip="Upload Data (Excel)"><i class="fa fa-upload"></i></span>
+
+                                <div class="excel-upload  excel-upload-cstm">
+                                    <button name="intershippingdownload" id="intershippingdownload" type="button" class="btn btn-primary" matTooltip="Download Sample File" matTooltipPosition="above" (click)="sampleExcelDownloadForInternationalShipping()" style="padding: 5px 10px !important;">Sample File Download</button>
+
+                                    <input type="file" name="upload2[]" id="upload2" (change)="customInternationalShippingExcelUpload($event)" class="uploaddoc upload-file"
+                                           accept=".xlsx, .xls, .csv">
+                                    <label for="upload2">
+                                        <span matTooltip="Upload Data (Excel)" matTooltipPosition="above">
+                                            <i class="fa fa-upload"></i>
+                                        </span>
                                     </label>
+                                    &nbsp; &nbsp;
+
                                 </div>
                             </div>
                         </ng-template>
@@ -252,6 +271,9 @@
                                     <button class="btn btn-danger nobg" data-toggle="tooltip" matTooltip="Add Ship Via " data-original-title="View Shipping Via Info">
                                         <i class="fa fa-truck" data-target="#addInternationShipVia" data-toggle="modal" (click)="selectedInternationalShipForShipVia(rowData)"></i>
                                     </button>
+                                    <button class="btn-history" mat-icon-button matTooltip="history" (click)="openInterShippingHistory(contentAuditHistInter,rowData)">
+                                        <mat-icon color="green">history</mat-icon>
+                                    </button>
                                 </td>
 
                             </tr>
@@ -266,9 +288,10 @@
                         </ng-template>                       
                         <ng-template pTemplate="summary" id="footer">
                             <label id="footer" class="footer">No'of records:</label>
-                            <input style="width: 5%;" [(ngModel)]="totalRecordsInternationalShipping" name="totalRecordsInternationalShipping" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp;
+                            <input style="width: 5%;" [(ngModel)]="intlShippingTable._totalRecords" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp;
                             <label id="footer" class="footer1">Pages Count:</label>
-                            <input style="width: 5%;" [(ngModel)]="totalPagesInternationalShipping" name="totalPagesInternationalShipping" [disabled]="true" pInputText type="text" />
+                           
+                            <input style="width: 5%;" [ngModel]="getPageCount(intlShippingTable._totalRecords,pageSize)" [disabled]="true" pInputText type="text" />
                         </ng-template>
                       
                         <!-- <ng-template pTemplate="summary" id="footer">
@@ -539,14 +562,14 @@
             <!-- Modal body -->
             <div class="modal-body" *ngIf="sourceViewforShipping">
                 <div class="col-sm-12">
-                    <p><span class="label"><b>Site Name: </b></span><span class="value">{{sourceViewforShipping.siteName}}</span></p>
-                    <p><span class="label"><b>Ship To Address 1: </b></span><span class="value">{{sourceViewforShipping.address1}}</span></p>
+                    <p><span class="label"><b>Site Name<span class="clr-red">*</span> : </b></span><span class="value">{{sourceViewforShipping.siteName}}</span></p>
+                    <p><span class="label"><b>Ship To Address 1<span class="clr-red">*</span> :   </b></span><span class="value">{{sourceViewforShipping.address1}}</span></p>
                     <p><span class="label"><b>Ship To Address 2: </b></span><span class="value">{{sourceViewforShipping.address2}}</span></p>
                     <p style="display:none"><span class="label"><b>ship To Address 3: </b></span><span class="value">{{sourceViewforShipping.address3}}</span></p>
-                    <p><span class="label"><b>Ship To City: </b></span><span class="value">{{sourceViewforShipping.city}}</span></p>
-                    <p><span class="label"><b>Ship To State / Prov: </b></span><span class="value">{{sourceViewforShipping.stateOrProvince}}</span></p>
-                    <p><span class="label"><b>Ship To Postal Code :</b></span><span class="value">{{sourceViewforShipping.postalCode}}</span></p>
-                    <p><span class="label"><b>Ship To Country: </b></span><span class="value">{{sourceViewforShipping.countryName}}</span></p>
+                    <p><span class="label"><b>Ship To City<span class="clr-red">*</span> : </b></span><span class="value">{{sourceViewforShipping.city}}</span></p>
+                    <p><span class="label"><b>Ship To State / Prov<span class="clr-red">*</span> : </b></span><span class="value">{{sourceViewforShipping.stateOrProvince}}</span></p>
+                    <p><span class="label"><b>Ship To Postal Code <span class="clr-red">*</span> : </b></span><span class="value">{{sourceViewforShipping.postalCode}}</span></p>
+                    <p><span class="label"><b>Ship To Country<span class="clr-red">*</span> : </b></span><span class="value">{{sourceViewforShipping.countryName}}</span></p>
 
 
                     <div class="clear"></div>
@@ -650,7 +673,7 @@
             </form>
         </div>
     </div>
-    <ng-template #contentAuditHistShipVia let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static">
+    <ng-template #contentAuditHistShipVia let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static" class="popup-blur">
         <!--<div #contentAuditHist id="contentAuditHist" class="modal fade">-->
         <div class="modal-header">
 
@@ -670,6 +693,7 @@
                             <th>Ship Via</th>
                             <th>Shipping Account Info</th>
                             <th>Memo</th>
+                            <th>IsActive</th>
                             <th>Updated By</th>
                             <th>Last Updated Time</th>
                             <th>Created By</th>
@@ -683,7 +707,7 @@
                         <td [ngStyle]="{'color':  getColorCodeForShipViaHistory(i, 'shipVia', audit.shipVia)  ? 'black' : 'red'  }">{{audit.shipVia}}</td>
                         <td [ngStyle]="{'color':  getColorCodeForShipViaHistory(i, 'shippingAccountInfo', audit.shippingAccountInfo)  ? 'black' : 'red'  }">{{audit.shippingAccountInfo}}</td>
                         <td [ngStyle]="{'color':  getColorCodeForShipViaHistory(i, 'memo', audit.memo)  ? 'black' : 'red'  }">{{audit.memo}}</td>
-                       
+                        <td [ngStyle]="{'color':  getColorCodeForShipViaHistory(i, 'isActive', audit.isActive)  ? 'black' : 'red'  }">{{audit.isActive}}</td>
                         <td>{{audit.updatedBy}}</td>
                         <td>{{audit.updatedDate | date: 'dd-MM-yyyy h:mm a '}}</td>
                         <td>{{audit.createdBy}}</td>
@@ -1015,7 +1039,7 @@
                         <p><span class="label"><b>Expiration Date: </b></span><span class="value">{{sourceViewforInterShipping.expirationDate | date:'dd-MM-yyyy'}}</span></p>
 
                         <p><span class="label"><b>Amount: </b></span><span class="value">{{sourceViewforInterShipping.amount}}</span></p>
-                        <p><span class="label"><b>Country: </b></span><span class="value">{{sourceViewforInterShipping.shipToCountry}}</span></p>
+                        <p><span class="label"><b>Country<span class="clr-red">*</span> : </b></span><span class="value">{{sourceViewforInterShipping.shipToCountry}}</span></p>
 
                         <div class="clear"></div>
                     </div>
@@ -1186,7 +1210,7 @@
                     <p><span class="label"><b>Expiration Date: </b></span><span class="value">{{sourceViewforInterShipping.expirationDate | date:'dd-MM-yyyy'}}</span></p>
 
                     <p><span class="label"><b>Amount: </b></span><span class="value">{{sourceViewforInterShipping.amount}}</span></p>
-                    <p><span class="label"><b>Country: </b></span><span class="value">{{sourceViewforInterShipping.shipToCountry}}</span></p>
+                    <p><span class="label"><b>Country<span class="clr-red">*</span> : </b></span><span class="value">{{sourceViewforInterShipping.shipToCountry}}</span></p>
 
                     <div class="clear"></div>
                 </div>
@@ -1237,7 +1261,7 @@
     </div>
 </div>
 
-<div class="modal" id="viewDomesticVia" data-backdrop="static">
+<div class="modal  popup-blur" id="viewDomesticVia" data-backdrop="static">
     <div class="modal-dialog">
         <div class="modal-content">
 
@@ -1416,7 +1440,9 @@
                         <th>Start Date</th>
                         <th>Expiration Date</th>
                         <th>Amount</th>
+                        <th>Country</th>
                         <th>Is Primary</th>
+                        <th>Is Active</th>
                         <th>Updated By</th>
                         <th>Last Updated Time</th>
                         <th>Created By</th>
@@ -1432,7 +1458,10 @@
                     <td [ngStyle]="{'color':  getColorCodeForInterHistory(i, 'startDate', audit.startDate)  ? 'black' : 'red'  }">{{audit.startDate}}</td>
                     <td [ngStyle]="{'color':  getColorCodeForInterHistory(i, 'expirationDate', audit.expirationDate)  ? 'black' : 'red'  }">{{audit.expirationDate}}</td>
                     <td [ngStyle]="{'color':  getColorCodeForInterHistory(i, 'amount', audit.amount)  ? 'black' : 'red'  }">{{audit.amount}}</td>
+                    <td [ngStyle]="{'color':  getColorCodeForInterHistory(i, 'countryName', audit.countryName)  ? 'black' : 'red'  }">{{audit.countryName}}</td>
+
                     <td [ngStyle]="{'color':  getColorCodeForInterHistory(i, 'isPrimary', audit.isPrimary)  ? 'black' : 'red'  }">{{audit.isPrimary}}</td>
+                    <td [ngStyle]="{'color':  getColorCodeForInterHistory(i, 'isActive', audit.isActive)  ? 'black' : 'red'  }">{{audit.isActive}}</td>
 
                     <td>{{audit.updatedBy}}</td>
                     <td>{{audit.updatedDate | date: 'dd-MM-yyyy h:mm a '}}</td>

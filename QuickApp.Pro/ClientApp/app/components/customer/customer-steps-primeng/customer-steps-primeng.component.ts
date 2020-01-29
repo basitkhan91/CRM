@@ -322,7 +322,7 @@ export class CustomerStepsPrimengComponent {
 			this.add_ataChapterList = responseData.map(x => {
 				return {
 					value: x,
-					label: x.ataChapterName
+					label: x.ataChapterCode + ' - ' + x.ataChapterName
 				}
 
 			})
@@ -330,7 +330,7 @@ export class CustomerStepsPrimengComponent {
 			this.search_ataChapterList = responseData.map(x => {
 				return {
 					value: x.ataChapterId,
-					label: x.ataChapterName
+					label: x.ataChapterCode + '-' + x.ataChapterName
 				}
 			})
 		});

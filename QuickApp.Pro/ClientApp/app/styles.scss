@@ -13506,6 +13506,11 @@ body .ui-datepicker table td > a.ui-state-active {
     border: 1px solid #ddd;
     padding: 10px;
     margin: 5px 0;
+    background-color: #fff;;
+}
+
+.popup-blur {
+    background: rgba(0, 0, 0, 0.3);
 }
 
 .shadow-box-cstm {
@@ -14108,6 +14113,13 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
 .ptable-cus-pma .ui-table-wrapper {
     padding: 0 !important;
 }
+.ptable-cus-pma .ui-table-summary {
+    margin-top: 3px;
+    background-color: #fff;
+    color: #333333;
+    border: 1px solid #fff !important;
+    padding: 0.571em 1em;
+}
 
 .multi-general p-multiselect[_ngcontent-c234] {
     width: 207px !important;
@@ -14269,6 +14281,9 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
 }
 
 .p-dropdown-cus-aircraft .ui-dropdown {
+    width: 100% !important;
+}
+.p-dropdown-cus-fullwidth .ui-dropdown {
     width: 100% !important;
 }
 
@@ -14666,12 +14681,17 @@ p-table .ui-table-summary {
     margin-right: -12px;
 }
 
-p-table .ui-table-summary label {
-    width: 100px;
-}
+
 
 p-table .ui-table-summary label.footer {
     margin-left: 44%;
+}
+p-table .ui-table-summary label {
+    width: 100px;
+    text-align: right;
+    padding-right: 8px;
+    margin-right: 0;
+    // margin-right: -20px !important;
 }
 
 p-table .ui-table-summary input {
@@ -14688,6 +14708,12 @@ p-table tr th input[type="text"], p-table tr th input[type="date"] {
 
 p-table tr td .btn i.fa-pencil {
     color: #0252b1;
+}
+.p-t-10 {
+    padding-top: 10px;
+}
+.full-width {
+    width: 100%;
 }
 
 .itemcapes-ptable .ui-table-scrollable-body {
@@ -14742,6 +14768,16 @@ p-table tr td .btn i.fa-pencil {
 button .ui-button-text {
     font-family: Roboto;
 }
+body .ui-fileupload .ui-fileupload-buttonbar .ui-button {
+    padding: 0;
+    border: none;
+}
+.ui-fileupload-content .ui-fileupload-row .ui-button {
+    padding: 11px;
+    height: 24px;
+    border: none;
+    font-size: 12px;
+}
 
 .accountdropdown.ui-dropdown .ui-dropdown-trigger {
     background-color: #337ab7 !important;
@@ -14782,4 +14818,8 @@ button .ui-button-text {
 }
 span.flag{
     margin-left: 10px !important;
+}
+.filelink{
+    color: blue !important;
+    text-decoration: underline !important;
 }
