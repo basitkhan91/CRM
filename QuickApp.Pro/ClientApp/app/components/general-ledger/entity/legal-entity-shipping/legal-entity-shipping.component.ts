@@ -1,12 +1,12 @@
 ﻿
 import { Component, Input, EventEmitter, Output } from '@angular/core';
-import { CustomerService } from '../../../services/customer.service';
+import { CustomerService } from '../../../../services/customer.service';
 import { OnInit, SimpleChanges } from '@angular/core/src/metadata/lifecycle_hooks';
-import { AuthService } from '../../../services/auth.service';
-import { AlertService, MessageSeverity } from '../../../services/alert.service';
-import { CustomerShippingModel } from '../../../models/customer-shipping.model';
-import { CustomerInternationalShippingModel, CustomerInternationalShipVia } from '../../../models/customer-internationalshipping.model';
-import { getValueFromObjectByKey, getObjectById, editValueAssignByCondition } from '../../../generic/autocomplete';
+import { AuthService } from '../../../../services/auth.service';
+import { AlertService, MessageSeverity } from '../../../../services/alert.service';
+import { CustomerShippingModel } from '../../../../models/customer-shipping.model';
+import { CustomerInternationalShippingModel, CustomerInternationalShipVia } from '../../../../models/customer-internationalshipping.model';
+import { getValueFromObjectByKey, getObjectById, editValueAssignByCondition } from '../../../../generic/autocomplete';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 import { NgbModal, NgbActiveModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import * as $ from 'jquery';

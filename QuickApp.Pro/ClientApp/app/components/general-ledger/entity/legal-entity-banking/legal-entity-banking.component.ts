@@ -27,9 +27,11 @@ export class EntityBankingComponent implements OnInit, AfterViewInit {
     @Input() countrycollection;
     @Input() allCurrencyInfo;
     @Input() customerListOriginal;
+    @Input() editMode;
+    @Input() editGeneralInformationData;
     @Output() tab = new EventEmitter<any>();
-    @Output() saveGeneralInformationData = new EventEmitter<any>();
-
+    @Input() savedGeneralInformationData;
+    @Input() creditTermsListOriginal;
     @Output() editGeneralInformation = new EventEmitter<any>();
 
 	cols1: any[];
@@ -354,7 +356,7 @@ export class EntityBankingComponent implements OnInit, AfterViewInit {
 						MessageSeverity.success
 						);
                     this.tab.emit('Billing');
-                    this.saveGeneralInformationData.emit(data);
+                    this.savedGeneralInformationData.emit(data);
                     //this.id = data.customerId;
                     this.editData = data;
                     this.isEdit = true;

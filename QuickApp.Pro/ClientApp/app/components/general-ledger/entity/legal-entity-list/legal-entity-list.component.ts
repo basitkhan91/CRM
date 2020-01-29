@@ -408,7 +408,7 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
 		//this.modal1.result.then(() => {
 		//	console.log('When user closes');
 		//}, () => { console.log('Backdrop click') })
-        this._route.navigateByUrl(`generalledgermodule/generalledgerpage/app-legal-entity-edit/${row.id}`);
+        this._route.navigateByUrl(`generalledgermodule/generalledgerpage/app-legal-entity-edit/${row.legalEntityId}`);
 	}
 	openEdit(content, row) {
 		this.GeneralInformation();
