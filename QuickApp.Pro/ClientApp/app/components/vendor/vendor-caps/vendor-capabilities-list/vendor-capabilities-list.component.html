@@ -91,22 +91,29 @@
                                         <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
                                         <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
         
-                                        <span>
+                                        <span data-toggle="modal" data-target="#vendorCapesView"><a class="btn nobg" (click)="viewSelectedRow(rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
+                                        <span><a class="btn nobg" (click)="openEdits(rowData)" matTooltip="Edit"><i class="fa fa-pencil"></i></a> </span>
+                                        <span><a class="btn nobg" (click)="openHistory(contentAuditHist,rowData)" matTooltip="History"><i class="fa fa-history"></i></a></span>
+                                        <span><a class="btn nobg" (click)="openDelete(content,rowData)" matTooltip="Delete"><i class="fa fa-trash"></i></a> </span>
+                                        <span><a class="btn nobg btn-pluspo-cstm" (click)="gotoCreatePO(rowData)" matTooltip="Create PO"><i class="fa fa-plus"></i></a> </span>
+                                        <span><a class="btn nobg btn-plusro-cstm" (click)="gotoCreateRO(rowData)" matTooltip="Create RO"><i class="fa fa-plus" style="color: #259e08;"></i></a> </span>
+
+                                        <!-- <span>
                                         <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="viewSelectedRow(rowData)" data-target="#vendorCapesView" data-toggle="modal" matTooltip="View" >
                                             <i class="fa fa-eye"></i>
                                         </a>
-                                        </span>
-                                        <button class="btn-edit" mat-icon-button (click)="openEdits(rowData)" matTooltip="edit">
+                                        </span> -->
+                                        <!-- <button class="btn-edit" mat-icon-button (click)="openEdits(rowData)" matTooltip="edit">
                                             <mat-icon>edit</mat-icon>
-                                        </button>
-                                        <button class="btn-history" mat-icon-button matTooltip="History" (click)="openHistory(contentAuditHist,rowData)">
+                                        </button> -->
+                                        <!-- <button class="btn-history" mat-icon-button matTooltip="History" (click)="openHistory(contentAuditHist,rowData)">
                                             <mat-icon color="green">history</mat-icon>
-                                        </button>
-                                        <button class="btn-delete" mat-icon-button matTooltip="Delete" (click)="openDelete(content,rowData)">
+                                        </button> -->
+                                        <!-- <button class="btn-delete" mat-icon-button matTooltip="Delete" (click)="openDelete(content,rowData)">
                                             <mat-icon color="warn">delete</mat-icon>
-                                        </button>
-                                        <span data-toggle="modal" data-target="#contacts"> <a class="btn btn-primary boxed-float-btn nobg" data-toggle="tooltip" (click)="gotoCreatePO(rowData)" matTooltip="Create PO"><i class="fa fa-plus"></i></a> </span>
-                                        <span data-toggle="modal" data-target="#contacts"> <a class="btn btn-primary boxed-float-btn nobg"  data-toggle="tooltip" (click)="gotoCreateRO(rowData)" matTooltip="Create RO"><i class="fa fa-plus" style="color:forestgreen"></i></a></span>
+                                        </button> -->
+                                        <!-- <span data-toggle="modal" data-target="#contacts"> <a class="btn btn-primary boxed-float-btn nobg" data-toggle="tooltip" (click)="gotoCreatePO(rowData)" matTooltip="Create PO"><i class="fa fa-plus"></i></a> </span>
+                                        <span data-toggle="modal" data-target="#contacts"> <a class="btn btn-primary boxed-float-btn nobg"  data-toggle="tooltip" (click)="gotoCreateRO(rowData)" matTooltip="Create RO"><i class="fa fa-plus" style="color:forestgreen"></i></a></span> -->
                                     </td>
         
                                 </tr>

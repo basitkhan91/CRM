@@ -819,7 +819,14 @@ export class VendorService {
         return this.actionEndpoint.getVendorDataById(vendorId);
       }
 
-      
+      getAllVendorList(data) {
+        return Observable.forkJoin(
+            this.actionEndpoint.getAllVendorList(data));
+    }      
+
+    vendorListGlobalSearch(filterText, pageNumber, pageSize, isActive) {
+        return this.actionEndpoint.vendorListGlobalSearch(filterText, pageNumber, pageSize, isActive);
+      }
 
       
 }
