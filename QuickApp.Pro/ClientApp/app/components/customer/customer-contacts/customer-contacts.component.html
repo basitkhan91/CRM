@@ -402,7 +402,7 @@
                             <div class="form-group" style="width:300px;margin-top:20px;">
                                 <label>Work Phone <span class="clr-red" style="margin-right:110px;">*</span></label>
                                 <div class="col-md-12">
-                                    <input class="form-control" type="text"  name="workPhone" [(ngModel)]="contactInformation.workPhone" style="width: calc(62% - 63px) !important;" (keypress)="patternMobilevalidationWithSpl($event)"  maxlength="20">
+                                    <input class="form-control" type="text" required  name="workPhone" [(ngModel)]="contactInformation.workPhone" style="width: calc(62% - 63px) !important;" (keypress)="patternMobilevalidationWithSpl($event)"  maxlength="20">
                                     -
                                     <input class="form-control" type="text" name="workPhoneExtn" [(ngModel)]="contactInformation.workPhoneExtn" style="width: calc(43% - 63px) !important;">
                                 </div>

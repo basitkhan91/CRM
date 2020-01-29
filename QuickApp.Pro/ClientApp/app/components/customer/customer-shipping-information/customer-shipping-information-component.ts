@@ -68,7 +68,9 @@ export class CustomerShippingInformationComponent implements OnInit {
         // { field: 'isPrimary', header: 'Is Primary' },
         { field: 'startDate', header: 'Start Date' },
         { field: 'expirationDate', header: 'Expiration Date' },
-        { field: 'amount', header: 'Amount' }
+        { field: 'amount', header: 'Amount' },
+        { field: 'shipToCountry', header: 'Country' }
+
     ]
     selectedColumnsForDomesticTable = this.domesticShippingHeaders;
     selectedColumnsForInternationTable = this.internationalShippingHeaders;
