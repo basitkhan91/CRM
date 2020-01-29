@@ -28,6 +28,10 @@
         CustomerBillingAddress,
         CustomerShippingAddress,
         CustomerInternationalShippingAddress,
-        LegalEntity
+        LegalEntity,
+        VendorContact,
+        VendorBillingAddress,
+        VendorShippingAddress,
+
     }
 }

@@ -228,6 +228,7 @@ import { TableModule } from 'primeng/table';
 import { StageCodeService } from './services/work-order-stagecode.service';
 import { RefreshAlert } from './directive/refreshalert.directive';
 
+import { CustomerPagesModule } from './customerpages/customerpages.module';
 
 @NgModule({
     imports: [
@@ -243,6 +244,7 @@ import { RefreshAlert } from './directive/refreshalert.directive';
         CommonModule,
         TableModule,
         DropdownModule,
+        CustomerPagesModule,
         TranslateModule.forRoot({
             loader: {
                 provide: TranslateLoader,

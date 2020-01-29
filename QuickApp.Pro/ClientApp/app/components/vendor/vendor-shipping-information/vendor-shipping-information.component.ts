@@ -24,6 +24,7 @@ import { Router } from '@angular/router';
 import * as $ from 'jquery';
 import { editValueAssignByCondition, getObjectById } from '../../../generic/autocomplete';
 import { VendorStepsPrimeNgComponent } from '../vendor-steps-prime-ng/vendor-steps-prime-ng.component';
+import { ConfigurationService } from '../../../services/configuration.service';
 declare const google: any;
 @Component({
     selector: 'app-vendor-shipping-information',
@@ -121,9 +122,14 @@ export class VendorShippingInformationComponent {
     isEditShippingInfo: boolean = false;
     selectedRowforDelete: any;
     auditHistory: any = [];
+    formData = new FormData();
+    totalRecords: number = 0;
+    pageIndex: number = 0;
+    pageSize: number = 10;
+    totalPages: number = 0;
 
     constructor(private http: HttpClient, private router: Router,
-        private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
+        private authService: AuthService, private modalService: NgbModal, private configurations: ConfigurationService, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
         if (this.workFlowtService.listCollection !== undefined) {
             this.workFlowtService.isEditMode = true;
         }
@@ -795,6 +801,36 @@ export class VendorShippingInformationComponent {
         this.sourceVendor = {};
         this.isEditShippingInfo = false;
     }
+
+    sampleExcelDownload() {
+        const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=VendorShipingAddress&fileName=VendorShippingAddress.xlsx`;
+        window.location.assign(url);
+    }
+
+    customExcelUpload(event) {
+        const file = event.target.files;
+
+        if (file.length > 0) {
+            this.formData.append('file', file[0])
+            this.workFlowtService.ShippingFileUpload(this.formData, this.local.vendorId).subscribe(res => {
+                event.target.value = '';
+
+                this.formData = new FormData();
+                this.loadData();
+
+                this.alertService.showMessage(
+                    'Success',
+                    `Successfully Uploaded  `,
+                    MessageSeverity.success
+                );
+            })
+        }
+    }
+
+    getPageCount(totalNoofRecords, pageSize) {
+        return Math.ceil(totalNoofRecords / pageSize)
+    }
+
 
 
 

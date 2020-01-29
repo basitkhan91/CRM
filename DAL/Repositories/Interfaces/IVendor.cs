@@ -1,5 +1,6 @@
 ﻿using DAL.Common;
 using DAL.Models;
+using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 
 namespace DAL.Repositories.Interfaces
@@ -77,5 +78,9 @@ namespace DAL.Repositories.Interfaces
 
         IEnumerable<object> searchItemAircraftMappingDataByMultiTypeIdModelIDDashID(long VendorCapabilityId, string AircraftTypeId, string AircraftModelId, string DashNumberId, string memo);
 
+
+        IEnumerable<object> UploadVendorBillingAddressCustomData(IFormFile file, long vendorId);
+        IEnumerable<object> UploadVendorShippingAddressCustomData(IFormFile file, long vendorId);
+        IEnumerable<object> UploadVendorContactsCustomData(IFormFile file, long vendorId);
     }
 }

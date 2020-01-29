@@ -1302,6 +1302,51 @@ namespace DAL.Repositories
             _appContext.ShippingBillingAddressAudit.Add(audit);
             _appContext.SaveChanges();
         }
+        public void ContactsHistory(long referenceId, int moduleId, long contactId,  string updatedBy)
+        {
+            ContactAudit audit = new ContactAudit();
+            long? contId = 0;
+
+            if (moduleId == Convert.ToInt32(ModuleEnum.Customer))
+            {
+                
+                    var cont = _appContext.CustomerContact.AsNoTracking().Where(p => p.CustomerContactId == contactId).FirstOrDefault();
+                    audit.ContactId = Convert.ToInt64(cont.CustomerContactId);
+                     audit.IsDefaultContact = Convert.ToBoolean(cont.IsDefaultContact);
+                    audit.IsActive = Convert.ToBoolean(cont.IsActive);
+                    audit.MasterCompanyId = Convert.ToInt32(cont.MasterCompanyId);
+                    audit.ModuleId = moduleId;
+                    audit.ReferenceId = referenceId;
+                    
+                    audit.CreatedBy = audit.UpdatedBy = updatedBy;
+                    audit.CreatedDate = audit.UpdatedDate = DateTime.Now;
+                contId = Convert.ToInt64(cont.ContactId);
+                
+            }
+
+            var con = _appContext.Contact.AsNoTracking().Where(p => p.ContactId == contId).FirstOrDefault();
+
+            audit.FirstName = con.FirstName;
+            audit.LastName = con.LastName;
+            audit.MiddleName = con.MiddleName;
+            audit.ContactTitle = con.ContactTitle;
+            audit.WorkPhone = con.WorkPhone;
+            audit.MobilePhone = con.MobilePhone;
+            audit.Prefix = con.Prefix;
+            audit.Suffix = con.Suffix;
+            audit.AlternatePhone = con.AlternatePhone;
+            audit.WorkPhoneExtn = con.WorkPhoneExtn;
+            audit.Fax = con.Fax;
+            audit.Email = con.Email;
+            audit.WebsiteURL = con.WebsiteURL;
+            audit.Notes = con.Notes;
+            audit.Tag = con.Tag;
+            _appContext.ContactAudit.Add(audit);
+            _appContext.SaveChanges();
+        }
+
+
+
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
     }
 }
