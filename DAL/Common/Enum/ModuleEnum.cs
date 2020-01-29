@@ -27,7 +27,7 @@
         NhaTlaAltEquItemMapping,
         CustomerBillingAddress,
         CustomerShippingAddress,
-        CustomerInternationalShippingAddress
-
+        CustomerInternationalShippingAddress,
+        LegalEntity
     }
 }

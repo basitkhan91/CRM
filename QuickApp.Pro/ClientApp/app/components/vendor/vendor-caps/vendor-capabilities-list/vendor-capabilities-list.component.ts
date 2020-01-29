@@ -365,4 +365,8 @@ export class VendorCapabilitiesListComponent implements OnInit{
         this.viewSelectedRow(rowData);
         $('#vendorCapesView').modal('show');
     }
+
+    getPageCount(totalNoofRecords, pageSize) {
+		return Math.ceil(totalNoofRecords / pageSize)
+	}
 }

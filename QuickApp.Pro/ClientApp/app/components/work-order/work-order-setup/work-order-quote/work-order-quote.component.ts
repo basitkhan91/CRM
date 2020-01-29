@@ -120,6 +120,7 @@ historicalWorkOrderId: number = 0;
 woWorkFlowId: number = 0;
 currenttaskId: number = 0;
 workOrderFreightList = [];
+overAllMarkup: any;
 
 
 
@@ -1041,11 +1042,17 @@ loadCurrency(){
 );
 }
 
-markupChanged(matData){
+markupChanged(matData, type){
   try{
     this.markupList.forEach((markup)=>{
-      if(markup.value == matData.markupPercentageId){
+      if(type == 'row' && markup.value == matData.markupPercentageId){
         matData.materialCostPlus = Number(matData.extendedCost) + ((Number(matData.extendedCost) / 100) * Number(markup.label))
+      }
+      else if(type == 'all' && markup.value == this.overAllMarkup){
+        this.materialListQuotation.forEach((mData)=>{
+          mData.markupPercentageId = this.overAllMarkup;
+          mData.materialCostPlus = Number(mData.extendedCost) + ((Number(mData.extendedCost) / 100) * Number(markup.label))
+        })
       }
     })
   }

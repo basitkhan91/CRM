@@ -928,13 +928,14 @@ namespace DAL.Repositories
                 model.IsDeleted = false;
                 if (model.IsPrimary == true)
                 {
-                    var customershipping = _appContext.CustomerInternationalShipping.Where(p => p.CustomerId == model.CustomerId).ToList();
+                    var customershipping = _appContext.CustomerInternationalShipping.Where(p => p.CustomerId == model.CustomerId &&p.IsPrimary==true).ToList();
 
-                    if (customershipping != null && customershipping.Count > 0)
+                    if (customershipping != null )
                     {
                         foreach (var item in customershipping)
                         {
                             item.IsPrimary = false;
+                            item.UpdatedDate = DateTime.Now;
                             _appContext.CustomerInternationalShipping.Update(item);
                             _appContext.SaveChanges();
                         }
@@ -962,17 +963,17 @@ namespace DAL.Repositories
 
                 if (model.IsPrimary == true)
                 {
-                  
-                    //var shipping = _appContext.CustomerInternationalShipping.Where(p => p.CustomerId == model.CustomerId).ToList();
 
-                    if (customershipping != null && customershipping.Count > 0)
+                    CustomerInternationalShipping ship = customershipping.Where(p => p.IsPrimary == true).FirstOrDefault();
+
+                    if (ship != null && model.InternationalShippingId!=ship.InternationalShippingId)
                     {
-                        foreach (var item in customershipping)
-                        {
-                            item.IsPrimary = false;
-                            _appContext.CustomerInternationalShipping.Update(item);
+
+                        ship.IsPrimary = false;
+                        ship.UpdatedDate = DateTime.Now;
+                            _appContext.CustomerInternationalShipping.Update(ship);
                             _appContext.SaveChanges();
-                        }
+                        
                     }
                 }
 
@@ -1847,8 +1848,33 @@ namespace DAL.Repositories
         public long AddCustomerShippingAddress(Customer objCustomer)
         {
             long shippingAddressId = 0;
-                    CustomerShippingAddress data = _appContext.CustomerShippingAddress.AsNoTracking().Where(p => p.AddressId == objCustomer.AddressId && p.CustomerId == objCustomer.CustomerId).FirstOrDefault();
-            //_appContext.CustomerShippingAddress.detach(objCustomerShippingAddress);
+            CommonRepository commonRepository = new CommonRepository(_appContext);
+
+          
+            var custShipping = _appContext.CustomerShippingAddress.Where(p => p.CustomerId == objCustomer.CustomerId && p.IsPrimary == true).AsNoTracking().FirstOrDefault();
+            CustomerShippingAddress data = _appContext.CustomerShippingAddress.Where(p => p.AddressId == objCustomer.AddressId && p.CustomerId == objCustomer.CustomerId).AsNoTracking().FirstOrDefault();
+            if (data != null)
+            {
+                if (custShipping != null && data.CustomerShippingAddressId != custShipping.CustomerShippingAddressId)
+                {
+                    CustomerShippingAddress ba = new CustomerShippingAddress();
+
+                    ba.CustomerShippingAddressId = custShipping.CustomerShippingAddressId;
+                    ba.UpdatedDate = DateTime.Now;
+                    ba.UpdatedBy = objCustomer.UpdatedBy;
+                    ba.IsPrimary = false;
+
+                    _appContext.CustomerShippingAddress.Attach(ba);
+                    _appContext.Entry(ba).Property(x => x.IsPrimary).IsModified = true;
+                    _appContext.Entry(ba).Property(x => x.UpdatedDate).IsModified = true;
+                    _appContext.Entry(ba).Property(x => x.UpdatedBy).IsModified = true;
+                    _appContext.SaveChanges();
+                    //custShipping.IsPrimary = false;
+                    //_appContext.CustomerShippingAddress.Update(custShipping);
+                    //_appContext.SaveChanges();
+                    commonRepository.ShippingBillingAddressHistory(Convert.ToInt64(objCustomer.CustomerId), Convert.ToInt32(ModuleEnum.Customer), Convert.ToInt64(custShipping.CustomerShippingAddressId), Convert.ToInt32(AddressTypeEnum.ShippingAddress), objCustomer.UpdatedBy);
+                }
+            }
             if (data != null)
             {
                 if (data.CustomerShippingAddressId > 0)
@@ -1862,7 +1888,7 @@ namespace DAL.Repositories
                     data.CreatedBy = objCustomer.CreatedBy;
                     data.UpdatedBy = objCustomer.UpdatedBy;
                     data.IsActive = objCustomer.IsActive;
-                   // data.IsPrimary = true;
+                    data.IsPrimary = true;
                     data.IsDelete = false;
                     _appContext.CustomerShippingAddress.Update(data);
                     _appContext.SaveChanges();
@@ -1872,6 +1898,25 @@ namespace DAL.Repositories
             }
             else
             {
+                 if (custShipping != null)
+                {
+                    CustomerShippingAddress ba = new CustomerShippingAddress();
+
+                    ba.CustomerShippingAddressId = custShipping.CustomerShippingAddressId;
+                    ba.UpdatedDate = DateTime.Now;
+                    ba.UpdatedBy = objCustomer.UpdatedBy;
+                    ba.IsPrimary = false;
+
+                    _appContext.CustomerShippingAddress.Attach(ba);
+                    _appContext.Entry(ba).Property(x => x.IsPrimary).IsModified = true;
+                    _appContext.Entry(ba).Property(x => x.UpdatedDate).IsModified = true;
+                    _appContext.Entry(ba).Property(x => x.UpdatedBy).IsModified = true;
+                    _appContext.SaveChanges();
+                    //custShipping.IsPrimary = false;
+                    //_appContext.CustomerShippingAddress.Update(custShipping);
+                    //_appContext.SaveChanges();
+                    commonRepository.ShippingBillingAddressHistory(Convert.ToInt64(objCustomer.CustomerId), Convert.ToInt32(ModuleEnum.Customer), Convert.ToInt64(custShipping.CustomerShippingAddressId), Convert.ToInt32(AddressTypeEnum.ShippingAddress), objCustomer.UpdatedBy);
+                }
                 CustomerShippingAddress objCustomerShippingAddress = new CustomerShippingAddress();
 
                 objCustomerShippingAddress.CustomerId = objCustomer.CustomerId;
@@ -1884,6 +1929,8 @@ namespace DAL.Repositories
                 objCustomerShippingAddress.UpdatedBy = objCustomer.UpdatedBy;
                 objCustomerShippingAddress.IsActive = objCustomer.IsActive;
                 objCustomerShippingAddress.IsPrimary = true;
+
+                
                 objCustomerShippingAddress.IsDelete = false;
 
                 _appContext.CustomerShippingAddress.Add(objCustomerShippingAddress);
@@ -1894,6 +1941,7 @@ namespace DAL.Repositories
             }
 
 
+            commonRepository.ShippingBillingAddressHistory(Convert.ToInt64(objCustomer.CustomerId), Convert.ToInt32(ModuleEnum.Customer), Convert.ToInt64(shippingAddressId), Convert.ToInt32(AddressTypeEnum.ShippingAddress), objCustomer.UpdatedBy);
 
             return shippingAddressId;
         }
@@ -1911,7 +1959,38 @@ namespace DAL.Repositories
         public long AddCustomerBillinggAddress(Customer objCustomer)
         {
             long billingAddressId = 0;
-            CustomerBillingAddress data = _appContext.CustomerBillingAddress.AsNoTracking().Where(p => p.AddressId == objCustomer.AddressId && p.CustomerId == objCustomer.CustomerId).FirstOrDefault();
+            CommonRepository commonRepository = new CommonRepository(_appContext);
+
+            var shippingList = _appContext.CustomerBillingAddress.AsNoTracking().Where(p => p.CustomerId == objCustomer.CustomerId).ToList();
+            var custShipping = shippingList.Where(p =>p.IsPrimary == true).FirstOrDefault();
+            CustomerBillingAddress data = shippingList.Where(p => p.AddressId == objCustomer.AddressId).FirstOrDefault();
+            if (data != null)
+            {
+                if (custShipping != null && data != null && custShipping.CustomerBillingAddressId != data.CustomerBillingAddressId)
+                {
+                    custShipping.IsPrimary = false;
+
+                    CustomerBillingAddress ba = new CustomerBillingAddress();
+
+                    ba.CustomerBillingAddressId = custShipping.CustomerBillingAddressId;
+                    ba.UpdatedDate = DateTime.Now;
+                    ba.UpdatedBy = objCustomer.UpdatedBy;
+                    ba.IsPrimary = false;
+
+                    _appContext.CustomerBillingAddress.Attach(ba);
+                    _appContext.Entry(ba).Property(x => x.IsPrimary).IsModified = true;
+                    _appContext.Entry(ba).Property(x => x.UpdatedDate).IsModified = true;
+                    _appContext.Entry(ba).Property(x => x.UpdatedBy).IsModified = true;
+                    _appContext.SaveChanges();
+
+                    // _appContext.CustomerBillingAddress.Update(custShipping);
+                    //  _appContext.SaveChanges();
+
+                    commonRepository.ShippingBillingAddressHistory(Convert.ToInt64(objCustomer.CustomerId), Convert.ToInt32(ModuleEnum.Customer), Convert.ToInt64(custShipping.CustomerBillingAddressId), Convert.ToInt32(AddressTypeEnum.BillingAddress), objCustomer.UpdatedBy);
+                }
+            }
+
+            
 
             if (data != null)
             {
@@ -1937,6 +2016,26 @@ namespace DAL.Repositories
             }
             else
             {
+                 if (custShipping != null)
+                {
+                    CustomerBillingAddress ba = new CustomerBillingAddress();
+
+                    ba.CustomerBillingAddressId = custShipping.CustomerBillingAddressId;
+                    ba.UpdatedDate = DateTime.Now;
+                    ba.UpdatedBy = objCustomer.UpdatedBy;
+                    ba.IsPrimary = false;
+
+                    _appContext.CustomerBillingAddress.Attach(ba);
+                    _appContext.Entry(ba).Property(x => x.IsPrimary).IsModified = true;
+                    _appContext.Entry(ba).Property(x => x.UpdatedDate).IsModified = true;
+                    _appContext.Entry(ba).Property(x => x.UpdatedBy).IsModified = true;
+                    _appContext.SaveChanges();
+                    //custShipping.IsPrimary = false;
+                    //_appContext.CustomerShippingAddress.Update(custShipping);
+                    //_appContext.SaveChanges();
+                    commonRepository.ShippingBillingAddressHistory(Convert.ToInt64(objCustomer.CustomerId), Convert.ToInt32(ModuleEnum.Customer), Convert.ToInt64(custShipping.CustomerBillingAddressId), Convert.ToInt32(AddressTypeEnum.BillingAddress), objCustomer.UpdatedBy);
+                }
+
                 CustomerBillingAddress objCustomerBillingAddress = new CustomerBillingAddress();
 
                 objCustomerBillingAddress.CustomerId = objCustomer.CustomerId;
@@ -1957,8 +2056,9 @@ namespace DAL.Repositories
                 billingAddressId = Convert.ToInt64(objCustomerBillingAddress.CustomerBillingAddressId);
 
             }
+            commonRepository.ShippingBillingAddressHistory(Convert.ToInt64(objCustomer.CustomerId), Convert.ToInt32(ModuleEnum.Customer), Convert.ToInt64(billingAddressId), Convert.ToInt32(AddressTypeEnum.BillingAddress), objCustomer.UpdatedBy);
 
-             return billingAddressId;
+            return billingAddressId;
 
 
         }
@@ -2307,7 +2407,7 @@ namespace DAL.Repositories
                 _appContext.Entry(model).Property(x => x.UpdatedBy).IsModified = true;
 
                 _appContext.SaveChanges();
-
+             
             }
             catch (Exception ex)
             {
@@ -2576,6 +2676,7 @@ namespace DAL.Repositories
                                 c.UpdatedBy,
                                 c.UpdatedDate,
                                 c.CreatedDate,
+                                c.IsActive,
                                
                                 c.MasterCompanyId
                             }).OrderByDescending(c => c.UpdatedDate).ToList();
@@ -2585,7 +2686,7 @@ namespace DAL.Repositories
         public IEnumerable<object> GetAuditShippingViaDetailsById(long customerId, long internationalShippingId,long ShippingViaDetailsId)
         {
             var data = (from c in _appContext.ShippingViaDetailsAudit
-                        where c.CustomerId == customerId && c.ShippingViaDetailsId ==c.ShippingViaDetailsId && c.InternationalShippingId==internationalShippingId
+                        where c.CustomerId == customerId && c.ShippingViaDetailsId == ShippingViaDetailsId && c.InternationalShippingId==internationalShippingId
                         select new
                         {
                             c.AuditShippingViaDetailsId,
@@ -2601,7 +2702,8 @@ namespace DAL.Repositories
                            c.ShipVia,
                            c.ShippingAccountInfo,
                             c.ShippingURL,
-                            c.MasterCompanyId
+                            c.MasterCompanyId,
+                            c.IsActive
                         }).OrderByDescending(c => c.UpdatedDate).ToList();
             return data;
         }
@@ -3016,6 +3118,61 @@ namespace DAL.Repositories
 
             }
            
+        }
+
+        private void ShippingBillingAddressHistory(CustomerShippingAddress shippingAddress, long referenceId, int moduleId, long billingShippingId, int addressType, string updatedBy)
+        {
+            ShippingBillingAddressAudit audit = new ShippingBillingAddressAudit();
+            long? addressId = 0;
+
+            if (moduleId == Convert.ToInt32(ModuleEnum.Customer))
+            {
+                if (addressType == Convert.ToInt32(AddressTypeEnum.ShippingAddress))
+                {
+
+                    // var shippingAddress = _appContext.CustomerShippingAddress.Where(p => p.CustomerShippingAddressId == billingShippingId).AsNoTracking().FirstOrDefault();
+                    
+                    audit.AddressId = Convert.ToInt64(shippingAddress.CustomerShippingAddressId);
+                    audit.AddressType = Convert.ToInt32(AddressTypeEnum.ShippingAddress);
+                    audit.IsPrimary = Convert.ToBoolean(shippingAddress.IsPrimary);
+                    audit.IsActive = Convert.ToBoolean(shippingAddress.IsActive);
+                    audit.MasterCompanyId = Convert.ToInt32(shippingAddress.MasterCompanyId);
+                    audit.ModuleId = moduleId;
+                    audit.ReferenceId = referenceId;
+                    audit.SiteName = shippingAddress.SiteName;
+                    audit.CreatedBy = audit.UpdatedBy = updatedBy;
+                    audit.CreatedDate = audit.UpdatedDate = DateTime.Now;
+                    addressId = shippingAddress.AddressId;
+
+                }
+                else
+                {
+                    var billingAddress = _appContext.CustomerBillingAddress.AsNoTracking().Where(p => p.CustomerBillingAddressId == billingShippingId).FirstOrDefault();
+                    audit.AddressId = Convert.ToInt64(billingAddress.CustomerBillingAddressId);
+                    audit.AddressType = Convert.ToInt32(AddressTypeEnum.BillingAddress);
+                    audit.IsPrimary = Convert.ToBoolean(billingAddress.IsPrimary);
+                    audit.IsActive = Convert.ToBoolean(billingAddress.IsActive);
+                    audit.MasterCompanyId = Convert.ToInt32(billingAddress.MasterCompanyId);
+                    audit.ModuleId = moduleId;
+                    audit.ReferenceId = referenceId;
+                    audit.SiteName = billingAddress.SiteName;
+                    audit.CreatedBy = audit.UpdatedBy = updatedBy;
+                    audit.CreatedDate = audit.UpdatedDate = DateTime.Now;
+                    addressId = billingAddress.AddressId;
+                }
+            }
+
+            var addr = _appContext.Address.AsNoTracking().Where(p => p.AddressId == addressId).FirstOrDefault();
+
+            audit.Line1 = addr.Line1;
+            audit.Line2 = addr.Line2;
+            audit.City = addr.City;
+            audit.StateOrProvince = addr.StateOrProvince;
+            audit.Country = addr.Country;
+            audit.PostalCode = addr.PostalCode;
+
+            _appContext.ShippingBillingAddressAudit.Add(audit);
+            _appContext.SaveChanges();
         }
     }
 }

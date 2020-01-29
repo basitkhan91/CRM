@@ -631,7 +631,7 @@
                                             </td>
                                         </tr>
                                     </ng-template>
-                                    <ng-template pTemplate="emptymessage" let-columns *ngIf="billingInfoList?.length == 0">
+                                    <ng-template pTemplate="emptymessage" let-columns *ngIf="billingInfoList.length == 0">
                                         <tr>
                                             <td [attr.colspan]="columns.length+1" style="color: red; font-weight: bold; text-align: center">
                                                 No records found

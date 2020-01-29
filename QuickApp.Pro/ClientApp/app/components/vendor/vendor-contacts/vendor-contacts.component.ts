@@ -97,7 +97,7 @@ export class VendorContactsComponent implements OnInit {
     loadingIndicator: boolean;
     closeResult: string;
     selectedColumn: any[];
-    
+
     cols: any[];
     title: string = "Create";
     id: number;
@@ -130,12 +130,12 @@ export class VendorContactsComponent implements OnInit {
     selectedColumns = this.vendorContactsColumns;
     constructor(private router: ActivatedRoute, private route: Router, private customerser: CustomerService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
 
-        if(this.workFlowtService.listCollection !== undefined){
+        if (this.workFlowtService.listCollection !== undefined) {
             this.workFlowtService.isEditMode = true;
         }
-        
-        console.log( this.workFlowtService);
-        
+
+        console.log(this.workFlowtService);
+
         if (this.local) {
             this.workFlowtService.contactCollection = this.local;
         }
@@ -147,7 +147,7 @@ export class VendorContactsComponent implements OnInit {
         }
         this.dataSource = new MatTableDataSource();
         if (this.workFlowtService.listCollection && this.workFlowtService.isEditMode == true) {
-            this.local = this.workFlowtService.listCollection.t;
+            this.local = this.workFlowtService.listCollection;
             this.loadData();
         }
         this.alertService.stopLoadingMessage();
@@ -201,15 +201,15 @@ export class VendorContactsComponent implements OnInit {
     }
 
 
-    private loadData() {        
+    private loadData() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
         this.workFlowtService.getContacts(this.local.vendorId).subscribe(
-            results => this.onDataLoadSuccessful(results[0]),           
-            error => this.onDataLoadFailed(error)            
+            results => this.onDataLoadSuccessful(results[0]),
+            error => this.onDataLoadFailed(error)
         );
 
-        
+
     }
 
     private loadCompleteddata() {
@@ -258,10 +258,10 @@ export class VendorContactsComponent implements OnInit {
     private refresh() {
         this.applyFilter(this.dataSource.filter);
     }
-    private onDataLoadSuccessful(allWorkFlows: any[]) {       
+    private onDataLoadSuccessful(allWorkFlows: any[]) {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
-        this.dataSource.data = allWorkFlows;      
+        this.dataSource.data = allWorkFlows;
         this.allActions = allWorkFlows;
         //console.log(this.allActions);
         //const responseData = allWorkFlows;
@@ -269,7 +269,7 @@ export class VendorContactsComponent implements OnInit {
         //   return {
         //       ...x,
         //     workPhone: `${x.workPhone} - ${x.workPhoneExtn}`,            
-           
+
         //   };
         // });         
     }
@@ -347,21 +347,21 @@ export class VendorContactsComponent implements OnInit {
         this.isEditMode = false;
         this.isDeleteMode = true;
         delete row.updatedBy;
-        this.localCollection = row;  
-        this.selectedRowforDelete = row;     
+        this.localCollection = row;
+        this.selectedRowforDelete = row;
         this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
 
-    openEdit(content, row) {        
+    openEdit(content, row) {
         this.isEditMode = true;
         this.isSaving = true;
-        this.sourceVendor = { ...row };       
+        this.sourceVendor = { ...row };
         this.loadMasterCompanies();
         this.isEditContactInfo = true;
-    }    
+    }
     openView(content, row) {
         this.sourceVendor = row;
         this.action_name = row.description;
@@ -443,7 +443,7 @@ export class VendorContactsComponent implements OnInit {
         }
     }
 
-    editItemAndCloseModel() {        
+    editItemAndCloseModel() {
         this.isSaving = true;
         if (!(this.sourceVendor.firstName && this.sourceVendor.lastName && this.sourceVendor.workPhone &&
             this.sourceVendor.email
@@ -458,7 +458,7 @@ export class VendorContactsComponent implements OnInit {
                 this.sourceVendor.updatedBy = this.userName;
                 this.sourceVendor.masterCompanyId = 1;
                 this.isDefault = this.sourceVendor.isDefaultContact;
-                if(!this.sourceVendor.isDefaultContact){
+                if (!this.sourceVendor.isDefaultContact) {
                     this.sourceVendor.isDefaultContact = false;
                 }
                 // before you commit make sure u don't have conlog, debug, commented code...
@@ -493,8 +493,8 @@ export class VendorContactsComponent implements OnInit {
         }
 
         else {
-        }       
-        this.workFlowtService.contactCollection = this.local;        
+        }
+        this.workFlowtService.contactCollection = this.local;
     }
 
 
@@ -515,16 +515,15 @@ export class VendorContactsComponent implements OnInit {
         this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-financial-information');
     }
 
-    deleteItemAndCloseModel() {       
-       let contactId=this.localCollection.contactId;
-       if(contactId >0)
-       {
-        this.isSaving = true;
-        this.workFlowtService.deleteContact(contactId).subscribe(
-            response => this.saveCompleted(this.sourceVendor),
-            error => this.saveFailedHelper(error));
-       }
-       this.modal.close();      
+    deleteItemAndCloseModel() {
+        let contactId = this.localCollection.contactId;
+        if (contactId > 0) {
+            this.isSaving = true;
+            this.workFlowtService.deleteContact(contactId).subscribe(
+                response => this.saveCompleted(this.sourceVendor),
+                error => this.saveFailedHelper(error));
+        }
+        this.modal.close();
     }
 
     updateVendorContact(updateObj: any) {
@@ -676,12 +675,12 @@ export class VendorContactsComponent implements OnInit {
 
     patternMobilevalidationWithSpl(event: any) {
         const pattern = /[0-9\+\-()\ ]/;
-    
+
         let inputChar = String.fromCharCode(event.charCode);
         if (event.keyCode != 8 && !pattern.test(inputChar)) {
-          event.preventDefault();
+            event.preventDefault();
         }
-        
-      }
+
+    }
 
 }
