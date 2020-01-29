@@ -20,7 +20,7 @@ import { TableModule } from 'primeng/table';
 
 import { GroupByPipe } from '../pipes/group-by.pipe';
 import { CommonModule } from "@angular/common";
-
+import { CustomerPagesModule } from "../customerpages/customerpages.module";
 
 @NgModule({
     imports: [
@@ -29,7 +29,8 @@ import { CommonModule } from "@angular/common";
         BrowserModule, BrowserAnimationsModule,
         QuickAppProMaterialModule,
         TranslateModule,
-        CommonModule
+        CommonModule,
+        CustomerPagesModule
     ],
     exports: [
         FlexLayoutModule,

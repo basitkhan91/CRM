@@ -165,6 +165,7 @@ export class CustomerShippingInformationComponent implements OnInit {
     }
 
     ngOnChanges(changes: SimpleChanges) {
+       
         for (let property in changes) {
             if (property == 'selectedCustomerTab') {
                 if (changes[property].currentValue == "Shipping") {
@@ -172,6 +173,18 @@ export class CustomerShippingInformationComponent implements OnInit {
                     //                this.getInternationalShippingByCustomerId()
                     //                this.getShipViaDataByInternationalShippingId()
                 }
+            }
+            if (property == 'customerDataFromExternalComponents') {
+
+            if(changes[property].currentValue != {}){
+                this.id = this.customerDataFromExternalComponents.customerId;
+                this.customerCode = this.customerDataFromExternalComponents.customerCode;
+                this.customerName = this.customerDataFromExternalComponents.name;
+                this.isViewMode = true;
+                // this.getList();
+                this.getDomesticShippingByCustomerId();
+                this.getInternationalShippingByCustomerId();
+              } 
             }
         }
 

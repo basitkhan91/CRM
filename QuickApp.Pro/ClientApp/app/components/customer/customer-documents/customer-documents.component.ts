@@ -1,4 +1,4 @@
-﻿import { Component, OnInit, AfterViewInit, ViewChild, Output, EventEmitter, Input, ElementRef } from '@angular/core';
+﻿import { Component, OnInit, AfterViewInit, ViewChild, Output, EventEmitter, Input, ElementRef, SimpleChanges } from '@angular/core';
 import { fadeInOut } from '../../../services/animations';
 import { Params, ActivatedRoute } from '@angular/router';
 import { Router, NavigationExtras } from '@angular/router';
@@ -96,6 +96,22 @@ export class CustomerDocumentsComponent implements OnInit {
         this.getList();
 	}
 
+    ngOnChanges(changes: SimpleChanges) {
+       
+        for (let property in changes) {
+          
+            if (property == 'customerDataFromExternalComponents') {
+
+            if(changes[property].currentValue != {}){
+                this.id = this.customerDataFromExternalComponents.customerId;
+                this.customerCode = this.customerDataFromExternalComponents.customerCode;
+                this.customerName = this.customerDataFromExternalComponents.name;
+                this.isViewMode = true;
+                this.getList();
+              } 
+            }
+        }
+    }
 
 	get userName(): string {
 		return this.authService.currentUser ? this.authService.currentUser.userName : "";

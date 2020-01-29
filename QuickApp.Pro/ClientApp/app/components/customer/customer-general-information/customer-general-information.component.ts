@@ -240,11 +240,13 @@ export class CustomerGeneralInformationComponent implements OnInit {
             if (this.generalInformation.restrictedPMAParts.length > 0) {
                 this.disableRestrictedPMA = true;
             }
-
+            for(let i=0; i<this.generalInformation.restrictedPMAParts.length; i++){
+                this.generalInformation.restrictedPMAParts[i]['itemMasterId'] = this.generalInformation.restrictedPMAParts[i]['masterPartId']
+            }
 
             this.restictPMAtempList = res.map(x => x.rescrictedPartId);
             this.partListForPMA = this.generalInformation.restrictedPMAParts.reduce((acc, obj) => {
-                return acc.filter(x => x.value.masterPartId !== obj.masterPartId)
+                return acc.filter(x => x.value.itemMasterId !== obj.masterPartId)
             }, this.partListOriginal)
 
 
@@ -260,9 +262,12 @@ export class CustomerGeneralInformationComponent implements OnInit {
             if (this.generalInformation.restrictedDERParts.length > 0) {
                 this.disableRestrictedDER = true;
             }
-            this.restictDERtempList = res.map(x => x.itemMasterId);
+            for(let i=0; i<this.generalInformation.restrictedDERParts.length; i++){
+                this.generalInformation.restrictedDERParts[i]['itemMasterId'] = this.generalInformation.restrictedDERParts[i]['masterPartId']
+            }
+            this.restictDERtempList = res.map(x => x.rescrictedPartId);
             this.partListForDER = this.generalInformation.restrictedDERParts.reduce((acc, obj) => {
-                return acc.filter(x => x.value.masterPartId !== obj.masterPartId)
+                return acc.filter(x => x.value.itemMasterId !== obj.masterPartId)
             }, this.partListOriginal)
 
 
@@ -282,7 +287,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
 
             this.partListOriginal = data.map(x => {
                 return {
-                    label: x.partNumber, value: { masterPartId: x.itemMasterId, partNumber: x.partNumber, memo: x.memo, createdBy: this.userName, updatedBy: this.userName, partDescription: x.partDescription, manufacturerName: x.manufacturerName }
+                    label: x.partNumber, value: { masterPartId: x.itemMasterId, itemMasterId: x.itemMasterId, partNumber: x.partNumber, memo: x.memo, createdBy: this.userName, updatedBy: this.userName, partDescription: x.partDescription, manufacturerName: x.manufacturerName }
                 }
             })
             this.partListForPMA = [...this.partListOriginal];
@@ -346,6 +351,9 @@ export class CustomerGeneralInformationComponent implements OnInit {
 
 
     addRestrictPMA() {
+        if(this.generalInformation.restrictedPMAParts ==  undefined){
+            this.generalInformation.restrictedPMAParts = []
+        }
 
         if (this.restictPMAtempList.length > 0) {
             this.disableRestrictedPMA = true;
@@ -356,7 +364,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
             }
             this.generalInformation.restrictedPMAParts = this.generalInformation.restrictedPMAParts.slice();
             this.partListForPMA = this.generalInformation.restrictedPMAParts.reduce((acc, obj) => {
-                return acc.filter(x => x.value.masterPartId !== obj.masterPartId)
+                return acc.filter(x => x.value.itemMasterId !== obj.masterPartId)
             }, this.partListOriginal)
             this.restictPMAtempList = [];
         }
@@ -398,8 +406,6 @@ export class CustomerGeneralInformationComponent implements OnInit {
         }
 
     }
-
-
     openPopupForDeleteRestrictPMA(i, rowData, content) {
         this.selectedRowForDeleteRestrictPMA = rowData;
         this.selectedRowForDeleteRestrictPMA['index'] = i;
@@ -429,6 +435,9 @@ export class CustomerGeneralInformationComponent implements OnInit {
         this.generalInformation.isAddressForShipping = true;
     }
     addRestrictBER() {
+        if(this.generalInformation.restrictedDERParts ==  undefined){
+            this.generalInformation.restrictedDERParts = []
+        }
         if (this.restictDERtempList.length > 0) {
             this.disableRestrictedDER = true;
             for (let i = 0; i < this.restictDERtempList.length; i++) {
@@ -438,7 +447,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
             }
             this.generalInformation.restrictedDERParts = this.generalInformation.restrictedDERParts.slice();
             this.partListForDER = this.generalInformation.restrictedDERParts.reduce((acc, obj) => {
-                return acc.filter(x => x.value.masterPartId !== obj.masterPartId)
+                return acc.filter(x => x.value.itemMasterId !== obj.masterPartId)
             }, this.partListOriginal)
             this.restictDERtempList = [];
         }
