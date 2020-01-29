@@ -40,11 +40,12 @@ declare const google: any;
     selector: 'app-vendor-general-information',
     templateUrl: './vendor-general-information.component.html',
     styleUrls: ['./vendor-general-information.component.scss'],
-    animations: [fadeInOut]
+    animations: [fadeInOut],
 })
 /** anys component*/
-export class VendorGeneralInformationComponent implements OnInit {
+export class VendorGeneralInformationComponent implements OnInit, AfterViewInit {
     @ViewChild(VendorStepsPrimeNgComponent) stepper: VendorStepsPrimeNgComponent;
+
     disableSaveVenderName: boolean;
     disableSaveVenderCode: boolean;
     VendorCodesColl: any[] = [];
@@ -161,6 +162,7 @@ export class VendorGeneralInformationComponent implements OnInit {
         public integrationService: IntegrationService,
         private acRouter: ActivatedRoute,
         private configurations: ConfigurationService) {
+        console.log(this.stepper);
         this.dataSource = new MatTableDataSource();
 
         const vendorId = this.acRouter.snapshot.params['id'];
@@ -280,6 +282,7 @@ export class VendorGeneralInformationComponent implements OnInit {
     ngOnInit(): void {
 
 
+
         // this.sourceVendor.vendorTypeId = 2;
 
         // this.matSpinner = false;
@@ -356,6 +359,10 @@ export class VendorGeneralInformationComponent implements OnInit {
 
     }
 
+    ngAfterViewInit() {
+        console.log(this.stepper);
+
+    }
     editModeDataBinding() {
         console.log('sample');
         console.log(this.vendorService.isEditMode);
