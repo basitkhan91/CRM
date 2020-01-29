@@ -1,44 +1,50 @@
-﻿﻿<div class="card">
-    <div class="card-body">
+﻿﻿<!-- <div class="card">
+    <div class="card-body"> -->
         <div class="right_col" role="main">
             <div>
                 <div class="x_content">
-                    <div class="row">
+
+                    <div class="col-md-12 shadow-box-cstm">        
                         <div class="col-md-4">
-                            <label class="fs12">Vendor Name : </label>
-                            <span class="span-header-red"> {{ local?.vendorName }}</span>
+                            <p class="fs12">
+                            <label class="control-label labels-font-header" style="width: auto;">Vendor Name: </label>
+                        <span class="span-header-red" style="text-transform: capitalize"> {{local?.vendorName }} </span> </p>
                         </div>
                         <div class="col-md-4">
-                            <label class="fs12">Vendor Code : </label>
-                            <span class="span-header-red"> {{ local?.vendorCode }}</span>
-                        </div>
+                            <p class="fs12">
+                            <label class="control-label labels-font-header" style="width: auto;">Vendor Code: </label>
+                            <span class="span-header-red" style="text-transform: capitalize"> {{local?.vendorCode }} </span> </p>
+                        </div>                            
                     </div>
-                    <!-- <div class="form-group col-sm-4  vendor-details-heading" style="display: inline-block;margin: 10px 5px 0 5px;">
-                        <p class="fs10">
-                            <label class="control-label w100">Vendor Name:</label>
-                            {{local?.vendorName}}
-                        </p>
-                    </div>
-                    <div class="form-group col-sm-4  vendor-details-heading" style="display: inline-block;margin: 10px 5px 0 5px;">
-                        <p class="fs10">
-                            <label class="control-label w100">Vendor Code:</label>
-                            {{local?.vendorCode}}
-                        </p>
-                    </div> -->
+                  
+                    <div class="card" style="padding: 10px;">
                     <div>
                         <div>
                             <div class="col-md-12" style="margin-bottom: -10px;">
+                                 <h4 class="po-head-sm">
+                                    Add Contact
+                                        <a
+                                    class="plusicon-cstm"
+                                    href="#"
+                                    data-toggle="modal"
+                                    data-target="#addContactInfo" 
+                                    ><i class="fa fa-plus-circle fa-lg" (click)="onAddContactInfo()"></i
+                                    ></a>
+                                    </h4>
+                           
+                                  </div>
+                             <!-- <div class="col-md-12" style="margin-bottom: -10px;">
                                 <h4 class="float-right">
                                     Add Contact
                                     <a class="plusicon-cstm" data-target="#addContactInfo" data-toggle="modal"><i class="fa fa-plus-circle fa-lg" (click)="onAddContactInfo()"></i></a>
                                 </h4>
-                            </div>
+                             </div> -->
 
                             <div class="clear"></div>
                             <hr />
 
                         </div>
-                        <!--<p class="lead"></p>-->
+                       
                         <p-table #dt class="ptable-custom" [value]="allActions" [metaKeySelection]="true" [rows]="10" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[10,20,50,100]" [columns]="selectedColumns" selectionMode="multiple" [(selection)]="selectedColumn" [resizableColumns]="true" [reorderableColumns]="true" [scrollable]="true">
                             <ng-template pTemplate="caption">
                                 <div style="text-align: right; min-height: 30px;">
@@ -51,12 +57,19 @@
                                     <button type="button" class="btn btn-primary" matTooltip="Download Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export Data" (click)="dt.exportCSV()" style="padding:5px 10px !important;"></button>
                                     <button type="button" class="btn btn-primary" matTooltip="Download Selected Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export Selected Data" (click)="dt.exportCSV({selectionOnly:true})" style="padding:5px 10px !important;"></button>
                                     
-                                    <!-- <div class="excel-upload excel-upload-cstm">
-                                        <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                                    <div class="excel-upload  excel-upload-cstm">
+                                        <button type="button"    class="btn btn-primary" matTooltip="Download Sample File" matTooltipPosition="above" (click)="sampleExcelDownload()" style="padding: 5px 10px !important;">Sample File Download</button>
+    
+                                        <input type="file" name="upload[]" id="upload" (change)="customExcelUpload($event)" class="uploaddoc upload-file"
+                                               accept=".xlsx, .xls, .csv">
                                         <label for="upload">
-                                            <span matTooltip="Upload Data (Excel)" matTooltipPosition="above"><i class="fa fa-upload"></i></span>
+                                            <span matTooltip="Upload Data (Excel)" matTooltipPosition="above">
+                                                <i class="fa fa-upload"></i>
+                                            </span>
                                         </label>
-                                    </div> -->
+                                        &nbsp; &nbsp;
+    
+                                    </div>
                                 </div>
 
 
@@ -64,20 +77,34 @@
 
                             <ng-template pTemplate="header" let-columns>
                                 <tr>
-
+                                    <th style="width: 40px;">Flag</th>
                                     <th *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
                                         {{col.header}}
                                         <p-sortIcon [field]="col.field"></p-sortIcon>
                                     </th>
 
-                                    <th></th>
+                                    <th>Actions</th>
 
+                                </tr>
+
+                                <tr>
+                                    <th></th>
+                                    <th style="width:auto" *ngFor="let col of columns" [ngSwitch]="col.field">
+                                        <input style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field, 'contains')">
+                                    </th>
+                                    <th></th>
                                 </tr>
                             </ng-template>
 
-                            <ng-template pTemplate="body" let-rowData let-columns="columns" let-i="rowIndex">                                 
-                                <tr [pSelectableRow]="rowData"  [pSelectableRowDblClick]="rowData" pReorderableRowHandle (dblclick)="opencontactView(view,rowData)" [ngClass]="{'row-primary': rowData.isDefaultContact === true}">
-                                    <!--[ngStyle]="{'background-color' : rowData.isDefaultContact === true ? '#79ffe3'  : 'white'}"-->
+                            <ng-template pTemplate="body" let-rowData let-columns="columns" >                                 
+                                <tr [pSelectableRow]="rowData"  [pSelectableRowDblClick]="rowData" pReorderableRowHandle (dblclick)="opencontactView(view,rowData)">
+                                
+                                    <td style="width: 40px;"> <span class="flag">
+                                        <i  *ngIf="rowData.isDefaultContact == true"   [ngStyle]="{'color': rowData.isDefaultContact == true ? 'green' : 'none'}"  
+                                         class="fa fa-flag" aria-hidden="true"></i>
+                                        </span>
+                                    </td>
+
 
                                     <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
                                         {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
@@ -107,19 +134,34 @@
 
                                 </tr>
                             </ng-template>
-                        </p-table>
-                        <div *ngIf="allActions.length<=0" style="text-align:center;border:1px solid">
-                            No Records
-                        </div>
-                    </div>
 
+                            <ng-template pTemplate="emptymessage" let-columns>
+                                <tr>                                  
+                                    <td [attr.colspan]="9" style="color: red; font-weight: bold; text-align: center">
+                                        No records found
+                                    </td>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="summary" id="footer">
+                                <label id="footer" class="footer">No'of records:</label>
+                                <input style="width: 5%;" [(ngModel)]="dt._totalRecords" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp;
+                                <label id="footer" class="footer1">Pages Count:</label>
+                               
+                                <input style="width: 5%;" [ngModel]="getPageCount(dt._totalRecords,pageSize)" [disabled]="true" pInputText type="text" />
+                            </ng-template>
+                        </p-table>
+                      
+                    </div>
+                    <div>
                     <button type="button" class="btn btn-primary pull-right submit-btn" (click)="nextClick()">Next</button>
                     <button type="button" class="btn btn-primary pull-right submit-btn" (click)="previousClick()">Previous</button>
                 </div>
+                </div>
+                </div>
             </div>
         </div>
-    </div>
-</div>
+    <!-- </div>
+</div> -->
 
 <ng-template #deleteContent let-c="close" let-d="dismiss" data-backdrop="static">
     <div class="modal-header">
@@ -178,7 +220,7 @@
                             <td [ngStyle]="{'color': getColorCodeForHistory(i, 'fax', audit.fax)  ? 'black' : 'red'  }">{{audit.fax}}</td>
                             <td [ngStyle]="{'color': getColorCodeForHistory(i, 'isActive', audit.isActive)  ? 'black' : 'red'  }">{{audit.isActive}}</td>
                         <td >{{audit.updatedBy}}</td>
-                        <td>{{audit.updatedDate | date: 'dd-MM-yyyy h:mm a '}}</td>
+                        <td>{{audit.updatedDate | date: 'MM-dd-yyyy'}}</td>
                     </tr>
                 </tbody> 
                 <!-- <tr *ngFor="let audit of contactauditHisory">

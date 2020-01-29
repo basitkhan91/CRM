@@ -20,6 +20,7 @@ import { Vendor } from '../../../models/vendor.model';
 import { Router, ActivatedRoute, Params, NavigationExtras } from '@angular/router';
 import { Row } from 'primeng/components/common/shared';
 import { CustomerService } from '../../../services/customer.service';
+import { ConfigurationService } from '../../../services/configuration.service';
 @Component({
     selector: 'app-vendor-contacts',
     templateUrl: './vendor-contacts.component.html',
@@ -68,6 +69,11 @@ export class VendorContactsComponent implements OnInit {
     disablesaveForFirstname: boolean;
     disablesaveForlastname: boolean;
     disablesaveForMiddlename: boolean;
+    formData = new FormData();
+    totalRecords: number = 0;
+    pageIndex: number = 0;
+    pageSize: number = 10;
+    totalPages: number = 0;
     ngOnInit(): void {
         this.sourceVendor.isdefaultContact = true;
         this.matSpinner = true;
@@ -128,13 +134,12 @@ export class VendorContactsComponent implements OnInit {
     ];
 
     selectedColumns = this.vendorContactsColumns;
-    constructor(private router: ActivatedRoute, private route: Router, private customerser: CustomerService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
+    constructor(private router: ActivatedRoute, private route: Router, private customerser: CustomerService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private configurations: ConfigurationService) {
 
         if (this.workFlowtService.listCollection !== undefined) {
             this.workFlowtService.isEditMode = true;
         }
-
-        console.log(this.workFlowtService);
+       
 
         if (this.local) {
             this.workFlowtService.contactCollection = this.local;
@@ -682,5 +687,35 @@ export class VendorContactsComponent implements OnInit {
         }
 
     }
+
+
+    sampleExcelDownload() {
+        const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=VendorContacts&fileName=VendorContact.xlsx`;
+        window.location.assign(url);
+    }
+
+    customExcelUpload(event) {
+        const file = event.target.files;
+       
+        if (file.length > 0) {
+            this.formData.append('file', file[0])
+            this.workFlowtService.ContactUpload(this.formData, this.local.vendorId).subscribe(res => {
+                event.target.value = '';
+
+                this.formData = new FormData();
+                this.loadData();
+
+                this.alertService.showMessage(
+                    'Success',
+                    `Successfully Uploaded  `,
+                    MessageSeverity.success
+                );
+            })
+        }
+    }
+
+    getPageCount(totalNoofRecords, pageSize) {
+		return Math.ceil(totalNoofRecords / pageSize)
+	}
 
 }
