@@ -71,7 +71,7 @@
                                                     <div class="form-group col-sm-12">
                                                         <label class="col-sm-4">Country</label>
                                                         <div class="col-sm-7">
-                                                            <p-autoComplete (onSelect)="onCountrieselected($event)" filter="true" (onKeyUp)=eventCountryHandler($event) [(ngModel)]="sourceLegalEntity.country" [ngModelOptions]="{standalone: true}" [suggestions]="countrycollection" (completeMethod)="filtercountry($event)" [size]="30"
+                                                            <p-autoComplete filter="true" [(ngModel)]="sourceLegalEntity.country" [ngModelOptions]="{standalone: true}" [suggestions]="countrycollection" [size]="30"
                                                                             [minLength]="1" [dropdown]="true">
                                                                 <ng-template let-nice_name pTemplate="item">
                                                                     <div class="ui-helper-clearfix">{{nice_name}}</div>
@@ -186,7 +186,7 @@
                                                 <div class="form-group col-sm-7">
                                                     <label class="col-sm-4">Country</label>
                                                     <div class="col-sm-7">
-                                                        <p-autoComplete (onSelect)="onCountrieselected($event)" filter="true" (onKeyUp)=eventCountryHandler($event) [(ngModel)]="sourceLegalEntity.bankcountry" [ngModelOptions]="{standalone: true}" [suggestions]="countrycollection" (completeMethod)="filtercountry($event)" [size]="30"
+                                                        <p-autoComplete filter="true" [(ngModel)]="sourceLegalEntity.bankcountry" [ngModelOptions]="{standalone: true}" [suggestions]="countrycollection" [size]="30"
                                                                         [minLength]="1" [dropdown]="true">
                                                             <ng-template let-nice_name pTemplate="item">
                                                                 <div class="ui-helper-clearfix">{{nice_name}}</div>
