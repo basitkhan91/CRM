@@ -155,7 +155,7 @@
                                 <label for="name" class="control-label">Classification<span class="clr-red">*</span></label>
                             </div>
                             <div class="col-sm-5">
-                                <p-autoComplete field="description" [(ngModel)]="sourceAction" (onSelect)="selectedClassification($event)" (onKeyUp)="checkIfClassificationExists($event.target.value)" name="description"
+                                <p-autoComplete field="description" [(ngModel)]="sourceAction" (onSelect)="selectedClassification($event)" (onKeyUp)="checkIfClassificationExists('description', $event.target.value)" name="description"
                                                 [suggestions]="localClassificationsCollection" (completeMethod)="filterclassifications($event)" [size]="30" [minLength]="1"
                                                 [dropdown]="true" class="p-autoComplete-ctsm" required>
                                 </p-autoComplete>
@@ -204,6 +204,7 @@
                                 <!--<th>CCID</th>-->
                                 <th>Classification Name</th>
                                 <th>Memo</th>
+                                <th>Is Active</th>
                                 <th>Last Updated By</th>
                                 <th>Last Updated Time</th>
                             </tr>
@@ -211,7 +212,9 @@
                         <tbody *ngIf="auditHistory.length> 0">
                             <tr *ngFor="let audit of auditHistory; let i = index;">
                                 <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'description', audit.description)  ? 'black' : 'red'  }">{{audit.description}}</td>
-                                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'memo', audit.description)  ? 'black' : 'red'  }">{{audit.memo}}</td>
+                                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'memo', audit.memo)  ? 'black' : 'red'  }">{{audit.memo}}</td>
+                                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'isActive', audit.isActive)  ? 'black' : 'red'  }">{{audit.isActive}}</td>
+
                                 <td>{{audit.updatedBy}}</td>
                                 <td>{{audit.updatedDate | date: 'dd-MM-yyyy h:mm a '}}</td>
                             </tr>

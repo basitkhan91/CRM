@@ -42,6 +42,7 @@ export class CustomerClassificationComponent implements OnInit, AfterViewInit {
     disableSave: boolean;
     descritpion: string = "";
     selectedRecordForEditDesc: string = "";
+    selectedRecordForEdit: any;
     customerClassificationId: number =0;
     actionamecolle: any[] = [];
 
@@ -201,13 +202,9 @@ export class CustomerClassificationComponent implements OnInit, AfterViewInit {
         this.customerClassificationId = row.customerClassificationId;
         this.isActive = row.isActive;
         this.selectedRecordForEditDesc = row.description;
-
-        //this.classificationName = this.sourceAction.description;
-        //this.loadMasterCompanies();
-        //this.modal = this.modalService.open(content, { size: 'sm' });
-        //this.modal.result.then(() => {
-        //    console.log('When user closes');
-        //}, () => { console.log('Backdrop click') })
+       
+        this.selectedRecordForEdit = { ...this.sourceAction }
+     
 
     }
 
@@ -243,37 +240,8 @@ export class CustomerClassificationComponent implements OnInit, AfterViewInit {
         }, () => { console.log('Backdrop click') })
     }
    
-    checkIfClassificationExists(value) {
-
-        const exists = selectedValueValidate('description', value, this.selectedRecordForEditDesc)
-
-        this.descmodified = true;
-        for (let i = 0; i < this.allcustomerclassificationInfo.length; i++) {
-
-            if (value == this.allcustomerclassificationInfo[i].description) {
-                const exists = selectedValueValidate('description', value, this.selectedRecordForEditDesc)
-
-                this.disableSave = !exists;
-
-                return;
-            }
-            else {
-                this.disableSave = false;
-            }
-
-        }
-
-    }
-    selectedClassification(event) {
-      
-        if (event.description !== this.selectedRecordForEditDesc) {
-            const exists = selectedValueValidate('description', event, this.selectedRecordForEditDesc)
-            this.disableSave = !exists;
-        }
-        else {
-            this.disableSave = false;
-        }
-    }
+   
+    
     filterclassifications(event) {
         this.localClassificationsCollection = [];
               this.localClassificationsCollection = [...this.allcustomerclassificationInfo.filter(x => { return x.description.toLowerCase().includes(event.query.toLowerCase()); })];
@@ -301,7 +269,7 @@ export class CustomerClassificationComponent implements OnInit, AfterViewInit {
 
 
             this.commonService.smartExcelFileUpload(this.formData).subscribe(res => {
-
+                event.target.value = '';
                 this.formData = new FormData();
                 this.loadData();
                 this.alertService.showMessage(
@@ -338,7 +306,7 @@ export class CustomerClassificationComponent implements OnInit, AfterViewInit {
             ...this.sourceAction,
             createdBy: this.userName,
             updatedBy: this.userName,
-            description: editValueAssignByCondition('description', this.sourceAction.description),
+             description: editValueAssignByCondition('description', this.sourceAction),
             memo: this.memo,
             masterCompanyId: 1,
             isActive: this.isActive
@@ -350,9 +318,9 @@ export class CustomerClassificationComponent implements OnInit, AfterViewInit {
                 error => this.saveFailedHelper(error));
         }
         else {
-            if (this.descmodified == true) {
-                data.description = this.sourceAction;
-            }
+            //if (this.descmodified == true) {
+            //  //  data.description = this.sourceAction;
+            //}
             data.customerClassificationId = this.customerClassificationId;
             data.memo = this.memo;
             this.CustomerClassificationService.updatecustomerclass(data).subscribe(
@@ -387,6 +355,7 @@ export class CustomerClassificationComponent implements OnInit, AfterViewInit {
 
     private saveCompleted(user?: CustomerClassification) {
         this.isSaving = false;
+        this.selectedRecordForEdit = undefined;
         if (this.isDeleteMode == true) {
             this.alertService.showMessage("Success", `Action was deleted successfully`, MessageSeverity.success);
             this.isDeleteMode = false;
@@ -453,5 +422,20 @@ export class CustomerClassificationComponent implements OnInit, AfterViewInit {
                 return data[i + 1][field] === value
             }
         }
+    }
+    checkIfClassificationExists(field, value) {
+        const exists = validateRecordExistsOrNot(field, value, this.allcustomerclassificationInfo, this.selectedRecordForEdit);
+        if (exists.length > 0) {
+            this.disableSave = true;
+        }
+        else {
+            this.disableSave = false;
+        }
+
+    }
+    selectedClassification(object) {
+        const exists = selectedValueValidate('description', object, this.selectedRecordForEdit)
+
+        this.disableSave = !exists;
     }
 }

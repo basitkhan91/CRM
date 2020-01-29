@@ -346,6 +346,9 @@ namespace DAL.Repositories
                 case "CapabilityType":
                     UploadCapabilityType(BindCustomData<CapabilityType>(file, "CapabilityTypeId", moduleName));
                     break;
+                case "AircraftType":
+                    UploadAircraftType(BindCustomData<AircraftType>(file, "AircraftTypeId", moduleName));
+                    break;
 
                 default:
                     break;
@@ -1015,6 +1018,22 @@ namespace DAL.Repositories
             }
         }
 
+        private void UploadAircraftType(List<AircraftType> aircraftList)
+        {
+
+            foreach (var item in aircraftList)
+            {
+
+                var flag = _appContext.AircraftType.Any(p => p.IsDeleted == false && (!string.IsNullOrEmpty(p.Description)
+                && p.Description.ToLower() == item.Description.Trim().ToLower()));
+
+                if (!flag)
+                {
+                    _appContext.AircraftType.Add(item);
+                    _appContext.SaveChanges();
+                }
+            }
+        }
 
         private static PropertyInfo[] GetProperties(object obj)
         {
