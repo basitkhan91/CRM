@@ -37,62 +37,64 @@ export class VendorStepsPrimeNgComponent implements OnInit {
 
 
 	changeStep(value) {
+		console.log(value);
+
 		console.log(this.vendorService.listCollection);
 
-		if (value == 'General Information') {
+		if (value == 1) {
 			//	this.showComponentPTab = this.vendorService.ShowPtab;
 			this.activeMenuItem = 1;
 			this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-general-information');
 		}
 
-		else if (value == 'Capabilities') {
+		else if (value == 2) {
 			this.activeMenuItem = 2;
 			this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-capes');
 		}
-		else if (value == 'Contacts') {
+		else if (value == 3) {
 
 			this.activeMenuItem = 3;
 			this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-contacts');
 		}
-		else if (value == 'Financial Information') {
+		else if (value == 4) {
 
 			this.activeMenuItem = 4;
 			this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-financial-information');
 		}
-		else if (value == 'Payment Information') {
+		else if (value == 5) {
 
 			this.activeMenuItem = 5;
 			this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-payment-information');
 		}
-		else if (value == 'Shipping Information') {
+		else if (value == 6) {
 
 			this.activeMenuItem = 6;
 			this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-shipping-information');
 		}
-		else if (value == 'Billing Information') {
+		else if (value == 7) {
 
 			this.activeMenuItem = 7;
 			this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-billing-information');
 		}
-		else if (value == 'Warnings') {
+		else if (value == 8) {
 
 			this.activeMenuItem = 8;
 			this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-warnings');
 		}
-		else if (value == 'Memos') {
+		else if (value == 9) {
 
 			this.activeMenuItem = 9;
 			this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-memo');
 		}
-		else if (value == 'Documents') {
+		else if (value == 10) {
 
 			this.activeMenuItem = 10;
 			this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-documents');
 		}
-		else {
-			this.activeMenuItem = 1;
-			this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-general-information');
-		}
+		// else {
+		// 	this.activeMenuItem = 1;
+		// 	this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-general-information');
+		// }
 
 	}
 

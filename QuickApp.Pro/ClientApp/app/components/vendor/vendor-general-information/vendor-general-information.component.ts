@@ -58,7 +58,7 @@ export class VendorGeneralInformationComponent implements OnInit {
     modelValue: boolean;
     display: boolean;
     matSpinner: boolean;
-    activeIndex: number;
+    activeIndex: number = 1;
     showvendorContractReference: boolean;
     showvendorCode: boolean;
     showVendorName: boolean;
@@ -831,9 +831,9 @@ export class VendorGeneralInformationComponent implements OnInit {
                     }
                     this.viewName = "Edit";
                     this.vendorService.isEditMode = true;
-                    this.activeIndex = 0;
-                    this.stepper.changeStep(this.activeIndex);
-                    this.vendorService.indexObj.next(this.activeIndex);
+                    // this.activeIndex = 0;
+                    // this.stepper.changeStep(this.activeIndex);
+                    // this.vendorService.indexObj.next(this.activeIndex);
                     this.savesuccessCompleted(this.sourceVendor, goNxt);
                 })
             }
@@ -881,9 +881,9 @@ export class VendorGeneralInformationComponent implements OnInit {
                         this.vendorService.financeCollection = this.localCollection;
                         this.vendorService.paymentCollection = this.localCollection;
                         this.vendorService.shippingCollection = this.localCollection;
-                        this.activeIndex = 0;
-                        this.stepper.changeStep(this.activeIndex);
-                        this.vendorService.indexObj.next(this.activeIndex);
+                        // this.activeIndex = 0;
+                        // this.stepper.changeStep(this.activeIndex);
+                        // this.vendorService.indexObj.next(this.activeIndex);
                         this.savesuccessCompleted(this.sourceVendor, goNxt);
                     })
             }
@@ -900,17 +900,17 @@ export class VendorGeneralInformationComponent implements OnInit {
         // this.vendorService.indexObj.next(this.activeIndex);
         // this.vendorService.changeStep('Contacts');
         // this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-contacts');
-        this.activeIndex = 1;
+        this.activeIndex = 2;
         this.stepper.changeStep(this.activeIndex);
-        this.vendorService.indexObj.next(this.activeIndex);
-        this.vendorService.changeStep('Capabilities');
-        this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-capes');
+        // this.vendorService.indexObj.next(this.activeIndex);
+        // this.vendorService.changeStep('Capabilities');
+        // this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-capes');
     }
 
     CreateVendorOnClick() {
         this.activeIndex = 1;
         this.stepper.changeStep(this.activeIndex);
-        this.vendorService.indexObj.next(this.activeIndex);
+        // this.vendorService.indexObj.next(this.activeIndex);
         // this.vendorService.changeStep('General Information');
         // this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-general-information');
     }

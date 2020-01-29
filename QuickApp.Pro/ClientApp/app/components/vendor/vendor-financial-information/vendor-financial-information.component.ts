@@ -26,6 +26,7 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 import { ChangeDetectorRef } from '@angular/core';
 import { DiscountValue } from '../../../models/discountvalue';
 import { CommonService } from '../../../services/common.service';
+import { VendorStepsPrimeNgComponent } from '../vendor-steps-prime-ng/vendor-steps-prime-ng.component';
 @Component({
     selector: 'app-vendor-financial-information',
     templateUrl: './vendor-financial-information.component.html',
@@ -34,9 +35,10 @@ import { CommonService } from '../../../services/common.service';
 })
 /** anys component*/
 export class VendorFinancialInformationComponent implements OnInit, AfterViewInit {
+    @ViewChild(VendorStepsPrimeNgComponent) stepper: VendorStepsPrimeNgComponent;
     modelValue: boolean;
     display: boolean;
-    activeIndex: any;
+    activeIndex: any = 4;
     showCurrency: boolean;
     showCreditTearms: boolean;
     showCreditLimit: boolean;
@@ -605,9 +607,9 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
                 this.workFlowtService.updatefinanceinfo(this.sourceVendor, this.sourceVendor.vendorId).subscribe(data => {
                     this.localCollection = data;
                     this.workFlowtService.financeCollection = this.local;
-                    this.activeIndex = 2;
+                    // this.activeIndex = 4;
                     this.getVendorProcess1099FromTransaction(this.sourceVendor.vendorId);
-                    this.workFlowtService.indexObj.next(this.activeIndex);
+                    // this.workFlowtService.indexObj.next(this.activeIndex);
                     this.savesuccessCompleted(this.sourceVendor, isGoNxt);
 
                 })
@@ -618,8 +620,8 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
                     this.localCollection = data;
                     this.saveCompleted(this.sourceVendor);
                     this.workFlowtService.financeCollection = this.local;
-                    this.activeIndex = 3;
-                    this.workFlowtService.indexObj.next(this.activeIndex);
+                    // this.activeIndex = 3;
+                    // this.workFlowtService.indexObj.next(this.activeIndex);
                     this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-payment-information');
                 })
             }
@@ -633,15 +635,17 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
     }
     NextClick() {
         this.workFlowtService.contactCollection = this.local;
-        this.activeIndex = 3;
-        this.workFlowtService.indexObj.next(this.activeIndex);
-        this.workFlowtService.changeStep('Payment Information');
+        this.activeIndex = 5;
+        this.stepper.changeStep(this.activeIndex);
+        // this.workFlowtService.indexObj.next(this.activeIndex);
+        // this.workFlowtService.changeStep('Payment Information');
         this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-payment-information');
     }
     previousClick() {
-        this.activeIndex = 1;
-        this.workFlowtService.indexObj.next(this.activeIndex);
-        this.workFlowtService.changeStep('Contacts');
+        this.activeIndex = 3;
+        this.stepper.changeStep(this.activeIndex);
+        // this.workFlowtService.indexObj.next(this.activeIndex);
+        // this.workFlowtService.changeStep('Contacts');
         this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-contacts');
     }
     dismissModel() {
@@ -962,7 +966,7 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
                 subscribe(data => {
                     this.loadDiscountData()
                 })
-            this.activeIndex = 2;
+            // this.activeIndex = 2;
         }
         else {
             this.sourceAction.updatedBy = this.userName;
@@ -972,7 +976,7 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
                 response => this.saveCompleted(this.sourceAction),
                 error => this.saveFailedHelper(error));
 
-            this.activeIndex = 2;
+            // this.activeIndex = 2;
         }
         this.modal.close();
     }

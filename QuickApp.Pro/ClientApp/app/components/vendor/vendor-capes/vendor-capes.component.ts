@@ -31,7 +31,7 @@ import { VendorStepsPrimeNgComponent } from '../vendor-steps-prime-ng/vendor-ste
 /** anys component*/
 export class VendorCapesComponent implements OnInit {
     @ViewChild(VendorStepsPrimeNgComponent) stepper: VendorStepsPrimeNgComponent;
-    activeIndex = 10;
+    activeIndex = 2;
     matSpinner: boolean;
     local: any;
     isEnableVendor: boolean = true;
@@ -104,16 +104,18 @@ export class VendorCapesComponent implements OnInit {
     }
 
     previousClick() {
-        this.activeIndex = 0;
+        this.activeIndex = 1
+        this.stepper.changeStep(this.activeIndex);
         // this.vendorService.vendorgeneralcollection = this.local;
-        this.workFlowtService.indexObj.next(this.activeIndex);
-        this.workFlowtService.changeStep('General Information');
+        // this.workFlowtService.indexObj.next(this.activeIndex);
+        // this.workFlowtService.changeStep('General Information');
         this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-general-information');
     }
     nextClick() {
-        this.activeIndex = 2;
-        this.workFlowtService.indexObj.next(this.activeIndex);
-        this.workFlowtService.changeStep('Contacts');
+        this.activeIndex = 3;
+        this.stepper.changeStep(this.activeIndex);
+        // this.workFlowtService.indexObj.next(this.activeIndex);
+        // this.workFlowtService.changeStep('Contacts');
         this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-contacts');
     }
 }
