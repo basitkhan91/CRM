@@ -778,7 +778,7 @@ namespace DAL
             get
             {
                 if (_vendor == null)
-                    _vendor = new VenodrRepository(_context);
+                    _vendor = new VenodrRepository(_context, _appSettings);
                 return _vendor;
             }
         }

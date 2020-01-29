@@ -4768,6 +4768,34 @@ namespace QuickApp.Pro.Controllers
 
         #endregion
 
+
+        #region Excel Uploads
+
+        [HttpPost("uploadvendorbillingaddress")]
+        public IActionResult UploadBillingCustomData(long vendorId)
+        {
+            var result = _unitOfWork.Vendor.UploadVendorBillingAddressCustomData(Request.Form.Files[0], vendorId);
+            return Ok(result);
+        }
+              
+
+        [HttpPost("uploadvendorshippingaddress")]
+        public IActionResult UploadShippingCustomData(long vendorId)
+        {
+            var result = _unitOfWork.Vendor.UploadVendorShippingAddressCustomData(Request.Form.Files[0], vendorId);
+            return Ok(result);
+        }
+
+        [HttpPost("uploadvendorrcontacts")]
+        public IActionResult UploadContactsCustomData(long vendorId)
+        {
+            _unitOfWork.Vendor.UploadVendorContactsCustomData(Request.Form.Files[0], vendorId);
+            return Ok();
+        }
+
+        #endregion
+
+
         #region Private Methods
 
         private void updateRanking(int rankId)
