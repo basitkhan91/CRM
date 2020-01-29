@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output, ViewChild, SimpleChanges } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ItemMasterService } from '../../../services/itemMaster.service';
 
@@ -21,11 +21,14 @@ import * as $ from 'jquery';
 })
 /** CustomerEdit component*/
 export class CustomerAircraftComponent implements OnInit {
-    @Input() savedGeneralInformationData;
+    @Input() savedGeneralInformationData: any = {};
     @Input() editGeneralInformationData;
     // @Input() editCustomerId;
     @Input() editMode;
     @Output() tab = new EventEmitter();
+    @ViewChild("aircraftForm")  aircraftForm : any;
+    @Input() customerDataFromExternalComponents : any = {};
+
     // aircraft Type used for both 
     manufacturerData: { value: any; label: any; }[];
     // search Variables
@@ -89,6 +92,8 @@ export class CustomerAircraftComponent implements OnInit {
     totalPages: number;
     pageSize: number = 10;
     showAdvancedSearchCard : boolean = false;
+    isViewMode: boolean = false;
+
 
     constructor(private route: ActivatedRoute, private itemser: ItemMasterService,
         private aircraftModelService: AircraftModelService,
@@ -105,10 +110,22 @@ export class CustomerAircraftComponent implements OnInit {
             this.customerCode = this.editGeneralInformationData.customerCode;
             this.customerName = this.editGeneralInformationData.name;
             this.getAircraftMappedDataByCustomerId();
+            this.isViewMode = false;
+
         } else {
+            if(this.customerDataFromExternalComponents != {}){
+                this.id = this.customerDataFromExternalComponents.customerId;
+                this.customerCode = this.customerDataFromExternalComponents.customerCode;
+				this.customerName = this.customerDataFromExternalComponents.name;
+				this.getAircraftMappedDataByCustomerId();
+                this.isViewMode = true;
+            } else {
             this.id = this.savedGeneralInformationData.customerId;
             this.customerCode = this.savedGeneralInformationData.customerCode;
             this.customerName = this.savedGeneralInformationData.name;
+            this.isViewMode = false;
+            }
+
         }
 
         this.route.data.subscribe(data => {
@@ -118,6 +135,23 @@ export class CustomerAircraftComponent implements OnInit {
         this.getAllAircraftModels();
         this.getAllDashNumbers();
 
+
+    }
+    ngOnChanges(changes: SimpleChanges) {
+       
+        for (let property in changes) {
+            if (property == 'customerDataFromExternalComponents') {
+
+            if(changes[property].currentValue != {}){
+                this.id = this.customerDataFromExternalComponents.customerId;
+                this.customerCode = this.customerDataFromExternalComponents.customerCode;
+                this.customerName = this.customerDataFromExternalComponents.name;
+                this.getAircraftMappedDataByCustomerId();
+                this.isViewMode = true;
+
+              } 
+            }
+        }
 
     }
 
@@ -351,6 +385,9 @@ export class CustomerAircraftComponent implements OnInit {
         });
 
     }
+    getPageCount(totalNoofRecords, pageSize) {
+		return Math.ceil(totalNoofRecords / pageSize)
+	}
 
 
     // add Inventory pop Functions
@@ -508,8 +545,27 @@ export class CustomerAircraftComponent implements OnInit {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
+    inventoryValidation(event){
+        console.log(event.target.value, "event.target.value");
+        if(event.target.value > 0){
+            return true;
+        } else {
+            this.alertService.showMessage(
+                'Warn',
+                'Inventory should be greater then 0',
+                MessageSeverity.warn
+            );
+            event.target.value = undefined;
 
-     saveAircraft() {
+        }
+    }
+
+     saveAircraft(form) {
+        // this.alertService.showMessage(
+        //             'Warn',
+        //             'Inventory should be greater then 0',
+        //             MessageSeverity.warn
+        //         );
         // const inventoryData = this.inventoryData.filter(x => {
         //     if (x.IsChecked) {
         //         return x;
@@ -517,21 +573,19 @@ export class CustomerAircraftComponent implements OnInit {
         // })
         //Inventory
         console.log(this.inventoryData, "this.inventoryData+");
+        const data = this.inventoryData.map(obj => {
+        // delete obj['IsChecked']
+        return {
+            ...obj,
+            DashNumberId: obj.DashNumber === 'Unknown' ? null : obj.DashNumberId,
+            AircraftModelId: obj.AircraftModel === 'Unknown' ? null : obj.AircraftModelId,
+            CustomerId: this.id,
+            MasterCompanyId: 1,
+            createdBy: this.userName,
+            updatedBy: this.userName,
+            IsDeleted: false,
 
-            
-                 const data = this.inventoryData.map(obj => {
-            // delete obj['IsChecked']
-            return {
-                ...obj,
-                DashNumberId: obj.DashNumber === 'Unknown' ? null : obj.DashNumberId,
-                AircraftModelId: obj.AircraftModel === 'Unknown' ? null : obj.AircraftModelId,
-                CustomerId: this.id,
-                MasterCompanyId: 1,
-                createdBy: this.userName,
-                updatedBy: this.userName,
-                IsDeleted: false,
-
-            }
+        }
         })
          this.customerService.postCustomerAircrafts(data).subscribe(res => {
 

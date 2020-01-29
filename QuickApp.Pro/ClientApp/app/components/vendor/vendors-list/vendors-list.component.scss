@@ -2,6 +2,7 @@
   font-weight: 700;
   font-size: 16px !important;
   color: #295d92 !important;
+  margin-left: 0 !important;
 }
 
 .contact-no-record{
@@ -19,4 +20,17 @@
 }
 .btn-ros {
   color: #ff5663;
+}
+.view-header {
+  padding-top: 2px !important;
+  margin: 0;
+}
+.table-cstm thead tr th {
+  padding: 2px 5px;
+}
+.table-cstm tr td a {
+  padding: 1px !important;
+}
+.table-cstm thead {
+  background: #4298ff !important;
 }

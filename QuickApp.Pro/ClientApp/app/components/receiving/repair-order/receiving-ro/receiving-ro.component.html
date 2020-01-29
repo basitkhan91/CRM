@@ -168,13 +168,14 @@
                                         <th>Line no</th>
                                         <th>PN</th>
                                         <th>Qty to Repair </th> <!--Qty Ordered-->
+                                        <th>Qty Drafted</th>
                                         <th>Qty Repaired</th> <!--Qty Received-->
                                         <!-- <th>Qty Rejected</th> -->
                                         <th>Qty Backordered </th>
                                         <th>Status</th>
                                         <th>Stockline Num</th>
                                         <!-- <th>Control Num</th>
-                                        <th>PO Num</th> -->
+    <th>PO Num</th> -->
                                         <th colspan="3" class="text-center"></th>
                                         <th colspan="2">Management Structure</th>
                                         <th>Is Serialized</th>
@@ -199,7 +200,9 @@
                                             <td>
                                                 {{part?.quantityToRepair}}
                                             </td>
-    
+                                            <td>
+                                                {{part.quantityDrafted}}
+                                            </td>
                                             <td>
                                                 {{part.quantityRepaired}}
                                             </td>

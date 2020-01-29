@@ -7,5 +7,6 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<DAL.Models.CustomerDocumentDetail> GetAllData();
         IEnumerable<object> GetAllDataById(long id);
         IEnumerable<object> GetAttachedDocumentById(long id);
+        IEnumerable<object> GetAllAudotHistoryById(long Id,long customerId,int moduleId);
     }
 }

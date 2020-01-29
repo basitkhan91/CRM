@@ -17,7 +17,7 @@ namespace DAL.Repositories.Interfaces
         List<MasterParts> GetMasterParts();
 
         void CreateRestrictedParts(List<RestrictedParts> restrictedParts, long referenceId, int moduleId);
-        void UpdateRestrictedParts(List<RestrictedParts> restrictedParts, long referenceId, int moduleId);
+        void UpdateRestrictedParts(List<RestrictedParts> restrictedParts, long referenceId, int moduleId,string partType="");
         List<RestrictedParts> GetRestrictedParts(long moduleId, long? referenceId, string partType);
 
         void CreateCustomerTaxTypeRateMapping(List<CustomerTaxTypeRateMapping> customerTaxTypeRateMappings ,long referenceId);
@@ -64,5 +64,7 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<object> GetShippingBillingAddressAudit(long referenceId, long addressId, long addressType, int moduleId);
         void CreateContactHistory(dynamic obj, int moduleId, long referenceId, long contactId);
         IEnumerable<object> GetContactAudit(long referenceId, int moduleId, long contactId);
+        void ShippingBillingAddressHistory(long referenceId, int moduleId, long billingShippingId, int addressType, string updatedBy);
+        void ContactsHistory(long referenceId, int moduleId, long contactId, string updatedBy);
     }
 }

@@ -91,6 +91,7 @@ namespace DAL.Repositories
                                         PartNumberId = rop.PartNumberId,
                                         ItemTypeId = rop.ItemTypeId,
                                         QuantityToRepair = rop.QuantityOrdered,
+                                        QuantityDrafted = _appContext.StockLineDraft.Count(s => s.RepairOrderPartRecordId == rop.RepairOrderPartRecordId && s.RepairOrderId == rop.RepairOrderId),
                                         QuantityRepaired = _appContext.StockLine.Count(s => s.RepairOrderPartRecordId == rop.RepairOrderPartRecordId && s.RepairOrderId == rop.RepairOrderId),
                                         ConditionId = rop.ConditionId,
                                         DiscountAmount = rop.DiscountAmount,
@@ -319,12 +320,12 @@ namespace DAL.Repositories
                          join uom in _appContext.UnitOfMeasure on part.UOMId equals uom.UnitOfMeasureId
                          into leftUom
                          from uom in leftUom.DefaultIfEmpty()
-                         //join stl in _appContext.StockLine on part.RepairOrderPartRecordId equals stl.RepairOrderPartRecordId
-                         //into leftStl
-                         //from stl in leftStl.ToList()
-                         //join stlDraft in _appContext.StockLineDraft on part.RepairOrderPartRecordId equals stlDraft.RepairOrderPartRecordId
-                         //into leftStlDraft
-                         //from stlDraft in leftStlDraft.ToList()
+                             //join stl in _appContext.StockLine on part.RepairOrderPartRecordId equals stl.RepairOrderPartRecordId
+                             //into leftStl
+                             //from stl in leftStl.ToList()
+                             //join stlDraft in _appContext.StockLineDraft on part.RepairOrderPartRecordId equals stlDraft.RepairOrderPartRecordId
+                             //into leftStlDraft
+                             //from stlDraft in leftStlDraft.ToList()
 
                          where part.RepairOrderId == repairOrderId
                          select new
@@ -335,7 +336,7 @@ namespace DAL.Repositories
                              PartNumber = itm.PartNumber,
                              PartDescription = itm.PartDescription,
                              QuantityToRepair = part.QuantityOrdered,
-                             DiscountPerUnit = part.DiscountPerUnit,                           
+                             DiscountPerUnit = part.DiscountPerUnit,
                              StockLineCount = 0,
                              RoPartSplitUserName = emp != null ? emp.FirstName + " " + emp.LastName : "",
                              UomText = uom != null ? uom.ShortName : "",
@@ -411,14 +412,14 @@ namespace DAL.Repositories
                                      Name = manf.Name,
                                  } : null
                              }
-                         }).ToList();           
+                         }).ToList();
 
             return parts;
 
         }
-    //            //var stocklinesDrafted = _appContext.StockLineDraft.Where(x => x.PurchaseOrderPartRecordId != null && x.PurchaseOrderPartRecordId == part.PurchaseOrderPartRecordId && !x.IsDeleted).ToList();
+        //            //var stocklinesDrafted = _appContext.StockLineDraft.Where(x => x.PurchaseOrderPartRecordId != null && x.PurchaseOrderPartRecordId == part.PurchaseOrderPartRecordId && !x.IsDeleted).ToList();
 
-    public void CreateStockLine(long repaireOrderId)
+        public void CreateStockLine(long repaireOrderId)
         {
             var draftedStockLines = _appContext.StockLineDraft.Where(x => x.RepairOrderId == repaireOrderId).OrderBy(x => x.StockLineDraftId).ToList();
 
@@ -438,6 +439,17 @@ namespace DAL.Repositories
                 }
 
                 _appContext.StockLineDraft.Remove(dstl);
+                _appContext.SaveChanges();
+
+                var stockLines = _appContext.StockLine.Where(x => x.RepairOrderId == repaireOrderId).ToList();
+
+                foreach (var stl in stockLines)
+                {
+                    stl.StockLineNumber = "STL-" + stl.StockLineId.ToString();
+                    stl.ControlNumber = "CNT-" + stl.StockLineId.ToString();
+                    _appContext.StockLine.Update(stl);                    
+                }
+
                 _appContext.SaveChanges();
             }
         }

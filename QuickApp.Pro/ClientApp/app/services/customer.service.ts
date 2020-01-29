@@ -622,8 +622,8 @@ export class CustomerService {
     getCustomerInterShipViaHistory(customerId, internationalShippingId, shippingViaDetailsId) {
         return this.customerEndpoint.getCustomerInterShipViaHistory(customerId, internationalShippingId, shippingViaDetailsId)
     }
-    getCustomerDocumentHistory(id) {
-        return this.customerEndpoint.getCustomerDocumentAuditHistory(id)
+    getCustomerDocumentHistory(id,customerId) {
+        return this.customerEndpoint.getCustomerDocumentAuditHistory(id,customerId)
     }
 
     BillingFileUpload(file, customerId) {
@@ -631,5 +631,11 @@ export class CustomerService {
     }
     ShippingFileUpload(file, customerId) {
         return this.customerEndpoint.CustomerShippingFileUpload(file, customerId);
+    }
+    InternationalShippingUpload(file, customerId) {
+        return this.customerEndpoint.CustomerInternationalShippingFileUpload(file, customerId);
+    }
+   ContactUpload(file, customerId) {
+       return this.customerEndpoint.CustomerContactFileUpload(file, customerId);
     }
 }

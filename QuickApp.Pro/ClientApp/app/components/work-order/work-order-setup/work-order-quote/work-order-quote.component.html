@@ -375,12 +375,30 @@
 
     </div>
   </div>
-<div class="card col-md-12" style="background: #f1f1f1; margin-top: 10px;" *ngIf="(selectedBuildMethod != '' && selectedWorkFlowOrWorkOrder) || (isEdit && selectedPartNumber != '') || selectedBuildMethod == 'build from scratch'">
+  <div *ngIf="selectedBuildMethod == 'build from scratch'">
+    <div class="col-sm-1">
+        <strong> <label> Task </label></strong>
+    </div>
+    <div class="col-sm-2">
+        <div class="inner-addon inline-block display-flex">
+            <select class="form-control custom-select"
+                    [(ngModel)]="currenttaskId">
+                <option value="0">Select</option>
+                <option *ngFor="let action of this.taskList"
+                        value={{action.taskId}}>
+                    {{action.description}}
+                </option>
+            </select>
+          </div>
+    </div>
+  </div>
+  <div class="card col-md-12" style="background: #f1f1f1; margin-top: 10px;" *ngIf="selectedBuildMethod != ''">
       <div class="form-group ">
         <button type="button" class="btn" [ngClass]="gridActiveTab === 'materialList'?'btn-primary':'btn-light-cstm'" (click)="gridTabChange('materialList');">Material List</button>
         <button type="button" class="btn" [ngClass]="gridActiveTab === 'labor'?'btn-primary':'btn-light-cstm'" (click)="gridTabChange('labor');">Labor</button>
         <button type="button" class="btn" [ngClass]="gridActiveTab === 'charges'?'btn-primary':'btn-light-cstm'" (click)="gridTabChange('charges');">Charges</button>
         <button type="button" class="btn" [ngClass]="gridActiveTab === 'exclusions'?'btn-primary':'btn-light-cstm'" (click)="gridTabChange('exclusions');">Exclusions</button>
+        <button type="button" class="btn" [ngClass]="gridActiveTab === 'freight'?'btn-primary':'btn-light-cstm'" (click)="gridTabChange('freight');">Freight</button>
       </div>
   </div>
 
@@ -391,10 +409,10 @@
     <div *ngIf="selectedBuildMethod == 'use work flow' || selectedBuildMethod == 'build from scratch'">
       <table class="table table-bordered table-striped table-sorting mpn-list-table table-disabled" >
         <thead>
-          <tr>
+          <tr style="color: #f1f1f1;">
               <td colspan="10">&nbsp;</td>
-              <td colspan="3">
-                  <div class="form-group">
+              <td colspan="3" style="display: flex;">
+                  <div class="form-group" style="text-align: center;">
                     <p-radioButton
                       class="p-radiobutton-label-horizontal"
                       name="costPlusType"
@@ -403,17 +421,27 @@
                       [(ngModel)]="costPlusType"
                       [disabled]="isView"
                     ></p-radioButton>
-                    <p-radioButton
-                      class="p-radiobutton-label-horizontal col-width"
-                      name="costPlusType"
-                      value="Cost Plus"
-                      label="Cost Plus"
-                      [(ngModel)]="costPlusType"
-                      [disabled]="isView"
-                    ></p-radioButton>
+                    <div style="display: flex;">
+                      <label>Mat Mark Up %</label>
+                      <select class="form-control wf-pub-id" (change)="markupChanged({}, 'all')" [(ngModel)]="overAllMarkup" [disabled]="isView || costPlusType != 'Mark Up'">
+                        <option value="">Select</option>
+                        <option *ngFor="let markUp of markupList" [value]="markUp.value">{{markUp.label}}</option>
+                      </select>
+                    </div>
                   </div>
               </td>
-              <td colspan="2" *ngIf="!isView">&nbsp;</td>
+              <td colspan="4">
+                <div>
+                  <p-radioButton
+                    class="p-radiobutton-label-horizontal col-width"
+                    name="costPlusType"
+                    value="Fixed Mat Price"
+                    label="Fixed Mat Price"
+                    [(ngModel)]="costPlusType"
+                    [disabled]="isView"
+                  ></p-radioButton>
+                </div>
+              </td>
           </tr>
           <tr>
             <th>MC PN</th>
@@ -422,13 +450,13 @@
             <th>REF</th>
             <th>QTY</th>
             <th>UOM</th>
-            <th>COND TYPE</th>
+            <th>Cond Type</th>
             <th>OEM/PMA/DER</th>
-            <th>UNIT COST</th>
-            <th>TOTAL PART COST</th>
-            <th *ngIf="costPlusType == 'Mark Up'">MARKUP</th>
-            <th>COST PLUS AMOUNT</th>
-            <th>FIXED AMOUNT</th>
+            <th>Unit Cost</th>
+            <th>Total Part Cost</th>
+            <th>Mark Up</th>
+            <th tooltip="Time & Materials">T&M Amount</th>
+            <th>Fixed Amount</th>
             <th *ngIf="!isView"></th>
             <th *ngIf="!isView"></th>
           </tr>
@@ -446,17 +474,16 @@
               <td>{{matQuotation.isDeferred}}</td>
               <td>{{matQuotation.unitCost}}</td>
               <td>{{matQuotation.quantity * matQuotation.unitCost}}</td>
-              <td *ngIf="costPlusType == 'Mark Up'">
-                  <select class="form-control wf-pub-id" (change)="markupChanged(matQuotation)" [(ngModel)]="matQuotation.markupPercentageId" [disabled]="isView">
+              <td>
+                  <select class="form-control wf-pub-id" (change)="markupChanged(matQuotation, 'row')" [(ngModel)]="matQuotation.markupPercentageId" [disabled]="isView || costPlusType != 'Mark Up'">
                     <option value="">Select</option>
                     <option *ngFor="let markUp of markupList" [value]="markUp.value">{{markUp.label}}</option>
                   </select>
               </td>
-              <td *ngIf="costPlusType == 'Mark Up'">{{ matQuotation.materialCostPlus }}</td>
-              <td *ngIf="costPlusType == 'Cost Plus'">
-                <input type="number" [(ngModel)]="matQuotation.materialCostPlus" [disabled]="isView"/>
+              <td>{{ matQuotation.materialCostPlus }}</td>
+              <td>
+                <input type="number" [(ngModel)]="matQuotation.fixedAmount" [disabled]="costPlusType != 'Fixed Mat Price'"/>
               </td>
-              <td>{{matQuotation.fixedAmount}}</td>
               <td *ngIf="!isView">
                   <button
                     class="btn-edit ptable-wo-btns"
@@ -532,7 +559,7 @@
                     ></p-radioButton>
                   </div>
               </td>
-              <td colspan="2">&nbsp;</td>
+              <td colspan="4">&nbsp;</td>
           </tr>
           <tr>
             <th>MC PN</th>
@@ -541,13 +568,13 @@
             <th>REF</th>
             <th>QTY</th>
             <th>UOM</th>
-            <th>COND TYPE</th>
+            <th>Cond Type</th>
             <th>OEM/PMA/DER</th>
-            <th>UNIT COST</th>
-            <th>TOTAL PART COST</th>
-            <th *ngIf="costPlusType == 'Mark Up'">MARKUP</th>
-            <th>COST PLUS AMOUNT</th>
-            <th>FIXED AMOUNT</th>
+            <th>Unit Cost</th>
+            <th>Total Part Cost</th>
+            <th>Mark Up</th>
+            <th tooltip="Time & Materials">T&M Amount</th>
+            <th>Fixed Amount</th>
             <th *ngIf="!isView"></th>
             <th *ngIf="!isView"></th>
           </tr>
@@ -564,17 +591,16 @@
             <td>{{matQuotation.oem}}</td>
             <td>{{matQuotation.unitCost}}</td>
             <td>{{matQuotation.quantity * matQuotation.unitCost}}</td>
-            <td *ngIf="costPlusType == 'Mark Up'">
-                <select class="form-control wf-pub-id" (change)="markupChanged(matQuotation)" [(ngModel)]="matQuotation.markupPercentageId" [disabled]="isView">
+            <td>
+                <select class="form-control wf-pub-id" (change)="markupChanged(matQuotation, 'row')" [(ngModel)]="matQuotation.markupPercentageId" [disabled]="isView || costPlusType != 'Mark Up'">
                   <option value="">Select</option>
                   <option *ngFor="let markUp of markupList" [value]="markUp.value">{{markUp.label}}</option>
                 </select>
             </td>
-            <td *ngIf="costPlusType == 'Mark Up'">{{ matQuotation.materialCostPlus }}</td>
-            <td *ngIf="costPlusType == 'Cost Plus'">
-              <input type="number" [(ngModel)]="matQuotation.materialCostPlus" [disabled]="isView"/>
+            <td>{{ matQuotation.materialCostPlus }}</td>
+            <td>
+              <input type="number" [(ngModel)]="matQuotation.fixedAmount" [disabled]="costPlusType != 'Fixed Mat Price'"/>
             </td>
-            <td>{{matQuotation.fixedAmount}}</td>
             <td *ngIf="!isView">
                 <button
                   class="btn-edit ptable-wo-btns"
@@ -649,6 +675,16 @@
       [isView]="isView"
     ></app-work-order-exclusions> 
 
+  </div>
+  <div class="wf-label-cstm" *ngIf="gridActiveTab === 'freight'">
+      <app-work-order-freight [freightForm]="freight" 
+      [isQuote]="isQuote"
+      [workOrderFreightList]="workOrderFreightList" 
+      [savedWorkOrderData]="savedWorkOrderData"
+      (saveFreightListForWO)="saveWorkOrderFreightsList($event)"
+      (updateFreightListForWo)="updateWorkOrderFreightsList($event)"
+      (refreshData)="getFreightListByWorkOrderId()"
+      ></app-work-order-freight>
   </div>
 
   <div class="table-responsive" *ngIf="gridActiveTab === 'labor'">
@@ -1118,6 +1154,48 @@
             &times;
           </button>
           <h4 class="modal-title">Exclusions</h4>
+        </div>
+        <div class="modal-body">
+          <grd-exclusions
+            *ngIf="!isEdit"
+            [isQuote]="isQuote"
+            [workFlow]="workFlowObject"
+            [isWorkOrder]="isWorkOrder"
+            [markupList]="markupList"
+            (saveExclusionsListForWO)="saveExclusionsList($event)"
+          >
+          </grd-exclusions>
+
+          <grd-exclusions
+            *ngIf="isEdit && editData"
+            [isQuote]="isQuote"
+            [isEdit]="isEdit"
+            [editData]="editData"
+            [workFlow]="workFlowObject"
+            [isWorkOrder]="isWorkOrder"
+            [markupList]="markupList"
+            (updateExclusionsListForWO)="updateExclusionsList($event)"
+          >
+          </grd-exclusions>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div
+  id="addNewFreight"
+  class="modal fade"
+  role="dialog"
+  data-backdrop="static"
+>
+    <div class="modal-dialog modal-lg">
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">
+            &times;
+          </button>
+          <h4 class="modal-title">Freight</h4>
         </div>
         <div class="modal-body">
           <grd-exclusions

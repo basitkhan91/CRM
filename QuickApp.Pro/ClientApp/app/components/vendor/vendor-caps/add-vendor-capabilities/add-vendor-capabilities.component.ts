@@ -128,7 +128,8 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 	totalRecords: number = 0;
 	totalPages: number = 0;
 	pageSize: number = 10;
-    pageIndex: number = 0;
+	pageIndex: number = 0;
+	
 
 	colsaircraftLD: any[] = [
         { field: "aircraft", header: "Aircraft" },
@@ -1611,5 +1612,10 @@ export class AddVendorCapabilitiesComponent implements OnInit{
 
 	dismissDeleteModel() {
 		$("#aircraftDelete").modal("hide");
+	}
+
+	getPageCount(totalNoofRecords, pageSize) {
+		
+		return Math.ceil(totalNoofRecords / pageSize)
 	}
 }

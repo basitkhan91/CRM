@@ -54,6 +54,12 @@ export class CustomerATAInformationComponent implements OnInit {
     customerContactATAMappingId: number;
     selectedRowForDelete: any;
     @Input() selectedTab: string = "";
+    totalRecords: number = 0;
+    pageIndex: number = 0;
+    pageSize: number = 10;
+    totalPages: number = 0;
+    originalATASubchapterData: any = [];
+
       constructor(
         private atasubchapter1service: AtaSubChapter1Service,
         private atamain: AtaMainService,
@@ -66,13 +72,15 @@ export class CustomerATAInformationComponent implements OnInit {
     }
 
     ngOnInit() {
+
         if (this.editMode) {
             this.id = this.editGeneralInformationData.customerId;
 
 
             this.customerCode = this.editGeneralInformationData.customerCode;
             this.customerName = this.editGeneralInformationData.name;
-            this.getMappedATAByCustomerId();
+            this.getOriginalATASubchapterList();
+
         } else {
             this.id = this.savedGeneralInformationData.customerId;
             this.customerCode = this.savedGeneralInformationData.customerCode;
@@ -107,11 +115,29 @@ export class CustomerATAInformationComponent implements OnInit {
 
     }
 
+     getOriginalATASubchapterList() {
+		this.atasubchapter1service.getAtaSubChapter1List().subscribe(res => {
+			const responseData = res[0];
+            this.originalATASubchapterData = responseData;	
+            this.getMappedATAByCustomerId();
+		
+		})
+
+	}
+
     // get mapped ata by customer id 
     getMappedATAByCustomerId() {
         this.customerService.getATAMappedByCustomerId(this.id).subscribe(res => {
             this.ataListDataValues = res;
             console.log(res);
+            if (res.length > 0) {
+                this.totalRecords = res.length;
+                this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+            }
+            for(let i=0; i<this.ataListDataValues.length; i++){
+				this.ataListDataValues[i]['ataChapterName'] = this.ataListDataValues[i]['ataChapterCode'] + ' - ' +this.ataListDataValues[i]['ataChapterName']
+				this.ataListDataValues[i]['ataSubChapterDescription'] = getValueFromArrayOfObjectById('ataSubChapterCode', 'ataSubChapterId', this.ataListDataValues[i]['ataSubChapterId'], this.originalATASubchapterData) + ' - ' +this.ataListDataValues[i]['ataSubChapterDescription']
+			}
 
         })
     }
@@ -226,6 +252,10 @@ export class CustomerATAInformationComponent implements OnInit {
             )
             .subscribe(res => {
                 this.ataListDataValues = res;
+                if (res.length > 0) {
+                    this.totalRecords = res.length;
+                    this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+                }
 
                 this.contactIdUrl = '';
                 this.ataSubchapterIdUrl = '';
@@ -271,6 +301,9 @@ export class CustomerATAInformationComponent implements OnInit {
         }
         this.modal.close();
     }
+    getPageCount(totalNoofRecords, pageSize) {
+		return Math.ceil(totalNoofRecords / pageSize)
+	}
     private saveCompleted(user?: any) {
 
         if (this.isDeleteMode == true) {

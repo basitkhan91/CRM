@@ -277,6 +277,9 @@ export class CustomersListComponent implements OnInit {
     filterData(data) {
         console.log(data);
     }
+    getPageCount(totalNoofRecords, pageSize) {
+		return Math.ceil(totalNoofRecords / pageSize)
+	}
     changeStatus(rowData) {
 
         this.customerService.updateActionforActive(rowData, this.userName).subscribe(res => {
@@ -292,7 +295,7 @@ export class CustomersListComponent implements OnInit {
 
     viewSelectedRow(rowData) {
         const { customerId } = rowData;
-        this.modal = this.modalService.open(CustomerViewComponent, { size: 'lg' });
+        this.modal = this.modalService.open(CustomerViewComponent, { size: 'lg' , backdrop: 'static', keyboard: false});
         this.modal.componentInstance.customerId = customerId;
          this.modal.result.then(() => {
             console.log('When user closes');

@@ -19,12 +19,13 @@ import { CommonService } from '../../../services/common.service';
 })
 /** anys component*/
 export class CustomerBillingInformationComponent {
-	@Input() savedGeneralInformationData;
+	@Input() savedGeneralInformationData: any = {};
 	@Input() countryListOriginal;
 	@Input() editGeneralInformationData;
 	@Input() editMode;
 	@Output() tab = new EventEmitter<any>();
 	@Input() selectedCustomerTab: string = "";
+    @Input() customerDataFromExternalComponents : any = {};
 
 	countryList: any[];
 	// countryListOriginal: any[];
@@ -59,7 +60,8 @@ export class CustomerBillingInformationComponent {
     pageSize: number = 10;
     totalPages: number;
     formData = new FormData();
-	
+    isViewMode: boolean = false;
+
 
     constructor(public customerService: CustomerService, private authService: AuthService, private alertService: AlertService, private modalService: NgbModal, private configurations: ConfigurationService,
         private activeModal: NgbActiveModal, private commonService: CommonService, ) {
@@ -73,13 +75,25 @@ export class CustomerBillingInformationComponent {
 			this.id = this.editGeneralInformationData.customerId;
 			this.customerCode = this.editGeneralInformationData.customerCode;
 			this.customerName = this.editGeneralInformationData.name;
-			this.getBillingDataById()
+            this.getBillingDataById()
+            this.isViewMode = false;
+
 		} else {
+            if(this.customerDataFromExternalComponents != {}){
+                this.id = this.customerDataFromExternalComponents.customerId;
+                this.customerCode = this.customerDataFromExternalComponents.customerCode;
+				this.customerName = this.customerDataFromExternalComponents.name;
+				this.getBillingDataById();
+                this.isViewMode = true;
+            } else {
 			this.id = this.savedGeneralInformationData.customerId;
 			this.customerCode = this.savedGeneralInformationData.customerCode;
             this.customerName = this.savedGeneralInformationData.name;
             //Added By Vijay For Customer Create time IsBillingAddess is selected checkbox Then list page we are displaying list
             this.getBillingDataById()
+            this.isViewMode = false;
+            }
+
 		}
 
 
@@ -93,7 +107,18 @@ export class CustomerBillingInformationComponent {
 				if(changes[property].currentValue == "Billing"){
 					this.getBillingDataById()
 				}
-			 }
+             }
+             if (property == 'customerDataFromExternalComponents') {
+
+                if(changes[property].currentValue != {}){
+                    this.id = this.customerDataFromExternalComponents.customerId;
+                    this.customerCode = this.customerDataFromExternalComponents.customerCode;
+                    this.customerName = this.customerDataFromExternalComponents.name;
+                    this.getBillingDataById()
+                    this.isViewMode = true;
+    
+                  } 
+                }
 		} 
 
       }
@@ -167,12 +192,16 @@ export class CustomerBillingInformationComponent {
             this.billingInfoList = res[0]
 
 
-            if (res.length > 0) {
-                this.totalRecords = this.billingInfoList.length;
-                this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
-            }
+            // if (res.length > 0) {
+            //     this.totalRecords = this.billingInfoList.length;
+            //     this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+            // }
 
 		})
+    }
+    
+	getPageCount(totalNoofRecords, pageSize) {
+		return Math.ceil(totalNoofRecords / pageSize)
 	}
 
 	openBillingView(data) {

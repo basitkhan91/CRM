@@ -40,6 +40,7 @@ export class WorkOrderLaborComponent implements OnInit, OnChanges {
     { label: 'Billable', value: 1 },
     { label: 'Non-Billable', value: 2 }
     ];
+  overAllMarkup: any;
 
 
   constructor(private workOrderService: WorkOrderService,
@@ -414,13 +415,31 @@ console.log(this.workOrderLaborList);
     this.laborForm.workOrderLaborList[0][taskName.toLowerCase()][index].isDeleted = true;
   }
 
-  markupChanged(matData) {
+  markupChanged(matData, type) {
       try {
-          this.markupList.forEach((markup) => {
-          if (markup.value == matData.markupPercentageId) {
-              matData.labourCostPlus = (matData.directLaborOHCost) + (((matData.directLaborOHCost) / 100) * Number(markup.label))
+        this.markupList.forEach((markup)=>{
+          if(type == 'row' && markup.value == matData.markupPercentageId){
+            matData.labourCostPlus = (matData.directLaborOHCost) + (((matData.directLaborOHCost) / 100) * Number(markup.label))
           }
-          })
+          else if(type == 'all' && markup.value == this.overAllMarkup){
+            for(let t in this.laborForm.workOrderLaborList[0]){
+              for(let mData of this.laborForm.workOrderLaborList[0][t]){
+                mData.markupPercentageId = this.overAllMarkup;
+                mData.labourCostPlus = Number(mData.directLaborOHCost) + ((Number(mData.directLaborOHCost) / 100) * Number(markup.label))
+              }
+            }
+            // this.materialListQuotation.forEach((mData)=>{
+            //   mData.markupPercentageId = this.overAllMarkup;
+            //   mData.materialCostPlus = Number(mData.extendedCost) + ((Number(mData.extendedCost) / 100) * Number(markup.label))
+            // })
+          }
+        })
+
+          // this.markupList.forEach((markup) => {
+          // if (markup.value == matData.markupPercentageId) {
+          //     matData.labourCostPlus = (matData.directLaborOHCost) + (((matData.directLaborOHCost) / 100) * Number(markup.label))
+          // }
+          // })
       }
       catch (e) {
           console.log(e);

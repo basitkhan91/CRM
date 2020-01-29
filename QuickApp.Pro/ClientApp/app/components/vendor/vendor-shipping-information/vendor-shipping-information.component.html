@@ -48,6 +48,19 @@
                                     <button type="button" class="btn btn-primary" matTooltip="Download Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export Data" (click)="dt.exportCSV()" style="padding:5px 10px !important;"></button>
                                     <button type="button" class="btn btn-primary" matTooltip="Download Selected Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export Selected Data" (click)="dt.exportCSV({selectionOnly:true})" style="padding:5px 10px !important;"></button>
 
+                                    <div class="excel-upload  excel-upload-cstm">
+                                        <button type="button"    class="btn btn-primary" matTooltip="Download Sample File" matTooltipPosition="above" (click)="sampleExcelDownload()" style="padding: 5px 10px !important;">Sample File Download</button>
+    
+                                        <input type="file" name="upload[]" id="upload" (change)="customExcelUpload($event)" class="uploaddoc upload-file"
+                                               accept=".xlsx, .xls, .csv">
+                                        <label for="upload">
+                                            <span matTooltip="Upload Data (Excel)" matTooltipPosition="above">
+                                                <i class="fa fa-upload"></i>
+                                            </span>
+                                        </label>
+                                        &nbsp; &nbsp;
+    
+                                    </div>
                                 </div>
 
 
@@ -61,8 +74,15 @@
                                         <p-sortIcon [field]="col.field"></p-sortIcon>
                                     </th>
 
-                                    <th class="headerList" style="width: 140px !important;"></th>
+                                    <th class="headerList" style="width: 140px !important;">Actions</th>
 
+                                </tr>
+
+                                <tr>
+                                    <th style="width:auto" *ngFor="let col of columns" [ngSwitch]="col.field">
+                                        <input style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field, 'contains')">
+                                    </th>
+                                    <th></th>
                                 </tr>
                             </ng-template>
 
@@ -97,10 +117,24 @@
 
                                 </tr>
                             </ng-template>
+                            <ng-template pTemplate="emptymessage" let-columns>
+                                <tr>                                  
+                                    <td [attr.colspan]="8" style="color: red; font-weight: bold; text-align: center">
+                                        No records found
+                                    </td>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="summary" id="footer">
+                                <label id="footer" class="footer">No'of records:</label>
+                                <input style="width: 5%;" [(ngModel)]="dt._totalRecords" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp;
+                                <label id="footer" class="footer1">Pages Count:</label>
+                               
+                                <input style="width: 5%;" [ngModel]="getPageCount(dt._totalRecords,pageSize)" [disabled]="true" pInputText type="text" />
+                            </ng-template>
                         </p-table>
-                        <div *ngIf="allActions.length<=0" style="text-align:center;border:1px solid">
+                        <!-- <div *ngIf="allActions.length<=0" style="text-align:center;border:1px solid">
                             No Records
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>

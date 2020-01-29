@@ -106,7 +106,7 @@
                                         <div class="form-group">
                                             <label class="control-label" >Currency Type <strong class="clr-red">*</strong></label>
                                             <select name="type" required>
-                                                <option >user</option>
+                                                <option *ngFor="let currencyType of currencyTypes" [ngValue]="currencyType.id" >{{currencyType.description}}</option>
                                             </select>
                                         </div>
 

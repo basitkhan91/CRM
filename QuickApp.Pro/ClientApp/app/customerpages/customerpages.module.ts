@@ -80,7 +80,7 @@ import { CommonService } from "../services/common.service";
         AutoCompleteModule,
         CalendarModule,
         GMapModule, RadioButtonModule, FileUploadModule, DialogModule, StepsModule, BreadcrumbModule,
-        DropdownModule, TooltipModule
+        DropdownModule, TooltipModule,
     ],
     declarations: [
         CustomerPagesComponent,
@@ -100,6 +100,13 @@ import { CommonService } from "../services/common.service";
         CustomerStepsPrimengComponent,
         CustomerATAInformationComponent
 
+    ],
+    exports: [
+        CustomerDocumentsComponent,
+        CustomerShippingInformationComponent,
+        CustomerAircraftComponent,
+        CustomerBillingInformationComponent,
+        CustomerContactsComponent
     ],
     providers: [
         AircraftModelService,

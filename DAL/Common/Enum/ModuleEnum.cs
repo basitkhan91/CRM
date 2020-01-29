@@ -26,6 +26,12 @@
         ItemMaster,
         NhaTlaAltEquItemMapping,
         CustomerBillingAddress,
-        CustomerShippingAddress
+        CustomerShippingAddress,
+        CustomerInternationalShippingAddress,
+        LegalEntity,
+        VendorContact,
+        VendorBillingAddress,
+        VendorShippingAddress,
+
     }
 }

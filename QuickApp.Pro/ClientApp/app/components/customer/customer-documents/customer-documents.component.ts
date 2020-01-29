@@ -1,4 +1,4 @@
-﻿import { Component, OnInit, AfterViewInit, ViewChild, Output, EventEmitter, Input, ElementRef } from '@angular/core';
+﻿import { Component, OnInit, AfterViewInit, ViewChild, Output, EventEmitter, Input, ElementRef, SimpleChanges } from '@angular/core';
 import { fadeInOut } from '../../../services/animations';
 import { Params, ActivatedRoute } from '@angular/router';
 import { Router, NavigationExtras } from '@angular/router';
@@ -62,6 +62,11 @@ export class CustomerDocumentsComponent implements OnInit {
         //{ field: 'link', header: 'Action' },
     ];
     isViewMode: boolean = false;
+    totalRecords: number = 0;
+    pageIndex: number = 0;
+    pageSize: number = 10;
+    totalPages: number = 0;
+
 	constructor(private router: ActivatedRoute, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public customerService: CustomerService,
         private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private configurations: ConfigurationService) {
 	}
@@ -91,6 +96,22 @@ export class CustomerDocumentsComponent implements OnInit {
         this.getList();
 	}
 
+    ngOnChanges(changes: SimpleChanges) {
+       
+        for (let property in changes) {
+          
+            if (property == 'customerDataFromExternalComponents') {
+
+            if(changes[property].currentValue != {}){
+                this.id = this.customerDataFromExternalComponents.customerId;
+                this.customerCode = this.customerDataFromExternalComponents.customerCode;
+                this.customerName = this.customerDataFromExternalComponents.name;
+                this.isViewMode = true;
+                this.getList();
+              } 
+            }
+        }
+    }
 
 	get userName(): string {
 		return this.authService.currentUser ? this.authService.currentUser.userName : "";
@@ -137,7 +158,11 @@ export class CustomerDocumentsComponent implements OnInit {
     }
 	getList() {
 		this.customerService.getDocumentList(this.id).subscribe(res => {
-			this.customerDocumentsData = res;
+            this.customerDocumentsData = res;
+            if (this.customerDocumentsData.length > 0) {
+                this.totalRecords = this.customerDocumentsData.length;
+                this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+            }
 		})
 	}
 	saveDocumentInformation() {
@@ -256,13 +281,17 @@ export class CustomerDocumentsComponent implements OnInit {
         const url = `${this.configurations.baseUrl}/api/FileUpload/downloadattachedfile?filePath=${rowData.link}`;
         window.location.assign(url);
     }
+    
+	getPageCount(totalNoofRecords, pageSize) {
+		return Math.ceil(totalNoofRecords / pageSize)
+	}
 
     openHistory(content, rowData) {
         //const { customerShippingAddressId } = rowData.customerShippingAddressId;
         //const { customerShippingId } = rowData.customerShippingId;
         this.alertService.startLoadingMessage();
 
-        this.customerService.getCustomerDocumentHistory(rowData.customerDocumentDetailId).subscribe(
+        this.customerService.getCustomerDocumentHistory(rowData.customerDocumentDetailId, this.id).subscribe(
             results => this.onAuditHistoryLoadSuccessful(results, content),
             error => this.saveFailedHelper(error));
     }

@@ -21,7 +21,7 @@ import { editValueAssignByCondition, selectedValueValidate, getObjectById } from
 export class CapabilityTypeComponent implements OnInit {
     capabilityTypeData: any;
     capabilityTypeHeaders = [
-        { field: 'description', header: 'Capability Type' },
+        { field: 'description', header: 'Vendor Capability Type' },
 
         { field: 'capabilityTypeDesc', header: 'Description' },
         { field: 'sequenceMemo', header: 'Memo' },
@@ -301,7 +301,8 @@ export class CapabilityTypeComponent implements OnInit {
         })
     }
     showAuditPopup(audit): void {
-        this.historyName = audit.description;
+       // this.historyName = audit.description;
+        this.historyName = 'Vendor Capability Type';
         this.getAuditHistoryById(audit.capabilityTypeId);
            }
 
@@ -317,7 +318,10 @@ export class CapabilityTypeComponent implements OnInit {
         }
     }
 
-    
+    getPageCount(totalNoofRecords, pageSize) {
+		
+		return Math.ceil(totalNoofRecords / pageSize)
+	}
 
 
 

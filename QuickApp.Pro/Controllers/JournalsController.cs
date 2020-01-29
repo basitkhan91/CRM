@@ -44,7 +44,7 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpPost("add")]
-        public IActionResult AddManualJournel([FromBody]JournalManual journelData,JournalBatch journalBatch)
+        public IActionResult AddManualJournel([FromBody]JournalManual journelData)
         {
             if (journelData != null)
             {
@@ -60,40 +60,40 @@ namespace QuickApp.Pro.Controllers
 
                     if (journelData.ID != 0)
                     {
-                        journelData.JournalManualBatchNumber = journelData.ID;
+                        journelData.BatchNumber = journelData.ID;
                         unitOfWork.Repository<JournalManual>().Update(journelData);
                         unitOfWork.SaveChanges();
                     }
 
-                    if (journelData != null)
-                    {
-                        journalBatch.JournalBatchNumber = journelData.JournalManualBatchNumber;
-                        journalBatch.JournalBatchName = journelData.JournalManualBatchName;
-                        journalBatch.JournalBatchDescription = journelData.JournalManualBatchDescription;
-                        journalBatch.GLAccountId = journelData.GLAccountId;
-                        journalBatch.JournalSourceId = 1;
-                        journalBatch.JournalTypeId = journelData.JournalManualTypeId;
-                        journalBatch.JournalPeriodName = journelData.JournalManualPeriodName;
-                        journalBatch.LocalCurrencyId = journelData.JournalManualLocalCurrencyId;
-                        journalBatch.LocalDebitAmount = journelData.JournalManualLocalDebitCurrency;
-                        journalBatch.LocalCreditAmount = journelData.JournalManualLocalDebitCurrency;
-                        journalBatch.ReportingCurrencyId = journelData.JournalManualReportingCurrencyId;
-                        journalBatch.ReportingDebitAmount = journelData.JournalManualReposrtingDebitCurrency;
+                    //if (journelData != null)
+                    //{
+                    //    journalBatch.JournalBatchNumber = journelData.BatchNumber;
+                    //    journalBatch.JournalBatchName = journelData.BatchName;
+                    //    journalBatch.JournalBatchDescription = journelData.BatchDescription;
+                    //    journalBatch.GLAccountId = journelData.GLAccountId;
+                    //    journalBatch.JournalSourceId = 1;
+                    //    journalBatch.JournalTypeId = journelData.JournalTypeId;
+                    //   // journalBatch.JournalPeriodName = journelData.AccountingCalendarId;
+                    //    journalBatch.LocalCurrencyId = journelData.LocalCurrencyId;
+                    //    journalBatch.LocalDebitAmount = journelData.LocalDebitCurrency;
+                    //    journalBatch.LocalCreditAmount = journelData.LocalDebitCurrency;
+                    //    journalBatch.ReportingCurrencyId = journelData.ReportingCurrencyId;
+                    //    journalBatch.ReportingDebitAmount = journelData.ReportingDebitCurrency;
 
-                        journalBatch.ReportingCreditAmount = journelData.JournalManualReposrtingDebitCurrency;
-                        journalBatch.IsReversing = journelData.isreversing;
-                        journalBatch.IsRecurring = journelData.isrecurring;
-                        journalBatch.MasterCompanyId = journelData.MasterCompanyId;
-                        //journalBatch.createdBy = journelData.CreatedBy;
-                        journalBatch.UpdatedBy = journelData.UpdatedBy;
-                        journalBatch.CreatedDate = journelData.CreatedDate;
-                        journalBatch.UpdatedDate = journelData.UpdatedDate;
-                        journalBatch.IsDeleted = journelData.IsDeleted;
-                        journalBatch.IsActive = journelData.IsActive;
+                    //    journalBatch.ReportingCreditAmount = journelData.ReportingDebitCurrency;
+                    //    journalBatch.IsReversing = journelData.IsReversing;
+                    //    journalBatch.IsRecurring = journelData.IsRecurring;
+                    //    journalBatch.MasterCompanyId = journelData.MasterCompanyId;
+                    //    //journalBatch.createdBy = journelData.CreatedBy;
+                    //    journalBatch.UpdatedBy = journelData.UpdatedBy;
+                    //    journalBatch.CreatedDate = journelData.CreatedDate;
+                    //    journalBatch.UpdatedDate = journelData.UpdatedDate;
+                    //    journalBatch.IsDeleted = journelData.IsDeleted;
+                    //    journalBatch.IsActive = journelData.IsActive;
 
-                        unitOfWork.Repository<JournalBatch>().Add(journalBatch);
-                        unitOfWork.SaveChanges();
-                    }
+                    //    unitOfWork.Repository<JournalBatch>().Add(journalBatch);
+                    //    unitOfWork.SaveChanges();
+                    //}
                     return Ok(journelData);
                 }
                 else

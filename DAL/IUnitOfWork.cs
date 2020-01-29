@@ -272,7 +272,7 @@ namespace DAL
 
         IAssetDepConvention AssetDepConvention { get; }
 
-        IPublicationTypesRepository PublicationTypesRepository { get; }
+        IPublicationTypeRepository PublicationTypeRepository { get; }
 
         ICommunicationRepository CommunicationRepository { get; }
 

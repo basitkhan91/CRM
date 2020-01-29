@@ -103,7 +103,7 @@ export class AccountListingService extends EndpointFactory {
 
         let deleteglIdUrl = `${this.deleteglIdUri}/${accountId}`;
 
-        return this.http.get(deleteglIdUrl, this.getRequestHeaders())
+        return this.http.delete(deleteglIdUrl, this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.deleteGlAccountById(accountId));
             });

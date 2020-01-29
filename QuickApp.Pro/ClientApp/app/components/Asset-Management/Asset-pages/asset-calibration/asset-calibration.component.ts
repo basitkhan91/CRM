@@ -272,6 +272,10 @@ export class AssetCalibrationComponent implements OnInit {
     }
 
     saveCalibration() {
+        delete this.currentCalibration.assetType;
+        delete this.currentCalibration.currency;
+        delete this.currentCalibration.manufacturer;
+        delete this.currentCalibration.unitOfMeasure;
         if (!this.currentCalibration.assetRecordId) {
             this.currentCalibration.createdBy = this.userName;
             this.currentCalibration.updatedBy = this.userName;
@@ -324,6 +328,7 @@ export class AssetCalibrationComponent implements OnInit {
                 this.currentCalibration.verificationGlAccountId = null;
                 this.currentCalibration.verificationMemo = null;
             }
+            
             this.currentCalibration.updatedBy = this.userName;
             this.currentCalibration.masterCompanyId = 1;
             console.log(this.currentCalibration);
