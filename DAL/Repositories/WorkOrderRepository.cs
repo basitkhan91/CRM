@@ -3681,7 +3681,8 @@ namespace DAL.Repositories
                                                    we.WorkOrderQuoteDetailsId,
                                                    we.WorkOrderQuoteExclusionsId,
                                                    we.TaskId,
-                                                   TaskName=ts==null?"":ts.Description
+                                                   TaskName=ts==null?"":ts.Description,
+                                                   we.MarkupFixedPrice
                                                }).Distinct()
                              .ToList();
                 return workOrderExclusionsList;
@@ -3794,7 +3795,7 @@ namespace DAL.Repositories
                                                 CarrierName = car.Description,
                                                 wf.MarkupPercentageId,
                                                 wf.FreightCostPlus,
-                                                
+                                                wf.MarkupFixedPrice,
                                             }).Distinct().ToList();
 
                 return workOrderFreightList;
@@ -3915,7 +3916,8 @@ namespace DAL.Repositories
                                 WorkflowChargeTypeId = woc.ChargesTypeId,
                                 woc.ChargesCostPlus,
                                 woc.TaskId,
-                                TaskName = ts == null ? "" : ts.Description
+                                TaskName = ts == null ? "" : ts.Description,
+                                woc.MarkupFixedPrice,
                             }
                           ).Distinct().ToList();
                 return list;
@@ -4033,7 +4035,9 @@ namespace DAL.Repositories
                                                   wom.ItemClassificationId,
                                                   wom.ItemMasterId,
                                                   wom.TaskId,
-                                                  TaskName = ts == null ? "" : ts.Description
+                                                  TaskName = ts == null ? "" : ts.Description,
+                                                  wom.MarkupFixedPrice,
+
                                               }).Distinct().ToList();
 
                 return workOrderMaterialsList;
@@ -4160,6 +4164,7 @@ namespace DAL.Repositories
                                      lh.TotalWorkHours,
                                      DataEnteredByName = deby.FirstName,
                                      ExpertiseType = exp.Description,
+                                     lh.MarkupFixedPrice,
                                      EmployeeName = emp.FirstName,
                                      LaborList = (from wol in _appContext.WorkOrderQuoteLabor
                                                   join exp in _appContext.ExpertiseType on wol.ExpertiseId equals exp.ExpertiseTypeId into wolexp
