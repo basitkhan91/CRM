@@ -1,4 +1,4 @@
-﻿import { Component, ViewChild, OnInit, AfterViewInit, ChangeDetectorRef, AfterViewChecked, OnDestroy } from '@angular/core';
+﻿import { Component, ViewChild, OnInit, AfterViewInit, ChangeDetectorRef, AfterViewChecked, OnDestroy, HostListener } from '@angular/core';
 import { MatPaginator, MatSort, MatTableDataSource, MatSnackBar, MatDialog } from '@angular/material';
 import { NgForm, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
@@ -34,6 +34,7 @@ import { CommonService } from '../../../services/common.service';
 import { IntegrationService } from '../../../services/integration-service';
 import { ConfigurationService } from '../../../services/configuration.service';
 import { editValueAssignByCondition, getObjectById } from '../../../generic/autocomplete';
+import { VendorStepsPrimeNgComponent } from '../vendor-steps-prime-ng/vendor-steps-prime-ng.component';
 declare const google: any;
 @Component({
     selector: 'app-vendor-general-information',
@@ -43,6 +44,7 @@ declare const google: any;
 })
 /** anys component*/
 export class VendorGeneralInformationComponent implements OnInit {
+    @ViewChild(VendorStepsPrimeNgComponent) stepper: VendorStepsPrimeNgComponent;
     disableSaveVenderName: boolean;
     disableSaveVenderCode: boolean;
     VendorCodesColl: any[] = [];
@@ -141,6 +143,7 @@ export class VendorGeneralInformationComponent implements OnInit {
     allVendorGeneralDocumentsList: any = [];
     sourceVendor: any = {};
 
+
     constructor(public vendorclassificationService: VendorClassificationService,
         private http: HttpClient,
         private changeDetectorRef: ChangeDetectorRef,
@@ -184,7 +187,7 @@ export class VendorGeneralInformationComponent implements OnInit {
                     this.vendorService.isEditMode = true;
                 }
 
-
+                this.editModeDataBinding();
 
 
                 // if (this.local) {
@@ -197,34 +200,7 @@ export class VendorGeneralInformationComponent implements OnInit {
 
 
 
-                if (this.vendorService.listCollection != null && this.vendorService.isEditMode == true) {
 
-                    this.showLable = true;
-                    this.viewName = "Edit";
-
-                    this.local = this.vendorService.listCollection;
-
-                    this.sourceVendor = this.vendorService.listCollection;
-                    console.log(this.sourceVendor);
-                    this.toGetVendorGeneralDocumentsList(this.sourceVendor.vendorId);
-                    this.sourceVendor.address1 = this.vendorService.listCollection.address1;
-                    this.sourceVendor.address2 = this.vendorService.listCollection.address2;
-                    this.sourceVendor.address3 = this.vendorService.listCollection.address3;
-                    this.sourceVendor.city = this.vendorService.listCollection.city;
-                    this.sourceVendor.country = this.vendorService.listCollection.country;
-                    this.sourceVendor.stateOrProvince = this.vendorService.listCollection.stateOrProvince;
-                    this.sourceVendor.PostalCode = this.vendorService.listCollection.postalCode;
-
-                }
-                if (this.customerser.isCustomerAlsoVendor == true) {
-                    this.sourceVendor = this.customerser.localCollectiontoVendor;
-                    this.sourceVendor.vendorEmail = this.customerser.localCollectiontoVendor.email;
-                    this.sourceVendor.vendorPhone = this.customerser.localCollectiontoVendor.customerPhone;
-                    this.sourceVendor.vendorName = this.customerser.localCollectiontoVendor.name;
-                    this.sourceVendor.vendorCode = this.customerser.localCollectiontoVendor.customerCode;
-                    this.sourceVendor.doingBusinessAsName = this.customerser.localCollectiontoVendor.doingBuinessAsName;
-                    this.sourceVendor.PostalCode = this.customerser.localCollectiontoVendor.postalCode;
-                }
 
                 //if(!this.vendorService.isEditMode)
                 //{            
@@ -313,6 +289,13 @@ export class VendorGeneralInformationComponent implements OnInit {
         // this.vendorService.alertObj.next(this.vendorService.ShowPtab);
         // this.activeIndex = 0;
         // this.vendorService.indexObj.next(this.activeIndex);
+        // if( this.vendorService.isEditMode = true){
+        //     this.vendorService.listCollection = this.sourceVendor;
+        this.editModeDataBinding();
+        // }
+
+
+
         this.loadData();
         this.Capabilitydata();
         this.countrylist();
@@ -371,6 +354,42 @@ export class VendorGeneralInformationComponent implements OnInit {
         //     this.vendorService.isReset = false;
         // }
 
+    }
+
+    editModeDataBinding() {
+        console.log('sample');
+        console.log(this.vendorService.isEditMode);
+        console.log(this.vendorService.listCollection);
+
+
+        if (this.vendorService.listCollection != null && this.vendorService.isEditMode == true) {
+
+            this.showLable = true;
+            this.viewName = "Edit";
+
+            this.local = this.vendorService.listCollection;
+
+            this.sourceVendor = this.vendorService.listCollection;
+            console.log(this.sourceVendor);
+            this.toGetVendorGeneralDocumentsList(this.sourceVendor.vendorId);
+            this.sourceVendor.address1 = this.vendorService.listCollection.address1;
+            this.sourceVendor.address2 = this.vendorService.listCollection.address2;
+            this.sourceVendor.address3 = this.vendorService.listCollection.address3;
+            this.sourceVendor.city = this.vendorService.listCollection.city;
+            this.sourceVendor.country = this.vendorService.listCollection.country;
+            this.sourceVendor.stateOrProvince = this.vendorService.listCollection.stateOrProvince;
+            this.sourceVendor.PostalCode = this.vendorService.listCollection.postalCode;
+
+        }
+        if (this.customerser.isCustomerAlsoVendor == true) {
+            this.sourceVendor = this.customerser.localCollectiontoVendor;
+            this.sourceVendor.vendorEmail = this.customerser.localCollectiontoVendor.email;
+            this.sourceVendor.vendorPhone = this.customerser.localCollectiontoVendor.customerPhone;
+            this.sourceVendor.vendorName = this.customerser.localCollectiontoVendor.name;
+            this.sourceVendor.vendorCode = this.customerser.localCollectiontoVendor.customerCode;
+            this.sourceVendor.doingBusinessAsName = this.customerser.localCollectiontoVendor.doingBuinessAsName;
+            this.sourceVendor.PostalCode = this.customerser.localCollectiontoVendor.postalCode;
+        }
     }
 
     closethis() {
@@ -813,6 +832,7 @@ export class VendorGeneralInformationComponent implements OnInit {
                     this.viewName = "Edit";
                     this.vendorService.isEditMode = true;
                     this.activeIndex = 0;
+                    this.stepper.changeStep(this.activeIndex);
                     this.vendorService.indexObj.next(this.activeIndex);
                     this.savesuccessCompleted(this.sourceVendor, goNxt);
                 })
@@ -862,6 +882,7 @@ export class VendorGeneralInformationComponent implements OnInit {
                         this.vendorService.paymentCollection = this.localCollection;
                         this.vendorService.shippingCollection = this.localCollection;
                         this.activeIndex = 0;
+                        this.stepper.changeStep(this.activeIndex);
                         this.vendorService.indexObj.next(this.activeIndex);
                         this.savesuccessCompleted(this.sourceVendor, goNxt);
                     })
@@ -879,7 +900,8 @@ export class VendorGeneralInformationComponent implements OnInit {
         // this.vendorService.indexObj.next(this.activeIndex);
         // this.vendorService.changeStep('Contacts');
         // this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-contacts');
-        this.activeIndex = 10;
+        this.activeIndex = 1;
+        this.stepper.changeStep(this.activeIndex);
         this.vendorService.indexObj.next(this.activeIndex);
         this.vendorService.changeStep('Capabilities');
         this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-capes');
@@ -887,6 +909,7 @@ export class VendorGeneralInformationComponent implements OnInit {
 
     CreateVendorOnClick() {
         this.activeIndex = 1;
+        this.stepper.changeStep(this.activeIndex);
         this.vendorService.indexObj.next(this.activeIndex);
         // this.vendorService.changeStep('General Information');
         // this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-general-information');

@@ -29,7 +29,7 @@ export class VendorStepsPrimeNgComponent implements OnInit {
 	constructor(private router: ActivatedRoute, private route: Router, private vendorService: VendorService) {
 		//debugger;
 		// this.vendorService.stepData$.subscribe(value => {
-		//     this.changeStep(value);
+		// 	this.changeStep(value);
 		// });
 
 
@@ -46,8 +46,6 @@ export class VendorStepsPrimeNgComponent implements OnInit {
 		}
 
 		else if (value == 'Capabilities') {
-
-
 			this.activeMenuItem = 2;
 			this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-capes');
 		}

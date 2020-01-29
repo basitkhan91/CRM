@@ -226,6 +226,8 @@ import { CommonService } from "./services/common.service";
 import { CommonModule } from '@angular/common';
 import { TableModule } from 'primeng/table';
 import { StageCodeService } from './services/work-order-stagecode.service';
+import { RefreshAlert } from './directive/refreshalert.directive';
+
 
 @NgModule({
     imports: [
@@ -279,7 +281,8 @@ import { StageCodeService } from './services/work-order-stagecode.service';
         SpinnerComponent,
         CustomerViewComponent,
         StocklineViewComponent,
-        StocklineHistoryComponent
+        StocklineHistoryComponent,
+        RefreshAlert
     ],
     providers: [
         { provide: 'BASE_URL', useFactory: getBaseUrl },
