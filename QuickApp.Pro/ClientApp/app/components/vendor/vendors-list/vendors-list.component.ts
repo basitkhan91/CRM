@@ -91,7 +91,7 @@ export class VendorsListComponent implements OnInit {
     allContacts: any[] = [];
     allpayments: any[] = [];
     selectedPaymentColumns: any[];
-    allShippings: any[] = [];  
+    allShippings: any[] = [];
     shippingCol: any[];
     selectedShippingColumns: any[];
     selectedRow: any;
@@ -102,9 +102,9 @@ export class VendorsListComponent implements OnInit {
     selectedWarningColumns: any[];
     warninggCol: any[];
     allVendorPOROList: any[] = [];
-    memoCols:any[];
-    vendorDocumentsData: any=[];
-    vendorDocumentsColumns :any[];    
+    memoCols: any[];
+    vendorDocumentsData: any = [];
+    vendorDocumentsColumns: any[];
     totalRecords: number = 0;
     totalPages: number = 0;
     pageSize: number = 10;
@@ -206,18 +206,18 @@ export class VendorsListComponent implements OnInit {
     // poPageSize: number = 10;
     // poPageIndex: number = 0;
 
-    constructor(private router: ActivatedRoute, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private configurations: ConfigurationService, private vendorCapesService: VendorCapabilitiesService) {
-        this.local = this.workFlowtService.financeCollection;
+    constructor(private router: ActivatedRoute, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public vendorService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private configurations: ConfigurationService, private vendorCapesService: VendorCapabilitiesService) {
+        this.local = this.vendorService.financeCollection;
         this.dataSource = new MatTableDataSource();
-        this.workFlowtService.listCollection = null;
+        this.vendorService.listCollection = null;
     }
 
     ngOnInit() {
         // this.loadData();
-        this.workFlowtService.currentUrl = '/vendorsmodule/vendorpages/app-vendors-list';
-        this.workFlowtService.bredcrumbObj.next(this.workFlowtService.currentUrl);
-        this.workFlowtService.ShowPtab = false;
-        this.workFlowtService.alertObj.next(this.workFlowtService.ShowPtab);
+        this.vendorService.currentUrl = '/vendorsmodule/vendorpages/app-vendors-list';
+        this.vendorService.bredcrumbObj.next(this.vendorService.currentUrl);
+        this.vendorService.ShowPtab = false;
+        this.vendorService.alertObj.next(this.vendorService.ShowPtab);
         this.isVendorList = true;
 
         this.breadcrumbs = [
@@ -256,12 +256,15 @@ export class VendorsListComponent implements OnInit {
         // this.selectedPOColumns = this.poCols;
     }
 
-    public navigateTogeneralInfo() {
-        this.activeIndex = 0;
-        this.workFlowtService.indexObj.next(this.activeIndex);
-        this.workFlowtService.isEditMode = false;
-        this.workFlowtService.enableExternal = false;
-        this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-general-information')
+    navigateTogeneralInfo() {
+        this.vendorService.changeofTab(1);
+        this.vendorService.isEditMode = false;
+        this.vendorService.listCollection = {};
+        // this.activeIndex = 0;
+        // this.vendorService.indexObj.next(this.activeIndex);
+        // this.vendorService.isEditMode = false;
+        // this.vendorService.enableExternal = false;
+        // this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-general-information')
 
     }
 
@@ -284,20 +287,20 @@ export class VendorsListComponent implements OnInit {
             this.isActive = true;
         }
         console.log(this.filterText);
-        if(this.filterText == '') {
+        if (this.filterText == '') {
             const PagingData = { ...this.lazyLoadEventDataInput, filters: listSearchFilterObjectCreation(this.lazyLoadEventDataInput.filters) }
             this.getList(PagingData);
         } else {
             this.globalSearch(this.filterText);
-        }        
+        }
         console.log(event);
     }
 
-    getList(data) {        
-        this.workFlowtService.getAllVendorList(data).subscribe(res => {
+    getList(data) {
+        this.vendorService.getAllVendorList(data).subscribe(res => {
             console.log(res);
             const vList: any = res[0];
-             this.allVendorList = vList;
+            this.allVendorList = vList;
             if (this.allVendorList.length > 0) {
                 this.totalRecords = vList[0].totalRecords;
                 this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
@@ -308,7 +311,7 @@ export class VendorsListComponent implements OnInit {
     globalSearch(value) {
         this.pageIndex = 0;
         this.filterText = value;
-        this.workFlowtService.vendorListGlobalSearch(value, this.pageIndex, this.pageSize, this.isActive).subscribe(res => {
+        this.vendorService.vendorListGlobalSearch(value, this.pageIndex, this.pageSize, this.isActive).subscribe(res => {
             this.pageIndex = 0;
             this.allVendorList = res;
             if (this.allVendorList.length > 0) {
@@ -330,15 +333,15 @@ export class VendorsListComponent implements OnInit {
     //         this.isActive = false;
     //     }
 
-    //     // this.workFlowtService.getAllVendorList(data).subscribe(res => {
+    //     // this.vendorService.getAllVendorList(data).subscribe(res => {
     //     //     console.log(res);            
     //     // })
-    //     this.workFlowtService.getVendorListForVendor(this.isActive).subscribe(
+    //     this.vendorService.getVendorListForVendor(this.isActive).subscribe(
     //         results => this.onDataLoadSuccessful(results[0]),
     //         error => this.onDataLoadFailed(error)
     //     );
 
-        
+
     // }
 
     // private onDataLoadSuccessful(allWorkFlows: any[]) {
@@ -375,14 +378,14 @@ export class VendorsListComponent implements OnInit {
         if (e.checked == false) {
             this.sourceVendor = rowData;
             this.Active = "In Active";
-            this.workFlowtService.updateContactinfo(this.sourceVendor).subscribe(
+            this.vendorService.updateContactinfo(this.sourceVendor).subscribe(
                 response => this.saveCompleted(this.sourceVendor),
                 error => this.saveFailedHelper(error));
         }
         else {
             this.sourceVendor = rowData;
             this.Active = "Active";
-            this.workFlowtService.updateContactinfo(this.sourceVendor).subscribe(
+            this.vendorService.updateContactinfo(this.sourceVendor).subscribe(
                 response => this.saveCompleted(this.sourceVendor),
                 error => this.saveFailedHelper(error));
         }
@@ -400,7 +403,7 @@ export class VendorsListComponent implements OnInit {
             this.Active = "In Active";
             this.updateActiveData.isActive = false;
             //this.sourceVendor.isActive == false;
-            this.workFlowtService.updateActionforActive(this.updateActiveData).subscribe(
+            this.vendorService.updateActionforActive(this.updateActiveData).subscribe(
                 response => this.saveCompleted(this.sourceVendor),
                 error => this.saveFailedHelper(error));
         }
@@ -410,7 +413,7 @@ export class VendorsListComponent implements OnInit {
             this.Active = "Active";
             //this.sourceVendor.isActive == true;
             this.updateActiveData.isActive = true;
-            this.workFlowtService.updateActionforActive(this.updateActiveData).subscribe(
+            this.vendorService.updateActionforActive(this.updateActiveData).subscribe(
                 response => this.saveCompleted(this.sourceVendor),
                 error => this.saveFailedHelper(error));
         }
@@ -503,15 +506,15 @@ export class VendorsListComponent implements OnInit {
     //View Edit
     openEdit(row) {
         // this.isEditMode = true;
-        // this.workFlowtService.isEditMode = true;
+        // this.vendorService.isEditMode = true;
         // this.isSaving = true;
         // this.sourceVendor = row;
-        // this.workFlowtService.isReset = true;
+        // this.vendorService.isReset = true;
         // // this.loadMasterCompanies();
-        // this.workFlowtService.listCollection = this.sourceVendor;
+        // this.vendorService.listCollection = this.sourceVendor;
         // this.activeIndex = 0;
-        // this.workFlowtService.enableExternal = true;
-        // this.workFlowtService.indexObj.next(this.activeIndex);
+        // this.vendorService.enableExternal = true;
+        // this.vendorService.indexObj.next(this.activeIndex);
         const { vendorId } = row;
         this.route.navigateByUrl(`/vendorsmodule/vendorpages/app-vendor-general-information/edit/${vendorId}`);
         // this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-general-information');
@@ -519,7 +522,7 @@ export class VendorsListComponent implements OnInit {
     private loadContactDataData(vendorId) {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-        this.workFlowtService.getContacts(vendorId).subscribe(
+        this.vendorService.getContacts(vendorId).subscribe(
             results => this.onContactDataLoadSuccessful(results[0]),
             error => this.onDataLoadFailed(error)
         );
@@ -544,7 +547,7 @@ export class VendorsListComponent implements OnInit {
     private loadShippingData(vendorId) {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-        this.workFlowtService.getVendorShipAddressGet(vendorId).subscribe(
+        this.vendorService.getVendorShipAddressGet(vendorId).subscribe(
             results => this.onShippingDataLoadSuccessful(results[0]),
             error => this.onDataLoadFailed(error)
         );
@@ -566,7 +569,7 @@ export class VendorsListComponent implements OnInit {
     private loadBillingData(vendorId) {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-        this.workFlowtService.getVendorBillAddressGet(vendorId).subscribe(
+        this.vendorService.getVendorBillAddressGet(vendorId).subscribe(
             results => this.onBillingDataLoadSuccessful(results[0]),
             error => this.onDataLoadFailed(error)
         );
@@ -586,7 +589,7 @@ export class VendorsListComponent implements OnInit {
     }
 
     private loadWarningsData(vendorId) {
-        this.workFlowtService.getVendorWarnings(vendorId).subscribe(
+        this.vendorService.getVendorWarnings(vendorId).subscribe(
             data => {
                 this.warningInfoList = data[0].map(x => {
                     return {
@@ -612,12 +615,12 @@ export class VendorsListComponent implements OnInit {
 
     private loadMemosData(vendorId) {
 
-        this.workFlowtService.getVendorPOMemolist(vendorId).subscribe(
+        this.vendorService.getVendorPOMemolist(vendorId).subscribe(
             res => {
                 this.allVendorPOROList = res;
             });
 
-        this.workFlowtService.getVendorROMemolist(vendorId).subscribe(
+        this.vendorService.getVendorROMemolist(vendorId).subscribe(
             res => {
                 for (let value of res) {
                     this.allVendorPOROList.push(value);
@@ -634,17 +637,17 @@ export class VendorsListComponent implements OnInit {
 
     private loadVendorDocumentsData(vendorId) {
 
-        this.workFlowtService.getDocumentList(vendorId).subscribe(res => {
+        this.vendorService.getDocumentList(vendorId).subscribe(res => {
             this.vendorDocumentsData = res;
         });
 
-    this.vendorDocumentsColumns = [
-		{ field: 'docName', header: 'Name' },
-		{ field: 'docDescription', header: 'Description' },
-		{ field: 'documents', header: 'Documents' },
-		{ field: 'docMemo', header: 'Memo' }
-	];
-   }
+        this.vendorDocumentsColumns = [
+            { field: 'docName', header: 'Name' },
+            { field: 'docDescription', header: 'Description' },
+            { field: 'documents', header: 'Documents' },
+            { field: 'docMemo', header: 'Memo' }
+        ];
+    }
 
     private onBillingDataLoadSuccessful(allWorkFlows: any[]) {
         this.alertService.stopLoadingMessage();
@@ -670,7 +673,7 @@ export class VendorsListComponent implements OnInit {
     private loadPayamentData(vendorId) {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-        this.workFlowtService.getCheckPaymentobj(vendorId).subscribe(
+        this.vendorService.getCheckPaymentobj(vendorId).subscribe(
             results => this.onPaymentDataLoadSuccessful(results[0]),
             error => this.onDataLoadFailed(error)
         );
@@ -693,7 +696,7 @@ export class VendorsListComponent implements OnInit {
 
     openView(content, row) {
 
-        this.workFlowtService.getVendorDataById(row.vendorId).subscribe(res => {
+        this.vendorService.getVendorDataById(row.vendorId).subscribe(res => {
             console.log(res);
             this.vendorData = res;
         });
@@ -795,7 +798,7 @@ export class VendorsListComponent implements OnInit {
         this.sourceVendor = row;
         this.isSaving = true;
         this.selectedRow = row;
-        this.workFlowtService.getHistoryForVendor(this.sourceVendor.vendorId).subscribe(
+        this.vendorService.getHistoryForVendor(this.sourceVendor.vendorId).subscribe(
             results => this.onHistoryLoadSuccessful(results, content),
             error => this.saveFailedHelper(error));
     }
@@ -811,7 +814,7 @@ export class VendorsListComponent implements OnInit {
         this.updateActiveData.isdeleted = true;
         //this.sourceVendor = content;
         this.updateActiveData.updatedBy = this.userName;
-        this.workFlowtService.updatevendorstatus(this.updateActiveData).subscribe(
+        this.vendorService.updatevendorstatus(this.updateActiveData).subscribe(
             response => this.saveCompleted(this.sourceVendor),
             error => this.saveFailedHelper(error));
         this.modal.close();
@@ -866,7 +869,7 @@ export class VendorsListComponent implements OnInit {
             this.sourceVendor.updatedBy = this.userName;
             this.Active = "In Active";
             this.sourceVendor.isActive == false;
-            this.workFlowtService.updateContactforActive(this.sourceVendor).subscribe(
+            this.vendorService.updateContactforActive(this.sourceVendor).subscribe(
                 response => this.saveCompleted(this.sourceVendor),
                 error => this.saveFailedHelper(error));
         }
@@ -875,7 +878,7 @@ export class VendorsListComponent implements OnInit {
             this.sourceVendor.updatedBy = this.userName;
             this.Active = "Active";
             this.sourceVendor.isActive == true;
-            this.workFlowtService.updateContactforActive(this.sourceVendor).subscribe(
+            this.vendorService.updateContactforActive(this.sourceVendor).subscribe(
                 response => this.saveCompleted(this.sourceVendor),
                 error => this.saveFailedHelper(error));
         }
@@ -901,7 +904,7 @@ export class VendorsListComponent implements OnInit {
 
     deleteItemAndCloseModelforContact(contactId) {
         this.isSaving = true;
-        this.workFlowtService.deleteContact(contactId).subscribe(
+        this.vendorService.deleteContact(contactId).subscribe(
             response => this.saveCompleted(this.sourceVendor),
             error => this.saveFailedHelper(error));
     }
@@ -924,7 +927,7 @@ export class VendorsListComponent implements OnInit {
             this.sourceVendor.updatedBy = this.userName;
             this.Active = "In Active";
             this.sourceVendor.isActive == false;
-            this.workFlowtService.updateContactforActive(this.sourceVendor).subscribe(
+            this.vendorService.updateContactforActive(this.sourceVendor).subscribe(
                 response => this.saveCompleted(this.sourceVendor),
                 error => this.saveFailedHelper(error));
         }
@@ -933,7 +936,7 @@ export class VendorsListComponent implements OnInit {
             this.sourceVendor.updatedBy = this.userName;
             this.Active = "Active";
             this.sourceVendor.isActive == true;
-            this.workFlowtService.updateContactforActive(this.sourceVendor).subscribe(
+            this.vendorService.updateContactforActive(this.sourceVendor).subscribe(
                 response => this.saveCompleted(this.sourceVendor),
                 error => this.saveFailedHelper(error));
         }
@@ -944,7 +947,7 @@ export class VendorsListComponent implements OnInit {
         this.loadingIndicator = true;
         this.sourceVendor = row;
         this.isSaving = true;
-        this.workFlowtService.historyAcion(this.sourceVendor.contactId).subscribe(
+        this.vendorService.historyAcion(this.sourceVendor.contactId).subscribe(
             results => this.onHistoryLoadSuccessful(results[0], content),
             error => this.saveFailedHelper(error));
     }
@@ -996,7 +999,7 @@ export class VendorsListComponent implements OnInit {
 
     toGetVendorGeneralDocumentsList(vendorId) {
         var moduleId = 3;
-        this.workFlowtService.GetVendorGeneralDocumentsList(vendorId, moduleId).subscribe(res => {
+        this.vendorService.GetVendorGeneralDocumentsList(vendorId, moduleId).subscribe(res => {
             this.allVendorGeneralDocumentsList = res;
 
         })
@@ -1018,7 +1021,7 @@ export class VendorsListComponent implements OnInit {
 
         // this.alertService.startLoadingMessage();
         //this.loadingIndicator = true;
-        this.workFlowtService.getVendorProcess1099DataFromTransaction(vendorId).subscribe(res => {
+        this.vendorService.getVendorProcess1099DataFromTransaction(vendorId).subscribe(res => {
             if (res[0].length != 0) {
                 this.vendorProcess1099Data = res[0].map(x => {
                     return {
@@ -1047,7 +1050,7 @@ export class VendorsListComponent implements OnInit {
 
     public getDomesticWithVendorId(vendorId) {
 
-        this.workFlowtService.getDomesticvedor(vendorId).subscribe(
+        this.vendorService.getDomesticvedor(vendorId).subscribe(
             // res => {
             //     if(res[0].length>0)
             //     {
@@ -1073,7 +1076,7 @@ export class VendorsListComponent implements OnInit {
 
     public InternatioalWithVendorId(vendorId) {
 
-        this.workFlowtService.getInternationalWire(vendorId).subscribe(
+        this.vendorService.getInternationalWire(vendorId).subscribe(
             // res => {
             //     if(res[0].length>0)
             //     {
@@ -1096,7 +1099,7 @@ export class VendorsListComponent implements OnInit {
 
     public DefaultWithVendorId(vendorId) {
 
-        this.workFlowtService.getDefaultlist(vendorId).subscribe(
+        this.vendorService.getDefaultlist(vendorId).subscribe(
             res => {
                 this.defaultPaymentData = res[0];
                 if (this.defaultPaymentData != null && this.defaultPaymentData.paymentType != null) {
@@ -1111,7 +1114,7 @@ export class VendorsListComponent implements OnInit {
         const status = 'active';
 
         if (vendorId != undefined) {
-            this.workFlowtService.getVendorCapabilityList(status, vendorId).subscribe(
+            this.vendorService.getVendorCapabilityList(status, vendorId).subscribe(
 
                 // res => {
                 //     this.allvendorCapsList = res[0];
@@ -1176,26 +1179,25 @@ export class VendorsListComponent implements OnInit {
                     memo: x.memo,
                 }
             })
-		})
+        })
     }
-    
+
     viewFileSelectedCapsRow(rowData) {
-        this.sourceViewforDocument=rowData;
-        this.toGetUploadDocumentsList(rowData.attachmentId, rowData.vendorId,3);
+        this.sourceViewforDocument = rowData;
+        this.toGetUploadDocumentsList(rowData.attachmentId, rowData.vendorId, 3);
     }
 
     viewSelectedDocsRowonDbl(rowData) {
         this.viewFileSelectedCapsRow(rowData);
         $('#fileDocview').modal('show');
     }
-    
-  	toGetUploadDocumentsList(attachmentId, vendorId,moduleId)
-	{
-		this.workFlowtService.toGetUploadDocumentsList(attachmentId, vendorId,moduleId).subscribe(res => {
-            this.sourceViewforDocumentList = res;           
-		})
+
+    toGetUploadDocumentsList(attachmentId, vendorId, moduleId) {
+        this.vendorService.toGetUploadDocumentsList(attachmentId, vendorId, moduleId).subscribe(res => {
+            this.sourceViewforDocumentList = res;
+        })
     }
-    
+
     getPageCount(totalNoofRecords, viewPageSize) {
         return Math.ceil(totalNoofRecords / viewPageSize)
     }

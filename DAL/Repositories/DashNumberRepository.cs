@@ -125,5 +125,31 @@ namespace DAL.Repositories
             return data;
             throw new NotImplementedException();
         }
+        public IEnumerable<object> GetDashNumbersAudit(long id)
+        {
+
+            var data = (from iM in _appContext.AircraftDashNumberAudit
+                        join at in _appContext.AircraftType on iM.AircraftTypeId equals at.AircraftTypeId
+                        join am in _appContext.AircraftModel on iM.AircraftModelId equals am.AircraftModelId
+                        where iM.DashNumberId == id
+                        select new
+                        {
+                            aircraft = at.Description,
+                            model = am.ModelName,
+                             at.AircraftTypeId,
+                            modelid = am.AircraftModelId,
+                            iM.DashNumber,
+                            iM.DashNumberId,
+                            iM.Memo,
+                            iM.IsActive,
+                            iM.UpdatedBy,
+                            iM.UpdatedDate,
+                            iM.CreatedBy,
+                            iM.CreatedDate
+
+                        }).OrderByDescending(p => p.UpdatedDate).ToList();
+            return data;
+          
+        }
     }
 }

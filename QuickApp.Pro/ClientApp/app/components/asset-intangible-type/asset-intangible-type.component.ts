@@ -241,8 +241,14 @@ export class AssetIntangibleTypeComponent implements OnInit {
         this.currentRow = this.newItem(0);
     }
 
+    // sampleExcelDownload() {
+    //     const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=AssetIntangibleType&fileName=AssetIntangibleType.xlsx`;
+    //     window.location.assign(url);
+    // }
+
     sampleExcelDownload() {
         const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=AssetIntangibleType&fileName=AssetIntangibleType.xlsx`;
+
         window.location.assign(url);
     }
 
@@ -255,7 +261,7 @@ export class AssetIntangibleTypeComponent implements OnInit {
                 this.formData = new FormData();
                 this.existingRecordsResponse = res;
                 let bulkUploadResult = res;
-                this.showBulkUploadResult(bulkUploadResult);
+                //this.showBulkUploadResult(bulkUploadResult);
                 this.getItemList();
                 this.alertService.showMessage(
                     'Success',

@@ -672,7 +672,14 @@ export class CustomerShippingInformationComponent implements OnInit {
 
         await this.customerService.getInternationalShippingById(rowData.internationalShippingId).subscribe(res => {
             this.isEditInternational = true;
-            this.internationalShippingInfo = { ...res, shipToCountryId: getObjectById('countries_id', res.shipToCountryId, this.countryListOriginal) };
+            this.internationalShippingInfo = {
+                ...res,
+                startDate: new Date(res.startDate),
+                expirationDate: new Date(res.expirationDate),
+                createdDate: new Date(res.expirationDate),
+                updatedDate: new Date(res.expirationDate),
+                shipToCountryId: getObjectById('countries_id', res.shipToCountryId, this.countryListOriginal)
+            };
         })
     }
     selectedInternationalShipForShipVia(rowData) {

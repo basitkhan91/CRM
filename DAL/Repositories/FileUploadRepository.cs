@@ -349,6 +349,9 @@ namespace DAL.Repositories
                 case "AircraftType":
                     UploadAircraftType(BindCustomData<AircraftType>(file, "AircraftTypeId", moduleName));
                     break;
+                case "DashNumber":
+                    UploadDashNumber(BindCustomData<AircraftDashNumber>(file, "DashNumberId,AircraftTypeId,AircraftModelId", moduleName));
+                    break;
 
                 default:
                     break;
@@ -480,6 +483,7 @@ namespace DAL.Repositories
                                                         }
                                                        
                                                     }
+                                                   
                                                     else
                                                         property.SetValue(model, reader.GetValue(propCount));
                                                     propCount++;
@@ -716,6 +720,34 @@ namespace DAL.Repositories
                     {
                         _appContext.AircraftModel.Add(item);
                         _appContext.SaveChanges();
+                    }
+                }
+            }
+        }
+        private void UploadDashNumber(List<AircraftDashNumber> aircraftModelList)
+        {
+            var aircraftTypes = _appContext.AircraftType.Where(p => p.IsDeleted == false).ToList();
+         
+            foreach (var item in aircraftModelList)
+            {
+                var aircraftType = aircraftTypes.Where(p => p.Description.ToLower() == item.AircraftTypeName.ToLower()).FirstOrDefault();
+
+                if (aircraftType != null && aircraftType.AircraftTypeId > 0)
+                {
+                    var aircraftModels = _appContext.AircraftModel.Where(p => p.IsDeleted == false && p.AircraftTypeId== aircraftType.AircraftTypeId).ToList();
+
+                    var aircraftModel = aircraftModels.Where(p => p.ModelName.ToLower() == item.ModelName.ToLower()).FirstOrDefault();
+                    if (aircraftModel != null && aircraftModel.AircraftModelId > 0)
+                    {
+                        item.AircraftTypeId = Convert.ToInt32(aircraftType.AircraftTypeId);
+                        item.AircraftModelId = Convert.ToInt32(aircraftModel.AircraftModelId);
+
+                        var flag = _appContext.AircraftDashNumber.Any(p => p.IsDeleted == false && p.DashNumber.ToLower() == item.DashNumber.Trim().ToLower() && p.AircraftTypeId == item.AircraftTypeId && p.AircraftModelId==item.AircraftModelId);
+                        if (!flag)
+                        {
+                            _appContext.AircraftDashNumber.Add(item);
+                            _appContext.SaveChanges();
+                        }
                     }
                 }
             }
