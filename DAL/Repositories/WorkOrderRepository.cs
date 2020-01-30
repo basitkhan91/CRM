@@ -3768,6 +3768,8 @@ namespace DAL.Repositories
                                             join wq in _appContext.WorkOrderQuoteDetails on wf.WorkOrderQuoteDetailsId equals wq.WorkOrderQuoteDetailsId
                                             join car in _appContext.Carrier on wf.CarrierId equals car.CarrierId
                                             join sv in _appContext.CustomerShipping on wf.ShipViaId equals sv.CustomerShippingId
+                                            join ts in _appContext.Task on wf.TaskId equals ts.TaskId into wets
+                                            from ts in wets.DefaultIfEmpty()
                                             where wf.IsDeleted == false && wf.WorkOrderQuoteDetailsId == workOrderQuoteDetailsId
                                             && wq.BuildMethodId == buildMethodId
                                             select new
@@ -3796,6 +3798,8 @@ namespace DAL.Repositories
                                                 wf.MarkupPercentageId,
                                                 wf.FreightCostPlus,
                                                 wf.MarkupFixedPrice,
+                                                wf.TaskId,
+                                                TaskName = ts == null ? "" : ts.Description,
                                             }).Distinct().ToList();
 
                 return workOrderFreightList;
