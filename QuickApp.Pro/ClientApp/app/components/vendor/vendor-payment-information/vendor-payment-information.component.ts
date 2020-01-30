@@ -710,8 +710,11 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 				this.sourceVendor.vendorId = this.local.vendorId;
 				this.domesticSaveObj.country = editValueAssignByCondition('countries_id', this.domesticSaveObj.country);
 				this.vendorService.addDomesticinfo(this.domesticSaveObj).subscribe(data => {
-					this.loadData();
-					this.localCollection = data;
+                    this.loadData();
+                    this.localCollection = {
+                        ...data, createdBy: this.userName,
+                        updatedBy: this.userName
+                    };
 					this.savesuccessCompleted(this.sourceVendor);
 					this.sourceVendor = new Object();
 					this.updateVendorDomesticWirePayment(this.localCollection);
@@ -746,7 +749,10 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 				this.sourceVendor.masterCompanyId = 1;
 				this.internationalSaveObj.country = editValueAssignByCondition('countries_id', this.internationalSaveObj.country);
 				this.vendorService.addInternationalinfo(this.internationalSaveObj).subscribe(data => {
-					this.localCollection = data;
+                    this.localCollection = {
+                        ...data, createdBy: this.userName,
+                        updatedBy: this.userName
+                    };
 					this.vendorService.paymentCollection = this.local;
 					// this.activeIndex = 4;
 					// this.vendorService.indexObj.next(this.activeIndex);
@@ -842,7 +848,8 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 		})
 	}
 
-	updateVendorDomesticWirePayment(updateObj: any) {
+    updateVendorDomesticWirePayment(updateObj: any) {
+    
 		this.vendorService.updateVendorDomesticWirePayment(updateObj, this.local.vendorId).subscribe(data => {
 			this.loadData();
 		})
