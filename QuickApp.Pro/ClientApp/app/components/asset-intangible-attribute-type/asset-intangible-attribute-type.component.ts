@@ -25,7 +25,7 @@ import { UploadTag } from "../../models/UploadTag.enum";
     styleUrls: ['asset-intangible-attribute-type.component.scss'],
     animations: [fadeInOut]
 })
-export class AssetIntangibleAttributeTypeComponent implements OnInit, OnChanges {
+export class AssetIntangibleAttributeTypeComponent implements OnInit {
 
     itemList: any[] = [];
     filteredItemList: AssetIntangibleAttributeType[];
@@ -88,17 +88,6 @@ export class AssetIntangibleAttributeTypeComponent implements OnInit, OnChanges 
         this.loadData();
     }
 
-    ngOnChanges(changes: SimpleChanges): void {
-        console.log(JSON.stringify(changes));
-        for (let propName in changes) {
-            let chng = changes[propName];
-            let cur = JSON.stringify(chng.currentValue);
-            let prev = JSON.stringify(chng.previousValue);
-            console.log(`${propName}: currentValue = ${cur}, previousValue = ${prev}`);
-        }
-        //throw new Error("Method not implemented.");
-    }
-
     //for auditing
     get userName(): string {
         //to-do:fix the empty username
@@ -131,7 +120,7 @@ export class AssetIntangibleAttributeTypeComponent implements OnInit, OnChanges 
         this.loadingIndicator = false;
         this.allAssetIntangibleTypes = getAssetTypeList;
         this.allAssetIntangibleAttributeTypes = getAssetTypeList;
-        this.loadSelectedNames();
+        //this.loadSelectedNames();
     }
 
     //loading GlAccount from generalLedger//
@@ -154,7 +143,7 @@ export class AssetIntangibleAttributeTypeComponent implements OnInit, OnChanges 
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.allGlInfo = getGlList;
-        this.loadSelectedNames();
+        //this.loadSelectedNames();
     }
 
     filterIntangibleType(event): void {
@@ -208,14 +197,14 @@ export class AssetIntangibleAttributeTypeComponent implements OnInit, OnChanges 
     getAllFrequency() {
         this.commonservice.smartDropDownList('[AssetDepreciationFrequency]', 'AssetDepreciationFrequencyId', 'Name').subscribe(res => {
             this.depreciationFreqList = res;
-            this.loadSelectedNames();
+            //this.loadSelectedNames();
         })
     }
 
     getAllDepreMthod() {
         this.commonservice.smartDropDownList('[AssetDepreciationMethod]', 'AssetDepreciationMethodId', 'AssetDepreciationMethodName').subscribe(res => {
             this.depreciationMethodList = res;
-            this.loadSelectedNames();
+            //this.loadSelectedNames();
         })
     }
     loadSelectedNames() {
@@ -500,11 +489,7 @@ export class AssetIntangibleAttributeTypeComponent implements OnInit, OnChanges 
             this.itemList = responseData;
             this.totalRecords = responseData.length;
             this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
-            this.glList();
-            this.getAllFrequency();
-            this.getAllDepreMthod();
-            this.loadManagementdata();
-            this.getIntangibleTypeList();
+            this.loadSelectedNames();
         })
     }
 
@@ -702,6 +687,11 @@ export class AssetIntangibleAttributeTypeComponent implements OnInit, OnChanges 
 
     //Step x: load all the required data for the page to function
     private loadData() {
+        this.glList();
+        this.getAllFrequency();
+        this.getAllDepreMthod();
+        this.loadManagementdata();
+        this.getIntangibleTypeList();
         this.getItemList();
         console.log(this.itemList);
 

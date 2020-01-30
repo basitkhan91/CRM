@@ -23,6 +23,7 @@ export class WorkOrderChargesComponent implements OnChanges, OnInit {
   @Output() refreshData = new EventEmitter();
   @Output() createQuote = new EventEmitter();
   @Input() isView: boolean = false;
+  @Input() taskList: any = [];
   cols = [
     { field: 'chargeType', header: 'Charge Type' },
     { field: 'description', header: 'Description' },

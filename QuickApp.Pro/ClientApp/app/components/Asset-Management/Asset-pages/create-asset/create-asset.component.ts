@@ -65,9 +65,11 @@ export class CreateAssetComponent implements OnInit {
     selectedColumns: any;
     cols: any;
     allAssetInfo: any[] = [];
+    excludedAssetInfo: any[] = [];
     disableSave: boolean;
     onSelectedId: any;
     localCollection: any[];
+    localCollectionExc: any[];
     managementStructureData: any = [];
     updateMode: boolean = false;
     allGlInfo: GlAccount[];
@@ -297,6 +299,17 @@ export class CreateAssetComponent implements OnInit {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.allAssetInfo = assetList;
+        this.excludedAssetInfo = assetList;
+        if (this.AssetId != null && this.AssetId != undefined) {
+            if (assetList != null && assetList != undefined) {
+                for (let i = 0; i < assetList.length; i++) {
+                    console.log(assetList[i]);
+                    if (assetList[i].assetId.toLowerCase() == this.AssetId) {
+                        this.excludedAssetInfo.splice(i, 1);
+                    }
+                }
+            }
+        }
     }
     get userName(): string {
         return this.authService.currentUser ? this.authService.currentUser.userName : "";
@@ -472,6 +485,26 @@ export class CreateAssetComponent implements OnInit {
                             "assetId": this.allAssetInfo[i].assetId
                         }]),
                             this.localCollection.push(assetId)
+
+                    }
+                }
+            }
+        }
+    }
+
+    filterExcAssetId(event) {
+
+        this.localCollectionExc = [];
+        if (this.excludedAssetInfo) {
+            for (let i = 0; i < this.excludedAssetInfo.length; i++) {
+                let assetId = this.excludedAssetInfo[i].assetId;
+                if (assetId) {
+                    if (assetId.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+                        this.allAssets.push([{
+                            "assetRecordId": this.excludedAssetInfo[i].assetRecordId,
+                            "assetId": this.excludedAssetInfo[i].assetId
+                        }]),
+                            this.localCollectionExc.push(assetId)
 
                     }
                 }
@@ -851,7 +884,7 @@ export class CreateAssetComponent implements OnInit {
     }
 
     saveAsset(): void {
-
+        console.log(this.currentAsset.alternateAssetId, this.currentAsset.assetId);
         if (this.currentAsset.isDepreciable == true) {
             if (!(this.currentAsset.assetId && this.currentAsset.name && this.currentAsset.unitOfMeasureId
                 && this.currentAsset.currencyId && this.currentAsset.assetTypeId && this.currentAsset.assetAcquisitionTypeId
@@ -885,6 +918,14 @@ export class CreateAssetComponent implements OnInit {
                 this.isSaving = false;
                 this.alertService.stopLoadingMessage();
                 this.alertService.showMessage("", `Asset Parent and Alternate Asset can't be same.`, MessageSeverity.error);
+                return;
+            }
+        }
+        if (this.currentAsset.alternateAssetId != null && this.currentAsset.assetId != null) {
+            if (this.currentAsset.alternateAssetId == this.currentAsset.assetId) {
+                this.isSaving = false;
+                this.alertService.stopLoadingMessage();
+                this.alertService.showMessage("", `Asset Id and Alternate Asset Id can't be same.`, MessageSeverity.error);
                 return;
             }
         }

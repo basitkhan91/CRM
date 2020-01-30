@@ -21,24 +21,99 @@
   >
     <ng-template pTemplate="header" let-columns>
       <tr>
+        <th colspan="9">
+            &nbsp;
+        </th>
+        <th colspan="2">
+            <div class="form-group" style="text-align: center;">
+              <p-radioButton
+                class="p-radiobutton-label-horizontal"
+                name="costPlusType"
+                label="Cost Plus"
+                value="Mark Up"
+                [(ngModel)]="costPlusType"
+                [disabled]="isView"
+              ></p-radioButton>
+              <div style="display: flex;">
+                <label>Mat Mark Up %</label>
+                <select class="form-control wf-pub-id" (change)="markupChanged({}, 'all')" [(ngModel)]="overAllMarkup" [disabled]="isView || costPlusType != 'Mark Up'">
+                  <option value="">Select</option>
+                  <option *ngFor="let markUp of markupList" [value]="markUp.value">{{markUp.label}}</option>
+                </select>
+              </div>
+            </div>
+        </th>
+        <th colspan="2">
+          <div>
+            <p-radioButton
+              class="p-radiobutton-label-horizontal col-width"
+              name="costPlusType"
+              value="Fixed Mat Price"
+              label="Fixed Mat Price"
+              [(ngModel)]="costPlusType"
+              [disabled]="isView"
+            ></p-radioButton>
+          </div>
+        </th>
+      </tr>
+      <tr>
+        <ng-container *ngIf="isQuote">
+          <th>Task</th>
+        </ng-container>
         <th *ngFor="let col of columns">
           {{ col.header }}
         </th>
+        <ng-container *ngIf="isQuote">
+          <th>Mark Up</th>
+          <th tooltip="Time & Materials">T&M Amount</th>
+          <th>Fixed Amount</th>
+        </ng-container>
         <th>Action</th>
       </tr>
     </ng-template>
-    <ng-template pTemplate="body" let-rowData let-columns="columns">
+    <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
       <tr *ngIf="!rowData['isDeleted']">
+        <ng-container *ngIf="isQuote">
+          <td>
+            <select class="form-control" [(ngModel)]="rowData.taskId" [disabled]="isView">
+              <option value="">Select</option>
+              <option *ngFor="let task of taskList" [value]="task.taskId">{{task.description}}</option>
+            </select>
+          </td>
+        </ng-container>
         <td *ngFor="let col of columns">
           {{ rowData[col.field] }}
         </td>
+        <ng-container *ngIf="isQuote">
+            <td>
+              <select
+                class="form-control"
+                (change)="markupChanged(rowData, 'row')"
+                [(ngModel)]="rowData.markupPercentageId"
+                [disabled]="isView"
+              >
+                <option value="">Select</option>
+                <option
+                  *ngFor="let markUp of markupList"
+                  [value]="markUp.value"
+                  >{{ markUp.label }}</option
+                >
+              </select>
+            </td>
+            <td>
+              {{ rowData.freightCostPlus }}
+            </td>
+            <td>
+              <input type="number" [(ngModel)]="rowData.fixedAmount" [disabled]="costPlusType != 'Fixed Mat Price'"/>
+            </td>
+        </ng-container>
         <td class="btn-spaces">
           <button
             class="btn-edit ptable-wo-btns"
             mat-icon-button
             data-target="#addNewFreight"
             data-toggle="modal"
-            (click)="edit(rowData)"
+            (click)="edit(rowData, rowIndex)"
             matTooltip="Edit"
           >
             <mat-icon>edit</mat-icon>
@@ -55,6 +130,13 @@
       </tr>
     </ng-template>
   </p-table>
+  <button
+    class="btn btn-primary pull-right"
+    (click)="createFreightsQuote()"
+    *ngIf="!isView && isQuote"
+  >
+    Save
+  </button>
 </div>
 
 <div id="addNewFreight" class="modal fade" role="dialog">
