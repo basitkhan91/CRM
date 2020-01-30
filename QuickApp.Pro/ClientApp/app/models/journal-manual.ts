@@ -1,7 +1,7 @@
 ﻿export class JournalManual {
     id: number;
     isManual: boolean;
-    glAccountId: number;
+    gLAccountId: number;
     batchNumber: number;
     batchName: string;
     batchDescription: string;
@@ -11,7 +11,7 @@
     entryDate: Date;
     effectiveDate: Date;
     accountingCalendarId: number;
-    // journalManualPeriodName: string;
+    journalPeriodName: string;
     employeeId: number;
     localCurrencyId: number;
     reportingCurrencyId: number;
