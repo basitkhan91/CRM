@@ -23,6 +23,7 @@ import { GMapModule } from 'primeng/gmap';
 import { Router } from '@angular/router';
 import * as $ from 'jquery';
 import { editValueAssignByCondition, getObjectById } from '../../../generic/autocomplete';
+import { VendorStepsPrimeNgComponent } from '../vendor-steps-prime-ng/vendor-steps-prime-ng.component';
 import { ConfigurationService } from '../../../services/configuration.service';
 declare const google: any;
 @Component({
@@ -33,6 +34,7 @@ declare const google: any;
 })
 /** VendorShippingInformation component*/
 export class VendorShippingInformationComponent {
+    @ViewChild(VendorStepsPrimeNgComponent) stepper: VendorStepsPrimeNgComponent;
     modelValue: boolean;
     display: boolean;
     activeIndex: number;
@@ -127,10 +129,10 @@ export class VendorShippingInformationComponent {
     totalPages: number = 0;
 
     constructor(private http: HttpClient, private router: Router,
-        private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private configurations: ConfigurationService) {
-            if(this.workFlowtService.listCollection !== undefined){
-                this.workFlowtService.isEditMode = true;
-            }
+        private authService: AuthService, private modalService: NgbModal, private configurations: ConfigurationService, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
+        if (this.workFlowtService.listCollection !== undefined) {
+            this.workFlowtService.isEditMode = true;
+        }
         this.dataSource = new MatTableDataSource();
         if (this.local) {
             this.workFlowtService.contactCollection = this.local;
@@ -231,8 +233,8 @@ export class VendorShippingInformationComponent {
             { field: 'stateOrProvince', header: 'State/Prov' },
             { field: 'postalCode', header: 'Postal Code' },
             { field: 'countryName', header: 'Country' }
-        ];  
-        this.selectedColumns = this.cols;            
+        ];
+        this.selectedColumns = this.cols;
     }
 
     private countrylist() {
@@ -306,7 +308,7 @@ export class VendorShippingInformationComponent {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.dataSource.data = allWorkFlows;
-        this.allActions = allWorkFlows;  
+        this.allActions = allWorkFlows;
     }
     private onShipViadetails(allWorkFlows: any) {
         this.alertService.stopLoadingMessage();
@@ -337,9 +339,9 @@ export class VendorShippingInformationComponent {
     private onAuditHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
-       
+
         this.shippingauditHisory = auditHistory;
-       
+
         // this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
         // this.modal.result.then(() => {
         //     console.log('When user closes');
@@ -382,7 +384,7 @@ export class VendorShippingInformationComponent {
     openEdit(row) {
         this.isEditMode = true;
         this.isSaving = true;
-        this.sourceVendor = {...row, country: getObjectById('countries_id', row.country, this.allCountryinfo)};
+        this.sourceVendor = { ...row, country: getObjectById('countries_id', row.country, this.allCountryinfo) };
         this.loadMasterCompanies();
         this.isEditShippingInfo = true;
     }
@@ -432,8 +434,8 @@ export class VendorShippingInformationComponent {
             results => this.onAuditHistoryLoadSuccessful(results, content),
             error => this.saveFailedHelper(error));
 
-      
-    }    
+
+    }
 
     editItemAndCloseModel() {
         this.isSaving = true;
@@ -466,7 +468,7 @@ export class VendorShippingInformationComponent {
                 this.sourceVendor.masterCompanyId = 1;
                 this.workFlowtService.updateshippinginfo(this.sourceVendor).subscribe(data => {
                     this.updatedCollection = data;
-                    this.loadData();                    
+                    this.loadData();
                     this.sourceVendor = {};
                     this.alertService.showMessage("Success", `Action was edited successfully`, MessageSeverity.success);
                 })
@@ -475,20 +477,19 @@ export class VendorShippingInformationComponent {
         }
         $('#addShippingInfo').modal('hide');
     }
-    saveVendorShipViaDetails() {        
+    saveVendorShipViaDetails() {
         this.isSaving = true;
-            if(this.shipViaObj.shipVia == null || this.shipViaObj.shipVia=="" )
-            {
-               this.alertService.showMessage("Empty", 'Cannot Submit Empty', MessageSeverity.warn);
-                return;
-            }
+        if (this.shipViaObj.shipVia == null || this.shipViaObj.shipVia == "") {
+            this.alertService.showMessage("Empty", 'Cannot Submit Empty', MessageSeverity.warn);
+            return;
+        }
 
-        if (this.shipViaObj.vendorShippingId>0) {            
+        if (this.shipViaObj.vendorShippingId > 0) {
             this.shipViaObj.createdBy = this.userName;
             this.shipViaObj.updatedBy = this.userName;
             this.shipViaObj.masterCompanyId = 1;
             this.shipViaObj.isActive = true;
-           
+
             this.workFlowtService.updateshippingViainfo(this.shipViaObj).subscribe(data => {
                 this.shipViaCollection = data;
                 this.loadShipViaCollection(this.shipViaCollection);
@@ -498,7 +499,7 @@ export class VendorShippingInformationComponent {
                     this.shipViaObj.shippingURL = "";
                     this.shipViaObj.shippingId = "";
                     this.shipViaObj.memo = "";
-                    this.shipViaObj.vendorShippingId=0;
+                    this.shipViaObj.vendorShippingId = 0;
                 }
             })
         }
@@ -517,17 +518,18 @@ export class VendorShippingInformationComponent {
                     this.shipViaObj.shippingURL = "";
                     this.shipViaObj.shippingId = "";
                     this.shipViaObj.memo = "";
-                    this.shipViaObj.vendorShippingId=0;
+                    this.shipViaObj.vendorShippingId = 0;
                 }
-            })            
+            })
         }
 
     }
 
     previousClick() {
-        this.activeIndex = 3;
-        this.workFlowtService.indexObj.next(this.activeIndex);
-        this.workFlowtService.changeStep('Payment Information');
+        this.activeIndex = 5;
+        this.stepper.changeStep(this.activeIndex);
+        // this.workFlowtService.indexObj.next(this.activeIndex);
+        // this.workFlowtService.changeStep('Payment Information');
         this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-payment-information');
     }
     openShipVia(content, rowData) {
@@ -550,7 +552,7 @@ export class VendorShippingInformationComponent {
     }
 
     updateVendorShippingAddress(updateObj: any) {
-       
+
         this.workFlowtService.updateVendorShippingAddressDetails(updateObj, this.local.vendorId).subscribe(data => {
             this.vendorshippingAddressdetails = data;
             this.workFlowtService.newShippingAddWithAddress(this.sourceVendor, this.vendorshippingAddressdetails.vendorShippingAddressId).subscribe(data => {
@@ -572,8 +574,8 @@ export class VendorShippingInformationComponent {
             error => this.saveFailedHelper(error));
     }
 
-    deleteVendorShippingAddress() {             
-        this.isSaving = true;       
+    deleteVendorShippingAddress() {
+        this.isSaving = true;
         this.localCollection.isActive = false;
         this.localCollection.addressStatus = false;
         this.localCollection.updatedBy = this.userName;
@@ -581,7 +583,7 @@ export class VendorShippingInformationComponent {
         this.workFlowtService.deleteVendorShippingAddress(this.localCollection).subscribe(
             response => this.saveCompleted(this.sourceVendor),
             error => this.saveFailedHelper(error));
-      this.modal.close();
+        this.modal.close();
     }
 
     deleteItemShippingCloseModel() {
@@ -610,7 +612,7 @@ export class VendorShippingInformationComponent {
         this.isEditMode = false;
         this.modal.close();
     }
-    dismissModel() {      
+    dismissModel() {
         this.isDeleteMode = false;
         this.isEditMode = false;
         this.modal.close();
@@ -667,9 +669,10 @@ export class VendorShippingInformationComponent {
         if (this.local) {
             this.workFlowtService.shippingCollection = this.local;
         }
-        this.activeIndex = 6;
-        this.workFlowtService.indexObj.next(this.activeIndex);
-        this.workFlowtService.changeStep('Billing Information');
+        this.activeIndex = 7;
+        this.stepper.changeStep(this.activeIndex);
+        // this.workFlowtService.indexObj.next(this.activeIndex);
+        // this.workFlowtService.changeStep('Billing Information');
         this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-billing-information');
     }
     handleChanges(rowData, e) {
@@ -731,12 +734,12 @@ export class VendorShippingInformationComponent {
         //     }
         // }
         this.countrycollection = this.allCountryinfo;
-		if (event.query !== undefined && event.query !== null) {
-			const countries = [...this.allCountryinfo.filter(x => {
-				return x.nice_name.toLowerCase().includes(event.query.toLowerCase())
-			})]
-			this.countrycollection = countries;
-		}
+        if (event.query !== undefined && event.query !== null) {
+            const countries = [...this.allCountryinfo.filter(x => {
+                return x.nice_name.toLowerCase().includes(event.query.toLowerCase())
+            })]
+            this.countrycollection = countries;
+        }
     }
     onShipVia(event) {
         if (this.allShipViaDetails) {
@@ -806,7 +809,7 @@ export class VendorShippingInformationComponent {
 
     customExcelUpload(event) {
         const file = event.target.files;
-       
+
         if (file.length > 0) {
             this.formData.append('file', file[0])
             this.workFlowtService.ShippingFileUpload(this.formData, this.local.vendorId).subscribe(res => {
@@ -825,8 +828,8 @@ export class VendorShippingInformationComponent {
     }
 
     getPageCount(totalNoofRecords, pageSize) {
-		return Math.ceil(totalNoofRecords / pageSize)
-	}
+        return Math.ceil(totalNoofRecords / pageSize)
+    }
 
 
 

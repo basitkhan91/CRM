@@ -14,6 +14,8 @@ import { Table } from "primeng/table";
 import { MatDialog } from "@angular/material";
 import { FormBuilder } from "@angular/forms";
 import { validateRecordExistsOrNot, selectedValueValidate, editValueAssignByCondition, getObjectByValue } from "../../generic/autocomplete";
+import { CommonService } from '../../services/common.service';
+import { ConfigurationService } from '../../services/configuration.service';
 @Component({
     selector: 'app-aircraft-manufacturer',
     templateUrl: './aircraft-manufacturer.component.html',
@@ -62,7 +64,7 @@ export class AircraftManufacturerComponent implements OnInit {
         private activeModal: NgbActiveModal,
         private _fb: FormBuilder,
         private alertService: AlertService,
-        public aircraftManufacturerService: AircraftManufacturerService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
+        public aircraftManufacturerService: AircraftManufacturerService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private commonService: CommonService, private configurations: ConfigurationService) {
 
     }
 
@@ -91,35 +93,35 @@ export class AircraftManufacturerComponent implements OnInit {
         this.getList();
     }
 
-    customExcelUpload(event) {
-        // const file = event.target.files;
+    customAircraftTypeExcelUpload(event) {
+        const file = event.target.files;
 
-        // console.log(file);
-        // if (file.length > 0) {
+        console.log(file);
+        if (file.length > 0) {
 
-        //     this.formData.append('file', file[0])
-        //     this.unitofmeasureService.UOMFileUpload(this.formData).subscribe(res => {
-        //         event.target.value = '';
+            this.formData.append('ModuleName', 'AircraftType')
+            this.formData.append('file', file[0])
 
-        //         this.formData = new FormData();
-        //         this.existingRecordsResponse = res;
-        //         this.getList();
-        //         this.alertService.showMessage(
-        //             'Success',
-        //             `Successfully Uploaded  `,
-        //             MessageSeverity.success
-        //         );
 
-        //     })
-        // }
+            this.commonService.smartExcelFileUpload(this.formData).subscribe(res => {
+                event.target.value = '';
+                this.formData = new FormData();
+                this.getList();
+                this.alertService.showMessage(
+                    'Success',
+                    `Successfully Uploaded  `,
+                    MessageSeverity.success
+                );
+
+            })
+        }
 
     }
-    sampleExcelDownload() {
-        // const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=UnitOfMeasure&fileName=uom.xlsx`;
 
-        // window.location.assign(url);
+    sampleAircraftTypeExcelDownload() {
+        const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=AircraftType&fileName=AircraftType.xlsx`;
+        window.location.assign(url);
     }
-
     getList() {
         this.aircraftManufacturerService.getAll().subscribe(res => {
             console.log(res[0])
@@ -254,7 +256,7 @@ export class AircraftManufacturerComponent implements OnInit {
 
     getAuditHistoryById(rowData) {
         this.aircraftManufacturerService.getAudit(rowData.aircraftTypeId).subscribe(res => {
-            this.auditHistory = res;
+            this.auditHistory = res[0].result;
         })
     }
     getColorCodeForHistory(i, field, value) {

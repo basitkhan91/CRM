@@ -1,6 +1,6 @@
 <div class="row">
   <div style="overflow-y: auto;">
-    <p-table #dt class="rpo-table-cstm rro-table-cstm" [value]="parts" [rows]="10" [lazy]="true"
+    <p-table #dt class="rpo-table-cstm rro-table-cstm sales-quote-part-search-data" [value]="parts" [rows]="10" [lazy]="true"
       [paginator]="showPaginator" [rowsPerPageOptions]="[10, 20, 30]" [totalRecords]="totalRecords"
       [pageLinks]="pageLinks" [columns]="columns" [scrollable]="true" scrollHeight="450px" [style]="{ width: '100%' }"
       (onLazyLoad)="onPaging($event)">
@@ -37,11 +37,11 @@
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-part>
-        <tr>
+        <tr [ngClass]="{'row-bg1':part.alternateFor.length==0}">
           <td><input type="checkbox" (change)="onChange($event, part)" /></td>
           <td>{{ part.method}}</td>
           <td>{{ part.partNumber }}</td>
-          <td>{{ part.alternatePartNumber }}</td>
+          <td>{{ part.alternateFor }} <span class="alternate-part-label" *ngIf="part.alternateFor?.length > 0">(Alt)</span></td>
           <td>{{ part.description }}</td>
           <td>{{ part.conditionDescription }}</td>
           <td>{{ part.uomDescription }}</td>

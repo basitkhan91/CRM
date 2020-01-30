@@ -14610,6 +14610,9 @@ body .ui-autocomplete .ui-autocomplete-dropdown .ui-button-icon-left:before {
 .sales-quote-customer-input input {
     width: 79%;
 }
+.sales-quote-part-search-data p-table .ui-table-summary{
+    margin: auto !important;
+  }
 
 @media only screen and (max-width: 1024px) {
     .md-stepper-horizontal .md-step.active.done .md-step-title, .md-stepper-horizontal .md-step.active.editable .md-step-title {

@@ -49,9 +49,9 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpGet("vendorglobalsearch")]
-        public IActionResult VendorGlobalSearch(string filterText, int pageNumber = 0, int pageSize = 10)
+        public IActionResult VendorGlobalSearch(string filterText, int pageNumber = 0, int pageSize = 10,bool isActive=false)
         {
-            var result = _unitOfWork.Vendor.VendorGlobalSearch(filterText, pageNumber, pageSize);
+            var result = _unitOfWork.Vendor.VendorGlobalSearch(filterText, pageNumber, pageSize,isActive);
             return Ok(result);
         }
 
