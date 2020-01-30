@@ -58,6 +58,44 @@
 </div>
 
 <div>
+    <table class="table table-bordered table-striped table-sorting mpn-list-table table-disabled">
+      <thead>
+          <tr style="color: #f1f1f1;">
+              <td colspan="10" style="width: 500px;">&nbsp;</td>
+              <td colspan="3" style="display: flex;">
+                  <div class="form-group" style="text-align: center;">
+                    <p-radioButton
+                      class="p-radiobutton-label-horizontal"
+                      name="costPlusType"
+                      label="Mark Up"
+                      value="Mark Up"
+                      [(ngModel)]="costPlusType"
+                      [disabled]="isView"
+                    ></p-radioButton>
+                    <div style="display: flex;">
+                      <label>Mat Mark Up %</label>
+                      <select class="form-control wf-pub-id" (change)="markupChanged({}, 'all')" [(ngModel)]="overAllMarkup" [disabled]="isView || costPlusType != 'Mark Up'">
+                        <option value="">Select</option>
+                        <option *ngFor="let markUp of markupList" [value]="markUp.value">{{markUp.label}}</option>
+                      </select>
+                    </div>
+                  </div>
+              </td>
+              <td colspan="4">
+                <div>
+                  <p-radioButton
+                    class="p-radiobutton-label-horizontal col-width"
+                    name="costPlusType"
+                    value="Fixed Mat Price"
+                    label="Fixed Mat Price"
+                    [(ngModel)]="costPlusType"
+                    [disabled]="isView"
+                  ></p-radioButton>
+                </div>
+              </td>
+          </tr>
+      </thead>
+    </table>
   <p-table
     class="rpo-table-cstm rro-table-cstm pub-ptable-cstm"
     [columns]="cols"
@@ -67,17 +105,56 @@
   >
     <ng-template pTemplate="header" let-columns>
       <tr>
+        <ng-container *ngIf="isQuote">
+          <th>Task</th>
+        </ng-container>
         <th *ngFor="let col of columns">
           {{ col.header }}
         </th>
+        <ng-container *ngIf="isQuote">
+          <th>Mark Up</th>
+          <th tooltip="Time & Materials">T&M Amount</th>
+          <th>Fixed Amount</th>
+        </ng-container>
         <th colspan="2">Actions</th>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-rowData let-columns="columns">
       <tr *ngIf="!rowData['isDeleted']">
+        <ng-container *ngIf="isQuote">
+          <td>
+            <select class="form-control" [(ngModel)]="rowData.taskId" [disabled]="isView">
+              <option value="">Select</option>
+              <option *ngFor="let task of taskList" [value]="task.taskId">{{task.description}}</option>
+            </select>
+          </td>
+        </ng-container>
         <td *ngFor="let col of columns">
           {{ rowData[col.field] }}
         </td>
+        <ng-container *ngIf="isQuote">
+            <td>
+              <select
+                class="form-control"
+                (change)="markupChanged(rowData, 'row')"
+                [(ngModel)]="rowData.markUpPercentageId"
+                [disabled]="isView || costPlusType != 'Mark Up'"
+              >
+                <option value="">Select</option>
+                <option
+                  *ngFor="let markUp of markupList"
+                  [value]="markUp.value"
+                  >{{ markUp.label }}</option
+                >
+              </select>
+            </td>
+            <td>
+              {{ rowData.costPlusAmount }}
+            </td>
+            <td>
+              <input type="number" [(ngModel)]="rowData.fixedAmount" [disabled]="costPlusType != 'Fixed Mat Price'"/>
+            </td>
+        </ng-container>
         <td *ngIf="!isView">
           <button
             class="btn-edit ptable-wo-btns"

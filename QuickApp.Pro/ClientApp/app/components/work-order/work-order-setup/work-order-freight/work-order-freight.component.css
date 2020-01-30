@@ -1,3 +1,6 @@
 .btn-spaces > button {
   margin-right: 13px !important;
 }
+.ui-radiobutton-label{
+  color: #ffffff !important;
+}
