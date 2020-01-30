@@ -20,6 +20,7 @@ import { Vendor } from '../../../models/vendor.model';
 import { Router, ActivatedRoute, Params, NavigationExtras } from '@angular/router';
 import { Row } from 'primeng/components/common/shared';
 import { CustomerService } from '../../../services/customer.service';
+import { VendorStepsPrimeNgComponent } from '../vendor-steps-prime-ng/vendor-steps-prime-ng.component';
 import { ConfigurationService } from '../../../services/configuration.service';
 @Component({
     selector: 'app-vendor-contacts',
@@ -29,10 +30,11 @@ import { ConfigurationService } from '../../../services/configuration.service';
 })
 /** anys component*/
 export class VendorContactsComponent implements OnInit {
+    @ViewChild(VendorStepsPrimeNgComponent) stepper: VendorStepsPrimeNgComponent;
     modelValue: boolean;
     display: boolean;
     matSpinner: boolean;
-    activeIndex: any;
+    activeIndex: any = 3;
     showFirstName: boolean;
     showemail: boolean;
     showworkPhone: boolean;
@@ -508,15 +510,17 @@ export class VendorContactsComponent implements OnInit {
     }
 
     previousClick() {
-        this.activeIndex = 10;
-        this.workFlowtService.indexObj.next(this.activeIndex);
-        this.workFlowtService.changeStep('Capabilities');
+        this.activeIndex = 2;
+        this.stepper.changeStep(this.activeIndex);
+        // this.workFlowtService.indexObj.next(this.activeIndex);
+        // this.workFlowtService.changeStep('Capabilities');
         this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-capes');
     }
     nextClick() {
-        this.activeIndex = 2;
-        this.workFlowtService.indexObj.next(this.activeIndex);
-        this.workFlowtService.changeStep('Financial Information');
+        this.activeIndex = 4;
+        this.stepper.changeStep(this.activeIndex);
+        // this.workFlowtService.indexObj.next(this.activeIndex);
+        // this.workFlowtService.changeStep('Financial Information');
         this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-financial-information');
     }
 

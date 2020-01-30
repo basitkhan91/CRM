@@ -19,6 +19,7 @@ import { MasterComapnyService } from '../../../services/mastercompany.service';
 import { Vendor } from '../../../models/vendor.model';
 import { debounce } from 'rxjs/operators/debounce';
 import { Router, ActivatedRoute, Params, NavigationExtras } from '@angular/router';
+import { VendorStepsPrimeNgComponent } from '../vendor-steps-prime-ng/vendor-steps-prime-ng.component';
 
 @Component({
     selector: 'app-vendor-warnings',
@@ -28,7 +29,7 @@ import { Router, ActivatedRoute, Params, NavigationExtras } from '@angular/route
 })
 /** VendorWarnings component*/
 export class VendorWarningsComponent implements OnInit {
-
+    @ViewChild(VendorStepsPrimeNgComponent) stepper: VendorStepsPrimeNgComponent;
     isOnlyReas: boolean = false;
     isReas: boolean = true;
     isReClose: boolean = true;
@@ -52,7 +53,7 @@ export class VendorWarningsComponent implements OnInit {
     soureRMA: any = {};
     sourceRo: any = {};
     sourceEdi: any = {};
-    sourceAero: any = {};    
+    sourceAero: any = {};
     sourceNet: any = {};
     activeIndex: number;
     workFlowtService: any;
@@ -69,7 +70,7 @@ export class VendorWarningsComponent implements OnInit {
     isROQuoteOnlyReas: boolean = true;
 
     constructor(private authService: AuthService, private router: Router, private vendorService: VendorService, private alertService: AlertService) {
-        if(this.vendorService.listCollection !== undefined){
+        if (this.vendorService.listCollection !== undefined) {
             this.vendorService.isEditMode = true;
         }
         if (this.vendorService.shippingCollection) {
@@ -93,21 +94,21 @@ export class VendorWarningsComponent implements OnInit {
         this.sourceAero.allow = true;
         this.sourceNet.allow = true;
         this.sourePo.isAllow = true;
-        this.sourcePOQuote.allow=true;
-        this.sourceROQuote.allow=true;
-        
-       // if (this.sourePo.allow = true  && this.sourceRo.allow == true && this.soureRMA.allow == true && this.sourceEdi.allow == true && this.sourceAero.allow == true && this.sourceNet.allow == true) {
-        if (this.sourePo.allow = true  && this.sourceRo.allow == true && this.sourcePOQuote.allow == true  && this.sourceROQuote.allow == true  ) {
+        this.sourcePOQuote.allow = true;
+        this.sourceROQuote.allow = true;
+
+        // if (this.sourePo.allow = true  && this.sourceRo.allow == true && this.soureRMA.allow == true && this.sourceEdi.allow == true && this.sourceAero.allow == true && this.sourceNet.allow == true) {
+        if (this.sourePo.allow = true && this.sourceRo.allow == true && this.sourcePOQuote.allow == true && this.sourceROQuote.allow == true) {
             this.isOnly = true;
             this.isOnlyRead = true;
             this.isOnlyReads = true;
             this.isOnlyClose = true;
             this.isReClose = true;
             this.isOnlyReas = true;
-            this.isPOQuoteReadOnly=true;
-            this.isROQuoteReadOnly=true;
-            this.isPOQuoteOnlyReas=true;
-            this.isROQuoteOnlyReas=true;
+            this.isPOQuoteReadOnly = true;
+            this.isROQuoteReadOnly = true;
+            this.isPOQuoteOnlyReas = true;
+            this.isROQuoteOnlyReas = true;
         }
         if (this.local) {
             this.loadData();
@@ -405,7 +406,7 @@ export class VendorWarningsComponent implements OnInit {
                             this.isROQuoteReadOnly = false;
                         }
                     }
-                   
+
 
                 }
 
@@ -414,7 +415,7 @@ export class VendorWarningsComponent implements OnInit {
 
     }
     private onDataLoadSuccessful(allWorkFlows: any) {
-       
+
         this.dataSource.data = allWorkFlows;
         this.allwarningData = allWorkFlows;
     }
@@ -431,8 +432,8 @@ export class VendorWarningsComponent implements OnInit {
             this.sourePo.vendorId = this.local.vendorId;
             this.vendorService.saveVendorwarnings(this.sourePo).subscribe(
                 data => {
-                   // this.saveRMA();
-                   this.SaveRO();
+                    // this.saveRMA();
+                    this.SaveRO();
                 })
         }
         else {
@@ -440,23 +441,26 @@ export class VendorWarningsComponent implements OnInit {
 
             this.sourePo.masterCompanyId = 1;
             this.vendorService.updateVendorWarnings(this.sourePo).subscribe(
-                data => { 
+                data => {
                     //this.saveRMA();
                     this.SaveRO();
-                     console.log(data) })
+                    console.log(data)
+                })
         }
     }
 
     previousClick() {
-        this.activeIndex = 6;
-        this.vendorService.indexObj.next(this.activeIndex);
-        this.vendorService.changeStep('Billing Information');
+        this.activeIndex = 8;
+        this.stepper.changeStep(this.activeIndex);
+        // this.vendorService.indexObj.next(this.activeIndex);
+        // this.vendorService.changeStep('Billing Information');
         this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-billing-information');
     }
     nextClick() {
-        this.activeIndex = 8;
-        this.vendorService.indexObj.next(this.activeIndex);
-        this.vendorService.changeStep('Memos');
+        this.activeIndex = 9;
+        this.stepper.changeStep(this.activeIndex);
+        // this.vendorService.indexObj.next(this.activeIndex);
+        // this.vendorService.changeStep('Memos');
         this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-memo');
     }
 
@@ -499,9 +503,10 @@ export class VendorWarningsComponent implements OnInit {
             this.sourePo.masterCompanyId = 1;
             this.vendorService.updateVendorWarnings(this.sourceRo).subscribe(
                 data => {
-                     //this.SaveEDI(); 
-                     this.SavePOQuote();
-                     console.log(data) })
+                    //this.SaveEDI(); 
+                    this.SavePOQuote();
+                    console.log(data)
+                })
         }
     }
 
@@ -668,16 +673,16 @@ export class VendorWarningsComponent implements OnInit {
             this.sourceEdi.warning = true;
             this.sourceAero.warning = true;
             this.sourceNet.warning = true;
-            this.sourcePOQuote.warning=true;
-            this.sourceROQuote.warning=true;
+            this.sourcePOQuote.warning = true;
+            this.sourceROQuote.warning = true;
             this.isReadOnly = false;
             this.isRead = false;
             this.isReads = false;
             this.isopen = false;
             this.isReadOpens = false;
             this.isReas = false;
-            this.isPOQuoteReadOnly=false;
-            this.isROQuoteReadOnly=false;
+            this.isPOQuoteReadOnly = false;
+            this.isROQuoteReadOnly = false;
         }
         else if (value == "D") {
             this.sourePo.warning = false;
@@ -686,16 +691,16 @@ export class VendorWarningsComponent implements OnInit {
             this.sourceEdi.warning = false;
             this.sourceAero.warning = false;
             this.sourceNet.warning = false;
-            this.sourcePOQuote.warning=false;
-            this.sourceROQuote.warning=false;
+            this.sourcePOQuote.warning = false;
+            this.sourceROQuote.warning = false;
             this.isReadOnly = true;
             this.isRead = true;
             this.isReads = true;
             this.isopen = true;
             this.isReadOpens = true;
-            this.isReas = true;            
-            this.isPOQuoteReadOnly=true;
-            this.isROQuoteReadOnly=true;
+            this.isReas = true;
+            this.isPOQuoteReadOnly = true;
+            this.isROQuoteReadOnly = true;
         }
 
     }
@@ -709,25 +714,25 @@ export class VendorWarningsComponent implements OnInit {
             this.sourceEdi.warning = false;
             this.sourceAero.warning = false;
             this.sourceNet.warning = false;
-            this.sourcePOQuote.warning=false;
-            this.sourceROQuote.warning=false;
+            this.sourcePOQuote.warning = false;
+            this.sourceROQuote.warning = false;
             this.sourePo.allow = false;
             this.soureRMA.allow = false;
             this.sourceRo.allow = false;
             this.sourceEdi.allow = false;
             this.sourceAero.allow = false;
             this.sourceNet.allow = false;
-            this.sourcePOQuote.allow=false;
-            this.sourceROQuote.allow=false;
+            this.sourcePOQuote.allow = false;
+            this.sourceROQuote.allow = false;
             this.sourePo.restrict = true;
             this.soureRMA.restrict = true;
             this.sourceRo.restrict = true;
             this.sourceEdi.restrict = true;
             this.sourceAero.restrict = true;
             this.sourceNet.restrict = true;
-            this.sourcePOQuote.restrict=true;
-            this.sourceROQuote.restrict=true;
-            
+            this.sourcePOQuote.restrict = true;
+            this.sourceROQuote.restrict = true;
+
             this.isReadOnly = true;
             this.isRead = true;
             this.isReads = true;
@@ -740,10 +745,10 @@ export class VendorWarningsComponent implements OnInit {
             this.isOnlyClose = false;
             this.isReClose = false;
             this.isOnlyReas = false;
-            this.isPOQuoteReadOnly=true;
-            this.isROQuoteReadOnly=true;
-            this.isPOQuoteOnlyReas=false;
-            this.isROQuoteOnlyReas=false;
+            this.isPOQuoteReadOnly = true;
+            this.isROQuoteReadOnly = true;
+            this.isPOQuoteOnlyReas = false;
+            this.isROQuoteOnlyReas = false;
         }
         else if (value == "F") {
             this.sourePo.restrict = false;
@@ -752,8 +757,8 @@ export class VendorWarningsComponent implements OnInit {
             this.sourceEdi.restrict = false;
             this.sourceAero.restrict = false;
             this.sourceNet.restrict = false;
-            this.sourcePOQuote.restrict=false;
-            this.sourceROQuote.restrict=false;
+            this.sourcePOQuote.restrict = false;
+            this.sourceROQuote.restrict = false;
 
             this.isReadOnly = true;
             this.isRead = true;
@@ -767,10 +772,10 @@ export class VendorWarningsComponent implements OnInit {
             this.isOnlyClose = true;
             this.isReClose = true;
             this.isOnlyReas = true;
-            this.isPOQuoteReadOnly=true;
-            this.isROQuoteReadOnly=true;
-            this.isPOQuoteOnlyReas=true;
-            this.isROQuoteOnlyReas=true;
+            this.isPOQuoteReadOnly = true;
+            this.isROQuoteReadOnly = true;
+            this.isPOQuoteOnlyReas = true;
+            this.isROQuoteOnlyReas = true;
             this.sourePo.allow = true;
             this.soureRMA.allow = true;
             this.sourceRo.allow = true;
@@ -778,8 +783,8 @@ export class VendorWarningsComponent implements OnInit {
             this.sourceAero.allow = true;
             this.sourceNet.allow = true;
             this.sourePo.isAllow = true;
-            this.sourcePOQuote.allow=true;
-            this.sourceROQuote.allow=true;
+            this.sourcePOQuote.allow = true;
+            this.sourceROQuote.allow = true;
 
         }
 

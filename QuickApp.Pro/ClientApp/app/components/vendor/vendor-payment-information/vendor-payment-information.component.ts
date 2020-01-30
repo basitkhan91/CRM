@@ -23,16 +23,18 @@ import { HttpClient } from '@angular/common/http';
 import { GMapModule } from 'primeng/gmap';
 import * as $ from 'jquery';
 import { getObjectById, editValueAssignByCondition } from '../../../generic/autocomplete';
+import { VendorStepsPrimeNgComponent } from '../vendor-steps-prime-ng/vendor-steps-prime-ng.component';
 declare const google: any;
 
 @Component({
-    selector: 'app-vendor-payment-information',
-    templateUrl: './vendor-payment-information.component.html',
-    styleUrls: ['./vendor-payment-information.component.scss'],
-    animations: [fadeInOut]
+	selector: 'app-vendor-payment-information',
+	templateUrl: './vendor-payment-information.component.html',
+	styleUrls: ['./vendor-payment-information.component.scss'],
+	animations: [fadeInOut]
 })
 /** VendorPaymentInformation component*/
 export class VendorPaymentInformationComponent implements OnInit, AfterViewInit {
+	@ViewChild(VendorStepsPrimeNgComponent) stepper: VendorStepsPrimeNgComponent;
 	modelValue: boolean;
 	display: boolean;
 	defaultPaymentStyle: boolean = true;
@@ -49,23 +51,23 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 	internationalwithVendor: any[];
 	defaultwithVendor: any[];
 	domesticWithVedor: any[];
-    checkAddress: boolean = false;
-    vendorCode: any = "";
-    vendorname: any = "";
-    allgeneralInfo: any[];
-    collection: any;
-    action_name: any = "";
-    allAddresses: any[];
-    addressId: any;
-    memo: any = "";
-    createdBy: any = "";
-    updatedBy: any = "";
-    createddate: any = "";
+	checkAddress: boolean = false;
+	vendorCode: any = "";
+	vendorname: any = "";
+	allgeneralInfo: any[];
+	collection: any;
+	action_name: any = "";
+	allAddresses: any[];
+	addressId: any;
+	memo: any = "";
+	createdBy: any = "";
+	updatedBy: any = "";
+	createddate: any = "";
 	updatedDate: any = "";
 	viewName: string = "Create";
-    sub: any;
-    local: any;
-    closeCmpny: boolean = true;
+	sub: any;
+	local: any;
+	closeCmpny: boolean = true;
 	service: boolean = false;
 	public checkValue: boolean = false;
 	public domasticWireValue: boolean = false;
@@ -75,34 +77,34 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 	public internationalStyle: boolean = false;
 	vendorId: any;
 	updatedCollection: {};
-    siteName: any;
-    address1: any;
-    address2: any;
-    isPrimary: boolean = false;
-    city: any;
+	siteName: any;
+	address1: any;
+	address2: any;
+	isPrimary: boolean = false;
+	city: any;
 	stateOrProvince: any;
 	postalCode: number;
-    country: any;
-    defaultPaymentMethod: number;
-    disablesaveforCountry: boolean;
-    disablesavefoInternalrCountry: boolean;
+	country: any;
+	defaultPaymentMethod: number;
+	disablesaveforCountry: boolean;
+	disablesavefoInternalrCountry: boolean;
 	disablesaveforBeneficiary: boolean;
 	selectedRowforDelete: any;
 
-    ngOnInit(): void {
+	ngOnInit(): void {
 		this.workFlowtService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-payment-information';
-        this.workFlowtService.bredcrumbObj.next(this.workFlowtService.currentUrl);
-		this.defaultSaveObj.defaultPaymentMethod=1;
+		this.workFlowtService.bredcrumbObj.next(this.workFlowtService.currentUrl);
+		this.defaultSaveObj.defaultPaymentMethod = 1;
 		this.countrylist();
 		if (this.local) {
-		
+
 			this.loadData();
 			this.defaultPaymentValue = true;
 			this.getDomesticWithVendorId();
 			this.InternatioalWithVendorId();
 			this.DefaultWithVendorId();
 			this.showDefault();
-			
+
 		}
 		//this.countrylist();
 		this.options = {
@@ -110,62 +112,62 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 			zoom: 12
 		};
 		this.getbencus();
-		
-     }
-    @ViewChild(MatPaginator) paginator: MatPaginator;
-    @ViewChild(MatSort) sort: MatSort;
-    filteredBrands: any[];
-    displayedColumns = ['actionId', 'companyName', 'description', 'memo', 'createdBy', 'updatedBy', 'updatedDate', 'createdDate'];
-    dataSource: MatTableDataSource<any>;
-    allActions: any[] = [];
-    allComapnies: MasterCompany[] = [];
-    private isSaving: boolean;
-    public sourceVendor: any = {};
-    public domesticSaveObj: any = {};
+
+	}
+	@ViewChild(MatPaginator) paginator: MatPaginator;
+	@ViewChild(MatSort) sort: MatSort;
+	filteredBrands: any[];
+	displayedColumns = ['actionId', 'companyName', 'description', 'memo', 'createdBy', 'updatedBy', 'updatedDate', 'createdDate'];
+	dataSource: MatTableDataSource<any>;
+	allActions: any[] = [];
+	allComapnies: MasterCompany[] = [];
+	private isSaving: boolean;
+	public sourceVendor: any = {};
+	public domesticSaveObj: any = {};
 	public internationalSaveObj: any = {};
-	public defaultSaveObj: any={};
+	public defaultSaveObj: any = {};
 	public defaultPaymentObj: any = {};
-    public sourceAction: any = [];
-    public auditHisory: AuditHistory[] = [];
-    private bodyText: string;
-    loadingIndicator: boolean;
-    closeResult: string;
-    selectedColumn: any[];
-    selectedColumns: any[];
-    cols: any[];
-    title: string = "Create";
-    id: number;
-    errorMessage: any;
-    modal: NgbModalRef;
-    actionName: string;
-    Active: string = "Active";
-    length: number;
-    localCollection: any[] = [];
-    options: any;
+	public sourceAction: any = [];
+	public auditHisory: AuditHistory[] = [];
+	private bodyText: string;
+	loadingIndicator: boolean;
+	closeResult: string;
+	selectedColumn: any[];
+	selectedColumns: any[];
+	cols: any[];
+	title: string = "Create";
+	id: number;
+	errorMessage: any;
+	modal: NgbModalRef;
+	actionName: string;
+	Active: string = "Active";
+	length: number;
+	localCollection: any[] = [];
+	options: any;
 	public overlays: any[];
 	allCountryinfo: any[];
 	disablesave: boolean;
 	countrycollection: any;
 	selectedCountries: any;
-    private isEditMode: boolean = false;
+	private isEditMode: boolean = false;
 	private isDeleteMode: boolean = false;
 	isEditPaymentInfo: boolean = false;
 
 	constructor(private http: HttpClient, private changeDetectorRef: ChangeDetectorRef, private router: ActivatedRoute, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
 
-		if(this.workFlowtService.listCollection !== undefined){
-            this.workFlowtService.isEditMode = true;
+		if (this.workFlowtService.listCollection !== undefined) {
+			this.workFlowtService.isEditMode = true;
 		}
-		
+
 		if (this.workFlowtService.financeCollection) {
 			this.local = this.workFlowtService.financeCollection;
-        }
-        if (this.defaultPaymentMethod == 1) {
-            this.showPament();
-        }
-        if (this.defaultPaymentMethod == 2) {
-            this.showDomesticWire();
-        }
+		}
+		if (this.defaultPaymentMethod == 1) {
+			this.showPament();
+		}
+		if (this.defaultPaymentMethod == 2) {
+			this.showDomesticWire();
+		}
 		this.countrylist();
 		this.dataSource = new MatTableDataSource();
 		if (this.local) {
@@ -178,7 +180,7 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 			this.viewName = "Edit";
 			this.local = this.workFlowtService.listCollection;
 			this.loadData();
-			
+
 		}
 		if (this.workFlowtService.generalCollection) {
 			this.local = this.workFlowtService.generalCollection;
@@ -196,23 +198,22 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 			this.local = this.workFlowtService.listCollection;
 			this.loadData();
 		}
-    }
-	
-    ngAfterViewInit() {
-    }
-    public allWorkFlows: any[] = [];
-    private getgeneralInnfo() {
-        this.alertService.startLoadingMessage();
-        this.loadingIndicator = true;
-
-        this.workFlowtService.getWorkFlows().subscribe(
-            results => this.ongeneralDataLoadSuccessful(results[0]),
-            error => this.onDataLoadFailed(error)
-        );
 	}
 
-	check()
-	{
+	ngAfterViewInit() {
+	}
+	public allWorkFlows: any[] = [];
+	private getgeneralInnfo() {
+		this.alertService.startLoadingMessage();
+		this.loadingIndicator = true;
+
+		this.workFlowtService.getWorkFlows().subscribe(
+			results => this.ongeneralDataLoadSuccessful(results[0]),
+			error => this.onDataLoadFailed(error)
+		);
+	}
+
+	check() {
 		this.checkValue = true;
 		this.domasticWireValue = false;
 		this.internationalValue = false;
@@ -224,8 +225,7 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 		this.defaultPaymentStyle = false;
 	}
 
-	domesticWire()
-	{
+	domesticWire() {
 		this.checkValue = false;
 		this.domasticWireValue = true;
 		this.internationalValue = false;
@@ -236,8 +236,7 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 		this.internationalStyle = false;
 		this.defaultPaymentStyle = false;
 	}
-	internationalWire()
-	{
+	internationalWire() {
 		this.checkValue = false;
 		this.domasticWireValue = false;
 		this.internationalValue = true;
@@ -248,8 +247,7 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 		this.internationalStyle = true;
 		this.defaultPaymentStyle = false;
 	}
-	defaultPayment()
-	{
+	defaultPayment() {
 		this.checkValue = false;
 		this.domasticWireValue = false;
 		this.internationalValue = false;
@@ -261,8 +259,7 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 		this.defaultPaymentStyle = true;
 	}
 
-	showDomesticWire()
-	{
+	showDomesticWire() {
 		this.domesticWire();
 	}
 	showPament() {
@@ -321,73 +318,74 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 	}
 
 
-    private loadData() {
-        this.alertService.startLoadingMessage();
-        this.loadingIndicator = true;
+	private loadData() {
+		this.alertService.startLoadingMessage();
+		this.loadingIndicator = true;
 		this.workFlowtService.getCheckPaymentobj(this.local.vendorId).subscribe(
-            results => this.onDataLoadSuccessful(results[0]),
-            error => this.onDataLoadFailed(error)
+			results => this.onDataLoadSuccessful(results[0]),
+			error => this.onDataLoadFailed(error)
 		);
-        this.cols = [
-            { field: 'siteName', header: 'Site Name' },
-            { field: 'address1', header: 'Address1' },
-            { field: 'address2', header: 'Address2' },
-            { field: 'city', header: 'City' },
-            { field: 'stateOrProvince', header: 'State/Prov' },
+		this.cols = [
+			{ field: 'siteName', header: 'Site Name' },
+			{ field: 'address1', header: 'Address1' },
+			{ field: 'address2', header: 'Address2' },
+			{ field: 'city', header: 'City' },
+			{ field: 'stateOrProvince', header: 'State/Prov' },
 			{ field: 'postalCode', header: 'Postal Code' },
-            { field: 'countryName', header: 'Country' }
-        ];
-        this.selectedColumns = this.cols;
+			{ field: 'countryName', header: 'Country' }
+		];
+		this.selectedColumns = this.cols;
 	}
 
 	public getbencus() {
 		this.workFlowtService.getBeneficiaryCustomer().subscribe(
 			results => this.onBencustomerLoad(results[0]),
 			error => this.onDataLoadFailed(error)
-		); }
+		);
+	}
 
-    private loadMasterCompanies() {
-        this.alertService.startLoadingMessage();
-        this.loadingIndicator = true;
-        this.masterComapnyService.getMasterCompanies().subscribe(
-            results => this.onDataMasterCompaniesLoadSuccessful(results[0]),
-            error => this.onDataLoadFailed(error)
-        );
-    }
+	private loadMasterCompanies() {
+		this.alertService.startLoadingMessage();
+		this.loadingIndicator = true;
+		this.masterComapnyService.getMasterCompanies().subscribe(
+			results => this.onDataMasterCompaniesLoadSuccessful(results[0]),
+			error => this.onDataLoadFailed(error)
+		);
+	}
 
-    public applyFilter(filterValue: string) {
-        this.dataSource.filter = filterValue;
-    }
-    handleChange(rowData, e) {
-        if (e.checked == false) {
-            this.sourceVendor = rowData;
-            this.sourceVendor.updatedBy = this.userName;
-            this.Active = "In Active";
-            this.sourceVendor.isActive == false;
+	public applyFilter(filterValue: string) {
+		this.dataSource.filter = filterValue;
+	}
+	handleChange(rowData, e) {
+		if (e.checked == false) {
+			this.sourceVendor = rowData;
+			this.sourceVendor.updatedBy = this.userName;
+			this.Active = "In Active";
+			this.sourceVendor.isActive == false;
 			this.workFlowtService.updateActiveforpayment(this.sourceVendor).subscribe(
-                response => this.saveCompleted(this.sourceVendor),
-                error => this.saveFailedHelper(error));
-            this.sourceVendor = "";
-        }
-        else {
-            this.sourceVendor = rowData;
-            this.sourceVendor.updatedBy = this.userName;
-            this.Active = "Active";
-            this.sourceVendor.isActive == true;
+				response => this.saveCompleted(this.sourceVendor),
+				error => this.saveFailedHelper(error));
+			this.sourceVendor = "";
+		}
+		else {
+			this.sourceVendor = rowData;
+			this.sourceVendor.updatedBy = this.userName;
+			this.Active = "Active";
+			this.sourceVendor.isActive == true;
 			this.workFlowtService.updateActiveforpayment(this.sourceVendor).subscribe(
-                response => this.saveCompleted(this.sourceVendor),
-                error => this.saveFailedHelper(error));
-            this.sourceVendor = "";
-        }
-    }
+				response => this.saveCompleted(this.sourceVendor),
+				error => this.saveFailedHelper(error));
+			this.sourceVendor = "";
+		}
+	}
 
-    private refresh() {
-        this.applyFilter(this.dataSource.filter);
-    }
-    private onDataLoadSuccessful(allWorkFlows: any[]) {
-        this.alertService.stopLoadingMessage();
-        this.loadingIndicator = false;
-        this.dataSource.data = allWorkFlows;
+	private refresh() {
+		this.applyFilter(this.dataSource.filter);
+	}
+	private onDataLoadSuccessful(allWorkFlows: any[]) {
+		this.alertService.stopLoadingMessage();
+		this.loadingIndicator = false;
+		this.dataSource.data = allWorkFlows;
 		this.allActions = allWorkFlows;
 	}
 	private onBencustomerLoad(allWorkFlows: any) {
@@ -396,14 +394,14 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 		this.dataSource.data = allWorkFlows;
 		this.alldata = allWorkFlows;
 	}
-    private ongeneralDataLoadSuccessful(allWorkFlows: any[]) {
-        this.alertService.stopLoadingMessage();
-        this.loadingIndicator = false;
-        this.dataSource.data = allWorkFlows;
-        this.allgeneralInfo = allWorkFlows;
-        this.vendorname = this.allgeneralInfo[0].vendorName;
-        this.vendorCode = this.allgeneralInfo[0].vendorCode;
-        console.log(this.allgeneralInfo);
+	private ongeneralDataLoadSuccessful(allWorkFlows: any[]) {
+		this.alertService.stopLoadingMessage();
+		this.loadingIndicator = false;
+		this.dataSource.data = allWorkFlows;
+		this.allgeneralInfo = allWorkFlows;
+		this.vendorname = this.allgeneralInfo[0].vendorName;
+		this.vendorCode = this.allgeneralInfo[0].vendorCode;
+		console.log(this.allgeneralInfo);
 	}
 
 	private onDomestciLoad(allWorkFlows: any) {
@@ -413,8 +411,8 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 		this.domesticWithVedor = allWorkFlows;
 		if (this.domesticWithVedor.length > 0) {
 			this.domesticSaveObj = allWorkFlows[0];
-			
-			if(this.domesticSaveObj.country != null) {				
+
+			if (this.domesticSaveObj.country != null) {
 				this.domesticSaveObj.country = getObjectById('countries_id', this.domesticSaveObj.country, this.allCountryinfo);
 			}
 		}
@@ -427,14 +425,14 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 		if (this.internationalwithVendor.length > 0) {
 
 			this.internationalSaveObj = allWorkFlows[0];
-			     
-        if(this.internationalSaveObj.country != null) {
-            this.internationalSaveObj.country = getObjectById('countries_id', this.internationalSaveObj.country, this.allCountryinfo);
+
+			if (this.internationalSaveObj.country != null) {
+				this.internationalSaveObj.country = getObjectById('countries_id', this.internationalSaveObj.country, this.allCountryinfo);
+			}
+
+
+
 		}
-		
-		
-		
-	}
 	}
 
 	private onDefaultLoad(allWorkFlows: any) {
@@ -442,50 +440,49 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 		this.loadingIndicator = false;
 		this.dataSource.data = allWorkFlows;
 		this.defaultwithVendor = allWorkFlows;
-		
+
 		if (allWorkFlows) {
 			this.defaultSaveObj = allWorkFlows;
 			if (this.defaultSaveObj.defaultPaymentMethod == 1) {
 				this.showPament();
-			} 
+			}
 			else if (this.defaultSaveObj.defaultPaymentMethod == 2) {
 				this.showDomesticWire();
 			}
 			else if (this.defaultSaveObj.defaultPaymentMethod == 3) {
 				this.showInternational();
 			}
-			else
-			{
+			else {
 				this.showPament();
-			}			
-		
+			}
+
 		}
 	}
 
-	
-    private loadPaymentObject() {
-        this.alertService.startLoadingMessage();
-        this.loadingIndicator = true;
-        this.workFlowtService.getPaymentObj().subscribe(
-            results => this.onPaymentObjUrl(results[0]),
-            error => this.onDataLoadFailed(error)
-        );
-    }
 
-    private onPaymentObjUrl(allWorkFlows: any) {
-        this.alertService.stopLoadingMessage();
-        this.loadingIndicator = false;
-        this.dataSource.data = allWorkFlows;
-        this.sourceVendor = allWorkFlows;
-    }
-    filterActions(event) {
-        this.localCollection = [];
-        for (let i = 0; i < this.allActions.length; i++) {
-            let actionName = this.allActions[i].description;
-            if (actionName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-                this.localCollection.push(actionName);
-            }
-        }
+	private loadPaymentObject() {
+		this.alertService.startLoadingMessage();
+		this.loadingIndicator = true;
+		this.workFlowtService.getPaymentObj().subscribe(
+			results => this.onPaymentObjUrl(results[0]),
+			error => this.onDataLoadFailed(error)
+		);
+	}
+
+	private onPaymentObjUrl(allWorkFlows: any) {
+		this.alertService.stopLoadingMessage();
+		this.loadingIndicator = false;
+		this.dataSource.data = allWorkFlows;
+		this.sourceVendor = allWorkFlows;
+	}
+	filterActions(event) {
+		this.localCollection = [];
+		for (let i = 0; i < this.allActions.length; i++) {
+			let actionName = this.allActions[i].description;
+			if (actionName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+				this.localCollection.push(actionName);
+			}
+		}
 	}
 	filterbencus(event) {
 		this.localCollection = [];
@@ -499,60 +496,60 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 		}
 	}
 
-    private onHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {
-        this.alertService.stopLoadingMessage();
-        this.loadingIndicator = false;
-        this.auditHisory = auditHistory;
-        this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
-        this.modal.result.then(() => {
-            console.log('When user closes');
-        }, () => { console.log('Backdrop click') })
-    }
+	private onHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {
+		this.alertService.stopLoadingMessage();
+		this.loadingIndicator = false;
+		this.auditHisory = auditHistory;
+		this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
+		this.modal.result.then(() => {
+			console.log('When user closes');
+		}, () => { console.log('Backdrop click') })
+	}
 
-    private onDataMasterCompaniesLoadSuccessful(allComapnies: MasterCompany[]) {
-        this.alertService.stopLoadingMessage();
-        this.loadingIndicator = false;
-        this.allComapnies = allComapnies;
-    }
+	private onDataMasterCompaniesLoadSuccessful(allComapnies: MasterCompany[]) {
+		this.alertService.stopLoadingMessage();
+		this.loadingIndicator = false;
+		this.allComapnies = allComapnies;
+	}
 
-    private onDataLoadFailed(error: any) {
-        this.alertService.stopLoadingMessage();
-        this.loadingIndicator = false;
-    }
+	private onDataLoadFailed(error: any) {
+		this.alertService.stopLoadingMessage();
+		this.loadingIndicator = false;
+	}
 
-    open(content) {
-        this.isEditMode = false;
-        this.isDeleteMode = false;
-        this.isSaving = true;
-        this.loadMasterCompanies();
-        this.actionName = "";
-        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
-        this.modal.result.then(() => {
-            console.log('When user closes');
-        }, () => { console.log('Backdrop click') })
-    }
+	open(content) {
+		this.isEditMode = false;
+		this.isDeleteMode = false;
+		this.isSaving = true;
+		this.loadMasterCompanies();
+		this.actionName = "";
+		this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
+		this.modal.result.then(() => {
+			console.log('When user closes');
+		}, () => { console.log('Backdrop click') })
+	}
 
 
-    openDelete(content, row) {
-        this.isEditMode = false;
-        this.isDeleteMode = true;
-        this.sourceVendor = row;
-        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
-        this.modal.result.then(() => {
-            console.log('When user closes');
-        }, () => { console.log('Backdrop click') })
-    }
+	openDelete(content, row) {
+		this.isEditMode = false;
+		this.isDeleteMode = true;
+		this.sourceVendor = row;
+		this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
+		this.modal.result.then(() => {
+			console.log('When user closes');
+		}, () => { console.log('Backdrop click') })
+	}
 
-    openEdit(row) {
-        this.isEditMode = true;
-        this.isSaving = true;
-        this.sourceVendor = {...row, country: getObjectById('countries_id', row.country, this.allCountryinfo)};
+	openEdit(row) {
+		this.isEditMode = true;
+		this.isSaving = true;
+		this.sourceVendor = { ...row, country: getObjectById('countries_id', row.country, this.allCountryinfo) };
 		this.loadMasterCompanies();
 		this.isEditPaymentInfo = true;
-    }
-    openView(content, row) {
-		
-        this.sourceVendor = row;
+	}
+	openView(content, row) {
+
+		this.sourceVendor = row;
 		this.siteName = row.siteName;
 		this.address1 = row.address1;
 		this.address2 = row.address2;
@@ -561,70 +558,70 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 		this.stateOrProvince = row.stateOrProvince;
 		this.postalCode = row.postalCode;
 		this.country = row.countryName;
-        this.createdBy = row.createdBy;
-        this.updatedBy = row.updatedBy;
-        this.createddate = row.createdDate;
-        this.updatedDate = row.updatedDate;
-        this.loadMasterCompanies();
-        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
-        this.modal.result.then(() => {
-            console.log('When user closes');
-        }, () => { console.log('Backdrop click') })
-    }
-    openHelpText(content) {
-        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
-        this.modal.result.then(() => {
-            console.log('When user closes');
-        }, () => { console.log('Backdrop click') })
-    }
+		this.createdBy = row.createdBy;
+		this.updatedBy = row.updatedBy;
+		this.createddate = row.createdDate;
+		this.updatedDate = row.updatedDate;
+		this.loadMasterCompanies();
+		this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
+		this.modal.result.then(() => {
+			console.log('When user closes');
+		}, () => { console.log('Backdrop click') })
+	}
+	openHelpText(content) {
+		this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
+		this.modal.result.then(() => {
+			console.log('When user closes');
+		}, () => { console.log('Backdrop click') })
+	}
 
-    openHist(content, row) {
-        this.alertService.startLoadingMessage();
-        this.loadingIndicator = true;
-        this.sourceVendor = row;
-        this.isSaving = true;
+	openHist(content, row) {
+		this.alertService.startLoadingMessage();
+		this.loadingIndicator = true;
+		this.sourceVendor = row;
+		this.isSaving = true;
 		this.workFlowtService.paymentHist(this.sourceVendor.checkPaymentId).subscribe(
-            results => this.onHistoryLoadSuccessful(results[0], content),
-            error => this.saveFailedHelper(error));
+			results => this.onHistoryLoadSuccessful(results[0], content),
+			error => this.saveFailedHelper(error));
 	}
 
 	// toggledbldisplay(data) {
 	// 	this.sourceVendor = data;
 	// }
-	
-    private onAddressDataLoadSuccessful(alladdress: any[]) {
-        this.alertService.stopLoadingMessage();
-        this.loadingIndicator = false;
-        this.dataSource.data = alladdress;
-        this.allAddresses = alladdress;
-        this.addressId = this.allAddresses[0].addressId;
-    }
 
-    private loadAddressDara() {
-        this.alertService.startLoadingMessage();
-        this.loadingIndicator = true;
-        this.workFlowtService.getAddressDtails().subscribe(
-            results => this.onAddressDataLoadSuccessful(results[0]),
-            error => this.onDataLoadFailed(error)
-        );
-    }
+	private onAddressDataLoadSuccessful(alladdress: any[]) {
+		this.alertService.stopLoadingMessage();
+		this.loadingIndicator = false;
+		this.dataSource.data = alladdress;
+		this.allAddresses = alladdress;
+		this.addressId = this.allAddresses[0].addressId;
+	}
 
-    getlatlng(address) {
-        this.checkAddress = true;
-        return this.http.get('https://maps.googleapis.com/maps/api/geocode/json?address=' + address + '&key=AIzaSyB_W96L25HhFWgqLblcikircQKjU6bgTgk').subscribe((data: any) => {
-            this.options = {
-                center: { lat: data.results[0].geometry.location.lat, lng: data.results[0].geometry.location.lng },
-                zoom: 50
-            };
-            this.overlays = [
-                new google.maps.Marker({ position: { lat: data.results[0].geometry.location.lat, lng: data.results[0].geometry.location.lng }, title: "" }),
-                
-                new google.maps.Circle({ center: { lat: 36.90707, lng: 30.56533 }, fillColor: '#1976D2', fillOpacity: 0.35, strokeWeight: 1, radius: 1500 }),
-                new google.maps.Polyline({ path: [{ lat: 36.86149, lng: 30.63743 }, { lat: 36.86341, lng: 30.72463 }], geodesic: true, strokeColor: '#FF0000', strokeOpacity: 0.5, strokeWeight: 2 })
-            ];
-            return data;
-        });
-    }
+	private loadAddressDara() {
+		this.alertService.startLoadingMessage();
+		this.loadingIndicator = true;
+		this.workFlowtService.getAddressDtails().subscribe(
+			results => this.onAddressDataLoadSuccessful(results[0]),
+			error => this.onDataLoadFailed(error)
+		);
+	}
+
+	getlatlng(address) {
+		this.checkAddress = true;
+		return this.http.get('https://maps.googleapis.com/maps/api/geocode/json?address=' + address + '&key=AIzaSyB_W96L25HhFWgqLblcikircQKjU6bgTgk').subscribe((data: any) => {
+			this.options = {
+				center: { lat: data.results[0].geometry.location.lat, lng: data.results[0].geometry.location.lng },
+				zoom: 50
+			};
+			this.overlays = [
+				new google.maps.Marker({ position: { lat: data.results[0].geometry.location.lat, lng: data.results[0].geometry.location.lng }, title: "" }),
+
+				new google.maps.Circle({ center: { lat: 36.90707, lng: 30.56533 }, fillColor: '#1976D2', fillOpacity: 0.35, strokeWeight: 1, radius: 1500 }),
+				new google.maps.Polyline({ path: [{ lat: 36.86149, lng: 30.63743 }, { lat: 36.86341, lng: 30.72463 }], geodesic: true, strokeColor: '#FF0000', strokeOpacity: 0.5, strokeWeight: 2 })
+			];
+			return data;
+		});
+	}
 
 	onBlurMethod(data) {
 		if (data == 'siteName') {
@@ -648,7 +645,7 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 		}
 	}
 
-    saveCheckPaymentInfo() {
+	saveCheckPaymentInfo() {
 		this.loadData();
 		this.isSaving = true;
 		if (!(this.sourceVendor.siteName && this.sourceVendor.address1 && this.sourceVendor.city &&
@@ -657,11 +654,10 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 			this.display = true;
 			this.modelValue = true;
 		}
-		
+
 		if (this.sourceVendor.siteName && this.sourceVendor.address1 && this.sourceVendor.city &&
-			this.sourceVendor.stateOrProvince && this.sourceVendor.postalCode && this.sourceVendor.country)
-		{
-			if (!this.sourceVendor.checkPaymentId &&!this.sourceVendor.vendorId) {
+			this.sourceVendor.stateOrProvince && this.sourceVendor.postalCode && this.sourceVendor.country) {
+			if (!this.sourceVendor.checkPaymentId && !this.sourceVendor.vendorId) {
 				this.sourceVendor.createdBy = this.userName;
 				this.sourceVendor.updatedBy = this.userName;
 				this.sourceVendor.masterCompanyId = 1;
@@ -692,16 +688,15 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 				this.sourceVendor = {};
 			}
 		}
-		else
-		{
-		}		
+		else {
+		}
 		$('#addPaymentInfo').modal('hide');
 	}
 
 
-    saveDomesticPaymentInfo() {
+	saveDomesticPaymentInfo() {
 		this.isSaving = true;
-		if (!(this.domesticSaveObj.aba && this.domesticSaveObj.accountNumber && this.domesticSaveObj.bankName 
+		if (!(this.domesticSaveObj.aba && this.domesticSaveObj.accountNumber && this.domesticSaveObj.bankName
 		)) {
 			this.display = true;
 			this.modelValue = true;
@@ -736,7 +731,7 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 		}
 		this.domesticSaveObj = {};
 
-    }
+	}
 
 	saveInternationalPaymentInfo() {
 		this.isSaving = true;
@@ -753,8 +748,8 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 				this.workFlowtService.addInternationalinfo(this.internationalSaveObj).subscribe(data => {
 					this.localCollection = data;
 					this.workFlowtService.paymentCollection = this.local;
-					this.activeIndex = 4;
-					this.workFlowtService.indexObj.next(this.activeIndex);
+					// this.activeIndex = 4;
+					// this.workFlowtService.indexObj.next(this.activeIndex);
 					this.savesuccessCompleted(this.sourceVendor);
 					this.updateVendorInternationalWirePayment(this.localCollection);
 				})
@@ -776,177 +771,179 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 		}
 		this.internationalSaveObj = {};
 	}
-	
+
 	saveDefaultPaymentInfo() {
-	
-		if (this.defaultSaveObj.vendorPaymentId >0) {			
 
-			    this.defaultPaymentObj.vendorPaymentId = this.defaultSaveObj.vendorPaymentId;
-			    this.defaultPaymentObj.vendorId = this.defaultSaveObj.vendorId;
-				this.defaultPaymentObj.updatedBy = this.userName;
-				this.defaultPaymentObj.masterCompanyId = 1;
-				this.defaultPaymentObj.isActive=true;
-				this.defaultPaymentObj.defaultPaymentMethod=this.defaultSaveObj.defaultPaymentMethod;
+		if (this.defaultSaveObj.vendorPaymentId > 0) {
 
-				this.workFlowtService.vendorDefaultUpdate(this.defaultPaymentObj).subscribe(
-					data => {
-						this.workFlowtService.paymentCollection = this.local;
-						this.saveCompleted(this.sourceVendor);
-					})
-			}
-			else {
-			
-				this.defaultPaymentObj.createdBy = this.userName;
-				this.defaultPaymentObj.updatedBy = this.userName;
-				this.defaultPaymentObj.masterCompanyId = 1;
-				this.defaultPaymentObj.vendorId = this.local.vendorId;
-				this.defaultPaymentObj.defaultPaymentMethod=this.defaultSaveObj.defaultPaymentMethod;
-				this.defaultPaymentObj.isActive=true;
-			
-				this.workFlowtService.addDefaultinfo(this.defaultPaymentObj).subscribe(data => {
-					this.activeIndex = 3;
-					this.workFlowtService.indexObj.next(this.activeIndex);
-					this.savesuccessCompleted(this.sourceVendor);
+			this.defaultPaymentObj.vendorPaymentId = this.defaultSaveObj.vendorPaymentId;
+			this.defaultPaymentObj.vendorId = this.defaultSaveObj.vendorId;
+			this.defaultPaymentObj.updatedBy = this.userName;
+			this.defaultPaymentObj.masterCompanyId = 1;
+			this.defaultPaymentObj.isActive = true;
+			this.defaultPaymentObj.defaultPaymentMethod = this.defaultSaveObj.defaultPaymentMethod;
+
+			this.workFlowtService.vendorDefaultUpdate(this.defaultPaymentObj).subscribe(
+				data => {
+					this.workFlowtService.paymentCollection = this.local;
+					this.saveCompleted(this.sourceVendor);
 				})
-			}
 		}
-	
-		
-			
+		else {
+
+			this.defaultPaymentObj.createdBy = this.userName;
+			this.defaultPaymentObj.updatedBy = this.userName;
+			this.defaultPaymentObj.masterCompanyId = 1;
+			this.defaultPaymentObj.vendorId = this.local.vendorId;
+			this.defaultPaymentObj.defaultPaymentMethod = this.defaultSaveObj.defaultPaymentMethod;
+			this.defaultPaymentObj.isActive = true;
+
+			this.workFlowtService.addDefaultinfo(this.defaultPaymentObj).subscribe(data => {
+				// this.activeIndex = 3;
+				// this.workFlowtService.indexObj.next(this.activeIndex);
+				this.savesuccessCompleted(this.sourceVendor);
+			})
+		}
+	}
+
+
+
 	// deleteItemAndCloseModel(checkPaymentId) {
-    //     this.isSaving = true;
-    //     this.sourceVendor.isActive = false;
-    //     this.sourceVendor.updatedBy = this.userName;
+	//     this.isSaving = true;
+	//     this.sourceVendor.isActive = false;
+	//     this.sourceVendor.updatedBy = this.userName;
 	// 	this.workFlowtService.deleteCheckPayment(checkPaymentId).subscribe(
-    //         response => this.saveCompleted(this.sourceVendor),
-    //         error => this.saveFailedHelper(error));
+	//         response => this.saveCompleted(this.sourceVendor),
+	//         error => this.saveFailedHelper(error));
 	// }
-	
+
 	deletePaymentInfo(rowData) {
 		this.selectedRowforDelete = rowData;
 	}
 
-    deleteConformation(value) {
-        if (value === 'Yes') {
-            this.workFlowtService.deleteCheckPayment(this.selectedRowforDelete.checkPaymentId).subscribe(() => {
-                this.loadData();
-                this.alertService.showMessage(
-                    'Success',
-                    `Action was deleted successfully`,
-                    MessageSeverity.success
-                );
-            })
-        } else {
-            this.selectedRowforDelete = undefined;
-        }
-    }
+	deleteConformation(value) {
+		if (value === 'Yes') {
+			this.workFlowtService.deleteCheckPayment(this.selectedRowforDelete.checkPaymentId).subscribe(() => {
+				this.loadData();
+				this.alertService.showMessage(
+					'Success',
+					`Action was deleted successfully`,
+					MessageSeverity.success
+				);
+			})
+		} else {
+			this.selectedRowforDelete = undefined;
+		}
+	}
 
-    updateVendorCheckPayment(updateObj: any) {
-        this.workFlowtService.updateVendorCheckpayment(updateObj, this.local.vendorId).subscribe(data => {
-            this.loadData();
-        })
-    }
+	updateVendorCheckPayment(updateObj: any) {
+		this.workFlowtService.updateVendorCheckpayment(updateObj, this.local.vendorId).subscribe(data => {
+			this.loadData();
+		})
+	}
 
-    updateVendorDomesticWirePayment(updateObj: any) {
-        this.workFlowtService.updateVendorDomesticWirePayment(updateObj, this.local.vendorId).subscribe(data => {
-            this.loadData();
-        })
-    }
+	updateVendorDomesticWirePayment(updateObj: any) {
+		this.workFlowtService.updateVendorDomesticWirePayment(updateObj, this.local.vendorId).subscribe(data => {
+			this.loadData();
+		})
+	}
 
 
-    updateVendorInternationalWirePayment(updateObj: any) {
-        this.workFlowtService.updateVendorInternationalWirePayment(updateObj, this.local.vendorId).subscribe(data => {
-            this.loadData();
-        })
+	updateVendorInternationalWirePayment(updateObj: any) {
+		this.workFlowtService.updateVendorInternationalWirePayment(updateObj, this.local.vendorId).subscribe(data => {
+			this.loadData();
+		})
 	}
 	previousClick() {
-		this.activeIndex = 2;
-        this.workFlowtService.indexObj.next(this.activeIndex);
-        this.workFlowtService.changeStep('Financial Information');
+		this.activeIndex = 4;
+		this.stepper.changeStep(this.activeIndex);
+		// this.workFlowtService.indexObj.next(this.activeIndex);
+		// this.workFlowtService.changeStep('Financial Information');
 		this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-financial-information');
 	}
 	nextClick() {
-			this.workFlowtService.contactCollection = this.local;
-			this.activeIndex = 4;
-        this.workFlowtService.indexObj.next(this.activeIndex);
-        this.workFlowtService.changeStep('Shipping Information');
-        this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-shipping-information');
-        //this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-billing-information');
+		this.workFlowtService.contactCollection = this.local;
+		this.activeIndex = 6;
+		this.stepper.changeStep(this.activeIndex);
+		// this.workFlowtService.indexObj.next(this.activeIndex);
+		// this.workFlowtService.changeStep('Shipping Information');
+		this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-shipping-information');
+		//this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-billing-information');
 	}
-    private saveCompleted(user?: any) {
-        this.isSaving = false;
-        if (this.isDeleteMode == true) {
-            this.alertService.showMessage("Success", `Action was deleted successfully`, MessageSeverity.success);
-            this.isDeleteMode = false;
-        }
-        else {
-            this.alertService.showMessage("Success", `Action was edited successfully`, MessageSeverity.success);
+	private saveCompleted(user?: any) {
+		this.isSaving = false;
+		if (this.isDeleteMode == true) {
+			this.alertService.showMessage("Success", `Action was deleted successfully`, MessageSeverity.success);
+			this.isDeleteMode = false;
+		}
+		else {
+			this.alertService.showMessage("Success", `Action was edited successfully`, MessageSeverity.success);
 
-        }
+		}
 
-        this.loadData();
-    }
+		this.loadData();
+	}
 
-    onInternalBankCountrieselected(event) {
-        if (this.allCountryinfo) {
-            for (let i = 0; i < this.allCountryinfo.length; i++) {
-                if (event == this.allCountryinfo[i].nice_name) {
-                    this.sourceVendor.nice_name = this.allCountryinfo[i].nice_name;
-                    this.disablesavefoInternalrCountry = false;
-                    this.selectedCountries = event;
-                }
-            }
-        }
-    }
-    eventInternalBankCountryHandler(event) {
-        if (event.target.value != "") {
-            let value = event.target.value.toLowerCase();
-            if (this.selectedCountries) {
-                if (value == this.selectedCountries.toLowerCase()) {
-                    this.disablesavefoInternalrCountry = false;
-                }
-                else {
-                    this.disablesavefoInternalrCountry = true;
-                }
-            }
+	onInternalBankCountrieselected(event) {
+		if (this.allCountryinfo) {
+			for (let i = 0; i < this.allCountryinfo.length; i++) {
+				if (event == this.allCountryinfo[i].nice_name) {
+					this.sourceVendor.nice_name = this.allCountryinfo[i].nice_name;
+					this.disablesavefoInternalrCountry = false;
+					this.selectedCountries = event;
+				}
+			}
+		}
+	}
+	eventInternalBankCountryHandler(event) {
+		if (event.target.value != "") {
+			let value = event.target.value.toLowerCase();
+			if (this.selectedCountries) {
+				if (value == this.selectedCountries.toLowerCase()) {
+					this.disablesavefoInternalrCountry = false;
+				}
+				else {
+					this.disablesavefoInternalrCountry = true;
+				}
+			}
 
-        }
-    }
+		}
+	}
 	private savesuccessCompleted(user?: any) {
 		this.isSaving = false;
 		this.alertService.showMessage("Success", `Action was saved successfully`, MessageSeverity.success);
-        this.loadData();
+		this.loadData();
 	}
 
-    private saveSuccessHelper(role?: any) {
-        this.isSaving = false;
-        this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
-        this.loadData();
-    }
+	private saveSuccessHelper(role?: any) {
+		this.isSaving = false;
+		this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
+		this.loadData();
+	}
 
-    get userName(): string {
-        return this.authService.currentUser ? this.authService.currentUser.userName : "";
-    }
+	get userName(): string {
+		return this.authService.currentUser ? this.authService.currentUser.userName : "";
+	}
 
-    private saveFailedHelper(error: any) {
-        this.isSaving = false;
-        this.alertService.stopLoadingMessage();
-        this.alertService.showStickyMessage("Save Error", "The below errors occured whilst saving your changes:", MessageSeverity.error, error);
-        this.alertService.showStickyMessage(error, null, MessageSeverity.error);
-    }
+	private saveFailedHelper(error: any) {
+		this.isSaving = false;
+		this.alertService.stopLoadingMessage();
+		this.alertService.showStickyMessage("Save Error", "The below errors occured whilst saving your changes:", MessageSeverity.error, error);
+		this.alertService.showStickyMessage(error, null, MessageSeverity.error);
+	}
 
-    private getDismissReason(reason: any): string {
-        if (reason === ModalDismissReasons.ESC) {
-            return 'by pressing ESC';
-        } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
-            return 'by clicking on a backdrop';
-        } else {
-            return `with: ${reason}`;
-        }
+	private getDismissReason(reason: any): string {
+		if (reason === ModalDismissReasons.ESC) {
+			return 'by pressing ESC';
+		} else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+			return 'by clicking on a backdrop';
+		} else {
+			return `with: ${reason}`;
+		}
 	}
 	dismissModel() { this.modal.close(); }
 	handleChanges(rowData, e) {
-		
+
 		if (e.checked == false) {
 			this.sourceVendor.checkPaymentId = rowData.checkPaymentId;
 			this.sourceVendor.updatedBy = this.userName;
@@ -971,8 +968,8 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 		if (this.allCountryinfo) {
 			for (let i = 0; i < this.allCountryinfo.length; i++) {
 				if (event == this.allCountryinfo[i].nice_name) {
-                    this.sourceVendor.nice_name = this.allCountryinfo[i].nice_name;
-                    this.disablesave = false;
+					this.sourceVendor.nice_name = this.allCountryinfo[i].nice_name;
+					this.disablesave = false;
 					this.selectedCountries = event;
 				}
 			}
@@ -982,11 +979,11 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 		if (event.target.value != "") {
 			let value = event.target.value.toLowerCase();
 			if (this.selectedCountries) {
-                if (value == this.selectedCountries.toLowerCase()) {
-                    this.disablesave = false;
+				if (value == this.selectedCountries.toLowerCase()) {
+					this.disablesave = false;
 				}
-                else {
-                    this.disablesave = true;
+				else {
+					this.disablesave = true;
 				}
 			}
 
@@ -1010,64 +1007,64 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 			})]
 			this.countrycollection = countries;
 		}
-    }
-
-    onBankCountrieselected(event) {
-        if (this.allCountryinfo) {
-            for (let i = 0; i < this.allCountryinfo.length; i++) {
-                if (event == this.allCountryinfo[i].nice_name) {
-                    this.sourceVendor.nice_name = this.allCountryinfo[i].nice_name;
-                    this.disablesaveforCountry = false;
-                    this.selectedCountries = event;
-                }
-            }
-        }
-    }
-    eventBankCountryHandler(event) {
-        if (event.target.value != "") {
-            let value = event.target.value.toLowerCase();
-            if (this.selectedCountries) {
-                if (value == this.selectedCountries.toLowerCase()) {
-                    this.disablesaveforCountry = false;
-                }
-                else {
-                    this.disablesaveforCountry = true;
-                }
-            }
-
-        }
-    }
-
-
-    onBeneficiaryselected(event) {
-        if (this.alldata) {
-            for (let i = 0; i < this.alldata.length; i++) {
-                if (event == this.alldata[i].beneficiaryCustomer) {
-                    this.sourceVendor.beneficiaryCustomer = event;
-                    this.disablesaveforBeneficiary = false;
-                    this.selectedCountries = event;
-                    break;
-                }
-            }
-        }
-    }
-    eventBeneficiaryHandler(event) {
-        if (event.target.value != "") {
-            let value = event.target.value.toLowerCase();
-            if (this.selectedCountries) {
-                if (value == this.selectedCountries.toLowerCase()) {
-                    this.disablesaveforBeneficiary = false;
-                }
-                else {
-                    this.disablesaveforBeneficiary = true;
-                }
-            }
-
-        }
 	}
-	
+
+	onBankCountrieselected(event) {
+		if (this.allCountryinfo) {
+			for (let i = 0; i < this.allCountryinfo.length; i++) {
+				if (event == this.allCountryinfo[i].nice_name) {
+					this.sourceVendor.nice_name = this.allCountryinfo[i].nice_name;
+					this.disablesaveforCountry = false;
+					this.selectedCountries = event;
+				}
+			}
+		}
+	}
+	eventBankCountryHandler(event) {
+		if (event.target.value != "") {
+			let value = event.target.value.toLowerCase();
+			if (this.selectedCountries) {
+				if (value == this.selectedCountries.toLowerCase()) {
+					this.disablesaveforCountry = false;
+				}
+				else {
+					this.disablesaveforCountry = true;
+				}
+			}
+
+		}
+	}
+
+
+	onBeneficiaryselected(event) {
+		if (this.alldata) {
+			for (let i = 0; i < this.alldata.length; i++) {
+				if (event == this.alldata[i].beneficiaryCustomer) {
+					this.sourceVendor.beneficiaryCustomer = event;
+					this.disablesaveforBeneficiary = false;
+					this.selectedCountries = event;
+					break;
+				}
+			}
+		}
+	}
+	eventBeneficiaryHandler(event) {
+		if (event.target.value != "") {
+			let value = event.target.value.toLowerCase();
+			if (this.selectedCountries) {
+				if (value == this.selectedCountries.toLowerCase()) {
+					this.disablesaveforBeneficiary = false;
+				}
+				else {
+					this.disablesaveforBeneficiary = true;
+				}
+			}
+
+		}
+	}
+
 	onAddPaymentInfo() {
 		this.sourceVendor = {};
 		this.isEditPaymentInfo = false;
-    }
+	}
 }

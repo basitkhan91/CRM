@@ -23,6 +23,7 @@ import { GMapModule } from 'primeng/gmap';
 import { Router } from '@angular/router';
 import * as $ from 'jquery';
 import { getObjectById, editValueAssignByCondition } from '../../../generic/autocomplete';
+import { VendorStepsPrimeNgComponent } from '../vendor-steps-prime-ng/vendor-steps-prime-ng.component';
 import { ConfigurationService } from '../../../services/configuration.service';
 declare const google: any;
 @Component({
@@ -33,6 +34,7 @@ declare const google: any;
 })
 /** VendorBillingInformation component*/
 export class VendorBillingInformationComponent {
+    @ViewChild(VendorStepsPrimeNgComponent) stepper: VendorStepsPrimeNgComponent;
     modelValue: boolean;
     display: boolean;
     activeIndex: number;
@@ -125,13 +127,13 @@ export class VendorBillingInformationComponent {
     totalPages: number = 0;
 
     constructor(private http: HttpClient, private router: Router,
-        private authService: AuthService, private modalService: NgbModal, 
-        private activeModal: NgbActiveModal, private _fb: FormBuilder, 
-        private alertService: AlertService, 
+        private authService: AuthService, private modalService: NgbModal,
+        private activeModal: NgbActiveModal, private _fb: FormBuilder,
+        private alertService: AlertService,
         public workFlowtService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private configurations: ConfigurationService) {
-            if(this.workFlowtService.listCollection !== undefined){
-                this.workFlowtService.isEditMode = true;
-            }
+        if (this.workFlowtService.listCollection !== undefined) {
+            this.workFlowtService.isEditMode = true;
+        }
         this.dataSource = new MatTableDataSource();
         if (this.local) {
             this.workFlowtService.contactCollection = this.local;
@@ -374,7 +376,7 @@ export class VendorBillingInformationComponent {
         this.isEditBillingInfo = true;
         this.isSaving = true;
         //this.sourceVendor = {...row};
-        this.sourceVendor = {...row, country: getObjectById('countries_id', row.country, this.allCountryinfo)};
+        this.sourceVendor = { ...row, country: getObjectById('countries_id', row.country, this.allCountryinfo) };
         this.loadMasterCompanies();
     }
     openView(content, row) {
@@ -419,7 +421,7 @@ export class VendorBillingInformationComponent {
         this.loadingIndicator = true;
         this.sourceVendor = row;
         this.isSaving = true;
-        this.workFlowtService.getVendorBillingAuditHistory(this.sourceVendor.vendorId,this.sourceVendor.vendorBillingAddressId).subscribe(
+        this.workFlowtService.getVendorBillingAuditHistory(this.sourceVendor.vendorId, this.sourceVendor.vendorBillingAddressId).subscribe(
             results => this.onAuditHistoryLoadSuccessful(results, content),
             error => this.saveFailedHelper(error));
     }
@@ -520,9 +522,10 @@ export class VendorBillingInformationComponent {
     }
 
     previousClick() {
-        this.activeIndex = 4;
-        this.workFlowtService.indexObj.next(this.activeIndex);
-        this.workFlowtService.changeStep('Shipping Information');
+        this.activeIndex = 7;
+        this.stepper.changeStep(this.activeIndex);
+        // this.workFlowtService.indexObj.next(this.activeIndex);
+        // this.workFlowtService.changeStep('Shipping Information');
         this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-shipping-information');
     }
     openShipVia(content, rowData) {
@@ -545,7 +548,7 @@ export class VendorBillingInformationComponent {
     }
 
     updateVendorBillingAddress(updateObj: any) {
-      
+
         this.workFlowtService.updateVendorBillingAddressDetails(updateObj, this.local.vendorId).subscribe(data => {
             this.vendorbillingAddressdetails = data;
             this.workFlowtService.newBillingAddWithAddress(this.sourceVendor, this.vendorbillingAddressdetails.vendorBillingAddressId).subscribe(data => {
@@ -572,7 +575,7 @@ export class VendorBillingInformationComponent {
     }
     deleteConformation(value) {
         if (value === 'Yes') {
-            this.workFlowtService.GetVendorBillingAddressDelete(this.selectedRowforDelete.vendorBillingAddressId,this.userName).subscribe(() => {
+            this.workFlowtService.GetVendorBillingAddressDelete(this.selectedRowforDelete.vendorBillingAddressId, this.userName).subscribe(() => {
                 this.loadData();
                 this.alertService.showMessage(
                     'Success',
@@ -656,9 +659,10 @@ export class VendorBillingInformationComponent {
         if (this.local) {
             this.workFlowtService.billingCollection = this.local;
         }
-        this.activeIndex = 7;
-        this.workFlowtService.indexObj.next(this.activeIndex);
-        this.workFlowtService.changeStep('Warnings');
+        this.activeIndex = 8;
+        this.stepper.changeStep(this.activeIndex);
+        // this.workFlowtService.indexObj.next(this.activeIndex);
+        // this.workFlowtService.changeStep('Warnings');
         this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-warnings');
     }
     handleChanges(rowData, e) {
@@ -671,11 +675,11 @@ export class VendorBillingInformationComponent {
             // this.workFlowtService.updateActionforActiveforBilling(this.sourceVendor).subscribe(
             //     response => this.saveCompleted(this.sourceVendor),
             //     error => this.saveFailedHelper(error));
-            this.workFlowtService.GetUpdateVendorBillingAddressStatus(this.sourceVendor.vendorBillingAddressId, this.sourceVendor.isActive,this.userName).subscribe(
+            this.workFlowtService.GetUpdateVendorBillingAddressStatus(this.sourceVendor.vendorBillingAddressId, this.sourceVendor.isActive, this.userName).subscribe(
                 response => this.saveCompleted(this.sourceVendor),
                 error => this.saveFailedHelper(error));
             this.sourceVendor = "";
-            
+
         }
         else {
             this.sourceVendor = rowData;
@@ -685,7 +689,7 @@ export class VendorBillingInformationComponent {
             // this.workFlowtService.updateActionforActiveforBilling(this.sourceVendor).subscribe(
             //     response => this.saveCompleted(this.sourceVendor),
             //     error => this.saveFailedHelper(error));
-            this.workFlowtService.GetUpdateVendorBillingAddressStatus(this.sourceVendor.vendorBillingAddressId, this.sourceVendor.isActive,this.userName).subscribe(
+            this.workFlowtService.GetUpdateVendorBillingAddressStatus(this.sourceVendor.vendorBillingAddressId, this.sourceVendor.isActive, this.userName).subscribe(
                 response => this.saveCompleted(this.sourceVendor),
                 error => this.saveFailedHelper(error));
             this.sourceVendor = "";
@@ -728,12 +732,12 @@ export class VendorBillingInformationComponent {
         //     }
         // }
         this.countrycollection = this.allCountryinfo;
-		if (event.query !== undefined && event.query !== null) {
-			const countries = [...this.allCountryinfo.filter(x => {
-				return x.nice_name.toLowerCase().includes(event.query.toLowerCase())
-			})]
-			this.countrycollection = countries;
-		}
+        if (event.query !== undefined && event.query !== null) {
+            const countries = [...this.allCountryinfo.filter(x => {
+                return x.nice_name.toLowerCase().includes(event.query.toLowerCase())
+            })]
+            this.countrycollection = countries;
+        }
     }
     onShipVia(event) {
         if (this.allShipViaDetails) {
@@ -796,7 +800,7 @@ export class VendorBillingInformationComponent {
 
     customExcelUpload(event) {
         const file = event.target.files;
-       
+
         if (file.length > 0) {
             this.formData.append('file', file[0])
             this.workFlowtService.BillingFileUpload(this.formData, this.local.vendorId).subscribe(res => {
@@ -815,8 +819,8 @@ export class VendorBillingInformationComponent {
     }
 
     getPageCount(totalNoofRecords, pageSize) {
-		return Math.ceil(totalNoofRecords / pageSize)
-	}
+        return Math.ceil(totalNoofRecords / pageSize)
+    }
 
 
 }
