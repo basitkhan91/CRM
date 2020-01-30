@@ -394,7 +394,7 @@ export class ItemClassificationComponent implements OnInit, AfterViewInit {
     }
 
     sampleExcelDownload(){
-        const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=UnitOfMeasure&fileName=uom.xlsx`;
+        const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=ItemClassification&fileName=itemClassification.xlsx`;
             window.location.assign(url);
     }
 

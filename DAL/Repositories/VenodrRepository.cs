@@ -431,6 +431,8 @@ namespace DAL.Repositories
                           from cr in crr.DefaultIfEmpty()
                           join cu in _appContext.Currency on t.CurrencyId equals cu.CurrencyId into cuu
                           from cu in cuu.DefaultIfEmpty()
+                          join vp in _appContext.Vendor on t.Parent equals vp.VendorId into vpp
+                          from vp in vpp.DefaultIfEmpty()
 
                               //join inte in _appContext.IntegrationPortalMapping on t.VendorId equals inte.ReferenceId into intee 
                               //from inte in intee.DefaultIfEmpty()
@@ -446,6 +448,7 @@ namespace DAL.Repositories
                               t.DoingBusinessAsName,
                               t.VendorClassificationId,
                               t.Parent,
+                              ParentName = vp.VendorName,
                               t.VendorContractReference,
                               t.AddressId,
                               t.IsVendorAlsoCustomer,
@@ -491,8 +494,10 @@ namespace DAL.Repositories
                               ad.StateOrProvince,
                               ad.PostalCode,
                               Country = cont.countries_name,
+                              CountryId = cont.countries_id,
                               CreditTerms = cr.Name,
-                              currency = cu.Symbol,
+                              currency = cu.Symbol,                          
+                              
 
                               //vc.ClassificationName,
                               VendorCapabilityName = vca.capabilityDescription,
