@@ -18,18 +18,22 @@ namespace DAL.Models
         [ForeignKey("AircraftModelId")]
         [Required(ErrorMessage = "Aircraft Model Id is required.")]
         public long   AircraftModelId { get; set; }
+           [NotMapped]
+        public string AircraftTypeName { get; set; }
+        [NotMapped]
+        public string ModelName { get; set; }
 
         [Required(ErrorMessage = "Dash Number is required.")]
         public string  DashNumber { get; set; }
-        
+        public string Memo { get; set; }
         public Int32 MasterCompanyId { get; set; }
 
         public virtual AircraftType AircraftType { get; set; }
 
         public virtual AircraftModel AircraftModel { get; set; }
-		public string Memo { get; set; }
+		
 
-        [NotMapped]
-        public List<int> AircraftModels { get; set; }
-	}
+     
+
+    }
 }
