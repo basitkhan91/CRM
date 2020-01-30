@@ -92,11 +92,9 @@ export class AssetTypeComponent implements OnInit {
         const file = event.target.files;
         //console.log(file[0]);
         if (file.length > 0) {
-            this.formData.append('file', file[0]);
-            //console.log(this.formData);
+            this.formData.append('file', file[0]);         
             this.coreDataService.bulkUpload(this.formData).subscribe(response => {
-                //event.target.value = '';
-                //console.log(response);
+               
                 this.alertService.showMessage(
                     'Success',
                     `Successfully Uploaded  `,
@@ -104,7 +102,7 @@ export class AssetTypeComponent implements OnInit {
                 );
                 this.formData = new FormData();
                 //let bulkUploadResult = response;
-                this.showBulkUploadResult(response);
+                //this.showBulkUploadResult(response);
                 this.getItemList();
             })
         }
@@ -319,7 +317,7 @@ export class AssetTypeComponent implements OnInit {
     }
 
     sampleExcelDownload() {
-         const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=AssetType&fileName=AssetClass.xlsx`;
+         const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=AssetClass&fileName=AssetClass.xlsx`;
          window.location.assign(url);
     }
 

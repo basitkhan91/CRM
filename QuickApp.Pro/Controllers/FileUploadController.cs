@@ -67,7 +67,9 @@ namespace QuickApp.Pro.Controllers
                 await stream.CopyToAsync(memory);
             }
             memory.Position = 0;
-            return File(memory, GetContentType(filePath), Path.GetFileName(filePath));
+            //Commented By Vijay removed down load file restriction
+            //return File(memory, GetContentType(filePath), Path.GetFileName(filePath));
+            return File(memory, "application/force-download", Path.GetFileName(filePath));
         }
 
 
@@ -84,7 +86,10 @@ namespace QuickApp.Pro.Controllers
                 await stream.CopyToAsync(memory);
             }
             memory.Position = 0;
-            return File(memory, GetContentType(fileFullPath), Path.GetFileName(fileFullPath));
+            //Commented By Vijay removed down load file restriction
+            //return File(memory, GetContentType(fileFullPath), Path.GetFileName(fileFullPath));
+            return File(memory, "application/force-download", Path.GetFileName(fileFullPath));
+          
         }
         [HttpGet]
         [Route("downloadattachedfile")]
@@ -98,7 +103,9 @@ namespace QuickApp.Pro.Controllers
                 await stream.CopyToAsync(memory);
             }
             memory.Position = 0;
-            return File(memory, GetContentType(filePath), Path.GetFileName(filePath));
+            //Commented By Vijay removed down load file restriction
+            //return File(memory, GetContentType(filePath), Path.GetFileName(filePath));
+            return File(memory, "application/force-download", Path.GetFileName(filePath));
         }
 
 
