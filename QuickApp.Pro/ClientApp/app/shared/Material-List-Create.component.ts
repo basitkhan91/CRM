@@ -30,6 +30,7 @@ export class MaterialListCreateComponent implements OnInit, OnChanges {
     @Input() isEdit = false;
     @Input() editData;
     @Input() isQuote = false;
+    @Input() taskList: any = [];
     @Input() workFlow: IWorkFlow;
     @Input() markupList;
     @Input() UpdateMode: boolean;

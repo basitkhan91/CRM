@@ -26,6 +26,7 @@ export class ChargesCreateComponent implements OnInit, OnChanges {
     @Input() markupList;
     @Input() isQuote = false;
     @Input() editData;
+    @Input() taskList: any = [];
     @Output() saveChargesListForWO = new EventEmitter();
     @Output() updateChargesListForWO = new EventEmitter();
 
@@ -299,18 +300,6 @@ export class ChargesCreateComponent implements OnInit, OnChanges {
           (material)=>{
             if(material.chargesCostPlus){
               total += material.chargesCostPlus;
-            }
-          }
-        )
-        return total;
-    }
-
-    getTotalFixedAmount(){
-        let total = 0;
-        this.workFlow.charges.forEach(
-          (material)=>{
-            if(material.fixedAmount){
-              total += Number(material.fixedAmount);
             }
           }
         )

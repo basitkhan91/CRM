@@ -27,6 +27,7 @@
           [isWorkOrder]="isWorkOrder"
           [isQuote]="isQuote"
           [markupList]="markupList"
+          [taskList]="taskList"
           (saveChargesListForWO)="saveChargesList($event)"
         ></grd-charges>
 
@@ -38,6 +39,7 @@
           [isWorkOrder]="isWorkOrder"
           [markupList]="markupList"
           [isQuote]="isQuote"
+          [taskList]="taskList"
           (updateChargesListForWO)="updateChargesList($event)"
         ></grd-charges>
       </div>
@@ -60,7 +62,7 @@
                   <p-radioButton
                     class="p-radiobutton-label-horizontal"
                     name="costPlusType"
-                    label="Mark Up"
+                    label="Cost Plus"
                     value="Mark Up"
                     [(ngModel)]="costPlusType"
                     [disabled]="isView"
@@ -117,7 +119,7 @@
       <tr *ngIf="!rowData['isDeleted']">
         <ng-container *ngIf="isQuote">
           <td>
-            <select class="form-control" [(ngModel)]="rowData.taskId" [disabled]="isView">
+            <select class="form-control select-read-only" [(ngModel)]="rowData.taskId"disabled>
               <option value="">Select</option>
               <option *ngFor="let task of taskList" [value]="task.taskId">{{task.description}}</option>
             </select>

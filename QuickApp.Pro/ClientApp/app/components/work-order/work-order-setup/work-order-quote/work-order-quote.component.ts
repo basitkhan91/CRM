@@ -792,7 +792,7 @@ overAllMarkup: any;
       res => {
         this.tabQuoteCreated['exclusions'] = true;
         this.workOrderExclusionsList = res.workOrderQuoteExclusions;
-        this.getExclusionListByWorkOrderId();
+        this.getQuoteExclusionListByWorkOrderQuoteId();
         this.updateWorkOrderQuoteDetailsId(res.workOrderQuoteDetailsId);
         console.log(res);
       }
@@ -945,6 +945,7 @@ setBuildMethod(id){
 saveWorkOrderExclusionsList(data) {
   this.exclusionPayload.BuildMethodId = this.getBuildMethodId();
   this.exclusionPayload["taskId"] = (this.selectedBuildMethod == 'build from scratch')?this.currenttaskId:0;
+  this.exclusionPayload['WorkflowWorkOrderId'] = this.selectedWorkFlowWorkOrderId;
   this.exclusionPayload.WorkOrderQuoteExclusions = data.map(ex=>{
     if(ex.workOrderQuoteDetailsId && ex.workOrderQuoteDetailsId != 0){
       this.exclusionPayload.WorkOrderQuoteDetailsId = ex.workOrderQuoteDetailsId;
@@ -960,8 +961,8 @@ saveWorkOrderExclusionsList(data) {
       "Quantity":ex.quantity,
       "UnitCost":ex.unitCost,
       "ExtendedCost":ex.extendedCost,
-      "MarkUpPercentageId":ex.markupPercentageId,
-      "CostPlusAmount":ex.CostPlusAmount,
+      "MarkUpPercentageId":ex.markUpPercentageId,
+      "CostPlusAmount":ex.costPlusAmount,
       "FixedAmount":ex.fixedAmount,
       "taskId": ex.taskId,
       "masterCompanyId":(ex.masterCompanyId == '')?0:ex.masterCompanyId,
@@ -974,7 +975,11 @@ saveWorkOrderExclusionsList(data) {
   this.workOrderService.saveExclusionsQuote(this.exclusionPayload)
     .subscribe(
       res => {
-        this.updateWorkOrderQuoteDetailsId(res.workOrderQuoteExclusions[0].workOrderQuoteDetailsId)
+        this.tabQuoteCreated['exclusions'] = true;
+        this.workOrderExclusionsList = res.workOrderQuoteExclusions;
+        this.updateWorkOrderQuoteDetailsId(res.workOrderQuoteDetailsId);
+        this.getQuoteExclusionListByWorkOrderQuoteId();
+        // this.updateWorkOrderQuoteDetailsId(res.workOrderQuoteExclusions[0].workOrderQuoteDetailsId)
         this.alertService.showMessage(
           this.moduleName,
           'Quotation created  Succesfully',
@@ -1001,7 +1006,7 @@ updateWorkOrderExclusionsList(data) {
           'Update Work Order Exclusions  Succesfully',
           MessageSeverity.success
       );
-      this.getExclusionListByWorkOrderId();
+      this.getQuoteExclusionListByWorkOrderQuoteId();
   })
 }
 

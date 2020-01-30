@@ -10,6 +10,7 @@
   <table class="table table-bordered table-fixed workflow-table-exclusion">
     <tr>
       <!-- <th><label>S.No</label></th> -->
+      <th *ngIf="isQuote"><label>Task</label></th>
       <th><label>EPN *</label></th>
       <th><label>EPN Description *</label></th>
       <th><label>QTY </label></th>
@@ -25,6 +26,12 @@
       *ngFor="let exclusion of workFlow.exclusions; let i = index"
     >
       <!-- <td>{{ (currentPage - 1) * itemsPerPage + i + 1 }}</td> -->
+      <td *ngIf="isQuote">
+        <select class="form-control" [(ngModel)]="exclusion.taskId">
+          <option value="">Select</option>
+          <option *ngFor="let task of taskList" [value]="task.taskId">{{task.description}}</option>
+        </select>
+      </td>
       <td>
         <p-autoComplete
           (onSelect)="onPartSelect($event, exclusion)"
@@ -123,6 +130,7 @@
 
     <tr>
       <!-- <td>Total</td> -->
+      <td *ngIf="isQuote">&nbsp;</td>
       <td>&nbsp;</td>
       <td>&nbsp;</td>
       <td>{{ workFlow.sumofQty }}</td>

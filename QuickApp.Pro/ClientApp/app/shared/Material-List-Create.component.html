@@ -16,6 +16,7 @@
     <thead>
       <tr>
         <!-- <th>S.No</th> -->
+        <th *ngIf="isQuote">Task</th>
         <th>PN *</th>
         <th>Description *</th>
         <th>Cond *</th>
@@ -27,9 +28,6 @@
         <th>Extended Cost *</th>
         <th *ngIf="!isQuote">Unit Price *</th>
         <th *ngIf="!isQuote">Extended Price</th>
-        <ng-container *ngIf="isQuote">
-          <th>FIXED AMOUNT</th>
-        </ng-container>
         <th>Deferred</th>
         <th>Memo</th>
         <th>Action</th>
@@ -42,6 +40,12 @@
         *ngFor="let material of workFlow.materialList; let i = index"
       >
         <!-- <td>{{ (currentPage - 1) * itemsPerPage + i + 1 }}</td> -->
+        <td *ngIf="isQuote">
+          <select class="form-control wf-pub-id" [(ngModel)]="material.taskId">
+            <option value="">Select</option>
+            <option *ngFor="let task of taskList" [value]="task.taskId">{{task.description}}</option>
+          </select>
+        </td>
         <td>
           <p-autoComplete
             (onSelect)="onPartSelect($event, material)"
@@ -188,9 +192,6 @@
             [(ngModel)]="material.extendedPrice"
           />
         </td>
-        <ng-container *ngIf="isQuote">
-          <td><input [(ngModel)]="material.fixedAmount" /></td>
-        </ng-container>
         <td style="width:30px;">
           <div class="custom-checkbox-box">
             <input
@@ -222,6 +223,7 @@
         <td>
           Total
         </td>
+        <td *ngIf="isQuote">&nbsp;</td>
         <td>&nbsp;</td>
 
         <td>&nbsp;</td>
@@ -233,9 +235,6 @@
         <td>{{ workFlow.materialExtendedCostSummation }}</td>
         <td *ngIf="!isQuote">{{ workFlow.totalMaterialCost }}</td>
         <td *ngIf="!isQuote">{{ workFlow.materialExtendedPriceSummation }}</td>
-        <ng-container *ngIf="isQuote">
-          <td>{{ getTotalFixedAmount() }}</td>
-        </ng-container>
         <td>&nbsp;</td>
         <td>&nbsp;</td>
         <td>&nbsp;</td>

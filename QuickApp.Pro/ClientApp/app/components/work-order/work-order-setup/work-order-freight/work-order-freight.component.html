@@ -75,7 +75,7 @@
       <tr *ngIf="!rowData['isDeleted']">
         <ng-container *ngIf="isQuote">
           <td>
-            <select class="form-control" [(ngModel)]="rowData.taskId" [disabled]="isView">
+            <select class="form-control select-read-only" [(ngModel)]="rowData.taskId" disabled>
               <option value="">Select</option>
               <option *ngFor="let task of taskList" [value]="task.taskId">{{task.description}}</option>
             </select>
@@ -90,7 +90,7 @@
                 class="form-control"
                 (change)="markupChanged(rowData, 'row')"
                 [(ngModel)]="rowData.markupPercentageId"
-                [disabled]="isView"
+                [disabled]="isView || costPlusType != 'Mark Up'"
               >
                 <option value="">Select</option>
                 <option
@@ -161,6 +161,7 @@
             <table class="table table-bordered ">
               <thead>
                 <tr>
+                  <th *ngIf="isQuote">Task</th>
                   <th>Carrier</th>
                   <th>Ship Via</th>
                   <th>Dimensions</th>
@@ -168,11 +169,17 @@
                   <th>Memo</th>
                   <th>Amount</th>
                   <th>Fixed Freight</th>
-                  <th>Fixed Amount</th>
+                  <th *ngIf="!isQuote">Fixed Amount</th>
                 </tr>
               </thead>
               <tbody>
                 <tr *ngFor="let f of freightForm; let i = index">
+                  <td *ngIf="isQuote">
+                    <select class="form-control" [(ngModel)]="f.taskId" [disabled]="isView">
+                      <option value="">Select</option>
+                      <option *ngFor="let task of taskList" [value]="task.taskId">{{task.description}}</option>
+                    </select>
+                  </td>
                   <td>
                     <p-dropdown
                       placeholder="Select Carrier"
@@ -254,7 +261,7 @@
                       [(ngModel)]="f.isFixedFreight"
                     />
                   </td>
-                  <td>
+                  <td *ngIf="!isQuote">
                     <input
                       type="number"
                       name="fixedAmount{{ i }}"

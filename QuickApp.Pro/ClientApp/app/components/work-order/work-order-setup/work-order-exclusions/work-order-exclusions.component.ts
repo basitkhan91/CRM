@@ -8,6 +8,7 @@ import { AuthService } from '../../../../services/auth.service';
 @Component({
   selector: 'app-work-order-exclusions',
   templateUrl: './work-order-exclusions.component.html',
+  styleUrls: ['./work-order-exclusions.component.scss'],
 
 })
 /** WorkOrderDocuments component*/
@@ -55,12 +56,12 @@ export class WorkOrderExclusionsComponent implements OnInit {
   markupChanged(matData, type) {
     try {
       this.markupList.forEach((markup)=>{
-        if(type == 'row' && markup.value == matData.markupPercentageId){
+        if(type == 'row' && markup.value == matData.markUpPercentageId){
           matData.costPlusAmount = Number(matData.extendedCost) + ((Number(matData.extendedCost) / 100) * Number(markup.label))
         }
         else if(type == 'all' && markup.value == this.overAllMarkup){
           this.workOrderExclusionsList.forEach((mData)=>{
-            mData.markupPercentageId = this.overAllMarkup;
+            mData.markUpPercentageId = this.overAllMarkup;
             mData.costPlusAmount = Number(mData.extendedCost) + ((Number(mData.extendedCost) / 100) * Number(markup.label))
           })
         }
