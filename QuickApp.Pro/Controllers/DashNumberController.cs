@@ -162,13 +162,14 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("audits/{id}")]
         public IActionResult AuditDetails(long id)
         {
-            var audits = unitOfWork.Repository<AircraftDashNumberAudit>()
-                .Find(x => x.DashNumberId == id)
-                .OrderByDescending(x => x.DashNumberId);
+            //var audits = unitOfWork.Repository<AircraftDashNumberAudit>()
+            //    .Find(x => x.DashNumberId == id)
+            //    .OrderByDescending(x => x.DashNumberId);
 
-            var auditResult = new List<AuditResult<AircraftDashNumberAudit>>();
+            //var auditResult = new List<AuditResult<AircraftDashNumberAudit>>();
 
-            auditResult.Add(new AuditResult<AircraftDashNumberAudit> { AreaName = "Dash Number", Result = audits.ToList() });
+            //auditResult.Add(new AuditResult<AircraftDashNumberAudit> { AreaName = "Dash Number", Result = audits.ToList() });
+            var auditResult = unitOfWork.DashNumberRepository.GetDashNumbersAudit(id);
 
             return Ok(auditResult);
         }

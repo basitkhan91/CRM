@@ -19,6 +19,7 @@ import { ConfigurationService } from "../../services/configuration.service";
 import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
 import { FormBuilder } from "../../../../node_modules/@angular/forms";
 import { MatDialog } from "../../../../node_modules/@angular/material";
+import { CommonService } from '../../services/common.service';
 @Component({
     selector: 'app-dashnumber',
     templateUrl: './dashnumber.component.html',
@@ -81,7 +82,8 @@ export class DashnumberComponent implements OnInit {
         public dashNumberService: DashNumberService,
         private configurations: ConfigurationService,
         private dialog: MatDialog, private aircraftManufacturerService: AircraftManufacturerService,
-        private aircraftModelService: AircraftModelService) {
+        private aircraftModelService: AircraftModelService,
+        private commonService: CommonService) {
 
     }
 
@@ -109,31 +111,32 @@ export class DashnumberComponent implements OnInit {
         this.getList();
     }
 
-    customExcelUpload(event) {
-        // const file = event.target.files;
+    customDashNumberExcelUpload(event) {
+        const file = event.target.files;
 
-        // console.log(file);
-        // if (file.length > 0) {
+        console.log(file);
+        if (file.length > 0) {
 
-        //     this.formData.append('file', file[0])
-        //     this.unitofmeasureService.UOMFileUpload(this.formData).subscribe(res => {
-        //         event.target.value = '';
+            this.formData.append('ModuleName', 'DashNumber')
+            this.formData.append('file', file[0])
 
-        //         this.formData = new FormData();
-        //         this.existingRecordsResponse = res;
-        //         this.getList();
-        //         this.alertService.showMessage(
-        //             'Success',
-        //             `Successfully Uploaded  `,
-        //             MessageSeverity.success
-        //         );
 
-        //     })
-        // }
+            this.commonService.smartExcelFileUpload(this.formData).subscribe(res => {
+                event.target.value = '';
+                this.formData = new FormData();
+                this.getList();
+                this.alertService.showMessage(
+                    'Success',
+                    `Successfully Uploaded  `,
+                    MessageSeverity.success
+                );
+
+            })
+        }
 
     }
     sampleExcelDownload() {
-        const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=DashNumber&fileName=dashnumber.xlsx`;
+        const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=DashNumber&fileName=DashNumber.xlsx`;
 
         window.location.assign(url);
     }
