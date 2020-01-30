@@ -14684,11 +14684,9 @@ p-table .ui-table-summary {
     margin-right: -12px;
 }
 
-
-
-p-table .ui-table-summary label.footer {
-    margin-left: 44%;
-}
+// p-table .ui-table-summary label.footer {
+//     margin-left: 44%;
+// }
 p-table .ui-table-summary label {
     width: 100px;
     text-align: right;
@@ -14699,6 +14697,7 @@ p-table .ui-table-summary label {
 
 p-table .ui-table-summary input {
     opacity: 0.8 !important;
+    border: 1px solid #c5c5c5;
 }
 
 p-table tr th {

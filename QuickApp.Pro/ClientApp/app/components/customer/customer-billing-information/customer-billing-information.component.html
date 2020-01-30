@@ -59,7 +59,7 @@
 
 
                     <!--<p class="lead"></p>-->
-                    <p-table #dt class="rpo-table-cstm rro-table-cstm tab-table-cstm"
+                    <p-table #dt class="rpo-table-cstm"
                      [value]="billingInfoList"
                       [metaKeySelection]="true" 
                       [rows]="10" 
@@ -70,7 +70,7 @@
                         selectionMode="multiple" 
                         [resizableColumns]="true" 
                         [reorderableColumns]="true">
-                        <ng-template pTemplate="caption"  *ngIf="isViewMode == false">
+                        <ng-template pTemplate="caption"  *ngIf="isViewMode == false"> <!--rpo-table-cstm rro-table-cstm tab-table-cstm-->
 
                             <div style="text-align: right">
                                 <p-multiSelect [options]="billingInfoTableHeaders" [(ngModel)]="selectedColumns" [ngModelOptions]="{standalone: true}" optionLabel="header"
@@ -92,8 +92,6 @@
                                             <i class="fa fa-upload"></i>
                                         </span>
                                     </label>
-                                    &nbsp; &nbsp;
-
                                 </div>
 
                             </div>
@@ -165,6 +163,13 @@
 
                                 </td>
 
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="emptymessage" let-columns *ngIf="billingInfoList.length == 0">
+                            <tr>
+                                <td colspan="9" style="color: red; font-weight: bold; text-align: center">
+                                    No records found
+                                </td>
                             </tr>
                         </ng-template>
                         <ng-template pTemplate="summary" id="footer">
