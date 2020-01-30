@@ -23,7 +23,7 @@ namespace DAL.Repositories
                         join cont in _appContext.Countries on Convert.ToInt32(ad.Country) equals cont.countries_id into country
                         from cont in country.DefaultIfEmpty()
 
-                        where ((v.IsDelete == false || v.IsDelete == null) && (v.VendorId==id))
+                        where ((v.IsDeleted == false || v.IsDeleted == null) && (v.VendorId==id))
 
                         // select new { t, ad, vt }).ToList();
                         select new
@@ -54,7 +54,7 @@ namespace DAL.Repositories
         {
             var data = (from vs in _appContext.VendorShipping
                         join vsa in  _appContext.VendorShippingAddress on Selectedrow equals vsa.VendorShippingAddressId  
-                        where ((vs.VendorShippingAddressId == Selectedrow) && (vs.IsActive==true && vs.IsDelete!=true))
+                        where ((vs.VendorShippingAddressId == Selectedrow) && (vs.IsActive==true && vs.IsDeleted!=true))
 
                         // select new { t, ad, vt }).ToList();
             select new

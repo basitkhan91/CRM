@@ -8,13 +8,13 @@ namespace QuickApp.Pro.ViewModels
         public long? VendorId { get; set; }
         public string SiteName { get; set; }
         public long? AddressId { get; set; }
-        public Int32? MasterCompanyId { get; set; }
+        public int MasterCompanyId { get; set; }
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }
         public System.DateTime CreatedDate { get; set; }
         public System.DateTime UpdatedDate { get; set; }
-        public Nullable<bool> IsActive { get; set; }
-        public Nullable<bool> IsDelete { get; set; }
+        public bool IsActive { get; set; }
+        public bool IsDelete { get; set; }
         public string Address1 { get; set; }
         public string Address2 { get; set; }
         public string Address3 { get; set; }

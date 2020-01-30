@@ -1561,6 +1561,7 @@ namespace QuickApp.Pro.Controllers
                 actionobject.VendorAudit = vendorViewModel.VendorAudit;
                 actionobject.MasterCompanyId = vendorViewModel.MasterCompanyId;
                 actionobject.IsActive = true;
+                actionobject.IsDeleted = vendorViewModel.IsDeleted;
                 actionobject.CreditTermsId = vendorViewModel.CreditTermsId;
                 actionobject.CreatedDate = DateTime.Now;
                 actionobject.UpdatedDate = DateTime.Now;
@@ -1631,7 +1632,7 @@ namespace QuickApp.Pro.Controllers
                                 data.UpdatedBy = actionobject.UpdatedBy;
                                 data.IsActive = actionobject.IsActive;
                                 data.IsPrimary = true;
-                                data.IsDelete = false;
+                                data.IsDeleted = false;
                                 _unitOfWork.VendorShippingAddress.Update(data);
                             }
                         }
@@ -1649,7 +1650,7 @@ namespace QuickApp.Pro.Controllers
                             objVendorrShippingAddress.UpdatedBy = actionobject.UpdatedBy;
                             objVendorrShippingAddress.IsActive = actionobject.IsActive;
                             objVendorrShippingAddress.IsPrimary = true;
-                            objVendorrShippingAddress.IsDelete = false;
+                            objVendorrShippingAddress.IsDeleted = false;
 
                             _context.VendorShippingAddress.Add(objVendorrShippingAddress);
                         }
@@ -1998,7 +1999,7 @@ namespace QuickApp.Pro.Controllers
                                 data.UpdatedBy = actionobject.UpdatedBy;
                                 data.IsActive = actionobject.IsActive;
                                 //data.IsPrimary = true;
-                                data.IsDelete = false;
+                                data.IsDeleted = false;
                                 _unitOfWork.VendorShippingAddress.Update(data);
                             }
                         }
@@ -2016,7 +2017,7 @@ namespace QuickApp.Pro.Controllers
                             objVendorrShippingAddress.UpdatedBy = actionobject.UpdatedBy;
                             objVendorrShippingAddress.IsActive = actionobject.IsActive;
                             //objVendorrShippingAddress.IsPrimary = true;
-                            objVendorrShippingAddress.IsDelete = false;
+                            objVendorrShippingAddress.IsDeleted = false;
 
                             _context.VendorShippingAddress.Add(objVendorrShippingAddress);
                         }
@@ -3261,7 +3262,7 @@ namespace QuickApp.Pro.Controllers
                 var addressObj = _unitOfWork.Address.GetSingleOrDefault(c => c.AddressId == checkPaymentObj.AddressId);
                 addressObj.IsActive = vendorShippingViewModel.AddressStatus;
                 checkPaymentObj.IsActive = vendorShippingViewModel.IsActive;
-                checkPaymentObj.IsDelete = true;
+                checkPaymentObj.IsDeleted = true;
                 checkPaymentObj.MasterCompanyId = 1;
                 checkPaymentObj.UpdatedDate = DateTime.Now;
                 checkPaymentObj.CreatedBy = vendorShippingViewModel.CreatedBy;
@@ -3551,17 +3552,18 @@ namespace QuickApp.Pro.Controllers
             {
                 // caps.WorkflowChargesListId = 0;
                 vendorCapability.MasterCompanyId = 1;
-                vendorCapability.IsActive = true;
+                //vendorCapability.IsActive = true;
                 vendorCapability.CreatedDate = DateTime.Now;
                 vendorCapability.UpdatedDate = DateTime.Now;
                 if (vendorCapability.VendorCapabilityId >0)
-                {                    
+                {
                     _unitOfWork.Repository<VendorCapabiliy>().Update(vendorCapability);
                     updateRanking(Convert.ToInt32(vendorCapability.VendorRanking));
                     _unitOfWork.SaveChanges();
                 }
                 else
                 {
+                    //vendorCapability.IsDeleted = false;
                     _unitOfWork.Repository<VendorCapabiliy>().Add(vendorCapability);
                     updateRanking(Convert.ToInt32(vendorCapability.VendorRanking));
                     _unitOfWork.SaveChanges();

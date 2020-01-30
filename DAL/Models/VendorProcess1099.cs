@@ -17,5 +17,6 @@ namespace DAL.Models
         public bool IsActive { get; set; }
         public bool IsDeleted { get; set; }
         public long VendorId { get; set; }
+        public int MasterCompanyId { get; set; }
     }
 }
