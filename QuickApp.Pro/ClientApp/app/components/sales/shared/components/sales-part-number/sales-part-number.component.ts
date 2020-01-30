@@ -148,6 +148,7 @@ export class SalesPartNumberComponent {
           this.part.partNumber = this.selectedPart.partNumber;
           this.part.stockLineNumber = this.selectedPart.stockLineNumber;
           this.part.salesPricePerUnit = +this.selectedPart.unitCost;
+          this.part.unitCostPerUnit = +this.selectedPart.unitCost;
           this.part.itemClassification = this.selectedPart.itemClassification;
           this.part.description = this.selectedPart.description;
           this.part.itemMasterId = this.selectedPart.itemId;
@@ -163,9 +164,9 @@ export class SalesPartNumberComponent {
           this.part.currencyDescription = this.selectedPart.currencyDescription;
           this.part.currency = this.selectedPart.currency;
           this.part.salesDiscount = 0;
-          this.part.unitCostPerUnit = 0;
+         // this.part.unitCostPerUnit = 0;
           this.part.markupPerUnit = 0;
-          this.part.salesPricePerUnit = 0;
+         // this.part.salesPricePerUnit = 0;
           this.part.markUpPercentage = 0;
           this.part.salesDiscount = 0;
           this.part.quantityRequested = this.query.partSearchParamters.quantityRequested;

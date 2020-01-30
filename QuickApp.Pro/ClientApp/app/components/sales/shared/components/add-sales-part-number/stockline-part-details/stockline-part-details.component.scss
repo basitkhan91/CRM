@@ -29,9 +29,26 @@ div.row {
 .ui-table-scrollable-body {
   margin-right: 17px !important;
 }
-.ui-table-summary{
-  margin: auto;
+.sales-quote-part-search-data p-table .ui-table-summary{
+  margin: auto !important;
 }
+.alternate-part-label{
+  color: #ff5663 !important;
+}
+.row-bg1 {
+  background-color: #ffe4e2 !important;
+}
+.sales-quote-part-search-data tr td:first-child {
+  background: #4298ff;
+  color: #fff;
+  position: -webkit-sticky;
+  position: sticky;
+  right: 0;
+}
+
+
+
+
 ///// this code below is for width of the scroll bar
 ::-webkit-scrollbar {
   width: 10px;
