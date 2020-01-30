@@ -53,14 +53,14 @@
                             </div>
                             <div class="form-group">
                                 <label>Credit Limit <span class="text-danger">*</span></label>
-                                <input class="form-control" type="text" name="creditLimit" [(ngModel)]="sourceVendor.creditLimit" required>
+                                <input class="form-control" type="number" name="creditLimit" [(ngModel)]="sourceVendor.creditLimit" required>
                             </div>
                             <div class="form-group">
                                 <label>Credit Terms <span class="text-danger">*</span>
-                                    <span style="margin-left:3px;cursor:pointer;"><a class="fa fa-plus-circle fa-lg" matTooltip="Add Currency" matTooltipPosition="above" (click)="openCrediTerms(contenCreditTerms)"></a></span>
+                                    <span style="margin-left:3px;cursor:pointer;"><a class="fa fa-plus-circle fa-lg" matTooltip="Add Credit Terms" matTooltipPosition="above" (click)="openCrediTerms(contenCreditTerms)"></a></span>
                                 </label>
-                                <select class="form-control" name="creditTermsId" [(ngModel)]="sourceVendor.creditTermsId" required>
-                                    <!-- <option value="0">Select Credit Terms</option> -->
+                                <select class="form-control" name="creditTermsId" [(ngModel)]="sourceVendor.creditTermsId" (change)="validateCreditTerms(sourceVendor.creditTermsId)" required>
+                                    <option value="0">Select Credit Terms</option>
                                     <ng-container *ngFor="let creditTermsId of allcreditTermInfo">                                        
                                         <option *ngIf="creditTermsId.isActive" [ngValue]="creditTermsId.creditTermsId">{{creditTermsId.name}}</option>
                                     </ng-container>
@@ -70,8 +70,8 @@
                                 <label>Currency <span class="text-danger">*</span>
                                     <span style="margin-left:3px;cursor:pointer;"><a class="fa fa-plus-circle fa-lg" matTooltip="Add Currency" matTooltipPosition="above" (click)="openCurrency(contentCurrency)"></a></span>
                                 </label>
-                                <select class="form-control" name="currencyId" [(ngModel)]="sourceVendor.currencyId" required>
-                                    <!-- <option value="0">Select Currency</option> -->
+                                <select class="form-control" name="currencyId" [(ngModel)]="sourceVendor.currencyId" (change)="validateCurrency(sourceVendor.currencyId)" required>
+                                    <option value="0">Select Currency</option>
                                     <ng-container *ngFor="let currencyName of allCurrencyInfo">
                                         <option *ngIf="currencyName.isActive" [ngValue]="currencyName.currencyId">{{currencyName.symbol}}</option>
                                     </ng-container>
@@ -79,10 +79,10 @@
                             </div>
                             <div class="form-group">
                                 <label>Discount
-                                    <span style="margin-left:3px;cursor:pointer;"><a class="fa fa-plus-circle fa-lg" matTooltip="Add Currency" matTooltipPosition="above" (click)="openDiscount(contentEdits)"></a></span>                                    
+                                    <span style="margin-left:3px;cursor:pointer;"><a class="fa fa-plus-circle fa-lg" matTooltip="Add Discount" matTooltipPosition="above" (click)="openDiscount(contentEdits)"></a></span>
                                 </label>
                                 <select class="form-control" name="discountId" [(ngModel)]="sourceVendor.discountId">
-                                    <!-- <option value="0">Select Discount</option> -->
+                                    <option value="0">Select Discount</option>
                                     <option *ngFor="let discontValue of alldiscountvalueInfo" [ngValue]="discontValue.discountId">{{discontValue.discontValue}}</option>
                                 </select>
                             </div>
@@ -123,8 +123,8 @@
                         </div>
                     </div>
                     <div>
+                        <button type="button" class="btn btn-primary pull-right" [disabled]="!finInfoForm.valid || disableCreditTerms || disableCurrency" (click)="editItemAndCloseModel(finInfoForm,true)">Save & Next</button>
                         <button type="button" class="btn btn-primary pull-right" (click)="previousClick()">Previous</button>
-                        <button type="button" class="btn btn-primary pull-right" (click)="editItemAndCloseModel(finInfoForm,true)">Save & Next</button>
                     </div> 
                     </form>                   
                 </div>
@@ -263,104 +263,101 @@
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
-    <div class="modal-body">
-        <form #userForm="ngForm" (ngSubmit)="saveCreditTermsdata()">
-            <div class="form-group">
-                <div class="col-sm-12">
-                    <div class="col-sm-4">
-                        <label class="control-label">Credit Term <span class="text-danger">*</span></label>
-                    </div>
-                    <div class="col-sm-5">
-                        <p-autoComplete class="p-autoComplete-ctsm" (onSelect)="partnmId($event)" (onKeyUp)=eventHandler($event) [(ngModel)]="creditTermsId" [ngModelOptions]="{standalone: true}" [suggestions]="creditTermsCollection" (completeMethod)="filtercreditTerms($event)" [size]="30" [minLength]="1" [dropdown]="true">
-                            <ng-template let-creditTermsId pTemplate="item">
-                                <div class="ui-helper-clearfix">{{creditTermsId}}</div>
-                            </ng-template>
-                        </p-autoComplete>
-                        <div *ngIf="disableSave" style="color:red">Already Exist</div>
-                    </div>
-                </div>                            
-                <!-- <label for="name" class="control-label">Credit Term<strong class="clr-red">*</strong></label> -->
-            </div>
-            <div class="form-group">
-                <div class="col-sm-12">
-                    <div class="col-sm-4">
-                        <label class="control-label">Percentage <span class="text-danger">*</span></label>
-                    </div>
-                    <div class="col-sm-5">
-                        <select name="percentage" [(ngModel)]="sourceAction.percentage">
-                            <option *ngFor="let Percentlist of percentageList" [ngValue]="Percentlist.label">{{Percentlist.label}}</option>
-                        </select>
-                        <!-- <select #percentage="ngModel" id="percentage" name="percentage" [(ngModel)]="sourceAction.percentage">
-                            <ng-container *ngFor="let discountObj of alldiscountvalueInfo">
-                                <option [ngValue]="discountObj.discontId">{{discountObj.discontValue}}%</option>
-                            </ng-container>
-                        </select> -->
-                    </div>
+    <form #creditTermForm="ngForm">
+    <div class="modal-body">        
+        <div class="form-group">
+            <div class="col-sm-12">
+                <div class="col-sm-4">
+                    <label class="control-label">Credit Term <span class="text-danger">*</span></label>
+                </div>
+                <div class="col-sm-5">
+                    <p-autoComplete class="p-autoComplete-ctsm" (onSelect)="onSelectCreditTerm($event)" (onKeyUp)=eventHandler($event) [(ngModel)]="creditTermsId" name="creditTermsId" [suggestions]="creditTermsCollection" (completeMethod)="filtercreditTerms($event)" [size]="30" [minLength]="1" [dropdown]="true" required>
+                        <ng-template let-creditTermsId pTemplate="item">
+                            <div class="ui-helper-clearfix">{{creditTermsId}}</div>
+                        </ng-template>
+                    </p-autoComplete>
+                    <div *ngIf="disableSave" style="color:red">Already Exist</div>
+                </div>
+            </div>                            
+            <!-- <label for="name" class="control-label">Credit Term<strong class="clr-red">*</strong></label> -->
+        </div>
+        <div class="form-group">
+            <div class="col-sm-12">
+                <div class="col-sm-4">
+                    <label class="control-label">Percentage <span class="text-danger">*</span></label>
+                </div>
+                <div class="col-sm-5">
+                    <select name="percentage" [(ngModel)]="sourceAction.percentage" required>
+                        <option *ngFor="let Percentlist of percentageList" [ngValue]="Percentlist.label">{{Percentlist.label}}</option>
+                    </select>
+                    <!-- <select #percentage="ngModel" id="percentage" name="percentage" [(ngModel)]="sourceAction.percentage">
+                        <ng-container *ngFor="let discountObj of alldiscountvalueInfo">
+                            <option [ngValue]="discountObj.discontId">{{discountObj.discontValue}}%</option>
+                        </ng-container>
+                    </select> -->
                 </div>
             </div>
-            <div class="form-group">
-                <div class="col-sm-12">
-                    <div class="col-sm-4">
-                        <label class="control-label">Days <span class="text-danger">*</span></label>
-                    </div>
-                    <div class="col-sm-5">
-                        <input type="text" class="form-control" pInputText pKeyFilter="num" name="days" [(ngModel)]="sourceAction.days" maxlength="3" required>
-                    </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-12">
+                <div class="col-sm-4">
+                    <label class="control-label">Days <span class="text-danger">*</span></label>
+                </div>
+                <div class="col-sm-5">
+                    <input type="text" class="form-control" pInputText pKeyFilter="num" name="days" [(ngModel)]="sourceAction.days" maxlength="3" required>
                 </div>
             </div>
-            <div class="form-group">
-                <div class="col-sm-12">
-                    <div class="col-sm-4">
-                        <label class="control-label">Net Days <span class="text-danger">*</span></label>
-                    </div>
-                    <div class="col-sm-5">
-                        <input type="text" class="form-control" pInputText pKeyFilter="num" name="netDays" [(ngModel)]="sourceAction.netDays" maxlength="3" required>
-                    </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-12">
+                <div class="col-sm-4">
+                    <label class="control-label">Net Days <span class="text-danger">*</span></label>
+                </div>
+                <div class="col-sm-5">
+                    <input type="text" class="form-control" pInputText pKeyFilter="num" name="netDays" [(ngModel)]="sourceAction.netDays" maxlength="3" required>
                 </div>
             </div>
-            <div class="form-group">
-                <div class="col-sm-12">
-                    <div class="col-sm-4">
-                        <label class="control-label">Memo</label>
-                    </div>
-                    <div class="col-sm-5">
-                        <textarea class="form-control" name="memo" [(ngModel)]="sourceAction.memo"></textarea>
-                    </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-12">
+                <div class="col-sm-4">
+                    <label class="control-label">Memo</label>
+                </div>
+                <div class="col-sm-5">
+                    <textarea class="form-control" name="memo" [(ngModel)]="sourceAction.memo"></textarea>
                 </div>
             </div>
-            <div class="form-group">
-                <div class="col-sm-6">
-                    <span class="checkbox-cstm">
-                        <label class="form-check-label" for="isActive">
-                            <input type="checkbox" name="isActive" class="form-check-input" checked id="isActive" [(ngModel)]="sourceAction.isActive">
-                            <span class="cr"><i class="cr-icon pi pi-check"></i></span> Active
-                        </label>
-                    </span>
-                </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-6">
+                <span class="checkbox-cstm">
+                    <label class="form-check-label" for="isActive">
+                        <input type="checkbox" name="isActive" class="form-check-input" checked id="isActive" [(ngModel)]="sourceAction.isActive">
+                        <span class="cr"><i class="cr-icon pi pi-check"></i></span> Active
+                    </label>
+                </span>
             </div>
-            <!-- <div class="form-group input-icon1">
-                <label for="percentage" class="control-label">Percentage</label>
-                <div class="col-sm-7">
-                    <div class="control-data">
-                        <select #percentage="ngModel" id="percentage" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.percentage">
-                            <ng-container *ngFor="let discountObj of alldiscountvalueInfo">
-                                <option [ngValue]="discountObj.discontId">{{discountObj.discontValue}}%</option>
-                            </ng-container>
-                        </select>
+        </div>
+        <!-- <div class="form-group input-icon1">
+            <label for="percentage" class="control-label">Percentage</label>
+            <div class="col-sm-7">
+                <div class="control-data">
+                    <select #percentage="ngModel" id="percentage" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceAction.percentage">
+                        <ng-container *ngFor="let discountObj of alldiscountvalueInfo">
+                            <option [ngValue]="discountObj.discontId">{{discountObj.discontValue}}%</option>
+                        </ng-container>
+                    </select>
 
-                    </div>                    
-                </div>
-                <div class="clear"></div>
-            </div> -->
-
-            <div class="modal-footer">
-
-                <button class="btn btn-success" [disabled]="disableSave">Save</button>
-                <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
+                </div>                    
             </div>
-        </form>
+            <div class="clear"></div>
+        </div> -->              
     </div>
-
+    <div class="modal-footer">
+        <button class="btn btn-primary" [disabled]="!creditTermForm.valid || disableSave" (click)="saveCreditTermsdata()">Save</button>
+        <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
+    </div>  
+</form>
 </ng-template>
 
 
@@ -373,7 +370,7 @@
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
-    <form #userForm="ngForm" (ngSubmit)="editItemCloseModel()">
+    <form #discountForm="ngForm"> <!--(ngSubmit)="editItemCloseModel()"-->
     <div class="modal-body">      
         <div class="form-group">
             <div class="col-sm-12" style="margin-bottom: 15px;">
@@ -381,7 +378,7 @@
                     <label class="control-label">Discount Percent <span class="text-danger">*</span></label>
                 </div>
                 <div class="col-sm-5">
-                    <p-autoComplete class="p-autoComplete-ctsm" [(ngModel)]="discontValue" [ngModelOptions]="{standalone: true}" (onKeyUp)=discountvalueHandler($event.target.value) (onSelect)="discountvaluedesc($event)" [suggestions]="discountcollection" (completeMethod)="filterDiscountvalue($event)" [size]="30" [minLength]="1" [dropdown]="true">
+                    <p-autoComplete class="p-autoComplete-ctsm" [(ngModel)]="discontValue" name="discontValuePercent" (onKeyUp)=discountvalueHandler($event.target.value) (onSelect)="discountvaluedesc($event)" [suggestions]="discountcollection" (completeMethod)="filterDiscountvalue($event)" [size]="30" [minLength]="1" [dropdown]="true" required>
                         <ng-template let-discountValue pTemplate="item">
                             <div class="ui-helper-clearfix">{{discountValue}}</div>
                         </ng-template>
@@ -399,16 +396,14 @@
                 </ng-template>
             </p-autoComplete>
         </div>
-        <div *ngIf="disableSaveConsume" style="color:red">Already Exist</div>                -->
+        <div *ngIf="disableSaveConsume" style="color:red">Already Exist</div> -->
     </div>
     <div class="modal-footer">
-        <button class="btn btn-success" [disabled]="disableSaveConsume">Submit</button>
+        <button class="btn btn-primary" [disabled]="!discountForm.valid || disableSaveConsume" (click)="saveDiscountPercent()">Save</button>
         <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
     </div> 
 </form>
 </ng-template>
-
-
 
 <ng-template #contentCurrency let-c="close" let-d="dismiss" style="width:auto">
     <div class="modal-header">
@@ -418,7 +413,7 @@
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
-    <form #userForm="ngForm" (ngSubmit)="saveCurrecy()">
+    <form #currencyForm="ngForm"> <!--(ngSubmit)="saveCurrency()"-->
     <div class="modal-body">        
             <div class="form-group">
                 <div class="col-sm-12">
@@ -426,8 +421,7 @@
                         <label class="control-label">Currency Code <span class="text-danger">*</span></label>
                     </div>
                     <div class="col-sm-5">
-                        <p-autoComplete class="p-autoComplete-ctsm" [(ngModel)]="currencyName" [ngModelOptions]="{standalone: true}" (onKeyUp)=currencyHandler($event) (onSelect)="CurrencyInfo($event)" [suggestions]="currencyCollection" (completeMethod)="filterCurrency($event)" [size]="30"
-                        [minLength]="1" [dropdown]="true">
+                        <p-autoComplete class="p-autoComplete-ctsm" [(ngModel)]="currencyName" name="addcurrencyName" (onKeyUp)=currencyHandler($event) (onSelect)="CurrencyInfo($event)" [suggestions]="currencyCollection" (completeMethod)="filterCurrency($event)" [size]="30" [minLength]="1" [dropdown]="true" required>
                             <ng-template let-currencyName pTemplate="item">
                                 <div class="ui-helper-clearfix">{{currencyName}}</div>
                             </ng-template>
@@ -442,7 +436,12 @@
                         <label class="control-label">Currency Symbol <span class="text-danger">*</span></label>
                     </div>
                     <div class="col-sm-5">
-                        <input type="text" name="symbol" class="form-control" [(ngModel)]="sourceAction.symbol" minlength="2" required>
+                        <input type="text" name="symbol" class="form-control" [(ngModel)]="sourceAction.symbol" #currSymbol="ngModel" minlength="2" required>
+                        <div *ngIf="currSymbol.invalid && currSymbol.touched" class="alert alert-danger alert-danger-cstm">
+                            <div>
+                                <small> Please enter min 2 characters </small>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -452,7 +451,12 @@
                         <label class="control-label">Currency Name <span class="text-danger">*</span></label>
                     </div>
                     <div class="col-sm-5">
-                        <input type="text" name="displayName" class="form-control" [(ngModel)]="sourceAction.displayName" minlength="2" required>                        
+                        <input type="text" name="displayName" class="form-control" [(ngModel)]="sourceAction.displayName" minlength="2" #currName="ngModel" required>     
+                        <div *ngIf="currName.invalid && currName.touched" class="alert alert-danger alert-danger-cstm">
+                            <div>
+                                <small> Please enter min 2 characters </small>
+                            </div>
+                        </div>                   
                     </div>
                 </div>
             </div>
@@ -537,7 +541,7 @@
             </div> -->                   
     </div>
     <div class="modal-footer">
-        <button class="btn btn-success" [disabled]="disableSaveCurrency">Save</button>
+        <button class="btn btn-primary" [disabled]="!currencyForm.valid || disableSaveCurrency" (click)="saveCurrency()">Save</button>
         <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
     </div> 
     </form>

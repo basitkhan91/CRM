@@ -11505,6 +11505,8 @@ body.modal-open {
     padding: 4px 0 5px 5px;
     border-radius: 0;
     font-weight: bold;
+    font-size: 10px !important;
+    padding-bottom: 4px !important;
 }
 
 .ui-table .ui-widget-header .ui-multiselect .ui-multiselect-trigger, .ui-table .ui-paginator-bottom p-dropdown .ui-dropdown-trigger {
