@@ -37,7 +37,7 @@ import { VendorStepsPrimeNgComponent } from '../vendor-steps-prime-ng/vendor-ste
 })
 /** anys component*/
 export class VendorFinancialInformationComponent implements OnInit, AfterViewInit {
-    @ViewChild(VendorStepsPrimeNgComponent) stepper: VendorStepsPrimeNgComponent;
+
     modelValue: boolean;
     display: boolean;
     activeIndex: any = 4;
@@ -80,8 +80,8 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
     listOfErrors: any[];
 
     ngOnInit(): void {
-        this.workFlowtService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-financial-information';
-        this.workFlowtService.bredcrumbObj.next(this.workFlowtService.currentUrl);
+        this.vendorService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-financial-information';
+        this.vendorService.bredcrumbObj.next(this.vendorService.currentUrl);
         this.loadCreditTermsData();
         this.sourceVendor.v1099RentDefault = true;
         this.sourceVendor.is1099Required = true;
@@ -130,19 +130,19 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
     private isDeleteMode: boolean = false;
     percentageList: any = [];
 
-    constructor(public CreditTermsService: CreditTermsService, public currencyService: CurrencyService, private router: ActivatedRoute, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private commonservice: CommonService) {
-        if (this.workFlowtService.listCollection !== undefined) {
-            this.workFlowtService.isEditMode = true;
+    constructor(private cdRef: ChangeDetectorRef, public CreditTermsService: CreditTermsService, public currencyService: CurrencyService, private router: ActivatedRoute, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public vendorService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private commonservice: CommonService) {
+        if (this.vendorService.listCollection !== undefined) {
+            this.vendorService.isEditMode = true;
         }
-        if (this.workFlowtService.contactCollection) {
-            this.local = this.workFlowtService.contactCollection;
+        if (this.vendorService.contactCollection) {
+            this.local = this.vendorService.contactCollection;
             this.sourceVendor = this.local;
         }
         this.dataSource = new MatTableDataSource();
-        if (this.workFlowtService.listCollection && this.workFlowtService.isEditMode == true) {
+        if (this.vendorService.listCollection && this.vendorService.isEditMode == true) {
             this.viewName = "Edit";
-            this.local = this.workFlowtService.listCollection;
-            this.sourceVendor = this.workFlowtService.listCollection;
+            this.local = this.vendorService.listCollection;
+            this.sourceVendor = this.vendorService.listCollection;
             this.getVendorProcess1099FromTransaction(this.sourceVendor.vendorId);
         }
         else {
@@ -162,7 +162,7 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
     private getVendorsList() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-        this.workFlowtService.getVendordata(this.local.vendorId).subscribe(
+        this.vendorService.getVendordata(this.local.vendorId).subscribe(
             results => this.onVendorsLoadSuccssfull(results[0]),
             error => this.onDataLoadFailed(error)
         );
@@ -184,7 +184,7 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
 
-        this.workFlowtService.getWorkFlows().subscribe(
+        this.vendorService.getWorkFlows().subscribe(
             results => this.onDataLoadSuccessful(results[0]),
             error => this.onDataLoadFailed(error)
         );
@@ -215,7 +215,7 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
 
-        this.workFlowtService.getWorkFlows().subscribe(
+        this.vendorService.getWorkFlows().subscribe(
             results => this.ongeneralDataLoadSuccessful(results[0]),
             error => this.onDataLoadFailed(error)
         );
@@ -225,7 +225,7 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
         this.loadingIndicator = false;
         this.dataSource.data = allWorkFlows;
         this.allgeneralInfo = allWorkFlows;
-        if (this.workFlowtService.isCOntact == true) {
+        if (this.vendorService.isCOntact == true) {
             this.vendorname = this.allgeneralInfo[0].vendorName;
             this.vendorCode = this.allgeneralInfo[0].vendorCode;
         }
@@ -236,7 +236,7 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
     private loadFinalObject() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-        this.workFlowtService.getFinalObj().subscribe(
+        this.vendorService.getFinalObj().subscribe(
             results => this.onFinalObjUrl(results[0]),
             error => this.onDataLoadFailed(error)
         );
@@ -253,7 +253,7 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
         let companyId = 1;
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-        this.workFlowtService.getVendorProcess1099Data(companyId).subscribe(res => {
+        this.vendorService.getVendorProcess1099Data(companyId).subscribe(res => {
             console.log(res[0], "res[0]")
             this.vendorProcess1099Data = res[0].map(x => {
                 return {
@@ -274,7 +274,7 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
 
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-        this.workFlowtService.getVendorProcess1099DataFromTransaction(vendorId).subscribe(res => {
+        this.vendorService.getVendorProcess1099DataFromTransaction(vendorId).subscribe(res => {
             if (res[0].length != 0) {
                 this.vendorProcess1099Data = res[0].map(x => {
                     return {
@@ -520,7 +520,7 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
 
 
     editItemAndCloseModel(userForm, isGoNxt?: boolean) {
-        console.log(userForm);        
+        console.log(userForm);
         this.isSaving = true;
         let errors;
         this.listOfErrors = [];
@@ -618,24 +618,24 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
                     }
                 }
                 this.sourceVendor.master1099s = this.vendorProcess1099Data;
-                this.workFlowtService.updatefinanceinfo(this.sourceVendor, this.sourceVendor.vendorId).subscribe(data => {
+                this.vendorService.updatefinanceinfo(this.sourceVendor, this.sourceVendor.vendorId).subscribe(data => {
                     this.localCollection = data;
-                    this.workFlowtService.financeCollection = this.local;
+                    this.vendorService.financeCollection = this.local;
                     // this.activeIndex = 4;
                     this.getVendorProcess1099FromTransaction(this.sourceVendor.vendorId);
-                    // this.workFlowtService.indexObj.next(this.activeIndex);
+                    // this.vendorService.indexObj.next(this.activeIndex);
                     this.savesuccessCompleted(this.sourceVendor, isGoNxt);
 
                 })
             }
             else {
                 this.sourceVendor.updatedBy = this.userName;
-                this.workFlowtService.updatefinanceinfo(this.sourceVendor, this.local.vendorId).subscribe(data => {
+                this.vendorService.updatefinanceinfo(this.sourceVendor, this.local.vendorId).subscribe(data => {
                     this.localCollection = data;
                     this.saveCompleted(this.sourceVendor);
-                    this.workFlowtService.financeCollection = this.local;
+                    this.vendorService.financeCollection = this.local;
                     // this.activeIndex = 3;
-                    // this.workFlowtService.indexObj.next(this.activeIndex);
+                    // this.vendorService.indexObj.next(this.activeIndex);
                     this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-payment-information');
                 })
             }
@@ -648,19 +648,19 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
         this.isSaving = true;
     }
     NextClick() {
-        this.workFlowtService.contactCollection = this.local;
+        this.vendorService.contactCollection = this.local;
         this.activeIndex = 5;
-        this.stepper.changeStep(this.activeIndex);
-        // this.workFlowtService.indexObj.next(this.activeIndex);
-        // this.workFlowtService.changeStep('Payment Information');
-        this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-payment-information');
+        this.vendorService.changeofTab(this.activeIndex);
+        // this.vendorService.indexObj.next(this.activeIndex);
+        // this.vendorService.changeStep('Payment Information');
+        // this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-payment-information');
     }
     previousClick() {
         this.activeIndex = 3;
-        this.stepper.changeStep(this.activeIndex);
-        // this.workFlowtService.indexObj.next(this.activeIndex);
-        // this.workFlowtService.changeStep('Contacts');
-        this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-contacts');
+        this.vendorService.changeofTab(this.activeIndex);
+        // this.vendorService.indexObj.next(this.activeIndex);
+        // this.vendorService.changeStep('Contacts');
+        // this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-contacts');
     }
     dismissModel() {
         this.isDeleteMode = false;
@@ -931,7 +931,7 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
     filterDiscountvalue(event) {
         this.discountcollection = [];
         for (let i = 0; i < this.alldiscountvalueInfo.length; i++) {
-            let discontValue = this.alldiscountvalueInfo[i].discontValue; 
+            let discontValue = this.alldiscountvalueInfo[i].discontValue;
             this.discountcollection.push(discontValue);
             // if (discontValue.toString().indexOf(event.query)) {
             //     this.namecolle.push([{
@@ -945,7 +945,7 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
     private loadDiscountData() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-        this.workFlowtService.getDiscountList().subscribe(
+        this.vendorService.getDiscountList().subscribe(
             results => this.onDataLoadClassifiSuccessful(results[0]),
             error => this.onDataLoadFailed(error)
         );
@@ -975,7 +975,7 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
             this.sourceAction.createdBy = this.userName;
             this.sourceAction.updatedBy = this.userName;
             this.sourceAction.discontValue = this.discontValue;
-            this.workFlowtService.newAddDiscount(this.sourceAction).
+            this.vendorService.newAddDiscount(this.sourceAction).
                 subscribe(data => {
                     this.loadDiscountData()
                 })
@@ -985,7 +985,7 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
             this.sourceAction.updatedBy = this.userName;
             this.sourceAction.discontValue = this.discontValue;
             this.sourceAction.masterCompanyId = 1;
-            this.workFlowtService.updatediscount(this.sourceAction).subscribe(
+            this.vendorService.updatediscount(this.sourceAction).subscribe(
                 response => this.saveCompleted(this.sourceAction),
                 error => this.saveFailedHelper(error));
 
@@ -1031,7 +1031,7 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
     }
     discountvaluedesc(event) {
         console.log(event);
-        
+
         const value = getObjectById('discountId', event, this.alldiscountvalueInfo);
         const exists = selectedValueValidate('discontValue', value, event);
 

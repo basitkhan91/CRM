@@ -32,7 +32,6 @@ import { VendorStepsPrimeNgComponent } from '../vendor-steps-prime-ng/vendor-ste
 })
 /** VendorMemo component*/
 export class VendorMemoComponent implements OnInit {
-	@ViewChild(VendorStepsPrimeNgComponent) stepper: VendorStepsPrimeNgComponent;
 	loadingIndicator: boolean;
 	allVendorPOList: any[];
 	allVendorROList: any[];
@@ -60,25 +59,25 @@ export class VendorMemoComponent implements OnInit {
 
 
 	/** VendorMemo ctor */
-	constructor(public workFlowtService: VendorService, private router: Router, private alertService: AlertService, private authService: AuthService, ) {
-		if (this.workFlowtService.listCollection !== undefined) {
-			this.workFlowtService.isEditMode = true;
+	constructor(public vendorService: VendorService, private router: Router, private alertService: AlertService, private authService: AuthService, ) {
+		if (this.vendorService.listCollection !== undefined) {
+			this.vendorService.isEditMode = true;
 		}
-		if (this.workFlowtService.listCollection && this.workFlowtService.isEditMode == true) {
+		if (this.vendorService.listCollection && this.vendorService.isEditMode == true) {
 
-			this.local = this.workFlowtService.listCollection;
+			this.local = this.vendorService.listCollection;
 
 		}
 
 	}
 
 	ngOnInit(): void {
-		this.workFlowtService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-memo';
-		this.workFlowtService.bredcrumbObj.next(this.workFlowtService.currentUrl);
-		this.workFlowtService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-memo';
-		this.workFlowtService.bredcrumbObj.next(this.workFlowtService.currentUrl);
-		this.workFlowtService.ShowPtab = true;
-		this.workFlowtService.alertObj.next(this.workFlowtService.ShowPtab);
+		this.vendorService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-memo';
+		this.vendorService.bredcrumbObj.next(this.vendorService.currentUrl);
+		this.vendorService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-memo';
+		this.vendorService.bredcrumbObj.next(this.vendorService.currentUrl);
+		this.vendorService.ShowPtab = true;
+		this.vendorService.alertObj.next(this.vendorService.ShowPtab);
 		if (this.local) {
 			this.VendorPOMemolist();
 			this.VendorROMemolist();
@@ -91,13 +90,13 @@ export class VendorMemoComponent implements OnInit {
 	}
 
 	createnew() {
-		this.workFlowtService.changeStep('General Information');
-		this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-general-information');
+		// this.vendorService.changeStep('General Information');
+		// this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-general-information');
 	}
 
 
 	async  VendorPOMemolist() {
-		await this.workFlowtService.getVendorPOMemolist(this.local.vendorId).subscribe(
+		await this.vendorService.getVendorPOMemolist(this.local.vendorId).subscribe(
 			res => {
 				this.allVendorPOList = res;
 				this.allVendorPOROList = res;
@@ -107,7 +106,7 @@ export class VendorMemoComponent implements OnInit {
 	}
 
 	async  VendorROMemolist() {
-		await this.workFlowtService.getVendorROMemolist(this.local.vendorId).subscribe(
+		await this.vendorService.getVendorROMemolist(this.local.vendorId).subscribe(
 			res => {
 				this.allVendorROList = res;
 
@@ -124,7 +123,7 @@ export class VendorMemoComponent implements OnInit {
 		this.isSaving = true;
 		console.log(row);
 		var name = this.userName;
-		this.workFlowtService.updateVendorPOROmemolist(row.orderNumberId, row.module, row.notes, name).subscribe(
+		this.vendorService.updateVendorPOROmemolist(row.orderNumberId, row.module, row.notes, name).subscribe(
 			res => {
 				this.VendorPOMemolist();
 				this.VendorROMemolist();
@@ -139,19 +138,19 @@ export class VendorMemoComponent implements OnInit {
 	}
 
 	NextClick() {
-		this.workFlowtService.contactCollection = this.local;
+		this.vendorService.contactCollection = this.local;
 		this.activeIndex = 10;
-		this.stepper.changeStep(this.activeIndex);
-		// this.workFlowtService.indexObj.next(this.activeIndex);
-		// this.workFlowtService.changeStep('Documents');
-		this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-documents');
+		this.vendorService.changeofTab(this.activeIndex);
+		// this.vendorService.indexObj.next(this.activeIndex);
+		// this.vendorService.changeStep('Documents');
+		// this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-documents');
 	}
 
 	backClick() {
 		this.activeIndex = 9;
-		this.stepper.changeStep(this.activeIndex);
-		// this.workFlowtService.indexObj.next(this.activeIndex);
-		// this.workFlowtService.changeStep('Warnings');
-		this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-warnings');
+		this.vendorService.changeofTab(this.activeIndex);
+		// this.vendorService.indexObj.next(this.activeIndex);
+		// this.vendorService.changeStep('Warnings');
+		// this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-warnings');
 	}
 }   
