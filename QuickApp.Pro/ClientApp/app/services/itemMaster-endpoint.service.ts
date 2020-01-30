@@ -80,6 +80,7 @@ export class ItemMasterEndpoint extends EndpointFactory {
     private readonly _getPartsDropDown: string = '/api/itemmaster/GetPartDetailsDropDown';
     private readonly _getpartdetailsWithidUrl: string = "/api/ItemMaster/GetpartdetailsWithid";
     private readonly _searchItemMaster: string = "/api/ItemMaster/search";
+    private readonly _searchPartNumberAdvanced: string = "/api/ItemMaster/searchpartnumberadvanced";
     private readonly _searchPartNumberUrl: string = "/api/ItemMaster/searchpartnumber";
 
     //Vendor Caps Air Craft
@@ -130,6 +131,7 @@ export class ItemMasterEndpoint extends EndpointFactory {
     get getpartdetailsWithidUrl() { return this.configurations.baseUrl + this._getpartdetailsWithidUrl };
     get ExchangeLoanUrl() { return this.configurations.baseUrl + this._getExchangeLoan };
     get getSearchUrl() { return this.configurations.baseUrl + this._searchItemMaster };
+    get getSearchPartNumberAdvancedUrl() { return this.configurations.baseUrl + this._searchPartNumberAdvanced };
     get searchPartNumberUrl() { return this.configurations.baseUrl + this._searchPartNumberUrl; }
     get getalterqqupartsUrl() { return this.configurations.baseUrl + this._getalterqquparts; }
     get saveNtaePartsUrl() { return this.configurations.baseUrl + this._saveNtaeParts; }
@@ -1027,6 +1029,13 @@ export class ItemMasterEndpoint extends EndpointFactory {
         return this.http.post<T>(this.getSearchUrl, JSON.stringify(searchParameters), this.getRequestHeaders())
             .catch(err => {
                 return this.handleError(err, () => this.searchItemMaster(searchParameters));
+            })
+    }
+
+    searchPartNumberAdvanced<T>(searchParameters: any): Observable<T> {
+        return this.http.post<T>(this.getSearchPartNumberAdvancedUrl, JSON.stringify(searchParameters), this.getRequestHeaders())
+            .catch(err => {
+                return this.handleError(err, () => this.searchPartNumberAdvanced(searchParameters));
             })
     }
 

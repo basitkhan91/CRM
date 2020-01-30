@@ -25,6 +25,7 @@ namespace DAL.Models
         public long? MarkupPercentageId { get; set; }
         public decimal? FreightCostPlus { get; set; }
         public string MarkupFixedPrice { get; set; }
+        public long? TaskId { get; set; }
         public int MasterCompanyId { get; set; }
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }

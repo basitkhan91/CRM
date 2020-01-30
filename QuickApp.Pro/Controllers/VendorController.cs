@@ -288,7 +288,7 @@ namespace QuickApp.Pro.Controllers
                                     vp.CreatedBy,
                                     vp.CreatedDate,
                                     vp.DefaultPaymentMethod,
-                                    vp.IsActive,
+                                    //vp.IsActive,
                                     vp.MasterCompanyId,
                                     vp.UpdatedBy,
                                     vp.UpdatedDate,
@@ -2316,7 +2316,7 @@ namespace QuickApp.Pro.Controllers
             {
                 var VendorpaymenttObj = _unitOfWork.vendorCheckPaymentRepository.GetSingleOrDefault(a => a.CheckPaymentId == id);
                 vendorPaymentViewModel.MasterCompanyId = 1;
-                VendorpaymenttObj.IsActive = vendorPaymentViewModel.IsActive;
+                //VendorpaymenttObj.IsActive = vendorPaymentViewModel.IsActive;
                 VendorpaymenttObj.UpdatedDate = DateTime.Now;
                 VendorpaymenttObj.UpdatedBy = vendorPaymentViewModel.UpdatedBy;
                 VendorpaymenttObj.CheckPaymentId = vendorPaymentViewModel.CheckPaymentId;
@@ -2907,10 +2907,10 @@ namespace QuickApp.Pro.Controllers
                 if (vendorDomesticWirePaymentViewModel == null)
                     return BadRequest($"{nameof(vendorDomesticWirePaymentViewModel)} cannot be null");
                 VendorDomesticWirePayment vendorCheckPaymentobj = new VendorDomesticWirePayment();
-                vendorCheckPaymentobj.IsActive = true;
+                //vendorCheckPaymentobj.IsActive = true;
                 vendorCheckPaymentobj.VendorId = vendorDomesticWirePaymentViewModel.VendorId;
                 vendorCheckPaymentobj.MasterCompanyId = 1;
-                vendorCheckPaymentobj.IsActive = vendorDomesticWirePaymentViewModel.IsActive;
+                //vendorCheckPaymentobj.IsActive = vendorDomesticWirePaymentViewModel.IsActive;
                 vendorCheckPaymentobj.DomesticWirePaymentId = vendorDomesticWirePaymentViewModel.DomesticWirePaymentId;
                 vendorCheckPaymentobj.CreatedDate = DateTime.Now;
                 vendorCheckPaymentobj.UpdatedDate = DateTime.Now;
@@ -2975,7 +2975,7 @@ namespace QuickApp.Pro.Controllers
                 if (vendorPaymentViewModel == null)
                     return BadRequest($"{nameof(vendorPaymentViewModel)} cannot be null");
                 VendorPayment defaultPaymentObj = new VendorPayment();
-                defaultPaymentObj.IsActive = true;
+                //defaultPaymentObj.IsActive = true;
                 defaultPaymentObj.MasterCompanyId = 1;
                 //defaultPaymentObj.IsActive = vendorPaymentViewModel.IsActive;
                 defaultPaymentObj.DefaultPaymentMethod = vendorPaymentViewModel.DefaultPaymentMethod;
@@ -2983,6 +2983,7 @@ namespace QuickApp.Pro.Controllers
                 defaultPaymentObj.CreatedDate = DateTime.Now;
                 defaultPaymentObj.UpdatedDate = DateTime.Now;
                 defaultPaymentObj.CreatedBy = vendorPaymentViewModel.CreatedBy;
+                defaultPaymentObj.UpdatedBy = vendorPaymentViewModel.UpdatedBy;
                 //_unitOfWork.SaveChanges();
                 _context.VendorPayment.Add(defaultPaymentObj);
                 _unitOfWork.SaveChanges();
@@ -3003,7 +3004,7 @@ namespace QuickApp.Pro.Controllers
                 //_unitOfWork.vendorPaymentRepository.GetSingleOrDefault(c => c.VendorPaymentId == id);
                 //defaultObj.IsActive = true;
                 defaultObj.MasterCompanyId = 1;
-                defaultObj.IsActive = vendorPaymentViewModel.IsActive;
+                //defaultObj.IsActive = vendorPaymentViewModel.IsActive;
                 defaultObj.DefaultPaymentMethod = vendorPaymentViewModel.DefaultPaymentMethod;
                 defaultObj.VendorId = vendorPaymentViewModel.VendorId;
                 defaultObj.CreatedDate = DateTime.Now;
@@ -3028,10 +3029,10 @@ namespace QuickApp.Pro.Controllers
                 if (vendorInternationlWirePaymentViewModel == null)
                     return BadRequest($"{nameof(vendorInternationlWirePaymentViewModel)} cannot be null");
                 VendorInternationlWirePayment vendorInternationalPaymentobj = new VendorInternationlWirePayment();
-                vendorInternationalPaymentobj.IsActive = true;
+                //vendorInternationalPaymentobj.IsActive = true;
                 vendorInternationalPaymentobj.VendorId = vendorInternationlWirePaymentViewModel.VendorId;
                 vendorInternationalPaymentobj.MasterCompanyId = 1;
-                vendorInternationalPaymentobj.IsActive = vendorInternationlWirePaymentViewModel.IsActive;
+                //vendorInternationalPaymentobj.IsActive = vendorInternationlWirePaymentViewModel.IsActive;
                 vendorInternationalPaymentobj.InternationalWirePaymentId = vendorInternationlWirePaymentViewModel.InternationalWirePaymentId;
                 //vendorInternationalPaymentobj.VendorInternationalWirePaymentId = vendorInternationlWirePaymentViewModel.VendorInternationalWirePaymentId;
                 vendorInternationalPaymentobj.CreatedDate = DateTime.Now;
@@ -3453,7 +3454,7 @@ namespace QuickApp.Pro.Controllers
                 vendorObject.IsAllow = vendorWarningViewModel.IsAllow;
                 vendorObject.IsRestrict = vendorWarningViewModel.IsRestrict;
                 vendorObject.IsWarning = vendorWarningViewModel.IsWarning;
-                vendorObject.IsActive = vendorWarningViewModel.IsActive;
+                //vendorObject.IsActive = vendorWarningViewModel.IsActive;
                 vendorObject.CreatedDate = DateTime.Now;
                 vendorObject.UpdatedDate = DateTime.Now;
                 vendorObject.CreatedBy = vendorWarningViewModel.CreatedBy;
@@ -3484,7 +3485,7 @@ namespace QuickApp.Pro.Controllers
                 vendorObject.WarningMessage = vendorWarningViewModel.WarningMessage;
                 vendorObject.RestrictMessage = vendorWarningViewModel.RestrictMessage;
                 vendorObject.MasterCompanyId = vendorWarningViewModel.MasterCompanyId;
-                vendorObject.IsActive = vendorWarningViewModel.IsActive;
+               // vendorObject.IsActive = vendorWarningViewModel.IsActive;
                 vendorObject.CreatedDate = DateTime.Now;
                 vendorObject.UpdatedDate = DateTime.Now;
                 vendorObject.CreatedBy = vendorWarningViewModel.CreatedBy;

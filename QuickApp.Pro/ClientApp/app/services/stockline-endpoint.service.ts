@@ -38,6 +38,7 @@ export class StocklineEndpoint extends EndpointFactory {
 	private readonly _stockLineROUnitCost: string = "/api/StockLine/stockLineROUnitCostGet";
 	private readonly _stockLineAdjustmentDelete: string = "/api/StockLine/stockLineAdjustmentReasonDelete";
 	private readonly _searchStockLine: string = "/api/StockLine/search";
+	private readonly _searchPartNumberAdvanced: string = "/api/StockLine/searchpartnumberadvanced";
 	private readonly _stocklineGlobalSearch: string = '/api/StockLine/ListGlobalSearch'
 	private readonly _tagTypeUrl: string = '/api/StockLine/tagType'
 
@@ -51,6 +52,7 @@ export class StocklineEndpoint extends EndpointFactory {
 	get companyUrl() { return this.configurations.baseUrl + this._actionsCompanyUrl; }
 	get legalEntityUrl() { return this.configurations.baseUrl + this._actionsLegalEntityUrl; }
 	get getSearchUrl() { return this.configurations.baseUrl + this._searchStockLine };
+	get getSearchPartNumberAdvancedUrl() { return this.configurations.baseUrl + this._searchPartNumberAdvanced };
 
 	constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
 		super(http, configurations, injector);
@@ -401,6 +403,12 @@ export class StocklineEndpoint extends EndpointFactory {
 				return this.handleError(err, () => this.searchItemMaster(searchParameters));
 			})
 	}
+	searchPartNumberAdvanced<T>(searchParameters: any): Observable<T> {
+        return this.http.post<T>(this.getSearchPartNumberAdvancedUrl, JSON.stringify(searchParameters), this.getRequestHeaders())
+            .catch(err => {
+                return this.handleError(err, () => this.searchPartNumberAdvanced(searchParameters));
+            })
+    }
 
 	getStockLineDetailsByStockLineId(stockLineId) {
         return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/stocklinedetails?stockLineId=${stockLineId}`, this.getRequestHeaders())
