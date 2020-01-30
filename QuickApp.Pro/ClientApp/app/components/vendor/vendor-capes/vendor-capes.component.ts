@@ -60,8 +60,8 @@ export class VendorCapesComponent implements OnInit {
         if (this.local) {
             this.vendorId = this.local.vendorId;
         }
-        if (this.vendorService.generalCollection) {
-            this.vendorId = this.vendorService.generalCollection.vendorId;
+        if (this.vendorService.listCollection) {
+            this.vendorId = this.vendorService.listCollection.vendorId;
         }
         console.log(this.vendorService.listCollection);
 
@@ -79,8 +79,8 @@ export class VendorCapesComponent implements OnInit {
         // }
         // this.loadCompleteddata();
         // this.loadEmptyObject();
-        this.router.queryParams.subscribe((params: Params) => {
-        });
+        // this.router.queryParams.subscribe((params: Params) => {
+        // });
     }
 
     getVendorCapabilityId(id) {

@@ -28,6 +28,7 @@ import * as $ from 'jquery';
 import { CustomerService } from "./services/customer.service";
 import { Globals } from './globals';
 import { MenuItem } from "primeng/components/common/menuitem"; //Bread crumb
+import { VendorService } from "./services/vendor.service";
 
 @Component({
     selector: "quickapp-pro-app",
@@ -93,7 +94,9 @@ export class AppComponent implements OnInit, AfterViewInit {
         public configurations: ConfigurationService,
         public router: Router,
         public dialog: MatDialog,
+        private vendorService: VendorService,
         changeDetectorRef: ChangeDetectorRef,
+
         media: MediaMatcher, private customerService: CustomerService, private globals: Globals) {
         this.mobileQuery = media.matchMedia('(max-width: 600px)');
         this._mobileQueryListener = () => changeDetectorRef.detectChanges();
@@ -155,7 +158,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                             { label: 'Create Role', routerLink: '/rolesmodule/rolespages/app-roles-setup' }]
                     },
                     {
-                        label: 'Global Settings', routerLink:  'admin/global-settings'
+                        label: 'Global Settings', routerLink: 'admin/global-settings'
                     },
                     { label: 'Notifications', routerLink: '/#' }
 
@@ -254,7 +257,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                 items: [
 
                     { label: 'Vendor List', routerLink: '/vendorsmodule/vendorpages/app-vendors-list' },
-                    { label: 'Create Vendor', routerLink: '/vendorsmodule/vendorpages/app-vendor-general-information' },
+                    { label: 'Create Vendor', command: (event?: any) => { this.newVendorClick(); } },
                     //{ label: 'Create Vendor',  command: (event?: any) => { this.newVendorClick(); } },
                     //{ label: 'Vendor Classification', routerLink: '/singlepages/singlepages/app-vendor-classification' },
                     //{ label: 'Process 1099', routerLink: '/singlepages/singlepages/app-vendor-process1099' },
@@ -643,7 +646,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                             { label: 'Priority', routerLink: '/singlepages/singlepages/app-priority' },
                             { label: 'Process 1099', routerLink: '/singlepages/singlepages/app-vendor-process1099' },
                             { label: 'Provision', routerLink: '/singlepages/singlepages/app-provision' },
-                           // { label: 'Site', routerLink: '/singlepages/singlepages/app-site' },
+                            // { label: 'Site', routerLink: '/singlepages/singlepages/app-site' },
                             { label: 'Vendor Classification', routerLink: '/singlepages/singlepages/app-vendor-classification' },
                             { label: 'Work Scope', routerLink: '/singlepages/singlepages/app-work-scope' },
 
@@ -677,10 +680,10 @@ export class AppComponent implements OnInit, AfterViewInit {
                     {
                         label: 'Stockline', items: [
                             { label: 'Adjustment Reason', routerLink: '/singlepages/singlepages/app-adjustment-reason' },
-                           // { label: 'Ware House', routerLink: '/singlepages/singlepages/app-warehouse' },
-                           // { label: 'Location', routerLink: '/singlepages/singlepages/app-location' },
-                           // { label: 'Shelf', routerLink: '/singlepages/singlepages/app-shelf' },
-                           // { label: 'Bin', routerLink: '/singlepages/singlepages/app-bin' },
+                            // { label: 'Ware House', routerLink: '/singlepages/singlepages/app-warehouse' },
+                            // { label: 'Location', routerLink: '/singlepages/singlepages/app-location' },
+                            // { label: 'Shelf', routerLink: '/singlepages/singlepages/app-shelf' },
+                            // { label: 'Bin', routerLink: '/singlepages/singlepages/app-bin' },
                         ]
                     },
                     {
@@ -782,8 +785,12 @@ export class AppComponent implements OnInit, AfterViewInit {
 
     newVendorClick() {
 
-        const url = `${this.configurations.baseUrl}/vendorsmodule/vendorpages/app-vendor-general-information`;
-        location.assign(url);
+        // this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-general-information');
+        this.vendorService.changeofTab(1);
+        this.vendorService.isEditMode = false;
+        this.vendorService.listCollection = {};
+
+        // location.assign(url);
     }
 
     initNotificationsLoading() {
