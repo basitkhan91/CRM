@@ -156,7 +156,10 @@ export class SalesPartNumberComponent {
           this.part.idNumber = this.selectedPart.idNumber;
           this.part.method = this.selectedPart.method;
           this.part.serialNumber = this.selectedPart.serialNumber;
-          this.part.pmaStatus = "OEM";
+          //this.part.pmaStatus = "OEM";
+          if (this.selectedPart.isOEM) this.part.pmaStatus = "ODA";
+          if (this.selectedPart.isPMA) this.part.pmaStatus = "PMA";
+          if (this.selectedPart.isDER) this.part.pmaStatus = "DER";
           this.part.masterCompanyId = this.selectedPart.itemClassification.masterCompanyId;
           this.part.conditionId = this.selectedPart.conditionId;
           this.part.conditionDescription = this.selectedPart.conditionDescription;

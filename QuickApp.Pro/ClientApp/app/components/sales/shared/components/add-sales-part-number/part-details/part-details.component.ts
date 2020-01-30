@@ -47,7 +47,7 @@ export class PartDetailsComponent implements OnChanges {
 
   initColumns() {
     this.columns = [
-      { field: null, header: '', width: '100px' },
+      { field: null, header: '', width: '50px' },
       { field: 'method', header: 'Method', width: '200px' },
       { field: 'partNumber', header: 'PN', width: '200px' },
       { field: 'alternamePartNumber', header: 'Alternate For', width: '200px' },

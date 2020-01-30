@@ -24,6 +24,9 @@ export interface IPartJson {
     unitListPrice: string;
     pma: string;
     der: string;
+    isOEM:boolean;
+    isPMA:boolean;
+    isDER:boolean;
     manufacturer: any;
     customerRef: string;
     currency: string;
