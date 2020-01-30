@@ -53,6 +53,13 @@ import { CommonService } from "../services/common.service";
 import { AccountingListingCalendarComponent } from '../components/general-ledger/accounting-listing-calendar/accounting-listing-calendar.component';
 import { OpenCloseLedgerComponent } from '../components/general-ledger/open-close-ledger/open-close-ledger.component';
 
+import { EntityAddComponent } from '../components/general-ledger/entity/legal-entity-add/legal-entity-add.component';
+import { LegalEntityStepsComponent } from '../components/general-ledger/entity/legal-entity-steps/legal-entity-steps.component';
+import { EntityContactComponent } from "../components/general-ledger/entity/legal-entity-contact/legal-entity-contact.component";
+import { EntityBankingComponent } from "../components/general-ledger/entity/legal-entity-banking/legal-entity-banking.component";
+import { EntityBillingComponent } from "../components/general-ledger/entity/legal-entity-billing/legal-entity-billing.component";
+import { EntityShippingComponent } from "../components/general-ledger/entity/legal-entity-shipping/legal-entity-shipping.component";
+
 @NgModule({
     imports: [
         FlexLayoutModule,
@@ -93,7 +100,13 @@ import { OpenCloseLedgerComponent } from '../components/general-ledger/open-clos
         AccountListingComponent,
         AccountListingCreateComponent,
         AccountingListingCalendarComponent,
-        OpenCloseLedgerComponent
+        OpenCloseLedgerComponent,
+        LegalEntityStepsComponent,
+        EntityAddComponent,
+        EntityContactComponent,
+        EntityBankingComponent,
+        EntityBillingComponent,
+        EntityShippingComponent
     ],
     providers: [
         NodeSetupService,

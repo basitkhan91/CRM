@@ -180,6 +180,7 @@ export class VendorEndpointService extends EndpointFactory {
 	private readonly _vendorProcess1099IdFromTransaction: string = "/api/Vendor/getVendorProcess1099ListFromTransaction";
 	private readonly _deleteVendorBillingAddressDelete: string = "/api/Vendor/deletevendorbillingaddress";
 	private readonly _updateVendorBillingAddressStatus: string = "/api/Vendor/vendorbillingaddressstatus";
+	private readonly _vendorListsUrl: string = "/api/Vendor/vendorlist";
 	
     private readonly excelUploadBilling: string = "/api/Vendor/uploadvendorbillingaddress"
     private readonly excelUploadShipping: string = "/api/Vendor/uploadvendorshippingaddress" 
@@ -246,7 +247,7 @@ export class VendorEndpointService extends EndpointFactory {
 	get roListWithFiltersUrl() { return this.configurations.baseUrl + this._roListWithFiltersUrl; }
 	get vendorProcess1099Id() { return this.configurations.baseUrl + this._vendorProcess1099Id; }
 	get vendorProcess1099IdFromTransaction() { return this.configurations.baseUrl + this._vendorProcess1099IdFromTransaction; }
-
+	get vendorListUrl() { return this.configurations.baseUrl + this._vendorListsUrl; }
 
 
 	constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
@@ -1688,6 +1689,16 @@ export class VendorEndpointService extends EndpointFactory {
 		return this.http.get<any>(`${this.configurations.baseUrl}/api/Vendor/getvendordatabyid/${vendorId}`)
 	}
 
+	getAllVendorList(data) {
+		return this.http.post(this.vendorListUrl, JSON.stringify(data), this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.getAllVendorList(data));
+			});
+	}
+
+	vendorListGlobalSearch(filterText, pageNumber, pageSize, isActive) {
+		return this.http.get<any>(`${this.configurations.baseUrl}/api/Vendor/vendorglobalsearch?filterText=${filterText}&pageNumber=${pageNumber}&pageSize=${pageSize}&isActive=${isActive}`)
+	  }
 	VendorBillingFileUpload(file, vendorId) {
         return this.http.post(`${this.configurations.baseUrl}${this.excelUploadBilling}?vendorId=${vendorId}`, file)
 

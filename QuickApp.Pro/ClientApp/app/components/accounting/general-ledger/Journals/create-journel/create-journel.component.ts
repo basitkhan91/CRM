@@ -78,20 +78,20 @@ export class CreateJournelComponent implements OnInit
         {
             this.currentManualJournel = this.journelService.manulaJournelCollection;
 
-            if (this.currentManualJournel.journalManualEntryDate) {
-                this.currentManualJournel.journalManualEntryDate = new Date(this.currentManualJournel.journalManualEntryDate);
+            if (this.currentManualJournel.entryDate) {
+                this.currentManualJournel.entryDate = new Date(this.currentManualJournel.entryDate);
             }
 
-            if (this.currentManualJournel.journalManualEffectiveDate) {
-                this.currentManualJournel.journalManualEffectiveDate = new Date(this.currentManualJournel.journalManualEffectiveDate);
+            if (this.currentManualJournel.effectiveDate) {
+                this.currentManualJournel.effectiveDate = new Date(this.currentManualJournel.effectiveDate);
             }
 
-            if (this.currentManualJournel.journalManualCurrencyDate) {
-              this.currentManualJournel.journalManualCurrencyDate = new Date(this.currentManualJournel.journalManualCurrencyDate);
+            if (this.currentManualJournel.currencyDate) {
+              this.currentManualJournel.currencyDate = new Date(this.currentManualJournel.currencyDate);
             }
 
-            if (this.currentManualJournel.journalManualReversingDate) {
-                this.currentManualJournel.journalManualReversingDate = new Date(this.currentManualJournel.journalManualReversingDate);
+            if (this.currentManualJournel.reversingDate) {
+                this.currentManualJournel.reversingDate = new Date(this.currentManualJournel.reversingDate);
             }
 
             this.updateJournelButton = true; 
@@ -101,6 +101,7 @@ export class CreateJournelComponent implements OnInit
     {
         if (this.journelService.manulaJournelCollection == null) {
             this.currentManualJournel = new JournalManual();
+            this.currentManualJournel.isManual = true;
         }
 
         this.loadCompaniesData();//loading for Company information
@@ -121,26 +122,40 @@ export class CreateJournelComponent implements OnInit
     private formInitialise(){
         this.journalForm = this.fb.group({
             gLAccountId: new FormControl('', Validators.required),
-            journalManualBatchNumber: new FormControl({value:'Creating', disabled: true}),
-            journalManualBatchName: new FormControl(),
-            journalManualBatchDescription: new FormControl(),
-            journalManualBalanceTypeId: new FormControl('', Validators.required),
-            journalManualCategoryId: new FormControl('', Validators.required),
-            journalManualTypeId: new FormControl('', Validators.required),
-            journalManualEntryDate: new FormControl,
-            journalManualEffectiveDate: new FormControl,
-            journalManualPeriodName: new FormControl,
-            journalManualEmployeeId: new FormControl('', Validators.required),
-            journalManualLocalCurrencyId: new FormControl('', Validators.required),
-            journalManualReportingCurrencyId: new FormControl('', Validators.required),
-            journalManualCurrencyDate: new FormControl,
-            journalManualcurrencyrate: new FormControl,
-            isreversing: new FormControl,
-            reversingstatus: new FormControl,
+            batchNumber: new FormControl({value:'Creating', disabled: true}),
+            batchName: new FormControl('', Validators.required),
+            batchDescription: new FormControl('', Validators.required),
+            balanceTypeId: new FormControl('', Validators.required),
+            journalCategoryId: new FormControl('', Validators.required),
+            journalTypeId: new FormControl('', Validators.required),
+            entryDate: new FormControl,
+            effectiveDate: new FormControl,
+            journalPeriodName: new FormControl,
+            employeeId: new FormControl('', Validators.required),
+            localCurrencyId: new FormControl('', Validators.required),
+            reportingCurrencyId: new FormControl('', Validators.required),
+            currencyDate: new FormControl,
+            journalCurrencyTypeId: new FormControl('', Validators.required),
+            currencyRate: new FormControl,
+            isReversing: new FormControl,
+            reversingDate: new FormControl,
+            isRecurring: new FormControl,
+            recurringDate: new FormControl,
+            masterCompanyId: new FormControl,
+            // reversingstatus: new FormControl,
 
         });
         
     }
+
+    setReversing(): void {
+        this.journalForm.controls.isRecurring.setValue(null);
+    }
+
+    setReccurring(): void {
+        this.journalForm.controls.isReversing.setValue(null);
+    }
+
     onSubmit(type: string){
         this.formSubmitted = true;
         if(!this.journalForm.valid){
@@ -211,6 +226,11 @@ export class CreateJournelComponent implements OnInit
         console.log('Type of post : ', type);
         this.currentManualJournel.createdBy = this.userName;
         this.currentManualJournel.updatedBy = this.userName;
+        this.currentManualJournel.createdDate = this.getCurrentTimeStamp();
+        this.currentManualJournel.updatedDate = this.getCurrentTimeStamp();
+        this.currentManualJournel.isActive = true;
+        this.currentManualJournel.isDeleted = false;
+
         this.journelService.addJournel(this.currentManualJournel).subscribe(journel => {
             this.alertService.showMessage('Manual Journel added successfully.');
             //this.journelService.getAllJournel().subscribe(journel => {
@@ -218,6 +238,17 @@ export class CreateJournelComponent implements OnInit
             //});
             this.resetAddBatch();
         });
+    }
+
+    getCurrentTimeStamp(): string {
+        const now = new Date();
+        const year = "" + now.getFullYear();
+        let month = "" + (now.getMonth() + 1); if (month.length == 1) { month = "0" + month; }
+        let day = "" + now.getDate(); if (day.length == 1) { day = "0" + day; }
+        let hour = "" + now.getHours(); if (hour.length == 1) { hour = "0" + hour; }
+        let minute = "" + now.getMinutes(); if (minute.length == 1) { minute = "0" + minute; }
+        let second = "" + now.getSeconds(); if (second.length == 1) { second = "0" + second; }
+        return year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + second;
     }
 
     setManualJournlToUpdate(editManulaJournelPopup: any, id: number): void {
@@ -251,10 +282,12 @@ export class CreateJournelComponent implements OnInit
     }
     resetAddBatch(): void {
         this.currentManualJournel = new JournalManual();
+        this.currentManualJournel.isManual = true;
     }
 
     resetUpdateBatch(): void {
         this.manualJournelToUpdate = new JournalManual();
+        this.manualJournelToUpdate.isManual = true;
     }
 
     Add() {
@@ -322,7 +355,7 @@ export class CreateJournelComponent implements OnInit
         for (let i = 0; i < this.EmployeeNamecoll.length; i++) {
             if (event == this.EmployeeNamecoll[i][0].employeeName)
             {
-                this.currentManualJournel.journalManualEmployeeId = this.EmployeeNamecoll[i][0].employeeId;
+                this.currentManualJournel.employeeId = this.EmployeeNamecoll[i][0].employeeId;
             }
 
         }
@@ -451,6 +484,6 @@ export class CreateJournelComponent implements OnInit
 
     localDebitCurrencyChange(amount)
     {
-        this.currentManualJournel.journalManualReposrtingDebitCurrency = this.currentManualJournel.journalManualLocalDebitCurrency * this.currentManualJournel.journalManualcurrencyrate;
+        this.currentManualJournel.reportingDebitCurrency = this.currentManualJournel.localDebitCurrency * this.currentManualJournel.currencyRate;
     }
 }

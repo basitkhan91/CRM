@@ -1,4 +1,5 @@
 ﻿import { Component, ViewChild, OnInit, AfterViewInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { fadeInOut } from '../../../../services/animations';
 import { AuthService } from '../../../../services/auth.service';
 import { NgbModal, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
@@ -69,7 +70,7 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
 	selectedCountries: any;
 	displayWarningModal: boolean = false;
 
-	constructor(
+	constructor(private _route: Router,
         private authService: AuthService, private _fb: FormBuilder, private alertService: AlertService, public currency: CurrencyService, public workFlowtService: LegalEntityService,
         private modalService: NgbModal, private activeModal: NgbActiveModal, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private customerService: CustomerService) {
 
@@ -245,15 +246,18 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
 	}
 
     open(content) {
-        this.GeneralInformation();
-        this.sourceLegalEntity = {};
-        this.sourceLegalEntity.isBalancingEntity = true;
-		this.sourceLegalEntity.isActive = true;
-		this.entityName = "";
-		this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
-		this.modal.result.then(() => {
-			console.log('When user closes');
-		}, () => { console.log('Backdrop click') })
+        console.log('content :', content)
+  //       this.GeneralInformation();
+  //       this.sourceLegalEntity = {};
+  //       this.sourceLegalEntity.isBalancingEntity = true;
+		// this.sourceLegalEntity.isActive = true;
+		// this.entityName = "";
+		// this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
+		// this.modal.result.then(() => {
+		// 	console.log('When user closes');
+		// }, () => { console.log('Backdrop click') })
+
+		this._route.navigateByUrl(`generalledgermodule/generalledgerpage/app-legal-entity-add`);
 	}
 
 	private onDataMasterCompaniesLoadSuccessful(allComapnies: MasterCompany[]) {
@@ -392,17 +396,19 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
 		if (this.modal1) { this.modal1.close(); }
 		
 	}
-	openContentEdit(content, row) {
-		this.isEditMode = true;
-		this.GeneralInformation();
-		this.sourceLegalEntity.isBankingInfo = false;
-		this.sourceLegalEntity = row;
-		this.sourceLegalEntity.createdDate = new Date(row.createdDate);
-		this.sourceLegalEntity.modifiedDate = new Date(row.updatedDate);
-		this.modal1 = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
-		this.modal1.result.then(() => {
-			console.log('When user closes');
-		}, () => { console.log('Backdrop click') })
+    openContentEdit(content, row) {
+        console.log('edit row :', row)
+		//this.isEditMode = true;
+		//this.GeneralInformation();
+		//this.sourceLegalEntity.isBankingInfo = false;
+		//this.sourceLegalEntity = row;
+		//this.sourceLegalEntity.createdDate = new Date(row.createdDate);
+		//this.sourceLegalEntity.modifiedDate = new Date(row.updatedDate);
+		//this.modal1 = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
+		//this.modal1.result.then(() => {
+		//	console.log('When user closes');
+		//}, () => { console.log('Backdrop click') })
+        this._route.navigateByUrl(`generalledgermodule/generalledgerpage/app-legal-entity-edit/${row.legalEntityId}`);
 	}
 	openEdit(content, row) {
 		this.GeneralInformation();

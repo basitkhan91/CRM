@@ -22,6 +22,7 @@ import $ from "jquery";
 import { ConfigurationService } from '../../../services/configuration.service';
 import { VendorCapabilitiesService } from '../../../services/vendorcapabilities.service';
 import { MenuItem } from 'primeng/api';
+import { listSearchFilterObjectCreation } from '../../../generic/autocomplete';
 
 @Component({
     selector: 'app-vendors-list',
@@ -109,8 +110,8 @@ export class VendorsListComponent implements OnInit {
     pageSize: number = 10;
     pageIndex: number = 0;
     isVendorList: boolean;
-    @Input() isCreatePO: boolean;
-    @Input() isCreateRO: boolean;
+    @Input() isCreatePO: boolean = false;
+    @Input() isCreateRO: boolean = false;
     purchaseOrderList: any = [];
     poCols: any = [];
     selectedPOColumns: any[];
@@ -174,7 +175,7 @@ export class VendorsListComponent implements OnInit {
     isEnablePOList: boolean = true;
     isEnableROList: boolean = true;
     vendorId: number;
-    isActive: boolean = true;
+    isActive: boolean = false;
     defaultPaymentData: any = {};
     internationalwithVendor: any[];
     defaultwithVendor: any[];
@@ -197,6 +198,10 @@ export class VendorsListComponent implements OnInit {
     sourceViewforDocumentList: any = [];
     vendorData: any = {};
     viewPageSize: number = 5;
+    lazyLoadEventData: any;
+    lazyLoadEventDataInput: any;
+    filterText: any = '';
+    globalfilter: string;
     // purchaseOrderData: any;
     // poPageSize: number = 10;
     // poPageIndex: number = 0;
@@ -208,7 +213,7 @@ export class VendorsListComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.loadData();
+        // this.loadData();
         this.workFlowtService.currentUrl = '/vendorsmodule/vendorpages/app-vendors-list';
         this.workFlowtService.bredcrumbObj.next(this.workFlowtService.currentUrl);
         this.workFlowtService.ShowPtab = false;
@@ -219,6 +224,24 @@ export class VendorsListComponent implements OnInit {
             { label: 'Vendors' },
             { label: 'Vendors List' },
         ];
+
+        this.cols = [
+            { field: 'vendorName', header: 'Vendor Name' },
+            { field: 'vendorCode', header: 'Vendor Code' },
+            { field: 'description', header: 'Vendor Type' },
+            // { field: 'vendorRanking', header: 'Vendor Ranking' },
+            { field: 'classificationName', header: 'Vendor Classification' },
+            { field: 'vendorCapabilityName', header: 'Vendor Capabilities' },
+            { field: 'vendorEmail', header: 'Email' },
+            { field: 'city', header: 'Vendor City' },
+            { field: 'stateOrProvince', header: 'Vendor State' },
+            { field: 'vendorPhoneContact', header: 'Vendor Contact' }
+            // { field: 'createdBy', header: 'Created By' },
+            // { field: 'updatedBy', header: 'Updated By' },
+            // { field: 'updatedDate', header: 'Updated Date' },
+            // { field: 'createdDate', header: 'Created Date' }
+        ];
+        this.selectedColumns = this.cols;
 
         // this.poCols = [
         //     { field: 'purchaseOrderNumber', header: 'PO Num' },
@@ -244,46 +267,90 @@ export class VendorsListComponent implements OnInit {
 
     //Load Data for Vendor List
 
-    private loadData() {
-        this.alertService.startLoadingMessage();
-        this.loadingIndicator = true;
-        if (!this.isCreatePO && !this.isCreateRO) {
-            this.isActive = false;
+    loadData(event) {
+        //this.lazyLoadEventData = null;
+        this.lazyLoadEventData = event;
+        const pageIndex = parseInt(event.first) / event.rows;;
+        this.pageIndex = pageIndex;
+        this.pageSize = event.rows;
+        event.first = pageIndex;
+        this.lazyLoadEventDataInput = event;
+        //openDate: this.todayDate
+        // if(this.isEnablePOList) {
+        //     this.lazyLoadEventDataInput.filters = { ...this.lazyLoadEventDataInput.filters, vendorId: this.vendorId }
+        // }
+        if (this.isCreatePO || this.isCreateRO) {
+            this.lazyLoadEventDataInput.filters = { ...this.lazyLoadEventDataInput.filters, status: 'active' }
+            this.isActive = true;
         }
-        this.workFlowtService.getVendorListForVendor(this.isActive).subscribe(
-            results => this.onDataLoadSuccessful(results[0]),
-            error => this.onDataLoadFailed(error)
-        );
-
-        this.cols = [
-            { field: 'vendorName', header: 'Vendor Name' },
-            { field: 'vendorCode', header: 'Vendor Code' },
-            { field: 'description', header: 'Vendor Type' },
-            // { field: 'vendorRanking', header: 'Vendor Ranking' },
-            { field: 'classificationName', header: 'Vendor Classification' },
-            { field: 'vendorCapabilityName', header: 'Vendor Capabilities' },
-            { field: 'vendorEmail', header: 'Email' },
-            { field: 'city', header: 'Vendor City' },
-            { field: 'stateOrProvince', header: 'Vendor State' },
-            { field: 'vendorPhoneContact', header: 'Vendor Contact' }
-            // { field: 'createdBy', header: 'Created By' },
-            // { field: 'updatedBy', header: 'Updated By' },
-            // { field: 'updatedDate', header: 'Updated Date' },
-            // { field: 'createdDate', header: 'Created Date' }
-        ];
-        this.selectedColumns = this.cols;
+        console.log(this.filterText);
+        if(this.filterText == '') {
+            const PagingData = { ...this.lazyLoadEventDataInput, filters: listSearchFilterObjectCreation(this.lazyLoadEventDataInput.filters) }
+            this.getList(PagingData);
+        } else {
+            this.globalSearch(this.filterText);
+        }        
+        console.log(event);
     }
 
-    private onDataLoadSuccessful(allWorkFlows: any[]) {
-        this.alertService.stopLoadingMessage();
-        this.loadingIndicator = false;
-        this.dataSource.data = allWorkFlows;
-        this.allVendorList = allWorkFlows;
-        if (allWorkFlows.length > 0) {
-            this.totalRecords = allWorkFlows.length;
-            this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
-        }
+    getList(data) {        
+        this.workFlowtService.getAllVendorList(data).subscribe(res => {
+            console.log(res);
+            const vList: any = res[0];
+             this.allVendorList = vList;
+            if (this.allVendorList.length > 0) {
+                this.totalRecords = vList[0].totalRecords;
+                this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+            }
+        })
     }
+
+    globalSearch(value) {
+        this.pageIndex = 0;
+        this.filterText = value;
+        this.workFlowtService.vendorListGlobalSearch(value, this.pageIndex, this.pageSize, this.isActive).subscribe(res => {
+            this.pageIndex = 0;
+            this.allVendorList = res;
+            if (this.allVendorList.length > 0) {
+                this.totalRecords = res[0].totalRecords;
+                this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+            }
+        })
+    }
+
+    resetGlobalFilter() {
+        this.filterText = '';
+        this.globalfilter = '';
+    }
+
+    // private loadData() {
+    //     this.alertService.startLoadingMessage();
+    //     this.loadingIndicator = true;
+    //     if (!this.isCreatePO && !this.isCreateRO) {
+    //         this.isActive = false;
+    //     }
+
+    //     // this.workFlowtService.getAllVendorList(data).subscribe(res => {
+    //     //     console.log(res);            
+    //     // })
+    //     this.workFlowtService.getVendorListForVendor(this.isActive).subscribe(
+    //         results => this.onDataLoadSuccessful(results[0]),
+    //         error => this.onDataLoadFailed(error)
+    //     );
+
+        
+    // }
+
+    // private onDataLoadSuccessful(allWorkFlows: any[]) {
+    //     this.alertService.stopLoadingMessage();
+    //     this.loadingIndicator = false;
+    //     this.dataSource.data = allWorkFlows;
+    //     this.allVendorList = allWorkFlows;
+    //     if (allWorkFlows.length > 0) {
+    //         this.totalRecords = allWorkFlows.length;
+    //         this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+    //     }
+    // }
 
     //load master Companies
 
@@ -764,13 +831,14 @@ export class VendorsListComponent implements OnInit {
         else {
             this.alertService.showMessage("Success", `Action was edited successfully`, MessageSeverity.success);
         }
-        this.loadData();
+        // this.loadData();
+        this.getList(this.lazyLoadEventData);
     }
 
     private saveSuccessHelper(role?: any) {
         this.isSaving = false;
         this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
-        this.loadData();
+        // this.loadData();
     }
 
     get userName(): string {

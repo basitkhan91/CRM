@@ -21,6 +21,7 @@ import { Router, ActivatedRoute, Params, NavigationExtras } from '@angular/route
 import { Row } from 'primeng/components/common/shared';
 import { CustomerService } from '../../../services/customer.service';
 import * as $ from 'jquery';
+import { VendorStepsPrimeNgComponent } from '../vendor-steps-prime-ng/vendor-steps-prime-ng.component';
 @Component({
     selector: 'app-vendor-capes',
     templateUrl: './vendor-capes.component.html',
@@ -29,8 +30,8 @@ import * as $ from 'jquery';
 })
 /** anys component*/
 export class VendorCapesComponent implements OnInit {
-
-    activeIndex = 10;
+    @ViewChild(VendorStepsPrimeNgComponent) stepper: VendorStepsPrimeNgComponent;
+    activeIndex = 2;
     matSpinner: boolean;
     local: any;
     isEnableVendor: boolean = true;
@@ -42,29 +43,29 @@ export class VendorCapesComponent implements OnInit {
         if (this.local) {
             this.workFlowtService.capesCollection = this.local;
         }
-        if (this.workFlowtService.generalCollection) {
-            this.local = this.workFlowtService.generalCollection;
+        if (this.workFlowtService.listCollection) {
+            this.local = this.workFlowtService.listCollection;
         }
         //this.dataSource = new MatTableDataSource();
-        console.log(this.workFlowtService);        
+        console.log(this.workFlowtService);
         if (this.workFlowtService.listCollection && this.workFlowtService.isEditMode == true) {
-        this.local = this.workFlowtService.listCollection.t; 
+            this.local = this.workFlowtService.listCollection;
             //this.loadData();
         }
-        if(this.workFlowtService.listCollection) {
+        if (this.workFlowtService.listCollection) {
             this.vendorId = this.workFlowtService.listCollection.vendorId;
-            console.log(this.vendorId);            
+            console.log(this.vendorId);
         }
         this.alertService.stopLoadingMessage();
         console.log(this.local);
-        if(this.local) {
+        if (this.local) {
             this.vendorId = this.local.vendorId;
         }
         if (this.workFlowtService.generalCollection) {
-                this.vendorId = this.workFlowtService.generalCollection.vendorId;
-            }
+            this.vendorId = this.workFlowtService.generalCollection.vendorId;
+        }
         console.log(this.workFlowtService.listCollection);
-        
+
     }
 
     ngOnInit() {
@@ -84,9 +85,9 @@ export class VendorCapesComponent implements OnInit {
     }
 
     getVendorCapabilityId(id) {
-        console.log(id); 
+        console.log(id);
         this.vendorCapabilityId = id;
-        if(this.vendorCapabilityId) {
+        if (this.vendorCapabilityId) {
             $('#addCapabilityInfo').modal('show');
         }
         this.loadList = false;
@@ -103,16 +104,18 @@ export class VendorCapesComponent implements OnInit {
     }
 
     previousClick() {
-        this.activeIndex = 0;
+        this.activeIndex = 1
+        this.stepper.changeStep(this.activeIndex);
         // this.vendorService.vendorgeneralcollection = this.local;
-        this.workFlowtService.indexObj.next(this.activeIndex);
-        this.workFlowtService.changeStep('General Information');
+        // this.workFlowtService.indexObj.next(this.activeIndex);
+        // this.workFlowtService.changeStep('General Information');
         this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-general-information');
     }
     nextClick() {
-        this.activeIndex = 2;
-        this.workFlowtService.indexObj.next(this.activeIndex);
-        this.workFlowtService.changeStep('Contacts');
+        this.activeIndex = 3;
+        this.stepper.changeStep(this.activeIndex);
+        // this.workFlowtService.indexObj.next(this.activeIndex);
+        // this.workFlowtService.changeStep('Contacts');
         this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-contacts');
     }
 }

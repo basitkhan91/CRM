@@ -104,12 +104,12 @@
         (change)="onChangeSearchType($event)" />&nbsp;Stock Line</label>
   </div>
   <div>
-    <label><input type="checkbox" name="includeAlternalePN" />&nbsp;Include
+    <label><input type="checkbox" name="includeAlternalePN" [(ngModel)]="query.partSearchParamters.includeAlternatePartNumber" />&nbsp;Include
       Alternate PN</label>
   </div>
   <div>
     <label><input type="checkbox" name="method" name="includeMultiplePN"
-        [(ngModel)]="query.partSearchParamters.includeAlternatePartNumber" />&nbsp;Multiple PN's</label>
+         />&nbsp;Multiple PN's</label>
   </div>
 </div>
 
