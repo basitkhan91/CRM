@@ -26,7 +26,9 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 import { ChangeDetectorRef } from '@angular/core';
 import { DiscountValue } from '../../../models/discountvalue';
 import { CommonService } from '../../../services/common.service';
+import { validateRecordExistsOrNot, getObjectById, getObjectByValue, selectedValueValidate } from '../../../generic/autocomplete';
 import { VendorStepsPrimeNgComponent } from '../vendor-steps-prime-ng/vendor-steps-prime-ng.component';
+
 @Component({
     selector: 'app-vendor-financial-information',
     templateUrl: './vendor-financial-information.component.html',
@@ -85,6 +87,7 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
         this.sourceVendor.is1099Required = true;
         this.loadDiscountData();
         this.loadCurrencyData();
+        this.getAllPercentage();
         if (this.local) {
             this.getVendorsList();
         }
@@ -125,8 +128,9 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
     public allWorkFlows: any[] = [];
     private isEditMode: boolean = false;
     private isDeleteMode: boolean = false;
+    percentageList: any = [];
 
-    constructor(private cdRef: ChangeDetectorRef, public CreditTermsService: CreditTermsService, public currencyService: CurrencyService, private router: ActivatedRoute, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private commonservice: CommonService) {
+    constructor(public CreditTermsService: CreditTermsService, public currencyService: CurrencyService, private router: ActivatedRoute, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private commonservice: CommonService) {
         if (this.workFlowtService.listCollection !== undefined) {
             this.workFlowtService.isEditMode = true;
         }
@@ -145,6 +149,9 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
             this.getVendorProcess1099();
         }
 
+        this.sourceVendor.currencyId = 0;
+        this.sourceVendor.discountId = 0;
+
         //if(this.sourceVendor.v1099GrossProceedsPaidToAttorneyDefault)
         //{
         //    console.log(this.sourceVendor);
@@ -159,6 +166,12 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
             results => this.onVendorsLoadSuccssfull(results[0]),
             error => this.onDataLoadFailed(error)
         );
+    }
+
+    getAllPercentage() {
+        this.commonservice.smartDropDownList('[Percent]', 'PercentId', 'PercentValue').subscribe(res => {
+            this.percentageList = res;
+        })
     }
 
     ngAfterViewChecked() {
@@ -507,6 +520,7 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
 
 
     editItemAndCloseModel(userForm, isGoNxt?: boolean) {
+        console.log(userForm);        
         this.isSaving = true;
         let errors;
         this.listOfErrors = [];
@@ -917,15 +931,14 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
     filterDiscountvalue(event) {
         this.discountcollection = [];
         for (let i = 0; i < this.alldiscountvalueInfo.length; i++) {
-            let discontValue = this.alldiscountvalueInfo[i].discontValue;
-
-            if (discontValue.toString().indexOf(event.query)) {
-                this.namecolle.push([{
-                    "discountId": this.alldiscountvalueInfo[i].discountId,
-                    "discontValue": discontValue
-                }]),
-                    this.discountcollection.push(discontValue)
-            }
+            let discontValue = this.alldiscountvalueInfo[i].discontValue; 
+            this.discountcollection.push(discontValue);
+            // if (discontValue.toString().indexOf(event.query)) {
+            //     this.namecolle.push([{
+            //         "discountId": this.alldiscountvalueInfo[i].discountId,
+            //         "discontValue": discontValue
+            //     }])                                                   
+            // }            
         }
     }
 
@@ -981,20 +994,27 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
         this.modal.close();
     }
 
-    discountvalueHandler(event) {
-        if (event.target.value != "") {
-            let value = event.target.value.toLowerCase();
-            if (this.selectedConsume) {
-                if (value == this.selectedConsume.toLowerCase()) {
-                    this.disableSaveConsume = true;
-                }
-                else {
-                    this.disableSaveConsume = false;
-
-                }
-            }
-
+    discountvalueHandler(value) {
+        const exists = validateRecordExistsOrNot('discontValue', parseInt(value), this.alldiscountvalueInfo);
+        if (exists.length > 0) {
+            this.disableSaveConsume = true;
         }
+        else {
+            this.disableSaveConsume = false;
+        }
+        // if (event.target.value != "") {
+        //     let value = event.target.value;
+        //     if (this.selectedConsume) {
+        //         if (value == this.selectedConsume) {
+        //             this.disableSaveConsume = true;
+        //         }
+        //         else {
+        //             this.disableSaveConsume = false;
+
+        //         }
+        //     }
+
+        // }
     }
     openDiscount(content) {
         this.isEditMode = false;
@@ -1010,15 +1030,21 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
         }, () => { console.log('Backdrop click') })
     }
     discountvaluedesc(event) {
-        if (this.alldiscountvalueInfo) {
-            for (let i = 0; i < this.alldiscountvalueInfo.length; i++) {
-                if (event == this.alldiscountvalueInfo[i].discontValue) {
-                    this.sourceVendor.itemClassificationCode = event;
-                    this.disableSaveConsume = true;
-                    this.selectedConsume = event;
-                }
-            }
-        }
+        console.log(event);
+        
+        const value = getObjectById('discountId', event, this.alldiscountvalueInfo);
+        const exists = selectedValueValidate('discontValue', value, event);
+
+        this.disableSaveConsume = !exists;
+        // if (this.alldiscountvalueInfo) {
+        //     for (let i = 0; i < this.alldiscountvalueInfo.length; i++) {
+        //         if (event == this.alldiscountvalueInfo[i].discontValue) {
+        //             this.sourceVendor.itemClassificationCode = event;
+        //             this.disableSaveConsume = true;
+        //             this.selectedConsume = event;
+        //         }
+        //     }
+        // }
     }
 }
 
