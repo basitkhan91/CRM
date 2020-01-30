@@ -7,6 +7,7 @@ import { FormBuilder } from '@angular/forms';
 import { AlertService, MessageSeverity } from '../../../../services/alert.service';
 import { LegalEntityService } from '../../../../services/legalentity.service';
 import { MatDialog, MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
+import { EntityGeneralInformation } from '../../../../models/legal-entity-general-information.model'
 import { MasterComapnyService } from '../../../../services/mastercompany.service';
 import { MasterCompany } from '../../../../models/mastercompany.model';
 import { CurrencyService } from '../../../../services/currency.service';
@@ -23,14 +24,14 @@ import { CustomerService } from '../../../../services/customer.service';
 /** EntityEdit component*/
 export class EntityAddComponent implements OnInit, AfterViewInit {
 
-    @Input() parentLegalEntity;
-    @Input() countrycollection;
-    @Input() allCurrencyInfo;
+    //@Input() parentLegalEntity;
+    //@Input() countrycollection;
+    //@Input() allCurrencyInfo;
     @Input() customerListOriginal;
     @Output() tab = new EventEmitter<any>();
-    @Output() saveGeneralInformationData = new EventEmitter<any>();
+    @Output() savedGeneralInformationData = new EventEmitter<any>();
 
-    @Output() editGeneralInformation = new EventEmitter<any>();
+    @Output() editGeneralInformationData = new EventEmitter<any>();
 
 	cols1: any[];
 	
@@ -39,9 +40,9 @@ export class EntityAddComponent implements OnInit, AfterViewInit {
 	childCollection: any[] = [];
 	/** EntityList ctor */
 
-	//allCurrencyInfo: any[];
-	sourceLegalEntity: any = {};
-    //parentLegalEntity1: any = {};
+	allCurrencyInfo: any[];
+    sourceLegalEntity = new EntityGeneralInformation();
+    parentLegalEntity: any = {};
 
 	selectedNode1: TreeNode;
 	dataSource: MatTableDataSource<{}>;
@@ -75,8 +76,8 @@ export class EntityAddComponent implements OnInit, AfterViewInit {
 	entityName: string;
     Active: string;
     entityViewFeilds: any = {};
-    //allCountryinfo: any[];
-   // countrycollection: any[];
+    allCountryinfo: any[];
+    countrycollection: any[];
     disablesave: boolean;
 	selectedCountries: any;
     displayWarningModal: boolean = false;
@@ -96,27 +97,18 @@ export class EntityAddComponent implements OnInit, AfterViewInit {
 		if (this.workFlowtService.listCollection != null && this.workFlowtService.isEditMode == true) {
 			this.sourceLegalEntity = this.workFlowtService.listCollection;
 			this.sourceLegalEntity.createdDate = new Date();
-			this.sourceLegalEntity.modifiedDate = new Date();
+            this.sourceLegalEntity.updatedDate = new Date();
 		}
 	
 	}
 
     ngOnInit(): void {
         this.sourceLegalEntity.isBalancingEntity = true;
-		//this.CurrencyData();
-        //this.loadData();
-		//this.countrylist();
-		//this.loadMasterCompanies();
-		//this.loadParentEntities();
-
-
-		//this.GeneralInformation();
-        this.sourceLegalEntity = {};
-        this.sourceLegalEntity.isBalancingEntity = true;
-		this.sourceLegalEntity.isActive = true;
-        this.entityName = "";
-        //this.parentLegalEntity1 = this.parentLegalEntity;
-        console.log('this.parentLegalEntity :', this.parentLegalEntity)
+        this.CurrencyData();
+        this.loadData();
+        this.countrylist();
+        this.loadMasterCompanies();
+        this.loadParentEntities();     
 	}
 
 	modal: NgbModalRef;
@@ -179,8 +171,7 @@ export class EntityAddComponent implements OnInit, AfterViewInit {
 		this.selectedColumns = this.cols;
 	}
 
-	private onDataLoadSuccessful(getAtaMainList: any[]) {
-		// alert('success');
+	private onDataLoadSuccessful(getAtaMainList: any[]) {        
 		this.alertService.stopLoadingMessage();
 		this.loadingIndicator = false;
 		this.dataSource.data = getAtaMainList;
@@ -273,7 +264,7 @@ export class EntityAddComponent implements OnInit, AfterViewInit {
 	}
 
     open(content) {
-        console.log('content :', content)
+        /*console.log('content :', content)
         this.GeneralInformation();
         this.sourceLegalEntity = {};
         this.sourceLegalEntity.isBalancingEntity = true;
@@ -283,6 +274,7 @@ export class EntityAddComponent implements OnInit, AfterViewInit {
 		this.modal.result.then(() => {
 			console.log('When user closes');
 		}, () => { console.log('Backdrop click') })
+        */
 	}
 
 	private onDataMasterCompaniesLoadSuccessful(allComapnies: MasterCompany[]) {
@@ -344,20 +336,25 @@ export class EntityAddComponent implements OnInit, AfterViewInit {
 			this.modelValue = true;
 		}
 		if (this.sourceLegalEntity.name && this.sourceLegalEntity.description && this.sourceLegalEntity.reportingCurrencyId && this.sourceLegalEntity.reportingCurrencyId && this.sourceLegalEntity.ledgerName) {
-			if (!this.sourceLegalEntity.legalEntityId) {
-				this.sourceLegalEntity.createdBy = this.userName;
+            if (!this.sourceLegalEntity.legalEntityId) {
+                console.log('source :', this.sourceLegalEntity)
+
+                this.sourceLegalEntity.createdBy = this.userName;
 				this.sourceLegalEntity.updatedBy = this.userName;
 
 				this.sourceLegalEntity.masterCompanyId = 1;
-                this.workFlowtService.newAddEntity(this.sourceLegalEntity).subscribe(data => {
+                this.workFlowtService.newAddEntity({
+                    ...this.sourceLegalEntity
+
+                }).subscribe(data => {
                     console.log('adding legal entity response :', data)
 					this.alertService.showMessage(
 						'Success',
-						'Legal Entity added successfully.',
+						'Legal Entity Saved successfully.',
 						MessageSeverity.success
 						);
                     this.tab.emit('Contacts');
-                    this.saveGeneralInformationData.emit(data);
+                    this.savedGeneralInformationData.emit(data);
                     //this.id = data.customerId;
                     this.editData = data;
                     this.isEdit = true;
@@ -369,7 +366,9 @@ export class EntityAddComponent implements OnInit, AfterViewInit {
 				this.sourceLegalEntity.createdBy = this.userName;
 				this.sourceLegalEntity.updatedBy = this.userName;
 				this.sourceLegalEntity.masterCompanyId = 1;
-                this.workFlowtService.updateEntity(this.sourceLegalEntity).subscribe(data => {
+                this.workFlowtService.updateEntity({
+                    ...this.sourceLegalEntity
+                }).subscribe(data => {
                     console.log('editing legal entity response :', data)
 					this.alertService.showMessage(
 						'Success',
@@ -379,7 +378,7 @@ export class EntityAddComponent implements OnInit, AfterViewInit {
                     this.tab.emit('Contacts');
 
                     //this.saveGeneralInformationData.emit(res);
-                    this.editGeneralInformation.emit(data);
+                    this.editGeneralInformationData.emit(data);
                     //this.id = data.customerId;
                     this.editData = data;
 
@@ -429,19 +428,21 @@ export class EntityAddComponent implements OnInit, AfterViewInit {
 		
 	}
 	openContentEdit(content, row) {
-		this.isEditMode = true;
+        /*
+        this.isEditMode = true;
 		this.GeneralInformation();
 		this.sourceLegalEntity.isBankingInfo = false;
 		this.sourceLegalEntity = row;
 		this.sourceLegalEntity.createdDate = new Date(row.createdDate);
-		this.sourceLegalEntity.modifiedDate = new Date(row.updatedDate);
+        this.sourceLegalEntity.updatedDate = new Date(row.updatedDate);
 		this.modal1 = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
 		this.modal1.result.then(() => {
 			console.log('When user closes');
 		}, () => { console.log('Backdrop click') })
+        */
 	}
 	openEdit(content, row) {
-		this.GeneralInformation();
+		/*this.GeneralInformation();
 		this.sourceLegalEntity = {};
 		this.sourceLegalEntity = row;
 		
@@ -452,6 +453,7 @@ export class EntityAddComponent implements OnInit, AfterViewInit {
 		this.modal.result.then(() => {
 			console.log('When user closes');
 		}, () => { console.log('Backdrop click') })
+        */
 	}
 	openDelete(content, row) {
 		this.sourceLegalEntity = row;
@@ -547,7 +549,7 @@ export class EntityAddComponent implements OnInit, AfterViewInit {
         }, () => { console.log('Backdrop click') })
     }
 
-    /*
+    
     private countrylist() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
@@ -585,6 +587,7 @@ export class EntityAddComponent implements OnInit, AfterViewInit {
         }
     }
 
+
     onCountrieselected(event) {
         if (this.allCountryinfo) {
             for (let i = 0; i < this.allCountryinfo.length; i++) {
@@ -597,6 +600,7 @@ export class EntityAddComponent implements OnInit, AfterViewInit {
             }
         }
     }
+
 
     eventCountryHandler(event) {
         if (event.target.value != "") {
@@ -611,5 +615,5 @@ export class EntityAddComponent implements OnInit, AfterViewInit {
             }
 
         }
-    } */
+    }
 }

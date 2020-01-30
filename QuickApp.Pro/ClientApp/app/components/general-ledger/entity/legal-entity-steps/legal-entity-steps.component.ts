@@ -1,6 +1,7 @@
 ﻿import { Component } from '@angular/core';
 import { Location } from "@angular/common";
 import { MenuItem } from 'primeng/api';
+import { MatDialog, MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
 
 import { Router, ActivatedRoute } from '@angular/router';
 import { CustomerService } from '../../../../services/customer.service';
@@ -51,6 +52,11 @@ export class LegalEntityStepsComponent {
     disablesave: boolean;
     selectedCountries: any;
     allComapnies: MasterCompany[] = [];
+    allATAMaininfo: any[] = [];
+    cols: any[];
+    selectedColumns: any[];
+    selectedColumns1: any[];
+    dataSource: MatTableDataSource<{}>;
 
     isEditMode: boolean = false;
 	isDeleteMode: boolean;
@@ -96,10 +102,12 @@ export class LegalEntityStepsComponent {
 
         this.sourceLegalEntity.isBalancingEntity = true;
         this.CurrencyData();
-        //this.loadData();
+        this.loadData();
         this.countrylist();
         this.loadMasterCompanies();
         this.loadParentEntities();
+        this.getAllCreditTerms();
+        this.getAllCountries();
 
 
         this.GeneralInformation();
@@ -112,29 +120,72 @@ export class LegalEntityStepsComponent {
             { label: this.editMode ? 'Edit Legal Entity' : 'Create Legal Entity' },
 		];
 		
-	}
+    }
+
+    private loadData() {
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
+
+        this.workFlowtService.getEntityList().subscribe(
+            results => this.onDataLoadSuccessful(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
+
+        this.cols = [
+            //{ field: 'ataMainId', header: 'ATAMain Id' },
+            { field: 'name', header: 'Company Code' },
+            { field: 'description', header: 'Company Name' },
+            { field: 'ledgerName', header: 'Ledger Name' },
+            { field: 'currencyCode', header: 'Functional Currency' },
+            { field: 'cageCode', header: 'Cage Code' },
+            { field: 'createdBy', header: 'Created By' },
+        ];
+
+        this.selectedColumns = this.cols;
+    }
+
+    private onDataLoadSuccessful(getAtaMainList: any[]) {
+        // alert('success');
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        //this.dataSource.data = getAtaMainList;
+        this.allATAMaininfo = getAtaMainList;
+    }
+
+    makeNestedObj(arr, parent) {
+        var out = []
+        for (var i in arr) {
+            if (arr[i].parentId == parent) {
+                var children = this.makeNestedObj(arr, arr[i].legalEntityId)
+                arr[i] = { "data": arr[i] };
+                if (children.length) {
+                    arr[i].children = children
+                }
+                out.push(arr[i])
+            }
+        }
+        return out
+    }
 
 	changeOfTab(value) {
 		if (value === 'General') {
 			this.currentTab = 'General';
 			this.activeMenuItem = 1;
-
         } else if (value === 'Contacts') {
 			this.currentTab = 'Contacts';
 			this.activeMenuItem = 2;
-
-		} else if (value === 'Financial') {
-			this.currentTab = 'Financial';
-			this.activeMenuItem = 5;
+		} else if (value === 'Banking') {
+            this.currentTab = 'Banking';
+			this.activeMenuItem = 3;
 		} else if (value === 'Billing') {
 			this.currentTab = 'Billing';
-			this.activeMenuItem = 6;
+			this.activeMenuItem = 4;
 		} else if (value === 'Shipping') {
 			this.currentTab = 'Shipping';
-			this.activeMenuItem = 7;
+			this.activeMenuItem = 5;
 		}  else if (value === 'Documents') {
 			this.currentTab = 'Documents';
-			this.activeMenuItem = 10;
+			this.activeMenuItem = 6;
 		}        
     }
 
@@ -218,8 +269,7 @@ export class LegalEntityStepsComponent {
     private onloadParentEntitiesLoadSuccessful(allEntities: MasterCompany[]) {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
-        this.parentLegalEntity = allEntities;
-        console.log('this.parentLegalEntity 123 :', this.parentLegalEntity)
+        this.parentLegalEntity = allEntities;        
     }
 
     GeneralInformation() {
