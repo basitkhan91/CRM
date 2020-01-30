@@ -18,6 +18,8 @@ namespace DAL
         IEnumerable<Customer> getAlldata();
         ICustomerBillingInformationRepository CustomerBillingInformation { get; }
 
+        ILegalEntityBillnformationRepository LegalEntityBillingInformation { get; }
+
         IProductRepository Products { get; }
         IOrdersRepository Orders { get; }
         IWorkflowActionRepository WorkflowActions { get; }
