@@ -157,12 +157,12 @@ namespace QuickApp.Pro.ViewModels
 
         public long? ataSubChapterId { get; set; }
 
-        public int? MasterCompanyId { get; set; }
+        public int MasterCompanyId { get; set; }
 
 
-        public bool? IsActive { get; set; }
+        public bool IsActive { get; set; }
 
-        public bool? IsDelete { get; set; }
+        public bool IsDelete { get; set; }
 
         public Int32? MarkUpPercentageId { get; set; }
 

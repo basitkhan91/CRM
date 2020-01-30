@@ -2151,7 +2151,7 @@ namespace DAL.Repositories
                     data.UpdatedBy = objCustomer.UpdatedBy;
                     data.IsActive = objCustomer.IsActive;
                     data.IsPrimary = true;
-                    data.IsDelete = false;
+                    data.IsDeleted = false;
                     _appContext.VendorShippingAddress.Update(data);
                 }
             }
@@ -2169,7 +2169,7 @@ namespace DAL.Repositories
                 objCustomerShippingAddress.UpdatedBy = objCustomer.UpdatedBy;
                 objCustomerShippingAddress.IsActive = objCustomer.IsActive;
                 objCustomerShippingAddress.IsPrimary = true;
-                objCustomerShippingAddress.IsDelete = false;
+                objCustomerShippingAddress.IsDeleted = false;
 
                 _appContext.VendorShippingAddress.Add(objCustomerShippingAddress);
             }

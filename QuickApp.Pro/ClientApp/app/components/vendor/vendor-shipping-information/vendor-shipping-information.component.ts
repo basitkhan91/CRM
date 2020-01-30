@@ -505,8 +505,8 @@ export class VendorShippingInformationComponent {
         }
         else {
             this.shipViaObj.createdBy = this.userName;
-            this.sourceVendor.updatedBy = this.userName;
-            this.sourceVendor.masterCompanyId = 1;
+            this.shipViaObj.updatedBy = this.userName;
+            this.shipViaObj.masterCompanyId = 1;
             this.shipViaObj.isActive = true;
 
             this.workFlowtService.newShippingViaAdd(this.shipViaObj).subscribe(data => {
