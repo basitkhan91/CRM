@@ -21,9 +21,12 @@ export class WorkOrderExclusionsComponent implements OnInit {
   @Output() refreshData = new EventEmitter();
   @Input() isQuote = false;
   @Input() isView: boolean = false;
+  @Input() taskList: any = [];
   isEdit: boolean = false;
   editData: any;
   editingIndex: number;
+  overAllMarkup: any;
+  costPlusType: string = "Mark Up";
   cols = [
     { field: 'epn', header: 'EPN' },
     { field: 'epnDescription', header: 'EPN Description' },
@@ -49,7 +52,30 @@ export class WorkOrderExclusionsComponent implements OnInit {
 
 
 
+  markupChanged(matData, type) {
+    try {
+      this.markupList.forEach((markup)=>{
+        if(type == 'row' && markup.value == matData.markupPercentageId){
+          matData.costPlusAmount = Number(matData.extendedCost) + ((Number(matData.extendedCost) / 100) * Number(markup.label))
+        }
+        else if(type == 'all' && markup.value == this.overAllMarkup){
+          this.workOrderExclusionsList.forEach((mData)=>{
+            mData.markupPercentageId = this.overAllMarkup;
+            mData.costPlusAmount = Number(mData.extendedCost) + ((Number(mData.extendedCost) / 100) * Number(markup.label))
+          })
+        }
+      })
 
+      // this.markupList.forEach((markup) => {
+      //   if (markup.value == matData.markupPercentageId) {
+      //     matData.chargesCostPlus = (matData.extendedCost) + (((matData.extendedCost) / 100) * Number(markup.label))
+      //   }
+      // })
+    }
+    catch (e) {
+      console.log(e);
+    }
+  }
 
 
   createNew() {
