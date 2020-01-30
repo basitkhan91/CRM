@@ -375,7 +375,7 @@
 
     </div>
   </div>
-  <div *ngIf="selectedBuildMethod == 'build from scratch'">
+  <!-- <div *ngIf="selectedBuildMethod == 'build from scratch'">
     <div class="col-sm-1">
         <strong> <label> Task </label></strong>
     </div>
@@ -391,7 +391,7 @@
             </select>
           </div>
     </div>
-  </div>
+  </div> -->
   <div class="card col-md-12" style="background: #f1f1f1; margin-top: 10px;" *ngIf="selectedBuildMethod != ''">
       <div class="form-group ">
         <button type="button" class="btn" [ngClass]="gridActiveTab === 'materialList'?'btn-primary':'btn-light-cstm'" (click)="gridTabChange('materialList');">Material List</button>
