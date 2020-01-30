@@ -115,7 +115,7 @@
 			</ng-template>
 
 			<ng-template pTemplate="body" let-rowData let-columns="columns">
-				<tr [pSelectableRow]="rowData" [pSelectableRow]="rowData" pReorderableRowHandle >
+				<tr [pSelectableRow]="rowData" pReorderableRowHandle >
 					<td style="width:160px" 
 						*ngFor="let col of columns" 
 						class="ui-resizable-column" 
