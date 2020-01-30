@@ -17,7 +17,7 @@ namespace DAL.Repositories
 
         public IEnumerable<VendorCheckPayment> GetVendorCheckPayments()
         {
-            return _appContext.VendorCheckPayment.Include("MasterCompany").Where((c =>c.IsDelete == null || c.IsDelete == false)).OrderByDescending(c => c.CheckPaymentId).ToList();
+            return _appContext.VendorCheckPayment.Include("MasterCompany").Where((c =>c.IsDeleted == false)).OrderByDescending(c => c.CheckPaymentId).ToList();
         }
 
 

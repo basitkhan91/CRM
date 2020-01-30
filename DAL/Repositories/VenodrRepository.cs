@@ -1247,11 +1247,11 @@ namespace DAL.Repositories
                 shippingAddress.VendorShippingAddressId = shippingAddressId;
                 shippingAddress.UpdatedDate = DateTime.Now;
                 shippingAddress.UpdatedBy = updatedBy;
-                shippingAddress.IsDelete = true;
+                shippingAddress.IsDeleted = true;
 
                 _appContext.VendorShippingAddress.Attach(shippingAddress);
 
-                _appContext.Entry(shippingAddress).Property(p => p.IsDelete).IsModified = true;
+                _appContext.Entry(shippingAddress).Property(p => p.IsDeleted).IsModified = true;
                 _appContext.Entry(shippingAddress).Property(p => p.UpdatedDate).IsModified = true;
                 _appContext.Entry(shippingAddress).Property(p => p.UpdatedBy).IsModified = true;
 
@@ -1274,7 +1274,7 @@ namespace DAL.Repositories
                 {
                     vendorShippingDetails.UpdatedBy = updatedBy;
                     vendorShippingDetails.UpdatedDate = DateTime.Now;
-                    vendorShippingDetails.IsDelete = true;
+                    vendorShippingDetails.IsDeleted = true;
                     _appContext.VendorShipping.Update(vendorShippingDetails);
                     _appContext.SaveChanges();
                     result = true;
@@ -2321,7 +2321,7 @@ namespace DAL.Repositories
                                             ship.MasterCompanyId = 1;
                                             ship.VendorId = vendorId;
                                             ship.IsActive = true;
-                                            ship.IsDelete = false;
+                                            ship.IsDeleted = false;
 
                                             ship.AddressId = addr.AddressId;
                                             ship.CreatedBy = ship.UpdatedBy = "System";

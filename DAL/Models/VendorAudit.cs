@@ -10,13 +10,9 @@ namespace DAL.Models
         public long VendorId { get; set; }
         public string VendorName { get; set; }
         public string VendorCode { get; set; }
-
         public int? VendorTypeId { get; set; }
-
         public string DoingBusinessAsName { get; set; }
-
-        public Int64? VendorClassificationId { get; set; }
-
+        public long? VendorClassificationId { get; set; }
         public long Parent { get; set; }
         public string VendorContractReference { get; set; }
         public Nullable<long> AddressId { get; set; }
@@ -28,21 +24,17 @@ namespace DAL.Models
         public string VendorURL { get; set; }
         public Nullable<bool> IsCertified { get; set; }
         public string CertificationFile { get; set; }
-        //public Nullable<bool> VendorAudit { get; set; }
         public string VendorAuditFile { get; set; }
         public Nullable<bool> EDI { get; set; }
         public string EDIDescription { get; set; }
         public Nullable<bool> AeroExchange { get; set; }
         public string AeroExchangeDescription { get; set; }
         public Nullable<decimal> CreditLimit { get; set; }
-
         public Int32? CurrencyId { get; set; }
         public Nullable<byte> DiscountLevel { get; set; }
         public Nullable<long> DiscountId { get; set; }
         public Nullable<bool> Is1099Required { get; set; }
         public Int16? CreditTermsId { get; set; }
-      
-        //public Nullable<short> CreditTermsId { get; set; }
         public Nullable<bool> v1099Rent { get; set; }
         public Nullable<bool> v1099RentDefault { get; set; }
         public Nullable<bool> v1099Royalties { get; set; }
@@ -61,19 +53,13 @@ namespace DAL.Models
         public int MasterCompanyId { get; set; }
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }
-        public System.DateTime CreatedDate { get; set; }
-        public System.DateTime UpdatedDate { get; set; }
-        public Nullable<bool> IsActive { get; set; }
-
+        public DateTime CreatedDate { get; set; }
+        public DateTime UpdatedDate { get; set; }
+        public bool IsActive { get; set; }
         public string VendorParentName { get; set; }             
-      
-        
         public string VendorPhone { get; set; }
-
-        public Nullable<bool> IsDelete { get; set; }      
-
+        public bool IsDeleted { get; set; }      
         public string VendorPhoneExt { get; set; }
-
         public Nullable<bool> IsAddressForBilling { get; set; }
         public Nullable<bool> IsAddressForShipping { get; set; }
         public Nullable<bool> IsAllowNettingAPAR { get; set; }

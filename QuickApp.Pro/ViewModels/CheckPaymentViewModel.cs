@@ -32,7 +32,7 @@ namespace QuickApp.Pro.ViewModels
         public string UpdatedBy { get; set; }
         public System.DateTime CreatedDate { get; set; }
         public System.DateTime UpdatedDate { get; set; }
-        public Nullable<bool> IsActive { get; set; }
+        public bool IsActive { get; set; }
 
 
 
