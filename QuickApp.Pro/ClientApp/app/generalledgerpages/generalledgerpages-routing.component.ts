@@ -26,6 +26,8 @@ import { AccountListingCreateComponent } from '../components/general-ledger/acco
 import { AccountingListingCalendarComponent } from '../components/general-ledger/accounting-listing-calendar/accounting-listing-calendar.component';
 import { OpenCloseLedgerComponent } from '../components/general-ledger/open-close-ledger/open-close-ledger.component';
 
+import { LegalEntityStepsComponent } from '../components/general-ledger/entity/legal-entity-steps/legal-entity-steps.component';
+
 const generalledgerpageRoutes: Routes = [
     {
 
@@ -36,7 +38,10 @@ const generalledgerpageRoutes: Routes = [
             { path: "app-legalentity-structure", component: LegalEntityStructureComponent, data: { title: "EntityListComponent" } },
             { path: "app-managemententity-structure", component: ManagementStructureComponent, data: { title: "EntitySetupComponent" } },
             { path: "app-legal-entity-list", component: EntityEditComponent, data: { title: "EntityListComponent" } },
-
+            
+            { path: "app-legal-entity-add", component: LegalEntityStepsComponent, data: { title: "EntityAddComponent" }},
+            { path: "app-legal-entity-edit/:id", component: LegalEntityStepsComponent, data: { title: "EntityAddComponent" }},
+           
             { path: "app-accounting-calendar", component: AccountingCalendarComponent, data: { title: "AccountingCalendarComponent" } },
             { path: "app-entity-edit-component", component: JournalsComponent, data: { title: "JournalsComponent" } },
             { path: "app-entity-edit-component", component: JournalsComponent, data: { title: "JournalsComponent" } },

@@ -1,5 +1,4 @@
-﻿import { Component, ViewChild, OnInit, AfterViewInit } from '@angular/core';
-import { Router } from '@angular/router';
+﻿import { Component, ViewChild, OnInit, AfterViewInit, Output, EventEmitter, Input } from '@angular/core';
 import { fadeInOut } from '../../../../services/animations';
 import { AuthService } from '../../../../services/auth.service';
 import { NgbModal, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
@@ -16,22 +15,36 @@ import { TreeNode } from 'primeng/api';
 import { CustomerService } from '../../../../services/customer.service';
 
 @Component({
-	selector: 'app-legal-entity-list',
-	templateUrl: './legal-entity-list.component.html',
-	styleUrls: ['./legal-entity-list.component.scss'],
+	selector: 'app-legal-entity-banking',
+    templateUrl: './legal-entity-banking.component.html',
+    styleUrls: ['./legal-entity-banking.component.scss'],
 	animations: [fadeInOut]
 })
 /** EntityEdit component*/
-export class EntityEditComponent implements OnInit, AfterViewInit {
+export class EntityBankingComponent implements OnInit, AfterViewInit {
+
+    @Input() parentLegalEntity;
+    @Input() countrycollection;
+    @Input() allCurrencyInfo;
+    @Input() customerListOriginal;
+    @Input() editMode;
+    @Input() editGeneralInformationData;
+    @Output() tab = new EventEmitter<any>();
+    @Input() savedGeneralInformationData;
+    @Input() creditTermsListOriginal;
+    @Output() editGeneralInformation = new EventEmitter<any>();
+
 	cols1: any[];
 	
 	//isEditMode: boolean;
 	gridData: TreeNode[];
 	childCollection: any[] = [];
 	/** EntityList ctor */
-	allCurrencyInfo: any[];
+
+	//allCurrencyInfo: any[];
 	sourceLegalEntity: any = {};
-	parentLegalEntity: any = {};
+    //parentLegalEntity1: any = {};
+
 	selectedNode1: TreeNode;
 	dataSource: MatTableDataSource<{}>;
 	displayedColumns: any;
@@ -51,8 +64,8 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
 	isEditMode: boolean = false;
 	isDeleteMode: boolean;
 	public sourceAction: any = [];
-	public GeneralInformationValue: boolean = true;
-	public LockboxValue: boolean = false;
+	public GeneralInformationValue: boolean = false;
+	public LockboxValue: boolean = true;
 	public domesticWireValue: boolean = false;
 	public internationalValue: boolean = false;
 	public GeneralInformationStyle: boolean = true;
@@ -64,13 +77,17 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
 	entityName: string;
     Active: string;
     entityViewFeilds: any = {};
-    allCountryinfo: any[];
-    countrycollection: any[];
+    //allCountryinfo: any[];
+   // countrycollection: any[];
     disablesave: boolean;
 	selectedCountries: any;
-	displayWarningModal: boolean = false;
+    displayWarningModal: boolean = false;
 
-	constructor(private _route: Router,
+    isEdit: any = false;
+    id: number;
+    editData: any;
+
+	constructor(
         private authService: AuthService, private _fb: FormBuilder, private alertService: AlertService, public currency: CurrencyService, public workFlowtService: LegalEntityService,
         private modalService: NgbModal, private activeModal: NgbActiveModal, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private customerService: CustomerService) {
 
@@ -86,11 +103,20 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
 
     ngOnInit(): void {
         this.sourceLegalEntity.isBalancingEntity = true;
-		this.CurrencyData();
-        this.loadData();
-		this.countrylist();
-		this.loadMasterCompanies();
-		this.loadParentEntities();
+		//this.CurrencyData();
+        //this.loadData();
+		//this.countrylist();
+		//this.loadMasterCompanies();
+		//this.loadParentEntities();
+
+
+		this.Lockbox();
+        this.sourceLegalEntity = {};
+        this.sourceLegalEntity.isBalancingEntity = true;
+		this.sourceLegalEntity.isActive = true;
+        this.entityName = "";
+        //this.parentLegalEntity1 = this.parentLegalEntity;
+        console.log('this.parentLegalEntity :', this.parentLegalEntity)
 	}
 
 	modal: NgbModalRef;
@@ -102,7 +128,8 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
 	}
 	public allWorkFlows: any[] = [];
 
-	private loadParentEntities() {
+    
+    private loadParentEntities() {
 		this.alertService.startLoadingMessage();
 		this.loadingIndicator = true;
 
@@ -158,7 +185,7 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
 		this.loadingIndicator = false;
 		this.dataSource.data = getAtaMainList;
 		this.allATAMaininfo = getAtaMainList;
-	}
+	}    
 
 	makeNestedObj(arr, parent) {
 		var out = []
@@ -247,17 +274,15 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
 
     open(content) {
         console.log('content :', content)
-  //       this.GeneralInformation();
-  //       this.sourceLegalEntity = {};
-  //       this.sourceLegalEntity.isBalancingEntity = true;
-		// this.sourceLegalEntity.isActive = true;
-		// this.entityName = "";
-		// this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
-		// this.modal.result.then(() => {
-		// 	console.log('When user closes');
-		// }, () => { console.log('Backdrop click') })
-
-		this._route.navigateByUrl(`generalledgermodule/generalledgerpage/app-legal-entity-add`);
+        this.GeneralInformation();
+        this.sourceLegalEntity = {};
+        this.sourceLegalEntity.isBalancingEntity = true;
+		this.sourceLegalEntity.isActive = true;
+		this.entityName = "";
+		this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
+		this.modal.result.then(() => {
+			console.log('When user closes');
+		}, () => { console.log('Backdrop click') })
 	}
 
 	private onDataMasterCompaniesLoadSuccessful(allComapnies: MasterCompany[]) {
@@ -310,7 +335,7 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
 			console.log('When user closes');
 		}, () => { console.log('Backdrop click') })
 	}
-	editItemAndCloseModel() {
+    saveGeneralInformation() {
 
 		//this.isSaving = true;
 
@@ -327,10 +352,14 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
 				this.workFlowtService.newAddEntity(this.sourceLegalEntity).subscribe(data => {
 					this.alertService.showMessage(
 						'Success',
-						'Legal Entity added successfully.',
+						'Banking Information added successfully.',
 						MessageSeverity.success
 						);
-					this.loadData();
+                    this.tab.emit('Billing');
+                    this.savedGeneralInformationData.emit(data);
+                    //this.id = data.customerId;
+                    this.editData = data;
+                    this.isEdit = true;
 
 				});
 			}
@@ -342,10 +371,17 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
 				this.workFlowtService.updateEntity(this.sourceLegalEntity).subscribe(data => {
 					this.alertService.showMessage(
 						'Success',
-						'Legal Entity updated successfully.',
+						'Banking Information updated successfully.',
 						MessageSeverity.success
 						);
-					this.loadData();
+                    this.tab.emit('Billing');
+
+                    //this.saveGeneralInformationData.emit(res);
+                    this.editGeneralInformation.emit(data);
+                    //this.id = data.customerId;
+                    this.editData = data;
+
+                    this.isEdit = true;
 				});
 			}
 			if (this.modal) { this.modal.close(); }
@@ -396,19 +432,17 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
 		if (this.modal1) { this.modal1.close(); }
 		
 	}
-    openContentEdit(content, row) {
-        console.log('edit row :', row)
-		//this.isEditMode = true;
-		//this.GeneralInformation();
-		//this.sourceLegalEntity.isBankingInfo = false;
-		//this.sourceLegalEntity = row;
-		//this.sourceLegalEntity.createdDate = new Date(row.createdDate);
-		//this.sourceLegalEntity.modifiedDate = new Date(row.updatedDate);
-		//this.modal1 = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
-		//this.modal1.result.then(() => {
-		//	console.log('When user closes');
-		//}, () => { console.log('Backdrop click') })
-        this._route.navigateByUrl(`generalledgermodule/generalledgerpage/app-legal-entity-edit/${row.legalEntityId}`);
+	openContentEdit(content, row) {
+		this.isEditMode = true;
+		this.GeneralInformation();
+		this.sourceLegalEntity.isBankingInfo = false;
+		this.sourceLegalEntity = row;
+		this.sourceLegalEntity.createdDate = new Date(row.createdDate);
+		this.sourceLegalEntity.modifiedDate = new Date(row.updatedDate);
+		this.modal1 = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
+		this.modal1.result.then(() => {
+			console.log('When user closes');
+		}, () => { console.log('Backdrop click') })
 	}
 	openEdit(content, row) {
 		this.GeneralInformation();
@@ -437,7 +471,7 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
 		this.sourceLegalEntity.updatedBy = this.userName;
 		this.workFlowtService.updateEntitydelete(this.sourceLegalEntity.legalEntityId).subscribe(
 			data => {
-				this.loadData();
+				//this.loadData();
 			})
 		this.modal.close();
 	}
@@ -517,6 +551,7 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
         }, () => { console.log('Backdrop click') })
     }
 
+    /*
     private countrylist() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
@@ -554,7 +589,6 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
         }
     }
 
-
     onCountrieselected(event) {
         if (this.allCountryinfo) {
             for (let i = 0; i < this.allCountryinfo.length; i++) {
@@ -567,7 +601,6 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
             }
         }
     }
-
 
     eventCountryHandler(event) {
         if (event.target.value != "") {
@@ -582,6 +615,5 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
             }
 
         }
-    }
-  
+    } */
 }
