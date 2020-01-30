@@ -28,9 +28,9 @@ overflow: hidden;
 text-overflow: ellipsis;
 white-space: nowrap;
 }
-:host /deep/ .ui-widget{
-padding: 0px !important;
-}
+// :host /deep/ .ui-widget{
+// padding: 0px !important;
+// }
 
 // :host /deep/ .ui-table-summary {
 //     margin-right: 0px !important;
@@ -62,4 +62,13 @@ padding: 0px !important;
     width: 30px !important;
     border: #e2e2e2 solid 1px;
     text-align: center
+}
+.m-lr-7 {
+    margin-left: -7px;
+    margin-right: -7px;
+}
+.aircraft-panel {
+    margin-left: -7px;
+    margin-right: -7px;
+    margin-top: -12px;
 }
