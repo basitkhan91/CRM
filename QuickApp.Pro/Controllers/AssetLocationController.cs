@@ -146,7 +146,7 @@ namespace QuickApp.Pro.Controllers
                     }
                     else
                     {
-                        assetaudit.IsDelete = true;
+                        assetaudit.IsDeleted = true;
                         unitOfWork.AssetLocationAudit.Remove(assetaudit);
                         unitOfWork.SaveChanges();
 
