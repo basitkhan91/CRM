@@ -29,10 +29,10 @@ export class VendorStepsPrimeNgComponent implements OnInit {
 	constructor(private router: ActivatedRoute,
 		private _changeDetectionRef: ChangeDetectorRef,
 		private route: Router, private vendorService: VendorService) {
-		//debugger;
-		// this.vendorService.stepData$.subscribe(value => {
-		// 	this.changeStep(value);
-		// });
+
+		this.vendorService.activeStep.subscribe(activeIndex => {
+			this.changeStep(activeIndex);
+		})
 
 
 	}

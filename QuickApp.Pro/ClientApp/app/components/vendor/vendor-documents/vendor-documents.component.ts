@@ -27,7 +27,6 @@ export class VendorDocumentsComponent implements OnInit {
 	// @Input() editMode;
 	// @Input() editGeneralInformationData;
 	@Output() tab = new EventEmitter<any>();
-	@ViewChild(VendorStepsPrimeNgComponent) stepper: VendorStepsPrimeNgComponent;
 	documentInformation = {
 		vendorDocumentDetailId: 0,
 		docName: '',
@@ -74,20 +73,20 @@ export class VendorDocumentsComponent implements OnInit {
 	pageIndex: number = 0;
 	pageSize: number = 10;
 	totalPages: number = 0;
-	constructor(public workFlowtService: VendorService, private router: ActivatedRoute, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService,
+	constructor(public vendorService: VendorService, private router: ActivatedRoute, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService,
 		private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private configurations: ConfigurationService) {
 
-		if (this.workFlowtService.listCollection !== undefined) {
-			this.workFlowtService.isEditMode = true;
+		if (this.vendorService.listCollection !== undefined) {
+			this.vendorService.isEditMode = true;
 			this.isViewMode = false;
 		}
 		else {
 			this.isViewMode = true;;
 		}
 
-		if (this.workFlowtService.listCollection && this.workFlowtService.isEditMode == true) {
+		if (this.vendorService.listCollection && this.vendorService.isEditMode == true) {
 
-			this.local = this.workFlowtService.listCollection;
+			this.local = this.vendorService.listCollection;
 
 		}
 	}
@@ -124,19 +123,19 @@ export class VendorDocumentsComponent implements OnInit {
 	}
 
 	getList() {
-		this.workFlowtService.getDocumentList(this.local.vendorId).subscribe(res => {
+		this.vendorService.getDocumentList(this.local.vendorId).subscribe(res => {
 			this.vendorDocumentsData = res;
 		})
 	}
 	getListById(vendorDocId) {
-		this.workFlowtService.getDocumentListbyId(vendorDocId).subscribe(res => {
+		this.vendorService.getDocumentListbyId(vendorDocId).subscribe(res => {
 			this.sourceViewforDocument = res;
 			console.log(this.sourceViewforDocument);
 		})
 	}
 
 	toGetUploadDocumentsList(attachmentId, vendorId, moduleId) {
-		this.workFlowtService.toGetUploadDocumentsList(attachmentId, vendorId, moduleId).subscribe(res => {
+		this.vendorService.toGetUploadDocumentsList(attachmentId, vendorId, moduleId).subscribe(res => {
 			this.sourceViewforDocumentList = res;
 			console.log(this.sourceViewforDocumentList);
 		})
@@ -155,7 +154,7 @@ export class VendorDocumentsComponent implements OnInit {
 		}
 
 
-		this.workFlowtService.documentUploadAction(this.formData).subscribe(res => {
+		this.vendorService.documentUploadAction(this.formData).subscribe(res => {
 			this.documentInformation.vendorDocumentDetailId = 0;
 			this.documentInformation.docDescription = '';
 			this.documentInformation.docMemo = '';
@@ -182,7 +181,7 @@ export class VendorDocumentsComponent implements OnInit {
 	editVendorDocument(rowdata, e) {
 		//this.toGetUploadDocumentsList(rowdata.attachmentId, rowdata.vendorId,3);
 		this.documentInformation = rowdata;
-		this.workFlowtService.toGetUploadDocumentsList(rowdata.attachmentId, rowdata.vendorId, 3).subscribe(res => {
+		this.vendorService.toGetUploadDocumentsList(rowdata.attachmentId, rowdata.vendorId, 3).subscribe(res => {
 			this.sourceViewforDocumentList = res;
 			this.sourceViewforDocument = rowdata;
 		})
@@ -191,7 +190,7 @@ export class VendorDocumentsComponent implements OnInit {
 	openView(content, row) {
 		// this.toGetUploadDocumentsList(row.attachmentId, row.vendorId,3);
 
-		this.workFlowtService.toGetUploadDocumentsList(row.attachmentId, row.vendorId, 3).subscribe(res => {
+		this.vendorService.toGetUploadDocumentsList(row.attachmentId, row.vendorId, 3).subscribe(res => {
 			this.sourceViewforDocumentList = res;
 			this.sourceViewforDocument = row;
 
@@ -207,7 +206,7 @@ export class VendorDocumentsComponent implements OnInit {
 	}
 
 	openViewOnDblClick(row) {
-		this.workFlowtService.toGetUploadDocumentsList(row.attachmentId, row.vendorId, 3).subscribe(res => {
+		this.vendorService.toGetUploadDocumentsList(row.attachmentId, row.vendorId, 3).subscribe(res => {
 			this.sourceViewforDocumentList = res;
 			this.sourceViewforDocument = row;
 		});
@@ -231,7 +230,7 @@ export class VendorDocumentsComponent implements OnInit {
 		let vendorDocumentDetailId = this.localCollection.vendorDocumentDetailId;
 		if (vendorDocumentDetailId > 0) {
 			this.isSaving = true;
-			this.workFlowtService.getDeleteDocumentListbyId(vendorDocumentDetailId).subscribe(
+			this.vendorService.getDeleteDocumentListbyId(vendorDocumentDetailId).subscribe(
 
 				res => {
 					this.getList();
@@ -258,22 +257,19 @@ export class VendorDocumentsComponent implements OnInit {
 
 	backClick() {
 		this.activeIndex = 9;
-		this.stepper.changeStep(this.activeIndex);
-
-
-
-		// this.workFlowtService.indexObj.next(this.activeIndex);
-		// this.workFlowtService.changeStep('Memos');
-		this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-memo');
+		this.vendorService.changeofTab(this.activeIndex);
+		// this.vendorService.indexObj.next(this.activeIndex);
+		// this.vendorService.changeStep('Memos');
+		// this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-memo');
 	}
 
 	CreateNewClick() {
-		// this.workFlowtService.contactCollection = this.local;
+		// this.vendorService.contactCollection = this.local;
 		this.activeIndex = 1;
-		this.stepper.changeStep(this.activeIndex);
-		// this.workFlowtService.indexObj.next(this.activeIndex);
-		// this.workFlowtService.changeStep('General Information');
-		this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-general-information');
+		this.vendorService.changeofTab(this.activeIndex);
+		// this.vendorService.indexObj.next(this.activeIndex);
+		// this.vendorService.changeStep('General Information');
+		// this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-general-information');
 
 	}
 	openHistory(content, row) {
@@ -281,7 +277,7 @@ export class VendorDocumentsComponent implements OnInit {
 		this.alertService.startLoadingMessage();
 
 		this.isSaving = true;
-		this.workFlowtService.getVendorDocumentAuditHistory(row.vendorDocumentDetailId).subscribe(
+		this.vendorService.getVendorDocumentAuditHistory(row.vendorDocumentDetailId).subscribe(
 			results => this.onAuditHistoryLoadSuccessful(results, content),
 			error => this.saveFailedHelper(error));
 

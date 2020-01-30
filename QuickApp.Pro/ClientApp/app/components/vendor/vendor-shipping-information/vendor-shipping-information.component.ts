@@ -34,7 +34,6 @@ declare const google: any;
 })
 /** VendorShippingInformation component*/
 export class VendorShippingInformationComponent {
-    @ViewChild(VendorStepsPrimeNgComponent) stepper: VendorStepsPrimeNgComponent;
     modelValue: boolean;
     display: boolean;
     activeIndex: number;
@@ -73,8 +72,8 @@ export class VendorShippingInformationComponent {
     shippingauditHisory: any[];
     isPrimary: boolean = false;
     ngOnInit(): void {
-        this.workFlowtService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-shipping-information';
-        this.workFlowtService.bredcrumbObj.next(this.workFlowtService.currentUrl);
+        this.vendorService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-shipping-information';
+        this.vendorService.bredcrumbObj.next(this.vendorService.currentUrl);
         if (this.local) {
             this.loadData();
         }
@@ -129,26 +128,26 @@ export class VendorShippingInformationComponent {
     totalPages: number = 0;
 
     constructor(private http: HttpClient, private router: Router,
-        private authService: AuthService, private modalService: NgbModal, private configurations: ConfigurationService, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
-        if (this.workFlowtService.listCollection !== undefined) {
-            this.workFlowtService.isEditMode = true;
+        private authService: AuthService, private modalService: NgbModal, private configurations: ConfigurationService, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public vendorService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
+        if (this.vendorService.listCollection !== undefined) {
+            this.vendorService.isEditMode = true;
         }
         this.dataSource = new MatTableDataSource();
         if (this.local) {
-            this.workFlowtService.contactCollection = this.local;
+            this.vendorService.contactCollection = this.local;
         }
-        if (this.workFlowtService.generalCollection) {
-            this.local = this.workFlowtService.generalCollection;
+        if (this.vendorService.generalCollection) {
+            this.local = this.vendorService.generalCollection;
         }
-        if (this.workFlowtService.paymentCollection) {
-            this.local = this.workFlowtService.paymentCollection;
+        if (this.vendorService.paymentCollection) {
+            this.local = this.vendorService.paymentCollection;
         }
         this.dataSource = new MatTableDataSource();
-        if (this.workFlowtService.listCollection && this.workFlowtService.isEditMode == true) {
-            this.local = this.workFlowtService.listCollection.t;
+        if (this.vendorService.listCollection && this.vendorService.isEditMode == true) {
+            this.local = this.vendorService.listCollection.t;
         }
-        if (this.workFlowtService.paymentCollection) {
-            this.local = this.workFlowtService.paymentCollection;
+        if (this.vendorService.paymentCollection) {
+            this.local = this.vendorService.paymentCollection;
             this.sourceVendor.siteName = this.local.vendorName;
             this.sourceVendor.address1 = this.local.address1;
             this.sourceVendor.address2 = this.local.address2;
@@ -158,9 +157,9 @@ export class VendorShippingInformationComponent {
             this.sourceVendor.stateOrProvince = this.local.stateOrProvince;
             this.sourceVendor.postalCode = this.local.PostalCode;
         }
-        if (this.workFlowtService.listCollection && this.workFlowtService.isEditMode == true) {
+        if (this.vendorService.listCollection && this.vendorService.isEditMode == true) {
             this.viewName = "Edit";
-            this.local = this.workFlowtService.listCollection;
+            this.local = this.vendorService.listCollection;
             this.loadData();
         }
     }
@@ -185,7 +184,7 @@ export class VendorShippingInformationComponent {
     private getgeneralInnfo() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-        this.workFlowtService.getWorkFlows().subscribe(
+        this.vendorService.getWorkFlows().subscribe(
             results => this.ongeneralDataLoadSuccessful(results[0]),
             error => this.onDataLoadFailed(error)
         );
@@ -195,7 +194,7 @@ export class VendorShippingInformationComponent {
         this.loadingIndicator = false;
         this.dataSource.data = allWorkFlows;
         this.allgeneralInfo = allWorkFlows;
-        if (this.workFlowtService.isCOntact == true) {
+        if (this.vendorService.isCOntact == true) {
             this.vendorname = this.allgeneralInfo[0].vendorName;
             this.vendorCode = this.allgeneralInfo[0].vendorCode;
         }
@@ -205,7 +204,7 @@ export class VendorShippingInformationComponent {
     private loadAddressDara() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-        this.workFlowtService.getAddressDtails().subscribe(
+        this.vendorService.getAddressDtails().subscribe(
             results => this.onAddressDataLoadSuccessful(results[0]),
             error => this.onDataLoadFailed(error)
         );
@@ -220,7 +219,7 @@ export class VendorShippingInformationComponent {
     private loadData() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-        this.workFlowtService.getVendorShipAddressGet(this.local.vendorId).subscribe(
+        this.vendorService.getVendorShipAddressGet(this.local.vendorId).subscribe(
             results => this.onDataLoadSuccessful(results[0]),
             error => this.onDataLoadFailed(error)
         );
@@ -240,7 +239,7 @@ export class VendorShippingInformationComponent {
     private countrylist() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-        this.workFlowtService.getCountrylist().subscribe(
+        this.vendorService.getCountrylist().subscribe(
             results => this.onDatacountrySuccessful(results[0]),
             error => this.onDataLoadFailed(error)
         );
@@ -256,7 +255,7 @@ export class VendorShippingInformationComponent {
     private loadShipViaCollection(rowData) {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-        this.workFlowtService.getVendorShipViaDetails(rowData).subscribe(
+        this.vendorService.getVendorShipViaDetails(rowData).subscribe(
             results => this.onShipViadetails(results[0]),
             error => this.onDataLoadFailed(error)
         );
@@ -421,7 +420,7 @@ export class VendorShippingInformationComponent {
         this.loadingIndicator = true;
         this.shipViaObj = row;
         this.isSaving = true;
-        this.workFlowtService.shipviaHistory(this.sourceVendor.vendorShippingId).subscribe(
+        this.vendorService.shipviaHistory(this.sourceVendor.vendorShippingId).subscribe(
             results => this.onHistoryLoadSuccessful(results[0], content),
             error => this.saveFailedHelper(error));
     }
@@ -430,7 +429,7 @@ export class VendorShippingInformationComponent {
         this.loadingIndicator = true;
         this.sourceVendor = row;
         this.isSaving = true;
-        this.workFlowtService.getShipaddressHistory(this.sourceVendor.vendorId, this.sourceVendor.vendorShippingAddressId).subscribe(
+        this.vendorService.getShipaddressHistory(this.sourceVendor.vendorId, this.sourceVendor.vendorShippingAddressId).subscribe(
             results => this.onAuditHistoryLoadSuccessful(results, content),
             error => this.saveFailedHelper(error));
 
@@ -453,7 +452,7 @@ export class VendorShippingInformationComponent {
                 this.sourceVendor.masterCompanyId = 1;
                 this.sourceVendor.vendorId = this.local.vendorId;
                 this.sourceVendor.country = editValueAssignByCondition('countries_id', this.sourceVendor.country);
-                this.workFlowtService.newShippingAdd(this.sourceVendor).subscribe(data => {
+                this.vendorService.newShippingAdd(this.sourceVendor).subscribe(data => {
                     this.localCollection = data;
                     this.loadData();
                     this.savesuccessCompleted(this.sourceVendor);
@@ -466,7 +465,7 @@ export class VendorShippingInformationComponent {
                 this.sourceVendor.updatedBy = this.userName;
                 this.sourceVendor.country = editValueAssignByCondition('countries_id', this.sourceVendor.country);
                 this.sourceVendor.masterCompanyId = 1;
-                this.workFlowtService.updateshippinginfo(this.sourceVendor).subscribe(data => {
+                this.vendorService.updateshippinginfo(this.sourceVendor).subscribe(data => {
                     this.updatedCollection = data;
                     this.loadData();
                     this.sourceVendor = {};
@@ -490,7 +489,7 @@ export class VendorShippingInformationComponent {
             this.shipViaObj.masterCompanyId = 1;
             this.shipViaObj.isActive = true;
 
-            this.workFlowtService.updateshippingViainfo(this.shipViaObj).subscribe(data => {
+            this.vendorService.updateshippingViainfo(this.shipViaObj).subscribe(data => {
                 this.shipViaCollection = data;
                 this.loadShipViaCollection(this.shipViaCollection);
                 if (this.shipViaCollection) {
@@ -509,7 +508,7 @@ export class VendorShippingInformationComponent {
             this.sourceVendor.masterCompanyId = 1;
             this.shipViaObj.isActive = true;
 
-            this.workFlowtService.newShippingViaAdd(this.shipViaObj).subscribe(data => {
+            this.vendorService.newShippingViaAdd(this.shipViaObj).subscribe(data => {
                 this.shipViaCollection = data;
                 this.loadShipViaCollection(this.shipViaCollection);
                 if (this.shipViaCollection) {
@@ -527,10 +526,10 @@ export class VendorShippingInformationComponent {
 
     previousClick() {
         this.activeIndex = 5;
-        this.stepper.changeStep(this.activeIndex);
-        // this.workFlowtService.indexObj.next(this.activeIndex);
-        // this.workFlowtService.changeStep('Payment Information');
-        this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-payment-information');
+        this.vendorService.changeofTab(this.activeIndex);
+        // this.vendorService.indexObj.next(this.activeIndex);
+        // this.vendorService.changeStep('Payment Information');
+        // this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-payment-information');
     }
     openShipVia(content, rowData) {
         this.isEditMode = false;
@@ -553,9 +552,9 @@ export class VendorShippingInformationComponent {
 
     updateVendorShippingAddress(updateObj: any) {
 
-        this.workFlowtService.updateVendorShippingAddressDetails(updateObj, this.local.vendorId).subscribe(data => {
+        this.vendorService.updateVendorShippingAddressDetails(updateObj, this.local.vendorId).subscribe(data => {
             this.vendorshippingAddressdetails = data;
-            this.workFlowtService.newShippingAddWithAddress(this.sourceVendor, this.vendorshippingAddressdetails.vendorShippingAddressId).subscribe(data => {
+            this.vendorService.newShippingAddWithAddress(this.sourceVendor, this.vendorshippingAddressdetails.vendorShippingAddressId).subscribe(data => {
                 this.localCollection = data;
                 this.updateVendorShippingAddress(this.localCollection);
             })
@@ -569,7 +568,7 @@ export class VendorShippingInformationComponent {
         this.sourceVendor.addressStatus = false;
         this.sourceVendor.updatedBy = this.userName;
         this.sourceVendor.vendorShippingAddressId = vendorShippingAddressId;
-        this.workFlowtService.deleteAcion(this.sourceVendor).subscribe(
+        this.vendorService.deleteAcion(this.sourceVendor).subscribe(
             response => this.saveCompleted(this.sourceVendor),
             error => this.saveFailedHelper(error));
     }
@@ -580,7 +579,7 @@ export class VendorShippingInformationComponent {
         this.localCollection.addressStatus = false;
         this.localCollection.updatedBy = this.userName;
         //this.sourceVendor.vendorShippingAddressId = vendorShippingAddressId;
-        this.workFlowtService.deleteVendorShippingAddress(this.localCollection).subscribe(
+        this.vendorService.deleteVendorShippingAddress(this.localCollection).subscribe(
             response => this.saveCompleted(this.sourceVendor),
             error => this.saveFailedHelper(error));
         this.modal.close();
@@ -597,11 +596,11 @@ export class VendorShippingInformationComponent {
         // this.shipViaObj.updatedBy = this.userName;        
         //this.shipViaObj.vendorShippingId = vendorShippingId;
 
-        this.workFlowtService.deleteVendorAcion(this.localCollection).subscribe(data => {
+        this.vendorService.deleteVendorAcion(this.localCollection).subscribe(data => {
             this.loadShipViaCollection(this.localCollection);
         })
 
-        // this.workFlowtService.deleteVendorAcion(this.localCollection).subscribe(
+        // this.vendorService.deleteVendorAcion(this.localCollection).subscribe(
         // response => this.saveCompleted(this.sourceVendor),
         // error => this.saveFailedHelper(error));
         //this.loadShipViaCollection(this.localCollection);
@@ -667,13 +666,13 @@ export class VendorShippingInformationComponent {
     }
     nextClick() {
         if (this.local) {
-            this.workFlowtService.shippingCollection = this.local;
+            this.vendorService.shippingCollection = this.local;
         }
         this.activeIndex = 7;
-        this.stepper.changeStep(this.activeIndex);
-        // this.workFlowtService.indexObj.next(this.activeIndex);
-        // this.workFlowtService.changeStep('Billing Information');
-        this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-billing-information');
+        this.vendorService.changeofTab(this.activeIndex);
+        // this.vendorService.indexObj.next(this.activeIndex);
+        // this.vendorService.changeStep('Billing Information');
+        // this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-billing-information');
     }
     handleChanges(rowData, e) {
         if (e.checked == false) {
@@ -681,7 +680,7 @@ export class VendorShippingInformationComponent {
             this.sourceVendor.updatedBy = this.userName;
             this.Active = "In Active";
             this.sourceVendor.isActive == false;
-            this.workFlowtService.updateActionforActiveforshipping(this.sourceVendor).subscribe(
+            this.vendorService.updateActionforActiveforshipping(this.sourceVendor).subscribe(
                 response => this.saveCompleted(this.sourceVendor),
                 error => this.saveFailedHelper(error));
             this.sourceVendor = "";
@@ -691,7 +690,7 @@ export class VendorShippingInformationComponent {
             this.sourceVendor.updatedBy = this.userName;
             this.Active = "Active";
             this.sourceVendor.isActive == true;
-            this.workFlowtService.updateActionforActiveforshipping(this.sourceVendor).subscribe(
+            this.vendorService.updateActionforActiveforshipping(this.sourceVendor).subscribe(
                 response => this.saveCompleted(this.sourceVendor),
                 error => this.saveFailedHelper(error));
             this.sourceVendor = "";
@@ -780,7 +779,7 @@ export class VendorShippingInformationComponent {
 
     shippingInfoHistory(rowData) {
         this.sourceVendor = rowData;
-        this.workFlowtService.getShipaddressHistory(this.sourceVendor.vendorId, this.sourceVendor.vendorShippingAddressId).subscribe(res => {
+        this.vendorService.getShipaddressHistory(this.sourceVendor.vendorId, this.sourceVendor.vendorShippingAddressId).subscribe(res => {
             this.auditHistory = res;
         })
     }
@@ -812,7 +811,7 @@ export class VendorShippingInformationComponent {
 
         if (file.length > 0) {
             this.formData.append('file', file[0])
-            this.workFlowtService.ShippingFileUpload(this.formData, this.local.vendorId).subscribe(res => {
+            this.vendorService.ShippingFileUpload(this.formData, this.local.vendorId).subscribe(res => {
                 event.target.value = '';
 
                 this.formData = new FormData();

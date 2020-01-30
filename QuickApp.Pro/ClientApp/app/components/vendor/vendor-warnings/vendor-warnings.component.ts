@@ -29,7 +29,6 @@ import { VendorStepsPrimeNgComponent } from '../vendor-steps-prime-ng/vendor-ste
 })
 /** VendorWarnings component*/
 export class VendorWarningsComponent implements OnInit {
-    @ViewChild(VendorStepsPrimeNgComponent) stepper: VendorStepsPrimeNgComponent;
     isOnlyReas: boolean = false;
     isReas: boolean = true;
     isReClose: boolean = true;
@@ -56,7 +55,6 @@ export class VendorWarningsComponent implements OnInit {
     sourceAero: any = {};
     sourceNet: any = {};
     activeIndex: number;
-    workFlowtService: any;
     isSaving: boolean;
     isDeleteMode: boolean;
     sourcePOQuote: any = {};
@@ -451,17 +449,17 @@ export class VendorWarningsComponent implements OnInit {
 
     previousClick() {
         this.activeIndex = 8;
-        this.stepper.changeStep(this.activeIndex);
+        this.vendorService.changeofTab(this.activeIndex);
         // this.vendorService.indexObj.next(this.activeIndex);
         // this.vendorService.changeStep('Billing Information');
-        this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-billing-information');
+        // this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-billing-information');
     }
     nextClick() {
         this.activeIndex = 9;
-        this.stepper.changeStep(this.activeIndex);
+        this.vendorService.changeofTab(this.activeIndex);
         // this.vendorService.indexObj.next(this.activeIndex);
         // this.vendorService.changeStep('Memos');
-        this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-memo');
+        // this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-memo');
     }
 
     // saveRMA() {

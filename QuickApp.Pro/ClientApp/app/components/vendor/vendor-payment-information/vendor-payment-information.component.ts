@@ -34,7 +34,7 @@ declare const google: any;
 })
 /** VendorPaymentInformation component*/
 export class VendorPaymentInformationComponent implements OnInit, AfterViewInit {
-	@ViewChild(VendorStepsPrimeNgComponent) stepper: VendorStepsPrimeNgComponent;
+
 	modelValue: boolean;
 	display: boolean;
 	defaultPaymentStyle: boolean = true;
@@ -92,8 +92,8 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 	selectedRowforDelete: any;
 
 	ngOnInit(): void {
-		this.workFlowtService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-payment-information';
-		this.workFlowtService.bredcrumbObj.next(this.workFlowtService.currentUrl);
+		this.vendorService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-payment-information';
+		this.vendorService.bredcrumbObj.next(this.vendorService.currentUrl);
 		this.defaultSaveObj.defaultPaymentMethod = 1;
 		this.countrylist();
 		if (this.local) {
@@ -153,14 +153,14 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 	private isDeleteMode: boolean = false;
 	isEditPaymentInfo: boolean = false;
 
-	constructor(private http: HttpClient, private changeDetectorRef: ChangeDetectorRef, private router: ActivatedRoute, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
+	constructor(private http: HttpClient, private changeDetectorRef: ChangeDetectorRef, private router: ActivatedRoute, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public vendorService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
 
-		if (this.workFlowtService.listCollection !== undefined) {
-			this.workFlowtService.isEditMode = true;
+		if (this.vendorService.listCollection !== undefined) {
+			this.vendorService.isEditMode = true;
 		}
 
-		if (this.workFlowtService.financeCollection) {
-			this.local = this.workFlowtService.financeCollection;
+		if (this.vendorService.financeCollection) {
+			this.local = this.vendorService.financeCollection;
 		}
 		if (this.defaultPaymentMethod == 1) {
 			this.showPament();
@@ -171,19 +171,19 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 		this.countrylist();
 		this.dataSource = new MatTableDataSource();
 		if (this.local) {
-			this.workFlowtService.contactCollection = this.local;
+			this.vendorService.contactCollection = this.local;
 		}
-		if (this.workFlowtService.generalCollection) {
-			this.local = this.workFlowtService.generalCollection;
+		if (this.vendorService.generalCollection) {
+			this.local = this.vendorService.generalCollection;
 		}
-		if (this.workFlowtService.listCollection && this.workFlowtService.isEditMode == true) {
+		if (this.vendorService.listCollection && this.vendorService.isEditMode == true) {
 			this.viewName = "Edit";
-			this.local = this.workFlowtService.listCollection;
+			this.local = this.vendorService.listCollection;
 			this.loadData();
 
 		}
-		if (this.workFlowtService.generalCollection) {
-			this.local = this.workFlowtService.generalCollection;
+		if (this.vendorService.generalCollection) {
+			this.local = this.vendorService.generalCollection;
 			this.sourceVendor.siteName = this.local.vendorName;
 			this.sourceVendor.address1 = this.local.address1;
 			this.sourceVendor.address2 = this.local.address2;
@@ -193,9 +193,9 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 			this.sourceVendor.stateOrProvince = this.local.stateOrProvince;
 			this.sourceVendor.postalCode = this.local.PostalCode;
 		}
-		if (this.workFlowtService.listCollection && this.workFlowtService.isEditMode == true) {
+		if (this.vendorService.listCollection && this.vendorService.isEditMode == true) {
 			this.viewName = "Edit";
-			this.local = this.workFlowtService.listCollection;
+			this.local = this.vendorService.listCollection;
 			this.loadData();
 		}
 	}
@@ -207,7 +207,7 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 		this.alertService.startLoadingMessage();
 		this.loadingIndicator = true;
 
-		this.workFlowtService.getWorkFlows().subscribe(
+		this.vendorService.getWorkFlows().subscribe(
 			results => this.ongeneralDataLoadSuccessful(results[0]),
 			error => this.onDataLoadFailed(error)
 		);
@@ -277,7 +277,7 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 	private getDomesticWithVendorId() {
 		this.alertService.startLoadingMessage();
 		this.loadingIndicator = true;
-		this.workFlowtService.getDomesticvedor(this.local.vendorId).subscribe(
+		this.vendorService.getDomesticvedor(this.local.vendorId).subscribe(
 			results => this.onDomestciLoad(results[0]),
 			error => this.onDataLoadFailed(error)
 		);
@@ -285,7 +285,7 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 	private InternatioalWithVendorId() {
 		this.alertService.startLoadingMessage();
 		this.loadingIndicator = true;
-		this.workFlowtService.getInternationalWire(this.local.vendorId).subscribe(
+		this.vendorService.getInternationalWire(this.local.vendorId).subscribe(
 			results => this.onInternatioalLoad(results[0]),
 			error => this.onDataLoadFailed(error)
 		);
@@ -294,7 +294,7 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 	private DefaultWithVendorId() {
 		this.alertService.startLoadingMessage();
 		this.loadingIndicator = true;
-		this.workFlowtService.getDefaultlist(this.local.vendorId).subscribe(
+		this.vendorService.getDefaultlist(this.local.vendorId).subscribe(
 			results => this.onDefaultLoad(results[0]),
 			error => this.onDataLoadFailed(error)
 		);
@@ -304,7 +304,7 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 	private countrylist() {
 		this.alertService.startLoadingMessage();
 		this.loadingIndicator = true;
-		this.workFlowtService.getCountrylist().subscribe(
+		this.vendorService.getCountrylist().subscribe(
 			results => this.onDatacountrySuccessful(results[0]),
 			error => this.onDataLoadFailed(error)
 		);
@@ -321,7 +321,7 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 	private loadData() {
 		this.alertService.startLoadingMessage();
 		this.loadingIndicator = true;
-		this.workFlowtService.getCheckPaymentobj(this.local.vendorId).subscribe(
+		this.vendorService.getCheckPaymentobj(this.local.vendorId).subscribe(
 			results => this.onDataLoadSuccessful(results[0]),
 			error => this.onDataLoadFailed(error)
 		);
@@ -338,7 +338,7 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 	}
 
 	public getbencus() {
-		this.workFlowtService.getBeneficiaryCustomer().subscribe(
+		this.vendorService.getBeneficiaryCustomer().subscribe(
 			results => this.onBencustomerLoad(results[0]),
 			error => this.onDataLoadFailed(error)
 		);
@@ -362,7 +362,7 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 			this.sourceVendor.updatedBy = this.userName;
 			this.Active = "In Active";
 			this.sourceVendor.isActive == false;
-			this.workFlowtService.updateActiveforpayment(this.sourceVendor).subscribe(
+			this.vendorService.updateActiveforpayment(this.sourceVendor).subscribe(
 				response => this.saveCompleted(this.sourceVendor),
 				error => this.saveFailedHelper(error));
 			this.sourceVendor = "";
@@ -372,7 +372,7 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 			this.sourceVendor.updatedBy = this.userName;
 			this.Active = "Active";
 			this.sourceVendor.isActive == true;
-			this.workFlowtService.updateActiveforpayment(this.sourceVendor).subscribe(
+			this.vendorService.updateActiveforpayment(this.sourceVendor).subscribe(
 				response => this.saveCompleted(this.sourceVendor),
 				error => this.saveFailedHelper(error));
 			this.sourceVendor = "";
@@ -463,7 +463,7 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 	private loadPaymentObject() {
 		this.alertService.startLoadingMessage();
 		this.loadingIndicator = true;
-		this.workFlowtService.getPaymentObj().subscribe(
+		this.vendorService.getPaymentObj().subscribe(
 			results => this.onPaymentObjUrl(results[0]),
 			error => this.onDataLoadFailed(error)
 		);
@@ -580,7 +580,7 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 		this.loadingIndicator = true;
 		this.sourceVendor = row;
 		this.isSaving = true;
-		this.workFlowtService.paymentHist(this.sourceVendor.checkPaymentId).subscribe(
+		this.vendorService.paymentHist(this.sourceVendor.checkPaymentId).subscribe(
 			results => this.onHistoryLoadSuccessful(results[0], content),
 			error => this.saveFailedHelper(error));
 	}
@@ -600,7 +600,7 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 	private loadAddressDara() {
 		this.alertService.startLoadingMessage();
 		this.loadingIndicator = true;
-		this.workFlowtService.getAddressDtails().subscribe(
+		this.vendorService.getAddressDtails().subscribe(
 			results => this.onAddressDataLoadSuccessful(results[0]),
 			error => this.onDataLoadFailed(error)
 		);
@@ -664,7 +664,7 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 				this.sourceVendor.isActive = true;
 				this.sourceVendor.vendorId = this.local.vendorId;
 				this.sourceVendor.country = editValueAssignByCondition('countries_id', this.sourceVendor.country);
-				this.workFlowtService.addCheckinfo(this.sourceVendor).subscribe(data => {
+				this.vendorService.addCheckinfo(this.sourceVendor).subscribe(data => {
 					this.loadData();
 					this.localCollection = data;
 					this.savesuccessCompleted(this.sourceVendor);
@@ -679,7 +679,7 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 				this.sourceVendor.updatedBy = this.userName;
 				this.sourceVendor.masterCompanyId = 1;
 				this.sourceVendor.country = editValueAssignByCondition('countries_id', this.sourceVendor.country);
-				this.workFlowtService.updateCheckPaymentInfo(this.sourceVendor).subscribe(data => {
+				this.vendorService.updateCheckPaymentInfo(this.sourceVendor).subscribe(data => {
 					if (data) { this.sourceVendor = new Object(); }
 					this.updatedCollection = data;
 					this.loadData();
@@ -709,7 +709,7 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 				this.sourceVendor.isActive = true;
 				this.sourceVendor.vendorId = this.local.vendorId;
 				this.domesticSaveObj.country = editValueAssignByCondition('countries_id', this.domesticSaveObj.country);
-				this.workFlowtService.addDomesticinfo(this.domesticSaveObj).subscribe(data => {
+				this.vendorService.addDomesticinfo(this.domesticSaveObj).subscribe(data => {
 					this.loadData();
 					this.localCollection = data;
 					this.savesuccessCompleted(this.sourceVendor);
@@ -721,7 +721,7 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 				this.sourceVendor.updatedBy = this.userName;
 				this.sourceVendor.masterCompanyId = 1;
 				this.domesticSaveObj.country = editValueAssignByCondition('countries_id', this.domesticSaveObj.country);
-				this.workFlowtService.updateDomesticBankPaymentinfo(this.domesticSaveObj).subscribe(
+				this.vendorService.updateDomesticBankPaymentinfo(this.domesticSaveObj).subscribe(
 					response => this.saveCompleted(this.sourceVendor),
 					error => this.saveFailedHelper(error));
 			}
@@ -745,11 +745,11 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 				this.sourceVendor.updatedBy = this.userName;
 				this.sourceVendor.masterCompanyId = 1;
 				this.internationalSaveObj.country = editValueAssignByCondition('countries_id', this.internationalSaveObj.country);
-				this.workFlowtService.addInternationalinfo(this.internationalSaveObj).subscribe(data => {
+				this.vendorService.addInternationalinfo(this.internationalSaveObj).subscribe(data => {
 					this.localCollection = data;
-					this.workFlowtService.paymentCollection = this.local;
+					this.vendorService.paymentCollection = this.local;
 					// this.activeIndex = 4;
-					// this.workFlowtService.indexObj.next(this.activeIndex);
+					// this.vendorService.indexObj.next(this.activeIndex);
 					this.savesuccessCompleted(this.sourceVendor);
 					this.updateVendorInternationalWirePayment(this.localCollection);
 				})
@@ -759,9 +759,9 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 				this.sourceVendor.updatedBy = this.userName;
 				this.sourceVendor.masterCompanyId = 1;
 				this.internationalSaveObj.country = editValueAssignByCondition('countries_id', this.internationalSaveObj.country);
-				this.workFlowtService.vendorInternationalUpdate(this.internationalSaveObj).subscribe(
+				this.vendorService.vendorInternationalUpdate(this.internationalSaveObj).subscribe(
 					data => {
-						this.workFlowtService.paymentCollection = this.local;
+						this.vendorService.paymentCollection = this.local;
 						this.saveCompleted(this.sourceVendor);
 					})
 			}
@@ -783,9 +783,9 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 			this.defaultPaymentObj.isActive = true;
 			this.defaultPaymentObj.defaultPaymentMethod = this.defaultSaveObj.defaultPaymentMethod;
 
-			this.workFlowtService.vendorDefaultUpdate(this.defaultPaymentObj).subscribe(
+			this.vendorService.vendorDefaultUpdate(this.defaultPaymentObj).subscribe(
 				data => {
-					this.workFlowtService.paymentCollection = this.local;
+					this.vendorService.paymentCollection = this.local;
 					this.saveCompleted(this.sourceVendor);
 				})
 		}
@@ -798,9 +798,9 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 			this.defaultPaymentObj.defaultPaymentMethod = this.defaultSaveObj.defaultPaymentMethod;
 			this.defaultPaymentObj.isActive = true;
 
-			this.workFlowtService.addDefaultinfo(this.defaultPaymentObj).subscribe(data => {
+			this.vendorService.addDefaultinfo(this.defaultPaymentObj).subscribe(data => {
 				// this.activeIndex = 3;
-				// this.workFlowtService.indexObj.next(this.activeIndex);
+				// this.vendorService.indexObj.next(this.activeIndex);
 				this.savesuccessCompleted(this.sourceVendor);
 			})
 		}
@@ -812,7 +812,7 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 	//     this.isSaving = true;
 	//     this.sourceVendor.isActive = false;
 	//     this.sourceVendor.updatedBy = this.userName;
-	// 	this.workFlowtService.deleteCheckPayment(checkPaymentId).subscribe(
+	// 	this.vendorService.deleteCheckPayment(checkPaymentId).subscribe(
 	//         response => this.saveCompleted(this.sourceVendor),
 	//         error => this.saveFailedHelper(error));
 	// }
@@ -823,7 +823,7 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 
 	deleteConformation(value) {
 		if (value === 'Yes') {
-			this.workFlowtService.deleteCheckPayment(this.selectedRowforDelete.checkPaymentId).subscribe(() => {
+			this.vendorService.deleteCheckPayment(this.selectedRowforDelete.checkPaymentId).subscribe(() => {
 				this.loadData();
 				this.alertService.showMessage(
 					'Success',
@@ -837,36 +837,36 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 	}
 
 	updateVendorCheckPayment(updateObj: any) {
-		this.workFlowtService.updateVendorCheckpayment(updateObj, this.local.vendorId).subscribe(data => {
+		this.vendorService.updateVendorCheckpayment(updateObj, this.local.vendorId).subscribe(data => {
 			this.loadData();
 		})
 	}
 
 	updateVendorDomesticWirePayment(updateObj: any) {
-		this.workFlowtService.updateVendorDomesticWirePayment(updateObj, this.local.vendorId).subscribe(data => {
+		this.vendorService.updateVendorDomesticWirePayment(updateObj, this.local.vendorId).subscribe(data => {
 			this.loadData();
 		})
 	}
 
 
 	updateVendorInternationalWirePayment(updateObj: any) {
-		this.workFlowtService.updateVendorInternationalWirePayment(updateObj, this.local.vendorId).subscribe(data => {
+		this.vendorService.updateVendorInternationalWirePayment(updateObj, this.local.vendorId).subscribe(data => {
 			this.loadData();
 		})
 	}
 	previousClick() {
 		this.activeIndex = 4;
-		this.stepper.changeStep(this.activeIndex);
-		// this.workFlowtService.indexObj.next(this.activeIndex);
-		// this.workFlowtService.changeStep('Financial Information');
+		this.vendorService.changeofTab(this.activeIndex);
+		// this.vendorService.indexObj.next(this.activeIndex);
+		// this.vendorService.changeStep('Financial Information');
 		this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-financial-information');
 	}
 	nextClick() {
-		this.workFlowtService.contactCollection = this.local;
+		this.vendorService.contactCollection = this.local;
 		this.activeIndex = 6;
-		this.stepper.changeStep(this.activeIndex);
-		// this.workFlowtService.indexObj.next(this.activeIndex);
-		// this.workFlowtService.changeStep('Shipping Information');
+		this.vendorService.changeofTab(this.activeIndex);
+		// this.vendorService.indexObj.next(this.activeIndex);
+		// this.vendorService.changeStep('Shipping Information');
 		this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-shipping-information');
 		//this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-billing-information');
 	}
@@ -949,7 +949,7 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 			this.sourceVendor.updatedBy = this.userName;
 			this.Active = "In Active";
 			this.sourceVendor.isActive = false;
-			this.workFlowtService.updateActiveforpayment(this.sourceVendor).subscribe(
+			this.vendorService.updateActiveforpayment(this.sourceVendor).subscribe(
 				response => this.saveCompleted(this.sourceVendor),
 				error => this.saveFailedHelper(error));
 		}
@@ -958,7 +958,7 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 			this.sourceVendor.updatedBy = this.userName;
 			this.Active = "Active";
 			this.sourceVendor.isActive = true;
-			this.workFlowtService.updateActiveforpayment(this.sourceVendor).subscribe(
+			this.vendorService.updateActiveforpayment(this.sourceVendor).subscribe(
 				response => this.saveCompleted(this.sourceVendor),
 				error => this.saveFailedHelper(error));
 		}

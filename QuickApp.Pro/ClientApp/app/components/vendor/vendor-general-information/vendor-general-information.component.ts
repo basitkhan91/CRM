@@ -43,8 +43,8 @@ declare const google: any;
     animations: [fadeInOut],
 })
 /** anys component*/
-export class VendorGeneralInformationComponent implements OnInit, AfterViewInit {
-    @ViewChild(VendorStepsPrimeNgComponent) stepper: VendorStepsPrimeNgComponent;
+export class VendorGeneralInformationComponent implements OnInit {
+
 
     disableSaveVenderName: boolean;
     disableSaveVenderCode: boolean;
@@ -162,7 +162,7 @@ export class VendorGeneralInformationComponent implements OnInit, AfterViewInit 
         public integrationService: IntegrationService,
         private acRouter: ActivatedRoute,
         private configurations: ConfigurationService) {
-        console.log(this.stepper);
+
         this.dataSource = new MatTableDataSource();
 
         const vendorId = this.acRouter.snapshot.params['id'];
@@ -359,10 +359,7 @@ export class VendorGeneralInformationComponent implements OnInit, AfterViewInit 
 
     }
 
-    ngAfterViewInit() {
-        console.log(this.stepper);
 
-    }
     editModeDataBinding() {
         console.log('sample');
         console.log(this.vendorService.isEditMode);
@@ -908,7 +905,7 @@ export class VendorGeneralInformationComponent implements OnInit, AfterViewInit 
         // this.vendorService.changeStep('Contacts');
         // this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-contacts');
         this.activeIndex = 2;
-        this.stepper.changeStep(this.activeIndex);
+        this.vendorService.changeofTab(this.activeIndex);
         // this.vendorService.indexObj.next(this.activeIndex);
         // this.vendorService.changeStep('Capabilities');
         // this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-capes');
@@ -916,7 +913,7 @@ export class VendorGeneralInformationComponent implements OnInit, AfterViewInit 
 
     CreateVendorOnClick() {
         this.activeIndex = 1;
-        this.stepper.changeStep(this.activeIndex);
+        this.vendorService.changeofTab(this.activeIndex);
         // this.vendorService.indexObj.next(this.activeIndex);
         // this.vendorService.changeStep('General Information');
         // this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-general-information');

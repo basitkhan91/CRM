@@ -72,6 +72,8 @@ export class VendorService {
     localCollectiontoCustomer: any;
     localCollectiontoVendor: any;
     selectedPoCollection: any;
+    activeStep = new Subject();
+    stepper = this.activeStep.asObservable();
     constructor(
         private router: Router,
         private http: HttpClient,
@@ -82,9 +84,13 @@ export class VendorService {
     //	this.mySubject.next(data);
     //}
 
-    changeStep(stepVal) {
-        this.stepDataSubject.next(stepVal);
+    changeofTab(activeIndex) {
+        this.activeStep.next(activeIndex);
     }
+
+    // changeStep(stepVal) {
+    //     this.stepDataSubject.next(stepVal);
+    // }
     getWorkFlows() {
         return Observable.forkJoin(
             this.actionEndpoint.getvendorEndpoint<any[]>());
@@ -790,47 +796,45 @@ export class VendorService {
             this.actionEndpoint.getVendorProcess1099idFromTransaction<any>(vendorId));
     }
 
-    repairOrderGlobalSearch(filterText, pageNumber, pageSize, vendorId){
+    repairOrderGlobalSearch(filterText, pageNumber, pageSize, vendorId) {
         return this.actionEndpoint.repairOrderGlobalSearch(filterText, pageNumber, pageSize, vendorId);
-      }
+    }
 
 
-      getHistoryForVendor(vendorId){
+    getHistoryForVendor(vendorId) {
         return this.actionEndpoint.getHistoryForVendor(vendorId);
-      }
+    }
 
 
 
-      GetVendorBillingAddressDelete(billingAddressId, updatedBy)
-      {
+    GetVendorBillingAddressDelete(billingAddressId, updatedBy) {
         return this.actionEndpoint.GetVendorBillingAddressDeleteEndpoint(billingAddressId, updatedBy);
-      }
+    }
 
-      GetUpdateVendorBillingAddressStatus(billingAddressId, status, updatedBy)
-      {
-        return this.actionEndpoint.GetUpdateVendorBillingAddressStatusEndpoint(billingAddressId,status, updatedBy);
-      }
+    GetUpdateVendorBillingAddressStatus(billingAddressId, status, updatedBy) {
+        return this.actionEndpoint.GetUpdateVendorBillingAddressStatusEndpoint(billingAddressId, status, updatedBy);
+    }
 
-      getVendorCapabilityByVendorId(vendorId){
+    getVendorCapabilityByVendorId(vendorId) {
         return this.actionEndpoint.getVendorCapabilityByVendorId(vendorId);
-      }
+    }
 
-      getVendorDataById(vendorId){
+    getVendorDataById(vendorId) {
         return this.actionEndpoint.getVendorDataById(vendorId);
-      }
+    }
 
-      BillingFileUpload(file, vendorId) {
+    BillingFileUpload(file, vendorId) {
         return this.actionEndpoint.VendorBillingFileUpload(file, vendorId);
     }
     ShippingFileUpload(file, vendorId) {
         return this.actionEndpoint.VendorShippingFileUpload(file, vendorId);
     }
-   
-   ContactUpload(file, vendorId) {
-       return this.actionEndpoint.VendorContactFileUpload(file, vendorId);
-    }
-      
 
-      
+    ContactUpload(file, vendorId) {
+        return this.actionEndpoint.VendorContactFileUpload(file, vendorId);
+    }
+
+
+
 }
 
