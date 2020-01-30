@@ -21,109 +21,110 @@ import { Router, ActivatedRoute, Params, NavigationExtras } from '@angular/route
 import { Message } from 'primeng/components/common/message';
 import { MenuItem } from 'primeng/components/common/menuitem';
 import { async } from '../../../../../node_modules/@angular/core/testing';
+import { VendorStepsPrimeNgComponent } from '../vendor-steps-prime-ng/vendor-steps-prime-ng.component';
 
 
 @Component({
-    selector: 'app-vendor-memo',
-    templateUrl: './vendor-memo.component.html',
+	selector: 'app-vendor-memo',
+	templateUrl: './vendor-memo.component.html',
 	styleUrls: ['./vendor-memo.component.scss'],
 	animations: [fadeInOut]
 })
 /** VendorMemo component*/
-export class VendorMemoComponent implements OnInit{
+export class VendorMemoComponent implements OnInit {
 	loadingIndicator: boolean;
-	allVendorPOList:any[];
-	allVendorROList:any[];
+	allVendorPOList: any[];
+	allVendorROList: any[];
 	allVendorPOROList: any[];
-	activeIndex: any;	
-	
+	activeIndex: any;
+
 	local: any;
 	private isEditMode: boolean = false;
 	private isSaving: boolean;
-			
+
 	memoCols = [
-		{ field: 'module', header: 'Module' },			
+		{ field: 'module', header: 'Module' },
 		{ field: 'orderNumber', header: 'ID' },
 		//{ field: 'notes', header: 'Memo text' },      
 
 		// { field: 'module', header: 'Module' },			
 		// { field: 'RepairOrderNumber', header: 'Id' },
 		// { field: 'RoMemo', header: 'Memo text' },  
-	];   
-	selectedColumns = this.memoCols;        
+	];
+	selectedColumns = this.memoCols;
 
 
 
-    //displayedColumns = ['capabilityName', 'capabilityId', 'createdDate', 'companyName'];	
-	
+	//displayedColumns = ['capabilityName', 'capabilityId', 'createdDate', 'companyName'];	
 
-    /** VendorMemo ctor */
-	constructor(public workFlowtService: VendorService, private router: Router,private alertService: AlertService,private authService: AuthService,) {
-		if(this.workFlowtService.listCollection !== undefined){
-            this.workFlowtService.isEditMode = true;
-        }
-		if (this.workFlowtService.listCollection && this.workFlowtService.isEditMode == true) {
-			
-			this.local = this.workFlowtService.listCollection;
-						
+
+	/** VendorMemo ctor */
+	constructor(public vendorService: VendorService, private router: Router, private alertService: AlertService, private authService: AuthService, ) {
+		if (this.vendorService.listCollection !== undefined) {
+			this.vendorService.isEditMode = true;
 		}
-		
+		if (this.vendorService.listCollection && this.vendorService.isEditMode == true) {
+
+			this.local = this.vendorService.listCollection;
+
+		}
+
 	}
 
 	ngOnInit(): void {
-		this.workFlowtService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-memo';
-		this.workFlowtService.bredcrumbObj.next(this.workFlowtService.currentUrl);
-		this.workFlowtService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-memo';
-		this.workFlowtService.bredcrumbObj.next(this.workFlowtService.currentUrl);
-		this.workFlowtService.ShowPtab = true;
-		this.workFlowtService.alertObj.next(this.workFlowtService.ShowPtab);
+		this.vendorService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-memo';
+		this.vendorService.bredcrumbObj.next(this.vendorService.currentUrl);
+		this.vendorService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-memo';
+		this.vendorService.bredcrumbObj.next(this.vendorService.currentUrl);
+		this.vendorService.ShowPtab = true;
+		this.vendorService.alertObj.next(this.vendorService.ShowPtab);
 		if (this.local) {
 			this.VendorPOMemolist();
 			this.VendorROMemolist();
 		}
-				
+
 	}
 
 	get userName(): string {
-        return this.authService.currentUser ? this.authService.currentUser.userName : "";
-    }
+		return this.authService.currentUser ? this.authService.currentUser.userName : "";
+	}
 
-	createnew(){
-        this.workFlowtService.changeStep('General Information');
-        this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-general-information');
+	createnew() {
+		// this.vendorService.changeStep('General Information');
+		// this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-general-information');
 	}
 
 
-	async  VendorPOMemolist() {			       
-	    await this.workFlowtService.getVendorPOMemolist(this.local.vendorId).subscribe(
-		 res => {
-			 this.allVendorPOList = res;
-			 this.allVendorPOROList = res;
-			 //this.allVendorPOROList.push(this.allVendorPOList);
-			 console.log(this.allVendorPOROList);
-		 });
+	async  VendorPOMemolist() {
+		await this.vendorService.getVendorPOMemolist(this.local.vendorId).subscribe(
+			res => {
+				this.allVendorPOList = res;
+				this.allVendorPOROList = res;
+				//this.allVendorPOROList.push(this.allVendorPOList);
+				console.log(this.allVendorPOROList);
+			});
 	}
-	
-	async  VendorROMemolist() {			       
-	    await this.workFlowtService.getVendorROMemolist(this.local.vendorId).subscribe(
-		 res => {
-			 this.allVendorROList = res;		 
 
-			 for (let value of this.allVendorROList) {
-				this.allVendorPOROList.push(value);
-			  }
-			 
-		 });
+	async  VendorROMemolist() {
+		await this.vendorService.getVendorROMemolist(this.local.vendorId).subscribe(
+			res => {
+				this.allVendorROList = res;
 
-	}	
-	
-	updateMemoTxext(row,e) {	
-        this.isEditMode = true;
-        this.isSaving = true;	
+				for (let value of this.allVendorROList) {
+					this.allVendorPOROList.push(value);
+				}
+
+			});
+
+	}
+
+	updateMemoTxext(row, e) {
+		this.isEditMode = true;
+		this.isSaving = true;
 		console.log(row);
-		var name= this.userName;		
-		this.workFlowtService.updateVendorPOROmemolist(row.orderNumberId,row.module,row.notes,name).subscribe(
-			res=>{
+		var name = this.userName;
+		this.vendorService.updateVendorPOROmemolist(row.orderNumberId, row.module, row.notes, name).subscribe(
+			res => {
 				this.VendorPOMemolist();
 				this.VendorROMemolist();
 				this.alertService.showMessage(
@@ -132,23 +133,24 @@ export class VendorMemoComponent implements OnInit{
 					MessageSeverity.success
 				);
 			}
-			
-		)     
+
+		)
 	}
-	
+
 	NextClick() {
-        this.workFlowtService.contactCollection = this.local;
-        this.activeIndex = 9;
-        this.workFlowtService.indexObj.next(this.activeIndex);
-        this.workFlowtService.changeStep('Documents');
-        this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-documents');
+		this.vendorService.contactCollection = this.local;
+		this.activeIndex = 10;
+		this.vendorService.changeofTab(this.activeIndex);
+		// this.vendorService.indexObj.next(this.activeIndex);
+		// this.vendorService.changeStep('Documents');
+		// this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-documents');
 	}
-	
-	backClick()
-	{
-		this.activeIndex = 7;
-        this.workFlowtService.indexObj.next(this.activeIndex);
-        this.workFlowtService.changeStep('Warnings');
-        this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-warnings');
+
+	backClick() {
+		this.activeIndex = 9;
+		this.vendorService.changeofTab(this.activeIndex);
+		// this.vendorService.indexObj.next(this.activeIndex);
+		// this.vendorService.changeStep('Warnings');
+		// this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-warnings');
 	}
 }   

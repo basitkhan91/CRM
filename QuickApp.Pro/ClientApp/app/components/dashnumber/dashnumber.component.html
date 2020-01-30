@@ -26,7 +26,7 @@
                                         iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})"></button>
                                     <div class="excel-upload  excel-upload-cstm">
 
-                                        <input type="file" name="upload[]" id="upload" (change)="customExcelUpload($event)" class="uploaddoc upload-file" accept=".xlsx, .xls, .csv">
+                                        <input type="file" name="upload[]" id="upload" (change)="customDashNumberExcelUpload($event)" class="uploaddoc upload-file" accept=".xlsx, .xls, .csv">
                                         <label for="upload">
                                             <span matTooltip="Upload Data (Excel)">
                                                 <i class="fa fa-upload"></i>
@@ -63,11 +63,13 @@
                                         (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
                                     </td>
                                     <td style="width:200px" *ngIf="selectedColumns.length> 0">
-                                        <p-inputSwitch [(ngModel)]="rowData['isActive']" matTooltip="Update" name="isActive{{rowIndex}}" (onChange)="changeStatus(rowData)"></p-inputSwitch>
+                                         <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="changeStatus(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                                        <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="changeStatus(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                                        <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="changeStatus(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
 
                                         <span data-toggle="modal" data-target="#view">
                                             <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="viewSelectedRow(rowData)" matTooltip="view" data-target="#view"
-                                                data-toggle="modal">
+                                               data-toggle="modal">
                                                 <i class="fa fa-eye"></i>
                                             </a>
                                         </span>
@@ -294,12 +296,13 @@
                         <tbody *ngIf="auditHistory.length> 0">
                             <tr *ngFor="let audit of auditHistory; let i = index;">
                                 <!-- auditHistory[i>0 ? i-1 : i] -->
-                                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'aircraftType', audit.aircraftType)  ? 'black' : 'red'  }">
-                                    {{audit.aircraftType}}</td>
-                                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'aircraftModel', audit.aircraftModel)  ? 'black' : 'red'  }">
-                                    {{audit.aircraftModel}}</td>
-                                <td [ngStyle]="{'color': getColorCodeForHistory(i, 'description', audit.description)  ? 'black' : 'red'  }">
-                                    {{audit.description}}</td>
+                                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'aircraft', audit.aircraft)  ? 'black' : 'red'  }">
+                                    {{audit.aircraft}}</td>
+                                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'model', audit.model)  ? 'black' : 'red'  }">
+                                    {{audit.model}}</td>
+                                <td [ngStyle]="{'color': getColorCodeForHistory(i, 'dashNumber', audit.dashNumber)  ? 'black' : 'red'  }">
+                                    {{audit.dashNumber}}
+                                </td>
                                 <td [ngStyle]="{'color': getColorCodeForHistory(i, 'memo', audit.memo)  ? 'black' : 'red'  }">
                                     {{audit.memo}}</td>
                                 <td [ngStyle]="{'color': getColorCodeForHistory(i, 'isActive', audit.isActive)  ? 'black' : 'red'  }">

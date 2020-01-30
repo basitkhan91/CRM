@@ -78,11 +78,12 @@ import { DropdownModule } from "primeng/dropdown";
 import { VendorCapesComponent } from "../components/vendor/vendor-capes/vendor-capes.component";
 
 
+
 @NgModule({
 	imports: [
 		//SharedModule,
 		//CompanyComponent,
-        KeyFilterModule,
+		KeyFilterModule,
 		FlexLayoutModule,
 		FormsModule, ReactiveFormsModule,
 		QuickAppProMaterialModule,
@@ -93,18 +94,18 @@ import { VendorCapesComponent } from "../components/vendor/vendor-capes/vendor-c
 		SelectButtonModule,
 		InputTextModule,
 		MultiSelectModule,
-        VendorPagesRoutingModule,
-        InputSwitchModule,
-        CheckboxModule,
-        AutoCompleteModule,
+		VendorPagesRoutingModule,
+		InputSwitchModule,
+		CheckboxModule,
+		AutoCompleteModule,
 		GMapModule
 		, RadioButtonModule, FileUploadModule,
 		StepsModule,
 		BreadcrumbModule, DialogModule, CalendarModule,
 		TreeModule,
-        TreeTableModule,
-        ValidateAccessModule,
-        TabViewModule,
+		TreeTableModule,
+		ValidateAccessModule,
+		TabViewModule,
 		TooltipModule,
 		DropdownModule
 
@@ -116,13 +117,13 @@ import { VendorCapesComponent } from "../components/vendor/vendor-capes/vendor-c
 		VendorFinancialInformationComponent,
 		VendorGeneralInformationComponent,
 		VendorPaymentInformationComponent,
-        VendorBillingInformationComponent,
+		VendorBillingInformationComponent,
 		VendorShippingInformationComponent,
 		VendorWarningsComponent,
 		VendorMemoComponent,
 		VendorEmailsComponent,
 		VendorConversationsComponent,
-        VendorsListComponent,
+		VendorsListComponent,
 		AddActionsDialogComponent,
 		VendorStepsPrimeNgComponent,
 		CreatePoComponent,
@@ -134,10 +135,12 @@ import { VendorCapesComponent } from "../components/vendor/vendor-capes/vendor-c
 		RoSetupComponent,
 
 		VendorCapabilitiesListComponent,
-        AddVendorCapabilitiesComponent,
+		AddVendorCapabilitiesComponent,
 		EditVendorCapabilitiesComponent,
-		VendorDocumentsComponent
-        
+		VendorDocumentsComponent,
+
+
+
 	],
 	providers: [
 		VendorClassificationComponent,
@@ -145,13 +148,13 @@ import { VendorCapesComponent } from "../components/vendor/vendor-capes/vendor-c
 		AircraftModelEndpointService,
 		DashNumberService,
 		DashNumberEndpointService,
-		AuthService		
+		AuthService
 	],
-    entryComponents: [
-        AddActionsDialogComponent
-    ],
+	entryComponents: [
+		AddActionsDialogComponent
+	],
 
-    
+
 })
 export class VendorPagesModule {
 

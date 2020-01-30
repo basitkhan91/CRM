@@ -23,6 +23,7 @@ import { GMapModule } from 'primeng/gmap';
 import { Router } from '@angular/router';
 import * as $ from 'jquery';
 import { getObjectById, editValueAssignByCondition } from '../../../generic/autocomplete';
+import { VendorStepsPrimeNgComponent } from '../vendor-steps-prime-ng/vendor-steps-prime-ng.component';
 import { ConfigurationService } from '../../../services/configuration.service';
 declare const google: any;
 @Component({
@@ -71,8 +72,8 @@ export class VendorBillingInformationComponent {
     shipviacollection: any[];
     formData = new FormData();
     ngOnInit(): void {
-        this.workFlowtService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-billing-information';
-        this.workFlowtService.bredcrumbObj.next(this.workFlowtService.currentUrl);
+        this.vendorService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-billing-information';
+        this.vendorService.bredcrumbObj.next(this.vendorService.currentUrl);
         if (this.local) {
             this.loadData();
         }
@@ -125,29 +126,29 @@ export class VendorBillingInformationComponent {
     totalPages: number = 0;
 
     constructor(private http: HttpClient, private router: Router,
-        private authService: AuthService, private modalService: NgbModal, 
-        private activeModal: NgbActiveModal, private _fb: FormBuilder, 
-        private alertService: AlertService, 
-        public workFlowtService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private configurations: ConfigurationService) {
-            if(this.workFlowtService.listCollection !== undefined){
-                this.workFlowtService.isEditMode = true;
-            }
+        private authService: AuthService, private modalService: NgbModal,
+        private activeModal: NgbActiveModal, private _fb: FormBuilder,
+        private alertService: AlertService,
+        public vendorService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private configurations: ConfigurationService) {
+        if (this.vendorService.listCollection !== undefined) {
+            this.vendorService.isEditMode = true;
+        }
         this.dataSource = new MatTableDataSource();
         if (this.local) {
-            this.workFlowtService.contactCollection = this.local;
+            this.vendorService.contactCollection = this.local;
         }
-        if (this.workFlowtService.generalCollection) {
-            this.local = this.workFlowtService.generalCollection;
+        if (this.vendorService.generalCollection) {
+            this.local = this.vendorService.generalCollection;
         }
-        if (this.workFlowtService.paymentCollection) {
-            this.local = this.workFlowtService.paymentCollection;
+        if (this.vendorService.paymentCollection) {
+            this.local = this.vendorService.paymentCollection;
         }
         this.dataSource = new MatTableDataSource();
-        if (this.workFlowtService.listCollection && this.workFlowtService.isEditMode == true) {
-            this.local = this.workFlowtService.listCollection.t;
+        if (this.vendorService.listCollection && this.vendorService.isEditMode == true) {
+            this.local = this.vendorService.listCollection.t;
         }
-        if (this.workFlowtService.paymentCollection) {
-            this.local = this.workFlowtService.paymentCollection;
+        if (this.vendorService.paymentCollection) {
+            this.local = this.vendorService.paymentCollection;
             this.sourceVendor.siteName = this.local.vendorName;
             this.sourceVendor.address1 = this.local.address1;
             this.sourceVendor.address2 = this.local.address2;
@@ -158,9 +159,9 @@ export class VendorBillingInformationComponent {
             this.sourceVendor.postalCode = this.local.PostalCode;
 
         }
-        if (this.workFlowtService.listCollection && this.workFlowtService.isEditMode == true) {
+        if (this.vendorService.listCollection && this.vendorService.isEditMode == true) {
             this.viewName = "Edit";
-            this.local = this.workFlowtService.listCollection;
+            this.local = this.vendorService.listCollection;
             this.loadData();
         }
     }
@@ -185,7 +186,7 @@ export class VendorBillingInformationComponent {
     private getgeneralInnfo() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-        this.workFlowtService.getWorkFlows().subscribe(
+        this.vendorService.getWorkFlows().subscribe(
             results => this.ongeneralDataLoadSuccessful(results[0]),
             error => this.onDataLoadFailed(error)
         );
@@ -195,7 +196,7 @@ export class VendorBillingInformationComponent {
         this.loadingIndicator = false;
         this.dataSource.data = allWorkFlows;
         this.allgeneralInfo = allWorkFlows;
-        if (this.workFlowtService.isCOntact == true) {
+        if (this.vendorService.isCOntact == true) {
             this.vendorname = this.allgeneralInfo[0].vendorName;
             this.vendorCode = this.allgeneralInfo[0].vendorCode;
         }
@@ -205,7 +206,7 @@ export class VendorBillingInformationComponent {
     private loadAddressDara() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-        this.workFlowtService.getAddressDtails().subscribe(
+        this.vendorService.getAddressDtails().subscribe(
             results => this.onAddressDataLoadSuccessful(results[0]),
             error => this.onDataLoadFailed(error)
         );
@@ -220,7 +221,7 @@ export class VendorBillingInformationComponent {
     private loadData() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-        this.workFlowtService.getVendorBillAddressGet(this.local.vendorId).subscribe(
+        this.vendorService.getVendorBillAddressGet(this.local.vendorId).subscribe(
             results => this.onDataLoadSuccessful(results[0]),
             error => this.onDataLoadFailed(error)
         );
@@ -240,7 +241,7 @@ export class VendorBillingInformationComponent {
     private countrylist() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-        this.workFlowtService.getCountrylist().subscribe(
+        this.vendorService.getCountrylist().subscribe(
             results => this.onDatacountrySuccessful(results[0]),
             error => this.onDataLoadFailed(error)
         );
@@ -256,7 +257,7 @@ export class VendorBillingInformationComponent {
     private loadShipViaCollection(rowData) {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-        this.workFlowtService.getVendorShipViaDetails(rowData).subscribe(
+        this.vendorService.getVendorShipViaDetails(rowData).subscribe(
             results => this.onShipViadetails(results[0]),
             error => this.onDataLoadFailed(error)
         );
@@ -374,7 +375,7 @@ export class VendorBillingInformationComponent {
         this.isEditBillingInfo = true;
         this.isSaving = true;
         //this.sourceVendor = {...row};
-        this.sourceVendor = {...row, country: getObjectById('countries_id', row.country, this.allCountryinfo)};
+        this.sourceVendor = { ...row, country: getObjectById('countries_id', row.country, this.allCountryinfo) };
         this.loadMasterCompanies();
     }
     openView(content, row) {
@@ -410,7 +411,7 @@ export class VendorBillingInformationComponent {
         this.loadingIndicator = true;
         this.shipViaObj = row;
         this.isSaving = true;
-        this.workFlowtService.shipviaHistory(this.sourceVendor.vendorBillingId).subscribe(
+        this.vendorService.shipviaHistory(this.sourceVendor.vendorBillingId).subscribe(
             results => this.onHistoryLoadSuccessful(results[0], content),
             error => this.saveFailedHelper(error));
     }
@@ -419,7 +420,7 @@ export class VendorBillingInformationComponent {
         this.loadingIndicator = true;
         this.sourceVendor = row;
         this.isSaving = true;
-        this.workFlowtService.getVendorBillingAuditHistory(this.sourceVendor.vendorId,this.sourceVendor.vendorBillingAddressId).subscribe(
+        this.vendorService.getVendorBillingAuditHistory(this.sourceVendor.vendorId, this.sourceVendor.vendorBillingAddressId).subscribe(
             results => this.onAuditHistoryLoadSuccessful(results, content),
             error => this.saveFailedHelper(error));
     }
@@ -451,13 +452,13 @@ export class VendorBillingInformationComponent {
                 this.sourceVendor.masterCompanyId = 1;
                 this.sourceVendor.vendorId = this.local.vendorId;
                 this.sourceVendor.country = editValueAssignByCondition('countries_id', this.sourceVendor.country);
-                //this.workFlowtService.newBillingAdd(this.sourceVendor).subscribe(data => {
+                //this.vendorService.newBillingAdd(this.sourceVendor).subscribe(data => {
                 //    this.localCollection = data;
                 //    this.loadData();
                 //    this.savesuccessCompleted(this.sourceVendor);
                 //    this.sourceVendor = {};
                 //})
-                this.workFlowtService.createNewBillinginfo(this.sourceVendor).subscribe(data => {
+                this.vendorService.createNewBillinginfo(this.sourceVendor).subscribe(data => {
                     this.localCollection = data;
                     this.loadData();
                     this.savesuccessCompleted(this.sourceVendor);
@@ -469,7 +470,7 @@ export class VendorBillingInformationComponent {
                 this.sourceVendor.updatedBy = this.userName;
                 this.sourceVendor.country = editValueAssignByCondition('countries_id', this.sourceVendor.country);
                 this.sourceVendor.masterCompanyId = 1;
-                this.workFlowtService.updateBillAddressdetails(this.sourceVendor).subscribe(data => {
+                this.vendorService.updateBillAddressdetails(this.sourceVendor).subscribe(data => {
                     this.updatedCollection = data;
                     this.loadData();
                     this.sourceVendor = {};
@@ -487,7 +488,7 @@ export class VendorBillingInformationComponent {
             this.shipViaObj.updatedBy = this.userName;
             this.shipViaObj.masterCompanyId = 1;
             this.shipViaObj.isActive = true;
-            this.workFlowtService.newBillingViaAdd(this.shipViaObj).subscribe(data => {
+            this.vendorService.newBillingViaAdd(this.shipViaObj).subscribe(data => {
                 this.shipViaCollection = data;
                 this.loadShipViaCollection(this.shipViaCollection);
                 if (this.shipViaCollection) {
@@ -504,7 +505,7 @@ export class VendorBillingInformationComponent {
             this.sourceVendor.updatedBy = this.userName;
             this.sourceVendor.masterCompanyId = 1;
             this.shipViaObj.isActive = true;
-            this.workFlowtService.updateBillingViainfo(this.shipViaObj).subscribe(data => {
+            this.vendorService.updateBillingViainfo(this.shipViaObj).subscribe(data => {
                 this.shipViaCollection = data;
                 this.loadShipViaCollection(this.shipViaCollection);
                 if (this.shipViaCollection) {
@@ -520,10 +521,11 @@ export class VendorBillingInformationComponent {
     }
 
     previousClick() {
-        this.activeIndex = 4;
-        this.workFlowtService.indexObj.next(this.activeIndex);
-        this.workFlowtService.changeStep('Shipping Information');
-        this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-shipping-information');
+        this.activeIndex = 7;
+        this.vendorService.changeofTab(this.activeIndex);
+        // this.vendorService.indexObj.next(this.activeIndex);
+        // this.vendorService.changeStep('Shipping Information');
+        // this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-shipping-information');
     }
     openShipVia(content, rowData) {
         this.isEditMode = false;
@@ -545,10 +547,10 @@ export class VendorBillingInformationComponent {
     }
 
     updateVendorBillingAddress(updateObj: any) {
-      
-        this.workFlowtService.updateVendorBillingAddressDetails(updateObj, this.local.vendorId).subscribe(data => {
+
+        this.vendorService.updateVendorBillingAddressDetails(updateObj, this.local.vendorId).subscribe(data => {
             this.vendorbillingAddressdetails = data;
-            this.workFlowtService.newBillingAddWithAddress(this.sourceVendor, this.vendorbillingAddressdetails.vendorBillingAddressId).subscribe(data => {
+            this.vendorService.newBillingAddWithAddress(this.sourceVendor, this.vendorbillingAddressdetails.vendorBillingAddressId).subscribe(data => {
                 this.localCollection = data;
                 this.updateVendorBillingAddress(this.localCollection);
             })
@@ -562,7 +564,7 @@ export class VendorBillingInformationComponent {
     //     this.sourceVendor.addressStatus = false;
     //     this.sourceVendor.updatedBy = this.userName;
     //     this.sourceVendor.vendorBillingAddressId = vendorBillingAddressId;
-    //     this.workFlowtService.deleteAcion(this.sourceVendor).subscribe(
+    //     this.vendorService.deleteAcion(this.sourceVendor).subscribe(
     //         response => this.saveCompleted(this.sourceVendor),
     //         error => this.saveFailedHelper(error));
     // }
@@ -572,7 +574,7 @@ export class VendorBillingInformationComponent {
     }
     deleteConformation(value) {
         if (value === 'Yes') {
-            this.workFlowtService.GetVendorBillingAddressDelete(this.selectedRowforDelete.vendorBillingAddressId,this.userName).subscribe(() => {
+            this.vendorService.GetVendorBillingAddressDelete(this.selectedRowforDelete.vendorBillingAddressId, this.userName).subscribe(() => {
                 this.loadData();
                 this.alertService.showMessage(
                     'Success',
@@ -590,7 +592,7 @@ export class VendorBillingInformationComponent {
         this.shipViaObj.isActive = true;
         this.shipViaObj.updatedBy = this.userName;
         this.shipViaObj.vendorBillingId = vendorBillingId;
-        this.workFlowtService.deleteVendorAcion(this.shipViaObj).subscribe(data => {
+        this.vendorService.deleteVendorAcion(this.shipViaObj).subscribe(data => {
             this.loadShipViaCollection(data);
         })
     }
@@ -654,12 +656,13 @@ export class VendorBillingInformationComponent {
     // }
     nextClick() {
         if (this.local) {
-            this.workFlowtService.billingCollection = this.local;
+            this.vendorService.billingCollection = this.local;
         }
-        this.activeIndex = 7;
-        this.workFlowtService.indexObj.next(this.activeIndex);
-        this.workFlowtService.changeStep('Warnings');
-        this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-warnings');
+        this.activeIndex = 8;
+        this.vendorService.changeofTab(this.activeIndex);
+        // this.vendorService.indexObj.next(this.activeIndex);
+        // this.vendorService.changeStep('Warnings');
+        // this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-warnings');
     }
     handleChanges(rowData, e) {
         console.log(rowData);
@@ -668,24 +671,24 @@ export class VendorBillingInformationComponent {
             this.sourceVendor.updatedBy = this.userName;
             this.Active = "In Active";
             this.sourceVendor.isActive == false;
-            // this.workFlowtService.updateActionforActiveforBilling(this.sourceVendor).subscribe(
+            // this.vendorService.updateActionforActiveforBilling(this.sourceVendor).subscribe(
             //     response => this.saveCompleted(this.sourceVendor),
             //     error => this.saveFailedHelper(error));
-            this.workFlowtService.GetUpdateVendorBillingAddressStatus(this.sourceVendor.vendorBillingAddressId, this.sourceVendor.isActive,this.userName).subscribe(
+            this.vendorService.GetUpdateVendorBillingAddressStatus(this.sourceVendor.vendorBillingAddressId, this.sourceVendor.isActive, this.userName).subscribe(
                 response => this.saveCompleted(this.sourceVendor),
                 error => this.saveFailedHelper(error));
             this.sourceVendor = "";
-            
+
         }
         else {
             this.sourceVendor = rowData;
             this.sourceVendor.updatedBy = this.userName;
             this.Active = "Active";
             this.sourceVendor.isActive == true;
-            // this.workFlowtService.updateActionforActiveforBilling(this.sourceVendor).subscribe(
+            // this.vendorService.updateActionforActiveforBilling(this.sourceVendor).subscribe(
             //     response => this.saveCompleted(this.sourceVendor),
             //     error => this.saveFailedHelper(error));
-            this.workFlowtService.GetUpdateVendorBillingAddressStatus(this.sourceVendor.vendorBillingAddressId, this.sourceVendor.isActive,this.userName).subscribe(
+            this.vendorService.GetUpdateVendorBillingAddressStatus(this.sourceVendor.vendorBillingAddressId, this.sourceVendor.isActive, this.userName).subscribe(
                 response => this.saveCompleted(this.sourceVendor),
                 error => this.saveFailedHelper(error));
             this.sourceVendor = "";
@@ -728,12 +731,12 @@ export class VendorBillingInformationComponent {
         //     }
         // }
         this.countrycollection = this.allCountryinfo;
-		if (event.query !== undefined && event.query !== null) {
-			const countries = [...this.allCountryinfo.filter(x => {
-				return x.nice_name.toLowerCase().includes(event.query.toLowerCase())
-			})]
-			this.countrycollection = countries;
-		}
+        if (event.query !== undefined && event.query !== null) {
+            const countries = [...this.allCountryinfo.filter(x => {
+                return x.nice_name.toLowerCase().includes(event.query.toLowerCase())
+            })]
+            this.countrycollection = countries;
+        }
     }
     onShipVia(event) {
         if (this.allShipViaDetails) {
@@ -796,10 +799,10 @@ export class VendorBillingInformationComponent {
 
     customExcelUpload(event) {
         const file = event.target.files;
-       
+
         if (file.length > 0) {
             this.formData.append('file', file[0])
-            this.workFlowtService.BillingFileUpload(this.formData, this.local.vendorId).subscribe(res => {
+            this.vendorService.BillingFileUpload(this.formData, this.local.vendorId).subscribe(res => {
                 event.target.value = '';
 
                 this.formData = new FormData();
@@ -815,8 +818,8 @@ export class VendorBillingInformationComponent {
     }
 
     getPageCount(totalNoofRecords, pageSize) {
-		return Math.ceil(totalNoofRecords / pageSize)
-	}
+        return Math.ceil(totalNoofRecords / pageSize)
+    }
 
 
 }

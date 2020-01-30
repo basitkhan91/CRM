@@ -150,7 +150,38 @@ namespace DAL.Repositories
                 throw ex;
             }
         }
+        public IEnumerable<object> GetAuditHistory(long aircraftModelId)
+        {
+            try
+            {
 
+                var q = (from x in _appContext.AircraftModelAudit
+                         join ad in _appContext.AircraftType on x.AircraftTypeId equals ad.AircraftTypeId
+                         where x.AircraftModelId == aircraftModelId
+                         select new
+                         {
+                             x.AircraftModelId,
+                             x.AircraftTypeId,
+                             x.ModelName,
+                             x.Memo,
+                             x.IsActive,
+                             x.IsDeleted,
+                             ad.Description,
+                             x.UpdatedDate,
+                             x.UpdatedBy,
+                             x.CreatedBy,
+                             x.CreatedDate
+
+                         }).OrderByDescending(p => p.UpdatedDate).ToList();
+
+                return q;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
 
     }

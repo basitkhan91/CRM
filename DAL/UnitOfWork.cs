@@ -23,6 +23,7 @@ namespace DAL
         IUserRoleRepository _userRole { get; set; }
         ICustomerRepository _customer;
         ICustomerBillingInformationRepository _customerBillingInformation;
+        ILegalEntityBillnformationRepository _legalEntityBillingInformation;
         IProductRepository _products;
         IOrdersRepository _orders;
         IWorkflowActionRepository _workflowActions;
@@ -315,7 +316,16 @@ namespace DAL
             }
         }
 
+        public ILegalEntityBillnformationRepository LegalEntityBillingInformation
+        {
+            get
+            {
+                if (_legalEntityBillingInformation == null)
+                    _legalEntityBillingInformation = new LegalEntityBillingInformationRepository(_context);
 
+                return _legalEntityBillingInformation;
+            }
+        }
 
         public IProductRepository Products
         {
@@ -2064,7 +2074,7 @@ namespace DAL
             }
         }
 
-
+        
     }
 }
 

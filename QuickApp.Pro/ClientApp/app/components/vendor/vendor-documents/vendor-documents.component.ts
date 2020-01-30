@@ -14,6 +14,7 @@ import { VendorService } from '../../../services/vendor.service';
 import { ConfigurationService } from '../../../services/configuration.service';
 import { AuditHistory } from '../../../models/audithistory.model';
 import * as $ from 'jquery';
+import { VendorStepsPrimeNgComponent } from '../vendor-steps-prime-ng/vendor-steps-prime-ng.component';
 
 @Component({
 	selector: 'app-vendor-documents',
@@ -27,7 +28,7 @@ export class VendorDocumentsComponent implements OnInit {
 	// @Input() editGeneralInformationData;
 	@Output() tab = new EventEmitter<any>();
 	documentInformation = {
-		vendorDocumentDetailId:0,
+		vendorDocumentDetailId: 0,
 		docName: '',
 		docMemo: '',
 		docDescription: ''
@@ -35,20 +36,20 @@ export class VendorDocumentsComponent implements OnInit {
 	vendorDocumentsData: any = [];
 	vendorDocumentsColumns = [
 		{ field: 'docName', header: 'Name' },
-		{ field: 'docDescription', header: 'Description' },		
+		{ field: 'docDescription', header: 'Description' },
 		{ field: 'documents', header: 'Documents' },
 		{ field: 'docMemo', header: 'Memo' },
-		
+
 	];
 	selectedColumns = this.vendorDocumentsColumns;
 
 	headersforAttachment = [
-        { field: 'fileName', header: 'File Name' },
-        //{ field: 'link', header: 'Action' },
+		{ field: 'fileName', header: 'File Name' },
+		//{ field: 'link', header: 'Action' },
 	];
 	sourceViewforDocumentListColumns = [
-        { field: 'fileName', header: 'File Name' },
-    ]
+		{ field: 'fileName', header: 'File Name' },
+	]
 	formData = new FormData()
 	// ediData: any;
 	isEditButton: boolean = false;
@@ -64,44 +65,44 @@ export class VendorDocumentsComponent implements OnInit {
 	private isEditMode: boolean = false;
 	private isSaving: boolean;
 	modal: NgbModalRef;
-    public auditHisory: AuditHistory[] = [];
-    loadingIndicator: boolean;
+	public auditHisory: AuditHistory[] = [];
+	loadingIndicator: boolean;
 	documentauditHisory: any[];
 	isViewMode: boolean = false;
-    totalRecords: number = 0;
-    pageIndex: number = 0;
-    pageSize: number = 10;
-    totalPages: number = 0;
-	constructor(public workFlowtService: VendorService,private router: ActivatedRoute, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService,
-		private dialog: MatDialog, private masterComapnyService: MasterComapnyService,private configurations: ConfigurationService) {
-			
-			if(this.workFlowtService.listCollection !== undefined){
-				this.workFlowtService.isEditMode = true;
-				this.isViewMode = false;
-			}
-			else{
-				this.isViewMode = true;;
-			}		
-			
-			if (this.workFlowtService.listCollection && this.workFlowtService.isEditMode == true) {
-			
-				this.local = this.workFlowtService.listCollection;
-							
-			}
+	totalRecords: number = 0;
+	pageIndex: number = 0;
+	pageSize: number = 10;
+	totalPages: number = 0;
+	constructor(public vendorService: VendorService, private router: ActivatedRoute, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService,
+		private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private configurations: ConfigurationService) {
+
+		if (this.vendorService.listCollection !== undefined) {
+			this.vendorService.isEditMode = true;
+			this.isViewMode = false;
+		}
+		else {
+			this.isViewMode = true;;
+		}
+
+		if (this.vendorService.listCollection && this.vendorService.isEditMode == true) {
+
+			this.local = this.vendorService.listCollection;
+
+		}
 	}
 
 	ngOnInit() {
 		this.getList();
 		// if (this.editMode) {
-        //     this.id = this.editGeneralInformationData.customerId;
-        //     this.customerCode = this.editGeneralInformationData.customerCode;
-        //     this.customerName = this.editGeneralInformationData.name;
+		//     this.id = this.editGeneralInformationData.customerId;
+		//     this.customerCode = this.editGeneralInformationData.customerCode;
+		//     this.customerName = this.editGeneralInformationData.name;
 
 
 		// } else {
 		// 	this.id = this.savedGeneralInformationData.customerId;
-        //     this.customerCode = this.savedGeneralInformationData.customerCode;
-        //     this.customerName = this.savedGeneralInformationData.name;
+		//     this.customerCode = this.savedGeneralInformationData.customerCode;
+		//     this.customerName = this.savedGeneralInformationData.name;
 
 		// }
 	}
@@ -122,20 +123,19 @@ export class VendorDocumentsComponent implements OnInit {
 	}
 
 	getList() {
-		this.workFlowtService.getDocumentList(this.local.vendorId).subscribe(res => {
-			this.vendorDocumentsData = res;			
+		this.vendorService.getDocumentList(this.local.vendorId).subscribe(res => {
+			this.vendorDocumentsData = res;
 		})
 	}
-	getListById(vendorDocId) {		
-		this.workFlowtService.getDocumentListbyId(vendorDocId).subscribe(res => {
+	getListById(vendorDocId) {
+		this.vendorService.getDocumentListbyId(vendorDocId).subscribe(res => {
 			this.sourceViewforDocument = res;
 			console.log(this.sourceViewforDocument);
 		})
 	}
 
-  	toGetUploadDocumentsList(attachmentId, vendorId,moduleId)
-	{
-		this.workFlowtService.toGetUploadDocumentsList(attachmentId, vendorId,moduleId).subscribe(res => {
+	toGetUploadDocumentsList(attachmentId, vendorId, moduleId) {
+		this.vendorService.toGetUploadDocumentsList(attachmentId, vendorId, moduleId).subscribe(res => {
 			this.sourceViewforDocumentList = res;
 			console.log(this.sourceViewforDocumentList);
 		})
@@ -152,62 +152,62 @@ export class VendorDocumentsComponent implements OnInit {
 		for (var key in data) {
 			this.formData.append(key, data[key]);
 		}
-		
 
-			this.workFlowtService.documentUploadAction(this.formData).subscribe(res => {
-				this.documentInformation.vendorDocumentDetailId=0;
-				this.documentInformation.docDescription='';
-				this.documentInformation.docMemo='';
-				this.documentInformation.docName='';
 
-				this.formData = new FormData();
-				this.getList();
-				this.alertService.showMessage(
-					'Success',
-					`Saved Documents Successfully `,
-					MessageSeverity.success
-				);
-				
-			
-			})
+		this.vendorService.documentUploadAction(this.formData).subscribe(res => {
+			this.documentInformation.vendorDocumentDetailId = 0;
+			this.documentInformation.docDescription = '';
+			this.documentInformation.docMemo = '';
+			this.documentInformation.docName = '';
 
-	}
-	updateVendorDocument() { 
+			this.formData = new FormData();
+			this.getList();
+			this.alertService.showMessage(
+				'Success',
+				`Saved Documents Successfully `,
+				MessageSeverity.success
+			);
 
-	
+
+		})
 
 	}
+	updateVendorDocument() {
 
-	editVendorDocument(rowdata,e) {
+
+
+	}
+
+	editVendorDocument(rowdata, e) {
 		//this.toGetUploadDocumentsList(rowdata.attachmentId, rowdata.vendorId,3);
-		this.documentInformation=rowdata;
-		this.workFlowtService.toGetUploadDocumentsList(rowdata.attachmentId, rowdata.vendorId,3).subscribe(res => {
-			this.sourceViewforDocumentList = res;	
-			this.sourceViewforDocument = rowdata;						
+		this.documentInformation = rowdata;
+		this.vendorService.toGetUploadDocumentsList(rowdata.attachmentId, rowdata.vendorId, 3).subscribe(res => {
+			this.sourceViewforDocumentList = res;
+			this.sourceViewforDocument = rowdata;
 		})
 	}
 
-	openView(content, row) {		
+	openView(content, row) {
 		// this.toGetUploadDocumentsList(row.attachmentId, row.vendorId,3);
 
-		this.workFlowtService.toGetUploadDocumentsList(row.attachmentId, row.vendorId,3).subscribe(res => {
-			this.sourceViewforDocumentList = res;	
-			this.sourceViewforDocument = row;		
-						
+		this.vendorService.toGetUploadDocumentsList(row.attachmentId, row.vendorId, 3).subscribe(res => {
+			this.sourceViewforDocumentList = res;
+			this.sourceViewforDocument = row;
+
 		})
-	
-			
+
+
 		// this.modal = this.modalService.open(content, { size: 'sm' });
-        //    this.modal.result.then(() => {
-        //     console.log('When user closes');
-        // }, () => { console.log('Backdrop click') })
+		//    this.modal.result.then(() => {
+		//     console.log('When user closes');
+		// }, () => { console.log('Backdrop click') })
 		//console.log(this.sourceViewforDocument);
 		//this.getListById(row.vendorDocumentDetailId);        
 	}
 
 	openViewOnDblClick(row) {
-		this.workFlowtService.toGetUploadDocumentsList(row.attachmentId, row.vendorId,3).subscribe(res => {
-			this.sourceViewforDocumentList = res;	
+		this.vendorService.toGetUploadDocumentsList(row.attachmentId, row.vendorId, 3).subscribe(res => {
+			this.sourceViewforDocumentList = res;
 			this.sourceViewforDocument = row;
 		});
 		$('#view').modal('show');
@@ -215,109 +215,110 @@ export class VendorDocumentsComponent implements OnInit {
 
 
 	openDelete(content, row) {
-        this.isEditMode = false;
-        this.isDeleteMode = true;
-        delete row.updatedBy;
-        this.localCollection = row;       
-        this.modal = this.modalService.open(content, { size: 'sm' });
-        this.modal.result.then(() => {
-            console.log('When user closes');
-        }, () => { console.log('Backdrop click') })
-    }
-	
-	deleteItemAndCloseModel() {  
-			
-		let vendorDocumentDetailId=this.localCollection.vendorDocumentDetailId;
-		if(vendorDocumentDetailId >0)
-		{
-		 this.isSaving = true;
-		 this.workFlowtService.getDeleteDocumentListbyId(vendorDocumentDetailId).subscribe(
-			
-			res => {
-				this.getList();
-				this.alertService.showMessage(
-					'Success',
-					`Action was deleted successfully `,
-					MessageSeverity.success
-				)							
-			});	
-			
+		this.isEditMode = false;
+		this.isDeleteMode = true;
+		delete row.updatedBy;
+		this.localCollection = row;
+		this.modal = this.modalService.open(content, { size: 'sm' });
+		this.modal.result.then(() => {
+			console.log('When user closes');
+		}, () => { console.log('Backdrop click') })
+	}
+
+	deleteItemAndCloseModel() {
+
+		let vendorDocumentDetailId = this.localCollection.vendorDocumentDetailId;
+		if (vendorDocumentDetailId > 0) {
+			this.isSaving = true;
+			this.vendorService.getDeleteDocumentListbyId(vendorDocumentDetailId).subscribe(
+
+				res => {
+					this.getList();
+					this.alertService.showMessage(
+						'Success',
+						`Action was deleted successfully `,
+						MessageSeverity.success
+					)
+				});
+
 		}
-		
-		this.modal.close();      
-	 }
 
-	 dismissModel() {
-        this.modal.close();
-    }
+		this.modal.close();
+	}
 
-	 downloadFileUpload(rowData) {	
-        const url = `${this.configurations.baseUrl}/api/FileUpload/downloadattachedfile?filePath=${rowData.link}`;
-		window.location.assign(url);       
-    }
+	dismissModel() {
+		this.modal.close();
+	}
+
+	downloadFileUpload(rowData) {
+		const url = `${this.configurations.baseUrl}/api/FileUpload/downloadattachedfile?filePath=${rowData.link}`;
+		window.location.assign(url);
+	}
 
 	backClick() {
-		this.activeIndex = 8;
-        this.workFlowtService.indexObj.next(this.activeIndex);
-        this.workFlowtService.changeStep('Memos');
-        this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-memo');
+		this.activeIndex = 9;
+		this.vendorService.changeofTab(this.activeIndex);
+		// this.vendorService.indexObj.next(this.activeIndex);
+		// this.vendorService.changeStep('Memos');
+		// this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-memo');
 	}
 
 	CreateNewClick() {
-       // this.workFlowtService.contactCollection = this.local;
-        this.activeIndex = 1;
-        this.workFlowtService.indexObj.next(this.activeIndex);
-		this.workFlowtService.changeStep('General Information');
-		this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-general-information');
-       
+		// this.vendorService.contactCollection = this.local;
+		this.activeIndex = 1;
+		this.vendorService.changeofTab(this.activeIndex);
+		// this.vendorService.indexObj.next(this.activeIndex);
+		// this.vendorService.changeStep('General Information');
+		// this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-general-information');
+
 	}
-    openHistory(content, row) {
-        
-        this.alertService.startLoadingMessage();
-        
-        this.isSaving = true;
-        this.workFlowtService.getVendorDocumentAuditHistory(row.vendorDocumentDetailId).subscribe(
-            results => this.onAuditHistoryLoadSuccessful(results, content),
-            error => this.saveFailedHelper(error));
+	openHistory(content, row) {
+
+		this.alertService.startLoadingMessage();
+
+		this.isSaving = true;
+		this.vendorService.getVendorDocumentAuditHistory(row.vendorDocumentDetailId).subscribe(
+			results => this.onAuditHistoryLoadSuccessful(results, content),
+			error => this.saveFailedHelper(error));
 
 
 
-    }
-    private onAuditHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {
-        this.alertService.stopLoadingMessage();
-        this.loadingIndicator = false;
-
-        this.documentauditHisory = auditHistory;
-
-        this.modal = this.modalService.open(content, { size: 'lg' });
-        this.modal.result.then(() => {
-            console.log('When user closes');
-        }, () => { console.log('Backdrop click') })
-    }
-    private saveFailedHelper(error: any) {
-        this.isSaving = false;
-        this.alertService.stopLoadingMessage();
-        this.alertService.showStickyMessage("Save Error", "The below errors occured whilst saving your changes:", MessageSeverity.error, error);
-        this.alertService.showStickyMessage(error, null, MessageSeverity.error);
 	}
-	
+	private onAuditHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {
+		this.alertService.stopLoadingMessage();
+		this.loadingIndicator = false;
+
+		this.documentauditHisory = auditHistory;
+
+		this.modal = this.modalService.open(content, { size: 'lg' });
+		this.modal.result.then(() => {
+			console.log('When user closes');
+		}, () => { console.log('Backdrop click') })
+	}
+	private saveFailedHelper(error: any) {
+		this.isSaving = false;
+		this.alertService.stopLoadingMessage();
+		this.alertService.showStickyMessage("Save Error", "The below errors occured whilst saving your changes:", MessageSeverity.error, error);
+		this.alertService.showStickyMessage(error, null, MessageSeverity.error);
+	}
+
 	getColorCodeForHistory(i, field, value) {
-        const data = this.documentauditHisory;
-        const dataLength = data.length;
-        if (i >= 0 && i <= dataLength) {
-            if ((i + 1) === dataLength) {
-                return true;
-            } else {
-                return data[i + 1][field] === value
-            }
-        }
+		const data = this.documentauditHisory;
+		const dataLength = data.length;
+		if (i >= 0 && i <= dataLength) {
+			if ((i + 1) === dataLength) {
+				return true;
+			} else {
+				return data[i + 1][field] === value
+			}
+		}
 	}
-	
+
 	getPageCount(totalNoofRecords, pageSize) {
 		return Math.ceil(totalNoofRecords / pageSize)
 	}
 
-   
+
 }
 
 

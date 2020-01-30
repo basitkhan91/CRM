@@ -21,6 +21,7 @@ import { Router, ActivatedRoute, Params, NavigationExtras } from '@angular/route
 import { Row } from 'primeng/components/common/shared';
 import { CustomerService } from '../../../services/customer.service';
 import * as $ from 'jquery';
+import { VendorStepsPrimeNgComponent } from '../vendor-steps-prime-ng/vendor-steps-prime-ng.component';
 @Component({
     selector: 'app-vendor-capes',
     templateUrl: './vendor-capes.component.html',
@@ -29,8 +30,7 @@ import * as $ from 'jquery';
 })
 /** anys component*/
 export class VendorCapesComponent implements OnInit {
-
-    activeIndex = 10;
+    activeIndex = 2;
     matSpinner: boolean;
     local: any;
     isEnableVendor: boolean = true;
@@ -38,33 +38,33 @@ export class VendorCapesComponent implements OnInit {
     loadList: boolean = false;
     @Input() vendorCapabilityId: number = 0;
 
-    constructor(public workFlowtService: VendorService, private router: ActivatedRoute, private route: Router, private authService: AuthService, private alertService: AlertService) {
+    constructor(public vendorService: VendorService, private router: ActivatedRoute, private route: Router, private authService: AuthService, private alertService: AlertService) {
         if (this.local) {
-            this.workFlowtService.capesCollection = this.local;
+            this.vendorService.capesCollection = this.local;
         }
-        if (this.workFlowtService.generalCollection) {
-            this.local = this.workFlowtService.generalCollection;
+        if (this.vendorService.listCollection) {
+            this.local = this.vendorService.listCollection;
         }
         //this.dataSource = new MatTableDataSource();
-        console.log(this.workFlowtService);        
-        if (this.workFlowtService.listCollection && this.workFlowtService.isEditMode == true) {
-        this.local = this.workFlowtService.listCollection.t; 
+        console.log(this.vendorService);
+        if (this.vendorService.listCollection && this.vendorService.isEditMode == true) {
+            this.local = this.vendorService.listCollection;
             //this.loadData();
         }
-        if(this.workFlowtService.listCollection) {
-            this.vendorId = this.workFlowtService.listCollection.vendorId;
-            console.log(this.vendorId);            
+        if (this.vendorService.listCollection) {
+            this.vendorId = this.vendorService.listCollection.vendorId;
+            console.log(this.vendorId);
         }
         this.alertService.stopLoadingMessage();
         console.log(this.local);
-        if(this.local) {
+        if (this.local) {
             this.vendorId = this.local.vendorId;
         }
-        if (this.workFlowtService.generalCollection) {
-                this.vendorId = this.workFlowtService.generalCollection.vendorId;
-            }
-        console.log(this.workFlowtService.listCollection);
-        
+        if (this.vendorService.listCollection) {
+            this.vendorId = this.vendorService.listCollection.vendorId;
+        }
+        console.log(this.vendorService.listCollection);
+
     }
 
     ngOnInit() {
@@ -72,21 +72,21 @@ export class VendorCapesComponent implements OnInit {
 
         //this.sourceVendor.isdefaultContact = true;
         this.matSpinner = true;
-        this.workFlowtService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-capes';
-        this.workFlowtService.bredcrumbObj.next(this.workFlowtService.currentUrl);
+        this.vendorService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-capes';
+        this.vendorService.bredcrumbObj.next(this.vendorService.currentUrl);
         // if (this.local) {
         //     this.loadData();
         // }
         // this.loadCompleteddata();
         // this.loadEmptyObject();
-        this.router.queryParams.subscribe((params: Params) => {
-        });
+        // this.router.queryParams.subscribe((params: Params) => {
+        // });
     }
 
     getVendorCapabilityId(id) {
-        console.log(id); 
+        console.log(id);
         this.vendorCapabilityId = id;
-        if(this.vendorCapabilityId) {
+        if (this.vendorCapabilityId) {
             $('#addCapabilityInfo').modal('show');
         }
         this.loadList = false;
@@ -103,16 +103,18 @@ export class VendorCapesComponent implements OnInit {
     }
 
     previousClick() {
-        this.activeIndex = 0;
+        this.activeIndex = 1
+        this.vendorService.changeofTab(this.activeIndex);
         // this.vendorService.vendorgeneralcollection = this.local;
-        this.workFlowtService.indexObj.next(this.activeIndex);
-        this.workFlowtService.changeStep('General Information');
-        this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-general-information');
+        // this.vendorService.indexObj.next(this.activeIndex);
+        // this.vendorService.changeStep('General Information');
+        // this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-general-information');
     }
     nextClick() {
-        this.activeIndex = 2;
-        this.workFlowtService.indexObj.next(this.activeIndex);
-        this.workFlowtService.changeStep('Contacts');
-        this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-contacts');
+        this.activeIndex = 3;
+        this.vendorService.changeofTab(this.activeIndex);
+        // this.vendorService.indexObj.next(this.activeIndex);
+        // this.vendorService.changeStep('Contacts');
+        // this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-contacts');
     }
 }

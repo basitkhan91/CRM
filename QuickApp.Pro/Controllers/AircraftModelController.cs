@@ -141,18 +141,21 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("audits/{id}")]
         public IActionResult AuditDetails(long id)
         {
-            var audits = unitOfWork.Repository<AircraftModelAudit>()
-                .Find(x => x.AircraftModelId == id)
-                .OrderByDescending(x => x.AircraftModelId);
+            //var audits = unitOfWork.Repository<AircraftModelAudit>()
+            //    .Find(x => x.AircraftModelId == id)
+            //    .OrderByDescending(x => x.AircraftModelId);
 
-            var auditResult = new List<AuditResult<AircraftModelAudit>>();
+            //var auditResult = new List<AuditResult<AircraftModelAudit>>();
 
-            auditResult.Add(new AuditResult<AircraftModelAudit> { AreaName = "Aircraft Model", Result = audits.ToList() });
+            //auditResult.Add(new AuditResult<AircraftModelAudit> { AreaName = "Aircraft Model", Result = audits.ToList() });
 
-            return Ok(auditResult);
+            //return Ok(auditResult);
+            var aircraftModels = unitOfWork.aircraftModel.GetAuditHistory(id);
+            return Ok(aircraftModels);
+
         }
 
-        
+
         [HttpGet("getModelsByManufacturerId/{id}")]
         public IActionResult getAircraftModelsByManufacturerId(string id)
         {

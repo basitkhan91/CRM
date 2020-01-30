@@ -1,12 +1,13 @@
 <div class="row">
   <div style="overflow-y: auto;">
-    <p-table #dt class="rpo-table-cstm rro-table-cstm" [value]="parts" [rows]="10" [lazy]="true"
+    <p-table #dt class="sales-quote-part-search-data" [value]="parts" [rows]="10" [lazy]="true"
       [paginator]="showPaginator" [rowsPerPageOptions]="[10, 20, 30]" [totalRecords]="totalRecords"
       [pageLinks]="pageLinks" [columns]="columns" [scrollable]="true" scrollHeight="450px" [style]="{ width: '100%' }"
       (onLazyLoad)="onPaging($event)">
       <ng-template pTemplate="colgroup" let-columns>
         <colgroup>
-          <col *ngFor="let col of columns" style="width:200px" />
+          <col *ngFor="let col of columns" [ngStyle]="{'width': col.width}" />
+          <col style="width:80px"/>
         </colgroup>
       </ng-template>
       <ng-template pTemplate="header">
@@ -34,14 +35,15 @@
           <th>ITAR</th>
           <th>ECCN</th>
           <th>Memo</th>
+          <th></th>
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-part>
-        <tr>
+        <tr [ngClass]="{'row-bg1':part.alternateFor.length==0}">
           <td><input type="checkbox" (change)="onChange($event, part)" /></td>
           <td>{{ part.method}}</td>
-          <td>{{ part.partNumber }}</td>
-          <td>{{ part.alternatePartNumber }}</td>
+          <td>{{ part.partNumber }} <span class="alternate-part-label" *ngIf="part.alternateFor?.length > 0">(Alt)</span></td>
+          <td>{{ part.alternateFor }} </td>
           <td>{{ part.description }}</td>
           <td>{{ part.conditionDescription }}</td>
           <td>{{ part.uomDescription }}</td>
@@ -69,15 +71,27 @@
           <td>{{ part.itar }}</td>
           <td>{{ part.eccn }}</td>
           <td>{{ part.memo }}</td>
+          <td> 
+            <span>
+            <a class="btn btn-info boxed-float-btn nobg"
+               data-toggle="tooltip"
+               (click)="viewSelectedRow(part)"
+               
+               matTooltip="View">
+                <i class="fa fa-list"></i>
+            </a>
+            <a class="btn btn-info boxed-float-btn nobg"
+            data-toggle="tooltip"
+            (click)="viewStockLineHistory(part)"
+            
+            matTooltip="History">
+             <i class="fa fa-history"></i>
+         </a>
+        </span>
+      </td>
         </tr>
       </ng-template>
-      <ng-template pTemplate="summary" id="footer">
-        <label id="footer" class="footer-t-rec">No'of records:</label>
-        <input style="width: 5%;" [(ngModel)]="totalRecords" [disabled]="true" pInputText type="text" />
-        &nbsp;&nbsp;
-        <label id="footer" class="footer-p-count">Pages Count:</label>
-        <input style="width: 5%;" [(ngModel)]="totalPages" [disabled]="true" pInputText type="text" />
-      </ng-template>
+      
     </p-table>
   </div>
 </div>

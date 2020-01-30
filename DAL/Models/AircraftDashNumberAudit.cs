@@ -11,14 +11,14 @@ namespace DAL.Models
         [Key]
         public Int32? DashNumberAuditId { get; set; }
 
-        public Int32? DashNumberId { get; set; }
+        public long DashNumberId { get; set; }
 
         public Int32? AircraftTypeId { get; set; }
 
-        public long? AircraftModelId { get; set; }
+        public long AircraftModelId { get; set; }
 
-        public Int32? DashNumber { get; set; }
-
+        public string DashNumber { get; set; }
+        public string Memo { get; set; }
         public Int32? MasterCompanyId { get; set; }
     }
 }

@@ -160,11 +160,11 @@ namespace DAL.Models
         public long? ataSubChapterId { get; set; }
 
         [ForeignKey("MasterCompanyId")]
-        public int? MasterCompanyId { get; set; }
+        public int MasterCompanyId { get; set; }
 
 
-        public bool? IsActive { get; set; }
-        public bool? IsDeleted { get; set; }
+        public bool IsActive { get; set; }
+        public bool IsDeleted { get; set; }
         public long? MarkUpPercentageId { get; set; }
         public int? GeneralCurrencyId { get; set; }
 

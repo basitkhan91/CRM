@@ -26,6 +26,9 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 import { ChangeDetectorRef } from '@angular/core';
 import { DiscountValue } from '../../../models/discountvalue';
 import { CommonService } from '../../../services/common.service';
+import { validateRecordExistsOrNot, getObjectById, getObjectByValue, selectedValueValidate } from '../../../generic/autocomplete';
+import { VendorStepsPrimeNgComponent } from '../vendor-steps-prime-ng/vendor-steps-prime-ng.component';
+
 @Component({
     selector: 'app-vendor-financial-information',
     templateUrl: './vendor-financial-information.component.html',
@@ -34,9 +37,10 @@ import { CommonService } from '../../../services/common.service';
 })
 /** anys component*/
 export class VendorFinancialInformationComponent implements OnInit, AfterViewInit {
+
     modelValue: boolean;
     display: boolean;
-    activeIndex: any;
+    activeIndex: any = 4;
     showCurrency: boolean;
     showCreditTearms: boolean;
     showCreditLimit: boolean;
@@ -73,27 +77,7 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
     SelectedCurrencyInfo: any;
     vendorProcess1099Data: any;
     checkedCheckboxesList: any = [];
-    listOfErrors: any[];
-
-    ngOnInit(): void {
-        this.workFlowtService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-financial-information';
-        this.workFlowtService.bredcrumbObj.next(this.workFlowtService.currentUrl);
-        this.loadCreditTermsData();
-        this.sourceVendor.v1099RentDefault = true;
-        this.sourceVendor.is1099Required = true;
-        this.loadDiscountData();
-        this.loadCurrencyData();
-        if (this.local) {
-            this.getVendorsList();
-        }
-        this.sourceVendor.aeroExchange = true;
-        this.sourceVendor.edi = true;
-
-        // this.commonservice.smartDropDownList('Discount', 'DiscountId', 'DiscountValue').subscribe(res => {
-        //     console.log(res);
-        // })
-
-    }
+    listOfErrors: any[];    
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     filteredBrands: any[];
@@ -123,25 +107,33 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
     public allWorkFlows: any[] = [];
     private isEditMode: boolean = false;
     private isDeleteMode: boolean = false;
+    percentageList: any = [];
+    disableCreditTerms: boolean = true;
+    disableCurrency: boolean = true;
 
-    constructor(private cdRef: ChangeDetectorRef, public CreditTermsService: CreditTermsService, public currencyService: CurrencyService, private router: ActivatedRoute, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public workFlowtService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private commonservice: CommonService) {
-        if (this.workFlowtService.listCollection !== undefined) {
-            this.workFlowtService.isEditMode = true;
+    constructor(private cdRef: ChangeDetectorRef, public CreditTermsService: CreditTermsService, public currencyService: CurrencyService, private router: ActivatedRoute, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public vendorService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private commonservice: CommonService) {
+        if (this.vendorService.listCollection !== undefined) {
+            this.vendorService.isEditMode = true;
         }
-        if (this.workFlowtService.contactCollection) {
-            this.local = this.workFlowtService.contactCollection;
+        if (this.vendorService.contactCollection) {
+            this.local = this.vendorService.contactCollection;
             this.sourceVendor = this.local;
         }
         this.dataSource = new MatTableDataSource();
-        if (this.workFlowtService.listCollection && this.workFlowtService.isEditMode == true) {
+        if (this.vendorService.listCollection && this.vendorService.isEditMode == true) {
             this.viewName = "Edit";
-            this.local = this.workFlowtService.listCollection;
-            this.sourceVendor = this.workFlowtService.listCollection;
+            this.local = this.vendorService.listCollection;
+            this.sourceVendor = this.vendorService.listCollection;
             this.getVendorProcess1099FromTransaction(this.sourceVendor.vendorId);
         }
         else {
             this.getVendorProcess1099();
+            this.sourceVendor.creditTermsId = 0;
+            this.sourceVendor.currencyId = 0;
+            this.sourceVendor.discountId = 0;
         }
+
+        
 
         //if(this.sourceVendor.v1099GrossProceedsPaidToAttorneyDefault)
         //{
@@ -150,13 +142,43 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
         //console.log(this.sourceVendor);
 
     }
+
+    ngOnInit(): void {
+        this.vendorService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-financial-information';
+        this.vendorService.bredcrumbObj.next(this.vendorService.currentUrl);
+        this.loadCreditTermsData();
+        this.sourceVendor.v1099RentDefault = true;
+        this.sourceVendor.is1099Required = true;
+        this.loadDiscountData();
+        this.loadCurrencyData();
+        this.getAllPercentage();
+        if (this.local) {
+            this.getVendorsList();
+        }
+        this.sourceVendor.aeroExchange = true;
+        this.sourceVendor.edi = true;
+        this.validateCreditTerms(this.sourceVendor.creditTermsId);
+        this.validateCurrency(this.sourceVendor.currencyId);
+
+        // this.commonservice.smartDropDownList('Discount', 'DiscountId', 'DiscountValue').subscribe(res => {
+        //     console.log(res);
+        // })
+
+    }
+
     private getVendorsList() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-        this.workFlowtService.getVendordata(this.local.vendorId).subscribe(
+        this.vendorService.getVendordata(this.local.vendorId).subscribe(
             results => this.onVendorsLoadSuccssfull(results[0]),
             error => this.onDataLoadFailed(error)
         );
+    }
+
+    getAllPercentage() {
+        this.commonservice.smartDropDownList('[Percent]', 'PercentId', 'PercentValue').subscribe(res => {
+            this.percentageList = res;
+        })
     }
 
     ngAfterViewChecked() {
@@ -169,7 +191,7 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
 
-        this.workFlowtService.getWorkFlows().subscribe(
+        this.vendorService.getWorkFlows().subscribe(
             results => this.onDataLoadSuccessful(results[0]),
             error => this.onDataLoadFailed(error)
         );
@@ -200,7 +222,7 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
 
-        this.workFlowtService.getWorkFlows().subscribe(
+        this.vendorService.getWorkFlows().subscribe(
             results => this.ongeneralDataLoadSuccessful(results[0]),
             error => this.onDataLoadFailed(error)
         );
@@ -210,7 +232,7 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
         this.loadingIndicator = false;
         this.dataSource.data = allWorkFlows;
         this.allgeneralInfo = allWorkFlows;
-        if (this.workFlowtService.isCOntact == true) {
+        if (this.vendorService.isCOntact == true) {
             this.vendorname = this.allgeneralInfo[0].vendorName;
             this.vendorCode = this.allgeneralInfo[0].vendorCode;
         }
@@ -221,7 +243,7 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
     private loadFinalObject() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-        this.workFlowtService.getFinalObj().subscribe(
+        this.vendorService.getFinalObj().subscribe(
             results => this.onFinalObjUrl(results[0]),
             error => this.onDataLoadFailed(error)
         );
@@ -238,7 +260,7 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
         let companyId = 1;
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-        this.workFlowtService.getVendorProcess1099Data(companyId).subscribe(res => {
+        this.vendorService.getVendorProcess1099Data(companyId).subscribe(res => {
             console.log(res[0], "res[0]")
             this.vendorProcess1099Data = res[0].map(x => {
                 return {
@@ -259,7 +281,7 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
 
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-        this.workFlowtService.getVendorProcess1099DataFromTransaction(vendorId).subscribe(res => {
+        this.vendorService.getVendorProcess1099DataFromTransaction(vendorId).subscribe(res => {
             if (res[0].length != 0) {
                 this.vendorProcess1099Data = res[0].map(x => {
                     return {
@@ -505,30 +527,31 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
 
 
     editItemAndCloseModel(userForm, isGoNxt?: boolean) {
+        console.log(userForm);
         this.isSaving = true;
-        let errors;
-        this.listOfErrors = [];
+        // let errors;
+        // this.listOfErrors = [];
 
-        if (userForm.status === "INVALID") {
-            Object.keys(userForm.controls).map(key => {
-                errors = userForm.controls[key].errors;
-                if (errors === null) { return null; }
-                if (errors['required']) {
-                    let titlevalue = key;
-                    if (document.getElementById(key)) {
-                        titlevalue = document.getElementById(key).getAttribute('title');
-                    }
-                    this.listOfErrors.push(`${titlevalue} is required`); //test
-                } else {
-                    this.listOfErrors.push(`${key} has an unknown error`);
-                }
-            });
+        // if (userForm.status === "INVALID") {
+        //     Object.keys(userForm.controls).map(key => {
+        //         errors = userForm.controls[key].errors;
+        //         if (errors === null) { return null; }
+        //         if (errors['required']) {
+        //             let titlevalue = key;
+        //             if (document.getElementById(key)) {
+        //                 titlevalue = document.getElementById(key).getAttribute('title');
+        //             }
+        //             this.listOfErrors.push(`${titlevalue} is required`); //test
+        //         } else {
+        //             this.listOfErrors.push(`${key} has an unknown error`);
+        //         }
+        //     });
 
-            this.display = true;
-            this.modelValue = true;
-            return false
+        //     this.display = true;
+        //     this.modelValue = true;
+        //     return false
 
-        }
+        // }
         // if (!(this.sourceVendor.creditLimit && this.sourceVendor.creditTermsId && this.sourceVendor.currencyId)) {
         //     this.display = true;
         //     this.modelValue = true;
@@ -602,24 +625,38 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
                     }
                 }
                 this.sourceVendor.master1099s = this.vendorProcess1099Data;
-                this.workFlowtService.updatefinanceinfo(this.sourceVendor, this.sourceVendor.vendorId).subscribe(data => {
+                const financialInfo = {
+                    master1099s: this.sourceVendor.master1099s,
+                    edi: this.sourceVendor.edi,
+                    ediDescription: this.sourceVendor.ediDescription,
+                    aeroExchange: this.sourceVendor.aeroExchange,
+                    aeroExchangeDescription: this.sourceVendor.aeroExchangeDescription,
+                    creditLimit: this.sourceVendor.creditLimit,
+                    creditTermsId: this.sourceVendor.creditTermsId,
+                    currencyId: this.sourceVendor.currencyId,
+                    discountId: this.sourceVendor.discountId,
+                    createdBy: this.sourceVendor.createdBy,
+                    updatedBy: this.sourceVendor.updatedBy,
+                    isActive: true                 
+                }
+                this.vendorService.updatefinanceinfo(financialInfo, this.sourceVendor.vendorId).subscribe(data => {
                     this.localCollection = data;
-                    this.workFlowtService.financeCollection = this.local;
-                    this.activeIndex = 2;
+                    this.vendorService.financeCollection = this.local;
+                    // this.activeIndex = 4;
                     this.getVendorProcess1099FromTransaction(this.sourceVendor.vendorId);
-                    this.workFlowtService.indexObj.next(this.activeIndex);
+                    // this.vendorService.indexObj.next(this.activeIndex);
                     this.savesuccessCompleted(this.sourceVendor, isGoNxt);
 
                 })
             }
             else {
                 this.sourceVendor.updatedBy = this.userName;
-                this.workFlowtService.updatefinanceinfo(this.sourceVendor, this.local.vendorId).subscribe(data => {
+                this.vendorService.updatefinanceinfo(this.sourceVendor, this.local.vendorId).subscribe(data => {
                     this.localCollection = data;
                     this.saveCompleted(this.sourceVendor);
-                    this.workFlowtService.financeCollection = this.local;
-                    this.activeIndex = 3;
-                    this.workFlowtService.indexObj.next(this.activeIndex);
+                    this.vendorService.financeCollection = this.local;
+                    // this.activeIndex = 3;
+                    // this.vendorService.indexObj.next(this.activeIndex);
                     this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-payment-information');
                 })
             }
@@ -632,17 +669,19 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
         this.isSaving = true;
     }
     NextClick() {
-        this.workFlowtService.contactCollection = this.local;
-        this.activeIndex = 3;
-        this.workFlowtService.indexObj.next(this.activeIndex);
-        this.workFlowtService.changeStep('Payment Information');
-        this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-payment-information');
+        this.vendorService.contactCollection = this.local;
+        this.activeIndex = 5;
+        this.vendorService.changeofTab(this.activeIndex);
+        // this.vendorService.indexObj.next(this.activeIndex);
+        // this.vendorService.changeStep('Payment Information');
+        // this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-payment-information');
     }
     previousClick() {
-        this.activeIndex = 1;
-        this.workFlowtService.indexObj.next(this.activeIndex);
-        this.workFlowtService.changeStep('Contacts');
-        this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-contacts');
+        this.activeIndex = 3;
+        this.vendorService.changeofTab(this.activeIndex);
+        // this.vendorService.indexObj.next(this.activeIndex);
+        // this.vendorService.changeStep('Contacts');
+        // this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-contacts');
     }
     dismissModel() {
         this.isDeleteMode = false;
@@ -739,30 +778,30 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
         this.dataSource.data = getCurrencyList;
         this.allCurrencyInfo = getCurrencyList;
     }
-    saveCurrecy() {
+    saveCurrency() {
         this.isSaving = true;
-        if (this.currencyName.toLowerCase().trim() == "") {
-            this.alertService.showMessage("Empty", 'Code Cannot Submit Empty', MessageSeverity.warn);
-            return;
-        }
+        // if (this.currencyName.toLowerCase().trim() == "") {
+        //     this.alertService.showMessage("Empty", 'Code Cannot Submit Empty', MessageSeverity.warn);
+        //     return;
+        // }
 
-        if (!(this.sourceAction.symbol)) {
-            this.alertService.showMessage("Empty", 'Symbol Cannot Be Empty', MessageSeverity.warn);
-            return;
-        }
-        if (!(this.sourceAction.displayName)) {
-            this.alertService.showMessage("Empty", 'Name Cannot Be Empty', MessageSeverity.warn);
-            return;
-        }
+        // if (!(this.sourceAction.symbol)) {
+        //     this.alertService.showMessage("Empty", 'Symbol Cannot Be Empty', MessageSeverity.warn);
+        //     return;
+        // }
+        // if (!(this.sourceAction.displayName)) {
+        //     this.alertService.showMessage("Empty", 'Name Cannot Be Empty', MessageSeverity.warn);
+        //     return;
+        // }
 
-        for (let i = 0; i < this.allCurrencyInfo.length; i++) {
-            if (this.allCurrencyInfo[i].code.toLowerCase().localeCompare(this.currencyName.toLowerCase()) == 0) {
-                this.alertService.showMessage("Duplicate", 'Currency Code Already Exist', MessageSeverity.warn);
-                return;
-            }
-            else {
-            }
-        }
+        // for (let i = 0; i < this.allCurrencyInfo.length; i++) {
+        //     if (this.allCurrencyInfo[i].code.toLowerCase().localeCompare(this.currencyName.toLowerCase()) == 0) {
+        //         this.alertService.showMessage("Duplicate", 'Currency Code Already Exist', MessageSeverity.warn);
+        //         return;
+        //     }
+        //     else {
+        //     }
+        // }
 
         if (this.isEditMode == false) {
             this.sourceAction.createdBy = this.userName;
@@ -888,7 +927,7 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
             }
         }
     }
-    partnmId(event) {
+    onSelectCreditTerm(event) {
         if (this.allcreditTermInfo) {
             for (let i = 0; i < this.allcreditTermInfo.length; i++) {
                 if (event == this.allcreditTermInfo[i].name) {
@@ -914,21 +953,20 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
         this.discountcollection = [];
         for (let i = 0; i < this.alldiscountvalueInfo.length; i++) {
             let discontValue = this.alldiscountvalueInfo[i].discontValue;
-
-            if (discontValue.toString().indexOf(event.query)) {
-                this.namecolle.push([{
-                    "discountId": this.alldiscountvalueInfo[i].discountId,
-                    "discontValue": discontValue
-                }]),
-                    this.discountcollection.push(discontValue)
-            }
+            this.discountcollection.push(discontValue);
+            // if (discontValue.toString().indexOf(event.query)) {
+            //     this.namecolle.push([{
+            //         "discountId": this.alldiscountvalueInfo[i].discountId,
+            //         "discontValue": discontValue
+            //     }])                                                   
+            // }            
         }
     }
 
     private loadDiscountData() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-        this.workFlowtService.getDiscountList().subscribe(
+        this.vendorService.getDiscountList().subscribe(
             results => this.onDataLoadClassifiSuccessful(results[0]),
             error => this.onDataLoadFailed(error)
         );
@@ -940,57 +978,64 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
         this.dataSource.data = getDiscountList;
         this.alldiscountvalueInfo = getDiscountList;
     }
-    editItemCloseModel() {
+    saveDiscountPercent() {
         this.isSaving = true;
-        if (this.discontValue.toLowerCase().trim() == "") {
-            this.alertService.showMessage("Empty", 'Cannot Submit Empty', MessageSeverity.warn);
-            return;
-        }
-        for (let i = 0; i < this.alldiscountvalueInfo.length; i++) {
-            if (this.alldiscountvalueInfo[i].discontValue.toString().localeCompare(this.discontValue.toLowerCase()) == 0) {
-                this.alertService.showMessage("Duplicate", 'Already Exist', MessageSeverity.warn);
-                return;
-            }
-            else {
-            }
-        }
+        // if (this.discontValue.toLowerCase().trim() == "") {
+        //     this.alertService.showMessage("Empty", 'Cannot Submit Empty', MessageSeverity.warn);
+        //     return;
+        // }
+        // for (let i = 0; i < this.alldiscountvalueInfo.length; i++) {
+        //     if (this.alldiscountvalueInfo[i].discontValue.toString().localeCompare(this.discontValue.toLowerCase()) == 0) {
+        //         this.alertService.showMessage("Duplicate", 'Already Exist', MessageSeverity.warn);
+        //         return;
+        //     }
+        //     else {
+        //     }
+        // }
         if (this.isEditMode == false) {
             this.sourceAction.createdBy = this.userName;
             this.sourceAction.updatedBy = this.userName;
             this.sourceAction.discontValue = this.discontValue;
-            this.workFlowtService.newAddDiscount(this.sourceAction).
+            this.vendorService.newAddDiscount(this.sourceAction).
                 subscribe(data => {
                     this.loadDiscountData()
                 })
-            this.activeIndex = 2;
+            // this.activeIndex = 2;
         }
         else {
             this.sourceAction.updatedBy = this.userName;
             this.sourceAction.discontValue = this.discontValue;
             this.sourceAction.masterCompanyId = 1;
-            this.workFlowtService.updatediscount(this.sourceAction).subscribe(
+            this.vendorService.updatediscount(this.sourceAction).subscribe(
                 response => this.saveCompleted(this.sourceAction),
                 error => this.saveFailedHelper(error));
 
-            this.activeIndex = 2;
+            // this.activeIndex = 2;
         }
         this.modal.close();
     }
 
-    discountvalueHandler(event) {
-        if (event.target.value != "") {
-            let value = event.target.value.toLowerCase();
-            if (this.selectedConsume) {
-                if (value == this.selectedConsume.toLowerCase()) {
-                    this.disableSaveConsume = true;
-                }
-                else {
-                    this.disableSaveConsume = false;
-
-                }
-            }
-
+    discountvalueHandler(value) {
+        const exists = validateRecordExistsOrNot('discontValue', parseInt(value), this.alldiscountvalueInfo);
+        if (exists.length > 0) {
+            this.disableSaveConsume = true;
         }
+        else {
+            this.disableSaveConsume = false;
+        }
+        // if (event.target.value != "") {
+        //     let value = event.target.value;
+        //     if (this.selectedConsume) {
+        //         if (value == this.selectedConsume) {
+        //             this.disableSaveConsume = true;
+        //         }
+        //         else {
+        //             this.disableSaveConsume = false;
+
+        //         }
+        //     }
+
+        // }
     }
     openDiscount(content) {
         this.isEditMode = false;
@@ -1006,14 +1051,36 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
         }, () => { console.log('Backdrop click') })
     }
     discountvaluedesc(event) {
-        if (this.alldiscountvalueInfo) {
-            for (let i = 0; i < this.alldiscountvalueInfo.length; i++) {
-                if (event == this.alldiscountvalueInfo[i].discontValue) {
-                    this.sourceVendor.itemClassificationCode = event;
-                    this.disableSaveConsume = true;
-                    this.selectedConsume = event;
-                }
-            }
+        console.log(event);
+
+        const value = getObjectById('discountId', event, this.alldiscountvalueInfo);
+        const exists = selectedValueValidate('discontValue', value, event);
+
+        this.disableSaveConsume = !exists;
+        // if (this.alldiscountvalueInfo) {
+        //     for (let i = 0; i < this.alldiscountvalueInfo.length; i++) {
+        //         if (event == this.alldiscountvalueInfo[i].discontValue) {
+        //             this.sourceVendor.itemClassificationCode = event;
+        //             this.disableSaveConsume = true;
+        //             this.selectedConsume = event;
+        //         }
+        //     }
+        // }
+    }
+
+    validateCreditTerms(value) {
+        if(value != 0) {
+            this.disableCreditTerms = false;
+        } else {
+            this.disableCreditTerms = true;
+        }     
+    }
+
+    validateCurrency(value) {        
+        if(value != 0) {
+            this.disableCurrency = false;
+        } else {
+            this.disableCurrency = true;
         }
     }
 }

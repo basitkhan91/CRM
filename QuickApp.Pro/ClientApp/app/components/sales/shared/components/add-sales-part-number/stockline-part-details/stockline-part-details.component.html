@@ -1,6 +1,6 @@
 <div class="row">
   <div style="overflow-y: auto;">
-    <p-table #dt class="rpo-table-cstm rro-table-cstm" [value]="parts" [rows]="10" [lazy]="true"
+    <p-table #dt class="rpo-table-cstm rro-table-cstm sales-quote-part-search-data" [value]="parts" [rows]="10" [lazy]="true"
       [paginator]="showPaginator" [rowsPerPageOptions]="[10, 20, 30]" [totalRecords]="totalRecords"
       [pageLinks]="pageLinks" [columns]="columns" [scrollable]="true" [style]="{ width: '100%' }"
       (onLazyLoad)="onPaging($event)">
@@ -31,11 +31,11 @@
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-part>
-        <tr>
+        <tr [ngClass]="{'row-bg1':part.alternateFor?.length==0}">
           <td><input type="checkbox" [(ngModel)]="part.selected" (change)="onChange($event, part,salesMargin)" /></td>
           <td>{{ part.method }}</td>
-          <td>{{ part.partNumber }}</td>
-          <td>{{ part.alternatePartNumber }}</td>
+          <td>{{ part.partNumber }} <span class="alternate-part-label" *ngIf="part.alternateFor?.length > 0">(Alt)</span></td>
+          <td>{{ part.alternateFor }}</td>
           <td>{{ part.description }}</td>
           <td>{{ part.conditionDescription }}</td>
           <td>{{ part.uomDescription }}</td>
@@ -75,16 +75,7 @@
 
         </tr>
       </ng-template>
-      <ng-template pTemplate="summary" id="footer">
-        <label id="footer" class="footer-t-rec">No'of records:</label>
-        <input style="width: 5%;" [(ngModel)]="totalRecords" [disabled]="true" pInputText type="text" />
-        &nbsp;&nbsp;
-        <!--
- <label id="footer" class="footer-p-count">Pages Count:</label>
-        <input style="width: 5%;" [(ngModel)]="totalPages" [disabled]="true" pInputText type="text" />
-        -->
-       
-      </ng-template>
+      
     </p-table>
   </div>
 </div>

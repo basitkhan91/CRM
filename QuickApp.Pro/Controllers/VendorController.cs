@@ -49,9 +49,9 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpGet("vendorglobalsearch")]
-        public IActionResult VendorGlobalSearch(string filterText, int pageNumber = 0, int pageSize = 10)
+        public IActionResult VendorGlobalSearch(string filterText, int pageNumber = 0, int pageSize = 10,bool isActive=false)
         {
-            var result = _unitOfWork.Vendor.VendorGlobalSearch(filterText, pageNumber, pageSize);
+            var result = _unitOfWork.Vendor.VendorGlobalSearch(filterText, pageNumber, pageSize,isActive);
             return Ok(result);
         }
 
@@ -288,7 +288,7 @@ namespace QuickApp.Pro.Controllers
                                     vp.CreatedBy,
                                     vp.CreatedDate,
                                     vp.DefaultPaymentMethod,
-                                    vp.IsActive,
+                                    //vp.IsActive,
                                     vp.MasterCompanyId,
                                     vp.UpdatedBy,
                                     vp.UpdatedDate,
@@ -1561,6 +1561,7 @@ namespace QuickApp.Pro.Controllers
                 actionobject.VendorAudit = vendorViewModel.VendorAudit;
                 actionobject.MasterCompanyId = vendorViewModel.MasterCompanyId;
                 actionobject.IsActive = true;
+                actionobject.IsDeleted = vendorViewModel.IsDeleted;
                 actionobject.CreditTermsId = vendorViewModel.CreditTermsId;
                 actionobject.CreatedDate = DateTime.Now;
                 actionobject.UpdatedDate = DateTime.Now;
@@ -1631,7 +1632,7 @@ namespace QuickApp.Pro.Controllers
                                 data.UpdatedBy = actionobject.UpdatedBy;
                                 data.IsActive = actionobject.IsActive;
                                 data.IsPrimary = true;
-                                data.IsDelete = false;
+                                data.IsDeleted = false;
                                 _unitOfWork.VendorShippingAddress.Update(data);
                             }
                         }
@@ -1649,7 +1650,7 @@ namespace QuickApp.Pro.Controllers
                             objVendorrShippingAddress.UpdatedBy = actionobject.UpdatedBy;
                             objVendorrShippingAddress.IsActive = actionobject.IsActive;
                             objVendorrShippingAddress.IsPrimary = true;
-                            objVendorrShippingAddress.IsDelete = false;
+                            objVendorrShippingAddress.IsDeleted = false;
 
                             _context.VendorShippingAddress.Add(objVendorrShippingAddress);
                         }
@@ -1998,7 +1999,7 @@ namespace QuickApp.Pro.Controllers
                                 data.UpdatedBy = actionobject.UpdatedBy;
                                 data.IsActive = actionobject.IsActive;
                                 //data.IsPrimary = true;
-                                data.IsDelete = false;
+                                data.IsDeleted = false;
                                 _unitOfWork.VendorShippingAddress.Update(data);
                             }
                         }
@@ -2016,7 +2017,7 @@ namespace QuickApp.Pro.Controllers
                             objVendorrShippingAddress.UpdatedBy = actionobject.UpdatedBy;
                             objVendorrShippingAddress.IsActive = actionobject.IsActive;
                             //objVendorrShippingAddress.IsPrimary = true;
-                            objVendorrShippingAddress.IsDelete = false;
+                            objVendorrShippingAddress.IsDeleted = false;
 
                             _context.VendorShippingAddress.Add(objVendorrShippingAddress);
                         }
@@ -2315,7 +2316,7 @@ namespace QuickApp.Pro.Controllers
             {
                 var VendorpaymenttObj = _unitOfWork.vendorCheckPaymentRepository.GetSingleOrDefault(a => a.CheckPaymentId == id);
                 vendorPaymentViewModel.MasterCompanyId = 1;
-                VendorpaymenttObj.IsActive = vendorPaymentViewModel.IsActive;
+                //VendorpaymenttObj.IsActive = vendorPaymentViewModel.IsActive;
                 VendorpaymenttObj.UpdatedDate = DateTime.Now;
                 VendorpaymenttObj.UpdatedBy = vendorPaymentViewModel.UpdatedBy;
                 VendorpaymenttObj.CheckPaymentId = vendorPaymentViewModel.CheckPaymentId;
@@ -2906,10 +2907,10 @@ namespace QuickApp.Pro.Controllers
                 if (vendorDomesticWirePaymentViewModel == null)
                     return BadRequest($"{nameof(vendorDomesticWirePaymentViewModel)} cannot be null");
                 VendorDomesticWirePayment vendorCheckPaymentobj = new VendorDomesticWirePayment();
-                vendorCheckPaymentobj.IsActive = true;
+                //vendorCheckPaymentobj.IsActive = true;
                 vendorCheckPaymentobj.VendorId = vendorDomesticWirePaymentViewModel.VendorId;
                 vendorCheckPaymentobj.MasterCompanyId = 1;
-                vendorCheckPaymentobj.IsActive = vendorDomesticWirePaymentViewModel.IsActive;
+                //vendorCheckPaymentobj.IsActive = vendorDomesticWirePaymentViewModel.IsActive;
                 vendorCheckPaymentobj.DomesticWirePaymentId = vendorDomesticWirePaymentViewModel.DomesticWirePaymentId;
                 vendorCheckPaymentobj.CreatedDate = DateTime.Now;
                 vendorCheckPaymentobj.UpdatedDate = DateTime.Now;
@@ -2974,7 +2975,7 @@ namespace QuickApp.Pro.Controllers
                 if (vendorPaymentViewModel == null)
                     return BadRequest($"{nameof(vendorPaymentViewModel)} cannot be null");
                 VendorPayment defaultPaymentObj = new VendorPayment();
-                defaultPaymentObj.IsActive = true;
+                //defaultPaymentObj.IsActive = true;
                 defaultPaymentObj.MasterCompanyId = 1;
                 //defaultPaymentObj.IsActive = vendorPaymentViewModel.IsActive;
                 defaultPaymentObj.DefaultPaymentMethod = vendorPaymentViewModel.DefaultPaymentMethod;
@@ -2982,6 +2983,7 @@ namespace QuickApp.Pro.Controllers
                 defaultPaymentObj.CreatedDate = DateTime.Now;
                 defaultPaymentObj.UpdatedDate = DateTime.Now;
                 defaultPaymentObj.CreatedBy = vendorPaymentViewModel.CreatedBy;
+                defaultPaymentObj.UpdatedBy = vendorPaymentViewModel.UpdatedBy;
                 //_unitOfWork.SaveChanges();
                 _context.VendorPayment.Add(defaultPaymentObj);
                 _unitOfWork.SaveChanges();
@@ -3002,7 +3004,7 @@ namespace QuickApp.Pro.Controllers
                 //_unitOfWork.vendorPaymentRepository.GetSingleOrDefault(c => c.VendorPaymentId == id);
                 //defaultObj.IsActive = true;
                 defaultObj.MasterCompanyId = 1;
-                defaultObj.IsActive = vendorPaymentViewModel.IsActive;
+                //defaultObj.IsActive = vendorPaymentViewModel.IsActive;
                 defaultObj.DefaultPaymentMethod = vendorPaymentViewModel.DefaultPaymentMethod;
                 defaultObj.VendorId = vendorPaymentViewModel.VendorId;
                 defaultObj.CreatedDate = DateTime.Now;
@@ -3027,10 +3029,10 @@ namespace QuickApp.Pro.Controllers
                 if (vendorInternationlWirePaymentViewModel == null)
                     return BadRequest($"{nameof(vendorInternationlWirePaymentViewModel)} cannot be null");
                 VendorInternationlWirePayment vendorInternationalPaymentobj = new VendorInternationlWirePayment();
-                vendorInternationalPaymentobj.IsActive = true;
+                //vendorInternationalPaymentobj.IsActive = true;
                 vendorInternationalPaymentobj.VendorId = vendorInternationlWirePaymentViewModel.VendorId;
                 vendorInternationalPaymentobj.MasterCompanyId = 1;
-                vendorInternationalPaymentobj.IsActive = vendorInternationlWirePaymentViewModel.IsActive;
+                //vendorInternationalPaymentobj.IsActive = vendorInternationlWirePaymentViewModel.IsActive;
                 vendorInternationalPaymentobj.InternationalWirePaymentId = vendorInternationlWirePaymentViewModel.InternationalWirePaymentId;
                 //vendorInternationalPaymentobj.VendorInternationalWirePaymentId = vendorInternationlWirePaymentViewModel.VendorInternationalWirePaymentId;
                 vendorInternationalPaymentobj.CreatedDate = DateTime.Now;
@@ -3261,7 +3263,7 @@ namespace QuickApp.Pro.Controllers
                 var addressObj = _unitOfWork.Address.GetSingleOrDefault(c => c.AddressId == checkPaymentObj.AddressId);
                 addressObj.IsActive = vendorShippingViewModel.AddressStatus;
                 checkPaymentObj.IsActive = vendorShippingViewModel.IsActive;
-                checkPaymentObj.IsDelete = true;
+                checkPaymentObj.IsDeleted = true;
                 checkPaymentObj.MasterCompanyId = 1;
                 checkPaymentObj.UpdatedDate = DateTime.Now;
                 checkPaymentObj.CreatedBy = vendorShippingViewModel.CreatedBy;
@@ -3452,7 +3454,7 @@ namespace QuickApp.Pro.Controllers
                 vendorObject.IsAllow = vendorWarningViewModel.IsAllow;
                 vendorObject.IsRestrict = vendorWarningViewModel.IsRestrict;
                 vendorObject.IsWarning = vendorWarningViewModel.IsWarning;
-                vendorObject.IsActive = vendorWarningViewModel.IsActive;
+                //vendorObject.IsActive = vendorWarningViewModel.IsActive;
                 vendorObject.CreatedDate = DateTime.Now;
                 vendorObject.UpdatedDate = DateTime.Now;
                 vendorObject.CreatedBy = vendorWarningViewModel.CreatedBy;
@@ -3483,7 +3485,7 @@ namespace QuickApp.Pro.Controllers
                 vendorObject.WarningMessage = vendorWarningViewModel.WarningMessage;
                 vendorObject.RestrictMessage = vendorWarningViewModel.RestrictMessage;
                 vendorObject.MasterCompanyId = vendorWarningViewModel.MasterCompanyId;
-                vendorObject.IsActive = vendorWarningViewModel.IsActive;
+               // vendorObject.IsActive = vendorWarningViewModel.IsActive;
                 vendorObject.CreatedDate = DateTime.Now;
                 vendorObject.UpdatedDate = DateTime.Now;
                 vendorObject.CreatedBy = vendorWarningViewModel.CreatedBy;
@@ -3551,17 +3553,18 @@ namespace QuickApp.Pro.Controllers
             {
                 // caps.WorkflowChargesListId = 0;
                 vendorCapability.MasterCompanyId = 1;
-                vendorCapability.IsActive = true;
+                //vendorCapability.IsActive = true;
                 vendorCapability.CreatedDate = DateTime.Now;
                 vendorCapability.UpdatedDate = DateTime.Now;
                 if (vendorCapability.VendorCapabilityId >0)
-                {                    
+                {
                     _unitOfWork.Repository<VendorCapabiliy>().Update(vendorCapability);
                     updateRanking(Convert.ToInt32(vendorCapability.VendorRanking));
                     _unitOfWork.SaveChanges();
                 }
                 else
                 {
+                    //vendorCapability.IsDeleted = false;
                     _unitOfWork.Repository<VendorCapabiliy>().Add(vendorCapability);
                     updateRanking(Convert.ToInt32(vendorCapability.VendorRanking));
                     _unitOfWork.SaveChanges();

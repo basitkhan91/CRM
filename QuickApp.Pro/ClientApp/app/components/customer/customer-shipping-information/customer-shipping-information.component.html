@@ -32,7 +32,7 @@
                     <hr />
                 </div>
 
-                <div class="table-responsive">
+                <div>
                     <!--<p class="lead"></p>-->
                     <p-table #domestictable class="rpo-table-cstm" 
                             [value]="domesticShippingData"
@@ -69,7 +69,6 @@
                                             <i class="fa fa-upload"></i>
                                         </span>
                                     </label>
-                                    &nbsp; &nbsp;
 
                                 </div>
                             </div>
@@ -172,7 +171,7 @@
                 <hr />
                 <div class="clear"></div>
 
-                <div class="table-responsive">
+                <div>
                     <p-table #intlShippingTable class="rpo-table-cstm"
                              [metaKeySelection]="true"
                              [value]="internationalShippingData"
@@ -209,7 +208,6 @@
                                             <i class="fa fa-upload"></i>
                                         </span>
                                     </label>
-                                    &nbsp; &nbsp;
 
                                 </div>
                             </div>
@@ -281,7 +279,7 @@
                         </ng-template> 
                         <ng-template pTemplate="emptymessage" let-columns *ngIf="internationalShippingData?.length == 0">
                             <tr>
-                                <td [attr.colspan]="7" style="color: red; font-weight: bold; text-align: center">
+                                <td [attr.colspan]="8" style="color: red; font-weight: bold; text-align: center">
                                     No records found
                                 </td>
                             </tr>
@@ -591,7 +589,7 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
 
-                <h4 class="modal-title">{{isEditDomestic ? 'Edit' : 'Add' }} Shipping Info   </h4>
+                <h4 class="modal-title">{{isEditDomestic ? 'Edit' : 'Add' }} Ship to Information   </h4>
                 <div class="col-md-12 shadow-box-cstm">
                     <div class="col-md-4">
                         <p class="fs12">
@@ -616,34 +614,15 @@
                                 <input class="form-control" type="text" id="vssitename" name="siteName" [(ngModel)]="domesticShippingInfo.siteName" required>
                             </div>
                             <div class="form-group">
-                                <label>Ship To Address 1 <span class="clr-red">*</span></label>
-                                <input class="form-control" id="csaddress1" type="text" name="address1" [(ngModel)]="domesticShippingInfo.address1" required>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label>Ship To Address 2</label>
-                                <input class="form-control" id="csaddress2" type="text" name="address2" [(ngModel)]="domesticShippingInfo.address2">
-                            </div>
-                            <div class="form-group">
-                                <label>Ship To City <span class="clr-red">*</span></label>
-                                <input class="form-control" id="cscity" type="text" name="city" [(ngModel)]="domesticShippingInfo.city" required>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-
-                            <div class="form-group">
                                 <label>Ship To State / Prov <span class="clr-red">*</span></label>
                                 <input class="form-control" id="csstate" type="text" name="stateOrProvince" [(ngModel)]="domesticShippingInfo.stateOrProvince" required>
                             </div>
-                            <div class="form-group">
-                                <label>Ship To Postal Code <span class="clr-red">*</span></label>
-                                <input class="form-control" id="cspostal" type="text" name="postalCode" [(ngModel)]="domesticShippingInfo.postalCode" required>
-                            </div>
                         </div>
-
                         <div class="col-md-3">
-
+                            <div class="form-group">
+                                <label>Ship To Address 1 <span class="clr-red">*</span></label>
+                                <input class="form-control" id="csaddress1" type="text" name="address1" [(ngModel)]="domesticShippingInfo.address1" required>
+                            </div>
                             <div class="form-group">
                                 <label>Ship To Country <span class="clr-red">*</span></label>
                                 <div class="inner-addon right-addon inline-block">
@@ -652,6 +631,26 @@
                                     </p-autoComplete>
                                 </div>
                             </div>
+
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Ship To Address 2</label>
+                                <input class="form-control" id="csaddress2" type="text" name="address2" [(ngModel)]="domesticShippingInfo.address2">
+                            </div>
+                           
+                            <div class="form-group">
+                                <label>Ship To Postal Code <span class="clr-red">*</span></label>
+                                <input class="form-control" id="cspostal" type="text" name="postalCode" [(ngModel)]="domesticShippingInfo.postalCode" required>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Ship To City <span class="clr-red">*</span></label>
+                                <input class="form-control" id="cscity" type="text" name="city" [(ngModel)]="domesticShippingInfo.city" required>
+                            </div>
+                           
                             <div class="col-md-3">
                             </div>
                             <div class="form-group" style="margin-top: 15px;">

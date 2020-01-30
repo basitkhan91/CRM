@@ -31,7 +31,7 @@ export class CustomerBillingInformationComponent {
 	// countryListOriginal: any[];
     selectedRowForDelete: any;
 	billingInfo = new CustomerBillingAddressModel()
-	billingInfoList: any;
+	billingInfoList: any = [];
 	billingInfoTableHeaders = [
 		{ field: 'siteName', header: 'Site Name' },
 		{ field: 'address1', header: 'Address1' },
