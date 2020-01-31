@@ -1,5 +1,5 @@
 ﻿<form   #generalForm="ngForm" method="post" id="" name="" class="form-horizontal add-custustomer">
-    <div class="form-row">
+    <div class="form-row" >
         <div class="form-group">
             <div class="form-group col-sm-12 vendor-details-heading" *ngIf="showalert">
                 <p class="fs10">
@@ -7,7 +7,7 @@
                 </p>
             </div>
         </div>
-        <div  class="col-md-12">
+        <div  class="col-md-12" >
 
             <div class="card">
                 <div>
@@ -94,15 +94,26 @@
 
                                 <p style="margin-bottom: 8px;" *ngIf="!sourceVendor.parent"></p>
                                 <div class="form-group" *ngIf="sourceVendor.parent">
+                                    <p-autoComplete field="vendorName" class="pautocomp-cstm" 
+                                    (onSelect)="onCountrieselected($event)" 
+                                    [forceSelection]="true"
+                                    [(ngModel)]="sourceVendor.vendorParentId" name="vendorParentName"
+                                    [suggestions]="vendorParentNames" (completeMethod)="filterVendorParentNames($event)" [size]="30"
+                                    [minLength]="1" [dropdown]="true" required>
+                                    </p-autoComplete>
 
-                                    <p-autoComplete class="pautocomp-cstm" (onSelect)="onParentNameselected($event)" (onKeyUp)=parentEventHandler($event)
+
+
+
+
+                                    <!-- <p-autoComplete class="pautocomp-cstm" (onSelect)="onParentNameselected($event)" (onKeyUp)=parentEventHandler($event)
                                                     [(ngModel)]="sourceVendor.vendorParentName" name="vendorParentName"
                                                     [suggestions]="vendorNames" (completeMethod)="filterVendorParentNames($event)" [size]="30"
                                                     [minLength]="1" [dropdown]="true">
                                         <ng-template let-vendorParentName pTemplate="item">
                                             <div class="ui-helper-clearfix">{{vendorParentName}}</div>
                                         </ng-template>
-                                    </p-autoComplete>
+                                    </p-autoComplete> -->
 
                                     <div *ngIf="disableSaveParentName" class="clr-red">Please Enter Valid Parent</div>
                                 </div>
@@ -185,7 +196,7 @@
                                         <span class="clr-red">*</span>
                                     </label>
                                     <input class="form-control" type="text" id="vmpostal" name="vmpostal"
-                                           [(ngModel)]="sourceVendor.PostalCode" required>
+                                           [(ngModel)]="sourceVendor.postalCode" required>
                                 </div>
 
                                 <div class="form-group">
@@ -195,6 +206,7 @@
                                     </label>
                                     <p-autoComplete field="nice_name" class="pautocomp-cstm" (onSelect)="onCountrieselected($event)" (onKeyUp)=eventCountryHandler($event)
                                                     [(ngModel)]="sourceVendor.country" name="country"
+                                                    [forceSelection]="true"
                                                     [suggestions]="countrycollection" (completeMethod)="filtercountry($event)" [size]="30"
                                                     [minLength]="1" [dropdown]="true" required>
                                         <!-- <ng-template let-nice_name pTemplate="item">
@@ -226,6 +238,7 @@
                                     <div class="checkbox-cstm">
                                         <label>
                                             <input type="checkbox" class="" value="" id="" style="margin-top: 1px;"
+                                                    [disabled]="isVendorAlsoCustomer"
                                                     [ngModelOptions]="{standalone: true}"
                                                     [(ngModel)]="sourceVendor.isVendorAlsoCustomer">
                                             <span class="cr"><i class="cr-icon pi pi-check"></i></span>
@@ -311,8 +324,15 @@
                                             <label for="vendorname">
                                                 URL to Vendor site
                                             </label>
-                                            <input class="form-control" type="text" [ngModelOptions]="{standalone: true}"
-                                                   [(ngModel)]="sourceVendor.vendorURL">
+                                            <input class="form-control" type="text"
+                                            [pattern]="urlPattern"
+                                            [ngModelOptions]="{standalone: true}"
+                                                   [(ngModel)]="sourceVendor.vendorURL" #url="ngModel">
+                                                   <div *ngIf="url.errors" [ngClass]="'error'">
+                                                    <div *ngIf="url.errors.pattern">
+                                                        <span style="color:red">URL not valid</span>
+                                                    </div>
+                                                </div>
                                         </div>
 
                                     </div>
@@ -419,7 +439,7 @@
                     </div>
 
                     <div style="padding-bottom: 7px;">
-                        <button type="submit" [validate] moduleName="app-vendor-general-information" requirePermission="canAdd"
+                        <!-- <button type="submit" [validate] moduleName="app-vendor-general-information" requirePermission="canAdd"
                                 class="btn btn-primary pull-right submit-btn" *ngIf="sourceVendor.vendorId == undefined"
                                 [disabled]="!generalForm.valid || disableSaveVenName || disableSaveVenCode || disableSaveParentName || disablesave"
                                 (click)="editItemAndCloseModel()">
@@ -432,7 +452,7 @@
                                 [disabled]="!generalForm.valid || disableSaveVenName || disableSaveVenCode || disableSaveParentName || disablesave"
                                 (click)="editItemAndCloseModel()">
                             Update
-                        </button>
+                        </button> -->
 
                         <button type="button" class="btn btn-primary pull-right " (click)="editItemAndCloseModel('goNext')" [disabled]="!generalForm.valid || disableSaveVenderName">
                             Save & Next
