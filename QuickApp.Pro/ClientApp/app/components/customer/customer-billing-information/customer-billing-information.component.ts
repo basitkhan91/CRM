@@ -25,7 +25,7 @@ export class CustomerBillingInformationComponent {
 	@Input() editMode;
 	@Output() tab = new EventEmitter<any>();
 	@Input() selectedCustomerTab: string = "";
-    @Input() customerDataFromExternalComponents : any = {};
+    @Input() customerDataFromExternalComponents : any;
 
 	countryList: any[];
 	// countryListOriginal: any[];
@@ -78,8 +78,8 @@ export class CustomerBillingInformationComponent {
             this.getBillingDataById()
             this.isViewMode = false;
 
-		} else {
-            if(this.customerDataFromExternalComponents != {}){
+        } else {
+            if (this.customerDataFromExternalComponents) {
                 this.id = this.customerDataFromExternalComponents.customerId;
                 this.customerCode = this.customerDataFromExternalComponents.customerCode;
 				this.customerName = this.customerDataFromExternalComponents.name;
@@ -245,7 +245,7 @@ export class CustomerBillingInformationComponent {
         
         this.billingauditHisory = auditHistory;
       
-        this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
+        this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false, windowClass: "popup-blur" });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })

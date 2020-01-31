@@ -37,7 +37,7 @@ export class WorkOrderFreightComponent implements OnInit {
     costPlusType: string = "Mark Up";
     cols = [
         { field: 'carrierName', header: 'Carrier' },
-        { field: 'shipVia', header: 'Ship Via' },
+        { field: 'shipViaName', header: 'Ship Via' },
         { field: 'length', header: 'Length' },
         { field: 'width', header: 'Width' },
         { field: 'weight', header: 'Weight' },

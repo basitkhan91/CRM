@@ -38,7 +38,7 @@ export class VendorShippingInformationComponent {
     display: boolean;
     activeIndex: number;
     public overlays: any[];
-    options: any;
+    // options: any;
     shipViaCollection: any;
     allShipViaDetails: any[];
     updatedCollection: {};
@@ -70,20 +70,7 @@ export class VendorShippingInformationComponent {
     selectedShipVia: any;
     shipviacollection: any[];
     shippingauditHisory: any[];
-    isPrimary: boolean = false;
-    ngOnInit(): void {
-        this.vendorService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-shipping-information';
-        this.vendorService.bredcrumbObj.next(this.vendorService.currentUrl);
-        if (this.local) {
-            this.loadData();
-        }
-        this.countrylist();
-        this.options = {
-            center: { lat: 36.890257, lng: 30.707417 },
-            zoom: 12
-        };
-
-    }
+    isPrimary: boolean = false;    
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     filteredBrands: any[];
@@ -98,10 +85,19 @@ export class VendorShippingInformationComponent {
     loadingIndicator: boolean;
     closeResult: string;
     selectedColumn: any[];
-    selectedColumns: any[];
+    //selectedColumns: any[];
     selectedShipViaColumn: any[];
     selectedShipViaColumns: any[];
-    cols: any[];
+    cols: any[] = [
+        { field: 'siteName', header: 'Site Name' },
+        { field: 'address1', header: 'Address1' },
+        { field: 'address2', header: 'Address2' },
+        { field: 'city', header: 'City' },
+        { field: 'stateOrProvince', header: 'State/Prov' },
+        { field: 'postalCode', header: 'Postal Code' },
+        { field: 'countryName', header: 'Country' }
+    ];
+    selectedColumns: any[] = this.cols;
     shipViacols: any[];
     shipViaColumns: any[];
     title: string = "Create";
@@ -126,6 +122,7 @@ export class VendorShippingInformationComponent {
     pageIndex: number = 0;
     pageSize: number = 10;
     totalPages: number = 0;
+    public sourceVendor: any = {};
 
     constructor(private http: HttpClient, private router: Router,
         private authService: AuthService, private modalService: NgbModal, private configurations: ConfigurationService, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public vendorService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
@@ -163,23 +160,36 @@ export class VendorShippingInformationComponent {
             this.loadData();
         }
     }
-    public sourceVendor: any = {};
 
-    ngAfterViewInit() {
-    }
-    getlatlng(address) {
-        this.checkAddress = true;
-        return this.http.get('https://maps.googleapis.com/maps/api/geocode/json?address=' + address + '&key=AIzaSyB_W96L25HhFWgqLblcikircQKjU6bgTgk').subscribe((data: any) => {
-            this.options = {
-                center: { lat: data.results[0].geometry.location.lat, lng: data.results[0].geometry.location.lng },
-                zoom: 12
-            };
-            this.overlays = [
-                new google.maps.Marker({ position: { lat: data.results[0].geometry.location.lat, lng: data.results[0].geometry.location.lng }, title: "Konyaalti" }),
-            ];
-            return data;
-        });
-    }
+    ngOnInit(): void {
+        this.vendorService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-shipping-information';
+        this.vendorService.bredcrumbObj.next(this.vendorService.currentUrl);
+        if (this.local) {
+            this.loadData();
+        }
+        this.countrylist();
+        // this.options = {
+        //     center: { lat: 36.890257, lng: 30.707417 },
+        //     zoom: 12
+        // };
+
+    }    
+
+    // ngAfterViewInit() {
+    // }
+    // getlatlng(address) {
+    //     this.checkAddress = true;
+    //     return this.http.get('https://maps.googleapis.com/maps/api/geocode/json?address=' + address + '&key=AIzaSyB_W96L25HhFWgqLblcikircQKjU6bgTgk').subscribe((data: any) => {
+    //         this.options = {
+    //             center: { lat: data.results[0].geometry.location.lat, lng: data.results[0].geometry.location.lng },
+    //             zoom: 12
+    //         };
+    //         this.overlays = [
+    //             new google.maps.Marker({ position: { lat: data.results[0].geometry.location.lat, lng: data.results[0].geometry.location.lng }, title: "Konyaalti" }),
+    //         ];
+    //         return data;
+    //     });
+    // }
 
     private getgeneralInnfo() {
         this.alertService.startLoadingMessage();
@@ -222,18 +232,7 @@ export class VendorShippingInformationComponent {
         this.vendorService.getVendorShipAddressGet(this.local.vendorId).subscribe(
             results => this.onDataLoadSuccessful(results[0]),
             error => this.onDataLoadFailed(error)
-        );
-        this.cols = [
-            { field: 'siteName', header: 'Site Name' },
-            { field: 'address1', header: 'Address1' },
-            { field: 'address2', header: 'Address2' },
-            // { field: 'address3', header: 'Address3' },
-            { field: 'city', header: 'City' },
-            { field: 'stateOrProvince', header: 'State/Prov' },
-            { field: 'postalCode', header: 'Postal Code' },
-            { field: 'countryName', header: 'Country' }
-        ];
-        this.selectedColumns = this.cols;
+        );        
     }
 
     private countrylist() {
