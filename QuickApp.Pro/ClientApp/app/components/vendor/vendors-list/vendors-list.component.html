@@ -618,6 +618,7 @@
 
                                         <ng-template pTemplate="header" let-columns>
                                             <tr>
+                                                <th>Flag</th>
                                                 <th *ngFor="let col of columns" pResizableColumn
                                                     pReorderableColumn [pSortableColumn]="col.field">
                                                     {{col.header}}
@@ -625,6 +626,7 @@
                                                 </th>
                                             </tr>
                                             <tr>
+                                                <th></th>
                                                 <th style="width:auto" *ngFor="let col of columns" [ngSwitch]="col.field">
                                                     <input style="width:100%;" pInputText type="text" (input)="vContact.filter($event.target.value, col.field, 'contains')">
                                                 </th>
@@ -633,7 +635,11 @@
     
                                         <ng-template pTemplate="body" let-rowData let-columns="columns">
                                             <tr [pSelectableRow]="rowData"> <!--(dblclick)="toggledbldisplay(rowData)"-->
-
+                                                <td> <span class="flag">
+                                                    <i  *ngIf="rowData.isDefaultContact == true"   [ngStyle]="{'color': rowData.isDefaultContact == true ? 'green' : 'none'}"  
+                                                     class="fa fa-flag" aria-hidden="true"></i>
+                                                    </span>
+                                                </td>
                                                 <td *ngFor="let col of columns" class="ui-resizable-column"
                                                     pReorderableRowHandle>
                                                     {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
@@ -954,7 +960,9 @@
                                              </ng-template>
     
                                         <ng-template pTemplate="header" let-columns>
+                                            
                                             <tr>
+                                                <th style="width: 40px !important;">Flag</th>
                                                 <th *ngFor="let col of columns" pResizableColumn
                                                     pReorderableColumn [pSortableColumn]="col.field">
                                                     {{col.header}}
@@ -963,6 +971,7 @@
                                                 <!--<th></th>-->
                                             </tr>
                                             <tr>
+                                                <th></th>
                                                 <th style="width:auto" *ngFor="let col of columns" [ngSwitch]="col.field">
                                                     <input style="width:100%;" pInputText type="text" (input)="vShipping.filter($event.target.value, col.field, 'contains')">
                                                 </th>
@@ -970,8 +979,16 @@
                                         </ng-template>
     
                                         <ng-template pTemplate="body" let-rowData let-columns="columns">
+                                           
+                                           
                                             <tr [pSelectableRow]="rowData"
                                                 (dblclick)="toggledbldisplay(rowData)">
+                                                
+                                                <td > <span class="flag">
+                                                    <i  *ngIf="rowData.isPrimary == true"   [ngStyle]="{'color': rowData.isPrimary == true ? 'green' : 'none'}"  
+                                                     class="fa fa-flag" aria-hidden="true"></i>
+                                                    </span>
+                                                </td>
                                                 <td *ngFor="let col of columns" class="ui-resizable-column"
                                                     pReorderableRowHandle>
                                                     {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy h:mm:ss a'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy h:mm:ss a'):rowData[col.field]}}
@@ -1027,6 +1044,7 @@
 
                                             <ng-template pTemplate="header" let-columns>
                                                 <tr>
+                                                    <th style="width: 40px;">Flag</th>
                                                     <th *ngFor="let col of columns" pResizableColumn
                                                     pReorderableColumn [pSortableColumn]="col.field">
                                                         {{ col.header }}
@@ -1034,6 +1052,7 @@
                                                     </th>
                                                 </tr>
                                                 <tr>
+                                                    <th></th>
                                                     <th style="width:auto" *ngFor="let col of columns" [ngSwitch]="col.field">
                                                         <input style="width:100%;" pInputText type="text" (input)="vBilling.filter($event.target.value, col.field, 'contains')">
                                                     </th>
@@ -1044,6 +1063,11 @@
                                                          let-columns="columns"
                                                          let-rowIndex="rowIndex">
                                                 <tr>
+                                                    <td > <span class="flag">
+                                                        <i  *ngIf="rowData.isPrimary == true"   [ngStyle]="{'color': rowData.isPrimary == true ? 'green' : 'none'}"  
+                                                         class="fa fa-flag" aria-hidden="true"></i>
+                                                        </span>
+                                                    </td>
 
                                                     <td *ngFor="let col of columns">
                                                         {{ rowData[col.field] }}
@@ -1342,18 +1366,32 @@
 
 
                 <ng-template pTemplate="header" let-columns>
+
                     <tr>
+                        <th style="width: 40px;">Flag</th>
                         <th *ngFor="let col of columns" pResizableColumn pReorderableColumn
                             [pSortableColumn]="col.field">
                             {{col.header}}
                             <p-sortIcon [field]="col.field"></p-sortIcon>
                         </th>
                     </tr>
+                    <tr>
+                        <th></th>
+                        <th style="width:auto" *ngFor="let col of columns" [ngSwitch]="col.field">
+                            <input style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field, 'contains')">
+                        </th>
+                       
+                    </tr>
                 </ng-template>
 
                 <ng-template pTemplate="body" let-rowData let-columns="columns">
                     <tr [pSelectableRow]="rowData" (dblclick)="toggledbldisplay(rowData)">
 
+                        <td style="width: 40px;"> <span class="flag">
+                            <i  *ngIf="rowData.isDefaultContact == true"   [ngStyle]="{'color': rowData.isDefaultContact == true ? 'green' : 'none'}"  
+                             class="fa fa-flag" aria-hidden="true"></i>
+                            </span>
+                        </td>
                         <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
                             {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
                         </td>
