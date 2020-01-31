@@ -49,8 +49,14 @@ export class WorkOrderChargesComponent implements OnChanges, OnInit {
 
   ngOnChanges() {
     console.log(this.markupList);
+    if(this.workOrderChargesList && this.workOrderChargesList.length > 0 && this.workOrderChargesList[0].markupFixedPrice){
+      this.costPlusType = this.workOrderChargesList[0].markupFixedPrice
+    }
   }
   ngOnInit() {
+    if(this.workOrderChargesList && this.workOrderChargesList.length > 0 && this.workOrderChargesList[0].markupFixedPrice){
+      this.costPlusType = this.workOrderChargesList[0].markupFixedPrice
+    }
     if(!this.isQuote){
       this.cols = [...this.cols, { field: 'extendedPrice', header: 'Extended Price' }, { field: 'unitPrice', header: 'Unit Price' },]
     }

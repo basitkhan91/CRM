@@ -69,6 +69,9 @@ console.log(this.workOrderLaborList);
         this.calculateTaskHours(task);
       }
     }
+    if(this.laborForm['costPlusType']){
+      this.laborForm['costPlusType'] = this.laborForm['markupFixedPrice'];
+    }
   }
 
   ngOnChanges(){
@@ -98,6 +101,9 @@ console.log(this.workOrderLaborList);
       for(let task of this.taskList){
         this.calculateTaskHours(task);
       }
+    }
+    if(this.laborForm['costPlusType']){
+      this.laborForm['costPlusType'] = this.laborForm['markupFixedPrice'];
     }
   }
 
@@ -327,13 +333,14 @@ console.log(this.workOrderLaborList);
       this.saveFormdata['workOrderHoursType'] = 3;
     }
     if(this.isQuote){
-      for(let labor in this.saveFormdata.workOrderLaborList){
-        this.saveFormdata.workOrderLaborList[labor].forEach(
-          (lab)=>{
-            lab['markupFixedPrice'] = this.laborForm['costPlusType'];
-          }
-        )
-      }
+      this.saveFormdata.markupFixedPrice = this.laborForm['costPlusType'];
+      // for(let labor in this.saveFormdata.workOrderLaborList){
+      //   this.saveFormdata.workOrderLaborList[labor].forEach(
+      //     (lab)=>{
+      //       lab['markupFixedPrice'] = this.laborForm['costPlusType'];
+      //     }
+      //   )
+      // }
     }
 
     this.saveworkOrderLabor.emit(this.saveFormdata);  

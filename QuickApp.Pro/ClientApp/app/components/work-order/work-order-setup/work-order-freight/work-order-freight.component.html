@@ -81,9 +81,26 @@
             </select>
           </td>
         </ng-container>
-        <td *ngFor="let col of columns">
+        <ng-container *ngFor="let col of columns">
+          <td *ngIf="col.field != 'shipVia' && col.field != 'carrierName'">
+            {{rowData[col.field]}}
+          </td>
+          <td *ngIf="col.field == 'carrierName'">
+            <select class="form-control select-read-only" [(ngModel)]="rowData.carrierId" disabled>
+              <option value="">Select</option>
+              <option *ngFor="let cl of carrierList" [value]="cl.value">{{cl.label}}</option>
+            </select>
+          </td>
+          <td *ngIf="col.field == 'shipVia'">
+            <select class="form-control select-read-only" [(ngModel)]="rowData.shipViaId" disabled>
+              <option value="">Select</option>
+              <option *ngFor="let sv of shipViaList" [value]="sv.value">{{sv.label}}</option>
+            </select>
+          </td>
+        </ng-container>
+        <!-- <td *ngFor="let col of columns">
           {{ rowData[col.field] }}
-        </td>
+        </td> -->
         <ng-container *ngIf="isQuote">
             <td>
               <select
