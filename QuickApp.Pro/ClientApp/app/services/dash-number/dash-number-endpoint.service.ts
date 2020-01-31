@@ -20,8 +20,11 @@ export class DashNumberEndpointService extends EndpointFactory {
     private readonly getDashNumber: string = "/api/dashnumber/pagination";
     private readonly getDashListByIdsURL: string = "/api/dashnumber/getDashListByModel_Type_Dash_IDS";
     private readonly getDash: string = "/api/dashnumber/GetDashNoBy_Model_TypeID";
+    private readonly getDashNum: string = "/api/dashnumber/GetDashNumberBy_Model_TypeID";
+
     private readonly getCapesDash: string = "/api/dashnumber/GetCapesDashNoBy_Model_TypeID";
     private readonly getDashListByMultiIdsURL: string = "/api/dashnumber/getDashListBy_MUTLI_MID_TID_DID";
+    private readonly excelUpload: string = "/api/fileupload/uploaddashnumber"
 
     get getAll() { return this.configurations.baseUrl + this.getAllURL; }
     get getByModelId() { return this.configurations.baseUrl + this.getAllModelIDURL; }
@@ -140,6 +143,18 @@ export class DashNumberEndpointService extends EndpointFactory {
         return this.http.get<T>(endpointUrl, this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.getDASHLISTBy_MultiID(Mid, Tid, Did));
+            });
+    }
+    CustomerDashNumberUpload(file) {
+        return this.http.post(`${this.configurations.baseUrl}${this.excelUpload}`, file)
+
+
+    }
+    getDashNumByModelTypeId<T>(Mid: string, Tid: string): Observable<T> {
+        let endpointUrl = `${this.getDashNum}/${Mid}/${Tid}`;
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getDashNumByModelTypeId(Mid, Tid));
             });
     }
 }

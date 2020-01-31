@@ -25,7 +25,7 @@ export class CustomerBillingInformationComponent {
 	@Input() editMode;
 	@Output() tab = new EventEmitter<any>();
 	@Input() selectedCustomerTab: string = "";
-    @Input() customerDataFromExternalComponents : any = {};
+    @Input() customerDataFromExternalComponents : any;
 
 	countryList: any[];
 	// countryListOriginal: any[];
@@ -79,7 +79,7 @@ export class CustomerBillingInformationComponent {
             this.isViewMode = false;
 
         } else {
-            if (this.customerDataFromExternalComponents != {} && this.customerDataFromExternalComponents.customerId != undefined) {
+            if (this.customerDataFromExternalComponents) {
                 this.id = this.customerDataFromExternalComponents.customerId;
                 this.customerCode = this.customerDataFromExternalComponents.customerCode;
 				this.customerName = this.customerDataFromExternalComponents.name;

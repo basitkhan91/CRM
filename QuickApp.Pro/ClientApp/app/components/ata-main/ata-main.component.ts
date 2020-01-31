@@ -267,7 +267,7 @@ export class AtaMainComponent implements OnInit {
         console.log(rowData);
         this.isEdit = true;
         this.disableSaveGroupId = true;
-        this.disableSaveForDescription = true;
+        //this.disableSaveForDescription = true;
         this.disableSaveForDescriptionMsg = false;
         this.addNew = {
             ...rowData,

@@ -16,6 +16,7 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<object> GetCapesDashNoByID(string Mid, string Tid);
         IEnumerable<object> getDashListBy_MUTLIIDs(string Mid, string Tid, string Did);
         IEnumerable<object> GetDashNumbersAudit(long id);
+        IEnumerable<object> GetDashNumberByID(string Mid, string Tid);
 
     }
 }

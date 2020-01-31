@@ -25,7 +25,7 @@ export class CustomerDocumentsComponent implements OnInit {
 	@Input() editGeneralInformationData;
     @Output() tab = new EventEmitter<any>();
     @ViewChild('fileUploadInput') fileUploadInput: any;
-    @Input() customerDataFromExternalComponents : any = {};
+    @Input() customerDataFromExternalComponents : any;
 	documentInformation = {
 
 		docName: '',
@@ -78,22 +78,25 @@ export class CustomerDocumentsComponent implements OnInit {
             this.customerCode = this.editGeneralInformationData.customerCode;
             this.customerName = this.editGeneralInformationData.name;
             this.isViewMode = false;
+            this.getList();
 
-		} else {
-            if(this.customerDataFromExternalComponents != {}){
+        } else {
+            if (this.customerDataFromExternalComponents) {
                 this.id = this.customerDataFromExternalComponents.customerId;
                 this.customerCode = this.customerDataFromExternalComponents.customerCode;
                 this.customerName = this.customerDataFromExternalComponents.name;
+                this.getList();
                 this.isViewMode = true;
             } else {
                 this.id = this.savedGeneralInformationData.customerId;
                 this.customerCode = this.savedGeneralInformationData.customerCode;
                 this.customerName = this.savedGeneralInformationData.name;
                 this.isViewMode = false;
+                this.getList();
             }			
 
         }
-        this.getList();
+       
 	}
 
     ngOnChanges(changes: SimpleChanges) {
@@ -106,8 +109,9 @@ export class CustomerDocumentsComponent implements OnInit {
                 this.id = this.customerDataFromExternalComponents.customerId;
                 this.customerCode = this.customerDataFromExternalComponents.customerCode;
                 this.customerName = this.customerDataFromExternalComponents.name;
-                this.isViewMode = true;
                 this.getList();
+                this.isViewMode = true;
+                
               } 
             }
         }

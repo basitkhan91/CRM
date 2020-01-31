@@ -27,7 +27,7 @@ export class CustomerAircraftComponent implements OnInit {
     @Input() editMode;
     @Output() tab = new EventEmitter();
     @ViewChild("aircraftForm")  aircraftForm : any;
-    @Input() customerDataFromExternalComponents : any = {};
+    @Input() customerDataFromExternalComponents : any;
 
     // aircraft Type used for both 
     manufacturerData: { value: any; label: any; }[];
@@ -113,7 +113,7 @@ export class CustomerAircraftComponent implements OnInit {
             this.isViewMode = false;
 
         } else {
-            if(this.customerDataFromExternalComponents != {}){
+            if (this.customerDataFromExternalComponents) {
                 this.id = this.customerDataFromExternalComponents.customerId;
                 this.customerCode = this.customerDataFromExternalComponents.customerCode;
 				this.customerName = this.customerDataFromExternalComponents.name;

@@ -63,6 +63,7 @@ export class AircraftModelComponent implements OnInit {
     viewRowData: any;
     selectedRowforDelete: any;
     existingRecordsResponse = []
+    aircraftModelsList: any;
     constructor(private breadCrumb: SingleScreenBreadcrumbService,
         private authService: AuthService,
         private modalService: NgbModal,
@@ -166,7 +167,7 @@ export class AircraftModelComponent implements OnInit {
 
     checkGroupDescriptionExists(field, value) {
         console.log(this.selectedRecordForEdit);
-        const exists = validateRecordExistsOrNot(field, value, this.originalData, this.selectedRecordForEdit);
+        const exists = validateRecordExistsOrNot(field, value, this.aircraftModelsList, this.selectedRecordForEdit);
         if (exists.length > 0) {
             this.disableSaveForDescription = true;
         }
@@ -176,9 +177,9 @@ export class AircraftModelComponent implements OnInit {
 
     }
     filterDescription(event) {
-        this.descriptionList = this.originalData;
+        this.descriptionList = this.aircraftModelsList;
 
-        const descriptionData = [...this.originalData.filter(x => {
+        const descriptionData = [...this.aircraftModelsList.filter(x => {
             return x.modelName.toLowerCase().includes(event.query.toLowerCase())
         })]
         this.descriptionList = descriptionData;
@@ -225,10 +226,12 @@ export class AircraftModelComponent implements OnInit {
         this.isEdit = false;
         this.selectedRecordForEdit = undefined;
         this.addNew = { ...this.new };
+        this.aircraftModelsList = [];
     }
 
 
-    edit(rowData) {
+    async  edit(rowData) {
+     await   this.aircraftManufacturerChange(rowData.aircraftTypeId)
         console.log(rowData);
         this.isEdit = true;
         this.disableSaveGroupId = false;
@@ -239,7 +242,7 @@ export class AircraftModelComponent implements OnInit {
             {
                 ...rowData,
                 aircraftType: getObjectByValue('aircraftType', rowData.aircraftType, this.originalData),
-                modelName: getObjectByValue('modelName', rowData.modelName, this.originalData),
+            modelName: getObjectByValue('modelName', rowData.modelName, this.originalData),
             };
         this.selectedRecordForEdit = { ...this.addNew }
 
@@ -300,6 +303,20 @@ export class AircraftModelComponent implements OnInit {
         }
     }
 
-
+    aircraftManufacturerChange(typeId?) {
+       
+        const id = typeId == undefined ? this.addNew.aircraftTypeId : typeId
+        console.log(id);
+        this.aircraftmodelService.getAircraftModelListByManufactureId(id).subscribe(dashNumbers => {
+            const responseValue = dashNumbers[0];
+            this.aircraftModelsList = responseValue.map(x => {
+                return {
+                    modelName: x.modelName,
+                    aircraftModelId: x.aircraftModelId
+                }
+            })
+            //console.log(this.aircraftModelsList);
+        });
+    }
    
 }
