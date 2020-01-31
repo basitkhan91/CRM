@@ -288,6 +288,7 @@ namespace DAL
         public DbSet<VendorCapabilityType> vendorCapabilityType { get; set; }
         public DbSet<VendorCapabiltiyAircraftModel> vendorCapabiltiyAircraftModel { get; set; }
         public DbSet<GLAccountNode> GLAccountNode { get; set; }
+        public DbSet<GLAccountNodeAudit> GLAccountNodeAudit { get; set; }
         public DbSet<GLAccountNodeShareWithEntityMapper> GLAccountNodeShareWithEntityMapper { get; set; }
         public DbSet<AssetDepreciationMethod> AssetDepreciationMethod { get; set; }
         public DbSet<AssetDepreciationMethodAudit> AssetDepreciationMethodAudit { get; set; }

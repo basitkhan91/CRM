@@ -43,6 +43,13 @@ namespace QuickApp.Pro.Controllers
             return Ok(journel);
         }
 
+        [HttpGet("EmployeeForJournal")]
+        public IActionResult EmployeeForJournal()
+        {
+            var journelEmployee = unitOfWork.Repository<Employee>().Find(x=> x.IsDeleted != true & x.IsActive == true);
+            return Ok(journelEmployee);
+        }
+
         [HttpPost("add")]
         public IActionResult AddManualJournel([FromBody]JournalManual journelData)
         {
