@@ -98,10 +98,20 @@ export class VendorBillingInformationComponent {
     loadingIndicator: boolean;
     closeResult: string;
     selectedColumn: any[];
-    selectedColumns: any[];
+    // selectedColumns: any[];
     selectedShipViaColumn: any[];
     selectedShipViaColumns: any[];
-    cols: any[];
+    // cols: any[];
+    cols: any[] = [
+        { field: 'siteName', header: 'Site Name' },
+        { field: 'address1', header: 'Address1' },
+        { field: 'address2', header: 'Address2' },
+        { field: 'city', header: 'City' },
+        { field: 'stateOrProvince', header: 'State/Prov' },
+        { field: 'postalCode', header: 'Postal Code' },
+        { field: 'countryName', header: 'Country' }
+    ];
+    selectedColumns: any[] = this.cols;
     billingauditHisory: any[];
     shipViacols: any[];
     title: string = "Create";
@@ -224,18 +234,7 @@ export class VendorBillingInformationComponent {
         this.vendorService.getVendorBillAddressGet(this.local.vendorId).subscribe(
             results => this.onDataLoadSuccessful(results[0]),
             error => this.onDataLoadFailed(error)
-        );
-        this.cols = [
-            { field: 'siteName', header: 'Site Name' },
-            { field: 'address1', header: 'Address1' },
-            { field: 'address2', header: 'Address2' },
-            // { field: 'address3', header: 'Address3' },
-            { field: 'city', header: 'City' },
-            { field: 'stateOrProvince', header: 'State/Prov' },
-            { field: 'postalCode', header: 'Postal Code' },
-            { field: 'countryName', header: 'Country' }
-        ];
-        this.selectedColumns = this.cols;
+        );        
     }
 
     private countrylist() {

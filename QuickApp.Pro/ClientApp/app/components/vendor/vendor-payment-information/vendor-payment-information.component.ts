@@ -39,7 +39,7 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 	display: boolean;
 	defaultPaymentStyle: boolean = true;
 	defaultPaymentValue: boolean = true;
-	activeIndex: number;
+	activeIndex: number = 5;
 	showcountry: boolean;
 	showpostalCode: boolean;
 	showstateOrProvince: boolean;
@@ -133,7 +133,7 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 	loadingIndicator: boolean;
 	closeResult: string;
 	selectedColumn: any[];
-	selectedColumns: any[];
+	selectedColumns: any[] = [];
 	cols: any[];
 	title: string = "Create";
 	id: number;
@@ -152,6 +152,7 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 	private isEditMode: boolean = false;
 	private isDeleteMode: boolean = false;
 	isEditPaymentInfo: boolean = false;
+	pageSize: number = 10;
 
 	constructor(private http: HttpClient, private changeDetectorRef: ChangeDetectorRef, private router: ActivatedRoute, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public vendorService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
 
@@ -168,6 +169,18 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 		if (this.defaultPaymentMethod == 2) {
 			this.showDomesticWire();
 		}
+
+		this.cols = [
+			{ field: 'siteName', header: 'Site Name' },
+			{ field: 'address1', header: 'Address1' },
+			{ field: 'address2', header: 'Address2' },
+			{ field: 'city', header: 'City' },
+			{ field: 'stateOrProvince', header: 'State/Prov' },
+			{ field: 'postalCode', header: 'Postal Code' },
+			{ field: 'countryName', header: 'Country' }
+		];
+		this.selectedColumns = this.cols;
+		
 		this.countrylist();
 		this.dataSource = new MatTableDataSource();
 		if (this.local) {
@@ -324,17 +337,7 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 		this.vendorService.getCheckPaymentobj(this.local.vendorId).subscribe(
 			results => this.onDataLoadSuccessful(results[0]),
 			error => this.onDataLoadFailed(error)
-		);
-		this.cols = [
-			{ field: 'siteName', header: 'Site Name' },
-			{ field: 'address1', header: 'Address1' },
-			{ field: 'address2', header: 'Address2' },
-			{ field: 'city', header: 'City' },
-			{ field: 'stateOrProvince', header: 'State/Prov' },
-			{ field: 'postalCode', header: 'Postal Code' },
-			{ field: 'countryName', header: 'Country' }
-		];
-		this.selectedColumns = this.cols;
+		);		
 	}
 
 	public getbencus() {
@@ -1073,5 +1076,9 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 	onAddPaymentInfo() {
 		this.sourceVendor = {};
 		this.isEditPaymentInfo = false;
+	}
+
+	getPageCount(totalNoofRecords, pageSize) {
+		return Math.ceil(totalNoofRecords / pageSize)
 	}
 }

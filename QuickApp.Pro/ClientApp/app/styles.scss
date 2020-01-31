@@ -14020,6 +14020,7 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
     color: #295d92 !important;
     margin-left: 6px;
     margin-top: 10px;
+    margin-bottom: 0;
 }
 
 .f-s-15 {
@@ -14822,6 +14823,10 @@ body .ui-fileupload .ui-fileupload-buttonbar .ui-button {
 }
 span.flag{
     margin-left: 10px !important;
+    color: green;
+}
+.vpay-tabview .ui-tabview {
+    padding: 0;
 }
 .filelink{
     color: blue !important;
