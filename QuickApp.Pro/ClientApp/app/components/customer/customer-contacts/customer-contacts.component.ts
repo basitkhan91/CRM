@@ -134,7 +134,8 @@ export class CustomerContactsComponent implements OnInit {
 
 	}
 
-	ngOnInit() {
+    ngOnInit() {
+      
 		console.log(this.add_ataChapterList, "add_ataChapterList+++")
 		if (this.editMode) {
 			this.id = this.editGeneralInformationData.customerId;
@@ -145,15 +146,17 @@ export class CustomerContactsComponent implements OnInit {
 
 
 			this.getAllCustomerContact()
-		} else {
-			if(this.customerDataFromExternalComponents != {}){
+        } else {
+           
+            if (this.customerDataFromExternalComponents != {} && this.customerDataFromExternalComponents.customerId != undefined) {
                 this.id = this.customerDataFromExternalComponents.customerId;
                 this.customerCode = this.customerDataFromExternalComponents.customerCode;
-				this.customerName = this.customerDataFromExternalComponents.name;
+                this.customerName = this.customerDataFromExternalComponents.name;
+
 				this.getAllCustomerContact();
                 this.isViewMode = true;
             } else {
-			
+               
 			this.id = this.savedGeneralInformationData.customerId;
 			this.customerCode = this.savedGeneralInformationData.customerCode;
 			this.customerName = this.savedGeneralInformationData.name;
@@ -324,7 +327,8 @@ export class CustomerContactsComponent implements OnInit {
 	}
 
 
-	getAllCustomerContact() {
+    getAllCustomerContact() {
+       
 		// get Customer Contatcs 
 		this.customerService.getContacts(this.id).subscribe(res => {
 			this.customerContacts = res[0]

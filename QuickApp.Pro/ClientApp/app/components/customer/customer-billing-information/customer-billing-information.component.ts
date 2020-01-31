@@ -78,8 +78,8 @@ export class CustomerBillingInformationComponent {
             this.getBillingDataById()
             this.isViewMode = false;
 
-		} else {
-            if(this.customerDataFromExternalComponents != {}){
+        } else {
+            if (this.customerDataFromExternalComponents != {} && this.customerDataFromExternalComponents.customerId != undefined) {
                 this.id = this.customerDataFromExternalComponents.customerId;
                 this.customerCode = this.customerDataFromExternalComponents.customerCode;
 				this.customerName = this.customerDataFromExternalComponents.name;
