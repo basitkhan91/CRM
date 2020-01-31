@@ -136,8 +136,10 @@ export class VendorStepsPrimeNgComponent implements OnInit {
 		//];
 	}
 
+
 	changeStep(value) {
 		console.log(value);
+
 
 		console.log(this.vendorService.listCollection);
 

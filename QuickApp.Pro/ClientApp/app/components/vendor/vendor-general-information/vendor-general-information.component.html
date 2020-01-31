@@ -1,5 +1,5 @@
 ﻿<form   #generalForm="ngForm" method="post" id="" name="" class="form-horizontal add-custustomer">
-    <div class="form-row">
+    <div class="form-row" >
         <div class="form-group">
             <div class="form-group col-sm-12 vendor-details-heading" *ngIf="showalert">
                 <p class="fs10">
@@ -7,7 +7,7 @@
                 </p>
             </div>
         </div>
-        <div  class="col-md-12">
+        <div  class="col-md-12" >
 
             <div class="card">
                 <div>
@@ -185,7 +185,7 @@
                                         <span class="clr-red">*</span>
                                     </label>
                                     <input class="form-control" type="text" id="vmpostal" name="vmpostal"
-                                           [(ngModel)]="sourceVendor.PostalCode" required>
+                                           [(ngModel)]="sourceVendor.postalCode" required>
                                 </div>
 
                                 <div class="form-group">
@@ -311,8 +311,15 @@
                                             <label for="vendorname">
                                                 URL to Vendor site
                                             </label>
-                                            <input class="form-control" type="text" [ngModelOptions]="{standalone: true}"
-                                                   [(ngModel)]="sourceVendor.vendorURL">
+                                            <input class="form-control" type="text"
+                                            [pattern]="urlPattern"
+                                            [ngModelOptions]="{standalone: true}"
+                                                   [(ngModel)]="sourceVendor.vendorURL" #url="ngModel">
+                                                   <div *ngIf="url.errors" [ngClass]="'error'">
+                                                    <div *ngIf="url.errors.pattern">
+                                                        <span style="color:red">URL not valid</span>
+                                                    </div>
+                                                </div>
                                         </div>
 
                                     </div>
@@ -419,7 +426,7 @@
                     </div>
 
                     <div style="padding-bottom: 7px;">
-                        <button type="submit" [validate] moduleName="app-vendor-general-information" requirePermission="canAdd"
+                        <!-- <button type="submit" [validate] moduleName="app-vendor-general-information" requirePermission="canAdd"
                                 class="btn btn-primary pull-right submit-btn" *ngIf="sourceVendor.vendorId == undefined"
                                 [disabled]="!generalForm.valid || disableSaveVenName || disableSaveVenCode || disableSaveParentName || disablesave"
                                 (click)="editItemAndCloseModel()">
@@ -432,7 +439,7 @@
                                 [disabled]="!generalForm.valid || disableSaveVenName || disableSaveVenCode || disableSaveParentName || disablesave"
                                 (click)="editItemAndCloseModel()">
                             Update
-                        </button>
+                        </button> -->
 
                         <button type="button" class="btn btn-primary pull-right " (click)="editItemAndCloseModel('goNext')" [disabled]="!generalForm.valid || disableSaveVenderName">
                             Save & Next
