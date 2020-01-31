@@ -6700,9 +6700,9 @@ td .input-group {
     color: #4285f4;
 }
 
-table.table-bordered thead {
-    background: #5b6d7f;
-}
+// table.table-bordered thead {
+//     background: #5b6d7f;
+// }
 
 table.table-bordered thead tr th {
     color: #fff;
@@ -7202,7 +7202,7 @@ html {
 }
 
 table.table-bordered thead {
-    background: #4298ff;
+    background: #4298ff !important;
 }
 
 .cat1-table table thead, .cat2-table table thead, .cat3-table table thead, .cat4-table table thead {
@@ -14595,6 +14595,7 @@ body .ui-autocomplete .ui-autocomplete-dropdown .ui-button-icon-left:before {
 }
 .modal {
     overflow-y: auto !important;
+    background: rgba(0, 0, 0, 0.3);
 }
 
 .margintop {
