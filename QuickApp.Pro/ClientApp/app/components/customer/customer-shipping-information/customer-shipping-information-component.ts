@@ -407,7 +407,7 @@ export class CustomerShippingInformationComponent implements OnInit {
         this.customerShippingAddressId = rowData.customerShippingAddressId;
         this.customerShippingId = rowData.customerShippingId
 
-        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false, windowClass: "popup-blur" });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -449,7 +449,7 @@ export class CustomerShippingInformationComponent implements OnInit {
         this.shippingViaDetailsId = rowData.shippingViaDetailsId;
         //this.customerShippingId = rowData.customerShippingId
 
-        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false, windowClass: "popup-blur" });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -870,7 +870,7 @@ export class CustomerShippingInformationComponent implements OnInit {
 
         this.shippingauditHisory = auditHistory;
 
-        this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
+        this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false, windowClass: "popup-blur" });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -903,7 +903,7 @@ export class CustomerShippingInformationComponent implements OnInit {
 
         this.interShippingauditHisory = auditHistory;
 
-        this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
+        this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false, windowClass: "popup-blur" });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -936,7 +936,7 @@ export class CustomerShippingInformationComponent implements OnInit {
 
         this.shippingViaauditHisory = auditHistory;
 
-        this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
+        this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false, windowClass: "popup-blur" });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
@@ -969,7 +969,7 @@ export class CustomerShippingInformationComponent implements OnInit {
 
         this.intershippingViaauditHisory = auditHistory;
 
-        this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
+        this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false, windowClass: "popup-blur" });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })

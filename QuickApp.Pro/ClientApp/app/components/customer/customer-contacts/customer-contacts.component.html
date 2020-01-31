@@ -46,7 +46,7 @@
                 </div>
                 <!-- class="rpo-table-cstm rro-table-cstm" -->
                 <p-table #dt
-                  class="rpo-table-cstm rro-table-cstm tab-table-cstm"
+                  class="rpo-table-cstm lastcol-fix"
                   [value]="customerContacts"
                   [metaKeySelection]="true"
                   [rows]="10"
@@ -231,7 +231,7 @@
                   <h4 class="modal-title">History of Customer Contact</h4>
               </div>
             <div class="modal-body">
-                <div class="table-responsive rro-table-cstm">
+                <div class="table-responsive">
                     <table class="table table-bordered" *ngIf="auditHistory.length> 0 else noDatavailable" >
                         <thead>
                             <tr>

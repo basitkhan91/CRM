@@ -432,6 +432,7 @@ export class VendorWarningsComponent implements OnInit {
                 data => {
                     // this.saveRMA();
                     this.SaveRO();
+                    this.nextClick();
                 })
         }
         else {
@@ -442,7 +443,7 @@ export class VendorWarningsComponent implements OnInit {
                 data => {
                     //this.saveRMA();
                     this.SaveRO();
-                    console.log(data)
+                    this.nextClick();
                 })
         }
     }

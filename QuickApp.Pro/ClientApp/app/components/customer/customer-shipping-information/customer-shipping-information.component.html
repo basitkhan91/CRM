@@ -18,7 +18,7 @@
             </div>
             <div class="card" style="padding: 10px">
                 <div >
-                    <div class="col-md-12" style="margin-bottom: -10px;">
+                    <div class="col-md-12">
                         <h4 class="po-head-sm"> <!--class="float-right"-->
                             Domestic Shipping Info
                             <a class="plusicon-cstm" *ngIf="isViewMode == false"
@@ -156,7 +156,7 @@
 
             <!-- <form class="form-horizontal" style="margin-top: 30px;"> -->
                     <!-- <h3 class="po-head pull-left" style="padding: 0 6px;">International Shipping Info</h3> -->
-                <div class="col-md-12" style="margin-bottom: -10px;">
+                <div class="col-md-12">
                     <h4 class="po-head-sm"> <!--class="float-right"-->
                         International Shipping Info
                         <a class="plusicon-cstm" *ngIf="isViewMode == false"
@@ -547,7 +547,7 @@
 </ng-template>
 
 <!-- The Modal -->
-<div  class="modal" id="viewShipping"  data-backdrop="static">
+<div  class="modal popup-blur" id="viewShipping"  data-backdrop="static">
     <div class="modal-dialog">
         <div class="modal-content">
 
@@ -805,7 +805,7 @@
     </div>
 </div>
 
-<div  class="modal" id="viewInter" data-backdrop="static">
+<div  class="modal popup-blur" id="viewInter" data-backdrop="static">
     <div class="modal-dialog">
         <div class="modal-content">
 
@@ -839,12 +839,12 @@
     </div>
 </div>
 
-<div class="modal fade" id="addDomesticShipVia" data-backdrop="static">
+<div class="modal fade popup-blur" id="addDomesticShipVia" data-backdrop="static">
     <form #addShippingVia="ngForm">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">{{isEditDomesticShipVia ? 'Edit' : 'Add'}}  Ship Via  </h4>
+                    <h4 class="modal-title">Ship Via</h4> <!--{{isEditDomesticShipVia ? 'Edit' : 'Add'}} Shipping -->
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
 
@@ -1018,7 +1018,7 @@
 
 </div>
 
-<div class="modal fade" id="addInternationShipVia" data-backdrop="static">
+<div class="modal fade popup-blur" id="addInternationShipVia" data-backdrop="static">
     <div *ngIf="sourceViewforInterShipping" class="modal" id="viewInter">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -1057,7 +1057,7 @@
             <div class="modal-content">
 
                 <div class="modal-header">
-                    <h4 class="modal-title">{{isEditInternationalShipVia ? 'Edit' : 'Add'}} International Ship Via  </h4>
+                    <h4 class="modal-title">Ship Via</h4> <!--{{isEditInternationalShipVia ? 'Edit' : 'Add'}} International -->
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
 
@@ -1224,7 +1224,7 @@
     </div>
 </div>
 
-<div  class="modal" id="viewInterVia" data-backdrop="static">
+<div  class="modal popup-blur" id="viewInterVia" data-backdrop="static">
     <div class="modal-dialog">
         <div class="modal-content">
 
@@ -1336,7 +1336,7 @@
     <div class="modal-header">
 
         <h4 class="modal-title">History of Shipping Info</h4>
-        <button type="button" class="btn btn-danger" aria-label="Close" (click)="dismissModel()">
+        <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
             <span aria-hidden="true">&times;</span>
         </button>
         <div class="col-md-12 shadow-box-cstm">
