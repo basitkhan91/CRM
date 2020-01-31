@@ -49,9 +49,9 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpGet("vendorglobalsearch")]
-        public IActionResult VendorGlobalSearch(string filterText, int pageNumber = 0, int pageSize = 10,bool isActive=false)
+        public IActionResult VendorGlobalSearch(string filterText, int pageNumber = 0, int pageSize = 10, bool isActive = false)
         {
-            var result = _unitOfWork.Vendor.VendorGlobalSearch(filterText, pageNumber, pageSize,isActive);
+            var result = _unitOfWork.Vendor.VendorGlobalSearch(filterText, pageNumber, pageSize, isActive);
             return Ok(result);
         }
 
@@ -2068,6 +2068,91 @@ namespace QuickApp.Pro.Controllers
 
                         _context.SaveChanges();
                     }
+
+                    var custData = _context.Customer.Where(p => p.Name.ToLower() == vendorViewModel.VendorName.ToLower()).FirstOrDefault();
+                    if(custData == null)
+                    {
+                        if (Convert.ToBoolean(actionobject.IsVendorAlsoCustomer))
+                        {
+                            DAL.Models.Customer customerObject = new DAL.Models.Customer();
+
+                            customerObject.CustomerAffiliationId = vendorViewModel.VendorTypeId;
+                            customerObject.CurrencyId = vendorViewModel.CurrencyId;
+                            customerObject.CreditTermsId = vendorViewModel.CreditTermsId;
+                            customerObject.Name = vendorViewModel.VendorName;
+                            customerObject.Parent = 0;
+                            customerObject.Email = vendorViewModel.VendorEmail; ;
+                            customerObject.CustomerPhone = vendorViewModel.VendorPhone;
+                            customerObject.CustomerPhoneExt = vendorViewModel.VendorPhoneExt;
+                            //customerObject.AnnualQuota = vendorViewModel.AnnualQuota;
+                            //customerObject.AnnualRevenuePotential = vendorViewModel.AnnualRevenuePotential;
+                            customerObject.CustomerParentName = vendorViewModel.VendorParentName;
+                            //customerObject.ScanDocuments = vendorViewModel.ScanDocuments;
+                            //customerObject.PBHCustomerMemo = vendorViewModel.PBHCustomerMemo;
+                            //customerObject.RestrictPMA = vendorViewModel.RestrictPMA;
+                            customerObject.IsAddressForBilling = vendorViewModel.IsAddressForBilling;
+                            customerObject.IsAddressForShipping = vendorViewModel.IsAddressForShipping;
+                            //customerObject.EDI = vendorViewModel.EDI;
+                            //customerObject.IsAeroExchange = vendorViewModel.IsAeroExchange;
+                            customerObject.AeroExchangeDescription = vendorViewModel.AeroExchangeDescription;
+                            customerObject.EDIDescription = vendorViewModel.EDIDescription;
+                            if (vendorViewModel.IsAllowNettingAPAR != null)
+                            {
+                                customerObject.AllowNettingOfAPAR = vendorViewModel.IsAllowNettingAPAR;
+                            }
+                            else
+                            {
+                                customerObject.AllowNettingOfAPAR = false;
+                            }
+
+
+                            var CustClassficationData = _context.CustomerClassification.Where(p => p.IsActive == true).OrderBy(p => p.CustomerClassificationId).FirstOrDefault();
+
+                            if (CustClassficationData != null)
+                            {
+                                customerObject.CustomerClassificationId = CustClassficationData.CustomerClassificationId;
+                            }
+
+                            customerObject.CustomerTypeId = vendorViewModel.VendorTypeId;
+                            //customerObject.CustomerType = CustomerType;
+                            customerObject.IsCustomerAlsoVendor = vendorViewModel.IsVendorAlsoCustomer;
+                            //customerObject.IsPBHCustomer = vendorViewModel.IsPBHCustomer;
+                            customerObject.CustomerCode = vendorViewModel.VendorCode;
+                            //customerObject.ContractReference = vendorViewModel.ContractReference;
+                            //customerObject.DoingBuinessAsName = vendorViewModel.DoingBuinessAsName;
+                            customerObject.CustomerURL = vendorViewModel.VendorURL;
+
+                            customerObject.MasterCompanyId = vendorViewModel.MasterCompanyId;
+
+                            //customerObject.ATAChapterId = vendorViewModel.ATAChapterId;
+                            //customerObject.GeneralCurrencyId = vendorViewModel.CurrencyId;
+                            //customerObject.ataSubChapterId = vendorViewModel.ataSubChapterId;
+                            customerObject.CreatedDate = DateTime.Now;
+                            customerObject.UpdatedDate = DateTime.Now;
+                            customerObject.CreatedBy = vendorViewModel.CreatedBy;
+                            customerObject.UpdatedBy = vendorViewModel.UpdatedBy;
+                            customerObject.IsActive = true;
+                            customerObject.IsDeleted = false;
+                            customerObject.AddressId = actionobject.AddressId;
+                            _context.Customer.Add(customerObject);
+                            _context.SaveChanges();
+
+                            if (customerObject.CustomerId > 0)
+                            {
+                                if (Convert.ToBoolean(customerObject.IsAddressForShipping))
+                                {
+                                    _unitOfWork.Customer.AddCustomerShippingAddress(customerObject);
+                                }
+
+                                if (Convert.ToBoolean(customerObject.IsAddressForBilling))
+                                {
+                                    _unitOfWork.Customer.AddCustomerBillinggAddress(customerObject);
+                                }
+                            }
+                        }
+                    }
+
+                   
                 }
 
 
@@ -2120,6 +2205,7 @@ namespace QuickApp.Pro.Controllers
                     vendorContactObj.UpdatedDate = DateTime.Now;
                     vendorContactObj.CreatedBy = vendorViewModel.CreatedBy;
                     vendorContactObj.UpdatedBy = vendorViewModel.UpdatedBy;
+                    vendorContactObj.IsDeleted = false;
                     _unitOfWork.vendorContactRepository.Add(vendorContactObj);
                     _unitOfWork.SaveChanges();
                 }
@@ -2248,10 +2334,11 @@ namespace QuickApp.Pro.Controllers
                 contactObj.UpdatedDate = DateTime.Now;
                 contactObj.CreatedBy = vendorContactViewModel.CreatedBy;
                 contactObj.UpdatedBy = vendorContactViewModel.UpdatedBy;
+                contactObj.IsDeleted = false;
 
                 if (vendorContactViewModel.IsDefaultContact == true)
                 {
-                    var vendorConcatData = _unitOfWork.vendorContactRepository.GetAll().Where(p => p.VendorId == contactObj.VendorId).ToList();
+                    var vendorConcatData = _unitOfWork.vendorContactRepository.GetAll().Where(p => p.VendorId == contactObj.VendorId && p.IsDefaultContact == true).ToList();
 
                     foreach (var objContactdata in vendorConcatData)
                     {
@@ -2408,7 +2495,7 @@ namespace QuickApp.Pro.Controllers
 
                 if (Convert.ToBoolean(contactViewModel.IsDefaultContact) == true)
                 {
-                    var vendorConcatData = _unitOfWork.vendorContactRepository.GetAll().Where(p => p.VendorId == vendorContactObj.VendorId).ToList();
+                    var vendorConcatData = _unitOfWork.vendorContactRepository.GetAll().Where(p => p.VendorId == vendorContactObj.VendorId && p.IsDefaultContact == true).ToList();
 
                     foreach (var objContactdata in vendorConcatData)
                     {
@@ -2673,16 +2760,23 @@ namespace QuickApp.Pro.Controllers
 
                 if (checkPaymentViewModel.IsPrimayPayment == true)
                 {
-                    var vendorConcatData = _context.CheckPayment.Where(p => p.AddressId == checkPaymentObj.AddressId).ToList();
+                    var vendorConcatData = (from cp in _context.CheckPayment
+                                            join vcp in _context.VendorCheckPayment on cp.CheckPaymentId equals vcp.CheckPaymentId
+                                            where cp.IsPrimayPayment == true && vcp.VendorId == checkPaymentViewModel.VendorId
+                                            select cp).ToList();
 
-                    foreach (var objContactdata in vendorConcatData)
+                    if (vendorConcatData.Count > 0)
                     {
-                        objContactdata.IsPrimayPayment = false;
-                        _unitOfWork.vendorPaymentRepository.Update(objContactdata);
+                        //foreach (var objContactdata in vendorConcatData)
+                        //{
+                        //    objContactdata.IsPrimayPayment = false;
+                        //   // _unitOfWork.vendorPaymentRepository.Update(objContactdata);
+                        //}
+                        vendorConcatData.ForEach(p => p.IsPrimayPayment = false);
+                        _unitOfWork.vendorPaymentRepository.UpdateRange(vendorConcatData);
+                        _unitOfWork.SaveChanges();
                     }
-                    _unitOfWork.SaveChanges();
                 }
-
 
                 _unitOfWork.vendorPaymentRepository.Add(checkPaymentObj);
                 _unitOfWork.SaveChanges();
@@ -2726,14 +2820,17 @@ namespace QuickApp.Pro.Controllers
 
                 if (checkPaymentViewModel.IsPrimayPayment == true)
                 {
-                    var vendorConcatData = _context.CheckPayment.Where(p => p.AddressId == checkPaymentObj.AddressId).ToList();
+                    var vendorConcatData = (from cp in _context.CheckPayment
+                                            join vcp in _context.VendorCheckPayment on cp.CheckPaymentId equals vcp.CheckPaymentId
+                                            where cp.IsPrimayPayment == true && vcp.VendorId == checkPaymentViewModel.VendorId
+                                            select cp).ToList();
 
-                    foreach (var objContactdata in vendorConcatData)
+                    if (vendorConcatData.Count > 0)
                     {
-                        objContactdata.IsPrimayPayment = false;
-                        _unitOfWork.vendorPaymentRepository.Update(objContactdata);
+                        vendorConcatData.ForEach(p => p.IsPrimayPayment = false);
+                        _unitOfWork.vendorPaymentRepository.UpdateRange(vendorConcatData);
+                        _unitOfWork.SaveChanges();
                     }
-                    _unitOfWork.SaveChanges();
                 }
                 checkPaymentObj.IsPrimayPayment = checkPaymentViewModel.IsPrimayPayment;
 
@@ -2752,6 +2849,7 @@ namespace QuickApp.Pro.Controllers
             {
                 if (vendorCheckPayment == null)
                     return BadRequest($"{nameof(vendorCheckPayment)} cannot be null");
+
                 VendorCheckPayment vendorCheckPaymentobj = new VendorCheckPayment();
                 vendorCheckPaymentobj.IsActive = true;
                 vendorCheckPaymentobj.VendorId = vendorCheckPayment.VendorId;
@@ -2880,7 +2978,7 @@ namespace QuickApp.Pro.Controllers
                 address.Line2 = internationalWirePaymentmodel.Address2;
                 address.Line3 = internationalWirePaymentmodel.Address3;
                 address.PostalCode = internationalWirePaymentmodel.Postalcode;
-                address.StateOrProvince = internationalWirePaymentmodel.StateorProvice;
+                address.StateOrProvince = internationalWirePaymentmodel.StateOrProvince;
                 address.City = internationalWirePaymentmodel.City;
                 address.Country = internationalWirePaymentmodel.Country;
                 address.MasterCompanyId = 1;
@@ -2947,7 +3045,7 @@ namespace QuickApp.Pro.Controllers
                 address.Line2 = internationalWirePaymentViewModel.Address2;
                 address.Line3 = internationalWirePaymentViewModel.Address3;
                 address.PostalCode = internationalWirePaymentViewModel.Postalcode;
-                address.StateOrProvince = internationalWirePaymentViewModel.StateorProvice;
+                address.StateOrProvince = internationalWirePaymentViewModel.StateOrProvince;
                 address.City = internationalWirePaymentViewModel.City;
                 address.Country = internationalWirePaymentViewModel.Country;
                 address.MasterCompanyId = 1;
@@ -3485,7 +3583,7 @@ namespace QuickApp.Pro.Controllers
                 vendorObject.WarningMessage = vendorWarningViewModel.WarningMessage;
                 vendorObject.RestrictMessage = vendorWarningViewModel.RestrictMessage;
                 vendorObject.MasterCompanyId = vendorWarningViewModel.MasterCompanyId;
-               // vendorObject.IsActive = vendorWarningViewModel.IsActive;
+                // vendorObject.IsActive = vendorWarningViewModel.IsActive;
                 vendorObject.CreatedDate = DateTime.Now;
                 vendorObject.UpdatedDate = DateTime.Now;
                 vendorObject.CreatedBy = vendorWarningViewModel.CreatedBy;
@@ -3512,7 +3610,7 @@ namespace QuickApp.Pro.Controllers
                 vendor.MasterCompanyId = 1;
                 vendorObject.VendorId = vendor.VendorId;
 
-               
+
 
                 vendorObject.IsDeleted = vendor.IsDeleted;
 
@@ -3556,7 +3654,7 @@ namespace QuickApp.Pro.Controllers
                 //vendorCapability.IsActive = true;
                 vendorCapability.CreatedDate = DateTime.Now;
                 vendorCapability.UpdatedDate = DateTime.Now;
-                if (vendorCapability.VendorCapabilityId >0)
+                if (vendorCapability.VendorCapabilityId > 0)
                 {
                     _unitOfWork.Repository<VendorCapabiliy>().Update(vendorCapability);
                     updateRanking(Convert.ToInt32(vendorCapability.VendorRanking));
@@ -3569,7 +3667,7 @@ namespace QuickApp.Pro.Controllers
                     updateRanking(Convert.ToInt32(vendorCapability.VendorRanking));
                     _unitOfWork.SaveChanges();
                 }
-             
+
                 //_context.VendorCapabiliy.Add(caps);
 
                 //_context.SaveChanges();
@@ -3633,7 +3731,7 @@ namespace QuickApp.Pro.Controllers
                         var aircraftData = _unitOfWork.Repository<VendorCapabilityAircraft>().GetSingleOrDefault(c => c.AircraftTypeId == Convert.ToInt32(vendorAircraftMapping[i].AircraftTypeId) && (c.AircraftModelId == vendorAircraftMapping[i].AircraftModelId) && (c.DashNumberId == vendorAircraftMapping[i].DashNumberId) && (c.CapabilityId == vendorAircraftMapping[i].CapabilityId) && (c.VendorId == vendorAircraftMapping[i].VendorId));
                         if (aircraftData == null)
                         {
-                            
+
                             var aircraft = _unitOfWork.Vendor.VendorAircraft(vendorAircraftMapping[i]);
                             //_unitOfWork.VendorCapabilityAircraft.Add(vendorAircraftMapping[i]);
                             //        _appContext.SaveChanges();
@@ -3644,7 +3742,7 @@ namespace QuickApp.Pro.Controllers
                             return BadRequest("Record already exist with these details");
                         }
                     }
-                   
+
 
                     //var aircraft = _unitOfWork.Vendor.VendorAircraft(vendorAircraftMapping);
                 }
@@ -4316,7 +4414,7 @@ namespace QuickApp.Pro.Controllers
 
         [HttpGet("searchForGetAirCraftByVendorCapsId/{vendorCapabilityId}")]
 
-        public IActionResult orAirMappedMultiDashId(long vendorCapabilityId, string aircraftTypeID, string aircraftModelID, string dashNumberId,string memo)
+        public IActionResult orAirMappedMultiDashId(long vendorCapabilityId, string aircraftTypeID, string aircraftModelID, string dashNumberId, string memo)
         {
             var result = _unitOfWork.Vendor.searchItemAircraftMappingDataByMultiTypeIdModelIDDashID(vendorCapabilityId, aircraftTypeID, aircraftModelID, dashNumberId, memo);
 
@@ -4780,7 +4878,7 @@ namespace QuickApp.Pro.Controllers
             var result = _unitOfWork.Vendor.UploadVendorBillingAddressCustomData(Request.Form.Files[0], vendorId);
             return Ok(result);
         }
-              
+
 
         [HttpPost("uploadvendorshippingaddress")]
         public IActionResult UploadShippingCustomData(long vendorId)
