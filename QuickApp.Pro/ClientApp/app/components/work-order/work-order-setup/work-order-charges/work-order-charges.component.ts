@@ -109,6 +109,9 @@ export class WorkOrderChargesComponent implements OnChanges, OnInit {
   }
 
   createChargeQuote() {
+    this.workOrderChargesList = this.workOrderChargesList.map(charge=>{
+      return {...charge, markupFixedPrice: this.costPlusType}
+    })
     this.createQuote.emit(this.workOrderChargesList);
   }
 

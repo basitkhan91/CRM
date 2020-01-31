@@ -57,6 +57,9 @@ export class WorkOrderFreightComponent implements OnInit {
         this.customerId = editValueAssignByCondition('customerId', this.savedWorkOrderData.customerId);
         this.getShipViaByCustomerId();
         this.getCarrierList();
+        if(this.workOrderFreightList.length>0 && this.workOrderFreightList[0].markupFixedPrice){
+            this.overAllMarkup = this.workOrderFreightList[0].markupFixedPrice;
+        }
     }
 
     get userName(): string {
@@ -128,6 +131,9 @@ export class WorkOrderFreightComponent implements OnInit {
     }
 
     createFreightsQuote() {
+        this.workOrderFreightList = this.workOrderFreightList.map((f)=>{
+            return {...f, markupFixedPrice: this.costPlusType}
+        })
         this.saveFreightListForWO.emit(this.workOrderFreightList);
     }
 

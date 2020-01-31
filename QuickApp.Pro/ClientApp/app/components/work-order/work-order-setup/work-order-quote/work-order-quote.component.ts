@@ -619,6 +619,7 @@ overAllMarkup: any;
         "markupPercentageId": fre.markupPercentageId,
         "freightCostPlus": fre.freightCostPlus,
         "taskId": fre.taskId,
+        "markupFixedPrice": fre.markupFixedPrice,
         "CreatedBy":"admin",
         "UpdatedBy":"admin",
         "CreatedDate":"2019-10-31T09:06:59.68",
@@ -668,6 +669,7 @@ overAllMarkup: any;
                   "Memo":mList.memo,
                   "IsDefered":mList.isDeferred,
                   "markupPercentageId":mList.markupPercentageId,
+                  "markupFixedPrice":this.costPlusType,
                   "TotalPartsCost":155,
                   "Markup":mList.markup,
                   "MaterialCostPlus":mList.materialCostPlus,
@@ -761,6 +763,7 @@ overAllMarkup: any;
         "ExtendedCost":charge.extendedCost,
         "UnitPrice":charge.unitPrice,
         "ExtendedPrice":charge.extendedPrice,
+        "markupFixedPrice": charge.markupFixedPrice,
         "masterCompanyId":(charge.masterCompanyId == "")?0:charge.masterCompanyId,
         "taskId": charge.taskId,
         "CreatedBy":"admin",
@@ -792,7 +795,7 @@ overAllMarkup: any;
       res => {
         this.tabQuoteCreated['exclusions'] = true;
         this.workOrderExclusionsList = res.workOrderQuoteExclusions;
-        this.getExclusionListByWorkOrderId();
+        this.getQuoteExclusionListByWorkOrderQuoteId();
         this.updateWorkOrderQuoteDetailsId(res.workOrderQuoteDetailsId);
         console.log(res);
       }
@@ -882,6 +885,7 @@ saveworkOrderLabor(data) {
         "laborOverheadCost": labor.laborOverheadCost,
         "markupPercentageId": labor.markupPercentageId,
         "directLaborOHCost": labor.directLaborOHCost,
+        "markupFixedPrice": labor.markupFixedPrice,
         "CreatedBy":"admin",
         "UpdatedBy":"admin",
         "IsActive":true,
@@ -945,6 +949,7 @@ setBuildMethod(id){
 saveWorkOrderExclusionsList(data) {
   this.exclusionPayload.BuildMethodId = this.getBuildMethodId();
   this.exclusionPayload["taskId"] = (this.selectedBuildMethod == 'build from scratch')?this.currenttaskId:0;
+  this.exclusionPayload['WorkflowWorkOrderId'] = this.selectedWorkFlowWorkOrderId;
   this.exclusionPayload.WorkOrderQuoteExclusions = data.map(ex=>{
     if(ex.workOrderQuoteDetailsId && ex.workOrderQuoteDetailsId != 0){
       this.exclusionPayload.WorkOrderQuoteDetailsId = ex.workOrderQuoteDetailsId;
@@ -960,9 +965,10 @@ saveWorkOrderExclusionsList(data) {
       "Quantity":ex.quantity,
       "UnitCost":ex.unitCost,
       "ExtendedCost":ex.extendedCost,
-      "MarkUpPercentageId":ex.markupPercentageId,
-      "CostPlusAmount":ex.CostPlusAmount,
+      "MarkUpPercentageId":ex.markUpPercentageId,
+      "CostPlusAmount":ex.costPlusAmount,
       "FixedAmount":ex.fixedAmount,
+      "markupFixedPrice": ex.markupFixedPrice,
       "taskId": ex.taskId,
       "masterCompanyId":(ex.masterCompanyId == '')?0:ex.masterCompanyId,
       "CreatedBy":"admin",
@@ -974,7 +980,11 @@ saveWorkOrderExclusionsList(data) {
   this.workOrderService.saveExclusionsQuote(this.exclusionPayload)
     .subscribe(
       res => {
-        this.updateWorkOrderQuoteDetailsId(res.workOrderQuoteExclusions[0].workOrderQuoteDetailsId)
+        this.tabQuoteCreated['exclusions'] = true;
+        this.workOrderExclusionsList = res.workOrderQuoteExclusions;
+        this.updateWorkOrderQuoteDetailsId(res.workOrderQuoteDetailsId);
+        this.getQuoteExclusionListByWorkOrderQuoteId();
+        // this.updateWorkOrderQuoteDetailsId(res.workOrderQuoteExclusions[0].workOrderQuoteDetailsId)
         this.alertService.showMessage(
           this.moduleName,
           'Quotation created  Succesfully',
@@ -1001,7 +1011,7 @@ updateWorkOrderExclusionsList(data) {
           'Update Work Order Exclusions  Succesfully',
           MessageSeverity.success
       );
-      this.getExclusionListByWorkOrderId();
+      this.getQuoteExclusionListByWorkOrderQuoteId();
   })
 }
 

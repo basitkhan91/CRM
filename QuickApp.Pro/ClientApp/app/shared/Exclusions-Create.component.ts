@@ -19,6 +19,7 @@ export class ExclusionsCreateComponent implements OnInit, OnChanges {
     @Input() isQuote = false;
     @Input() markupList;
     @Input() editData;
+    @Input() taskList: any = [];
     @Output() saveExclusionsListForWO = new EventEmitter();
     @Output() updateExclusionsListForWO = new EventEmitter();
 
@@ -42,7 +43,6 @@ export class ExclusionsCreateComponent implements OnInit, OnChanges {
     }
 
     ngOnInit(): void {
-
         if (this.isEdit) {
             this.workFlow.exclusions = [];
             const data = {
@@ -60,17 +60,21 @@ export class ExclusionsCreateComponent implements OnInit, OnChanges {
                 this.addRow();
             }
         }
+        
         if (this.isWorkOrder) {
             this.row = this.workFlow.exclusions[0];
 
             // this.row = this.workFlow.exclusions[0];
             // this.addRow();
+            
         } else {
             this.row = this.workFlow.exclusions[0];
             if (this.row == undefined) {
                 this.row = {};
             }
-            this.row.taskId = this.workFlow.taskId;
+            if(!this.isQuote){
+                this.row.taskId = this.workFlow.taskId;
+            }
         }
 
         this.ptnumberlistdata();
@@ -81,6 +85,7 @@ export class ExclusionsCreateComponent implements OnInit, OnChanges {
 
 
     ngOnChanges(): void {
+        console.log(this.taskList);
         console.log(this.isEdit);
         console.log(this.isQuote);
     }
@@ -92,7 +97,7 @@ export class ExclusionsCreateComponent implements OnInit, OnChanges {
     addRow(): void {
         var newRow = Object.assign({}, this.row);
         newRow.workflowExclusionId = "0";
-        newRow.taskId = this.workFlow.taskId;
+        // newRow.taskId = this.workFlow.taskId;
         newRow.partDescription = "";
         newRow.estimtPercentOccurrance = "";
         newRow.extendedCost = "";

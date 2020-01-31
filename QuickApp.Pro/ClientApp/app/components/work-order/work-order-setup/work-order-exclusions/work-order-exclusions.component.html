@@ -32,6 +32,7 @@
           [workFlow]="workFlowObject"
           [isWorkOrder]="isWorkOrder"
           [markupList]="markupList"
+          [taskList]="taskList"
           (saveExclusionsListForWO)="saveExclusionsList($event)"
         >
         </grd-exclusions>
@@ -44,6 +45,7 @@
           [workFlow]="workFlowObject"
           [isWorkOrder]="isWorkOrder"
           [markupList]="markupList"
+          [taskList]="taskList"
           (updateExclusionsListForWO)="updateExclusionsList($event)"
         >
         </grd-exclusions>
@@ -67,7 +69,7 @@
                     <p-radioButton
                       class="p-radiobutton-label-horizontal"
                       name="costPlusType"
-                      label="Mark Up"
+                      label="T&M"
                       value="Mark Up"
                       [(ngModel)]="costPlusType"
                       [disabled]="isView"
@@ -119,11 +121,11 @@
         <th colspan="2">Actions</th>
       </tr>
     </ng-template>
-    <ng-template pTemplate="body" let-rowData let-columns="columns">
+    <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
       <tr *ngIf="!rowData['isDeleted']">
         <ng-container *ngIf="isQuote">
           <td>
-            <select class="form-control" [(ngModel)]="rowData.taskId" [disabled]="isView">
+            <select class="form-control select-read-only" [(ngModel)]="rowData.taskId" disabled>
               <option value="">Select</option>
               <option *ngFor="let task of taskList" [value]="task.taskId">{{task.description}}</option>
             </select>
@@ -161,7 +163,7 @@
             mat-icon-button
             data-target="#addNewExclusions"
             data-toggle="modal"
-            (click)="edit(rowData, i)"
+            (click)="edit(rowData, rowIndex)"
             matTooltip="Edit"
           >
             <mat-icon>edit</mat-icon>
@@ -172,7 +174,7 @@
             class="btn-delete ptable-wo-btns"
             mat-icon-button
             matTooltip="Delete"
-            (click)="delete(rowData, i)"
+            (click)="delete(rowData, rowIndex)"
           >
             <mat-icon color="warn">delete</mat-icon>
           </button>

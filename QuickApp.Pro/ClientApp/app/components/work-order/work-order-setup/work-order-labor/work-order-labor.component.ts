@@ -326,6 +326,15 @@ console.log(this.workOrderLaborList);
     else {
       this.saveFormdata['workOrderHoursType'] = 3;
     }
+    if(this.isQuote){
+      for(let labor in this.saveFormdata.workOrderLaborList){
+        this.saveFormdata.workOrderLaborList[labor].forEach(
+          (lab)=>{
+            lab['markupFixedPrice'] = this.laborForm['costPlusType'];
+          }
+        )
+      }
+    }
 
     this.saveworkOrderLabor.emit(this.saveFormdata);  
 
