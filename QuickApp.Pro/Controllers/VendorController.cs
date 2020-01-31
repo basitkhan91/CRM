@@ -2473,7 +2473,7 @@ namespace QuickApp.Pro.Controllers
                     {
                         VendorProcess1099 vendorprocess = new VendorProcess1099();
                         vendorprocess.IsActive = true;
-                        vendorprocess.VendorId = vendorViewModel.VendorId;
+                        vendorprocess.VendorId = id;
                         vendorprocess.Master1099Id = item.Master1099Id;
                         if (item.VendorProcess1099Id != 0)
                         {
