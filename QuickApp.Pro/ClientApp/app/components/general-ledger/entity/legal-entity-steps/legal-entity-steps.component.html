@@ -33,19 +33,18 @@
       <div class="md-step-bar-right"></div>
     </div>    
     
-    <div
-      class="md-step"
-      [ngClass]="{
-        active: activeMenuItem >= 3,
-        editable: activeMenuItem === 3
-      }"
-      (click)="changeOfTab('Financial')"
-      [class.isDisabled]="!isDisabledSteps"
-    >
-      <div class="md-step-circle"><span>3</span></div>
-      <div class="md-step-title">Financial Info</div>
-      <div class="md-step-bar-left"></div>
-      <div class="md-step-bar-right"></div>
+    <div class="md-step"
+         [ngClass]="{
+         active: activeMenuItem >= 3,
+         editable: activeMenuItem === 3
+        }"
+        (click)="changeOfTab('Banking')"
+        [class.isDisabled]="!isDisabledSteps"
+        >
+        <div class="md-step-circle"><span>3</span></div>
+        <div class="md-step-title">Banking Info</div>
+        <div class="md-step-bar-left"></div>
+        <div class="md-step-bar-right"></div>
     </div>
 
     <div
@@ -98,17 +97,10 @@
   <div class="card">
       <div [ngClass]="{ hideTab: currentTab !== 'General' }">
           <div *ngIf="parentLegalEntity && countrycollection && allCurrencyInfo">
-              <app-legal-entity-add [parentLegalEntity]="parentLegalEntity"
-                                    [countrycollection]="countrycollection"
-                                    [allCurrencyInfo]="allCurrencyInfo"
-                                    (saveGeneralInformationData)="generalInformationData($event)"
-                                    (editGeneralInformation)="updateInformationData($event)"
+              <app-legal-entity-add (savedGeneralInformationData)="generalInformationData($event)"
+                                    (editGeneralInformationData)="updateInformationData($event)"
                                     (tab)="changeOfTab($event)">
-
               </app-legal-entity-add>
-
-
-
           </div>
       </div>
 
@@ -127,7 +119,7 @@
           </div>
       </div>
 
-      <div [ngClass]="{ hideTab: currentTab !== 'Financial' }">
+      <div [ngClass]="{ hideTab: currentTab !== 'Banking' }">
           <div *ngIf="savedGeneralInformationData || editGeneralInformationData">
               <app-legal-entity-banking [editMode]="editMode"
                                         [editGeneralInformationData]="editGeneralInformationData"
@@ -158,18 +150,17 @@
               [selectedCustomerTab]="currentTab"></app-legal-entity-shipping>
           </div>
       </div>
-      <!--
+      
     <div [ngClass]="{ hideTab: currentTab !== 'Documents' }">
       <div *ngIf="savedGeneralInformationData || editGeneralInformationData">
-        <app-customer-documents
+        <app-legal-entity-documents
           [editMode]="editMode"
           [editGeneralInformationData]="editGeneralInformationData"
           [savedGeneralInformationData]="savedGeneralInformationData"
           (tab)="changeOfTab($event)"
-        ></app-customer-documents>
+        ></app-legal-entity-documents>
       </div>
     </div>
-
-      -->
+      
   </div>
 </div>

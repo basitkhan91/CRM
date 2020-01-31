@@ -59,23 +59,23 @@ export class ListJournelComponent implements OnInit {
 
         this.journelService.manulaJournelCollection = null;
 
-        this.journelService.getAllJournel().subscribe(manualJournel => {
-            console.log(' journal list : ', manualJournel);
-            this.manualJournelList = manualJournel[0];
+        this.journelService.getAllJournel().subscribe(resultManualJournel => {
+            console.log(' journal list : ', resultManualJournel);
+            this.manualJournelList = resultManualJournel[0];
             this.manualJournelList.forEach(function (manualJournel) {
                 manualJournel.isActive = manualJournel.isActive == false ? false : true;
             });
-            this.journalList = manualJournel;
+            this.journalList = this.manualJournelList;
         });
 
         this.contactcols = [
-            { field: 'glAccountId', header: 'ledger Name' },
-            { field: 'journalManualBatchNumber', header: 'Batch Number' },
-            { field: 'journalManualBatchName', header: 'Batch Name' },
-            { field: 'journalManualBalanceTypeId', header: 'Balance Type' },
-            { field: 'journalManualCategoryId', header: 'Category' },
-            { field: 'journalManualTypeId', header: 'Journel Type' },
-            { field: 'journalManualEmployeeId', header: 'Employee' },
+            { field: 'glAccountId', header: 'Ledger Name' },
+            { field: 'batchNumber', header: 'Batch Number' },
+            { field: 'batchName', header: 'Batch Name' },
+            { field: 'balanceTypeId', header: 'Balance Type' },
+            { field: 'journalCategoryId', header: 'Category' },
+            { field: 'journalTypeId', header: 'Journel Type' },
+            { field: 'employeeId', header: 'Employee' },
             { field: 'createdBy', header: 'Created By' },
             { field: 'updatedBy', header: 'Updated By' },
             { field: 'updatedDate', header: 'Updated Date' },

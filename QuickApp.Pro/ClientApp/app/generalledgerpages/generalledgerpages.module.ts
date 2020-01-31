@@ -25,6 +25,7 @@ import { ManagementStructureComponent } from "../components/general-ledger/entit
 import { TreeTableModule } from 'primeng/treetable';
 import { EntityEditComponent } from "../components/general-ledger/entity/legal-entity-list/legal-entity-list.component";
 //import { TreeNode } from 'primeng/api';
+import { FileUploadModule } from 'primeng/fileupload';
 import { TreeModule } from 'primeng/tree';
 import { DialogModule } from 'primeng/dialog';
 import { CalendarModule } from 'primeng/calendar';
@@ -59,6 +60,7 @@ import { EntityContactComponent } from "../components/general-ledger/entity/lega
 import { EntityBankingComponent } from "../components/general-ledger/entity/legal-entity-banking/legal-entity-banking.component";
 import { EntityBillingComponent } from "../components/general-ledger/entity/legal-entity-billing/legal-entity-billing.component";
 import { EntityShippingComponent } from "../components/general-ledger/entity/legal-entity-shipping/legal-entity-shipping.component";
+import { EntityDocumentsComponent } from "../components/general-ledger/entity/legal-entity-documents/legal-entity-documents.component";
 
 @NgModule({
     imports: [
@@ -78,8 +80,8 @@ import { EntityShippingComponent } from "../components/general-ledger/entity/leg
         AuditModule,
         AutoCompleteModule,
         TooltipModule,
-        DropdownModule,BreadcrumbModule
-
+        DropdownModule,BreadcrumbModule,
+        FileUploadModule
     ],
     declarations: [
         GeneralledgerPageComponent,
@@ -106,7 +108,8 @@ import { EntityShippingComponent } from "../components/general-ledger/entity/leg
         EntityContactComponent,
         EntityBankingComponent,
         EntityBillingComponent,
-        EntityShippingComponent
+        EntityShippingComponent,
+        EntityDocumentsComponent
     ],
     providers: [
         NodeSetupService,
