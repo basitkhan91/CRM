@@ -144,8 +144,8 @@ export class CustomerShippingInformationComponent implements OnInit {
             this.isViewMode = false;
 
         } else {
-           
-            if(this.customerDataFromExternalComponents != {}){
+
+            if (this.customerDataFromExternalComponents != {} && this.customerDataFromExternalComponents.customerId != undefined) {
                 this.id = this.customerDataFromExternalComponents.customerId;
                 this.customerCode = this.customerDataFromExternalComponents.customerCode;
                 this.customerName = this.customerDataFromExternalComponents.name;
