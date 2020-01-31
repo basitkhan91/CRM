@@ -41,7 +41,7 @@ export class CustomerContactsComponent implements OnInit {
 	@Output() refreshCustomerATAMapped = new EventEmitter();
 	@Output() refreshCustomerATAByCustomerId = new EventEmitter();
 	@Output() refreshCustomerContactMapped = new EventEmitter();
-    @Input() customerDataFromExternalComponents : any = {};
+    @Input() customerDataFromExternalComponents: any;
 
 
 	formData = new FormData();
@@ -147,8 +147,8 @@ export class CustomerContactsComponent implements OnInit {
 
 			this.getAllCustomerContact()
         } else {
-           
-            if (this.customerDataFromExternalComponents != {} && this.customerDataFromExternalComponents.customerId != undefined) {
+
+            if (this.customerDataFromExternalComponents) {
                 this.id = this.customerDataFromExternalComponents.customerId;
                 this.customerCode = this.customerDataFromExternalComponents.customerCode;
                 this.customerName = this.customerDataFromExternalComponents.name;
@@ -171,7 +171,12 @@ export class CustomerContactsComponent implements OnInit {
 	}
 	
 	ngOnChanges(changes: SimpleChanges) {
-		for (let property in changes) {
+        for (let property in changes) {
+            if (property == 'selectedCustomerTab') {
+                if (changes[property].currentValue == "Contacts") {
+                    this.getAllCustomerContact();
+                }
+            }
              if (property == 'customerDataFromExternalComponents') {
 
                 if(changes[property].currentValue != {}){

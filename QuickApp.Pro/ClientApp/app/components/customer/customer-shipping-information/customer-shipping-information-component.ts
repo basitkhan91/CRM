@@ -29,7 +29,7 @@ export class CustomerShippingInformationComponent implements OnInit {
     @Input() editMode;
     @Output() tab = new EventEmitter();
     @Input() selectedCustomerTab: string = "";
-    @Input() customerDataFromExternalComponents : any = {};
+    @Input() customerDataFromExternalComponents : any;
 
     domesticShippingInfo = new CustomerShippingModel()
     internationalShippingInfo = new CustomerInternationalShippingModel()
@@ -145,7 +145,7 @@ export class CustomerShippingInformationComponent implements OnInit {
 
         } else {
 
-            if (this.customerDataFromExternalComponents != {} && this.customerDataFromExternalComponents.customerId != undefined) {
+            if (this.customerDataFromExternalComponents) {
                 this.id = this.customerDataFromExternalComponents.customerId;
                 this.customerCode = this.customerDataFromExternalComponents.customerCode;
                 this.customerName = this.customerDataFromExternalComponents.name;

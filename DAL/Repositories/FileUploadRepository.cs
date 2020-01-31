@@ -349,9 +349,7 @@ namespace DAL.Repositories
                 case "AircraftType":
                     UploadAircraftType(BindCustomData<AircraftType>(file, "AircraftTypeId", moduleName));
                     break;
-                case "DashNumber":
-                    UploadDashNumber(BindCustomData<AircraftDashNumber>(file, "DashNumberId,AircraftTypeId,AircraftModelId", moduleName));
-                    break;
+              
 
                 default:
                     break;
@@ -724,35 +722,7 @@ namespace DAL.Repositories
                 }
             }
         }
-        private void UploadDashNumber(List<AircraftDashNumber> aircraftModelList)
-        {
-            var aircraftTypes = _appContext.AircraftType.Where(p => p.IsDeleted == false).ToList();
-         
-            foreach (var item in aircraftModelList)
-            {
-                var aircraftType = aircraftTypes.Where(p => p.Description.ToLower() == item.AircraftTypeName.ToLower()).FirstOrDefault();
-
-                if (aircraftType != null && aircraftType.AircraftTypeId > 0)
-                {
-                    var aircraftModels = _appContext.AircraftModel.Where(p => p.IsDeleted == false && p.AircraftTypeId== aircraftType.AircraftTypeId).ToList();
-
-                    var aircraftModel = aircraftModels.Where(p => p.ModelName.ToLower() == item.ModelName.ToLower()).FirstOrDefault();
-                    if (aircraftModel != null && aircraftModel.AircraftModelId > 0)
-                    {
-                        item.AircraftTypeId = Convert.ToInt32(aircraftType.AircraftTypeId);
-                        item.AircraftModelId = Convert.ToInt32(aircraftModel.AircraftModelId);
-
-                        var flag = _appContext.AircraftDashNumber.Any(p => p.IsDeleted == false && p.DashNumber.ToLower() == item.DashNumber.Trim().ToLower() && p.AircraftTypeId == item.AircraftTypeId && p.AircraftModelId==item.AircraftModelId);
-                        if (!flag)
-                        {
-                            _appContext.AircraftDashNumber.Add(item);
-                            _appContext.SaveChanges();
-                        }
-                    }
-                }
-            }
-        }
-
+       
         private void UploadATAChapter(List<ATAChapter> ataChapterList)
         {
 
@@ -1065,6 +1035,110 @@ namespace DAL.Repositories
                     _appContext.SaveChanges();
                 }
             }
+        }
+        public void UploadDashNumberCustomData(IFormFile file)
+        {
+            string modelname = string.Empty;
+            string aircrafttypename = string.Empty;
+           
+            List<object> obj = new List<object>();
+
+            int count = 0;
+            try
+            {
+
+                AircraftDashNumber air;
+
+                string fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+                string filePath = Path.Combine(AppSettings.CustomUploadFilePath, Convert.ToString(ModuleEnum.CustomerInternationalShippingAddress), DateTime.Now.ToString("yyyy-MM-dd hh-mm-ss"));
+
+                if (!Directory.Exists(filePath))
+                {
+                    Directory.CreateDirectory(filePath);
+                }
+
+                string fullPath = Path.Combine(filePath, fileName);
+
+
+                using (var stream = File.Open(fullPath, FileMode.Create))
+                {
+                    file.CopyTo(stream);
+                    {
+                        using (var reader = ExcelReaderFactory.CreateReader(stream))
+                        {
+                            do
+                            {
+                                while (reader.Read())
+                                {
+                                    if (count > 0 && reader.GetValue(0) != null && reader.GetValue(1) != null && reader.GetValue(2) != null)
+                                    {
+
+                                        air = new AircraftDashNumber();
+                                        if (reader.GetValue(3) != null)
+                                        {
+                                            air.Memo = Convert.ToString(reader.GetValue(3));
+                                        }
+                                        if (reader.GetValue(0) != null)
+                                        {
+                                            aircrafttypename = Convert.ToString(reader.GetValue(0));
+
+                                            var aircraftType = _appContext.AircraftType.Where(p => p.Description.ToLower() == aircrafttypename.Trim().ToLower()).FirstOrDefault();
+
+
+                                            if (aircraftType != null && aircraftType.AircraftTypeId > 0)
+                                            {
+                                                var aircraftModels = _appContext.AircraftModel.Where(p => p.IsDeleted == false && p.AircraftTypeId == aircraftType.AircraftTypeId).ToList();
+                                                if (reader.GetValue(1) != null)
+                                                {
+                                                    modelname = Convert.ToString(reader.GetValue(1));
+
+
+                                                    var aircraftModel = aircraftModels.Where(p => p.ModelName.ToLower() == modelname.Trim().ToLower()).FirstOrDefault();
+                                                    if (aircraftModel != null && aircraftModel.AircraftModelId > 0)
+                                                    {
+                                                        air.AircraftTypeId = Convert.ToInt32(aircraftType.AircraftTypeId);
+                                                        air.AircraftModelId = Convert.ToInt64(aircraftModel.AircraftModelId);
+                                                        if (reader.GetValue(2) != null)
+                                                        {
+                                                            air.DashNumber = Convert.ToString(reader.GetValue(2));
+                                                            var flag = _appContext.AircraftDashNumber.Any(p => p.IsDeleted == false && p.DashNumber.ToLower() == air.DashNumber.Trim().ToLower() && p.AircraftTypeId == air.AircraftTypeId && p.AircraftModelId == air.AircraftModelId);
+                                                            air.MasterCompanyId = 1;
+                                                            air.IsActive = true;
+                                                            air.IsDeleted = false;
+
+                                                            air.CreatedBy = air.UpdatedBy = "System";
+                                                            air.UpdatedDate = air.CreatedDate = DateTime.Now;
+
+
+                                                            if (!flag)
+                                                            {
+                                                                _appContext.AircraftDashNumber.Add(air);
+                                                                _appContext.SaveChanges();
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+
+                                                   
+                                                }
+                                            
+                                   
+                                    count++;
+                                }
+                            } while (reader.NextResult());
+
+                        }
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+
+            }
+
         }
 
         private static PropertyInfo[] GetProperties(object obj)
