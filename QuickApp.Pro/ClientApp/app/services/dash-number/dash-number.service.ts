@@ -77,5 +77,11 @@ export class DashNumberService {
     }
   getAllDashModels_MultiID(Mid: string, Tid: number, Did: string) {
     return this.dashNumberEndpoint.getDASHLISTByID<any>(Mid, Tid, Did);
-  }
+    }
+    CustomerDashNumberUpload(file) {
+        return this.dashNumberEndpoint.CustomerDashNumberUpload(file);
+    }
+    getDashNumByModelTypeId(Mid: string, Tid: string) {
+        return this.dashNumberEndpoint.getDashNumByModelTypeId<any>(Mid, Tid);
+    }
 }

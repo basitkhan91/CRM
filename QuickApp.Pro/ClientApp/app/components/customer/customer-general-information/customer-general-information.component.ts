@@ -185,8 +185,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
             });
 
 
-            this.getCustomerIntegrationTypesByCustomerId();
-
+           
             setTimeout(() => {
                 this.getCustomerRestrictedPMAByCustomerId();
             }, 1000);
@@ -198,6 +197,10 @@ export class CustomerGeneralInformationComponent implements OnInit {
             setTimeout(() => {
                 this.getCustomerClassificationByCustomerId();
             }, 1000);
+            setTimeout(() => {
+                this.getCustomerIntegrationTypesByCustomerId();
+            }, 1000);
+            
 
 
         } else {

@@ -215,6 +215,11 @@ namespace QuickApp.Pro.Controllers
                 return BadRequest(ex.Message);
             }
         }
-
+        [HttpPost("uploaddashnumber")]
+        public IActionResult UploadDashNumberCustomData()
+        {
+            _unitOfWork.FileUploadRepository.UploadDashNumberCustomData(Request.Form.Files[0]);
+            return Ok();
+        }
     }
 }

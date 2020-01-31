@@ -14,5 +14,6 @@ namespace DAL.Repositories.Interfaces
         void UploadCustomFile(string moduleName, IFormFile file);
         IEnumerable<object> GetDocumentDetailById(long id, int moduleId);
         bool GetDocumentDelete(long id, string updatedBy);
+        void UploadDashNumberCustomData(IFormFile file);
     }
 }

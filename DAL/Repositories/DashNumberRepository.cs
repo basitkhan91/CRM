@@ -151,5 +151,30 @@ namespace DAL.Repositories
             return data;
           
         }
+        public IEnumerable<object> GetDashNumberByID(string Mid, string Tid)
+        {
+            long[] myMids = Mid.Split(',').Select(n => Convert.ToInt64(n)).ToArray();
+            long[] myTids = Tid.Split(',').Select(n => Convert.ToInt64(n)).ToArray();
+            var data = (from iM in _appContext.AircraftDashNumber
+                        join at in _appContext.AircraftType on iM.AircraftTypeId equals at.AircraftTypeId
+                        join am in _appContext.AircraftModel on iM.AircraftModelId equals am.AircraftModelId
+                        where iM.IsActive == true && myMids.Contains(iM.AircraftModelId) && myTids.Contains(iM.AircraftTypeId)
+                        select new
+                        {
+                            DashNumber =  iM.DashNumber,
+                            iM.DashNumberId,
+                            at.AircraftTypeId,
+                            at.Description,
+                            am.AircraftModelId,
+                            am.ModelName,
+                            iM.Memo,
+                            iM.MasterCompanyId
+
+
+                        }).ToList();
+            return data;
+            throw new NotImplementedException();
+        }
+
     }
 }

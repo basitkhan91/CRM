@@ -33,7 +33,7 @@ import { CustomerService } from '../../../services/customer.service';
 import { CommonService } from '../../../services/common.service';
 import { IntegrationService } from '../../../services/integration-service';
 import { ConfigurationService } from '../../../services/configuration.service';
-import { editValueAssignByCondition, getObjectById } from '../../../generic/autocomplete';
+import { editValueAssignByCondition, getObjectById, getValueFromObjectByKey } from '../../../generic/autocomplete';
 import { VendorStepsPrimeNgComponent } from '../vendor-steps-prime-ng/vendor-steps-prime-ng.component';
 declare const google: any;
 @Component({
@@ -143,6 +143,7 @@ export class VendorGeneralInformationComponent implements OnInit {
     formData = new FormData();
     allVendorGeneralDocumentsList: any = [];
     sourceVendor: any = {};
+    vendorParentNames: any[];
     // isEditTemp = false;
 
 
@@ -176,7 +177,7 @@ export class VendorGeneralInformationComponent implements OnInit {
         // if (vendorId === null) {
         //     vendorId = this.vendorService.listCollection.vendorId;
         // }
-
+        this.countrylist();
 
 
         if (vendorId) {
@@ -262,8 +263,8 @@ export class VendorGeneralInformationComponent implements OnInit {
                 this.sourceVendor.vendorTypeId = 2;
             }
 
-            if (this.vendorService.generalCollection) {
-                this.sourceVendor = this.vendorService.generalCollection;
+            if (this.vendorService.listCollection) {
+                this.sourceVendor = this.vendorService.listCollection;
             }
 
             // this.integrationCols = [
@@ -294,7 +295,7 @@ export class VendorGeneralInformationComponent implements OnInit {
     }
 
     ngOnInit(): void {
-
+        // this.countrylist();
 
 
         // this.sourceVendor.vendorTypeId = 2;
@@ -396,10 +397,13 @@ export class VendorGeneralInformationComponent implements OnInit {
             this.sourceVendor.address2 = this.vendorService.listCollection.address2;
             this.sourceVendor.address3 = this.vendorService.listCollection.address3;
             this.sourceVendor.city = this.vendorService.listCollection.city;
-            // this.sourceVendor.country = getObjectById('countries_id', this.vendorService.listCollection.countryId, this.countrycollection);
+            this.sourceVendor.country = getObjectById('countries_id', this.vendorService.listCollection.countryId, this.allCountryinfo);
             this.sourceVendor.stateOrProvince = this.vendorService.listCollection.stateOrProvince;
-            this.sourceVendor.PostalCode = this.vendorService.listCollection.postalCode;
+            this.sourceVendor.postalCode = this.vendorService.listCollection.postalCode;
             this.sourceVendor.vendorClassificationIds = this.sourceVendor.vendorClassifications;
+            if (this.sourceVendor.parent) {
+                this.sourceVendor.vendorParentId = getObjectById('vendorId', this.sourceVendor.vendorParentId, this.allActions);
+            }
 
         }
         if (this.customerser.isCustomerAlsoVendor == true) {
@@ -409,7 +413,7 @@ export class VendorGeneralInformationComponent implements OnInit {
             this.sourceVendor.vendorName = this.customerser.localCollectiontoVendor.name;
             this.sourceVendor.vendorCode = this.customerser.localCollectiontoVendor.customerCode;
             this.sourceVendor.doingBusinessAsName = this.customerser.localCollectiontoVendor.doingBuinessAsName;
-            this.sourceVendor.PostalCode = this.customerser.localCollectiontoVendor.postalCode;
+            this.sourceVendor.postalCode = this.customerser.localCollectiontoVendor.postalCode;
 
         }
     }
@@ -448,7 +452,7 @@ export class VendorGeneralInformationComponent implements OnInit {
         this.dataSource.data = allWorkFlows;
         this.allCountryinfo = allWorkFlows;
         if (this.vendorService.isEditMode && this.sourceVendor.country != null) {
-            this.sourceVendor.country = getObjectById('countries_id', this.sourceVendor.country, this.allCountryinfo);
+            // this.sourceVendor.country = getObjectById('countries_id', this.sourceVendor.country, this.allCountryinfo);
         }
     }
     //Load Capability Data
@@ -669,14 +673,24 @@ export class VendorGeneralInformationComponent implements OnInit {
             }
         }
     }
+
+
+
+
+
     filterVendorParentNames(event) {
-        this.vendorNames = [];
-        for (let i = 0; i < this.allActions.length; i++) {
-            let vendorParentName = this.allActions[i].vendorName;
-            if (vendorParentName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-                this.vendorNames.push(vendorParentName);
-            }
-        }
+        this.vendorParentNames = this.allActions;
+
+        this.vendorParentNames = [...this.allActions.filter(x => {
+            return x.vendorName.toLowerCase().includes(event.query.toLowerCase());
+        })]
+        // this.vendorNames = [];
+        // for (let i = 0; i < this.allActions.length; i++) {
+        //     let vendorParentName = this.allActions[i].vendorName;
+        //     if (vendorParentName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+        //         this.vendorNames.push(vendorParentName);
+        //     }
+        // }
     }
 
     filterVendorCodes(event) {
@@ -794,13 +808,13 @@ export class VendorGeneralInformationComponent implements OnInit {
         this.isSaving = true;
         this.isEditMode = true;
         if (!(this.sourceVendor.vendorName && this.sourceVendor.vendorCode && this.sourceVendor.vendorEmail && this.sourceVendor.vendorPhone && this.sourceVendor.address1 && this.sourceVendor.city
-            && this.sourceVendor.PostalCode && this.sourceVendor.country && this.sourceVendor.vendorClassificationIds
+            && this.sourceVendor.postalCode && this.sourceVendor.country && this.sourceVendor.vendorClassificationIds
         )) {
             //this.display = true;
             this.modelValue = true;
         }
         if (this.sourceVendor.vendorName && this.sourceVendor.vendorCode && this.sourceVendor.vendorEmail && this.sourceVendor.vendorPhone && this.sourceVendor.address1 && this.sourceVendor.city
-            && this.sourceVendor.PostalCode && this.sourceVendor.country && this.sourceVendor.vendorClassificationIds) {
+            && this.sourceVendor.postalCode && this.sourceVendor.country && this.sourceVendor.vendorClassificationIds) {
 
             this.sourceVendor.country = editValueAssignByCondition('countries_id', this.sourceVendor.country);
             console.log(this.sourceVendor);
@@ -809,6 +823,15 @@ export class VendorGeneralInformationComponent implements OnInit {
                 this.sourceVendor.updatedBy = this.userName;
                 this.sourceVendor.masterCompanyId = 1;
                 this.sourceVendor.isActive = true;
+                console.log('Test');
+
+                if (this.sourceVendor.parent) {
+
+                    this.sourceVendor.vendorParentId = editValueAssignByCondition('vendorId', this.sourceVendor.vendorParentId);
+                    console.log(this.sourceVendor.vendorParentId);
+
+
+                }
                 if (this.sourceVendor.parent == false || this.sourceVendor.parent == null) {
                     this.sourceVendor.vendorParentName = '';
                 }
@@ -839,7 +862,8 @@ export class VendorGeneralInformationComponent implements OnInit {
                     this.sourceVendor.city = data.address.city;
                     this.sourceVendor.country = data.address.country;
                     this.sourceVendor.stateOrProvince = data.address.stateOrProvince;
-                    this.sourceVendor.PostalCode = data.address.postalCode;
+                    this.sourceVendor.postalCode = data.address.postalCode;
+                    // this.sourceVendor.vendorParentId = getObjectById('vendorId', this.sourceVendor.vendorParentId, this.vendorCollection)
                     this.vendorService.generalCollection = this.localCollection;
                     this.vendorService.contactCollection = this.localCollection;
                     this.vendorService.financeCollection = this.localCollection;
@@ -865,7 +889,9 @@ export class VendorGeneralInformationComponent implements OnInit {
                     this.sourceVendor.vendorParentName = '';
                 }
 
-
+                if (this.sourceVendor.parent) {
+                    this.sourceVendor.vendorParentId = editValueAssignByCondition('vendorId', this.sourceVendor.vendorParentId);
+                }
                 const { vendorContact, address, ...newSourceVendor } = this.sourceVendor;
 
                 this.vendorService.updateVendorDetails(newSourceVendor).subscribe(
@@ -889,14 +915,14 @@ export class VendorGeneralInformationComponent implements OnInit {
                         this.sourceVendor.updatedBy = this.userName;
                         this.localCollection = data;
                         this.sourceVendor = data;
-
+                        // this.sourceVendor.vendorParentId = getObjectById('vendorId', this.sourceVendor.vendorParentId, this.vendorCollection)
                         this.sourceVendor.address1 = data.address.line1;
                         this.sourceVendor.address2 = data.address.line2;
                         this.sourceVendor.address3 = data.address.line3;
                         this.sourceVendor.city = data.address.city;
                         this.sourceVendor.country = data.address.country;
                         this.sourceVendor.stateOrProvince = data.address.stateOrProvince;
-                        this.sourceVendor.PostalCode = data.address.postalCode;
+                        this.sourceVendor.postalCode = data.address.postalCode;
                         this.vendorService.generalCollection = this.localCollection;
                         this.vendorService.contactCollection = this.localCollection;
                         this.vendorService.financeCollection = this.localCollection;
