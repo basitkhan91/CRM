@@ -486,7 +486,7 @@ export class EntityContactComponent implements OnInit {
 	}
 
 	nextClick() {
-		this.tab.emit('AircraftInfo');
+        this.tab.emit('Banking');
 
 	}
 	backClick() {

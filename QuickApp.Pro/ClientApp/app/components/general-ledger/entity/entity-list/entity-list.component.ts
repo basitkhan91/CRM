@@ -69,11 +69,8 @@ export class LegalEntityStructureComponent implements OnInit, AfterViewInit {
 	
 	items: MenuItem[];
 	selectedNode: TreeNode;
-	constructor(private authService: AuthService, private _fb: FormBuilder, private alertService: AlertService, public currency: CurrencyService, public workFlowtService: LegalEntityService,  private modalService: NgbModal, private activeModal: NgbActiveModal, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
-		
+	constructor(private authService: AuthService, private _fb: FormBuilder, private alertService: AlertService, public currency: CurrencyService, public workFlowtService: LegalEntityService,  private modalService: NgbModal, private activeModal: NgbActiveModal, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {		
 		this.dataSource = new MatTableDataSource();
-		
-
 	}
 
 	ngOnInit(): void {
