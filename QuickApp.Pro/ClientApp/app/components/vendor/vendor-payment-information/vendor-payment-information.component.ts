@@ -681,6 +681,7 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 				this.sourceVendor.updatedBy = this.userName;
 				this.sourceVendor.updatedBy = this.userName;
 				this.sourceVendor.masterCompanyId = 1;
+				this.sourceVendor.vendorId = this.local.vendorId;
 				this.sourceVendor.country = editValueAssignByCondition('countries_id', this.sourceVendor.country);
 				this.vendorService.updateCheckPaymentInfo(this.sourceVendor).subscribe(data => {
 					if (data) { this.sourceVendor = new Object(); }

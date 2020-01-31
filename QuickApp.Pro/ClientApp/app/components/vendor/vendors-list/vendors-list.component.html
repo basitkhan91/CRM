@@ -610,11 +610,21 @@
                                              [columns]="selectedContactColumns" [resizableColumns]="true"
                                              [reorderableColumns]="true" [scrollable]="true" scrollHeight="450px">
 
-                                        <ng-template pTemplate="colgroup" let-columns>
-                                            <colgroup>
-                                                <col *ngFor="let col of columns" style="width:130px">
-                                            </colgroup>
-                                         </ng-template>
+                                             <ng-template pTemplate="colgroup" let-columns>
+                                                <colgroup>
+                                                    <col style="width:40px">
+                                                    <col style="width:130px">
+                                                    <col style="width:130px">
+                                                    <col style="width:130px">
+                                                    <col style="width:130px">
+                                                    <col style="width:130px">
+                                                    <col style="width:130px">
+                                                    <col style="width:130px">
+                                                    <col style="width:130px">
+                                                    <col style="width:130px">
+                                                    <col style="width:130px">
+                                                </colgroup>
+                                                </ng-template>
 
                                         <ng-template pTemplate="header" let-columns>
                                             <tr>
@@ -955,7 +965,7 @@
     
                                              <ng-template pTemplate="colgroup" let-columns>
                                                 <colgroup>
-                                                    <col *ngFor="let col of columns" style="width:130px">
+                                                    <col *ngFor="let col of columns" style="width:auto">
                                                 </colgroup>
                                              </ng-template>
     
@@ -984,7 +994,7 @@
                                             <tr [pSelectableRow]="rowData"
                                                 (dblclick)="toggledbldisplay(rowData)">
                                                 
-                                                <td > <span class="flag">
+                                                <td style="width: 40px;"> <span class="flag">
                                                     <i  *ngIf="rowData.isPrimary == true"   [ngStyle]="{'color': rowData.isPrimary == true ? 'green' : 'none'}"  
                                                      class="fa fa-flag" aria-hidden="true"></i>
                                                     </span>
@@ -1038,7 +1048,7 @@
 
                                                  <ng-template pTemplate="colgroup" let-columns>
                                                     <colgroup>
-                                                        <col *ngFor="let col of columns" style="width:130px">
+                                                        <col *ngFor="let col of columns" style="width:auto">
                                                     </colgroup>
                                                  </ng-template>
 
@@ -1063,8 +1073,8 @@
                                                          let-columns="columns"
                                                          let-rowIndex="rowIndex">
                                                 <tr>
-                                                    <td > <span class="flag">
-                                                        <i  *ngIf="rowData.isPrimary == true"   [ngStyle]="{'color': rowData.isPrimary == true ? 'green' : 'none'}"  
+                                                    <td style="width: 40px;"> <span class="flag">
+                                                        <i  *ngIf="rowData.isPrimary == true" [ngStyle]="{'color': rowData.isPrimary == true ? 'green' : 'none'}"  
                                                          class="fa fa-flag" aria-hidden="true"></i>
                                                         </span>
                                                     </td>
@@ -1136,7 +1146,6 @@
                                                              let-columns="columns"
                                                              let-rowIndex="rowIndex">
                                                     <tr>
-    
                                                         <td *ngFor="let col of columns">
                                                             {{ rowData[col.field] }}
                                                         </td>
