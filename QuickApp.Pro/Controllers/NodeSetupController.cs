@@ -70,6 +70,12 @@ namespace QuickApp.Pro.Controllers
             return Ok(node);
         }
 
+        [HttpGet("getNodeAuditById/{id}")]
+        public IActionResult getNodeAuditById(long id)
+        {
+            var node = unitOfWork.Repository<GLAccountNodeAudit>().Find(x => x.GLAccountNodeId == id);
+            return Ok(node);
+        }
 
         [HttpGet("shareWithOtherEntityById/{id}")]
         [Produces(typeof(List<GLAccountNodeShareWithEntityMapper>))]
