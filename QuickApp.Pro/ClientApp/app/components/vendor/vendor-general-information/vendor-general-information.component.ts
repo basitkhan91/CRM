@@ -35,6 +35,7 @@ import { IntegrationService } from '../../../services/integration-service';
 import { ConfigurationService } from '../../../services/configuration.service';
 import { editValueAssignByCondition, getObjectById, getValueFromObjectByKey } from '../../../generic/autocomplete';
 import { VendorStepsPrimeNgComponent } from '../vendor-steps-prime-ng/vendor-steps-prime-ng.component';
+import { emailPattern, urlPattern } from '../../../validations/validation-pattern';
 declare const google: any;
 @Component({
     selector: 'app-vendor-general-information',
@@ -145,6 +146,9 @@ export class VendorGeneralInformationComponent implements OnInit {
     sourceVendor: any = {};
     vendorParentNames: any[];
     // isEditTemp = false;
+
+    emailPattern = emailPattern()
+    urlPattern = urlPattern()
 
 
     constructor(public vendorclassificationService: VendorClassificationService,
