@@ -141,6 +141,9 @@ export class WorkOrderExclusionsComponent implements OnInit {
   }
 
   saveQuotation() {
+    this.workOrderExclusionsList = this.workOrderExclusionsList.map(exc=>{
+      return {...exc, markupFixedPrice: this.costPlusType}
+    })
     this.saveExclusionsListForWO.emit(this.workOrderExclusionsList);
   }
 
