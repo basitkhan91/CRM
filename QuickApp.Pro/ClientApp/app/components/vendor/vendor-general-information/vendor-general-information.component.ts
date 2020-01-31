@@ -1,4 +1,4 @@
-﻿import { Component, ViewChild, OnInit, AfterViewInit, ChangeDetectorRef, Directive, AfterViewChecked, OnDestroy, HostListener } from '@angular/core';
+﻿import { Component, ViewChild, OnInit, AfterViewInit, ChangeDetectorRef, AfterViewChecked, OnDestroy, HostListener } from '@angular/core';
 import { MatPaginator, MatSort, MatTableDataSource, MatSnackBar, MatDialog } from '@angular/material';
 import { NgForm, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
@@ -33,9 +33,8 @@ import { CustomerService } from '../../../services/customer.service';
 import { CommonService } from '../../../services/common.service';
 import { IntegrationService } from '../../../services/integration-service';
 import { ConfigurationService } from '../../../services/configuration.service';
-import { editValueAssignByCondition, getObjectById } from '../../../generic/autocomplete';
+import { editValueAssignByCondition, getObjectById, getValueFromObjectByKey } from '../../../generic/autocomplete';
 import { VendorStepsPrimeNgComponent } from '../vendor-steps-prime-ng/vendor-steps-prime-ng.component';
-import { urlPattern } from '../../../validations/validation-pattern';
 declare const google: any;
 @Component({
     selector: 'app-vendor-general-information',
@@ -144,7 +143,7 @@ export class VendorGeneralInformationComponent implements OnInit {
     formData = new FormData();
     allVendorGeneralDocumentsList: any = [];
     sourceVendor: any = {};
-    urlPattern = urlPattern()
+    vendorParentNames: any[];
     // isEditTemp = false;
 
 
@@ -178,6 +177,7 @@ export class VendorGeneralInformationComponent implements OnInit {
         // if (vendorId === null) {
         //     vendorId = this.vendorService.listCollection.vendorId;
         // }
+        this.countrylist();
 
 
         if (vendorId) {
@@ -263,8 +263,8 @@ export class VendorGeneralInformationComponent implements OnInit {
                 this.sourceVendor.vendorTypeId = 2;
             }
 
-            if (this.vendorService.generalCollection) {
-                this.sourceVendor = this.vendorService.generalCollection;
+            if (this.vendorService.listCollection) {
+                this.sourceVendor = this.vendorService.listCollection;
             }
 
             // this.integrationCols = [
@@ -294,90 +294,84 @@ export class VendorGeneralInformationComponent implements OnInit {
 
     }
 
-
-
-    // window:keyup
-
-
     ngOnInit(): void {
-
-        this.countrylist(); 
+        // this.countrylist();
 
 
         // this.sourceVendor.vendorTypeId = 2;
-    
+
         // this.matSpinner = false;
-    // this.vendorService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-general-information';
-    // this.vendorService.bredcrumbObj.next(this.vendorService.currentUrl);
-    // this.vendorService.ShowPtab = true;
-    // this.vendorService.alertObj.next(this.vendorService.ShowPtab);
-    // this.activeIndex = 0;
-    // this.vendorService.indexObj.next(this.activeIndex);
-    // if( this.vendorService.isEditMode = true){
-    //     this.vendorService.listCollection = this.sourceVendor;
-    this.editModeDataBinding();
-    // }
-    
+        // this.vendorService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-general-information';
+        // this.vendorService.bredcrumbObj.next(this.vendorService.currentUrl);
+        // this.vendorService.ShowPtab = true;
+        // this.vendorService.alertObj.next(this.vendorService.ShowPtab);
+        // this.activeIndex = 0;
+        // this.vendorService.indexObj.next(this.activeIndex);
+        // if( this.vendorService.isEditMode = true){
+        //     this.vendorService.listCollection = this.sourceVendor;
+        this.editModeDataBinding();
+        // }
+
 
 
         this.loadData();
-    this.Capabilitydata();
-    
+        this.Capabilitydata();
+        this.countrylist();
         this.loadDataVendorData();
-    this.getAllVendorCapabilities();
-    this.getAllVendorClassification();
-    this.getVendorClassificationByVendorrId();
-    this.getAllIntegrations();
-    this.getVendorIntegrationByVendorrId();
-    
+        this.getAllVendorCapabilities();
+        this.getAllVendorClassification();
+        this.getVendorClassificationByVendorrId();
+        this.getAllIntegrations();
+        this.getVendorIntegrationByVendorrId();
+
         // this.options = {
-    //     center: { lat: 36.890257, lng: 30.707417 },
-    //     zoom: 12
-    // };
-    //     this.sourceVendor.vendorTypeId = 1;
-    //     if (this.vendorService.isEditMode == false) {
-    //         this.sourceVendor.vendorTypeId = 2;
-    //         this.viewName = "Create";
-    //         this.sourceVendor.isAddressForBilling = true;
-    //         this.sourceVendor.isAddressForShipping = true;
-    
+        //     center: { lat: 36.890257, lng: 30.707417 },
+        //     zoom: 12
+        // };
+        //     this.sourceVendor.vendorTypeId = 1;
+        //     if (this.vendorService.isEditMode == false) {
+        //         this.sourceVendor.vendorTypeId = 2;
+        //         this.viewName = "Create";
+        //         this.sourceVendor.isAddressForBilling = true;
+        //         this.sourceVendor.isAddressForShipping = true;
+
         //     }
-    //     if (this.vendorService.enableExternal == false) {
-    //         this.sourceVendor.vendorTypeId = 2;
-    //     }
-    
+        //     if (this.vendorService.enableExternal == false) {
+        //         this.sourceVendor.vendorTypeId = 2;
+        //     }
+
         //     if (this.vendorService.generalCollection) {
-    //         this.sourceVendor = this.vendorService.generalCollection;
-    //     }
-    
+        //         this.sourceVendor = this.vendorService.generalCollection;
+        //     }
+
         //     // this.integrationCols = [
-    //     //     { field: '145.com', header: '145.com' },
-    //     //     { field: 'Aeroxchange', header: 'Aeroxchange' },
-    //     //     { field: 'AvRef', header: 'AvRef' },
-    //     //     { field: 'ILS', header: 'ILS' },
-    //     //     { field: 'partsBase', header: 'Parts base' },
-    //     // ];
-    //     if (!this.intSelectedColumns) {
-    //         this.intSelectedColumns = this.cols;
-    //     }
-    //     // this.CreateVendorOnClick();
-    //     //console.log(this.sourceVendor, this.isEditMode, this.viewName, "vendor Information ");
-    
+        //     //     { field: '145.com', header: '145.com' },
+        //     //     { field: 'Aeroxchange', header: 'Aeroxchange' },
+        //     //     { field: 'AvRef', header: 'AvRef' },
+        //     //     { field: 'ILS', header: 'ILS' },
+        //     //     { field: 'partsBase', header: 'Parts base' },
+        //     // ];
+        //     if (!this.intSelectedColumns) {
+        //         this.intSelectedColumns = this.cols;
+        //     }
+        //     // this.CreateVendorOnClick();
+        //     //console.log(this.sourceVendor, this.isEditMode, this.viewName, "vendor Information ");
+
         //     if (!this.vendorService.isReset) {
-    //         if (this.viewName != "Edit") {
-    //             this.sourceVendor = {};
-    //             this.sourceVendor.vendorTypeId = 2;
-    //             this.sourceVendor.isAddressForBilling = true;
-    //             this.sourceVendor.isAddressForShipping = true;
-    //         }
-    //     }
-    //     console.log(this.vendorService.listCollection);
-    // }
-    // ngOnDestroy(): void {
-    //     this.sourceVendor = {};
-    //     this.vendorService.isReset = false;
-    // }
-    
+        //         if (this.viewName != "Edit") {
+        //             this.sourceVendor = {};
+        //             this.sourceVendor.vendorTypeId = 2;
+        //             this.sourceVendor.isAddressForBilling = true;
+        //             this.sourceVendor.isAddressForShipping = true;
+        //         }
+        //     }
+        //     console.log(this.vendorService.listCollection);
+        // }
+        // ngOnDestroy(): void {
+        //     this.sourceVendor = {};
+        //     this.vendorService.isReset = false;
+        // }
+
     }
 
     ngOnDestroy() {
@@ -390,117 +384,120 @@ export class VendorGeneralInformationComponent implements OnInit {
 
 
         if (this.vendorService.listCollection != null && this.vendorService.isEditMode == true) {
-    
+
             this.showLable = true;
-        this.viewName = "Edit";
-        
+            this.viewName = "Edit";
+
             this.local = this.vendorService.listCollection;
-        
+
             this.sourceVendor = this.vendorService.listCollection;
-        console.log(this.sourceVendor);
-        this.toGetVendorGeneralDocumentsList(this.sourceVendor.vendorId);
-        this.sourceVendor.address1 = this.vendorService.listCollection.address1;
-        this.sourceVendor.address2 = this.vendorService.listCollection.address2;
-        this.sourceVendor.address3 = this.vendorService.listCollection.address3;
-        this.sourceVendor.city = this.vendorService.listCollection.city;
-        this.sourceVendor.country = getObjectById('countries_id', this.vendorService.listCollection.countryId, this.allCountryinfo);
-        this.sourceVendor.stateOrProvince = this.vendorService.listCollection.stateOrProvince;
-        this.sourceVendor.postalCode = this.vendorService.listCollection.postalCode;
-        this.sourceVendor.vendorClassificationIds = this.sourceVendor.vendorClassifications;
-        
+            console.log(this.sourceVendor);
+            this.toGetVendorGeneralDocumentsList(this.sourceVendor.vendorId);
+            this.sourceVendor.address1 = this.vendorService.listCollection.address1;
+            this.sourceVendor.address2 = this.vendorService.listCollection.address2;
+            this.sourceVendor.address3 = this.vendorService.listCollection.address3;
+            this.sourceVendor.city = this.vendorService.listCollection.city;
+            this.sourceVendor.country = getObjectById('countries_id', this.vendorService.listCollection.countryId, this.allCountryinfo);
+            this.sourceVendor.stateOrProvince = this.vendorService.listCollection.stateOrProvince;
+            this.sourceVendor.postalCode = this.vendorService.listCollection.postalCode;
+            this.sourceVendor.vendorClassificationIds = this.sourceVendor.vendorClassifications;
+            if (this.sourceVendor.parent) {
+                this.sourceVendor.vendorParentId = getObjectById('vendorId', this.sourceVendor.vendorParentId, this.allActions);
+            }
+
         }
-    if (this.customerser.isCustomerAlsoVendor == true) {
-        this.sourceVendor = this.customerser.localCollectiontoVendor;
-        this.sourceVendor.vendorEmail = this.customerser.localCollectiontoVendor.email;
-        this.sourceVendor.vendorPhone = this.customerser.localCollectiontoVendor.customerPhone;
-        this.sourceVendor.vendorName = this.customerser.localCollectiontoVendor.name;
-        this.sourceVendor.vendorCode = this.customerser.localCollectiontoVendor.customerCode;
-        this.sourceVendor.doingBusinessAsName = this.customerser.localCollectiontoVendor.doingBuinessAsName;
-        this.sourceVendor.postalCode = this.customerser.localCollectiontoVendor.postalCode;
-        
+        if (this.customerser.isCustomerAlsoVendor == true) {
+            this.sourceVendor = this.customerser.localCollectiontoVendor;
+            this.sourceVendor.vendorEmail = this.customerser.localCollectiontoVendor.email;
+            this.sourceVendor.vendorPhone = this.customerser.localCollectiontoVendor.customerPhone;
+            this.sourceVendor.vendorName = this.customerser.localCollectiontoVendor.name;
+            this.sourceVendor.vendorCode = this.customerser.localCollectiontoVendor.customerCode;
+            this.sourceVendor.doingBusinessAsName = this.customerser.localCollectiontoVendor.doingBuinessAsName;
+            this.sourceVendor.postalCode = this.customerser.localCollectiontoVendor.postalCode;
+
         }
-    
+    }
 
     closethis() {
-    this.closeCmpny = false;
-    
-public allWorkFlows: any[] = [];
+        this.closeCmpny = false;
+    }
+    public allWorkFlows: any[] = [];
     private loadData() {
         this.alertService.startLoadingMessage();
-    this.loadingIndicator = true;
-    this.vendorService.getWorkFlows().subscribe(
-        results => this.onDataLoadSuccessful(results[0]),
-        error => this.onDataLoadFailed(error)
-        
-    
-private onDataLoadSuccessful(allWorkFlows: any[]) {
+        this.loadingIndicator = true;
+        this.vendorService.getWorkFlows().subscribe(
+            results => this.onDataLoadSuccessful(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
+    }
+    private onDataLoadSuccessful(allWorkFlows: any[]) {
         this.alertService.stopLoadingMessage();
-    this.loadingIndicator = false;
-    this.dataSource.data = allWorkFlows;
-    this.allActions = allWorkFlows;
-    
+        this.loadingIndicator = false;
+        this.dataSource.data = allWorkFlows;
+        this.allActions = allWorkFlows;
+    }
 
     //get Country List
     private countrylist() {
         this.alertService.startLoadingMessage();
-    this.loadingIndicator = true;
-    this.vendorService.getCountrylist().subscribe(
-        results => this.onDatacountrySuccessful(results[0]),
-        error => this.onDataLoadFailed(error)
-        
-    
-private onDatacountrySuccessful(allWorkFlows: any[]) {
+        this.loadingIndicator = true;
+        this.vendorService.getCountrylist().subscribe(
+            results => this.onDatacountrySuccessful(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
+    }
+    private onDatacountrySuccessful(allWorkFlows: any[]) {
         this.alertService.stopLoadingMessage();
-    this.loadingIndicator = false;
-    this.dataSource.data = allWorkFlows;
-    this.allCountryinfo = allWorkFlows;
-    // if (this.vendorService.isEditMode && this.sourceVendor.country != null) {
-    //     this.sourceVendor.country = getObjectById('countries_id', this.sourceVendor.country, this.allCountryinfo);
-    // }
-    
-//Load Capability Data
+        this.loadingIndicator = false;
+        this.dataSource.data = allWorkFlows;
+        this.allCountryinfo = allWorkFlows;
+        if (this.vendorService.isEditMode && this.sourceVendor.country != null) {
+            // this.sourceVendor.country = getObjectById('countries_id', this.sourceVendor.country, this.allCountryinfo);
+        }
+    }
+    //Load Capability Data
     private Capabilitydata() {
         this.alertService.startLoadingMessage();
-    this.loadingIndicator = true;
-    this.vendorService.getCapabilibylist().subscribe(
-        results => this.onCapabilitySuccessful(results[0]),
-        error => this.onDataLoadFailed(error)
-        
-    
-private onCapabilitySuccessful(allWorkFlows: any[]) {
+        this.loadingIndicator = true;
+        this.vendorService.getCapabilibylist().subscribe(
+            results => this.onCapabilitySuccessful(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
+    }
+    private onCapabilitySuccessful(allWorkFlows: any[]) {
         this.alertService.stopLoadingMessage();
-    this.loadingIndicator = false;
-    this.dataSource.data = allWorkFlows;
-    this.allCapbilityClassInfo = allWorkFlows;
-    
+        this.loadingIndicator = false;
+        this.dataSource.data = allWorkFlows;
+        this.allCapbilityClassInfo = allWorkFlows;
+    }
 
     public addEntity() {
         let dialogRef = this.dialog.open(AddActionsDialogComponent,
-        {
-            panelClass: 'mat-dialog-md',
-            data: { role: "" }
-            
-        ogRef.afterClosed().subscribe(role => {
-        if (role) {
-        }
-        
-    
-//Load Address 
+            {
+                panelClass: 'mat-dialog-md',
+                data: { role: "" }
+            });
+        dialogRef.afterClosed().subscribe(role => {
+            if (role) {
+            }
+        });
+    }
+    //Load Address 
     private loadAddressDara() {
         this.alertService.startLoadingMessage();
-    this.loadingIndicator = true;
-    this.vendorService.getAddressDtails().subscribe(
-        results => this.onAddressDataLoadSuccessful(results[0]),
-        error => this.onDataLoadFailed(error)
-        
-    
-private onAddressDataLoadSuccessful(alladdress: any[]) {
+        this.loadingIndicator = true;
+        this.vendorService.getAddressDtails().subscribe(
+            results => this.onAddressDataLoadSuccessful(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
+    }
+    private onAddressDataLoadSuccessful(alladdress: any[]) {
         this.alertService.stopLoadingMessage();
-    this.loadingIndicator = false;
-    this.dataSource.data = alladdress;
-    this.allAddresses = alladdress;
-    this.addressId = this.allAddresses[0].addressId;
-    
+        this.loadingIndicator = false;
+        this.dataSource.data = alladdress;
+        this.allAddresses = alladdress;
+        this.addressId = this.allAddresses[0].addressId;
+    }
 
     //getlatlng(address) {
     //    this.checkAddress = true;
@@ -518,713 +515,734 @@ private onAddressDataLoadSuccessful(alladdress: any[]) {
     //Load Master Companies
     private loadMasterCompanies() {
         this.alertService.startLoadingMessage();
-    this.loadingIndicator = true;
-    this.masterComapnyService.getMasterCompanies().subscribe(
-        results => this.onDataMasterCompaniesLoadSuccessful(results[0]),
-        error => this.onDataLoadFailed(error)
-        
-    
-private onDataMasterCompaniesLoadSuccessful(allComapnies: MasterCompany[]) {
+        this.loadingIndicator = true;
+        this.masterComapnyService.getMasterCompanies().subscribe(
+            results => this.onDataMasterCompaniesLoadSuccessful(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
+    }
+    private onDataMasterCompaniesLoadSuccessful(allComapnies: MasterCompany[]) {
         this.alertService.stopLoadingMessage();
-    this.loadingIndicator = false;
-    this.allComapnies = allComapnies;
-    
-openClassification(content) {
-    this.isEditMode = false;
-    this.isDeleteMode = false;
-    this.isSaving = true;
-    this.loadMasterCompanies();
-    this.sourceAction = new VendorClassification();
-    this.sourceAction.isActive = true;
-    this.vendorName = "";
-    this.vendorClassName = "";
-    this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
-    
+        this.loadingIndicator = false;
+        this.allComapnies = allComapnies;
+    }
+    openClassification(content) {
+        this.isEditMode = false;
+        this.isDeleteMode = false;
+        this.isSaving = true;
+        this.loadMasterCompanies();
+        this.sourceAction = new VendorClassification();
+        this.sourceAction.isActive = true;
+        this.vendorName = "";
+        this.vendorClassName = "";
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
+
         // below line doing nothing
-    this.modal.result.then(() => {
-        console.log('When user closes');
-        ) => { console.log('Backdrop click') })
-    
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+    }
 
     saveVendorClassificationDetails() {
-    this.isSaving = true;
-    if (this.vendorClassName.toLowerCase().trim() == "") {
-        this.alertService.showMessage("Empty", 'Cannot Submit Empty', MessageSeverity.warn);
-        return;
-        
-    for (let i = 0; i < this.allVendorClassInfo.length; i++) {
-        let vendorName = this.allVendorClassInfo[i].classificationName;
-        if (vendorName.toLowerCase().localeCompare(this.vendorClassName.toLowerCase()) == 0) {
-            this.alertService.showMessage("Duplicate", 'Already Exist', MessageSeverity.warn);
+        this.isSaving = true;
+        if (this.vendorClassName.toLowerCase().trim() == "") {
+            this.alertService.showMessage("Empty", 'Cannot Submit Empty', MessageSeverity.warn);
             return;
-            
-        else {
         }
-        
-    if (this.isEditMode == false) {
-        this.sourceAction.createdBy = this.userName;
-        this.sourceAction.updatedBy = this.userName;
-        this.sourceAction.classificationName = this.vendorClassName;
-        this.sourceAction.masterCompanyId = 1;
-        this.vendorclassificationService.newVendorClassification(this.sourceAction).subscribe(data => {
-            if (data) {
-                this.sourceVendor.vendorClassificationId = data.vendorClassificationId
-                
-            this.alertService.showMessage("Success", 'Added New Vendor Classification Successfully.', MessageSeverity.success);
-            
-                this.loadDataVendorData();
-            
-        
-    else {
-    
+        for (let i = 0; i < this.allVendorClassInfo.length; i++) {
+            let vendorName = this.allVendorClassInfo[i].classificationName;
+            if (vendorName.toLowerCase().localeCompare(this.vendorClassName.toLowerCase()) == 0) {
+                this.alertService.showMessage("Duplicate", 'Already Exist', MessageSeverity.warn);
+                return;
+            }
+            else {
+            }
+        }
+        if (this.isEditMode == false) {
+            this.sourceAction.createdBy = this.userName;
             this.sourceAction.updatedBy = this.userName;
-        this.sourceAction.classificationName = this.vendorClassName;
-        this.sourceAction.masterCompanyId = 1;
-        this.vendorclassificationService.updateVendorClassification(this.sourceAction).subscribe(
-            response => this.saveCompleted(this.sourceAction),
-            error => this.saveFailedHelper(error));
-            
-    this.modal.close();
-    
+            this.sourceAction.classificationName = this.vendorClassName;
+            this.sourceAction.masterCompanyId = 1;
+            this.vendorclassificationService.newVendorClassification(this.sourceAction).subscribe(data => {
+                if (data) {
+                    this.sourceVendor.vendorClassificationId = data.vendorClassificationId
+                }
+                this.alertService.showMessage("Success", 'Added New Vendor Classification Successfully.', MessageSeverity.success);
+
+                this.loadDataVendorData();
+            })
+        }
+        else {
+
+            this.sourceAction.updatedBy = this.userName;
+            this.sourceAction.classificationName = this.vendorClassName;
+            this.sourceAction.masterCompanyId = 1;
+            this.vendorclassificationService.updateVendorClassification(this.sourceAction).subscribe(
+                response => this.saveCompleted(this.sourceAction),
+                error => this.saveFailedHelper(error));
+        }
+        this.modal.close();
+    }
 
     async getAllVendorClassification() {
-    await this.commonService.smartDropDownList('VendorClassification', 'VendorClassificationId', 'ClassificationName').subscribe(res => {
-        this.allvendorclassificationInfo = res;
-        
-    
+        await this.commonService.smartDropDownList('VendorClassification', 'VendorClassificationId', 'ClassificationName').subscribe(res => {
+            this.allvendorclassificationInfo = res;
+        });
+    }
 
     async  getVendorClassificationByVendorrId() {
-    if (this.sourceVendor.vendorId > 0) {
-        await this.commonService.getClassificationMapping(this.sourceVendor.vendorId, 3).subscribe(res => {
-            this.sourceVendor.vendorClassificationIds = res.map(x => x.vendorClassificationId);
-            
+        if (this.sourceVendor.vendorId > 0) {
+            await this.commonService.getClassificationMapping(this.sourceVendor.vendorId, 3).subscribe(res => {
+                this.sourceVendor.vendorClassificationIds = res.map(x => x.vendorClassificationId);
+
             });
-        
-    
+        }
+
     }
 
     async getAllIntegrations() {
-    await this.integrationService.getWorkFlows().subscribe(res => {
-        const responseData = res[0]
-        this.integrationOriginalList = responseData.map(x => {
-            return {
-                label: x.description, value: x.integrationPortalId
-                
-            
-        
+        await this.integrationService.getWorkFlows().subscribe(res => {
+            const responseData = res[0]
+            this.integrationOriginalList = responseData.map(x => {
+                return {
+                    label: x.description, value: x.integrationPortalId
+                }
+            })
+
         })
-    
+    }
 
 
     async  getVendorIntegrationByVendorrId() {
-    if (this.sourceVendor.vendorId > 0) {
-        await this.commonService.getIntegrationMapping(this.sourceVendor.vendorId, 3).subscribe(res => {
-            this.sourceVendor.integrationPortalIds = res.map(x => x.integrationPortalId);
-            
+        if (this.sourceVendor.vendorId > 0) {
+            await this.commonService.getIntegrationMapping(this.sourceVendor.vendorId, 3).subscribe(res => {
+                this.sourceVendor.integrationPortalIds = res.map(x => x.integrationPortalId);
+
             });
-        
-    
+        }
+
     }
 
 
     //Load Vendor Data
     private loadDataVendorData() {
         this.alertService.startLoadingMessage();
-    this.loadingIndicator = true;
-    this.vendorclassificationService.getActiveVendorClassificationEndpointList().subscribe(
-        results => this.onVendorDataLoad(results[0]),
-        error => this.onDataLoadFailed(error)
-        
-    
-private onVendorDataLoad(getActiveVendorClassificationList: VendorClassification[]) {
+        this.loadingIndicator = true;
+        this.vendorclassificationService.getActiveVendorClassificationEndpointList().subscribe(
+            results => this.onVendorDataLoad(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
+    }
+    private onVendorDataLoad(getActiveVendorClassificationList: VendorClassification[]) {
         this.alertService.stopLoadingMessage();
-    this.loadingIndicator = false;
-    this.dataSource.data = getActiveVendorClassificationList;
-    this.allVendorClassInfo = getActiveVendorClassificationList;
-    
-filterVendors(event) {
-    this.vendorCollection = [];
-    for (let i = 0; i < this.allVendorClassInfo.length; i++) {
-        let vendorName = this.allVendorClassInfo[i].classificationName;
-        if (vendorName != "" && vendorName != null && vendorName != "Null") {
-            if (vendorName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-                this.vendorCollection.push(vendorName);
-                
-            
-        
-    
-public applyFilter(filterValue: string) {
+        this.loadingIndicator = false;
+        this.dataSource.data = getActiveVendorClassificationList;
+        this.allVendorClassInfo = getActiveVendorClassificationList;
+    }
+    filterVendors(event) {
+        this.vendorCollection = [];
+        for (let i = 0; i < this.allVendorClassInfo.length; i++) {
+            let vendorName = this.allVendorClassInfo[i].classificationName;
+            if (vendorName != "" && vendorName != null && vendorName != "Null") {
+                if (vendorName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+                    this.vendorCollection.push(vendorName);
+                }
+            }
+        }
+    }
+    public applyFilter(filterValue: string) {
         this.dataSource.filter = filterValue;
-    
-private refresh() {
+    }
+    private refresh() {
         this.applyFilter(this.dataSource.filter);
-    
-private onvendorloadsuccessfull(allWorkFlows: any[]) {
+    }
+    private onvendorloadsuccessfull(allWorkFlows: any[]) {
         this.vendorInfoByName = allWorkFlows[0]
-    this.sourceVendor = this.vendorInfoByName;
-    
-filterVendorNames(event) {
-    this.vendorNames = [];
-    for (let i = 0; i < this.allActions.length; i++) {
-        let vendorName = this.allActions[i].vendorName;
-        if (vendorName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-            this.VendorNamecoll.push([{
-                "vendorId": this.allActions[i].vendorId,
-                "vendorName": vendorName
-                
-                this.vendorNames.push(vendorName);
-                
-        
-    
-filterVendorParentNames(event) {
-    this.vendorNames = [];
-    for (let i = 0; i < this.allActions.length; i++) {
-        let vendorParentName = this.allActions[i].vendorName;
-        if (vendorParentName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-            this.vendorNames.push(vendorParentName);
-            
-        
-    
+        this.sourceVendor = this.vendorInfoByName;
+    }
+    filterVendorNames(event) {
+        this.vendorNames = [];
+        for (let i = 0; i < this.allActions.length; i++) {
+            let vendorName = this.allActions[i].vendorName;
+            if (vendorName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+                this.VendorNamecoll.push([{
+                    "vendorId": this.allActions[i].vendorId,
+                    "vendorName": vendorName
+                }]),
+                    this.vendorNames.push(vendorName);
+            }
+        }
+    }
+
+
+
+
+
+    filterVendorParentNames(event) {
+        this.vendorParentNames = this.allActions;
+
+        this.vendorParentNames = [...this.allActions.filter(x => {
+            return x.vendorName.toLowerCase().includes(event.query.toLowerCase());
+        })]
+        // this.vendorNames = [];
+        // for (let i = 0; i < this.allActions.length; i++) {
+        //     let vendorParentName = this.allActions[i].vendorName;
+        //     if (vendorParentName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+        //         this.vendorNames.push(vendorParentName);
+        //     }
+        // }
+    }
 
     filterVendorCodes(event) {
-    this.vendorCodes = [];
-    for (let i = 0; i < this.allActions.length; i++) {
-        let vendorCode = this.allActions[i].vendorCode;
-        if (vendorCode.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-            this.VendorCodesColl.push([{
-                "vendorId": this.allActions[i].vendorClassificationId,
-                "vendorCode": vendorCode
-                
-                this.vendorCodes.push(vendorCode);
-                
-        
-    
+        this.vendorCodes = [];
+        for (let i = 0; i < this.allActions.length; i++) {
+            let vendorCode = this.allActions[i].vendorCode;
+            if (vendorCode.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+                this.VendorCodesColl.push([{
+                    "vendorId": this.allActions[i].vendorClassificationId,
+                    "vendorCode": vendorCode
+                }]),
+                    this.vendorCodes.push(vendorCode);
+            }
+        }
+    }
 
     private onHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {
         this.alertService.stopLoadingMessage();
-    this.loadingIndicator = false;
-    this.auditHisory = auditHistory;
-    this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
-    // does nothing here too
-    this.modal.result.then(() => {
-        console.log('When user closes');
-        ) => { console.log('Backdrop click') })
-    
-private onDataLoadFailed(error: any) {
+        this.loadingIndicator = false;
+        this.auditHisory = auditHistory;
+        this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
+        // does nothing here too
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+    }
+    private onDataLoadFailed(error: any) {
         this.alertService.stopLoadingMessage();
-    this.loadingIndicator = false;
-    
-private loadGeneralObject() {
+        this.loadingIndicator = false;
+    }
+    private loadGeneralObject() {
         this.alertService.startLoadingMessage();
-    this.loadingIndicator = true;
-    this.vendorService.getGeneralObj().subscribe(
-        results => this.onGeneralObjUrl(results[0]),
-        error => this.onDataLoadFailed(error)
-        
-    
-private onGeneralObjUrl(allWorkFlows: any) {
+        this.loadingIndicator = true;
+        this.vendorService.getGeneralObj().subscribe(
+            results => this.onGeneralObjUrl(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
+    }
+    private onGeneralObjUrl(allWorkFlows: any) {
         this.alertService.stopLoadingMessage();
-    this.loadingIndicator = false;
-    this.dataSource.data = allWorkFlows;
-    this.sourceVendor = allWorkFlows;
-    
-private ongeneralDataLoadSuccessful(allWorkFlows: any[]) {
+        this.loadingIndicator = false;
+        this.dataSource.data = allWorkFlows;
+        this.sourceVendor = allWorkFlows;
+    }
+    private ongeneralDataLoadSuccessful(allWorkFlows: any[]) {
         this.alertService.stopLoadingMessage();
-    this.loadingIndicator = false;
-    this.dataSource.data = allWorkFlows;
-    this.allgeneralInfo = allWorkFlows;
-    
-open(content) {
-    this.isEditMode = false;
-    this.isDeleteMode = false;
-    this.isSaving = true;
-    this.loadMasterCompanies();
-    this.toGetVendorGeneralDocumentsList(this.sourceVendor.vendorId);
-    this.actionName = "";
-    this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
-    //remove
-    this.modal.result.then(() => {
-        console.log('When user closes');
-        ) => { console.log('Backdrop click') })
-    
+        this.loadingIndicator = false;
+        this.dataSource.data = allWorkFlows;
+        this.allgeneralInfo = allWorkFlows;
+    }
+    open(content) {
+        this.isEditMode = false;
+        this.isDeleteMode = false;
+        this.isSaving = true;
+        this.loadMasterCompanies();
+        this.toGetVendorGeneralDocumentsList(this.sourceVendor.vendorId);
+        this.actionName = "";
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
+        //remove
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+    }
 
     openDelete(content, row) {
-    this.isEditMode = false;
-    this.isDeleteMode = true;
-    this.sourceVendor = row;
-    this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
-    this.modal.result.then(() => {
-        console.log('When user closes');
-        ) => { console.log('Backdrop click') })
-    
+        this.isEditMode = false;
+        this.isDeleteMode = true;
+        this.sourceVendor = row;
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+    }
 
     openEdit(content, row) {
-    debugger
-    this.toGetVendorGeneralDocumentsList(this.sourceVendor.vendorId);
-    this.isEditMode = true;
-    this.isSaving = true;
-    this.sourceVendor = row;
-    this.loadMasterCompanies();
-    this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
-    this.modal.result.then(() => {
-        console.log('When user closes');
-        ) => { console.log('Backdrop click') })
-    
-openView(content, row) {
-    this.sourceVendor = row;
-    this.action_name = row.description;
-    this.memo = row.memo;
-    this.createdBy = row.createdBy;
-    this.updatedBy = row.updatedBy;
-    this.createddate = row.createdDate;
-    this.updatedDate = row.updatedDate;
-    this.loadMasterCompanies();
-    this.toGetVendorGeneralDocumentsList(this.sourceVendor.vendorId);
-    this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
-    this.modal.result.then(() => {
-        console.log('When user closes');
-        ) => { console.log('Backdrop click') })
-    
-openHelpText(content) {
-    this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
-    this.modal.result.then(() => {
-        console.log('When user closes');
-        ) => { console.log('Backdrop click') })
-    
+        debugger
+        this.toGetVendorGeneralDocumentsList(this.sourceVendor.vendorId);
+        this.isEditMode = true;
+        this.isSaving = true;
+        this.sourceVendor = row;
+        this.loadMasterCompanies();
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+    }
+    openView(content, row) {
+        this.sourceVendor = row;
+        this.action_name = row.description;
+        this.memo = row.memo;
+        this.createdBy = row.createdBy;
+        this.updatedBy = row.updatedBy;
+        this.createddate = row.createdDate;
+        this.updatedDate = row.updatedDate;
+        this.loadMasterCompanies();
+        this.toGetVendorGeneralDocumentsList(this.sourceVendor.vendorId);
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+    }
+    openHelpText(content) {
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+    }
 
     openHist(content, row) {
-    this.alertService.startLoadingMessage();
-    this.loadingIndicator = true;
-    this.sourceVendor = row;
-    
-editItemAndCloseModel(goNxt?: any) {
-    this.isSaving = true; 
-    this.isEditMode = true;
-    if (!(this.sourceVendor.vendorName && this.sourceVendor.vendorCode && this.sourceVendor.vendorEmail && this.sourceVendor.vendorPhone && this.sourceVendor.address1 && this.sourceVendor.city
-        && this.sourceVendor.postalCode && this.sourceVendor.country && this.sourceVendor.vendorClassificationIds
-        
-        //this.display = true;
-        this.modelValue = true;
-        
-    if (this.sourceVendor.vendorName && this.sourceVendor.vendorCode && this.sourceVendor.vendorEmail && this.sourceVendor.vendorPhone && this.sourceVendor.address1 && this.sourceVendor.city
-        && this.sourceVendor.postalCode && this.sourceVendor.country && this.sourceVendor.vendorClassificationIds) {
-        
-            this.sourceVendor.country = editValueAssignByCondition('countries_id', this.sourceVendor.country);
-        
-            console.log(this.sourceVendor);
-        if (!this.sourceVendor.vendorId) {
-            this.sourceVendor.createdBy = this.userName;
-            this.sourceVendor.updatedBy = this.userName;
-            this.sourceVendor.masterCompanyId = 1;
-            this.sourceVendor.isActive = true;
-            if (this.sourceVendor.parent == false || this.sourceVendor.parent == null) {
-                this.sourceVendor.vendorParentName = '';
-                
-            
-                this.vendorService.newAction(this.sourceVendor).subscribe(data => {
-            
-                    const vdata = {
-                    vendorId: data.vendorId,
-                    masterCompanyId: 1,
-                    createdBy: this.userName,
-                    updatedBy: this.userName
-                    
-                
-                    for (var key in vdata) {
-                    this.formData.append(key, vdata[key]);
-                    
-                //this.vendorService.vendorGeneralDocumentUploadEndpoint(this.formData, this.sourceVendor.vendorId,3,'Vendor',this.userName,1);
-                this.vendorService.vendorGeneralFileUpload(this.formData).subscribe(res => {
-                    this.formData = new FormData();
-                    this.toGetVendorGeneralDocumentsList(this.sourceVendor.vendorId);
-                    
-                this.sourceVendor.updatedBy = this.userName;
-                this.localCollection = data;
-                this.sourceVendor = data;
-                this.sourceVendor.address1 = data.address.line1;
-                this.sourceVendor.address2 = data.address.line2;
-                this.sourceVendor.address3 = data.address.line3;
-                this.sourceVendor.city = data.address.city;
-                this.sourceVendor.country =  data.address.country;
-                this.sourceVendor.stateOrPr ince = data.address.stateOrProvince;
-                this.sourceVendor.postalCode = data.address.postalCode;
-                this.vendorService.generalCollection = this.localCollection;
-                this.vendorService.contactCollection = this.localCollection;
-                this.vendorService.financeCollection = this.localCollection;
-                this.vendorService.paymentCollection = this.localCollection;
-                this.vendorService.shippingCollection = this.localCollection;
-                if (this.sourceVendor.isVendorAlsoCustomer == true) {
-                    this.vendorService.isVendorAlsoCustomer = this.sourceVendor.isVendorAlsoCustomer;
-                    this.vendorService.localCollectiontoCustomer = this.sourceVendor;
-                    
-                this.viewName = "Edit";
-                this.vendorService.isEditMode = true;
-                this.vendorService.listCollection = this.sourceVendor;
-                // this.activeIndex = 0;
-                // this.stepper.changeStep(this.activeIndex);
-                // this.vendorService.indexObj.next(this.activeIndex);
-                this.savesuccessCompleted(this.sourceVendor, goNxt);
-                
-            
-        
-            else {
-            this.sourceVendor.updatedBy = this.userName;
-            if (this.sourceVendor.parent == false || this.sourceVendor.parent == null) {
-                this.sourceVendor.vendorParentName = '';
-                
-            
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
+        this.sourceVendor = row;
+    }
+    editItemAndCloseModel(goNxt?: any) {
+        this.isSaving = true;
+        this.isEditMode = true;
+        if (!(this.sourceVendor.vendorName && this.sourceVendor.vendorCode && this.sourceVendor.vendorEmail && this.sourceVendor.vendorPhone && this.sourceVendor.address1 && this.sourceVendor.city
+            && this.sourceVendor.postalCode && this.sourceVendor.country && this.sourceVendor.vendorClassificationIds
+        )) {
+            //this.display = true;
+            this.modelValue = true;
+        }
+        if (this.sourceVendor.vendorName && this.sourceVendor.vendorCode && this.sourceVendor.vendorEmail && this.sourceVendor.vendorPhone && this.sourceVendor.address1 && this.sourceVendor.city
+            && this.sourceVendor.postalCode && this.sourceVendor.country && this.sourceVendor.vendorClassificationIds) {
 
-                const { vendorContact, address, ...newSourceVendor } = this.sourceVendor;
-            
-                this.vendorService.updateVendorDetails(newSourceVendor).subscribe(
-                data => {
+            this.sourceVendor.country = editValueAssignByCondition('countries_id', this.sourceVendor.country);
+            console.log(this.sourceVendor);
+            if (!this.sourceVendor.vendorId) {
+                this.sourceVendor.createdBy = this.userName;
+                this.sourceVendor.updatedBy = this.userName;
+                this.sourceVendor.masterCompanyId = 1;
+                this.sourceVendor.isActive = true;
+                console.log('Test');
+
+                if (this.sourceVendor.parent) {
+
+                    this.sourceVendor.vendorParentId = editValueAssignByCondition('vendorId', this.sourceVendor.vendorParentId);
+                    console.log(this.sourceVendor.vendorParentId);
+
+
+                }
+                if (this.sourceVendor.parent == false || this.sourceVendor.parent == null) {
+                    this.sourceVendor.vendorParentName = '';
+                }
+
+                this.vendorService.newAction(this.sourceVendor).subscribe(data => {
+
                     const vdata = {
-                        vendorId: this.sourceVendor.vendorId,
+                        vendorId: data.vendorId,
                         masterCompanyId: 1,
                         createdBy: this.userName,
                         updatedBy: this.userName
-                        
-                    
-                        for (var key in vdata) {
+                    }
+
+                    for (var key in vdata) {
                         this.formData.append(key, vdata[key]);
-                        
+                    }
                     //this.vendorService.vendorGeneralDocumentUploadEndpoint(this.formData, this.sourceVendor.vendorId,3,'Vendor',this.userName,1);
                     this.vendorService.vendorGeneralFileUpload(this.formData).subscribe(res => {
                         this.formData = new FormData();
                         this.toGetVendorGeneralDocumentsList(this.sourceVendor.vendorId);
-                        
-                    
-                        this.sourceVendor.updatedBy = this.userName;
+                    });
+                    this.sourceVendor.updatedBy = this.userName;
                     this.localCollection = data;
                     this.sourceVendor = data;
-                    
-                        this.sourceVendor.address1 = data.address.line1;
+                    this.sourceVendor.address1 = data.address.line1;
                     this.sourceVendor.address2 = data.address.line2;
                     this.sourceVendor.address3 = data.address.line3;
                     this.sourceVendor.city = data.address.city;
                     this.sourceVendor.country = data.address.country;
                     this.sourceVendor.stateOrProvince = data.address.stateOrProvince;
                     this.sourceVendor.postalCode = data.address.postalCode;
+                    // this.sourceVendor.vendorParentId = getObjectById('vendorId', this.sourceVendor.vendorParentId, this.vendorCollection)
                     this.vendorService.generalCollection = this.localCollection;
                     this.vendorService.contactCollection = this.localCollection;
                     this.vendorService.financeCollection = this.localCollection;
                     this.vendorService.paymentCollection = this.localCollection;
                     this.vendorService.shippingCollection = this.localCollection;
+                    if (this.sourceVendor.isVendorAlsoCustomer == true) {
+                        this.vendorService.isVendorAlsoCustomer = this.sourceVendor.isVendorAlsoCustomer;
+                        this.vendorService.localCollectiontoCustomer = this.sourceVendor;
+                    }
+                    this.viewName = "Edit";
+                    this.vendorService.isEditMode = true;
+                    this.vendorService.listCollection = this.sourceVendor;
                     // this.activeIndex = 0;
                     // this.stepper.changeStep(this.activeIndex);
                     // this.vendorService.indexObj.next(this.activeIndex);
-                    this.vendorService.isEditMode = true;
-                    this.vendorService.listCollection = this.sourceVendor;
                     this.savesuccessCompleted(this.sourceVendor, goNxt);
-                    
-                
-        
-    else {
-    }
-    
+                })
+            }
+
+            else {
+                this.sourceVendor.updatedBy = this.userName;
+                if (this.sourceVendor.parent == false || this.sourceVendor.parent == null) {
+                    this.sourceVendor.vendorParentName = '';
+                }
+
+                if (this.sourceVendor.parent) {
+                    this.sourceVendor.vendorParentId = editValueAssignByCondition('vendorId', this.sourceVendor.vendorParentId);
+                }
+                const { vendorContact, address, ...newSourceVendor } = this.sourceVendor;
+
+                this.vendorService.updateVendorDetails(newSourceVendor).subscribe(
+                    data => {
+                        const vdata = {
+                            vendorId: this.sourceVendor.vendorId,
+                            masterCompanyId: 1,
+                            createdBy: this.userName,
+                            updatedBy: this.userName
+                        }
+
+                        for (var key in vdata) {
+                            this.formData.append(key, vdata[key]);
+                        }
+                        //this.vendorService.vendorGeneralDocumentUploadEndpoint(this.formData, this.sourceVendor.vendorId,3,'Vendor',this.userName,1);
+                        this.vendorService.vendorGeneralFileUpload(this.formData).subscribe(res => {
+                            this.formData = new FormData();
+                            this.toGetVendorGeneralDocumentsList(this.sourceVendor.vendorId);
+                        });
+
+                        this.sourceVendor.updatedBy = this.userName;
+                        this.localCollection = data;
+                        this.sourceVendor = data;
+                        // this.sourceVendor.vendorParentId = getObjectById('vendorId', this.sourceVendor.vendorParentId, this.vendorCollection)
+                        this.sourceVendor.address1 = data.address.line1;
+                        this.sourceVendor.address2 = data.address.line2;
+                        this.sourceVendor.address3 = data.address.line3;
+                        this.sourceVendor.city = data.address.city;
+                        this.sourceVendor.country = data.address.country;
+                        this.sourceVendor.stateOrProvince = data.address.stateOrProvince;
+                        this.sourceVendor.postalCode = data.address.postalCode;
+                        this.vendorService.generalCollection = this.localCollection;
+                        this.vendorService.contactCollection = this.localCollection;
+                        this.vendorService.financeCollection = this.localCollection;
+                        this.vendorService.paymentCollection = this.localCollection;
+                        this.vendorService.shippingCollection = this.localCollection;
+                        // this.activeIndex = 0;
+                        // this.stepper.changeStep(this.activeIndex);
+                        // this.vendorService.indexObj.next(this.activeIndex);
+                        this.vendorService.isEditMode = true;
+                        this.vendorService.listCollection = this.sourceVendor;
+                        this.savesuccessCompleted(this.sourceVendor, goNxt);
+                    })
+            }
+        }
+        else {
+        }
+
 
     }
 
     nextClick() {
-    this.vendorService.vendorgeneralcollection = this.local;
-    // this.activeIndex = 1;
-    // this.vendorService.indexObj.next(this.activeIndex);
-    // this.vendorService.changeStep('Contacts');
-    // this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-contacts');
-    this.activeIndex = 2;
-    this.vendorService.changeofTab(this.activeIndex);
-    // this.vendorService.indexObj.next(this.activeIndex);
-    // this.vendorService.changeStep('Capabilities');
-    // this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-capes');
-    
+        this.vendorService.vendorgeneralcollection = this.local;
+        // this.activeIndex = 1;
+        // this.vendorService.indexObj.next(this.activeIndex);
+        // this.vendorService.changeStep('Contacts');
+        // this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-contacts');
+        this.activeIndex = 2;
+        this.vendorService.changeofTab(this.activeIndex);
+        // this.vendorService.indexObj.next(this.activeIndex);
+        // this.vendorService.changeStep('Capabilities');
+        // this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-capes');
+    }
 
     // CreateVendorOnClick() {
-//     this.activeIndex = 1;
-//     this.vendorService.changeofTab(this.activeIndex);
-//     // this.vendorService.indexObj.next(this.activeIndex);
-//     // this.vendorService.changeStep('General Information');
-//     // this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-general-information');
-// }
+    //     this.activeIndex = 1;
+    //     this.vendorService.changeofTab(this.activeIndex);
+    //     // this.vendorService.indexObj.next(this.activeIndex);
+    //     // this.vendorService.changeStep('General Information');
+    //     // this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-general-information');
+    // }
 
     dismissModel() {
-    this.isDeleteMode = false;
-    this.isEditMode = false;
-    this.modal.close();
-    
+        this.isDeleteMode = false;
+        this.isEditMode = false;
+        this.modal.close();
+    }
 
     private saveCompleted(user?: any) {
-        this.isSaving = false; 
-    if (this.isDeleteMode == true) {
-        this.alertService.showMessage("Success", `Action was deleted successfully`, MessageSeverity.success);
-        this.isDeleteMode = false;
-        
-    else {
-        this.alertService.showMessage("Success", `Action was edited successfully`, MessageSeverity.success);
-        
-    this.loadData();
-    
+        this.isSaving = false;
+        if (this.isDeleteMode == true) {
+            this.alertService.showMessage("Success", `Action was deleted successfully`, MessageSeverity.success);
+            this.isDeleteMode = false;
+        }
+        else {
+            this.alertService.showMessage("Success", `Action was edited successfully`, MessageSeverity.success);
+        }
+        this.loadData();
+    }
 
     private savesuccessCompleted(user?: any, goNxt?: any) {
-        this.isSaving = false;  
-    this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
-    if (goNxt === 'goNext') {
-        this.nextClick();
-        
-    this.loadData();
-    
-private saveSuccessHelper(role?: any) {
-        this.isSaving = false; 
-    this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
-    
+        this.isSaving = false;
+        this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
+        if (goNxt === 'goNext') {
+            this.nextClick();
+        }
+        this.loadData();
+    }
+    private saveSuccessHelper(role?: any) {
+        this.isSaving = false;
+        this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
+    }
 
     get userName(): string {
-    return this.authService.currentUser ? this.authService.currentUser.userName : "";
-    
+        return this.authService.currentUser ? this.authService.currentUser.userName : "";
+    }
 
     private saveFailedHelper(error: any) {
     }
 
     private getDismissReason(reason: any): string {
         if (reason === ModalDismissReasons.ESC) {
-        return 'by pressing ESC';
-        se if (reason === ModalDismissReasons.BACKDROP_CLICK) {
-        return 'by clicking on a backdrop';
-        se {
-        return `with: ${reason}`;
-        
-    
-onUpload(event) {
-    for (let file of event.files) {
-        this.uploadedFiles.push(file);
-        
-    this.msgs = [];
-    this.msgs.push({ severity: 'info', summary: 'File Uploaded', detail: '' });
-    
-eventHandler(event) {
-    if (event.target.value != "") {
-        let value = event.target.value.toLowerCase();
-        if (this.selectedActionName) {
-            if (value == this.selectedActionName.toLowerCase()) {
-                this.disableSaveVenderName = true;
+            return 'by pressing ESC';
+        } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+            return 'by clicking on a backdrop';
+        } else {
+            return `with: ${reason}`;
+        }
+    }
+    onUpload(event) {
+        for (let file of event.files) {
+            this.uploadedFiles.push(file);
+        }
+        this.msgs = [];
+        this.msgs.push({ severity: 'info', summary: 'File Uploaded', detail: '' });
+    }
+    eventHandler(event) {
+        if (event.target.value != "") {
+            let value = event.target.value.toLowerCase();
+            if (this.selectedActionName) {
+                if (value == this.selectedActionName.toLowerCase()) {
+                    this.disableSaveVenderName = true;
+                    this.disableSaveVenName = true;
+                }
+                else {
+                    this.disableSaveVenderName = false;
+                    this.disableSaveVenName = false;
+                }
+            }
+        }
+    }
+    onVendorselected(event) {
+        for (let i = 0; i < this.VendorNamecoll.length; i++) {
+            if (event == this.VendorNamecoll[i][0].vendorName) {
                 this.disableSaveVenName = true;
-                
-            else {
-                this.disableSaveVenderName = false;
-                this.disableSaveVenName = false;
-                
-            
-        
-    
-onVendorselected(event) {
-    for (let i = 0; i < this.VendorNamecoll.length; i++) {
-        if (event == this.VendorNamecoll[i][0].vendorName) {
-            this.disableSaveVenName = true;
-            this.disableSave = true;
-            this.disableSaveVenderName = true;
-            this.selectedActionName = event;
-            
-        
-    
+                this.disableSave = true;
+                this.disableSaveVenderName = true;
+                this.selectedActionName = event;
+            }
+        }
+    }
 
     checkVendorExist() {
-    this.disableSaveVenderName = false;
-    for (let i = 0; i < this.VendorNamecoll.length; i++) {
-        if (this.sourceVendor.vendorName == this.VendorNamecoll[i][0].vendorName) {
-            this.disableSaveVenName = true;
-            this.disableSave = true;
-            this.disableSaveVenderName = true;
-            this.selectedActionName = event;
-            return;
-            
-        
-    
+        this.disableSaveVenderName = false;
+        for (let i = 0; i < this.VendorNamecoll.length; i++) {
+            if (this.sourceVendor.vendorName == this.VendorNamecoll[i][0].vendorName) {
+                this.disableSaveVenName = true;
+                this.disableSave = true;
+                this.disableSaveVenderName = true;
+                this.selectedActionName = event;
+                return;
+            }
+        }
+
     }
 
     eventvendorHandler(event) {
-    if (event.target.value != "") {
-        let value = event.target.value.toLowerCase();
-        if (this.selectedVendorCode) {
-            if (value == this.selectedVendorCode.toLowerCase()) {
+        if (event.target.value != "") {
+            let value = event.target.value.toLowerCase();
+            if (this.selectedVendorCode) {
+                if (value == this.selectedVendorCode.toLowerCase()) {
+                    this.disableSaveVenCode = true;
+                    this.disableSaveVenderCode = true;
+                }
+                else {
+                    this.disableSaveVenCode = false;
+                    this.disableSaveVenderCode = false;
+                }
+            }
+        }
+    }
+    onVendorCodeselected(event) {
+        for (let i = 0; i < this.VendorCodesColl.length; i++) {
+            if (event == this.VendorCodesColl[i][0].vendorCode) {
                 this.disableSaveVenCode = true;
                 this.disableSaveVenderCode = true;
-                
-            else {
-                this.disableSaveVenCode = false;
-                this.disableSaveVenderCode = false;
-                
-            
-        
-    
-onVendorCodeselected(event) {
-    for (let i = 0; i < this.VendorCodesColl.length; i++) {
-        if (event == this.VendorCodesColl[i][0].vendorCode) {
-            this.disableSaveVenCode = true;
-            this.disableSaveVenderCode = true;
-            this.selectedVendorCode = event;
-            
-        
-    
-onCountrieselected(event) {
-    if (this.allCountryinfo) {
-        for (let i = 0; i < this.allCountryinfo.length; i++) {
-            if (event == this.allCountryinfo[i].nice_name) {
-                this.sourceVendor.nice_name = this.allCountryinfo[i].nice_name;
-                this.disablesave = false;
-                this.selectedCountries = event;
-                
-            
-        
-    
-//Added by Vijay For Capabilities dropdown binding
+                this.selectedVendorCode = event;
+            }
+        }
+    }
+    onCountrieselected(event) {
+        if (this.allCountryinfo) {
+            for (let i = 0; i < this.allCountryinfo.length; i++) {
+                if (event == this.allCountryinfo[i].nice_name) {
+                    this.sourceVendor.nice_name = this.allCountryinfo[i].nice_name;
+                    this.disablesave = false;
+                    this.selectedCountries = event;
+                }
+            }
+        }
+    }
+    //Added by Vijay For Capabilities dropdown binding
 
     getAllVendorCapabilities(): void {
 
         this.commonService.smartDropDownList('VendorCapabiliy', 'VendorCapabilityId', 'capabilityDescription').subscribe(res => {
-        this.dropDownVendorCapabilitiesList = res;
-        
-    
+            this.dropDownVendorCapabilitiesList = res;
+        })
+    }
 
     eventCountryHandler(event) {
-    if (event.target.value != "") {
-        let value = event.target.value.toLowerCase();
-        if (this.selectedCountries) {
-            if (value == this.selectedCountries.toLowerCase()) {
-                this.disablesave = false;
-                
-            else {
-                this.disablesave = true;
-                
-            
-        
-    
-filtercountry(event) {
-    //this.countrycollection = [];
-    // if (this.allCountryinfo.length > 0) {
-    //     for (let i = 0; i < this.allCountryinfo.length; i++) {
-    //         let countryName = this.allCountryinfo[i].nice_name;
-    //         if (countryName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-    //             this.countrycollection.push(countryName);
-    //         }
-    //     }
-    // }
-    this.countrycollection = this.allCountryinfo;
-    if (event.query !== undefined && event.query !== null) {
-        const countries = [...this.allCountryinfo.filter(x => {
-            return x.nice_name.toLowerCase().includes(event.query.toLowerCase())
-            
-        this.countrycollection = countries;
-        
-    
+        if (event.target.value != "") {
+            let value = event.target.value.toLowerCase();
+            if (this.selectedCountries) {
+                if (value == this.selectedCountries.toLowerCase()) {
+                    this.disablesave = false;
+                }
+                else {
+                    this.disablesave = true;
+                }
+            }
+        }
+    }
+    filtercountry(event) {
+        //this.countrycollection = [];
+        // if (this.allCountryinfo.length > 0) {
+        //     for (let i = 0; i < this.allCountryinfo.length; i++) {
+        //         let countryName = this.allCountryinfo[i].nice_name;
+        //         if (countryName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+        //             this.countrycollection.push(countryName);
+        //         }
+        //     }
+        // }
+        this.countrycollection = this.allCountryinfo;
+        if (event.query !== undefined && event.query !== null) {
+            const countries = [...this.allCountryinfo.filter(x => {
+                return x.nice_name.toLowerCase().includes(event.query.toLowerCase())
+            })]
+            this.countrycollection = countries;
+        }
+    }
 
     parentEventHandler(event) {
-    if (event.target.value != "") {
-        let value = event.target.value.toLowerCase();
-        if (this.selectedActionName) {
-            if (value == this.selectedActionName.toLowerCase()) {
-                this.disableSaveParentName = false;
-                
+        if (event.target.value != "") {
+            let value = event.target.value.toLowerCase();
+            if (this.selectedActionName) {
+                if (value == this.selectedActionName.toLowerCase()) {
+                    this.disableSaveParentName = false;
+
                 }
-            else {
-                this.disableSaveParentName = true;
-                
+                else {
+                    this.disableSaveParentName = true;
+
                 }
-            
-        
+            }
+
         }
-    
+    }
 
     onParentNameselected(event) {
-    if (this.allActions) {
-        for (let i = 0; i < this.allActions.length; i++) {
-            if (event == this.allActions[i].vendorName) {
-                this.sourceVendor.vendorParentName = event;
-                
+        if (this.allActions) {
+            for (let i = 0; i < this.allActions.length; i++) {
+                if (event == this.allActions[i].vendorName) {
+                    this.sourceVendor.vendorParentName = event;
+
                     this.disableSaveParentName = false;
-                
+
                     this.selectedActionName = event;
-                
-            
+                }
+
             }
-        
-    
+        }
+    }
 
     onClassificationelected(event) {
-    if (this.allVendorClassInfo) {
-        for (let i = 0; i < this.allVendorClassInfo.length; i++) {
-            if (event == this.allVendorClassInfo[i].classificationName) {
-                this.sourceVendor.vendorClassificationId = event;
-                this.disablesaveForClassification = true;
-                this.selectedClass = event;
-                
-            
-        
-    
+        if (this.allVendorClassInfo) {
+            for (let i = 0; i < this.allVendorClassInfo.length; i++) {
+                if (event == this.allVendorClassInfo[i].classificationName) {
+                    this.sourceVendor.vendorClassificationId = event;
+                    this.disablesaveForClassification = true;
+                    this.selectedClass = event;
+                }
+            }
+        }
+    }
 
     eventClassificationHandler(event) {
-    if (event.target.value != "") {
-        let value = event.target.value.toLowerCase();
-        if (this.selectedClass) {
-            if (value == this.selectedClass.toLowerCase()) {
-                this.disablesaveForClassification = true;
-                
-            else {
-                this.disablesaveForClassification = false;
-                
-            
-        
-    
+        if (event.target.value != "") {
+            let value = event.target.value.toLowerCase();
+            if (this.selectedClass) {
+                if (value == this.selectedClass.toLowerCase()) {
+                    this.disablesaveForClassification = true;
+                }
+                else {
+                    this.disablesaveForClassification = false;
+                }
+            }
+        }
+    }
 
     onAddIntegrationWith() {
-    this.router.navigate(['/singlepages/singlepages/app-integration']);
-    
+        this.router.navigate(['/singlepages/singlepages/app-integration']);
+    }
 
     onAddCapabilities() {
-    this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-capabilities-list');
-    
+        this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-capabilities-list');
+    }
 
     patternMobilevalidationWithSpl(event: any) {
-    const pattern = /[0-9\+\-()\ ]/;
-    
+        const pattern = /[0-9\+\-()\ ]/;
+
         let inputChar = String.fromCharCode(event.charCode);
-    if (event.keyCode != 8 && !pattern.test(inputChar)) {
-        event.preventDefault();
-        
-    
+        if (event.keyCode != 8 && !pattern.test(inputChar)) {
+            event.preventDefault();
+        }
+
     }
 
     fileUpload(event, fileType) {
-    if (event.files.length === 0)
-        return;
-        
+        if (event.files.length === 0)
+            return;
+
         for (let file of event.files) {        // console.log(fileType);   
-        this.formData.append(fileType, file);
-        console.log(this.formData);
-        
-    
+            this.formData.append(fileType, file);
+            console.log(this.formData);
+        }
+
     }
 
     toGetVendorGeneralDocumentsList(vendorId) {
-    var moduleId = 3;
-    this.vendorService.GetVendorGeneralDocumentsList(vendorId, moduleId).subscribe(res => {
-        this.allVendorGeneralDocumentsList = res;
-        console.log(this.allVendorGeneralDocumentsList);
-        
-    
-downloadFileUpload(rowData) {
-    const url = `${this.configurations.baseUrl}/api/FileUpload/downloadattachedfile?filePath=${rowData.link}`;
-    window.location.assign(url);
-    
+        var moduleId = 3;
+        this.vendorService.GetVendorGeneralDocumentsList(vendorId, moduleId).subscribe(res => {
+            this.allVendorGeneralDocumentsList = res;
+            console.log(this.allVendorGeneralDocumentsList);
+        })
+    }
+    downloadFileUpload(rowData) {
+        const url = `${this.configurations.baseUrl}/api/FileUpload/downloadattachedfile?filePath=${rowData.link}`;
+        window.location.assign(url);
+    }
 
     VendorAttachmentDelete(rowData) {
-    let attachmentDetailId = rowData.attachmentDetailId;
-    let updatedBy = this.userName;
-    
+        let attachmentDetailId = rowData.attachmentDetailId;
+        let updatedBy = this.userName;
+
         this.vendorService.GetVendorAttachmentDelete(attachmentDetailId, updatedBy).subscribe(res => {
-        //this.allVendorGeneralDocumentsList = res;
-        //console.log(this.allVendorGeneralDocumentsList);
-        this.toGetVendorGeneralDocumentsList(this.sourceVendor.vendorId)
-        
-    
+            //this.allVendorGeneralDocumentsList = res;
+            //console.log(this.allVendorGeneralDocumentsList);
+            this.toGetVendorGeneralDocumentsList(this.sourceVendor.vendorId)
+        })
+    }
 
 
 

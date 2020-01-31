@@ -27,10 +27,10 @@ namespace QuickApp.Pro.ViewModels
         public long?[] VendorClassificationIds { get; set; }
 
         public long?[] IntegrationPortalIds { get; set; }
-        
 
+		public long? VendorParentId { get; set; }
 
-        public long Parent { get; set; }
+		public long Parent { get; set; }
         public string VendorContractReference { get; set; }
        
         public long? AddressId { get; set; }

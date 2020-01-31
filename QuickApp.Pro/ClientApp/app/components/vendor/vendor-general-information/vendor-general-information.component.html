@@ -94,15 +94,26 @@
 
                                 <p style="margin-bottom: 8px;" *ngIf="!sourceVendor.parent"></p>
                                 <div class="form-group" *ngIf="sourceVendor.parent">
+                                    <p-autoComplete field="vendorName" class="pautocomp-cstm" 
+                                    (onSelect)="onCountrieselected($event)" 
+                                    [forceSelection]="true"
+                                    [(ngModel)]="sourceVendor.vendorParentId" name="vendorParentName"
+                                    [suggestions]="vendorParentNames" (completeMethod)="filterVendorParentNames($event)" [size]="30"
+                                    [minLength]="1" [dropdown]="true" required>
+                                    </p-autoComplete>
 
-                                    <p-autoComplete class="pautocomp-cstm" (onSelect)="onParentNameselected($event)" (onKeyUp)=parentEventHandler($event)
+
+
+
+
+                                    <!-- <p-autoComplete class="pautocomp-cstm" (onSelect)="onParentNameselected($event)" (onKeyUp)=parentEventHandler($event)
                                                     [(ngModel)]="sourceVendor.vendorParentName" name="vendorParentName"
                                                     [suggestions]="vendorNames" (completeMethod)="filterVendorParentNames($event)" [size]="30"
                                                     [minLength]="1" [dropdown]="true">
                                         <ng-template let-vendorParentName pTemplate="item">
                                             <div class="ui-helper-clearfix">{{vendorParentName}}</div>
                                         </ng-template>
-                                    </p-autoComplete>
+                                    </p-autoComplete> -->
 
                                     <div *ngIf="disableSaveParentName" class="clr-red">Please Enter Valid Parent</div>
                                 </div>
@@ -195,6 +206,7 @@
                                     </label>
                                     <p-autoComplete field="nice_name" class="pautocomp-cstm" (onSelect)="onCountrieselected($event)" (onKeyUp)=eventCountryHandler($event)
                                                     [(ngModel)]="sourceVendor.country" name="country"
+                                                    [forceSelection]="true"
                                                     [suggestions]="countrycollection" (completeMethod)="filtercountry($event)" [size]="30"
                                                     [minLength]="1" [dropdown]="true" required>
                                         <!-- <ng-template let-nice_name pTemplate="item">
@@ -226,6 +238,7 @@
                                     <div class="checkbox-cstm">
                                         <label>
                                             <input type="checkbox" class="" value="" id="" style="margin-top: 1px;"
+                                                    [disabled]="isVendorAlsoCustomer"
                                                     [ngModelOptions]="{standalone: true}"
                                                     [(ngModel)]="sourceVendor.isVendorAlsoCustomer">
                                             <span class="cr"><i class="cr-icon pi pi-check"></i></span>

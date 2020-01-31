@@ -496,7 +496,8 @@ namespace DAL.Repositories
                               Country = cont.countries_name,
                               CountryId = cont.countries_id,
                               CreditTerms = cr.Name,
-                              currency = cu.Symbol,                          
+                              currency = cu.Symbol, 
+							  t.VendorParentId,
                               
 
                               //vc.ClassificationName,

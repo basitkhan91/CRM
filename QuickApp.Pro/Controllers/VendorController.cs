@@ -1569,7 +1569,9 @@ namespace QuickApp.Pro.Controllers
                 actionobject.UpdatedBy = vendorViewModel.UpdatedBy;
                 actionobject.IsAddressForBilling = vendorViewModel.IsAddressForBilling;
                 actionobject.IsAddressForShipping = vendorViewModel.IsAddressForShipping;
-                if (vendorViewModel.IsAllowNettingAPAR == null)
+				actionobject.VendorParentId = vendorViewModel.VendorParentId;
+
+				if (vendorViewModel.IsAllowNettingAPAR == null)
                 {
                     actionobject.IsAllowNettingAPAR = false;
                 }
@@ -1898,8 +1900,9 @@ namespace QuickApp.Pro.Controllers
                 actionobject.UpdatedBy = vendorViewModel.UpdatedBy;
                 actionobject.IsAddressForBilling = vendorViewModel.IsAddressForBilling;
                 actionobject.IsAddressForShipping = vendorViewModel.IsAddressForShipping;
+				actionobject.VendorParentId = vendorViewModel.VendorParentId;
 
-                if (vendorViewModel.IsAllowNettingAPAR == null)
+				if (vendorViewModel.IsAllowNettingAPAR == null)
                 {
                     actionobject.IsAllowNettingAPAR = false;
                 }
