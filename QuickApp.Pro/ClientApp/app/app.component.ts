@@ -786,9 +786,13 @@ export class AppComponent implements OnInit, AfterViewInit {
     newVendorClick() {
 
         // this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-general-information');
-        this.vendorService.changeofTab(1);
         this.vendorService.isEditMode = false;
-        this.vendorService.listCollection = {};
+        this.vendorService.ShowPtab = true;
+        this.vendorService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-general-information';
+        this.vendorService.bredcrumbObj.next(this.vendorService.currentUrl);
+        this.vendorService.alertObj.next(this.vendorService.ShowPtab);
+        this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-general-information');
+        this.vendorService.listCollection = undefined;
 
         // location.assign(url);
     }
