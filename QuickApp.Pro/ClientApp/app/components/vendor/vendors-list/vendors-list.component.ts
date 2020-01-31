@@ -257,9 +257,16 @@ export class VendorsListComponent implements OnInit {
     }
 
     navigateTogeneralInfo() {
-        this.vendorService.changeofTab(1);
         this.vendorService.isEditMode = false;
-        this.vendorService.listCollection = {};
+        this.vendorService.ShowPtab = true;
+        this.vendorService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-general-information';
+        this.vendorService.bredcrumbObj.next(this.vendorService.currentUrl);
+        this.vendorService.alertObj.next(this.vendorService.ShowPtab);
+        this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-general-information');
+        this.vendorService.listCollection = undefined;
+        // this.vendorService.changeofTab(1);
+        // this.vendorService.isEditMode = false;
+        // this.vendorService.enableExternal = false;
         // this.activeIndex = 0;
         // this.vendorService.indexObj.next(this.activeIndex);
         // this.vendorService.isEditMode = false;

@@ -396,7 +396,7 @@ export class VendorGeneralInformationComponent implements OnInit {
             this.sourceVendor.address2 = this.vendorService.listCollection.address2;
             this.sourceVendor.address3 = this.vendorService.listCollection.address3;
             this.sourceVendor.city = this.vendorService.listCollection.city;
-            this.sourceVendor.country = getObjectById('countries_id', this.vendorService.listCollection.country, this.countrycollection);
+            // this.sourceVendor.country = getObjectById('countries_id', this.vendorService.listCollection.countryId, this.countrycollection);
             this.sourceVendor.stateOrProvince = this.vendorService.listCollection.stateOrProvince;
             this.sourceVendor.PostalCode = this.vendorService.listCollection.postalCode;
             this.sourceVendor.vendorClassificationIds = this.sourceVendor.vendorClassifications;

@@ -3767,9 +3767,10 @@ namespace DAL.Repositories
                 var workOrderFreightList = (from wf in _appContext.WorkOrderQuoteFreight
                                             join wq in _appContext.WorkOrderQuoteDetails on wf.WorkOrderQuoteDetailsId equals wq.WorkOrderQuoteDetailsId
                                             join car in _appContext.Carrier on wf.CarrierId equals car.CarrierId
-                                            join sv in _appContext.CustomerShipping on wf.ShipViaId equals sv.CustomerShippingId
+                                            //join sv in _appContext.ShippingVia on wf.ShipViaId equals sv.ShippingViaId
                                             join ts in _appContext.Task on wf.TaskId equals ts.TaskId into wets
                                             from ts in wets.DefaultIfEmpty()
+                                            join woq in _appContext.WorkOrderQuote on wq.WorkOrderQuoteId equals woq.WorkOrderQuoteId
                                             where wf.IsDeleted == false && wf.WorkOrderQuoteDetailsId == workOrderQuoteDetailsId
                                             && wq.BuildMethodId == buildMethodId
                                             select new
@@ -3793,7 +3794,7 @@ namespace DAL.Repositories
                                                 wf.Width,
                                                 wf.WorkOrderQuoteDetailsId,
                                                 wf.WorkOrderQuoteFreightId,
-                                                ShipViaName = sv.ShipVia,
+                                                ShipViaName = _appContext.ShippingVia.Where(p=>p.ReferenceId==woq.CustomerId && p.UserType==1).Select(p=>p.Name).FirstOrDefault(),
                                                 CarrierName = car.Description,
                                                 wf.MarkupPercentageId,
                                                 wf.FreightCostPlus,

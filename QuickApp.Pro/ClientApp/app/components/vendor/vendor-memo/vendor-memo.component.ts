@@ -41,6 +41,10 @@ export class VendorMemoComponent implements OnInit {
 	local: any;
 	private isEditMode: boolean = false;
 	private isSaving: boolean;
+	totalRecords: number = 0;
+    pageIndex: number = 0;
+    pageSize: number = 10;
+    totalPages: number = 0;
 
 	memoCols = [
 		{ field: 'module', header: 'Module' },
@@ -153,4 +157,8 @@ export class VendorMemoComponent implements OnInit {
 		// this.vendorService.changeStep('Warnings');
 		// this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-warnings');
 	}
+
+	getPageCount(totalNoofRecords, pageSize) {
+        return Math.ceil(totalNoofRecords / pageSize)
+    }
 }   
