@@ -425,10 +425,10 @@ namespace DAL.Repositories
         public IEnumerable<object> getLegalEntityAccountsData(long value)
         {
             var data = (from e in _appContext.LegalEntity
-                        join dw in _appContext.DomesticWirePayment on e.DomesticWirePaymentId equals dw.DomesticWirePaymentId into domesticwire
-                        from domeswire in domesticwire.DefaultIfEmpty()
-                        join iw in _appContext.InternationalWirePayment on e.InternationalWirePaymentId equals iw.InternationalWirePaymentId into interwire
-                        from internalwire in interwire.DefaultIfEmpty()
+                        //join dw in _appContext.DomesticWirePayment on e.DomesticWirePaymentId equals dw.DomesticWirePaymentId into domesticwire
+                        //from domeswire in domesticwire.DefaultIfEmpty()
+                        //join iw in _appContext.InternationalWirePayment on e.InternationalWirePaymentId equals iw.InternationalWirePaymentId into interwire
+                        //from internalwire in interwire.DefaultIfEmpty()
                         join ach in _appContext.ACH on e.ACHId equals ach.ACHId into achdetails
                         from achdata in achdetails.DefaultIfEmpty()
 
@@ -438,8 +438,8 @@ namespace DAL.Repositories
                         select new
                         {
                             e.LegalEntityId,
-                            domeswire.AccountNumber,
-                            internalwire.BeneficiaryBankAccount,
+                            //domeswire.AccountNumber,
+                            //internalwire.BeneficiaryBankAccount,
                             achAccountNumber = achdata.AccountNumber
 
                         }).ToList();
@@ -464,12 +464,6 @@ namespace DAL.Repositories
             var leftOuterJoin = from e in _appContext.LegalEntity
                                 join d in _appContext.Address on e.AddressId equals d.AddressId into dept
                                 from department in dept.DefaultIfEmpty()
-                                join dw in _appContext.DomesticWirePayment on e.DomesticWirePaymentId equals dw.DomesticWirePaymentId into domesticwire
-                                from domeswire in domesticwire.DefaultIfEmpty()
-                                join iw in _appContext.InternationalWirePayment on e.InternationalWirePaymentId equals iw.InternationalWirePaymentId into interwire
-                                from internalwire in interwire.DefaultIfEmpty()
-                                join lbad in _appContext.Address on e.LockBoxAddressId equals lbad.AddressId into lockboxaddress
-                                from lockboxaddressdetails in lockboxaddress.DefaultIfEmpty()
                                 join ach in _appContext.ACH on e.ACHId equals ach.ACHId into achdetails
                                 from achdata in achdetails.DefaultIfEmpty()
 
@@ -492,24 +486,7 @@ namespace DAL.Repositories
                                     IsBalancingEntity = e.IsBalancingEntity,
                                     CageCode = e.CageCode,
                                     e.LegalEntityId,
-                                    LockboxAddressid = lockboxaddressdetails.AddressId,
-                                    DomesticIntermediateBank = domeswire.IntermediaryBankName,
                                     department.AddressId,
-                                    BankStreetaddress1 = lockboxaddressdetails.Line1,
-                                    BankStreetaddress2 = lockboxaddressdetails.Line2,
-                                    BankCity = lockboxaddressdetails.City,
-                                    BankProvince = lockboxaddressdetails.StateOrProvince,
-                                    Bankcountry = lockboxaddressdetails.Country,
-                                    BankpostalCode = lockboxaddressdetails.PostalCode,
-                                    DomesticBankName = domeswire.BankName,
-                                    DomesticBenficiaryBankName = domeswire.BenificiaryBankName,
-                                    DomesticBankAccountNumber = domeswire.AccountNumber,
-                                    DomesticABANumber = domeswire.ABA,
-                                    InternationalBankName = internalwire.BeneficiaryBank,
-                                    InternationalIntermediateBank = internalwire.BeneficiaryBank,
-                                    InternationalBenficiaryBankName = internalwire.BeneficiaryBank,
-                                    InternationalBankAccountNumber = internalwire.BeneficiaryBankAccount,
-                                    InternationalSWIFTID = internalwire.SwiftCode,
                                     e.ParentId,
                                     e.CreatedBy,
                                     e.CreatedDate,
@@ -519,10 +496,6 @@ namespace DAL.Repositories
                                     e.FaxNumber,
                                     e.PhoneNumber1,
                                     e.TaxId,
-                                    e.IsLastLevel,
-                                    e.DomesticWirePaymentId,
-                                    e.InternationalWirePaymentId,
-                                    e.LockBoxAddressId,
                                     e.ACHId,
                                     achdata,
                                     achBankName = achdata.BankName,
@@ -531,8 +504,6 @@ namespace DAL.Repositories
                                     achBankAccountNumber = achdata.AccountNumber,
                                     achABANumber = achdata.ABA,
                                     achSWIFTID = achdata.SwiftCode,
-                                    IsBankingInfo = e.IsBankingInfo,
-
                                 };
 
             return leftOuterJoin.OrderByDescending(a => a.LegalEntityId).ToList();

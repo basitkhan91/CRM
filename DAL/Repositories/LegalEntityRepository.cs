@@ -41,12 +41,12 @@ namespace DAL.Repositories
             var data = (from legal in _appContext.LegalEntity
                         join adress in _appContext.Address on legal.AddressId equals adress.AddressId into addd
                         from adress in addd.DefaultIfEmpty()
-                        join lockbox in _appContext.Address on legal.LockBoxAddressId equals lockbox.AddressId into loc
-                        from lockbox in loc.DefaultIfEmpty()
-                        join domestic in _appContext.DomesticWirePayment on legal.DomesticWirePaymentId equals domestic.DomesticWirePaymentId into domes
-                        from domestic in domes.DefaultIfEmpty()
-                        join international in _appContext.InternationalWirePayment on legal.InternationalWirePaymentId equals international.InternationalWirePaymentId into inter
-                        from international in inter.DefaultIfEmpty()
+                        //join lockbox in _appContext.Address on legal.LockBoxAddressId equals lockbox.AddressId into loc
+                        //from lockbox in loc.DefaultIfEmpty()
+                        //join domestic in _appContext.DomesticWirePayment on legal.DomesticWirePaymentId equals domestic.DomesticWirePaymentId into domes
+                        //from domestic in domes.DefaultIfEmpty()
+                        //join international in _appContext.InternationalWirePayment on legal.InternationalWirePaymentId equals international.InternationalWirePaymentId into inter
+                        //from international in inter.DefaultIfEmpty()
                         join ach in _appContext.ACH on legal.ACHId equals ach.ACHId into ac
                         from ach in ac.DefaultIfEmpty()
                         join curr in _appContext.Currency on legal.FunctionalCurrencyId equals curr.CurrencyId into currCode
@@ -66,13 +66,13 @@ namespace DAL.Repositories
                             legal.CageCode,
                             legal.FAALicense,
                             legal.TaxId,
-                            legal.IsLastLevel,
+                           // legal.IsLastLevel,
                             legal.MasterCompanyId,
                             legal.IsActive,
                             legal.IsDeleted,
                             legal.FunctionalCurrencyId,
                             legal.ReportingCurrencyId,
-                            legal.IsBankingInfo,
+                           // legal.IsBankingInfo,
                             legal.LedgerName,
 
                             CurrencyCode = curr.DisplayName,
@@ -84,25 +84,25 @@ namespace DAL.Repositories
                             postalCode = adress.PostalCode,
                             country = adress.Country,
 
-                            poBox = lockbox.PoBox,
-                            bankStreetaddress1 = lockbox.Line1,
-                            bankStreetaddress2 = lockbox.Line2,
-                            bankCity = lockbox.City,
-                            bankProvince = lockbox.StateOrProvince,
-                            bankcountry = lockbox.Country,
-                            bankpostalCode = lockbox.PostalCode,
+                            //poBox = lockbox.PoBox,
+                            //bankStreetaddress1 = lockbox.Line1,
+                            //bankStreetaddress2 = lockbox.Line2,
+                            //bankCity = lockbox.City,
+                            //bankProvince = lockbox.StateOrProvince,
+                            //bankcountry = lockbox.Country,
+                            //bankpostalCode = lockbox.PostalCode,
 
-                            domesticBankName = domestic.BankName,
-                            domesticIntermediateBank = domestic.IntermediaryBankName,
-                            domesticBenficiaryBankName = domestic.BenificiaryBankName,
-                            domesticBankAccountNumber = domestic.AccountNumber,
-                            domesticABANumber = domestic.ABA,
+                            //domesticBankName = domestic.BankName,
+                            //domesticIntermediateBank = domestic.IntermediaryBankName,
+                            //domesticBenficiaryBankName = domestic.BenificiaryBankName,
+                            //domesticBankAccountNumber = domestic.AccountNumber,
+                            //domesticABANumber = domestic.ABA,
 
-                            internationalBankName = international.BankName,
-                            internationalIntermediateBank = international.IntermediaryBank,
-                            internationalBenficiaryBankName = international.BeneficiaryBank,
-                            internationalBankAccountNumber = international.BeneficiaryBankAccount,
-                            internationalSWIFTID = international.SwiftCode,
+                            //internationalBankName = international.BankName,
+                            //internationalIntermediateBank = international.IntermediaryBank,
+                            //internationalBenficiaryBankName = international.BeneficiaryBank,
+                            //internationalBankAccountNumber = international.BeneficiaryBankAccount,
+                            //internationalSWIFTID = international.SwiftCode,
 
                             achBankName = ach.BankName,
                             achIntermediateBank = ach.IntermediateBankName,
