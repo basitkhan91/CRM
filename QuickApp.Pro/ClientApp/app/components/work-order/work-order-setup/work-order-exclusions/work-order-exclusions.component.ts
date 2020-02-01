@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, ChangeDetectorRef, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ChangeDetectorRef, OnInit, OnChanges } from '@angular/core';
 import * as $ from 'jquery'
 import { AlertService, MessageSeverity } from '../../../../services/alert.service';
 import { WorkOrderService } from '../../../../services/work-order/work-order.service';
@@ -12,7 +12,7 @@ import { AuthService } from '../../../../services/auth.service';
 
 })
 /** WorkOrderDocuments component*/
-export class WorkOrderExclusionsComponent implements OnInit {
+export class WorkOrderExclusionsComponent implements OnInit, OnChanges {
   @Input() workOrderExclusionsList;
   @Input() workFlowObject;
   @Input() isWorkOrder;
@@ -43,7 +43,15 @@ export class WorkOrderExclusionsComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log(this.workOrderExclusionsList);
+    if(this.workOrderExclusionsList && this.workOrderExclusionsList.length > 0 && this.workOrderExclusionsList[0].markupFixedPrice){
+      this.costPlusType = this.workOrderExclusionsList[0].markupFixedPrice
+    }
+  }
+
+  ngOnChanges() {
+    if(this.workOrderExclusionsList && this.workOrderExclusionsList.length > 0 && this.workOrderExclusionsList[0].markupFixedPrice){
+      this.costPlusType = this.workOrderExclusionsList[0].markupFixedPrice
+    }
   }
 
 

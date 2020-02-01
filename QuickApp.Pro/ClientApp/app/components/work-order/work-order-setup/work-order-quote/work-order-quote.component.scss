@@ -31,7 +31,7 @@ textarea {
 #accordion h4 a {
   font-size: 12px !important; 
 }
-.ui-radiobutton-label{
+.p-radiobutton-label-horizontal .ui-radiobutton-label{
   color: white;
 }
 select:disabled{
@@ -44,4 +44,8 @@ select:disabled{
   text-indent: 1px;
   text-overflow: '';
   box-shadow: none !important;
+}
+
+body .ui-radiobutton .ui-radiobutton-box{
+  border: 3px solid #ffffff;
 }

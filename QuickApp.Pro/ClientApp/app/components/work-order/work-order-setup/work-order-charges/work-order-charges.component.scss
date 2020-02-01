@@ -13,3 +13,11 @@ select:disabled{
   text-overflow: '';
   box-shadow: none !important;
 }
+
+.rro-table-cstm th{
+  width: unset !important;
+}
+
+body .ui-radiobutton .ui-radiobutton-box{
+  border: 3px solid #ffffff;
+}

@@ -448,6 +448,7 @@ overAllMarkup: any;
         }
       )
     }
+    this.gridTabChange('materialList');
     
     
   }
@@ -858,6 +859,7 @@ saveworkOrderLabor(data) {
   this.laborPayload.WorkOrderQuoteLaborHeader.ExpertiseId = data.expertiseId;
   this.laborPayload.WorkOrderQuoteLaborHeader.TotalWorkHours = data.totalWorkHours
   this.laborPayload.WorkOrderQuoteLaborHeader.masterCompanyId = data.masterCompanyId; 
+  this.laborPayload.WorkOrderQuoteLaborHeader['markupFixedPrice'] = data.markupFixedPrice;
   this.laborPayload.WorkOrderQuoteLaborHeader.CreatedBy = "admin"
   this.laborPayload.WorkOrderQuoteLaborHeader.UpdatedBy = "admin" 
   this.laborPayload.WorkOrderQuoteLaborHeader.IsActive = true 
@@ -886,6 +888,7 @@ saveworkOrderLabor(data) {
         "markupPercentageId": labor.markupPercentageId,
         "directLaborOHCost": labor.directLaborOHCost,
         "markupFixedPrice": labor.markupFixedPrice,
+        "fixedAmount": labor.fixedAmount,
         "CreatedBy":"admin",
         "UpdatedBy":"admin",
         "IsActive":true,
@@ -1171,6 +1174,9 @@ getQuoteMaterialListByWorkOrderQuoteId() {
   if(this.workOrderQuoteDetailsId){
     this.workOrderService.getQuoteMaterialList(this.workOrderQuoteDetailsId, (this.selectedBuildMethod == "use work flow")?1:(this.selectedBuildMethod == "use historical wos")?2:3).subscribe(res => {
         this.materialListQuotation = res;
+        if(this.materialListQuotation && this.materialListQuotation.length > 0 && this.materialListQuotation[0].markupFixedPrice){
+          this.costPlusType = this.materialListQuotation[0].markupFixedPrice;
+        }
         if(res.length > 0){
           this.updateWorkOrderQuoteDetailsId(res[0].workOrderQuoteDetailsId)
         }

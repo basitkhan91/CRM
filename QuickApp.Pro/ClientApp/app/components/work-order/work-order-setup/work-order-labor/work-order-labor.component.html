@@ -307,7 +307,7 @@
                       [(ngModel)]="rec.expertiseId"
                     ></p-dropdown> -->
 
-                    <select [(ngModel)]="rec.expertiseId" style="width: 130px;" [disabled]="isView || laborForm['costPlusType'] != 'Mark Up'">
+                    <select [(ngModel)]="rec.expertiseId" style="width: 130px;" [disabled]="isView">
                       <option>Select</option>
                       <ng-container *ngFor="let exp of expertiseTypeList">
                         <option [value]="exp.value">{{exp.label}}</option> 

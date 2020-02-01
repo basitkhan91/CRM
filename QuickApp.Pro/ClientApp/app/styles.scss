@@ -13099,6 +13099,9 @@ p-radiobutton .ui-radiobutton .ui-radiobutton-box.ui-state-active {
     background-color: #007ad9 !important;
     color: #ffffff;
 }
+p-radiobutton .ui-radiobutton .ui-radiobutton-box{
+    border: 3px solid #ffffff;
+}
 
 .p-checkbox-label .ui-chkbox-label {
     margin-top: 16px !important;

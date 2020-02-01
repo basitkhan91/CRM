@@ -12,3 +12,7 @@
   text-overflow: '';
   box-shadow: none !important;
 }
+
+p-radiobutton .ui-radiobutton .ui-radiobutton-box{
+  border: 3px solid #ffffff !important;
+}
