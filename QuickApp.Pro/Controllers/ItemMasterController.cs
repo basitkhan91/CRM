@@ -1979,7 +1979,7 @@ namespace QuickApp.Pro.Controllers
 
             if (results.Any() && searchView.partSearchParamters.includeAlternatePartNumber)
             {
-                results = results.Concat(GetMappedPartNumbers(searchView));
+                results = results.Concat(GetMappedPartNumbers(searchView.partSearchParamters));
             }
 
             var pageCount = (searchView.first / searchView.rows) + 1;
@@ -1991,16 +1991,50 @@ namespace QuickApp.Pro.Controllers
             return Ok(searchData);
         }
 
-        private IEnumerable<object> GetMappedPartNumbers(ItemMasterSearchViewModel searchView)
+
+        [HttpPost("multisearch")]
+        public IActionResult MultiSearchItemMaster([FromBody]MultiItemMasterSearchViewModel searchViews)
+        {
+            if (searchViews == null
+                   || searchViews.multiPartSearchParamters == null
+                   || !searchViews.multiPartSearchParamters.Any())
+            {
+                return BadRequest(new Exception("Invalid request parameter, Atleast one part number should be sent"));
+            }
+
+
+            IEnumerable<object> results = Enumerable.Empty<object>();
+
+            foreach(var partSearchParamters in searchViews.multiPartSearchParamters)
+            {
+                results = results.Concat(GetPartDetails(partSearchParamters.partId, partSearchParamters.conditionId));
+
+                if (results.Any() && partSearchParamters.includeAlternatePartNumber)
+                {
+                    results = results.Concat(GetMappedPartNumbers(partSearchParamters));
+                }
+            }
+
+            var pageCount = (searchViews.first / searchViews.rows) + 1;
+
+            var searchData = new GetSearchData<object>();
+
+            searchData.Data = DAL.Common.PaginatedList<object>.Create(results.AsQueryable<object>(), pageCount, searchViews.rows);
+
+            return Ok(searchData);
+        }
+
+
+        private IEnumerable<object> GetMappedPartNumbers(PartSearchParamters partSearchParamters)
         {
             IEnumerable<object> results = Enumerable.Empty<object>();
 
-            if (searchView.partSearchParamters.includeAlternatePartNumber)
+            if (partSearchParamters.includeAlternatePartNumber)
             {
                 var alternatePartNumbers =
                 (from mp in _context.Nha_Tla_Alt_Equ_ItemMapping
                  join im in _context.ItemMaster on mp.ItemMasterId equals im.ItemMasterId
-                 where mp.ItemMasterId == searchView.partSearchParamters.partId.Value
+                 where mp.ItemMasterId == partSearchParamters.partId.Value
                          && mp.IsActive
                          && im.IsActive.HasValue && im.IsActive.Value
                          && mp.MappingType == 1
@@ -2017,7 +2051,7 @@ namespace QuickApp.Pro.Controllers
                 {
                     foreach (var pn in alternatePartNumbers)
                     {
-                        results = results.Concat(GetPartDetails(pn.MappingItemMasterId, searchView.partSearchParamters.conditionId, pn.PartNumber));
+                        results = results.Concat(GetPartDetails(pn.MappingItemMasterId, partSearchParamters.conditionId, pn.PartNumber));
                     }
                 }
             }
@@ -2165,6 +2199,60 @@ namespace QuickApp.Pro.Controllers
         {
             var result = _unitOfWork.itemMaster.ItemMasterData(capesFilters);
             return Ok(result);
+        }
+
+        [HttpPost("searchmultipleparts")]
+        public IActionResult SearchMultipleParts([FromBody] MultiPartSearchParameters partSearchParamters)
+        {
+            if (partSearchParamters == null || partSearchParamters.Parts == null || !partSearchParamters.Parts.Any())
+            {
+                return BadRequest(new Exception("No part numbers provided"));
+            }
+
+            var parts = Enumerable.Empty<SearchPartView>();
+            
+            parts = from part in partSearchParamters.Parts  
+                    join im in _context.ItemMaster on part.ToLower() equals im.PartNumber.ToLower()  into itemMasterParts 
+                    from imp in itemMasterParts.DefaultIfEmpty()  
+                    select new SearchPartView{
+                        partId = imp != null ? imp?.ItemMasterId : null,
+                        partNumber = imp != null ? imp?.PartNumber : part,
+                        partDescription = imp != null ? imp?.PartDescription : null,
+                        Exist = imp != null  && imp.ItemMasterId.HasValue, 
+                    };
+
+
+            if( parts.Any()  
+                && partSearchParamters.CustomerId.HasValue 
+                && ( partSearchParamters.RestrictPMA 
+                    || partSearchParamters.RestrictDER))
+            {
+                var customer  =  _context.Customer.Where( c => c.CustomerId == partSearchParamters.CustomerId.Value).FirstOrDefault();
+                if(customer != null){
+                    
+                    partSearchParamters.RestrictDER = partSearchParamters.RestrictDER ? partSearchParamters.RestrictDER && customer.RestrictBER.Value : false;  
+                    partSearchParamters.RestrictPMA = partSearchParamters.RestrictPMA  ? partSearchParamters.RestrictPMA && customer.RestrictPMA : false;
+
+                    if( partSearchParamters.RestrictDER  ||  partSearchParamters.RestrictDER )
+                    {
+                        var restrictedParts = _context.RestrictedParts.Where( rp => 
+                                                        rp.ReferenceId == partSearchParamters.CustomerId.Value 
+                                                        && rp.IsActive 
+                                                        && rp.IsDeleted == false 
+                                                        && ( (partSearchParamters.RestrictPMA && rp.PartType == "PMA") || ( partSearchParamters.RestrictDER && rp.PartType == "DER")));
+                        
+
+                        if(restrictedParts.Any()){
+                            parts = parts.Select ( p => { 
+                               p.Restricted = restrictedParts.Any( rp => rp.PartNumber == p.partNumber);
+                               return p;
+                            });
+                        }
+                    }
+                }
+            }
+
+            return Ok(parts);
         }
     }
 }

@@ -1116,7 +1116,7 @@ namespace QuickApp.Pro.Controllers
 
             if(results.Any() && searchView.partSearchParamters.includeAlternatePartNumber)
             {
-                results = results.Concat(GetMappedPartNumbers(searchView)); 
+                results = results.Concat(GetMappedPartNumbers(searchView.partSearchParamters)); 
             }
            
             var pageCount = (searchView.first / searchView.rows) + 1;
@@ -1128,16 +1128,16 @@ namespace QuickApp.Pro.Controllers
             return Ok(searchData);
         }
 
-        private IEnumerable<object> GetMappedPartNumbers(ItemMasterSearchViewModel searchView)
+        private IEnumerable<object> GetMappedPartNumbers(PartSearchParamters partSearchParamters)
         {
             IEnumerable<object> results = Enumerable.Empty<object>();
 
-             if (searchView.partSearchParamters.includeAlternatePartNumber)
+             if (partSearchParamters.includeAlternatePartNumber)
             {
                 var alternatePartNumbers  =  
                 (from mp in _context.Nha_Tla_Alt_Equ_ItemMapping 
                 join im in _context.ItemMaster on mp.ItemMasterId equals im.ItemMasterId
-                where mp.ItemMasterId == searchView.partSearchParamters.partId.Value
+                where mp.ItemMasterId == partSearchParamters.partId.Value
                         && mp.IsActive 
                         && im.IsActive.HasValue && im.IsActive.Value
                         && mp.MappingType  == 1
@@ -1153,7 +1153,7 @@ namespace QuickApp.Pro.Controllers
                 {
                     foreach(var pn in alternatePartNumbers)
                     {
-                      results = results.Concat(GetPartDetails(pn.MappingItemMasterId, searchView.partSearchParamters.conditionId, pn.PartNumber));
+                      results = results.Concat(GetPartDetails(pn.MappingItemMasterId, partSearchParamters.conditionId, pn.PartNumber));
                     }
                 }
             }
@@ -1270,6 +1270,38 @@ namespace QuickApp.Pro.Controllers
             stream.Position = 0;
             string excelName = $"StockLineReport-{DateTime.Now.ToString("ddMMMyyyy")}.xlsx";
             return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", excelName);
+        }
+
+        [HttpPost("multisearch")]
+        public IActionResult MultiSearchItemMaster([FromBody]MultiItemMasterSearchViewModel searchViews)
+        {
+            if (searchViews == null
+                   || searchViews.multiPartSearchParamters == null
+                   || !searchViews.multiPartSearchParamters.Any())
+            {
+                return BadRequest(new Exception("Invalid request parameter, Atleast one part number should be sent"));
+            }
+
+
+            IEnumerable<object> results = Enumerable.Empty<object>();
+
+            foreach(var partSearchParamters in searchViews.multiPartSearchParamters)
+            {
+                results = results.Concat(GetPartDetails(partSearchParamters.partId, partSearchParamters.conditionId));
+
+                if (results.Any() && partSearchParamters.includeAlternatePartNumber)
+                {
+                    results = results.Concat(GetMappedPartNumbers(partSearchParamters));
+                }
+            }
+
+            var pageCount = (searchViews.first / searchViews.rows) + 1;
+
+            var searchData = new GetSearchData<object>();
+
+            searchData.Data = DAL.Common.PaginatedList<object>.Create(results.AsQueryable<object>(), pageCount, searchViews.rows);
+
+            return Ok(searchData);
         }
     }
 }
