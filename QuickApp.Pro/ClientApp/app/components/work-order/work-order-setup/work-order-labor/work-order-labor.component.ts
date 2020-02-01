@@ -491,6 +491,16 @@ console.log(this.workOrderLaborList);
     return total;
   }
 
+  getTotalFixedAmount(taskList){
+    let total = 0;
+    for(let labor of taskList){
+      if(labor.fixedAmount){
+        total += labor.fixedAmount;
+      }
+    }
+    return total;
+  }
+
   getTotalLaborOHCost(taskList){
     let total = 0;
     for(let labor of taskList){

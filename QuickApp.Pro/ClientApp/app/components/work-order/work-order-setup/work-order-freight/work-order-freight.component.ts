@@ -177,5 +177,47 @@ export class WorkOrderFreightComponent implements OnInit {
             console.log(e);
         }
     }
+    
+      getTotalAmount() {
+        let total = 0;
+        if(this.workOrderFreightList){
+          this.workOrderFreightList.forEach(
+            (material) => {
+              if (material.amount) {
+                total += Number(material.amount);
+              }
+            }
+          )
+        }
+        return total;
+      }
+    
+      getCostPlus() {
+        let total = 0;
+        if(this.workOrderFreightList){
+          this.workOrderFreightList.forEach(
+            (material) => {
+              if (material.freightCostPlus) {
+                total += material.freightCostPlus;
+              }
+            }
+          )
+        }
+        return total;
+      }
+    
+      getTotalFixedAmount() {
+        let total = 0;
+        if(this.workOrderFreightList){
+          this.workOrderFreightList.forEach(
+            (material) => {
+              if (material.fixedAmount) {
+                total += Number(material.fixedAmount);
+              }
+            }
+          )
+        }
+        return total;
+      }
 
 }
