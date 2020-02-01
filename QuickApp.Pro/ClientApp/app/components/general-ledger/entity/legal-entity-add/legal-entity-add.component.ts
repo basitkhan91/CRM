@@ -336,9 +336,7 @@ export class EntityAddComponent implements OnInit, AfterViewInit {
 			this.modelValue = true;
 		}
 		if (this.sourceLegalEntity.name && this.sourceLegalEntity.description && this.sourceLegalEntity.reportingCurrencyId && this.sourceLegalEntity.reportingCurrencyId && this.sourceLegalEntity.ledgerName) {
-            if (!this.sourceLegalEntity.legalEntityId) {
-                console.log('source :', this.sourceLegalEntity)
-
+            if (!this.sourceLegalEntity.legalEntityId) {               
                 this.sourceLegalEntity.createdBy = this.userName;
 				this.sourceLegalEntity.updatedBy = this.userName;
 
@@ -347,8 +345,7 @@ export class EntityAddComponent implements OnInit, AfterViewInit {
                     ...this.sourceLegalEntity
 
                 }).subscribe(data => {
-                    console.log('adding legal entity response :', data)
-					this.alertService.showMessage(
+                   this.alertService.showMessage(
 						'Success',
 						'Legal Entity Saved successfully.',
 						MessageSeverity.success
@@ -369,8 +366,7 @@ export class EntityAddComponent implements OnInit, AfterViewInit {
                 this.workFlowtService.updateEntity({
                     ...this.sourceLegalEntity
                 }).subscribe(data => {
-                    console.log('editing legal entity response :', data)
-					this.alertService.showMessage(
+        			this.alertService.showMessage(
 						'Success',
 						'Legal Entity updated successfully.',
 						MessageSeverity.success

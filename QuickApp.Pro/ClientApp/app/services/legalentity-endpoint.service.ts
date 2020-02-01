@@ -27,6 +27,8 @@ export class LegalEntityEndpontService extends EndpointFactory {
 
 	private readonly _activeUrl: string = "/api/legalEntity/UpdateActive";
 	private readonly getLegalEntityAddressByIdURL: string = "/api/legalEntity/legalentityaddressbyid";
+    private readonly _contactUrl: string = "/api/LegalEntity/legalentitycontacts";
+    private readonly _entityBillViaDetails = "/api/LegalEntity/legalentitybillingaddressbyid";
 
 	get entityurl() { return this.configurations.baseUrl + this._entityurl; }
     get managemententityurl() { return this.configurations.baseUrl + this._managementUrl; }
@@ -34,6 +36,8 @@ export class LegalEntityEndpontService extends EndpointFactory {
 	get parentEntityUrl() { return this.configurations.baseUrl + this._parentEntityUrl; }  
 	get ledgerNamesurl() { return this.configurations.baseUrl + this._ledgerUrl; }
 	get entityediturl() { return this.configurations.baseUrl + this._entityediturl; }
+    get contactUrl() { return this.configurations.baseUrl + this._contactUrl; }
+    get entityBillViaDetails() { return this.configurations.baseUrl + this._entityBillViaDetails; }
 
 	constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
 
@@ -132,6 +136,14 @@ export class LegalEntityEndpontService extends EndpointFactory {
 	//			return this.handleError(error, () => this.getEditJobTitleEndpoint(actionId));
 	//		});
 	//}
+
+    getContcatDetails<T>(): Observable<T> {
+        let endpointUrl = `${this.contactUrl}`;
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getContcatDetails());
+            });
+    }
 
 	getUpdateLegalEntityEndpontService<T>(roleObject: any, actionId: number): Observable<T> {
 		let endpointUrl = `${this._entityUrlNew}/${actionId}`;
@@ -232,6 +244,14 @@ export class LegalEntityEndpontService extends EndpointFactory {
         return this.http.get<T>(endpointUrl, this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.getLegalEntityAddressById(entityId));
+            });
+    }
+
+    getEntityBillViaDetails<T>(roleObject: any): Observable<T> {
+        let endpointUrl = `${this.entityBillViaDetails}/${roleObject}`;
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getEntityBillViaDetails(roleObject));
             });
     }
 }

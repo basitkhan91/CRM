@@ -10,6 +10,7 @@ import { AuditHistory } from '../../../../models/audithistory.model';
 import * as $ from 'jquery';
 import { ConfigurationService } from '../../../../services/configuration.service';
 import { CommonService } from '../../../../services/common.service';
+import { LegalEntityService } from '../../../../services/legalentity.service';
 
 @Component({
     selector: 'app-legal-entity-billing',
@@ -62,7 +63,7 @@ export class EntityBillingComponent {
 	
 
     constructor(public customerService: CustomerService, private authService: AuthService, private alertService: AlertService, private modalService: NgbModal, private configurations: ConfigurationService,
-        private activeModal: NgbActiveModal, private commonService: CommonService, ) {
+        private activeModal: NgbActiveModal, private commonService: CommonService, public workFlowtService: LegalEntityService,) {
 
     }
 
@@ -70,14 +71,14 @@ export class EntityBillingComponent {
 	ngOnInit(): void {
 
 		if (this.editMode) {
-			this.id = this.editGeneralInformationData.customerId;
-			this.customerCode = this.editGeneralInformationData.customerCode;
-			this.customerName = this.editGeneralInformationData.name;
+            this.id = this.editGeneralInformationData.legalEntityId;
+			//this.customerCode = this.editGeneralInformationData.customerCode;
+			//this.customerName = this.editGeneralInformationData.name;
 			this.getBillingDataById()
 		} else {
-			this.id = this.savedGeneralInformationData.customerId;
-			this.customerCode = this.savedGeneralInformationData.customerCode;
-            this.customerName = this.savedGeneralInformationData.name;
+            this.id = this.savedGeneralInformationData.legalEntityId;
+			//this.customerCode = this.savedGeneralInformationData.customerCode;
+            //this.customerName = this.savedGeneralInformationData.name;
             //Added By Vijay For Customer Create time IsBillingAddess is selected checkbox Then list page we are displaying list
             this.getBillingDataById()
 		}
@@ -163,7 +164,7 @@ export class EntityBillingComponent {
         this.billingInfo = new CustomerBillingAddressModel();
     }
 	getBillingDataById() {
-		this.customerService.getCustomerBillViaDetails(this.id).subscribe(res => {
+        this.workFlowtService.getEntityBillViaDetails(this.id).subscribe(res => {
             this.billingInfoList = res[0]
 
 

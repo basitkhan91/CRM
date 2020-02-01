@@ -3,16 +3,24 @@
     <div>
         <div class="right_col" role="main">
             <div style="">
-                <div class="x_content">
+                <div class="x_content payment-info">
+                    <div class="mt-2">
+                        <ul class="nav nav-pills">
+                            <li><button class="btn my-btn" (click)="Lockbox()" [class.extraclass]="LockboxStyle">Lockbox</button></li>
+                            <li><button class="btn my-btn" (click)="DomesticWire()" [class.extraclass]="domesticWireStyle">Domestic Wire</button></li>
+                            <li><button class="btn my-btn" (click)="InternationalWire()" [class.extraclass]="internationalStyle">International Wire</button></li>
+                            <li><button class="btn my-btn" (click)="ACH()" [class.extraclass]="ACHStyle">ACH</button></li>
+                        </ul>
+                    </div>
                     <div class="clear"></div>
                     <form action="#" method="post" class="form-horizontal add-charges">
                         <div class="tab-content  margin0 padding0">
                             <div class="" id="menu3">
                                 <div class="clear"></div>
-                                <div class="payment-info">                               
+                                <div class="payment-info">
                                     <div class="clear"></div>
                                     <hr class="hr-light-grey">
-                                    <div class="tab-content padding0" id="new-data-form">                                       
+                                    <div class="tab-content padding0" id="new-data-form">
                                         <div *ngIf="LockboxValue" class="tab-pane active">
                                             <div class="clear"></div>
                                             <div class="col-sm-12">
