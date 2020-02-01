@@ -23,7 +23,7 @@ namespace DAL.Models
 
         //[ForeignKey("VendorTypeId")]
         public int? VendorTypeId { get; set; }
-		public long? VendorParentId { get; set; }
+        public long? VendorParentId { get; set; }
 		public string DoingBusinessAsName { get; set; }
 
         //[ForeignKey("VendorClassificationId")]

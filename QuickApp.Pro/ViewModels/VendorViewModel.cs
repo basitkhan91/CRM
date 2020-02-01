@@ -92,23 +92,23 @@ namespace QuickApp.Pro.ViewModels
         public string Phone { get; set; }
         public string CustomerTypeDesc { get; set; }
         public string VendorPhone { get; set; }
-        public virtual VendorCapabiliy VendorCapabiliy { get; set; }
+        //public VendorCapabiliy VendorCapabiliy { get; set; }
 
-        public virtual VendorContact VendorContact { get; set; }
+        //public VendorContact VendorContact { get; set; }
 
-        public virtual Address Address { get; set; }
+        //public Address Address { get; set; }
 
         //public virtual VendorClassification VendorClassification { get; set; }
 
-        public virtual Currency Currency { get; set; }
+        //public Currency Currency { get; set; }
 
-        public virtual CreditTerms CreditTerms { get; set; }
+        //public CreditTerms CreditTerms { get; set; }
 
         //public virtual VendorType VendorType { get; set; }
 
-        public virtual VendorShipping VendorShipping { get; set; }
+        //public VendorShipping VendorShipping { get; set; }
 
-        public virtual MasterCompany MasterCompany { get; set; }
+        //public MasterCompany MasterCompany { get; set; }
         
         public IFormFile VendorFileCertified { get; set; }
         public IFormFile VendorFileAudit { get; set; }
@@ -118,6 +118,6 @@ namespace QuickApp.Pro.ViewModels
         public Nullable<bool> IsAllowNettingAPAR { get; set; }
 
 
-        public virtual List<VendorProcess1099> Master1099s { get; set; }
+        public List<VendorProcess1099> Master1099s { get; set; }
     }
 }
