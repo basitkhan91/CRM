@@ -243,6 +243,11 @@ namespace DAL.Repositories
                     UploadTaxType(BindCustomData<TaxType>(file, "TaxTypeId", moduleName));
                     break;
 
+                case "CreditTerms":
+                    UploadCreditTerms(BindCustomData<CreditTerms>(file, "CreditTermsId", moduleName));
+                    break;
+
+
                 case "Provision":
                     UploadProvision(BindCustomData<Provision>(file, "ProvisionId", moduleName));
                     break;
@@ -575,6 +580,20 @@ namespace DAL.Repositories
                 if (!flag)
                 {
                     _appContext.TaxType.Add(item);
+                    _appContext.SaveChanges();
+                }
+            }
+        }
+
+        private void UploadCreditTerms(List<CreditTerms> credittermsList)
+        {
+            foreach (var item in credittermsList)
+            {
+                var flag = _appContext.CreditTerms.Any(p => p.IsDeleted == false
+                                                    && (p.Name.ToLower() == item.Name.Trim().ToLower()));
+                if (!flag)
+                {
+                    _appContext.CreditTerms.Add(item);
                     _appContext.SaveChanges();
                 }
             }

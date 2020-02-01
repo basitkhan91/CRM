@@ -70,5 +70,10 @@ export class TaxTypeService {
     getServerPages(serverSidePagesData: any) {
         return Observable.forkJoin(
             this.taxTypeEndpoint.getTaxTypeRecords<TaxType[]>(serverSidePagesData));
-    }
+	}
+
+	taxtypeCustomUpload(file) {
+		return this.taxTypeEndpoint.taxtypeCustomUpload(file);
+	}
+
 }

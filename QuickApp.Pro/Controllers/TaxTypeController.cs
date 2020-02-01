@@ -252,6 +252,14 @@ namespace QuickApp.Pro.Controllers
             else
                 return BadRequest(new Exception("Error Occured while fetching customer specific details."));
         }
+
+
+        [HttpPost("UploadtaxtypeCustomData")]
+        public IActionResult UploadtaxtypeCustomData()
+        {
+            _unitOfWork.FileUploadRepository.UploadCustomFile(Convert.ToString("TaxType"), Request.Form.Files[0]);
+            return Ok();
+        }
     }
 
 }
