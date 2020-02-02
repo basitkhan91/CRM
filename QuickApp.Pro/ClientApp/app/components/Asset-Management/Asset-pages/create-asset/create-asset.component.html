@@ -106,33 +106,45 @@
                                         </ng-template>
                                     </p-autoComplete>
                                 </div>
-                                <div class="form-group">
-                                    <label>Company<span class="clr-red">*</span></label>
-                                    <select [(ngModel)]="currentAsset.companyId" [ngModelOptions]="{standalone: true}" (change)="getBUList(currentAsset.companyId)">
-                                        <option>--Select--</option>
-                                        <option *ngFor="let managementStructure of maincompanylist" [ngValue]="managementStructure.managementStructureId">{{managementStructure.code}}</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label>BU</label>
-                                    <select [(ngModel)]="currentAsset.buisinessUnitId" [ngModelOptions]="{standalone: true}" (change)="getDepartmentlist(currentAsset.buisinessUnitId)">
-                                        <option>--Select--</option>
-                                        <option *ngFor="let managementStructure of bulist" [ngValue]="managementStructure.managementStructureId">{{managementStructure.code}}</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label>Div</label>
-                                    <select [(ngModel)]="currentAsset.departmentId" [ngModelOptions]="{standalone: true}" (change)="getDivisionlist(currentAsset.departmentId)">
-                                        <option>--Select--</option>
-                                        <option *ngFor="let managementStructure of departmentList " [ngValue]="managementStructure.managementStructureId">{{managementStructure.code}}</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label>Dept</label>
-                                    <select [(ngModel)]="currentAsset.divisionId" [ngModelOptions]="{standalone: true}" (change)="divisionChange(currentAsset.divisionId)">
-                                        <option>--Select--</option>
-                                        <option *ngFor="let managementStructure of divisionlist " [ngValue]="managementStructure.managementStructureId">{{managementStructure.code}}</option>
-                                    </select>
+                                <div class="">
+                                    <div class="card" style="margin-top: 20px;">
+                                        <div class="card-header" style="padding: 10px 12px;">
+                                            <h5 style="margin-bottom: 0; font-size: 12px;">Management Structure<span class="clr-red">*</span></h5>
+                                        </div>
+                                        <div class="card-body" style="padding: 12px 12px 4px;">
+                                            <div class="form-group">
+                                                <select [ngClass]="managementValidCheck ? 'select-validate-cstm' : ''" class="form-control" name="primaryCompany" [(ngModel)]="currentAsset.companyId"
+                                                        (change)="getBUList(currentAsset.companyId); checkValidOnChange(currentAsset.companyId, 'companyId');" #mCompanyName required>
+                                                    <option value="">Select Legal Entity</option>
+                                                    <option *ngFor="let managementStructure of maincompanylist" [ngValue]="managementStructure.managementStructureId">{{managementStructure.code}}</option>
+                                                </select>
+                                                <div *ngIf="mCompanyName.invalid && (mCompanyName.dirty || mCompanyName.touched)" class="alert alert-danger alert-danger-cstm">
+                                                    <div *ngIf="mCompanyName.errors.required">
+                                                        <small> Company Name is required </small>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <div class="form-group">
+                                                <select [(ngModel)]="currentAsset.buisinessUnitId" name="primaryBU" (change)="getDepartmentlist(currentAsset.buisinessUnitId)" class="form-control">
+                                                    <option value="">--Select--</option>
+                                                    <option *ngFor="let managementStructure of bulist" [ngValue]="managementStructure.managementStructureId">{{managementStructure.code}}</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <select class="form-control" [(ngModel)]="currentAsset.departmentId" name="primaryDivision" (change)="getDivisionlist(currentAsset.departmentId)">
+                                                    <option value="">--Select--</option>
+                                                    <option *ngFor="let managementStructure of departmentList " [ngValue]="managementStructure.managementStructureId">{{managementStructure.code}}</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <select class="form-control" [(ngModel)]="currentAsset.divisionId" name="primaryDept" (change)="divisionChange(currentAsset.divisionId)">
+                                                    <option value="">--Select--</option>
+                                                    <option *ngFor="let managementStructure of divisionlist " [ngValue]="managementStructure.managementStructureId">{{managementStructure.code}}</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-sm-3">
@@ -140,12 +152,14 @@
                                     <div class="form-group">
                                         <label>Acquisition Type <span class="clr-red">*</span></label>
                                         <select [ngModelOptions]="{standalone: true}" [(ngModel)]="currentAsset.assetAcquisitionTypeId">
+                                            <option ng-option value="">--Select--</option>
                                             <option *ngFor="let acquisitionType of assetAcquisitionTypeList" [ngValue]="acquisitionType.value">{{acquisitionType.label}}</option>
                                         </select>
                                     </div>
                                     <div class="form-group">
                                         <label>Manufacturer</label>
                                         <select [ngModelOptions]="{standalone: true}" [(ngModel)]="currentAsset.manufacturerId">
+                                            <option ng-option value="">--Select--</option>
                                             <option *ngFor="let name of allManufacturerInfo" [ngValue]="name.manufacturerId">{{name.name}}</option>
                                         </select>
                                     </div>
@@ -175,7 +189,7 @@
                                         <div class="form-group">
                                             <label>Intangible Class <span class="clr-red">*</span></label>
                                             <select [ngModelOptions]="{standalone: true}" [(ngModel)]="currentAsset.assetIntangibleTypeId" (change)="showItemEdit(currentAsset.assetIntangibleTypeId)">
-                                                <option>--Select--</option>
+                                                <option ng-option value="0">--Select--</option>
                                                 <option class="form-control" *ngFor="let assetIntangible of allIntangibleInfo" [ngValue]="assetIntangible.assetIntangibleTypeId">
                                                     {{assetIntangible.assetIntangibleName}}
                                                 </option>
