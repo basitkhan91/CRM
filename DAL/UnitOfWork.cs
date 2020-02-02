@@ -108,7 +108,9 @@ namespace DAL
         ICountriesRepository _Countries;
         ICustomerWarning _CustomerWarning;
         ICustomerContactRepository _CustomerContact;
+        ILegalEntityContactRepository _legalEntityContact;
         ICustomerShippingAddress _CustomerShippingAddress;
+        ILegalEntityShippingAddress _LegalEntityShippingAddress;
         ICustomerAffliationRepository _customerAffliationRepository;
 
         ICustomerType _customerType;
@@ -204,10 +206,10 @@ namespace DAL
         IAssetDisposalType _assetDisposalType;
         IAssetStatus _assetStatus;
         IAssetLocation _assetLocation;
-		IAssetLocationAudit _assetLocationAudit;
-       // IAssetLocationAuditRepository _assetLocationAuditRepository;
+        IAssetLocationAudit _assetLocationAudit;
+        // IAssetLocationAuditRepository _assetLocationAuditRepository;
         IAssetAcquisitionType _AssetAcquisitionType;
-		IAssetAcquisitionTypeAudit _AssetAcquisitionTypeAudit;
+        IAssetAcquisitionTypeAudit _AssetAcquisitionTypeAudit;
         IAssetDepConvention _assetDepConvention;
 
         IPublicationTypeRepository _publicationTypeRepository;
@@ -230,14 +232,14 @@ namespace DAL
         IEmployeeStationRepository _employeeStationRepository;
         IGlobalSettingsRepository _globalSettingsRepository;
         JournalRepository _journalRepository;
-
+        LegalEntityShippingRepository _legalEntityShippingRepository;
 
         public UnitOfWork(ApplicationDbContext context, IOptions<AppSettings> appSettings)
         {
             _context = context;
             _appSettings = appSettings;
         }
-        
+
 
         IVendorWarning _vendorWarning;
 
@@ -299,7 +301,7 @@ namespace DAL
             get
             {
                 if (_customer == null)
-                    _customer = new CustomerRepository(_context,_appSettings);
+                    _customer = new CustomerRepository(_context, _appSettings);
 
                 return _customer;
             }
@@ -1032,6 +1034,18 @@ namespace DAL
                 return _CustomerContact;
             }
         }
+
+        public ILegalEntityContactRepository LegalEntityContact
+
+        {
+            get
+            {
+                if (_legalEntityContact == null)
+                    _legalEntityContact = new LegalEntityContactRepository(_context);
+                return _legalEntityContact;
+            }
+        }
+
         public ICustomerShippingAddress CustomerShippingAddress
 
         {
@@ -1042,6 +1056,18 @@ namespace DAL
                 return _CustomerShippingAddress;
             }
         }
+
+        public ILegalEntityShippingAddress LegalEntityShippingAddress
+
+        {
+            get
+            {
+                if (_LegalEntityShippingAddress == null)
+                    _LegalEntityShippingAddress = new LegalEntityShippingAddressRepository(_context);
+                return _LegalEntityShippingAddress;
+            }
+        }
+
         public ICustomerWarning CustomerWarning
 
         {
@@ -1826,8 +1852,8 @@ namespace DAL
                 return _assetLocation;
             }
         }
-		
-		public IAssetLocationAudit AssetLocationAudit
+
+        public IAssetLocationAudit AssetLocationAudit
         {
             get
             {
@@ -1846,8 +1872,8 @@ namespace DAL
                 return _AssetAcquisitionType;
             }
         }
-		
-		IAssetAcquisitionTypeAudit IUnitOfWork.AssetAcquisitionTypeAudit
+
+        IAssetAcquisitionTypeAudit IUnitOfWork.AssetAcquisitionTypeAudit
         {
             get
             {
@@ -1995,7 +2021,7 @@ namespace DAL
             {
                 if (_receiveRepairOrder == null)
                 {
-                    _receiveRepairOrder = new ReceiveRepairOrderRepository(_context,CommonRepository);
+                    _receiveRepairOrder = new ReceiveRepairOrderRepository(_context, CommonRepository);
                 }
                 return _receiveRepairOrder;
             }
@@ -2082,6 +2108,17 @@ namespace DAL
                     _journalRepository = new JournalRepository(_context);
 
                 return _journalRepository;
+            }
+        }
+
+        public ILegalEntityShipping LegalEntityShipping
+        {
+            get
+            {
+                if (_legalEntityShippingRepository == null)
+                    _legalEntityShippingRepository = new LegalEntityShippingRepository(_context);
+
+                return _legalEntityShippingRepository;
             }
         }
     }

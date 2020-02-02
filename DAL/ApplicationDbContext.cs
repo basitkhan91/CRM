@@ -115,10 +115,14 @@ namespace DAL
         public DbSet<VendorAudit> VendorAudit { get; set; }
         public DbSet<CustomerContact> CustomerContact { get; set; }
         public DbSet<CustomerShipping> CustomerShipping { get; set; }
+        public DbSet<LegalEntityShipping> LegalEntityShipping { get; set; }
         public DbSet<CustomerShippingAudit> CustomerShippingAudit { get; set; }
 
         public DbSet<CustomerShippingAddress> CustomerShippingAddress { get; set; }
         public DbSet<CustomerShippingAddressAudit> CustomerShippingAddressAudit { get; set; }
+        public DbSet<LegalEntityShippingAudit> LegalEntityShippingAudit { get; set; }
+        public DbSet<LegalEntityShippingAddress> LegalEntityShippingAddress { get; set; }
+        public DbSet<LegalEntityShippingAddressAudit> LegalEntityShippingAddressAudit { get; set; }
 
         public DbSet<VendorContact> VendorContact { get; set; }
         public DbSet<VendorContactAudit> VendorContactAudit { get; set; }
@@ -210,7 +214,7 @@ namespace DAL
         public DbSet<LaborOverloadCost> LaborOverloadCost { get; set; }
         public DbSet<LaborOverloadCostAudit> LaborOverloadCostAudit { get; set; }
 
-
+        public DbSet<LegalEntityAudit> LegalEntityAudit { get; set; }
         public DbSet<LegalEntity> LegalEntity { get; set; }
 
         public DbSet<PurchaseOrder> PurchaseOrder { get; set; }
@@ -467,7 +471,6 @@ namespace DAL
         public DbSet<VendorDocumentDetailsAudit> VendorDocumentDetailsAudit { get; set; }
         public DbSet<PurchaseOrderShipVia> PurchaseOrderShipVia { get; set; }
         public DbSet<LegalEntityBillingAddress> LegalEntityBillingAddress { get; set; }
-        public DbSet<LegalEntityShippingAddress> LegalEntityShippingAddress { get; set; }
         public DbSet<LegalEntityContact> LegalEntityContact { get; set; }
         public DbSet<PurchaseOrderAudit> PurchaseOrderAudit { get; set; }
         public DbSet<WorkOrderTask> WorkOrderTask { get; set; }
@@ -510,6 +513,7 @@ namespace DAL
 
         public DbSet<Models.Sales.MasterSalesOrderQuoteStatus> MasterSalesOrderQuoteStatus { get; set; }
         public DbSet<AuditCustomerContact> AuditCustomerContact { get; set; }
+        public DbSet<LegalEntityContactAudit> LegalEntityContactAudit { get; set; }
         public DbSet<WorkOrderSettings> WorkOrderSettings { get; set; }
         public DbSet<WorkOrderStageAndStatus> WorkOrderStageAndStatus { get; set; }
         public DbSet<EmployeeStation> EmployeeStation { get; set; }

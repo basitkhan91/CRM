@@ -1,6 +1,7 @@
 ﻿using DAL.Common;
 using DAL.Models;
 using DAL.Repositories.Interfaces;
+using EntityFrameworkPaginate;
 using ExcelDataReader;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -14,11 +15,200 @@ using System.Text;
 
 namespace DAL.Repositories
 {
-    class LegalEntityRepository : Repository<DAL.Models.LegalEntity>, ILegalEntity
+   public  class LegalEntityRepository : Repository<DAL.Models.LegalEntity>, ILegalEntity
     {
         public LegalEntityRepository(ApplicationDbContext context, IOptions<AppSettings> settings) : base(context)
         {
             AppSettings = settings.Value;
+        }
+
+        public IEnumerable<object> GetList(Common.Filters<LegalEntityFilters> entityFilters)
+        {
+            if (entityFilters.filters == null)
+                entityFilters.filters = new LegalEntityFilters();
+            var pageNumber = entityFilters.first + 1;
+            var pageSize = entityFilters.rows;
+
+            string sortColumn = string.Empty;
+
+            var sorts = new Sorts<LegalEntityFilters>();
+
+            if (string.IsNullOrEmpty(entityFilters.SortField))
+            {
+                sortColumn = "createdDate";
+                entityFilters.SortOrder = -1;
+                sorts.Add(sortColumn == "createdDate", x => x.createdDate, true);
+            }
+            else
+            {
+                sortColumn = entityFilters.SortField;
+            }
+
+            var propertyInfo = typeof(LegalEntityFilters).GetProperty(sortColumn);
+
+            if (entityFilters.SortOrder == -1)
+            {
+                sorts.Add(true, x => propertyInfo.GetValue(x, null), true);
+            }
+            else
+            {
+                sorts.Add(true, x => propertyInfo.GetValue(x, null));
+            }
+            var totalRecords = (from t in _appContext.LegalEntity
+                                join ad in _appContext.Address on t.AddressId equals ad.AddressId into add
+                                from ad in add.DefaultIfEmpty()
+                                join cc in _appContext.LegalEntityContact.Where(p => p.IsDefaultContact == true) on t.LegalEntityId equals cc.LegalEntityId into custinfo
+                                from custContacts in custinfo.DefaultIfEmpty()
+                                join con in _appContext.Contact on custContacts.ContactId equals con.ContactId into contactInfo
+                                from contacts in contactInfo.DefaultIfEmpty()
+                                where (t.IsDeleted == false || t.IsDeleted == null)
+                                //&& t.Name.Contains((!String.IsNullOrEmpty(LegalEntityFilters.filters.name) ? LegalEntityFilters.filters.name : t.Name))
+                                //&& t.LegalEntityCode.Contains((!String.IsNullOrEmpty(LegalEntityFilters.filters.LegalEntityCode) ? LegalEntityFilters.filters.LegalEntityCode : t.LegalEntityCode))
+                                //&& t.Email.Contains((!String.IsNullOrEmpty(LegalEntityFilters.filters.email) ? LegalEntityFilters.filters.email : t.Email))
+                                //&& type.Description.Contains((!String.IsNullOrEmpty(LegalEntityFilters.filters.accountType) ? LegalEntityFilters.filters.accountType : type.Description))
+                                //&& AccountTyp.description.Contains((!String.IsNullOrEmpty(LegalEntityFilters.filters.LegalEntityType) ? LegalEntityFilters.filters.LegalEntityType : AccountTyp.description))
+
+                                //&& ct.Description.Contains((!String.IsNullOrEmpty(LegalEntityFilters.filters.LegalEntityClassification) ? LegalEntityFilters.filters.LegalEntityClassification : ct.Description))
+                                //&& ad.City.Contains((!String.IsNullOrEmpty(LegalEntityFilters.filters.city) ? LegalEntityFilters.filters.city : ad.City))
+                                //&& ad.StateOrProvince.Contains((!String.IsNullOrEmpty(LegalEntityFilters.filters.stateOrProvince) ? LegalEntityFilters.filters.stateOrProvince : ad.StateOrProvince))
+                                //  && t.LegalEntityPhone.Contains((!String.IsNullOrEmpty(LegalEntityFilters.filters.contact) ? LegalEntityFilters.filters.contact : t.LegalEntityPhone))
+                                //&& LegalEntityFilters.filters.salesPersonPrimary == null ? string.IsNullOrEmpty(t.PrimarySalesPersonFirstName) || t.PrimarySalesPersonFirstName != null :
+                                //         t.PrimarySalesPersonFirstName.Contains(LegalEntityFilters.filters.salesPersonPrimary)
+                                select new
+                                {
+                                    t.LegalEntityId,
+                                   // Contact = t.LegalEntityPhone == null ? "-" : t.LegalEntityPhone,
+
+                                }).Distinct().Count();
+
+            var data = (from t in _appContext.LegalEntity
+                        join ad in _appContext.Address on t.AddressId equals ad.AddressId into add
+                        from ad in add.DefaultIfEmpty()
+                        join cc in _appContext.LegalEntityContact.Where(p => p.IsDefaultContact == true) on t.LegalEntityId equals cc.LegalEntityId into custinfo
+                        from custContacts in custinfo.DefaultIfEmpty()
+                        join con in _appContext.Contact on custContacts.ContactId equals con.ContactId into contactInfo
+                        from contacts in contactInfo.DefaultIfEmpty()
+                        where (t.IsDeleted == false || t.IsDeleted == null)
+                        //&& t.Name.Contains((!String.IsNullOrEmpty(LegalEntityFilters.filters.name) ? LegalEntityFilters.filters.name : t.Name))
+                        //&& t.LegalEntityCode.Contains((!String.IsNullOrEmpty(LegalEntityFilters.filters.LegalEntityCode) ? LegalEntityFilters.filters.LegalEntityCode : t.LegalEntityCode))
+                        //&& t.Email.Contains((!String.IsNullOrEmpty(LegalEntityFilters.filters.email) ? LegalEntityFilters.filters.email : t.Email))
+                        //&& type.Description.Contains((!String.IsNullOrEmpty(LegalEntityFilters.filters.accountType) ? LegalEntityFilters.filters.accountType : type.Description))
+                        //&& AccountTyp.description.Contains((!String.IsNullOrEmpty(LegalEntityFilters.filters.LegalEntityType) ? LegalEntityFilters.filters.LegalEntityType : AccountTyp.description))
+
+                        //&& ct.Description.Contains((!String.IsNullOrEmpty(LegalEntityFilters.filters.LegalEntityClassification) ? LegalEntityFilters.filters.LegalEntityClassification : ct.Description))
+                        //&& ad.City.Contains((!String.IsNullOrEmpty(LegalEntityFilters.filters.city) ? LegalEntityFilters.filters.city : ad.City))
+                        //&& ad.StateOrProvince.Contains((!String.IsNullOrEmpty(LegalEntityFilters.filters.stateOrProvince) ? LegalEntityFilters.filters.stateOrProvince : ad.StateOrProvince))
+                        //  && t.LegalEntityPhone.Contains((!String.IsNullOrEmpty(LegalEntityFilters.filters.contact) ? LegalEntityFilters.filters.contact : t.LegalEntityPhone))
+                        //&& LegalEntityFilters.filters.salesPersonPrimary == null ? string.IsNullOrEmpty(t.PrimarySalesPersonFirstName) || t.PrimarySalesPersonFirstName != null :
+                        //         t.PrimarySalesPersonFirstName.Contains(LegalEntityFilters.filters.salesPersonPrimary)
+                        select new LegalEntityFilters()
+                        {
+                            LegalEntityId = t.LegalEntityId,
+                            createdDate = t.CreatedDate,
+                            isActive = t.IsActive,
+                            isDeleted = t.IsDeleted,
+                            totalRecords = totalRecords
+                        }).Distinct()
+                        .Paginate(pageNumber, pageSize, sorts).Results;
+            return (data);
+        }
+
+        public IEnumerable<object> GetListGlobalFilter(string value, int pageNumber, int pageSize)
+        {
+
+            var pageNumbers = pageNumber + 1;
+            var take = pageSize;
+            var skip = take * (pageNumbers - 1);
+
+            if (!string.IsNullOrEmpty(value))
+            {
+                var totalRecords = (from t in _appContext.LegalEntity
+                                    join ad in _appContext.Address on t.AddressId equals ad.AddressId
+                                    join cc in _appContext.LegalEntityContact.Where(p => p.IsDefaultContact == true) on t.LegalEntityId equals cc.LegalEntityId into custinfo
+                                    from custContacts in custinfo.DefaultIfEmpty()
+                                    join con in _appContext.Contact on custContacts.ContactId equals con.ContactId into contactInfo
+                                    from contacts in contactInfo.DefaultIfEmpty()
+                                    where (t.IsDeleted == false || t.IsDeleted == null)
+                                    //&& t.Name.Contains(value) || t.LegalEntityCode.Contains(value) || t.Email.Contains(value)
+                                    //|| type.Description.Contains(value) || ct.Description.Contains(value)
+                                    //|| ad.City.Contains(value) || ad.StateOrProvince.Contains(value)
+                                    //|| contacts.WorkPhone.Contains(value) || t.PrimarySalesPersonFirstName.Contains(value)
+                                    select new
+                                    {
+                                        t.LegalEntityId,
+
+                                    }).Count();
+
+                var data = (from t in _appContext.LegalEntity
+                           
+                            join ad in _appContext.Address on t.AddressId equals ad.AddressId
+                            join cc in _appContext.LegalEntityContact.Where(p => p.IsDefaultContact == true) on t.LegalEntityId equals cc.LegalEntityId into custinfo
+                            from custContacts in custinfo.DefaultIfEmpty()
+                            join con in _appContext.Contact on custContacts.ContactId equals con.ContactId into contactInfo
+                            from contacts in contactInfo.DefaultIfEmpty()
+                            //where (t.IsDeleted == false || t.IsDeleted == null)
+                            //       && t.Name.Contains(value) || t.LegalEntityCode.Contains(value) || t.Email.Contains(value)
+                            //       || type.Description.Contains(value) || ct.Description.Contains(value)
+                            //       || ad.City.Contains(value) || ad.StateOrProvince.Contains(value)
+                            //       || contacts.WorkPhone.Contains(value) || t.PrimarySalesPersonFirstName.Contains(value)
+                            select new
+                            {
+                                t.LegalEntityId,
+                                t.Name,
+                                ad.City,
+                                ad.StateOrProvince,
+                                Contact = contacts.WorkPhone == null ? "-" : contacts.WorkPhone,
+                                t.UpdatedDate,
+                                t.IsActive,
+                                t.IsDeleted,
+                                TotalRecords = totalRecords
+                            }).OrderBy(p => p.UpdatedDate)
+                                 .Skip(skip)
+                                 .Take(take)
+                                 .ToList();
+                return (data);
+            }
+            else
+            {
+                var totalRecords = (from t in _appContext.LegalEntity
+                                    join ad in _appContext.Address on t.AddressId equals ad.AddressId
+                                    join cc in _appContext.LegalEntityContact.Where(p => p.IsDefaultContact == true) on t.LegalEntityId equals cc.LegalEntityId into custinfo
+                                    from custContacts in custinfo.DefaultIfEmpty()
+                                    join con in _appContext.Contact on custContacts.ContactId equals con.ContactId into contactInfo
+                                    from contacts in contactInfo.DefaultIfEmpty()
+                                    where (t.IsDeleted == false || t.IsDeleted == null)
+                                    select new
+                                    {
+                                        t.LegalEntityId,
+
+                                    }).Count();
+
+                var data = (from t in _appContext.LegalEntity
+                            join ad in _appContext.Address on t.AddressId equals ad.AddressId
+                            join cc in _appContext.LegalEntityContact.Where(p => p.IsDefaultContact == true) on t.LegalEntityId equals cc.LegalEntityId into custinfo
+                            from custContacts in custinfo.DefaultIfEmpty()
+                            join con in _appContext.Contact on custContacts.ContactId equals con.ContactId into contactInfo
+                            from contacts in contactInfo.DefaultIfEmpty()
+                            where (t.IsDeleted == false || t.IsDeleted == null)
+                            select new
+                            {
+                                t.LegalEntityId,
+                                t.Name,
+                                ad.City,
+                                ad.StateOrProvince,
+                                Contact = contacts.WorkPhone == null ? "-" : contacts.WorkPhone,
+                                t.UpdatedDate,
+                                t.IsActive,
+                                t.IsDeleted,
+                                TotalRecords = totalRecords
+                            }).OrderBy(p => p.UpdatedDate)
+                                 .Skip(skip)
+                                 .Take(take)
+                                 .ToList();
+                return (data);
+            }
+
+
         }
 
         public IEnumerable<object> GetParentEntities()
@@ -119,8 +309,6 @@ namespace DAL.Repositories
                         }).OrderByDescending(p=>p.UpdatedDate).ToList();
             return data;
         }
-
-
 
         public long CreateLegalEntityBillingAddress(LegalEntityBillingAddress billingAddress)
         {
@@ -639,6 +827,120 @@ namespace DAL.Repositories
 
         private AppSettings AppSettings { get; set; }
 
+        public IEnumerable<object> GetLegalEntityShipviaDetails(long entityId, long addressId)
+        {
+            try
+            {
+                var list = (from csv in _appContext.LegalEntityShipping
+                            where csv.LegalEntityId == entityId && csv.LegalEntityShippingAddressId == addressId
+                            select new
+                            {
+                                csv.LegalEntityShippingId,
+                                csv.IsActive,
+                                csv.Memo,
+                                csv.ShippingAccountinfo,
+                                csv.ShippingId,
+                                csv.ShippingURL,
+                                csv.ShipVia,
+                            }).ToList();
+                return list;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public void LegalEntityShippingDetailsStatus(long id, bool status, string updatedBy)
+        {
+            try
+            {
+                LegalEntityShippingAddress model = new LegalEntityShippingAddress();
+                model.LegalEntityShippingAddressId = id;
+                model.UpdatedDate = DateTime.Now;
+                model.IsActive = status;
+                model.UpdatedBy = updatedBy;
+                _appContext.LegalEntityShippingAddress.Attach(model);
+                _appContext.Entry(model).Property(x => x.IsActive).IsModified = true;
+                _appContext.Entry(model).Property(x => x.UpdatedDate).IsModified = true;
+                _appContext.Entry(model).Property(x => x.UpdatedBy).IsModified = true;
+                _appContext.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public void DeleteShipViaDetails(long id, string updatedBy)
+        {
+            try
+            {
+                LegalEntityShipping model = new LegalEntityShipping();
+                model.LegalEntityShippingId = id;
+                model.UpdatedDate = DateTime.Now;
+                model.IsDeleted = true;
+                model.UpdatedBy = updatedBy;
+
+                _appContext.LegalEntityShipping.Attach(model);
+
+                _appContext.Entry(model).Property(x => x.IsDeleted).IsModified = true;
+                _appContext.Entry(model).Property(x => x.UpdatedDate).IsModified = true;
+                _appContext.Entry(model).Property(x => x.UpdatedBy).IsModified = true;
+
+                _appContext.SaveChanges();
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public void LegalEntityShippingDetailsViaStatus(long id, bool status, string updatedBy)
+        {
+            try
+            {
+                LegalEntityShipping model = new LegalEntityShipping();
+                model.LegalEntityShippingId = id;
+                model.UpdatedDate = DateTime.Now;
+                model.IsActive = status;
+
+                _appContext.LegalEntityShipping.Attach(model);
+
+                _appContext.Entry(model).Property(x => x.IsActive).IsModified = true;
+                _appContext.Entry(model).Property(x => x.UpdatedDate).IsModified = true;
+                _appContext.Entry(model).Property(x => x.UpdatedBy).IsModified = true;
+
+                _appContext.SaveChanges();
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public IEnumerable<object> GetLegalEntityAuditHistoryByid(long entityId)
+        {
+
+            {
+                var data = (from t in _appContext.LegalEntityAudit
+                            join ad in _appContext.Address on t.AddressId equals ad.AddressId into add
+                            from ad in add.DefaultIfEmpty()
+                            join cont in _appContext.Countries on Convert.ToInt32(ad.Country) equals cont.countries_id into country
+                            from cont in country.DefaultIfEmpty()
+                            where t.LegalEntityId == entityId 
+                            select new
+                            {
+                                t,
+                                t.UpdatedDate
+                            }).OrderByDescending(a => a.UpdatedDate).ToList();
+                return data;
+            }
+
+        }
+
         public IEnumerable<object> GetLegalEntityInternationalShippingAuditHistoryByid(long legalEntityId, long internationalShippingId)
         {
             {
@@ -678,7 +980,7 @@ namespace DAL.Repositories
                 LegalEntityBillingAddress bill;
 
                 string fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
-                string filePath = Path.Combine(AppSettings.CustomUploadFilePath, Convert.ToString(ModuleEnum.CustomerBillingAddress), DateTime.Now.ToString("yyyy-MM-dd hh-mm-ss"));
+                string filePath = Path.Combine(AppSettings.CustomUploadFilePath, Convert.ToString(ModuleEnum.LegalEntityBillingAddress), DateTime.Now.ToString("yyyy-MM-dd hh-mm-ss"));
 
                 if (!Directory.Exists(filePath))
                 {
@@ -766,7 +1068,7 @@ namespace DAL.Repositories
                 LegalEntityShippingAddress ship;
 
                 string fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
-                string filePath = Path.Combine(AppSettings.CustomUploadFilePath, Convert.ToString(ModuleEnum.CustomerShippingAddress), DateTime.Now.ToString("yyyy-MM-dd hh-mm-ss"));
+                string filePath = Path.Combine(AppSettings.CustomUploadFilePath, Convert.ToString(ModuleEnum.LegalEntityShippingAddress), DateTime.Now.ToString("yyyy-MM-dd hh-mm-ss"));
 
                 if (!Directory.Exists(filePath))
                 {
@@ -853,7 +1155,7 @@ namespace DAL.Repositories
             {
                 LegalEntityInternationalShipping ship;
                 string fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
-                string filePath = Path.Combine(AppSettings.CustomUploadFilePath, Convert.ToString(ModuleEnum.CustomerInternationalShippingAddress), DateTime.Now.ToString("yyyy-MM-dd hh-mm-ss"));
+                string filePath = Path.Combine(AppSettings.CustomUploadFilePath, Convert.ToString(ModuleEnum.LegalEntityInternationalShippingAddress), DateTime.Now.ToString("yyyy-MM-dd hh-mm-ss"));
 
                 if (!Directory.Exists(filePath))
                 {
@@ -930,7 +1232,7 @@ namespace DAL.Repositories
                 LegalEntityContact legalCont;
 
                 string fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
-                string filePath = Path.Combine(AppSettings.CustomUploadFilePath, Convert.ToString(Common.ModuleEnum.CustomerContact), DateTime.Now.ToString("yyyy-MM-dd hh-mm-ss"));
+                string filePath = Path.Combine(AppSettings.CustomUploadFilePath, Convert.ToString(Common.ModuleEnum.LegalEntity), DateTime.Now.ToString("yyyy-MM-dd hh-mm-ss"));
 
                 if (!Directory.Exists(filePath))
                 {
