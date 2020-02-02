@@ -26,6 +26,8 @@ namespace QuickApp.Pro.ViewModels
 
         public bool includeAlternatePartNumber { get; set; }
 
+        public bool includeEquivalentPartNumber { get; set; }
+
         public ItemSearchType itemSearchType { get; set; }
 
         public bool? restrictPMA { get;set;}

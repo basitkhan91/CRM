@@ -1114,7 +1114,7 @@ namespace QuickApp.Pro.Controllers
 
             IEnumerable<object> results = GetPartDetails(searchView.partSearchParamters.partId, searchView.partSearchParamters.conditionId);
 
-            if(results.Any() && searchView.partSearchParamters.includeAlternatePartNumber)
+            if(results.Any() && (searchView.partSearchParamters.includeAlternatePartNumber || searchView.partSearchParamters.includeEquivalentPartNumber))
             {
                 results = results.Concat(GetMappedPartNumbers(searchView.partSearchParamters)); 
             }
@@ -1132,7 +1132,7 @@ namespace QuickApp.Pro.Controllers
         {
             IEnumerable<object> results = Enumerable.Empty<object>();
 
-             if (partSearchParamters.includeAlternatePartNumber)
+             if (partSearchParamters.includeAlternatePartNumber || partSearchParamters.includeEquivalentPartNumber)
             {
                 var alternatePartNumbers  =  
                 (from mp in _context.Nha_Tla_Alt_Equ_ItemMapping 
@@ -1140,20 +1140,21 @@ namespace QuickApp.Pro.Controllers
                 where mp.ItemMasterId == partSearchParamters.partId.Value
                         && mp.IsActive 
                         && im.IsActive.HasValue && im.IsActive.Value
-                        && mp.MappingType  == 1
+                        && ( (partSearchParamters.includeAlternatePartNumber && mp.MappingType  == 1 ) || ( partSearchParamters.includeEquivalentPartNumber && mp.MappingType  == 2))
                         && im.MasterCompanyId == 1
                         && mp.MasterCompanyId == 1
                 select new MappedPartsView{ 
                     ItemMasterId = im.ItemMasterId,
                     PartNumber = im.PartNumber,
-                    MappingItemMasterId = mp.MappingItemMasterId
+                    MappingItemMasterId = mp.MappingItemMasterId,  
+                    MappingType = mp.MappingType
                 }).ToList<MappedPartsView>();
 
                 if(alternatePartNumbers.Any())
                 {
                     foreach(var pn in alternatePartNumbers)
                     {
-                      results = results.Concat(GetPartDetails(pn.MappingItemMasterId, partSearchParamters.conditionId, pn.PartNumber));
+                      results = results.Concat(GetPartDetails(pn.MappingItemMasterId, partSearchParamters.conditionId, pn.PartNumber, pn.MappingType));
                     }
                 }
             }
@@ -1197,7 +1198,7 @@ namespace QuickApp.Pro.Controllers
         }
 
 
-        private IEnumerable<object> GetPartDetails(long? partId, long? conditionId, string alternateFor = "")
+        private IEnumerable<object> GetPartDetails(long? partId, long? conditionId, string alternateFor = "", int mappingType = -1)
         {
             var result = Enumerable.Empty<object>();
 
@@ -1242,7 +1243,8 @@ namespace QuickApp.Pro.Controllers
                          conditionDescription = cp != null ? cp.Description : string.Empty,
                          currencyId = ic != null ? ic.CurrencyId : -1,
                          currencyDescription = ic != null ? ic.DisplayName : string.Empty,
-                         unitCost = sl.CoreUnitCost
+                         unitCost = sl.CoreUnitCost,
+                         mappingType = mappingType
                      };
 
 

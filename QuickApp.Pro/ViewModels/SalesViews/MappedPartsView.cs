@@ -5,5 +5,7 @@ namespace QuickApp.Pro.ViewModels.SalesViews
        public long? ItemMasterId { get;set;}
        public string PartNumber { get;set;}
        public long? MappingItemMasterId { get;set;}
+
+       public int MappingType { get;set;}
     }
 }
