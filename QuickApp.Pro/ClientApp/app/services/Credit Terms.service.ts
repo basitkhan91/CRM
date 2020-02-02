@@ -59,5 +59,8 @@ export class CreditTermsService {
     getCreditTermsAudit(credittermId: number) {
         return this.CreditTermsEndpoint.getCreaditTermsAuditById<any>(credittermId);
     }
+    creditTermsCustomUpload(file) {
+        return this.CreditTermsEndpoint.creditTermsCustomUpload(file);
+    }
 
 }

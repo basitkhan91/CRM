@@ -5,7 +5,7 @@ import { AlertService,  MessageSeverity } from '../../services/alert.service';
 import { CreditTerms } from '../../models/credit-terms.model';
 import { AuthService } from '../../services/auth.service';
 import { SingleScreenBreadcrumbService } from "../../services/single-screens-breadcrumb.service";
-
+import { ConfigurationService } from '../../services/configuration.service';
 import { Table } from 'primeng/table';
 import { ConditionService } from '../../services/condition.service';
 import { PercentService } from '../../services/percent.service';
@@ -32,13 +32,14 @@ export class CreditTermsComponent implements OnInit {
     Active: string = "Active";
 
     viewRowData: any;
-    auditHistory: any;
     selectedRowforDelete: any;
     percentageList:any[];
     dayList:number[]=[];
     netDayList:number[]=[];
     creditTermData: any;
     creditTermsList: any;
+    formData = new FormData();
+    existingRecordsResponse: Object;
     disableSaveForCreditTermMSg : boolean = false;
     creditTermHeaders = [
 
@@ -55,6 +56,7 @@ export class CreditTermsComponent implements OnInit {
     totalPages: number;
     @ViewChild('dt')
     private table: Table;
+    auditHistory: any[] = [];
     selectedRecordForEdit: any;
     newCreditTerm =
         {
@@ -70,7 +72,7 @@ export class CreditTermsComponent implements OnInit {
     addNewCreditTerm= { ...this.newCreditTerm };
     disableSaveForCreditTerm: boolean;
     /** credit terms ctor */
-    constructor(private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private alertService: AlertService,
+    constructor(private breadCrumb: SingleScreenBreadcrumbService, private authService: AuthService, private alertService: AlertService, private configurations: ConfigurationService,
         public percentageService: PercentService, public creditTermService: CreditTermsService) {
 
 
@@ -135,6 +137,30 @@ export class CreditTermsComponent implements OnInit {
 
     }
 
+    getChange() {
+        if (this.disableSaveForCreditTermMSg == false) {
+            this.disableSaveForCreditTerm = false;
+        }
+    }
+
+    customExcelUpload(event) {
+        const file = event.target.files;
+        console.log(file);
+        if (file.length > 0) {
+            this.formData.append('file', file[0])
+            this.creditTermService.creditTermsCustomUpload(this.formData).subscribe(res => {
+                event.target.value = '';
+                this.existingRecordsResponse = res;
+                this.getCreditTermList();
+                this.alertService.showMessage(
+                    'Success',
+                    `Successfully Uploaded  `,
+                    MessageSeverity.success
+                );                
+            })
+        }
+    }
+
     onBlur(event) {
         const value = event.target.value;
       
@@ -171,6 +197,11 @@ export class CreditTermsComponent implements OnInit {
             return x.name.toLowerCase().includes(event.query.toLowerCase())
         })]
         this.creditTermsList = CREDITTERMDATA;
+    }
+
+    sampleExcelDownload() {
+        const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=CreditTerms&fileName=creditterms.xlsx`;
+        window.location.assign(url);
     }
 
     checkCreditTermExists(field, value) {
@@ -273,9 +304,10 @@ export class CreditTermsComponent implements OnInit {
     }
 
 
-    getAuditHistoryById(rowData) {
+    getAuditHistoryById(rowData) {       
         this.creditTermService.getCreditTermsAudit(rowData.creditTermsId).subscribe(res => {
             this.auditHistory = res;
+          
         })
     }
     getColorCodeForHistory(i, field, value) {
@@ -292,7 +324,7 @@ export class CreditTermsComponent implements OnInit {
 
     changePage(event: { first: any; rows: number }) {
         console.log(event);
-        const pageIndex = (event.first / event.rows);
+       // const pageIndex = (event.first / event.rows);
         // this.pageIndex = pageIndex;
         this.pageSize = event.rows;
         this.totalPages = Math.ceil(this.totalRecords / this.pageSize);

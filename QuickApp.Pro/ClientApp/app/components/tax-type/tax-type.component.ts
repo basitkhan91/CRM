@@ -68,8 +68,8 @@ export class TaxTypeComponent implements OnInit {
     viewRowData: any;
     disableSaveTaxtypeMsg:boolean;
     selectedRowforDelete: any;
-   
-    existingRecordsResponse = []
+    existingRecordsResponse: Object;
+   // existingRecordsResponse = []
 
     constructor(private breadCrumb: SingleScreenBreadcrumbService,
         private authService: AuthService,
@@ -109,29 +109,29 @@ export class TaxTypeComponent implements OnInit {
         this.getList();
     }
 
-    customExcelUpload() {
-        // const file = event.target.files;
+    customExcelUpload(event) {
+         const file = event.target.files;
 
-        // console.log(file);
-        // if (file.length > 0) {
+         console.log(file);
+         if (file.length > 0) {
 
-        //     this.formData.append('file', file[0])
-        //     this.unitofmeasureService.UOMFileUpload(this.formData).subscribe(res => {
-        //         event.target.value = '';
+             this.formData.append('file', file[0])
+             this.taxTypeService.taxtypeCustomUpload(this.formData).subscribe(res => {
+                 event.target.value = '';
 
-        //         this.formData = new FormData();
-        //         this.existingRecordsResponse = res;
-        //         this.getList();
-        //         this.alertService.showMessage(
-        //             'Success',
-        //             `Successfully Uploaded  `,
-        //             MessageSeverity.success
-        //         );
+                 this.formData = new FormData();
+                 this.existingRecordsResponse = res;
 
-        //     })
-        // }
-
-    }
+                // alert(JSON.stringify(this.existingRecordsResponse));
+                 this.getList();
+                 this.alertService.showMessage(
+                     'Success',
+                     `Successfully Uploaded  `,
+                     MessageSeverity.success
+                 );
+             })
+        };
+    };
     sampleExcelDownload() {
         const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=TaxType&fileName=taxType.xlsx`;
         window.location.assign(url);
@@ -229,7 +229,9 @@ export class TaxTypeComponent implements OnInit {
         this.addNew = { ...this.new };
     }
     getChange() {
-        this.disableSaveTaxtype = false;
+        if (this.disableSaveTaxtypeMsg == false) {
+            this.disableSaveTaxtype = false;
+        }
     }
     edit(rowData) {
         console.log(rowData);

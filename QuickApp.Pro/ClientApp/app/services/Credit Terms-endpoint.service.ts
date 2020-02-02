@@ -14,6 +14,7 @@ export class CreditTermsEndpoint extends EndpointFactory {
     private readonly _credittermsPosturl: string = "/api/CreditTerms/Creditermspost";
     private readonly _actionsUrlNewAuditHistory: string = "/api/CreditTerms/audits";
     private readonly getCreditTermsAuditById: string = "/api/CreditTerms/audits";
+    private readonly excelUpload: string = "/api/CreditTerms/UploadCreditTermsCustomData";
 
     get creditermsUrl() { return this.configurations.baseUrl + this._creditermsUrl; }
 
@@ -79,5 +80,10 @@ export class CreditTermsEndpoint extends EndpointFactory {
             .catch(error => {
                 return this.handleError(error, () => this.getCreaditTermsAuditById(creditTermId));
             });
+    }
+
+    creditTermsCustomUpload(file) {
+        return this.http.post(`${this.configurations.baseUrl}${this.excelUpload}`, file)
+
     }
 }

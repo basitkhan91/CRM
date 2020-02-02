@@ -17,7 +17,9 @@ export class TaxTypeEndpointService extends EndpointFactory {
     private readonly getTaxTypeDataAuditById: string = "/api/TaxType/audits";
     private readonly _auditUrl: string = "/api/TaxType/audits";
     private readonly getTaxType: string = "/api/TaxType/pagination";
-    private readonly deleteTaxType: string = "/api/TaxType/actions";
+	private readonly deleteTaxType: string = "/api/TaxType/actions";
+
+	private readonly excelUpload: string = "/api/TaxType/UploadtaxtypeCustomData";
 
     get paginate() { return this.configurations.baseUrl + this.getTaxType; }
 	get taxTypeUrl() { return this.configurations.baseUrl + this._taxTypeUrl; }
@@ -104,5 +106,11 @@ export class TaxTypeEndpointService extends EndpointFactory {
             .catch(error => {
                 return this.handleError(error, () => this.getTaxTypeRecords(paginationOption));
             });
-    }
+	}
+
+
+	taxtypeCustomUpload(file) {
+		return this.http.post(`${this.configurations.baseUrl}${this.excelUpload}`, file)
+
+	}
 }

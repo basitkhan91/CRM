@@ -51,19 +51,13 @@ namespace QuickApp.Pro.Controllers
             dynamicGridData.ColumnData = Mapper.Map<IEnumerable<CreditTermsViewModel>>(result);
             dynamicGridData.TotalRecords = dynamicGridData.ColumnData.Count();
             return Ok(dynamicGridData);
-           
-
-
-
         }
-
- 
+         
 
         [HttpGet("audits/{id}")]
         [Produces(typeof(List<CreditTermsAudit>))]
         public IActionResult AuditDetails(long id)
         {
-
             var result = _unitOfWork.CreditTerms.GetAuditDetails(id);
             return Ok(result);
         }
@@ -162,5 +156,13 @@ namespace QuickApp.Pro.Controllers
             return Ok(dynamicGridData);
         }
         #endregion
+
+
+        [HttpPost("UploadCreditTermsCustomData")]
+        public IActionResult UploadCreditTermsCustomData()
+        {
+            _unitOfWork.FileUploadRepository.UploadCustomFile(Convert.ToString("CreditTerms"), Request.Form.Files[0]);
+            return Ok();
+        }
     }
 }
