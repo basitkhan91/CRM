@@ -8,7 +8,7 @@ namespace DAL.Models
     {
         [Key]
         public long LegalEntityBillingAddressId { get; set; }
-        public long LegalEntityId { get; set; }
+        public long? LegalEntityId { get; set; }
 		[ForeignKey("AddressId")]
 		public long? AddressId { get; set; }
         public string SiteName { get; set; }
@@ -19,7 +19,7 @@ namespace DAL.Models
         public string UpdatedBy { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime UpdatedDate { get; set; }
-        public bool IsActive { get; set; }
+        public bool? IsActive { get; set; }
         public bool IsDeleted { get; set; }
 
 		public virtual Address Address { get; set; }
