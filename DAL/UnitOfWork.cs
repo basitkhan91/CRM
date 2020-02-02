@@ -229,7 +229,7 @@ namespace DAL
         IMasterSalesOrderQuoteStatusRepository _masterSalesOrderQuoteStatusRepository;
         IEmployeeStationRepository _employeeStationRepository;
         IGlobalSettingsRepository _globalSettingsRepository;
-
+        JournalRepository _journalRepository;
 
 
         public UnitOfWork(ApplicationDbContext context, IOptions<AppSettings> appSettings)
@@ -2074,7 +2074,16 @@ namespace DAL
             }
         }
 
-        
+        public IJournalRepository Journal
+        {
+            get
+            {
+                if (_journalRepository == null)
+                    _journalRepository = new JournalRepository(_context);
+
+                return _journalRepository;
+            }
+        }
     }
 }
 

@@ -32,7 +32,7 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("getAll")]
         public IActionResult getAllManualJournel()
         {
-            var journel = unitOfWork.Repository<JournalManual>().GetAll().Where(x => x.IsDeleted != true).OrderByDescending(x => x.ID);
+            var journel = unitOfWork.Journal.GetManualJournalList();
             return Ok(journel);
         }
 

@@ -31,14 +31,6 @@ namespace DAL.Models
 
         public string TaxId { get; set; }
 
-        public bool? IsLastLevel { get; set; }
-
-        public long? LockBoxAddressId { get; set; }
-
-        public long DomesticWirePaymentId { get; set; }
-
-        public long InternationalWirePaymentId { get; set; }
-
         public long? ACHId { get; set; }
         public long? ParentId { get; set; }
 
@@ -46,10 +38,8 @@ namespace DAL.Models
 
         public bool? IsActive { get; set; }
         public bool? IsDeleted { get; set; }
-        public bool? IsBankingInfo { get; set; }
-
         public string LedgerName { get; set; }
 
-
+        public byte[] EntityLogo { get; set; }
     }
 }

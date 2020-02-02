@@ -101,6 +101,8 @@ namespace DAL
 
         IJobTitle JobTitle { get; }
 
+        IJournalRepository Journal { get; }
+
         IJobType JobType { get; }
         IDocument Document { get; }
 
