@@ -88,7 +88,15 @@ export class LegalEntityService {
 	}
 	deleteEntity(actionId: number) {
 		return this.legalEntityEndpont.getDeleteLegalEntityEndpontService(actionId);
-	}
+    }
+    getContacts() {
+        return Observable.forkJoin(
+            this.legalEntityEndpont.getContcatDetails<any>());
+    }
+    getEntityBillViaDetails(rowData) {
+        return Observable.forkJoin(
+            this.legalEntityEndpont.getEntityBillViaDetails(rowData));
+    }
 	getFileSystem() {
 		//debugger;
 		let obj: any = {

@@ -8,6 +8,7 @@ import { NgbModal, NgbActiveModal, ModalDismissReasons } from '@ng-bootstrap/ng-
 import { AuthService } from '../../../../services/auth.service';
 import { FormBuilder, NgForm } from '@angular/forms';
 import { AlertService, MessageSeverity } from '../../../../services/alert.service';
+import { LegalEntityService } from '../../../../services/legalentity.service';
 
 import { MasterComapnyService } from '../../../../services/mastercompany.service';
 import { CustomerService } from '../../../../services/customer.service';
@@ -110,7 +111,7 @@ export class EntityContactComponent implements OnInit {
 	@ViewChild('ATAADD') myModal;
 
 	constructor(private router: ActivatedRoute,
-
+        public workFlowtService: LegalEntityService,
 		private route: Router,
 		private authService: AuthService,
 		private modalService: NgbModal,
@@ -123,25 +124,15 @@ export class EntityContactComponent implements OnInit {
 		private masterComapnyService: MasterComapnyService) {
 	}
 
-	ngOnInit() {
-		if (this.editMode) {
-			this.id = this.editGeneralInformationData.customerId;
-			this.customerCode = this.editGeneralInformationData.customerCode;
-			this.customerName = this.editGeneralInformationData.name;
-			console.log(this.id);
-
-			this.getAllCustomerContact()
-		} else {
-			this.id = this.savedGeneralInformationData.customerId;
-			this.customerCode = this.savedGeneralInformationData.customerCode;
-            this.customerName = this.savedGeneralInformationData.name;
-            this.getAllCustomerContact();
-
+    ngOnInit() {
+       if (this.editMode) {
+            this.id = this.editGeneralInformationData.legalEntityId;
+		    this.getAllEntityContact()
+	    } else {
+            this.id = this.savedGeneralInformationData.legalEntityId;
+		    this.getAllEntityContact();
 		}
-
-		this.getAllContacts();
-		// this.getATACustomerContactMapped();
-
+        
 	}
 
 
@@ -211,7 +202,7 @@ export class EntityContactComponent implements OnInit {
 					// get all contacts
 					this.getAllContacts();
 					// get Customer Contatcs 
-                    this.getAllCustomerContact();
+                    this.getAllEntityContact();
                     this.refreshCustomerContactMapped.emit(this.id);
 
 					this.alertService.showMessage(
@@ -270,7 +261,7 @@ export class EntityContactComponent implements OnInit {
 		}
 		this.customerService.updateContactinfo(data).subscribe(res => {
 			this.getAllContacts();
-			this.getAllCustomerContact();
+            this.getAllEntityContact();
 
 			this.alertService.showMessage(
 				'Success',
@@ -281,9 +272,9 @@ export class EntityContactComponent implements OnInit {
 	}
 
 
-	getAllCustomerContact() {
-		// get Customer Contatcs 
-		this.customerService.getContacts(this.id).subscribe(res => {
+    getAllEntityContact() {
+        // get Customer Contatcs 
+        this.workFlowtService.getContacts().subscribe(res => {
 			this.customerContacts = res[0]
             const re=res[0]
             if (re.length > 0) {
@@ -300,7 +291,7 @@ export class EntityContactComponent implements OnInit {
 
 		this.customerService.updateContactinfo(data).subscribe(res => {
 			this.getAllContacts();
-			this.getAllCustomerContact();
+            this.getAllEntityContact();
 			this.alertService.showMessage(
 				'Success',
 				`Sucessfully Updated Status`,
@@ -507,7 +498,7 @@ export class EntityContactComponent implements OnInit {
 		}
 
 
-		this.getAllCustomerContact();
+        this.getAllEntityContact();
 	}
 	private saveFailedHelper(error: any) {
 
