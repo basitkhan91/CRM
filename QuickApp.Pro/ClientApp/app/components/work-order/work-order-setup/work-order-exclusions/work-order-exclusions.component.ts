@@ -154,7 +154,61 @@ export class WorkOrderExclusionsComponent implements OnInit, OnChanges {
     })
     this.saveExclusionsListForWO.emit(this.workOrderExclusionsList);
   }
+  getTotalQuantity() {
+    let totalQuantity = 0;
+    if(this.workOrderExclusionsList){
+      this.workOrderExclusionsList.forEach(
+        (material) => {
+          if (material.quantity) {
+            totalQuantity += material.quantity;
+          }
+        }
+      )
+    }
+    return totalQuantity;
+  }
 
+  getTotalUnitCost() {
+    let total = 0;
+    if(this.workOrderExclusionsList){
+      this.workOrderExclusionsList.forEach(
+        (material) => {
+          if (material.unitCost) {
+            total += Number(material.unitCost);
+          }
+        }
+      )
+    }
+    return total;
+  }
+
+  getCostPlus() {
+    let total = 0;
+    if(this.workOrderExclusionsList){
+      this.workOrderExclusionsList.forEach(
+        (material) => {
+          if (material.costPlusAmount) {
+            total += material.costPlusAmount;
+          }
+        }
+      )
+    }
+    return total;
+  }
+
+  getTotalFixedAmount() {
+    let total = 0;
+    if(this.workOrderExclusionsList){
+      this.workOrderExclusionsList.forEach(
+        (material) => {
+          if (material.fixedAmount) {
+            total += Number(material.fixedAmount);
+          }
+        }
+      )
+    }
+    return total;
+  }
 
   //   saveChargesList(event){
   //     this.saveChargesListForWO.emit(event);

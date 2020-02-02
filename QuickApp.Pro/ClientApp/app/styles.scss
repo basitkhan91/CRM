@@ -13099,8 +13099,21 @@ p-radiobutton .ui-radiobutton .ui-radiobutton-box.ui-state-active {
     background-color: #007ad9 !important;
     color: #ffffff;
 }
-p-radiobutton .ui-radiobutton .ui-radiobutton-box{
-    border: 3px solid #ffffff;
+.p-radio-custom .ui-radiobutton .ui-radiobutton-box{
+    border: 4px solid #ffffff;
+}
+
+.p-radio-custom .ui-radiobutton .ui-radiobutton-box.ui-state-active .ui-radiobutton-icon{
+    background-color:#212121 !important;
+}
+
+.p-radio-custom .ui-radiobutton .ui-radiobutton-box.ui-state-active{
+    background-color: #ffffff !important;
+}
+
+.p-radio-custom .ui-radiobutton-label{
+    color: #ffffff;
+    width: 100px !important;
 }
 
 .p-checkbox-label .ui-chkbox-label {

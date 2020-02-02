@@ -49,3 +49,7 @@ select:disabled{
 body .ui-radiobutton .ui-radiobutton-box{
   border: 3px solid #ffffff;
 }
+
+.ui-radiobutton .ui-radiobutton-box.ui-state-active .ui-radiobutton-icon{
+  background-color:#212121 !important;
+}
