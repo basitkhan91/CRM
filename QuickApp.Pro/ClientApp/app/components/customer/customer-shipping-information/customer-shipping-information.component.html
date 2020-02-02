@@ -891,10 +891,10 @@
                         </div>
                     </div>
                 </div>
-                <p-table #dt class="rpo-table-cstm rro-table-cstm"
+                <p-table #domesShipVia class="rpo-table-cstm"
                          name="domesticShipViaTable"
                          [metaKeySelection]="true"
-                         [lazy]="true"
+                         [rows]="10"
                          [paginator]="true"
                          [pageLinks]="3"
                          [value]="demosticShippingViaData"
@@ -902,7 +902,14 @@
                          [rowsPerPageOptions]="[10,20,50,100]"
                          selectionMode="multiple"
                          [resizableColumns]="true"
-                         [reorderableColumns]="true">
+                         [reorderableColumns]="true" [scrollable]="true" 
+                         scrollHeight="450px">
+
+                         <ng-template pTemplate="colgroup" let-columns>
+                            <colgroup>
+                                <col *ngFor="let col of columns" style="width:auto">
+                            </colgroup>
+                        </ng-template>
 
                     <ng-template pTemplate="header" let-columns>
                         <tr>
@@ -913,6 +920,12 @@
                             </th>
                             <th style="width: 140px;" *ngIf="isViewMode == false"> Actions</th>
                         </tr>
+                        <tr>
+                            <th style="width:auto" *ngFor="let col of columns" [ngSwitch]="col.field">
+                                <input style="width:100%;" pInputText type="text" (input)="domesShipVia.filter($event.target.value, col.field, 'contains')">
+                            </th>
+                            <th *ngIf="isViewMode == false"></th>
+                        </tr>
                     </ng-template>
 
                     <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
@@ -920,7 +933,7 @@
                             <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
                                 {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
                             </td>
-                            <td *ngIf="isViewMode == false">
+                            <td style="width: 140px;" *ngIf="isViewMode == false">
                                 <p-inputSwitch [(ngModel)]="rowData['isActive']" name="isActiveIS{{rowIndex}}" (onChange)="updateActiveorInActiveForS(rowData)"></p-inputSwitch>
 
 
@@ -941,7 +954,20 @@
                             </td>
                         </tr>
                     </ng-template>
-                               </p-table>
+                    <ng-template pTemplate="emptymessage" let-columns *ngIf="demosticShippingViaData.length == 0">
+                        <tr>
+                            <td colspan="4" style="color: red; font-weight: bold; text-align: center">
+                                No records found
+                            </td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="summary" id="footer">
+                        <label id="footer" class="footer">No'of records:</label>
+                        <input style="width: 5%;" [(ngModel)]="domesShipVia._totalRecords" name="totalRecords" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp;
+                        <label id="footer" class="footer1">Pages Count:</label>                       
+                        <input style="width: 5%;" [ngModel]="getPageCount(domesShipVia._totalRecords,pageSize)" name="pagecount" [disabled]="true" pInputText type="text" />
+                    </ng-template>
+                    </p-table>
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="resetShipViaDomestic()">Close</button>
@@ -1018,7 +1044,7 @@
 
 </div>
 
-<div class="modal fade popup-blur" id="addInternationShipVia" data-backdrop="static">
+<div class="modal fade" id="addInternationShipVia" data-backdrop="static">
     <div *ngIf="sourceViewforInterShipping" class="modal" id="viewInter">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -1105,7 +1131,7 @@
                     </div>
                 </div>
 
-                <p-table #dt class="rpo-table-cstm rro-table-cstm"
+                <p-table #internationShipVia class="rpo-table-cstm"
                          name="internationalshipViaTable"
                          [first]="pageIndexForInternationalShipVia"
                          [rows]="pageSizeForInternationalShipVia"
@@ -1120,11 +1146,19 @@
                          [resizableColumns]="true"
                          [reorderableColumns]="true"
                          [totalRecords]="totalRecordsForInternationalShipVia"
-                         (onPage)="internationalShippingViaPagination($event)">
-                    <ng-template pTemplate="caption">
+                         (onPage)="internationalShippingViaPagination($event)" [scrollable]="true" 
+                         scrollHeight="450px">
+
+                         <ng-template pTemplate="colgroup" let-columns>
+                            <colgroup>
+                                <col *ngFor="let col of columns" style="width:auto">
+                            </colgroup>
+                        </ng-template>
+
+                    <!-- <ng-template pTemplate="caption">
                         <div style="text-align: right">
                         </div>
-                    </ng-template>
+                    </ng-template> -->
 
                     <ng-template pTemplate="header" let-columns>
                         <tr>
@@ -1132,7 +1166,13 @@
                                 {{col.header}}
                                 <p-sortIcon [field]="col.field"></p-sortIcon>
                             </th>
-                            <th style="width: 140px;" *ngIf="selectedColumnsForInternationTable.length > 0 && isViewMode == false" > Actions</th>
+                            <th style="width: 140px;" *ngIf="isViewMode == false"> Actions</th>
+                        </tr>
+                        <tr>
+                            <th style="width:auto" *ngFor="let col of columns" [ngSwitch]="col.field">
+                                <input style="width:100%;" pInputText type="text" (keyup)="internationShipVia.filter($event.target.value, col.field, 'contains')">
+                            </th>
+                            <th *ngIf="isViewMode == false"></th>
                         </tr>
                     </ng-template>
 
@@ -1141,7 +1181,7 @@
                             <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
                                 {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
                             </td>
-                            <td *ngIf="isViewMode == false">
+                            <td style="width: 140px;" *ngIf="isViewMode == false">
                                 <p-inputSwitch [(ngModel)]="rowData['isActive']" name="isActive{{rowIndex}}" (onChange)="updateActiveorInActiveShipViaForIS(rowData)"></p-inputSwitch>
                                 <span data-toggle="modal" data-target="#viewInterVia"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openInterShippingViewVia(rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
 
@@ -1160,7 +1200,30 @@
                             </td>
                         </tr>
                     </ng-template>
-                  
+                    <ng-template pTemplate="emptymessage" let-columns *ngIf="internationalShippingViaData.length == 0">
+                        <tr>
+                            <td colspan="4" style="color: red; font-weight: bold; text-align: center">
+                                No records found
+                            </td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="summary" id="footer">
+                        <label id="footer" class="footer">No'of records:</label>
+                        <input style="width: 5%;"
+                               [(ngModel)]="interTotalRecords"
+                               [disabled]="true"
+                               name="interTotalRecords"
+                               pInputText
+                               type="text" />
+                        &nbsp;&nbsp;
+                        <label id="footer" class="footer1">Pages Count:</label>
+                        <input style="width: 5%;"
+                               [(ngModel)]="interTotalPages"
+                               [disabled]="true"
+                               name="interTotalPages"
+                               pInputText
+                               type="text" />
+                    </ng-template>
                 </p-table>
 
                 <div class="modal-footer">
@@ -1260,7 +1323,7 @@
     </div>
 </div>
 
-<div class="modal  popup-blur" id="viewDomesticVia" data-backdrop="static">
+<div class="modal" id="viewDomesticVia" data-backdrop="static">
     <div class="modal-dialog">
         <div class="modal-content">
 

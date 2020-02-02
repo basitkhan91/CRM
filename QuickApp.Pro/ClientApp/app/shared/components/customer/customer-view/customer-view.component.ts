@@ -40,6 +40,7 @@ export class CustomerViewComponent implements OnInit {
     ]
 
     ataHeaders = [
+        { field: 'firstName', header: 'Contact' },
         { field: 'ataChapterName', header: 'ATA Chapter' },
         { field: 'ataSubChapterDescription', header: 'ATA Sub-Chapter' }
     ]
@@ -169,7 +170,7 @@ export class CustomerViewComponent implements OnInit {
             this.getCustomerIntegrationTypesByCustomerId(customerId);
             this.toGetCustomerFinanceDocumentsList(customerId)
             this.viewDataGeneralInformation = res[0];
-            debugger
+            //debugger
             console.log(this.viewDataGeneralInformation);
         })
         // this.openStep1();
