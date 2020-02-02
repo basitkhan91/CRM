@@ -12,6 +12,7 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<object> GetCompleteContacts();
 
         IEnumerable<object> GetCustomerContacts(long id);
+        IEnumerable<object> GetLegalEntityContacts(long id);
         IEnumerable<object> GetVendorContactsAudit(long vendorId, long vendorContactId);
         IEnumerable<object> GetContactsById(long id);
 

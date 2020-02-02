@@ -93,6 +93,42 @@ namespace DAL.Repositories
             //return _appContext.Contact.Include("MasterCompany").OrderByDescending(c => c.ContactId).ToList();
         }
 
+        public IEnumerable<object> GetLegalEntityContacts(long id)
+        {
+            var data = (from c in _appContext.Contact
+                        join vc in _appContext.LegalEntityContact on c.ContactId equals vc.ContactId
+                        where vc.LegalEntityId == id && vc.IsDeleted != true
+                        select new
+                        {
+                            c.ContactId,
+                            c.ContactTitle,
+                            c.AlternatePhone,
+                            c.CreatedBy,
+                            c.UpdatedBy,
+                            c.Email,
+                            c.Tag,
+                            c.Fax,
+                            c.FirstName,
+                            c.LastName,
+                            c.MiddleName,
+                            c.MobilePhone,
+                            c.Notes,
+                            c.Prefix,
+                            c.Suffix,
+                            c.WebsiteURL,
+                            c.WorkPhone,
+                            c.IsActive,
+                            vc.LegalEntityContactId,
+                            vc.IsDefaultContact,
+                            vc.LegalEntityId,
+                            c.CreatedDate,
+                            c.UpdatedDate,
+                            c.WorkPhoneExtn,
+                            FullContactNo = string.Concat(c.WorkPhone, " - ", c.WorkPhoneExtn),
+                        }).ToList();
+            return data;
+        }
+
         public IEnumerable<object> GetVendorContactsAudit(long vendorId, long vendorContactId)
         {
             var data = (from c in _appContext.Contact

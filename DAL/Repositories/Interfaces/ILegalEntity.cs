@@ -1,4 +1,5 @@
-﻿using DAL.Models;
+﻿using DAL.Common;
+using DAL.Models;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -8,12 +9,19 @@ namespace DAL.Repositories.Interfaces
 {
   public  interface ILegalEntity : IRepository<LegalEntity>
     {
+        IEnumerable<Object> GetList(Filters<LegalEntityFilters> entityFilters);
+        IEnumerable<Object> GetListGlobalFilter(string value, int pageNumber, int pageSize);
+        IEnumerable<object> GetLegalEntityShipviaDetails(long entityId, long addressId);
         void UploadLegalEntityContactsCustomData(IFormFile file, long legalEntityId);
         void UploadLegalEntityInternationalCustomData(IFormFile file, long legalEntityId);
         IEnumerable<object> UploadLegalEntityShippingAddressCustomData(IFormFile file, long legalEntityId);
         IEnumerable<object> UploadLegalEntityBillingAddressCustomData(IFormFile file, long legalEntityId);
         IEnumerable<object> GetLegalEntityInternationalShippingAuditHistoryByid(long legalEntityId, long InternationalShippingId);
+        IEnumerable<object> GetLegalEntityAuditHistoryByid(long entityId);
         IEnumerable<object> GetAllLegalEntityData();
+        void LegalEntityShippingDetailsViaStatus(long id, bool status, string updatedBy);
+        void DeleteShipViaDetails(long id, string updatedBy);
+        void LegalEntityShippingDetailsStatus(long id, bool status, string updatedBy);
         IEnumerable<object> GetParentEntities();  
         long CreateLegalEntityBillingAddress(LegalEntityBillingAddress billingAddress);
         void UpdateLegalEntityBillingAddress(LegalEntityBillingAddress billingAddress);

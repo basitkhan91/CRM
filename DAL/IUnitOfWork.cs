@@ -151,9 +151,12 @@ namespace DAL
         IVendorWarning VendorWarning { get; }
 
         ICustomerContactRepository CustomerContact { get; }
-        ICustomerShippingAddress CustomerShippingAddress { get; }
 
+        ILegalEntityContactRepository LegalEntityContact { get; }
+        ICustomerShippingAddress CustomerShippingAddress { get; }
+        ILegalEntityShippingAddress LegalEntityShippingAddress { get; }
         ICustomerShipping CustomerShipping { get; }
+        ILegalEntityShipping LegalEntityShipping { get; }
         ICustomerWarning CustomerWarning { get; }
         //IEmployeeShift employeeShift { get; }
 
