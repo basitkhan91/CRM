@@ -971,25 +971,60 @@
                          [resizableColumns]="true" [reorderableColumns]="true">
                     <ng-template pTemplate="header" let-columns>
                         <tr>
+                            
+                           <th style="width: 40px;">Flag</th>
+
                             <th *ngFor="let col of columns" pResizableColumn pReorderableColumn
                                 [pSortableColumn]="col.field">
                                 {{col.header}}
                                 <p-sortIcon [field]="col.field"></p-sortIcon>
                             </th>
+                            <th>Actions</th>
+                        </tr>
+                        <tr> 
+                            <th></th>                     
+                            <th style="width:auto" *ngFor="let col of columns" [ngSwitch]="col.field">
+                                <input style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field, 'contains')">
+                            </th>      
+                            <th></th>                     
                         </tr>
                     </ng-template>
     
                     <ng-template pTemplate="body" let-rowData let-columns="columns">
+                       
                         <tr [pSelectableRow]="rowData" (dblclick)="toggledbldisplay(rowData)">
+                          
+                            <td style="width: 40px;"> <span class="flag">
+                                <i  *ngIf="rowData.isDefaultContact == true"   [ngStyle]="{'color': rowData.isDefaultContact == true ? 'green' : 'none'}"  
+                                 class="fa fa-flag" aria-hidden="true"></i>
+                                </span>
+                            </td>
+                            
                             <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
                                 {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
                             </td>
+                            <td style="width:140px">
+                                <span data-toggle="modal" data-target="#ListContactview"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="viewContactSelectedRow(rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
+
+                                </td>
                         </tr>
                     </ng-template>
+                    <ng-template pTemplate="emptymessage" let-columns>
+                        <tr>
+                            <td colspan="8" style="color: red; font-weight: bold; text-align: center">
+                                No records found
+                            </td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="summary" id="footer">
+                        <label id="footer" class="footer">No'of records:</label>
+                        <input style="width: 5%;" [(ngModel)]="dt._totalRecords" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp;
+                        <label id="footer" class="footer1">Pages Count:</label>
+                       
+                        <input style="width: 5%;" [ngModel]="getPageCount(dt._totalRecords,pageSize)" [disabled]="true" pInputText type="text" />
+                    </ng-template>
                 </p-table>
-                <div class="contact-no-record" *ngIf="allContacts.length == 0">
-                    No Records found
-                </div>
+               
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="dismissModel()">Close</button>
@@ -1120,6 +1155,47 @@
     
         </div>
     </div>
+
+    <div  id="ListContactview" #ListContactview class="modal fade" role="dialog" *ngIf="sourceViewforContact" data-backdrop="static" data-keyboard="false" style="z-index: 99999;">
+        <div class="modal-dialog">
+      
+          <!-- Modal content-->
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">Details of Customer Contact</h4>
+            </div>
+            <div class="modal-body">
+                <div class="col-sm-12">
+                    <p><span class="label"><b>Tag<span class="clr-red">*</span>: </b></span><span class="value">{{sourceViewforContact.tag}}</span></p>
+                    <p><span class="label"><b>Prefix: </b></span><span class="value">{{sourceViewforContact.prefix}}</span></p>
+                    <p><span class="label"><b>First Name<span class="clr-red">*</span>: </b></span><span class="value">{{sourceViewforContact.firstName}}</span></p>
+                    <p><span class="label"><b>Middle Name: </b></span><span class="value">{{sourceViewforContact.middleName}}</span></p>
+                    <p><span class="label"><b>Last Name<span class="clr-red">*</span>:</b></span><span class="value">{{sourceViewforContact.lastName}}</span></p>
+                    <p><span class="label"><b>Suffix: </b></span><span class="value">{{sourceViewforContact.suffix}}</span></p>
+                    <p><span class="label"><b>Title: </b></span><span class="value">{{sourceViewforContact.contactTitle}}</span></p>
+                    <p><span class="label"><b>Work Phone<span class="clr-red">*</span>: </b></span><span class="value">{{sourceViewforContact.workPhone}} - {{sourceViewforContact.workPhoneExtn}}</span></p>
+                    <p><span class="label"><b>Primary Contact </b></span><span class="value">{{sourceViewforContact.isDefaultContact}}</span></p>
+
+                    <p><span class="label"><b>Email<span class="clr-red">*</span>:</b></span><span class="value">{{sourceViewforContact.email}}</span></p>
+                    <p><span class="label"><b>WebSite: </b></span><span class="value">{{sourceViewforContact.websiteURL}}</span></p>
+                    <p><span class="label"><b>Mobile Phone: </b></span><span class="value">{{sourceViewforContact.mobilePhone}}</span></p>
+                    <p><span class="label"><b>Alternate Phone:</b></span><span class="value">{{sourceViewforContact.alternatePhone}}</span></p>
+
+                    <p><span class="label"><b>Fax: </b></span><span class="value">{{sourceViewforContact.fax}}</span></p>
+                    <p><span class="label"><b>Memo: </b></span><span class="value">{{sourceViewforContact.notes}}</span></p>
+                    <p><span class="label"><b>Active: </b></span><span class="value">{{sourceViewforContact.isActive}}</span></p>
+
+                    <div class="clear"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger"  data-dismiss="modal">Close</button>
+            </div>
+          </div>
+      
+        </div>
+</div>
 
 
 
