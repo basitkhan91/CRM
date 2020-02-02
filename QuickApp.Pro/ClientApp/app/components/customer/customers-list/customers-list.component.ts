@@ -49,6 +49,7 @@ export class CustomersListComponent implements OnInit {
     demosticInterShippingViaDataInfo: any;
     sourceViewforDocument: any;
     home: any;
+    sourceViewforContact: any;
     selectedColumnsForInternationShipViaTable = [
         { field: 'shipVia', header: 'Ship Via' },
         { field: 'shippingAccountInfo', header: 'Shipping AccountInfo' },
@@ -309,6 +310,8 @@ export class CustomersListComponent implements OnInit {
         const { customerId } = rowData;
         this.customerService.getCustomerdataById(customerId).subscribe(res => {
             this.viewDataGeneralInformation = res[0];
+            debugger
+            console.log(this.viewDataGeneralInformation);
             
            
         })
@@ -625,6 +628,7 @@ export class CustomersListComponent implements OnInit {
             { field: 'lastName', header: 'Last  Name' },
             { field: 'contactTitle', header: 'Contact Title' },
             { field: 'email', header: 'Email' },
+            { field: 'workPhone', header: 'Work Phone' },
             { field: 'mobilePhone', header: 'Mobile Phone' },
             { field: 'fax', header: 'Fax' }
                  ];
@@ -635,6 +639,8 @@ export class CustomersListComponent implements OnInit {
    
         this.dataSource.data = allWorkFlows;
         this.allContacts = allWorkFlows;
+        debugger
+        console.log(this.allContacts);
     }
     private onDataLoadFailed(error: any) {
         this.alertService.stopLoadingMessage();
@@ -676,6 +682,12 @@ export class CustomersListComponent implements OnInit {
         const url = `${this.configurations.baseUrl}/api/FileUpload/downloadattachedfile?filePath=${rowData.link}`;
         window.location.assign(url);
     }
+
+    viewContactSelectedRow(rowData) {
+		this.sourceViewforContact = rowData;
+
+    }
+    
    
   
 
