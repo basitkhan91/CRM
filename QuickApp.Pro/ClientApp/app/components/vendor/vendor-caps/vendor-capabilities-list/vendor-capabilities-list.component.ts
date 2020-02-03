@@ -60,7 +60,8 @@ export class VendorCapabilitiesListComponent implements OnInit{
     @Output() vendorCapabilityId = new EventEmitter<any>();
     totalRecords: number = 0;
 	totalPages: number = 0;
-	pageSize: number = 10;
+    pageSize: number = 10;
+    @Input() isViewMode: boolean = false;
 
     constructor(private vendorService: VendorService, private modalService: NgbModal, private authService: AuthService, private _route: Router, private alertService: AlertService, private vendorCapesService: VendorCapabilitiesService)
     {

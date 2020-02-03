@@ -1,4 +1,4 @@
-﻿import { Component, ViewChild, OnInit, AfterViewInit } from '@angular/core';
+﻿import { Component, ViewChild, OnInit, AfterViewInit, Input } from '@angular/core';
 import { MatPaginator, MatSort, MatTableDataSource, MatSnackBar, MatDialog } from '@angular/material';
 import { NgForm, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
@@ -38,7 +38,7 @@ export class VendorBillingInformationComponent {
     display: boolean;
     activeIndex: number;
     public overlays: any[];
-    options: any;
+    // options: any;
     shipViaCollection: any;
     allShipViaDetails: any[];
     updatedCollection: {};
@@ -46,7 +46,7 @@ export class VendorBillingInformationComponent {
     local: any;
     addressId: any;
     allAddresses: any[];
-    vendorId: any;
+    // vendorId: any;
     vendorCode: any;
     vendorname: any;
     allgeneralInfo: any[];
@@ -70,20 +70,7 @@ export class VendorBillingInformationComponent {
     country: any;
     selectedShipVia: any;
     shipviacollection: any[];
-    formData = new FormData();
-    ngOnInit(): void {
-        this.vendorService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-billing-information';
-        this.vendorService.bredcrumbObj.next(this.vendorService.currentUrl);
-        if (this.local) {
-            this.loadData();
-        }
-        this.countrylist();
-        this.options = {
-            center: { lat: 36.890257, lng: 30.707417 },
-            zoom: 12
-        };
-
-    }
+    formData = new FormData();    
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     filteredBrands: any[];
@@ -134,6 +121,9 @@ export class VendorBillingInformationComponent {
     pageIndex: number = 0;
     pageSize: number = 10;
     totalPages: number = 0;
+    public sourceVendor: any = {};
+    @Input() vendorId: number = 0;
+    @Input() isViewMode: boolean = false;
 
     constructor(private http: HttpClient, private router: Router,
         private authService: AuthService, private modalService: NgbModal,
@@ -175,23 +165,39 @@ export class VendorBillingInformationComponent {
             this.loadData();
         }
     }
-    public sourceVendor: any = {};
+
+    ngOnInit() {        
+        if (this.local) {
+            this.loadData();
+        }
+        this.countrylist();
+        if(this.vendorId != 0) {
+            this.loadData();
+        } else {
+            this.vendorService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-billing-information';
+            this.vendorService.bredcrumbObj.next(this.vendorService.currentUrl);
+        }
+        // this.options = {
+        //     center: { lat: 36.890257, lng: 30.707417 },
+        //     zoom: 12
+        // };
+    }    
 
     ngAfterViewInit() {
     }
-    getlatlng(address) {
-        this.checkAddress = true;
-        return this.http.get('https://maps.googleapis.com/maps/api/geocode/json?address=' + address + '&key=AIzaSyB_W96L25HhFWgqLblcikircQKjU6bgTgk').subscribe((data: any) => {
-            this.options = {
-                center: { lat: data.results[0].geometry.location.lat, lng: data.results[0].geometry.location.lng },
-                zoom: 12
-            };
-            this.overlays = [
-                new google.maps.Marker({ position: { lat: data.results[0].geometry.location.lat, lng: data.results[0].geometry.location.lng }, title: "Konyaalti" }),
-            ];
-            return data;
-        });
-    }
+    // getlatlng(address) {
+    //     this.checkAddress = true;
+    //     return this.http.get('https://maps.googleapis.com/maps/api/geocode/json?address=' + address + '&key=AIzaSyB_W96L25HhFWgqLblcikircQKjU6bgTgk').subscribe((data: any) => {
+    //         this.options = {
+    //             center: { lat: data.results[0].geometry.location.lat, lng: data.results[0].geometry.location.lng },
+    //             zoom: 12
+    //         };
+    //         this.overlays = [
+    //             new google.maps.Marker({ position: { lat: data.results[0].geometry.location.lat, lng: data.results[0].geometry.location.lng }, title: "Konyaalti" }),
+    //         ];
+    //         return data;
+    //     });
+    // }
 
     private getgeneralInnfo() {
         this.alertService.startLoadingMessage();
@@ -210,7 +216,7 @@ export class VendorBillingInformationComponent {
             this.vendorname = this.allgeneralInfo[0].vendorName;
             this.vendorCode = this.allgeneralInfo[0].vendorCode;
         }
-        this.vendorId = this.allgeneralInfo[0].vendorId;
+        // this.vendorId = this.allgeneralInfo[0].vendorId;
         console.log(this.allgeneralInfo);
     }
     private loadAddressDara() {
@@ -231,7 +237,8 @@ export class VendorBillingInformationComponent {
     private loadData() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-        this.vendorService.getVendorBillAddressGet(this.local.vendorId).subscribe(
+        const vendorId = this.vendorId != 0 ? this.vendorId : this.local.vendorId;
+        this.vendorService.getVendorBillAddressGet(vendorId).subscribe(
             results => this.onDataLoadSuccessful(results[0]),
             error => this.onDataLoadFailed(error)
         );        
@@ -520,7 +527,7 @@ export class VendorBillingInformationComponent {
     }
 
     previousClick() {
-        this.activeIndex = 7;
+        this.activeIndex = 5;
         this.vendorService.changeofTab(this.activeIndex);
         // this.vendorService.indexObj.next(this.activeIndex);
         // this.vendorService.changeStep('Shipping Information');
@@ -657,7 +664,7 @@ export class VendorBillingInformationComponent {
         if (this.local) {
             this.vendorService.billingCollection = this.local;
         }
-        this.activeIndex = 8;
+        this.activeIndex = 7;
         this.vendorService.changeofTab(this.activeIndex);
         // this.vendorService.indexObj.next(this.activeIndex);
         // this.vendorService.changeStep('Warnings');

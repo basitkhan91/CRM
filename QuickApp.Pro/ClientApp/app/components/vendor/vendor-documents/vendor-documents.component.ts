@@ -73,6 +73,9 @@ export class VendorDocumentsComponent implements OnInit {
 	pageIndex: number = 0;
 	pageSize: number = 10;
 	totalPages: number = 0;
+	@Input() vendorId: number = 0;
+	@Input() viewMode: boolean = false;
+	
 	constructor(public vendorService: VendorService, private router: ActivatedRoute, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService,
 		private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private configurations: ConfigurationService) {
 
@@ -123,7 +126,8 @@ export class VendorDocumentsComponent implements OnInit {
 	}
 
 	getList() {
-		this.vendorService.getDocumentList(this.local.vendorId).subscribe(res => {
+		const vendorId = this.vendorId != 0 ? this.vendorId : this.local.vendorId;
+		this.vendorService.getDocumentList(vendorId).subscribe(res => {
 			this.vendorDocumentsData = res;
 		})
 	}
@@ -264,12 +268,15 @@ export class VendorDocumentsComponent implements OnInit {
 	}
 
 	CreateNewClick() {
-		// this.vendorService.contactCollection = this.local;
-		this.activeIndex = 1;
-		this.vendorService.changeofTab(this.activeIndex);
+		// this.vendorService.contactCollection = this.local;		
 		// this.vendorService.indexObj.next(this.activeIndex);
 		// this.vendorService.changeStep('General Information');
 		// this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-general-information');
+
+		// this.activeIndex = 1;
+		// this.vendorService.changeofTab(this.activeIndex);
+
+		this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendors-list');
 
 	}
 	openHistory(content, row) {
