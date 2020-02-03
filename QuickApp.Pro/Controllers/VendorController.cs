@@ -4742,13 +4742,13 @@ namespace QuickApp.Pro.Controllers
                         {
                             _unitOfWork.VendorDocumentDetails.Update(vendorDocObj);
                             _unitOfWork.SaveChanges();
-                            vendorDocObj.AttachmentId = _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, objVendorDocumentDetail.VendorId,
+                            vendorDocObj.AttachmentId = _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, vendorDocObj.VendorId,
                                                          Convert.ToInt32(ModuleEnum.Vendor), Convert.ToString(ModuleEnum.Vendor), vendorDocObj.UpdatedBy, vendorDocObj.MasterCompanyId, vendorDocObj.AttachmentId);
 
                         }
                         else
                         {
-                            vendorDocObj.AttachmentId = _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, objVendorDocumentDetail.VendorId,
+                            vendorDocObj.AttachmentId = _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, vendorDocObj.VendorId,
                              Convert.ToInt32(ModuleEnum.Vendor), Convert.ToString(ModuleEnum.Vendor), vendorDocObj.UpdatedBy, vendorDocObj.MasterCompanyId);
                             _unitOfWork.VendorDocumentDetails.Update(vendorDocObj);
                             _unitOfWork.SaveChanges();

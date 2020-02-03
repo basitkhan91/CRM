@@ -115,9 +115,7 @@
                                     <mat-icon>edit</mat-icon>
                                 </button>
 
-                                <button *ngIf="!viewMode" [validate] moduleName="app-vendor-contacts" requirePermission="canDelete"
-                                        class="btn-delete" mat-icon-button matTooltip="Delete"
-                                        (click)=" openDelete(deleteContent, rowData)">
+                                <button *ngIf="!viewMode" class="btn-delete" mat-icon-button matTooltip="Delete" (click)=" openDelete(deleteContent, rowData)">
                                     <mat-icon color="warn">delete</mat-icon>
                                 </button>
 
