@@ -19,6 +19,8 @@ import { DepriciationMethod } from '../../../models/depriciation-method.model';
 import { CommonService } from '../../../services/common.service';
 import { ItemMasterCapabilitiesModel } from '../../../models/itemMasterCapabilities.model';
 import { VendorService } from '../../../services/vendor.service';
+import { AssetLocation } from '../../../models/asset-location.model';
+import { AssetLocationService } from '../../../services/asset-location/asset-location.service';
 import * as $ from 'jquery'
 
 @Component({
@@ -61,14 +63,16 @@ export class AssetListingComponent implements OnInit {
     allManufacturerInfo: any[] = [];
     managementStructureData: any = [];
     depriciationMethodList: DepriciationMethod[] = [];
-    depreciationFrequencyList: any[];
-    assetAcquisitionTypeList: any[];
+    depreciationFrequencyList: any[] = [];
+    assetAcquisitionTypeList: any[] = [];
     GLAccountList: any[] = [];
     allCapesInfo: ItemMasterCapabilitiesModel[] = [];
-    allVendorInfo: Vendor[];
+    allVendorInfo: Vendor[] = [];
     historyCols:any[] = [];
     historyData:any[] = [];
-    selectedAsset:any;
+    selectedAsset: any;
+    allAssetLocationInfo: any[] = [];
+    allAssetLocations: any[] = [];
     // comented for asset audit
     //AuditDetails: SingleScreenAuditDetails[];
 
@@ -90,14 +94,16 @@ export class AssetListingComponent implements OnInit {
     loadingIndicator: boolean;
     allAssetInfo: any[] = [];
     allAssetInfoNew: any[] = [];
-    cols: { field: string; header: string; }[];
+    cols: { field: string; header: string; colspan: string }[];
+    cols1: { field: string; header: string; }[];
     selectedColumns: { field: string; header: string; }[];
     selectedCol: { field: string; header: string; }[];
     constructor(private alertService: AlertService, private assetService: AssetService, private _route: Router,
         private modalService: NgbModal, private glAccountService: GlAccountService,
         public assetattrService1: AssetAttributeTypeService, private vendorService: VendorService,public assetIntangibleService: AssetIntangibleAttributeTypeService,
         private vendorEndpointService: VendorEndpointService, private depriciationMethodService: DepriciationMethodService, private commonservice: CommonService,
-        private legalEntityServices: LegalEntityService
+        private legalEntityServices: LegalEntityService,
+        private assetLocationService: AssetLocationService
     ) {
         this.assetService.isEditMode = false;
         this.assetService.listCollection = null;
@@ -134,19 +140,19 @@ export class AssetListingComponent implements OnInit {
 
         this.cols = [
 
-            { field: 'name', header: 'Asset Name' },
-            { field: 'assetId', header: 'Asset ID' },
-            { field: 'alternateAssetId', header: 'Alt Asset ID' },
-            { field: 'manufacturerName', header: 'Manufacturer' },
-            { field: 'isSerializedNew', header: 'Serial Num' },
-            { field: 'calibrationRequiredNew', header: 'Calibrated' },
-            { field: 'companyName', header: 'Co' },
-            { field: 'buName', header: 'BU' },
+            { field: 'name', header: 'Asset Name', colspan: '1' },
+            { field: 'assetId', header: 'Asset ID', colspan: '1' },
+            { field: 'alternateAssetId', header: 'Alt Asset ID', colspan: '1' },
+            { field: 'manufacturerName', header: 'Manufacturer', colspan: '1' },
+            { field: 'isSerializedNew', header: 'Serial Num', colspan: '1' },
+            { field: 'calibrationRequiredNew', header: 'Calibrated', colspan: '1' },
+            { field: 'managementStrName', header: 'Management Structure', colspan: '4' },
+            /*{ field: 'buName', header: 'BU' },
             { field: 'deptName', header: 'Div' },
-            { field: 'divName', header: 'Dept' },
-            { field: 'assetClass', header: 'Asset Category' },
-            { field: 'assetType', header: 'Asset Class' },
-            { field: 'assetStatus', header: 'Status' },
+            { field: 'divName', header: 'Dept' },*/
+            { field: 'assetClass', header: 'Asset Category', colspan: '1' },
+            { field: 'assetType', header: 'Asset Class', colspan: '1' },
+            { field: 'assetStatus', header: 'Status', colspan: '1' },
         ];
 
         this.selectedColumns = this.cols;
@@ -420,7 +426,7 @@ export class AssetListingComponent implements OnInit {
             error => this.onDataLoadFailed(error)
         );
 
-        this.cols = [
+        this.cols1 = [
 
             { field: 'partNumber', header: 'PN' },
             { field: 'partDescription', header: 'PN Description' },
@@ -429,10 +435,11 @@ export class AssetListingComponent implements OnInit {
             { field: 'modelname', header: 'Models' },
             { field: 'dashnumber', header: 'Dash Number' }
         ];
-        this.selectedCol = this.cols;
+        this.selectedCol = this.cols1;
         this.assetViewList.unitCost = row.unitCost;
         this.assetViewList.expirationDate = row.expirationDate;
         this.assetViewList.asset_Location = row.asset_Location;
+        this.assetLocationData(row.asset_Location);
         this.assetViewList.assetParentId = row.assetParentId;
         this.assetViewList.memo = row.memo;
         this.assetViewList.assetTypeSingleScreenId = row.assetTypeSingleScreenId;
@@ -603,18 +610,23 @@ export class AssetListingComponent implements OnInit {
             let deptName = '';
             let divName = '';
             let manufacturerName = '';
+            let managementStrName = '';
             this.setManagementStrucureData(this.currentAsset);
             if (this.currentAsset.companyId) {
                 companyName = this.getNameById(this.currentAsset.companyId);
+                managementStrName = companyName;
             }
             if (this.currentAsset.buisinessUnitId) {
                 buName = this.getNameById(this.currentAsset.buisinessUnitId);
+                managementStrName = managementStrName + ', ' + buName;
             }
             if (this.currentAsset.departmentId) {
                 deptName = this.getNameById(this.currentAsset.departmentId);
+                managementStrName = managementStrName + ', ' + deptName;
             }
             if (this.currentAsset.divisionId) {
                 divName = this.getNameById(this.currentAsset.divisionId);
+                managementStrName = managementStrName + ', ' + divName;
             }
             if (this.currentAsset.manufacturer) {
                 manufacturerName = this.currentAsset.manufacturer.name
@@ -636,6 +648,7 @@ export class AssetListingComponent implements OnInit {
                 assetClass: this.currentAsset.isDepreciable == true ? 'Tangible' : 'Intangible',
                 assetType: this.currentAsset.assetType.assetTypeName,              
                 assetStatus: this.currentAsset.isActive == true ? 'Active' : 'In Active',
+                managementStrName: managementStrName,
             };
             
             this.allAssetInfoNew.push(this.currentAsset);
@@ -788,4 +801,22 @@ export class AssetListingComponent implements OnInit {
     //        }
     //    });
     //}
+
+    private assetLocationData(id) {
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
+        this.assetLocationService.getById(id).subscribe(
+            results => this.onAssetLocationLoad(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
+    }
+
+    private onAssetLocationLoad(location: any) {
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        this.allAssetLocations = [];
+        console.log('onAssetLocationLoad', location[0]);
+        if (location != null && location != undefined && location.length > 0)
+        this.assetViewList.assetLocationName = location[0].code+" - "+location[0].name;
+    }
 }

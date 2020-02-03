@@ -63,7 +63,7 @@
                             <ng-template pTemplate="header" let-columns style="padding-top: 1% !important">
                                 <tr>
                                     <th style="width:auto" *ngFor="let col of columns" pResizableColumn pReorderableColumn 
-                                        [pSortableColumn]="col.field">
+                                        [pSortableColumn]="col.field" [attr.colspan]="1">
                                         {{col.header}}
                                         <p-sortIcon [field]="col.field"></p-sortIcon>
                                     </th>
@@ -79,8 +79,9 @@
                             <ng-template pTemplate="body" let-rowData let-columns="columns" let-asset>
                                 <tr [pSelectableRow]="rowData" pReorderableRowHandle (dblclick)="openView(view,rowData)">
 
-                                    <td style="width:auto" *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
-                                        {{rowData[col.field]}}
+                                    <td style="width:auto" *ngFor="let col of columns" class="ui-resizable-column"
+                                        pReorderableRowHandle>
+                                        {{col.field == 'companyName' ? rowData['companyName'] + ', ' +rowData['buName']+ ', ' +rowData['deptName']+ ', ' +rowData['divName'] :rowData[col.field]}}
                                     </td>
                                     <td class="action-icons-cstm" style="width:150px" *ngIf="selectedColumns.length> 0">
                                         <div>
@@ -188,23 +189,23 @@
                                                 </span>
                                             </p>
                                             <p>
-                                                <span class=""><b> </b></span><span class="value">
+                                                <span style="padding-left: 40px"><b> </b></span><span class="value">
                                                     {{assetViewList.buName}}
                                                 </span>
                                             </p>
                                             <p>
-                                                <span class=""><b> </b></span><span class="value">
+                                                <span style="padding-left: 40px"><b> </b></span><span class="value">
                                                     {{assetViewList.deptName}}
                                                 </span>
                                             </p>
                                             <p>
-                                                <span class=""><b> </b></span><span class="value">
+                                                <span style="padding-left: 40px"><b> </b></span><span class="value">
                                                     {{assetViewList.divName}}
                                                 </span>
                                             </p>
                                         </div>
                                         <p>
-                                            <span class="label"><b>Intangible/Depreciable: </b></span><span class="value">{{assetViewList.depreOrIntang}}</span>
+                                            <span class="label"><b>Tangible/Intangible: </b></span><span class="value">{{assetViewList.depreOrIntang}}</span>
                                         </p>
                                         <p>
                                             <span class="label"><b>Acquisition Type: </b></span><span class="value">{{assetViewList.assetAcquisitionTypeId}}</span>
@@ -235,7 +236,7 @@
                                     </div>
                                     <div class="col-sm-6">
                                         <p>
-                                            <span class="label"><b>Asset Location: </b></span><span class="value">{{assetViewList.asset_Location}}</span>
+                                            <span class="label"><b>Asset Location: </b></span><span class="value">{{assetViewList.assetLocationName}}</span>
                                         </p>
                                         <p>
                                             <span class="label"><b>Memo: </b></span><span class="value">{{assetViewList.memo}} </span>
