@@ -159,6 +159,7 @@ export class VendorDocumentsComponent implements OnInit {
 			this.documentInformation.docDescription = '';
 			this.documentInformation.docMemo = '';
 			this.documentInformation.docName = '';
+			this.sourceViewforDocumentList= [];	
 
 			this.formData = new FormData();
 			this.getList();
@@ -317,6 +318,17 @@ export class VendorDocumentsComponent implements OnInit {
 	getPageCount(totalNoofRecords, pageSize) {
 		return Math.ceil(totalNoofRecords / pageSize)
 	}
+
+	// resetVendorDocument()
+	// {
+	// 	    this.getList();
+	// 	    this.sourceViewforDocumentList= [];		 
+	// 	    this.documentInformation.vendorDocumentDetailId = 0;
+	// 		this.documentInformation.docDescription = '';
+	// 		this.documentInformation.docMemo = '';
+	// 		this.documentInformation.docName = '';
+
+	// }
 
 
 }
