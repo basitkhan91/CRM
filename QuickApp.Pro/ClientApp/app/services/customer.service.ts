@@ -472,6 +472,9 @@ export class CustomerService {
     postCustomerTaxTypeRate(data) {
         return Observable.forkJoin(this.customerEndpoint.postCustomerTaxTypeRate<any>(data));
     }
+    updateCustomerTaxTypeRate(data){
+        return this.customerEndpoint.updateCustomerTaxTypeRate(data);
+    }
     newItemMasterAircarftClass(action: any) {
         return this.customerEndpoint.getNewitemAircraftEndpoint<any>(action);
     }

@@ -143,7 +143,9 @@ export class CustomerGeneralInformationComponent implements OnInit {
         this.getAllCustomerClassification();
         // this.getAllCurrency();
         // this.getAllClassification();
-        this.getAllIntegrations()
+        // if (this.isEdit) {
+        this.getAllIntegrations();
+        // }
 
         console.log(this.customerListOriginal);
 
@@ -185,7 +187,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
             });
 
 
-           
+
             setTimeout(() => {
                 this.getCustomerRestrictedPMAByCustomerId();
             }, 1000);
@@ -200,7 +202,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
             setTimeout(() => {
                 this.getCustomerIntegrationTypesByCustomerId();
             }, 1000);
-            
+
 
 
         } else {
@@ -230,7 +232,6 @@ export class CustomerGeneralInformationComponent implements OnInit {
 
             });
         }
-
     }
 
 
@@ -243,7 +244,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
             if (this.generalInformation.restrictedPMAParts.length > 0) {
                 this.disableRestrictedPMA = true;
             }
-            for(let i=0; i<this.generalInformation.restrictedPMAParts.length; i++){
+            for (let i = 0; i < this.generalInformation.restrictedPMAParts.length; i++) {
                 this.generalInformation.restrictedPMAParts[i]['itemMasterId'] = this.generalInformation.restrictedPMAParts[i]['masterPartId']
             }
 
@@ -265,7 +266,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
             if (this.generalInformation.restrictedDERParts.length > 0) {
                 this.disableRestrictedDER = true;
             }
-            for(let i=0; i<this.generalInformation.restrictedDERParts.length; i++){
+            for (let i = 0; i < this.generalInformation.restrictedDERParts.length; i++) {
                 this.generalInformation.restrictedDERParts[i]['itemMasterId'] = this.generalInformation.restrictedDERParts[i]['masterPartId']
             }
             this.restictDERtempList = res.map(x => x.rescrictedPartId);
@@ -354,7 +355,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
 
 
     addRestrictPMA() {
-        if(this.generalInformation.restrictedPMAParts ==  undefined){
+        if (this.generalInformation.restrictedPMAParts == undefined) {
             this.generalInformation.restrictedPMAParts = []
         }
 
@@ -438,7 +439,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
         this.generalInformation.isAddressForShipping = true;
     }
     addRestrictBER() {
-        if(this.generalInformation.restrictedDERParts ==  undefined){
+        if (this.generalInformation.restrictedDERParts == undefined) {
             this.generalInformation.restrictedDERParts = []
         }
         if (this.restictDERtempList.length > 0) {

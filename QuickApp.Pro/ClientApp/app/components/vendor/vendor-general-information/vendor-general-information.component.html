@@ -139,8 +139,15 @@
                                             Email
                                             <span class="clr-red">*</span>
                                         </label>
-                                        <input class="form-control" type="email" email name="vendorEmail"
+                                        <input class="form-control" type="email" email name="vendorEmailId"
+                                        #vendorEmail="ngModel"
+                                                [pattern]="emailPattern"
                                                [(ngModel)]="sourceVendor.vendorEmail" required>
+                                               <div *ngIf="vendorEmail.errors" [ngClass]="'error'">
+                                                    <div *ngIf="vendorEmail.errors.pattern">
+                                                        <span style="color:red">User Email  not valid</span>
+                                                    </div>
+                                                </div>
                                     </div>
                                 </div>
                             <div class="col-md-3">
