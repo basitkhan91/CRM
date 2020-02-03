@@ -1015,6 +1015,7 @@
                             <th>Ship Via</th>
                             <th>Shipping Account Info</th>
                             <th>Memo</th>
+                            <th>Is Active</th>
                             <th>Updated By</th>
                             <th>Last Updated Time</th>
                             <th>Created By</th>
@@ -1028,6 +1029,7 @@
                         <td [ngStyle]="{'color':  getColorCodeForInterShipViaHistory(i, 'shipVia', audit.shipVia)  ? 'black' : 'red'  }">{{audit.shipVia}}</td>
                         <td [ngStyle]="{'color':  getColorCodeForInterShipViaHistory(i, 'shippingAccountInfo', audit.shippingAccountInfo)  ? 'black' : 'red'  }">{{audit.shippingAccountInfo}}</td>
                         <td [ngStyle]="{'color':  getColorCodeForInterShipViaHistory(i, 'memo', audit.memo)  ? 'black' : 'red'  }">{{audit.memo}}</td>
+                        <td [ngStyle]="{'color':  getColorCodeForInterShipViaHistory(i, 'isActive', audit.isActive)  ? 'black' : 'red'  }">{{audit.isActive}}</td>
 
                         <td>{{audit.updatedBy}}</td>
                         <td>{{audit.updatedDate | date: 'dd-MM-yyyy h:mm a '}}</td>
@@ -1133,10 +1135,10 @@
 
                 <p-table #internationShipVia class="rpo-table-cstm"
                          name="internationalshipViaTable"
-                         [first]="pageIndexForInternationalShipVia"
-                         [rows]="pageSizeForInternationalShipVia"
+                       
+                         [rows]="10"
                          [metaKeySelection]="true"
-                         [lazy]="true"
+                        
                          [value]="internationalShippingViaData"
                          [paginator]="true"
                          [pageLinks]="3"
@@ -1145,20 +1147,21 @@
                          selectionMode="multiple"
                          [resizableColumns]="true"
                          [reorderableColumns]="true"
-                         [totalRecords]="totalRecordsForInternationalShipVia"
-                         (onPage)="internationalShippingViaPagination($event)" [scrollable]="true" 
+                         [scrollable]="true"
                          scrollHeight="450px">
+                 
+                
 
-                         <ng-template pTemplate="colgroup" let-columns>
-                            <colgroup>
-                                <col *ngFor="let col of columns" style="width:auto">
-                            </colgroup>
-                        </ng-template>
+                    <ng-template pTemplate="colgroup" let-columns>
+                        <colgroup>
+                            <col *ngFor="let col of columns" style="width:auto">
+                        </colgroup>
+                    </ng-template>
 
                     <!-- <ng-template pTemplate="caption">
-                        <div style="text-align: right">
-                        </div>
-                    </ng-template> -->
+        <div style="text-align: right">
+        </div>
+    </ng-template> -->
 
                     <ng-template pTemplate="header" let-columns>
                         <tr>
@@ -1169,8 +1172,9 @@
                             <th style="width: 140px;" *ngIf="isViewMode == false"> Actions</th>
                         </tr>
                         <tr>
+
                             <th style="width:auto" *ngFor="let col of columns" [ngSwitch]="col.field">
-                                <input style="width:100%;" pInputText type="text" (keyup)="internationShipVia.filter($event.target.value, col.field, 'contains')">
+                                <input style="width:100%;" pInputText type="text" (input)="internationShipVia.filter($event.target.value, col.field, 'contains')">
                             </th>
                             <th *ngIf="isViewMode == false"></th>
                         </tr>

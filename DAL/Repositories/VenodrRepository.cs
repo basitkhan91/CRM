@@ -1119,6 +1119,8 @@ namespace DAL.Repositories
         {
             try
             {
+                CommonRepository commonRepository = new CommonRepository(_appContext);
+
                 Address address = new Address();
 
                 address.City = billingAddress.City;
@@ -1177,22 +1179,28 @@ namespace DAL.Repositories
                     {
                         objContactdata.IsPrimary = false;
                         _appContext.VendorBillingAddress.Update(objContactdata);
+
+                        _appContext.SaveChanges();
+                       commonRepository.ShippingBillingAddressHistory(Convert.ToInt64(objContactdata.VendorId), Convert.ToInt32(ModuleEnum.Vendor), Convert.ToInt64(objContactdata.VendorBillingAddressId), Convert.ToInt32(AddressTypeEnum.BillingAddress), objContactdata.UpdatedBy);
                     }
-                    _appContext.SaveChanges();
-                }
+                    }
 
                 if (billingAddress.VendorBillingAddressId > 0)
                 {
                     _appContext.VendorBillingAddress.Update(billingAddress);
+                    _appContext.SaveChanges();
+
                 }
                 else
                 {
                     billingAddress.CreatedDate = DateTime.Now;
                     _appContext.VendorBillingAddress.Add(billingAddress);
+                    _appContext.SaveChanges();
+
+
+                    commonRepository.ShippingBillingAddressHistory(Convert.ToInt64(billingAddress.VendorId), Convert.ToInt32(ModuleEnum.Vendor), Convert.ToInt64(billingAddress.VendorBillingAddressId), Convert.ToInt32(AddressTypeEnum.BillingAddress), billingAddress.UpdatedBy);
                 }
-
-                _appContext.SaveChanges();
-
+                
                 return billingAddress.VendorBillingAddressId;
             }
             catch (Exception ex)
@@ -1299,6 +1307,8 @@ namespace DAL.Repositories
         {
             try
             {
+                CommonRepository commonRepository = new CommonRepository(_appContext);
+
                 VendorBillingAddress billingAddress = new VendorBillingAddress();
                 billingAddress.VendorBillingAddressId = billingAddressId;
                 billingAddress.IsActive = status;
@@ -1312,6 +1322,16 @@ namespace DAL.Repositories
                 _appContext.Entry(billingAddress).Property(p => p.UpdatedBy).IsModified = true;
 
                 _appContext.SaveChanges();
+                var data = (from vba in _appContext.VendorBillingAddress
+                           
+                            where vba.VendorBillingAddressId == billingAddressId
+                            select new
+                            {
+                               vba.VendorId
+                            }
+                            ).FirstOrDefault();
+                commonRepository.ShippingBillingAddressHistory(Convert.ToInt64(data.VendorId), Convert.ToInt32(ModuleEnum.Vendor), Convert.ToInt64(billingAddress.VendorBillingAddressId), Convert.ToInt32(AddressTypeEnum.BillingAddress), billingAddress.UpdatedBy);
+
             }
             catch (Exception ex)
             {
@@ -2528,7 +2548,28 @@ namespace DAL.Repositories
             return obj;
 
         }
-        
+
+        public IEnumerable<object> getVendorShipVia(long id)
+        {
+            var data = (from c in _appContext.VendorShippingAudit
+                        where c.VendorShippingId==id
+                        select new
+                        {
+                           
+                            c.CreatedBy,
+                            c.UpdatedBy,
+                            c.UpdatedDate,
+                            c.CreatedDate,
+                            c.Memo,
+                            c.ShipVia,
+                            c.ShippingId,
+                            c.ShippingAccountinfo,
+                            c.ShippingURL,
+                            c.MasterCompanyId,
+                            c.IsActive
+                        }).OrderByDescending(c => c.UpdatedDate).ToList();
+            return data;
+        }
 
 
     }
