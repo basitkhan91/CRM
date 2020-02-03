@@ -28,4 +28,5 @@ export class DBkeys {
     public static readonly Module_Hierarchy = "module_hierarchy";
     public static readonly GLOBAL_SETTINGS = "global_settings";
     public static readonly MASTER_COMPANY_ID = 1;
+    public static readonly DEFAULT_ROTABLE_ID = 13;
 }
