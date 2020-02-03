@@ -9,6 +9,7 @@ export class ItemMasterSearchQuery {
     public sortOrder: number;
     public sortField: string;
     public partSearchParamters: PartSearchParamters;
+    public multiPartSearchParamters:PartSearchParamters[];
 
     constructor() {
         this.partSearchParamters = new PartSearchParamters();

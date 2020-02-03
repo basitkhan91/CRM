@@ -108,8 +108,28 @@
       Alternate PN</label>
   </div>
   <div>
-    <label><input type="checkbox" name="method" name="includeMultiplePN"
+    <label><input type="checkbox" name="includeEquivalentPartNumber" [(ngModel)]="query.partSearchParamters.includeEquivalentPartNumber" />&nbsp;Include
+      Equivalent PN</label>
+  </div>
+  <div>
+    <label><input type="checkbox" name="method" (change)="includeMultiplePN($event, part)"  name="includeMultiplePN" [(ngModel)]="query.partSearchParamters.includeMultiplePartNumber"
          />&nbsp;Multiple PN's</label>
   </div>
 </div>
+<ng-template #searchMultiPart let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title">search Multi Part</h4>
+        <button type="button" class="close" aria-label="Close" (click)="onCloseMultiPartNumbers()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+            <input type="textbox" name="multiPartNumbers"  [(ngModel)]="multiPartNumbers" >
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-success" (click)="searchMultiPartNumbers()">Save</button>
+        <button type="button" class="btn btn-danger" (click)="onCloseMultiPartNumbers()">No</button>
+    </div>
+
+</ng-template>
 

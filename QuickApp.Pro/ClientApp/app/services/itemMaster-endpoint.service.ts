@@ -82,6 +82,8 @@ export class ItemMasterEndpoint extends EndpointFactory {
     private readonly _searchItemMaster: string = "/api/ItemMaster/search";
     private readonly _searchPartNumberAdvanced: string = "/api/ItemMaster/searchpartnumberadvanced";
     private readonly _searchPartNumberUrl: string = "/api/ItemMaster/searchpartnumber";
+    private readonly _searchMulitPartNumberUrl: string = "/api/ItemMaster/searchmultipleparts";
+    private readonly _multiSearchItemMasterUrl: string = "/api/ItemMaster/multisearch";
 
     //Vendor Caps Air Craft
     private readonly _VendorMasterAircraftPostUrlNew: string = "/api/Vendor/VendorAircraftPost";
@@ -132,6 +134,8 @@ export class ItemMasterEndpoint extends EndpointFactory {
     get ExchangeLoanUrl() { return this.configurations.baseUrl + this._getExchangeLoan };
     get getSearchUrl() { return this.configurations.baseUrl + this._searchItemMaster };
     get getSearchPartNumberAdvancedUrl() { return this.configurations.baseUrl + this._searchPartNumberAdvanced };
+    get getSearchMulitPartNumberUrl() { return this.configurations.baseUrl + this._searchMulitPartNumberUrl };
+    get getMultiSearchUrl() { return this.configurations.baseUrl + this._multiSearchItemMasterUrl };
     get searchPartNumberUrl() { return this.configurations.baseUrl + this._searchPartNumberUrl; }
     get getalterqqupartsUrl() { return this.configurations.baseUrl + this._getalterqquparts; }
     get saveNtaePartsUrl() { return this.configurations.baseUrl + this._saveNtaeParts; }
@@ -1029,6 +1033,19 @@ export class ItemMasterEndpoint extends EndpointFactory {
         return this.http.post<T>(this.getSearchUrl, JSON.stringify(searchParameters), this.getRequestHeaders())
             .catch(err => {
                 return this.handleError(err, () => this.searchItemMaster(searchParameters));
+            })
+    }
+
+    searchMultiPartNumbers<T>(searchParameters: any): Observable<T> {
+        return this.http.post<T>(this.getSearchMulitPartNumberUrl, JSON.stringify(searchParameters), this.getRequestHeaders())
+            .catch(err => {
+                return this.handleError(err, () => this.searchMultiPartNumbers(searchParameters));
+            })
+    }
+    multiSearch<T>(searchParameters: any): Observable<T> {
+        return this.http.post<T>(this.getMultiSearchUrl, JSON.stringify(searchParameters), this.getRequestHeaders())
+            .catch(err => {
+                return this.handleError(err, () => this.multiSearch(searchParameters));
             })
     }
 
