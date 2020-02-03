@@ -764,7 +764,7 @@ namespace QuickApp.Pro.Controllers
             }
         }
 
-        [HttpGet("getContactHistroty/{id}", Name = "getContactHistrotyById")]
+        [HttpGet("getEntityContactHistroty/{id}", Name = "getEntityContactHistroty")]
         [Produces(typeof(List<AuditHistory>))]
         [ApiExplorerSettings(IgnoreApi = true)]
         public IActionResult getContactHistroty(long id)
