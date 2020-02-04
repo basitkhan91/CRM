@@ -30,7 +30,8 @@ export class PartNumberFilterComponent {
   errorMessages:any[]=[];
   multiPartModal: NgbModalRef;
   multiPartNumbers="";
-  multiSearchResult:any[]=[];
+    multiSearchResult: any[] = [];
+    part: any;
 
   constructor(
     private modalService: NgbModal,

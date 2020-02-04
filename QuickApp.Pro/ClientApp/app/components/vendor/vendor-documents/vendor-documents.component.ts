@@ -56,6 +56,7 @@ export class VendorDocumentsComponent implements OnInit {
 	// id: number;
 	// customerCode: any;
 	// customerName: any;
+    
 	sourceViewforDocument: any;
 	localCollection: any;
 	sourceViewforDocumentList: any = [];
