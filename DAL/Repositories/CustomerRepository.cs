@@ -850,28 +850,32 @@ namespace DAL.Repositories
             }
         }
 
-        public IEnumerable<object> GetTaxTypeRateMapped(long customerId)
-        {
-            
+		public IEnumerable<object> GetTaxTypeRateMapped(long customerId)
+		{
 
-                var data = (from c in _appContext.CustomerTaxTypeRateMapping
-                            where c.CustomerId == customerId && c.IsDeleted == false
-                            select new
-                            {
-                                c.CustomerTaxTypeRateMappingId,
-                                c.CustomerId,
-                                c.TaxType,
-                                c.TaxRate,
-                                c.CreatedBy,
-                                c.TaxRateId,
-                                c.TaxTypeId,
-                                c.MasterCompanyId
-                            }).ToList();
-                return data;
-           
-        }
 
-        public IEnumerable<object> getIntegrationData(long id)
+			var data = (from c in _appContext.CustomerTaxTypeRateMapping
+						join ty in _appContext.TaxType on c.TaxTypeId equals ty.TaxTypeId into tyy
+						from ty in tyy.DefaultIfEmpty()
+						join tr in _appContext.TaxRate on c.TaxRateId equals tr.TaxRateId into trr
+						from tr in trr.DefaultIfEmpty()
+						where c.CustomerId == customerId && c.IsDeleted == false
+						select new
+						{
+							c.CustomerTaxTypeRateMappingId,
+							c.CustomerId,
+							TaxType=ty.Description,
+							tr.TaxRate,
+							c.CreatedBy,
+							c.TaxRateId,
+							c.TaxTypeId,
+							c.MasterCompanyId
+						}).ToList();
+			return data;
+
+		}
+
+		public IEnumerable<object> getIntegrationData(long id)
         {
 
             {

@@ -21,6 +21,6 @@ namespace DAL.Models
         public bool? IsDeleted { get; set; }
         public bool IsActive { get; set; }
         public long? TaxRateId { get; set; }
-        public Int16? TaxTypeId { get; set; }
+        public byte? TaxTypeId { get; set; }
     }
 }

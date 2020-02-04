@@ -2453,7 +2453,40 @@ namespace QuickApp.Pro.Controllers
             return Ok(ModelState);
         }
 
-        [HttpDelete("DeleteCustomerTaxTypeRateMappint/{id}")]
+		[HttpPut("CustomerTaxTypeRateUpdate/{id}")]
+		[Produces(typeof(CustomerTaxTypeRateMapping))]
+		public IActionResult InsertCustomerTaxTypeRateInfoUpdate(long id,[FromBody] CustomerTaxTypeRateMapping customerContactTaxMapping)
+		{
+			if (ModelState.IsValid)
+			{
+
+				if(id > 0)
+				{
+					var extData = _context.CustomerTaxTypeRateMapping.Where(p => p.CustomerTaxTypeRateMappingId == id).FirstOrDefault();
+					extData.UpdatedBy = customerContactTaxMapping.UpdatedBy ?? "admin";
+					extData.UpdatedDate = System.DateTime.Now;
+					//extData.TaxRate = customerContactTaxMapping.TaxRate;
+					extData.TaxRateId = customerContactTaxMapping.TaxRateId;
+					//extData.TaxType = customerContactTaxMapping.TaxType;
+					extData.TaxTypeId = customerContactTaxMapping.TaxTypeId;
+					_unitOfWork.Repository<CustomerTaxTypeRateMapping>().Update(extData);
+					_unitOfWork.SaveChanges();				
+				}
+				else
+				{
+					return BadRequest($"{nameof(customerContactTaxMapping)} update failed!");
+				}
+				
+			}
+			else
+			{
+				return BadRequest($"{nameof(customerContactTaxMapping)} cannot be null");
+			}
+
+			return Ok(ModelState);
+		}
+
+		[HttpDelete("DeleteCustomerTaxTypeRateMappint/{id}")]
         public IActionResult DeleteCustomerTaxTypeRate(long id)
         {
             var existingResult = _unitOfWork.Repository<CustomerTaxTypeRateMapping>().GetSingleOrDefault(c => c.CustomerTaxTypeRateMappingId == id);
