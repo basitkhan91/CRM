@@ -24,6 +24,7 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<object> GetAircraftMapped(long customerId);
         IEnumerable<object> GetTaxTypeRateMapped(long customerId);
         IEnumerable<object> GetATAMapped(long customerId);
+        IEnumerable<object> GetATAMappedAudit(long CustomerContactATAMappingId);
         IEnumerable<object> GetATAContactMapped(long contactId);
 
         //IEnumerable <object> GetCustomerBynameList(string name);

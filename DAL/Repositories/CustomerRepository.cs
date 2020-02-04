@@ -827,6 +827,34 @@ namespace DAL.Repositories
             }
         }
 
+        public IEnumerable<object> GetATAMappedAudit(long CustomerContactATAMappingId)
+        {            
+                var data = (from ca in _appContext.CustomerContactATAMappingAudit
+                            join cont in _appContext.CustomerContact on ca.CustomerContactId equals cont.ContactId
+                            join contt in _appContext.Contact on cont.ContactId equals contt.ContactId into conttt
+                            from contt in conttt.DefaultIfEmpty()
+
+                            where ca.CustomerContactATAMappingId == CustomerContactATAMappingId
+                            select new
+                            {
+                                ca.AuditCustomerContactATAMappingId,
+                                ca.CustomerContactATAMappingId,
+                                ca.CustomerId,
+                                ca.ATAChapterId,
+                                ca.ATAChapterCode,
+                                ca.ATAChapterName,
+                                ca.ATASubChapterId,
+                                ca.ATASubChapterDescription,
+                                contt.FirstName,
+                                contt.ContactId,
+                                ca.UpdatedBy,
+                                ca.UpdatedDate
+
+                            }).ToList();
+                return data;            
+        }
+        
+
         public IEnumerable<object> GetATAContactMapped(long contactId)
         {
             {
@@ -3387,7 +3415,9 @@ namespace DAL.Repositories
                             c.CreatedBy,
                             c.TaxRateId,
                             c.TaxTypeId,
-                            c.MasterCompanyId
+                            c.MasterCompanyId,
+                            c.UpdatedBy,
+                            c.UpdatedDate
                         }).ToList();
             return data;
         }

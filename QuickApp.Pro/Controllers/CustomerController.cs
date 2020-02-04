@@ -2350,6 +2350,22 @@ namespace QuickApp.Pro.Controllers
 
         }
 
+        [HttpGet("getCustomerATAMappedAudit/{CustomerContactATAMappingId}")]
+        [Produces(typeof(List<CustomerATAMapping>[]))]
+        public IActionResult ataMappedAudit(long CustomerContactATAMappingId)
+        {
+            var result = _unitOfWork.Customer.GetATAMappedAudit(CustomerContactATAMappingId);
+            if (result == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                return Ok(result);
+            }
+
+        }
+
         [HttpPost("CustomerATAPost")]
         public IActionResult InsertCustomerATA([FromBody] CustomerATAMapping[] customerATAMapping)
         {
@@ -2398,6 +2414,8 @@ namespace QuickApp.Pro.Controllers
             }
 
         }
+
+
 
         [HttpPost("CustomerContactATAPost")]
         public IActionResult InsertCustomerContactATA([FromBody] CustomerContactATAMapping[] customerContactATAMapping)

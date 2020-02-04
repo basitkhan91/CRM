@@ -1,12 +1,12 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-
 namespace DAL.Models
 {
-    public partial class CustomerContactATAMapping
+    public partial class CustomerContactATAMappingAudit
     {
         [Key]
+        public long AuditCustomerContactATAMappingId { get; set; }
         public long CustomerContactATAMappingId { get; set; }
         public long CustomerContactId { get; set; }
         public long CustomerId { get; set; }
@@ -24,5 +24,3 @@ namespace DAL.Models
         public bool IsActive { get; set; }
     }
 }
-
-
