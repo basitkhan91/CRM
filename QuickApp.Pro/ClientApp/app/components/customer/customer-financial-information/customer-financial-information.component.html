@@ -204,13 +204,12 @@
                                                                     <td *ngFor="let col of columns">
                                                                 {{rowData[col.field]}}
                                                             </td>
-                                                            <td>
-                                                                <span data-toggle="modal" data-target="#contentAuditHist"><a class="btn nobg" 
-                                                                    (click)="getAuditHistoryById(rowData)" 
-                                                                    matTooltip="History"><i class="fa fa-history"></i></a></span>
-                                                            </td>
+
 
                                                             <td>
+                                                                    <span data-toggle="modal" data-target="#contentAuditHist"><a class="btn nobg" 
+                                                                        (click)="getAuditHistoryById(rowData)" 
+                                                                        matTooltip="History"><i class="fa fa-history"></i></a></span>
                                                                     <button
                                                                     class="btn-edit"
                                                                     mat-icon-button
@@ -426,26 +425,19 @@
           <button type="button" class="close" data-dismiss="modal">&times;</button>
           <h4 class="modal-title">History For Tax </h4>
         </div>
-        <div class="modal-body">
-            <table>
+        <div class="modal-body" *ngIf="auditDataForTaxData.length > 0">
+            <table class= "table table-bordered ">
                 <thead>
                     <tr>
                         <th>Tax Type</th>
                         <th>Tax Rate</th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
 
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                    <tr *ngFor="let x of auditDataForTaxData; let i =index;">
+                        <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'taxType', x.taxType)  ? 'black' : 'red'  }">{{x.taxType}}</td>
+                        <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'taxRate', x.taxRate)  ? 'black' : 'red'  }">{{x.taxRate}}</td>
                     </tr>
                 </tbody>
             </table>

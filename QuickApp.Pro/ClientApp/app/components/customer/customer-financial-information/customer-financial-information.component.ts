@@ -129,7 +129,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
     selectedRowFileForDelete: any;
     taxRateEditData: any;
     indexForTaxRate: any = 1;
-    auditDataForTaxData: any;
+    auditDataForTaxData: any= [];
 
     constructor(public taxtypeser: TaxTypeService, public creditTermsService: CreditTermsService,
         public currencyService: CurrencyService,
@@ -214,7 +214,6 @@ export class CustomerFinancialInformationComponent implements OnInit {
     getAllcreditTermList() {
         this.commonservice.smartDropDownList('CreditTerms', 'CreditTermsId', 'Name').subscribe(res => {
             this.creditTermsListOriginal = res;
-
         })
     }
 
@@ -591,8 +590,8 @@ export class CustomerFinancialInformationComponent implements OnInit {
 
 
     }
-    getAuditHistoryById(data){
-        const {customerTaxTypeRateMappingId} = data;
+    getAuditHistoryById(data) {
+        const { customerTaxTypeRateMappingId } = data;
         this.customerService.getAuditHistoryForTaxType(customerTaxTypeRateMappingId).subscribe(res => {
             this.auditDataForTaxData = res;
 
@@ -884,6 +883,17 @@ export class CustomerFinancialInformationComponent implements OnInit {
     }
     dismissModel() {
         this.modal.close();
+    }
+    getColorCodeForHistory(i, field, value) {
+        const data = this.auditDataForTaxData;
+        const dataLength = data.length;
+        if (i >= 0 && i <= dataLength) {
+            if ((i + 1) === dataLength) {
+                return true;
+            } else {
+                return data[i + 1][field] === value
+            }
+        }
     }
 
 
