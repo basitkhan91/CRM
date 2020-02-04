@@ -128,6 +128,8 @@ export class CustomerFinancialInformationComponent implements OnInit {
     _discountListForDropdown: any = [];
     selectedRowFileForDelete: any;
     taxRateEditData: any;
+    indexForTaxRate: any = 1;
+    auditDataForTaxData: any;
 
     constructor(public taxtypeser: TaxTypeService, public creditTermsService: CreditTermsService,
         public currencyService: CurrencyService,
@@ -247,7 +249,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
         })
     }
     getAllTaxRates() {
-        this.commonservice.smartDropDownList('[Percent]', 'PercentId', 'PercentValue').subscribe(res => {
+        this.commonservice.smartDropDownList('[TaxRate]', 'TaxRateId', 'TaxRate').subscribe(res => {
 
             this.taxRatesList = res;
         })
@@ -524,13 +526,28 @@ export class CustomerFinancialInformationComponent implements OnInit {
                 this.selectedTaxRates = null;
                 this.selectedTaxType = null;
             } else {
-                this.taxTypeRateMapping = [...this.taxTypeRateMapping, {
+
+                this.taxTypeRateMapping.push({
                     customerId: this.id,
-                    taxTypeId : this.selectedTaxType,
+                    id: this.indexForTaxRate,
+                    taxTypeId: this.selectedTaxType,
                     taxRateId: this.selectedTaxRates,
                     taxType: getValueFromArrayOfObjectById('label', 'value', this.selectedTaxType, this.taxTypeList),
                     taxRate: getValueFromObjectByKey('label', getObjectById('value', this.selectedTaxRates, this.taxRatesList))
-                }];
+                })
+
+                // this.taxTypeRateMapping = []
+
+                // [...this.taxTypeRateMapping.map((x, index) => {
+                //     return {
+                //         customerId: x.id,
+                //         id: index,
+                //         taxTypeId: this.selectedTaxType,
+                //         taxRateId: this.selectedTaxRates,
+                //         taxType: getValueFromArrayOfObjectById('label', 'value', this.selectedTaxType, this.taxTypeList),
+                //         taxRate: getValueFromObjectByKey('label', getObjectById('value', this.selectedTaxRates, this.taxRatesList))
+                //     }
+                // })];
 
                 this.selectedTaxRates = null;
                 this.selectedTaxType = null;
@@ -538,7 +555,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
 
 
         }
-        console.log(this.taxTypeRateMapping, "this.taxTypeRateMapping+++")
+        console.log(this.taxTypeRateMapping)
     }
     editTaxtRate(rowData) {
         this.taxRateEditData = { ...rowData };
@@ -546,16 +563,38 @@ export class CustomerFinancialInformationComponent implements OnInit {
 
     }
 
-    updateTaxTypeandRate(){
+    updateTaxTypeandRate() {
+        if (this.taxRateEditData.customerTaxTypeRateMappingId) {
+            this.customerService.updateCustomerTaxTypeRate(this.taxRateEditData).subscribe(res => {
+                this.taxRateEditData = undefined;
+                this.getMappedTaxTypeRateDetails();
+                this.alertService.showMessage(
+                    'Success',
+                    `Successfully Update Tax Type and Rate`,
+                    MessageSeverity.success
+                );
+            })
+        } else {
+            const data = [...this.taxTypeRateMapping.map(x => {
+                if (x.id == this.taxRateEditData.id) {
+                    return {
+                        ...this.taxRateEditData,
+                        taxType: getValueFromArrayOfObjectById('label', 'value', this.taxRateEditData.taxTypeId, this.taxTypeList),
+                        taxRate: getValueFromObjectByKey('label', getObjectById('value', this.taxRateEditData.taxRateId, this.taxRatesList))
+                    };
+                } else {
+                    return x;
+                }
+            })];
+            this.taxTypeRateMapping = data;
+        }
 
-        this.customerService.updateCustomerTaxTypeRate(this.taxRateEditData).subscribe(res => {
-            this.taxRateEditData = undefined;
-            this.alertService.showMessage(
-                'Success',
-                `Successfully Update Tax Type and Rate`,
-                MessageSeverity.success
-            );
 
+    }
+    getAuditHistoryById(data){
+        const {customerTaxTypeRateMappingId} = data;
+        this.customerService.getAuditHistoryForTaxType(customerTaxTypeRateMappingId).subscribe(res => {
+            this.auditDataForTaxData = res;
 
         })
     }
