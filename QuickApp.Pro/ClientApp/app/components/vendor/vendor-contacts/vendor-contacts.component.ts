@@ -1,4 +1,4 @@
-﻿import { Component, ViewChild, OnInit, AfterViewInit } from '@angular/core';
+﻿import { Component, ViewChild, OnInit, AfterViewInit, Input } from '@angular/core';
 import { MatPaginator, MatSort, MatTableDataSource, MatSnackBar, MatDialog } from '@angular/material';
 import { NgForm, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
@@ -75,20 +75,6 @@ export class VendorContactsComponent implements OnInit {
     pageIndex: number = 0;
     pageSize: number = 10;
     totalPages: number = 0;
-    ngOnInit(): void {
-        this.sourceVendor.isdefaultContact = true;
-        this.matSpinner = true;
-        this.vendorService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-contacts';
-        this.vendorService.bredcrumbObj.next(this.vendorService.currentUrl);
-        if (this.local) {
-            this.loadData();
-        }
-        this.loadCompleteddata();
-        this.loadEmptyObject();
-        this.router.queryParams.subscribe((params: Params) => {
-        });
-    }
-
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     filteredBrands: any[];
@@ -104,7 +90,6 @@ export class VendorContactsComponent implements OnInit {
     loadingIndicator: boolean;
     closeResult: string;
     selectedColumn: any[];
-
     cols: any[];
     title: string = "Create";
     id: number;
@@ -135,13 +120,14 @@ export class VendorContactsComponent implements OnInit {
     ];
 
     selectedColumns = this.vendorContactsColumns;
+    @Input() vendorId: number = 0;
+    @Input() isViewMode: boolean = false;
+
     constructor(private router: ActivatedRoute, private route: Router, private customerser: CustomerService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public vendorService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private configurations: ConfigurationService) {
 
         if (this.vendorService.listCollection !== undefined) {
             this.vendorService.isEditMode = true;
         }
-
-
         if (this.local) {
             this.vendorService.contactCollection = this.local;
         }
@@ -158,6 +144,25 @@ export class VendorContactsComponent implements OnInit {
         }
         this.alertService.stopLoadingMessage();
     }
+
+    ngOnInit(): void {
+        this.sourceVendor.isdefaultContact = true;
+        this.matSpinner = true;        
+        if (this.local) {
+            this.loadData();
+        }
+        this.loadCompleteddata();
+        this.loadEmptyObject();
+        this.router.queryParams.subscribe((params: Params) => {
+        });
+        if(this.vendorId != 0) {
+            this.loadData();
+        } else {
+            this.vendorService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-contacts';
+            this.vendorService.bredcrumbObj.next(this.vendorService.currentUrl);
+        }
+    }
+
     filterFirstNames(event) {
         this.firstNames = [];
         for (let i = 0; i < this.alldata.length; i++) {
@@ -210,12 +215,11 @@ export class VendorContactsComponent implements OnInit {
     private loadData() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-        this.vendorService.getContacts(this.local.vendorId).subscribe(
+        const vendorId = this.vendorId != 0 ? this.vendorId : this.local.vendorId;
+        this.vendorService.getContacts(vendorId).subscribe(
             results => this.onDataLoadSuccessful(results[0]),
             error => this.onDataLoadFailed(error)
         );
-
-
     }
 
     private loadCompleteddata() {

@@ -1,4 +1,6 @@
-﻿﻿<p-breadcrumb [model]="breadcrumbs"></p-breadcrumb>
+﻿﻿<div *ngIf="isVendorList && !isCreatePO && !isCreateRO">
+    <p-breadcrumb [model]="breadcrumbs"></p-breadcrumb>
+</div>
 
 <div class="card">
     <div class="card-body">
@@ -7,6 +9,29 @@
             <a matTooltip="Add Vendor" (click)="navigateTogeneralInfo()" class="plusicon-cstm ">
                 <i class="fa fa-plus-circle fa-lg"></i>
             </a>
+        </div>
+
+        <div class="form-row status-radio" style="margin: 0px 4px;" *ngIf="isVendorList && !isCreatePO && !isCreateRO">
+            <div class="col-md-8">
+                <div class="form-group">
+                    <label style="float:left; width:auto; margin-right:20px; padding-top:3px;">Status:</label>
+                    <div class="pull-left" style="margin-top: 4px; margin-right: 15px;">
+                        <label class="radio-cstm wauto">
+                            <input type="radio" name="vendorStatus" class="form-control" value="active" (click)="getVenListByStatus('active')" checked>
+                            <span class="checkmark"></span>Active</label>
+                    </div>
+                    <div class="pull-left" style="margin-top: 4px; margin-right: 15px;">
+                        <label class="radio-cstm wauto">
+                            <input type="radio" name="vendorStatus" class="form-control" value="inactive" (click)="getVenListByStatus('inactive')">
+                            <span class="checkmark"></span>InActive</label>
+                    </div>
+                    <div class="pull-left" style="margin-top: 4px; margin-right: 15px;">
+                        <label class="radio-cstm wauto">
+                            <input type="radio" name="vendorStatus" class="form-control" value="all" (click)="getVenListByStatus('all')">
+                            <span class="checkmark"></span>All</label>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <p-table #dt class="rpo-table-cstm rro-table-cstm" [value]="allVendorList" [first]="0" [rows]="pageSize" [paginator]="true" [pageLinks]="3" [lazy]="true" (onLazyLoad)="loadData($event)" [rowsPerPageOptions]="[10,20,50,100]" [columns]="selectedColumns" [metaKeySelection]="true" selectionMode="multiple" [(selection)]="selectedColumn" [resizableColumns]="true" [reorderableColumns]="true" [scrollable]="true" scrollHeight="450px" [totalRecords]="totalRecords">
@@ -519,7 +544,10 @@
                     </div>
                     <div id="step11" class="panel-collapse collapse" aria-expanded="false"
                          style="height: 0px;">
-                        <div class="panel-body">
+                         <div>
+                             <app-vendor-capabilities-list *ngIf="vendorId" [vendorId]="vendorId" [isViewMode]="isViewMode"></app-vendor-capabilities-list>
+                         </div>
+                        <!-- <div class="panel-body">
                             <div class="col-sm-12">
                                 <div class="shadow-Box">
                                     <p-table #vendorCapesList class="rpo-table-cstm" [value]="allvendorCapsList" [metaKeySelection]="true" [rows]="10"
@@ -559,9 +587,6 @@
                                        </td>
                                        <td class="text-center">
                                         <span data-toggle="modal" data-target="#vendorCapesView"><a class="btn nobg" (click)="viewSelectedCapsRow(rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
-                                        <!-- <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="viewSelectedCapsRow(rowData)" data-target="#vendorCapesView" data-toggle="modal" matTooltip="View" >
-                                            <i class="fa fa-eye"></i>
-                                        </a> -->
                                         </td>
                                    </tr>
                                </ng-template>
@@ -586,24 +611,25 @@
                                     <label id="footer" class="footer1">Pages Count:</label>
                                     <input style="width: 5%;" [ngModel]="getPageCount(vendorCapesList._totalRecords,viewPageSize)" [disabled]="true" pInputText type="text" />
                                 </ng-template>
-                           </p-table>
+                                    </p-table>
                                 </div>
                             </div>                           
-                        </div>
+                        </div> -->
                     </div>
                 </div>				
 
                 <div class="panel panel-default">
                     <div class="panel-heading">
-
                         <h4 class="panel-title">
                             <a data-toggle="collapse" href="#step2"
                                aria-expanded="false" class="collapsed">Contact</a>
                         </h4>
                     </div>
                     <div id="step2" class="panel-collapse collapse in" aria-expanded="true">
-                        <div class="panel-body">
-                            <div class="col-sm-12">
+                        <div>
+                            <app-vendor-contacts *ngIf="vendorId" [vendorId]="vendorId" [isViewMode]="isViewMode"></app-vendor-contacts>
+                        </div>
+                            <!-- <div class="col-sm-12">
                                 <div class="shadow-Box">
                                     <p-table #vContact class="rpo-table-cstm" [value]="allContacts" [metaKeySelection]="true" [rows]="10"
                                              [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[10,20,50,100]"
@@ -644,7 +670,7 @@
                                         </ng-template>
     
                                         <ng-template pTemplate="body" let-rowData let-columns="columns">
-                                            <tr [pSelectableRow]="rowData"> <!--(dblclick)="toggledbldisplay(rowData)"-->
+                                            <tr [pSelectableRow]="rowData">
                                                 <td> <span class="flag">
                                                     <i  *ngIf="rowData.isDefaultContact == true"   [ngStyle]="{'color': rowData.isDefaultContact == true ? 'green' : 'none'}"  
                                                      class="fa fa-flag" aria-hidden="true"></i>
@@ -679,8 +705,7 @@
                                         </ng-template>
                                     </p-table>
                                 </div>
-                            </div>                            
-                        </div>
+                            </div>                             -->
                     </div>
                 </div>
                 <div class="panel panel-default">
@@ -813,7 +838,10 @@
                                         </div>
                                     </div>
                                 </div>
-                                <p-table #vPayments class="rpo-table-cstm" [value]="allpayments" [metaKeySelection]="true" [rows]="10"
+                                <div>
+                                    <app-vendor-payment-information *ngIf="vendorId" [vendorId]="vendorId" [isViewMode]="isViewMode"></app-vendor-payment-information>
+                                </div>
+                                <!-- <p-table #vPayments class="rpo-table-cstm" [value]="allpayments" [metaKeySelection]="true" [rows]="10"
                                 [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[10,20,50,100]"
                                 [columns]="selectedPaymentColumns" [resizableColumns]="true"
                                 [reorderableColumns]="true" [scrollable]="true" scrollHeight="450px">
@@ -868,12 +896,12 @@
                                <label id="footer" class="footer1">Pages Count:</label>
                                <input style="width: 5%;" [ngModel]="getPageCount(vPayments._totalRecords,viewPageSize)" [disabled]="true" pInputText type="text" />
                            </ng-template>
-                                </p-table>
+                                </p-table> -->
 
-                                <hr />
-                                <div class="clear"></div>
+                                <!-- <hr />
+                                <div class="clear"></div> -->
 
-                                <div class="form-row">
+                                <div class="form-row m-t-10">
                                     <div class="col-sm-6">
                                         <div class="=col-sm-12">
                                             <!-- <p><span class="label"><b>Domestic Wire </b></span></p> -->
@@ -946,6 +974,88 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step6">Billing Info</a> </h4>
+                    </div>
+                    <div id="step6" class="panel-collapse  collapse">
+                        <div>
+                            <app-vendor-billing-information *ngIf="vendorId" [vendorId]="vendorId" [isViewMode]="isViewMode"></app-vendor-billing-information>
+                        </div>
+                        <!-- <div class="panel-body">
+                            <div class="col-sm-12">
+                                <div class="shadow-Box">                                       
+                                <p-table #vBilling class="rpo-table-cstm" [value]="billingInfoList" [metaKeySelection]="true" [rows]="10"
+                                             [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[10,20,50,100]"
+                                             [columns]="selectedBillingColumns" [resizableColumns]="true"
+                                             [reorderableColumns]="true" [scrollable]="true" scrollHeight="450px">
+
+                                             <ng-template pTemplate="colgroup" let-columns>
+                                                <colgroup>
+                                                    <col *ngFor="let col of columns" style="width:auto">
+                                                </colgroup>
+                                             </ng-template>
+
+                                        <ng-template pTemplate="header" let-columns>
+                                            <tr>
+                                                <th style="width: 40px;">Flag</th>
+                                                <th *ngFor="let col of columns" pResizableColumn
+                                                pReorderableColumn [pSortableColumn]="col.field">
+                                                    {{ col.header }}
+                                                    <p-sortIcon [field]="col.field"></p-sortIcon>
+                                                </th>
+                                            </tr>
+                                            <tr>
+                                                <th></th>
+                                                <th style="width:auto" *ngFor="let col of columns" [ngSwitch]="col.field">
+                                                    <input style="width:100%;" pInputText type="text" (input)="vBilling.filter($event.target.value, col.field, 'contains')">
+                                                </th>
+                                            </tr>
+                                        </ng-template>
+                                        <ng-template pTemplate="body"
+                                                     let-rowData
+                                                     let-columns="columns"
+                                                     let-rowIndex="rowIndex">
+                                            <tr>
+                                                <td style="width: 40px;"> <span class="flag">
+                                                    <i  *ngIf="rowData.isPrimary == true" [ngStyle]="{'color': rowData.isPrimary == true ? 'green' : 'none'}"  
+                                                     class="fa fa-flag" aria-hidden="true"></i>
+                                                    </span>
+                                                </td>
+
+                                                <td *ngFor="let col of columns">
+                                                    {{ rowData[col.field] }}
+                                                </td>
+                                            </tr>
+                                        </ng-template>
+                                        <ng-template pTemplate="emptymessage" let-columns>
+                                            <tr *ngIf="billingInfoList.length == 0">
+                                                <td colspan="11" style="color: red; font-weight: bold; text-align: center">
+                                                    No records found
+                                                </td>
+                                            </tr>
+                                        </ng-template>
+                                        <ng-template pTemplate="emptymessage" let-columns *ngIf="billingInfoList.length == 0">
+                                            <tr>
+                                                <td colspan="11" style="color: red; font-weight: bold; text-align: center">
+                                                    No records found
+                                                </td>
+                                            </tr>
+                                        </ng-template>
+                                        <ng-template pTemplate="summary" id="footer">
+                                            <label id="footer" class="footer">No'of records:</label>
+                                            <input style="width: 5%;" [(ngModel)]="vBilling._totalRecords" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp;
+                                            <label id="footer" class="footer1">Pages Count:</label>
+                                            <input style="width: 5%;" [ngModel]="getPageCount(vBilling._totalRecords,viewPageSize)" [disabled]="true" pInputText type="text" />
+                                        </ng-template>
+                                    </p-table>
+                                </div>
+                            </div>
+                        </div> -->
+                    </div>
+            </div>
+
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h4 class="panel-title">
@@ -955,7 +1065,10 @@
                     </div>
                     <div id="step5" class="panel-collapse collapse" aria-expanded="false"
                          style="height: 0px;">
-                        <div class="panel-body">
+                         <div>
+                             <app-vendor-shipping-information *ngIf="vendorId" [vendorId]="vendorId" [isViewMode]="isViewMode"></app-vendor-shipping-information>
+                         </div>
+                        <!-- <div class="panel-body">
                             <div class="col-sm-12">
                                 <div class="shadow-Box">
                                     <p-table #vShipping class="rpo-table-cstm" [value]="allShippings" [metaKeySelection]="true" [rows]="10"
@@ -978,7 +1091,6 @@
                                                     {{col.header}}
                                                     <p-sortIcon [field]="col.field"></p-sortIcon>
                                                 </th>
-                                                <!--<th></th>-->
                                             </tr>
                                             <tr>
                                                 <th></th>
@@ -1027,90 +1139,11 @@
                                         </ng-template>
                                     </p-table>
                                 </div>
-                            </div>
-                            
-                        </div>
+                            </div>                            
+                        </div> -->
                     </div>
                 </div>
-
-                <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step6">Billing Info</a> </h4>
-                        </div>
-                        <div id="step6" class="panel-collapse  collapse">
-                            <div class="panel-body">
-                                <div class="col-sm-12">
-                                    <div class="shadow-Box">                                       
-                                    <p-table #vBilling class="rpo-table-cstm" [value]="billingInfoList" [metaKeySelection]="true" [rows]="10"
-                                                 [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[10,20,50,100]"
-                                                 [columns]="selectedBillingColumns" [resizableColumns]="true"
-                                                 [reorderableColumns]="true" [scrollable]="true" scrollHeight="450px">
-
-                                                 <ng-template pTemplate="colgroup" let-columns>
-                                                    <colgroup>
-                                                        <col *ngFor="let col of columns" style="width:auto">
-                                                    </colgroup>
-                                                 </ng-template>
-
-                                            <ng-template pTemplate="header" let-columns>
-                                                <tr>
-                                                    <th style="width: 40px;">Flag</th>
-                                                    <th *ngFor="let col of columns" pResizableColumn
-                                                    pReorderableColumn [pSortableColumn]="col.field">
-                                                        {{ col.header }}
-                                                        <p-sortIcon [field]="col.field"></p-sortIcon>
-                                                    </th>
-                                                </tr>
-                                                <tr>
-                                                    <th></th>
-                                                    <th style="width:auto" *ngFor="let col of columns" [ngSwitch]="col.field">
-                                                        <input style="width:100%;" pInputText type="text" (input)="vBilling.filter($event.target.value, col.field, 'contains')">
-                                                    </th>
-                                                </tr>
-                                            </ng-template>
-                                            <ng-template pTemplate="body"
-                                                         let-rowData
-                                                         let-columns="columns"
-                                                         let-rowIndex="rowIndex">
-                                                <tr>
-                                                    <td style="width: 40px;"> <span class="flag">
-                                                        <i  *ngIf="rowData.isPrimary == true" [ngStyle]="{'color': rowData.isPrimary == true ? 'green' : 'none'}"  
-                                                         class="fa fa-flag" aria-hidden="true"></i>
-                                                        </span>
-                                                    </td>
-
-                                                    <td *ngFor="let col of columns">
-                                                        {{ rowData[col.field] }}
-                                                    </td>
-                                                </tr>
-                                            </ng-template>
-                                            <ng-template pTemplate="emptymessage" let-columns>
-                                                <tr *ngIf="billingInfoList.length == 0">
-                                                    <td colspan="11" style="color: red; font-weight: bold; text-align: center">
-                                                        No records found
-                                                    </td>
-                                                </tr>
-                                            </ng-template>
-                                            <ng-template pTemplate="emptymessage" let-columns *ngIf="billingInfoList.length == 0">
-                                                <tr>
-                                                    <td colspan="11" style="color: red; font-weight: bold; text-align: center">
-                                                        No records found
-                                                    </td>
-                                                </tr>
-                                            </ng-template>
-                                            <ng-template pTemplate="summary" id="footer">
-                                                <label id="footer" class="footer">No'of records:</label>
-                                                <input style="width: 5%;" [(ngModel)]="vBilling._totalRecords" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp;
-                                                <label id="footer" class="footer1">Pages Count:</label>
-                                                <input style="width: 5%;" [ngModel]="getPageCount(vBilling._totalRecords,viewPageSize)" [disabled]="true" pInputText type="text" />
-                                            </ng-template>
-                                        </p-table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
+            
                     <div class="panel panel-default">
                             <div class="panel-heading">
                                 <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step7"> Warnings</a> </h4>
@@ -1241,7 +1274,7 @@
                                                     <label id="footer" class="footer1">Pages Count:</label>
                                                     <input style="width: 5%;" [ngModel]="getPageCount(vMemo._totalRecords,viewPageSize)" [disabled]="true" pInputText type="text" />
                                                 </ng-template>
-                                            </p-table>
+                                        </p-table>
                                         </div>
                                     </div>
                                 </div>
@@ -1253,7 +1286,10 @@
                                 <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step10"> Documents</a> </h4>
                             </div>
                             <div id="step10" class="panel-collapse  collapse">
-                                <div class="panel-body">
+                                <div>
+                                    <app-vendor-documents *ngIf="vendorId" [vendorId]="vendorId" [viewMode]="isViewMode"></app-vendor-documents>
+                                </div>
+                                <!-- <div class="panel-body">
                                     <div class="col-sm-12">
                                         <div class="shadow-Box">                                       
                                         <p-table #vDocument class="rpo-table-cstm" [value]="vendorDocumentsData" [metaKeySelection]="true" [rows]="10" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[10,20,50,100]"
@@ -1333,7 +1369,7 @@
                                             </p-table>
                                         </div>
                                     </div>
-                                </div>
+                                </div> -->
                             </div>
                         </div>                
             </div>            
@@ -1366,8 +1402,13 @@
             <h4 class="modal-title"> Details of : {{this.selectedRow['vendorName']}}</h4>
         </div>
 
+        <div class="modal-body">
+            <div>
+                <app-vendor-contacts *ngIf="vendorId" [vendorId]="vendorId" [isViewMode]="isViewMode"></app-vendor-contacts>
+            </div>
+        </div>
 
-        <div class="modal-body viewform">
+        <!-- <div class="modal-body viewform">
 
             <p-table class="table-responsive" #dt *ngIf="allContacts.length > 0" [value]="allContacts" [metaKeySelection]="true" [rows]="10" [paginator]="true"
                      [pageLinks]="3" [rowsPerPageOptions]="[10,20,50,100]" [columns]="selectedContactColumns"
@@ -1412,9 +1453,8 @@
             </div>
 
 
-        </div>
+        </div> -->
         <div class="modal-footer">
-
             <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="dismissModel()">Close</button>
         </div>
     </div>

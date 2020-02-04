@@ -24,6 +24,7 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<object> GetAircraftMapped(long customerId);
         IEnumerable<object> GetTaxTypeRateMapped(long customerId);
         IEnumerable<object> GetATAMapped(long customerId);
+        IEnumerable<object> GetATAMappedAudit(long CustomerContactATAMappingId);
         IEnumerable<object> GetATAContactMapped(long contactId);
 
         //IEnumerable <object> GetCustomerBynameList(string name);
@@ -93,6 +94,10 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<object> UploadCustomerShippingAddressCustomData(IFormFile file, long customerId);
         void UploadCustomerInternationalCustomData(IFormFile file, long customerId);
         void UploadCustomerContactsCustomData(IFormFile file, long customerId);
+        IEnumerable<object> GetInterShippingViaDetails(long internationalShippingId);
+
+        IEnumerable<object> CustomerTaxTypeRateInfoAudit(long CustomerTaxTypeRateMappingId);
+
     }
 
 }

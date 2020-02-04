@@ -102,7 +102,7 @@
                                                     <select name="generalCurrencyId" [(ngModel)]="savedGeneralInformationData.generalCurrencyId" required>
                                                         <option class="form-control" *ngFor="let currencyName of allCurrencyInfo"
                                                                 [ngValue]="currencyName.currencyId">
-                                                            {{currencyName.symbol}}
+                                                            {{currencyName.code}}
                                                         </option>
                                                     </select>
                                                 </div>                                           
@@ -181,7 +181,7 @@
                                                         </div>
                                                     </div>
                                                 </div><!--/Form-row for Add Tax Info-->                                           
-                                                
+
                                                 <p-table #taxInfoTable class="rpo-table-cstm" [value]="taxTypeRateMapping" [paginator]="true" [rows]="3" [columns]="taxInfoTableColumns" *ngIf="taxTypeRateMapping.length>0">
                                                     <ng-template pTemplate="header" let-columns>
                                                         <tr>
@@ -204,7 +204,22 @@
                                                                     <td *ngFor="let col of columns">
                                                                 {{rowData[col.field]}}
                                                             </td>
+
+
                                                             <td>
+                                                                    <span data-toggle="modal" data-target="#contentAuditHist"><a class="btn nobg" 
+                                                                        (click)="getAuditHistoryById(rowData)" 
+                                                                        matTooltip="History"><i class="fa fa-history"></i></a></span>
+                                                                    <button
+                                                                    class="btn-edit"
+                                                                    mat-icon-button
+                                                                    (click)="editTaxtRate(rowData)"
+                                                                    matTooltip="Edit"
+                                                                    data-toggle="modal"
+                                                                    data-target="#editTarget"
+                                                                  >
+                                                                    <mat-icon>edit</mat-icon>
+                                                                  </button>
                                                                 <button class="btn-delete" mat-icon-button matTooltip="Delete" (click)="deleteTaxTypeRate(deleteContent1,rowData);">
                                                                     <mat-icon color="warn">delete</mat-icon>
                                                                 </button>
@@ -340,6 +355,103 @@
     </div>
 
 
+
+
+    
+    <div id="editTarget" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+      
+          <!-- Modal content-->
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">Edit Tax Type & Tax Rate</h4>
+            </div>
+            <div class="modal-body" *ngIf="taxRateEditData">
+<div class="card">
+    <div class="form-row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <label class="fs12">
+                    Tax Type
+                </label>
+              
+            
+                <select name="taxType" [(ngModel)]="taxRateEditData.taxTypeId">
+                    <option value="">select</option>
+                    <option *ngFor="let Percentlist of taxTypeList" [ngValue]="Percentlist.value">{{Percentlist.label}}</option>
+                </select>
+                </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label class="fs12">
+                    Tax Rate
+                </label>
+               
+                <select name="taxRates" [(ngModel)]="taxRateEditData.taxRateId">
+                    <option value="">select</option>
+                    <option *ngFor="let Percentlist of taxRatesList" [ngValue]="Percentlist.value">{{Percentlist.label}}</option>
+                </select>
+                    </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                <button class="btn btn-primary" (click)="updateTaxTypeandRate()" data-dismiss="modal">
+                    Update
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+      
+        </div>
+      </div>
+
+
+
+      <!-- Modal -->
+<div id="contentAuditHist" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+  
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">History For Tax </h4>
+        </div>
+        <div class="modal-body" *ngIf="auditDataForTaxData.length > 0">
+            <table class= "table table-bordered ">
+                <thead>
+                    <tr>
+                        <th>Tax Type</th>
+                        <th>Tax Rate</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let x of auditDataForTaxData; let i =index;">
+                        <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'taxType', x.taxType)  ? 'black' : 'red'  }">{{x.taxType}}</td>
+                        <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'taxRate', x.taxRate)  ? 'black' : 'red'  }">{{x.taxRate}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        
+
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+  
+    </div>
+  </div>
 
     <div  *ngIf="selectedRowFileForDelete" #delete id="delete"  class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog">

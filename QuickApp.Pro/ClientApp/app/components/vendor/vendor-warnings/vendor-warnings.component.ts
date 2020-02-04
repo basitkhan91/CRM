@@ -449,7 +449,7 @@ export class VendorWarningsComponent implements OnInit {
     }
 
     previousClick() {
-        this.activeIndex = 8;
+        this.activeIndex = 7;
         this.vendorService.changeofTab(this.activeIndex);
         // this.vendorService.indexObj.next(this.activeIndex);
         // this.vendorService.changeStep('Billing Information');

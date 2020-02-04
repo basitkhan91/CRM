@@ -7,46 +7,52 @@
                         <div class="inline-block display-flex">
                             <h3 class="po-head lead">ATA Chapter</h3>
                             &nbsp;&nbsp;
-                            <a class="plusicon-cstm new-margin" pTooltip="Add ATA Chapter" tooltipPosition="right"
+                            <a class="plusicon-cstm new-margin" matTooltip="Add ATA Chapter" matTooltipPosition="right"
                                 data-target="#add" data-toggle="modal" (click)="resetForm()">
                                 <i class="fa fa-plus-circle fa-lg"></i>
                             </a>
                         </div>
                         <p-table #dt class="rpo-table-cstm rro-table-cstm" [value]="originalData" [first]="0"
-                            [rows]="pageSize" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[10,20,50,100]"
-                            [columns]="selectedColumns" selectionMode="multiple" (onPage)="changePage($event)"
-                            [resizableColumns]="true" [reorderableColumns]="true" [scrollable]="true"
-                            [totalRecords]="totalRecords" scrollHeight="450px">
+                                 [rows]="pageSize" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[10,20,50,100]"
+                                 [columns]="selectedColumns" selectionMode="multiple" (onPage)="changePage($event)"
+                                 [resizableColumns]="true" [reorderableColumns]="true" [scrollable]="true"
+                                 [totalRecords]="totalRecords" scrollHeight="450px">
                             <ng-template pTemplate="caption">
                                 <div style="text-align: right;margin-left:-6px !important;">
                                     <p-multiSelect [maxSelectedLabels]="2" [options]="headers" optionLabel="header"
-                                        [(ngModel)]="selectedColumns" [style]="{minWidth: '200px'}" style="float:left" [resetFilterOnHide]="true" 
-                                        (onChange)="columnsChanges()"></p-multiSelect>
-                                    <button type="button" class="btn btn-primary" pTooltip="Download All Data" matTooltipPosition="above"
-                                        tooltipPosition="top" pButton icon="fa-download" iconPos="left"
-                                        label="Export All Data" (click)="dt.exportCSV()"></button>
-                                    <button type="button" class="btn btn-primary" pTooltip="Download Selected" matTooltipPosition="above"
-                                        tooltipPosition="top" pButton icon="fa-download" iconPos="left"
-                                        label="Export Selection Only"
-                                        (click)="dt.exportCSV({selectionOnly:true})"></button>
+                                                   [(ngModel)]="selectedColumns" [style]="{minWidth: '200px'}" style="float:left" [resetFilterOnHide]="true"
+                                                   (onChange)="columnsChanges()"></p-multiSelect>
+                                    <button type="button" class="btn btn-primary" matTooltip="Download All Data" matTooltipPosition="above"
+                                            tooltipPosition="top" pButton icon="fa-download" iconPos="left"
+                                            label="Export All Data" (click)="dt.exportCSV()"></button>
+                                    <button type="button" class="btn btn-primary" matTooltip="Download Selected" matTooltipPosition="above"
+                                            tooltipPosition="top" pButton icon="fa-download" iconPos="left"
+                                            label="Export Selection Only"
+                                            (click)="dt.exportCSV({selectionOnly:true})"></button>
                                     <div class="excel-upload  excel-upload-cstm">
 
                                         <input type="file" name="upload[]" id="upload"
-                                            (change)="customExcelUpload($event)" class="uploaddoc upload-file"
-                                            accept=".xlsx, .xls, .csv">
+                                               (change)="customExcelUpload($event)" class="uploaddoc upload-file"
+                                               accept=".xlsx, .xls, .csv">
                                         <label for="upload">
-                                            <span pTooltip="Upload Data (Excel)" matTooltipPosition="above" tooltipPosition="top">
+                                            <span matTooltip="Upload Data (Excel)" matTooltipPosition="above" tooltipPosition="top">
                                                 <i class="fa fa-upload"></i>
                                             </span>
                                         </label>
                                         &nbsp; &nbsp;
-                                        <button class="btn btn-primary" pTooltip="Sample File download" tooltipPosition="top" matTooltipPosition="above"
-                                            (click)="sampleExcelDownload()">Sample File
-                                            Download</button>
+                                        <button class="btn btn-primary" matTooltip="Sample File download" tooltipPosition="top" matTooltipPosition="above"
+                                                (click)="sampleExcelDownload()">
+                                            Sample File
+                                            Download
+                                        </button>
                                     </div>
                                 </div>
                             </ng-template>
-
+                            <ng-template pTemplate="colgroup" let-columns>
+                                <colgroup>
+                                    <col *ngFor="let col of columns" [style.width]="col.width">
+                                </colgroup>
+                            </ng-template>
                             <ng-template pTemplate="header" let-columns>
                                 <tr>
                                     <th style="width:120px" *ngFor="let col of columns" pResizableColumn
@@ -54,13 +60,14 @@
                                         {{col.header}}
                                         <p-sortIcon [field]="col.field"></p-sortIcon>
                                     </th>
-                                    <th style="width:200px;position:sticky" *ngIf="selectedColumns.length> 0"> Actions
+                                    <th style="width:200px;position:sticky" *ngIf="selectedColumns.length> 0">
+                                        Actions
                                     </th>
                                 </tr>
                                 <tr>
                                     <th style="width:120px" *ngFor="let col of columns" [ngSwitch]="col.field">
                                         <input style="width:100%;" pInputText type="text"
-                                            (input)="dt.filter($event.target.value, col.field,'contains')">
+                                               (input)="dt.filter($event.target.value, col.field,'contains')">
                                     </th>
                                     <th style="width:200px;position:sticky"></th>
                                 </tr>
@@ -70,13 +77,15 @@
                                     <td style="width:120px" *ngFor="let col of columns" class="ui-resizable-column"
                                         pReorderableRowHandle data-toggle="modal" data-target="#view"
                                         (dblclick)="viewSelectedRow(rowData)">
-                                        {{col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?
-                                        (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
+                                        {{
+col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?
+                                        (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]
+                                        }}
                                     </td>
                                     <td style="width:200px" *ngIf="selectedColumns.length> 0">
                                         <!--<p-inputSwitch [(ngModel)]="rowData['isActive']" matTooltip="Update"
-                       name="isActive{{rowIndex}}" (onChange)="changeStatus(rowData)">
-    </p-inputSwitch>-->
+                                   name="isActive{{rowIndex}}" (onChange)="changeStatus(rowData)">
+                </p-inputSwitch>-->
                                         <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="changeStatus(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
                                         <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="changeStatus(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
                                         <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="changeStatus(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
@@ -113,10 +122,10 @@
                             <ng-template pTemplate="summary" id="footer">
                                 <label id="footer" class="footer">No'of records:</label>
                                 <input style="width: 5%;" [(ngModel)]="totalRecords" [disabled]="true" pInputText
-                                    type="text" /> &nbsp;&nbsp;
+                                       type="text" /> &nbsp;&nbsp;
                                 <label id="footer" class="footer1">Pages Count:</label>
                                 <input style="width: 5%;" [(ngModel)]="totalPages" [disabled]="true" pInputText
-                                    type="text" />
+                                       type="text" />
                             </ng-template>
                         </p-table>
                     </div>
@@ -198,7 +207,7 @@
                             </div>
                             <div class="col-sm-5">
                                 <input type="text" class="form-control" name="ataChapterCategory"
-                                    [(ngModel)]="addNew.ataChapterCategory" />
+                                    [(ngModel)]="addNew.ataChapterCategory"  (ngModelChange)="getChange()"/>
                             </div>
                         </div>
                         <div class="col-sm-12">
@@ -209,7 +218,7 @@
                             </div>
                             <div class="col-sm-5">
                                 <input type="text" class="form-control" name="ataChapterCode"
-                                    [(ngModel)]="addNew.ataChapterCode" />
+                                    [(ngModel)]="addNew.ataChapterCode" (ngModelChange)="getChange()" />
                             </div>
                         </div>
 
@@ -219,7 +228,7 @@
                             </div>
                             <div class="col-sm-5">
                                 <textarea class="text-item" #memo="ngModel" id="memo" name="memodescription"
-                                    [(ngModel)]="addNew.memo" minlength="2"></textarea>
+                                    [(ngModel)]="addNew.memo" minlength="2" (ngModelChange)="getChange()"></textarea>
                             </div>
                         </div>
                     </div>
@@ -227,7 +236,7 @@
                         <div class="col-sm-6">
                             <div class="checkbox-cstm">
                                 <label>
-                                    <input type="checkbox" name="isActive" [(ngModel)]="addNew.isActive">
+                                    <input type="checkbox" name="isActive" [(ngModel)]="addNew.isActive" (ngModelChange)="getChange()">
                                     <span class="cr">
                                         <i class="cr-icon pi pi-check"></i>
                                     </span>

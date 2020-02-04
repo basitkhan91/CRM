@@ -42,14 +42,22 @@
                                         Vendor Name
                                         <span class="clr-red">*</span>
                                     </label>
-                                    <p-autoComplete class="pautocomp-cstm" (onSelect)="onVendorselected($event)" (onKeyUp)="eventHandler($event)"
+                                    <p-autoComplete field="vendorName" class="pautocomp-cstm" 
+                                    [forceSelection]="forceSelectionOfVendorName"
+                                    (onSelect)="onVendorselected($event); "
+                                    [(ngModel)]="sourceVendor.vendorName" name="vendorName"
+                                    [suggestions]="vendorNames" (completeMethod)="filterVendorNames($event)" [size]="30"
+                                    [minLength]="1" [dropdown]="true" required>
+                                    </p-autoComplete>
+
+                                    <!-- <p-autoComplete class="pautocomp-cstm" (onSelect)="onVendorselected($event)" (onKeyUp)="eventHandler($event)"
                                                     [(ngModel)]="sourceVendor.vendorName" name="vendorName"
                                                     [suggestions]="vendorNames" (completeMethod)="filterVendorNames($event)" [size]="30"
                                                     [minLength]="1" [dropdown]="true" required (onBlur)="checkVendorExist()">
                                         <ng-template let-vendorName pTemplate="item">
                                             <div class="ui-helper-clearfix">{{ vendorName }}</div>
                                         </ng-template>
-                                    </p-autoComplete>
+                                    </p-autoComplete> -->
                                     <div *ngIf="disableSaveVenderName" class="clr-red">
                                         Already Exists
                                     </div>
@@ -95,7 +103,6 @@
                                 <p style="margin-bottom: 8px;" *ngIf="!sourceVendor.parent"></p>
                                 <div class="form-group" *ngIf="sourceVendor.parent">
                                     <p-autoComplete field="vendorName" class="pautocomp-cstm" 
-                                    (onSelect)="onCountrieselected($event)" 
                                     [forceSelection]="true"
                                     [(ngModel)]="sourceVendor.vendorParentId" name="vendorParentName"
                                     [suggestions]="vendorParentNames" (completeMethod)="filterVendorParentNames($event)" [size]="30"
@@ -139,8 +146,15 @@
                                             Email
                                             <span class="clr-red">*</span>
                                         </label>
-                                        <input class="form-control" type="email" email name="vendorEmail"
+                                        <input class="form-control" type="email" email name="vendorEmailId"
+                                        #vendorEmail="ngModel"
+                                                [pattern]="emailPattern"
                                                [(ngModel)]="sourceVendor.vendorEmail" required>
+                                               <div *ngIf="vendorEmail.errors" [ngClass]="'error'">
+                                                    <div *ngIf="vendorEmail.errors.pattern">
+                                                        <span style="color:red">User Email  not valid</span>
+                                                    </div>
+                                                </div>
                                     </div>
                                 </div>
                             <div class="col-md-3">

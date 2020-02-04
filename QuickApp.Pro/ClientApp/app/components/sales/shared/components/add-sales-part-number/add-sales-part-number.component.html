@@ -7,7 +7,7 @@
       </div>
       <div class="modal-body">
         <app-customer-detail [salesQuote]="salesQuote"></app-customer-detail>
-        <app-part-number-filter (onPartSearch)="onPartSearch($event)"
+        <app-part-number-filter [salesQuote]="salesQuote" (onPartSearch)="onPartSearch($event)"
           (onSearchTypeChange)="onSearchTypeChange($event)">
         </app-part-number-filter>
         <ng-container *ngIf="searchType === '1'">
