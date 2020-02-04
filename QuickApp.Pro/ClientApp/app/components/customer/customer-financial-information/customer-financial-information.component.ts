@@ -127,6 +127,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
     globalSettings: any = {};
     _discountListForDropdown: any = [];
     selectedRowFileForDelete: any;
+    taxRateEditData: any;
 
     constructor(public taxtypeser: TaxTypeService, public creditTermsService: CreditTermsService,
         public currencyService: CurrencyService,
@@ -395,12 +396,12 @@ export class CustomerFinancialInformationComponent implements OnInit {
         this.customerService.getDiscountList().subscribe(res => {
             this.discountList = res[0];
             console.log(this.discountList, "this.discuontList++++")
-            for(let i=0; i<this.discountList.length; i++){
-                this._discountListForDropdown.push({label: this.discountList[i].discontValue.toString(), value: this.discountList[i].discontValue})
+            for (let i = 0; i < this.discountList.length; i++) {
+                this._discountListForDropdown.push({ label: this.discountList[i].discontValue.toString(), value: this.discountList[i].discontValue })
             }
             console.log(this._discountListForDropdown, "this._discountListForDropdown++++")
 
-            
+
         })
     }
 
@@ -510,6 +511,8 @@ export class CustomerFinancialInformationComponent implements OnInit {
         })
     }
     mapTaxTypeandRate() {
+        console.log(this.selectedTaxRates, this.selectedTaxType);
+
         if (this.selectedTaxRates && this.selectedTaxType) {
             const index = this.taxTypeRateMapping.findIndex(item => item.taxType === getValueFromArrayOfObjectById('label', 'value', this.selectedTaxType, this.taxTypeList));
             if (index > -1) {
@@ -523,8 +526,10 @@ export class CustomerFinancialInformationComponent implements OnInit {
             } else {
                 this.taxTypeRateMapping = [...this.taxTypeRateMapping, {
                     customerId: this.id,
+                    taxTypeId : this.selectedTaxType,
+                    taxRateId: this.selectedTaxRates,
                     taxType: getValueFromArrayOfObjectById('label', 'value', this.selectedTaxType, this.taxTypeList),
-                    taxRate: this.selectedTaxRates
+                    taxRate: getValueFromObjectByKey('label', getObjectById('value', this.selectedTaxRates, this.taxRatesList))
                 }];
 
                 this.selectedTaxRates = null;
@@ -534,6 +539,25 @@ export class CustomerFinancialInformationComponent implements OnInit {
 
         }
         console.log(this.taxTypeRateMapping, "this.taxTypeRateMapping+++")
+    }
+    editTaxtRate(rowData) {
+        this.taxRateEditData = { ...rowData };
+        console.log(this.taxRateEditData);
+
+    }
+
+    updateTaxTypeandRate(){
+
+        this.customerService.updateCustomerTaxTypeRate(this.taxRateEditData).subscribe(res => {
+            this.taxRateEditData = undefined;
+            this.alertService.showMessage(
+                'Success',
+                `Successfully Update Tax Type and Rate`,
+                MessageSeverity.success
+            );
+
+
+        })
     }
     fileUpload(event, fileType) {
         if (event.files.length === 0)
@@ -722,6 +746,8 @@ export class CustomerFinancialInformationComponent implements OnInit {
 
     }
     newTaxRateAdd() {
+        console.log(this.addNewTaxRate);
+
         const data = {
             ...this.addNewTaxRate, createdBy: this.userName, updatedBy: this.userName, masterCompanyId: 1,
 

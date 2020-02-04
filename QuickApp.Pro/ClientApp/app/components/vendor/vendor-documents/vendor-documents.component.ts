@@ -15,6 +15,8 @@ import { ConfigurationService } from '../../../services/configuration.service';
 import { AuditHistory } from '../../../models/audithistory.model';
 import * as $ from 'jquery';
 import { VendorStepsPrimeNgComponent } from '../vendor-steps-prime-ng/vendor-steps-prime-ng.component';
+import { Documents } from '../../../models/documents.model';
+
 
 @Component({
 	selector: 'app-vendor-documents',
@@ -27,12 +29,10 @@ export class VendorDocumentsComponent implements OnInit {
 	// @Input() editMode;
 	// @Input() editGeneralInformationData;
 	@Output() tab = new EventEmitter<any>();
-	documentInformation = {
-		vendorDocumentDetailId: 0,
-		docName: '',
-		docMemo: '',
-		docDescription: ''
-	}
+	@ViewChild('fileUpload') fileUpload: any;
+
+	documentInformation = { ...new Documents() };
+
 	vendorDocumentsData: any = [];
 	vendorDocumentsColumns = [
 		{ field: 'docName', header: 'Name' },
@@ -114,12 +114,29 @@ export class VendorDocumentsComponent implements OnInit {
 
 	// opencontactView(content, row) {
 
-	fileUpload(event) {
+	resetCreateForm() {
+		this.documentInformation = new Documents();
+		this.sourceViewforDocument = undefined;
+		this.sourceViewforDocumentList = [];
+		this.clearFileUpload();
+
+	}
+	clearFileUpload() {
+		this.fileUpload.clear();
+	}
+
+
+
+
+	fileUploadForDocuments(event) {
 		if (event.files.length === 0)
 			return;
 
-		for (let file of event.files)
+		for (let file of event.files) {
 			this.formData.append(file.name, file);
+		}
+		// fileUpload.clear();
+
 	}
 
 	getList() {
@@ -154,14 +171,16 @@ export class VendorDocumentsComponent implements OnInit {
 		}
 
 
+
 		this.vendorService.documentUploadAction(this.formData).subscribe(res => {
-			this.documentInformation.vendorDocumentDetailId = 0;
+			// this.documentInformation.vendorDocumentDetailId = 0;
 			this.documentInformation.docDescription = '';
 			this.documentInformation.docMemo = '';
 			this.documentInformation.docName = '';
 			this.sourceViewforDocumentList= [];	
 
 			this.formData = new FormData();
+			this.clearFileUpload();
 			this.getList();
 			this.alertService.showMessage(
 				'Success',
@@ -173,15 +192,15 @@ export class VendorDocumentsComponent implements OnInit {
 		})
 
 	}
+
 	updateVendorDocument() {
-
-
-
 	}
+
+
 
 	editVendorDocument(rowdata, e) {
 		//this.toGetUploadDocumentsList(rowdata.attachmentId, rowdata.vendorId,3);
-		this.documentInformation = rowdata;
+		this.documentInformation = { ...rowdata };
 		this.vendorService.toGetUploadDocumentsList(rowdata.attachmentId, rowdata.vendorId, 3).subscribe(res => {
 			this.sourceViewforDocumentList = res;
 			this.sourceViewforDocument = rowdata;
