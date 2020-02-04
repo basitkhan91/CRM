@@ -852,7 +852,7 @@ namespace DAL.Repositories
 
         public IEnumerable<object> GetTaxTypeRateMapped(long customerId)
         {
-            {
+            
 
                 var data = (from c in _appContext.CustomerTaxTypeRateMapping
                             where c.CustomerId == customerId && c.IsDeleted == false
@@ -868,7 +868,7 @@ namespace DAL.Repositories
                                 c.MasterCompanyId
                             }).ToList();
                 return data;
-            }
+           
         }
 
         public IEnumerable<object> getIntegrationData(long id)
