@@ -365,6 +365,12 @@ export class ItemMasterService {
     searchPartNumberAdvanced(searchParameters: any) {
         return this.itemMasterEndpoint.searchPartNumberAdvanced(searchParameters);
     }
+    searchMultiPartNumbers(searchParameters: any) {
+        return this.itemMasterEndpoint.searchMultiPartNumbers(searchParameters);
+    }
+    multiSearch(searchParameters: any) {
+        return this.itemMasterEndpoint.multiSearch(searchParameters);
+    }
 
     searchPartNumber(partNumber: string) {
         return Observable.forkJoin(

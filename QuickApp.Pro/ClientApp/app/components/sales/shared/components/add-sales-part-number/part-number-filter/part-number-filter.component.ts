@@ -1,11 +1,13 @@
-import { Component, Input, Output, EventEmitter } from "@angular/core";
+import { Component, Input, Output, EventEmitter,ViewChild, ElementRef } from "@angular/core";
 import { ItemMasterSearchQuery } from "../../../../quotes/models/item-master-search-query";
 import { ItemSearchType } from "../../../../quotes/models/item-search-type";
-
+import { NgbModalRef, NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { ItemMasterService } from "../../../../../../services/itemMaster.service";
 import { StocklineService } from "../../../../../../services/stockline.service";
 import { SalesQuoteService } from "../../../../../../services/salesquote.service";
 import { ConditionService } from '../../../../../../services/condition.service';
+import { ISalesQuote } from "../../../../../../models/sales/ISalesQuote.model";
+import { PartSearchParamters } from "../../../../quotes/models/part-search-parameters";
 
 @Component({
   selector: "app-part-number-filter",
@@ -14,8 +16,10 @@ import { ConditionService } from '../../../../../../services/condition.service';
 })
 export class PartNumberFilterComponent {
   @Input() customer: any;
+  @Input() salesQuote:ISalesQuote;
   @Output() onPartSearch: EventEmitter<any> = new EventEmitter<any>();
   @Output() onSearchTypeChange: EventEmitter<ItemSearchType> = new EventEmitter<ItemSearchType>();
+  @ViewChild("searchMultiPart") searchMultiPart: ElementRef;
   query: ItemMasterSearchQuery;
   partDetails: any[];
   partDetail: any;
@@ -24,8 +28,12 @@ export class PartNumberFilterComponent {
   allConditionInfo: any[] = [];
   displayPartError: boolean = false;
   errorMessages:any[]=[];
+  multiPartModal: NgbModalRef;
+  multiPartNumbers="";
+  multiSearchResult:any[]=[];
 
   constructor(
+    private modalService: NgbModal,
     private itemMasterService: ItemMasterService,
     private stockLineService: StocklineService,
     private salesQuoteService: SalesQuoteService,
@@ -70,23 +78,29 @@ this.salesQuoteService.getSearchPartObject()
 
   search($event) {
     $event.preventDefault();
-    switch (this.query.partSearchParamters.itemSearchType) {
-      case ItemSearchType.StockLine:
+    if(this.query.partSearchParamters.includeMultiplePartNumber){
+      this.getMultipartsQuery();
+    }else{
+      switch (this.query.partSearchParamters.itemSearchType) {
+        case ItemSearchType.StockLine:
         this.stockLineService.search(this.query)
-          .subscribe(result => {
-            console.log(result);
-            this.onPartSearch.emit(result);
-          });
-        break;
-
-      default:
-        console.log('Item master....');
-        this.itemMasterService.search(this.query)
-          .subscribe(result => {
-            this.onPartSearch.emit(result);
-          });
-        break;
+        .subscribe(result => {
+          console.log(result);
+          this.onPartSearch.emit(result);
+        });
+         
+          break;
+  
+        default:
+          console.log('Item master....');
+          this.itemMasterService.search(this.query)
+            .subscribe(result => {
+              this.onPartSearch.emit(result);
+            });
+          break;
+      }
     }
+    
     console.log(this.query);
   }
   calculate() {
@@ -124,6 +138,8 @@ private onptnmbersSuccessful(allWorkFlows: any[]) {
     console.log(this.query);
     if (this.query.partSearchParamters.conditionId>0 && this.query.partSearchParamters.partNumber)
           this.searchDisabled = false;
+    else if (this.query.partSearchParamters.conditionId>0 && this.query.partSearchParamters.includeMultiplePartNumber)
+          this.searchDisabled = false;
   }
   
  /* onPartNumberSelect(event) {
@@ -140,10 +156,16 @@ private onptnmbersSuccessful(allWorkFlows: any[]) {
 
   searchPartByPartNumber(event) {
     this.searchDisabled = true;
-    this.itemMasterService.searchPartNumber(event.query).subscribe(
-      result => {
-        this.partDetails = result.length > 0 ? result[0] : [];
-        console.log(this.partDetails);
+    let partSearchParamters={
+      'partNumber':event.query,
+      "restrictPMA": this.salesQuote.restrictPMA,
+      "restrictDER": this.salesQuote.restrictDER,  
+      "customerId": this.salesQuote.customerId
+    }
+    this.itemMasterService.searchPartNumberAdvanced(partSearchParamters).subscribe(
+      (result: any[]) => {
+        this.partDetails = result.length > 0 ? result : [];
+       // console.log(result);
       }
     );
   }
@@ -163,5 +185,90 @@ private onptnmbersSuccessful(allWorkFlows: any[]) {
 
     }
     this.onSearchTypeChange.emit(searchType);
+  }
+
+  openMultiPartSearch() {
+
+    this.multiPartModal = this.modalService.open(this.searchMultiPart, { size: "sm" });
+    this.multiPartModal.result.then(
+      () => {
+        console.log("When user closes");
+      },
+      () => {
+        console.log("Backdrop click");
+      }
+    );
+  }
+  getMultipartsQuery() {
+
+    let multiParts = [];
+    for (let i = 0; i < this.multiSearchResult.length; i++) {
+      if (this.multiSearchResult[i].exist) {
+        let partSearchParamters = new PartSearchParamters();
+        partSearchParamters =  { ...this.query.partSearchParamters };
+        partSearchParamters.partNumber = this.multiSearchResult[i].partNumber;
+        partSearchParamters.partId = this.multiSearchResult[i].partId;
+        partSearchParamters.partDescription = this.multiSearchResult[i].partDescription;
+        multiParts.push(partSearchParamters);
+      }
+    }
+    console.log(multiParts);
+    if(multiParts.length>0){
+     // this.query.partSearchParamters = new PartSearchParamters();
+      this.query.multiPartSearchParamters = multiParts;
+      console.log(this.query);
+      switch (this.query.partSearchParamters.itemSearchType) {
+        case ItemSearchType.StockLine:
+        this.stockLineService.multiSearch(this.query)
+        .subscribe(result => {
+          console.log(result);
+          this.onPartSearch.emit(result);
+        });
+         
+          break;
+  
+        default:
+          console.log('Item master....');
+          this.itemMasterService.multiSearch(this.query)
+            .subscribe(result => {
+              this.onPartSearch.emit(result);
+            });
+          break;
+      }
+    }
+    
+    
+    
+  }
+  searchMultiPartNumbers(): void {
+
+    let partSearchParamters={
+      'parts':this.multiPartNumbers.split(","),
+      "restrictPMA": this.salesQuote.restrictPMA,
+      "restrictDER": this.salesQuote.restrictDER,  
+      "customerId": this.salesQuote.customerId
+    }
+    this.itemMasterService.searchMultiPartNumbers(partSearchParamters).subscribe((response:any[]) => {
+      console.log(response);
+      this.multiSearchResult = response;
+      if (this.query.partSearchParamters.conditionId>0)
+          this.searchDisabled = false;
+      this.multiPartModal.close();
+      
+     
+    });
+
+  }
+  includeMultiplePN(event, part) {
+    let checked: boolean = event.srcElement.checked;
+    if(checked){
+      this.openMultiPartSearch();
+    }
+    
+  }
+  onCloseMultiPartNumbers(event) {
+  
+    this.multiPartModal.close();
+   
   }
 }
