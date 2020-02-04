@@ -1636,6 +1636,9 @@ namespace QuickApp.Pro.Controllers
                                 data.IsPrimary = true;
                                 data.IsDeleted = false;
                                 _unitOfWork.VendorShippingAddress.Update(data);
+                                _context.SaveChanges();
+                                _unitOfWork.CommonRepository.ShippingBillingAddressHistory(Convert.ToInt64(data.VendorId), Convert.ToInt32(ModuleEnum.Vendor), Convert.ToInt64(data.VendorShippingAddressId), Convert.ToInt32(AddressTypeEnum.ShippingAddress), data.UpdatedBy);
+
                             }
                         }
                         else
@@ -1655,6 +1658,9 @@ namespace QuickApp.Pro.Controllers
                             objVendorrShippingAddress.IsDeleted = false;
 
                             _context.VendorShippingAddress.Add(objVendorrShippingAddress);
+                            _context.SaveChanges();
+                            _unitOfWork.CommonRepository.ShippingBillingAddressHistory(Convert.ToInt64(objVendorrShippingAddress.VendorId), Convert.ToInt32(ModuleEnum.Vendor), Convert.ToInt64(objVendorrShippingAddress.VendorShippingAddressId), Convert.ToInt32(AddressTypeEnum.ShippingAddress), objVendorrShippingAddress.UpdatedBy);
+
                         }
 
                         _context.SaveChanges();
@@ -1680,6 +1686,9 @@ namespace QuickApp.Pro.Controllers
                                 data.IsActive = true;
                                 data.IsDeleted = false;
                                 _context.VendorBillingAddress.Update(data);
+                                _context.SaveChanges();
+                                _unitOfWork.CommonRepository.ShippingBillingAddressHistory(Convert.ToInt64(data.VendorId), Convert.ToInt32(ModuleEnum.Vendor), Convert.ToInt64(data.VendorBillingAddressId), Convert.ToInt32(AddressTypeEnum.BillingAddress), data.UpdatedBy);
+
                             }
                         }
                         else
@@ -1699,6 +1708,9 @@ namespace QuickApp.Pro.Controllers
                             objVendorBillingAddress.IsDeleted = false;
 
                             _context.VendorBillingAddress.Add(objVendorBillingAddress);
+                            _context.SaveChanges();
+                            _unitOfWork.CommonRepository.ShippingBillingAddressHistory(Convert.ToInt64(objVendorBillingAddress.VendorId), Convert.ToInt32(ModuleEnum.Vendor), Convert.ToInt64(objVendorBillingAddress.VendorBillingAddressId), Convert.ToInt32(AddressTypeEnum.BillingAddress), objVendorBillingAddress.UpdatedBy);
+
                         }
 
                         _context.SaveChanges();
@@ -2004,6 +2016,9 @@ namespace QuickApp.Pro.Controllers
                                 //data.IsPrimary = true;
                                 data.IsDeleted = false;
                                 _unitOfWork.VendorShippingAddress.Update(data);
+                                _context.SaveChanges();
+                                _unitOfWork.CommonRepository.ShippingBillingAddressHistory(Convert.ToInt64(actionobject.VendorId), Convert.ToInt32(ModuleEnum.Vendor), Convert.ToInt64(data.VendorShippingAddressId), Convert.ToInt32(AddressTypeEnum.ShippingAddress), actionobject.UpdatedBy);
+
                             }
                         }
                         else
@@ -2023,6 +2038,9 @@ namespace QuickApp.Pro.Controllers
                             objVendorrShippingAddress.IsDeleted = false;
 
                             _context.VendorShippingAddress.Add(objVendorrShippingAddress);
+                            _context.SaveChanges();
+                            _unitOfWork.CommonRepository.ShippingBillingAddressHistory(Convert.ToInt64(actionobject.VendorId), Convert.ToInt32(ModuleEnum.Vendor), Convert.ToInt64(objVendorrShippingAddress.VendorShippingAddressId), Convert.ToInt32(AddressTypeEnum.ShippingAddress), actionobject.UpdatedBy);
+
                         }
 
                         _context.SaveChanges();
@@ -2030,10 +2048,33 @@ namespace QuickApp.Pro.Controllers
 
                     if (Convert.ToBoolean(actionobject.IsAddressForBilling))
                     {
+                        var shippingList = _context.VendorBillingAddress.AsNoTracking().Where(p => p.VendorId == actionobject.VendorId).ToList();
+                        var custShipping = shippingList.Where(p => p.IsPrimary == true).FirstOrDefault();
+
                         VendorBillingAddress data = _context.VendorBillingAddress.AsNoTracking().Where(p => p.AddressId == actionobject.AddressId && p.VendorId == actionobject.VendorId).FirstOrDefault();
 
                         if (data != null)
                         {
+                            if (custShipping != null && data != null && custShipping.VendorBillingAddressId != data.VendorBillingAddressId)
+                            {
+                                custShipping.IsPrimary = false;
+
+                                VendorBillingAddress ba = new VendorBillingAddress();
+
+                                ba.VendorBillingAddressId = custShipping.VendorBillingAddressId;
+                                ba.UpdatedDate = DateTime.Now;
+                                ba.UpdatedBy = actionobject.UpdatedBy;
+                                ba.IsPrimary = false;
+
+                                _context.VendorBillingAddress.Attach(ba);
+                                _context.Entry(ba).Property(x => x.IsPrimary).IsModified = true;
+                                _context.Entry(ba).Property(x => x.UpdatedDate).IsModified = true;
+                                _context.Entry(ba).Property(x => x.UpdatedBy).IsModified = true;
+                                _context.SaveChanges();
+
+
+                                _unitOfWork.CommonRepository.ShippingBillingAddressHistory(Convert.ToInt64(actionobject.VendorId), Convert.ToInt32(ModuleEnum.Vendor), Convert.ToInt64(custShipping.VendorBillingAddressId), Convert.ToInt32(AddressTypeEnum.BillingAddress), actionobject.UpdatedBy);
+                            }
                             if (data.VendorBillingAddressId > 0)
                             {
                                 data.VendorId = actionobject.VendorId;
@@ -2048,10 +2089,32 @@ namespace QuickApp.Pro.Controllers
                                 data.IsActive = true;
                                 data.IsDeleted = false;
                                 _context.VendorBillingAddress.Update(data);
+                                _context.SaveChanges();
+                                _unitOfWork.CommonRepository.ShippingBillingAddressHistory(Convert.ToInt64(actionobject.VendorId), Convert.ToInt32(ModuleEnum.Vendor), Convert.ToInt64(data.VendorBillingAddressId), Convert.ToInt32(AddressTypeEnum.BillingAddress), actionobject.UpdatedBy);
+
                             }
                         }
                         else
                         {
+                            if (custShipping != null)
+                            {
+                                VendorBillingAddress ba = new VendorBillingAddress();
+
+                                ba.VendorBillingAddressId = custShipping.VendorBillingAddressId;
+                                ba.UpdatedDate = DateTime.Now;
+                                ba.UpdatedBy = actionobject.UpdatedBy;
+                                ba.IsPrimary = false;
+
+                                _context.VendorBillingAddress.Attach(ba);
+                                _context.Entry(ba).Property(x => x.IsPrimary).IsModified = true;
+                                _context.Entry(ba).Property(x => x.UpdatedDate).IsModified = true;
+                                _context.Entry(ba).Property(x => x.UpdatedBy).IsModified = true;
+                                _context.SaveChanges();
+                                //custShipping.IsPrimary = false;
+                                //_appContext.CustomerShippingAddress.Update(custShipping);
+                                //_appContext.SaveChanges();
+                                _unitOfWork.CommonRepository.ShippingBillingAddressHistory(Convert.ToInt64(actionobject.VendorId), Convert.ToInt32(ModuleEnum.Vendor), Convert.ToInt64(custShipping.VendorBillingAddressId), Convert.ToInt32(AddressTypeEnum.BillingAddress), actionobject.UpdatedBy);
+                            }
                             VendorBillingAddress objVendorBillingAddress = new VendorBillingAddress();
 
                             objVendorBillingAddress.VendorId = actionobject.VendorId;
@@ -2067,6 +2130,9 @@ namespace QuickApp.Pro.Controllers
                             objVendorBillingAddress.IsDeleted = false;
 
                             _context.VendorBillingAddress.Add(objVendorBillingAddress);
+                            _context.SaveChanges();
+                            _unitOfWork.CommonRepository.ShippingBillingAddressHistory(Convert.ToInt64(actionobject.VendorId), Convert.ToInt32(ModuleEnum.Vendor), Convert.ToInt64(objVendorBillingAddress.VendorBillingAddressId), Convert.ToInt32(AddressTypeEnum.BillingAddress), actionobject.UpdatedBy);
+
                         }
 
                         _context.SaveChanges();
@@ -2431,6 +2497,8 @@ namespace QuickApp.Pro.Controllers
                 VendorshippingObj.VendorShippingAddressId = vendorShippingViewModel.VendorShippingAddressId;
                 _unitOfWork.VendorShippingAddress.Update(VendorshippingObj);
                 _unitOfWork.SaveChanges();
+                _unitOfWork.CommonRepository.ShippingBillingAddressHistory(Convert.ToInt64(VendorshippingObj.VendorId), Convert.ToInt32(ModuleEnum.Vendor), Convert.ToInt64(VendorshippingObj.VendorShippingAddressId), Convert.ToInt32(AddressTypeEnum.ShippingAddress), VendorshippingObj.UpdatedBy);
+
                 return Ok(VendorshippingObj);
             }
 
@@ -2689,8 +2757,10 @@ namespace QuickApp.Pro.Controllers
                     {
                         objContactdata.IsPrimary = false;
                         _unitOfWork.VendorShippingAddress.Update(objContactdata);
+
+                        _unitOfWork.SaveChanges();
+                        _unitOfWork.CommonRepository.ShippingBillingAddressHistory(Convert.ToInt64(objContactdata.VendorId), Convert.ToInt32(ModuleEnum.Vendor), Convert.ToInt64(objContactdata.VendorShippingAddressId), Convert.ToInt32(AddressTypeEnum.ShippingAddress), objContactdata.UpdatedBy);
                     }
-                    _unitOfWork.SaveChanges();
                 }
                 VendorShippingAddress vendorShippingAddressObj = new VendorShippingAddress();
                 vendorShippingAddressObj.IsActive = true;
@@ -2708,11 +2778,17 @@ namespace QuickApp.Pro.Controllers
                     vendorShippingAddressObj.CreatedDate = vendorshipping.CreatedDate;
                     vendorShippingAddressObj.VendorShippingAddressId = vendorshipping.VendorShippingAddressId;
                     _unitOfWork.VendorShippingAddress.Update(vendorShippingAddressObj);
+                    _unitOfWork.SaveChanges();
+                    _unitOfWork.CommonRepository.ShippingBillingAddressHistory(Convert.ToInt64(vendorShippingAddressObj.VendorId), Convert.ToInt32(ModuleEnum.Vendor), Convert.ToInt64(vendorShippingAddressObj.VendorShippingAddressId), Convert.ToInt32(AddressTypeEnum.ShippingAddress), vendorShippingAddressObj.UpdatedBy);
+
                 }
                 else
                 {
                     vendorShippingAddressObj.CreatedDate = DateTime.Now;
                     _unitOfWork.VendorShippingAddress.Add(vendorShippingAddressObj);
+                    _unitOfWork.SaveChanges();
+                    _unitOfWork.CommonRepository.ShippingBillingAddressHistory(Convert.ToInt64(vendorShippingAddressObj.VendorId), Convert.ToInt32(ModuleEnum.Vendor), Convert.ToInt64(vendorShippingAddressObj.VendorShippingAddressId), Convert.ToInt32(AddressTypeEnum.ShippingAddress), vendorShippingAddressObj.UpdatedBy);
+
                 }
 
                 _unitOfWork.SaveChanges();
@@ -3234,14 +3310,16 @@ namespace QuickApp.Pro.Controllers
 
                 if (vendorShippingViewModel.IsPrimary == true)
                 {
-                    var vendorConcatData = _unitOfWork.VendorShippingAddress.GetAll().Where(p => p.VendorId == vendorShippingViewModel.VendorId).ToList();
+                    var vendorConcatData = _unitOfWork.VendorShippingAddress.GetAll().Where(p => p.VendorId == vendorShippingViewModel.VendorId && p.IsPrimary == true).FirstOrDefault();
 
-                    foreach (var objContactdata in vendorConcatData)
+                    if (vendorConcatData != null && vendorConcatData.VendorShippingAddressId != checkPaymentObj.VendorShippingAddressId)
                     {
-                        objContactdata.IsPrimary = false;
-                        _unitOfWork.VendorShippingAddress.Update(objContactdata);
+                        vendorConcatData.IsPrimary = false;
+                        _unitOfWork.VendorShippingAddress.Update(vendorConcatData);
+
+                        _unitOfWork.SaveChanges();
+                        _unitOfWork.CommonRepository.ShippingBillingAddressHistory(Convert.ToInt64(vendorConcatData.VendorId), Convert.ToInt32(ModuleEnum.Vendor), Convert.ToInt64(vendorConcatData.VendorShippingAddressId), Convert.ToInt32(AddressTypeEnum.ShippingAddress), vendorConcatData.UpdatedBy);
                     }
-                    _unitOfWork.SaveChanges();
                 }
 
 
@@ -3260,6 +3338,7 @@ namespace QuickApp.Pro.Controllers
                     checkPaymentObj.IsPrimary = vendorShippingViewModel.IsPrimary;
                     //checkPaymentObj.VendorShippingAddressId = vendorShippingViewModel.VendorShippingAddressId;
                     _unitOfWork.VendorShippingAddress.Update(checkPaymentObj);
+                   
                     _unitOfWork.SaveChanges();
                     if (addressObj != null)
                     {
@@ -3279,6 +3358,7 @@ namespace QuickApp.Pro.Controllers
                         _unitOfWork.Address.Update(addressObj);
                         _unitOfWork.SaveChanges();
                     }
+                    _unitOfWork.CommonRepository.ShippingBillingAddressHistory(Convert.ToInt64(checkPaymentObj.VendorId), Convert.ToInt32(ModuleEnum.Vendor), Convert.ToInt64(checkPaymentObj.VendorShippingAddressId), Convert.ToInt32(AddressTypeEnum.ShippingAddress), checkPaymentObj.UpdatedBy);
 
 
                 }
@@ -3512,23 +3592,26 @@ namespace QuickApp.Pro.Controllers
 
         }
 
-        [HttpGet("getShipViaHistory/{id}", Name = "GetShipViaHistory")]
+        [HttpGet("getShipViaHistory/{id}")]
         [Produces(typeof(List<AuditHistory>))]
         public IActionResult GetShipviaHistory(long id)
+
         {
-            var result = _unitOfWork.AuditHistory.GetAllHistory("Vendorshipping", id); //.GetAllCustomersData();
+            var result= _unitOfWork.Vendor.getVendorShipVia(id);
+           return Ok(result);
+            //var result = _unitOfWork.AuditHistory.GetAllHistory("Vendorshipping", id); //.GetAllCustomersData();
 
 
-            try
-            {
-                var resul1 = Mapper.Map<IEnumerable<AuditHistoryViewModel>>(result);
+            //try
+            //{
+            //    var resul1 = Mapper.Map<IEnumerable<AuditHistoryViewModel>>(result);
 
-                return Ok(resul1);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            //    return Ok(resul1);
+            //}
+            //catch (Exception ex)
+            //{
+            //    return BadRequest(ex.Message);
+            //}
 
 
 
@@ -4226,8 +4309,9 @@ namespace QuickApp.Pro.Controllers
         [ApiExplorerSettings(IgnoreApi = true)]
         public IActionResult GetAllVendorBillingAddressAudit(long vendorId, long vendorBillingaddressId)
         {
+            var allVendorBillingDetails = _unitOfWork.CommonRepository.GetShippingBillingAddressAudit(vendorId, vendorBillingaddressId, Convert.ToInt32(AddressTypeEnum.BillingAddress), Convert.ToInt32(ModuleEnum.Vendor));
 
-            var allVendorBillingDetails = _unitOfWork.Vendor.GetVendorBillingAddressAudit(vendorId, vendorBillingaddressId);
+            //var allVendorBillingDetails = _unitOfWork.Vendor.GetVendorBillingAddressAudit(vendorId, vendorBillingaddressId);
             return Ok(allVendorBillingDetails);
         }
 
@@ -4235,7 +4319,9 @@ namespace QuickApp.Pro.Controllers
         [ApiExplorerSettings(IgnoreApi = true)]
         public IActionResult GetAllVendorrShippingAddressAudit(long vendorId, long vendorShippingAddressId)
         {
-            var allVendorShippingDetails = _unitOfWork.VendorShippingAddress.GetVendorShippingAddressAudit(vendorId, vendorShippingAddressId);
+            var allVendorShippingDetails = _unitOfWork.CommonRepository.GetShippingBillingAddressAudit(vendorId, vendorShippingAddressId, Convert.ToInt32(AddressTypeEnum.ShippingAddress), Convert.ToInt32(ModuleEnum.Vendor));
+
+            // var allVendorShippingDetails = _unitOfWork.VendorShippingAddress.GetVendorShippingAddressAudit(vendorId, vendorShippingAddressId);
             return Ok(allVendorShippingDetails);
         }
 
@@ -4482,6 +4568,7 @@ namespace QuickApp.Pro.Controllers
 
                 _context.SaveChanges();
                 _unitOfWork.Vendor.CreateVendorBillingAddress(billingAddress);
+              
                 return Ok(billingAddress);
             }
             else
@@ -4550,14 +4637,16 @@ namespace QuickApp.Pro.Controllers
 
                 if (billingAddress.IsPrimary == true)
                 {
-                    var vendorConcatData = _context.VendorBillingAddress.Where(p => p.VendorId == billingAddress.VendorId).ToList();
+                    var vendorConcatData = _context.VendorBillingAddress.Where(p => p.VendorId == billingAddress.VendorId && p.IsPrimary == true).FirstOrDefault();
 
-                    foreach (var objContactdata in vendorConcatData)
+                    if (vendorConcatData != null && vendorConcatData.VendorBillingAddressId != billingAddressData.VendorBillingAddressId)
                     {
-                        objContactdata.IsPrimary = false;
-                        _context.VendorBillingAddress.Update(objContactdata);
+                        vendorConcatData.IsPrimary = false;
+                        _context.VendorBillingAddress.Update(vendorConcatData);
+
+                        _context.SaveChanges();
+                        _unitOfWork.CommonRepository.ShippingBillingAddressHistory(Convert.ToInt64(vendorConcatData.VendorId), Convert.ToInt32(ModuleEnum.Vendor), Convert.ToInt64(vendorConcatData.VendorBillingAddressId), Convert.ToInt32(AddressTypeEnum.BillingAddress), vendorConcatData.UpdatedBy);
                     }
-                    _context.SaveChanges();
                 }
 
                 billingAddressData.AddressId = billingAddress.AddressId;
@@ -4572,6 +4661,8 @@ namespace QuickApp.Pro.Controllers
 
                 _unitOfWork.Vendor.UpdateVendorBillingAddress(billingAddressData);
                 _context.SaveChanges();
+                _unitOfWork.CommonRepository.ShippingBillingAddressHistory(Convert.ToInt64(billingAddressData.VendorId), Convert.ToInt32(ModuleEnum.Vendor), Convert.ToInt64(billingAddressData.VendorBillingAddressId), Convert.ToInt32(AddressTypeEnum.BillingAddress), billingAddressData.UpdatedBy);
+
                 return Ok(billingAddress);
             }
             return BadRequest(ModelState);

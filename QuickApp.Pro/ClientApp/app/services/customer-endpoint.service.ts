@@ -158,6 +158,7 @@ export class CustomerEndpoint extends EndpointFactory {
     private readonly excelUploadShipping: string = "/api/Customer/uploadcustomershippingaddress"
     private readonly excelUploadInterShipping: string = "/api/Customer/uploadcustomerinternationalshipping"
     private readonly excelUploadContact: string = "/api/Customer/uploadcustomercontacts"
+    private readonly _internationalShipViaByShippingIdList: string = '/api/Customer/getinternationalshippingviadetails';
 
     get globalSearch() { return this.configurations.baseUrl + this.getGlobalCustomer; }
     get paginate() { return this.configurations.baseUrl + this.getCustomer; }
@@ -227,7 +228,7 @@ export class CustomerEndpoint extends EndpointFactory {
     get customersBillingUpdateforActive() { return this.configurations.baseUrl + this._customersBillingUpdateforActive }
     get deleteShipVia() { return this.configurations.baseUrl + this._deleteShipVia; }
     get deleteCustomerDocuments() { return this.configurations.baseUrl + this._addRemoveDetails; }
-
+    get InternatioanlShipViaByInternationalShippingId() { return this.configurations.baseUrl + this._internationalShipViaByShippingIdList }
 
 
 
@@ -1419,6 +1420,12 @@ export class CustomerEndpoint extends EndpointFactory {
         return this.http.post(`${this.configurations.baseUrl}${this.excelUploadContact}?customerId=${customerId}`, file)
 
 
+    }
+    getInternationalShipViaByInternationalShippingId<T>(id) {
+        return this.http.get<T>(`${this.InternatioanlShipViaByInternationalShippingId}?internationalShippingId=${id}`)
+            .catch(error => {
+                return this.handleError(error, () => this.getInternationalShipViaByInternationalShippingId(id));
+            });
     }
 }
 

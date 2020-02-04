@@ -802,17 +802,23 @@ export class CustomerShippingInformationComponent implements OnInit {
 
     getShipViaDataByInternationalShippingId() {
         // this.selectedShipVia.internationalShippingId
-        this.customerService.getShipViaByInternationalShippingId(this.selectedShipViaInternational.internationalShippingId, this.pageIndexForInternationalShipVia,
-            this.pageSizeForInternationalShipVia
+        this.customerService.getInternationalShipViaByInternationalShippingId(this.selectedShipViaInternational.internationalShippingId
+        
         ).subscribe(res => {
-            this.internationalShippingViaData = res.paginationList;
-            this.totalRecordsForInternationalShipVia = res.totalRecordsCount;
+            //this.internationalShippingViaData = res.paginationList;
+            //this.totalRecordsForInternationalShipVia = res.totalRecordsCount;
+            //if (this.internationalShippingViaData.length > 0) {
+            //    this.interTotalRecords = res.totalRecordsCount;
+            //    this.interTotalPages = Math.ceil(this.interTotalRecords / this.pageSize);
+            //} else {
+            //    this.interTotalRecords = 0;
+            //    this.interTotalPages = 0;
+            //}
+
+            this.internationalShippingViaData = res;
             if (this.internationalShippingViaData.length > 0) {
-                this.interTotalRecords = res.totalRecordsCount;
+                this.interTotalRecords = this.internationalShippingViaData.length;
                 this.interTotalPages = Math.ceil(this.interTotalRecords / this.pageSize);
-            } else {
-                this.interTotalRecords = 0;
-                this.interTotalPages = 0;
             }
         })
 

@@ -641,4 +641,9 @@ export class CustomerService {
    ContactUpload(file, customerId) {
        return this.customerEndpoint.CustomerContactFileUpload(file, customerId);
     }
+
+    getInternationalShipViaByInternationalShippingId(id) {
+        return this.customerEndpoint.getInternationalShipViaByInternationalShippingId(id);
+    }
+
 }
