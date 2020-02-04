@@ -127,7 +127,7 @@
             <!-- <th *ngFor="let col of ataHeaders">
                 {{ col.header }}
             </th> -->
-            <th *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
+            <th  *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
                     {{ col.header }} <p-sortIcon [field]="col.field"></p-sortIcon>
                     </th>
             <th style="width:70px;position:sticky">Action</th>
@@ -146,7 +146,7 @@
             let-columns="columns"
         >
             <tr [pSelectableRow]="rowData" [pSelectableRowDblClick]="rowData">
-            <td *ngFor="let col of columns" pResizableColumn pReorderableColumn >
+            <td class="uiTable_td_ovrflw_control" *ngFor="let col of columns" pResizableColumn pReorderableColumn >
                 {{ rowData[col.field] }}
             </td>
             <td style="width:70px;position:sticky; text-align: center"> 

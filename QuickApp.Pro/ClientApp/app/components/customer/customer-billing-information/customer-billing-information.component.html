@@ -320,7 +320,7 @@
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <button type="button" class="close" (click)="closeMyModel()">&times;</button>
                 <div class="col-md-12 shadow-box-cstm">
                     <div class="col-md-4">
                         <p class="fs12">
@@ -335,7 +335,7 @@
                         </p>
                     </div>
                 </div>
-                <h4 class="modal-title">{{isEditMode ? 'Edit' : 'Add' }} Billing Info </h4>
+                <h4 class="modal-title">{{isEditMode ? 'Edit' : 'Add' }} Billing Info </h4> 
             </div>
             <form #addBillingForm="ngForm" class="form-horizontal">
                 <div class="modal-body">
@@ -343,25 +343,25 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label>Site Name <span class="clr-red">*</span></label>
-                                <input class="form-control" id="cssitename" type="text" name="siteName" [(ngModel)]="billingInfo.siteName" required>
+                                <input class="form-control" id="cssitename" type="text" name="siteName" [(ngModel)]="billingInfo.siteName"  (ngModelChange)="enableSave()" required>
                             </div>
                             <div class="form-group">
                                 <label>Bill To Address 1 <span class="clr-red">*</span></label>
-                                <input class="form-control" id="csaddress1" type="text" name="address1" [(ngModel)]="billingInfo.address1" required>
+                                <input class="form-control" id="csaddress1" type="text" name="address1" [(ngModel)]="billingInfo.address1"  (ngModelChange)="enableSave()" required>
                             </div>
                             <div class="form-group">
                                 <label>Bill To Address 2</label>
-                                <input class="form-control" id="csaddress2" type="text" name="address2" [(ngModel)]="billingInfo.address2">
+                                <input class="form-control" id="csaddress2" type="text" name="address2" [(ngModel)]="billingInfo.address2"  (ngModelChange)="enableSave()">
                             </div>
                             <div class="form-group" style="display:none">
                                 <label>Bill To Address 3</label>
-                                <input class="form-control" id="csaddress3" type="text" name="address3" [(ngModel)]="billingInfo.address3">
+                                <input class="form-control" id="csaddress3" type="text" name="address3" [(ngModel)]="billingInfo.address3"  (ngModelChange)="enableSave()">
                             </div>
                             <div class="form-group">
                                 <div class="form-group" style="margin-top: 15px; margin-bottom: 20px;">
                                       <span class="checkbox-cstm">
                                         <label>
-                                            <input type="checkbox" name="isPrimary" [(ngModel)]="billingInfo.isPrimary">
+                                            <input type="checkbox" name="isPrimary" [(ngModel)]="billingInfo.isPrimary"  (ngModelChange)="enableSave()">
                                             <span class="cr"><i class="cr-icon pi pi-check"></i></span>
                                             Primary
                                         </label>
@@ -372,15 +372,15 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label>Bill To City <span class="clr-red">*</span></label>
-                                <input class="form-control" id="cscity" type="text" name="city" [(ngModel)]="billingInfo.city" required>
+                                <input class="form-control" id="cscity" type="text" name="city" [(ngModel)]="billingInfo.city"  (ngModelChange)="enableSave()" required>
                             </div>
                             <div class="form-group">
                                 <label>Bill To State / Prov <span class="clr-red">*</span></label>
-                                <input class="form-control" id="csstate" type="text" name="stateOrProvince" [(ngModel)]="billingInfo.stateOrProvince" required>
+                                <input class="form-control" id="csstate" type="text" name="stateOrProvince" [(ngModel)]="billingInfo.stateOrProvince "  (ngModelChange)="enableSave()" required>
                             </div>
                             <div class="form-group">
                                 <label>Bill To Postal Code <span class="clr-red">*</span></label>
-                                <input class="form-control" id="cspostal" type="text" name="postalCode" [(ngModel)]="billingInfo.postalCode" required>
+                                <input class="form-control" id="cspostal" type="text" name="postalCode" [(ngModel)]="billingInfo.postalCode"  (ngModelChange)="enableSave()" required>
                             </div>
                             <div class="form-group">
                                 <label>Bill To Country <span class="clr-red">*</span></label>
@@ -389,7 +389,7 @@
 
                                     
                                         <p-autoComplete class="autocomp-customer-cstm" name="country"  
-                                        [(ngModel)]="billingInfo.country" 
+                                        [(ngModel)]="billingInfo.country"   (ngModelChange)="enableSave()"
                                           [suggestions]="countryList" field="countries_name"  [forceSelection]="true" (completeMethod)="filtercountry($event)" [size]="30"
                                                           [minLength]="1" [dropdown]="true" required>
                                             
@@ -408,8 +408,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary pull-right" [disabled]="!addBillingForm.valid" (click)="saveBillingInformation()" data-dismiss="modal">{{isEditMode ? 'Update' : 'Save'}}</button>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary pull-right" [disabled]="!addBillingForm.valid || disableSave" (click)="saveBillingInformation()">{{isEditMode ? 'Update' : 'Save'}}</button>
+                    <button type="button" class="btn btn-danger" (click)="closeMyModel()">Close</button>
                 </div>
             </form>
         </div>

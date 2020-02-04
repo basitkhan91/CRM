@@ -282,7 +282,7 @@
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"  (click)="dismissDocumentPopupModel()">&times;</button>
+                <button type="button" class="close"   (click)="closeMyModel('#addDocumentDetails')">&times;</button>
                 <h4 class="modal-title">Add Document Details</h4>
             </div>
             <form #addDocumentForm="ngForm" class="form-horizontal">
@@ -292,22 +292,22 @@
 
                             <div class="form-group">
                                 <label>Name <span class="clr-red">*</span></label>
-                                <input class="form-control" type="text" name="name" [(ngModel)]="documentInformation.docName" required>
+                                <input class="form-control" type="text" name="name" [(ngModel)]="documentInformation.docName" (ngModelChange)="enableSave()" required>
                             </div>
                             <div class="form-group">
                                 <label>Description <span class="clr-red">*</span></label>
-                                <textarea class="form-control" name="description" [(ngModel)]="documentInformation.docDescription" required></textarea>
+                                <textarea class="form-control" name="description" [(ngModel)]="documentInformation.docDescription" (ngModelChange)="enableSave()" required></textarea>
                             </div>
                             <div class="form-group">
                                 <label>Memo </label>
-                                <textarea class="form-control" name="memo" [(ngModel)]="documentInformation.docMemo"></textarea>
+                                <textarea class="form-control" name="memo" [(ngModel)]="documentInformation.docMemo" (ngModelChange)="enableSave()"></textarea>
                             </div>
                         </div>
 
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label style="float: none;">Attachments <span class="clr-red">*</span></label>
-                                <p-fileUpload #fileUploadInput name="fileupload[]" multiple="multiple" [showCancelButton]="false" [showUploadButton]="false" customUpload="true" (onSelect)="fileUpload($event)"></p-fileUpload>
+                                <p-fileUpload #fileUploadInput name="fileupload[]" multiple="multiple"  [showCancelButton]="false" [showUploadButton]="false" customUpload="true" (onSelect)="fileUpload($event)"></p-fileUpload>
                             </div>
                         </div>
                         <div class="table-responsive table-overflow" *ngIf="sourceViewforDocumentList.length > 0">
@@ -364,9 +364,9 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button"  *ngIf="!isEditButton" class="btn btn-primary pull-right submit-btn" style="text-align:center" (click)="saveDocumentInformation()" [disabled]="!addDocumentForm.valid" data-dismiss="modal">Save</button>
-                    <button type="button"  *ngIf="isEditButton" class="btn btn-primary pull-right submit-btn" style="text-align:center" (click)="saveDocumentInformation()" [disabled]="!addDocumentForm.valid" data-dismiss="modal">Update</button>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="dismissDocumentPopupModel()">Close</button>
+                    <button type="button"  *ngIf="!isEditButton" class="btn btn-primary pull-right submit-btn" style="text-align:center" (click)="saveDocumentInformation()" [disabled]="!addDocumentForm.valid || disableSave" >Save</button>
+                    <button type="button"  *ngIf="isEditButton" class="btn btn-primary pull-right submit-btn" style="text-align:center" (click)="saveDocumentInformation()" [disabled]="!addDocumentForm.valid || disableSave">Update</button>
+                    <button type="button" class="btn btn-danger" (click)="dismissDocumentPopupModel();closeMyModel('#addDocumentDetails');">Close</button>
                 </div>
             </form>
         </div>
