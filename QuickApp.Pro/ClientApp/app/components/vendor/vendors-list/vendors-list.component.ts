@@ -1017,6 +1017,14 @@ export class VendorsListComponent implements OnInit {
         const { vendorId } = rowData;
         this.route.navigateByUrl(`vendorsmodule/vendorpages/app-ro-setup/vendor/${vendorId}`);
     }
+    navigateToCreatePO() {
+        $('#purchaseOrderList').modal('hide');
+        this.route.navigateByUrl(`vendorsmodule/vendorpages/app-purchase-setup/vendor/${this.vendorId}`);        
+    }
+    navigateToCreateRO() {
+        $('#repairOrderList').modal('hide');
+        this.route.navigateByUrl(`vendorsmodule/vendorpages/app-ro-setup/vendor/${this.vendorId}`);
+    }
 
     toGetVendorGeneralDocumentsList(vendorId) {
         var moduleId = 3;
