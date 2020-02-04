@@ -410,6 +410,7 @@ namespace DAL
         public DbSet<CustomerATAMapping> CustomerATAMapping { get; set; }
         public DbSet<CustomerContactATAMapping> CustomerContactATAMapping { get; set; }
         public DbSet<CustomerTaxTypeRateMapping> CustomerTaxTypeRateMapping { get; set; }
+        public DbSet<CustomerTaxTypeRateMappingAudit> CustomerTaxTypeRateMappingAudit { get; set; }
         public DbSet<AssetCapes> AssetCapes { get; set; }
         public DbSet<AssetCapesAudit> AssetCapesAudit { get; set; }
 

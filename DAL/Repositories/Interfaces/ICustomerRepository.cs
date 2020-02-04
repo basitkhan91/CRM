@@ -95,6 +95,8 @@ namespace DAL.Repositories.Interfaces
         void UploadCustomerContactsCustomData(IFormFile file, long customerId);
         IEnumerable<object> GetInterShippingViaDetails(long internationalShippingId);
 
+        IEnumerable<object> CustomerTaxTypeRateInfoAudit(long CustomerTaxTypeRateMappingId);
+
     }
 
 }
