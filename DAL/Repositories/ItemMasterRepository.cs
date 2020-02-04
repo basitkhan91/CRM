@@ -865,48 +865,45 @@ namespace DAL.Repositories
             }
         }
 
-        public IEnumerable<object> gePurcSaleByItemMasterID(long ItemMasterid)
+        public IEnumerable<ItemMasterPurchaseSale> gePurcSaleByItemMasterID(long ItemMasterid)
         {
 
             var data = (from iM in _appContext.ItemMasterPurchaseSale
                         where iM.ItemMasterId == ItemMasterid && iM.IsActive == true && iM.IsDeleted == false
-                        select new
+                        select new ItemMasterPurchaseSale
                         {
-                            iM.Condition,
-                            iM.ItemMasterId,
-                            iM.ItemMasterPurchaseSaleId,
-                            iM.PartNumber,
-                            iM.PP_CurrencyId,
-                            iM.PP_FXRatePerc,
-                            iM.PP_LastListPriceDate,
-                            iM.PP_LastPurchaseDiscDate,
-                            iM.PP_PurchaseDiscAmount,
-                            iM.PP_PurchaseDiscPerc,
-                            iM.PP_UnitPurchasePrice,
-                            iM.PP_UOMId,
-                            iM.PP_VendorListPrice,
-                            iM.SP_CalSPByPP_BaseSalePrice,
-                            iM.SP_CalSPByPP_LastMarkUpDate,
-                            iM.SP_CalSPByPP_LastSalesDiscDate,
-                            iM.SP_CalSPByPP_MarkUpAmount,
-                            iM.SP_CalSPByPP_MarkUpPercOnListPrice,
-                            iM.SP_CalSPByPP_SaleDiscAmount,
-                            iM.SP_CalSPByPP_SaleDiscPerc,
-                            iM.SP_CalSPByPP_UnitSalePrice,
-                            iM.SP_FSP_CurrencyId,
-                            iM.SP_FSP_FlatPriceAmount,
-                            iM.SP_FSP_FXRatePerc,
-                            iM.SP_FSP_LastFlatPriceDate,
-                            iM.SP_FSP_UOMId,
-                            iM.UpdatedBy,
-                            iM.UpdatedDate,
-                            iM.IsActive,
-                            iM.IsDeleted,
-                            iM.CreatedBy,
-                            iM.CreatedDate,
-
-
-
+                            Condition = iM.Condition,
+                            ItemMasterId = iM.ItemMasterId,
+                            ItemMasterPurchaseSaleId = iM.ItemMasterPurchaseSaleId,
+                            PartNumber = iM.PartNumber,
+                            PP_CurrencyId = iM.PP_CurrencyId,
+                            PP_FXRatePerc = iM.PP_FXRatePerc,
+                            PP_LastListPriceDate = iM.PP_LastListPriceDate,
+                            PP_LastPurchaseDiscDate = iM.PP_LastPurchaseDiscDate,
+                            PP_PurchaseDiscAmount = iM.PP_PurchaseDiscAmount,
+                            PP_PurchaseDiscPerc = iM.PP_PurchaseDiscPerc,
+                            PP_UnitPurchasePrice = iM.PP_UnitPurchasePrice,
+                            PP_UOMId = iM.PP_UOMId,
+                            PP_VendorListPrice = iM.PP_VendorListPrice,
+                            SP_CalSPByPP_BaseSalePrice = iM.SP_CalSPByPP_BaseSalePrice,
+                            SP_CalSPByPP_LastMarkUpDate = iM.SP_CalSPByPP_LastMarkUpDate,
+                            SP_CalSPByPP_LastSalesDiscDate= iM.SP_CalSPByPP_LastSalesDiscDate,
+                            SP_CalSPByPP_MarkUpAmount = iM.SP_CalSPByPP_MarkUpAmount,
+                            SP_CalSPByPP_MarkUpPercOnListPrice = iM.SP_CalSPByPP_MarkUpPercOnListPrice,
+                            SP_CalSPByPP_SaleDiscAmount = iM.SP_CalSPByPP_SaleDiscAmount,
+                            SP_CalSPByPP_SaleDiscPerc = iM.SP_CalSPByPP_SaleDiscPerc,
+                            SP_CalSPByPP_UnitSalePrice = iM.SP_CalSPByPP_UnitSalePrice,
+                            SP_FSP_CurrencyId = iM.SP_FSP_CurrencyId,
+                            SP_FSP_FlatPriceAmount = iM.SP_FSP_FlatPriceAmount,
+                            SP_FSP_FXRatePerc = iM.SP_FSP_FXRatePerc,
+                            SP_FSP_LastFlatPriceDate = iM.SP_FSP_LastFlatPriceDate,
+                            SP_FSP_UOMId = iM.SP_FSP_UOMId,
+                            UpdatedBy = iM.UpdatedBy,
+                            UpdatedDate = iM.UpdatedDate,
+                            IsActive = iM.IsActive,
+                            IsDeleted = iM.IsDeleted,
+                            CreatedBy = iM.CreatedBy,
+                            CreatedDate = iM.CreatedDate
                         }).ToList();
             return data;
         }
