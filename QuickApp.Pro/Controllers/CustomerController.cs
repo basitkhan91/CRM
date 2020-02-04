@@ -475,7 +475,7 @@ namespace QuickApp.Pro.Controllers
                             if (Convert.ToBoolean(objVendor.IsAddressForBilling))
                             {
                                 _unitOfWork.Customer.AddVendorBillingAddress(actionobject, objVendor.VendorId, Convert.ToInt64(objVendor.AddressId));
-                              
+
                             }
 
 
@@ -1691,12 +1691,13 @@ namespace QuickApp.Pro.Controllers
                     CustomerObject.WarningMessage = CustomerWarningViewModel[i].WarningMessage;
                     CustomerObject.RestrictMessage = CustomerWarningViewModel[i].RestrictMessage;
                     CustomerObject.MasterCompanyId = CustomerWarningViewModel[i].MasterCompanyId;
-                    CustomerObject.IsActive = CustomerWarningViewModel[i].IsActive;
                     CustomerObject.CreatedDate = DateTime.Now;
                     CustomerObject.UpdatedDate = DateTime.Now;
                     CustomerObject.CreatedBy = CustomerWarningViewModel[i].CreatedBy;
                     CustomerObject.UpdatedBy = CustomerWarningViewModel[i].UpdatedBy;
                     CustomerObject.IsAllow = CustomerWarningViewModel[i].IsAllow;
+                    CustomerObject.IsActive = CustomerWarningViewModel[i].IsActive;
+                    CustomerObject.IsDeleted = false;
                     _unitOfWork.CustomerWarning.Add(CustomerObject);
                     _unitOfWork.SaveChanges();
 
@@ -1716,38 +1717,77 @@ namespace QuickApp.Pro.Controllers
                     return BadRequest($"{nameof(CustomerWarningViewModel)} cannot be null");
                 //var CustomerObject = _unitOfWork.CustomerWarning.GetSingleOrDefault(c => c.CustomerId == id);
 
+                //for (int i = 0; i < CustomerWarningViewModel.Length; i++)
+                //{
+                //    if (CustomerWarningViewModel[i].CustomerWarningId > 0)
+                //    {
+                //        var CustomerObject = _unitOfWork.CustomerWarning.Get(CustomerWarningViewModel[i].CustomerWarningId);
+
+                //        if (CustomerObject != null)
+                //        {
+                //            CustomerWarningViewModel[i].MasterCompanyId = 1;
+                //            CustomerObject.CustomerId = CustomerWarningViewModel[i].CustomerId;
+                //            CustomerObject.Allow = CustomerWarningViewModel[i].Allow;
+                //            CustomerObject.SourceModule = CustomerWarningViewModel[i].SourceModule;
+                //            CustomerObject.Restrict = CustomerWarningViewModel[i].Restrict;
+                //            CustomerObject.Warning = CustomerWarningViewModel[i].Warning;
+                //            CustomerObject.WarningMessage = CustomerWarningViewModel[i].WarningMessage;
+                //            CustomerObject.RestrictMessage = CustomerWarningViewModel[i].RestrictMessage;
+                //            CustomerObject.MasterCompanyId = CustomerWarningViewModel[i].MasterCompanyId;
+                //            CustomerObject.IsActive = CustomerWarningViewModel[i].IsActive;
+                //            CustomerObject.CreatedDate = DateTime.Now;
+                //            //CustomerObject.IsActive = true;
+                //            CustomerObject.UpdatedDate = DateTime.Now;
+                //            CustomerObject.CreatedBy = CustomerWarningViewModel[i].CreatedBy;
+                //            CustomerObject.UpdatedBy = CustomerWarningViewModel[i].UpdatedBy;
+                //            CustomerObject.IsAllow = CustomerWarningViewModel[i].IsAllow;
+                //            CustomerObject.IsWarning = CustomerWarningViewModel[i].IsWarning;
+                //            CustomerObject.IsRestrict = CustomerWarningViewModel[i].IsRestrict;
+                //            _unitOfWork.CustomerWarning.Update(CustomerObject);
+                //            _unitOfWork.SaveChanges();
+                //        }
+
+                //    }
+                //}
+
+
+                var custWarnData = _context.CustomerWarning.Where(p => p.CustomerId == id).ToList();
+
+                if (custWarnData.Count > 0)
+                {
+                    foreach (var cWarnData in custWarnData)
+                    {
+                        _context.CustomerWarning.Remove(cWarnData);
+                    }
+                    _context.SaveChanges();
+
+                }
+
+
                 for (int i = 0; i < CustomerWarningViewModel.Length; i++)
                 {
-                    if (CustomerWarningViewModel[i].CustomerWarningId > 0)
-                    {
-                        var CustomerObject = _unitOfWork.CustomerWarning.Get(CustomerWarningViewModel[i].CustomerWarningId);
 
-                        if (CustomerObject != null)
-                        {
-                            CustomerWarningViewModel[i].MasterCompanyId = 1;
-                            CustomerObject.CustomerId = CustomerWarningViewModel[i].CustomerId;
-                            CustomerObject.Allow = CustomerWarningViewModel[i].Allow;
-                            CustomerObject.SourceModule = CustomerWarningViewModel[i].SourceModule;
-                            CustomerObject.Restrict = CustomerWarningViewModel[i].Restrict;
-                            CustomerObject.Warning = CustomerWarningViewModel[i].Warning;
-                            CustomerObject.WarningMessage = CustomerWarningViewModel[i].WarningMessage;
-                            CustomerObject.RestrictMessage = CustomerWarningViewModel[i].RestrictMessage;
-                            CustomerObject.MasterCompanyId = CustomerWarningViewModel[i].MasterCompanyId;
-                            CustomerObject.IsActive = CustomerWarningViewModel[i].IsActive;
-                            CustomerObject.CreatedDate = DateTime.Now;
-                            //CustomerObject.IsActive = true;
-                            CustomerObject.UpdatedDate = DateTime.Now;
-                            CustomerObject.CreatedBy = CustomerWarningViewModel[i].CreatedBy;
-                            CustomerObject.UpdatedBy = CustomerWarningViewModel[i].UpdatedBy;
-                            CustomerObject.IsAllow = CustomerWarningViewModel[i].IsAllow;
-                            CustomerObject.IsWarning = CustomerWarningViewModel[i].IsWarning;
-                            CustomerObject.IsRestrict = CustomerWarningViewModel[i].IsRestrict;
-                            _unitOfWork.CustomerWarning.Update(CustomerObject);
-                            _unitOfWork.SaveChanges();
-                        }
+                    CustomerWarning CustomerObject = new CustomerWarning();
 
-                    }
-
+                    CustomerWarningViewModel[i].MasterCompanyId = 1;
+                    // CustomerWarningViewModel.IsActive = true;
+                    CustomerObject.CustomerId = CustomerWarningViewModel[i].CustomerId;
+                    CustomerObject.Allow = CustomerWarningViewModel[i].Allow;
+                    CustomerObject.SourceModule = CustomerWarningViewModel[i].SourceModule;
+                    CustomerObject.Restrict = CustomerWarningViewModel[i].Restrict;
+                    CustomerObject.Warning = CustomerWarningViewModel[i].Warning;
+                    CustomerObject.WarningMessage = CustomerWarningViewModel[i].WarningMessage;
+                    CustomerObject.RestrictMessage = CustomerWarningViewModel[i].RestrictMessage;
+                    CustomerObject.MasterCompanyId = CustomerWarningViewModel[i].MasterCompanyId;
+                    CustomerObject.CreatedDate = DateTime.Now;
+                    CustomerObject.UpdatedDate = DateTime.Now;
+                    CustomerObject.CreatedBy = CustomerWarningViewModel[i].CreatedBy;
+                    CustomerObject.UpdatedBy = CustomerWarningViewModel[i].UpdatedBy;
+                    CustomerObject.IsAllow = CustomerWarningViewModel[i].IsAllow;
+                    CustomerObject.IsActive = CustomerWarningViewModel[i].IsActive;
+                    CustomerObject.IsDeleted = false;
+                    _unitOfWork.CustomerWarning.Add(CustomerObject);
+                    _unitOfWork.SaveChanges();
 
                 }
                 return Ok(CustomerWarningViewModel);
@@ -2045,7 +2085,7 @@ namespace QuickApp.Pro.Controllers
                     if (customerContactTaxMapping.CustomerTaxTypeRateMappingId > 0)
                     {
                         var extData = _context.CustomerTaxTypeRateMapping.Where(p => p.CustomerTaxTypeRateMappingId == customerContactTaxMapping.CustomerTaxTypeRateMappingId).FirstOrDefault();
-                        extData.UpdatedBy= customerContactTaxMapping.UpdatedBy ?? "admin";
+                        extData.UpdatedBy = customerContactTaxMapping.UpdatedBy ?? "admin";
                         extData.UpdatedDate = System.DateTime.Now;
                         extData.TaxRate = customerContactTaxMapping.TaxRate;
                         extData.TaxRateId = customerContactTaxMapping.TaxRateId;
@@ -2395,6 +2435,41 @@ namespace QuickApp.Pro.Controllers
 
         }
 
+        [HttpPut("CustomerContactATAUpdate/{id}")]
+        public IActionResult InsertCustomerContactATA(long id, [FromBody] CustomerContactATAMapping customerContactAtaMapping)
+        {
+            if (ModelState.IsValid)
+            {
+
+                var custATAData = _context.CustomerContactATAMapping.Where(c => c.CustomerContactATAMappingId == id).FirstOrDefault();
+                if (custATAData != null)
+                {
+                    custATAData.CustomerContactId = customerContactAtaMapping.CustomerContactId;
+                    custATAData.CustomerId = customerContactAtaMapping.CustomerId;
+                    custATAData.ATAChapterId = customerContactAtaMapping.ATAChapterId;
+                    custATAData.ATASubChapterId = customerContactAtaMapping.ATASubChapterId;
+                    custATAData.ATAChapterCode = customerContactAtaMapping.ATAChapterCode;
+                    custATAData.ATAChapterName = customerContactAtaMapping.ATAChapterName;
+                    custATAData.ATASubChapterDescription = customerContactAtaMapping.ATASubChapterDescription;
+                    custATAData.UpdatedBy = customerContactAtaMapping.UpdatedBy;
+                    custATAData.UpdatedDate = DateTime.Now;
+
+                    _unitOfWork.Repository<CustomerContactATAMapping>().Update(custATAData);
+                    _unitOfWork.SaveChanges();
+
+                }
+                else
+                {
+
+                    return BadRequest("Record already exist with these details");
+                }
+            }
+
+
+            return Ok(ModelState);
+
+        }
+
         [HttpDelete("DeleteCustomerContactATAMapping/{id}")]
         public IActionResult DeleteCustomerContactATA(long id)
         {
@@ -2453,40 +2528,59 @@ namespace QuickApp.Pro.Controllers
             return Ok(ModelState);
         }
 
-		[HttpPut("CustomerTaxTypeRateUpdate/{id}")]
-		[Produces(typeof(CustomerTaxTypeRateMapping))]
-		public IActionResult InsertCustomerTaxTypeRateInfoUpdate(long id,[FromBody] CustomerTaxTypeRateMapping customerContactTaxMapping)
-		{
-			if (ModelState.IsValid)
-			{
 
-				if(id > 0)
-				{
-					var extData = _context.CustomerTaxTypeRateMapping.Where(p => p.CustomerTaxTypeRateMappingId == id).FirstOrDefault();
-					extData.UpdatedBy = customerContactTaxMapping.UpdatedBy ?? "admin";
-					extData.UpdatedDate = System.DateTime.Now;
-					//extData.TaxRate = customerContactTaxMapping.TaxRate;
-					extData.TaxRateId = customerContactTaxMapping.TaxRateId;
-					//extData.TaxType = customerContactTaxMapping.TaxType;
-					extData.TaxTypeId = customerContactTaxMapping.TaxTypeId;
-					_unitOfWork.Repository<CustomerTaxTypeRateMapping>().Update(extData);
-					_unitOfWork.SaveChanges();				
-				}
-				else
-				{
-					return BadRequest($"{nameof(customerContactTaxMapping)} update failed!");
-				}
-				
-			}
-			else
-			{
-				return BadRequest($"{nameof(customerContactTaxMapping)} cannot be null");
-			}
+        [HttpPut("CustomerTaxTypeRateUpdate/{id}")]
+        [Produces(typeof(CustomerTaxTypeRateMapping))]
+        public IActionResult InsertCustomerTaxTypeRateInfoUpdate(long id, [FromBody] CustomerTaxTypeRateMapping customerContactTaxMapping)
+        {
+            if (ModelState.IsValid)
+            {
 
-			return Ok(ModelState);
-		}
+                if (id > 0)
+                {
+                    var extData = _context.CustomerTaxTypeRateMapping.Where(p => p.CustomerTaxTypeRateMappingId == id).FirstOrDefault();
+                    extData.UpdatedBy = customerContactTaxMapping.UpdatedBy ?? "admin";
+                    extData.UpdatedDate = System.DateTime.Now;
+                    //extData.TaxRate = customerContactTaxMapping.TaxRate;
+                    extData.TaxRateId = customerContactTaxMapping.TaxRateId;
+                    //extData.TaxType = customerContactTaxMapping.TaxType;
+                    extData.TaxTypeId = customerContactTaxMapping.TaxTypeId;
+                    _unitOfWork.Repository<CustomerTaxTypeRateMapping>().Update(extData);
+                    _unitOfWork.SaveChanges();
+                }
+                else
+                {
+                    return BadRequest($"{nameof(customerContactTaxMapping)} update failed!");
+                }
 
-		[HttpDelete("DeleteCustomerTaxTypeRateMappint/{id}")]
+            }
+            else
+            {
+                return BadRequest($"{nameof(customerContactTaxMapping)} cannot be null");
+            }
+
+            return Ok(ModelState);
+        }
+
+        [HttpGet("CustomerTaxTypeRateAudit/{id}")]
+        [Produces(typeof(CustomerTaxTypeRateMapping))]
+        public IActionResult CustomerTaxTypeRateInfoAudit(long id)
+        {
+
+            var result = _unitOfWork.Customer.CustomerTaxTypeRateInfoAudit(id);
+
+            if (result == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                return Ok(result);
+            }
+        }
+
+
+        [HttpDelete("DeleteCustomerTaxTypeRateMappint/{id}")]
         public IActionResult DeleteCustomerTaxTypeRate(long id)
         {
             var existingResult = _unitOfWork.Repository<CustomerTaxTypeRateMapping>().GetSingleOrDefault(c => c.CustomerTaxTypeRateMappingId == id);
