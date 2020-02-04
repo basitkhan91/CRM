@@ -149,6 +149,8 @@ export class VendorGeneralInformationComponent implements OnInit {
 
     emailPattern = emailPattern()
     urlPattern = urlPattern()
+    parentVendorOriginal: any[];
+
 
 
     constructor(public vendorclassificationService: VendorClassificationService,
@@ -193,6 +195,7 @@ export class VendorGeneralInformationComponent implements OnInit {
                 this.sourceVendor = res;
                 // this.workFlowtService.isReset = true;
                 // // this.loadMasterCompanies();
+
 
                 this.vendorService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-general-information/edit';
                 this.vendorService.bredcrumbObj.next(this.vendorService.currentUrl);
@@ -245,6 +248,7 @@ export class VendorGeneralInformationComponent implements OnInit {
                 // }
             })
         } else {
+
 
             // this.vendorService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-general-information';
             // this.vendorService.bredcrumbObj.next(this.vendorService.currentUrl);
@@ -319,6 +323,22 @@ export class VendorGeneralInformationComponent implements OnInit {
 
 
         this.loadData();
+
+        this.parentVendorOriginal = this.allActions;
+        console.log(this.parentVendorOriginal);
+        
+        // console.log(this.parentVendorOriginal);
+
+        // setTimeout(() => {
+        //     if (this.vendorService.isEditMode) {
+        //         this.parentVendorList(this.vendorService.listCollection.vendorId);
+        //     }
+        // }, 1000)
+
+        // if (this.vendorService.isEditMode == false) {
+
+
+        // }
         this.Capabilitydata();
         this.countrylist();
         this.loadDataVendorData();
@@ -420,25 +440,28 @@ export class VendorGeneralInformationComponent implements OnInit {
             this.sourceVendor.postalCode = this.customerser.localCollectiontoVendor.postalCode;
 
         }
+
+
     }
 
     closethis() {
         this.closeCmpny = false;
     }
     public allWorkFlows: any[] = [];
-    private loadData() {
+    async  loadData() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-        this.vendorService.getWorkFlows().subscribe(
-            results => this.onDataLoadSuccessful(results[0]),
-            error => this.onDataLoadFailed(error)
+        await this.vendorService.getWorkFlows().subscribe(res =>
+            this.allActions = res[0]
+            // results => this.onDataLoadSuccessful(results[0]),
+            // error => this.onDataLoadFailed(error)
         );
     }
     private onDataLoadSuccessful(allWorkFlows: any[]) {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.dataSource.data = allWorkFlows;
-        this.allActions = allWorkFlows;
+
     }
 
     //get Country List
@@ -664,6 +687,9 @@ export class VendorGeneralInformationComponent implements OnInit {
         this.vendorInfoByName = allWorkFlows[0]
         this.sourceVendor = this.vendorInfoByName;
     }
+
+
+
     filterVendorNames(event) {
         this.vendorNames = [];
         for (let i = 0; i < this.allActions.length; i++) {
@@ -680,12 +706,23 @@ export class VendorGeneralInformationComponent implements OnInit {
 
 
 
+    parentVendorList(id) {
+        console.log(id);
+
+        this.parentVendorOriginal = [... this.allActions.filter(x => {
+            if (x.vendorId != id) {
+                return x;
+            }
+        })]
+        console.log(this.parentVendorOriginal);
+
+    }
 
 
     filterVendorParentNames(event) {
-        this.vendorParentNames = this.allActions;
+        this.vendorParentNames = this.parentVendorOriginal;
 
-        this.vendorParentNames = [...this.allActions.filter(x => {
+        this.vendorParentNames = [...this.parentVendorOriginal.filter(x => {
             return x.vendorName.toLowerCase().includes(event.query.toLowerCase());
         })]
         // this.vendorNames = [];
@@ -1038,6 +1075,8 @@ export class VendorGeneralInformationComponent implements OnInit {
         }
     }
     onVendorselected(event) {
+        console.log(event);
+
         for (let i = 0; i < this.VendorNamecoll.length; i++) {
             if (event == this.VendorNamecoll[i][0].vendorName) {
                 this.disableSaveVenName = true;

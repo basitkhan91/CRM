@@ -1102,7 +1102,8 @@ export class VendorEndpointService extends EndpointFactory {
 				return this.handleError(error, () => this.gethistoryOfcheckpayment(vendorId));
 			});
 	}
-	getShipviaHistory<T>(vendorId: number): Observable<T> {
+    getShipviaHistory<T>(vendorId: number): Observable<T> {
+
 		let endpointUrl = `${this.getShipViaHistory}/${vendorId}`;
 		return this.http.get<T>(endpointUrl, this.getRequestHeaders())
 			.catch(error => {

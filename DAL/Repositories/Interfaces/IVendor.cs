@@ -82,5 +82,7 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<object> UploadVendorBillingAddressCustomData(IFormFile file, long vendorId);
         IEnumerable<object> UploadVendorShippingAddressCustomData(IFormFile file, long vendorId);
         IEnumerable<object> UploadVendorContactsCustomData(IFormFile file, long vendorId);
+        IEnumerable<object> getVendorShipVia(long id);
+
     }
 }

@@ -158,7 +158,7 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 			{ field: 'countryName', header: 'Country' }
 		];
 		this.selectedColumns = this.cols;
-		
+
 		this.countrylist();
 		this.dataSource = new MatTableDataSource();
 		if (this.local) {
@@ -345,7 +345,7 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 		this.vendorService.getCheckPaymentobj(vendorId).subscribe(
 			results => this.onDataLoadSuccessful(results[0]),
 			error => this.onDataLoadFailed(error)
-		);		
+		);
 	}
 
 	public getbencus() {
@@ -722,11 +722,11 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 				this.sourceVendor.vendorId = this.local.vendorId;
 				this.domesticSaveObj.country = editValueAssignByCondition('countries_id', this.domesticSaveObj.country);
 				this.vendorService.addDomesticinfo(this.domesticSaveObj).subscribe(data => {
-                    this.loadData();
-                    this.localCollection = {
-                        ...data, createdBy: this.userName,
-                        updatedBy: this.userName
-                    };
+					this.loadData();
+					this.localCollection = {
+						...data, createdBy: this.userName,
+						updatedBy: this.userName
+					};
 					this.savesuccessCompleted(this.sourceVendor);
 					this.sourceVendor = new Object();
 					this.updateVendorDomesticWirePayment(this.localCollection);
@@ -744,7 +744,7 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 			this.domasticWireValue = true;
 			this.internationalValue = false;
 		}
-		this.domesticSaveObj = {};
+		// this.domesticSaveObj = {};
 
 	}
 
@@ -761,10 +761,10 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 				this.sourceVendor.masterCompanyId = 1;
 				this.internationalSaveObj.country = editValueAssignByCondition('countries_id', this.internationalSaveObj.country);
 				this.vendorService.addInternationalinfo(this.internationalSaveObj).subscribe(data => {
-                    this.localCollection = {
-                        ...data, createdBy: this.userName,
-                        updatedBy: this.userName
-                    };
+					this.localCollection = {
+						...data, createdBy: this.userName,
+						updatedBy: this.userName
+					};
 					this.vendorService.paymentCollection = this.local;
 					// this.activeIndex = 4;
 					// this.vendorService.indexObj.next(this.activeIndex);
@@ -860,8 +860,8 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 		})
 	}
 
-    updateVendorDomesticWirePayment(updateObj: any) {
-    
+	updateVendorDomesticWirePayment(updateObj: any) {
+
 		this.vendorService.updateVendorDomesticWirePayment(updateObj, this.local.vendorId).subscribe(data => {
 			this.loadData();
 		})

@@ -42,7 +42,7 @@
         <tr [ngClass]="{'row-bg1':part.alternateFor.length==0}">
           <td><input type="checkbox" (change)="onChange($event, part)" /></td>
           <td>{{ part.method}}</td>
-          <td>{{ part.partNumber }} <span class="alternate-part-label" *ngIf="part.alternateFor?.length > 0">(Alt)</span></td>
+          <td>{{ part.partNumber }} <span class="alternate-part-label" *ngIf="part.mappingType==1">(Alt)</span> <span class="alternate-part-label" *ngIf="part.mappingType==2">(Eq)</span></td>
           <td>{{ part.alternateFor }} </td>
           <td>{{ part.description }}</td>
           <td>{{ part.conditionDescription }}</td>

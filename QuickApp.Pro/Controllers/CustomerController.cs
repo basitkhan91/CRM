@@ -475,6 +475,7 @@ namespace QuickApp.Pro.Controllers
                             if (Convert.ToBoolean(objVendor.IsAddressForBilling))
                             {
                                 _unitOfWork.Customer.AddVendorBillingAddress(actionobject, objVendor.VendorId, Convert.ToInt64(objVendor.AddressId));
+                              
                             }
 
 
@@ -3491,6 +3492,12 @@ namespace QuickApp.Pro.Controllers
         {
             _unitOfWork.Customer.UploadCustomerContactsCustomData(Request.Form.Files[0], customerId);
             return Ok();
+        }
+        [HttpGet("getinternationalshippingviadetails")]
+        public IActionResult GetShippingViaDetails(long internationalShippingId)
+        {
+            var result = _unitOfWork.Customer.GetInterShippingViaDetails(internationalShippingId);
+            return Ok(result);
         }
 
     }

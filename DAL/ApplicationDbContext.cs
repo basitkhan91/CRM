@@ -522,7 +522,7 @@ namespace DAL
         public DbSet<ShippingBillingAddressAudit> ShippingBillingAddressAudit { get; set; }
         public DbSet<DocumentsAudit> DocumentsAudit { get; set; }
 
-
+        public DbSet<VendorShippingAudit> VendorShippingAudit { get; set; }
 
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {

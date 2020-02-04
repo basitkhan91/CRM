@@ -1388,6 +1388,7 @@ namespace DAL.Repositories
                 model.ShippingViaDetailsId = id;
                 model.UpdatedDate = DateTime.Now;
                 model.IsActive = status;
+                model.UpdatedBy = updatedBy;
 
                 _appContext.ShippingViaDetails.Attach(model);
 
@@ -2135,6 +2136,7 @@ namespace DAL.Repositories
         }
         public void AddVendorShippingAddress(Customer objCustomer, long vendorId, long addressId)
         {
+            CommonRepository commonRepository = new CommonRepository(_appContext);
 
             VendorShippingAddress data = _appContext.VendorShippingAddress.AsNoTracking().Where(p => p.AddressId == addressId && p.VendorId == vendorId).FirstOrDefault();
             if (data != null)
@@ -2153,6 +2155,8 @@ namespace DAL.Repositories
                     data.IsPrimary = true;
                     data.IsDeleted = false;
                     _appContext.VendorShippingAddress.Update(data);
+                    commonRepository.ShippingBillingAddressHistory(Convert.ToInt64(data.VendorId), Convert.ToInt32(ModuleEnum.Vendor), Convert.ToInt64(data.VendorShippingAddressId), Convert.ToInt32(AddressTypeEnum.ShippingAddress), data.UpdatedBy);
+
                 }
             }
             else
@@ -2172,6 +2176,8 @@ namespace DAL.Repositories
                 objCustomerShippingAddress.IsDeleted = false;
 
                 _appContext.VendorShippingAddress.Add(objCustomerShippingAddress);
+                commonRepository.ShippingBillingAddressHistory(Convert.ToInt64(objCustomerShippingAddress.VendorId), Convert.ToInt32(ModuleEnum.Vendor), Convert.ToInt64(objCustomerShippingAddress.VendorShippingAddressId), Convert.ToInt32(AddressTypeEnum.ShippingAddress), objCustomerShippingAddress.UpdatedBy);
+
             }
 
             _appContext.SaveChanges();
@@ -2180,6 +2186,8 @@ namespace DAL.Repositories
         }
         public void AddVendorBillingAddress(Customer objCustomer, long vendorId, long addressId)
         {
+            CommonRepository commonRepository = new CommonRepository(_appContext);
+
             VendorBillingAddress data = _appContext.VendorBillingAddress.AsNoTracking().Where(p => p.AddressId == addressId && p.VendorId == vendorId).FirstOrDefault();
 
             if (data != null)
@@ -2198,6 +2206,8 @@ namespace DAL.Repositories
                     data.IsActive = true;
                     data.IsDeleted = false;
                     _appContext.VendorBillingAddress.Update(data);
+                    commonRepository.ShippingBillingAddressHistory(Convert.ToInt64(data.VendorId), Convert.ToInt32(ModuleEnum.Vendor), Convert.ToInt64(data.VendorBillingAddressId), Convert.ToInt32(AddressTypeEnum.BillingAddress), data.UpdatedBy);
+
                 }
             }
             else
@@ -2217,6 +2227,8 @@ namespace DAL.Repositories
                 objCustomerBillingAddress.IsDeleted = false;
 
                 _appContext.VendorBillingAddress.Add(objCustomerBillingAddress);
+                commonRepository.ShippingBillingAddressHistory(Convert.ToInt64(objCustomerBillingAddress.VendorId), Convert.ToInt32(ModuleEnum.Vendor), Convert.ToInt64(objCustomerBillingAddress.VendorBillingAddressId), Convert.ToInt32(AddressTypeEnum.BillingAddress), objCustomerBillingAddress.UpdatedBy);
+
             }
 
             _appContext.SaveChanges();
@@ -2454,6 +2466,7 @@ namespace DAL.Repositories
                 model.CustomerShippingId = id;
                 model.UpdatedDate = DateTime.Now;
                 model.IsActive = status;
+                model.UpdatedBy = updatedBy;
 
                 _appContext.CustomerShipping.Attach(model);
 
@@ -3313,5 +3326,43 @@ namespace DAL.Repositories
            
         }
 
-      }
+        public IEnumerable<Object> GetInterShippingViaDetails(long internationalShippingId)
+        {
+
+            var data = (from cs in _appContext.ShippingViaDetails
+                        join csa in _appContext.CustomerInternationalShipping on cs.InternationalShippingId equals csa.InternationalShippingId
+                        where ((cs.InternationalShippingId == internationalShippingId) && (cs.IsDeleted == false || cs.IsDeleted == null))
+
+                        // select new { t, ad, vt }).ToList();
+                        select new
+                        {
+
+                            cs.ShippingViaDetailsId,
+                            cs.Memo,
+                            cs.ShipVia,
+                            ShippingAccountInfo = cs.ShippingAccountInfo,
+                            cs.ShippingURL,
+                            cs.ShippingId,
+                            cs.IsActive,
+                            cs.CustomerId,
+                            cs.InternationalShippingId,
+                            cs.CreatedDate,
+                            cs.UpdatedDate,
+                            //csa.Amount,
+                            //csa.StartDate,
+                            //csa.ExpirationDate,
+                            //csa.Description,
+                            //csa.ExportLicenseNumber
+
+
+                        }).ToList();
+            return data;
+
+
+          
+
+        }
+
+
+    }
 }

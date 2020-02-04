@@ -421,11 +421,12 @@ export class VendorShippingInformationComponent {
     }
 
     openHist(content, row) {
+       
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
         this.shipViaObj = row;
         this.isSaving = true;
-        this.vendorService.shipviaHistory(this.sourceVendor.vendorShippingId).subscribe(
+        this.vendorService.shipviaHistory(row.vendorShippingId).subscribe(
             results => this.onHistoryLoadSuccessful(results[0], content),
             error => this.saveFailedHelper(error));
     }
@@ -614,12 +615,14 @@ export class VendorShippingInformationComponent {
     dismissShipViaModelModel() {
         this.isDeleteMode = false;
         this.isEditMode = false;
-        this.modal.close();
+         this.modal.close();
     }
     dismissModel() {
         this.isDeleteMode = false;
         this.isEditMode = false;
-        this.modal.close();
+      
+     this.modal.close();
+       
     }
     private saveCompleted(user?: any) {
         this.isSaving = false;
@@ -834,7 +837,17 @@ export class VendorShippingInformationComponent {
     getPageCount(totalNoofRecords, pageSize) {
         return Math.ceil(totalNoofRecords / pageSize)
     }
-
+    getColorCodeForInterShipViaHistory(i, field, value) {
+        const data = this.auditHisory;
+        const dataLength = data.length;
+        if (i >= 0 && i <= dataLength) {
+            if ((i + 1) === dataLength) {
+                return true;
+            } else {
+                return data[i + 1][field] === value
+            }
+        }
+    }
 
 
 

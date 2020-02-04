@@ -18,6 +18,7 @@
                 </div>                            
             </div>
             
+
             <div [ngClass]="!viewMode ? 'card' : ''" style="padding: 10px;">
                 <div *ngIf="!viewMode">
                     <div class="col-md-12">
@@ -26,6 +27,7 @@
                             <a class="plusicon-cstm"
                                 href="#"
                                 data-toggle="modal"
+                               (click)="resetCreateForm()"
                                 data-target="#addDocumentDetails">
                                 <i class="fa fa-plus-circle fa-lg"></i>
                             </a>
@@ -33,6 +35,7 @@
                     </div>
                     <div class="clear"></div>
                     <hr />
+
                 </div>
 
             <div>                
@@ -360,7 +363,7 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label style="float: none;">Attachments <span class="clr-red">*</span></label>
-                                <p-fileUpload name="fileupload[]" multiple="multiple" [showCancelButton]="false" [showUploadButton]="false" customUpload="true" (onSelect)="fileUpload($event)"></p-fileUpload>
+                                <p-fileUpload #fileUpload   name="fileupload[]" multiple="multiple" [showCancelButton]="false" [showUploadButton]="false" customUpload="true" (onSelect)="fileUploadForDocuments($event,fileUpload)" ></p-fileUpload>
                             </div>
                         </div>
                         <!-- <div class="table-responsive table-overflow">

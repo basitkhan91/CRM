@@ -23,6 +23,10 @@ export class PartSearchParamters {
 
     public includeAlternatePartNumber: boolean;
 
+    public includeEquivalentPartNumber: boolean;
+
+    public includeMultiplePartNumber:boolean;
+
     public qtyAvailable:number;
     
     public qtyOnHand:number;

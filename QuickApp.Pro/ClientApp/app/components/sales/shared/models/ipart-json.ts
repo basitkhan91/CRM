@@ -37,4 +37,5 @@ export interface IPartJson {
     memo: string;
     currencyId: string;
     currencyDescription: string;
+    mappingType: number;
 }

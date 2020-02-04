@@ -21,6 +21,7 @@ export class SalesPartNumberComponent {
   addPartModal: NgbModalRef;
   deletePartModal: NgbModalRef;
   salesMarginModal: NgbModalRef;
+
   part: PartDetail;
   selectedPart: IPartJson;
   selectedParts: any[] = [];
@@ -104,6 +105,7 @@ export class SalesPartNumberComponent {
     this.deletePartModal.close();
    
   }
+ 
 
   addPartNumber() {
     this.salesQuoteService.resetSearchPart();
@@ -320,4 +322,6 @@ export class SalesPartNumberComponent {
     }
     console.log(this.selectedParts);
   }
+
+ 
 }
