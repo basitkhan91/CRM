@@ -39,7 +39,7 @@
                                                         <label for="currencyExchange" class="control-label">Currency</label>
                                                        <select name="currencyExchange" [(ngModel)]="currentItem.exchangeCurrencyId">
                                                            <option value="0">Select</option>
-                                                           <option *ngFor="let excur of exchangeCurrencies" [ngValue]="excur.currencyId">{{excur.displayName}}</option>
+                                                           <option *ngFor="let excur of exchangeCurrencies" [ngValue]="excur.currencyId">{{excur.code}}</option>
                                                         </select>   
                                                 </div>
                         </div>
@@ -80,7 +80,7 @@
                                 <label for="currencyLoan" class="control-label">Currency</label>
                                <select name="currencyLoan" class="select-value-drop" [(ngModel)]="currentItem.loanCurrencyId">
                                    <option value="0">Select</option>
-                                   <option *ngFor="let loancur of loanCurrencies" [ngValue]="loancur.currencyId">{{loancur.displayName}}</option>
+                                   <option *ngFor="let loancur of loanCurrencies" [ngValue]="loancur.currencyId">{{loancur.code}}</option>
                                 </select>   
                         </div>
                         <div class="form-group">
