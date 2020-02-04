@@ -863,6 +863,8 @@ namespace DAL.Repositories
                                 c.TaxType,
                                 c.TaxRate,
                                 c.CreatedBy,
+                                c.TaxRateId,
+                                c.TaxTypeId,
                                 c.MasterCompanyId
                             }).ToList();
                 return data;

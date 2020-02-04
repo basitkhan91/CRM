@@ -10,7 +10,7 @@ namespace DAL.Models
     {
         [Key]
         public long CustomerTaxTypeRateMappingId { get; set; }
-        public long CustomerId { get; set; }
+        public long CustomerId { get; set; }       
         public string TaxType { get; set; }
         public string TaxRate { get; set; }
         public int MasterCompanyId { get; set; }
@@ -20,5 +20,7 @@ namespace DAL.Models
         public DateTime? UpdatedDate { get; set; }
         public bool? IsDeleted { get; set; }
         public bool IsActive { get; set; }
+        public long? TaxRateId { get; set; }
+        public Int16? TaxTypeId { get; set; }
     }
 }
