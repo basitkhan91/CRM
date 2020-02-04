@@ -1308,7 +1308,7 @@ namespace DAL.Repositories
                     addressId = shippingAddress.AddressId;
 
                 }
-                else
+                else if((addressType == Convert.ToInt32(AddressTypeEnum.BillingAddress)))
                 {
                     var billingAddress = _appContext.VendorBillingAddress.AsNoTracking().Where(p => p.VendorBillingAddressId == billingShippingId).FirstOrDefault();
                     audit.AddressId = Convert.ToInt64(billingAddress.VendorBillingAddressId);
@@ -1322,6 +1322,33 @@ namespace DAL.Repositories
                     audit.CreatedBy = audit.UpdatedBy = updatedBy;
                     audit.CreatedDate = audit.UpdatedDate = DateTime.Now;
                     addressId = billingAddress.AddressId;
+                }
+                else
+                {
+                    var billingAddress = _appContext.CheckPayment.AsNoTracking().Where(p => p.CheckPaymentId == billingShippingId).FirstOrDefault();
+
+                    var checkpayment = _appContext.VendorCheckPayment.AsNoTracking().Where(p => p.CheckPaymentId == billingShippingId).FirstOrDefault();
+
+
+                    audit.AddressId = Convert.ToInt64(billingAddress.CheckPaymentId);
+                    audit.AddressType = Convert.ToInt32(AddressTypeEnum.CheckPayment);
+                    audit.IsPrimary = Convert.ToBoolean(billingAddress.IsPrimayPayment);
+                    if (checkpayment != null)
+                    {
+                        audit.IsActive = Convert.ToBoolean(checkpayment.IsActive);
+                    }
+                    else
+                    {
+                        audit.IsActive = Convert.ToBoolean(billingAddress.IsActive);
+                    }
+                    audit.MasterCompanyId = Convert.ToInt32(billingAddress.MasterCompanyId);
+                    audit.ModuleId = moduleId;
+                    audit.ReferenceId = referenceId;
+                    audit.SiteName = billingAddress.SiteName;
+                    audit.CreatedBy = audit.UpdatedBy = updatedBy;
+                    audit.CreatedDate = audit.UpdatedDate = DateTime.Now;
+                    addressId = billingAddress.AddressId;
+
                 }
             }
 
@@ -1357,6 +1384,29 @@ namespace DAL.Repositories
                     audit.CreatedDate = audit.UpdatedDate = DateTime.Now;
                 contId = Convert.ToInt64(cont.ContactId);
                 
+            }
+            else
+            {
+                var cont = _appContext.VendorContact.AsNoTracking().Where(p => p.VendorContactId == contactId).FirstOrDefault();
+                var contVendor = _appContext.Contact.AsNoTracking().Where(p => p.ContactId == cont.ContactId).FirstOrDefault();
+
+                audit.ContactId = Convert.ToInt64(cont.VendorContactId);
+                audit.IsDefaultContact = Convert.ToBoolean(cont.IsDefaultContact);
+                if (contVendor != null)
+                {
+                    audit.IsActive = Convert.ToBoolean(contVendor.IsActive);
+                }
+                else
+                {
+                    audit.IsActive = Convert.ToBoolean(cont.IsActive);
+                }
+                audit.MasterCompanyId = Convert.ToInt32(cont.MasterCompanyId);
+                audit.ModuleId = moduleId;
+                audit.ReferenceId = referenceId;
+
+                audit.CreatedBy = audit.UpdatedBy = updatedBy;
+                audit.CreatedDate = audit.UpdatedDate = DateTime.Now;
+                contId = Convert.ToInt64(cont.ContactId);
             }
 
             var con = _appContext.Contact.AsNoTracking().Where(p => p.ContactId == contId).FirstOrDefault();

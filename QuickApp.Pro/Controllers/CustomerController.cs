@@ -496,9 +496,15 @@ namespace QuickApp.Pro.Controllers
         [HttpPut("customers/{id}")]
         public IActionResult UpdateCustomers(long id, [FromBody] CustomerViewModel customerViewModel, CustomerType ct)
         {
-
+            bool customerCode = false;
+            bool updateShippingAddress = false;
+            bool updateBillingAddress = false;
             var actionobject = _unitOfWork.Customer.GetSingleOrDefault(a => a.CustomerId == id);
             var address = _unitOfWork.Address.GetSingleOrDefault(a => a.AddressId == customerViewModel.Addressid);
+            if (actionobject.CustomerCode != customerViewModel.CustomerCode)
+            {
+                customerCode = true;
+            }
 
             customerViewModel.MasterCompanyId = 1;
             actionobject.RestrictBERMemo = customerViewModel.RestrictBERMemo;
@@ -554,6 +560,24 @@ namespace QuickApp.Pro.Controllers
             address.CreatedDate = DateTime.Now;
             address.UpdatedDate = DateTime.Now;
             actionobject.GeneralCurrencyId = customerViewModel.GeneralCurrencyId;
+            var flag = _context.Address.Any(a => (a.AddressId == customerViewModel.Addressid) && (a.Line1 == customerViewModel.Address1 && a.Line2 == customerViewModel.Address2 && a.City == customerViewModel.City && a.StateOrProvince == customerViewModel.StateOrProvince && a.Country == customerViewModel.Country && a.PostalCode == customerViewModel.PostalCode));
+
+            var custShipping = _context.CustomerShippingAddress.Where(p => p.CustomerId == customerViewModel.CustomerId && p.AddressId == customerViewModel.Addressid && p.IsPrimary == true).AsNoTracking().FirstOrDefault();
+            var custBilling = _context.CustomerBillingAddress.Where(p => p.CustomerId == customerViewModel.CustomerId && p.AddressId == customerViewModel.Addressid && p.IsPrimary == true).AsNoTracking().FirstOrDefault();
+
+            if (flag == false || customerCode == true || custShipping == null)
+            {
+
+                updateShippingAddress = true;
+
+            }
+            if (flag == false || customerCode == true || custBilling == null)
+            {
+
+                updateBillingAddress = true;
+
+            }
+
             //actionobject.IsAddressForBillingAndShipping = customerViewModel.IsAddressForBillingAndShipping;
             if (customerViewModel.AircraftTypeId != null)
             {
@@ -612,13 +636,13 @@ namespace QuickApp.Pro.Controllers
             {
                 if (Convert.ToBoolean(actionobject.IsAddressForShipping))
                 {
-                    long ShippingAddressId = _unitOfWork.Customer.AddCustomerShippingAddress(actionobject);
+                    long ShippingAddressId = _unitOfWork.Customer.AddCustomerShippingAddress(actionobject, updateShippingAddress);
 
                 }
 
                 if (Convert.ToBoolean(actionobject.IsAddressForBilling))
                 {
-                    long BillingAddressId = _unitOfWork.Customer.AddCustomerBillinggAddress(actionobject);
+                    long BillingAddressId = _unitOfWork.Customer.AddCustomerBillinggAddress(actionobject, updateBillingAddress);
 
                 }
             }
@@ -3236,34 +3260,36 @@ namespace QuickApp.Pro.Controllers
 
                     }
 
-                    if (attachmentId != null)
+                    if (documentDeatailId != null)
                     {
-                        var data = _context.AttachmentDetails.AsNoTracking().Where(p => p.AttachmentId == attachmentId).OrderByDescending(p => p.UpdatedDate).FirstOrDefault();
-                        if (data != null)
+                        DocumentsAudit obj = new DocumentsAudit();
+                        obj.UpdatedDate = obj.CreatedDate = DateTime.Now;
+                        obj.CreatedBy = obj.UpdatedBy = Request.Form["UpdatedBy"];
+                        obj.MasterCompanyId = 1;
+                        obj.ModuleId = Convert.ToInt32(ModuleEnum.Customer);
+                        obj.ReferenceId = Convert.ToInt64(Request.Form["CustomerId"]);
+                        obj.AttachmentId = documentDeatailId;
+                        obj.DocDescription = Request.Form["DocDescription"];
+                        obj.DocMemo = Request.Form["DocMemo"];
+                        obj.DocName = Request.Form["DocName"];
+                        obj.IsActive = true;
+                        if (attachmentId != null)
                         {
-                            DocumentsAudit obj = new DocumentsAudit();
+                            var data = _context.AttachmentDetails.AsNoTracking().Where(p => p.AttachmentId == attachmentId).OrderByDescending(p => p.UpdatedDate).FirstOrDefault();
+                            if (data != null)
+                            {
+                                obj.FileName = data.FileName;
+                                obj.Link = data.Link;
+                                obj.Description = data.Description;
 
-                            obj.UpdatedDate = obj.CreatedDate = DateTime.Now;
-                            obj.CreatedBy = obj.UpdatedBy = Request.Form["UpdatedBy"];
-                            obj.MasterCompanyId = 1;
-                            obj.ModuleId = Convert.ToInt32(ModuleEnum.Customer);
-                            obj.ReferenceId = Convert.ToInt64(Request.Form["CustomerId"]);
-                            obj.AttachmentId = documentDeatailId;
-                            obj.DocDescription = Request.Form["DocDescription"];
-                            obj.DocMemo = Request.Form["DocMemo"];
-                            obj.DocName = Request.Form["DocName"];
-                            obj.FileName = data.FileName;
-                            obj.Link = data.Link;
-                            obj.Description = data.Description;
-                            obj.IsActive = true;
-
-
-
-
-                            _context.DocumentsAudit.Add(obj);
-                            _context.SaveChanges();
+                            }
                         }
+
+
+                        _context.DocumentsAudit.Add(obj);
+                        _context.SaveChanges();
                     }
+
                     return Ok(objCustomerDocumentDetail);
                 }
 
