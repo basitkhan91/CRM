@@ -1,4 +1,4 @@
-﻿import { Component, ViewChild, OnInit, AfterViewInit } from '@angular/core';
+﻿import { Component, ViewChild, OnInit, AfterViewInit, Input } from '@angular/core';
 import { MatPaginator, MatSort, MatTableDataSource, MatSnackBar, MatDialog } from '@angular/material';
 import { NgForm, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
@@ -46,7 +46,7 @@ export class VendorShippingInformationComponent {
     local: any;
     addressId: any;
     allAddresses: any[];
-    vendorId: any;
+    // vendorId: any;
     vendorCode: any;
     vendorname: any;
     allgeneralInfo: any[];
@@ -123,6 +123,8 @@ export class VendorShippingInformationComponent {
     pageSize: number = 10;
     totalPages: number = 0;
     public sourceVendor: any = {};
+    @Input() vendorId: number = 0;
+    @Input() isViewMode: boolean = false;
 
     constructor(private http: HttpClient, private router: Router,
         private authService: AuthService, private modalService: NgbModal, private configurations: ConfigurationService, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public vendorService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
@@ -161,18 +163,21 @@ export class VendorShippingInformationComponent {
         }
     }
 
-    ngOnInit(): void {
-        this.vendorService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-shipping-information';
-        this.vendorService.bredcrumbObj.next(this.vendorService.currentUrl);
+    ngOnInit() {        
         if (this.local) {
             this.loadData();
         }
         this.countrylist();
+        if(this.vendorId != 0) {
+            this.loadData();
+        } else {
+            this.vendorService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-shipping-information';
+            this.vendorService.bredcrumbObj.next(this.vendorService.currentUrl);
+        }
         // this.options = {
         //     center: { lat: 36.890257, lng: 30.707417 },
         //     zoom: 12
         // };
-
     }    
 
     // ngAfterViewInit() {
@@ -208,7 +213,7 @@ export class VendorShippingInformationComponent {
             this.vendorname = this.allgeneralInfo[0].vendorName;
             this.vendorCode = this.allgeneralInfo[0].vendorCode;
         }
-        this.vendorId = this.allgeneralInfo[0].vendorId;
+        //this.vendorId = this.allgeneralInfo[0].vendorId;
         console.log(this.allgeneralInfo);
     }
     private loadAddressDara() {
@@ -229,7 +234,8 @@ export class VendorShippingInformationComponent {
     private loadData() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-        this.vendorService.getVendorShipAddressGet(this.local.vendorId).subscribe(
+        const vendorId = this.vendorId != 0 ? this.vendorId : this.local.vendorId;
+        this.vendorService.getVendorShipAddressGet(vendorId).subscribe(
             results => this.onDataLoadSuccessful(results[0]),
             error => this.onDataLoadFailed(error)
         );        
@@ -525,7 +531,7 @@ export class VendorShippingInformationComponent {
     }
 
     previousClick() {
-        this.activeIndex = 5;
+        this.activeIndex = 6;
         this.vendorService.changeofTab(this.activeIndex);
         // this.vendorService.indexObj.next(this.activeIndex);
         // this.vendorService.changeStep('Payment Information');
@@ -670,7 +676,7 @@ export class VendorShippingInformationComponent {
         if (this.local) {
             this.vendorService.shippingCollection = this.local;
         }
-        this.activeIndex = 7;
+        this.activeIndex = 8;
         this.vendorService.changeofTab(this.activeIndex);
         // this.vendorService.indexObj.next(this.activeIndex);
         // this.vendorService.changeStep('Billing Information');

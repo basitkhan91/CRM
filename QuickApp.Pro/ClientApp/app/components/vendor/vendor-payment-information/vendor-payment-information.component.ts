@@ -1,4 +1,4 @@
-﻿import { Component, ViewChild, OnInit, AfterViewInit, ChangeDetectorRef } from '@angular/core';
+﻿import { Component, ViewChild, OnInit, AfterViewInit, ChangeDetectorRef, Input } from '@angular/core';
 import { MatPaginator, MatSort, MatTableDataSource, MatSnackBar, MatDialog } from '@angular/material';
 import { NgForm, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
@@ -75,7 +75,7 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 	public checkStyle: boolean = false;
 	public domesticWireStyle: boolean = false;
 	public internationalStyle: boolean = false;
-	vendorId: any;
+	//vendorId: any;
 	updatedCollection: {};
 	siteName: any;
 	address1: any;
@@ -89,31 +89,7 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 	disablesaveforCountry: boolean;
 	disablesavefoInternalrCountry: boolean;
 	disablesaveforBeneficiary: boolean;
-	selectedRowforDelete: any;
-
-	ngOnInit(): void {
-		this.vendorService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-payment-information';
-		this.vendorService.bredcrumbObj.next(this.vendorService.currentUrl);
-		this.defaultSaveObj.defaultPaymentMethod = 1;
-		this.countrylist();
-		if (this.local) {
-
-			this.loadData();
-			this.defaultPaymentValue = true;
-			this.getDomesticWithVendorId();
-			this.InternatioalWithVendorId();
-			this.DefaultWithVendorId();
-			this.showDefault();
-
-		}
-		//this.countrylist();
-		this.options = {
-			center: { lat: 36.890257, lng: 30.707417 },
-			zoom: 12
-		};
-		this.getbencus();
-
-	}
+	selectedRowforDelete: any;	
 	@ViewChild(MatPaginator) paginator: MatPaginator;
 	@ViewChild(MatSort) sort: MatSort;
 	filteredBrands: any[];
@@ -143,7 +119,7 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 	Active: string = "Active";
 	length: number;
 	localCollection: any[] = [];
-	options: any;
+	//options: any;
 	public overlays: any[];
 	allCountryinfo: any[];
 	disablesave: boolean;
@@ -153,6 +129,8 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 	private isDeleteMode: boolean = false;
 	isEditPaymentInfo: boolean = false;
 	pageSize: number = 10;
+	@Input() vendorId: number = 0;
+    @Input() isViewMode: boolean = false;
 
 	constructor(private http: HttpClient, private changeDetectorRef: ChangeDetectorRef, private router: ActivatedRoute, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public vendorService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
 
@@ -211,6 +189,35 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 			this.local = this.vendorService.listCollection;
 			this.loadData();
 		}
+	}
+
+	ngOnInit() {
+		
+		this.defaultSaveObj.defaultPaymentMethod = 1;
+		this.countrylist();
+		if (this.local) {
+
+			this.loadData();
+			this.defaultPaymentValue = true;
+			this.getDomesticWithVendorId();
+			this.InternatioalWithVendorId();
+			this.DefaultWithVendorId();
+			this.showDefault();
+
+		}
+		//this.countrylist();
+		// this.options = {
+		// 	center: { lat: 36.890257, lng: 30.707417 },
+		// 	zoom: 12
+		// };
+		this.getbencus();
+		if(this.vendorId != 0) {
+            this.loadData();
+        } else {
+            this.vendorService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-payment-information';
+			this.vendorService.bredcrumbObj.next(this.vendorService.currentUrl);
+        }
+
 	}
 
 	ngAfterViewInit() {
@@ -334,7 +341,8 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 	private loadData() {
 		this.alertService.startLoadingMessage();
 		this.loadingIndicator = true;
-		this.vendorService.getCheckPaymentobj(this.local.vendorId).subscribe(
+		const vendorId = this.vendorId != 0 ? this.vendorId : this.local.vendorId;
+		this.vendorService.getCheckPaymentobj(vendorId).subscribe(
 			results => this.onDataLoadSuccessful(results[0]),
 			error => this.onDataLoadFailed(error)
 		);
@@ -609,22 +617,22 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 		);
 	}
 
-	getlatlng(address) {
-		this.checkAddress = true;
-		return this.http.get('https://maps.googleapis.com/maps/api/geocode/json?address=' + address + '&key=AIzaSyB_W96L25HhFWgqLblcikircQKjU6bgTgk').subscribe((data: any) => {
-			this.options = {
-				center: { lat: data.results[0].geometry.location.lat, lng: data.results[0].geometry.location.lng },
-				zoom: 50
-			};
-			this.overlays = [
-				new google.maps.Marker({ position: { lat: data.results[0].geometry.location.lat, lng: data.results[0].geometry.location.lng }, title: "" }),
+	// getlatlng(address) {
+	// 	this.checkAddress = true;
+	// 	return this.http.get('https://maps.googleapis.com/maps/api/geocode/json?address=' + address + '&key=AIzaSyB_W96L25HhFWgqLblcikircQKjU6bgTgk').subscribe((data: any) => {
+	// 		this.options = {
+	// 			center: { lat: data.results[0].geometry.location.lat, lng: data.results[0].geometry.location.lng },
+	// 			zoom: 50
+	// 		};
+	// 		this.overlays = [
+	// 			new google.maps.Marker({ position: { lat: data.results[0].geometry.location.lat, lng: data.results[0].geometry.location.lng }, title: "" }),
 
-				new google.maps.Circle({ center: { lat: 36.90707, lng: 30.56533 }, fillColor: '#1976D2', fillOpacity: 0.35, strokeWeight: 1, radius: 1500 }),
-				new google.maps.Polyline({ path: [{ lat: 36.86149, lng: 30.63743 }, { lat: 36.86341, lng: 30.72463 }], geodesic: true, strokeColor: '#FF0000', strokeOpacity: 0.5, strokeWeight: 2 })
-			];
-			return data;
-		});
-	}
+	// 			new google.maps.Circle({ center: { lat: 36.90707, lng: 30.56533 }, fillColor: '#1976D2', fillOpacity: 0.35, strokeWeight: 1, radius: 1500 }),
+	// 			new google.maps.Polyline({ path: [{ lat: 36.86149, lng: 30.63743 }, { lat: 36.86341, lng: 30.72463 }], geodesic: true, strokeColor: '#FF0000', strokeOpacity: 0.5, strokeWeight: 2 })
+	// 		];
+	// 		return data;
+	// 	});
+	// }
 
 	onBlurMethod(data) {
 		if (data == 'siteName') {

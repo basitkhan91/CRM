@@ -102,7 +102,7 @@
                                                     <select name="generalCurrencyId" [(ngModel)]="savedGeneralInformationData.generalCurrencyId" required>
                                                         <option class="form-control" *ngFor="let currencyName of allCurrencyInfo"
                                                                 [ngValue]="currencyName.currencyId">
-                                                            {{currencyName.symbol}}
+                                                            {{currencyName.code}}
                                                         </option>
                                                     </select>
                                                 </div>                                           

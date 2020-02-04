@@ -151,7 +151,7 @@ export class VendorMemoComponent implements OnInit {
 	}
 
 	backClick() {
-		this.activeIndex = 9;
+		this.activeIndex = 8;
 		this.vendorService.changeofTab(this.activeIndex);
 		// this.vendorService.indexObj.next(this.activeIndex);
 		// this.vendorService.changeStep('Warnings');

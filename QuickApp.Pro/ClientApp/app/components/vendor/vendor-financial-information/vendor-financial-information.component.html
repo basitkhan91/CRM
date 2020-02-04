@@ -73,7 +73,7 @@
                                 <select class="form-control" name="currencyId" [(ngModel)]="sourceVendor.currencyId" (change)="validateCurrency(sourceVendor.currencyId)" required>
                                     <option value="0">Select Currency</option>
                                     <ng-container *ngFor="let currencyName of allCurrencyInfo">
-                                        <option *ngIf="currencyName.isActive" [ngValue]="currencyName.currencyId">{{currencyName.symbol}}</option>
+                                        <option *ngIf="currencyName.isActive" [ngValue]="currencyName.currencyId">{{currencyName.code}}</option>
                                     </ng-container>
                                 </select>
                             </div>
