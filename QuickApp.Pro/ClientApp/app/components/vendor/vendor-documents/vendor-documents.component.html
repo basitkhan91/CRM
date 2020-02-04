@@ -363,7 +363,9 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label style="float: none;">Attachments <span class="clr-red">*</span></label>
-                                <p-fileUpload #fileUpload   name="fileupload[]" multiple="multiple" [showCancelButton]="false" [showUploadButton]="false" customUpload="true" (onSelect)="fileUploadForDocuments($event)" ></p-fileUpload>
+                                <p-fileUpload #fileUpload   name="fileupload[]" multiple="multiple" [showCancelButton]="false" [showUploadButton]="false" customUpload="true" 
+
+                                (onSelect)="fileUploadForDocuments($event)" ></p-fileUpload>
                             </div>
                         </div>
                         <!-- <div class="table-responsive table-overflow">

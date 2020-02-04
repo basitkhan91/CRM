@@ -475,6 +475,9 @@ export class CustomerService {
     updateCustomerTaxTypeRate(data){
         return this.customerEndpoint.updateCustomerTaxTypeRate(data);
     }
+    getAuditHistoryForTaxType(customerTaxTypeRateMappingId){
+        return this.customerEndpoint.getAuditHistoryForTaxType(customerTaxTypeRateMappingId);
+    }
     newItemMasterAircarftClass(action: any) {
         return this.customerEndpoint.getNewitemAircraftEndpoint<any>(action);
     }
