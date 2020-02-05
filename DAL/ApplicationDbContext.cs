@@ -494,6 +494,10 @@ namespace DAL
         public DbSet<Master1099> Master1099 { get; set; }
         public DbSet<VendorProcess1099> VendorProcess1099 { get; set; }
         public DbSet<VendorCapabilityAircraft> VendorCapabilityAircraft { get; set; }
+        public DbSet<VendorInternationalShipping> VendorInternationalShipping { get; set; }
+        public DbSet<VendorInternationalShippingAudit> VendorInternationalShippingAudit { get; set; }
+        public DbSet<VendorInternationalShipViaDetails> VendorInternationalShipViaDetails { get; set; }
+        public DbSet<VendorInternationalShipViaDetailsAudit> VendorInternationalShipViaDetailsAudit { get; set; }
 
 
 
