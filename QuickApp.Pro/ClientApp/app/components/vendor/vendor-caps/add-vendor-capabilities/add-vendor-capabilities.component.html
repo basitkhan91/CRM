@@ -15,7 +15,7 @@
 						<div class="row" style="padding: 0 5px;" *ngIf="isEnableVendor">
                             <div class="col-md-4" *ngIf="vendorName">
                                 <label class="fs12" style="width: auto;">Vendor Name : </label>
-                                <span class="span-header-red"> {{ vendorName }}</span>
+                                <span class="span-header-red"> {{ getVendorName() }}</span>
                             </div>
                             <div class="col-md-4" *ngIf="vendorCode">
                                 <label class="fs12" style="width: auto;">Vendor Code : </label>

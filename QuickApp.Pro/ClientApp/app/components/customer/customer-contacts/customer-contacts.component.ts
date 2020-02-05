@@ -33,8 +33,9 @@ export class CustomerContactsComponent implements OnInit {
 	@Input() editMode;
 	@Input() editGeneralInformationData;
 
-	@Input() add_ataChapterList;
-
+    @Input() add_ataChapterList;
+    @Input() search_ataChapterList;
+    @Input() search_ataChapterList1;
 	// @Input() ataListDataValues;
 	@Output() tab = new EventEmitter<any>();
 	@Output() saveCustomerContactATAMapped = new EventEmitter();
@@ -65,7 +66,7 @@ export class CustomerContactsComponent implements OnInit {
 	disableSaveMiddleName: boolean;
 	disableSaveLastName: boolean;
 	disablesaveForlastname: boolean;
-
+    //ataChapterEditData: any;
 	customerContactsColumns = [
 		{ field: 'isDefaultContact', header: 'Primary Contact' },
 		{ field: 'tag', header: 'Tag' },
@@ -101,20 +102,38 @@ export class CustomerContactsComponent implements OnInit {
 	sourceViewforContact: any;
 	add_SelectedId: any;
 	add_SelectedModels: any;
-	add_ataSubChapterList: any;
+    add_ataSubChapterList: any;
+    search_ataSubChapterList: any;
+    search_ataSubChapterList1: any;
 	selectedContact: any;
 	ataHeaders = [
 		{ field: 'ataChapterName', header: 'ATA Chapter' },
 		{ field: 'ataSubChapterDescription', header: 'ATA Sub-Chapter' }
 	]
 	ataListDataValues = []
-	auditHistory: any[] = [];
+    auditHistory: any[] = [];
+    auditHistory1: any[] = [];
 	@ViewChild('ATAADD') myModal;
 	originalATASubchapterData: any = [];
 	isViewMode: boolean = false;
+    ataChapterEditDat =
+        {
+            ataChapterId: null,
+            ataSubChapterId:null,
+            isActive: true,
+            isDeleted: false,
+            customerContactATAMappingId:0,
+            masterCompanyId: 1,
+            createdBy: "",
+            updatedBy: "",
+            createdDate: new Date(),
+            customerContactId:0,
+            ataChapterName: "",
+            ataSubChapterDescription:"",
 
+        }
 	
-
+    ataChapterEditData = { ...this.ataChapterEditDat };
 	constructor(private router: ActivatedRoute,
 
 		private route: Router,
@@ -165,7 +184,8 @@ export class CustomerContactsComponent implements OnInit {
 			}
 		}
 
-		this.getAllContacts();
+        this.getAllContacts();
+       
 		// this.getATACustomerContactMapped();
 
 	}
@@ -419,14 +439,40 @@ export class CustomerContactsComponent implements OnInit {
 		this.add_ataSubChapterList = '';
 		this.getOriginalATASubchapterList()
 		this.getATACustomerContactMapped();
-
+        this.getATASubChapter();
 
 	}
 	dismissModel() {
 		this.modal.close();
 	}
 
+    getATASubChapter() {
 
+       
+        this.atasubchapter1service.getAtaSubChaptersList().subscribe(atasubchapter => {
+            const responseData = atasubchapter[0];
+            console.log(this.add_ataSubChapterList, "this.add_ataSubChapterList++++=")
+            this.add_ataSubChapterList = responseData.map(x => {
+                return {
+                    label: x.ataSubChapterCode + ' - ' + x.description,
+                    value: x
+                }
+            })
+            this.search_ataSubChapterList = responseData.map(x => {
+                return {
+                    value: x.ataSubChapterId,
+                    label: x.ataSubChapterCode + ' - ' + x.description
+                }
+            })
+            this.search_ataSubChapterList1 = responseData.map(x => {
+                return {
+                    value: x.ataSubChapterId,
+                    label: x.description
+                }
+            })
+
+        })
+    }
 
 	// get subchapter by Id in the add ATA Mapping
 	getATASubChapterByATAChapter() {
@@ -563,6 +609,11 @@ export class CustomerContactsComponent implements OnInit {
 
 	nextClick() {
 		this.tab.emit('AircraftInfo');
+		this.alertService.showMessage(
+			'Success',
+			` ${this.editMode ? 'Updated' : 'Saved'  } Customer Contacts Sucessfully `,
+			MessageSeverity.success
+		);
 
 	}
 	backClick() {
@@ -682,7 +733,83 @@ export class CustomerContactsComponent implements OnInit {
 		}
 
 	}
+    editContactATAChapters(rowData)
+    {
+        console.log(rowData, 'ataedit');
+        console.log(this.search_ataChapterList);
+        console.log(this.search_ataSubChapterList);
+        this.getATASubChapterByATAChapterID(rowData.ataChapterId)
+        this.ataChapterEditData = {
+            ...rowData,
+            //ataSubChapterId: getObjectById('label', rowData.ataSubChapterId, this.search_ataSubChapterList)
+        }
+       
+       
 
+      
+        
+    }
+
+
+
+    getATAAuditHistoryById(rowData) {
+        this.customerService.getCustomerContactATAAuditDetails(rowData.customerContactATAMappingId).subscribe(res => {
+            this.auditHistory1 = res;
+            
+        })
+    }
+    getColorCodeForHistoryATA(i, field, value) {
+        const data = this.auditHistory1;
+        const dataLength = data.length;
+        if (i >= 0 && i <= dataLength) {
+            if ((i + 1) === dataLength) {
+                return true;
+            } else {
+                return data[i + 1][field] === value
+            }
+        }
+    }
+    updateATAChapters() {
+        
+        this.ataChapterEditData = {
+            ...this.ataChapterEditData,
+            masterCompanyId: 1,
+            isActive: true,
+            createdBy: this.userName,
+            updatedBy: this.userName,
+            createdDate: new Date(),
+            customerContactId: this.selectedContact.contactId,
+         
+            ataChapterName: getValueFromArrayOfObjectById('label', 'value', this.ataChapterEditData.ataChapterId, this.search_ataChapterList1),
+
+            ataSubChapterDescription: getValueFromArrayOfObjectById('label', 'value', this.ataChapterEditData.ataSubChapterId, this.search_ataSubChapterList1),
+
+            
+        }
+        this.customerService.updateCustomerContactATAMApped(this.ataChapterEditData).subscribe(res => {
+            this.getATACustomerContactMapped();
+            this.alertService.showMessage(
+                'Success',
+                `Successfully Updated`,
+                MessageSeverity.success
+            );
+        })
+    }
+    getATASubChapterByATAChapterID(id) {
+
+       
+        this.atasubchapter1service.getATASubChapterListByATAChapterId(id).subscribe(atasubchapter => {
+        const responseData = atasubchapter[0];
+           // console.log(this.add_ataSubChapterList, "this.add_ataSubChapterList++++=")
+            this.search_ataSubChapterList = responseData.map(x => {
+                return {
+                    label: x.ataSubChapterCode + ' - ' + x.description,
+                    value: x.ataSubChapterId
+                }
+            })
+
+        })
+    }
 
 }
 

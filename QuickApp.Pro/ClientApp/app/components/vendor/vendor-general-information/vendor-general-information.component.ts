@@ -33,7 +33,7 @@ import { CustomerService } from '../../../services/customer.service';
 import { CommonService } from '../../../services/common.service';
 import { IntegrationService } from '../../../services/integration-service';
 import { ConfigurationService } from '../../../services/configuration.service';
-import { editValueAssignByCondition, getObjectById, getValueFromObjectByKey, selectedValueValidate } from '../../../generic/autocomplete';
+import { editValueAssignByCondition, getObjectById, getValueFromObjectByKey, selectedValueValidate, toLowerCaseOnInput } from '../../../generic/autocomplete';
 import { VendorStepsPrimeNgComponent } from '../vendor-steps-prime-ng/vendor-steps-prime-ng.component';
 import { emailPattern, urlPattern } from '../../../validations/validation-pattern';
 declare const google: any;
@@ -322,6 +322,9 @@ export class VendorGeneralInformationComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.vendorService.currentEditModeStatus.subscribe(message => {
+            this.isvendorEditMode = message; 
+        });
         // this.countrylist();
         // if(this.vendorService.listCollection == undefined){
         //     this.countrylist();
@@ -420,6 +423,7 @@ export class VendorGeneralInformationComponent implements OnInit {
         // }
 
     }
+    isvendorEditMode
 
     ngOnDestroy() {
 
@@ -615,12 +619,15 @@ export class VendorGeneralInformationComponent implements OnInit {
             this.sourceAction.classificationName = this.vendorClassName;
             this.sourceAction.masterCompanyId = 1;
             this.vendorclassificationService.newVendorClassification(this.sourceAction).subscribe(data => {
+
                 if (data) {
                     this.sourceVendor.vendorClassificationId = data.vendorClassificationId
                 }
                 this.alertService.showMessage("Success", 'Added New Vendor Classification Successfully.', MessageSeverity.success);
 
                 this.loadDataVendorData();
+                this.getAllVendorClassification();
+
             })
         }
         else {
@@ -633,6 +640,7 @@ export class VendorGeneralInformationComponent implements OnInit {
                 error => this.saveFailedHelper(error));
         }
         this.modal.close();
+
     }
 
     async getAllVendorClassification() {
@@ -675,7 +683,6 @@ export class VendorGeneralInformationComponent implements OnInit {
     }
 
 
-    //Load Vendor Data
     private loadDataVendorData() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
@@ -753,7 +760,7 @@ export class VendorGeneralInformationComponent implements OnInit {
 
 
     filterVendorParentNames(event) {
-        this.vendorParentNames = this.parentVendorOriginal;
+        this.vendorParentNames = this.parentVendorOriginal ? this.parentVendorOriginal :[] ;
 
         this.vendorParentNames = [...this.parentVendorOriginal.filter(x => {
             return x.vendorName.toLowerCase().includes(event.query.toLowerCase());
@@ -878,6 +885,12 @@ export class VendorGeneralInformationComponent implements OnInit {
         this.loadingIndicator = true;
         this.sourceVendor = row;
     }
+
+    convertUrlToLowerCase(event) {
+        const value = event.target.value;
+        event.target.value = toLowerCaseOnInput(value);
+    }
+
     editItemAndCloseModel(goNxt?: any) {
         this.isSaving = true;
         this.isEditMode = true;
@@ -1066,10 +1079,11 @@ export class VendorGeneralInformationComponent implements OnInit {
         }
         this.loadData();
     }
-
+    
     private savesuccessCompleted(user?: any, goNxt?: any) {
         this.isSaving = false;
-        this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
+        console.log("vendor service",this.vendorService.isEditMode);    
+        this.alertService.showMessage("Success", `${this.isvendorEditMode ? 'Updated' : 'Saved'  }  General Information  successfully`, MessageSeverity.success);
         if (goNxt === 'goNext') {
             this.nextClick();
         }

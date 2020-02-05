@@ -159,7 +159,7 @@ export class CustomerEndpoint extends EndpointFactory {
     private readonly excelUploadInterShipping: string = "/api/Customer/uploadcustomerinternationalshipping"
     private readonly excelUploadContact: string = "/api/Customer/uploadcustomercontacts"
     private readonly _internationalShipViaByShippingIdList: string = '/api/Customer/getinternationalshippingviadetails';
-
+    private readonly _customerContacATAHistory: string = '/api/Customer/getCustomerATAMappedAudit'
     get globalSearch() { return this.configurations.baseUrl + this.getGlobalCustomer; }
     get paginate() { return this.configurations.baseUrl + this.getCustomer; }
     get customerBillAddressUrl() { return this.configurations.baseUrl + this._customerBillAddressUrl; }
@@ -229,8 +229,9 @@ export class CustomerEndpoint extends EndpointFactory {
     get deleteShipVia() { return this.configurations.baseUrl + this._deleteShipVia; }
     get deleteCustomerDocuments() { return this.configurations.baseUrl + this._addRemoveDetails; }
     get InternatioanlShipViaByInternationalShippingId() { return this.configurations.baseUrl + this._internationalShipViaByShippingIdList }
+    get customerContacATAHistory() { return this.configurations.baseUrl + this._customerContacATAHistory }
 
-
+    
 
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
 
@@ -1429,6 +1430,19 @@ export class CustomerEndpoint extends EndpointFactory {
             .catch(error => {
                 return this.handleError(error, () => this.getInternationalShipViaByInternationalShippingId(id));
             });
+    }
+   
+    getCustomerContactATAAuditDetails<T>(customerContactATAMappingId: any): Observable<T> {
+        let url = `${this.customerContacATAHistory}/${customerContactATAMappingId}`;
+        return this.http.get<T>(url, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getIntegrationEndpoint(customerContactATAMappingId));
+            });
+    }
+
+    updateCustomerContactATAMApped(data) {
+        const url = `${this.configurations.baseUrl}/api/Customer/customercontactataupdate/${data.customerContactATAMappingId}`
+        return this.http.put(url, JSON.stringify(data), this.getRequestHeaders());
     }
 }
 

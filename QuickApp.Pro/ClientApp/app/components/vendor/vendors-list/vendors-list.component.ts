@@ -524,6 +524,7 @@ export class VendorsListComponent implements OnInit {
 
     //View Edit
     openEdit(row) {
+        this.vendorService.checkVendorEditmode(true);
         // this.isEditMode = true;
         // this.vendorService.isEditMode = true;
         // this.isSaving = true;
