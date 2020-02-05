@@ -134,6 +134,8 @@ export class VendorDocumentsComponent implements OnInit {
 
 
 	fileUploadForDocuments(event) {
+		console.log(event);
+
 		if (event.files.length === 0)
 			return;
 
@@ -141,6 +143,10 @@ export class VendorDocumentsComponent implements OnInit {
 			this.formData.append(file.name, file);
 		}
 		// fileUpload.clear();
+
+	}
+	removeFile(event) {
+		this.formData.delete(event.file.name)
 
 	}
 
