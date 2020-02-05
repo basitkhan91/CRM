@@ -24,6 +24,7 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<object> GetAircraftMapped(long customerId);
         IEnumerable<object> GetTaxTypeRateMapped(long customerId);
         IEnumerable<object> GetATAMapped(long customerId);
+        IEnumerable<object> GetATAMappedAudit(long CustomerContactATAMappingId);
         IEnumerable<object> GetATAContactMapped(long contactId);
 
         //IEnumerable <object> GetCustomerBynameList(string name);
@@ -66,9 +67,9 @@ namespace DAL.Repositories.Interfaces
         void UpdateDocumentDetails(CustomerDocumentDetail customerDocument);
         CustomerDocumentDetail GetCustomerDocumentDetailById(long id);
         IEnumerable<object> GetCustomerNameAndCodes(string value);
-        long AddCustomerShippingAddress(Customer objCustomer);
-        long AddCustomerBillinggAddress(Customer objCustomer);
-    		IEnumerable<object> GetCustomerNameAndCodesByCustomerId(long customerId);
+        long AddCustomerShippingAddress(Customer objCustomer, bool flag = true);
+        long AddCustomerBillinggAddress(Customer objCustomer, bool flag = true);
+        IEnumerable<object> GetCustomerNameAndCodesByCustomerId(long customerId);
         IEnumerable<object> SearchCustomer(string value, CustomerSearchType searchType);
         void DeleteRestrictedParts(long id, string updatedBy);
 
@@ -94,6 +95,8 @@ namespace DAL.Repositories.Interfaces
         void UploadCustomerInternationalCustomData(IFormFile file, long customerId);
         void UploadCustomerContactsCustomData(IFormFile file, long customerId);
         IEnumerable<object> GetInterShippingViaDetails(long internationalShippingId);
+
+        IEnumerable<object> CustomerTaxTypeRateInfoAudit(long CustomerTaxTypeRateMappingId);
 
     }
 

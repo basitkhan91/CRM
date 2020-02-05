@@ -56,6 +56,7 @@ export class VendorDocumentsComponent implements OnInit {
 	// id: number;
 	// customerCode: any;
 	// customerName: any;
+
 	sourceViewforDocument: any;
 	localCollection: any;
 	sourceViewforDocumentList: any = [];
@@ -75,7 +76,7 @@ export class VendorDocumentsComponent implements OnInit {
 	totalPages: number = 0;
 	@Input() vendorId: number = 0;
 	@Input() viewMode: boolean = false;
-	
+
 	constructor(public vendorService: VendorService, private router: ActivatedRoute, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService,
 		private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private configurations: ConfigurationService) {
 
@@ -131,7 +132,10 @@ export class VendorDocumentsComponent implements OnInit {
 
 
 
+
 	fileUploadForDocuments(event) {
+		console.log(event);
+
 		if (event.files.length === 0)
 			return;
 
@@ -139,6 +143,10 @@ export class VendorDocumentsComponent implements OnInit {
 			this.formData.append(file.name, file);
 		}
 		// fileUpload.clear();
+
+	}
+	removeFile(event) {
+		this.formData.delete(event.file.name)
 
 	}
 
@@ -181,7 +189,7 @@ export class VendorDocumentsComponent implements OnInit {
 			this.documentInformation.docDescription = '';
 			this.documentInformation.docMemo = '';
 			this.documentInformation.docName = '';
-			this.sourceViewforDocumentList= [];	
+			this.sourceViewforDocumentList = [];
 
 			this.formData = new FormData();
 			this.clearFileUpload();

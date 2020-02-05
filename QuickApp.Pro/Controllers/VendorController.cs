@@ -2277,6 +2277,8 @@ namespace QuickApp.Pro.Controllers
                     vendorContactObj.IsDeleted = false;
                     _unitOfWork.vendorContactRepository.Add(vendorContactObj);
                     _unitOfWork.SaveChanges();
+                    _unitOfWork.CommonRepository.ContactsHistory(Convert.ToInt64(vendorContactObj.VendorId), Convert.ToInt32(ModuleEnum.Vendor), Convert.ToInt64(vendorContactObj.VendorContactId), vendorContactObj.UpdatedBy);
+
                 }
 
             }
@@ -2407,18 +2409,26 @@ namespace QuickApp.Pro.Controllers
 
                 if (vendorContactViewModel.IsDefaultContact == true)
                 {
-                    var vendorConcatData = _unitOfWork.vendorContactRepository.GetAll().Where(p => p.VendorId == contactObj.VendorId && p.IsDefaultContact == true).ToList();
+                    var vendorConcatData = _unitOfWork.vendorContactRepository.GetAll().Where(p => p.VendorId == contactObj.VendorId && p.IsDefaultContact == true).FirstOrDefault();
 
-                    foreach (var objContactdata in vendorConcatData)
+                    if (vendorConcatData != null)
                     {
-                        objContactdata.IsDefaultContact = false;
-                        _unitOfWork.vendorContactRepository.Update(objContactdata);
+                        vendorConcatData.IsDefaultContact = false;
+                        vendorConcatData.UpdatedBy = vendorContactViewModel.UpdatedBy;
+                        vendorConcatData.UpdatedDate = DateTime.Now;
+                        _unitOfWork.vendorContactRepository.Update(vendorConcatData);
+
+                        _unitOfWork.SaveChanges();
+                        _unitOfWork.CommonRepository.ContactsHistory(Convert.ToInt64(vendorConcatData.VendorId), Convert.ToInt32(ModuleEnum.Vendor), Convert.ToInt64(vendorConcatData.VendorContactId), vendorConcatData.UpdatedBy);
                     }
-                    _unitOfWork.SaveChanges();
+
                 }
 
                 _unitOfWork.vendorContactRepository.Add(contactObj);
                 _unitOfWork.SaveChanges();
+                _unitOfWork.CommonRepository.ContactsHistory(Convert.ToInt64(contactObj.VendorId), Convert.ToInt32(ModuleEnum.Vendor), Convert.ToInt64(contactObj.VendorContactId), contactObj.UpdatedBy);
+
+
 
             }
 
@@ -2460,6 +2470,9 @@ namespace QuickApp.Pro.Controllers
                 VendorcontactObj.ContactId = contactViewModel.ContactId;
                 _unitOfWork.ContactRepository.Update(VendorcontactObj);
                 _unitOfWork.SaveChanges();
+                var contactObj = _unitOfWork.vendorContactRepository.GetSingleOrDefault(a => a.ContactId == id);
+                _unitOfWork.CommonRepository.ContactsHistory(Convert.ToInt64(contactObj.VendorId), Convert.ToInt32(ModuleEnum.Vendor), Convert.ToInt64(contactObj.VendorContactId), VendorcontactObj.UpdatedBy);
+
                 return Ok(VendorcontactObj);
             }
 
@@ -2472,12 +2485,15 @@ namespace QuickApp.Pro.Controllers
             {
                 var VendorpaymenttObj = _unitOfWork.vendorCheckPaymentRepository.GetSingleOrDefault(a => a.CheckPaymentId == id);
                 vendorPaymentViewModel.MasterCompanyId = 1;
-                //VendorpaymenttObj.IsActive = vendorPaymentViewModel.IsActive;
+                VendorpaymenttObj.IsActive =Convert.ToBoolean(vendorPaymentViewModel.IsActive);
                 VendorpaymenttObj.UpdatedDate = DateTime.Now;
                 VendorpaymenttObj.UpdatedBy = vendorPaymentViewModel.UpdatedBy;
                 VendorpaymenttObj.CheckPaymentId = vendorPaymentViewModel.CheckPaymentId;
                 _unitOfWork.vendorCheckPaymentRepository.Update(VendorpaymenttObj);
                 _unitOfWork.SaveChanges();
+
+                _unitOfWork.CommonRepository.ShippingBillingAddressHistory(Convert.ToInt64(VendorpaymenttObj.VendorId), Convert.ToInt32(ModuleEnum.Vendor), Convert.ToInt64(VendorpaymenttObj.CheckPaymentId), Convert.ToInt32(AddressTypeEnum.CheckPayment), VendorpaymenttObj.UpdatedBy);
+
                 return Ok(VendorpaymenttObj);
             }
 
@@ -2566,19 +2582,25 @@ namespace QuickApp.Pro.Controllers
 
                 if (Convert.ToBoolean(contactViewModel.IsDefaultContact) == true)
                 {
-                    var vendorConcatData = _unitOfWork.vendorContactRepository.GetAll().Where(p => p.VendorId == vendorContactObj.VendorId && p.IsDefaultContact == true).ToList();
+                    var vendorConcatData = _unitOfWork.vendorContactRepository.GetAll().Where(p => p.VendorId == vendorContactObj.VendorId && p.IsDefaultContact == true).FirstOrDefault();
 
-                    foreach (var objContactdata in vendorConcatData)
+                    if(vendorConcatData!= null && vendorConcatData.VendorContactId!= vendorContactObj.VendorContactId)
                     {
-                        objContactdata.IsDefaultContact = false;
-                        _unitOfWork.vendorContactRepository.Update(objContactdata);
+                        vendorConcatData.IsDefaultContact = false;
+                        vendorConcatData.UpdatedDate = DateTime.Now;
+                        vendorConcatData.UpdatedBy = contactViewModel.UpdatedBy;
+                        _unitOfWork.vendorContactRepository.Update(vendorConcatData);
+
+                        _unitOfWork.SaveChanges();
+                        _unitOfWork.CommonRepository.ContactsHistory(Convert.ToInt64(vendorConcatData.VendorId), Convert.ToInt32(ModuleEnum.Vendor), Convert.ToInt64(vendorConcatData.VendorContactId), vendorConcatData.UpdatedBy);
                     }
-                    _unitOfWork.SaveChanges();
                 }
                 vendorContactObj.IsDefaultContact = Convert.ToBoolean(contactViewModel.IsDefaultContact);
 
                 _unitOfWork.vendorContactRepository.Update(vendorContactObj);
                 _unitOfWork.SaveChanges();
+                _unitOfWork.CommonRepository.ContactsHistory(Convert.ToInt64(vendorContactObj.VendorId), Convert.ToInt32(ModuleEnum.Vendor), Convert.ToInt64(vendorContactObj.VendorContactId), vendorContactObj.UpdatedBy);
+
 
             }
 
@@ -2842,23 +2864,23 @@ namespace QuickApp.Pro.Controllers
                     var vendorConcatData = (from cp in _context.CheckPayment
                                             join vcp in _context.VendorCheckPayment on cp.CheckPaymentId equals vcp.CheckPaymentId
                                             where cp.IsPrimayPayment == true && vcp.VendorId == checkPaymentViewModel.VendorId
-                                            select cp).ToList();
+                                            select cp).FirstOrDefault();
 
-                    if (vendorConcatData.Count > 0)
+                    if (vendorConcatData != null)
                     {
-                        //foreach (var objContactdata in vendorConcatData)
-                        //{
-                        //    objContactdata.IsPrimayPayment = false;
-                        //   // _unitOfWork.vendorPaymentRepository.Update(objContactdata);
-                        //}
-                        vendorConcatData.ForEach(p => p.IsPrimayPayment = false);
-                        _unitOfWork.vendorPaymentRepository.UpdateRange(vendorConcatData);
+
+                        vendorConcatData.IsPrimayPayment = false;
+                        _unitOfWork.vendorPaymentRepository.Update(vendorConcatData);
                         _unitOfWork.SaveChanges();
+                        _unitOfWork.CommonRepository.ShippingBillingAddressHistory(Convert.ToInt64(checkPaymentViewModel.VendorId), Convert.ToInt32(ModuleEnum.Vendor), Convert.ToInt64(vendorConcatData.CheckPaymentId), Convert.ToInt32(AddressTypeEnum.CheckPayment), vendorConcatData.UpdatedBy);
+
                     }
                 }
 
                 _unitOfWork.vendorPaymentRepository.Add(checkPaymentObj);
                 _unitOfWork.SaveChanges();
+                _unitOfWork.CommonRepository.ShippingBillingAddressHistory(Convert.ToInt64(checkPaymentViewModel.VendorId), Convert.ToInt32(ModuleEnum.Vendor), Convert.ToInt64(checkPaymentObj.CheckPaymentId), Convert.ToInt32(AddressTypeEnum.CheckPayment), checkPaymentObj.UpdatedBy);
+           
                 return Ok(checkPaymentObj);
             }
 
@@ -2902,19 +2924,26 @@ namespace QuickApp.Pro.Controllers
                     var vendorConcatData = (from cp in _context.CheckPayment
                                             join vcp in _context.VendorCheckPayment on cp.CheckPaymentId equals vcp.CheckPaymentId
                                             where cp.IsPrimayPayment == true && vcp.VendorId == checkPaymentViewModel.VendorId
-                                            select cp).ToList();
+                                            select cp).FirstOrDefault();
 
-                    if (vendorConcatData.Count > 0)
+                    if (vendorConcatData != null && vendorConcatData.CheckPaymentId != checkPaymentObj.CheckPaymentId)
                     {
-                        vendorConcatData.ForEach(p => p.IsPrimayPayment = false);
-                        _unitOfWork.vendorPaymentRepository.UpdateRange(vendorConcatData);
+                        vendorConcatData.IsPrimayPayment = false;
+                        vendorConcatData.UpdatedBy = checkPaymentViewModel.UpdatedBy;
+                        vendorConcatData.UpdatedDate = DateTime.Now;
+                        _unitOfWork.vendorPaymentRepository.Update(vendorConcatData);
                         _unitOfWork.SaveChanges();
+                        _unitOfWork.CommonRepository.ShippingBillingAddressHistory(Convert.ToInt64(checkPaymentViewModel.VendorId), Convert.ToInt32(ModuleEnum.Vendor), Convert.ToInt64(vendorConcatData.CheckPaymentId), Convert.ToInt32(AddressTypeEnum.CheckPayment), vendorConcatData.UpdatedBy);
+
+
                     }
                 }
                 checkPaymentObj.IsPrimayPayment = checkPaymentViewModel.IsPrimayPayment;
 
                 _unitOfWork.vendorPaymentRepository.Update(checkPaymentObj);
                 _unitOfWork.SaveChanges();
+                _unitOfWork.CommonRepository.ShippingBillingAddressHistory(Convert.ToInt64(checkPaymentViewModel.VendorId), Convert.ToInt32(ModuleEnum.Vendor), Convert.ToInt64(checkPaymentObj.CheckPaymentId), Convert.ToInt32(AddressTypeEnum.CheckPayment), checkPaymentObj.UpdatedBy);
+
                 return Ok(checkPaymentObj);
             }
 
@@ -3539,7 +3568,11 @@ namespace QuickApp.Pro.Controllers
 
             try
             {
-                var allVendorCheckDetails = _unitOfWork.Vendor.GetVendorsCheckAuditHistory(id);
+                //var allVendorCheckDetails = _unitOfWork.Vendor.GetVendorsCheckAuditHistory(id);
+
+                var data = _context.VendorCheckPayment.Where(p => p.CheckPaymentId == id).FirstOrDefault();
+                var allVendorCheckDetails = _unitOfWork.CommonRepository.GetShippingBillingAddressAudit(data.VendorId, id, Convert.ToInt32(AddressTypeEnum.CheckPayment), Convert.ToInt32(ModuleEnum.Vendor));
+
                 return Ok(allVendorCheckDetails);
 
             }
@@ -4329,7 +4362,10 @@ namespace QuickApp.Pro.Controllers
         [ApiExplorerSettings(IgnoreApi = true)]
         public IActionResult GetAllVendorrContactAddressAudit(long vendorId, long vendorContactId)
         {
-            var allVendorShippingDetails = _unitOfWork.ContactRepository.GetVendorContactsAudit(vendorId, vendorContactId);
+            var contact = _context.VendorContact.Where(p => p.ContactId == vendorContactId && p.VendorId == vendorId).FirstOrDefault();
+
+            var allVendorShippingDetails = _unitOfWork.CommonRepository.GetContactAudit(vendorId, Convert.ToInt32(ModuleEnum.Vendor), contact.VendorContactId);
+            //var allVendorShippingDetails = _unitOfWork.ContactRepository.GetVendorContactsAudit(vendorId, vendorContactId);
             return Ok(allVendorShippingDetails);
         }
 
@@ -4813,6 +4849,9 @@ namespace QuickApp.Pro.Controllers
                 VendorDocumentDetails objVendorDocumentDetail = new VendorDocumentDetails();
                 if (ModelState.IsValid)
                 {
+                    long attachmentId = 0;
+                    long documentDeatailId = 0;
+
                     if (Request.Form == null)
                         return BadRequest($"{nameof(objVendorDocumentDetail)} cannot be null");
 
@@ -4843,7 +4882,10 @@ namespace QuickApp.Pro.Controllers
                              Convert.ToInt32(ModuleEnum.Vendor), Convert.ToString(ModuleEnum.Vendor), vendorDocObj.UpdatedBy, vendorDocObj.MasterCompanyId);
                             _unitOfWork.VendorDocumentDetails.Update(vendorDocObj);
                             _unitOfWork.SaveChanges();
+                          
                         }
+                        attachmentId = vendorDocObj.AttachmentId;
+                        documentDeatailId = vendorDocObj.VendorDocumentDetailId;
 
 
                     }
@@ -4864,10 +4906,40 @@ namespace QuickApp.Pro.Controllers
                                                                             Convert.ToInt32(ModuleEnum.Vendor), Convert.ToString(ModuleEnum.Vendor), objVendorDocumentDetail.UpdatedBy, objVendorDocumentDetail.MasterCompanyId);
                         _unitOfWork.VendorDocumentDetails.Add(objVendorDocumentDetail);
                         _unitOfWork.SaveChanges();
+                        documentDeatailId = objVendorDocumentDetail.VendorDocumentDetailId;
+
+                        attachmentId = objVendorDocumentDetail.AttachmentId;
                     }
+                    if (documentDeatailId != null)
+                    {
+                        DocumentsAudit obj = new DocumentsAudit();
 
+                        obj.UpdatedDate = obj.CreatedDate = DateTime.Now;
+                        obj.CreatedBy = obj.UpdatedBy = Request.Form["UpdatedBy"];
+                        obj.MasterCompanyId = 1;
+                        obj.ModuleId = Convert.ToInt32(ModuleEnum.Vendor);
+                        obj.ReferenceId = Convert.ToInt64(Request.Form["VendorId"]);
+                        obj.AttachmentId = documentDeatailId;
+                        obj.DocDescription = Request.Form["DocDescription"];
+                        obj.DocMemo = Request.Form["DocMemo"];
+                        obj.DocName = Request.Form["DocName"];
+                        obj.IsActive = true;
+                        if (attachmentId != null)
+                        {
+                            var data = _context.AttachmentDetails.AsNoTracking().Where(p => p.AttachmentId == attachmentId).OrderByDescending(p => p.UpdatedDate).FirstOrDefault();
+                            if (data != null)
+                            {
 
+                                obj.FileName = data.FileName;
+                                obj.Link = data.Link;
+                                obj.Description = data.Description;
+                               
+                             }
+                        }
+                        _context.DocumentsAudit.Add(obj);
+                        _context.SaveChanges();
 
+                    }
                     return Ok(objVendorDocumentDetail);
                 }
                 return Ok(ModelState);
@@ -4947,7 +5019,10 @@ namespace QuickApp.Pro.Controllers
         [Produces(typeof(VendorDocumentDetailsAudit))]
         public IActionResult GetCustomerDocumentDetailAudit(long id)
         {
-            var allvendorsDoc = _unitOfWork.Vendor.GetVendorDocumentDetailsAudit(id);
+            var data = _context.VendorDocumentDetails.Where(p => p.VendorDocumentDetailId == id).FirstOrDefault();
+            var allvendorsDoc = _unitOfWork.CreateDocumentDetails.GetAllAudotHistoryById(id, data.VendorId, Convert.ToInt32(ModuleEnum.Vendor));
+
+            //var allvendorsDoc = _unitOfWork.Vendor.GetVendorDocumentDetailsAudit(id);
             return Ok(allvendorsDoc);
 
         }

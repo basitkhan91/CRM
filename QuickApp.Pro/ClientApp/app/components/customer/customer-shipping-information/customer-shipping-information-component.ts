@@ -30,7 +30,7 @@ export class CustomerShippingInformationComponent implements OnInit {
     @Output() tab = new EventEmitter();
     @Input() selectedCustomerTab: string = "";
     @Input() customerDataFromExternalComponents : any;
-
+    disableSave:boolean=true;
     domesticShippingInfo = new CustomerShippingModel()
     internationalShippingInfo = new CustomerInternationalShippingModel()
 
@@ -193,7 +193,15 @@ export class CustomerShippingInformationComponent implements OnInit {
         }
 
     }
-
+    enableSave() {
+        console.log('hello ,directive');
+               this.disableSave = false;
+       
+       } 
+       closeMyModel(type){
+           $(type).modal("hide");
+           this.disableSave=true;
+       }
 
     get userName(): string {
         return this.authService.currentUser ? this.authService.currentUser.userName : "";
@@ -244,7 +252,8 @@ export class CustomerShippingInformationComponent implements OnInit {
             })
         }
 
-
+        $("#addShippingInfo").modal("hide");
+           this.disableSave=true;
 
     }
 
@@ -554,6 +563,8 @@ export class CustomerShippingInformationComponent implements OnInit {
             })
 
         }
+        $("#addInternationalShippingInfo").modal("hide");
+        this.disableSave=true;
     }
 
     // get International shipping by customer id 

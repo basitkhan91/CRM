@@ -1,6 +1,6 @@
 ﻿import { Component, OnInit, AfterViewInit, ViewChild, Output, EventEmitter, Input, SimpleChanges } from '@angular/core';
 import { fadeInOut } from '../../../services/animations';
-
+import * as $ from 'jquery';
 import { Params, ActivatedRoute } from '@angular/router';
 import { Router, NavigationExtras } from '@angular/router';
 
@@ -43,7 +43,7 @@ export class CustomerContactsComponent implements OnInit {
 	@Output() refreshCustomerContactMapped = new EventEmitter();
     @Input() customerDataFromExternalComponents: any;
 
-
+	disableSave:boolean = true;
 	formData = new FormData();
 	totalRecords: any;
 	pageIndex: number = 0;
@@ -191,8 +191,15 @@ export class CustomerContactsComponent implements OnInit {
 		} 
 
       }
-
-
+	  enableSave() {
+     console.log('hello ,directive');
+            this.disableSave = false;
+    
+    } 
+	closeMyModel(){
+		$("#addContactDetails").modal("hide");
+		this.disableSave=true;
+	}
 
 	get userName(): string {
 		return this.authService.currentUser ? this.authService.currentUser.userName : "";
@@ -272,6 +279,8 @@ export class CustomerContactsComponent implements OnInit {
 					);
 				})
 		})
+		$("#addContactDetails").modal("hide");
+		this.disableSave=true;
 	}
 
 
@@ -329,6 +338,8 @@ export class CustomerContactsComponent implements OnInit {
 				MessageSeverity.success
 			);
 		});
+		$("#addContactDetails").modal("hide");
+		this.disableSave=true
 	}
 
 

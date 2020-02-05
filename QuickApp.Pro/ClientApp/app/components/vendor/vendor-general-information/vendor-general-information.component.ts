@@ -33,7 +33,7 @@ import { CustomerService } from '../../../services/customer.service';
 import { CommonService } from '../../../services/common.service';
 import { IntegrationService } from '../../../services/integration-service';
 import { ConfigurationService } from '../../../services/configuration.service';
-import { editValueAssignByCondition, getObjectById, getValueFromObjectByKey } from '../../../generic/autocomplete';
+import { editValueAssignByCondition, getObjectById, getValueFromObjectByKey, selectedValueValidate } from '../../../generic/autocomplete';
 import { VendorStepsPrimeNgComponent } from '../vendor-steps-prime-ng/vendor-steps-prime-ng.component';
 import { emailPattern, urlPattern } from '../../../validations/validation-pattern';
 declare const google: any;
@@ -150,6 +150,8 @@ export class VendorGeneralInformationComponent implements OnInit {
     emailPattern = emailPattern()
     urlPattern = urlPattern()
     parentVendorOriginal: any[];
+    forceSelectionOfVendorName: boolean = false;
+    selectedEditData: any;
 
 
 
@@ -174,7 +176,15 @@ export class VendorGeneralInformationComponent implements OnInit {
         this.dataSource = new MatTableDataSource();
 
 
+
         let vendorId = this.acRouter.snapshot.params['id'];
+        // if (this.acRouter.snapshot.params['id']) {
+        //     this.countrylist();
+        //     this.loadData();
+        // } else {
+        this.countrylist();
+        this.loadData();
+        // }
         console.log(vendorId);
 
 
@@ -183,7 +193,8 @@ export class VendorGeneralInformationComponent implements OnInit {
         // if (vendorId === null) {
         //     vendorId = this.vendorService.listCollection.vendorId;
         // }
-        this.countrylist();
+
+
 
 
         if (vendorId) {
@@ -193,6 +204,13 @@ export class VendorGeneralInformationComponent implements OnInit {
                 // this.vendorService.isEditMode = true;
                 // this.isSaving = true;
                 this.sourceVendor = res;
+
+
+
+                this.parentVendorList(res.vendorId);
+
+                this.forceSelectionOfVendorName = true;
+
                 // this.workFlowtService.isReset = true;
                 // // this.loadMasterCompanies();
 
@@ -204,11 +222,12 @@ export class VendorGeneralInformationComponent implements OnInit {
 
                 this.vendorService.indexObj.next(0);
 
-                this.vendorService.listCollection = this.sourceVendor;
+                this.vendorService.listCollection = this.sourceVendor
                 this.vendorService.enableExternal = true;
                 if (this.vendorService.listCollection !== undefined) {
                     this.vendorService.isEditMode = true;
                 }
+
 
                 this.editModeDataBinding();
 
@@ -304,7 +323,10 @@ export class VendorGeneralInformationComponent implements OnInit {
 
     ngOnInit(): void {
         // this.countrylist();
-
+        // if(this.vendorService.listCollection == undefined){
+        //     this.countrylist();
+        //     this.loadData();
+        // }
 
         // this.sourceVendor.vendorTypeId = 2;
 
@@ -317,16 +339,17 @@ export class VendorGeneralInformationComponent implements OnInit {
         // this.vendorService.indexObj.next(this.activeIndex);
         // if( this.vendorService.isEditMode = true){
         //     this.vendorService.listCollection = this.sourceVendor;
+
+
         this.editModeDataBinding();
         // }
 
 
 
-        this.loadData();
 
-        this.parentVendorOriginal = this.allActions;
-        console.log(this.parentVendorOriginal);
-        
+        // this.parentVendorOriginal = this.allActions;
+        // console.log(this.parentVendorOriginal);
+
         // console.log(this.parentVendorOriginal);
 
         // setTimeout(() => {
@@ -340,7 +363,7 @@ export class VendorGeneralInformationComponent implements OnInit {
 
         // }
         this.Capabilitydata();
-        this.countrylist();
+
         this.loadDataVendorData();
         this.getAllVendorCapabilities();
         this.getAllVendorClassification();
@@ -416,6 +439,7 @@ export class VendorGeneralInformationComponent implements OnInit {
 
             this.sourceVendor = this.vendorService.listCollection;
             console.log(this.sourceVendor);
+            this.sourceVendor.vendorName = getObjectById('vendorId', this.sourceVendor.vendorId, this.allActions);
             this.toGetVendorGeneralDocumentsList(this.sourceVendor.vendorId);
             this.sourceVendor.address1 = this.vendorService.listCollection.address1;
             this.sourceVendor.address2 = this.vendorService.listCollection.address2;
@@ -691,23 +715,32 @@ export class VendorGeneralInformationComponent implements OnInit {
 
 
     filterVendorNames(event) {
-        this.vendorNames = [];
-        for (let i = 0; i < this.allActions.length; i++) {
-            let vendorName = this.allActions[i].vendorName;
-            if (vendorName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-                this.VendorNamecoll.push([{
-                    "vendorId": this.allActions[i].vendorId,
-                    "vendorName": vendorName
-                }]),
-                    this.vendorNames.push(vendorName);
-            }
+
+        this.vendorNames = this.allActions;
+
+        if (event.query !== undefined && event.query !== null) {
+            const vendorName = [...this.allActions.filter(x => {
+                return x.vendorName.toLowerCase().includes(event.query.toLowerCase())
+            })]
+            this.vendorNames = vendorName;
         }
+        // this.vendorNames = [];
+        // for (let i = 0; i < this.allActions.length; i++) {
+        //     let vendorName = this.allActions[i].vendorName;
+        //     if (vendorName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+        //         this.VendorNamecoll.push([{
+        //             "vendorId": this.allActions[i].vendorId,
+        //             "vendorName": vendorName
+        //         }]),
+        //             this.vendorNames.push(vendorName);
+        //     }
+        // }
     }
 
 
 
     parentVendorList(id) {
-        console.log(id);
+
 
         this.parentVendorOriginal = [... this.allActions.filter(x => {
             if (x.vendorId != id) {
@@ -858,6 +891,7 @@ export class VendorGeneralInformationComponent implements OnInit {
             && this.sourceVendor.postalCode && this.sourceVendor.country && this.sourceVendor.vendorClassificationIds) {
 
             this.sourceVendor.country = editValueAssignByCondition('countries_id', this.sourceVendor.country);
+            this.sourceVendor.vendorParentId = editValueAssignByCondition('vendorId', this.sourceVendor.vendorParentId);
             console.log(this.sourceVendor);
             if (!this.sourceVendor.vendorId) {
                 this.sourceVendor.createdBy = this.userName;
@@ -868,7 +902,7 @@ export class VendorGeneralInformationComponent implements OnInit {
 
                 if (this.sourceVendor.parent) {
 
-                    this.sourceVendor.vendorParentId = editValueAssignByCondition('vendorId', this.sourceVendor.vendorParentId);
+
                     console.log(this.sourceVendor.vendorParentId);
 
 
@@ -889,6 +923,7 @@ export class VendorGeneralInformationComponent implements OnInit {
                     for (var key in vdata) {
                         this.formData.append(key, vdata[key]);
                     }
+                    this.sourceVendor.vendorName = editValueAssignByCondition('vendorName', this.sourceVendor.vendorName)
                     //this.vendorService.vendorGeneralDocumentUploadEndpoint(this.formData, this.sourceVendor.vendorId,3,'Vendor',this.userName,1);
                     this.vendorService.vendorGeneralFileUpload(this.formData).subscribe(res => {
                         this.formData = new FormData();
@@ -925,10 +960,12 @@ export class VendorGeneralInformationComponent implements OnInit {
             }
 
             else {
+                this.sourceVendor.vendorName = editValueAssignByCondition('vendorName', this.sourceVendor.vendorName)
                 this.sourceVendor.updatedBy = this.userName;
                 if (this.sourceVendor.parent == false || this.sourceVendor.parent == null) {
                     this.sourceVendor.vendorParentName = '';
                 }
+
 
                 if (this.sourceVendor.parent) {
                     this.sourceVendor.vendorParentId = editValueAssignByCondition('vendorId', this.sourceVendor.vendorParentId);
@@ -969,6 +1006,7 @@ export class VendorGeneralInformationComponent implements OnInit {
                         this.vendorService.financeCollection = this.localCollection;
                         this.vendorService.paymentCollection = this.localCollection;
                         this.vendorService.shippingCollection = this.localCollection;
+
                         // this.activeIndex = 0;
                         // this.stepper.changeStep(this.activeIndex);
                         // this.vendorService.indexObj.next(this.activeIndex);
@@ -985,6 +1023,12 @@ export class VendorGeneralInformationComponent implements OnInit {
     }
 
     nextClick() {
+        // this.sourceVendor.vendorName = editValueAssignByCondition('vendorName', this.sourceVendor.vendorName) 
+        // if (this.sourceVendor.parent) {
+        //     this.sourceVendor.vendorParentId = editValueAssignByCondition('vendorId', this.sourceVendor.vendorParentId);
+        // }
+        console.log(this.sourceVendor);
+
         this.vendorService.vendorgeneralcollection = this.local;
         // this.activeIndex = 1;
         // this.vendorService.indexObj.next(this.activeIndex);
@@ -1059,47 +1103,60 @@ export class VendorGeneralInformationComponent implements OnInit {
         this.msgs = [];
         this.msgs.push({ severity: 'info', summary: 'File Uploaded', detail: '' });
     }
-    eventHandler(event) {
-        if (event.target.value != "") {
-            let value = event.target.value.toLowerCase();
-            if (this.selectedActionName) {
-                if (value == this.selectedActionName.toLowerCase()) {
-                    this.disableSaveVenderName = true;
-                    this.disableSaveVenName = true;
-                }
-                else {
-                    this.disableSaveVenderName = false;
-                    this.disableSaveVenName = false;
-                }
-            }
-        }
-    }
-    onVendorselected(event) {
-        console.log(event);
+    // eventHandler(event) {
+    //     if (event.target.value != "") {
+    //         let value = event.target.value.toLowerCase();
+    //         if (this.selectedActionName) {
+    //             if (value == this.selectedActionName.toLowerCase()) {
+    //                 this.disableSaveVenderName = true;
+    //                 this.disableSaveVenName = true;
+    //             }
+    //             else {
+    //                 this.disableSaveVenderName = false;
+    //                 this.disableSaveVenName = false;
+    //             }
+    //         }
+    //     }
+    // }
+    onVendorselected(object) {
 
-        for (let i = 0; i < this.VendorNamecoll.length; i++) {
-            if (event == this.VendorNamecoll[i][0].vendorName) {
-                this.disableSaveVenName = true;
-                this.disableSave = true;
-                this.disableSaveVenderName = true;
-                this.selectedActionName = event;
-            }
+        if (this.vendorService.isEditMode === true) {
+            this.selectedEditData = this.sourceVendor
+        } else {
+            this.selectedEditData = undefined;
         }
+        const exists = selectedValueValidate('vendorName', object, this.selectedEditData);
+        console.log(exists);
+
+        this.parentVendorList(getValueFromObjectByKey('vendorId', object));
+        this.disableSaveVenderName = !exists;
+
+
+        // console.log(event);
+
+        // for (let i = 0; i < this.VendorNamecoll.length; i++) {
+        //     if (event == this.VendorNamecoll[i][0].vendorName) {
+        //         this.disableSaveVenName = true;
+        //         this.disableSave = true;
+        //         this.disableSaveVenderName = true;
+        //         this.selectedActionName = event;
+        //     }
+        // }
     }
 
-    checkVendorExist() {
-        this.disableSaveVenderName = false;
-        for (let i = 0; i < this.VendorNamecoll.length; i++) {
-            if (this.sourceVendor.vendorName == this.VendorNamecoll[i][0].vendorName) {
-                this.disableSaveVenName = true;
-                this.disableSave = true;
-                this.disableSaveVenderName = true;
-                this.selectedActionName = event;
-                return;
-            }
-        }
+    // checkVendorExist() {
+    //     this.disableSaveVenderName = false;
+    //     for (let i = 0; i < this.VendorNamecoll.length; i++) {
+    //         if (this.sourceVendor.vendorName == this.VendorNamecoll[i][0].vendorName) {
+    //             this.disableSaveVenName = true;
+    //             this.disableSave = true;
+    //             this.disableSaveVenderName = true;
+    //             this.selectedActionName = event;
+    //             return;
+    //         }
+    //     }
 
-    }
+    // }
 
     eventvendorHandler(event) {
         if (event.target.value != "") {

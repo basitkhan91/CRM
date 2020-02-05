@@ -193,8 +193,10 @@
                 <thead>
                     <tr>
                         <th>Document Name</th>
+
+                        <th>Description</th>
                         <th>Memo</th>
-                        <th>Description</th>                        
+                        <th>File Name</th>
                         <th>Updated By</th>
                         <th>Last Updated Time</th>
                         <th>Created By</th>
@@ -204,15 +206,17 @@
                 </thead>
                 <tbody>
                         <tr *ngFor="let audit of documentauditHisory">
-                                <tr *ngFor="let audit of documentauditHisory; let i = index;">                                       
-                                        <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'docName', audit.docName)  ? 'black' : 'red'  }">{{audit.docName}}</td>
-                                        <td [ngStyle]="{'color': getColorCodeForHistory(i, 'docDescription', audit.docDescription)  ? 'black' : 'red'  }">{{audit.docDescription}}</td>
-                                        <td [ngStyle]="{'color': getColorCodeForHistory(i, 'docMemo', audit.docMemo)  ? 'black' : 'red'  }">{{audit.docMemo}}</td>                                        
-                                        <td>{{audit.updatedBy}}</td>
-                                        <td>{{audit.updatedDate | date: 'dd-MM-yyyy h:mm a '}}</td>
-                                        <td>{{audit.createdBy}}</td>
-                                        <td>{{audit.createdDate | date: 'dd-MM-yyyy h:mm a '}}</td>
-                                </tr>                                    
+                        <tr *ngFor="let audit of documentauditHisory; let i = index;">
+                            <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'docName', audit.docName)  ? 'black' : 'red'  }">{{audit.docName}}</td>
+                            <td [ngStyle]="{'color': getColorCodeForHistory(i, 'docDescription', audit.docDescription)  ? 'black' : 'red'  }">{{audit.docDescription}}</td>
+                            <td [ngStyle]="{'color': getColorCodeForHistory(i, 'docMemo', audit.docMemo)  ? 'black' : 'red'  }">{{audit.docMemo}}</td>
+                            <td [ngStyle]="{'color': getColorCodeForHistory(i, 'fileName', audit.fileName)  ? 'black' : 'red'  }">{{audit.fileName}}</td>
+
+                            <td>{{audit.updatedBy}}</td>
+                            <td>{{audit.updatedDate | date: 'dd-MM-yyyy h:mm a '}}</td>
+                            <td>{{audit.createdBy}}</td>
+                            <td>{{audit.createdDate | date: 'dd-MM-yyyy h:mm a '}}</td>
+                        </tr>                                    
                 </tbody>
                
             </table>
@@ -345,7 +349,7 @@
                     <div class="form-row">
                         <div class="col-md-6">
 
-                            <input class="form-control" type="hidden" name="vendorDocumentDetailId" [(ngModel)]="documentInformation.vendorDocumentDetailId" required>
+                            <!--<input class="form-control" type="hidden" name="vendorDocumentDetailId" [(ngModel)]="documentInformation.vendorDocumentDetailId" required>-->
                             <div class="form-group">
                                 <label>Name <span class="clr-red">*</span></label>
                                 <input class="form-control" type="text" name="name" [(ngModel)]="documentInformation.docName" required>
@@ -363,7 +367,9 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label style="float: none;">Attachments <span class="clr-red">*</span></label>
-                                <p-fileUpload #fileUpload   name="fileupload[]" multiple="multiple" [showCancelButton]="false" [showUploadButton]="false" customUpload="true" (onSelect)="fileUploadForDocuments($event,fileUpload)" ></p-fileUpload>
+                                <p-fileUpload #fileUpload   name="fileupload[]" multiple="multiple" [showCancelButton]="false" [showUploadButton]="false" customUpload="true" 
+
+                                (onSelect)="fileUploadForDocuments($event)"  (onRemove)="removeFile($event)"></p-fileUpload>
                             </div>
                         </div>
                         <!-- <div class="table-responsive table-overflow">

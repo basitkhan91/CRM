@@ -435,9 +435,12 @@ export class CustomerEndpoint extends EndpointFactory {
         return this.http.post<any>(this.getCustomerATAPosttUrl, JSON.stringify(postData), this.getRequestHeaders())
 
     }
-    updateCustomerTaxTypeRate(data){
-        const url = `${this.configurations.baseUrl}/api/Customer/`
-        return this.http.put(url, JSON.stringify(data),this.getRequestHeaders());
+    updateCustomerTaxTypeRate(data) {
+        const url = `${this.configurations.baseUrl}/api/Customer/CustomerTaxTypeRateUpdate/${data.customerTaxTypeRateMappingId}`
+        return this.http.put(url, JSON.stringify(data), this.getRequestHeaders());
+    }
+    getAuditHistoryForTaxType(customerTaxTypeRateMappingId){
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/Customer/CustomerTaxTypeRateAudit/${customerTaxTypeRateMappingId}`)
     }
 
     getNewitemAircraftEndpoint<T>(userObject: any): Observable<T> {
