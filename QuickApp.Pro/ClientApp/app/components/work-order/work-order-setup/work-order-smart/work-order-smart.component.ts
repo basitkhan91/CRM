@@ -36,7 +36,7 @@ export class WorkOrderSmartComponent implements OnInit {
     priorityList: any;
     workOrderTypes: any;
     workOrderStatusList: any;
-    partNumberOriginalData: Object;
+   // partNumberOriginalData: Object;
     workOrderId: any;
     editWorkOrderGeneralInformation: any;
     workOrderGeneralInformation: workOrderGeneralInfo = new workOrderGeneralInfo();
@@ -72,7 +72,7 @@ export class WorkOrderSmartComponent implements OnInit {
         this.getAllEmployees();
         this.getAllWorkScpoes();
         this.getAllWorkOrderStages();
-        this.getMultiplePartsNumbers();
+        //this.getMultiplePartsNumbers();
         this.getAllPriority();
         this.getCurrency();
         this.getLegalEntity();
@@ -200,7 +200,7 @@ export class WorkOrderSmartComponent implements OnInit {
 
     getMultiplePartsNumbers() {
         this.workOrderService.getMultipleParts().pipe(takeUntil(this.onDestroy$)).subscribe(res => {
-            this.partNumberOriginalData = res;
+            //this.partNumberOriginalData = res;
         })
     }
 
