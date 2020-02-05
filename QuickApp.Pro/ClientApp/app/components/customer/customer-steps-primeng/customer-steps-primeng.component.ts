@@ -28,7 +28,8 @@ export class CustomerStepsPrimengComponent {
 	editGeneralInformationData: any;
 	employeeListOriginal: any[];
 	isDisabledSteps: boolean = false;
-	search_ataChapterList: any;
+    search_ataChapterList: any;
+    search_ataChapterList1: any;
 	add_ataChapterList: any;
 	ataListDataValues: any[] = [];
 	contactList: any;
@@ -332,7 +333,14 @@ export class CustomerStepsPrimengComponent {
 					value: x.ataChapterId,
 					label: x.ataChapterCode + '-' + x.ataChapterName
 				}
-			})
+            })
+
+            this.search_ataChapterList1 = responseData.map(x => {
+                return {
+                    value: x.ataChapterId,
+                    label:  x.ataChapterName
+                }
+            })
 		});
 	}
 

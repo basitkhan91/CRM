@@ -1477,6 +1477,26 @@ namespace QuickApp.Pro.Controllers
                 actionobject.UpdatedDate = DateTime.Now;
                 actionobject.CreatedBy = CustomerShippingDetailsViewModel.CreatedBy;
                 actionobject.UpdatedBy = CustomerShippingDetailsViewModel.UpdatedBy;
+                actionobject.IsPrimary = CustomerShippingDetailsViewModel.IsPrimary;
+
+                if (CustomerShippingDetailsViewModel.IsPrimary == true)
+                {
+                    var customerContact = _context.CustomerShipping.AsNoTracking().Where(p => p.CustomerShippingAddressId == CustomerShippingDetailsViewModel.CustomerShippingAddressId && p.IsPrimary == true).FirstOrDefault();
+
+                    if (customerContact != null)
+                    {
+
+                        customerContact.IsPrimary = false;
+                        customerContact.UpdatedDate = DateTime.Now;
+                        customerContact.UpdatedBy = CustomerShippingDetailsViewModel.UpdatedBy;
+                        _unitOfWork.CustomerShipping.Update(customerContact);
+                        _unitOfWork.SaveChanges();
+
+                    }
+
+
+
+                }
                 _unitOfWork.CustomerShipping.Add(actionobject);
                 _unitOfWork.SaveChanges();
                 return Ok(actionobject);
@@ -1510,6 +1530,40 @@ namespace QuickApp.Pro.Controllers
                 checkPaymentObj.UpdatedDate = DateTime.Now;
                 checkPaymentObj.CreatedBy = CustomerShippingViewModel.CreatedBy;
                 checkPaymentObj.UpdatedBy = CustomerShippingViewModel.UpdatedBy;
+
+                checkPaymentObj.IsPrimary = CustomerShippingViewModel.IsPrimary;
+                if (CustomerShippingViewModel.IsPrimary == true)
+                {
+                    var customerContact = _context.CustomerShipping.AsNoTracking().Where(p => p.CustomerShippingAddressId == CustomerShippingViewModel.CustomerShippingAddressId && p.IsPrimary == true).FirstOrDefault();
+
+                    if (customerContact != null && customerContact.CustomerShippingId != CustomerShippingViewModel.CustomerShippingId)
+                    {
+
+                        CustomerShipping model = new CustomerShipping();
+                        model.CustomerShippingId = customerContact.CustomerShippingId;
+                        model.UpdatedDate = DateTime.Now;
+                        model.IsPrimary = false;
+                        model.UpdatedBy = CustomerShippingViewModel.UpdatedBy;
+
+                        _context.CustomerShipping.Attach(model);
+
+                        _context.Entry(model).Property(x => x.IsPrimary).IsModified = true;
+                        _context.Entry(model).Property(x => x.UpdatedDate).IsModified = true;
+                        _context.Entry(model).Property(x => x.UpdatedBy).IsModified = true;
+
+                       
+
+                        //customerContact.IsPrimary = false;
+                        //customerContact.UpdatedDate = DateTime.Now;
+                        //customerContact.UpdatedBy = CustomerShippingViewModel.UpdatedBy;
+                        //_unitOfWork.CustomerShipping.Update(customerContact);
+                        
+                    }
+
+                }
+
+
+
                 _unitOfWork.CustomerShipping.Update(checkPaymentObj);
                 _unitOfWork.SaveChanges();
                 return Ok(checkPaymentObj);
