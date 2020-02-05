@@ -5059,13 +5059,16 @@ namespace DAL.Repositories
             }
         }
 
-        public IEnumerable<object> GetWorkOrderPartDetails()
+        public IEnumerable<object> GetWorkOrderPartDetails(long customerId)
         {
             try
             {
-                var list = (from sl in _appContext.StockLine
-                            join im in _appContext.ItemMaster on sl.ItemMasterId equals im.ItemMasterId
-                            where im.IsActive == true && (im.IsDeleted == false || im.IsDeleted == null)
+                var list = (from rc in _appContext.ReceivingCustomerWork
+                            join sl in _appContext.StockLine on rc.StockLineId equals sl.StockLineId
+                            join im in _appContext.ItemMaster on rc.ItemMasterId equals im.ItemMasterId
+                            join con in _appContext.Condition on rc.ConditionId equals con.ConditionId
+                            where rc.IsActive == true && rc.IsDeleted == false
+                            && rc.CustomerId==customerId
                             select new
                             {
                                 sl.ItemMasterId,
@@ -5073,16 +5076,12 @@ namespace DAL.Repositories
                                 im.PartDescription,
                                 im.DER,
                                 PMA = im.isPma,
-                                NTEOverhaulHours = im.OverhaulHours == null ? 0 : im.OverhaulHours,
-                                NTERepairHours = im.RPHours == null ? 0 : im.RPHours,
-                                NTEMfgHours = im.mfgHours == null ? 0 : im.mfgHours,
-                                NTEBenchTestHours = im.TestHours == null ? 0 : im.TestHours,
-                                TurnTimeOverhaulHours = im.TurnTimeOverhaulHours == null ? 0 : im.TurnTimeOverhaulHours,
-                                TurnTimeRepairHours = im.TurnTimeRepairHours == null ? 0 : im.TurnTimeRepairHours,
-                                TurnTimeMfg = im.turnTimeMfg == null ? 0 : im.turnTimeMfg,
-                                TurnTimeBenchTest = im.turnTimeBenchTest == null ? 0 : im.turnTimeBenchTest,
                                 RevisedPartId = im.RevisedPartId == null ? 0 : im.RevisedPartId,
-                                RevisedPartNo = im.RevisedPartId == null ? "" : (_appContext.ItemMaster.Where(p => p.ItemMasterId == im.RevisedPartId).Select(p => p.PartNumber).FirstOrDefault().ToString())
+                                RevisedPartNo = im.RevisedPartId == null ? "" : (_appContext.ItemMaster.Where(p => p.ItemMasterId == im.RevisedPartId).Select(p => p.PartNumber).FirstOrDefault().ToString()),
+                                Condition= con.Description,
+                                sl.StockLineNumber,
+                                sl.SerialNumber,
+
                             })
                             .Distinct()
                             .ToList();
