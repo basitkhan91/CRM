@@ -38,7 +38,7 @@
               >
               </p-autoComplete>
             </div>
-            <div class="form-group">
+            <div class="form-group" *ngIf="!isQuote">
               <label for="expertise">Expertise </label>
               <p-dropdown
               placeholder="Select Expertise Type"
@@ -48,7 +48,7 @@
                 [disabled]="isView"
               ></p-dropdown>
             </div>
-            <div class="form-group">
+            <div class="form-group" *ngIf="!isQuote">
               <label for="employee">Employee </label>
               <p-autoComplete
                 class="p-autoComplete-ctsm"
@@ -67,7 +67,7 @@
             </div>
           </div>
 
-          <div class="col-md-4 col-offset-3">
+          <div class="col-md-4 col-offset-3" *ngIf="!isQuote">
             <div class="form-group">
               <p-checkbox
                 class="p-checkbox-label"
@@ -79,7 +79,7 @@
               ></p-checkbox>
             </div>
 
-            <div class="form-group">
+            <div class="form-group" *ngIf="!isQuote">
               <p-radioButton
                 class="p-radiobutton-label-vertical"
                 name="WorkFloworSpecificTaskorWorkOrder"
@@ -109,7 +109,7 @@
         </div>
       </div>
     </div>
-    <div class="form-row">
+    <div class="form-row" *ngIf="!isQuote">
       <div class="form-group">
         <p-radioButton
           class="p-radiobutton-label-horizontal"
@@ -204,6 +204,12 @@
               ></p-radioButton>
             </div>
           </td>
+          <td></td>
+          <ng-container *ngIf="isQuote">
+            <td></td>
+            <td></td>
+            <td></td>
+          </ng-container>
         </tr>
         <tr>
           <th class="text-center padding-td">Tasks</th>
@@ -240,11 +246,27 @@
             <th>
               Direct Labor OH Cost
             </th>
+            <th>
+              Burden Rate Amount
+            </th>
+            <th>
+              Total Cost/Hour
+            </th>
+            <th>
+              Total Cost
+            </th>
+            <th>
+              Billing Method
+            </th>
             <th>Mark Up</th>
-            <th tooltop="Time & Materials">T&M Amount</th>
-            <th>Fixed Amount</th>
+            <th>
+              Billing Rate
+            </th>
+            <th>
+              Billing Amount
+            </th>
           </ng-container>
-          <th class="text-center" style="padding: 7px 53px !important;">
+          <th class="text-center" style="padding: 7px 53px !important;" *ngIf="!isQuote">
             Memo
           </th>
           <th *ngIf="!isView"></th>
@@ -285,6 +307,15 @@
             <td></td>
             <td></td>
             <td></td>
+            <ng-container *ngIf="isQuote">
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </ng-container>
             <td *ngIf="!isView">
             </td>
           </tr>
@@ -397,7 +428,7 @@
                   {{ rec.hours }}
                 </td>
                 <td *ngIf="laborForm.hoursorClockorScan === 1"> 
-                  <input type="number" (blur)="calculateHoursDifference(rec); calculateTaskHours(task);" [(ngModel)]="rec.hours" name="hours" [disabled]="checkDisability(rec, task.taskId) || isView"> 
+                  <input type="number" (blur)="calculateHoursDifference(rec); calculateTaskHours(task); calculateTotalCost(rec)" [(ngModel)]="rec.hours" name="hours" [disabled]="checkDisability(rec, task.taskId) || isView"> 
                 </td>
                 <ng-container *ngIf="!isQuote">
                   <td>
@@ -409,21 +440,37 @@
                 </ng-container>
                 <ng-container *ngIf="isQuote">
                   <td>
-                    <input type="number" [(ngModel)]="rec.directLaborOHCost" [disabled]="isView"/>
+                    <input type="number" (blur)="calculateTotalCost(rec)" [(ngModel)]="rec.directLaborOHCost" [disabled]="isView"/>
+                  </td>
+                  <td>
+                    <input type="number" (blur)="calculateTotalCost(rec)" [(ngModel)]="rec.burdenRateAmount" [disabled]="isView"/>
+                  </td>
+                  <td>
+                    {{ rec.totalCostPerHour }}
+                  </td>
+                  <td>
+                    {{ rec.totalCost }}
+                  </td>
+                  <td>
+                    <select class="form-control" [(ngModel)]="rec.billingMethod" style="width: 130px;">
+                      <option value="">Select</option>
+                      <option value="T&M">T&M</option>
+                      <option value="actual">Actual</option>
+                    </select>
                   </td>
                   <td>
                       <!-- <input [(ngModel)]="matQuotation.markup" /> -->
-                    <select class="form-control" (change)="markupChanged(rec, 'row')" [(ngModel)]="rec.markupPercentageId" style="width: 130px;" [disabled]="isView || laborForm['costPlusType'] != 'Mark Up'">
+                    <select class="form-control" (change)="markupChanged(rec, 'row')" [(ngModel)]="rec.markupPercentageId" style="width: 130px;" [disabled]="isView || rec.billingMethod != 'T&M'">
                       <option value="">Select</option>
                       <option *ngFor="let markUp of markupList" [value]="markUp.value">{{markUp.label}}</option>
                     </select>
                   </td>
-                  <td>{{ rec.labourCostPlus }}</td>
                   <td>
-                    <input type="number" [(ngModel)]="rec.fixedAmount" [disabled]="laborForm['costPlusType'] != 'Fixed Mat Price'"/>
+                      <input type="number" [(ngModel)]="rec.billingRate" [disabled]="isView || rec.billingMethod != 'actual'"/>
                   </td>
+                  <td>{{ rec.billingAmount }}</td>
                 </ng-container>
-                <td>
+                <td *ngIf="!isQuote">
                   <input type="text" [(ngModel)]="rec.memo" [disabled]="isView"/>
                 </td>
                 <td *ngIf="!isView">
@@ -462,9 +509,14 @@
                 <input type="number" [(ngModel)]="task.totalWorkHours" (change)="calculateTotalHours()" [disabled]="laborForm.workFloworSpecificTaskorWorkOrder == 'specificTasks'"/>
             </td>
             <td>{{getTotalLaborOHCost(laborForm.workOrderLaborList[0][task.description | lowercase])}}</td>
+            <td>{{getTotalLaborBurdenRate(laborForm.workOrderLaborList[0][task.description | lowercase])}}</td>
+            <td>{{getTotalCostPerHour(laborForm.workOrderLaborList[0][task.description | lowercase])}}</td>
+            <td>{{getTotalCost(laborForm.workOrderLaborList[0][task.description | lowercase])}}</td>
             <td></td>
-            <td>{{getTotalCostPlus(laborForm.workOrderLaborList[0][task.description | lowercase])}}</td>
-            <td>{{getTotalFixedAmount(laborForm.workOrderLaborList[0][task.description | lowercase])}}</td>
+            <td></td>
+            <td>{{getTotalBillingRate(laborForm.workOrderLaborList[0][task.description | lowercase])}}</td>
+            <td>{{getTotalBillingAmount(laborForm.workOrderLaborList[0][task.description | lowercase])}}</td>
+            <td></td>
             <td *ngIf="!isView">
             </td>
           </tr>
