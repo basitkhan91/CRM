@@ -64,6 +64,16 @@ namespace DAL.Models
         public string CertifiedBy { get; set; }
         [NotMapped]
         public string TagType { get; set; }
-
+        [NotMapped]
+        public string Condition { get; set; }
+        [NotMapped]
+        public string StockLineNumber { get; set; }
+        [NotMapped]
+        public string PartDescription { get; set; }
+        [NotMapped]
+        public string RevisedPartNo { get; set; }
+        [NotMapped]
+        public TimeLife TimeLife { get;set;}
+        
     }
 }

@@ -23,6 +23,6 @@ namespace DAL.Repositories.Interfaces
         ReceivingCustomerWork CreateReceivingCustomer(ReceivingCustomerWork receivingCustomer);
         ReceivingCustomerWork UpdateReceivingCustomer(ReceivingCustomerWork receivingCustomer);
         object GetPartDettails(long itemMasterId);
-
+        IEnumerable<object> ReceivingCustomers(string value);
     }
 }
