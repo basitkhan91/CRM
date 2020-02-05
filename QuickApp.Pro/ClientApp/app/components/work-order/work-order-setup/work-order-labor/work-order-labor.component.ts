@@ -431,17 +431,30 @@ console.log(this.workOrderLaborList);
     this.laborForm.workOrderLaborList[0][taskName.toLowerCase()][index].isDeleted = true;
   }
 
+  calculateTotalCost(rec){
+    if(rec['directLaborOHCost'] && rec['burdenRateAmount']){
+      rec.totalCostPerHour = Number(rec['directLaborOHCost'])+Number(rec['burdenRateAmount']);
+      if(rec.hours){
+        rec['totalCost'] = Number(rec.totalCostPerHour) * Number(rec.hours);
+      }
+    }
+  }
+
   markupChanged(matData, type) {
       try {
         this.markupList.forEach((markup)=>{
           if(type == 'row' && markup.value == matData.markupPercentageId){
-            matData.labourCostPlus = (matData.directLaborOHCost) + (((matData.directLaborOHCost) / 100) * Number(markup.label))
+            matData['billingRate'] = (matData['totalCostPerHour']) + (((matData['totalCostPerHour']) / 100) * Number(markup.label))
+            matData['billingAmount'] = Number(matData['billingRate']) * Number(matData.hours);
           }
           else if(type == 'all' && markup.value == this.overAllMarkup){
             for(let t in this.laborForm.workOrderLaborList[0]){
               for(let mData of this.laborForm.workOrderLaborList[0][t]){
-                mData.markupPercentageId = this.overAllMarkup;
-                mData.labourCostPlus = Number(mData.directLaborOHCost) + ((Number(mData.directLaborOHCost) / 100) * Number(markup.label))
+                if(mData['billingMethod'] == 'T&M'){
+                  mData.markupPercentageId = this.overAllMarkup;
+                  mData['billingRate'] = (mData['totalCostPerHour']) + (((mData['totalCostPerHour']) / 100) * Number(markup.label))
+                  mData['billingAmount'] = Number(mData['billingRate']) * Number(mData.hours);
+                }
               }
             }
             // this.materialListQuotation.forEach((mData)=>{
@@ -506,6 +519,56 @@ console.log(this.workOrderLaborList);
     for(let labor of taskList){
       if(labor.directLaborOHCost){
         total += labor.directLaborOHCost;
+      }
+    }
+    return total;
+  }
+
+  getTotalLaborBurdenRate(taskList){
+    let total = 0;
+    for(let labor of taskList){
+      if(labor.burdenRateAmount){
+        total += labor.burdenRateAmount;
+      }
+    }
+    return total;
+  }
+
+  getTotalCostPerHour(taskList){
+    let total = 0;
+    for(let labor of taskList){
+      if(labor.totalCostPerHour){
+        total += labor.totalCostPerHour;
+      }
+    }
+    return total;
+  }
+
+  getTotalCost(taskList){
+    let total = 0;
+    for(let labor of taskList){
+      if(labor.totalCost){
+        total += labor.totalCost;
+      }
+    }
+    return total;
+  }
+
+  getTotalBillingRate(taskList){
+    let total = 0;
+    for(let labor of taskList){
+      if(labor.billingRate){
+        total += labor.billingRate;
+      }
+    }
+    return total;
+  }
+
+  getTotalBillingAmount(taskList){
+    let total = 0;
+    for(let labor of taskList){
+      if(labor.billingAmount){
+        total += labor.billingAmount;
       }
     }
     return total;
