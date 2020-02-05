@@ -428,7 +428,7 @@
     <ng-template #contentHist let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static">
         <div class="modal-header">
 
-            <h4 class="modal-title">History of Action</h4>
+            <h4 class="modal-title">History of Payment Info</h4>
             <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
                 <span aria-hidden="true">&times;</span>
             </button>
@@ -449,24 +449,34 @@
                             <th>State</th>
                             <th>Postal Code</th>
                             <th>Country</th>
-                            <th>Status</th>
+                            <th>Is Primary</th>
+                            <th>Is Active</th>
+                            <th>Created By</th>
+                            <th>Created Date</th>
                             <th>Updated By</th>
                             <th>Updated Date</th>
                         </tr>
                     </thead>
-                    <tr *ngFor="let audit of auditHisory">
-                        <!-- <td>{{audit.auditHistoryId}}</td> -->
-                        <td>{{audit.siteName}}</td>
-                        <td>{{audit.address1}}</td>
-                        <td>{{audit.address2}}</td>
-                        <td>{{audit.city}}</td>
-                        <td>{{audit.stateOrProvince}}</td>
-                        <td>{{audit.postalCode}}</td>
-                        <td>{{audit.country}}</td>
-                        <td>{{audit.isActive}}</td>
-                        <td>{{audit.updatedBy}}</td>
-                        <td>{{audit.updatedDate | date: 'MM/dd/yyyy'}}</td>
-                    </tr>
+                    <tbody class="audithistory-cstm">
+                        <tr *ngFor="let audit of auditHisory;let i = index;">
+                            <!-- <td>{{audit.auditHistoryId}}</td> -->
+                            <td [ngStyle]="{'color': getColorCodeForHistory(i, 'siteName', audit.siteName)  ? 'black' : 'red'  }">{{audit.siteName}}</td>
+                            <td [ngStyle]="{'color': getColorCodeForHistory(i, 'address1', audit.address1)  ? 'black' : 'red'  }">{{audit.address1}}</td>
+                            <td [ngStyle]="{'color': getColorCodeForHistory(i, 'address2', audit.address2)  ? 'black' : 'red'  }">{{audit.address2}}</td>
+                            <td [ngStyle]="{'color': getColorCodeForHistory(i, 'city', audit.city)  ? 'black' : 'red'  }">{{audit.city}}</td>
+                            <td [ngStyle]="{'color': getColorCodeForHistory(i, 'stateOrProvince', audit.stateOrProvince)  ? 'black' : 'red'  }">{{audit.stateOrProvince}}</td>
+                            <td [ngStyle]="{'color': getColorCodeForHistory(i, 'postalCode', audit.postalCode)  ? 'black' : 'red'  }">{{audit.postalCode}}</td>
+                            <td [ngStyle]="{'color': getColorCodeForHistory(i, 'countryName', audit.countryName)  ? 'black' : 'red'  }">{{audit.country}}</td>
+                            <td [ngStyle]="{'color': getColorCodeForHistory(i, 'isPrimary', audit.isPrimary)  ? 'black' : 'red'  }">{{audit.isPrimary}}</td>
+
+                            <td [ngStyle]="{'color': getColorCodeForHistory(i, 'isActive', audit.isActive)  ? 'black' : 'red'  }">{{audit.isActive}}</td>
+                            <td>{{audit.createdBy}}</td>
+                            <td>{{audit.createdDate | date: 'dd-MM-yyyy h:mm a ' }}</td>
+
+                            <td>{{audit.updatedBy}}</td>
+                            <td>{{audit.updatedDate | date: 'dd-MM-yyyy h:mm a ' }}</td>
+                        </tr>
+                        </tbody>
                 </table>
             </div>
         </div>

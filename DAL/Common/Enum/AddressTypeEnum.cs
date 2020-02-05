@@ -9,6 +9,7 @@ namespace DAL.Common
     {
         BillingAddress = 1,
         ShippingAddress,
+        CheckPayment,
         
     }
 }

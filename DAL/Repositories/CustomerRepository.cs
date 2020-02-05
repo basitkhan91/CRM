@@ -1880,104 +1880,103 @@ namespace DAL.Repositories
         ///  Added By vijay on 12/11/2019
         /// </summary>
         /// <param name="objCustomer"></param>
-        public long AddCustomerShippingAddress(Customer objCustomer)
+        public long AddCustomerShippingAddress(Customer objCustomer, bool flag = true)
         {
+
             long shippingAddressId = 0;
-            CommonRepository commonRepository = new CommonRepository(_appContext);
-
-          
-            var custShipping = _appContext.CustomerShippingAddress.Where(p => p.CustomerId == objCustomer.CustomerId && p.IsPrimary == true).AsNoTracking().FirstOrDefault();
-            CustomerShippingAddress data = _appContext.CustomerShippingAddress.Where(p => p.AddressId == objCustomer.AddressId && p.CustomerId == objCustomer.CustomerId).AsNoTracking().FirstOrDefault();
-            if (data != null)
+            if (flag == true)
             {
-                if (custShipping != null && data.CustomerShippingAddressId != custShipping.CustomerShippingAddressId)
+                CommonRepository commonRepository = new CommonRepository(_appContext);
+
+
+                var custShipping = _appContext.CustomerShippingAddress.Where(p => p.CustomerId == objCustomer.CustomerId && p.IsPrimary == true).AsNoTracking().FirstOrDefault();
+                CustomerShippingAddress data = _appContext.CustomerShippingAddress.Where(p => p.AddressId == objCustomer.AddressId && p.CustomerId == objCustomer.CustomerId).AsNoTracking().FirstOrDefault();
+
+                if (data != null)
                 {
-                    CustomerShippingAddress ba = new CustomerShippingAddress();
+                    if (custShipping != null && data.CustomerShippingAddressId != custShipping.CustomerShippingAddressId)
+                    {
+                        CustomerShippingAddress ba = new CustomerShippingAddress();
 
-                    ba.CustomerShippingAddressId = custShipping.CustomerShippingAddressId;
-                    ba.UpdatedDate = DateTime.Now;
-                    ba.UpdatedBy = objCustomer.UpdatedBy;
-                    ba.IsPrimary = false;
+                        ba.CustomerShippingAddressId = custShipping.CustomerShippingAddressId;
+                        ba.UpdatedDate = DateTime.Now;
+                        ba.UpdatedBy = objCustomer.UpdatedBy;
+                        ba.IsPrimary = false;
 
-                    _appContext.CustomerShippingAddress.Attach(ba);
-                    _appContext.Entry(ba).Property(x => x.IsPrimary).IsModified = true;
-                    _appContext.Entry(ba).Property(x => x.UpdatedDate).IsModified = true;
-                    _appContext.Entry(ba).Property(x => x.UpdatedBy).IsModified = true;
-                    _appContext.SaveChanges();
-                    //custShipping.IsPrimary = false;
-                    //_appContext.CustomerShippingAddress.Update(custShipping);
-                    //_appContext.SaveChanges();
-                    commonRepository.ShippingBillingAddressHistory(Convert.ToInt64(objCustomer.CustomerId), Convert.ToInt32(ModuleEnum.Customer), Convert.ToInt64(custShipping.CustomerShippingAddressId), Convert.ToInt32(AddressTypeEnum.ShippingAddress), objCustomer.UpdatedBy);
+                        _appContext.CustomerShippingAddress.Attach(ba);
+                        _appContext.Entry(ba).Property(x => x.IsPrimary).IsModified = true;
+                        _appContext.Entry(ba).Property(x => x.UpdatedDate).IsModified = true;
+                        _appContext.Entry(ba).Property(x => x.UpdatedBy).IsModified = true;
+                        _appContext.SaveChanges();
+                        commonRepository.ShippingBillingAddressHistory(Convert.ToInt64(objCustomer.CustomerId), Convert.ToInt32(ModuleEnum.Customer), Convert.ToInt64(custShipping.CustomerShippingAddressId), Convert.ToInt32(AddressTypeEnum.ShippingAddress), objCustomer.UpdatedBy);
+                    }
                 }
-            }
-            if (data != null)
-            {
-                if (data.CustomerShippingAddressId > 0)
+                if (data != null)
                 {
-                    data.CustomerId = objCustomer.CustomerId;
-                    data.AddressId = objCustomer.AddressId;
-                    data.MasterCompanyId = objCustomer.MasterCompanyId;
-                    data.SiteName = objCustomer.CustomerCode;
-                    data.CreatedDate = DateTime.Now;
-                    data.UpdatedDate = DateTime.Now;
-                    data.CreatedBy = objCustomer.CreatedBy;
-                    data.UpdatedBy = objCustomer.UpdatedBy;
-                    data.IsActive = objCustomer.IsActive;
-                    data.IsPrimary = true;
-                    data.IsDelete = false;
-                    _appContext.CustomerShippingAddress.Update(data);
-                    _appContext.SaveChanges();
+                    if (data.CustomerShippingAddressId > 0)
+                    {
+                        data.CustomerId = objCustomer.CustomerId;
+                        data.AddressId = objCustomer.AddressId;
+                        data.MasterCompanyId = objCustomer.MasterCompanyId;
+                        data.SiteName = objCustomer.CustomerCode;
+                        data.CreatedDate = DateTime.Now;
+                        data.UpdatedDate = DateTime.Now;
+                        data.CreatedBy = objCustomer.CreatedBy;
+                        data.UpdatedBy = objCustomer.UpdatedBy;
+                        data.IsActive = objCustomer.IsActive;
+                        data.IsPrimary = true;
+                        data.IsDelete = false;
+                        _appContext.CustomerShippingAddress.Update(data);
+                        _appContext.SaveChanges();
 
-                    shippingAddressId = Convert.ToInt64(data.CustomerShippingAddressId);
+                        shippingAddressId = Convert.ToInt64(data.CustomerShippingAddressId);
+                    }
                 }
-            }
-            else
-            {
-                 if (custShipping != null)
+                else
                 {
-                    CustomerShippingAddress ba = new CustomerShippingAddress();
 
-                    ba.CustomerShippingAddressId = custShipping.CustomerShippingAddressId;
-                    ba.UpdatedDate = DateTime.Now;
-                    ba.UpdatedBy = objCustomer.UpdatedBy;
-                    ba.IsPrimary = false;
+                    if (custShipping != null)
+                    {
+                        CustomerShippingAddress ba = new CustomerShippingAddress();
 
-                    _appContext.CustomerShippingAddress.Attach(ba);
-                    _appContext.Entry(ba).Property(x => x.IsPrimary).IsModified = true;
-                    _appContext.Entry(ba).Property(x => x.UpdatedDate).IsModified = true;
-                    _appContext.Entry(ba).Property(x => x.UpdatedBy).IsModified = true;
+                        ba.CustomerShippingAddressId = custShipping.CustomerShippingAddressId;
+                        ba.UpdatedDate = DateTime.Now;
+                        ba.UpdatedBy = objCustomer.UpdatedBy;
+                        ba.IsPrimary = false;
+
+                        _appContext.CustomerShippingAddress.Attach(ba);
+                        _appContext.Entry(ba).Property(x => x.IsPrimary).IsModified = true;
+                        _appContext.Entry(ba).Property(x => x.UpdatedDate).IsModified = true;
+                        _appContext.Entry(ba).Property(x => x.UpdatedBy).IsModified = true;
+                        _appContext.SaveChanges();
+                        commonRepository.ShippingBillingAddressHistory(Convert.ToInt64(objCustomer.CustomerId), Convert.ToInt32(ModuleEnum.Customer), Convert.ToInt64(custShipping.CustomerShippingAddressId), Convert.ToInt32(AddressTypeEnum.ShippingAddress), objCustomer.UpdatedBy);
+                    }
+                    CustomerShippingAddress objCustomerShippingAddress = new CustomerShippingAddress();
+
+                    objCustomerShippingAddress.CustomerId = objCustomer.CustomerId;
+                    objCustomerShippingAddress.AddressId = objCustomer.AddressId;
+                    objCustomerShippingAddress.MasterCompanyId = objCustomer.MasterCompanyId;
+                    objCustomerShippingAddress.SiteName = objCustomer.CustomerCode;
+                    objCustomerShippingAddress.CreatedDate = DateTime.Now;
+                    objCustomerShippingAddress.UpdatedDate = DateTime.Now;
+                    objCustomerShippingAddress.CreatedBy = objCustomer.CreatedBy;
+                    objCustomerShippingAddress.UpdatedBy = objCustomer.UpdatedBy;
+                    objCustomerShippingAddress.IsActive = objCustomer.IsActive;
+                    objCustomerShippingAddress.IsPrimary = true;
+
+
+                    objCustomerShippingAddress.IsDelete = false;
+
+                    _appContext.CustomerShippingAddress.Add(objCustomerShippingAddress);
                     _appContext.SaveChanges();
-                    //custShipping.IsPrimary = false;
-                    //_appContext.CustomerShippingAddress.Update(custShipping);
-                    //_appContext.SaveChanges();
-                    commonRepository.ShippingBillingAddressHistory(Convert.ToInt64(objCustomer.CustomerId), Convert.ToInt32(ModuleEnum.Customer), Convert.ToInt64(custShipping.CustomerShippingAddressId), Convert.ToInt32(AddressTypeEnum.ShippingAddress), objCustomer.UpdatedBy);
+                    shippingAddressId = Convert.ToInt64(objCustomerShippingAddress.CustomerShippingAddressId);
+
+
                 }
-                CustomerShippingAddress objCustomerShippingAddress = new CustomerShippingAddress();
-
-                objCustomerShippingAddress.CustomerId = objCustomer.CustomerId;
-                objCustomerShippingAddress.AddressId = objCustomer.AddressId;
-                objCustomerShippingAddress.MasterCompanyId = objCustomer.MasterCompanyId;
-                objCustomerShippingAddress.SiteName = objCustomer.CustomerCode;
-                objCustomerShippingAddress.CreatedDate = DateTime.Now;
-                objCustomerShippingAddress.UpdatedDate = DateTime.Now;
-                objCustomerShippingAddress.CreatedBy = objCustomer.CreatedBy;
-                objCustomerShippingAddress.UpdatedBy = objCustomer.UpdatedBy;
-                objCustomerShippingAddress.IsActive = objCustomer.IsActive;
-                objCustomerShippingAddress.IsPrimary = true;
-
-                
-                objCustomerShippingAddress.IsDelete = false;
-
-                _appContext.CustomerShippingAddress.Add(objCustomerShippingAddress);
-                _appContext.SaveChanges();
-                shippingAddressId = Convert.ToInt64(objCustomerShippingAddress.CustomerShippingAddressId);
 
 
+                commonRepository.ShippingBillingAddressHistory(Convert.ToInt64(objCustomer.CustomerId), Convert.ToInt32(ModuleEnum.Customer), Convert.ToInt64(shippingAddressId), Convert.ToInt32(AddressTypeEnum.ShippingAddress), objCustomer.UpdatedBy);
             }
-
-
-            commonRepository.ShippingBillingAddressHistory(Convert.ToInt64(objCustomer.CustomerId), Convert.ToInt32(ModuleEnum.Customer), Convert.ToInt64(shippingAddressId), Convert.ToInt32(AddressTypeEnum.ShippingAddress), objCustomer.UpdatedBy);
-
             return shippingAddressId;
         }
 
@@ -1991,108 +1990,110 @@ namespace DAL.Repositories
         /// Added By vijay on 12/11/2019
         /// </summary>
         /// <param name="objCustomer"></param>
-        public long AddCustomerBillinggAddress(Customer objCustomer)
+        public long AddCustomerBillinggAddress(Customer objCustomer, bool flag = true)
         {
             long billingAddressId = 0;
-            CommonRepository commonRepository = new CommonRepository(_appContext);
-
-            var shippingList = _appContext.CustomerBillingAddress.AsNoTracking().Where(p => p.CustomerId == objCustomer.CustomerId).ToList();
-            var custShipping = shippingList.Where(p =>p.IsPrimary == true).FirstOrDefault();
-            CustomerBillingAddress data = shippingList.Where(p => p.AddressId == objCustomer.AddressId).FirstOrDefault();
-            if (data != null)
+            if (flag == true)
             {
-                if (custShipping != null && data != null && custShipping.CustomerBillingAddressId != data.CustomerBillingAddressId)
+                CommonRepository commonRepository = new CommonRepository(_appContext);
+
+                var shippingList = _appContext.CustomerBillingAddress.AsNoTracking().Where(p => p.CustomerId == objCustomer.CustomerId).ToList();
+                var custShipping = shippingList.Where(p => p.IsPrimary == true).FirstOrDefault();
+                CustomerBillingAddress data = shippingList.Where(p => p.AddressId == objCustomer.AddressId).FirstOrDefault();
+                if (data != null)
                 {
-                    custShipping.IsPrimary = false;
+                    if (custShipping != null && data != null && custShipping.CustomerBillingAddressId != data.CustomerBillingAddressId)
+                    {
+                        custShipping.IsPrimary = false;
 
-                    CustomerBillingAddress ba = new CustomerBillingAddress();
+                        CustomerBillingAddress ba = new CustomerBillingAddress();
 
-                    ba.CustomerBillingAddressId = custShipping.CustomerBillingAddressId;
-                    ba.UpdatedDate = DateTime.Now;
-                    ba.UpdatedBy = objCustomer.UpdatedBy;
-                    ba.IsPrimary = false;
+                        ba.CustomerBillingAddressId = custShipping.CustomerBillingAddressId;
+                        ba.UpdatedDate = DateTime.Now;
+                        ba.UpdatedBy = objCustomer.UpdatedBy;
+                        ba.IsPrimary = false;
 
-                    _appContext.CustomerBillingAddress.Attach(ba);
-                    _appContext.Entry(ba).Property(x => x.IsPrimary).IsModified = true;
-                    _appContext.Entry(ba).Property(x => x.UpdatedDate).IsModified = true;
-                    _appContext.Entry(ba).Property(x => x.UpdatedBy).IsModified = true;
-                    _appContext.SaveChanges();
+                        _appContext.CustomerBillingAddress.Attach(ba);
+                        _appContext.Entry(ba).Property(x => x.IsPrimary).IsModified = true;
+                        _appContext.Entry(ba).Property(x => x.UpdatedDate).IsModified = true;
+                        _appContext.Entry(ba).Property(x => x.UpdatedBy).IsModified = true;
+                        _appContext.SaveChanges();
 
-                    // _appContext.CustomerBillingAddress.Update(custShipping);
-                    //  _appContext.SaveChanges();
+                        // _appContext.CustomerBillingAddress.Update(custShipping);
+                        //  _appContext.SaveChanges();
 
-                    commonRepository.ShippingBillingAddressHistory(Convert.ToInt64(objCustomer.CustomerId), Convert.ToInt32(ModuleEnum.Customer), Convert.ToInt64(custShipping.CustomerBillingAddressId), Convert.ToInt32(AddressTypeEnum.BillingAddress), objCustomer.UpdatedBy);
-                }
-            }
-
-            
-
-            if (data != null)
-            {
-                if (data.CustomerBillingAddressId > 0)
-                {
-                    data.CustomerId = objCustomer.CustomerId;
-                    data.MasterCompanyId = objCustomer.MasterCompanyId;
-                    data.AddressId = objCustomer.AddressId;
-                    data.SiteName = objCustomer.CustomerCode;
-                    data.CreatedDate = DateTime.Now;
-                    data.UpdatedDate = DateTime.Now;
-                    data.CreatedBy = objCustomer.CreatedBy;
-                    data.UpdatedBy = objCustomer.UpdatedBy;
-                    data.IsPrimary = true;
-                    data.IsActive = true;
-                    data.IsDeleted = false;
-                    _appContext.CustomerBillingAddress.Update(data);
-                    _appContext.SaveChanges();
-
-                    billingAddressId = Convert.ToInt64(data.CustomerBillingAddressId);
-
-                }
-            }
-            else
-            {
-                 if (custShipping != null)
-                {
-                    CustomerBillingAddress ba = new CustomerBillingAddress();
-
-                    ba.CustomerBillingAddressId = custShipping.CustomerBillingAddressId;
-                    ba.UpdatedDate = DateTime.Now;
-                    ba.UpdatedBy = objCustomer.UpdatedBy;
-                    ba.IsPrimary = false;
-
-                    _appContext.CustomerBillingAddress.Attach(ba);
-                    _appContext.Entry(ba).Property(x => x.IsPrimary).IsModified = true;
-                    _appContext.Entry(ba).Property(x => x.UpdatedDate).IsModified = true;
-                    _appContext.Entry(ba).Property(x => x.UpdatedBy).IsModified = true;
-                    _appContext.SaveChanges();
-                    //custShipping.IsPrimary = false;
-                    //_appContext.CustomerShippingAddress.Update(custShipping);
-                    //_appContext.SaveChanges();
-                    commonRepository.ShippingBillingAddressHistory(Convert.ToInt64(objCustomer.CustomerId), Convert.ToInt32(ModuleEnum.Customer), Convert.ToInt64(custShipping.CustomerBillingAddressId), Convert.ToInt32(AddressTypeEnum.BillingAddress), objCustomer.UpdatedBy);
+                        commonRepository.ShippingBillingAddressHistory(Convert.ToInt64(objCustomer.CustomerId), Convert.ToInt32(ModuleEnum.Customer), Convert.ToInt64(custShipping.CustomerBillingAddressId), Convert.ToInt32(AddressTypeEnum.BillingAddress), objCustomer.UpdatedBy);
+                    }
                 }
 
-                CustomerBillingAddress objCustomerBillingAddress = new CustomerBillingAddress();
 
-                objCustomerBillingAddress.CustomerId = objCustomer.CustomerId;
-                objCustomerBillingAddress.MasterCompanyId = objCustomer.MasterCompanyId;
-                objCustomerBillingAddress.AddressId = objCustomer.AddressId;
-                objCustomerBillingAddress.SiteName = objCustomer.CustomerCode;
-                objCustomerBillingAddress.CreatedDate = DateTime.Now;
-                objCustomerBillingAddress.UpdatedDate = DateTime.Now;
-                objCustomerBillingAddress.CreatedBy = objCustomer.CreatedBy;
-                objCustomerBillingAddress.UpdatedBy = objCustomer.UpdatedBy;
-                objCustomerBillingAddress.IsPrimary = true;
-                objCustomerBillingAddress.IsActive = true;
-                objCustomerBillingAddress.IsDeleted = false;
 
-                _appContext.CustomerBillingAddress.Add(objCustomerBillingAddress);
-                _appContext.SaveChanges();
+                if (data != null)
+                {
+                    if (data.CustomerBillingAddressId > 0)
+                    {
+                        data.CustomerId = objCustomer.CustomerId;
+                        data.MasterCompanyId = objCustomer.MasterCompanyId;
+                        data.AddressId = objCustomer.AddressId;
+                        data.SiteName = objCustomer.CustomerCode;
+                        data.CreatedDate = DateTime.Now;
+                        data.UpdatedDate = DateTime.Now;
+                        data.CreatedBy = objCustomer.CreatedBy;
+                        data.UpdatedBy = objCustomer.UpdatedBy;
+                        data.IsPrimary = true;
+                        data.IsActive = true;
+                        data.IsDeleted = false;
+                        _appContext.CustomerBillingAddress.Update(data);
+                        _appContext.SaveChanges();
 
-                billingAddressId = Convert.ToInt64(objCustomerBillingAddress.CustomerBillingAddressId);
+                        billingAddressId = Convert.ToInt64(data.CustomerBillingAddressId);
 
+                    }
+                }
+                else
+                {
+                    if (custShipping != null)
+                    {
+                        CustomerBillingAddress ba = new CustomerBillingAddress();
+
+                        ba.CustomerBillingAddressId = custShipping.CustomerBillingAddressId;
+                        ba.UpdatedDate = DateTime.Now;
+                        ba.UpdatedBy = objCustomer.UpdatedBy;
+                        ba.IsPrimary = false;
+
+                        _appContext.CustomerBillingAddress.Attach(ba);
+                        _appContext.Entry(ba).Property(x => x.IsPrimary).IsModified = true;
+                        _appContext.Entry(ba).Property(x => x.UpdatedDate).IsModified = true;
+                        _appContext.Entry(ba).Property(x => x.UpdatedBy).IsModified = true;
+                        _appContext.SaveChanges();
+                        //custShipping.IsPrimary = false;
+                        //_appContext.CustomerShippingAddress.Update(custShipping);
+                        //_appContext.SaveChanges();
+                        commonRepository.ShippingBillingAddressHistory(Convert.ToInt64(objCustomer.CustomerId), Convert.ToInt32(ModuleEnum.Customer), Convert.ToInt64(custShipping.CustomerBillingAddressId), Convert.ToInt32(AddressTypeEnum.BillingAddress), objCustomer.UpdatedBy);
+                    }
+
+                    CustomerBillingAddress objCustomerBillingAddress = new CustomerBillingAddress();
+
+                    objCustomerBillingAddress.CustomerId = objCustomer.CustomerId;
+                    objCustomerBillingAddress.MasterCompanyId = objCustomer.MasterCompanyId;
+                    objCustomerBillingAddress.AddressId = objCustomer.AddressId;
+                    objCustomerBillingAddress.SiteName = objCustomer.CustomerCode;
+                    objCustomerBillingAddress.CreatedDate = DateTime.Now;
+                    objCustomerBillingAddress.UpdatedDate = DateTime.Now;
+                    objCustomerBillingAddress.CreatedBy = objCustomer.CreatedBy;
+                    objCustomerBillingAddress.UpdatedBy = objCustomer.UpdatedBy;
+                    objCustomerBillingAddress.IsPrimary = true;
+                    objCustomerBillingAddress.IsActive = true;
+                    objCustomerBillingAddress.IsDeleted = false;
+
+                    _appContext.CustomerBillingAddress.Add(objCustomerBillingAddress);
+                    _appContext.SaveChanges();
+
+                    billingAddressId = Convert.ToInt64(objCustomerBillingAddress.CustomerBillingAddressId);
+
+                }
+                commonRepository.ShippingBillingAddressHistory(Convert.ToInt64(objCustomer.CustomerId), Convert.ToInt32(ModuleEnum.Customer), Convert.ToInt64(billingAddressId), Convert.ToInt32(AddressTypeEnum.BillingAddress), objCustomer.UpdatedBy);
             }
-            commonRepository.ShippingBillingAddressHistory(Convert.ToInt64(objCustomer.CustomerId), Convert.ToInt32(ModuleEnum.Customer), Convert.ToInt64(billingAddressId), Convert.ToInt32(AddressTypeEnum.BillingAddress), objCustomer.UpdatedBy);
-
             return billingAddressId;
 
 
@@ -2189,6 +2190,7 @@ namespace DAL.Repositories
                     data.IsPrimary = true;
                     data.IsDeleted = false;
                     _appContext.VendorShippingAddress.Update(data);
+                    _appContext.SaveChanges();
                     commonRepository.ShippingBillingAddressHistory(Convert.ToInt64(data.VendorId), Convert.ToInt32(ModuleEnum.Vendor), Convert.ToInt64(data.VendorShippingAddressId), Convert.ToInt32(AddressTypeEnum.ShippingAddress), data.UpdatedBy);
 
                 }
@@ -2210,6 +2212,7 @@ namespace DAL.Repositories
                 objCustomerShippingAddress.IsDeleted = false;
 
                 _appContext.VendorShippingAddress.Add(objCustomerShippingAddress);
+                _appContext.SaveChanges();
                 commonRepository.ShippingBillingAddressHistory(Convert.ToInt64(objCustomerShippingAddress.VendorId), Convert.ToInt32(ModuleEnum.Vendor), Convert.ToInt64(objCustomerShippingAddress.VendorShippingAddressId), Convert.ToInt32(AddressTypeEnum.ShippingAddress), objCustomerShippingAddress.UpdatedBy);
 
             }
@@ -2240,6 +2243,7 @@ namespace DAL.Repositories
                     data.IsActive = true;
                     data.IsDeleted = false;
                     _appContext.VendorBillingAddress.Update(data);
+                    _appContext.SaveChanges();
                     commonRepository.ShippingBillingAddressHistory(Convert.ToInt64(data.VendorId), Convert.ToInt32(ModuleEnum.Vendor), Convert.ToInt64(data.VendorBillingAddressId), Convert.ToInt32(AddressTypeEnum.BillingAddress), data.UpdatedBy);
 
                 }
@@ -2261,6 +2265,7 @@ namespace DAL.Repositories
                 objCustomerBillingAddress.IsDeleted = false;
 
                 _appContext.VendorBillingAddress.Add(objCustomerBillingAddress);
+                _appContext.SaveChanges();
                 commonRepository.ShippingBillingAddressHistory(Convert.ToInt64(objCustomerBillingAddress.VendorId), Convert.ToInt32(ModuleEnum.Vendor), Convert.ToInt64(objCustomerBillingAddress.VendorBillingAddressId), Convert.ToInt32(AddressTypeEnum.BillingAddress), objCustomerBillingAddress.UpdatedBy);
 
             }
