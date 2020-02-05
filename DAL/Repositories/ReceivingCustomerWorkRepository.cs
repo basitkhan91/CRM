@@ -275,7 +275,8 @@ namespace DAL.Repositories
                             join emp in _appContext.Employee on cr.EmployeeId equals emp.EmployeeId
                             join cd in _appContext.Condition on cr.ConditionId equals cd.ConditionId
                             join si in _appContext.Site on cr.SiteId equals si.SiteId
-                            join wh in _appContext.Warehouse on cr.WarehouseId equals wh.WarehouseId
+                            join wh in _appContext.Warehouse on cr.WarehouseId equals wh.WarehouseId into crwh
+                            from wh in crwh.DefaultIfEmpty()
                             join lo in _appContext.Location on cr.LocationId equals lo.LocationId into crlo
                             from lo in crlo.DefaultIfEmpty()
                             join sh in _appContext.Shelf on cr.ShelfId equals sh.ShelfId into crsh
