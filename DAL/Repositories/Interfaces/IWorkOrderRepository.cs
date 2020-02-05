@@ -107,7 +107,7 @@ namespace DAL.Repositories.Interfaces
 
         IEnumerable<object> GetWorkFlowNos(long partId, long workScopeId);
         IEnumerable<object> GetWorkOrderNos(long partId, long workScopeId);
-        IEnumerable<object> GetWorkOrderPartDetails();
+        IEnumerable<object> GetWorkOrderPartDetails(long customerId);
         IEnumerable<object> GetStockLineDetailsByPartNo(long itemMasterId, long conditionId);
         object GetPartSerialNo(long stockLineId);
         IEnumerable<object> GetPartPublications(long itemMasterId);

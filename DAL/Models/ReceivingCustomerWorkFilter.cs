@@ -1,7 +1,4 @@
-﻿using DAL.Common;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace DAL.Models
@@ -11,10 +8,10 @@ namespace DAL.Models
         [Key]
         public long ReceivingCustomerWorkId { get; set; }
         public string partNumber { get; set; }
-        public string receivingCustomerNumber { get; set; }
+        public string receivingNumber { get; set; }
         public string changePartNumber { get; set; }
-        public string firstName { get; set; }
-        public string name { get; set; }
+        public string employeeName { get; set; }
+        public string customerName { get; set; }
         public string customerReference { get; set; }
         public string workOrderNum { get; set; }
         public string partDescription { get; set; }

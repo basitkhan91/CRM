@@ -66,14 +66,14 @@ export class CustomerWorksListComponent implements OnInit, AfterViewInit{
     public compnayname: any;
           cols = [
              
-    { field: 'receivingCustomerNumber', header: 'Recev.No.' },
+    { field: 'receivingNumber', header: 'Recev.No.' },
     //{ field: 'workOrderNum', header: 'WorkOrderNum' },
     { field: 'partNumber', header: 'PN' },
     { field: 'partDescription', header: 'PN Description' },
 
     { field: 'changePartNumber', header: 'Change Part Number' },
-    { field: 'firstName', header: 'Employee Name' },
-    { field: 'name', header: 'Customer Name' },
+    { field: 'employeeName', header: 'Employee Name' },
+    { field: 'customerName', header: 'Customer Name' },
     { field: 'customerReference', header: 'Customer Reference' },
 ];
     selectedColumns = this.cols;
