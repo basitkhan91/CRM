@@ -29,6 +29,7 @@ export class AssetMaintenanceWarrantyComponent implements OnInit {
     allVendorInfo: Vendor[];
     AssetId: any;
     static assetService;
+    isSaving: boolean;
     /** asset-maintenance-warranty ctor */
     constructor(private router: ActivatedRoute,private assetService: AssetService, private vendorService: VendorService, private route: Router,
         private authService: AuthService, private alertService: AlertService, private glAccountService: GlAccountService) {
@@ -51,13 +52,13 @@ export class AssetMaintenanceWarrantyComponent implements OnInit {
                 this.currentMaintenance.warrantyEndDate = new Date(this.currentMaintenance.warrantyEndDate);
             }
             else {
-                this.currentMaintenance.warrantyEndDate = new Date();
+                //this.currentMaintenance.warrantyEndDate = new Date();
             }
             if (this.currentMaintenance.warrantyStartDate) {
                 this.currentMaintenance.warrantyStartDate = new Date(this.currentMaintenance.warrantyStartDate);
             }
             else {
-                this.currentMaintenance.warrantyStartDate = new Date();
+                //this.currentMaintenance.warrantyStartDate = new Date();
             }
             if (this.assetService.listCollection) {
                 this.local = this.assetService.listCollection;
@@ -92,15 +93,15 @@ export class AssetMaintenanceWarrantyComponent implements OnInit {
         if (this.currentMaintenance.warrantyEndDate) {
             this.currentMaintenance.warrantyEndDate = new Date(this.currentMaintenance.warrantyEndDate);
         }
-        else {
-            this.currentMaintenance.warrantyEndDate = new Date();
-        }
+        //else {
+        //    this.currentMaintenance.warrantyEndDate = new Date();
+        //}
         if (this.currentMaintenance.warrantyStartDate) {
             this.currentMaintenance.warrantyStartDate = new Date(this.currentMaintenance.warrantyStartDate);
         }
-        else {
-            this.currentMaintenance.warrantyStartDate = new Date();
-        }
+        //else {
+        //    this.currentMaintenance.warrantyStartDate = new Date();
+        //}
         if (this.assetService.listCollection) {
             this.local = this.assetService.listCollection;
             this.currentMaintenance = this.local;
@@ -144,6 +145,7 @@ export class AssetMaintenanceWarrantyComponent implements OnInit {
         else {
             this.currentMaintenance.updatedBy = this.userName;
             this.currentMaintenance.masterCompanyId = 1;
+            this.isSaving = true;
             if (this.currentMaintenance.assetIsMaintenanceReqd == false || this.currentMaintenance.isDepreciable == false) {
                 this.currentMaintenance.assetMaintenanceIsContract = false;
                 this.currentMaintenance.assetMaintenanceContractFile = "";
@@ -161,6 +163,27 @@ export class AssetMaintenanceWarrantyComponent implements OnInit {
                 this.currentMaintenance.warrantyStatus = "";
                 this.currentMaintenance.unexpiredTime = "";
             }
+            else {
+                if (this.currentMaintenance.warrantyStartDate != null && this.currentMaintenance.warrantyEndDate != null) {
+                    console.log(this.currentMaintenance.warrantyStartDate, this.currentMaintenance.warrantyEndDate);
+                    if (this.currentMaintenance.warrantyEndDate < this.currentMaintenance.warrantyStartDate) {
+                        this.alertService.stopLoadingMessage();
+                        //console.log('End date > start date');
+                        this.isSaving = false;
+                        this.alertService.showMessage("", `Warranty Start Date cannot be later than End date.`, MessageSeverity.error);
+                        return;
+                    }
+                    else {
+                        let startDate = new Date(this.currentMaintenance.warrantyStartDate);
+                        let endDate = new Date(this.currentMaintenance.warrantyEndDate);
+                        this.currentMaintenance.warrantyEndDate = new Date(endDate.getFullYear(), endDate.getMonth(),
+                            endDate.getDate());
+                        this.currentMaintenance.warrantyStartDate = new Date(startDate.getFullYear(), startDate.getMonth(),
+                            startDate.getDate());
+                    }
+                }
+            }
+            if (this.isSaving)
             this.assetService.updateAsset(this.currentMaintenance).subscribe(data => {
                 this.currentMaintenance.updatedBy = this.userName;
                 this.localCollection = data;                

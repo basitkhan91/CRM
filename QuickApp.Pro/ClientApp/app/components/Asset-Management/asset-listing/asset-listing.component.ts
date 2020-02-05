@@ -54,6 +54,10 @@ export class AssetListingComponent implements OnInit {
     pageIndex: number = 0;
     pageSize: number = 10;
     totalPages: number;
+	totalRecords1: any;
+    pageIndex1: number = 0;
+    pageSize1: number = 10;
+    totalPages1: number;
     updateMode: boolean = false;
     allManagemtninfo: any[] = [];
     bulist: any[] = [];
@@ -221,14 +225,14 @@ export class AssetListingComponent implements OnInit {
         // this.assetService.currentAssetId = row.assetRecordId;
         this.assetService.listCollection = row;
         const { assetId } = row;
-        this._route.navigateByUrl(`assetmodule/assetpages/app-edit-asset/${assetId}`);
+        this._route.navigateByUrl(`assetmodule/assetpages/app-edit-asset/${row.assetRecordId}`);
     }
     openAssetToAdjustment(row) {
        
         // this.assetService.currentAssetId = row.assetRecordId;
         this.assetService.listCollection = row;
         const { assetId } = row;
-        this._route.navigateByUrl(`assetmodule/assetpages/app-asset-adjustment/${assetId}`);
+        this._route.navigateByUrl(`assetmodule/assetpages/app-asset-adjustment/${row.assetRecordId}`);
     }
 
     dismissModel() {
@@ -474,6 +478,8 @@ export class AssetListingComponent implements OnInit {
     }
     private onCapesLoaded(allCapes: ItemMasterCapabilitiesModel[]) {
         this.allCapesInfo = allCapes;
+		this.totalRecords1 = this.allAssetInfo.length;
+        this.totalPages1 = Math.ceil(this.totalRecords1 / this.pageSize1);
     }
     
     getAssetAcqName(id) {
