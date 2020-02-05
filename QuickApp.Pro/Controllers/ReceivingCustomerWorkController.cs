@@ -252,10 +252,16 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpGet("receivecustomerpartdetails")]
-
         public IActionResult GetPartDettails(long itemMasterId)
         {
             var result = _unitOfWork.receivingCustomerWork.GetPartDettails(itemMasterId);
+            return Ok(result);
+        }
+
+        [HttpGet("getreceivingcustomerslist")]
+        public IActionResult ReceivingCustomers(string value)
+        {
+            var result = _unitOfWork.receivingCustomerWork.ReceivingCustomers(value);
             return Ok(result);
         }
     }

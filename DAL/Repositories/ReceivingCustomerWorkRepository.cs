@@ -742,12 +742,23 @@ namespace DAL.Repositories
                 _appContext.StockLine.Add(stockLine);
                 _appContext.SaveChanges();
 
+                
+                
+
                 stockLine.StockLineNumber = "STL-" + stockLine.StockLineId;
                 stockLine.ControlNumber = "CNT-" + stockLine.StockLineId;
                 stockLine.IdNumber = "Id-" + stockLine.StockLineId;
                 _appContext.StockLine.Update(stockLine);
                 _appContext.SaveChanges();
 
+                if (receivingCustomer.TimeLife != null)
+                {
+                    receivingCustomer.TimeLife.StockLineId = stockLine.StockLineId;
+                    _appContext.TimeLife.Add(receivingCustomer.TimeLife);
+                    _appContext.SaveChanges();
+                }
+
+                receivingCustomer.TimeLifeCyclesId = receivingCustomer.TimeLife.TimeLifeCyclesId;
                 receivingCustomer.StockLineId = stockLine.StockLineId;
                 _appContext.ReceivingCustomerWork.Add(receivingCustomer);
                 _appContext.SaveChanges();
@@ -772,6 +783,11 @@ namespace DAL.Repositories
 
                 receivingCustomer.UpdatedDate = DateTime.Now;
 
+                if (receivingCustomer.TimeLife != null)
+                {
+                    _appContext.TimeLife.Update(receivingCustomer.TimeLife);
+                    _appContext.SaveChanges();
+                }
 
                 var stockLine = BindStockLineData(receivingCustomer);
                 _appContext.StockLine.Update(stockLine);
@@ -808,6 +824,47 @@ namespace DAL.Repositories
                                 im.RevisedPartId
                             }).FirstOrDefault();
                           return data;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public IEnumerable<object> ReceivingCustomers(string value)
+        {
+            if (value == null)
+                value = "";
+            try
+            {
+                var list = (from rc in _appContext.ReceivingCustomerWork
+                            join cust in _appContext.Customer on rc.CustomerId equals cust.CustomerId
+                            join refe in _appContext.Customer on rc.ReferenceId equals refe.CustomerId
+                            join cc in _appContext.CustomerContact.Where(p => p.IsDefaultContact == true) on cust.CustomerId equals cc.CustomerId into custcc
+                            from cc in custcc.DefaultIfEmpty()
+                            join con in _appContext.Contact on cc.ContactId equals con.ContactId into custcon
+                            from con in custcon.DefaultIfEmpty()
+                            join emp in _appContext.Employee on cust.CsrId equals emp.EmployeeId into custemp
+                            from emp in custemp.DefaultIfEmpty()
+                            where rc.IsDeleted == false && rc.IsActive == true
+                            && (cust.Name.ToLower().Contains(value.ToLower()) || cust.CustomerCode.ToLower().Contains(value.ToLower()))
+                            select new
+                            {
+                                rc.CustomerId,
+                                CustomerName = cust.Name + " - " + cust.CustomerCode,
+                                rc.ReferenceId,
+                                CustomerRef = refe.Name,
+                                cust.CsrId,
+                                CSRName=emp==null?"":emp.FirstName,
+                                cust.CreditLimit,
+                                cust.CreditTermsId,
+                                CustomerEmail = cust.Email,
+                                CustomerPhoneNo = con == null ? "" : con.WorkPhone,
+                                CustomerContact = con == null ? " " : con.FirstName,
+
+                            }).Distinct().ToList();
+                return list;
             }
             catch (Exception)
             {

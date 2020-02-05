@@ -484,6 +484,8 @@ export class WorkOrderEndpointService extends EndpointFactory {
         return this.http.post<any>(`${this.configurations.baseUrl}/api/workorder/createquoteexclusions`, JSON.stringify(data), this.getRequestHeaders());
     }
 
-
+    getPartNosByCustomer(customerId) {
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/workorderpartdetails?customerId=${customerId}`, this.getRequestHeaders())
+    }
 
 }
