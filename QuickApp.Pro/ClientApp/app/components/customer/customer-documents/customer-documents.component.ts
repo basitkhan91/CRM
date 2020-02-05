@@ -20,6 +20,7 @@ import * as $ from 'jquery';
 })
 /** Customer component*/
 export class CustomerDocumentsComponent implements OnInit {
+    disableSave:boolean=true;
 	@Input() savedGeneralInformationData;
 	@Input() editMode;
 	@Input() editGeneralInformationData;
@@ -116,7 +117,15 @@ export class CustomerDocumentsComponent implements OnInit {
             }
         }
     }
-
+    enableSave() {
+               this.disableSave = false;
+       
+       } 
+       closeMyModel(type){
+           console.log("check issues")
+           $(type).modal("hide");
+           this.disableSave=true;
+       }
 	get userName(): string {
 		return this.authService.currentUser ? this.authService.currentUser.userName : "";
 	}
@@ -129,7 +138,12 @@ export class CustomerDocumentsComponent implements OnInit {
 			return;
 
 		for (let file of event.files)
-			this.formData.append(file.name, file);
+            this.formData.append(file.name, file);
+            this.disableSave=false;
+    }
+    removeFile(event) {
+		this.formData.delete(event.file.name)
+
 	}
 	
     openDocument(content, row) {
@@ -218,7 +232,8 @@ export class CustomerDocumentsComponent implements OnInit {
                 this.dismissDocumentPopupModel()
             })
         }
-
+        $("#addDocumentDetails").modal("hide");
+        this.disableSave=true;
     }
    
 	updateCustomerDocument() { }
@@ -279,6 +294,8 @@ export class CustomerDocumentsComponent implements OnInit {
 
     dismissDocumentPopupModel(){
         this.fileUploadInput.clear();
+        // this.closeMyModel(type);
+        console.log("hiasdsadsad")
     }
 
     downloadFileUpload(rowData) {

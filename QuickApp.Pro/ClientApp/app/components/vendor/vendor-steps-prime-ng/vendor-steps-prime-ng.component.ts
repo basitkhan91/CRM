@@ -171,12 +171,12 @@ export class VendorStepsPrimeNgComponent implements OnInit {
 		else if (value == 6) {
 
 			this.activeMenuItem = 6;
-			this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-shipping-information');
+			this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-billing-information');
 		}
 		else if (value == 7) {
 
 			this.activeMenuItem = 7;
-			this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-billing-information');
+			this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-shipping-information');			
 		}
 		else if (value == 8) {
 

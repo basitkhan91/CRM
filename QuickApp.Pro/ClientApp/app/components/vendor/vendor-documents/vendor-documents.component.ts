@@ -15,6 +15,8 @@ import { ConfigurationService } from '../../../services/configuration.service';
 import { AuditHistory } from '../../../models/audithistory.model';
 import * as $ from 'jquery';
 import { VendorStepsPrimeNgComponent } from '../vendor-steps-prime-ng/vendor-steps-prime-ng.component';
+import { Documents } from '../../../models/documents.model';
+
 
 @Component({
 	selector: 'app-vendor-documents',
@@ -27,12 +29,10 @@ export class VendorDocumentsComponent implements OnInit {
 	// @Input() editMode;
 	// @Input() editGeneralInformationData;
 	@Output() tab = new EventEmitter<any>();
-	documentInformation = {
-		vendorDocumentDetailId: 0,
-		docName: '',
-		docMemo: '',
-		docDescription: ''
-	}
+	@ViewChild('fileUpload') fileUpload: any;
+
+	documentInformation = { ...new Documents() };
+
 	vendorDocumentsData: any = [];
 	vendorDocumentsColumns = [
 		{ field: 'docName', header: 'Name' },
@@ -56,6 +56,7 @@ export class VendorDocumentsComponent implements OnInit {
 	// id: number;
 	// customerCode: any;
 	// customerName: any;
+
 	sourceViewforDocument: any;
 	localCollection: any;
 	sourceViewforDocumentList: any = [];
@@ -73,6 +74,9 @@ export class VendorDocumentsComponent implements OnInit {
 	pageIndex: number = 0;
 	pageSize: number = 10;
 	totalPages: number = 0;
+	@Input() vendorId: number = 0;
+	@Input() viewMode: boolean = false;
+
 	constructor(public vendorService: VendorService, private router: ActivatedRoute, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService,
 		private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private configurations: ConfigurationService) {
 
@@ -114,16 +118,41 @@ export class VendorDocumentsComponent implements OnInit {
 
 	// opencontactView(content, row) {
 
-	fileUpload(event) {
+	resetCreateForm() {
+		this.documentInformation = new Documents();
+		this.sourceViewforDocument = undefined;
+		this.sourceViewforDocumentList = [];
+		this.clearFileUpload();
+
+	}
+	clearFileUpload() {
+		this.fileUpload.clear();
+	}
+
+
+
+
+
+	fileUploadForDocuments(event) {
+		console.log(event);
+
 		if (event.files.length === 0)
 			return;
 
-		for (let file of event.files)
+		for (let file of event.files) {
 			this.formData.append(file.name, file);
+		}
+		// fileUpload.clear();
+
+	}
+	removeFile(event) {
+		this.formData.delete(event.file.name)
+
 	}
 
 	getList() {
-		this.vendorService.getDocumentList(this.local.vendorId).subscribe(res => {
+		const vendorId = this.vendorId != 0 ? this.vendorId : this.local.vendorId;
+		this.vendorService.getDocumentList(vendorId).subscribe(res => {
 			this.vendorDocumentsData = res;
 		})
 	}
@@ -154,13 +183,16 @@ export class VendorDocumentsComponent implements OnInit {
 		}
 
 
+
 		this.vendorService.documentUploadAction(this.formData).subscribe(res => {
-			this.documentInformation.vendorDocumentDetailId = 0;
+			// this.documentInformation.vendorDocumentDetailId = 0;
 			this.documentInformation.docDescription = '';
 			this.documentInformation.docMemo = '';
 			this.documentInformation.docName = '';
+			this.sourceViewforDocumentList = [];
 
 			this.formData = new FormData();
+			this.clearFileUpload();
 			this.getList();
 			this.alertService.showMessage(
 				'Success',
@@ -172,15 +204,15 @@ export class VendorDocumentsComponent implements OnInit {
 		})
 
 	}
+
 	updateVendorDocument() {
-
-
-
 	}
+
+
 
 	editVendorDocument(rowdata, e) {
 		//this.toGetUploadDocumentsList(rowdata.attachmentId, rowdata.vendorId,3);
-		this.documentInformation = rowdata;
+		this.documentInformation = { ...rowdata };
 		this.vendorService.toGetUploadDocumentsList(rowdata.attachmentId, rowdata.vendorId, 3).subscribe(res => {
 			this.sourceViewforDocumentList = res;
 			this.sourceViewforDocument = rowdata;
@@ -264,12 +296,15 @@ export class VendorDocumentsComponent implements OnInit {
 	}
 
 	CreateNewClick() {
-		// this.vendorService.contactCollection = this.local;
-		this.activeIndex = 1;
-		this.vendorService.changeofTab(this.activeIndex);
+		// this.vendorService.contactCollection = this.local;		
 		// this.vendorService.indexObj.next(this.activeIndex);
 		// this.vendorService.changeStep('General Information');
 		// this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-general-information');
+
+		// this.activeIndex = 1;
+		// this.vendorService.changeofTab(this.activeIndex);
+
+		this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendors-list');
 
 	}
 	openHistory(content, row) {
@@ -317,6 +352,17 @@ export class VendorDocumentsComponent implements OnInit {
 	getPageCount(totalNoofRecords, pageSize) {
 		return Math.ceil(totalNoofRecords / pageSize)
 	}
+
+	// resetVendorDocument()
+	// {
+	// 	    this.getList();
+	// 	    this.sourceViewforDocumentList= [];		 
+	// 	    this.documentInformation.vendorDocumentDetailId = 0;
+	// 		this.documentInformation.docDescription = '';
+	// 		this.documentInformation.docMemo = '';
+	// 		this.documentInformation.docName = '';
+
+	// }
 
 
 }

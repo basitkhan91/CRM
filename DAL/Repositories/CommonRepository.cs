@@ -1155,9 +1155,9 @@ namespace DAL.Repositories
         {
 
             var list = (from vba in _appContext.ShippingBillingAddressAudit
-                        where vba.ReferenceId == referenceId && vba.AddressId == addressId && vba.AddressType == addressType && vba.ModuleId == moduleId
                         join c in _appContext.Countries on Convert.ToInt16(vba.Country) equals c.countries_id into conttt
                         from c in conttt.DefaultIfEmpty()
+                        where vba.ReferenceId == referenceId && vba.AddressId == addressId && vba.AddressType == addressType && vba.ModuleId == moduleId
 
 
                         select new
@@ -1289,6 +1289,68 @@ namespace DAL.Repositories
                     addressId = billingAddress.AddressId;
                 }
             }
+            else
+            {
+                if (addressType == Convert.ToInt32(AddressTypeEnum.ShippingAddress))
+                {
+
+                    var shippingAddress = _appContext.VendorShippingAddress.Where(p => p.VendorShippingAddressId == billingShippingId).AsNoTracking().FirstOrDefault();
+                    audit.AddressId = Convert.ToInt64(shippingAddress.VendorShippingAddressId);
+                    audit.AddressType = Convert.ToInt32(AddressTypeEnum.ShippingAddress);
+                    audit.IsPrimary = Convert.ToBoolean(shippingAddress.IsPrimary);
+                    audit.IsActive = Convert.ToBoolean(shippingAddress.IsActive);
+                    audit.MasterCompanyId = Convert.ToInt32(shippingAddress.MasterCompanyId);
+                    audit.ModuleId = moduleId;
+                    audit.ReferenceId = referenceId;
+                    audit.SiteName = shippingAddress.SiteName;
+                    audit.CreatedBy = audit.UpdatedBy = updatedBy;
+                    audit.CreatedDate = audit.UpdatedDate = DateTime.Now;
+                    addressId = shippingAddress.AddressId;
+
+                }
+                else if((addressType == Convert.ToInt32(AddressTypeEnum.BillingAddress)))
+                {
+                    var billingAddress = _appContext.VendorBillingAddress.AsNoTracking().Where(p => p.VendorBillingAddressId == billingShippingId).FirstOrDefault();
+                    audit.AddressId = Convert.ToInt64(billingAddress.VendorBillingAddressId);
+                    audit.AddressType = Convert.ToInt32(AddressTypeEnum.BillingAddress);
+                    audit.IsPrimary = Convert.ToBoolean(billingAddress.IsPrimary);
+                    audit.IsActive = Convert.ToBoolean(billingAddress.IsActive);
+                    audit.MasterCompanyId = Convert.ToInt32(billingAddress.MasterCompanyId);
+                    audit.ModuleId = moduleId;
+                    audit.ReferenceId = referenceId;
+                    audit.SiteName = billingAddress.SiteName;
+                    audit.CreatedBy = audit.UpdatedBy = updatedBy;
+                    audit.CreatedDate = audit.UpdatedDate = DateTime.Now;
+                    addressId = billingAddress.AddressId;
+                }
+                else
+                {
+                    var billingAddress = _appContext.CheckPayment.AsNoTracking().Where(p => p.CheckPaymentId == billingShippingId).FirstOrDefault();
+
+                    var checkpayment = _appContext.VendorCheckPayment.AsNoTracking().Where(p => p.CheckPaymentId == billingShippingId).FirstOrDefault();
+
+
+                    audit.AddressId = Convert.ToInt64(billingAddress.CheckPaymentId);
+                    audit.AddressType = Convert.ToInt32(AddressTypeEnum.CheckPayment);
+                    audit.IsPrimary = Convert.ToBoolean(billingAddress.IsPrimayPayment);
+                    if (checkpayment != null)
+                    {
+                        audit.IsActive = Convert.ToBoolean(checkpayment.IsActive);
+                    }
+                    else
+                    {
+                        audit.IsActive = Convert.ToBoolean(billingAddress.IsActive);
+                    }
+                    audit.MasterCompanyId = Convert.ToInt32(billingAddress.MasterCompanyId);
+                    audit.ModuleId = moduleId;
+                    audit.ReferenceId = referenceId;
+                    audit.SiteName = billingAddress.SiteName;
+                    audit.CreatedBy = audit.UpdatedBy = updatedBy;
+                    audit.CreatedDate = audit.UpdatedDate = DateTime.Now;
+                    addressId = billingAddress.AddressId;
+
+                }
+            }
 
             var addr = _appContext.Address.AsNoTracking().Where(p => p.AddressId == addressId).FirstOrDefault();
 
@@ -1322,6 +1384,29 @@ namespace DAL.Repositories
                     audit.CreatedDate = audit.UpdatedDate = DateTime.Now;
                 contId = Convert.ToInt64(cont.ContactId);
                 
+            }
+            else
+            {
+                var cont = _appContext.VendorContact.AsNoTracking().Where(p => p.VendorContactId == contactId).FirstOrDefault();
+                var contVendor = _appContext.Contact.AsNoTracking().Where(p => p.ContactId == cont.ContactId).FirstOrDefault();
+
+                audit.ContactId = Convert.ToInt64(cont.VendorContactId);
+                audit.IsDefaultContact = Convert.ToBoolean(cont.IsDefaultContact);
+                if (contVendor != null)
+                {
+                    audit.IsActive = Convert.ToBoolean(contVendor.IsActive);
+                }
+                else
+                {
+                    audit.IsActive = Convert.ToBoolean(cont.IsActive);
+                }
+                audit.MasterCompanyId = Convert.ToInt32(cont.MasterCompanyId);
+                audit.ModuleId = moduleId;
+                audit.ReferenceId = referenceId;
+
+                audit.CreatedBy = audit.UpdatedBy = updatedBy;
+                audit.CreatedDate = audit.UpdatedDate = DateTime.Now;
+                contId = Convert.ToInt64(cont.ContactId);
             }
 
             var con = _appContext.Contact.AsNoTracking().Where(p => p.ContactId == contId).FirstOrDefault();

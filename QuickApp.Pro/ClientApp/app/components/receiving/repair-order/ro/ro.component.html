@@ -45,7 +45,7 @@
                                             {{col.header}}
                                             <p-sortIcon [field]="col.field"></p-sortIcon>
                                         </th>
-                                        <th></th>
+                                        <th class="Ui-Action-mincount"> Actions </th>
                                     </tr>
                                     <tr>
                                         <th *ngFor="let col of columns" [ngSwitch]="col.field">
@@ -58,31 +58,31 @@
                                 <ng-template pTemplate="body" let-rowData let-columns="columns">
                                     <tr [pSelectableRow]="rowData">
                                         <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
-                                            {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy h:mm:ss a'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy h:mm:ss a'):rowData[col.field]}}
+                                            {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]&& col.field == 'openDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
                                         </td>
-                                        <td>
-                                            <span data-toggle="modal" data-target="#view" (click)="viewSelectedRow(rowData)">
-                                                <a data-toggle="tooltip" pTooltip="View" tooltipPosition="bottom" title="" class="btn btn-primary nobg" data-original-title="View">
+                                        <td class="ui-reUsable-column_span">
+                                            <span data-toggle="modal" data-target="#view"  (click)="viewSelectedRow(rowData)">
+                                                <a data-toggle="tooltip" matTooltip="View"  class="btn nobg" data-original-title="View">
                                                     <i class="fa fa-eye"></i>
                                                 </a>
-                                            </span>
+                                            </span> 
                                             <!-- <span (click)="editSelectedRO(rowData)" *ngIf="rowData.statusId != 4">
-                                                <a data-toggle="tooltip" pTooltip="Edit" tooltipPosition="bottom" title="" class="btn btn-primary nobg" data-original-title="" edit="">
+                                                <a data-toggle="tooltip" matTooltip="Edit"  class="btn nobg" data-original-title="" edit="">
                                                     <i class="fa fa-edit"></i>
                                                 </a>
                                             </span> -->
                                             <span *ngIf="rowData.statusId == 3" (click)="getSelectedRow(rowData)">
-                                                <a data-toggle="tooltip" pTooltip="Receive RO" tooltipPosition="bottom" title="" class="btn btn-primary nobg" data-original-title="" edit="">
+                                                <a data-toggle="tooltip" matTooltip="Receive RO"  class="btn nobg" data-original-title="" edit="">
                                                     <i class=" fa fa-chevron-down"></i>
                                                 </a>
                                             </span>
                                             <span *ngIf="rowData.statusId == 3" (click)="editStockLine(rowData)">
-                                                <a data-toggle="tooltip" pTooltip="Edit Received Parts" tooltipPosition="bottom" title="" class="btn btn-primary nobg" data-original-title="" edit="">
+                                                <a data-toggle="tooltip" matTooltip="Edit Received Parts"  class="btn nobg" data-original-title="" edit="">
                                                     <i class="fa fa-edit"></i>
                                                 </a>
                                             </span>
                                             <span *ngIf="rowData.statusId == 4" (click)="viewSummary(rowData)">
-                                                <a data-toggle="tooltip" pTooltip="View Summary" tooltipPosition="bottom" title="" class="btn btn-primary nobg" data-original-title="" edit="">
+                                                <a data-toggle="tooltip" matTooltip="View Summary"  class="btn nobg" data-original-title="" edit="">
                                                     <i class="fa fa-external-link"></i>
                                                 </a>
                                             </span>

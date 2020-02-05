@@ -127,6 +127,9 @@ export class CustomerFinancialInformationComponent implements OnInit {
     globalSettings: any = {};
     _discountListForDropdown: any = [];
     selectedRowFileForDelete: any;
+    taxRateEditData: any;
+    indexForTaxRate: any = 1;
+    auditDataForTaxData: any= [];
 
     constructor(public taxtypeser: TaxTypeService, public creditTermsService: CreditTermsService,
         public currencyService: CurrencyService,
@@ -211,7 +214,6 @@ export class CustomerFinancialInformationComponent implements OnInit {
     getAllcreditTermList() {
         this.commonservice.smartDropDownList('CreditTerms', 'CreditTermsId', 'Name').subscribe(res => {
             this.creditTermsListOriginal = res;
-
         })
     }
 
@@ -246,7 +248,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
         })
     }
     getAllTaxRates() {
-        this.commonservice.smartDropDownList('[Percent]', 'PercentId', 'PercentValue').subscribe(res => {
+        this.commonservice.smartDropDownList('[TaxRate]', 'TaxRateId', 'TaxRate').subscribe(res => {
 
             this.taxRatesList = res;
         })
@@ -395,12 +397,12 @@ export class CustomerFinancialInformationComponent implements OnInit {
         this.customerService.getDiscountList().subscribe(res => {
             this.discountList = res[0];
             console.log(this.discountList, "this.discuontList++++")
-            for(let i=0; i<this.discountList.length; i++){
-                this._discountListForDropdown.push({label: this.discountList[i].discontValue.toString(), value: this.discountList[i].discontValue})
+            for (let i = 0; i < this.discountList.length; i++) {
+                this._discountListForDropdown.push({ label: this.discountList[i].discontValue.toString(), value: this.discountList[i].discontValue })
             }
             console.log(this._discountListForDropdown, "this._discountListForDropdown++++")
 
-            
+
         })
     }
 
@@ -510,6 +512,8 @@ export class CustomerFinancialInformationComponent implements OnInit {
         })
     }
     mapTaxTypeandRate() {
+        console.log(this.selectedTaxRates, this.selectedTaxType);
+
         if (this.selectedTaxRates && this.selectedTaxType) {
             const index = this.taxTypeRateMapping.findIndex(item => item.taxType === getValueFromArrayOfObjectById('label', 'value', this.selectedTaxType, this.taxTypeList));
             if (index > -1) {
@@ -521,11 +525,28 @@ export class CustomerFinancialInformationComponent implements OnInit {
                 this.selectedTaxRates = null;
                 this.selectedTaxType = null;
             } else {
-                this.taxTypeRateMapping = [...this.taxTypeRateMapping, {
+
+                this.taxTypeRateMapping.push({
                     customerId: this.id,
+                    id: this.indexForTaxRate,
+                    taxTypeId: this.selectedTaxType,
+                    taxRateId: this.selectedTaxRates,
                     taxType: getValueFromArrayOfObjectById('label', 'value', this.selectedTaxType, this.taxTypeList),
-                    taxRate: this.selectedTaxRates
-                }];
+                    taxRate: getValueFromObjectByKey('label', getObjectById('value', this.selectedTaxRates, this.taxRatesList))
+                })
+
+                // this.taxTypeRateMapping = []
+
+                // [...this.taxTypeRateMapping.map((x, index) => {
+                //     return {
+                //         customerId: x.id,
+                //         id: index,
+                //         taxTypeId: this.selectedTaxType,
+                //         taxRateId: this.selectedTaxRates,
+                //         taxType: getValueFromArrayOfObjectById('label', 'value', this.selectedTaxType, this.taxTypeList),
+                //         taxRate: getValueFromObjectByKey('label', getObjectById('value', this.selectedTaxRates, this.taxRatesList))
+                //     }
+                // })];
 
                 this.selectedTaxRates = null;
                 this.selectedTaxType = null;
@@ -533,7 +554,48 @@ export class CustomerFinancialInformationComponent implements OnInit {
 
 
         }
-        console.log(this.taxTypeRateMapping, "this.taxTypeRateMapping+++")
+        console.log(this.taxTypeRateMapping)
+    }
+    editTaxtRate(rowData) {
+        this.taxRateEditData = { ...rowData };
+        console.log(this.taxRateEditData);
+
+    }
+
+    updateTaxTypeandRate() {
+        if (this.taxRateEditData.customerTaxTypeRateMappingId) {
+            this.customerService.updateCustomerTaxTypeRate(this.taxRateEditData).subscribe(res => {
+                this.taxRateEditData = undefined;
+                this.getMappedTaxTypeRateDetails();
+                this.alertService.showMessage(
+                    'Success',
+                    `Successfully Update Tax Type and Rate`,
+                    MessageSeverity.success
+                );
+            })
+        } else {
+            const data = [...this.taxTypeRateMapping.map(x => {
+                if (x.id == this.taxRateEditData.id) {
+                    return {
+                        ...this.taxRateEditData,
+                        taxType: getValueFromArrayOfObjectById('label', 'value', this.taxRateEditData.taxTypeId, this.taxTypeList),
+                        taxRate: getValueFromObjectByKey('label', getObjectById('value', this.taxRateEditData.taxRateId, this.taxRatesList))
+                    };
+                } else {
+                    return x;
+                }
+            })];
+            this.taxTypeRateMapping = data;
+        }
+
+
+    }
+    getAuditHistoryById(data) {
+        const { customerTaxTypeRateMappingId } = data;
+        this.customerService.getAuditHistoryForTaxType(customerTaxTypeRateMappingId).subscribe(res => {
+            this.auditDataForTaxData = res;
+
+        })
     }
     fileUpload(event, fileType) {
         if (event.files.length === 0)
@@ -722,6 +784,8 @@ export class CustomerFinancialInformationComponent implements OnInit {
 
     }
     newTaxRateAdd() {
+        console.log(this.addNewTaxRate);
+
         const data = {
             ...this.addNewTaxRate, createdBy: this.userName, updatedBy: this.userName, masterCompanyId: 1,
 
@@ -819,6 +883,17 @@ export class CustomerFinancialInformationComponent implements OnInit {
     }
     dismissModel() {
         this.modal.close();
+    }
+    getColorCodeForHistory(i, field, value) {
+        const data = this.auditDataForTaxData;
+        const dataLength = data.length;
+        if (i >= 0 && i <= dataLength) {
+            if ((i + 1) === dataLength) {
+                return true;
+            } else {
+                return data[i + 1][field] === value
+            }
+        }
     }
 
 

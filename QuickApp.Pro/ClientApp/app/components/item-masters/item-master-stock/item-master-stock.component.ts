@@ -51,6 +51,7 @@ import { pulloutRequiredFieldsOfForm } from '../../../validations/form.validator
 import { SiteService } from '../../../services/site.service';
 import { Site } from '../../../models/site.model';
 import { StocklineService } from '../../../services/stockline.service';
+import { DBkeys } from '../../../services/db-Keys';
 
 
 @Component({
@@ -62,6 +63,7 @@ import { StocklineService } from '../../../services/stockline.service';
 /** item-master-stock component*/
 export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     @ViewChild('exchLoan') exchLoan: ItemMasterExchangeLoanComponent;
+    defaultRotableId: any ;
     dataSourceValue: MatTableDataSource<Priority>;
     disables: boolean = false;
     disable1: boolean = true;
@@ -436,6 +438,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             partNumber: "",
             partDescription: ""
         }
+        
         this.PDropdownDirectives = ["partNumber", "partDescription"];
         //Adding Below Code for By Default Date Should be current Date while Creation
         this.sourceItemMaster.salesLastSalePriceDate = new Date();
@@ -603,6 +606,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     capesListDataValues: any;
 
     ngOnInit(): void {
+        this.defaultRotableId = DBkeys.DEFAULT_ROTABLE_ID;
         this.ataform = this.fb.group({
             atanumber: new FormControl('', Validators.required),
             atasubchaptername: new FormControl('', Validators.required)
@@ -625,7 +629,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         //     this.selectedModelId = undefined;
         //     this.selectedDashnumber = undefined;
         //});
-        this.addFieldValue();
+        // this.addFieldValue();
         // this.getAtachapter();
         this.modalDash = [
             { field: 'aircraft', header: 'Aircraft' },
@@ -1958,7 +1962,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                 else {
                     this.disableSavepartNumber = false;
                     this.sourceItemMasterCap.partDescription = "";
-                    this.disableSavepartDescription = false;
+                    // this.disableSavepartDescription = false;
                 }
             }
 
@@ -4773,7 +4777,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     saveExportInformation() {
 
         const ItemMasterID = this.isEdit === true ? this.itemMasterId : this.collectionofItemMaster.itemMasterId;
-        const data = { ...this.exportInfo, ExportCountryId: this.tempExportCountryId, ItemMasterId: ItemMasterID }
+        const data = { ...this.exportInfo, ExportCountryId: this.tempExportCountryId, ItemMasterId: parseInt(ItemMasterID) }
 
         this.itemser.newItemMasterExportInformation(data).subscribe(datas => {
             this.tempExportCountryId = null;
@@ -4788,7 +4792,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     saveandcreate() {
         if (this.isValidClassification) {
             const ItemMasterID = this.isEdit === true ? this.itemMasterId : this.collectionofItemMaster.itemMasterId;
-            const data = { ...this.exportInfo, ExportCountryId: this.tempExportCountryId, ItemMasterId: ItemMasterID }
+            const data = { ...this.exportInfo, ExportCountryId: this.tempExportCountryId, ItemMasterId: parseInt(ItemMasterID) }
 
             this.itemser.newItemMasterExportInformation(data).subscribe(datas => {
                 this.tempExportCountryId = null;
@@ -5313,7 +5317,9 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                 for (let i = 0; i < this.allPartnumbersInfo.length; i++) {
                     let partDescription = this.allPartnumbersInfo[i].partDescription;
                     if (partDescription) {
+                        if (partDescription.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
                         this.descriptionCollection.push(partDescription);
+                        }
                     }
                 }
             }
@@ -5326,7 +5332,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             for (let i = 0; i < this.allPartnumbersInfo.length; i++) {
                 if (event == this.allPartnumbersInfo[i].partDescription) {
                     this.sourceItemMaster.partDescription = event;
-                    this.disableSavepartDescription = true;
+                    // this.disableSavepartDescription = true;
                     this.selectdescription = event;
                 }
             }
@@ -5578,7 +5584,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         if (currencyid) {
             for (let i = 0; i < this.allCurrencyInfo.length; i++) {
                 if (currencyid == this.allCurrencyInfo[i].currencyId) {
-                    this.currencySymbol = this.allCurrencyInfo[i].symbol;
+                    this.currencySymbol = this.allCurrencyInfo[i].code;
                 }
             }
 

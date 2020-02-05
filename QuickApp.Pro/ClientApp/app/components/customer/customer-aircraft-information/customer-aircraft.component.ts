@@ -28,7 +28,8 @@ export class CustomerAircraftComponent implements OnInit {
     @Output() tab = new EventEmitter();
     @ViewChild("aircraftForm")  aircraftForm : any;
     @Input() customerDataFromExternalComponents : any;
-
+   // for disabled form submit buttons
+    disableSave:boolean=true;
     // aircraft Type used for both 
     manufacturerData: { value: any; label: any; }[];
     // search Variables
@@ -154,7 +155,15 @@ export class CustomerAircraftComponent implements OnInit {
         }
 
     }
-
+    enableSave() {
+        console.log('hello ,directive');
+               this.disableSave = false;
+       
+       } 
+       closeMyModel(){
+           $("#editAirCraftDetails").modal("hide");
+           this.disableSave=true;
+       }
     get userName(): string {
         return this.authService.currentUser ? this.authService.currentUser.userName : "";
     }
@@ -536,7 +545,8 @@ export class CustomerAircraftComponent implements OnInit {
             );
         })
 
-
+        $("#editAirCraftDetails").modal("hide");
+        this.disableSave=true;
 
     }
     openAddInventoryPopup(content){

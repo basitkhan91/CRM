@@ -361,6 +361,7 @@ overAllMarkup: any;
           (res)=>{
             if(res && res['workOrderQuoteDetailsId']){
               this.workOrderQuoteDetailsId = res['workOrderQuoteDetailsId'];
+              this.getQuoteTabData();
               this.historicalWorkOrderId = res['selectedId'];
               this.woWorkFlowId = res['selectedId'];
               this.currenttaskId = res['taskId'];
@@ -455,88 +456,88 @@ overAllMarkup: any;
 
   gridTabChange(value) {
     this.gridActiveTab = value;
-    if((this.isEdit || this.tabQuoteCreated['materialList']) && value == 'materialList'){
-      this.getQuoteMaterialListByWorkOrderQuoteId();
-    }
-    else if((this.isEdit || this.tabQuoteCreated['charges']) && value == 'charges'){
-      this.getQuoteChargesListByWorkOrderQuoteId();
-    }
-    else if((this.isEdit || this.tabQuoteCreated['exclusions']) && value == 'exclusions'){
-      this.getQuoteExclusionListByWorkOrderQuoteId();
-    }
-    else if((this.isEdit || this.tabQuoteCreated['labor']) && value == 'labor'){
-      for(let task in this.labor.workOrderLaborList[0]){
-        this.labor.workOrderLaborList[0][task] = [];
-      }
-      this.getQuoteLaborListByWorkOrderQuoteId();
-    }
-    else if((this.isEdit || this.tabQuoteCreated['freight']) && value == 'freight'){
-      this.getQuoteFreightListByWorkOrderQuoteId();
-    }
-    else{
-      if(this.selectedBuildMethod == 'use historical wos' && this.selectedWorkFlowOrWorkOrder){
-          this.clearQuoteData();
-          if(value == 'materialList') {
-            this.workOrderService.getWorkOrderMaterialListForQuote(this.selectedWorkFlowOrWorkOrder.workFlowWorkOrderId)
-            .subscribe(
-              (res: any[]) =>{
-                this.materialListQuotation = res;
-                this.workOrderMaterialList = res;
-              }
-            )
-          }
-          if(value ==  'labor') {
-            this.savedWorkOrderData.workFlowWorkOrderId = 0;
-            this.workOrderService.getWorkOrderLaborListForQuote(this.selectedWorkFlowOrWorkOrder.workFlowWorkOrderId)
-            .subscribe(
-              (res: any) =>{
-                if(res){
-                  let laborList = this.labor.workOrderLaborList;
-                  this.labor = {...res, workOrderLaborList: laborList};
-                  if(this.selectedBuildMethod == 'use work flow'){
-                    this.labor.workFloworSpecificTaskorWorkOrder = 'workFlow';
-                  }
-                  else if(this.selectedBuildMethod == 'use historical wos'){
-                    this.labor.workFloworSpecificTaskorWorkOrder = 'specificTasks';
-                  }
-                  this.taskList.forEach((tl)=>{
-                    this.labor.workOrderLaborList[0][tl['description'].toLowerCase()] = [];
-                    res.laborList.forEach((rt)=>{
-                      if(rt['taskId'] == tl['taskId']){
-                        if(this.labor.workOrderLaborList[0][tl['description'].toLowerCase()][0] && this.labor.workOrderLaborList[0][tl['description'].toLowerCase()][0]['expertiseId'] == null && this.labor.workOrderLaborList[0][tl['description'].toLowerCase()][0]['employeeId'] == null){
-                          this.labor.workOrderLaborList[0][tl['description'].toLowerCase()] = [];
-                        }
-                        let labor = {}
-                        labor = {...rt, employeeId: {'label':rt.employeeName, 'value': rt.employeeId}}
-                        this.labor.workOrderLaborList[0][tl['description'].toLowerCase()].push(labor);
-                      }
-                    })
-                  })
-                }
-                this.laborQuotation = res;
-              }
-            )
-          }
-          if(value == 'charges') {
-            this.workOrderService.getWorkOrderChargesListForQuote(this.selectedWorkFlowOrWorkOrder.workFlowWorkOrderId)
-            .subscribe(
-              (res: any[]) =>{
-                this.chargesQuotation = res;
-                this.workOrderChargesList = res;
-              }
-            )
-          }
-          if(value == 'exclusions') {
-            this.workOrderService.getWorkOrderExclutionsListForQuote(this.selectedWorkFlowOrWorkOrder.workFlowWorkOrderId)
-            .subscribe(
-              (res: any[]) =>{
-                this.exclusionsQuotation = res;
-                this.workOrderExclusionsList = res;
-              }
-            )
-          }
-      }
-    }
+    // if((this.isEdit || this.tabQuoteCreated['materialList']) && value == 'materialList'){
+    //   this.getQuoteMaterialListByWorkOrderQuoteId();
+    // }
+    // else if((this.isEdit || this.tabQuoteCreated['charges']) && value == 'charges'){
+    //   this.getQuoteChargesListByWorkOrderQuoteId();
+    // }
+    // else if((this.isEdit || this.tabQuoteCreated['exclusions']) && value == 'exclusions'){
+    //   this.getQuoteExclusionListByWorkOrderQuoteId();
+    // }
+    // else if((this.isEdit || this.tabQuoteCreated['labor']) && value == 'labor'){
+    //   for(let task in this.labor.workOrderLaborList[0]){
+    //     this.labor.workOrderLaborList[0][task] = [];
+    //   }
+    //   this.getQuoteLaborListByWorkOrderQuoteId();
+    // }
+    // else if((this.isEdit || this.tabQuoteCreated['freight']) && value == 'freight'){
+    //   this.getQuoteFreightListByWorkOrderQuoteId();
+    // }
+    // else{
+    //   if(this.selectedBuildMethod == 'use historical wos' && this.selectedWorkFlowOrWorkOrder){
+    //       this.clearQuoteData();
+    //       if(value == 'materialList') {
+    //         this.workOrderService.getWorkOrderMaterialListForQuote(this.selectedWorkFlowOrWorkOrder.workFlowWorkOrderId)
+    //         .subscribe(
+    //           (res: any[]) =>{
+    //             this.materialListQuotation = res;
+    //             this.workOrderMaterialList = res;
+    //           }
+    //         )
+    //       }
+    //       if(value ==  'labor') {
+    //         this.savedWorkOrderData.workFlowWorkOrderId = 0;
+    //         this.workOrderService.getWorkOrderLaborListForQuote(this.selectedWorkFlowOrWorkOrder.workFlowWorkOrderId)
+    //         .subscribe(
+    //           (res: any) =>{
+    //             if(res){
+    //               let laborList = this.labor.workOrderLaborList;
+    //               this.labor = {...res, workOrderLaborList: laborList};
+    //               if(this.selectedBuildMethod == 'use work flow'){
+    //                 this.labor.workFloworSpecificTaskorWorkOrder = 'workFlow';
+    //               }
+    //               else if(this.selectedBuildMethod == 'use historical wos'){
+    //                 this.labor.workFloworSpecificTaskorWorkOrder = 'specificTasks';
+    //               }
+    //               this.taskList.forEach((tl)=>{
+    //                 this.labor.workOrderLaborList[0][tl['description'].toLowerCase()] = [];
+    //                 res.laborList.forEach((rt)=>{
+    //                   if(rt['taskId'] == tl['taskId']){
+    //                     if(this.labor.workOrderLaborList[0][tl['description'].toLowerCase()][0] && this.labor.workOrderLaborList[0][tl['description'].toLowerCase()][0]['expertiseId'] == null && this.labor.workOrderLaborList[0][tl['description'].toLowerCase()][0]['employeeId'] == null){
+    //                       this.labor.workOrderLaborList[0][tl['description'].toLowerCase()] = [];
+    //                     }
+    //                     let labor = {}
+    //                     labor = {...rt, employeeId: {'label':rt.employeeName, 'value': rt.employeeId}}
+    //                     this.labor.workOrderLaborList[0][tl['description'].toLowerCase()].push(labor);
+    //                   }
+    //                 })
+    //               })
+    //             }
+    //             this.laborQuotation = res;
+    //           }
+    //         )
+    //       }
+    //       if(value == 'charges') {
+    //         this.workOrderService.getWorkOrderChargesListForQuote(this.selectedWorkFlowOrWorkOrder.workFlowWorkOrderId)
+    //         .subscribe(
+    //           (res: any[]) =>{
+    //             this.chargesQuotation = res;
+    //             this.workOrderChargesList = res;
+    //           }
+    //         )
+    //       }
+    //       if(value == 'exclusions') {
+    //         this.workOrderService.getWorkOrderExclutionsListForQuote(this.selectedWorkFlowOrWorkOrder.workFlowWorkOrderId)
+    //         .subscribe(
+    //           (res: any[]) =>{
+    //             this.exclusionsQuotation = res;
+    //             this.workOrderExclusionsList = res;
+    //           }
+    //         )
+    //       }
+    //   }
+    // }
   }
   getQuoteInfo(data) {
     this.selectedWorkFlowOrWorkOrder = data;
@@ -1154,6 +1155,7 @@ getQuoteTabData() {
   this.getQuoteMaterialListByWorkOrderQuoteId();
   this.getQuoteChargesListByWorkOrderQuoteId();
   this.getQuoteLaborListByWorkOrderQuoteId();
+  this.getQuoteFreightListByWorkOrderQuoteId();
 
   // this.calculateTotalWorkOrderCost();
 

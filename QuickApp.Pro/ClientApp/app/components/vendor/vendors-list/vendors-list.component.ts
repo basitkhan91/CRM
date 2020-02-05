@@ -129,7 +129,7 @@ export class VendorsListComponent implements OnInit {
     aeroExchangeDesc: any;
     vendorProcess1099Data: any;
     checkedCheckboxesList: any = [];
-
+    status: string = 'active';
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
@@ -202,6 +202,7 @@ export class VendorsListComponent implements OnInit {
     lazyLoadEventDataInput: any;
     filterText: any = '';
     globalfilter: string;
+    isViewMode: boolean = true;
     // purchaseOrderData: any;
     // poPageSize: number = 10;
     // poPageIndex: number = 0;
@@ -290,11 +291,12 @@ export class VendorsListComponent implements OnInit {
         //     this.lazyLoadEventDataInput.filters = { ...this.lazyLoadEventDataInput.filters, vendorId: this.vendorId }
         // }
         if (this.isCreatePO || this.isCreateRO) {
-            this.lazyLoadEventDataInput.filters = { ...this.lazyLoadEventDataInput.filters, status: 'active' }
+            // this.lazyLoadEventDataInput.filters = { ...this.lazyLoadEventDataInput.filters, status: 'active' }
             this.isActive = true;
         }
         console.log(this.filterText);
         if (this.filterText == '') {
+            this.lazyLoadEventDataInput.filters = { ...this.lazyLoadEventDataInput.filters, status: this.status }
             const PagingData = { ...this.lazyLoadEventDataInput, filters: listSearchFilterObjectCreation(this.lazyLoadEventDataInput.filters) }
             this.getList(PagingData);
         } else {
@@ -311,6 +313,9 @@ export class VendorsListComponent implements OnInit {
             if (this.allVendorList.length > 0) {
                 this.totalRecords = vList[0].totalRecords;
                 this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+            } else {
+                this.totalRecords = 0;
+                this.totalPages = 0;
             }
         })
     }
@@ -331,6 +336,13 @@ export class VendorsListComponent implements OnInit {
     resetGlobalFilter() {
         this.filterText = '';
         this.globalfilter = '';
+    }
+
+    getVenListByStatus(status) {
+        this.status = status;
+        this.lazyLoadEventDataInput.filters = { ...this.lazyLoadEventDataInput.filters, status: status };
+        const PagingData = { ...this.lazyLoadEventDataInput, filters: listSearchFilterObjectCreation(this.lazyLoadEventDataInput.filters) }
+            this.getList(PagingData);
     }
 
     // private loadData() {
@@ -702,7 +714,8 @@ export class VendorsListComponent implements OnInit {
     }
 
     openView(content, row) {
-
+        this.vendorId = row.vendorId;
+        console.log(this.vendorId);        
         this.vendorService.getVendorDataById(row.vendorId).subscribe(res => {
             console.log(res);
             this.vendorData = res;
@@ -714,7 +727,7 @@ export class VendorsListComponent implements OnInit {
         this.getDomesticWithVendorId(row.vendorId);
         this.InternatioalWithVendorId(row.vendorId);
         this.DefaultWithVendorId(row.vendorId);
-        this.loadContactDataData(row.vendorId);
+        //this.loadContactDataData(row.vendorId);
         this.loadPayamentData(row.vendorId);
         this.loadShippingData(row.vendorId);
         this.loadBillingData(row.vendorId);
@@ -959,6 +972,7 @@ export class VendorsListComponent implements OnInit {
             error => this.saveFailedHelper(error));
     }
     openContactList(content, row) {
+        this.vendorId = row.vendorId;
         this.selectedRow = row;
         this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {

@@ -65,6 +65,7 @@ namespace QuickApp.Pro.ViewModels
         public string Manufacturer { get; set; }
         public string ReasonForRemoval { get; set; }
         public int? OwnerType { get; set; }
+        public long? StockLineId {get;set;}
         #region NOT USED
 
         //public long? CustomerClassificationId { get; set; }

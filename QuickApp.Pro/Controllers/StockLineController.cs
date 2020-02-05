@@ -1112,7 +1112,7 @@ namespace QuickApp.Pro.Controllers
                 return BadRequest(new Exception("Invalid request parameter, partId not passed"));
             }
 
-            IEnumerable<object> results = GetPartDetails(searchView.partSearchParamters.partId, searchView.partSearchParamters.conditionId);
+            IEnumerable<object> results = GetPartDetails(searchView.partSearchParamters.partId, searchView.partSearchParamters.conditionId, searchView.partSearchParamters.customerId);
 
             if(results.Any() && (searchView.partSearchParamters.includeAlternatePartNumber || searchView.partSearchParamters.includeEquivalentPartNumber))
             {
@@ -1154,7 +1154,7 @@ namespace QuickApp.Pro.Controllers
                 {
                     foreach(var pn in alternatePartNumbers)
                     {
-                      results = results.Concat(GetPartDetails(pn.MappingItemMasterId, partSearchParamters.conditionId, pn.PartNumber, pn.MappingType));
+                      results = results.Concat(GetPartDetails(pn.MappingItemMasterId, partSearchParamters.conditionId, partSearchParamters.customerId, pn.PartNumber, pn.MappingType));
                     }
                 }
             }
@@ -1198,11 +1198,13 @@ namespace QuickApp.Pro.Controllers
         }
 
 
-        private IEnumerable<object> GetPartDetails(long? partId, long? conditionId, string alternateFor = "", int mappingType = -1)
+        private IEnumerable<object> GetPartDetails(long? partId, long? conditionId, long? customerId, string alternateFor = "", int mappingType = -1)
         {
             var result = Enumerable.Empty<object>();
 
             var condition = _context.Condition.Where(c => c.ConditionId == conditionId).FirstOrDefault();
+
+            var itemMasterSale = GetItemMasterPurchaseSale(customerId, partId);  
 
             result = from item in _context.ItemMaster
                      join sl in _context.StockLine on item.ItemMasterId equals sl.ItemMasterId
@@ -1244,7 +1246,8 @@ namespace QuickApp.Pro.Controllers
                          currencyId = ic != null ? ic.CurrencyId : -1,
                          currencyDescription = ic != null ? ic.DisplayName : string.Empty,
                          unitCost = sl.CoreUnitCost,
-                         mappingType = mappingType
+                         mappingType = mappingType, 
+                         itemMasterSale = itemMasterSale
                      };
 
 
@@ -1289,7 +1292,7 @@ namespace QuickApp.Pro.Controllers
 
             foreach(var partSearchParamters in searchViews.multiPartSearchParamters)
             {
-                results = results.Concat(GetPartDetails(partSearchParamters.partId, partSearchParamters.conditionId));
+                results = results.Concat(GetPartDetails(partSearchParamters.partId, partSearchParamters.conditionId, partSearchParamters.conditionId));
 
                 if (results.Any() && partSearchParamters.includeAlternatePartNumber)
                 {
@@ -1304,6 +1307,40 @@ namespace QuickApp.Pro.Controllers
             searchData.Data = DAL.Common.PaginatedList<object>.Create(results.AsQueryable<object>(), pageCount, searchViews.rows);
 
             return Ok(searchData);
+        }
+
+        private ItemMasterSaleViewModel GetItemMasterPurchaseSale(long? customerId, long? partId)
+        { 
+            
+            ItemMasterSaleViewModel itemMasterSale = null;  
+
+            if( customerId.HasValue)
+            { 
+                Customer customer  = _unitOfWork.Customer.Get(customerId); 
+                
+                if(customer != null)
+                { 
+                    IEnumerable<ItemMasterPurchaseSale> itemMasterPurchaseSales = _unitOfWork.itemMaster.gePurcSaleByItemMasterID(partId.Value);
+                
+                    if(itemMasterPurchaseSales.Any())
+                    {
+                
+                        itemMasterSale = itemMasterPurchaseSales.Where( imps => imps.SP_FSP_CurrencyId == customer.CurrencyId).Select( sales => new ItemMasterSaleViewModel{
+                            ItemMasterPurchaseSaleId = sales.ItemMasterPurchaseSaleId,
+                            Condition = sales.Condition,
+                            UomId  = sales.SP_FSP_UOMId,
+                            CurrencyId = sales.SP_FSP_CurrencyId,
+                            FxRate = sales.SP_FSP_FXRatePerc,
+                            BaseSalePrice = sales.SP_CalSPByPP_BaseSalePrice,
+                            DiscountPercentage = sales.SP_CalSPByPP_SaleDiscPerc,
+                            DiscountAmount = sales.SP_CalSPByPP_SaleDiscAmount,
+                            UnitSalePrice = sales.SP_CalSPByPP_UnitSalePrice
+                        }).FirstOrDefault();  
+                    }
+                } 
+            }
+
+            return itemMasterSale;
         }
     }
 }

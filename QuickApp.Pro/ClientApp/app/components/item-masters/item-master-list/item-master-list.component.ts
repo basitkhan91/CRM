@@ -170,7 +170,11 @@ export class ItemMasterListComponent implements OnInit, AfterViewInit {
     exchangeCorePrice :any;
     exchangeOverhaulPrice:any;
     exchangeOutrightPrice :any;
-    exchangeCoreCost :any;
+	exchangeCoreCost :any;
+	pageSize: number = 10;
+	totalRecords: number = 0;
+    totalPages: number = 0;
+
 
 	//selectedColumns: any;
 	/** item-master-list ctor */
@@ -383,6 +387,21 @@ export class ItemMasterListComponent implements OnInit, AfterViewInit {
 	
 	}
 	private onitemmasterSuccessful(allWorkFlows: any[], value) {
+
+		for(let i=0; i<allWorkFlows.length; i++){
+			if(allWorkFlows[i]["manufacturer"]){
+				allWorkFlows[i]["manufacturerdesc"] = allWorkFlows[i]["manufacturer"]["name"]
+			}
+
+			if(allWorkFlows[i]["itemClassification"]) {
+				allWorkFlows[i]["classificationdesc"] = allWorkFlows[i]["itemClassification"]["description"]
+			}
+						
+		}
+		this.totalRecords = allWorkFlows.length;
+		this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+
+
 
 		if (value == "Stock") {
 			this.stockTable = true;

@@ -409,7 +409,9 @@ namespace DAL
         public DbSet<CustomerAircraftMapping> CustomerAircraftMapping { get; set; }
         public DbSet<CustomerATAMapping> CustomerATAMapping { get; set; }
         public DbSet<CustomerContactATAMapping> CustomerContactATAMapping { get; set; }
+        public DbSet<CustomerContactATAMappingAudit> CustomerContactATAMappingAudit { get; set; }
         public DbSet<CustomerTaxTypeRateMapping> CustomerTaxTypeRateMapping { get; set; }
+        public DbSet<CustomerTaxTypeRateMappingAudit> CustomerTaxTypeRateMappingAudit { get; set; }
         public DbSet<AssetCapes> AssetCapes { get; set; }
         public DbSet<AssetCapesAudit> AssetCapesAudit { get; set; }
 
@@ -522,7 +524,7 @@ namespace DAL
         public DbSet<ShippingBillingAddressAudit> ShippingBillingAddressAudit { get; set; }
         public DbSet<DocumentsAudit> DocumentsAudit { get; set; }
 
-
+        public DbSet<VendorShippingAudit> VendorShippingAudit { get; set; }
 
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
