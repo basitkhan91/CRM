@@ -33,7 +33,7 @@ import { CustomerService } from '../../../services/customer.service';
 import { CommonService } from '../../../services/common.service';
 import { IntegrationService } from '../../../services/integration-service';
 import { ConfigurationService } from '../../../services/configuration.service';
-import { editValueAssignByCondition, getObjectById, getValueFromObjectByKey, selectedValueValidate } from '../../../generic/autocomplete';
+import { editValueAssignByCondition, getObjectById, getValueFromObjectByKey, selectedValueValidate, toLowerCaseOnInput } from '../../../generic/autocomplete';
 import { VendorStepsPrimeNgComponent } from '../vendor-steps-prime-ng/vendor-steps-prime-ng.component';
 import { emailPattern, urlPattern } from '../../../validations/validation-pattern';
 declare const google: any;
@@ -615,12 +615,15 @@ export class VendorGeneralInformationComponent implements OnInit {
             this.sourceAction.classificationName = this.vendorClassName;
             this.sourceAction.masterCompanyId = 1;
             this.vendorclassificationService.newVendorClassification(this.sourceAction).subscribe(data => {
+
                 if (data) {
                     this.sourceVendor.vendorClassificationId = data.vendorClassificationId
                 }
                 this.alertService.showMessage("Success", 'Added New Vendor Classification Successfully.', MessageSeverity.success);
 
                 this.loadDataVendorData();
+                this.getAllVendorClassification();
+
             })
         }
         else {
@@ -633,6 +636,7 @@ export class VendorGeneralInformationComponent implements OnInit {
                 error => this.saveFailedHelper(error));
         }
         this.modal.close();
+
     }
 
     async getAllVendorClassification() {
@@ -675,7 +679,6 @@ export class VendorGeneralInformationComponent implements OnInit {
     }
 
 
-    //Load Vendor Data
     private loadDataVendorData() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
@@ -878,6 +881,12 @@ export class VendorGeneralInformationComponent implements OnInit {
         this.loadingIndicator = true;
         this.sourceVendor = row;
     }
+
+    convertUrlToLowerCase(event) {
+        const value = event.target.value;
+        event.target.value = toLowerCaseOnInput(value);
+    }
+
     editItemAndCloseModel(goNxt?: any) {
         this.isSaving = true;
         this.isEditMode = true;

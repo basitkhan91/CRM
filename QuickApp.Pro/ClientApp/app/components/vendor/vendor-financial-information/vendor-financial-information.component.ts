@@ -26,7 +26,7 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 import { ChangeDetectorRef } from '@angular/core';
 import { DiscountValue } from '../../../models/discountvalue';
 import { CommonService } from '../../../services/common.service';
-import { validateRecordExistsOrNot, getObjectById, getObjectByValue, selectedValueValidate } from '../../../generic/autocomplete';
+import { validateRecordExistsOrNot, getObjectById, getObjectByValue, selectedValueValidate, editValueAssignByCondition } from '../../../generic/autocomplete';
 import { VendorStepsPrimeNgComponent } from '../vendor-steps-prime-ng/vendor-steps-prime-ng.component';
 
 @Component({
@@ -77,7 +77,7 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
     SelectedCurrencyInfo: any;
     vendorProcess1099Data: any;
     checkedCheckboxesList: any = [];
-    listOfErrors: any[];    
+    listOfErrors: any[];
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     filteredBrands: any[];
@@ -133,7 +133,7 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
             this.sourceVendor.discountId = 0;
         }
 
-        
+
 
         //if(this.sourceVendor.v1099GrossProceedsPaidToAttorneyDefault)
         //{
@@ -637,7 +637,7 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
                     discountId: this.sourceVendor.discountId,
                     createdBy: this.sourceVendor.createdBy,
                     updatedBy: this.sourceVendor.updatedBy,
-                    isActive: true                 
+                    isActive: true
                 }
                 this.vendorService.updatefinanceinfo(financialInfo, this.sourceVendor.vendorId).subscribe(data => {
                     this.localCollection = data;
@@ -877,7 +877,11 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.dataSource.data = getCreditTermsList;
-        this.allcreditTermInfo = getCreditTermsList.columnData;
+        this.allcreditTermInfo = getCreditTermsList.columnData.filter(x => {
+            if (x.isActive === true) {
+                return x;
+            }
+        });
     }
     saveCreditTermsdata() {
         this.isSaving = true;
@@ -916,6 +920,7 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
     }
     filtercreditTerms(event) {
         this.creditTermsCollection = [];
+
         for (let i = 0; i < this.allcreditTermInfo.length; i++) {
             let creditTermName = this.allcreditTermInfo[i].name;
             if (creditTermName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
@@ -972,11 +977,15 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
         );
 
     }
-    private onDataLoadClassifiSuccessful(getDiscountList: DiscountValue[]) {
+    private onDataLoadClassifiSuccessful(getDiscountList) {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.dataSource.data = getDiscountList;
-        this.alldiscountvalueInfo = getDiscountList;
+        this.alldiscountvalueInfo = getDiscountList.filter(x => {
+            if (x.isActive === true) {
+                return x;
+            }
+        });
     }
     saveDiscountPercent() {
         this.isSaving = true;
@@ -1069,15 +1078,21 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
     }
 
     validateCreditTerms(value) {
-        if(value != 0) {
+        if (value != 0) {
             this.disableCreditTerms = false;
         } else {
             this.disableCreditTerms = true;
-        }     
+        }
+    }
+    getVendorName() {
+        if (this.local.vendorName !== undefined) {
+            return editValueAssignByCondition('vendorName', this.local.vendorName)
+        }
     }
 
-    validateCurrency(value) {        
-        if(value != 0) {
+
+    validateCurrency(value) {
+        if (value != 0) {
             this.disableCurrency = false;
         } else {
             this.disableCurrency = true;

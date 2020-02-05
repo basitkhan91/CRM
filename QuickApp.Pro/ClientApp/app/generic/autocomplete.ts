@@ -166,5 +166,11 @@ export function validateRecordExistsOrNotForInput(currentInput: any, originalDat
     }
 }
 
+export function toLowerCaseOnInput(value) {
+    if (value !== undefined && typeof (value) === 'string') {
+        return value.toLowerCase();
+    }
+}
+
 
 

@@ -61,6 +61,7 @@
                                 </colgroup>
                             </ng-template>
         
+  
                             <ng-template pTemplate="header" let-columns>
                                 <tr>
                                     <th *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
@@ -201,7 +202,7 @@
                                 <th>Caps Type</th>
                                 <th>Vendor Ranking</th>
                                 <th>TAT</th>
-                                <th>IsActive</th>
+                                <th>Is Active</th>
                                 <th>Updated By</th>
                                 <th>Updated Time</th>
                             </tr>
@@ -253,13 +254,13 @@
                             <div class="col-sm-3">
                                 <p><span class="label"><b>Vendor Name: </b></span><span class="value">{{vendorCapesGeneralInfo.vendorName ? vendorCapesGeneralInfo.vendorName : '-'}}</span></p>
                                 <p><span class="label"><b>Vendor Code: </b></span><span class="value">{{vendorCapesGeneralInfo.vendorCode ? vendorCapesGeneralInfo.vendorCode : '-'}}</span></p>
-                                <p><span class="label"><b>PN: </b></span><span class="value">{{vendorCapesGeneralInfo.partNumber ? vendorCapesGeneralInfo.partNumber : '-'}}</span></p>
+                                <p><span class="label"><b>PN:<span class="clr-red">*</span>  </b></span><span class="value">{{vendorCapesGeneralInfo.partNumber ? vendorCapesGeneralInfo.partNumber : '-'}}</span></p>
                                 <p><span class="label"><b>PN Description: </b></span><span class="value">{{vendorCapesGeneralInfo.partDescription ? vendorCapesGeneralInfo.partDescription : '-'}}</span></p>
                             </div>
                             <div class="col-sm-3">
                                 <p><span class="label"><b>PN Mfg: </b></span><span class="value">{{vendorCapesGeneralInfo.manufacturerName ? vendorCapesGeneralInfo.manufacturerName : '-'}}</span></p>
-                                <p><span class="label"><b>Vendor Capability Type: </b></span><span class="value">{{vendorCapesGeneralInfo.capabilityType ? vendorCapesGeneralInfo.capabilityType : '-'}}</span></p>
-                                <p><span class="label"><b>Vendor Ranking: </b></span><span class="value">{{vendorCapesGeneralInfo.vendorRanking ? vendorCapesGeneralInfo.vendorRanking : '-'}}</span></p>
+                                <p><span class="label"><b>Vendor Capability Type: <span class="clr-red">*</span> </b></span><span class="value">{{vendorCapesGeneralInfo.capabilityType ? vendorCapesGeneralInfo.capabilityType : '-'}}</span></p>
+                                <p><span class="label"><b>Vendor Ranking:<span class="clr-red">*</span>  </b></span><span class="value">{{vendorCapesGeneralInfo.vendorRanking ? vendorCapesGeneralInfo.vendorRanking : '-'}}</span></p>
                             </div>
                             <div class="col-sm-3">
                                 <p><span class="label"><b>PMA: </b></span><span class="value">{{vendorCapesGeneralInfo.isPMA ? vendorCapesGeneralInfo.isPMA : '-'}}</span></p>
