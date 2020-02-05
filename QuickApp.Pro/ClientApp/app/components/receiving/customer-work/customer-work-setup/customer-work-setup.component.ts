@@ -182,7 +182,7 @@ export class CustomerWorkSetupComponent implements OnInit {
     // receivingForm: any = {};
     // public allWorkFlows: any[] = [];
 
-    constructor(private commonService: CommonService, private customerService: CustomerService, private binService: BinService, private siteService: SiteService, private conditionService: ConditionService, private datePipe: DatePipe, private _actRoute: ActivatedRoute, private receivingCustomerWorkService: ReceivingCustomerWorkService, private authService: AuthService, private router: Router, private alertService: AlertService) {
+    constructor(private commonService: CommonService, private customerService: CustomerService, private binService: BinService, private siteService: SiteService, private conditionService: ConditionService, private datePipe: DatePipe, private _actRoute: ActivatedRoute, private receivingCustomerWorkService: ReceivingCustomerWorkService, private authService: AuthService, private router: Router, private alertService: AlertService, private stocklineService: StocklineService) {
         this.receivingForm.receivingNumber = 'Creating';
         this.receivingForm.conditionId = 0;
         this.receivingForm.siteId = 0;
@@ -243,7 +243,7 @@ export class CustomerWorkSetupComponent implements OnInit {
             this.allCustomersInfo = res[0];
             if(this.isEditMode) {
                 this.onSelectCustomeronEdit(this.customerId);
-            }            
+            }
         });
     }
 
@@ -280,6 +280,7 @@ export class CustomerWorkSetupComponent implements OnInit {
     getReceivingCustomerDataonEdit(id) {
         this.receivingCustomerWorkService.getCustomerWorkdataById(id).subscribe(res => {
             console.log(res);
+            this.customerId = res.customerId;
             this.receivingForm = {
                 ...res,
                 employeeId: getObjectById('value', res.employeeId, this.allEmployeeList),
@@ -290,12 +291,16 @@ export class CustomerWorkSetupComponent implements OnInit {
                 expDate: res.expDate ? new Date(res.expDate) : '',
                 timeLifeDate: res.timeLifeDate ? new Date(res.timeLifeDate) : '',
             };
-            //this.onSelectCustomeronEdit(res.customerId);
-            this.customerId = res.customerId;
+            //this.onSelectCustomeronEdit(res.customerId);            
             this.onPartNumberSelected(res.itemMasterId);
             this.getManagementStructureOnEdit(res.managementStructureId);
             this.getSiteDetailsOnEdit(res);
             this.getObtainOwnerTraceOnEdit(res);
+            if(res.timeLifeCyclesId != null  || res.timeLifeCyclesId != 0) {
+                this.sourceTimeLife.timeLifeCyclesId = res.timeLifeCyclesId;
+                this.getTimeLifeOnEdit(res.timeLifeCyclesId);
+            }            
+            this.customerList();
         });
     }
 
@@ -367,6 +372,13 @@ export class CustomerWorkSetupComponent implements OnInit {
         else if(res.traceableToTypeId == 4) {
             this.receivingForm.traceableTo = res.traceableTo;
         }
+    }
+
+    getTimeLifeOnEdit(timeLifeId) {
+        this.stocklineService.getStockLineTimeLifeList(timeLifeId).subscribe(res => {
+            console.log(res);
+            this.sourceTimeLife = res[0];
+        });
     }
     
     selectedLegalEntity(legalEntityId) {
@@ -639,19 +651,13 @@ export class CustomerWorkSetupComponent implements OnInit {
             referenceId: this.receivingForm.referenceId ? editValueAssignByCondition('value', this.receivingForm.referenceId) : '',
             createdBy: this.userName,
             updatedBy: this.userName,
-            timeLife: this.sourceTimeLife
-            
+            timeLife: {...this.sourceTimeLife, updatedDate: new Date()}            
         }    
         console.log(this.receivingForm);
         const {customerCode, customerPhone, partDescription, manufacturer, revisePartId, ...receivingInfo} = this.receivingForm;
         if(!this.isEditMode) {
             this.receivingCustomerWorkService.newReason(receivingInfo).subscribe(res => {
                 console.log(res);
-                // if (this.receivingForm.isTimeLife) {
-                //     this.receivingCustomerWorkService.newStockLineTimeLife(this.sourceTimeLife).subscribe(res => {
-                //         console.log(res);
-                //     });
-                // }
                 this.alertService.showMessage(
                     'Success',
                     `Saved Customer Work Successfully`,
@@ -663,11 +669,6 @@ export class CustomerWorkSetupComponent implements OnInit {
         else {
             this.receivingCustomerWorkService.updateCustomerWorkReceiving(receivingInfo).subscribe(res => {
                 console.log(res);
-                // if (this.receivingForm.isTimeLife) {
-                //     this.receivingCustomerWorkService.newStockLineTimeLife(this.sourceTimeLife).subscribe(res => {
-                //         console.log(res);
-                //     });
-                // }
                 this.alertService.showMessage(
                     'Success',
                     `Updated Customer Work Successfully`,
