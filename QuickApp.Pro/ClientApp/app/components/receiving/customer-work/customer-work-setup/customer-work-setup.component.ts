@@ -88,6 +88,7 @@ export class CustomerWorkSetupComponent implements OnInit {
     disableMagmtStruct: boolean = true;
     textAreaInfo: string;
 	textAreaLabel: string;
+	receivingCustomerWorkId: number;
     
 
     // firstCollection: any[];
@@ -176,7 +177,7 @@ export class CustomerWorkSetupComponent implements OnInit {
     // receivingForm: any = {};
     // public allWorkFlows: any[] = [];
 
-    constructor(private commonService: CommonService, private customerService: CustomerService, private binService: BinService, private siteService: SiteService, private conditionService: ConditionService, private itemMasterService: ItemMasterService, private datePipe: DatePipe) {
+    constructor(private commonService: CommonService, private customerService: CustomerService, private binService: BinService, private siteService: SiteService, private conditionService: ConditionService, private itemMasterService: ItemMasterService, private datePipe: DatePipe, private _actRoute: ActivatedRoute, private receivingCustomerWorkService: ReceivingCustomerWorkService, private authService: AuthService) {
         this.receivingForm.receivingNumber = 'Creating';
         this.receivingForm.customerContactId = 0;
         this.receivingForm.conditionId = 0;
@@ -201,7 +202,19 @@ export class CustomerWorkSetupComponent implements OnInit {
         this.loadSiteData();
         this.getLegalEntity();
         this.loadConditionData();
+
+        this.receivingCustomerWorkId = this._actRoute.snapshot.params['id'];
+        if(this.receivingCustomerWorkId) {
+            this.isEditMode = true;
+            this.getReceivingCustomerDataonEdit(this.receivingCustomerWorkId);
+        }
     }
+
+    get userName(): string {
+        return this.authService.currentUser
+          ? this.authService.currentUser.userName
+          : '';
+      }
 
     private loadPartNumData() {
 		this.commonService.smartDropDownList('ItemMaster', 'ItemMasterId', 'partnumber').subscribe(response => {
@@ -255,6 +268,12 @@ export class CustomerWorkSetupComponent implements OnInit {
         this.commonService.getLegalEntityList().pipe(takeUntil(this.onDestroy$)).subscribe(res => {
             this.legalEntityList = res;
         })
+    }
+
+    getReceivingCustomerDataonEdit(id) {
+        this.receivingCustomerWorkService.getCustomerWorkdataById(id).subscribe(res => {
+            console.log(res);            
+        });
     }
     
     selectedLegalEntity(legalEntityId) {
@@ -475,15 +494,23 @@ export class CustomerWorkSetupComponent implements OnInit {
         this.receivingForm = {
             ...this.receivingForm,
             customerId: getValueFromObjectByKey('customerId', this.receivingForm.customerId),
-            isMFGDate: this.receivingForm.isMFGDate ? this.datePipe.transform(this.receivingForm.isMFGDate, "MM/dd/yyyy") : '',
-            isExpDate: this.receivingForm.isExpDate ? this.datePipe.transform(this.receivingForm.isExpDate, "MM/dd/yyyy") : '',
+            MFGDate: this.receivingForm.MFGDate ? this.datePipe.transform(this.receivingForm.MFGDate, "MM/dd/yyyy") : '',
+            expDate: this.receivingForm.expDate ? this.datePipe.transform(this.receivingForm.expDate, "MM/dd/yyyy") : '',
+            itemMasterId: this.receivingForm.itemMasterId ? editValueAssignByCondition('value', this.receivingForm.itemMasterId) : '',
+            partNumber: this.receivingForm.itemMasterId ? editValueAssignByCondition('label', this.receivingForm.itemMasterId) : '',
             employeeId: this.receivingForm.employeeId ? editValueAssignByCondition('value', this.receivingForm.employeeId) : '',
             obtainFromId: this.receivingForm.obtainFromId ? editValueAssignByCondition('value', this.receivingForm.obtainFromId) : '',
 			ownerId: this.receivingForm.ownerId ? editValueAssignByCondition('value', this.receivingForm.ownerId) : '',
 			traceableToId: this.receivingForm.traceableToId ? editValueAssignByCondition('value', this.receivingForm.traceableToId) : '',
-			referenceId: this.receivingForm.referenceId ? editValueAssignByCondition('value', this.receivingForm.referenceId) : '',
+            referenceId: this.receivingForm.referenceId ? editValueAssignByCondition('value', this.receivingForm.referenceId) : '',
+            createdBy: this.userName,
+            updatedBy: this.userName
         }    
-        console.log(this.receivingForm);   
+        console.log(this.receivingForm);
+        const {customerCode, ...receivingInfo} = this.receivingForm;
+        this.receivingCustomerWorkService.newReason(receivingInfo).subscribe(res => {
+            console.log(res);
+        });
     }
 
 }
