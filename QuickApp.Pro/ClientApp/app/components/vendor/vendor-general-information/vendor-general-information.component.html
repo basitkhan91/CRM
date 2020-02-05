@@ -284,7 +284,9 @@
                                                 </span>
 
                                             </label>
-                                            <p-multiSelect [options]="allvendorclassificationInfo" [(ngModel)]="sourceVendor.vendorClassificationIds"  name="vendorClassificationIds" required>
+                                            <p-multiSelect [options]="allvendorclassificationInfo"
+                                            [resetFilterOnHide]="true"
+                                            [(ngModel)]="sourceVendor.vendorClassificationIds"  name="vendorClassificationIds" required>
                                             </p-multiSelect>
                                         </div>
 
@@ -341,7 +343,7 @@
                                             <input class="form-control" type="text"
                                             [pattern]="urlPattern"
                                             [ngModelOptions]="{standalone: true}"
-                                                   [(ngModel)]="sourceVendor.vendorURL" #url="ngModel">
+                                                   [(ngModel)]="sourceVendor.vendorURL" #url="ngModel" (input)="convertUrlToLowerCase($event)">
                                                    <div *ngIf="url.errors" [ngClass]="'error'">
                                                     <div *ngIf="url.errors.pattern">
                                                         <span style="color:red">URL not valid</span>

@@ -9,7 +9,7 @@ import { AlertService, MessageSeverity } from '../../../services/alert.service';
 import { MasterComapnyService } from '../../../services/mastercompany.service';
 import { CustomerContactModel } from '../../../models/customer-contact.model';
 import { MatDialog } from '@angular/material';
-import { getObjectByValue, getObjectById, getValueFromObjectByKey } from '../../../generic/autocomplete';
+import { getObjectByValue, getObjectById, getValueFromObjectByKey, editValueAssignByCondition } from '../../../generic/autocomplete';
 import { VendorService } from '../../../services/vendor.service';
 import { ConfigurationService } from '../../../services/configuration.service';
 import { AuditHistory } from '../../../models/audithistory.model';
@@ -343,6 +343,11 @@ export class VendorDocumentsComponent implements OnInit {
 		}
 	}
 
+	getVendorName() {
+        if (this.local.vendorName !== undefined) {
+            return editValueAssignByCondition('vendorName', this.local.vendorName)
+        }
+    }
 	getPageCount(totalNoofRecords, pageSize) {
 		return Math.ceil(totalNoofRecords / pageSize)
 	}

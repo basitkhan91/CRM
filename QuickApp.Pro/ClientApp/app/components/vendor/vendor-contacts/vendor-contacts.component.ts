@@ -22,6 +22,7 @@ import { Row } from 'primeng/components/common/shared';
 import { CustomerService } from '../../../services/customer.service';
 import { VendorStepsPrimeNgComponent } from '../vendor-steps-prime-ng/vendor-steps-prime-ng.component';
 import { ConfigurationService } from '../../../services/configuration.service';
+import { getValueFromArrayOfObjectById, editValueAssignByCondition } from '../../../generic/autocomplete';
 @Component({
     selector: 'app-vendor-contacts',
     templateUrl: './vendor-contacts.component.html',
@@ -147,7 +148,7 @@ export class VendorContactsComponent implements OnInit {
 
     ngOnInit(): void {
         this.sourceVendor.isdefaultContact = true;
-        this.matSpinner = true;        
+        this.matSpinner = true;
         if (this.local) {
             this.loadData();
         }
@@ -155,7 +156,7 @@ export class VendorContactsComponent implements OnInit {
         this.loadEmptyObject();
         this.router.queryParams.subscribe((params: Params) => {
         });
-        if(this.vendorId != 0) {
+        if (this.vendorId != 0) {
             this.loadData();
         } else {
             this.vendorService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-contacts';
@@ -605,80 +606,80 @@ export class VendorContactsComponent implements OnInit {
         }, () => { console.log('Backdrop click') })
     }
 
-    onFirstNameSelected(event) {
-        if (this.alldata) {
-            for (let i = 0; i < this.alldata.length; i++) {
-                if (event == this.alldata[i].firstName) {
-                    this.sourceVendor.firstName = event;
-                    this.disablesaveForFirstname = true;
-                    this.selectedFirstName = event;
-                }
-            }
-        }
-    }
-    eventFirstNameHandler(event) {
-        if (event.target.value != "") {
-            let value = event.target.value.toLowerCase();
-            if (this.selectedFirstName) {
-                if (value == this.selectedFirstName.toLowerCase()) {
-                    this.disablesaveForFirstname = true;
-                }
-                else {
-                    this.disablesaveForFirstname = false;
-                }
-            }
-        }
-    }
+    // onFirstNameSelected(event) {
+    //     if (this.alldata) {
+    //         for (let i = 0; i < this.alldata.length; i++) {
+    //             if (event == this.alldata[i].firstName) {
+    //                 this.sourceVendor.firstName = event;
+    //                 this.disablesaveForFirstname = true;
+    //                 this.selectedFirstName = event;
+    //             }
+    //         }
+    //     }
+    // }
+    // eventFirstNameHandler(event) {
+    //     if (event.target.value != "") {
+    //         let value = event.target.value.toLowerCase();
+    //         if (this.selectedFirstName) {
+    //             if (value == this.selectedFirstName.toLowerCase()) {
+    //                 this.disablesaveForFirstname = true;
+    //             }
+    //             else {
+    //                 this.disablesaveForFirstname = false;
+    //             }
+    //         }
+    //     }
+    // }
 
-    onLastNameSelected(event) {
-        if (this.alldata) {
-            for (let i = 0; i < this.alldata.length; i++) {
-                if (event == this.alldata[i].lastName) {
-                    this.sourceVendor.lastName = event;
-                    this.disablesaveForlastname = true;
-                    this.selectedFirstName = event;
-                }
-            }
-        }
-    }
-    eventlastNameHandler(event) {
-        if (event.target.value != "") {
-            let value = event.target.value.toLowerCase();
-            if (this.selectedFirstName) {
-                if (value == this.selectedFirstName.toLowerCase()) {
-                    this.disablesaveForlastname = true;
-                }
-                else {
-                    this.disablesaveForlastname = false;
-                }
-            }
-        }
-    }
+    // onLastNameSelected(event) {
+    //     if (this.alldata) {
+    //         for (let i = 0; i < this.alldata.length; i++) {
+    //             if (event == this.alldata[i].lastName) {
+    //                 this.sourceVendor.lastName = event;
+    //                 this.disablesaveForlastname = true;
+    //                 this.selectedFirstName = event;
+    //             }
+    //         }
+    //     }
+    // }
+    // eventlastNameHandler(event) {
+    //     if (event.target.value != "") {
+    //         let value = event.target.value.toLowerCase();
+    //         if (this.selectedFirstName) {
+    //             if (value == this.selectedFirstName.toLowerCase()) {
+    //                 this.disablesaveForlastname = true;
+    //             }
+    //             else {
+    //                 this.disablesaveForlastname = false;
+    //             }
+    //         }
+    //     }
+    // }
 
-    onMiddleNameSelected(event) {
-        if (this.alldata) {
-            for (let i = 0; i < this.alldata.length; i++) {
-                if (event == this.alldata[i].middleName) {
-                    this.sourceVendor.middleName = event;
-                    this.disablesaveForMiddlename = true;
-                    this.selectedFirstName = event;
-                }
-            }
-        }
-    }
-    eventMiddleNameHandler(event) {
-        if (event.target.value != "") {
-            let value = event.target.value.toLowerCase();
-            if (this.selectedFirstName) {
-                if (value == this.selectedFirstName.toLowerCase()) {
-                    this.disablesaveForMiddlename = true;
-                }
-                else {
-                    this.disablesaveForMiddlename = false;
-                }
-            }
-        }
-    }
+    // onMiddleNameSelected(event) {
+    //     if (this.alldata) {
+    //         for (let i = 0; i < this.alldata.length; i++) {
+    //             if (event == this.alldata[i].middleName) {
+    //                 this.sourceVendor.middleName = event;
+    //                 this.disablesaveForMiddlename = true;
+    //                 this.selectedFirstName = event;
+    //             }
+    //         }
+    //     }
+    // }
+    // eventMiddleNameHandler(event) {
+    //     if (event.target.value != "") {
+    //         let value = event.target.value.toLowerCase();
+    //         if (this.selectedFirstName) {
+    //             if (value == this.selectedFirstName.toLowerCase()) {
+    //                 this.disablesaveForMiddlename = true;
+    //             }
+    //             else {
+    //                 this.disablesaveForMiddlename = false;
+    //             }
+    //         }
+    //     }
+    // }
 
     onAddContactInfo() {
         this.sourceVendor = {};
@@ -718,6 +719,12 @@ export class VendorContactsComponent implements OnInit {
                     MessageSeverity.success
                 );
             })
+        }
+    }
+
+    getVendorName() {
+        if (this.local.vendorName !== undefined) {
+            return editValueAssignByCondition('vendorName', this.local.vendorName)
         }
     }
 
