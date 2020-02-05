@@ -111,5 +111,9 @@ export class CommonService {
 		window.location.assign(url);  
     }
     
+    getReceivingCustomers(value) {
+        return this.http.get(`${this.baseUrl}/api/receivingcustomerwork/getreceivingcustomerslist?value=${value}`, this.authService.getRequestHeaders());
+    }
 
+    
 }

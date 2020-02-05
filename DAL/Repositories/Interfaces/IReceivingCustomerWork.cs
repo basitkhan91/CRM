@@ -14,12 +14,15 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<Object> GetList(Filters<ReceivingCustomerWorkFilter> customerFilters);
 
         IEnumerable<object> GetAllreceivingCustomerWorkAudit(long receivingCustomerWorkId);
-        IEnumerable<object> GetreceivingCustomerWorkById(long receivingCustomerWorkId);
+        object GetreceivingCustomerWorkById(long receivingCustomerWorkId);
         IEnumerable<object> GetAllTimeLifeData(long id);
         void DeleteReceivingCustomer(long id, string updatedBy);
         IEnumerable<object> GetReceivingCustomerWorkData(long receivingCustomerWorkId);
         IEnumerable<Object> GetListGlobalFilter(string value, int pageNumber, int pageSize);
-        //  void CreateAction(DAL.Models.Action action);
 
+        ReceivingCustomerWork CreateReceivingCustomer(ReceivingCustomerWork receivingCustomer);
+        ReceivingCustomerWork UpdateReceivingCustomer(ReceivingCustomerWork receivingCustomer);
+        object GetPartDettails(long itemMasterId);
+        IEnumerable<object> ReceivingCustomers(string value);
     }
 }

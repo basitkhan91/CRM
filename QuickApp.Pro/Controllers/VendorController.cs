@@ -5038,6 +5038,67 @@ namespace QuickApp.Pro.Controllers
 
         #endregion
 
+        #region Vendor Internation shipping
+
+        [HttpPost("createinternationalshipping")]
+        [Produces(typeof(VendorInternationalShipping))]
+        public IActionResult CreateVendorInternationalShipping([FromBody] VendorInternationalShipping model)
+        {
+            if (ModelState.IsValid)
+            {
+                if (model == null)
+                    return BadRequest($"{nameof(model)} cannot be null");
+                var result = _unitOfWork.Vendor.CreateVendorInternationalShippingDetails(model);
+                return Ok(result);
+            }
+            return Ok(ModelState);
+        }
+
+        [HttpGet("internationalshippingdetailsbyid/{id}")]
+        [Produces(typeof(VendorInternationalShipping))]
+        public IActionResult VendorInternationalShippingDetailsById(long id)
+        {
+            var result = _unitOfWork.Vendor.VendorInternationalShippingDetailsById(id);
+            return Ok(result);
+        }
+
+        [HttpPut("internationalshippingstatusupdate")]
+        public IActionResult VendorInternationalShippingDetailsStatus(long id, bool status, string updatedBy)
+        {
+            _unitOfWork.Vendor.VendorInternationalShippingDetailsStatus(id, status, updatedBy);
+            return Ok();
+        }
+
+
+
+        [HttpDelete("deleteinternationalshipping")]
+        public IActionResult DeleteVendorInternationalShippingDetails(long id, string updatedBy)
+        {
+            _unitOfWork.Vendor.DeleteVendorInternationalShippingDetails(id, updatedBy);
+            return Ok();
+        }
+
+       
+
+        [HttpGet("internationalshippingdetaillist")]
+        public IActionResult GetVendorInternationalShippingDetails(long VendorId)
+        {
+            var result = _unitOfWork.Vendor.GetVendorInternationalShippingDetails(VendorId);
+            return Ok(result);
+        }
+
+        [HttpGet("internationalshippingaudit/{vendorInternationalShippingId}")]
+        public IActionResult GetVendorInternationalShippingDetailsAudit(long vendorInternationalShippingId)
+        {
+            var result = _unitOfWork.Vendor.GetVendorInternationalShippingDetailsAudit(vendorInternationalShippingId);
+            return Ok(result);
+        }
+
+        #endregion
+
+        #region Vendor International shipVia
+
+        #endregion
 
         #region Excel Uploads
 

@@ -659,7 +659,7 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 	}
 
 	saveCheckPaymentInfo() {
-		this.loadData();
+		// this.loadData();
 		this.isSaving = true;
 		if (!(this.sourceVendor.siteName && this.sourceVendor.address1 && this.sourceVendor.city &&
 			this.sourceVendor.stateOrProvince && this.sourceVendor.postalCode && this.sourceVendor.country
@@ -1096,6 +1096,11 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 
 	getPageCount(totalNoofRecords, pageSize) {
 		return Math.ceil(totalNoofRecords / pageSize)
+	}
+	getVendorName() {
+        if (this.local.vendorName !== undefined) {
+            return editValueAssignByCondition('vendorName', this.local.vendorName)
+        }
     }
     getColorCodeForHistory(i, field, value) {
         const data = this.auditHisory;

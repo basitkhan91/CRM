@@ -20,6 +20,7 @@ import { Vendor } from '../../../models/vendor.model';
 import { debounce } from 'rxjs/operators/debounce';
 import { Router, ActivatedRoute, Params, NavigationExtras } from '@angular/router';
 import { VendorStepsPrimeNgComponent } from '../vendor-steps-prime-ng/vendor-steps-prime-ng.component';
+import { editValueAssignByCondition } from '../../../generic/autocomplete';
 
 @Component({
     selector: 'app-vendor-warnings',
@@ -796,5 +797,10 @@ export class VendorWarningsComponent implements OnInit {
 
         }
 
+    }
+    getVendorName() {
+        if (this.local.vendorName !== undefined) {
+            return editValueAssignByCondition('vendorName', this.local.vendorName)
+        }
     }
 }

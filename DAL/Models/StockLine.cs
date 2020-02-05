@@ -110,6 +110,7 @@ namespace DAL.Models
         public bool isActive { get; set; }
         public bool IsDeleted { get; set; }
         public decimal? WorkOrderExtendedCost { get; set; }
+        public bool IsCustomerStock { get; set; } = false;
         public virtual PurchaseOrder PurchaseOrder { get; set; }
         public virtual PurchaseOrderPart PurchaseOrderPartRecord { get; set; }
 

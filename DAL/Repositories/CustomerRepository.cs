@@ -848,7 +848,9 @@ namespace DAL.Repositories
                                 contt.FirstName,
                                 contt.ContactId,
                                 ca.UpdatedBy,
-                                ca.UpdatedDate
+                                ca.UpdatedDate,
+                                ca.CreatedBy,
+                                ca.CreatedDate,
 
                             }).ToList();
                 return data;            
@@ -1313,6 +1315,26 @@ namespace DAL.Repositories
                 model.CreatedDate = model.UpdatedDate = DateTime.Now;
                 model.IsActive = true;
                 model.IsDeleted = false;
+                if (model.IsPrimary == true)
+                {
+                    var customerContact = _appContext.ShippingViaDetails.Where(p => p.InternationalShippingId == model.InternationalShippingId && p.IsPrimary == true).FirstOrDefault();
+
+                    if (customerContact != null)
+                    {
+
+                        customerContact.IsPrimary = false;
+                        customerContact.UpdatedDate = DateTime.Now;
+                        customerContact.UpdatedBy = model.UpdatedBy;
+                        _appContext.ShippingViaDetails.Update(customerContact);
+                        _appContext.SaveChanges();
+
+                    }
+
+
+
+                }
+
+
                 _appContext.ShippingViaDetails.Add(model);
                 _appContext.SaveChanges();
 
@@ -1379,6 +1401,26 @@ namespace DAL.Repositories
             try
             {
                 model.UpdatedDate = DateTime.Now;
+
+
+                if (model.IsPrimary == true)
+                {
+                    var customerContact = _appContext.ShippingViaDetails.AsNoTracking().Where(p => p.InternationalShippingId == model.InternationalShippingId && p.IsPrimary == true).FirstOrDefault();
+
+                    if (customerContact != null && customerContact.ShippingViaDetailsId!=model.ShippingViaDetailsId)
+                    {
+
+                        customerContact.IsPrimary = false;
+                        customerContact.UpdatedDate = DateTime.Now;
+                        customerContact.UpdatedBy = model.UpdatedBy;
+                        _appContext.ShippingViaDetails.Update(customerContact);
+                        _appContext.SaveChanges();
+
+                    }
+
+
+
+                }
                 _appContext.ShippingViaDetails.Update(model);
                 _appContext.SaveChanges();
 
@@ -2739,7 +2781,8 @@ namespace DAL.Repositories
                            c.ShippingAccountInfo,
                             c.ShippingURL,
                             c.MasterCompanyId,
-                            c.IsActive
+                            c.IsActive,
+                            c.IsPrimary,
                         }).OrderByDescending(c => c.UpdatedDate).ToList();
             return data;
         }
@@ -3387,6 +3430,7 @@ namespace DAL.Repositories
                             cs.InternationalShippingId,
                             cs.CreatedDate,
                             cs.UpdatedDate,
+                            cs.IsPrimary,
                             //csa.Amount,
                             //csa.StartDate,
                             //csa.ExpirationDate,

@@ -22,6 +22,7 @@ import { Message } from 'primeng/components/common/message';
 import { MenuItem } from 'primeng/components/common/menuitem';
 import { async } from '../../../../../node_modules/@angular/core/testing';
 import { VendorStepsPrimeNgComponent } from '../vendor-steps-prime-ng/vendor-steps-prime-ng.component';
+import { editValueAssignByCondition } from '../../../generic/autocomplete';
 
 
 @Component({
@@ -165,6 +166,11 @@ export class VendorMemoComponent implements OnInit {
 		// this.vendorService.changeStep('Warnings');
 		// this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-warnings');
 	}
+	getVendorName() {
+        if (this.local.vendorName !== undefined) {
+            return editValueAssignByCondition('vendorName', this.local.vendorName)
+        }
+    }
 
 	getPageCount(totalNoofRecords, pageSize) {
         return Math.ceil(totalNoofRecords / pageSize)

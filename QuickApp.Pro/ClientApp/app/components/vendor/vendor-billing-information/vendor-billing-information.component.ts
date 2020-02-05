@@ -830,6 +830,11 @@ export class VendorBillingInformationComponent {
             })
         }
     }
+    getVendorName() {
+        if (this.local.vendorName !== undefined) {
+            return editValueAssignByCondition('vendorName', this.local.vendorName)
+        }
+    }
 
     getPageCount(totalNoofRecords, pageSize) {
         return Math.ceil(totalNoofRecords / pageSize)
