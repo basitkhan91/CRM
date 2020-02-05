@@ -151,6 +151,7 @@ export class VendorGeneralInformationComponent implements OnInit {
     urlPattern = urlPattern()
     parentVendorOriginal: any[];
     forceSelectionOfVendorName: boolean = false;
+    selectedEditData: any;
 
 
 
@@ -1111,24 +1112,31 @@ export class VendorGeneralInformationComponent implements OnInit {
         this.msgs = [];
         this.msgs.push({ severity: 'info', summary: 'File Uploaded', detail: '' });
     }
-    eventHandler(event) {
-        if (event.target.value != "") {
-            let value = event.target.value.toLowerCase();
-            if (this.selectedActionName) {
-                if (value == this.selectedActionName.toLowerCase()) {
-                    this.disableSaveVenderName = true;
-                    this.disableSaveVenName = true;
-                }
-                else {
-                    this.disableSaveVenderName = false;
-                    this.disableSaveVenName = false;
-                }
-            }
-        }
-    }
+    // eventHandler(event) {
+    //     if (event.target.value != "") {
+    //         let value = event.target.value.toLowerCase();
+    //         if (this.selectedActionName) {
+    //             if (value == this.selectedActionName.toLowerCase()) {
+    //                 this.disableSaveVenderName = true;
+    //                 this.disableSaveVenName = true;
+    //             }
+    //             else {
+    //                 this.disableSaveVenderName = false;
+    //                 this.disableSaveVenName = false;
+    //             }
+    //         }
+    //     }
+    // }
     onVendorselected(object) {
 
-        const exists = selectedValueValidate('vendorName', object, this.sourceVendor)
+        if (this.vendorService.isEditMode === true) {
+            this.selectedEditData = this.sourceVendor
+        } else {
+            this.selectedEditData = undefined;
+        }
+        const exists = selectedValueValidate('vendorName', object, this.selectedEditData);
+        console.log(exists);
+
         this.parentVendorList(getValueFromObjectByKey('vendorId', object));
         this.disableSaveVenderName = !exists;
 

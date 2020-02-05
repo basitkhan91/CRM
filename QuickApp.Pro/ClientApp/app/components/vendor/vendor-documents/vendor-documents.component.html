@@ -369,7 +369,7 @@
                                 <label style="float: none;">Attachments <span class="clr-red">*</span></label>
                                 <p-fileUpload #fileUpload   name="fileupload[]" multiple="multiple" [showCancelButton]="false" [showUploadButton]="false" customUpload="true" 
 
-                                (onSelect)="fileUploadForDocuments($event)" ></p-fileUpload>
+                                (onSelect)="fileUploadForDocuments($event)"  (onRemove)="removeFile($event)"></p-fileUpload>
                             </div>
                         </div>
                         <!-- <div class="table-responsive table-overflow">

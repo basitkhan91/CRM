@@ -49,6 +49,8 @@
                                     [suggestions]="vendorNames" (completeMethod)="filterVendorNames($event)" [size]="30"
                                     [minLength]="1" [dropdown]="true" required>
                                     </p-autoComplete>
+                                    <div *ngIf="disableSaveVenderName" class="clr-red">Already Exists</div>
+                                    <div class="clear"></div>
 
                                     <!-- <p-autoComplete class="pautocomp-cstm" (onSelect)="onVendorselected($event)" (onKeyUp)="eventHandler($event)"
                                                     [(ngModel)]="sourceVendor.vendorName" name="vendorName"
@@ -58,9 +60,9 @@
                                             <div class="ui-helper-clearfix">{{ vendorName }}</div>
                                         </ng-template>
                                     </p-autoComplete> -->
-                                    <div *ngIf="disableSaveVenderName" class="clr-red">
+                                    <!-- <div *ngIf="disableSaveVenderName" class="clr-red">
                                         Already Exists
-                                    </div>
+                                    </div> -->
                                 </div>
 
                                 <div class="form-group">
