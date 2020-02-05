@@ -60,7 +60,7 @@
                     </div>
                     <div class="form-group">
                         <label>Contact <span class="text-danger">*</span></label>
-                        <p-autoComplete field="csr" class="pautocomp-cstm" [(ngModel)]="receivingForm.customerContactId" name="customerContactId" [suggestions]="customerContactInfo" (completeMethod)="filterCustContacts($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" (onSelect)="customerContactChange(receivingForm.customerContactId)" [disabled]="custName.invalid" #cusContact="ngModel" required></p-autoComplete>
+                        <p-autoComplete field="csr" class="pautocomp-cstm" [(ngModel)]="receivingForm.customerContactId" name="customerContactId" [suggestions]="customerContactInfo" (completeMethod)="filterCustContacts($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" [disabled]="custName.invalid" #cusContact="ngModel" required></p-autoComplete>
                         <div *ngIf="cusContact.invalid && (cusContact.dirty || cusContact.touched)" class="alert alert-danger alert-danger-cstm">
                             <div *ngIf="cusContact.errors.required">
                                 <small> Contact is required </small>
@@ -69,7 +69,7 @@
                     </div>
                     <div class="form-group">
                         <label>Contact Phone <span class="text-danger">*</span></label>
-                        <p-autoComplete field="workPhone" class="pautocomp-cstm" [(ngModel)]="receivingForm.customerPhone" name="customerPhone" [suggestions]="customerPhoneInfo" (completeMethod)="filterCustContactPhone($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" (onSelect)="customerContactChange(receivingForm.customerContactId)" [disabled]="custName.invalid" #cusPhone="ngModel" required></p-autoComplete>
+                        <p-autoComplete field="workPhone" class="pautocomp-cstm" [(ngModel)]="receivingForm.customerPhone" name="customerPhone" [suggestions]="customerPhoneInfo" (completeMethod)="filterCustContactPhone($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" [disabled]="custName.invalid" #cusPhone="ngModel" required></p-autoComplete>
                         <div *ngIf="cusPhone.invalid && (cusPhone.dirty || cusPhone.touched)" class="alert alert-danger alert-danger-cstm">
                             <div *ngIf="cusPhone.errors.required">
                                 <small> Contact Phone is required </small>

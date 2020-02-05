@@ -215,6 +215,11 @@ export class CustomerWorkSetupComponent implements OnInit {
         if(this.receivingCustomerWorkId) {
             this.isEditMode = true;
             this.getReceivingCustomerDataonEdit(this.receivingCustomerWorkId);
+            this.breadcrumbs = [
+                { label: 'Receiving' },
+                { label: 'Customer Work' },
+                { label: 'Edit Customer Work' }
+            ];
         }
     }
 
