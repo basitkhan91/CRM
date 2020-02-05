@@ -60,7 +60,7 @@ export class VendorWarningsComponent implements OnInit {
     isDeleteMode: boolean;
     sourcePOQuote: any = {};
     sourceROQuote: any = {};
-
+    isvendorEditMode:any;
     //isPOQuoteMsg: boolean = false;
     //isPOQuoteWar: boolean = true;
     isPOQuoteReadOnly: boolean = true;
@@ -84,6 +84,9 @@ export class VendorWarningsComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.vendorService.currentEditModeStatus.subscribe(message => {
+            this.isvendorEditMode = message; 
+        });
         this.vendorService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-warnings';
         this.vendorService.bredcrumbObj.next(this.vendorService.currentUrl);
         this.sourePo.allow = true;
@@ -456,12 +459,18 @@ export class VendorWarningsComponent implements OnInit {
         // this.vendorService.changeStep('Billing Information');
         // this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-billing-information');
     }
+    isViewMode
     nextClick() {
         this.activeIndex = 9;
         this.vendorService.changeofTab(this.activeIndex);
         // this.vendorService.indexObj.next(this.activeIndex);
         // this.vendorService.changeStep('Memos');
         // this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-memo');
+        this.alertService.showMessage(
+			'Success',
+			`${this.isvendorEditMode ? 'Updated' : 'Saved'  }  Warning Messages Sucessfully `,
+			MessageSeverity.success
+		);
     }
 
     // saveRMA() {
@@ -628,7 +637,7 @@ export class VendorWarningsComponent implements OnInit {
             this.isDeleteMode = false;
         }
         else {
-            this.alertService.showMessage("Success", `Action was edited successfully`, MessageSeverity.success);
+            // this.alertService.showMessage("Success", `Action was edited successfully`, MessageSeverity.success);
             this.saveCompleted
         }
         this.loadData();

@@ -795,6 +795,7 @@ export class AppComponent implements OnInit, AfterViewInit {
         this.vendorService.listCollection = undefined;
 
         // location.assign(url);
+        this.vendorService.checkVendorEditmode(false);
     }
 
     initNotificationsLoading() {

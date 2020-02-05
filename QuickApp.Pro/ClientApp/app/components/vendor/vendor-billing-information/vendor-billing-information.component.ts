@@ -124,7 +124,7 @@ export class VendorBillingInformationComponent {
     public sourceVendor: any = {};
     @Input() vendorId: number = 0;
     @Input() isViewMode: boolean = false;
-
+    isvendorEditMode:any;
     constructor(private http: HttpClient, private router: Router,
         private authService: AuthService, private modalService: NgbModal,
         private activeModal: NgbActiveModal, private _fb: FormBuilder,
@@ -166,7 +166,10 @@ export class VendorBillingInformationComponent {
         }
     }
 
-    ngOnInit() {        
+    ngOnInit() {
+        this.vendorService.currentEditModeStatus.subscribe(message => {
+            this.isvendorEditMode = message; 
+        });         
         if (this.local) {
             this.loadData();
         }
@@ -669,6 +672,11 @@ export class VendorBillingInformationComponent {
         // this.vendorService.indexObj.next(this.activeIndex);
         // this.vendorService.changeStep('Warnings');
         // this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-warnings');
+        this.alertService.showMessage(
+			'Success',
+			`${this.isvendorEditMode ? 'Updated' : 'Saved'  }  Billing Information Sucessfully `,
+			MessageSeverity.success
+		);
     }
     handleChanges(rowData, e) {
         console.log(rowData);

@@ -322,6 +322,9 @@ export class VendorGeneralInformationComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.vendorService.currentEditModeStatus.subscribe(message => {
+            this.isvendorEditMode = message; 
+        });
         // this.countrylist();
         // if(this.vendorService.listCollection == undefined){
         //     this.countrylist();
@@ -420,6 +423,7 @@ export class VendorGeneralInformationComponent implements OnInit {
         // }
 
     }
+    isvendorEditMode
 
     ngOnDestroy() {
 
@@ -756,7 +760,7 @@ export class VendorGeneralInformationComponent implements OnInit {
 
 
     filterVendorParentNames(event) {
-        this.vendorParentNames = this.parentVendorOriginal;
+        this.vendorParentNames = this.parentVendorOriginal ? this.parentVendorOriginal :[] ;
 
         this.vendorParentNames = [...this.parentVendorOriginal.filter(x => {
             return x.vendorName.toLowerCase().includes(event.query.toLowerCase());
@@ -1075,10 +1079,11 @@ export class VendorGeneralInformationComponent implements OnInit {
         }
         this.loadData();
     }
-
+    
     private savesuccessCompleted(user?: any, goNxt?: any) {
         this.isSaving = false;
-        this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
+        console.log("vendor service",this.vendorService.isEditMode);    
+        this.alertService.showMessage("Success", `${this.isvendorEditMode ? 'Updated' : 'Saved'  }  General Information  successfully`, MessageSeverity.success);
         if (goNxt === 'goNext') {
             this.nextClick();
         }

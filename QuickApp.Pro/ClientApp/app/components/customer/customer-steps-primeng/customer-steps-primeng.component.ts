@@ -73,7 +73,7 @@ export class CustomerStepsPrimengComponent {
 		this.customerId = this.acRouter.snapshot.params['id'];
 		if (this.customerId) {
 			this.isDisabledSteps = true;
-			this.editMode = true;
+			this.editMode = true; 
 		}
 
 		this.getAllCountries();
