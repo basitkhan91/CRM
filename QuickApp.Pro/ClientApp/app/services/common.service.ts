@@ -61,7 +61,7 @@ export class CommonService {
     }
 
     getReceiveCustomerPartDetailsById(id) {
-        return this.http.get<any>(`${this.configurations.baseUrl}/api/common/receivecustomerpartdetails?itemMasterId=${id}`)
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/ReceivingCustomerWork/receivecustomerpartdetails?itemMasterId=${id}`)
     }
 
     getItemMasterDetails() {

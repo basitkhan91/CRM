@@ -24,11 +24,21 @@
                 <div class="col-md-3">
                     <div class="form-group">
                         <label>Customer Name <span class="text-danger">*</span></label>
-                        <p-autoComplete field="name" class="pautocomp-cstm" [(ngModel)]="receivingForm.customerId" name="customerId" [suggestions]="customerNamesInfo" (completeMethod)="filterCustNames($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" (onSelect)="onSelectCustomer(receivingForm.customerId)"></p-autoComplete>  
+                        <p-autoComplete field="name" class="pautocomp-cstm" [(ngModel)]="receivingForm.customerId" name="customerId" [suggestions]="customerNamesInfo" (completeMethod)="filterCustNames($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" (onSelect)="onSelectCustomer(receivingForm.customerId)" #custName="ngModel" required></p-autoComplete>  
+                        <div *ngIf="custName.invalid && (custName.dirty || custName.touched)" class="alert alert-danger alert-danger-cstm">
+                            <div *ngIf="custName.errors.required">
+                                <small> Customer Name is required </small>
+                            </div>
+                    </div>
                     </div>
                     <div class="form-group">
                         <label>Customer Code <span class="text-danger">*</span></label>
-                        <p-autoComplete field="customerCode" class="pautocomp-cstm" [(ngModel)]="receivingForm.customerCode" name="customerCode" [suggestions]="customerCodesInfo" (completeMethod)="filterCustCodes($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" (onSelect)="onSelectCustomer(receivingForm.customerCode)"></p-autoComplete>  
+                        <p-autoComplete field="customerCode" class="pautocomp-cstm" [(ngModel)]="receivingForm.customerCode" name="customerCode" [suggestions]="customerCodesInfo" (completeMethod)="filterCustCodes($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" (onSelect)="onSelectCustomer(receivingForm.customerCode)" #custCode="ngModel" required></p-autoComplete>  
+                        <div *ngIf="custCode.invalid && (custCode.dirty || custCode.touched)" class="alert alert-danger alert-danger-cstm">
+                                <div *ngIf="custCode.errors.required">
+                                    <small> Customer Code is required </small>
+                                </div>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label>Receiving Num</label>
@@ -36,18 +46,21 @@
                     </div>
                     <div class="form-group">
                         <label>Ref <span class="text-danger">*</span></label>
-                        <p-autoComplete field="label" class="pautocomp-cstm" [(ngModel)]="receivingForm.referenceId" name="referenceId" [suggestions]="customersList" (completeMethod)="filterCustomerNames($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true"></p-autoComplete>
+                        <p-autoComplete field="label" class="pautocomp-cstm" [(ngModel)]="receivingForm.referenceId" name="referenceId" [suggestions]="customersList" (completeMethod)="filterCustomerNames($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" required></p-autoComplete>
                     </div>
                     <div class="form-group">
                         <label>Contact <span class="text-danger">*</span></label>
-                        <select [(ngModel)]="receivingForm.customerContactId" name="customerContactId" (change)="customerContactChange(receivingForm.customerContactId)" required> 
+                        <p-autoComplete field="csr" class="pautocomp-cstm" [(ngModel)]="receivingForm.customerContactId" name="customerContactId" [suggestions]="customerContactInfo" (completeMethod)="filterCustContacts($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" (onSelect)="customerContactChange(receivingForm.customerContactId)" [disabled]="custName.invalid" required></p-autoComplete>
+
+                        <!-- <select [(ngModel)]="receivingForm.customerContactId" name="customerContactId" (change)="customerContactChange(receivingForm.customerContactId)" required> 
                             <option value="0">-- Select --</option>
                             <option *ngFor="let contact of customerContactList" [ngValue]="contact.contactId">{{contact.firstName}}</option>
-                        </select>
+                        </select> -->
                     </div>
                     <div class="form-group">
                         <label>Contact Phone <span class="text-danger">*</span></label>
-                        <input class="form-control" type="text" name="workPhone" [(ngModel)]="receivingForm.workPhone" required>
+                        <p-autoComplete field="workPhone" class="pautocomp-cstm" [(ngModel)]="receivingForm.customerPhone" name="customerPhone" [suggestions]="customerPhoneInfo" (completeMethod)="filterCustContactPhone($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" (onSelect)="customerContactChange(receivingForm.customerContactId)" [disabled]="custName.invalid" required></p-autoComplete>
+                        <!-- <input class="form-control" type="text" name="workPhone" [(ngModel)]="receivingForm.workPhone" required> -->
                     </div>
                     <div class="form-group">
                         <label>PN <span class="text-danger">*</span></label>
@@ -165,7 +178,7 @@
                 <div class="col-md-3">
                     <div class="form-group">
                         <label>Obtain From</label>
-                        <select [(ngModel)]="receivingForm.obtainFromTypeId" name="obtainFromType" (change)="onSelectObrainFrom()">
+                        <select [(ngModel)]="receivingForm.obtainFromTypeId" name="obtainFromTypeId" (change)="onSelectObrainFrom()">
                             <option value="0">-- Select --</option>
                             <option value="1">Customer</option>
                             <option value="2">Vendor</option>
@@ -176,7 +189,7 @@
                     <div class="form-group">
                         <div class="form-row" *ngIf="receivingForm.obtainFromTypeId == 1">
                             <div class="col-sm-11">
-                                <p-autoComplete field="label" class="pautocomp-cstm" [(ngModel)]="receivingForm.obtainFromId" name="obtainFromCustomer" [suggestions]="customersList" (completeMethod)="filterCustomerNames($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true"></p-autoComplete>                                    
+                                <p-autoComplete field="label" class="pautocomp-cstm" [(ngModel)]="receivingForm.obtainFrom" name="obtainFromCustomer" [suggestions]="customersList" (completeMethod)="filterCustomerNames($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true"></p-autoComplete>                                    
                             </div>
                             <div class="col-sm-1">
                                 <div style="cursor:pointer; font-size:14px; margin:2px -7px;"><a class="fa fa-plus-circle fa-lg" target="_blank" matTooltip="Add Customer" matTooltipPosition="above" [routerLink]="['/customersmodule/customerpages/app-customer-create']"></a></div>
@@ -184,7 +197,7 @@
                         </div>
                         <div class="form-row" *ngIf="receivingForm.obtainFromTypeId == 2">
                             <div class="col-sm-11">
-                                <p-autoComplete field="label" class="pautocomp-cstm" [(ngModel)]="receivingForm.obtainFromId" name="obtainFromVendor" [suggestions]="vendorsList" (completeMethod)="filterVendorNames($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true">
+                                <p-autoComplete field="label" class="pautocomp-cstm" [(ngModel)]="receivingForm.obtainFrom" name="obtainFromVendor" [suggestions]="vendorsList" (completeMethod)="filterVendorNames($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true">
                                 </p-autoComplete>
                             </div>
                             <div class="col-sm-1">
@@ -194,7 +207,7 @@
                         <div class="form-row" *ngIf="receivingForm.obtainFromTypeId == 3">
                             <div class="col-sm-12">
                                 <p-autoComplete field="label" class="pautocomp-cstm"
-                                    [(ngModel)]="receivingForm.obtainFromId" name="obtainFromCompany" 
+                                    [(ngModel)]="receivingForm.obtainFrom" name="obtainFromCompany" 
                                     [suggestions]="companyList" 
                                     (completeMethod)="filterCompanyNames($event)" 
                                     [size]="30" 
@@ -207,7 +220,7 @@
                         </div>
                         <div class="form-row" *ngIf="receivingForm.obtainFromTypeId == 4">
                             <div class="col-sm-12">
-                                <input class="form-control" type="text" name="obtainFromOther" [(ngModel)]="receivingForm.obtainFromId">
+                                <input class="form-control" type="text" name="obtainFromOther" [(ngModel)]="receivingForm.obtainFrom">
                             </div>
                         </div>
                     </div>
@@ -224,7 +237,7 @@
                     <div class="form-group">
                         <div class="form-row" *ngIf="receivingForm.ownerTypeId == 1">
                             <div class="col-sm-11">
-                                <p-autoComplete field="label" class="pautocomp-cstm" [(ngModel)]="receivingForm.ownerId" name="ownerCustomer" [suggestions]="customersList" (completeMethod)="filterCustomerNames($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true"></p-autoComplete>                                    
+                                <p-autoComplete field="label" class="pautocomp-cstm" [(ngModel)]="receivingForm.owner" name="ownerCustomer" [suggestions]="customersList" (completeMethod)="filterCustomerNames($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true"></p-autoComplete>                                    
                             </div>
                             <div class="col-sm-1">
                                 <div style="cursor:pointer; font-size:14px; margin:2px -7px;"><a class="fa fa-plus-circle fa-lg" target="_blank" matTooltip="Add Customer" matTooltipPosition="above" [routerLink]="['/customersmodule/customerpages/app-customer-create']"></a></div>
@@ -232,7 +245,7 @@
                         </div>
                         <div class="form-row" *ngIf="receivingForm.ownerTypeId == 2">
                             <div class="col-sm-11">
-                                <p-autoComplete field="label" class="pautocomp-cstm" [(ngModel)]="receivingForm.ownerId" name="ownerVendor" [suggestions]="vendorsList" (completeMethod)="filterVendorNames($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true">
+                                <p-autoComplete field="label" class="pautocomp-cstm" [(ngModel)]="receivingForm.owner" name="ownerVendor" [suggestions]="vendorsList" (completeMethod)="filterVendorNames($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true">
                                 </p-autoComplete>
                             </div>
                             <div class="col-sm-1">
@@ -242,7 +255,7 @@
                         <div class="form-row" *ngIf="receivingForm.ownerTypeId == 3">
                             <div class="col-sm-12">
                                 <p-autoComplete field="label" class="pautocomp-cstm"
-                                    [(ngModel)]="receivingForm.ownerId" name="ownerCompany" 
+                                    [(ngModel)]="receivingForm.owner" name="ownerCompany" 
                                     [suggestions]="companyList" 
                                     (completeMethod)="filterCompanyNames($event)" 
                                     [size]="30" 
@@ -255,7 +268,7 @@
                         </div>
                         <div class="form-row" *ngIf="receivingForm.ownerTypeId == 4">
                             <div class="col-sm-12">
-                                <input class="form-control" type="text" name="ownerOther" [(ngModel)]="receivingForm.ownerId">
+                                <input class="form-control" type="text" name="ownerOther" [(ngModel)]="receivingForm.owner">
                             </div>
                         </div>
                     </div>
@@ -272,7 +285,7 @@
                     <div class="form-group">
                         <div class="form-row" *ngIf="receivingForm.traceableToTypeId == 1">
                             <div class="col-sm-11">
-                                <p-autoComplete field="label" class="pautocomp-cstm" [(ngModel)]="receivingForm.traceableToId" name="traceableToCustomer" [suggestions]="customersList" (completeMethod)="filterCustomerNames($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true"></p-autoComplete>
+                                <p-autoComplete field="label" class="pautocomp-cstm" [(ngModel)]="receivingForm.traceableTo" name="traceableToCustomer" [suggestions]="customersList" (completeMethod)="filterCustomerNames($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true"></p-autoComplete>
                             </div>
                             <div class="col-sm-1">
                                 <div style="cursor:pointer; font-size:14px; margin:2px -7px;"><a class="fa fa-plus-circle fa-lg" target="_blank" matTooltip="Add Customer" matTooltipPosition="above" [routerLink]="['/customersmodule/customerpages/app-customer-create']"></a></div>
@@ -280,7 +293,7 @@
                         </div>
                         <div class="form-row" *ngIf="receivingForm.traceableToTypeId == 2">
                             <div class="col-sm-11">
-                                <p-autoComplete field="label" class="pautocomp-cstm" [(ngModel)]="receivingForm.traceableToId" name="traceableToVendor" [suggestions]="vendorsList" (completeMethod)="filterVendorNames($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true">
+                                <p-autoComplete field="label" class="pautocomp-cstm" [(ngModel)]="receivingForm.traceableTo" name="traceableToVendor" [suggestions]="vendorsList" (completeMethod)="filterVendorNames($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true">
                                 </p-autoComplete>
                             </div>
                             <div class="col-sm-1">
@@ -290,7 +303,7 @@
                         <div class="form-row" *ngIf="receivingForm.traceableToTypeId == 3">
                             <div class="col-sm-12">
                                 <p-autoComplete field="label" class="pautocomp-cstm"
-                                    [(ngModel)]="receivingForm.traceableToId" name="traceableToCompany" 
+                                    [(ngModel)]="receivingForm.traceableTo" name="traceableToCompany" 
                                     [suggestions]="companyList" 
                                     (completeMethod)="filterCompanyNames($event)" 
                                     [size]="30" 
@@ -303,7 +316,7 @@
                         </div>
                         <div class="form-row" *ngIf="receivingForm.traceableToTypeId == 4">
                             <div class="col-sm-12">
-                                <input class="form-control" type="text" name="traceableToOther" [(ngModel)]="receivingForm.traceableToId">
+                                <input class="form-control" type="text" name="traceableToOther" [(ngModel)]="receivingForm.traceableTo">
                             </div>
                         </div>
                     </div>
@@ -317,15 +330,15 @@
                         </div>
                     </div>
                     <div class="form-group" *ngIf="receivingForm.isMFGDate">
-                        <p-calendar [showIcon]="true" [maxDate]="currentDate" name="manufacturingDate" [(ngModel)]="receivingForm.MFGDate"></p-calendar>
+                        <p-calendar class="workflow-clder" [showIcon]="true" [maxDate]="currentDate" name="manufacturingDate" [(ngModel)]="receivingForm.mfgDate"></p-calendar>
                     </div>
                     <div class="form-group">
                         <label>MFG Trace</label>
-                        <input class="form-control" type="text" name="MFGTrace" [(ngModel)]="receivingForm.MFGTrace">
+                        <input class="form-control" type="text" name="MFGTrace" [(ngModel)]="receivingForm.mfgTrace">
                     </div>
                     <div class="form-group">
                         <label>MFG Lot</label>
-                        <input class="form-control" type="text" name="MFGLotNo" [(ngModel)]="receivingForm.MFGLotNo">
+                        <input class="form-control" type="text" name="MFGLotNo" [(ngModel)]="receivingForm.mfgLotNo">
                     </div>
                     <div class="form-group">
                         <div class="checkbox-cstm m-t-10">
@@ -337,7 +350,7 @@
                         </div>
                     </div>
                     <div class="form-group" *ngIf="receivingForm.isExpDate">
-                        <p-calendar [showIcon]="true" [minDate]="currentDate" name="expDate" [(ngModel)]="receivingForm.expDate"></p-calendar>
+                        <p-calendar class="workflow-clder" [showIcon]="true" [minDate]="currentDate" name="expDate" [(ngModel)]="receivingForm.expDate"></p-calendar>
                     </div>
                     <div class="form-group">
                         <div class="checkbox-cstm m-t-10">
@@ -350,8 +363,8 @@
                     </div>
                     <div *ngIf="receivingForm.isTimeLife">
                         <div class="form-group">
-                            <label>Date</label>
-                            <p-calendar [showIcon]="true" name="timeLifeDate" [(ngModel)]="receivingForm.timeLifeDate"></p-calendar>
+                            <label>Time Life Date</label>
+                            <p-calendar class="workflow-clder" [showIcon]="true" name="timeLifeDate" [(ngModel)]="receivingForm.timeLifeDate"></p-calendar>
                         </div>
                         <div class="form-group">
                             <label>Origin</label>

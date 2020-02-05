@@ -35,6 +35,7 @@ import { CommonService } from '../../../../services/common.service';
 import { Subject } from 'rxjs'
 import { takeUntil } from 'rxjs/operators';
 import { DatePipe } from '@angular/common';
+import { StocklineService } from '../../../../services/stockline.service';
 
 @Component({
     selector: 'app-customer-work-setup',
@@ -84,12 +85,16 @@ export class CustomerWorkSetupComponent implements OnInit {
     departmentList: any = [];
     allConditionInfo: any = [];
     customerContactList: any = [];
+    customerContactInfo: any = [];
+    customerPhoneInfo: any = [];
     currentDate = new Date();
     disableMagmtStruct: boolean = true;
     textAreaInfo: string;
 	textAreaLabel: string;
 	receivingCustomerWorkId: number;
-    
+    sourceTimeLife: any = {};
+    customerId: number;    
+
 
     // firstCollection: any[];
 	// allEmployeeinfo: any[] = [];
@@ -177,9 +182,8 @@ export class CustomerWorkSetupComponent implements OnInit {
     // receivingForm: any = {};
     // public allWorkFlows: any[] = [];
 
-    constructor(private commonService: CommonService, private customerService: CustomerService, private binService: BinService, private siteService: SiteService, private conditionService: ConditionService, private itemMasterService: ItemMasterService, private datePipe: DatePipe, private _actRoute: ActivatedRoute, private receivingCustomerWorkService: ReceivingCustomerWorkService, private authService: AuthService) {
+    constructor(private commonService: CommonService, private customerService: CustomerService, private binService: BinService, private siteService: SiteService, private conditionService: ConditionService, private datePipe: DatePipe, private _actRoute: ActivatedRoute, private receivingCustomerWorkService: ReceivingCustomerWorkService, private authService: AuthService, private router: Router, private alertService: AlertService) {
         this.receivingForm.receivingNumber = 'Creating';
-        this.receivingForm.customerContactId = 0;
         this.receivingForm.conditionId = 0;
         this.receivingForm.siteId = 0;
         this.receivingForm.warehouseId = 0;
@@ -237,6 +241,9 @@ export class CustomerWorkSetupComponent implements OnInit {
     private customerList() {
 		this.customerService.getWorkFlows().subscribe(res => {
             this.allCustomersInfo = res[0];
+            if(this.isEditMode) {
+                this.onSelectCustomeronEdit(this.customerId);
+            }            
         });
     }
 
@@ -272,8 +279,94 @@ export class CustomerWorkSetupComponent implements OnInit {
 
     getReceivingCustomerDataonEdit(id) {
         this.receivingCustomerWorkService.getCustomerWorkdataById(id).subscribe(res => {
-            console.log(res);            
+            console.log(res);
+            this.receivingForm = {
+                ...res,
+                employeeId: getObjectById('value', res.employeeId, this.allEmployeeList),
+                itemMasterId: getObjectById('value', res.itemMasterId, this.allPartnumbersList),
+                referenceId: getObjectById('value', res.referenceId, this.allCustomersList),
+                tagDate: res.tagDate ? new Date(res.tagDate) : '',
+                mfgDate: res.mfgDate ? new Date(res.mfgDate) : '',
+                expDate: res.expDate ? new Date(res.expDate) : '',
+                timeLifeDate: res.timeLifeDate ? new Date(res.timeLifeDate) : '',
+            };
+            //this.onSelectCustomeronEdit(res.customerId);
+            this.customerId = res.customerId;
+            this.onPartNumberSelected(res.itemMasterId);
+            this.getManagementStructureOnEdit(res.managementStructureId);
+            this.getSiteDetailsOnEdit(res);
+            this.getObtainOwnerTraceOnEdit(res);
         });
+    }
+
+    getManagementStructureOnEdit(managementStructureId) {
+        this.commonService.getManagementStructureDetails(managementStructureId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
+            this.selectedLegalEntity(res.Level1);
+            this.selectedBusinessUnit(res.Level2);
+            this.selectedDivision(res.Level3);
+            this.selectedDepartment(res.Level4);
+            this.managementStructure = {
+                companyId: res.Level1 !== undefined ? res.Level1 : 0,
+                buId: res.Level2 !== undefined ? res.Level2 : 0,
+                divisionId: res.Level3 !== undefined ? res.Level3 : 0,
+                departmentId: res.Level4 !== undefined ? res.Level4 : 0,
+            }
+        })
+    }
+
+    getSiteDetailsOnEdit(res) {
+        this.siteValueChange(res.siteId);
+        this.wareHouseValueChange(res.warehouseId);
+        this.locationValueChange(res.locationId);
+        this.shelfValueChange(res.binId);
+        this.receivingForm.warehouseId = res.warehouseId;
+        this.receivingForm.locationId = res.locationId;
+        this.receivingForm.shelfId = res.shelfId;
+        this.receivingForm.binId = res.binId;
+    }
+
+    getObtainOwnerTraceOnEdit(res) {
+        //obtain from
+        if(res.obtainFromTypeId == 1) {
+            this.receivingForm.obtainFrom = getObjectById('value', res.obtainFrom, this.allCustomersList);
+        }
+        else if(res.obtainFromTypeId == 2) {
+            this.receivingForm.obtainFrom = getObjectById('value', res.obtainFrom, this.allVendorsList);
+        }
+        else if(res.obtainFromTypeId == 3) {
+            this.receivingForm.obtainFrom = getObjectById('value', res.obtainFrom, this.allCompanyList);
+        }
+        else if(res.obtainFromTypeId == 4) {
+            this.receivingForm.obtainFrom = res.obtainFrom;
+        }
+
+        //owner
+        if(res.ownerTypeId == 1) {
+            this.receivingForm.owner = getObjectById('value', res.owner, this.allCustomersList);
+        }
+        else if(res.ownerTypeId == 2) {
+            this.receivingForm.owner = getObjectById('value', res.owner, this.allVendorsList);
+        }
+        else if(res.ownerTypeId == 3) {
+            this.receivingForm.owner = getObjectById('value', res.owner, this.allCompanyList);
+        }
+        else if(res.ownerTypeId == 4) {
+            this.receivingForm.owner = res.owner;
+        }
+
+        //traceable to
+        if(res.traceableToTypeId == 1) {
+            this.receivingForm.traceableTo = getObjectById('value', res.traceableTo, this.allCustomersList);
+        }
+        else if(res.traceableToTypeId == 2) {
+            this.receivingForm.traceableTo = getObjectById('value', res.traceableTo, this.allVendorsList);
+        }
+        else if(res.traceableToTypeId == 3) {
+            this.receivingForm.traceableTo = getObjectById('value', res.traceableTo, this.allCompanyList);
+        }
+        else if(res.traceableToTypeId == 4) {
+            this.receivingForm.traceableTo = res.traceableTo;
+        }
     }
     
     selectedLegalEntity(legalEntityId) {
@@ -378,6 +471,28 @@ export class CustomerWorkSetupComponent implements OnInit {
 		}
     }
 
+    filterCustContacts(event) {
+		this.customerContactInfo = this.customerContactList;
+
+		if (event.query !== undefined && event.query !== null) {
+			const customers = [...this.customerContactList.filter(x => {
+				return x.csr.toLowerCase().includes(event.query.toLowerCase())
+			})]
+			this.customerContactInfo = customers;
+		}
+    }
+
+    filterCustContactPhone(event) {
+		this.customerPhoneInfo = this.customerContactList;
+
+		if (event.query !== undefined && event.query !== null) {
+			const customers = [...this.customerContactList.filter(x => {
+				return x.workPhone.toLowerCase().includes(event.query.toLowerCase())
+			})]
+			this.customerPhoneInfo = customers;
+		}
+    }
+
 	filterVendorNames(event) {
 		this.vendorsList = this.allVendorsList;
 
@@ -464,53 +579,103 @@ export class CustomerWorkSetupComponent implements OnInit {
         this.getAllCustomerContact(value.customerId); 
     }
 
+    onSelectCustomeronEdit(id) {
+        const customerObj = getObjectById('customerId', id, this.allCustomersInfo);
+        this.receivingForm.customerCode = customerObj;   
+        this.receivingForm.customerId = customerObj;  
+        this.getAllCustomerContact(id);
+    }
+
     getAllCustomerContact(id) {
-        this.customerService.getContacts(id).subscribe(res => {
-            this.customerContactList = res[0];
-        })
+        this.commonService.getCustomerContactsById(id).subscribe(res => {
+            console.log(res);            
+            this.customerContactList = res;
+            const isDefaultContact = this.customerContactList.filter(x => {
+                if (x.isDefaultContact === true) {
+                    return x;
+                } else return x;
+            })
+            this.receivingForm.customerContactId = isDefaultContact[0];
+            this.receivingForm.customerPhone = isDefaultContact[0];
+        });
     }
 
     onPartNumberSelected(value) {
-        console.log(value);        
-        // this.itemMasterService.getDescriptionbypart(event).subscribe(res => {
-        //     console.log(res);            
-        // });
+        this.commonService.getReceiveCustomerPartDetailsById(value).subscribe(res => {
+            this.receivingForm.partDescription = res.partDescription;  
+            this.receivingForm.manufacturerId = res.manufacturerId;  
+            this.receivingForm.manufacturer = res.manufacturer;
+            this.receivingForm.revisePartId = res.revisedPart;
+            this.receivingForm.isSerialized = res.isSerialized;
+            this.receivingForm.isTimeLife = res.isTimeLife;
+        });
     }
 
     onSelectObrainFrom() {
-		this.receivingForm.obtainFromId = undefined;
+		this.receivingForm.obtainFrom = undefined;
 	}
 
 	onSelectOwner() {
-		this.receivingForm.ownerId = undefined;
+		this.receivingForm.owner = undefined;
 	}
 
 	onSelectTraceableTo() {
-		this.receivingForm.traceableToId = undefined;
+		this.receivingForm.traceableTo = undefined;
 	}
     
     onSaveCustomerReceiving() {
-        console.log(this.receivingForm); 
         this.receivingForm = {
             ...this.receivingForm,
             customerId: getValueFromObjectByKey('customerId', this.receivingForm.customerId),
-            MFGDate: this.receivingForm.MFGDate ? this.datePipe.transform(this.receivingForm.MFGDate, "MM/dd/yyyy") : '',
+            customerContactId: getValueFromObjectByKey('customerContactId', this.receivingForm.customerContactId),
+            mfgDate: this.receivingForm.mfgDate ? this.datePipe.transform(this.receivingForm.mfgDate, "MM/dd/yyyy") : '',
             expDate: this.receivingForm.expDate ? this.datePipe.transform(this.receivingForm.expDate, "MM/dd/yyyy") : '',
             itemMasterId: this.receivingForm.itemMasterId ? editValueAssignByCondition('value', this.receivingForm.itemMasterId) : '',
             partNumber: this.receivingForm.itemMasterId ? editValueAssignByCondition('label', this.receivingForm.itemMasterId) : '',
             employeeId: this.receivingForm.employeeId ? editValueAssignByCondition('value', this.receivingForm.employeeId) : '',
-            obtainFromId: this.receivingForm.obtainFromId ? editValueAssignByCondition('value', this.receivingForm.obtainFromId) : '',
-			ownerId: this.receivingForm.ownerId ? editValueAssignByCondition('value', this.receivingForm.ownerId) : '',
-			traceableToId: this.receivingForm.traceableToId ? editValueAssignByCondition('value', this.receivingForm.traceableToId) : '',
+            obtainFrom: this.receivingForm.obtainFrom ? editValueAssignByCondition('value', this.receivingForm.obtainFrom) : '',
+			owner: this.receivingForm.owner ? editValueAssignByCondition('value', this.receivingForm.owner) : '',
+			traceableTo: this.receivingForm.traceableTo ? editValueAssignByCondition('value', this.receivingForm.traceableTo) : '',
             referenceId: this.receivingForm.referenceId ? editValueAssignByCondition('value', this.receivingForm.referenceId) : '',
             createdBy: this.userName,
-            updatedBy: this.userName
+            updatedBy: this.userName,
+            timeLife: this.sourceTimeLife
+            
         }    
         console.log(this.receivingForm);
-        const {customerCode, ...receivingInfo} = this.receivingForm;
-        this.receivingCustomerWorkService.newReason(receivingInfo).subscribe(res => {
-            console.log(res);
-        });
+        const {customerCode, customerPhone, partDescription, manufacturer, revisePartId, ...receivingInfo} = this.receivingForm;
+        if(!this.isEditMode) {
+            this.receivingCustomerWorkService.newReason(receivingInfo).subscribe(res => {
+                console.log(res);
+                // if (this.receivingForm.isTimeLife) {
+                //     this.receivingCustomerWorkService.newStockLineTimeLife(this.sourceTimeLife).subscribe(res => {
+                //         console.log(res);
+                //     });
+                // }
+                this.alertService.showMessage(
+                    'Success',
+                    `Saved Customer Work Successfully`,
+                    MessageSeverity.success
+                );
+                this.router.navigateByUrl('/receivingmodule/receivingpages/app-customer-works-list');
+            });
+        } 
+        else {
+            this.receivingCustomerWorkService.updateCustomerWorkReceiving(receivingInfo).subscribe(res => {
+                console.log(res);
+                // if (this.receivingForm.isTimeLife) {
+                //     this.receivingCustomerWorkService.newStockLineTimeLife(this.sourceTimeLife).subscribe(res => {
+                //         console.log(res);
+                //     });
+                // }
+                this.alertService.showMessage(
+                    'Success',
+                    `Updated Customer Work Successfully`,
+                    MessageSeverity.success
+                );
+                this.router.navigateByUrl('/receivingmodule/receivingpages/app-customer-works-list');
+            });
+        }
     }
 
 }
