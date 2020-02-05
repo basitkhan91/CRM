@@ -229,7 +229,13 @@ export class CustomerBillingInformationComponent {
 
     }
 	nextClick() {
-		this.tab.emit('Shipping');
+        this.tab.emit('Shipping');
+        this.alertService.showMessage(
+			'Success',
+			` ${this.editMode ? 'Updated' : 'Saved'  } Billing Information Sucessfully `,
+			MessageSeverity.success
+		);
+        
 	}
 	backClick() {
 		this.tab.emit('Financial');

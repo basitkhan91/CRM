@@ -125,7 +125,7 @@ export class VendorShippingInformationComponent {
     public sourceVendor: any = {};
     @Input() vendorId: number = 0;
     @Input() isViewMode: boolean = false;
-
+    isvendorEditMode:any;
     constructor(private http: HttpClient, private router: Router,
         private authService: AuthService, private modalService: NgbModal, private configurations: ConfigurationService, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public vendorService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
         if (this.vendorService.listCollection !== undefined) {
@@ -163,7 +163,10 @@ export class VendorShippingInformationComponent {
         }
     }
 
-    ngOnInit() {        
+    ngOnInit() {  
+        this.vendorService.currentEditModeStatus.subscribe(message => {
+            this.isvendorEditMode = message; 
+        });      
         if (this.local) {
             this.loadData();
         }
@@ -678,6 +681,12 @@ export class VendorShippingInformationComponent {
         }
         this.activeIndex = 8;
         this.vendorService.changeofTab(this.activeIndex);
+        this.alertService.showMessage(
+			'Success',
+			`${this.isvendorEditMode ? 'Updated' : 'Saved'  }  Shipping Information Sucessfully `,
+			MessageSeverity.success
+        );
+ 
         // this.vendorService.indexObj.next(this.activeIndex);
         // this.vendorService.changeStep('Billing Information');
         // this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-billing-information');

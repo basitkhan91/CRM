@@ -151,6 +151,7 @@ export class VendorGeneralInformationComponent implements OnInit {
     urlPattern = urlPattern()
     parentVendorOriginal: any[];
     forceSelectionOfVendorName: boolean = false;
+    selectedEditData: any;
 
 
 
@@ -321,6 +322,9 @@ export class VendorGeneralInformationComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.vendorService.currentEditModeStatus.subscribe(message => {
+            this.isvendorEditMode = message; 
+        });
         // this.countrylist();
         // if(this.vendorService.listCollection == undefined){
         //     this.countrylist();
@@ -419,6 +423,7 @@ export class VendorGeneralInformationComponent implements OnInit {
         // }
 
     }
+    isvendorEditMode
 
     ngOnDestroy() {
 
@@ -752,7 +757,7 @@ export class VendorGeneralInformationComponent implements OnInit {
 
 
     filterVendorParentNames(event) {
-        this.vendorParentNames = this.parentVendorOriginal;
+        this.vendorParentNames = this.parentVendorOriginal ? this.parentVendorOriginal :[] ;
 
         this.vendorParentNames = [...this.parentVendorOriginal.filter(x => {
             return x.vendorName.toLowerCase().includes(event.query.toLowerCase());
@@ -877,7 +882,7 @@ export class VendorGeneralInformationComponent implements OnInit {
         this.loadingIndicator = true;
         this.sourceVendor = row;
     }
-    editItemAndCloseModel(goNxt?: any) {
+    editItemAndCloseModel(goNxt?: any) { 
         this.isSaving = true;
         this.isEditMode = true;
         if (!(this.sourceVendor.vendorName && this.sourceVendor.vendorCode && this.sourceVendor.vendorEmail && this.sourceVendor.vendorPhone && this.sourceVendor.address1 && this.sourceVendor.city
@@ -1065,10 +1070,11 @@ export class VendorGeneralInformationComponent implements OnInit {
         }
         this.loadData();
     }
-
+    
     private savesuccessCompleted(user?: any, goNxt?: any) {
         this.isSaving = false;
-        this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
+        console.log("vendor service",this.vendorService.isEditMode);    
+        this.alertService.showMessage("Success", `${this.isvendorEditMode ? 'Updated' : 'Saved'  }  General Information  successfully`, MessageSeverity.success);
         if (goNxt === 'goNext') {
             this.nextClick();
         }
@@ -1102,24 +1108,31 @@ export class VendorGeneralInformationComponent implements OnInit {
         this.msgs = [];
         this.msgs.push({ severity: 'info', summary: 'File Uploaded', detail: '' });
     }
-    eventHandler(event) {
-        if (event.target.value != "") {
-            let value = event.target.value.toLowerCase();
-            if (this.selectedActionName) {
-                if (value == this.selectedActionName.toLowerCase()) {
-                    this.disableSaveVenderName = true;
-                    this.disableSaveVenName = true;
-                }
-                else {
-                    this.disableSaveVenderName = false;
-                    this.disableSaveVenName = false;
-                }
-            }
-        }
-    }
+    // eventHandler(event) {
+    //     if (event.target.value != "") {
+    //         let value = event.target.value.toLowerCase();
+    //         if (this.selectedActionName) {
+    //             if (value == this.selectedActionName.toLowerCase()) {
+    //                 this.disableSaveVenderName = true;
+    //                 this.disableSaveVenName = true;
+    //             }
+    //             else {
+    //                 this.disableSaveVenderName = false;
+    //                 this.disableSaveVenName = false;
+    //             }
+    //         }
+    //     }
+    // }
     onVendorselected(object) {
 
-        const exists = selectedValueValidate('vendorName', object, this.sourceVendor)
+        if (this.vendorService.isEditMode === true) {
+            this.selectedEditData = this.sourceVendor
+        } else {
+            this.selectedEditData = undefined;
+        }
+        const exists = selectedValueValidate('vendorName', object, this.selectedEditData);
+        console.log(exists);
+
         this.parentVendorList(getValueFromObjectByKey('vendorId', object));
         this.disableSaveVenderName = !exists;
 

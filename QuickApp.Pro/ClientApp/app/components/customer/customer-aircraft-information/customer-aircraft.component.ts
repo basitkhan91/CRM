@@ -712,7 +712,12 @@ export class CustomerAircraftComponent implements OnInit {
         this.modal.close();
     }
     nextClick() {
-        this.tab.emit('Atachapter');
+        this.tab.emit('Atachapter'); 
+        this.alertService.showMessage(
+			'Success',
+			` ${this.editMode ? 'Updated' : 'Saved'  } Aircraft Information Sucessfully `,
+			MessageSeverity.success
+		);
     }
     backClick() {
 

@@ -563,6 +563,11 @@ export class CustomerContactsComponent implements OnInit {
 
 	nextClick() {
 		this.tab.emit('AircraftInfo');
+		this.alertService.showMessage(
+			'Success',
+			` ${this.editMode ? 'Updated' : 'Saved'  } Customer Contacts Sucessfully `,
+			MessageSeverity.success
+		);
 
 	}
 	backClick() {
