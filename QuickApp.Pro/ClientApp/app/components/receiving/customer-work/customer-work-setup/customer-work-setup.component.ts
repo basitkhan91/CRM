@@ -87,6 +87,7 @@ export class CustomerWorkSetupComponent implements OnInit {
     customerContactList: any = [];
     customerContactInfo: any = [];
     customerPhoneInfo: any = [];
+    allTagTypes: any = [];
     currentDate = new Date();
     disableMagmtStruct: boolean = true;
     textAreaInfo: string;
@@ -94,7 +95,8 @@ export class CustomerWorkSetupComponent implements OnInit {
 	receivingCustomerWorkId: number;
     sourceTimeLife: any = {};
     customerId: number;    
-
+    disableCondition: boolean = true;
+    disableSite: boolean = true;
 
     // firstCollection: any[];
 	// allEmployeeinfo: any[] = [];
@@ -193,6 +195,7 @@ export class CustomerWorkSetupComponent implements OnInit {
         this.receivingForm.obtainFromTypeId = 0;
         this.receivingForm.ownerTypeId = 0;
         this.receivingForm.traceableToTypeId = 0;
+        this.receivingForm.tagTypeId = 0;
         this.receivingForm.isCustomerStock = true;
     }
 
@@ -206,6 +209,7 @@ export class CustomerWorkSetupComponent implements OnInit {
         this.loadSiteData();
         this.getLegalEntity();
         this.loadConditionData();
+        this.loadTagTypes();
 
         this.receivingCustomerWorkId = this._actRoute.snapshot.params['id'];
         if(this.receivingCustomerWorkId) {
@@ -228,13 +232,20 @@ export class CustomerWorkSetupComponent implements OnInit {
 
     loadEmployeeData() {
 		this.commonService.smartDropDownList('Employee', 'employeeId', 'firstName').subscribe(res => {
-			this.allEmployeeList = res;
+            this.allEmployeeList = res;
+            if(this.isEditMode) {
+                this.receivingForm.employeeId = getObjectById('value', this.receivingForm.employeeId, this.allEmployeeList);
+                this.receivingForm.certifiedById = getObjectById('value', this.receivingForm.certifiedById, this.allEmployeeList);
+            }
 		})
 	}
 
     loadCustomerData() {
         this.commonService.smartDropDownList('Customer', 'CustomerId', 'Name').subscribe(response => {
             this.allCustomersList = response;
+            if(this.isEditMode) {
+                this.receivingForm.referenceId = getObjectById('value', this.receivingForm.referenceId, this.allCustomersList);
+            }
         });
     }
     
@@ -277,15 +288,22 @@ export class CustomerWorkSetupComponent implements OnInit {
         })
     }
 
-    getReceivingCustomerDataonEdit(id) {
+    loadTagTypes() {
+		this.stocklineService.getAllTagTypes().subscribe(res => {
+			this.allTagTypes = res;
+		});
+	}
+
+     getReceivingCustomerDataonEdit(id) {
         this.receivingCustomerWorkService.getCustomerWorkdataById(id).subscribe(res => {
             console.log(res);
             this.customerId = res.customerId;
             this.receivingForm = {
                 ...res,
-                employeeId: getObjectById('value', res.employeeId, this.allEmployeeList),
+                //employeeId: getObjectById('value', res.employeeId, this.allEmployeeList),
+                //certifiedById: getObjectById('value', res.certifiedById, this.allEmployeeList),
                 itemMasterId: getObjectById('value', res.itemMasterId, this.allPartnumbersList),
-                referenceId: getObjectById('value', res.referenceId, this.allCustomersList),
+                //referenceId: getObjectById('value', res.referenceId, this.allCustomersList),
                 tagDate: res.tagDate ? new Date(res.tagDate) : '',
                 mfgDate: res.mfgDate ? new Date(res.mfgDate) : '',
                 expDate: res.expDate ? new Date(res.expDate) : '',
@@ -301,6 +319,10 @@ export class CustomerWorkSetupComponent implements OnInit {
                 this.getTimeLifeOnEdit(res.timeLifeCyclesId);
             }            
             this.customerList();
+            this.loadEmployeeData();
+            this.loadCustomerData();
+            this.onChangeSiteName();
+            this.onSelectCondition();
         });
     }
 
@@ -327,7 +349,7 @@ export class CustomerWorkSetupComponent implements OnInit {
         this.receivingForm.warehouseId = res.warehouseId;
         this.receivingForm.locationId = res.locationId;
         this.receivingForm.shelfId = res.shelfId;
-        this.receivingForm.binId = res.binId;
+        this.receivingForm.binId = res.binId;        
     }
 
     getObtainOwnerTraceOnEdit(res) {
@@ -389,7 +411,7 @@ export class CustomerWorkSetupComponent implements OnInit {
 		this.managementStructure.divisionId = 0;
 		this.managementStructure.departmentId = 0;
 
-        if (legalEntityId != 0) {
+        if (legalEntityId != 0 && legalEntityId != null && legalEntityId != undefined) {
             this.receivingForm.managementStructureId = legalEntityId;
             this.commonService.getBusinessUnitListByLegalEntityId(legalEntityId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
                 this.businessUnitList = res;
@@ -405,7 +427,7 @@ export class CustomerWorkSetupComponent implements OnInit {
 		this.managementStructure.divisionId = 0;
 		this.managementStructure.departmentId = 0;
 
-        if (businessUnitId != 0) {
+        if (businessUnitId != 0 && businessUnitId != null && businessUnitId != undefined) {
             this.receivingForm.managementStructureId = businessUnitId;
             this.commonService.getDivisionListByBU(businessUnitId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
                 this.divisionList = res;
@@ -416,7 +438,7 @@ export class CustomerWorkSetupComponent implements OnInit {
 		this.departmentList = [];
 		this.managementStructure.departmentId = 0;
 
-        if (divisionUnitId != 0) {
+        if (divisionUnitId != 0 && divisionUnitId != null && divisionUnitId != undefined) {
             this.receivingForm.managementStructureId = divisionUnitId;
             this.commonService.getDepartmentListByDivisionId(divisionUnitId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
                 this.departmentList = res;
@@ -424,7 +446,7 @@ export class CustomerWorkSetupComponent implements OnInit {
         }
     }
     selectedDepartment(departmentId) {
-        if (departmentId != 0) {
+        if (departmentId != 0 && departmentId != null && departmentId != undefined) {
             this.receivingForm.managementStructureId = departmentId;
         }
 	}
@@ -539,6 +561,15 @@ export class CustomerWorkSetupComponent implements OnInit {
 		this.binService.getWareHouseDate(siteId).subscribe(res => {
             this.allWareHouses = res;
         });
+        this.onChangeSiteName();
+    }
+
+    onChangeSiteName() {
+        if (this.receivingForm.siteId != 0) {
+			this.disableSite = false;
+		} else {
+			this.disableSite = true;
+		}
     }
     
     wareHouseValueChange(warehouseId) {
@@ -633,6 +664,14 @@ export class CustomerWorkSetupComponent implements OnInit {
 
 	onSelectTraceableTo() {
 		this.receivingForm.traceableTo = undefined;
+    }
+    
+    onSelectCondition() {
+		if (this.receivingForm.conditionId != 0) {
+			this.disableCondition = false;
+		} else {
+			this.disableCondition = true;
+		}
 	}
     
     onSaveCustomerReceiving() {
@@ -645,6 +684,7 @@ export class CustomerWorkSetupComponent implements OnInit {
             itemMasterId: this.receivingForm.itemMasterId ? editValueAssignByCondition('value', this.receivingForm.itemMasterId) : '',
             partNumber: this.receivingForm.itemMasterId ? editValueAssignByCondition('label', this.receivingForm.itemMasterId) : '',
             employeeId: this.receivingForm.employeeId ? editValueAssignByCondition('value', this.receivingForm.employeeId) : '',
+            certifiedById: this.receivingForm.certifiedById ? editValueAssignByCondition('value', this.receivingForm.certifiedById) : '',
             obtainFrom: this.receivingForm.obtainFrom ? editValueAssignByCondition('value', this.receivingForm.obtainFrom) : '',
 			owner: this.receivingForm.owner ? editValueAssignByCondition('value', this.receivingForm.owner) : '',
 			traceableTo: this.receivingForm.traceableTo ? editValueAssignByCondition('value', this.receivingForm.traceableTo) : '',

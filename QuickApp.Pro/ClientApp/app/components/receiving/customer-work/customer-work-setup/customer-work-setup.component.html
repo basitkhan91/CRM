@@ -13,7 +13,12 @@
                 <div class="col-md-3">
                     <div class="form-group">
                         <label>Employee Name <span class="text-danger">*</span></label>
-                        <p-autoComplete field="label" class="pautocomp-cstm" [(ngModel)]="receivingForm.employeeId" name="employeeId" [suggestions]="employeeNames" (completeMethod)="filterEmployees($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true"></p-autoComplete>
+                        <p-autoComplete field="label" class="pautocomp-cstm" [(ngModel)]="receivingForm.employeeId" name="employeeId" [suggestions]="employeeNames" (completeMethod)="filterEmployees($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" #empName="ngModel" required></p-autoComplete>
+                        <div *ngIf="empName.invalid && (empName.dirty || empName.touched)" class="alert alert-danger alert-danger-cstm">
+                            <div *ngIf="empName.errors.required">
+                                <small> Employee Name is required </small>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -29,7 +34,7 @@
                             <div *ngIf="custName.errors.required">
                                 <small> Customer Name is required </small>
                             </div>
-                    </div>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label>Customer Code <span class="text-danger">*</span></label>
@@ -46,20 +51,30 @@
                     </div>
                     <div class="form-group">
                         <label>Ref <span class="text-danger">*</span></label>
-                        <p-autoComplete field="label" class="pautocomp-cstm" [(ngModel)]="receivingForm.referenceId" name="referenceId" [suggestions]="customersList" (completeMethod)="filterCustomerNames($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" required></p-autoComplete>
+                        <p-autoComplete field="label" class="pautocomp-cstm" [(ngModel)]="receivingForm.referenceId" name="referenceId" [suggestions]="customersList" (completeMethod)="filterCustomerNames($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" #custRef="ngModel" required></p-autoComplete>
+                        <div *ngIf="custRef.invalid && (custRef.dirty || custRef.touched)" class="alert alert-danger alert-danger-cstm">
+                            <div *ngIf="custRef.errors.required">
+                                <small> Receiving Num is required </small>
+                            </div>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label>Contact <span class="text-danger">*</span></label>
-                        <p-autoComplete field="csr" class="pautocomp-cstm" [(ngModel)]="receivingForm.customerContactId" name="customerContactId" [suggestions]="customerContactInfo" (completeMethod)="filterCustContacts($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" (onSelect)="customerContactChange(receivingForm.customerContactId)" [disabled]="custName.invalid" required></p-autoComplete>
-
-                        <!-- <select [(ngModel)]="receivingForm.customerContactId" name="customerContactId" (change)="customerContactChange(receivingForm.customerContactId)" required> 
-                            <option value="0">-- Select --</option>
-                            <option *ngFor="let contact of customerContactList" [ngValue]="contact.contactId">{{contact.firstName}}</option>
-                        </select> -->
+                        <p-autoComplete field="csr" class="pautocomp-cstm" [(ngModel)]="receivingForm.customerContactId" name="customerContactId" [suggestions]="customerContactInfo" (completeMethod)="filterCustContacts($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" (onSelect)="customerContactChange(receivingForm.customerContactId)" [disabled]="custName.invalid" #cusContact="ngModel" required></p-autoComplete>
+                        <div *ngIf="cusContact.invalid && (cusContact.dirty || cusContact.touched)" class="alert alert-danger alert-danger-cstm">
+                            <div *ngIf="cusContact.errors.required">
+                                <small> Contact is required </small>
+                            </div>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label>Contact Phone <span class="text-danger">*</span></label>
-                        <p-autoComplete field="workPhone" class="pautocomp-cstm" [(ngModel)]="receivingForm.customerPhone" name="customerPhone" [suggestions]="customerPhoneInfo" (completeMethod)="filterCustContactPhone($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" (onSelect)="customerContactChange(receivingForm.customerContactId)" [disabled]="custName.invalid" required></p-autoComplete>
+                        <p-autoComplete field="workPhone" class="pautocomp-cstm" [(ngModel)]="receivingForm.customerPhone" name="customerPhone" [suggestions]="customerPhoneInfo" (completeMethod)="filterCustContactPhone($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" (onSelect)="customerContactChange(receivingForm.customerContactId)" [disabled]="custName.invalid" #cusPhone="ngModel" required></p-autoComplete>
+                        <div *ngIf="cusPhone.invalid && (cusPhone.dirty || cusPhone.touched)" class="alert alert-danger alert-danger-cstm">
+                            <div *ngIf="cusPhone.errors.required">
+                                <small> Contact Phone is required </small>
+                            </div>
+                        </div>
                         <!-- <input class="form-control" type="text" name="workPhone" [(ngModel)]="receivingForm.workPhone" required> -->
                     </div>
                     <div class="form-group">
@@ -100,8 +115,10 @@
                             <input class="form-control" type="text" name="serialNumber" [(ngModel)]="receivingForm.serialNumber">
                         </div>
                         <div class="form-group">
-                            <label>Cert By</label>
-                            <input class="form-control" type="text" name="certifiedBy" [(ngModel)]="receivingForm.certifiedById">
+                            <label>Certify By
+                                <span style="margin-left:3px;cursor:pointer;"><a class="fa fa-plus-circle fa-lg" matTooltip="Add Employee" matTooltipPosition="above" target="_blank" [routerLink]="['/employeesmodule/employeepages/app-employee-general-information']"></a></span>
+                            </label>
+                            <p-autoComplete field="label" class="pautocomp-cstm" [(ngModel)]="receivingForm.certifiedById" name="certifiedBy" [suggestions]="employeeNames" (completeMethod)="filterEmployees($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true"></p-autoComplete>
                         </div>
                         <div class="form-group">
                             <label>Tag Date</label>
@@ -109,7 +126,10 @@
                         </div>
                         <div class="form-group">
                             <label>Tag Type</label>
-                            <input class="form-control" type="text" name="tagTypeId" [(ngModel)]="receivingForm.tagTypeId">
+                            <select [(ngModel)]="receivingForm.tagTypeId" name="tagType">
+                                <option value="0">-- Select --</option>
+                                <option *ngFor="let tag of allTagTypes" [ngValue]="tag.tagTypeId">{{tag.name}}</option>
+                            </select>
                         </div>
                         <div class="form-group">
                             <label>Parts Cert Num</label>
@@ -122,7 +142,7 @@
                     </div>
                     <div class="form-group">
                         <label>Condition <span class="text-danger">*</span></label>
-                        <select class="form-control" name="conditionId" [(ngModel)]="receivingForm.conditionId" required>
+                        <select class="form-control" name="conditionId" [(ngModel)]="receivingForm.conditionId" (change)="onSelectCondition()" required>
                             <option value="0">-- Select --</option>
                             <option *ngFor="let condition of allConditionInfo" [ngValue]="condition.conditionId">{{condition.description}}</option>
                         </select>
@@ -472,7 +492,7 @@
                 </div>
             </div>
             <div class="form-row pull-right">
-                <button type="submit" class="btn btn-primary" (click)="onSaveCustomerReceiving()" [disabled]="!customerWorkForm.valid || disableMagmtStruct">{{isEditMode ? 'Update' : 'Save'}}</button>
+                <button type="submit" class="btn btn-primary" (click)="onSaveCustomerReceiving()" [disabled]="!customerWorkForm.valid || disableMagmtStruct || disableCondition || disableSite">{{isEditMode ? 'Update' : 'Save'}}</button>
             </div>
         </form>
     </div>
