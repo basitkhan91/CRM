@@ -24,11 +24,11 @@
                 <div class="col-md-3">
                     <div class="form-group">
                         <label>Customer Name <span class="text-danger">*</span></label>
-                        <p-autoComplete field="name" class="pautocomp-cstm" [(ngModel)]="receivingForm.customerId" name="customerId" [suggestions]="customerNamesInfo" (completeMethod)="filterCustNames($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true"></p-autoComplete>  
+                        <p-autoComplete field="name" class="pautocomp-cstm" [(ngModel)]="receivingForm.customerId" name="customerId" [suggestions]="customerNamesInfo" (completeMethod)="filterCustNames($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" (onSelect)="onSelectCustomer(receivingForm.customerId)"></p-autoComplete>  
                     </div>
                     <div class="form-group">
                         <label>Customer Code <span class="text-danger">*</span></label>
-                        <p-autoComplete field="customerCode" class="pautocomp-cstm" [(ngModel)]="receivingForm.customerCode" name="customerCode" [suggestions]="customerCodesInfo" (completeMethod)="filterCustCodes($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true"></p-autoComplete>  
+                        <p-autoComplete field="customerCode" class="pautocomp-cstm" [(ngModel)]="receivingForm.customerCode" name="customerCode" [suggestions]="customerCodesInfo" (completeMethod)="filterCustCodes($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" (onSelect)="onSelectCustomer(receivingForm.customerCode)"></p-autoComplete>  
                     </div>
                     <div class="form-group">
                         <label>Receiving Num</label>
@@ -41,7 +41,7 @@
                     <div class="form-group">
                         <label>Contact <span class="text-danger">*</span></label>
                         <select [(ngModel)]="receivingForm.customerContactId" name="customerContactId" (change)="customerContactChange(receivingForm.customerContactId)" required> 
-                            <option value="0">--Select--</option>
+                            <option value="0">-- Select --</option>
                             <option *ngFor="let contact of customerContactList" [ngValue]="contact.contactId">{{contact.firstName}}</option>
                         </select>
                     </div>
@@ -110,6 +110,7 @@
                     <div class="form-group">
                         <label>Condition <span class="text-danger">*</span></label>
                         <select class="form-control" name="conditionId" [(ngModel)]="receivingForm.conditionId" required>
+                            <option value="0">-- Select --</option>
                             <option *ngFor="let condition of allConditionInfo" [ngValue]="condition.conditionId">{{condition.description}}</option>
                         </select>
                     </div>
@@ -118,35 +119,35 @@
                             <span style="margin-left:3px;cursor:pointer;"><a class="fa fa-plus-circle fa-lg" matTooltip="Create Site" matTooltipPosition="above" target="_blank" [routerLink]="['/singlepages/singlepages/app-site']"></a></span>
                         </label>
                         <select [(ngModel)]="receivingForm.siteId" name="siteId" (change)="siteValueChange(receivingForm.siteId)" required>
-                            <option>--Select--</option>
+                            <option value="0">-- Select --</option>
                             <option *ngFor="let site of allSites" [ngValue]="site.siteId">{{site.name}}</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Warehouse <span class="text-danger">*</span></label>
-                        <select [(ngModel)]="receivingForm.warehouseId" name="warehouseId" (change)="wareHouseValueChange(receivingForm.warehouseId)" required>
-                            <option value="">--Select--</option>
+                        <label>Warehouse</label>
+                        <select [(ngModel)]="receivingForm.warehouseId" name="warehouseId" (change)="wareHouseValueChange(receivingForm.warehouseId)">
+                            <option value="0">-- Select --</option>
                             <option *ngFor="let site of allWareHouses" [ngValue]="site.warehouseId">{{site.warehouseName}}</option>
                         </select>
                     </div>
                     <div class="form-group">
                         <label>Location</label>
                         <select [(ngModel)]="receivingForm.locationId" name="locationId" (change)="locationValueChange(receivingForm.locationId)">
-                            <option>--Select--</option>
+                            <option value="0">-- Select --</option>
                             <option *ngFor="let site of allLocations" [ngValue]="site.locationId">{{site.name}}</option>
                         </select>
                     </div>
                     <div class="form-group">
                         <label>Shelf</label>
                         <select [(ngModel)]="receivingForm.shelfId" name="shelfId" (change)="shelfValueChange(receivingForm.shelfId)">
-                            <option>--Select--</option>
+                            <option value="0">-- Select --</option>
                             <option *ngFor="let site of allShelfs" [ngValue]="site.shelfId">{{site.name}}</option>
                         </select>
                     </div>
                     <div class="form-group">
                         <label>Bin</label>
                         <select [(ngModel)]="receivingForm.binId" name="binId">
-                            <option>--Select--</option>
+                            <option value="0">-- Select --</option>
                             <option *ngFor="let site of allBins" [ngValue]="site.binId">{{site.name}}</option>
                         </select>
                     </div>
@@ -164,7 +165,7 @@
                 <div class="col-md-3">
                     <div class="form-group">
                         <label>Obtain From</label>
-                        <select [(ngModel)]="receivingForm.obtainFromTypeId" name="obtainFromType" (change)="getObtaintoType(receivingForm.obtainFromType)">
+                        <select [(ngModel)]="receivingForm.obtainFromTypeId" name="obtainFromType" (change)="onSelectObrainFrom()">
                             <option value="0">-- Select --</option>
                             <option value="1">Customer</option>
                             <option value="2">Vendor</option>
@@ -260,7 +261,7 @@
                     </div>
                     <div class="form-group">
                         <label>Traceble To</label>
-                        <select [(ngModel)]="receivingForm.traceableToTypeId" name="traceableToType" (change)="getTracabletoType(receivingForm.traceableToType)">
+                        <select [(ngModel)]="receivingForm.traceableToTypeId" name="traceableToType" (change)="onSelectTraceableTo()">
                             <option value="0">-- Select --</option>
                             <option value="1">Customer</option>
                             <option value="2">Vendor</option>
@@ -341,10 +342,20 @@
                     <div class="form-group">
                         <div class="checkbox-cstm m-t-10">
                             <label>
-                                <input type="checkbox" name="isTimeLife" [(ngModel)]="receivingForm.isTimeLife">
+                                <input type="checkbox" name="isTimeLife" [(ngModel)]="receivingForm.isTimeLife" disabled>
                                 <span class="cr"><i class="cr-icon pi pi-check"></i></span>
                                 Time Life
                             </label>
+                        </div>
+                    </div>
+                    <div *ngIf="receivingForm.isTimeLife">
+                        <div class="form-group">
+                            <label>Date</label>
+                            <p-calendar [showIcon]="true" name="timeLifeDate" [(ngModel)]="receivingForm.timeLifeDate"></p-calendar>
+                        </div>
+                        <div class="form-group">
+                            <label>Origin</label>
+                            <input class="form-control" type="text" name="timeLifeOrigin" [(ngModel)]="receivingForm.timeLifeOrigin">
                         </div>
                     </div>
                     <div class="form-group memo-popup-cstm">
@@ -395,6 +406,58 @@
                     </div>
                 </div>
             </div>
+            <div class="form-row" *ngIf="receivingForm.isTimeLife">                               
+                <div class="table-responsive form-group">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th colspan="15" class="text-center"><strong>Time Life Adjustments</strong></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th></th>
+                                <th class="text-center">Cycles</th>
+                                <th class="text-center">Time</th>
+                                <th class="text-center">Last</th>
+                            </tr>
+                            <tr>
+                                <td>Remaining</td>
+                                <td class="clr2 text-center"><input type="number" class="w60 form-control" placeholder="hours" name="cyclesRemaining" [(ngModel)]="sourceTimeLife.cyclesRemaining"></td>
+                                <td class="clr2 text-center"><input type="number" class="w60 form-control" placeholder="hours" name="timeRemaining" [(ngModel)]="sourceTimeLife.timeRemaining"></td>
+                                <td></td>
+
+                            </tr>
+                            <tr>
+                                <td>Since New</td>
+                                <td class="clr2 text-center"><input type="number" class="w60 form-control" placeholder="hours" name="cyclesSinceNew" [(ngModel)]="sourceTimeLife.cyclesSinceNew"></td>
+                                <td class="clr2 text-center"><input type="number" class="w60 form-control" placeholder="hours" name="timeSinceNew" [(ngModel)]="sourceTimeLife.timeSinceNew"></td>
+                                <td class="clr2 text-center"><input type="number" class="w60 form-control" placeholder="hours" name="lastSinceNew" [(ngModel)]="sourceTimeLife.lastSinceNew"></td>
+
+                            </tr>
+                            <tr>
+                                <td>Since Ovh</td>
+                                <td class="clr2 text-center"><input type="number" class="w60 form-control" placeholder="hours" name="cyclesSinceOVH" [(ngModel)]="sourceTimeLife.cyclesSinceOVH"></td>
+                                <td class="clr2 text-center"><input type="number" class="w60 form-control" placeholder="hours" name="timeSinceOVH" [(ngModel)]="sourceTimeLife.timeSinceOVH"></td>
+                                <td class="clr2 text-center"><input type="number" class="w60 form-control" placeholder="hours" name="lastSinceOVH" [(ngModel)]="sourceTimeLife.lastSinceOVH"></td>
+
+                            </tr>
+                            <tr>
+                                <td>Since Insp</td>
+                                <td class="clr2 text-center"><input type="number" class="w60 form-control" placeholder="hours" name="cyclesSinceInspection" [(ngModel)]="sourceTimeLife.cyclesSinceInspection"></td>
+                                <td class="clr2 text-center"><input type="number" class="w60 form-control" placeholder="hours" name="timeSinceInspection" [(ngModel)]="sourceTimeLife.timeSinceInspection"></td>
+                                <td class="clr2 text-center"><input type="number" class="w60 form-control" placeholder="hours" name="lastSinceInspection" [(ngModel)]="sourceTimeLife.lastSinceInspection"></td>
+                            </tr>
+                            <tr>
+                                <td>Since Repair</td>
+                                <td class="clr2 text-center"><input type="number" class="w60 form-control" placeholder="hours" name="cyclesSinceRepair" [(ngModel)]="sourceTimeLife.cyclesSinceRepair"></td>
+                                <td class="clr2 text-center"><input type="number" class="w60 form-control" placeholder="hours" name="timeSinceRepair" [(ngModel)]="sourceTimeLife.timeSinceRepair"></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
             <div class="form-row pull-right">
                 <button type="submit" class="btn btn-primary" (click)="onSaveCustomerReceiving()" [disabled]="!customerWorkForm.valid || disableMagmtStruct">{{isEditMode ? 'Update' : 'Save'}}</button>
             </div>
@@ -425,7 +488,7 @@
 </div>
 
 
-<div [@fadeInOut] class="page-content">
+<!-- <div [@fadeInOut] class="page-content">
     <div class="right_col" role="main" style="min-height: 629px;">
         <div class="x_panel" style="">
             <div class="x_content add-customer-work">
@@ -483,7 +546,6 @@
                                                             (completeMethod)="filterCodes($event)" [size]="30" #customerCode="ngModel"
                                                             [minLength]="1" [dropdown]="true" required>
 
-                                                <!--field="customerCode"-->
                                             </p-autoComplete>
                                           
                                         </div>
@@ -608,10 +670,6 @@
                                 </div>
                                 <div class="col-sm-4 blocks3">
 
-
-
-
-
                                     <div class="clear"></div>
                                     <div class="form-group col-sm-12">
                                         <label class="control-label col-sm-4">QTY</label>
@@ -636,7 +694,7 @@
 
                                             <select style="border-radius:5px;" [(ngModel)]="receivingForm.siteId" name="siteId" (change)="siteValueChange($event.target.value)" required>
                                                 <option>--Select</option>
-                                                <option *ngFor="let site of allSites" [ngValue]="site.siteId">{{site.name}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
+                                                <option *ngFor="let site of allSites" [ngValue]="site.siteId">{{site.name}}</option>
                                             </select>
                                             <a matTooltip="Create Site" style="position: absolute;right: -20px;top: 0;"
                                                class=""
@@ -717,7 +775,7 @@
                                             <label class="control-label col-sm-4"></label>
                                             <div class="inner-addon inline-block display-flex" *ngIf="receivingForm.ownerType == 3">
                                                 <select style="border-radius:5px;" [(ngModel)]="receivingForm.owner" [ngModelOptions]="{standalone: true}">
-                                                    <option *ngFor="let vendor of allVendorList" [ngValue]="vendor.vendorName">{{vendor.vendorName}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
+                                                    <option *ngFor="let vendor of allVendorList" [ngValue]="vendor.vendorName">{{vendor.vendorName}}</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -740,7 +798,7 @@
                                         <label class="control-label col-sm-4" for="obtainFrom">Tracable to</label>
                                         <div class="col-sm-8">
                                             <select style="border-radius:5px;" id="obtainFrom" [(ngModel)]="receivingForm.traceableToType" [ngModelOptions]="{standalone: true}" class="form-control" (change)="getTracabletoType(receivingForm.traceableToType)">
-                                                <option>--Select--</option>
+                                                <option>-- Select --</option>
                                                 <option value="1">Customer</option>
                                                 <option value="2">Other </option>
                                                 <option value="3">Vendor</option>
@@ -765,7 +823,7 @@
                                             <label class="control-label col-sm-4"></label>
                                             <div class="inner-addon inline-block display-flex" *ngIf="receivingForm.traceableToType == 3">
                                                 <select style="border-radius:5px;" [(ngModel)]="receivingForm.traceableTo" [ngModelOptions]="{standalone: true}">
-                                                    <option *ngFor="let vendor of allVendorList" [ngValue]="vendor.vendorName">{{vendor.vendorName}}</option><!--(onchange)="siteValueChange(site.siteName)"-->
+                                                    <option *ngFor="let vendor of allVendorList" [ngValue]="vendor.vendorName">{{vendor.vendorName}}</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -787,7 +845,7 @@
                                         <label class="control-label col-sm-4">Obtain From</label>
                                         <div class="col-sm-8">
                                             <select style="border-radius:5px;" [(ngModel)]="receivingForm.obtainFromType" [ngModelOptions]="{standalone: true}" class="form-control" (change)="getObtaintoType(receivingForm.obtainFromType)">
-                                                <option>--Select--</option>
+                                                <option>-- Select --</option>
                                                 <option value="1">Customer</option>
                                                 <option value="2">Other </option>
                                                 <option value="3">Vendor</option>
@@ -1011,4 +1069,4 @@
         <button type="button" pButton icon="pi pi-check" (click)="display=false" label="Close"></button>
     </p-footer>
 
-</p-dialog>
+</p-dialog> -->

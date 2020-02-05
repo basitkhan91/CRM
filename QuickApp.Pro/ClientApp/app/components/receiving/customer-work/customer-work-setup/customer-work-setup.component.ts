@@ -34,12 +34,14 @@ import { getValueFromObjectByKey, getObjectByValue, getValueFromArrayOfObjectByI
 import { CommonService } from '../../../../services/common.service';
 import { Subject } from 'rxjs'
 import { takeUntil } from 'rxjs/operators';
+import { DatePipe } from '@angular/common';
 
 @Component({
     selector: 'app-customer-work-setup',
     templateUrl: './customer-work-setup.component.html',
     styleUrls: ['./customer-work-setup.component.scss'],
-    animations: [fadeInOut]
+    animations: [fadeInOut],
+	providers: [DatePipe]
 })
 
 export class CustomerWorkSetupComponent implements OnInit {
@@ -80,6 +82,8 @@ export class CustomerWorkSetupComponent implements OnInit {
 	businessUnitList: any = [];
     divisionList: any = [];
     departmentList: any = [];
+    allConditionInfo: any = [];
+    customerContactList: any = [];
     currentDate = new Date();
     disableMagmtStruct: boolean = true;
     textAreaInfo: string;
@@ -172,8 +176,19 @@ export class CustomerWorkSetupComponent implements OnInit {
     // receivingForm: any = {};
     // public allWorkFlows: any[] = [];
 
-    constructor(private commonService: CommonService, private customerService: CustomerService, private binService: BinService, private siteService: SiteService) {
-
+    constructor(private commonService: CommonService, private customerService: CustomerService, private binService: BinService, private siteService: SiteService, private conditionService: ConditionService, private itemMasterService: ItemMasterService, private datePipe: DatePipe) {
+        this.receivingForm.receivingNumber = 'Creating';
+        this.receivingForm.customerContactId = 0;
+        this.receivingForm.conditionId = 0;
+        this.receivingForm.siteId = 0;
+        this.receivingForm.warehouseId = 0;
+        this.receivingForm.locationId = 0;
+        this.receivingForm.shelfId = 0;
+        this.receivingForm.binId = 0;
+        this.receivingForm.obtainFromTypeId = 0;
+        this.receivingForm.ownerTypeId = 0;
+        this.receivingForm.traceableToTypeId = 0;
+        this.receivingForm.isCustomerStock = true;
     }
 
     ngOnInit() {
@@ -184,6 +199,8 @@ export class CustomerWorkSetupComponent implements OnInit {
         this.loadCompanyData();
         this.customerList();
         this.loadSiteData();
+        this.getLegalEntity();
+        this.loadConditionData();
     }
 
     private loadPartNumData() {
@@ -227,6 +244,12 @@ export class CustomerWorkSetupComponent implements OnInit {
             this.allSites = res[0];
         });
     }
+
+    private loadConditionData() {
+		this.conditionService.getConditionList().subscribe(res => {
+            this.allConditionInfo = res[0];
+        });
+	}
     
     getLegalEntity() {
         this.commonService.getLegalEntityList().pipe(takeUntil(this.onDestroy$)).subscribe(res => {
@@ -363,7 +386,7 @@ export class CustomerWorkSetupComponent implements OnInit {
 		this.allLocations = [];
 		this.allShelfs = [];
         this.allBins = [];
-        this.receivingForm.warehouseId = null;
+        this.receivingForm.warehouseId = 0;
 		this.receivingForm.locationId = 0;
 		this.receivingForm.shelfId = 0;
 		this.receivingForm.binId = 0;
@@ -414,10 +437,53 @@ export class CustomerWorkSetupComponent implements OnInit {
 		if(this.textAreaLabel == 'Memo') {
 			this.receivingForm.memo = this.textAreaInfo;
 		}
+    }
+    
+    onSelectCustomer(value) {
+        this.receivingForm.customerCode = value;   
+        this.receivingForm.customerId = value;  
+        this.getAllCustomerContact(value.customerId); 
+    }
+
+    getAllCustomerContact(id) {
+        this.customerService.getContacts(id).subscribe(res => {
+            this.customerContactList = res[0];
+        })
+    }
+
+    onPartNumberSelected(value) {
+        console.log(value);        
+        // this.itemMasterService.getDescriptionbypart(event).subscribe(res => {
+        //     console.log(res);            
+        // });
+    }
+
+    onSelectObrainFrom() {
+		this.receivingForm.obtainFromId = undefined;
+	}
+
+	onSelectOwner() {
+		this.receivingForm.ownerId = undefined;
+	}
+
+	onSelectTraceableTo() {
+		this.receivingForm.traceableToId = undefined;
 	}
     
     onSaveCustomerReceiving() {
-        console.log(this.receivingForm);        
+        console.log(this.receivingForm); 
+        this.receivingForm = {
+            ...this.receivingForm,
+            customerId: getValueFromObjectByKey('customerId', this.receivingForm.customerId),
+            isMFGDate: this.receivingForm.isMFGDate ? this.datePipe.transform(this.receivingForm.isMFGDate, "MM/dd/yyyy") : '',
+            isExpDate: this.receivingForm.isExpDate ? this.datePipe.transform(this.receivingForm.isExpDate, "MM/dd/yyyy") : '',
+            employeeId: this.receivingForm.employeeId ? editValueAssignByCondition('value', this.receivingForm.employeeId) : '',
+            obtainFromId: this.receivingForm.obtainFromId ? editValueAssignByCondition('value', this.receivingForm.obtainFromId) : '',
+			ownerId: this.receivingForm.ownerId ? editValueAssignByCondition('value', this.receivingForm.ownerId) : '',
+			traceableToId: this.receivingForm.traceableToId ? editValueAssignByCondition('value', this.receivingForm.traceableToId) : '',
+			referenceId: this.receivingForm.referenceId ? editValueAssignByCondition('value', this.receivingForm.referenceId) : '',
+        }    
+        console.log(this.receivingForm);   
     }
 
 }
