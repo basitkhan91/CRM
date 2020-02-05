@@ -14639,7 +14639,26 @@ body .ui-autocomplete .ui-autocomplete-dropdown .ui-button-icon-left:before {
 .sales-quote-part-search-data p-table .ui-table-summary{
     margin: auto !important;
   }
+.Ui-Action-mincount{
+    width: 100px;
+}
+.ui-reUsable-column_span{
 
+    span{
+       padding: 0 2px 0 6%;
+   }
+   i{
+       font-size: 15px;
+   }
+   }
+   .uiTable_td_ovrflw_control{
+    white-space: normal;
+   }
+   .text_overflow_elipses{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 @media only screen and (max-width: 1024px) {
     .md-stepper-horizontal .md-step.active.done .md-step-title, .md-stepper-horizontal .md-step.active.editable .md-step-title {
         font-size: 10px !important;
