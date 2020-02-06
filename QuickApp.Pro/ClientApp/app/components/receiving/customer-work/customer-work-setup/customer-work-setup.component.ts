@@ -95,6 +95,7 @@ export class CustomerWorkSetupComponent implements OnInit {
 	receivingCustomerWorkId: number;
     sourceTimeLife: any = {};
     customerId: number;    
+    timeLifeCyclesId: number;    
     disableCondition: boolean = true;
     disableSite: boolean = true;
 
@@ -320,7 +321,7 @@ export class CustomerWorkSetupComponent implements OnInit {
             this.getSiteDetailsOnEdit(res);
             this.getObtainOwnerTraceOnEdit(res);
             if(res.timeLifeCyclesId != null  || res.timeLifeCyclesId != 0) {
-                this.sourceTimeLife.timeLifeCyclesId = res.timeLifeCyclesId;
+                this.timeLifeCyclesId = res.timeLifeCyclesId;
                 this.getTimeLifeOnEdit(res.timeLifeCyclesId);
             }            
             this.customerList();
@@ -695,8 +696,8 @@ export class CustomerWorkSetupComponent implements OnInit {
             //referenceId: this.receivingForm.referenceId ? editValueAssignByCondition('value', this.receivingForm.referenceId) : '',
             createdBy: this.userName,
             updatedBy: this.userName,
-            timeLife: {...this.sourceTimeLife, updatedDate: new Date()}            
-        }    
+            timeLife: {...this.sourceTimeLife, timeLifeCyclesId: this.timeLifeCyclesId, updatedDate: new Date()}            
+        }
         console.log(this.receivingForm);
         const {customerCode, customerPhone, partDescription, manufacturer, revisePartId, ...receivingInfo} = this.receivingForm;
         if(!this.isEditMode) {
