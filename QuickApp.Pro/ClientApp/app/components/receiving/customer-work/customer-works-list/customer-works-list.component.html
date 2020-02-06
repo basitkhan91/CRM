@@ -457,12 +457,11 @@
                 </div>
                 <div class="modal-body" *ngIf="viewCustWorkInfo">
                     <div class="form-row">
-                        <div class="col-md-6">
-                            <p><span class="label"><b>Employee Name: <span class="text-danger">*</span></b></span><span class="value">{{ viewCustWorkInfo.employeeName }}</span></p>
+                        <div class="col-md-6">                            
                             <p><span class="label"><b>Customer Name: <span class="text-danger">*</span></b></span><span class="value">{{ viewCustWorkInfo.customerName }}</span></p>
                             <p><span class="label"><b>Customer Code: <span class="text-danger">*</span></b></span><span class="value">{{ viewCustWorkInfo.customerCode }}</span></p>
                             <p><span class="label"><b>Receiving Num: </b></span><span class="value">{{ viewCustWorkInfo.receivingNumber }}</span></p>
-                            <p><span class="label"><b>Ref: <span class="text-danger">*</span></b></span><span class="value">{{ viewCustWorkInfo.customerReference }}</span></p>
+                            <p><span class="label"><b>Ref: <span class="text-danger">*</span></b></span><span class="value">{{ viewCustWorkInfo.reference }}</span></p>
                             <p><span class="label"><b>Contact: <span class="text-danger">*</span></b></span><span class="value">{{ viewCustWorkInfo.customerContact }}</span></p>
                             <p><span class="label"><b>Contact: <span class="text-danger">*</span></b></span><span class="value">{{ viewCustWorkInfo.customerContact }}</span></p>
                             <p><span class="label"><b>Contact Phone: <span class="text-danger">*</span></b></span><span class="value">{{ viewCustWorkInfo.contactPhone }}</span></p>
@@ -569,6 +568,7 @@
                             </div>
                             <p class="full-width"><span class="label"><b>Time Life Date: </b></span><span class="value">{{ viewCustWorkInfo.timeLifeDate | date: 'dd-MM-yyyy' }}</span></p>
                             <p><span class="label"><b>Origin: </b></span><span class="value">{{ viewCustWorkInfo.timeLifeOrigin ? viewCustWorkInfo.timeLifeOrigin : '-' }}</span></p>
+                            <p><span class="label"><b>Employee Name: <span class="text-danger">*</span></b></span><span class="value">{{ viewCustWorkInfo.employeeName }}</span></p>
                             <p><span class="label"><b>Memo: </b></span><span class="value">{{ viewCustWorkInfo.memo ? viewCustWorkInfo.memo : '-' }}</span></p>                            
                         </div>
                     </div>
