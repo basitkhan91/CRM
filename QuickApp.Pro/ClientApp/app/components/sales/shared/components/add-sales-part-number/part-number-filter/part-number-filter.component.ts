@@ -279,7 +279,7 @@ private onptnmbersSuccessful(allWorkFlows: any[]) {
     });
 
   }
-  includeMultiplePN(event, part) {
+  includeMultiplePN(event) {
     let checked: boolean = event.srcElement.checked;
     if(checked){
       //this.openMultiPartSearch();
