@@ -10,7 +10,7 @@ namespace DAL.Models
         public long ReceivingCustomerWorkId { get; set; }
         public long EmployeeId { get; set; }
         public long CustomerId { get; set; }
-        public long ReferenceId { get; set; }
+        public string Reference { get; set; }
         public string ReceivingNumber { get; set; }
         public long CustomerContactId { get; set; }
         public long ItemMasterId { get; set; }
@@ -49,6 +49,8 @@ namespace DAL.Models
         public long? ManagementStructureId { get; set; }
         public long? StockLineId { get; set; }
         public long? WorkOrderId { get; set; }
+        public bool? IsSkipSerialNo { get; set; }
+        public bool? IsSkipTimeLife { get; set; }
         public int MasterCompanyId { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime UpdatedDate { get; set; }
