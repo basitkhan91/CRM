@@ -90,5 +90,14 @@ namespace DAL.Repositories.Interfaces
         void DeleteVendorInternationalShippingDetails(long id, string updatedBy);
         IEnumerable<object> GetVendorInternationalShippingDetails(long VendorId);
         IEnumerable<object> GetVendorInternationalShippingDetailsAudit(long VendorInternationalShippingId);
+
+        VendorInternationalShipViaDetails CreateVendorInternationalShipViaDetails(VendorInternationalShipViaDetails model);
+        object VendorInternationalShipViaDetailsById(long id);
+        void VendorInternationalShipViaDetailsStatus(long id, bool status, string updatedBy);
+        void DeleteVendorInternationalShipViaDetails(long id, string updatedBy);
+        IEnumerable<object> GetVendorInternationalShipViaDetails(long VendorInternationalShippingId);
+        IEnumerable<object> GetVendorInternationalShipViaDetailsAudit(long VendorInternationalShipViaDetailsId);
+
+
     }
 }

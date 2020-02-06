@@ -221,7 +221,6 @@ namespace DAL.Repositories
                                 from rp in crrp.DefaultIfEmpty()
                                 join emp in _appContext.Employee on cr.EmployeeId equals emp.EmployeeId
                                 join cust in _appContext.Customer on cr.CustomerId equals cust.CustomerId
-                                join refe in _appContext.Customer on cr.ReferenceId equals refe.CustomerId
                                 where cr.IsDeleted == false
                                 select new ReceivingCustomerWorkFilter()
                                 {
@@ -232,7 +231,7 @@ namespace DAL.Repositories
                                     changePartNumber = rp == null ? "" : rp.PartNumber,
                                     employeeName = emp.FirstName,
                                     customerName = cust.Name,
-                                    customerReference = refe.Name
+                                    customerReference = cr.Reference
                                 }).Distinct()
                                 .Paginate(pageNumber, pageSize, sorts, filters).RecordCount;
 
@@ -242,7 +241,6 @@ namespace DAL.Repositories
                         from rp in crrp.DefaultIfEmpty()
                         join emp in _appContext.Employee on cr.EmployeeId equals emp.EmployeeId
                         join cust in _appContext.Customer on cr.CustomerId equals cust.CustomerId
-                        join refe in _appContext.Customer on cr.ReferenceId equals refe.CustomerId
                         where cr.IsDeleted == false
                         select new ReceivingCustomerWorkFilter()
                         {
@@ -253,7 +251,7 @@ namespace DAL.Repositories
                             changePartNumber = rp == null ? "" : rp.PartNumber,
                             employeeName = emp.FirstName,
                             customerName = cust.Name,
-                            customerReference = refe.Name,
+                            customerReference = cr.Reference,
                             isActive = cr.IsActive,
                             createdDate = cr.CreatedDate,
                             totalRecords = totalRecords,
@@ -271,7 +269,6 @@ namespace DAL.Repositories
                 var data = (from cr in _appContext.ReceivingCustomerWork
                             join im in _appContext.ItemMaster on cr.ItemMasterId equals im.ItemMasterId
                             join cust in _appContext.Customer on cr.CustomerId equals cust.CustomerId
-                            join refe in _appContext.Customer on cr.ReferenceId equals refe.CustomerId
                             join emp in _appContext.Employee on cr.EmployeeId equals emp.EmployeeId
                             join cd in _appContext.Condition on cr.ConditionId equals cd.ConditionId
                             join si in _appContext.Site on cr.SiteId equals si.SiteId
@@ -300,7 +297,6 @@ namespace DAL.Repositories
                                 EmployeeName = emp.FirstName,
                                 CustomerName = cust.Name,
                                 cust.CustomerCode,
-                                CustomerReference = refe.Name,
                                 CustomerContact = con.FirstName,
                                 ContactPhone = con.WorkPhone,
                                 im.PartNumber,
@@ -316,8 +312,32 @@ namespace DAL.Repositories
                                 Shelf = sh == null ? "" : sh.Name,
                                 Bin = bin == null ? "" : bin.Name,
                                 OwnerType = cr.OwnerTypeId == 1 ? "Customer" : (cr.OwnerTypeId == 2 ? "Vendor" : (cr.OwnerTypeId == 3 ? "Company" : "Other")),
-                                TracableType = cr.TraceableToTypeId == 1 ? "Customer" : (cr.TraceableToTypeId == 2 ? "Vendor" : (cr.TraceableToTypeId == 3 ? "Company" : "Other")),
+                                TracableToType = cr.TraceableToTypeId == 1 ? "Customer" : (cr.TraceableToTypeId == 2 ? "Vendor" : (cr.TraceableToTypeId == 3 ? "Company" : "Other")),
                                 ObtainFromType = cr.ObtainFromTypeId == 1 ? "Customer" : (cr.ObtainFromTypeId == 2 ? "Vendor" : (cr.ObtainFromTypeId == 3 ? "Company" : "Other")),
+
+                                OwnerName = cr.OwnerTypeId == 1 ? 
+                                _appContext.Customer.Where(p=>p.CustomerId==Convert.ToInt64(cr.Owner)).Select(p=>p.Name).FirstOrDefault()
+                                : (cr.OwnerTypeId == 2 ?
+                                _appContext.Vendor.Where(p => p.VendorId == Convert.ToInt64(cr.Owner)).Select(p => p.VendorName).FirstOrDefault()
+                                : (cr.OwnerTypeId == 3 ?
+                                _appContext.LegalEntity.Where(p => p.LegalEntityId == Convert.ToInt64(cr.Owner)).Select(p => p.Name).FirstOrDefault()
+                                : cr.Owner)),
+
+                                TracableToName = cr.TraceableToTypeId == 1 ?
+                                _appContext.Customer.Where(p => p.CustomerId == Convert.ToInt64(cr.TraceableTo)).Select(p => p.Name).FirstOrDefault()
+                                : (cr.TraceableToTypeId == 2 ?
+                                _appContext.Vendor.Where(p => p.VendorId == Convert.ToInt64(cr.TraceableTo)).Select(p => p.VendorName).FirstOrDefault()
+                                : (cr.TraceableToTypeId == 3 ?
+                                _appContext.LegalEntity.Where(p => p.LegalEntityId == Convert.ToInt64(cr.TraceableTo)).Select(p => p.Name).FirstOrDefault()
+                                : cr.TraceableTo)),
+
+                                ObtainFromName = cr.ObtainFromTypeId == 1 ?
+                                _appContext.Customer.Where(p => p.CustomerId == Convert.ToInt64(cr.ObtainFrom)).Select(p => p.Name).FirstOrDefault()
+                                : (cr.ObtainFromTypeId == 2 ?
+                                _appContext.Vendor.Where(p => p.VendorId == Convert.ToInt64(cr.ObtainFrom)).Select(p => p.VendorName).FirstOrDefault()
+                                : (cr.ObtainFromTypeId == 3 ?
+                                _appContext.LegalEntity.Where(p => p.LegalEntityId == Convert.ToInt64(cr.ObtainFrom)).Select(p => p.Name).FirstOrDefault()
+                                : cr.ObtainFrom)),
 
                                 cr.BinId,
                                 cr.CertifiedById,
@@ -352,7 +372,7 @@ namespace DAL.Repositories
                                 cr.Quantity,
                                 cr.ReceivingCustomerWorkId,
                                 cr.ReceivingNumber,
-                                cr.ReferenceId,
+                                cr.Reference,
                                 cr.RevisePartId,
                                 cr.SerialNumber,
                                 cr.ShelfId,
@@ -369,6 +389,8 @@ namespace DAL.Repositories
                                 cr.UpdatedDate,
                                 cr.WarehouseId,
                                 cr.WorkOrderId,
+                                cr.IsSkipSerialNo,
+                                cr.IsSkipTimeLife
 
 
                             }).FirstOrDefault();
@@ -397,10 +419,9 @@ namespace DAL.Repositories
                                     from rp in crrp.DefaultIfEmpty()
                                     join emp in _appContext.Employee on cr.EmployeeId equals emp.EmployeeId
                                     join cust in _appContext.Customer on cr.CustomerId equals cust.CustomerId
-                                    join refe in _appContext.Customer on cr.ReferenceId equals refe.CustomerId
                                     where cr.IsDeleted == false
                                      && (cr.ReceivingNumber.Contains(value) || im.PartNumber.Contains(value) || im.PartDescription.Contains(value)
-                                    || rp.PartNumber.Contains(value) || emp.FirstName.Contains(value) || cust.Name.Contains(value) || refe.Name.Contains(value)
+                                    || rp.PartNumber.Contains(value) || emp.FirstName.Contains(value) || cust.Name.Contains(value) || cr.Reference.Contains(value)
                                     )
                                     select new ReceivingCustomerWorkFilter()
                                     {
@@ -411,7 +432,7 @@ namespace DAL.Repositories
                                         changePartNumber = rp == null ? "" : rp.PartNumber,
                                         employeeName = emp.FirstName,
                                         customerName = cust.Name,
-                                        customerReference = refe.Name
+                                        customerReference =cr.Reference,
                                     }).Distinct()
                                     .Count();
 
@@ -422,10 +443,9 @@ namespace DAL.Repositories
                             from rp in crrp.DefaultIfEmpty()
                             join emp in _appContext.Employee on cr.EmployeeId equals emp.EmployeeId
                             join cust in _appContext.Customer on cr.CustomerId equals cust.CustomerId
-                            join refe in _appContext.Customer on cr.ReferenceId equals refe.CustomerId
                             where cr.IsDeleted == false
                              && (cr.ReceivingNumber.Contains(value) || im.PartNumber.Contains(value) || im.PartDescription.Contains(value)
-                                    || rp.PartNumber.Contains(value) || emp.FirstName.Contains(value) || cust.Name.Contains(value) || refe.Name.Contains(value)
+                                    || rp.PartNumber.Contains(value) || emp.FirstName.Contains(value) || cust.Name.Contains(value) || cr.Reference.Contains(value)
                                     )
                             select new ReceivingCustomerWorkFilter()
                             {
@@ -436,7 +456,7 @@ namespace DAL.Repositories
                                 changePartNumber = rp == null ? "" : rp.PartNumber,
                                 employeeName = emp.FirstName,
                                 customerName = cust.Name,
-                                customerReference = refe.Name,
+                                customerReference = cr.Reference,
                                 isActive = cr.IsActive,
                                 createdDate = cr.CreatedDate,
                                 totalRecords = totalRecords,
@@ -458,7 +478,6 @@ namespace DAL.Repositories
                                     from rp in crrp.DefaultIfEmpty()
                                     join emp in _appContext.Employee on cr.EmployeeId equals emp.EmployeeId
                                     join cust in _appContext.Customer on cr.CustomerId equals cust.CustomerId
-                                    join refe in _appContext.Customer on cr.ReferenceId equals refe.CustomerId
                                     where cr.IsDeleted == false
                                     select new ReceivingCustomerWorkFilter()
                                     {
@@ -469,7 +488,7 @@ namespace DAL.Repositories
                                         changePartNumber = rp == null ? "" : rp.PartNumber,
                                         employeeName = emp.FirstName,
                                         customerName = cust.Name,
-                                        customerReference = refe.Name
+                                        customerReference = cr.Reference
                                     }).Distinct()
                                     .Count();
 
@@ -480,7 +499,6 @@ namespace DAL.Repositories
                             from rp in crrp.DefaultIfEmpty()
                             join emp in _appContext.Employee on cr.EmployeeId equals emp.EmployeeId
                             join cust in _appContext.Customer on cr.CustomerId equals cust.CustomerId
-                            join refe in _appContext.Customer on cr.ReferenceId equals refe.CustomerId
                             where cr.IsDeleted == false
                             select new ReceivingCustomerWorkFilter()
                             {
@@ -491,7 +509,7 @@ namespace DAL.Repositories
                                 changePartNumber = rp == null ? "" : rp.PartNumber,
                                 employeeName = emp.FirstName,
                                 customerName = cust.Name,
-                                customerReference = refe.Name,
+                                customerReference = cr.Reference,
                                 isActive = cr.IsActive,
                                 createdDate = cr.CreatedDate,
                                 totalRecords = totalRecords,
@@ -679,19 +697,19 @@ namespace DAL.Repositories
         {
             try
             {
-                var result = (from stl in _appContext.ReceivingCustomerWork
+                var result = (from rc in _appContext.ReceivingCustomerWork
 
-                              join im in _appContext.ItemMaster on stl.PartNumber equals im.PartNumber
-                              join customer in _appContext.Customer on stl.CustomerId equals customer.CustomerId into cus
+                              join im in _appContext.ItemMaster on rc.PartNumber equals im.PartNumber
+                              join customer in _appContext.Customer on rc.CustomerId equals customer.CustomerId into cus
                               from customer in cus.DefaultIfEmpty()
                                   //join contact in _appContext.Contact on Convert.ToInt64(stl.ContactId) equals contact.ContactId into con
                                   //from contact in con.DefaultIfEmpty()
 
-                              where stl.ReceivingCustomerWorkId == receivingCustomerWorkId
+                              where rc.ReceivingCustomerWorkId == receivingCustomerWorkId
 
                               select new
                               {
-                                  stl,
+                                  rc,
                                   im.ItemMasterId,
                                   customer.CustomerId,
                                   customer.CustomerCode,
@@ -703,20 +721,20 @@ namespace DAL.Repositories
                                   //contact.WorkPhone,
                                   //stl.WorkPhone,
 
-                                  partNumber = stl.PartNumber,
-                                  stl.ReceivingNumber,
-                                  stl.RevisePartId,
+                                  partNumber = rc.PartNumber,
+                                  rc.ReceivingNumber,
+                                  rc.RevisePartId,
                                   partDescription = im.PartDescription,
-                                  stl.CreatedDate,
-                                  stl.UpdatedDate,
-                                  stl.CreatedBy,
-                                  stl.UpdatedBy,
-                                  stl.ReferenceId,
-                                  stl.IsActive,
-                                  stl.ManufacturerId,
+                                  rc.CreatedDate,
+                                  rc.UpdatedDate,
+                                  rc.CreatedBy,
+                                  rc.UpdatedBy,
+                                  rc.Reference,
+                                  rc.IsActive,
+                                  rc.ManufacturerId,
                                   //  stl.Manufacturer,
                                   im.ItemTypeId,
-                                  stl.ManagementStructureId
+                                  rc.ManagementStructureId
 
 
                               }).ToList();
@@ -840,7 +858,6 @@ namespace DAL.Repositories
             {
                 var list = (from rc in _appContext.ReceivingCustomerWork
                             join cust in _appContext.Customer on rc.CustomerId equals cust.CustomerId
-                            join refe in _appContext.Customer on rc.ReferenceId equals refe.CustomerId
                             join cc in _appContext.CustomerContact.Where(p => p.IsDefaultContact == true) on cust.CustomerId equals cc.CustomerId into custcc
                             from cc in custcc.DefaultIfEmpty()
                             join con in _appContext.Contact on cc.ContactId equals con.ContactId into custcon
@@ -853,8 +870,6 @@ namespace DAL.Repositories
                             {
                                 rc.CustomerId,
                                 CustomerName = cust.Name + " - " + cust.CustomerCode,
-                                rc.ReferenceId,
-                                CustomerRef = refe.Name,
                                 cust.CsrId,
                                 CSRName=emp==null?"":emp.FirstName,
                                 cust.CreditLimit,
@@ -864,6 +879,28 @@ namespace DAL.Repositories
                                 CustomerContact = con == null ? " " : con.FirstName,
 
                             }).Distinct().ToList();
+                return list;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public IEnumerable<object> GetReceivingCustomerReference(long customerId)
+        {
+            try
+            {
+                var list = (from rc in _appContext.ReceivingCustomerWork
+                            join cust in _appContext.Customer on rc.CustomerId equals cust.CustomerId
+                            where rc.CustomerId == customerId
+                            select new
+                            {
+                                rc.ReceivingCustomerWorkId,
+                                rc.Reference
+                            }
+                           ).ToList();
                 return list;
             }
             catch (Exception)

@@ -2280,7 +2280,7 @@ namespace DAL.Repositories
                                                         _appContext.SaveChanges();
 
                                                         //Audit History
-                                                        //commonRepository.ShippingBillingAddressHistory(Convert.ToInt64(vendorId), Convert.ToInt32(ModuleEnum.Vendor), Convert.ToInt64(custShipping.VendorBillingAddressId), Convert.ToInt32(AddressTypeEnum.BillingAddress), "System");
+                                                        commonRepository.ShippingBillingAddressHistory(Convert.ToInt64(vendorId), Convert.ToInt32(ModuleEnum.Vendor), Convert.ToInt64(vendShipping.VendorBillingAddressId), Convert.ToInt32(AddressTypeEnum.BillingAddress), "System");
                                                         _appContext.Entry(ba).State = EntityState.Detached;
 
                                                     }
@@ -2313,7 +2313,7 @@ namespace DAL.Repositories
                                             _appContext.VendorBillingAddress.Add(bill);
                                             _appContext.SaveChanges();
                                             //Audit History
-                                            // commonRepository.ShippingBillingAddressHistory(Convert.ToInt64(vendorId), Convert.ToInt32(ModuleEnum.Vendor), Convert.ToInt64(bill.VendorBillingAddressId), Convert.ToInt32(AddressTypeEnum.BillingAddress), "System");
+                                             commonRepository.ShippingBillingAddressHistory(Convert.ToInt64(vendorId), Convert.ToInt32(ModuleEnum.Vendor), Convert.ToInt64(bill.VendorBillingAddressId), Convert.ToInt32(AddressTypeEnum.BillingAddress), "System");
                                             _appContext.Entry(bill).State = EntityState.Detached;
                                         }
 
@@ -2438,7 +2438,7 @@ namespace DAL.Repositories
                                                         _appContext.SaveChanges();
 
                                                         //Audit History
-                                                        //commonRepository.ShippingBillingAddressHistory(Convert.ToInt64(vendorId), Convert.ToInt32(ModuleEnum.Vendor), Convert.ToInt64(vendShipping.VendorShippingAddressId), Convert.ToInt32(AddressTypeEnum.ShippingAddress), "System");
+                                                        commonRepository.ShippingBillingAddressHistory(Convert.ToInt64(vendorId), Convert.ToInt32(ModuleEnum.Vendor), Convert.ToInt64(vendShipping.VendorShippingAddressId), Convert.ToInt32(AddressTypeEnum.ShippingAddress), "System");
                                                         _appContext.Entry(ba).State = EntityState.Detached;
 
                                                     }
@@ -2471,7 +2471,7 @@ namespace DAL.Repositories
                                             _appContext.SaveChanges();
 
                                             //Audit History
-                                            //commonRepository.ShippingBillingAddressHistory(Convert.ToInt64(vendorId), Convert.ToInt32(ModuleEnum.Vendor), Convert.ToInt64(ship.VendorShippingAddressId), Convert.ToInt32(AddressTypeEnum.ShippingAddress), "System");
+                                            commonRepository.ShippingBillingAddressHistory(Convert.ToInt64(vendorId), Convert.ToInt32(ModuleEnum.Vendor), Convert.ToInt64(ship.VendorShippingAddressId), Convert.ToInt32(AddressTypeEnum.ShippingAddress), "System");
                                             _appContext.Entry(ship).State = EntityState.Detached;
 
                                         }
@@ -2605,7 +2605,7 @@ namespace DAL.Repositories
 
                                                     _appContext.SaveChanges();
                                                     //For Contact Audit History
-                                                    //commonRepository.ContactsHistory(Convert.ToInt64(vendorId), Convert.ToInt32(ModuleEnum.Vendor), Convert.ToInt64(vendContact.VendorContactId), "System");
+                                                    commonRepository.ContactsHistory(Convert.ToInt64(vendorId), Convert.ToInt32(ModuleEnum.Vendor), Convert.ToInt64(vendContact.VendorContactId), "System");
 
                                                     _appContext.Entry(ba).State = EntityState.Detached;
 
@@ -2639,7 +2639,7 @@ namespace DAL.Repositories
                                         _appContext.VendorContact.Add(cCont);
                                         _appContext.SaveChanges();
                                         //Audit History
-                                        //commonRepository.ContactsHistory(Convert.ToInt64(vendorId), Convert.ToInt32(ModuleEnum.Vendor), Convert.ToInt64(cCont.VendorContactId), "System");
+                                        commonRepository.ContactsHistory(Convert.ToInt64(vendorId), Convert.ToInt32(ModuleEnum.Vendor), Convert.ToInt64(cCont.VendorContactId), "System");
 
                                         _appContext.Entry(cCont).State = EntityState.Detached;
                                     }
@@ -2772,7 +2772,7 @@ namespace DAL.Repositories
                               vsi.CreatedBy,
                               vsi.UpdatedBy,
                               vsi.CreatedDate,
-                          }).OrderByDescending(p => p.CreatedDate).FirstOrDefault();
+                          }).FirstOrDefault();
 
             return result;
         }
@@ -2875,6 +2875,192 @@ namespace DAL.Repositories
 
             return result;
         }
+
+        #endregion
+
+        #region Vendor international Ship Via
+
+        public VendorInternationalShipViaDetails CreateVendorInternationalShipViaDetails(VendorInternationalShipViaDetails model)
+        {
+            try
+            {
+                if (model.VendorInternationalShipViaDetailsId > 0)
+                {
+                    if (model.IsPrimary == true)
+                    {
+                        var vendorShipVia = _appContext.VendorInternationalShipViaDetails.Where(p => p.VendorInternationalShippingId == model.VendorInternationalShippingId && p.IsPrimary == true).ToList();
+
+                        if (vendorShipVia != null)
+                        {
+                            foreach (var item in vendorShipVia)
+                            {
+                                item.IsPrimary = false;
+                                item.UpdatedDate = DateTime.Now;
+                                _appContext.VendorInternationalShipViaDetails.Update(item);
+                                _appContext.SaveChanges();
+                            }
+                        }
+                    }
+                    model.UpdatedDate = DateTime.Now;
+                    model.UpdatedBy = model.UpdatedBy;
+                    model.IsPrimary = model.IsPrimary;
+
+                    _appContext.VendorInternationalShipViaDetails.Update(model);
+                    _appContext.SaveChanges();
+                }
+                else
+                {
+                    model.CreatedDate = model.UpdatedDate = DateTime.Now;
+                    model.IsActive = true;
+                    model.IsDeleted = false;
+                    if (model.IsPrimary == true)
+                    {
+                        var vendorShipVia = _appContext.VendorInternationalShipViaDetails.Where(p => p.VendorInternationalShippingId == model.VendorInternationalShippingId && p.IsPrimary == true).ToList();
+
+                        if (vendorShipVia != null)
+                        {
+                            foreach (var item in vendorShipVia)
+                            {
+                                item.IsPrimary = false;
+                                item.UpdatedDate = DateTime.Now;
+                                _appContext.VendorInternationalShipViaDetails.Update(item);
+                                _appContext.SaveChanges();
+                            }
+                        }
+                    }
+                    model.IsPrimary = model.IsPrimary;
+
+                    _appContext.VendorInternationalShipViaDetails.Add(model);
+                    _appContext.SaveChanges();
+                }
+                return model;
+
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        public object VendorInternationalShipViaDetailsById(long id)
+        {
+            var result = (from vsi in _appContext.VendorInternationalShipViaDetails
+                          where vsi.IsDeleted == false && vsi.VendorInternationalShippingId == id
+                          select new
+                          {
+                              vsi.VendorInternationalShipViaDetailsId,
+                              vsi.VendorInternationalShippingId,
+                              vsi.IsPrimary,
+                              vsi.ShipVia,
+                              vsi.ShippingAccountInfo,
+                              vsi.Memo,
+                              vsi.MasterCompanyId,
+                              vsi.CreatedBy,
+                              vsi.UpdatedBy,
+                              vsi.CreatedDate,
+                              vsi.UpdatedDate,
+                              vsi.IsActive,
+                              vsi.IsDeleted,
+                          }).FirstOrDefault();
+
+            return result;
+        }
+        public void VendorInternationalShipViaDetailsStatus(long id, bool status, string updatedBy)
+        {
+            try
+            {
+                VendorInternationalShipViaDetails model = new VendorInternationalShipViaDetails();
+                model.VendorInternationalShipViaDetailsId = id;
+                model.UpdatedDate = DateTime.Now;
+                model.IsActive = status;
+                model.UpdatedBy = updatedBy;
+
+                _appContext.VendorInternationalShipViaDetails.Attach(model);
+
+                _appContext.Entry(model).Property(x => x.IsActive).IsModified = true;
+                _appContext.Entry(model).Property(x => x.UpdatedDate).IsModified = true;
+                _appContext.Entry(model).Property(x => x.UpdatedBy).IsModified = true;
+
+                _appContext.SaveChanges();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+           
+        }
+        public void DeleteVendorInternationalShipViaDetails(long id, string updatedBy)
+        {
+            try
+            {
+                VendorInternationalShipViaDetails model = new VendorInternationalShipViaDetails();
+                model.VendorInternationalShipViaDetailsId = id;
+                model.UpdatedDate = DateTime.Now;
+                model.IsDeleted = true;
+                model.UpdatedBy = updatedBy;
+
+                _appContext.VendorInternationalShipViaDetails.Attach(model);
+
+                _appContext.Entry(model).Property(x => x.IsDeleted).IsModified = true;
+                _appContext.Entry(model).Property(x => x.UpdatedDate).IsModified = true;
+                _appContext.Entry(model).Property(x => x.UpdatedBy).IsModified = true;
+
+                _appContext.SaveChanges();
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        public IEnumerable<object> GetVendorInternationalShipViaDetails(long VendorInternationalShippingId)
+        {
+            var result = (from vsi in _appContext.VendorInternationalShipViaDetails
+                          where vsi.IsDeleted == false && vsi.VendorInternationalShippingId == VendorInternationalShippingId
+                          select new
+                          {
+                              vsi.VendorInternationalShipViaDetailsId,
+                              vsi.VendorInternationalShippingId,
+                              vsi.IsPrimary,
+                              vsi.ShipVia,
+                              vsi.ShippingAccountInfo,
+                              vsi.Memo,
+                              vsi.MasterCompanyId,
+                              vsi.CreatedBy,
+                              vsi.UpdatedBy,
+                              vsi.CreatedDate,
+                              vsi.UpdatedDate,
+                              vsi.IsActive,
+                              vsi.IsDeleted,
+                          }).OrderByDescending(p=>p.CreatedDate).ToList();
+
+            return result;
+        }
+        public IEnumerable<object> GetVendorInternationalShipViaDetailsAudit(long VendorInternationalShipViaDetailsId)
+        {
+            var result = (from vsi in _appContext.VendorInternationalShipViaDetailsAudit
+                          where vsi.IsDeleted == false && vsi.VendorInternationalShipViaDetailsId == VendorInternationalShipViaDetailsId
+                          select new
+                          {
+                              vsi.AuditVendorInternationalShipViaDetailsId,
+                              vsi.VendorInternationalShipViaDetailsId,
+                              vsi.VendorInternationalShippingId,
+                              vsi.IsPrimary,
+                              vsi.ShipVia,
+                              vsi.ShippingAccountInfo,
+                              vsi.Memo,
+                              vsi.MasterCompanyId,
+                              vsi.CreatedBy,
+                              vsi.UpdatedBy,
+                              vsi.CreatedDate,
+                              vsi.UpdatedDate,
+                              vsi.IsActive,
+                              vsi.IsDeleted,
+                          }).OrderByDescending(p => p.CreatedDate).ToList();
+
+            return result;
+        }
+
 
         #endregion
 
