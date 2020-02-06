@@ -853,6 +853,9 @@ export class VendorService {
         return this.actionEndpoint.VendorContactFileUpload(file, vendorId);
     }
 
+    PaymentCheckUpload(file, vendorId) {
+        return this.actionEndpoint.VendorCheckPaymentFileUpload(file, vendorId);
+    }
 
 
 }

@@ -543,12 +543,15 @@ export class CustomerContactsComponent implements OnInit {
 	}
 
 	async getATACustomerContactMapped() {
+		
 		this.customerService.getATAMappedByContactId(this.selectedContact.contactId).subscribe(res => {
-			console.log(res);
+			//console.log(res);
 			this.ataListDataValues = res;
+			
 			for(let i=0; i<this.ataListDataValues.length; i++){
 				this.ataListDataValues[i]['ataChapterName'] = this.ataListDataValues[i]['ataChapterCode'] + ' - ' +this.ataListDataValues[i]['ataChapterName']
-				this.ataListDataValues[i]['ataSubChapterDescription'] = getValueFromArrayOfObjectById('ataSubChapterCode', 'ataSubChapterId', this.ataListDataValues[i]['ataSubChapterId'], this.originalATASubchapterData) + ' - ' +this.ataListDataValues[i]['ataSubChapterDescription']
+				//this.ataListDataValues[i]['ataSubChapterDescription'] = getValueFromArrayOfObjectById('ataSubChapterCode', 'ataSubChapterId', this.ataListDataValues[i]['ataSubChapterId'], this.originalATASubchapterData) + ' - ' +this.ataListDataValues[i]['ataSubChapterDescription']
+				this.ataListDataValues[i]['ataSubChapterDescription'] = this.ataListDataValues[i]['ataSubChapterCode'] + ' - ' +this.ataListDataValues[i]['ataSubChapterDescription']
 			}
 		})
 	}
@@ -735,9 +738,9 @@ export class CustomerContactsComponent implements OnInit {
 	}
     editContactATAChapters(rowData)
     {
-        console.log(rowData, 'ataedit');
-        console.log(this.search_ataChapterList);
-        console.log(this.search_ataSubChapterList);
+		// console.log(rowData, 'ataedit');
+        //console.log(this.search_ataChapterList);
+        //console.log(this.search_ataSubChapterList);
         this.getATASubChapterByATAChapterID(rowData.ataChapterId)
         this.ataChapterEditData = {
             ...rowData,
