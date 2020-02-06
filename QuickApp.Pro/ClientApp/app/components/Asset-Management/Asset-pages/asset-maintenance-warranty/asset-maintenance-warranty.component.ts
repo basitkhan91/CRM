@@ -261,6 +261,6 @@ export class AssetMaintenanceWarrantyComponent implements OnInit {
         this.activeIndex = 2;
         this.assetService.indexObj.next(this.activeIndex);
         const { assetId } = this.local;
-        this.route.navigateByUrl(`/assetmodule/assetpages/app-asset-calibration/${assetId}`);
+        this.route.navigateByUrl(`/assetmodule/assetpages/app-asset-calibration/${this.local.assetRecordId}`);
     }
 }

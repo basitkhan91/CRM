@@ -1396,7 +1396,7 @@ export class AssetCapesComponent implements OnInit {
         this.assetServices.indexObj.next(this.activeIndex);
         const { assetId } = this.local;
         this.alertService.showMessage("Success", `Asset capes saved successfully.`, MessageSeverity.success);
-        this.route.navigateByUrl(`/assetmodule/assetpages/app-asset-calibration/${assetId}`);
+        this.route.navigateByUrl(`/assetmodule/assetpages/app-asset-calibration/${this.local.assetRecordId}`);
     }
 
     backClick() {
@@ -1406,7 +1406,7 @@ export class AssetCapesComponent implements OnInit {
         this.assetServices.isEditMode = true;
         this.isSaving = true;
         const { assetId } = this.local;
-        this.route.navigateByUrl(`/assetmodule/assetpages/app-edit-asset/${assetId}`);
+        this.route.navigateByUrl(`/assetmodule/assetpages/app-edit-asset/${this.local.assetRecordId}`);
     }
 
     //turn the item active/inActive

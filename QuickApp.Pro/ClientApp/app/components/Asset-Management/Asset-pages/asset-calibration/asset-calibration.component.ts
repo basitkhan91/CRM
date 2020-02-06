@@ -288,7 +288,7 @@ export class AssetCalibrationComponent implements OnInit {
                 this.activeIndex = 3;
                 this.assetService.indexObj.next(this.activeIndex);
                 const { assetId } = this.local;
-                this.route.navigateByUrl(`/assetmodule/assetpages/app-asset-maintenance-warranty/${assetId}`);
+                this.route.navigateByUrl(`/assetmodule/assetpages/app-asset-maintenance-warranty/${this.local.assetRecordId}`);
             })
         }
         else {
@@ -341,7 +341,7 @@ export class AssetCalibrationComponent implements OnInit {
                 this.activeIndex = 3;
                 this.assetService.indexObj.next(this.activeIndex);
                 const { assetId } = this.local;
-                this.route.navigateByUrl(`/assetmodule/assetpages/app-asset-maintenance-warranty/${assetId}`);
+                this.route.navigateByUrl(`/assetmodule/assetpages/app-asset-maintenance-warranty/${this.local.assetRecordId}`);
             })
         }
 
@@ -352,7 +352,7 @@ export class AssetCalibrationComponent implements OnInit {
         this.activeIndex = 3;
         this.assetService.indexObj.next(this.activeIndex);
         const { assetId } = this.local;
-        this.route.navigateByUrl(`/assetmodule/assetpages/app-asset-maintenance-warranty/${assetId}`);
+        this.route.navigateByUrl(`/assetmodule/assetpages/app-asset-maintenance-warranty/${this.local.assetRecordId}`);
     }
 
     backClick() {
@@ -360,6 +360,6 @@ export class AssetCalibrationComponent implements OnInit {
         this.activeIndex = 1;
         this.assetService.indexObj.next(this.activeIndex);
         const { assetId } = this.local;
-        this.route.navigateByUrl(`/assetmodule/assetpages/app-asset-capes/${assetId}`);
+        this.route.navigateByUrl(`/assetmodule/assetpages/app-asset-capes/${this.local.assetRecordId}`);
     }
 }
