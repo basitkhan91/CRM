@@ -9,7 +9,15 @@
     </div>
     <div class="card-body">
         <form #customerWorkForm="ngForm">
-            <div class="form-row">                            
+            <!-- <div class="form-row">                            
+                <div class="col-md-3">
+                    
+                </div>
+            </div>
+            <div class="clear"></div>
+            <hr/> -->
+
+            <div class="form-row">
                 <div class="col-md-3">
                     <div class="form-group">
                         <label>Employee Name <span class="text-danger">*</span></label>
@@ -20,13 +28,10 @@
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="clear"></div>
-            <hr/>
-
-            <div class="form-row">
-                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Receiving Num</label>
+                        <input class="form-control" type="text" name="receivingCusNum" [(ngModel)]="receivingForm.receivingNumber" disabled>
+                    </div>
                     <div class="form-group">
                         <label>Customer Name <span class="text-danger">*</span></label>
                         <p-autoComplete field="name" class="pautocomp-cstm" [(ngModel)]="receivingForm.customerId" name="customerId" [suggestions]="customerNamesInfo" (completeMethod)="filterCustNames($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" (onSelect)="onSelectCustomer(receivingForm.customerId)" #custName="ngModel" required></p-autoComplete>  
@@ -44,14 +49,11 @@
                                     <small> Customer Code is required </small>
                                 </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Receiving Num</label>
-                        <input class="form-control" type="text" name="receivingCusNum" [(ngModel)]="receivingForm.receivingNumber" disabled>
-                    </div>
+                    </div>                    
                     <div class="form-group">
                         <label>Ref <span class="text-danger">*</span></label>
-                        <p-autoComplete field="label" class="pautocomp-cstm" [(ngModel)]="receivingForm.referenceId" name="referenceId" [suggestions]="customersList" (completeMethod)="filterCustomerNames($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" #custRef="ngModel" required></p-autoComplete>
+                        <input class="form-control" type="text" name="referenceId" [(ngModel)]="receivingForm.reference" #custRef="ngModel" required>
+                        <!-- <p-autoComplete field="label" class="pautocomp-cstm" [(ngModel)]="receivingForm.referenceId" name="referenceId" [suggestions]="customersList" (completeMethod)="filterCustomerNames($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" #custRef="ngModel" required></p-autoComplete> -->
                         <div *ngIf="custRef.invalid && (custRef.dirty || custRef.touched)" class="alert alert-danger alert-danger-cstm">
                             <div *ngIf="custRef.errors.required">
                                 <small> Receiving Num is required </small>
@@ -98,8 +100,6 @@
                         <label>Revised PN</label>
                         <input class="form-control" type="text" name="revisePartId" [(ngModel)]="receivingForm.revisePartId" disabled>
                     </div>
-                </div>
-                <div class="col-md-3">
                     <div class="form-group">
                         <div class="checkbox-cstm m-t-10">
                             <label>
@@ -111,30 +111,41 @@
                     </div>
                     <div *ngIf="receivingForm.isSerialized">
                         <div class="form-group">
+                            <div class="checkbox-cstm m-t-10">
+                                <label>
+                                    <input type="checkbox" name="isSkipSerialNo" [(ngModel)]="receivingForm.isSkipSerialNo">
+                                    <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                    Skip Serial Number
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group" *ngIf="!receivingForm.isSkipSerialNo">
                             <label>Serial Number</label>
                             <input class="form-control" type="text" name="serialNumber" [(ngModel)]="receivingForm.serialNumber">
-                        </div>
-                        <div class="form-group">
-                            <label>Certify By
-                                <span style="margin-left:3px;cursor:pointer;"><a class="fa fa-plus-circle fa-lg" matTooltip="Add Employee" matTooltipPosition="above" target="_blank" [routerLink]="['/employeesmodule/employeepages/app-employee-general-information']"></a></span>
-                            </label>
-                            <p-autoComplete field="label" class="pautocomp-cstm" [(ngModel)]="receivingForm.certifiedById" name="certifiedBy" [suggestions]="employeeNames" (completeMethod)="filterEmployees($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true"></p-autoComplete>
-                        </div>
-                        <div class="form-group">
-                            <label>Tag Date</label>
-                            <p-calendar class="workflow-clder" [showIcon]="true" name="tagDate" [(ngModel)]="receivingForm.tagDate"></p-calendar>
-                        </div>
-                        <div class="form-group">
-                            <label>Tag Type</label>
-                            <select [(ngModel)]="receivingForm.tagTypeId" name="tagType">
-                                <option value="0">-- Select --</option>
-                                <option *ngFor="let tag of allTagTypes" [ngValue]="tag.tagTypeId">{{tag.name}}</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Parts Cert Num</label>
-                            <input class="form-control" type="text" name="partCertificationNumber" [(ngModel)]="receivingForm.partCertificationNumber">
-                        </div>
+                        </div>                        
+                    </div>
+                </div>
+                <div class="col-md-3">                    
+                    <div class="form-group">
+                        <label>Certify By
+                            <span style="margin-left:3px;cursor:pointer;"><a class="fa fa-plus-circle fa-lg" matTooltip="Add Employee" matTooltipPosition="above" target="_blank" [routerLink]="['/employeesmodule/employeepages/app-employee-general-information']"></a></span>
+                        </label>
+                        <p-autoComplete field="label" class="pautocomp-cstm" [(ngModel)]="receivingForm.certifiedById" name="certifiedBy" [suggestions]="employeeNames" (completeMethod)="filterEmployees($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true"></p-autoComplete>
+                    </div>
+                    <div class="form-group">
+                        <label>Tag Date</label>
+                        <p-calendar class="workflow-clder" [showIcon]="true" name="tagDate" [(ngModel)]="receivingForm.tagDate"></p-calendar>
+                    </div>
+                    <div class="form-group">
+                        <label>Tag Type</label>
+                        <select [(ngModel)]="receivingForm.tagTypeId" name="tagType">
+                            <option value="0">-- Select --</option>
+                            <option *ngFor="let tag of allTagTypes" [ngValue]="tag.tagTypeId">{{tag.name}}</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Parts Cert Num</label>
+                        <input class="form-control" type="text" name="partCertificationNumber" [(ngModel)]="receivingForm.partCertificationNumber">
                     </div>
                     <div class="form-group">
                         <label>QTY</label>
@@ -183,7 +194,9 @@
                             <option value="0">-- Select --</option>
                             <option *ngFor="let site of allBins" [ngValue]="site.binId">{{site.name}}</option>
                         </select>
-                    </div>
+                    </div>                                        
+                </div>
+                <div class="col-md-3">
                     <div class="form-group">
                         <div class="checkbox-cstm m-t-10">
                             <label>
@@ -193,9 +206,6 @@
                             </label>
                         </div>
                     </div>
-                    
-                </div>
-                <div class="col-md-3">
                     <div class="form-group">
                         <label>Obtain From</label>
                         <select [(ngModel)]="receivingForm.obtainFromTypeId" name="obtainFromTypeId" (change)="onSelectObrainFrom()">
@@ -371,26 +381,7 @@
                     </div>
                     <div class="form-group" *ngIf="receivingForm.isExpDate">
                         <p-calendar class="workflow-clder" [showIcon]="true" [minDate]="currentDate" name="expDate" [(ngModel)]="receivingForm.expDate"></p-calendar>
-                    </div>
-                    <div class="form-group">
-                        <div class="checkbox-cstm m-t-10">
-                            <label>
-                                <input type="checkbox" name="isTimeLife" [(ngModel)]="receivingForm.isTimeLife" disabled>
-                                <span class="cr"><i class="cr-icon pi pi-check"></i></span>
-                                Time Life
-                            </label>
-                        </div>
-                    </div>
-                    <div *ngIf="receivingForm.isTimeLife">
-                        <div class="form-group">
-                            <label>Time Life Date</label>
-                            <p-calendar class="workflow-clder" [showIcon]="true" name="timeLifeDate" [(ngModel)]="receivingForm.timeLifeDate"></p-calendar>
-                        </div>
-                        <div class="form-group">
-                            <label>Origin</label>
-                            <input class="form-control" type="text" name="timeLifeOrigin" [(ngModel)]="receivingForm.timeLifeOrigin">
-                        </div>
-                    </div>
+                    </div>                    
                     <div class="form-group memo-popup-cstm">
                         <label>Memo</label>
                         <span matTooltip="{{receivingForm.memo}}" matTooltipPosition="above"><input type="text" name="memo" pInputText class="form-control" value="{{receivingForm.memo}}" disabled /></span>
@@ -439,59 +430,95 @@
                     </div>
                 </div>
             </div>
-            <div class="form-row" *ngIf="receivingForm.isTimeLife">                               
-                <div class="table-responsive form-group">
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th colspan="15" class="text-center"><strong>Time Life Adjustments</strong></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <th></th>
-                                <th class="text-center">Cycles</th>
-                                <th class="text-center">Time</th>
-                                <th class="text-center">Last</th>
-                            </tr>
-                            <tr>
-                                <td>Remaining</td>
-                                <td class="clr2 text-center"><input type="number" class="w60 form-control" placeholder="hours" name="cyclesRemaining" [(ngModel)]="sourceTimeLife.cyclesRemaining"></td>
-                                <td class="clr2 text-center"><input type="number" class="w60 form-control" placeholder="hours" name="timeRemaining" [(ngModel)]="sourceTimeLife.timeRemaining"></td>
-                                <td></td>
-
-                            </tr>
-                            <tr>
-                                <td>Since New</td>
-                                <td class="clr2 text-center"><input type="number" class="w60 form-control" placeholder="hours" name="cyclesSinceNew" [(ngModel)]="sourceTimeLife.cyclesSinceNew"></td>
-                                <td class="clr2 text-center"><input type="number" class="w60 form-control" placeholder="hours" name="timeSinceNew" [(ngModel)]="sourceTimeLife.timeSinceNew"></td>
-                                <td class="clr2 text-center"><input type="number" class="w60 form-control" placeholder="hours" name="lastSinceNew" [(ngModel)]="sourceTimeLife.lastSinceNew"></td>
-
-                            </tr>
-                            <tr>
-                                <td>Since Ovh</td>
-                                <td class="clr2 text-center"><input type="number" class="w60 form-control" placeholder="hours" name="cyclesSinceOVH" [(ngModel)]="sourceTimeLife.cyclesSinceOVH"></td>
-                                <td class="clr2 text-center"><input type="number" class="w60 form-control" placeholder="hours" name="timeSinceOVH" [(ngModel)]="sourceTimeLife.timeSinceOVH"></td>
-                                <td class="clr2 text-center"><input type="number" class="w60 form-control" placeholder="hours" name="lastSinceOVH" [(ngModel)]="sourceTimeLife.lastSinceOVH"></td>
-
-                            </tr>
-                            <tr>
-                                <td>Since Insp</td>
-                                <td class="clr2 text-center"><input type="number" class="w60 form-control" placeholder="hours" name="cyclesSinceInspection" [(ngModel)]="sourceTimeLife.cyclesSinceInspection"></td>
-                                <td class="clr2 text-center"><input type="number" class="w60 form-control" placeholder="hours" name="timeSinceInspection" [(ngModel)]="sourceTimeLife.timeSinceInspection"></td>
-                                <td class="clr2 text-center"><input type="number" class="w60 form-control" placeholder="hours" name="lastSinceInspection" [(ngModel)]="sourceTimeLife.lastSinceInspection"></td>
-                            </tr>
-                            <tr>
-                                <td>Since Repair</td>
-                                <td class="clr2 text-center"><input type="number" class="w60 form-control" placeholder="hours" name="cyclesSinceRepair" [(ngModel)]="sourceTimeLife.cyclesSinceRepair"></td>
-                                <td class="clr2 text-center"><input type="number" class="w60 form-control" placeholder="hours" name="timeSinceRepair" [(ngModel)]="sourceTimeLife.timeSinceRepair"></td>
-                                <td></td>
-                            </tr>
-                        </tbody>
-                    </table>
+            <div [ngClass]="receivingForm.isTimeLife ? 'card ' : ''">
+                <div [ngClass]="receivingForm.isTimeLife ? 'card-body card-timelife' : ''">
+                    <div class="form-row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <div class="checkbox-cstm m-t-10">
+                                    <label>
+                                        <input type="checkbox" name="isTimeLife" [(ngModel)]="receivingForm.isTimeLife" disabled>
+                                        <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                        Time Life
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row" *ngIf="receivingForm.isTimeLife">                
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <div class="checkbox-cstm m-t-10">
+                                    <label>
+                                        <input type="checkbox" name="isSkipTimeLife" [(ngModel)]="receivingForm.isSkipTimeLife">
+                                        <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                        Skip Time Life
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group" *ngIf="!receivingForm.isSkipTimeLife">
+                                <label>Date</label>
+                                <p-calendar class="workflow-clder" [showIcon]="true" name="timeLifeDate" [(ngModel)]="receivingForm.timeLifeDate"></p-calendar>
+                            </div>
+                            <div class="form-group" *ngIf="!receivingForm.isSkipTimeLife">
+                                <label>Origin</label>
+                                <input class="form-control" type="text" name="timeLifeOrigin" [(ngModel)]="receivingForm.timeLifeOrigin">
+                            </div>
+                        </div>
+                        <div class="table-responsive form-group" style="padding: 0 5px;" *ngIf="!receivingForm.isSkipTimeLife">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th colspan="15" class="text-center"><strong>Time Life Adjustments</strong></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <th></th>
+                                        <th class="text-center">Cycles</th>
+                                        <th class="text-center">Time</th>
+                                        <th class="text-center">Last</th>
+                                    </tr>
+                                    <tr>
+                                        <td>Remaining</td>
+                                        <td class="clr2 text-center"><input type="number" class="w60 form-control" placeholder="hours" name="cyclesRemaining" [(ngModel)]="sourceTimeLife.cyclesRemaining"></td>
+                                        <td class="clr2 text-center"><input type="number" class="w60 form-control" placeholder="hours" name="timeRemaining" [(ngModel)]="sourceTimeLife.timeRemaining"></td>
+                                        <td></td>
+        
+                                    </tr>
+                                    <tr>
+                                        <td>Since New</td>
+                                        <td class="clr2 text-center"><input type="number" class="w60 form-control" placeholder="hours" name="cyclesSinceNew" [(ngModel)]="sourceTimeLife.cyclesSinceNew"></td>
+                                        <td class="clr2 text-center"><input type="number" class="w60 form-control" placeholder="hours" name="timeSinceNew" [(ngModel)]="sourceTimeLife.timeSinceNew"></td>
+                                        <td class="clr2 text-center"><input type="number" class="w60 form-control" placeholder="hours" name="lastSinceNew" [(ngModel)]="sourceTimeLife.lastSinceNew"></td>
+        
+                                    </tr>
+                                    <tr>
+                                        <td>Since Ovh</td>
+                                        <td class="clr2 text-center"><input type="number" class="w60 form-control" placeholder="hours" name="cyclesSinceOVH" [(ngModel)]="sourceTimeLife.cyclesSinceOVH"></td>
+                                        <td class="clr2 text-center"><input type="number" class="w60 form-control" placeholder="hours" name="timeSinceOVH" [(ngModel)]="sourceTimeLife.timeSinceOVH"></td>
+                                        <td class="clr2 text-center"><input type="number" class="w60 form-control" placeholder="hours" name="lastSinceOVH" [(ngModel)]="sourceTimeLife.lastSinceOVH"></td>
+        
+                                    </tr>
+                                    <tr>
+                                        <td>Since Insp</td>
+                                        <td class="clr2 text-center"><input type="number" class="w60 form-control" placeholder="hours" name="cyclesSinceInspection" [(ngModel)]="sourceTimeLife.cyclesSinceInspection"></td>
+                                        <td class="clr2 text-center"><input type="number" class="w60 form-control" placeholder="hours" name="timeSinceInspection" [(ngModel)]="sourceTimeLife.timeSinceInspection"></td>
+                                        <td class="clr2 text-center"><input type="number" class="w60 form-control" placeholder="hours" name="lastSinceInspection" [(ngModel)]="sourceTimeLife.lastSinceInspection"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Since Repair</td>
+                                        <td class="clr2 text-center"><input type="number" class="w60 form-control" placeholder="hours" name="cyclesSinceRepair" [(ngModel)]="sourceTimeLife.cyclesSinceRepair"></td>
+                                        <td class="clr2 text-center"><input type="number" class="w60 form-control" placeholder="hours" name="timeSinceRepair" [(ngModel)]="sourceTimeLife.timeSinceRepair"></td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="form-row pull-right">
+            <div class="form-row pull-right m-t-10">
                 <button type="submit" class="btn btn-primary" (click)="onSaveCustomerReceiving()" [disabled]="!customerWorkForm.valid || disableMagmtStruct || disableCondition || disableSite">{{isEditMode ? 'Update' : 'Save'}}</button>
             </div>
         </form>
@@ -515,6 +542,27 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="onSaveTextAreaInfo()">Save</button>
                 <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="workorderpopup" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-sm" style="max-width: 530px !important;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Customer Work is saved. Would you like to create Work Order ?</h4>
+            </div>
+            <!-- <div class="modal-body">
+                <div class="form-group">
+                    <label>{{textAreaLabel}}</label>
+                    <textarea class="form-control" name="textAreaInfo" [(ngModel)]="textAreaInfo" value={{textAreaInfo}}></textarea>
+                </div>
+            </div> -->
+            <div class="modal-footer" style="border-top: transparent;">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="goToWorkOrder()">Yes</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="goToCustomerWorkList()">No</button>
             </div>
         </div>
     </div>
