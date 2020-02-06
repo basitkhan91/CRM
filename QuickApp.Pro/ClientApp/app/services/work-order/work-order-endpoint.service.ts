@@ -488,4 +488,8 @@ export class WorkOrderEndpointService extends EndpointFactory {
         return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/workorderpartdetails?customerId=${customerId}`, this.getRequestHeaders())
     }
 
+    getReceivingCustomerreference(customerId) {
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/receivingcustomerWork/receivingcustomerreference?customerId=${customerId}`, this.getRequestHeaders())
+    }
+
 }
