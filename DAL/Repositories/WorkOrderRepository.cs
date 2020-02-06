@@ -93,6 +93,10 @@ namespace DAL.Repositories
                 // Creating WorkflowWorkOrder From Work Flow
                 workOrder.WorkFlowWorkOrderId = CreateWorkFlowWorkOrderFromWorkFlow(workOrder.PartNumbers, workOrder.WorkOrderId, workOrder.CreatedBy);
 
+
+
+
+
                 return workOrder;
             }
             catch (Exception)
@@ -117,7 +121,7 @@ namespace DAL.Repositories
                         item.WorkScope = workScope.Description;
                 }
 
-               // UpdateCustomer(workOrder);
+                // UpdateCustomer(workOrder);
 
                 workOrder.WorkFlowWorkOrderId = CreateWorkFlowWorkOrderFromWorkFlow(workOrder.PartNumbers, workOrder.WorkOrderId, workOrder.CreatedBy);
 
@@ -436,7 +440,7 @@ namespace DAL.Repositories
                 else
                 {
                     totalRecords = (from wo in _appContext.WorkOrder
-                                  //  join wop in _appContext.WorkOrderPartNumber on wo.WorkOrderId equals wop.WorkOrderId
+                                        //  join wop in _appContext.WorkOrderPartNumber on wo.WorkOrderId equals wop.WorkOrderId
                                     join cust in _appContext.Customer on wo.CustomerId equals cust.CustomerId
                                     join ca in _appContext.CustomerAffiliation on cust.CustomerAffiliationId equals ca.CustomerAffiliationId
                                     where wo.IsDeleted == false
@@ -528,7 +532,7 @@ namespace DAL.Repositories
                            .Paginate(pageNumber, woFilters.rows, sorts, filters).RecordCount;
 
                     var list = (from wo in _appContext.WorkOrder
-                               // join wop in _appContext.WorkOrderPartNumber on wo.WorkOrderId equals wop.WorkOrderId
+                                    // join wop in _appContext.WorkOrderPartNumber on wo.WorkOrderId equals wop.WorkOrderId
                                 join cust in _appContext.Customer on wo.CustomerId equals cust.CustomerId
                                 join ca in _appContext.CustomerAffiliation on cust.CustomerAffiliationId equals ca.CustomerAffiliationId
                                 where wo.IsDeleted == false
@@ -1012,8 +1016,6 @@ namespace DAL.Repositories
                 {
                     workOrder.CustomerDetails = new CustomerDetails();
 
-                    workOrder.CSR = workOrder.CustomerDetails.CSRName = customer.PrimarySalesPersonId;
-
                     workOrder.CustomerDetails.CustomerRef = customer.ContractReference;
                     workOrder.CustomerDetails.CustomerName = customer.Name;
                     workOrder.CustomerDetails.CreditLimit = customer.CreditLimit;
@@ -1022,6 +1024,9 @@ namespace DAL.Repositories
                     workOrder.CustomerDetails.CustomerName = customer.Name;
                     workOrder.CustomerDetails.CustomerEmail = customer.Email;
                     workOrder.CustomerDetails.CustomerPhone = customer.CustomerPhone;
+                    workOrder.CustomerDetails.CSRId = workOrder.CSRId;
+                    workOrder.CustomerDetails.CSRName = workOrder.CSRId == null ? "" : _appContext.Employee.Where(p => p.EmployeeId == workOrder.CSRId).Select(p => p.FirstName).FirstOrDefault();
+                    workOrder.CSRName = workOrder.CustomerDetails.CSRName;
 
                     workOrder.CreditLimit = Convert.ToInt64(customer.CreditLimit);
                     workOrder.CreditTermsId = Convert.ToInt16(customer.CreditTermsId);
@@ -1030,17 +1035,17 @@ namespace DAL.Repositories
 
                 foreach (var part in workOrder.PartNumbers)
                 {
-                    part.RevisedParts = WORevisedParts(part.MasterPartId, 1);
-                    var itemMaster = WorkOrderPartDetails(part.MasterPartId);
-                    if (itemMaster != null)
-                        part.Description = itemMaster.PartDescription;
-                    else
-                        part.Description = string.Empty;
-                    var stockLine = WOPartSerialNo(part.StockLineId);
-                    if (stockLine != null)
-                        part.SerialNumber = stockLine.SerialNumber;
-                    else
-                        part.SerialNumber = string.Empty;
+                    
+                    var partDetails = WorkOrderPartDetails(workOrder.WorkOrderId,part.ID);
+                    if (partDetails != null)
+                    {
+                        part.Condition = partDetails.Condition;
+                        part.SerialNumber = partDetails.SerialNumber;
+                        part.StockLineNumber = partDetails.StockLineNumber;
+                        part.Description = partDetails.PartDescription;
+                        part.PartNumber = partDetails.PartNumber;
+                        part.RevisedPartNo = partDetails.RevisedPartNo;
+                    }
                 }
 
                 if (workOrder.IsSinglePN)
@@ -1058,6 +1063,8 @@ namespace DAL.Repositories
                 throw;
             }
         }
+
+
 
         public object WorkOrderHeaderView(long workOrderId)
         {
@@ -2019,7 +2026,7 @@ namespace DAL.Repositories
                                 woc.WorkOrderChargesId,
                                 woc.WorkOrderId,
                                 WorkflowChargeTypeId = woc.ChargesTypeId,
-                                TaskName=ts==null?"":ts.Description
+                                TaskName = ts == null ? "" : ts.Description
                             }
                           ).Distinct().ToList();
                 return list;
@@ -2145,7 +2152,7 @@ namespace DAL.Repositories
                                                wa.CheckedOutDate,
                                                wa.CheckInOutStatus,
                                                wa.TaskId,
-                                               TaskName=ts==null?"":ts.Description
+                                               TaskName = ts == null ? "" : ts.Description
                                            }).Distinct().ToList();
 
                 return workOrderAssetsList;
@@ -2690,7 +2697,7 @@ namespace DAL.Repositories
                                                   wom.Memo,
                                                   wom.IsDeferred,
                                                   wom.TaskId,
-                                                  TaskName=ts==null?"":ts.Description
+                                                  TaskName = ts == null ? "" : ts.Description
                                               }).Distinct().ToList();
 
                 return workOrderMaterialsList;
@@ -3652,7 +3659,7 @@ namespace DAL.Repositories
                                                join ts in _appContext.Task on we.TaskId equals ts.TaskId into wets
                                                from ts in wets.DefaultIfEmpty()
                                                where we.IsDeleted == false && we.WorkOrderQuoteDetailsId == workOrderQuoteDetailsId
-                                               && wq.BuildMethodId== buildMethodId
+                                               && wq.BuildMethodId == buildMethodId
                                                select new
                                                {
                                                    we.CostPlusAmount,
@@ -3681,7 +3688,7 @@ namespace DAL.Repositories
                                                    we.WorkOrderQuoteDetailsId,
                                                    we.WorkOrderQuoteExclusionsId,
                                                    we.TaskId,
-                                                   TaskName=ts==null?"":ts.Description,
+                                                   TaskName = ts == null ? "" : ts.Description,
                                                    we.MarkupFixedPrice
                                                }).Distinct()
                              .ToList();
@@ -3760,7 +3767,7 @@ namespace DAL.Repositories
             }
         }
 
-        public IEnumerable<object> GetWorkOrderQuoteFreight(long workOrderQuoteDetailsId,long buildMethodId)
+        public IEnumerable<object> GetWorkOrderQuoteFreight(long workOrderQuoteDetailsId, long buildMethodId)
         {
             try
             {
@@ -3794,7 +3801,7 @@ namespace DAL.Repositories
                                                 wf.Width,
                                                 wf.WorkOrderQuoteDetailsId,
                                                 wf.WorkOrderQuoteFreightId,
-                                                ShipViaName = _appContext.ShippingVia.Where(p=>p.ReferenceId==woq.CustomerId && p.UserType==1).Select(p=>p.Name).FirstOrDefault(),
+                                                ShipViaName = _appContext.ShippingVia.Where(p => p.ReferenceId == woq.CustomerId && p.UserType == 1).Select(p => p.Name).FirstOrDefault(),
                                                 CarrierName = car.Description,
                                                 wf.MarkupPercentageId,
                                                 wf.FreightCostPlus,
@@ -3878,7 +3885,7 @@ namespace DAL.Repositories
             }
         }
 
-        public IEnumerable<object> GetWorkOrderQuoteCharges(long workOrderQuoteDetailsId,long buildMethodId)
+        public IEnumerable<object> GetWorkOrderQuoteCharges(long workOrderQuoteDetailsId, long buildMethodId)
         {
             try
             {
@@ -4000,7 +4007,7 @@ namespace DAL.Repositories
             }
         }
 
-        public IEnumerable<object> GetWorkOrderQuoteMaterial(long workOrderQuoteDetailsId,long buildMethodId)
+        public IEnumerable<object> GetWorkOrderQuoteMaterial(long workOrderQuoteDetailsId, long buildMethodId)
         {
 
             try
@@ -4015,7 +4022,7 @@ namespace DAL.Repositories
                                               join ts in _appContext.Task on wom.TaskId equals ts.TaskId into womts
                                               from ts in womts.DefaultIfEmpty()
                                               where wom.IsDeleted == false && wom.WorkOrderQuoteDetailsId == workOrderQuoteDetailsId
-                                              && wq.BuildMethodId==buildMethodId
+                                              && wq.BuildMethodId == buildMethodId
                                               select new
                                               {
                                                   im.PartNumber,
@@ -4085,7 +4092,7 @@ namespace DAL.Repositories
             {
                 if (quoteLabor.WorkOrderQuoteDetailsId > 0)
                 {
-                    if (quoteLabor.WorkOrderQuoteLaborHeader!=null && quoteLabor.WorkOrderQuoteLaborHeader.WorkOrderQuoteLaborHeaderId > 0)
+                    if (quoteLabor.WorkOrderQuoteLaborHeader != null && quoteLabor.WorkOrderQuoteLaborHeader.WorkOrderQuoteLaborHeaderId > 0)
                     {
                         var exelabour = _appContext.WorkOrderQuoteLabor.Where(p => p.WorkOrderQuoteLaborHeaderId == quoteLabor.WorkOrderQuoteLaborHeader.WorkOrderQuoteLaborHeaderId).AsNoTracking().ToList();
                         _appContext.WorkOrderQuoteLabor.RemoveRange(exelabour);
@@ -4133,7 +4140,7 @@ namespace DAL.Repositories
             }
         }
 
-        public object GetWorkOrderQuoteLabor(long workOrderQuoteDetailsId,long buildMethodId)
+        public object GetWorkOrderQuoteLabor(long workOrderQuoteDetailsId, long buildMethodId)
         {
             try
             {
@@ -5059,13 +5066,17 @@ namespace DAL.Repositories
             }
         }
 
-        public IEnumerable<object> GetWorkOrderPartDetails()
+        public IEnumerable<object> GetWorkOrderPartDetails(long customerId)
         {
             try
             {
-                var list = (from sl in _appContext.StockLine
-                            join im in _appContext.ItemMaster on sl.ItemMasterId equals im.ItemMasterId
-                            where im.IsActive == true && (im.IsDeleted == false || im.IsDeleted == null)
+                var list = (from rc in _appContext.ReceivingCustomerWork
+                            join sl in _appContext.StockLine on rc.StockLineId equals sl.StockLineId
+                            join im in _appContext.ItemMaster on rc.ItemMasterId equals im.ItemMasterId
+                            join con in _appContext.Condition on rc.ConditionId equals con.ConditionId
+                            join refe in _appContext.Customer on rc.ReferenceId equals refe.CustomerId
+                            where rc.IsActive == true && rc.IsDeleted == false && sl.WorkOrderId==null
+                            && rc.CustomerId == customerId
                             select new
                             {
                                 sl.ItemMasterId,
@@ -5073,16 +5084,13 @@ namespace DAL.Repositories
                                 im.PartDescription,
                                 im.DER,
                                 PMA = im.isPma,
-                                NTEOverhaulHours = im.OverhaulHours == null ? 0 : im.OverhaulHours,
-                                NTERepairHours = im.RPHours == null ? 0 : im.RPHours,
-                                NTEMfgHours = im.mfgHours == null ? 0 : im.mfgHours,
-                                NTEBenchTestHours = im.TestHours == null ? 0 : im.TestHours,
-                                TurnTimeOverhaulHours = im.TurnTimeOverhaulHours == null ? 0 : im.TurnTimeOverhaulHours,
-                                TurnTimeRepairHours = im.TurnTimeRepairHours == null ? 0 : im.TurnTimeRepairHours,
-                                TurnTimeMfg = im.turnTimeMfg == null ? 0 : im.turnTimeMfg,
-                                TurnTimeBenchTest = im.turnTimeBenchTest == null ? 0 : im.turnTimeBenchTest,
                                 RevisedPartId = im.RevisedPartId == null ? 0 : im.RevisedPartId,
-                                RevisedPartNo = im.RevisedPartId == null ? "" : (_appContext.ItemMaster.Where(p => p.ItemMasterId == im.RevisedPartId).Select(p => p.PartNumber).FirstOrDefault().ToString())
+                                RevisedPartNo = im.RevisedPartId == null ? "" : (_appContext.ItemMaster.Where(p => p.ItemMasterId == im.RevisedPartId).Select(p => p.PartNumber).FirstOrDefault().ToString()),
+                                Condition = con.Description,
+                                sl.StockLineNumber,
+                                rc.SerialNumber,
+                                rc.StockLineId,
+                                rc.ConditionId,
                             })
                             .Distinct()
                             .ToList();
@@ -5317,7 +5325,7 @@ namespace DAL.Repositories
             {
                 var list = (from im in _appContext.ItemMaster
                             where im.IsActive == true && (im.IsDeleted == false || im.IsDeleted == null)
-                            && im.ItemMasterId== itemMasterId
+                            && im.ItemMasterId == itemMasterId
                             select new
                             {
 
@@ -5346,6 +5354,8 @@ namespace DAL.Repositories
                 throw;
             }
         }
+
+        
 
         #endregion
 
@@ -7579,11 +7589,46 @@ namespace DAL.Repositories
             }
         }
 
-        private ItemMaster WorkOrderPartDetails(long itemMasterId)
+        //private ItemMaster WorkOrderPartDetails(long itemMasterId)
+        //{
+        //    try
+        //    {
+        //        return _appContext.ItemMaster.Where(p => p.ItemMasterId == itemMasterId).FirstOrDefault();
+        //    }
+        //    catch (Exception)
+        //    {
+
+        //        throw;
+        //    }
+        //}
+
+        private ReceivingCustomerWork WorkOrderPartDetails(long workOrderId,long workOrderPartId)
         {
             try
             {
-                return _appContext.ItemMaster.Where(p => p.ItemMasterId == itemMasterId).FirstOrDefault();
+                var data = (from rc in _appContext.ReceivingCustomerWork
+                            join sl in _appContext.StockLine on rc.StockLineId equals sl.StockLineId
+                            join im in _appContext.ItemMaster on rc.ItemMasterId equals im.ItemMasterId
+                            join con in _appContext.Condition on rc.ConditionId equals con.ConditionId
+                            join refe in _appContext.Customer on rc.ReferenceId equals refe.CustomerId
+                            join wo in _appContext.WorkOrder on rc.WorkOrderId equals wo.WorkOrderId
+                            join wop in _appContext.WorkOrderPartNumber on rc.WorkOrderId equals wop.WorkOrderId
+                            where rc.IsActive == true && rc.IsDeleted == false 
+                            && rc.WorkOrderId == workOrderId && wop.ID==workOrderPartId
+                            select new ReceivingCustomerWork()
+                            {
+                                PartNumber = im.PartNumber,
+                                PartDescription = im.PartDescription,
+                                RevisePartId = im.RevisedPartId == null ? 0 : im.RevisedPartId,
+                                RevisedPartNo = im.RevisedPartId == null ? "" : (_appContext.ItemMaster.Where(p => p.ItemMasterId == im.RevisedPartId).Select(p => p.PartNumber).FirstOrDefault().ToString()),
+                                Condition = con.Description,
+                                StockLineNumber = sl.StockLineNumber,
+                                SerialNumber = rc.SerialNumber,
+                            }).FirstOrDefault();
+
+
+
+                return data;
             }
             catch (Exception)
             {

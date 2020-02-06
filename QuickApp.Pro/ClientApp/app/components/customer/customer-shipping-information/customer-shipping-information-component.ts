@@ -864,6 +864,11 @@ export class CustomerShippingInformationComponent implements OnInit {
 
     nextClick() {
         this.tab.emit('Sales');
+        this.alertService.showMessage(
+			'Success',
+			` ${this.editMode ? 'Updated' : 'Saved'  } Customer Shipping Information Sucessfully `,
+			MessageSeverity.success
+		);
     }
     backClick() {
         this.tab.emit('Billing');

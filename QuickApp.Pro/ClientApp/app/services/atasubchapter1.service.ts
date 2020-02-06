@@ -71,6 +71,11 @@ export class AtaSubChapter1Service {
 	getATASubChapterListByATAChapterId(ataChapterId: number) {
 		return Observable.forkJoin(
 			this.ataSubChapter1Endpoint.getAtaSubChaptersListByAtaChapterId<ATASubChapter[]>(ataChapterId));
-	}
+    }
+    getAtaSubChaptersList() {
+        return Observable.forkJoin(
+            this.ataSubChapter1Endpoint.getAtaSubChaptersList<ATASubChapter[]>());
+    }
+    
 
 }

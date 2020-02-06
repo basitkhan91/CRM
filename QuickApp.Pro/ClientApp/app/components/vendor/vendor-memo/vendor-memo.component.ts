@@ -22,6 +22,7 @@ import { Message } from 'primeng/components/common/message';
 import { MenuItem } from 'primeng/components/common/menuitem';
 import { async } from '../../../../../node_modules/@angular/core/testing';
 import { VendorStepsPrimeNgComponent } from '../vendor-steps-prime-ng/vendor-steps-prime-ng.component';
+import { editValueAssignByCondition } from '../../../generic/autocomplete';
 
 
 @Component({
@@ -37,7 +38,7 @@ export class VendorMemoComponent implements OnInit {
 	allVendorROList: any[];
 	allVendorPOROList: any[];
 	activeIndex: any;
-
+	isvendorEditMode:any;
 	local: any;
 	private isEditMode: boolean = false;
 	private isSaving: boolean;
@@ -76,6 +77,9 @@ export class VendorMemoComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
+		this.vendorService.currentEditModeStatus.subscribe(message => {
+            this.isvendorEditMode = message; 
+        });
 		this.vendorService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-memo';
 		this.vendorService.bredcrumbObj.next(this.vendorService.currentUrl);
 		this.vendorService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-memo';
@@ -140,11 +144,16 @@ export class VendorMemoComponent implements OnInit {
 
 		)
 	}
-
+	isViewMode
 	NextClick() {
 		this.vendorService.contactCollection = this.local;
 		this.activeIndex = 10;
 		this.vendorService.changeofTab(this.activeIndex);
+		this.alertService.showMessage(
+			'Success',
+			`${this.isvendorEditMode ? 'Updated' : 'Saved'  }  Memos Sucessfully `,
+			MessageSeverity.success
+		);
 		// this.vendorService.indexObj.next(this.activeIndex);
 		// this.vendorService.changeStep('Documents');
 		// this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-documents');
@@ -157,6 +166,11 @@ export class VendorMemoComponent implements OnInit {
 		// this.vendorService.changeStep('Warnings');
 		// this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-warnings');
 	}
+	getVendorName() {
+        if (this.local.vendorName !== undefined) {
+            return editValueAssignByCondition('vendorName', this.local.vendorName)
+        }
+    }
 
 	getPageCount(totalNoofRecords, pageSize) {
         return Math.ceil(totalNoofRecords / pageSize)

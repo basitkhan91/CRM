@@ -648,5 +648,10 @@ export class CustomerService {
     getInternationalShipViaByInternationalShippingId(id) {
         return this.customerEndpoint.getInternationalShipViaByInternationalShippingId(id);
     }
-
+    getCustomerContactATAAuditDetails(id) {
+        return this.customerEndpoint.getCustomerContactATAAuditDetails<any>(id)
+    }
+    updateCustomerContactATAMApped(data) {
+        return this.customerEndpoint.updateCustomerContactATAMApped(data);
+    }
 }

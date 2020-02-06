@@ -131,7 +131,7 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 	pageSize: number = 10;
 	@Input() vendorId: number = 0;
     @Input() isViewMode: boolean = false;
-
+	isvendorEditMode:any;
 	constructor(private http: HttpClient, private changeDetectorRef: ChangeDetectorRef, private router: ActivatedRoute, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public vendorService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
 
 		if (this.vendorService.listCollection !== undefined) {
@@ -192,7 +192,9 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 	}
 
 	ngOnInit() {
-		
+		this.vendorService.currentEditModeStatus.subscribe(message => {
+            this.isvendorEditMode = message; 
+        }); 
 		this.defaultSaveObj.defaultPaymentMethod = 1;
 		this.countrylist();
 		if (this.local) {
@@ -657,7 +659,7 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 	}
 
 	saveCheckPaymentInfo() {
-		this.loadData();
+		// this.loadData();
 		this.isSaving = true;
 		if (!(this.sourceVendor.siteName && this.sourceVendor.address1 && this.sourceVendor.city &&
 			this.sourceVendor.stateOrProvince && this.sourceVendor.postalCode && this.sourceVendor.country
@@ -886,6 +888,11 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 		this.vendorService.changeofTab(this.activeIndex);
 		// this.vendorService.indexObj.next(this.activeIndex);
 		// this.vendorService.changeStep('Shipping Information');
+		this.alertService.showMessage(
+			'Success',
+			`${this.isvendorEditMode ? 'Updated' : 'Saved'  }  Payment Information Sucessfully `,
+			MessageSeverity.success
+		);
 		this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-shipping-information');
 		//this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-billing-information');
 	}
@@ -1089,6 +1096,11 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 
 	getPageCount(totalNoofRecords, pageSize) {
 		return Math.ceil(totalNoofRecords / pageSize)
+	}
+	getVendorName() {
+        if (this.local.vendorName !== undefined) {
+            return editValueAssignByCondition('vendorName', this.local.vendorName)
+        }
     }
     getColorCodeForHistory(i, field, value) {
         const data = this.auditHisory;

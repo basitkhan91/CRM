@@ -33,6 +33,7 @@ import * as $ from 'jquery';
 /** add-vendor-capabilities component*/
 export class AddVendorCapabilitiesComponent implements OnInit {
 
+
 	matSpinner: boolean;
 	loadingIndicator: boolean;
 
@@ -159,8 +160,12 @@ export class AddVendorCapabilitiesComponent implements OnInit {
 	@Input() vendorCapsId: number;
 
 	/** add-vendor-capabilities ctor */
-	constructor(private _route: Router, private modalService: NgbModal, public ataSubChapter1Service: AtaSubChapter1Service, public ataservice: AtaMainService, public vendorService: VendorService, private alertService: AlertService, public itemser: ItemMasterService, public commonService: CommonService, private aircraftModelService: AircraftModelService, private dashNumService: DashNumberService, private authService: AuthService, private _actRoute: ActivatedRoute, private vendorCapesService: VendorCapabilitiesService) {
+	constructor(private _route: Router, private modalService: NgbModal,
+		private cd: ChangeDetectorRef,
+		public ataSubChapter1Service: AtaSubChapter1Service, public ataservice: AtaMainService, public vendorService: VendorService, private alertService: AlertService, public itemser: ItemMasterService, public commonService: CommonService, private aircraftModelService: AircraftModelService, private dashNumService: DashNumberService, private authService: AuthService, private _actRoute: ActivatedRoute, private vendorCapesService: VendorCapabilitiesService) {
 		// this.vendorService.isEditMode = false;
+
+
 	}
 
 	ngOnInit(): void {
@@ -199,6 +204,9 @@ export class AddVendorCapabilitiesComponent implements OnInit {
 		console.log(this.vendorCapabilityId);
 
 	}
+
+
+
 
 	getVendorCapabilitiesEdit(vendorCapesId) {
 		this.vendorCapesService.getVendorCapabilitybyId(vendorCapesId).subscribe(res => {
@@ -1584,6 +1592,11 @@ export class AddVendorCapabilitiesComponent implements OnInit {
 	dismissDeleteModel() {
 		$("#aircraftDelete").modal("hide");
 	}
+	getVendorName() {
+        if (this.sselectedVendorName !== undefined) {
+            return editValueAssignByCondition('vendorName', this.sselectedVendorName);
+        }
+    }
 
 	getPageCount(totalNoofRecords, pageSize) {
 

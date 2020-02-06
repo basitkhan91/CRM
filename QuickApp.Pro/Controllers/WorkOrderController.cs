@@ -1280,9 +1280,9 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpGet("workorderpartdetails")]
-        public IActionResult GetWorkOrderPartDetails()
+        public IActionResult GetWorkOrderPartDetails(long customerId)
         {
-            var result = unitOfWork.WorkOrderRepository.GetWorkOrderPartDetails();
+            var result = unitOfWork.WorkOrderRepository.GetWorkOrderPartDetails(customerId);
             return Ok(result);
         }
 

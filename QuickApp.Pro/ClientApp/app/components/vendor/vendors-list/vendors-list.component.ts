@@ -524,6 +524,7 @@ export class VendorsListComponent implements OnInit {
 
     //View Edit
     openEdit(row) {
+        this.vendorService.checkVendorEditmode(true);
         // this.isEditMode = true;
         // this.vendorService.isEditMode = true;
         // this.isSaving = true;
@@ -1016,6 +1017,14 @@ export class VendorsListComponent implements OnInit {
     gotoCreateRO(rowData) {
         const { vendorId } = rowData;
         this.route.navigateByUrl(`vendorsmodule/vendorpages/app-ro-setup/vendor/${vendorId}`);
+    }
+    navigateToCreatePO() {
+        $('#purchaseOrderList').modal('hide');
+        this.route.navigateByUrl(`vendorsmodule/vendorpages/app-purchase-setup/vendor/${this.vendorId}`);        
+    }
+    navigateToCreateRO() {
+        $('#repairOrderList').modal('hide');
+        this.route.navigateByUrl(`vendorsmodule/vendorpages/app-ro-setup/vendor/${this.vendorId}`);
     }
 
     toGetVendorGeneralDocumentsList(vendorId) {

@@ -66,7 +66,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     @Input() workOrderStagesList;
     @Input() workOrderOriginalStageList;
     @Input() priorityList;
-    @Input() partNumberOriginalData;
+    //@Input() partNumberOriginalData;
     @Input() workOrderGeneralInformation;
     @Input() isSubWorkOrder: boolean = false;
     @Input() subWorkOrderDetails;
@@ -87,6 +87,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     // workOrderStagesList: any;
     // creditTerms: any;
     // customers: Customer[];
+    partNumberOriginalData: any;
     selectedCustomer: Customer;
     selectedEmployee: any;
     selectedsalesPerson: any;
@@ -398,16 +399,19 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
 
     filterCustomerName(event) {
         const value = event.query.toLowerCase()
-        this.commonService.getCustomerNameandCode(value).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
+        this.commonService.getReceivingCustomers(value).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
             this.customerNamesList = res;
         })
     }
 
     selectCustomer(object, currentRecord) {
         currentRecord.customerReference = object.customerRef,
-            currentRecord.csr = object.csrName;
+            currentRecord.csr = object.csrId;
+        
         currentRecord.creditLimit = object.creditLimit;
         currentRecord.creditTermsId = object.creditTermsId;
+        
+       this.getPartNosByCustomer(object.customerId)
 
     }
     viewCustomerDetails(customerId) {
@@ -692,13 +696,19 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
         // this.getConditionByItemMasterId(itemMasterId, index)
         this.getPartPublicationByItemMasterId(itemMasterId)
         currentRecord.description = object.partDescription
-        currentRecord.nte = object.nte;
+        //currentRecord.nte = object.nte;
         currentRecord.isPMA = object.pma === null ? false : object.pma;
         currentRecord.isDER = object.der === null ? false : object.der;
-        currentRecord.tatDaysStandard = object.tatDaysStandard === null ? '' : object.tatDaysStandard
+        //currentRecord.tatDaysStandard = object.tatDaysStandard === null ? '' : object.tatDaysStandard
         currentRecord.revisedPartNo = object.revisedPartNo;
+        currentRecord.serialNumber = object.serialNumber;
+        currentRecord.stockLineId = object.stockLineId;
+        currentRecord.conditionId = object.conditionId;
+        currentRecord.condition = object.condition;
+        currentRecord.stockLineNumber = object.stockLineNumber;
 
         this.revisedPartId = object.revisedPartId;
+
     }
 
 
@@ -844,11 +854,16 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     }
 
     getNTEandSTDByItemMasterId(itemMasterId, currentRecord) {
-        const label = getValueFromArrayOfObjectById('label', 'value', currentRecord.workOrderScopeId, this.workScopesList);
-        this.workOrderService.getNTEandSTDByItemMasterId(itemMasterId, label).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
-            currentRecord.nte = res.nteHours;
-            currentRecord.tatDaysStandard = res.stdHours;
-        })
+
+        if (currentRecord.workOrderScopeId !== null && currentRecord.workOrderScopeId !== '') {
+            const label = getValueFromArrayOfObjectById('label', 'value', currentRecord.workOrderScopeId, this.workScopesList);
+            this.workOrderService.getNTEandSTDByItemMasterId(itemMasterId, label).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
+                if (res !== null) {
+                    currentRecord.nte = res.nteHours;
+                    currentRecord.tatDaysStandard = res.stdHours;
+                }
+            })
+        }
     }
 
 
@@ -1655,7 +1670,11 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
 
 
 
-
+    getPartNosByCustomer(customerId) {
+        this.workOrderService.getPartNosByCustomer(customerId).subscribe(res => {
+            this.partNumberOriginalData = res;
+        });
+    }
 
 
 
