@@ -66,7 +66,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     @Input() workOrderStagesList;
     @Input() workOrderOriginalStageList;
     @Input() priorityList;
-    //@Input() partNumberOriginalData;
+    @Input() partNumberOriginalData;
     @Input() workOrderGeneralInformation;
     @Input() isSubWorkOrder: boolean = false;
     @Input() subWorkOrderDetails;
@@ -87,7 +87,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     // workOrderStagesList: any;
     // creditTerms: any;
     // customers: Customer[];
-    partNumberOriginalData: any;
+    //partNumberOriginalData: any;
     selectedCustomer: Customer;
     selectedEmployee: any;
     selectedsalesPerson: any;
@@ -206,6 +206,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     }
     revisedPartId: any;
     csrList: any;
+    customerReferencelist: { label: string; value: number; }[];
 
     private onDestroy$: Subject<void> = new Subject<void>();
     workOrderFreightList: Object;
@@ -270,6 +271,9 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
 
 
             } else { // edit WorkOrder
+
+                
+
                 console.log(this.workOrderGeneralInformation);
                 this.getWorkOrderQuoteDetail(this.workOrderGeneralInformation.workOrderId, this.workOrderGeneralInformation.workFlowWorkOrderId);
                 const data = this.workOrderGeneralInformation;
@@ -286,14 +290,18 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
                     }
 
                 })
+
+                this.getReceivingCustomerreference(data.customerId);
+                this.getPartNosByCustomer(data.customerId);
+
                 this.workOrderGeneralInformation = {
                     ...data,
                     workOrderTypeId: String(data.workOrderTypeId),
-                    customerReference: data.customerReference,
-                    csr: getObjectById('value', parseInt(data.csr), this.employeesOriginalData),
+                    customerReference: data.receivingCustomerWorkId,
+                    csr: getObjectById('value', parseInt(data.csrId), this.employeesOriginalData),
                     customerId: data.customerDetails,
                     employeeId: getObjectById('value', data.employeeId, this.employeesOriginalData),
-                    salesPersonId: getObjectById('value', data.employeeId, this.employeesOriginalData),
+                    salesPersonId: getObjectById('value', data.salesPersonId, this.employeesOriginalData),
 
                     partNumbers: data.partNumbers.map((x, index) => {
 
@@ -332,8 +340,8 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
                 this.savedWorkOrderData = this.workOrderGeneralInformation;
                 this.getWorkOrderWorkFlowNos();
                 // this.billingCreateOrEdit();
-
-
+               
+                 
             }
         } else {
             console.log(this.subWorkOrderDetails);
@@ -405,13 +413,16 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     }
 
     selectCustomer(object, currentRecord) {
-        currentRecord.customerReference = object.customerRef,
-            currentRecord.csr = object.csrId;
+
+        this.partNumberOriginalData = null;
+        this.partNumberList = null;
         
+        currentRecord.csr = object.csrId;
         currentRecord.creditLimit = object.creditLimit;
         currentRecord.creditTermsId = object.creditTermsId;
         
-       this.getPartNosByCustomer(object.customerId)
+        this.getPartNosByCustomer(object.customerId);
+        this.getReceivingCustomerreference(object.customerId);
 
     }
     viewCustomerDetails(customerId) {
@@ -591,7 +602,9 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
             customerId: editValueAssignByCondition('customerId', generalInfo.customerId),
             employeeId: editValueAssignByCondition('value', generalInfo.employeeId),
             salesPersonId: editValueAssignByCondition('value', generalInfo.salesPersonId),
-            csr: editValueAssignByCondition('value', generalInfo.csr),
+            csrId: editValueAssignByCondition('value', generalInfo.csr),
+            receivingCustomerWorkId: editValueAssignByCondition('value', generalInfo.customerReference),
+
             masterCompanyId: 1,
             customerContactId: 68,
             createdBy: this.userName,
@@ -706,6 +719,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
         currentRecord.conditionId = object.conditionId;
         currentRecord.condition = object.condition;
         currentRecord.stockLineNumber = object.stockLineNumber;
+        currentRecord.receivingCustomerWorkId = object.receivingCustomerWorkId;
 
         this.revisedPartId = object.revisedPartId;
 
@@ -855,7 +869,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
 
     getNTEandSTDByItemMasterId(itemMasterId, currentRecord) {
 
-        if (currentRecord.workOrderScopeId !== null && currentRecord.workOrderScopeId !== '') {
+        if (currentRecord.workOrderScopeId !== null && currentRecord.workOrderScopeId !== '' && currentRecord.workOrderScopeId>0) {
             const label = getValueFromArrayOfObjectById('label', 'value', currentRecord.workOrderScopeId, this.workScopesList);
             this.workOrderService.getNTEandSTDByItemMasterId(itemMasterId, label).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
                 if (res !== null) {
@@ -1670,12 +1684,23 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
 
 
 
-    getPartNosByCustomer(customerId) {
-        this.workOrderService.getPartNosByCustomer(customerId).subscribe(res => {
+    async getPartNosByCustomer(customerId) {
+
+        await this.workOrderService.getPartNosByCustomer(customerId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
             this.partNumberOriginalData = res;
         });
     }
 
+    async getReceivingCustomerreference(customerId) {
 
+        await this.workOrderService.getReceivingCustomerreference(customerId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
+            this.customerReferencelist = res.map(x => {
+                return {
+                    label: x.reference,
+                    value: x.receivingCustomerWorkId
+                }
+            })
+        });
+    }
 
 }

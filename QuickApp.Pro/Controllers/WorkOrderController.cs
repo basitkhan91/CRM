@@ -30,9 +30,9 @@ namespace QuickApp.Pro.Controllers
         #region Work Order
 
         [HttpGet("workorderbyid")]
-        public IActionResult WorkOrderById(long workOrderId)
+        public IActionResult WorkOrderById(long workOrderId=0, long receivingCustomerId=0)
         {
-            var workOrder = unitOfWork.WorkOrderRepository.WorkOrderById(workOrderId);
+            var workOrder = unitOfWork.WorkOrderRepository.WorkOrderById(workOrderId, receivingCustomerId);
             return Ok(workOrder);
         }
 
@@ -143,6 +143,8 @@ namespace QuickApp.Pro.Controllers
             return Ok(result);
         }
 
+        
+
         #endregion
 
         #region Sub Work Order
@@ -251,6 +253,8 @@ namespace QuickApp.Pro.Controllers
             var result = unitOfWork.WorkOrderRepository.GetWorkFlowWorkOrderById(workFlowWorkOrderId);
             return Ok(result);
         }
+
+        
 
         [HttpGet("workorderworkflownos")]
         public IActionResult GetWorkOrderWorkFlowNos(long workOrderId)

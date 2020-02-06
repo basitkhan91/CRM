@@ -39,6 +39,7 @@ namespace DAL.Models
         public long? SalesPersonId { get; set; }
         public long ManagementStructureId { get; set; }
         public long? CSRId { get; set; }
+        public long ReceivingCustomerWorkId { get; set; }
         public int MasterCompanyId { get; set; }
         public string CreatedBy { get; set; }
         public Nullable<DateTime> CreatedDate { get; set; }
@@ -69,6 +70,7 @@ namespace DAL.Models
         public string CustomerReference { get; set; }
         [NotMapped]
         public string CSRName { get; set; }
+       
 
 
     }

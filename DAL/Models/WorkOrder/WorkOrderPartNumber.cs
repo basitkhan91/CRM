@@ -55,6 +55,8 @@ namespace DAL.Models
         public string StockLineNumber { get; set; }
         [NotMapped]
         public string PartNumber { get; set; }
+        [NotMapped]
+        public long ReceivingCustomerWorkId { get; set; }
     }
 
     public class RevisedPart

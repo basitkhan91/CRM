@@ -310,5 +310,7 @@ export class WorkOrderService {
         return this.workOrderEndpointService.getPartNosByCustomer(customerId);
     }
     
-
+    getReceivingCustomerreference(customerId) {
+        return this.workOrderEndpointService.getReceivingCustomerreference(customerId);
+    }
 }
