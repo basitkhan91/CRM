@@ -24,6 +24,7 @@ import { GMapModule } from 'primeng/gmap';
 import * as $ from 'jquery';
 import { getObjectById, editValueAssignByCondition } from '../../../generic/autocomplete';
 import { VendorStepsPrimeNgComponent } from '../vendor-steps-prime-ng/vendor-steps-prime-ng.component';
+import { ConfigurationService } from '../../../services/configuration.service';
 declare const google: any;
 
 @Component({
@@ -130,9 +131,10 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 	isEditPaymentInfo: boolean = false;
 	pageSize: number = 10;
 	@Input() vendorId: number = 0;
-	@Input() isViewMode: boolean = false;
-	isvendorEditMode: any;
-	constructor(private http: HttpClient, private changeDetectorRef: ChangeDetectorRef, private router: ActivatedRoute, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public vendorService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
+    @Input() isViewMode: boolean = false;
+	isvendorEditMode:any;
+	formData = new FormData();
+	constructor(private http: HttpClient, private changeDetectorRef: ChangeDetectorRef, private router: ActivatedRoute, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public vendorService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private configurations: ConfigurationService) {
 
 		if (this.vendorService.listCollection !== undefined) {
 			this.vendorService.isEditMode = true;
@@ -1115,15 +1117,43 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 			return '';
 		}
 	}
-	getColorCodeForHistory(i, field, value) {
-		const data = this.auditHisory;
-		const dataLength = data.length;
-		if (i >= 0 && i <= dataLength) {
-			if ((i + 1) === dataLength) {
-				return true;
-			} else {
-				return data[i + 1][field] === value
-			}
-		}
+
+
+    getColorCodeForHistory(i, field, value) {
+        const data = this.auditHisory;
+        const dataLength = data.length;
+        if (i >= 0 && i <= dataLength) {
+            if ((i + 1) === dataLength) {
+                return true;
+            } else {
+                return data[i + 1][field] === value
+            }
+        }
 	}
+	
+
+	sampleExcelDownload() {
+        const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=VendorPaymentInfo&fileName=VendorPaymentInfo.xlsx`;
+        window.location.assign(url);
+    }
+
+    customExcelUpload(event) {
+        const file = event.target.files;
+
+        // if (file.length > 0) {
+        //     this.formData.append('file', file[0])
+        //     this.vendorService.PaymentCheckUpload(this.formData, this.local.vendorId).subscribe(res => {
+        //         event.target.value = '';
+
+        //         this.formData = new FormData();
+        //         this.loadData();
+
+        //         this.alertService.showMessage(
+        //             'Success',
+        //             `Successfully Uploaded  `,
+        //             MessageSeverity.success
+        //         );
+        //     })
+        // }
+    }
 }

@@ -544,6 +544,7 @@ namespace DAL.Repositories
                           from cu in cuu.DefaultIfEmpty()
                           join vp in _appContext.Vendor on t.Parent equals vp.VendorId into vpp
 						  join d in _appContext.Discount on t.DiscountId equals d.DiscountId
+                          join vp in _appContext.Vendor on t.VendorParentId equals vp.VendorId into vpp
                           from vp in vpp.DefaultIfEmpty()
 
                               //join inte in _appContext.IntegrationPortalMapping on t.VendorId equals inte.ReferenceId into intee 
@@ -593,7 +594,7 @@ namespace DAL.Repositories
                               t.IsDeleted,
                               t.DiscountId ,
                               t.capabilityId,
-                              t.VendorParentName,
+                              VendorParentName= vp.VendorName,
                               t.ManagementStructureId,
                               t.DefaultPaymentTypeId,
                               t.VendorPhoneExt,
@@ -1698,7 +1699,7 @@ namespace DAL.Repositories
         {
             try
             {
-                return _appContext.VendorDocumentDetailsAudit.Where(p => p.IsActive == true && p.VendorDocumentDetailId == id).OrderByDescending(p => p.UpdatedDate).ToList();
+                return _appContext.VendorDocumentDetailsAudit.Where(p => p.IsActive == true && p.VendorDocumentDetailId == id).OrderByDescending(p => p.CreatedDate).ToList();
 
             }
             catch (Exception ex)
@@ -1882,7 +1883,7 @@ namespace DAL.Repositories
         {
             try
             {
-                return _appContext.Master1099Audit.Where(p => p.Master1099Id == id).OrderByDescending(p => p.UpdatedDate).ToList();
+                return _appContext.Master1099Audit.Where(p => p.Master1099Id == id).OrderByDescending(p => p.CreatedDate).ToList();
 
             }
             catch (Exception ex)
@@ -2660,6 +2661,177 @@ namespace DAL.Repositories
             }
             return obj;
 
+        }
+
+        public IEnumerable<object> UploadVendorPaymentAddressCustomData(IFormFile file, long vendorId)
+        {
+            string countryName = string.Empty;
+            //For Future purpose Added object to retun faild records, present we are returning empty object
+            List<object> obj = new List<object>();
+            CommonRepository commonRepository = new CommonRepository(_appContext);
+
+            int count = 0;
+            try
+            {
+                Address addr;
+                CheckPayment chkPayment;
+                VendorCheckPayment vchkPayment;
+
+                string fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+                string filePath = Path.Combine(AppSettings.CustomUploadFilePath, Convert.ToString(ModuleEnum.VendorCheckAddress), DateTime.Now.ToString("yyyy-MM-dd hh-mm-ss"));
+
+                if (!Directory.Exists(filePath))
+                {
+                    Directory.CreateDirectory(filePath);
+                }
+
+                string fullPath = Path.Combine(filePath, fileName);
+
+
+                using (var stream = File.Open(fullPath, FileMode.Create))
+                {
+                    file.CopyTo(stream);
+                    {
+                        using (var reader = ExcelReaderFactory.CreateReader(stream))
+                        {
+                            do
+                            {
+                                while (reader.Read())
+                                {
+                                    if (count > 0 && reader.GetValue(0) != null && reader.GetValue(1) != null && reader.GetValue(3) != null && reader.GetValue(4) != null && reader.GetValue(5) != null && reader.GetValue(6) != null)
+                                    {                                        
+                                         
+                                        addr = new Address();
+                                        chkPayment = new CheckPayment();
+                                        vchkPayment = new VendorCheckPayment();
+                                        if (reader.GetValue(0) != null)
+                                            chkPayment.SiteName = Convert.ToString(reader.GetValue(0));
+
+                                        if (reader.GetValue(1) != null)
+                                            addr.Line1 = Convert.ToString(reader.GetValue(1));
+                                        if (reader.GetValue(2) != null)
+                                            addr.Line2 = Convert.ToString(reader.GetValue(2));
+                                        if (reader.GetValue(3) != null)
+                                            addr.City = Convert.ToString(reader.GetValue(3));
+                                        if (reader.GetValue(4) != null)
+                                            addr.StateOrProvince = Convert.ToString(reader.GetValue(4));
+                                        if (reader.GetValue(5) != null)
+                                            addr.PostalCode = Convert.ToString(reader.GetValue(5));
+
+                                        if (reader.GetValue(6) != null)
+                                            countryName = Convert.ToString(reader.GetValue(6));
+                                        var country = _appContext.Countries.Where(p => p.countries_name == countryName).FirstOrDefault();
+                                        if (country != null)
+                                        {
+                                            addr.Country = country.countries_id.ToString();
+                                                                                       
+                                            addr.MasterCompanyId = 1;
+                                            addr.IsActive = true;
+
+                                            addr.CreatedBy = addr.UpdatedBy = "System";
+                                            addr.UpdatedDate = addr.CreatedDate = DateTime.Now;
+
+                                            _appContext.Address.Add(addr);
+                                            _appContext.SaveChanges();
+
+
+                                            var vendorConcatData = (from cp in _appContext.CheckPayment
+                                                                    join vcp in _appContext.VendorCheckPayment on cp.CheckPaymentId equals vcp.CheckPaymentId
+                                                                    where cp.IsPrimayPayment == true && vcp.VendorId == vendorId
+                                                                    select cp).AsNoTracking().FirstOrDefault();
+
+                                           
+                                            if (vendorConcatData != null)
+                                            {
+                                                if (reader.GetValue(7) != null)
+                                                {
+                                                    if (reader.GetValue(7).ToString().ToLower() == "yes")
+                                                    {
+                                                        chkPayment.IsPrimayPayment = true;
+
+                                                        vendorConcatData.IsPrimayPayment = false;
+
+                                                        CheckPayment ba = new CheckPayment();
+
+                                                        ba.CheckPaymentId = Convert.ToInt64(vendorConcatData.CheckPaymentId);
+                                                        ba.UpdatedDate = DateTime.Now;
+                                                        ba.UpdatedBy = "System";
+                                                        ba.IsPrimayPayment = false;
+                                                        
+                                                        _appContext.Entry(ba).State = EntityState.Detached;
+                                                        _appContext.CheckPayment.Attach(ba);
+                                                        _appContext.Entry(ba).Property(x => x.IsPrimayPayment).IsModified = true;
+                                                        _appContext.Entry(ba).Property(x => x.UpdatedDate).IsModified = true;
+                                                        _appContext.Entry(ba).Property(x => x.UpdatedBy).IsModified = true;
+                                                        _appContext.SaveChanges();
+
+                                                        //Audit History
+                                                        commonRepository.ShippingBillingAddressHistory(Convert.ToInt64(vendorId), Convert.ToInt32(ModuleEnum.Vendor), Convert.ToInt64(vendorConcatData.CheckPaymentId), Convert.ToInt32(AddressTypeEnum.CheckPayment), "System");
+
+                                                        _appContext.Entry(ba).State = EntityState.Detached;
+
+                                                    }
+                                                    else
+                                                    {
+                                                        chkPayment.IsPrimayPayment= false;
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    chkPayment.IsPrimayPayment = false;
+                                                }
+
+                                            }
+                                            else
+                                            {
+                                                chkPayment.IsPrimayPayment = true;
+                                            }
+                                            chkPayment.MasterCompanyId = 1;                                           
+                                            chkPayment.IsActive = true;                                  
+                                            chkPayment.AddressId = Convert.ToInt64(addr.AddressId);
+                                            chkPayment.CreatedBy = chkPayment.UpdatedBy = "System";
+                                            chkPayment.UpdatedDate = chkPayment.CreatedDate = DateTime.Now;
+
+                                            _appContext.Entry(chkPayment).State = EntityState.Detached;
+
+                                            _appContext.CheckPayment.Add(chkPayment);
+                                            _appContext.SaveChanges();
+
+                                            vchkPayment.VendorId = vendorId;
+                                            vchkPayment.IsActive = true;
+                                            vchkPayment.IsDeleted = false;
+                                            vchkPayment.CreatedBy = vchkPayment.UpdatedBy = "System";
+                                            vchkPayment.UpdatedDate = vchkPayment.CreatedDate = DateTime.Now;
+                                            vchkPayment.MasterCompanyId = 1;
+                                            vchkPayment.CheckPaymentId = Convert.ToInt64(chkPayment.CheckPaymentId);
+
+                                            _appContext.Entry(vchkPayment).State = EntityState.Detached;
+
+                                            _appContext.VendorCheckPayment.Add(vchkPayment);
+                                            _appContext.SaveChanges();
+                                            //Audit History
+                                            commonRepository.ShippingBillingAddressHistory(Convert.ToInt64(vendorId), Convert.ToInt32(ModuleEnum.Vendor), Convert.ToInt64(chkPayment.CheckPaymentId), Convert.ToInt32(AddressTypeEnum.CheckPayment), "System");
+                                            _appContext.Entry(chkPayment).State = EntityState.Detached;
+                                        }
+
+
+                                    }
+
+
+                                    count++;
+                                }
+                            } while (reader.NextResult());
+
+                        }
+                    }
+                }
+                return obj;
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return obj;
         }
 
         public IEnumerable<object> getVendorShipVia(long id)

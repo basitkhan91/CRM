@@ -184,7 +184,8 @@ export class VendorEndpointService extends EndpointFactory {
 	
     private readonly excelUploadBilling: string = "/api/Vendor/uploadvendorbillingaddress"
     private readonly excelUploadShipping: string = "/api/Vendor/uploadvendorshippingaddress" 
-    private readonly excelUploadContact: string = "/api/Vendor/uploadvendorrcontacts"
+	private readonly excelUploadContact: string = "/api/Vendor/uploadvendorrcontacts"
+	private readonly excelUploadPayment: string = "/api/Vendor/uploadvendorpaymentaddress"
 	
 
 	get capabilityTypeListUrl() { return this.configurations.baseUrl + this._capabilityListUrl; }
@@ -1711,6 +1712,12 @@ export class VendorEndpointService extends EndpointFactory {
     VendorContactFileUpload(file, vendorId) {
         return this.http.post(`${this.configurations.baseUrl}${this.excelUploadContact}?vendorId=${vendorId}`, file)
 
-    }
+	}
+	
+	VendorCheckPaymentFileUpload(file, vendorId)
+	{
+		return this.http.post(`${this.configurations.baseUrl}${this.excelUploadPayment}?vendorId=${vendorId}`, file)
+
+	}
 
 }

@@ -2119,7 +2119,9 @@ ul.msg_list li a .message {
 .dropdown-menu.msg_list span {
     white-space: normal
 }
-
+.common_white-space_down{
+    white-space: normal
+}
 .tile_count .tile_stats_count, ul.quick-list li {
     white-space: nowrap;
     overflow: hidden;
@@ -14158,6 +14160,14 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
     min-width: 95% !important;
     margin-left: 5px !important;
     margin-top: 10px;
+}
+.ui-multiselect-panel .ui-widget-header .ui-chkbox-box {
+    padding-top: 5px !important;
+    padding-left: 6px !important;
+}
+.ui-multiselect-panel .ui-multiselect-item .ui-chkbox-box {
+    padding-top: 2px !important;
+   
 }
 
 .autocomplete-value .ui-autocomplete .ui-autocomplete-panel {

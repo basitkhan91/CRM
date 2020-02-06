@@ -96,7 +96,7 @@
                                     <div class="checkbox-cstm">
                                         <label>
                                             <input type="checkbox" id="cparent" name="parent"
-                                                   [(ngModel)]="sourceVendor.parent">
+                                                   [(ngModel)]="sourceVendor.parent" [disabled]="!sourceVendor.vendorName">
                                             <span class="cr"><i class="cr-icon pi pi-check"></i></span>
                                             Parent
                                         </label>
@@ -108,12 +108,15 @@
                                     <p-autoComplete field="vendorName" class="pautocomp-cstm" 
                                     [forceSelection]="true"
                                     [(ngModel)]="sourceVendor.vendorParentId" name="vendorParentName"
-                                    [suggestions]="vendorParentNames" (completeMethod)="filterVendorParentNames($event)" [size]="30"
+                                    [suggestions]="vendorParentNames" (completeMethod)="filterVendorParentNames($event)"
+                                    (onSelect)="selectedParentName($event)"
+                                    (onKeyUp)="checkWithName($event.target.value)"
+                                    (onChange)="checkWithName($event.target.value)"
+                                    [size]="30"
                                     [minLength]="1" [dropdown]="true" required>
-                                    </p-autoComplete>
+                                    </p-autoComplete> 
 
-
-
+                                    <div *ngIf="disableSaveParentName" style="color:red;font-size: 13px;">Parent name can't be same as customer name</div>
 
 
                                     <!-- <p-autoComplete class="pautocomp-cstm" (onSelect)="onParentNameselected($event)" (onKeyUp)=parentEventHandler($event)
@@ -125,7 +128,7 @@
                                         </ng-template>
                                     </p-autoComplete> -->
 
-                                    <div *ngIf="disableSaveParentName" class="clr-red">Please Enter Valid Parent</div>
+                                    <!-- <div *ngIf="disableSaveParentName" class="clr-red">Please Enter Valid Parent</div> -->
                                 </div>
 
                                 <div class="form-group">

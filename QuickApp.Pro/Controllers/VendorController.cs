@@ -618,7 +618,7 @@ namespace QuickApp.Pro.Controllers
                                 vc.IsDER,
                                 CapabilityType = vcat.Description
 
-                            }).OrderByDescending(p => p.UpdatedDate).FirstOrDefault();
+                            }).FirstOrDefault();
                 // return data;
                 return Ok(data);
             }
@@ -4935,7 +4935,7 @@ namespace QuickApp.Pro.Controllers
                         obj.IsActive = true;
                         if (attachmentId != null)
                         {
-                            var data = _context.AttachmentDetails.AsNoTracking().Where(p => p.AttachmentId == attachmentId).OrderByDescending(p => p.UpdatedDate).FirstOrDefault();
+                            var data = _context.AttachmentDetails.AsNoTracking().Where(p => p.AttachmentId == attachmentId).FirstOrDefault();
                             if (data != null)
                             {
 
@@ -5186,6 +5186,13 @@ namespace QuickApp.Pro.Controllers
         {
             _unitOfWork.Vendor.UploadVendorContactsCustomData(Request.Form.Files[0], vendorId);
             return Ok();
+        }
+
+        [HttpPost("uploadvendorpaymentaddress")]
+        public IActionResult UploadPaymentCustomData(long vendorId)
+        {
+            var result = _unitOfWork.Vendor.UploadVendorPaymentAddressCustomData(Request.Form.Files[0], vendorId);
+            return Ok(result);
         }
 
         #endregion

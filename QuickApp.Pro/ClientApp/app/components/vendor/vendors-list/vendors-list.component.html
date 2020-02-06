@@ -320,7 +320,7 @@
                                         <p>
                                             <span class="label"><b>Vendor Name: <span class="text-danger">*</span> </b></span><span class="value">{{vendorData.vendorName}}</span>
                                         </p>
-                                        <p>
+                                        <p> 
                                             <span class="label"><b>Vendor Code: <span class="text-danger">*</span> </b></span><span class="value">{{vendorData.vendorCode}}</span>
                                         </p>
                                         <p>
@@ -329,9 +329,21 @@
                                         <p>
                                             <span class="label"><b>D/b/a: </b></span><span class="value">{{vendorData.doingBusinessAsName ? vendorData.doingBusinessAsName : '-'}}</span>
                                         </p>
-                                        <p>
-                                            <span class="label"><b>Parent: </b></span><span class="value">{{vendorData.vendorParentName ? vendorData.vendorParentName : '-'}}</span>
-                                        </p>
+ 
+                                        <div class="form-group p-t-10 parent-info">
+                                            <div class="checkbox-cstm">
+                                                <label>
+                                                    <input type="checkbox" name="parent"
+                                                           [(ngModel)]="vendorData.parent" disabled>
+                                                    <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                                  Parent :
+                                                </label>
+                                            </div>
+                                            <p>
+                                                <span class="vendor_Name">{{vendorData.vendorParentName ? vendorData.vendorParentName : '-'}}</span>
+                                              </p>
+                                        </div>
+                                      
                                         <p>
                                             <span class="label"><b>Address1: <span class="text-danger">*</span> </b></span><span class="value">{{vendorData.address1 ? vendorData.address1 : '-'}}</span>
                                         </p>
@@ -397,7 +409,7 @@
                                             <span class="label"><b>Email: <span class="text-danger">*</span> </b></span><span class="value">{{vendorData.vendorEmail ? vendorData.vendorEmail : '-'}}</span>
                                         </p>
                                         <p>
-                                            <span class="label"><b>Classification: <span class="text-danger">*</span> </b></span><span class="value">{{vendorData.vendorClassificationName ? vendorData.vendorClassificationName : '-'}}</span>
+                                            <span class="label"><b>Classification: <span class="text-danger">*</span> </b></span><span class="value common_white-space_down">{{vendorData.vendorClassificationName ? vendorData.vendorClassificationName : '-'}}</span>
                                         </p>
                                         <p>
                                             <span class="label"><b>Contract Reference: </b></span><span class="value">{{vendorData.vendorContractReference ? vendorData.vendorContractReference : '-'}}</span>
@@ -406,7 +418,7 @@
                                             <span class="label"><b>Preferred Vendor: </b></span><span class="value"> <input type="checkbox" name="isPreferredVendor" [(ngModel)]="vendorData.isPreferredVendor" disabled> </span>
                                         </p> -->                                        
                                         <p>
-                                            <span class="label"><b>Integration With: </b></span><span class="value">{{vendorData.integrationPortalNames ? vendorData.integrationPortalNames : '-'}}</span>
+                                            <span class="label"><b>Integration With: </b></span><span class="value common_white-space_down">{{vendorData.integrationPortalNames ? vendorData.integrationPortalNames : '-'}}</span>
                                         </p>
                                         <p>
                                             <span class="label"><b>License #:</b></span><span class="value">{{vendorData.licenseNumber ? vendorData.licenseNumber : '-'}}</span>
