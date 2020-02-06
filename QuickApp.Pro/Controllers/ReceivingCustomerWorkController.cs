@@ -264,6 +264,13 @@ namespace QuickApp.Pro.Controllers
             var result = _unitOfWork.receivingCustomerWork.ReceivingCustomers(value);
             return Ok(result);
         }
+
+        [HttpGet("receivingcustomerreference")]
+        public IActionResult GetReceivingCustomerReference(long customerId)
+        {
+            var result = _unitOfWork.receivingCustomerWork.GetReceivingCustomerReference(customerId);
+            return Ok(result);
+        }
     }
 
 }

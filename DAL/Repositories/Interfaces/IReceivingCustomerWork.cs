@@ -24,5 +24,6 @@ namespace DAL.Repositories.Interfaces
         ReceivingCustomerWork UpdateReceivingCustomer(ReceivingCustomerWork receivingCustomer);
         object GetPartDettails(long itemMasterId);
         IEnumerable<object> ReceivingCustomers(string value);
+        IEnumerable<object> GetReceivingCustomerReference(long customerId);
     }
 }

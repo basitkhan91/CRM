@@ -201,14 +201,31 @@
                                                     <span class="clr-red">*</span>
                                                 </label>
 
-                                                <input type="text" class="form-control wo-input" name="contactRef" #contactRef="ngModel" [(ngModel)]="workOrderGeneralInformation.customerReference" required disabled>
+                                                <!--<input type="text" class="form-control wo-input" name="contactRef" #contactRef="ngModel" [(ngModel)]="workOrderGeneralInformation.customerReference" required disabled>
 
 
-                                                <div *ngIf="contactRef.invalid && (contactRef.dirty || contactRef.touched)" class="alert alert-danger alert-danger-cstm">
-                                                    <div *ngIf="contactRef.errors.required">
-                                                        <small> Contact Ref is required </small>
-                                                    </div>
-                                                </div>
+    <div *ngIf="contactRef.invalid && (contactRef.dirty || contactRef.touched)" class="alert alert-danger alert-danger-cstm">
+        <div *ngIf="contactRef.errors.required">
+            <small> Contact Ref is required </small>
+        </div>
+    </div>-->
+                                                <!--<p-dropdown class="p-dropdown-custom-md " placeholder="Select Reference"
+                name="contactRef" #contactRef="ngModel"
+                [options]="customerReferencelist" [(ngModel)]="workOrderGeneralInformation.receivingCustomerWorkId" required>
+        <div *ngIf="contactRef.invalid && (contactRef.dirty || contactRef.touched)" class="alert alert-danger alert-danger-cstm">
+            <div *ngIf="contactRef.errors.required">
+                <small> Contact Ref is required </small>
+            </div>
+        </div>
+    </p-dropdown>-->
+
+                                                <p-dropdown placeholder="Select Reference"
+                                                            name="contactRef"
+                                                            #contactRef="ngModel"
+                                                            [options]="customerReferencelist"
+                                                            class="p-dropdown-custom-md-2"
+                                                            [(ngModel)]="workOrderGeneralInformation.customerReference">
+                                                </p-dropdown>
 
                                             </div>
 
