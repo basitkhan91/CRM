@@ -8,7 +8,7 @@
                         <div class="inline-block display-flex">
                             <h3 class="po-head lead"> GL Account Type</h3>
                             &nbsp;&nbsp;
-                            <a class="plusicon-cstm new-margin" pTooltip="Add  GL Account Type" tooltipPosition="right" (click)="open(contentEdit)">
+                            <a class="plusicon-cstm new-margin" pTooltip="Add  GL Account Type" tooltipPosition="right" data-target="#addglaccount" data-toggle="modal" (click)="resetForm()">
                                 <i class="fa fa-plus-circle fa-lg"></i>
                             </a>
                         </div>
@@ -114,7 +114,7 @@ col.field == 'createdDate'? (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[co
 </div>
 
 
-<div *ngIf="viewRowData" #view class="modal fade " id="view" role="dialog" data-backdrop="static" data-keyboard="false">
+<div *ngIf="viewRowData" #view class="modal fade" id="view" role="dialog" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">

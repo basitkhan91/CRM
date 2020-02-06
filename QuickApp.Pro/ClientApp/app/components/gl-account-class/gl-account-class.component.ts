@@ -227,6 +227,7 @@ export class GlAccountClassComponent implements OnInit {
     }
 
     open(content) {
+        alert('hitest');
         this.disableSave = true;
         this.disableSaveMsg = true;
         this.isEditMode = false;
@@ -242,8 +243,14 @@ export class GlAccountClassComponent implements OnInit {
         }, () => { console.log('Backdrop click') })
     }
 
+    resetForm() {
+        this.isEditMode = false;
+        this.selectedRecordForEdit = undefined;
+        this.addnewGLAccountClassType = { ...this.newGLAccountClassType };
+    }
 
     openView(rowData) {
+       
         console.log(rowData);
         this.viewRowData = rowData;
     }
@@ -264,7 +271,7 @@ export class GlAccountClassComponent implements OnInit {
 
     openEdit(row) {
         console.log(row);
-        this.disablesave = false;
+        this.disableSave = true;
         this.disableSaveMsg = false;
         this.isEditMode = true;
         // this.isSaving = true;
@@ -499,7 +506,7 @@ export class GlAccountClassComponent implements OnInit {
 
     getGLAccountClassList() {
 
-        this.loadData();
+       // this.loadData();
     }
 
 }
