@@ -209,10 +209,14 @@
                                                         <span class="pull-left">Customer Classification</span> <span class="clr-red">*</span>
                                                         <span style="margin-left:3px;cursor:pointer;"><a  class="fa fa-plus-circle fa-lg" data-toggle="modal" data-backdrop="static" data-target="#addCustomerClassification" (click)="addclassification()" ></a></span>
                                                     </label>
-
-                                                    <p-multiSelect [options]="allcustomerclassificationInfo" [(ngModel)]="generalInformation.customerClassificationIds" name="customerClassificationId" required>
-
+                                                    
+                                                    <p-multiSelect [options]="allcustomerclassificationInfo"
+                                                    [(ngModel)]="generalInformation.customerClassificationIds" 
+                                                   
+                                                     name="customerClassificationId" required>
+                                                                                                                                          
                                                     </p-multiSelect>
+                                                   
                                                 </div>
                                                 <div class="form-group">
                                                     <label>Contract Ref</label>
@@ -524,7 +528,7 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label>Name <span class="clr-red">*</span></label>
-                        <div class="inner-addon right-addon inline-block">
+                        <div class="inner-addon right-addon inline-block autocomp-customer-cstm">
                             <p-autoComplete class="p-dropdown-custom-2 p-dropdown-custom-gen" name="classificationName"
                                             [(ngModel)]="addNewclassification.description"
                                             (onSelect)="selectedClassification($event)"
@@ -538,7 +542,7 @@
                     <div class="form-group">
                         <div class="col-sm-6">
                             <span class="checkbox-cstm">
-                                <label style="margin-top: 12px;" class="form-check-label" for="isActive">
+                                <label style="margin-top: 12px;" class="form-check-label " for="isActive">
                                     <input type="checkbox" name="isActive" #isActive="ngModel" class="form-check-input" checked id="isActive" [(ngModel)]="addNewclassification.isActive">
                                     <span class="cr"><i class="cr-icon pi pi-check"></i></span> Active
                                 </label>
@@ -575,7 +579,7 @@
                         <label>WebSite url  <span class="clr-red">*</span></label>
                         <div class="inner-addon right-addon inline-block">
 
-                            <p-autoComplete class="p-dropdown-custom-2 p-dropdown-custom-gen" name="url" 
+                            <p-autoComplete class="p-dropdown-custom-2 p-dropdown-custom-gen autocomp-customer-cstm" name="url" 
                                             [(ngModel)]="addNewIntergation.portalURL"
                                             (onKeyUp)="checkIntergationExists('field',$event.target.value)"
                                             (onSelect)="selectedWebSite()"

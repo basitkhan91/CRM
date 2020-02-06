@@ -14159,6 +14159,14 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
     margin-left: 5px !important;
     margin-top: 10px;
 }
+.ui-multiselect-panel .ui-widget-header .ui-chkbox-box {
+    padding-top: 5px !important;
+    padding-left: 6px !important;
+}
+.ui-multiselect-panel .ui-multiselect-item .ui-chkbox-box {
+    padding-top: 2px !important;
+   
+}
 
 .autocomplete-value .ui-autocomplete .ui-autocomplete-panel {
     min-width: 93% !important;
