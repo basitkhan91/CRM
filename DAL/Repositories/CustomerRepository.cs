@@ -862,6 +862,8 @@ namespace DAL.Repositories
             {
 
                 var data = (from ca in _appContext.CustomerContactATAMapping
+                            join atasub in _appContext.ATASubChapter on ca.ATASubChapterId equals atasub.ATASubChapterId into atasubg
+                            from atasub in atasubg.DefaultIfEmpty()
                             where ca.CustomerContactId == contactId && ca.IsDeleted == false
                             select new
                             {
@@ -870,7 +872,7 @@ namespace DAL.Repositories
                                 ca.ATAChapterId,
                                 ca.ATAChapterCode,
                                 ca.ATAChapterName,
-
+                                atasub.ATASubChapterCode,
                                 ca.ATASubChapterId,
                                 ca.ATASubChapterDescription
 
