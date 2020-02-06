@@ -640,7 +640,8 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
                     discountId: this.sourceVendor.discountId,
                     createdBy: this.sourceVendor.createdBy,
                     updatedBy: this.sourceVendor.updatedBy,
-                    isActive: true
+                    isActive: true,
+                    is1099Required:this.sourceVendor.is1099Required? this.sourceVendor.is1099Required :false
                 }
                 this.vendorService.updatefinanceinfo(financialInfo, this.sourceVendor.vendorId).subscribe(data => {
                     this.localCollection = data;

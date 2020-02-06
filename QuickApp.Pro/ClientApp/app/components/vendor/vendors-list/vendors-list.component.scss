@@ -41,3 +41,17 @@
   margin-right: 0;
   font-weight: normal;
 }
+.parent-info{
+  box-shadow: 1px 1px 3px 1px #d8d4d4;
+  width: 80%;
+  padding: 4px;
+  display: grid;
+
+  .checkbox-cstm{
+    border-bottom: 1px solid #d4d4d4;
+    padding: 8px 0;
+  }
+  .vendor_Name{
+    width: 100%;
+  }
+}

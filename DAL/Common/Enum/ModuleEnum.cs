@@ -35,6 +35,7 @@
         VendorContact,
         VendorBillingAddress,
         VendorShippingAddress,
+        VendorCheckAddress,
 
     }
 }
