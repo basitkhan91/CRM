@@ -31,8 +31,23 @@ namespace QuickApp.Pro.Controllers
         [Produces(typeof(List<GLAccountClassViewModel>))]
         public IActionResult Get()
         {
-            var allGlAccountClass = _unitOfWork.GLAccountClass.GetAllGLAccountClassData(); 
-            return Ok(Mapper.Map<IEnumerable<GLAccountClassViewModel>>(allGlAccountClass));
+            var allGlAccountClass = _unitOfWork.GLAccountClass.GetAllGLAccountClassData();
+            List<ColumHeader> columHeaders = new List<ColumHeader>();
+            PropertyInfo[] propertyInfos = typeof(GLAccountClassViewModel).GetProperties();
+            ColumHeader columnHeader;
+            DynamicGridData<dynamic> dynamicGridData = new DynamicGridData<dynamic>();
+            foreach (PropertyInfo property in propertyInfos)
+            {
+                columnHeader = new ColumHeader();
+                columnHeader.field = char.ToLower(property.Name[0]) + property.Name.Substring(1);//FirstCharToUpper(property.Name);
+                columnHeader.header = property.Name;
+                columHeaders.Add(columnHeader);
+            }
+            dynamicGridData.columHeaders = columHeaders;
+            dynamicGridData.ColumnData = Mapper.Map<IEnumerable<GLAccountClassViewModel>>(allGlAccountClass);
+            dynamicGridData.TotalRecords = dynamicGridData.ColumnData.Count();
+            return Ok(dynamicGridData);
+            // return Ok((allGlAccountClass));
 
         }
         
