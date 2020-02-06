@@ -342,7 +342,7 @@ export class VendorsListComponent implements OnInit {
         this.status = status;
         this.lazyLoadEventDataInput.filters = { ...this.lazyLoadEventDataInput.filters, status: status };
         const PagingData = { ...this.lazyLoadEventDataInput, filters: listSearchFilterObjectCreation(this.lazyLoadEventDataInput.filters) }
-            this.getList(PagingData);
+        this.getList(PagingData);
     }
 
     // private loadData() {
@@ -716,13 +716,13 @@ export class VendorsListComponent implements OnInit {
 
     openView(content, row) {
         this.vendorId = row.vendorId;
-        console.log(this.vendorId);        
+        console.log(this.vendorId);
         this.vendorService.getVendorDataById(row.vendorId).subscribe(res => {
             console.log(res);
             this.vendorData = res;
         });
 
-        this.loadVendorCapsData(row.vendorId);
+        // this.loadVendorCapsData(row.vendorId);
         this.toGetVendorGeneralDocumentsList(row.vendorId);
         this.getVendorProcess1099FromTransaction(row.vendorId);
         this.getDomesticWithVendorId(row.vendorId);
@@ -1020,7 +1020,7 @@ export class VendorsListComponent implements OnInit {
     }
     navigateToCreatePO() {
         $('#purchaseOrderList').modal('hide');
-        this.route.navigateByUrl(`vendorsmodule/vendorpages/app-purchase-setup/vendor/${this.vendorId}`);        
+        this.route.navigateByUrl(`vendorsmodule/vendorpages/app-purchase-setup/vendor/${this.vendorId}`);
     }
     navigateToCreateRO() {
         $('#repairOrderList').modal('hide');

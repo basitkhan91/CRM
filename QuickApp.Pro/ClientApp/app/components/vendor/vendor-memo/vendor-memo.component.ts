@@ -38,14 +38,14 @@ export class VendorMemoComponent implements OnInit {
 	allVendorROList: any[];
 	allVendorPOROList: any[];
 	activeIndex: any;
-	isvendorEditMode:any;
+	isvendorEditMode: any;
 	local: any;
 	private isEditMode: boolean = false;
 	private isSaving: boolean;
 	totalRecords: number = 0;
-    pageIndex: number = 0;
-    pageSize: number = 10;
-    totalPages: number = 0;
+	pageIndex: number = 0;
+	pageSize: number = 10;
+	totalPages: number = 0;
 
 	memoCols = [
 		{ field: 'module', header: 'Module' },
@@ -78,8 +78,8 @@ export class VendorMemoComponent implements OnInit {
 
 	ngOnInit(): void {
 		this.vendorService.currentEditModeStatus.subscribe(message => {
-            this.isvendorEditMode = message; 
-        });
+			this.isvendorEditMode = message;
+		});
 		this.vendorService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-memo';
 		this.vendorService.bredcrumbObj.next(this.vendorService.currentUrl);
 		this.vendorService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-memo';
@@ -151,7 +151,7 @@ export class VendorMemoComponent implements OnInit {
 		this.vendorService.changeofTab(this.activeIndex);
 		this.alertService.showMessage(
 			'Success',
-			`${this.isvendorEditMode ? 'Updated' : 'Saved'  }  Memos Sucessfully `,
+			`${this.isvendorEditMode ? 'Updated' : 'Saved'}  Memos Sucessfully `,
 			MessageSeverity.success
 		);
 		// this.vendorService.indexObj.next(this.activeIndex);
@@ -166,13 +166,18 @@ export class VendorMemoComponent implements OnInit {
 		// this.vendorService.changeStep('Warnings');
 		// this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-warnings');
 	}
+
 	getVendorName() {
-        if (this.local.vendorName !== undefined) {
-            return editValueAssignByCondition('vendorName', this.local.vendorName)
-        }
-    }
+
+
+		if (this.local !== undefined) {
+			return editValueAssignByCondition('vendorName', this.local.vendorName) === undefined ? '' : editValueAssignByCondition('vendorName', this.local.vendorName);
+		} else {
+			return '';
+		}
+	}
 
 	getPageCount(totalNoofRecords, pageSize) {
-        return Math.ceil(totalNoofRecords / pageSize)
-    }
+		return Math.ceil(totalNoofRecords / pageSize)
+	}
 }   

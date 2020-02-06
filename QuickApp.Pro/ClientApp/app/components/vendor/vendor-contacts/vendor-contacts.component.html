@@ -107,7 +107,12 @@
 
 
                                     <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
-                                        {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
+                                        {{col.field == 'createdDate'?  
+                                        (rowData[col.field] | date: 'MM/dd/yyyy'):
+                                        rowData[col.field]
+                                         && col.field == 'updatedDate'?  
+                                         (rowData[col.field] | date: 'MM/dd/yyyy')
+                                         :rowData[col.field] }}
                                     </td>
                                     <td class="text-center">
                                         <p-inputSwitch *ngIf="!isViewMode" name="isActive{{i}}" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="handleChanges(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>

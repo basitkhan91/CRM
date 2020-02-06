@@ -110,7 +110,7 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
     percentageList: any = [];
     disableCreditTerms: boolean = true;
     disableCurrency: boolean = true;
-    isvendorEditMode:any;
+    isvendorEditMode: any;
     constructor(private cdRef: ChangeDetectorRef, public CreditTermsService: CreditTermsService, public currencyService: CurrencyService, private router: ActivatedRoute, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public vendorService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private commonservice: CommonService) {
         if (this.vendorService.listCollection !== undefined) {
             this.vendorService.isEditMode = true;
@@ -145,8 +145,8 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
 
     ngOnInit(): void {
         this.vendorService.currentEditModeStatus.subscribe(message => {
-            this.isvendorEditMode = message; 
-        }); 
+            this.isvendorEditMode = message;
+        });
         this.vendorService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-financial-information';
         this.vendorService.bredcrumbObj.next(this.vendorService.currentUrl);
         this.loadCreditTermsData();
@@ -651,7 +651,7 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
                     this.savesuccessCompleted(this.sourceVendor, isGoNxt);
 
                 })
-             
+
             }
             else {
                 this.sourceVendor.updatedBy = this.userName;
@@ -667,7 +667,7 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
         }
         else {
         }
-     
+
     }
 
     deleteItemAndCloseModel() {
@@ -710,7 +710,7 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
         // this.alertService.showMessage("Success", `Action was saved successfully`, MessageSeverity.success);
         this.alertService.showMessage(
             'Success',
-            ` ${this.isvendorEditMode ? 'Updated': 'Saved'} Financial Information Sucessfully `,
+            ` ${this.isvendorEditMode ? 'Updated' : 'Saved'} Financial Information Sucessfully `,
             MessageSeverity.success
         );
         if (isGoNxt) {
@@ -1094,9 +1094,12 @@ export class VendorFinancialInformationComponent implements OnInit, AfterViewIni
             this.disableCreditTerms = true;
         }
     }
+
     getVendorName() {
-        if (this.local.vendorName !== undefined) {
-            return editValueAssignByCondition('vendorName', this.local.vendorName)
+        if (this.local !== undefined) {
+            return editValueAssignByCondition('vendorName', this.local.vendorName) === undefined ? '' : editValueAssignByCondition('vendorName', this.local.vendorName);
+        } else {
+            return '';
         }
     }
 

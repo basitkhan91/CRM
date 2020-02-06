@@ -349,11 +349,16 @@ export class VendorDocumentsComponent implements OnInit {
 		}
 	}
 
+
 	getVendorName() {
-        if (this.local.vendorName !== undefined) {
-            return editValueAssignByCondition('vendorName', this.local.vendorName)
-        }
-    }
+
+
+		if (this.local !== undefined) {
+			return editValueAssignByCondition('vendorName', this.local.vendorName) === undefined ? '' : editValueAssignByCondition('vendorName', this.local.vendorName);
+		} else {
+			return '';
+		}
+	}
 	getPageCount(totalNoofRecords, pageSize) {
 		return Math.ceil(totalNoofRecords / pageSize)
 	}

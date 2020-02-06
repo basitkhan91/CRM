@@ -60,7 +60,7 @@ export class VendorWarningsComponent implements OnInit {
     isDeleteMode: boolean;
     sourcePOQuote: any = {};
     sourceROQuote: any = {};
-    isvendorEditMode:any;
+    isvendorEditMode: any;
     //isPOQuoteMsg: boolean = false;
     //isPOQuoteWar: boolean = true;
     isPOQuoteReadOnly: boolean = true;
@@ -85,7 +85,7 @@ export class VendorWarningsComponent implements OnInit {
 
     ngOnInit() {
         this.vendorService.currentEditModeStatus.subscribe(message => {
-            this.isvendorEditMode = message; 
+            this.isvendorEditMode = message;
         });
         this.vendorService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-warnings';
         this.vendorService.bredcrumbObj.next(this.vendorService.currentUrl);
@@ -467,10 +467,10 @@ export class VendorWarningsComponent implements OnInit {
         // this.vendorService.changeStep('Memos');
         // this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-memo');
         this.alertService.showMessage(
-			'Success',
-			`${this.isvendorEditMode ? 'Updated' : 'Saved'  }  Warning Messages Sucessfully `,
-			MessageSeverity.success
-		);
+            'Success',
+            `${this.isvendorEditMode ? 'Updated' : 'Saved'}  Warning Messages Sucessfully `,
+            MessageSeverity.success
+        );
     }
 
     // saveRMA() {
@@ -798,9 +798,14 @@ export class VendorWarningsComponent implements OnInit {
         }
 
     }
+
     getVendorName() {
-        if (this.local.vendorName !== undefined) {
-            return editValueAssignByCondition('vendorName', this.local.vendorName)
+
+
+        if (this.local !== undefined) {
+            return editValueAssignByCondition('vendorName', this.local.vendorName) === undefined ? '' : editValueAssignByCondition('vendorName', this.local.vendorName);
+        } else {
+            return '';
         }
     }
 }
