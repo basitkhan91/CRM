@@ -544,8 +544,8 @@ namespace DAL.Repositories
                           from cu in cuu.DefaultIfEmpty()
                           join vp in _appContext.Vendor on t.Parent equals vp.VendorId into vpp
 						  join d in _appContext.Discount on t.DiscountId equals d.DiscountId
-                          join vp in _appContext.Vendor on t.VendorParentId equals vp.VendorId into vpp
-                          from vp in vpp.DefaultIfEmpty()
+                          join vp1 in _appContext.Vendor on t.VendorParentId equals vp1.VendorId into vpp1
+                          from vp1 in vpp1.DefaultIfEmpty()
 
                               //join inte in _appContext.IntegrationPortalMapping on t.VendorId equals inte.ReferenceId into intee 
                               //from inte in intee.DefaultIfEmpty()
@@ -561,7 +561,7 @@ namespace DAL.Repositories
                               t.DoingBusinessAsName,
                               t.VendorClassificationId,
                               t.Parent,
-                              ParentName = vp.VendorName,
+                              ParentName = vp1.VendorName,
                               t.VendorContractReference,
                               t.AddressId,
                               t.IsVendorAlsoCustomer,
@@ -594,7 +594,7 @@ namespace DAL.Repositories
                               t.IsDeleted,
                               t.DiscountId ,
                               t.capabilityId,
-                              VendorParentName= vp.VendorName,
+                              VendorParentName= vp1.VendorName,
                               t.ManagementStructureId,
                               t.DefaultPaymentTypeId,
                               t.VendorPhoneExt,
