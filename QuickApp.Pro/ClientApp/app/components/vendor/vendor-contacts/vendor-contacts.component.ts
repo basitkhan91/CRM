@@ -114,6 +114,7 @@ export class VendorContactsComponent implements OnInit {
         { field: 'fullContactNo', header: 'Work Phone' },
         // { field: 'mobilePhone', header: 'Mobile Phone' },
         { field: 'fax', header: 'FAX' },
+        // { field: 'isDefaultContact', header: 'Flag' }
         // { field: 'isDefaultContact', header: 'Primary Contact' },
         // { field: 'notes', header: 'Memo' }
         //{ field: 'updatedDate', header: 'Updated Date' },
@@ -123,7 +124,7 @@ export class VendorContactsComponent implements OnInit {
     selectedColumns = this.vendorContactsColumns;
     @Input() vendorId: number = 0;
     @Input() isViewMode: boolean = false;
-    isvendorEditMode:any;
+    isvendorEditMode: any;
     constructor(private router: ActivatedRoute, private route: Router, private customerser: CustomerService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public vendorService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private configurations: ConfigurationService) {
 
         if (this.vendorService.listCollection !== undefined) {
@@ -148,8 +149,8 @@ export class VendorContactsComponent implements OnInit {
 
     ngOnInit(): void {
         this.vendorService.currentEditModeStatus.subscribe(message => {
-            this.isvendorEditMode = message; 
-        }); 
+            this.isvendorEditMode = message;
+        });
         this.sourceVendor.isdefaultContact = true;
         this.matSpinner = true;
         if (this.local) {
@@ -527,10 +528,10 @@ export class VendorContactsComponent implements OnInit {
         this.activeIndex = 4;
         this.vendorService.changeofTab(this.activeIndex);
         this.alertService.showMessage(
-			'Success',
-			`${this.isvendorEditMode ? 'Updated' : 'Saved'  }  Contacts Sucessfully `,
-			MessageSeverity.success
-		);
+            'Success',
+            `${this.isvendorEditMode ? 'Updated' : 'Saved'}  Contacts Sucessfully `,
+            MessageSeverity.success
+        );
         // this.vendorService.indexObj.next(this.activeIndex);
         // this.vendorService.changeStep('Financial Information');
         // this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-financial-information');
@@ -730,9 +731,14 @@ export class VendorContactsComponent implements OnInit {
         }
     }
 
+
     getVendorName() {
-        if (this.local.vendorName !== undefined) {
-            return editValueAssignByCondition('vendorName', this.local.vendorName)
+
+
+        if (this.local !== undefined) {
+            return editValueAssignByCondition('vendorName', this.local.vendorName) === undefined ? '' : editValueAssignByCondition('vendorName', this.local.vendorName);
+        } else {
+            return '';
         }
     }
 

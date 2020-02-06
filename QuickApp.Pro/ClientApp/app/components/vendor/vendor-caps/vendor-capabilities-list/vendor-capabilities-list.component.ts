@@ -27,7 +27,7 @@ import { VendorCapabilitiesService } from '../../../../services/vendorcapabiliti
     animations: [fadeInOut]
 })
 /** vendor-capabilities-list component*/
-export class VendorCapabilitiesListComponent implements OnInit{
+export class VendorCapabilitiesListComponent implements OnInit {
     /** vendor-capabilities-list ctor */
     activeIndex: number;
     selectedColumns: any[];
@@ -47,7 +47,7 @@ export class VendorCapabilitiesListComponent implements OnInit{
     capabilityauditHisory: any[];
     vendorCapesGeneralInfo: any = {};
     aircraftListDataValues: any;
-    status:string = "active";
+    status: string = "active";
     colsaircraftLD: any[] = [
         { field: "aircraft", header: "Aircraft" },
         { field: "model", header: "Model" },
@@ -59,27 +59,25 @@ export class VendorCapabilitiesListComponent implements OnInit{
     @Input() vendorId: number = 0;
     @Output() vendorCapabilityId = new EventEmitter<any>();
     totalRecords: number = 0;
-	totalPages: number = 0;
+    totalPages: number = 0;
     pageSize: number = 10;
     @Input() isViewMode: boolean = false;
 
-    constructor(private vendorService: VendorService, private modalService: NgbModal, private authService: AuthService, private _route: Router, private alertService: AlertService, private vendorCapesService: VendorCapabilitiesService)
-    {
+    constructor(private vendorService: VendorService, private modalService: NgbModal, private authService: AuthService, private _route: Router, private alertService: AlertService, private vendorCapesService: VendorCapabilitiesService) {
         this.dataSource = new MatTableDataSource();
     }
 
-    ngOnInit()
-    {
+    ngOnInit() {
         this.loadData(this.status);
-         if(!this.vendorId) {
+        if (!this.vendorId) {
             this.activeIndex = 0;
             this.vendorService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-capabilities-list';
-    
+
             this.vendorService.ShowPtab = false;
             this.vendorService.alertObj.next(this.vendorService.ShowPtab);
-    
+
             this.vendorService.bredcrumbObj.next(this.vendorService.currentUrl);
-         }
+        }
     }
 
     dataSource: MatTableDataSource<any>;
@@ -87,15 +85,13 @@ export class VendorCapabilitiesListComponent implements OnInit{
     paginator: MatPaginator;
     sort: MatSort;
 
-    private onDataLoadFailed(error: any)
-    {
+    private onDataLoadFailed(error: any) {
     }
 
-    private loadData(status)
-    {
+    private loadData(status) {
         //const status = 'active';
 
-        if(this.vendorId != undefined) {
+        if (this.vendorId != undefined) {
             this.vendorService.getVendorCapabilityList(status, this.vendorId).subscribe(
                 results => this.onDataLoadSuccessful(results[0]),
                 error => this.onDataLoadFailed(error)
@@ -133,31 +129,27 @@ export class VendorCapabilitiesListComponent implements OnInit{
     }
 
     getVenCapesListByStatus(status) {
-        this.status=status;
+        this.status = status;
         this.vendorService.getVendorCapabilityList(status, this.vendorId).subscribe(
             results => this.onDataLoadSuccessful(results[0]),
             error => this.onDataLoadFailed(error)
         );
     }
 
-    ngAfterViewInit()
-    {
+    ngAfterViewInit() {
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
     }
 
-    public applyFilter(filterValue: string)
-    {
+    public applyFilter(filterValue: string) {
         this.dataSource.filter = filterValue;
     }
 
-    private refresh()
-    {
+    private refresh() {
         // Causes the filter to refresh there by updating with recently added data.
         this.applyFilter(this.dataSource.filter);
     }
-    dismissModel()
-    {
+    dismissModel() {
         this.isDeleteMode = false;
         this.isEditMode = false;
         this.modal.close();
@@ -174,8 +166,7 @@ export class VendorCapabilitiesListComponent implements OnInit{
         return this.authService.currentUser ? this.authService.currentUser.userName : "";
     }
 
-    openDelete(content, row)
-    {
+    openDelete(content, row) {
 
         this.isEditMode = false;
         this.isDeleteMode = true;
@@ -185,27 +176,24 @@ export class VendorCapabilitiesListComponent implements OnInit{
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
-    openEdits(row)
-    {
-        if(this.isEnableVendor) {
-            const {vendorCapabilityId} = row;
+    openEdits(row) {
+        if (this.isEnableVendor) {
+            const { vendorCapabilityId } = row;
             this.vendorCapabilityId.emit(vendorCapabilityId);
         }
         else {
             this.vendorService.isEditMode = true;
             this.isSaving = true;
             this.vendorService.listCollection = row; //Storing Row Data  and saving Data in Service that will used in StockLine Setup
-            const {vendorCapabilityId} = row
+            const { vendorCapabilityId } = row
             this._route.navigateByUrl(`/vendorsmodule/vendorpages/app-add-vendor-capabilities/edit/${vendorCapabilityId}`);
         }
-        
+
     }
 
-    private saveCompleted(user?: any)
-    {
+    private saveCompleted(user?: any) {
         this.isSaving = false;
-        if (this.isDeleteMode == true)
-        {
+        if (this.isDeleteMode == true) {
             this.alertService.showMessage("Success", `Action was deleted successfully`, MessageSeverity.success);
             this.isDeleteMode = false;
         }
@@ -223,8 +211,7 @@ export class VendorCapabilitiesListComponent implements OnInit{
         this.alertService.showStickyMessage(error, null, MessageSeverity.error);
     }
 
-    private onHistoryLoadSuccessful(auditHistory: AuditHistory[], content)
-    {
+    private onHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {
         // debugger;
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
@@ -241,8 +228,7 @@ export class VendorCapabilitiesListComponent implements OnInit{
 
     }
 
-    public navigateTogeneralInfo()
-    {
+    public navigateTogeneralInfo() {
         //this.workFlowtService.listCollection = [];
         this.vendorService.isEditMode = false;
         this.vendorService.enableExternal = false;
@@ -274,8 +260,7 @@ export class VendorCapabilitiesListComponent implements OnInit{
 
     }
 
-    deleteItemAndCloseModel()
-    {
+    deleteItemAndCloseModel() {
         this.isSaving = true;
         this.sourceAction.updatedBy = this.userName;
         this.vendorService.deleteVendorCapability(this.sourceAction.vendorCapabilityId).subscribe(
@@ -286,7 +271,7 @@ export class VendorCapabilitiesListComponent implements OnInit{
     openHistory(content, row) {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-       
+
         this.isSaving = true;
         this.vendorNameHist = row.vendorName;
         this.vendorService.getVendorCapabilityAuditHistory(row.vendorCapabilityId, row.vendorId).subscribe(
@@ -321,35 +306,37 @@ export class VendorCapabilitiesListComponent implements OnInit{
     }
 
     gotoCreatePO(rowData) {
-       
+
         console.log(rowData);
         const { vendorId } = rowData;
         this._route.navigateByUrl(`vendorsmodule/vendorpages/app-purchase-setup/vendor/${vendorId}`);
     }
     gotoCreateRO(rowData) {
-     
+
         console.log(rowData);
         const { vendorId } = rowData;
         this._route.navigateByUrl(`vendorsmodule/vendorpages/app-ro-setup/vendor/${vendorId}`);
     }
 
-    viewSelectedRow(rowData) { 
+    viewSelectedRow(rowData) {
         console.log(rowData);
-        const {vendorCapabilityId} = rowData;
-        this.getVendorCapabilitiesView(vendorCapabilityId);     
-        this.getVendorCapesAircraftView(vendorCapabilityId);     
+        const { vendorCapabilityId } = rowData;
+        this.getVendorCapabilitiesView(vendorCapabilityId);
+        this.getVendorCapesAircraftView(vendorCapabilityId);
+        $("#vendorCapesView").modal('show');
     }
 
     getVendorCapabilitiesView(vendorCapesId) {
-		this.vendorCapesService.getVendorCapabilitybyId(vendorCapesId).subscribe(res => {
-			console.log(res);
-			this.vendorCapesGeneralInfo = res;
-		})
-	}
-
-	getVendorCapesAircraftView(vendorCapesId) {
-		this.vendorCapesService.getVendorAircraftGetDataByCapsId(vendorCapesId).subscribe(res => {
+        this.vendorCapesService.getVendorCapabilitybyId(vendorCapesId).subscribe(res => {
             console.log(res);
+            this.vendorCapesGeneralInfo = res;
+        })
+    }
+
+    getVendorCapesAircraftView(vendorCapesId) {
+        this.vendorCapesService.getVendorAircraftGetDataByCapsId(vendorCapesId).subscribe(res => {
+            console.log(res);
+          
             this.aircraftListDataValues = res.map(x => {
                 return {
                     ...x,
@@ -359,8 +346,8 @@ export class VendorCapabilitiesListComponent implements OnInit{
                     memo: x.memo,
                 }
             })
-		})
-	}
+        })
+    }
 
     viewSelectedRowdbl(rowData) {
         this.viewSelectedRow(rowData);
@@ -368,6 +355,6 @@ export class VendorCapabilitiesListComponent implements OnInit{
     }
 
     getPageCount(totalNoofRecords, pageSize) {
-		return Math.ceil(totalNoofRecords / pageSize)
-	}
+        return Math.ceil(totalNoofRecords / pageSize)
+    }
 }

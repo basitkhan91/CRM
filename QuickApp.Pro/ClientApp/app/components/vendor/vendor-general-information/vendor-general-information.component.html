@@ -14,14 +14,14 @@
                     <h4 class="page-heading clr-green"> General Info</h4>
                 </div>
                 <div class="card-body">
-                    <div class="col-md-4">
+                    <!-- <div class="col-md-4">
                         <label class="fs12">Vendor Name : </label>
                         <span class="span-header-red"> {{ sourceVendor?.vendorName }}</span>
                     </div>
                     <div class="col-md-4">
                         <label class="fs12">Vendor Code : </label>
                         <span class="span-header-red"> {{ sourceVendor?.vendorCode }}</span>
-                    </div>
+                    </div> -->
                     <div class="clear"></div>
                     <hr />
                     <div class="clear"></div>
@@ -44,8 +44,8 @@
                                     </label>
                                     <p-autoComplete field="vendorName" class="pautocomp-cstm" 
                                     [forceSelection]="forceSelectionOfVendorName"
-                                    (onSelect)="onVendorselected($event);"
-                                    (onKeyUp)="checVendorName($event.target.value)"
+                                    (onSelect)="onVendorselected($event); "
+                                    (onKeyUp)="checkVendorExists('vendorName', $event.target.value)"
                                     [(ngModel)]="sourceVendor.vendorName" name="vendorName"
                                     [suggestions]="vendorNames" (completeMethod)="filterVendorNames($event)" [size]="30"
                                     [minLength]="1" [dropdown]="true" required>

@@ -542,6 +542,8 @@ namespace DAL.Repositories
                           from cr in crr.DefaultIfEmpty()
                           join cu in _appContext.Currency on t.CurrencyId equals cu.CurrencyId into cuu
                           from cu in cuu.DefaultIfEmpty()
+                          join vp in _appContext.Vendor on t.Parent equals vp.VendorId into vpp
+						  join d in _appContext.Discount on t.DiscountId equals d.DiscountId
                           join vp in _appContext.Vendor on t.VendorParentId equals vp.VendorId into vpp
                           from vp in vpp.DefaultIfEmpty()
 
@@ -579,7 +581,8 @@ namespace DAL.Repositories
                               t.CreditLimit,
                               t.CurrencyId,
                               t.DiscountLevel,
-                              t.Is1099Required,
+							  d.DiscontValue,
+							  t.Is1099Required,
                               t.CreditTermsId,
                               t.MasterCompanyId,
                               t.CreatedBy,
@@ -589,7 +592,7 @@ namespace DAL.Repositories
                               t.IsActive,
                               t.VendorPhone,
                               t.IsDeleted,
-                              t.DiscountId,
+                              t.DiscountId ,
                               t.capabilityId,
                               VendorParentName= vp.VendorName,
                               t.ManagementStructureId,

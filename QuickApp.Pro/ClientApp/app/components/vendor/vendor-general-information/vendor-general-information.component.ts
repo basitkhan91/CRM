@@ -33,7 +33,7 @@ import { CustomerService } from '../../../services/customer.service';
 import { CommonService } from '../../../services/common.service';
 import { IntegrationService } from '../../../services/integration-service';
 import { ConfigurationService } from '../../../services/configuration.service';
-import { editValueAssignByCondition, getObjectById, getValueFromObjectByKey, selectedValueValidate, toLowerCaseOnInput } from '../../../generic/autocomplete';
+import { editValueAssignByCondition, getObjectById, getValueFromObjectByKey, selectedValueValidate, toLowerCaseOnInput, validateRecordExistsOrNot } from '../../../generic/autocomplete';
 import { VendorStepsPrimeNgComponent } from '../vendor-steps-prime-ng/vendor-steps-prime-ng.component';
 import { emailPattern, urlPattern } from '../../../validations/validation-pattern';
 declare const google: any;
@@ -152,6 +152,7 @@ export class VendorGeneralInformationComponent implements OnInit {
     parentVendorOriginal: any[];
     forceSelectionOfVendorName: boolean = false;
     selectedEditData: any;
+    editModeData: any;
 
     newvendorId;
 
@@ -924,6 +925,26 @@ console.log("check id",id)
     convertUrlToLowerCase(event) {
         const value = event.target.value;
         event.target.value = toLowerCaseOnInput(value);
+    }
+
+
+    checkVendorExists(field, value) {
+
+        let isEdit ;
+        if(this.vendorService.isEditMode){
+            this.editModeData = this.sourceVendor.listCollection;
+        }else{
+            isEdit = undefined;
+        }
+
+        const exists = validateRecordExistsOrNot(field, value, this.allActions, this.editModeData);
+        if (exists.length > 0) {
+            this.disableSaveVenderName = true;
+        }
+        else {
+            this.disableSaveVenderName = false;
+        }
+
     }
 
     editItemAndCloseModel(goNxt?: any) {

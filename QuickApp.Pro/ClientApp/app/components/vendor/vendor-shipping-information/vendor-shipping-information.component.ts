@@ -1,4 +1,4 @@
-﻿import { Component, ViewChild, OnInit, AfterViewInit, Input } from '@angular/core';
+﻿import { Component, ViewChild, OnInit, AfterViewInit, Input, ElementRef } from '@angular/core';
 import { MatPaginator, MatSort, MatTableDataSource, MatSnackBar, MatDialog } from '@angular/material';
 import { NgForm, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
@@ -25,6 +25,7 @@ import * as $ from 'jquery';
 import { editValueAssignByCondition, getObjectById } from '../../../generic/autocomplete';
 import { VendorStepsPrimeNgComponent } from '../vendor-steps-prime-ng/vendor-steps-prime-ng.component';
 import { ConfigurationService } from '../../../services/configuration.service';
+import { ModalService } from '../../../services/Index';
 declare const google: any;
 @Component({
     selector: 'app-vendor-shipping-information',
@@ -34,6 +35,7 @@ declare const google: any;
 })
 /** VendorShippingInformation component*/
 export class VendorShippingInformationComponent {
+    // @ViewChild('contentShipVia') shipviapoup : ModalService;
     modelValue: boolean;
     display: boolean;
     activeIndex: number;
@@ -70,7 +72,7 @@ export class VendorShippingInformationComponent {
     selectedShipVia: any;
     shipviacollection: any[];
     shippingauditHisory: any[];
-    isPrimary: boolean = false;    
+    isPrimary: boolean = false;
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     filteredBrands: any[];
@@ -125,7 +127,7 @@ export class VendorShippingInformationComponent {
     public sourceVendor: any = {};
     @Input() vendorId: number = 0;
     @Input() isViewMode: boolean = false;
-    isvendorEditMode:any;
+    isvendorEditMode: any;
     constructor(private http: HttpClient, private router: Router,
         private authService: AuthService, private modalService: NgbModal, private configurations: ConfigurationService, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public vendorService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
         if (this.vendorService.listCollection !== undefined) {
@@ -163,15 +165,15 @@ export class VendorShippingInformationComponent {
         }
     }
 
-    ngOnInit() {  
+    ngOnInit() {
         this.vendorService.currentEditModeStatus.subscribe(message => {
-            this.isvendorEditMode = message; 
-        });      
+            this.isvendorEditMode = message;
+        });
         if (this.local) {
             this.loadData();
         }
         this.countrylist();
-        if(this.vendorId != 0) {
+        if (this.vendorId != 0) {
             this.loadData();
         } else {
             this.vendorService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-shipping-information';
@@ -181,7 +183,7 @@ export class VendorShippingInformationComponent {
         //     center: { lat: 36.890257, lng: 30.707417 },
         //     zoom: 12
         // };
-    }    
+    }
 
     // ngAfterViewInit() {
     // }
@@ -241,7 +243,7 @@ export class VendorShippingInformationComponent {
         this.vendorService.getVendorShipAddressGet(vendorId).subscribe(
             results => this.onDataLoadSuccessful(results[0]),
             error => this.onDataLoadFailed(error)
-        );        
+        );
     }
 
     private countrylist() {
@@ -424,7 +426,7 @@ export class VendorShippingInformationComponent {
     }
 
     openHist(content, row) {
-       
+
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
         this.shipViaObj = row;
@@ -483,6 +485,7 @@ export class VendorShippingInformationComponent {
             }
 
         }
+
         $('#addShippingInfo').modal('hide');
     }
     saveVendorShipViaDetails() {
@@ -618,14 +621,14 @@ export class VendorShippingInformationComponent {
     dismissShipViaModelModel() {
         this.isDeleteMode = false;
         this.isEditMode = false;
-         this.modal.close();
+        this.modal.close();
     }
     dismissModel() {
         this.isDeleteMode = false;
         this.isEditMode = false;
-      
-     this.modal.close();
-       
+
+        this.modal.close();
+
     }
     private saveCompleted(user?: any) {
         this.isSaving = false;
@@ -682,11 +685,11 @@ export class VendorShippingInformationComponent {
         this.activeIndex = 8;
         this.vendorService.changeofTab(this.activeIndex);
         this.alertService.showMessage(
-			'Success',
-			`${this.isvendorEditMode ? 'Updated' : 'Saved'  }  Shipping Information Sucessfully `,
-			MessageSeverity.success
+            'Success',
+            `${this.isvendorEditMode ? 'Updated' : 'Saved'}  Shipping Information Sucessfully `,
+            MessageSeverity.success
         );
- 
+
         // this.vendorService.indexObj.next(this.activeIndex);
         // this.vendorService.changeStep('Billing Information');
         // this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-billing-information');
@@ -795,10 +798,15 @@ export class VendorShippingInformationComponent {
     }
 
     shippingInfoHistory(rowData) {
-        this.sourceVendor = rowData;
-        this.vendorService.getShipaddressHistory(this.sourceVendor.vendorId, this.sourceVendor.vendorShippingAddressId).subscribe(res => {
+        const data = rowData;
+        this.vendorService.getShipaddressHistory(data.vendorId, data.vendorShippingAddressId).subscribe(res => {
             this.auditHistory = res;
         })
+    }
+    closeAddShipViaDomestic() {
+        console.log('Sample');
+        // this.shipviapoup.hide();
+        // $("#contentShipVia").dialog('close');
     }
 
     getColorCodeForHistory(i, field, value) {
@@ -844,8 +852,12 @@ export class VendorShippingInformationComponent {
     }
 
     getVendorName() {
-        if (this.local.vendorName !== undefined) {
-            return editValueAssignByCondition('vendorName', this.local.vendorName)
+
+
+        if (this.local !== undefined) {
+            return editValueAssignByCondition('vendorName', this.local.vendorName) === undefined ? '' : editValueAssignByCondition('vendorName', this.local.vendorName);
+        } else {
+            return '';
         }
     }
     getPageCount(totalNoofRecords, pageSize) {
