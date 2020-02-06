@@ -394,6 +394,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         IsExportMilitary: false,
         IsExportNONMilitary: false,
         IsExportDual: false,
+        unitOfMeasureId: ''
     }
     tempOEMpartNumberId: number = null;
     tempExportCountryId: number = null;
@@ -512,6 +513,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
                 // binding the export information data on edit
                 this.exportInfo = {
+                    unitOfMeasureId: this.sourceItemMaster.unitOfMeasureId,
                     ExportECCN: this.sourceItemMaster.exportECCN,
                     ITARNumber: this.sourceItemMaster.itarNumber,
                     ExportUomId: this.sourceItemMaster.exportUomId,

@@ -570,6 +570,7 @@
                     <p><span class="label"><b>Ship To State / Prov<span class="clr-red">*</span> : </b></span><span class="value">{{sourceViewforShipping.stateOrProvince}}</span></p>
                     <p><span class="label"><b>Ship To Postal Code <span class="clr-red">*</span> : </b></span><span class="value">{{sourceViewforShipping.postalCode}}</span></p>
                     <p><span class="label"><b>Ship To Country<span class="clr-red">*</span> : </b></span><span class="value">{{sourceViewforShipping.countryName}}</span></p>
+                    <p><span class="label"><b>Is Primary : </b></span><span class="value">{{sourceViewforShipping.isPrimary === true ? 'Yes' : 'No'}}</span></p>
                     <p><span class="label"><b>In Active : </b></span><span class="value"> {{sourceViewforShipping.isActive === true ? 'Yes' : 'No'}}</span></p>
                     <div class="clear"></div>
                 </div>
@@ -809,7 +810,8 @@
                     <p><span class="label"><b>Start Date: </b></span><span class="value">{{sourceViewforInterShipping.startDate | date:'dd-MM-yyyy'}}</span></p>
                     <p><span class="label"><b>Expiration Date: </b></span><span class="value">{{sourceViewforInterShipping.expirationDate | date:'dd-MM-yyyy'}}</span></p>
                     <p><span class="label"><b>Amount: </b></span><span class="value">{{sourceViewforInterShipping.amount}}</span></p>
-                    <p><span class="label"><b>Country: </b></span><span class="value">{{sourceViewforInterShipping.shipToCountry}}</span></p>
+                    <p><span class="label"><b>Country<span class="clr-red">*</span> : </b></span><span class="value">{{sourceViewforInterShipping.shipToCountry}}</span></p>
+                    <p><span class="label"><b>Is Primary : </b></span><span class="value">{{sourceViewforInterShipping.isPrimary === true ? 'Yes' : 'No'}}</span></p>
                     <p><span class="label"><b>In Active: </b></span><span class="value">{{sourceViewforInterShipping.isActive === true ? 'Yes' : 'No'}}</span></p>
 
                     <div class="clear"></div>
