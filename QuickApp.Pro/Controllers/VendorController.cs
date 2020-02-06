@@ -2299,7 +2299,16 @@ namespace QuickApp.Pro.Controllers
 
                 DAL.Models.DiscountModel discObj = new DAL.Models.DiscountModel();
                 discObj.DiscontValue = discountViewModel.DiscontValue;
-                _unitOfWork.Discount.Add(discObj);
+				discObj.CreatedDate = DateTime.Now;
+				discObj.IsActive = true;
+				discObj.IsDeleted = false;
+				discObj.MasterCompanyId = 1;
+				discObj.UpdatedDate = DateTime.Now;
+				discObj.CreatedBy = discountViewModel.CreatedBy;
+				discObj.UpdatedBy = discountViewModel.UpdatedBy;
+
+
+				_unitOfWork.Discount.Add(discObj);
                 _unitOfWork.SaveChanges();
             }
             return Ok(ModelState);
