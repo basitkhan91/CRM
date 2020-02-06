@@ -56,6 +56,14 @@ export class CommonService {
         return this.http.get(`${this.baseUrl}/api/Customer/customernameandcodesbyId?customerId=${customerId}`, this.authService.getRequestHeaders())
     }
 
+    getCustomerContactsById(id) {
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/common/customercontacts?customerId=${id}`)
+    }
+
+    getReceiveCustomerPartDetailsById(id) {
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/ReceivingCustomerWork/receivecustomerpartdetails?itemMasterId=${id}`)
+    }
+
     getItemMasterDetails() {
         return this.http.get(`${this.baseUrl}/api/itemMaster/GetPartDetailsDropDown`, this.authService.getRequestHeaders())
     }

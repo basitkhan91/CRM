@@ -60,6 +60,14 @@ export class ReceivingCustomerWorkEndpoint extends EndpointFactory {
 			.catch(error => {
 				return this.handleError(error, () => this.getNewReasonEndpoint(userObject));
 			});
+    }
+    
+    updateCustomerWorkReceivingEndpoint<T>(userObject: any): Observable<T> {
+
+		return this.http.put<T>(this._actionsUpdateUrlNew, JSON.stringify(userObject), this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.updateCustomerWorkReceivingEndpoint(userObject));
+		});
 	}
 
 	getHistoryReasonEndpoint<T>(receivingCustomerWorkId: number): Observable<T> {
