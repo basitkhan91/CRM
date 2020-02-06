@@ -153,7 +153,7 @@ export class VendorGeneralInformationComponent implements OnInit {
     forceSelectionOfVendorName: boolean = false;
     selectedEditData: any;
 
-
+    newvendorId;
 
     constructor(public vendorclassificationService: VendorClassificationService,
         private http: HttpClient,
@@ -206,7 +206,7 @@ export class VendorGeneralInformationComponent implements OnInit {
                 this.sourceVendor = res;
 
 
-
+this.newvendorId=res.vendorId;
                 this.parentVendorList(res.vendorId);
 
                 this.forceSelectionOfVendorName = true;
@@ -481,9 +481,11 @@ export class VendorGeneralInformationComponent implements OnInit {
         this.loadingIndicator = true;
         await this.vendorService.getWorkFlows().subscribe(res =>
             this.allActions = res[0]
+           
             // results => this.onDataLoadSuccessful(results[0]),
             // error => this.onDataLoadFailed(error)
         );
+        console.log("heler", this.allActions);
     }
     private onDataLoadSuccessful(allWorkFlows: any[]) {
         this.alertService.stopLoadingMessage();
@@ -748,7 +750,7 @@ export class VendorGeneralInformationComponent implements OnInit {
 
     parentVendorList(id) {
 
-
+console.log("check id",id)
         this.parentVendorOriginal = [... this.allActions.filter(x => {
             if (x.vendorId != id) {
                 return x;
@@ -760,11 +762,14 @@ export class VendorGeneralInformationComponent implements OnInit {
 
 
     filterVendorParentNames(event) {
-        this.vendorParentNames = this.parentVendorOriginal ? this.parentVendorOriginal :[] ;
-
+        this.vendorParentNames = this.parentVendorOriginal;
+        console.log("vendor info",this.parentVendorOriginal);
         this.vendorParentNames = [...this.parentVendorOriginal.filter(x => {
             return x.vendorName.toLowerCase().includes(event.query.toLowerCase());
-        })]
+       })]
+     }
+
+    
         // this.vendorNames = [];
         // for (let i = 0; i < this.allActions.length; i++) {
         //     let vendorParentName = this.allActions[i].vendorName;
@@ -772,7 +777,37 @@ export class VendorGeneralInformationComponent implements OnInit {
         //         this.vendorNames.push(vendorParentName);
         //     }
         // }
-    }
+        selectedParentName(event) {
+
+            // if (this.changeName == false) {
+            //     if (event.name === this.generalInformation1.name) {
+            //         this.disableSaveParentName = true;
+            //     }
+            //     else {
+            //         this.disableSaveParentName = false;
+            //     }
+            // }
+            // else {
+                if (event.name === this.sourceVendor.vendorName) {
+                    this.disableSaveParentName = true;
+                }
+                else {
+                    this.disableSaveParentName = false;
+                }
+            // }
+    
+        }
+        checkWithName(event) {
+    
+      
+                if (event === this.sourceVendor.vendorName) {
+                    this.disableSaveParentName = true;
+                }
+                else {
+                    this.disableSaveParentName = false;
+                }
+            
+        }
 
     filterVendorCodes(event) {
         this.vendorCodes = [];
@@ -1157,7 +1192,9 @@ export class VendorGeneralInformationComponent implements OnInit {
         //     }
         // }
     }
-
+    checVendorName(name){
+        this.parentVendorList(this.newvendorId);
+    }
     // checkVendorExist() {
     //     this.disableSaveVenderName = false;
     //     for (let i = 0; i < this.VendorNamecoll.length; i++) {
