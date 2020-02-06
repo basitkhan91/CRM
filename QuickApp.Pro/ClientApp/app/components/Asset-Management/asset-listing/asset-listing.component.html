@@ -269,31 +269,57 @@
                                 <div class="panel-body">
                                     <div class="col-sm-12">
                                         <div class="table-responsive">
-                                            <p-table #dt [value]="allCapesInfo" [metaKeySelection]="true"
-                                                     [columns]="selectedCol" selectionMode="multiple"
-                                                     [resizableColumns]="true" [reorderableColumns]="true">
+                                            <p-table #dt class="rpo-table-cstm rro-table-cstm" [value]="allCapesInfo"
+											 [metaKeySelection]="true"
+											 [first]="pageIndex"
+											 [rows]="pageSize"
+											 [paginator]="true"
+											 [pageLinks]="3"
+											 [rowsPerPageOptions]="[10,20,50,100]"
+											 [columns]="selectedCol"
+											 selectionMode="multiple"
+											 [resizableColumns]="true"
+											 [reorderableColumns]="true"
+											 [scrollable]="true"
+											 [totalRecords]="totalRecords"
+											 scrollHeight="450px">
+										<ng-template pTemplate="colgroup" let-columns>
+											<colgroup>
+												<col *ngFor="let col of columns" style="width:140px">
+											</colgroup>
+										</ng-template>
+										<ng-template pTemplate="header" let-columns style="padding-top: 1% !important">
+											<tr>
+												<th style="width:auto" *ngFor="let col of columns" pResizableColumn pReorderableColumn
+													[pSortableColumn]="col.field">
+													{{col.header}}
+													<p-sortIcon [field]="col.field"></p-sortIcon>
+												</th>
+											</tr>
+											<tr>
+												<th style="width:auto" *ngFor="let col of columns" [ngSwitch]="col.field">
+													<input style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field,'contains')">
+												</th>
+											</tr>
+										</ng-template>
 
-                                                <ng-template pTemplate="header" let-columns>
-                                                    <tr>
-                                                        <th>PN</th>
-                                                        <th>PN Description</th>
-                                                        <th>Capability type</th>
-                                                        <th>Aircraft maufacturer</th>
-                                                        <th>Models</th>
-                                                        <th>Dash Number</th>
-                                                    </tr>
-                                                </ng-template>
 
-
-                                                <ng-template pTemplate="body" let-rowData let-asset let-columns="columns">
-                                                    <tr [pSelectableRow]="rowData" pReorderableRowHandle>
-
-                                                        <td style="width:auto" *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
-                                                            {{rowData[col.field]}}
-                                                        </td>
-                                                    </tr>
-                                                </ng-template>
-                                            </p-table>
+										<ng-template pTemplate="body" let-rowData let-columns="columns" let-assetCapes let-rowIndex="rowIndex">
+											<tr [pSelectableRow]="rowData" pReorderableRowHandle>
+												<td style="width:120px" *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
+													{{rowData[col.field]}}
+												</td>
+											</tr>
+										</ng-template>
+										<ng-template pTemplate="summary" id="footer">
+											<div style="text-align: right;">
+												<label id="footer" class="footer">No. of records:</label>
+												<input style="width: 5% !important;" [(ngModel)]="totalRecords1" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp;
+												<label id="footer" class="footer1">Pages Count:</label>
+												<input style="width: 5% !important;" [(ngModel)]="totalPages1" [disabled]="true" pInputText type="text" />
+											</div>
+										</ng-template>
+									</p-table>
                                             <p class="clr-red">Number of rows in the table are all the possible combinations of the PN, Capability Type, Aircraft Manufacturer and Model selected.</p>
                                         </div>
                                     </div>
@@ -323,7 +349,7 @@
                                     </div>
                                     <div class="col-sm-3" *ngIf="assetViewList.certificationRequired">
                                         <p>
-                                            <span class="label"><b>Certification Frequency: </b></span><span class="value">{{assetViewList.certificationFrequencyMonths}}Months{{assetViewList.certificationFrequencyDays}}Days</span>
+                                            <span class="label"><b>Certification Frequency: </b></span><span class="value">{{assetViewList.certificationFrequencyMonths}} Months, {{assetViewList.certificationFrequencyDays}} Days</span>
                                         </p>
                                         <p><span class="label"><b>Default Vendor: </b></span><span class="value">{{assetViewList.certificationDefaultVendorId}} </span></p>
                                         <p>
