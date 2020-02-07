@@ -751,6 +751,9 @@ namespace DAL.Repositories
         {
             try
             {
+                
+                if (receivingCustomer.RevisePartId == null)
+                    receivingCustomer.RevisePartId = _appContext.ItemMaster.Where(p => p.ItemMasterId == receivingCustomer.ItemMasterId).Select(p => p.RevisedPartId).FirstOrDefault();
 
                 receivingCustomer.CreatedDate = receivingCustomer.UpdatedDate = DateTime.Now;
                 receivingCustomer.IsActive = true;
@@ -798,6 +801,8 @@ namespace DAL.Repositories
         {
             try
             {
+                if (receivingCustomer.RevisePartId == null)
+                    receivingCustomer.RevisePartId = _appContext.ItemMaster.Where(p => p.ItemMasterId == receivingCustomer.ItemMasterId).Select(p => p.RevisedPartId).FirstOrDefault();
 
                 receivingCustomer.UpdatedDate = DateTime.Now;
 
