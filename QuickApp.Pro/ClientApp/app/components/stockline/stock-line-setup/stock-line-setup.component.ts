@@ -1,35 +1,21 @@
-﻿import { Component,  OnInit, AfterViewInit, ChangeDetectorRef } from '@angular/core';
+﻿import { Component,  OnInit } from '@angular/core';
 import { ConditionService } from '../../../services/condition.service';
 import { Condition } from '../../../models/condition.model';
 import { fadeInOut } from '../../../services/animations';
-import { MatTableDataSource, MatDialog } from '@angular/material';
-import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
-import { Integration } from '../../../models/integration.model';
 import { IntegrationService } from '../../../services/integration-service';
-import { HttpClient } from '@angular/common/http';
-import { NgbModal,  NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
-import { AtaMainService } from '../../../services/atamain.service';
 import { StocklineService } from '../../../services/stockline.service';
-import { MessageSeverity, AlertService } from '../../../services/alert.service';
-import { AuthService } from '../../../services/auth.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { SiteService } from '../../../services/site.service';
 import { Site } from '../../../models/site.model';
 import { BinService } from '../../../services/bin.service';
-import { LegalEntityService } from '../../../services/legalentity.service';
-import { CustomerService } from '../../../services/customer.service';
 import { VendorService } from '../../../services/vendor.service';
-import { GLAccountClassService } from '../../../services/glaccountclass.service';
 import { ItemMasterService } from '../../../services/itemMaster.service';
-import { TreeNode, } from 'primeng/api';
 import { ManufacturerService } from '../../../services/manufacturer.service';
-import { EmployeeService } from '../../../services/employee.service';
 import { CommonService } from '../../../services/common.service';
 import { Subject } from 'rxjs'
 import { takeUntil } from 'rxjs/operators';
 import { GlAccountService } from '../../../services/glAccount/glAccount.service';
-import { getObjectById, getValueFromArrayOfObjectById, getValueFromObjectByKey, editValueAssignByCondition } from '../../../generic/autocomplete';
+import { getValueFromArrayOfObjectById, getValueFromObjectByKey, editValueAssignByCondition } from '../../../generic/autocomplete';
 import { DatePipe } from '@angular/common';
 
 @Component({
@@ -86,6 +72,7 @@ export class StockLineSetupComponent implements OnInit {
 	disableMagmtStruct: boolean = true;
 	disableCondition: boolean = true;
 	disableSiteName: boolean = true;
+	stockLineId: number;
 
 	// public sourceBin: any = {};
 	// allTagTypes: any;
@@ -176,7 +163,7 @@ export class StockLineSetupComponent implements OnInit {
 
 	// });
 	
-	constructor(private stocklineser: StocklineService, private commonService: CommonService, private conditionService: ConditionService, private binService: BinService, private siteService: SiteService, private vendorService: VendorService, private manufacturerService: ManufacturerService, private integrationService: IntegrationService, private itemMasterService: ItemMasterService, private glAccountService: GlAccountService, private router: Router, private datePipe: DatePipe) {
+	constructor(private stocklineser: StocklineService, private commonService: CommonService, private conditionService: ConditionService, private binService: BinService, private siteService: SiteService, private vendorService: VendorService, private manufacturerService: ManufacturerService, private integrationService: IntegrationService, private itemMasterService: ItemMasterService, private glAccountService: GlAccountService, private router: Router, private _actRoute: ActivatedRoute, private datePipe: DatePipe) {
 		this.stockLineForm.siteId = 0;
 		this.stockLineForm.warehouseId = 0;
 		this.stockLineForm.locationId = 0;
@@ -213,6 +200,13 @@ export class StockLineSetupComponent implements OnInit {
 		this.loadTagTypes();
 		this.loadIntegrationPortal();
 		this.loadGlAccountData();
+
+		this.stockLineId = this._actRoute.snapshot.params['id'];
+		if(this.stockLineId) {
+			this.isEditMode = true;
+			this.getStockLineDetailsById(this.stockLineId);
+		}
+
         // this.loadManagementdata();
         // this.loadData();
         // this.loadEmployeeData();
@@ -306,6 +300,12 @@ export class StockLineSetupComponent implements OnInit {
 	private loadGlAccountData() {
 		this.glAccountService.getAll().subscribe(res => {
 			this.allGlAccountInfo = res[0];
+		});
+	}
+
+	getStockLineDetailsById(stockLineId) {
+		this.stocklineser.getStockLineDetailsById(stockLineId).subscribe(res => {
+			console.log(res);
 		});
 	}
 
