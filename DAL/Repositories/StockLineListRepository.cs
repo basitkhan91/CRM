@@ -1509,14 +1509,23 @@ namespace DAL.Repositories
                 var result = (from s in _appContext.StockLine
                               join ip in _appContext.StocklineIntegrationPortal on s.StockLineId equals ip.StocklineId
                               join i in _appContext.IntegrationPortal on ip.IntegrationPortalId equals i.IntegrationPortalId
-                              where s.StockLineId == id
+                              where ip.StocklineId == id
 
                               select new
                               {
                                   ip.StocklineId,
                                   ip.IsListed,
                                   ip.IntegrationPortalId,
-                                  ip.StocklineIntegrationPortalId
+                                  ip.StocklineIntegrationPortalId,
+                                  ip.IsActive,
+                                  i.CreatedBy,
+                                  i.CreatedDate,
+                                  i.Description,                                                           
+                                  i.MasterCompanyId,
+                                  i.Memo,
+                                  i.PortalUrl,
+                                  i.UpdatedBy,
+                                  i.UpdatedDate,                                                                   
 
                               }).ToList();
                 return result;

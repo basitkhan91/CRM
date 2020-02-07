@@ -4935,7 +4935,7 @@ namespace QuickApp.Pro.Controllers
                         obj.IsActive = true;
                         if (attachmentId != null)
                         {
-                            var data = _context.AttachmentDetails.AsNoTracking().Where(p => p.AttachmentId == attachmentId).FirstOrDefault();
+                            var data = _context.AttachmentDetails.AsNoTracking().Where(p => p.AttachmentId == attachmentId).OrderByDescending(p=>p.AttachmentDetailId).FirstOrDefault();
                             if (data != null)
                             {
 
@@ -5194,6 +5194,33 @@ namespace QuickApp.Pro.Controllers
             var result = _unitOfWork.Vendor.UploadVendorPaymentAddressCustomData(Request.Form.Files[0], vendorId);
             return Ok(result);
         }
+
+        #endregion
+
+        
+      
+
+        #region Vendor Contact ATA Mapping
+        [HttpGet("getVendorContactATAMapped/{contactId}")]
+        [Produces(typeof(List<VendorContactATAMapping>))]
+        public IActionResult ataContactMapped(long contactId)
+        {
+            var result = _unitOfWork.Vendor.GetATAContactMapped(contactId);
+            if (result == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                return Ok(result);
+            }
+
+        }
+
+
+
+      
+
 
         #endregion
 
