@@ -7,3 +7,20 @@ table td {
 .managementstr input {
     padding: 4px !important;
 }
+.status-radio label {
+    font-size: 12px !important;
+    text-align: left;
+    width: 140px;
+    margin-right: 0;
+    font-weight: normal;
+}
+
+input.hidePlaceHolder {
+    color: transparent !important;
+}
+
+input.hidePlaceHolder:focus,
+input.hidePlaceHolder:hover,
+input.hidePlaceHolder:active {
+    color: #000 !important;
+}

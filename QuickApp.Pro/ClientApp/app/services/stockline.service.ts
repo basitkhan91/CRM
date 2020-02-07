@@ -240,5 +240,9 @@ export class StocklineService {
 
     downloadStockLineReport() {
         return this.stocklineEndpoint.downloadStockLineReport();
-    }
+	}
+	
+	getStockLineDetailsById(stockLineId) {
+		return this.stocklineEndpoint.getStockLineDetailsById(stockLineId);
+	}
 }

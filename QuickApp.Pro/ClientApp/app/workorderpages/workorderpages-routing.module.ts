@@ -44,6 +44,12 @@ const workorderPagesRoutes: Routes = [
         component: SubWorkOrderComponent,
         data: { title: 'Sub WorkOrder Create' }
       },
+      {
+        path: 'app-work-order-receivingcustworkid/:rcustid',
+        // path: 'app-work-order-edit?receivingCustWorkId=:receivingCustWorkId&workOrderId=:workOrderId',
+        component: WorkOrderSmartComponent,
+        data: { title: 'Work Order Setup' }
+      },
 
 
       // {
