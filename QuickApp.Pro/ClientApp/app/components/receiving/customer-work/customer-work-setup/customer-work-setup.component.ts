@@ -659,6 +659,25 @@ export class CustomerWorkSetupComponent implements OnInit {
         });
     }
 
+    resetSerialNoTimeLife() {
+        this.receivingForm.isSkipSerialNo = false;
+        this.receivingForm.serialNumber = '';
+        this.receivingForm.isSkipTimeLife = false;
+        this.receivingForm.timeLifeDate = null;
+        this.receivingForm.timeLifeOrigin = '';
+        this.sourceTimeLife = {};
+    }
+
+    resetSerialNo() {
+        this.receivingForm.serialNumber = '';
+    }
+
+    resetTimelife() {
+        this.receivingForm.timeLifeDate = null;
+        this.receivingForm.timeLifeOrigin = '';
+        this.sourceTimeLife = {};
+    }
+
     onSelectObrainFrom() {
 		this.receivingForm.obtainFrom = undefined;
 	}
@@ -680,7 +699,7 @@ export class CustomerWorkSetupComponent implements OnInit {
 	}
     
     onSaveCustomerReceiving() {
-        this.receivingForm = {
+        const receivingForm = {
             ...this.receivingForm,
             customerId: getValueFromObjectByKey('customerId', this.receivingForm.customerId),
             customerContactId: getValueFromObjectByKey('customerContactId', this.receivingForm.customerContactId),
@@ -698,8 +717,8 @@ export class CustomerWorkSetupComponent implements OnInit {
             updatedBy: this.userName,
             timeLife: {...this.sourceTimeLife, timeLifeCyclesId: this.timeLifeCyclesId, updatedDate: new Date()}            
         }
-        console.log(this.receivingForm);
-        const {customerCode, customerPhone, partDescription, manufacturer, revisePartId, ...receivingInfo} = this.receivingForm;
+        console.log(receivingForm);
+        const {customerCode, customerPhone, partDescription, manufacturer, revisePartId, ...receivingInfo} = receivingForm;
         if(!this.isEditMode) {
             this.receivingCustomerWorkService.newReason(receivingInfo).subscribe(res => {
                 $('#workorderpopup').modal('show');

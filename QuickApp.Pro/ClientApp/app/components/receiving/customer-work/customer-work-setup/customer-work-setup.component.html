@@ -72,7 +72,7 @@
                     </div>
                     <div class="form-group">
                         <label>PN <span class="text-danger">*</span></label>
-                        <p-autoComplete field="label" class="pautocomp-cstm" [(ngModel)]="receivingForm.itemMasterId" name="partNumber" [suggestions]="partNumbersInfo" (completeMethod)="filterPartNumbers($event)" [size]="30" [minLength]="1" [dropdown]="true" (onSelect)="onPartNumberSelected($event.value);" #partNum="ngModel" errorMessage="Records not found" [forceSelection]="true" required></p-autoComplete>
+                        <p-autoComplete field="label" class="pautocomp-cstm" [(ngModel)]="receivingForm.itemMasterId" name="partNumber" [suggestions]="partNumbersInfo" (completeMethod)="filterPartNumbers($event)" [size]="30" [minLength]="1" [dropdown]="true" (onSelect)="onPartNumberSelected($event.value); resetSerialNoTimeLife();" #partNum="ngModel" errorMessage="Records not found" [forceSelection]="true" required></p-autoComplete>
                         <div *ngIf="partNum.invalid && (partNum.dirty || partNum.touched)" class="alert alert-danger alert-danger-cstm">
                                 <div *ngIf="partNum.errors.required">
                                     <small> Part Number is required </small>
@@ -99,31 +99,7 @@
                                 <small> Employee Name is required </small>
                             </div>
                         </div>
-                    </div> 
-                    <div class="form-group">
-                        <div class="checkbox-cstm m-t-10">
-                            <label>
-                                <input type="checkbox" class="serialized-checkbox" name="isSerialized" [(ngModel)]="receivingForm.isSerialized" disabled>
-                                <span class="cr"><i class="cr-icon pi pi-check"></i></span>
-                                Is Serialized
-                            </label>
-                        </div>
-                    </div>
-                    <div *ngIf="receivingForm.isSerialized">
-                        <div class="form-group">
-                            <div class="checkbox-cstm m-t-10">
-                                <label>
-                                    <input type="checkbox" name="isSkipSerialNo" [(ngModel)]="receivingForm.isSkipSerialNo">
-                                    <span class="cr"><i class="cr-icon pi pi-check"></i></span>
-                                    Skip Serial Number
-                                </label>
-                            </div>
-                        </div>
-                        <div class="form-group" *ngIf="!receivingForm.isSkipSerialNo">
-                            <label>Serial Number</label>
-                            <input class="form-control" type="text" name="serialNumber" [(ngModel)]="receivingForm.serialNumber">
-                        </div>                        
-                    </div>
+                    </div>                     
                 </div>
                 <div class="col-md-3">                    
                     <div class="form-group">
@@ -430,12 +406,47 @@
                     </div>
                 </div>
             </div>
-            <div [ngClass]="receivingForm.isTimeLife ? 'card ' : ''">
-                <div [ngClass]="receivingForm.isTimeLife ? 'card-body card-timelife' : ''">
+
+            <div [ngClass]="receivingForm.isTimeLife ? 'card card-timelife' : ''">
+                <div [ngClass]="receivingForm.isTimeLife ? 'card-body' : ''">
                     <div class="form-row">
                         <div class="col-md-3">
                             <div class="form-group">
-                                <div class="checkbox-cstm m-t-10">
+                                <div class="checkbox-cstm m-t-15">
+                                    <label>
+                                        <input type="checkbox" class="serialized-checkbox" name="isSerialized" [(ngModel)]="receivingForm.isSerialized" disabled>
+                                        <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                        Is Serialized
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3" *ngIf="receivingForm.isSerialized">
+                            <div class="form-group">
+                                <div class="checkbox-cstm m-t-15">
+                                    <label>
+                                        <input type="checkbox" name="isSkipSerialNo" [(ngModel)]="receivingForm.isSkipSerialNo" (change)="resetSerialNo()">
+                                        <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                        Serial Number info not provided
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3" *ngIf="receivingForm.isSerialized">
+                            <div class="form-group" *ngIf="!receivingForm.isSkipSerialNo">
+                                <label>Serial Number</label>
+                                <input class="form-control" type="text" name="serialNumber" [(ngModel)]="receivingForm.serialNumber">
+                            </div>  
+                        </div>                
+                    </div>
+                </div>
+            </div>
+            <div [ngClass]="receivingForm.isTimeLife ? 'card card-timelife' : ''">
+                <div [ngClass]="receivingForm.isTimeLife ? 'card-body' : ''">
+                    <div class="form-row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <div class="checkbox-cstm m-t-15">
                                     <label>
                                         <input type="checkbox" name="isTimeLife" [(ngModel)]="receivingForm.isTimeLife" disabled>
                                         <span class="cr"><i class="cr-icon pi pi-check"></i></span>
@@ -444,32 +455,36 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="form-row" *ngIf="receivingForm.isTimeLife">                
-                        <div class="col-md-3">
+                        <div class="col-md-3" *ngIf="receivingForm.isTimeLife">
                             <div class="form-group">
-                                <div class="checkbox-cstm m-t-10">
+                                <div class="checkbox-cstm m-t-15">
                                     <label>
-                                        <input type="checkbox" name="isSkipTimeLife" [(ngModel)]="receivingForm.isSkipTimeLife">
+                                        <input type="checkbox" name="isSkipTimeLife" [(ngModel)]="receivingForm.isSkipTimeLife" (change)="resetTimelife()">
                                         <span class="cr"><i class="cr-icon pi pi-check"></i></span>
-                                        Skip Time Life
+                                        Time Life info not provided
                                     </label>
                                 </div>
                             </div>
+                        </div>
+                        <div class="col-md-3" *ngIf="receivingForm.isTimeLife">
                             <div class="form-group" *ngIf="!receivingForm.isSkipTimeLife">
                                 <label>Date</label>
                                 <p-calendar class="workflow-clder" [showIcon]="true" name="timeLifeDate" [(ngModel)]="receivingForm.timeLifeDate"></p-calendar>
                             </div>
+                        </div>
+                        <div class="col-md-3" *ngIf="receivingForm.isTimeLife">
                             <div class="form-group" *ngIf="!receivingForm.isSkipTimeLife">
                                 <label>Origin</label>
                                 <input class="form-control" type="text" name="timeLifeOrigin" [(ngModel)]="receivingForm.timeLifeOrigin">
                             </div>
                         </div>
+                    </div>
+                    <div class="form-row" *ngIf="receivingForm.isTimeLife">  
                         <div class="table-responsive form-group" style="padding: 0 5px;" *ngIf="!receivingForm.isSkipTimeLife">
                             <table class="table table-bordered">
                                 <thead>
                                     <tr>
-                                        <th colspan="15" class="text-center"><strong>Time Life Adjustments</strong></th>
+                                        <th colspan="15" class="text-center"><strong>Time Life Info</strong></th>
                                     </tr>
                                 </thead>
                                 <tbody>

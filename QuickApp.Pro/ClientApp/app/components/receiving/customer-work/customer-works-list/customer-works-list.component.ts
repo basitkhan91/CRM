@@ -158,6 +158,8 @@ export class CustomerWorksListComponent implements OnInit {
     }
 
     openView(rowData) {
+        this.viewCustWorkInfo = {};
+        this.timeLifeInfo = {};
         console.log(rowData);   
         const {receivingCustomerWorkId} = rowData;
         this.receivingCustomerWorkService.getCustomerWorkdataById(receivingCustomerWorkId).subscribe(res => {
@@ -170,7 +172,7 @@ export class CustomerWorksListComponent implements OnInit {
                 timeLifeDate: res.timeLifeDate ? new Date(res.timeLifeDate) : '',
             }
             this.getManagementStructureCodes(res.managementStructureId);
-            if(res.timeLifeCyclesId != null  || res.timeLifeCyclesId != 0) {
+            if(res.timeLifeCyclesId != null  && res.timeLifeCyclesId != 0 && res.timeLifeCyclesId != undefined) {
                 this.getTimeLifeOnEdit(res.timeLifeCyclesId);
             } 
         });
