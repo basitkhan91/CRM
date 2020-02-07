@@ -166,9 +166,10 @@ namespace QuickApp.Pro.Controllers
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
             quoteView.SalesOrderQuote.StatusId = 1;  // Defualt to "Open" 
+            quoteView.SalesOrderQuote.StatusChangeDate = System.DateTime.Now;
 
             SalesOrderQuote quote = Mapper.Map<SalesOrderQuoteView, SalesOrderQuote>(quoteView.SalesOrderQuote);
-
+            
             IEnumerable<SalesOrderQuoteApproverList> approverList = Mapper.Map<List<SalesOrderQuoteApproverListView>, List<SalesOrderQuoteApproverList>>(quoteView.ApproverList);
 
             IEnumerable<SalesOrderQuotePart> parts = Mapper.Map<List<SalesOrderQuotePartView>, List<SalesOrderQuotePart>>(quoteView.Parts);
@@ -203,6 +204,12 @@ namespace QuickApp.Pro.Controllers
         {
 
             if (!ModelState.IsValid) return BadRequest(ModelState);
+
+            var currentQuote  = this.UnitOfWork.SalesOrderQuote.Get(quoteView.SalesOrderQuote.SalesOrderQuoteId.Value, false);
+
+            quoteView.SalesOrderQuote.StatusChangeDate = ( currentQuote.StatusId != quoteView.SalesOrderQuote.StatusId )
+                                                            ? System.DateTime.Now 
+                                                            : currentQuote.StatusChangeDate;
 
             SalesOrderQuote quote = Mapper.Map<SalesOrderQuoteView, SalesOrderQuote>(quoteView.SalesOrderQuote);
 

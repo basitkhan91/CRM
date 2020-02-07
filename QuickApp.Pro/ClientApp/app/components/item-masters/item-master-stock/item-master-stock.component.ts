@@ -52,6 +52,7 @@ import { SiteService } from '../../../services/site.service';
 import { Site } from '../../../models/site.model';
 import { StocklineService } from '../../../services/stockline.service';
 import { DBkeys } from '../../../services/db-Keys';
+import { getObjectByValue, getPageCount, getObjectById, getValueFromObjectByKey, editValueAssignByCondition, getValueFromArrayOfObjectById } from '../../../generic/autocomplete';
 
 
 @Component({
@@ -394,6 +395,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         IsExportMilitary: false,
         IsExportNONMilitary: false,
         IsExportDual: false,
+        unitOfMeasureId: ''
     }
     tempOEMpartNumberId: number = null;
     tempExportCountryId: number = null;
@@ -417,6 +419,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     shelfData: any[] = [];
     binData: any[] = [];
     isEnableItemMaster: boolean = true;
+    orginalAtaSubChapterValues: any[] = [];
 
     // errorLogForPS: string = '';
 
@@ -449,91 +452,8 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             // get the itemmaster data by id
             this.isEdit = true;
             this.isItemMasterCreated = true;
-            this.itemser.getItemMasterDetailById(this.itemMasterId).subscribe(res => {
-                const responseDataOfEdit = res;
-                this.isDisabledSteps = true;
-                this.sourceItemMaster = responseDataOfEdit[0];
-                if (this.sourceItemMaster.siteId) {
-                    this.siteValueChange()
-                }
-                if (this.sourceItemMaster.warehouseId) {
-                    this.wareHouseValueChange()
-                }
-                if (this.sourceItemMaster.locationId) {
-                    this.locationValueChange()
-                }
-                if (this.sourceItemMaster.shelfId) {
-                    this.shelfValueChange()
-                }
-                this.sourceItemMaster.expirationDate = new Date(this.sourceItemMaster.expirationDate);
-                this.Integration();
-                this.sourceItemMaster.oemPNId = this.sourceItemMaster.oemPNData[0]
-                this.ItemMasterId = this.itemMasterId;
-                // assign the header values
-                this.pnvalue = this.sourceItemMaster.partNumber;
-                this.pnDescription = this.sourceItemMaster.partDescription;
-                this.ManufacturerValue = this.sourceItemMaster.manufacturerName;
-                this.alternatePn = this.sourceItemMaster.partAlternatePartId;
-
-                this.itemser.getPurcSaleDetailById(this.itemMasterId).subscribe(res => {
-
-
-                    this.fieldArray = res.map(x => {
-                        return {
-                            Condition: x.condition,
-                            PP_UOMId: x.pP_UOMId,
-                            PP_CurrencyId: x.pP_CurrencyId,
-                            PP_FXRatePerc: x.pP_FXRatePerc,
-                            PP_VendorListPrice: x.pP_VendorListPrice,
-                            PP_LastListPriceDate: x.pP_LastListPriceDate,
-                            PP_PurchaseDiscPerc: x.pP_PurchaseDiscPerc,
-                            PP_LastPurchaseDiscDate: x.pP_LastPurchaseDiscDate,
-                            PP_PurchaseDiscAmount: x.pP_PurchaseDiscAmount,
-                            PP_UnitPurchasePrice: x.pP_UnitPurchasePrice,
-                            SP_FSP_UOMId: x.sP_FSP_UOMId,
-                            SP_FSP_CurrencyId: x.sP_FSP_CurrencyId,
-                            SP_FSP_FXRatePerc: x.sP_FSP_FXRatePerc,
-                            SP_FSP_FlatPriceAmount: x.sP_FSP_FlatPriceAmount,
-                            SP_FSP_LastFlatPriceDate: x.sP_FSP_LastFlatPriceDate,
-                            SP_CalSPByPP_MarkUpPercOnListPrice: x.sP_CalSPByPP_MarkUpPercOnListPrice,
-                            SP_CalSPByPP_MarkUpAmount: x.sP_CalSPByPP_MarkUpAmount,
-                            SP_CalSPByPP_LastMarkUpDate: x.sP_CalSPByPP_LastMarkUpDate,
-                            SP_CalSPByPP_BaseSalePrice: x.sP_CalSPByPP_BaseSalePrice,
-                            SP_CalSPByPP_SaleDiscPerc: x.sP_CalSPByPP_SaleDiscPerc,
-                            SP_CalSPByPP_SaleDiscAmount: x.sP_CalSPByPP_SaleDiscAmount,
-                            SP_CalSPByPP_LastSalesDiscDate: x.sP_CalSPByPP_LastSalesDiscDate,
-                            SP_CalSPByPP_UnitSalePrice: x.sP_CalSPByPP_UnitSalePrice
-                        }
-                    })
-
-                })
-
-
-
-                // binding the export information data on edit
-                this.exportInfo = {
-                    ExportECCN: this.sourceItemMaster.exportECCN,
-                    ITARNumber: this.sourceItemMaster.itarNumber,
-                    ExportUomId: this.sourceItemMaster.exportUomId,
-                    ExportCountryId: this.sourceItemMaster.countryData[0],
-                    ExportValue: this.sourceItemMaster.exportValue,
-                    ExportCurrencyId: this.sourceItemMaster.exportCurrencyId,
-                    ExportWeight: this.sourceItemMaster.exportWeight,
-                    ExportWeightUnit: parseInt(this.sourceItemMaster.exportWeightUnit),
-                    ExportSizeLength: this.sourceItemMaster.exportSizeLength,
-                    ExportSizeWidth: this.sourceItemMaster.exportSizeWidth,
-                    ExportSizeHeight: this.sourceItemMaster.exportSizeHeight,
-                    IsExportUnspecified: this.sourceItemMaster.isExportUnspecified,
-                    IsExportMilitary: this.sourceItemMaster.isExportMilitary,
-                    IsExportNONMilitary: this.sourceItemMaster.isExportNONMilitary,
-                    IsExportDual: this.sourceItemMaster.isExportDual,
-                }
-                // validate classification required in Export Information
-                this.validateClassificationRequired()
-                this.getAircraftMappedDataByItemMasterId();
-                this.getATAMappedDataByItemMasterId();
-                this.toGetAllDocumentsList(this.ItemMasterId);
-            })
+            this.getItemMasterDetailsById()
+           
 
         }
         this.Integration();
@@ -731,6 +651,95 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
 
     }
+
+    getItemMasterDetailsById(){
+        this.itemser.getItemMasterDetailById(this.itemMasterId).subscribe(res => {
+            const responseDataOfEdit = res;
+            this.isDisabledSteps = true;
+            this.sourceItemMaster = responseDataOfEdit[0];
+            if (this.sourceItemMaster.siteId) {
+                this.siteValueChange()
+            }
+            if (this.sourceItemMaster.warehouseId) {
+                this.wareHouseValueChange()
+            }
+            if (this.sourceItemMaster.locationId) {
+                this.locationValueChange()
+            }
+            if (this.sourceItemMaster.shelfId) {
+                this.shelfValueChange()
+            }
+            this.sourceItemMaster.expirationDate = new Date(this.sourceItemMaster.expirationDate);
+            this.Integration();
+            this.sourceItemMaster.oemPNId = this.sourceItemMaster.oemPNData[0]
+            this.ItemMasterId = this.itemMasterId;
+            // assign the header values
+            this.pnvalue = this.sourceItemMaster.partNumber;
+            this.pnDescription = this.sourceItemMaster.partDescription;
+            this.ManufacturerValue = this.sourceItemMaster.manufacturerName;
+            this.alternatePn = this.sourceItemMaster.partAlternatePartId;
+
+            this.itemser.getPurcSaleDetailById(this.itemMasterId).subscribe(res => {
+
+
+                this.fieldArray = res.map(x => {
+                    return {
+                        Condition: x.condition,
+                        PP_UOMId: x.pP_UOMId,
+                        PP_CurrencyId: x.pP_CurrencyId,
+                        PP_FXRatePerc: x.pP_FXRatePerc,
+                        PP_VendorListPrice: x.pP_VendorListPrice,
+                        PP_LastListPriceDate: x.pP_LastListPriceDate,
+                        PP_PurchaseDiscPerc: x.pP_PurchaseDiscPerc,
+                        PP_LastPurchaseDiscDate: x.pP_LastPurchaseDiscDate,
+                        PP_PurchaseDiscAmount: x.pP_PurchaseDiscAmount,
+                        PP_UnitPurchasePrice: x.pP_UnitPurchasePrice,
+                        SP_FSP_UOMId: x.sP_FSP_UOMId,
+                        SP_FSP_CurrencyId: x.sP_FSP_CurrencyId,
+                        SP_FSP_FXRatePerc: x.sP_FSP_FXRatePerc,
+                        SP_FSP_FlatPriceAmount: x.sP_FSP_FlatPriceAmount,
+                        SP_FSP_LastFlatPriceDate: x.sP_FSP_LastFlatPriceDate,
+                        SP_CalSPByPP_MarkUpPercOnListPrice: x.sP_CalSPByPP_MarkUpPercOnListPrice,
+                        SP_CalSPByPP_MarkUpAmount: x.sP_CalSPByPP_MarkUpAmount,
+                        SP_CalSPByPP_LastMarkUpDate: x.sP_CalSPByPP_LastMarkUpDate,
+                        SP_CalSPByPP_BaseSalePrice: x.sP_CalSPByPP_BaseSalePrice,
+                        SP_CalSPByPP_SaleDiscPerc: x.sP_CalSPByPP_SaleDiscPerc,
+                        SP_CalSPByPP_SaleDiscAmount: x.sP_CalSPByPP_SaleDiscAmount,
+                        SP_CalSPByPP_LastSalesDiscDate: x.sP_CalSPByPP_LastSalesDiscDate,
+                        SP_CalSPByPP_UnitSalePrice: x.sP_CalSPByPP_UnitSalePrice
+                    }
+                })
+
+            })
+
+
+
+            // binding the export information data on edit
+            this.exportInfo = {
+                unitOfMeasureId: this.sourceItemMaster.unitOfMeasureId,
+                ExportECCN: this.sourceItemMaster.exportECCN,
+                ITARNumber: this.sourceItemMaster.itarNumber,
+                ExportUomId: this.sourceItemMaster.exportUomId,
+                ExportCountryId: this.sourceItemMaster.countryData[0],
+                ExportValue: this.sourceItemMaster.exportValue,
+                ExportCurrencyId: this.sourceItemMaster.exportCurrencyId,
+                ExportWeight: this.sourceItemMaster.exportWeight,
+                ExportWeightUnit: parseInt(this.sourceItemMaster.exportWeightUnit),
+                ExportSizeLength: this.sourceItemMaster.exportSizeLength,
+                ExportSizeWidth: this.sourceItemMaster.exportSizeWidth,
+                ExportSizeHeight: this.sourceItemMaster.exportSizeHeight,
+                IsExportUnspecified: this.sourceItemMaster.isExportUnspecified,
+                IsExportMilitary: this.sourceItemMaster.isExportMilitary,
+                IsExportNONMilitary: this.sourceItemMaster.isExportNONMilitary,
+                IsExportDual: this.sourceItemMaster.isExportDual,
+            }
+            // validate classification required in Export Information
+            this.validateClassificationRequired()
+            this.getAircraftMappedDataByItemMasterId();
+            this.toGetAllDocumentsList(this.ItemMasterId);
+        })
+    }
+    
 
     private loadSiteData()  //retriving Information
     {
@@ -4427,7 +4436,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.atasubchapter1service.getAtaSubChapter1List().subscribe(res => {
             this.atasubchapter = res[0].map(x => {
                 return {
-                    label: x.description,
+                    label:  x.ataSubChapterCode + ' - ' + x.description,
                     value: x
                 }
             })
@@ -4476,8 +4485,8 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             this.ataMappedList = res.map(x => {
                 return {
                     ...x,
-                    ataChapterName: x.ataChapterName,
-                    ataSubChapterDescription: x.ataSubChapterDescription
+                    ataChapterName: x.ataChapterCode + ' - ' + x.ataChapterName,
+                    ataSubChapterDescription: getValueFromArrayOfObjectById('ataSubChapterCode', 'ataSubChapterId', x.ataSubChapterId, this.orginalAtaSubChapterValues) + ' - ' +x.ataSubChapterDescription
                 }
             })
 
@@ -4552,12 +4561,18 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             .getAtaSubChapter1List()
             .subscribe(atasubchapter => {
                 const responseData = atasubchapter[0];
+                this.orginalAtaSubChapterValues = responseData;
                 this.atasubchapterValues = responseData.map(x => {
                     return {
-                        label: x.description,
+                        label:  x.ataSubChapterCode + ' - ' + x.description,
                         value: x.ataSubChapterId
                     };
                 });
+                // for(let i=0; i<responseData.length; i++){
+                //     responseData[i]['label'] = responseData[i]['description'];
+                //     responseData[i]['value'] = responseData[i]['ataSubChapterId'];
+                // }
+                this.getATAMappedDataByItemMasterId();
             });
     }
 
@@ -4573,7 +4588,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
                     this.atasubchapterValues = responseData.map(x => {
                         return {
-                            label: x.description,
+                            label:  x.ataSubChapterCode + ' - ' + x.description,
                             value: x.ataSubChapterId
                         };
                     });
@@ -4856,6 +4871,8 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                     this.sourceItemMaster.oemPNId = this.oemPnData;
 
                     this.tempOEMpartNumberId = null;
+                    
+               
 
                     this.ManufacturerValue = data.manufacturer.name;
                     // check whether response it there or not 
@@ -4957,11 +4974,12 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                 console.log(this.sourceItemMaster, "this.sourceItemMaster+++")
                 // Destructing the Object in Services Place Apply Changes there also 
                 this.itemser.updateItemMaster(this.sourceItemMaster).subscribe(data => {
-
+                    
                     this.sourceItemMaster.oemPNId = this.oemPnData;
                     this.tempOEMpartNumberId = null;
                     this.changeOfTab('AircraftInfo');
                     this.collectionofItemMaster = data;
+                    this.getItemMasterDetailsById();
                     this.saveCompleted(this.sourceItemMaster);
                     if (data != null) {
                         if (data.partId && data.itemMasterId) {
@@ -5645,8 +5663,8 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             const responseData = atasubchapter[0];
             this.atasubchapter = responseData.map(x => {
                 return {
-                    label: x.description,
-                    value: x
+                    label: x.ataSubChapterCode + ' - ' + x.description,
+					value: x
                 }
             })
         })

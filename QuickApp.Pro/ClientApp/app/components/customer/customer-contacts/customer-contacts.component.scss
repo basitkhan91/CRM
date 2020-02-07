@@ -53,6 +53,16 @@ a.fa.fa-plus-circle {
 .cus-contact-table tr td {
     padding: 4px;
 }
+.action-width{
+    width: 20%;
+    text-align: center;
+}
+.uiTable_td_ovrflw_control {
+    white-space: normal !important;
+}
+.update_withFlag{
+    width: 45px !important;
+}
 @media (min-width: 768px) {
     .col-md-3 {
         max-width: 22%;

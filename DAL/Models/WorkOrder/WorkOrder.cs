@@ -32,21 +32,14 @@ namespace DAL.Models
 
        // public long CustomerContactId { get; set; }
 
-        
-
-
         [Required(ErrorMessage = "Status is required")]
         [ForeignKey("WorkOrderStatusId")]
         public long WorkOrderStatusId { get; set; }
-
-        [Required(ErrorMessage = "Employee is required")]
-        [ForeignKey("EmployeeId")]
-        public long EmployeeId { get; set; }
-
-        [Required(ErrorMessage = "Sales person is required")]
-        public long SalesPersonId { get; set; }
-       
+        public long? EmployeeId { get; set; }
+        public long? SalesPersonId { get; set; }
         public long ManagementStructureId { get; set; }
+        public long? CSRId { get; set; }
+        public long ReceivingCustomerWorkId { get; set; }
         public int MasterCompanyId { get; set; }
         public string CreatedBy { get; set; }
         public Nullable<DateTime> CreatedDate { get; set; }
@@ -76,7 +69,9 @@ namespace DAL.Models
         [NotMapped]
         public string CustomerReference { get; set; }
         [NotMapped]
-        public long? CSR { get; set; }
+        public string CSRName { get; set; }
+       
+
 
     }
 
@@ -88,7 +83,8 @@ namespace DAL.Models
         public short? CreditTermsId { get; set; }
         public string CustomerContact { get; set; }
         public string CustomerRef { get; set; }
-        public long? CSRName { get; set; }
+        public string CSRName { get; set; }
+        public long? CSRId { get; set; }
         public string CustomerEmail { get;set;}
         public string CustomerPhone {get; set; }
     }

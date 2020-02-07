@@ -107,7 +107,7 @@ export class TaxRateComponent implements OnInit {
     totalPages: number;
     currentModeOfOperation: ModeOfOperation;
     headers = [
-        { field: 'taxType', header: 'Tax Type' },
+        { field: 'description', header: 'Tax Type' },
         { field: 'taxRate', header: 'Tax Rate' },
         { field: 'memo', header: 'Memo' },
     ]
@@ -163,7 +163,7 @@ export class TaxRateComponent implements OnInit {
 
 
 
-    ngOnInit(): void {        
+    ngOnInit(): void {
         this.addNew.isActive = true;
         //this.addNew.taxRate = 0;
         this.getAllPercentage();
@@ -181,7 +181,7 @@ export class TaxRateComponent implements OnInit {
         this.getList();
         // this.selectedColumns = this.cols;
     }
-    
+
     get userName(): string {
         return this.authService.currentUser ? this.authService.currentUser.userName : "";
     }
@@ -307,7 +307,7 @@ export class TaxRateComponent implements OnInit {
     }
 
     save() {
-        
+
         if (!this.isEdit) {
             const data = {
                 ...this.addNew, createdBy: this.userName, updatedBy: this.userName,
@@ -360,7 +360,7 @@ export class TaxRateComponent implements OnInit {
 
 
     edit(rowData) {
-        console.log('rowData',rowData);
+        console.log('rowData', rowData);
         this.isEdit = true;
         this.disableSave = false;
         //console.log(this.getTaxTypeId(rowData.taxTypeId));
@@ -406,11 +406,11 @@ export class TaxRateComponent implements OnInit {
     }
     viewSelectedRow(rowData) {
         //console.log(rowData);
-        let data = 
-            {
-                ...rowData,
+        let data =
+        {
+            ...rowData,
             //taxTypeName: editValueAssignByCondition('description', rowData.taxTypeId),
-            };
+        };
         this.viewRowData = data;
     }
     resetViewData() {

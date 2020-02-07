@@ -14,14 +14,14 @@
                     <h4 class="page-heading clr-green"> General Info</h4>
                 </div>
                 <div class="card-body">
-                    <div class="col-md-4">
+                    <!-- <div class="col-md-4">
                         <label class="fs12">Vendor Name : </label>
                         <span class="span-header-red"> {{ sourceVendor?.vendorName }}</span>
                     </div>
                     <div class="col-md-4">
                         <label class="fs12">Vendor Code : </label>
                         <span class="span-header-red"> {{ sourceVendor?.vendorCode }}</span>
-                    </div>
+                    </div> -->
                     <div class="clear"></div>
                     <hr />
                     <div class="clear"></div>
@@ -45,10 +45,13 @@
                                     <p-autoComplete field="vendorName" class="pautocomp-cstm" 
                                     [forceSelection]="forceSelectionOfVendorName"
                                     (onSelect)="onVendorselected($event); "
+                                    (onKeyUp)="checkVendorExists('vendorName', $event.target.value)"
                                     [(ngModel)]="sourceVendor.vendorName" name="vendorName"
                                     [suggestions]="vendorNames" (completeMethod)="filterVendorNames($event)" [size]="30"
                                     [minLength]="1" [dropdown]="true" required>
                                     </p-autoComplete>
+                                    <div *ngIf="disableSaveVenderName" class="clr-red">Already Exists</div>
+                                    <div class="clear"></div>
 
                                     <!-- <p-autoComplete class="pautocomp-cstm" (onSelect)="onVendorselected($event)" (onKeyUp)="eventHandler($event)"
                                                     [(ngModel)]="sourceVendor.vendorName" name="vendorName"
@@ -58,9 +61,9 @@
                                             <div class="ui-helper-clearfix">{{ vendorName }}</div>
                                         </ng-template>
                                     </p-autoComplete> -->
-                                    <div *ngIf="disableSaveVenderName" class="clr-red">
+                                    <!-- <div *ngIf="disableSaveVenderName" class="clr-red">
                                         Already Exists
-                                    </div>
+                                    </div> -->
                                 </div>
 
                                 <div class="form-group">
@@ -93,7 +96,7 @@
                                     <div class="checkbox-cstm">
                                         <label>
                                             <input type="checkbox" id="cparent" name="parent"
-                                                   [(ngModel)]="sourceVendor.parent">
+                                                   [(ngModel)]="sourceVendor.parent" [disabled]="!sourceVendor.vendorName">
                                             <span class="cr"><i class="cr-icon pi pi-check"></i></span>
                                             Parent
                                         </label>
@@ -105,12 +108,15 @@
                                     <p-autoComplete field="vendorName" class="pautocomp-cstm" 
                                     [forceSelection]="true"
                                     [(ngModel)]="sourceVendor.vendorParentId" name="vendorParentName"
-                                    [suggestions]="vendorParentNames" (completeMethod)="filterVendorParentNames($event)" [size]="30"
+                                    [suggestions]="vendorParentNames" (completeMethod)="filterVendorParentNames($event)"
+                                    (onSelect)="selectedParentName($event)"
+                                    (onKeyUp)="checkWithName($event.target.value)"
+                                    (onChange)="checkWithName($event.target.value)"
+                                    [size]="30"
                                     [minLength]="1" [dropdown]="true" required>
-                                    </p-autoComplete>
+                                    </p-autoComplete> 
 
-
-
+                                    <div *ngIf="disableSaveParentName" style="color:red;font-size: 13px;">Parent name can't be same as customer name</div>
 
 
                                     <!-- <p-autoComplete class="pautocomp-cstm" (onSelect)="onParentNameselected($event)" (onKeyUp)=parentEventHandler($event)
@@ -122,7 +128,7 @@
                                         </ng-template>
                                     </p-autoComplete> -->
 
-                                    <div *ngIf="disableSaveParentName" class="clr-red">Please Enter Valid Parent</div>
+                                    <!-- <div *ngIf="disableSaveParentName" class="clr-red">Please Enter Valid Parent</div> -->
                                 </div>
 
                                 <div class="form-group">
@@ -284,7 +290,9 @@
                                                 </span>
 
                                             </label>
-                                            <p-multiSelect [options]="allvendorclassificationInfo" [(ngModel)]="sourceVendor.vendorClassificationIds"  name="vendorClassificationIds" required>
+                                            <p-multiSelect [options]="allvendorclassificationInfo"
+                                            [resetFilterOnHide]="true"
+                                            [(ngModel)]="sourceVendor.vendorClassificationIds"  name="vendorClassificationIds" required>
                                             </p-multiSelect>
                                         </div>
 
@@ -341,7 +349,7 @@
                                             <input class="form-control" type="text"
                                             [pattern]="urlPattern"
                                             [ngModelOptions]="{standalone: true}"
-                                                   [(ngModel)]="sourceVendor.vendorURL" #url="ngModel">
+                                                   [(ngModel)]="sourceVendor.vendorURL" #url="ngModel" (input)="convertUrlToLowerCase($event)">
                                                    <div *ngIf="url.errors" [ngClass]="'error'">
                                                     <div *ngIf="url.errors.pattern">
                                                         <span style="color:red">URL not valid</span>

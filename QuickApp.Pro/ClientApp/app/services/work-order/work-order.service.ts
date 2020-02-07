@@ -306,7 +306,11 @@ export class WorkOrderService {
         return this.workOrderEndpointService.getBillingEditData(workOrderId, workOrderPartNoId);
     }
 
-
-
-
+    getPartNosByCustomer(customerId) {
+        return this.workOrderEndpointService.getPartNosByCustomer(customerId);
+    }
+    
+    getReceivingCustomerreference(customerId) {
+        return this.workOrderEndpointService.getReceivingCustomerreference(customerId);
+    }
 }

@@ -33,7 +33,7 @@ import { CustomerService } from '../../../services/customer.service';
 import { CommonService } from '../../../services/common.service';
 import { IntegrationService } from '../../../services/integration-service';
 import { ConfigurationService } from '../../../services/configuration.service';
-import { editValueAssignByCondition, getObjectById, getValueFromObjectByKey, selectedValueValidate } from '../../../generic/autocomplete';
+import { editValueAssignByCondition, getObjectById, getValueFromObjectByKey, selectedValueValidate, toLowerCaseOnInput, validateRecordExistsOrNot } from '../../../generic/autocomplete';
 import { VendorStepsPrimeNgComponent } from '../vendor-steps-prime-ng/vendor-steps-prime-ng.component';
 import { emailPattern, urlPattern } from '../../../validations/validation-pattern';
 declare const google: any;
@@ -151,8 +151,10 @@ export class VendorGeneralInformationComponent implements OnInit {
     urlPattern = urlPattern()
     parentVendorOriginal: any[];
     forceSelectionOfVendorName: boolean = false;
+    selectedEditData: any;
+    editModeData: any;
 
-
+    newvendorId;
 
     constructor(public vendorclassificationService: VendorClassificationService,
         private http: HttpClient,
@@ -205,7 +207,7 @@ export class VendorGeneralInformationComponent implements OnInit {
                 this.sourceVendor = res;
 
 
-
+this.newvendorId=res.vendorId;
                 this.parentVendorList(res.vendorId);
 
                 this.forceSelectionOfVendorName = true;
@@ -321,6 +323,9 @@ export class VendorGeneralInformationComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.vendorService.currentEditModeStatus.subscribe(message => {
+            this.isvendorEditMode = message; 
+        });
         // this.countrylist();
         // if(this.vendorService.listCollection == undefined){
         //     this.countrylist();
@@ -419,6 +424,7 @@ export class VendorGeneralInformationComponent implements OnInit {
         // }
 
     }
+    isvendorEditMode
 
     ngOnDestroy() {
 
@@ -476,9 +482,11 @@ export class VendorGeneralInformationComponent implements OnInit {
         this.loadingIndicator = true;
         await this.vendorService.getWorkFlows().subscribe(res =>
             this.allActions = res[0]
+           
             // results => this.onDataLoadSuccessful(results[0]),
             // error => this.onDataLoadFailed(error)
         );
+        console.log("heler", this.allActions);
     }
     private onDataLoadSuccessful(allWorkFlows: any[]) {
         this.alertService.stopLoadingMessage();
@@ -614,12 +622,15 @@ export class VendorGeneralInformationComponent implements OnInit {
             this.sourceAction.classificationName = this.vendorClassName;
             this.sourceAction.masterCompanyId = 1;
             this.vendorclassificationService.newVendorClassification(this.sourceAction).subscribe(data => {
+
                 if (data) {
                     this.sourceVendor.vendorClassificationId = data.vendorClassificationId
                 }
                 this.alertService.showMessage("Success", 'Added New Vendor Classification Successfully.', MessageSeverity.success);
 
                 this.loadDataVendorData();
+                this.getAllVendorClassification();
+
             })
         }
         else {
@@ -632,6 +643,7 @@ export class VendorGeneralInformationComponent implements OnInit {
                 error => this.saveFailedHelper(error));
         }
         this.modal.close();
+
     }
 
     async getAllVendorClassification() {
@@ -674,7 +686,6 @@ export class VendorGeneralInformationComponent implements OnInit {
     }
 
 
-    //Load Vendor Data
     private loadDataVendorData() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
@@ -740,7 +751,7 @@ export class VendorGeneralInformationComponent implements OnInit {
 
     parentVendorList(id) {
 
-
+console.log("check id",id)
         this.parentVendorOriginal = [... this.allActions.filter(x => {
             if (x.vendorId != id) {
                 return x;
@@ -753,10 +764,13 @@ export class VendorGeneralInformationComponent implements OnInit {
 
     filterVendorParentNames(event) {
         this.vendorParentNames = this.parentVendorOriginal;
-
+        console.log("vendor info",this.parentVendorOriginal);
         this.vendorParentNames = [...this.parentVendorOriginal.filter(x => {
             return x.vendorName.toLowerCase().includes(event.query.toLowerCase());
-        })]
+       })]
+     }
+
+    
         // this.vendorNames = [];
         // for (let i = 0; i < this.allActions.length; i++) {
         //     let vendorParentName = this.allActions[i].vendorName;
@@ -764,7 +778,37 @@ export class VendorGeneralInformationComponent implements OnInit {
         //         this.vendorNames.push(vendorParentName);
         //     }
         // }
-    }
+        selectedParentName(event) {
+
+            // if (this.changeName == false) {
+            //     if (event.name === this.generalInformation1.name) {
+            //         this.disableSaveParentName = true;
+            //     }
+            //     else {
+            //         this.disableSaveParentName = false;
+            //     }
+            // }
+            // else {
+                if (event.name === this.sourceVendor.vendorName) {
+                    this.disableSaveParentName = true;
+                }
+                else {
+                    this.disableSaveParentName = false;
+                }
+            // }
+    
+        }
+        checkWithName(event) {
+    
+      
+                if (event === this.sourceVendor.vendorName) {
+                    this.disableSaveParentName = true;
+                }
+                else {
+                    this.disableSaveParentName = false;
+                }
+            
+        }
 
     filterVendorCodes(event) {
         this.vendorCodes = [];
@@ -877,6 +921,32 @@ export class VendorGeneralInformationComponent implements OnInit {
         this.loadingIndicator = true;
         this.sourceVendor = row;
     }
+
+    convertUrlToLowerCase(event) {
+        const value = event.target.value;
+        event.target.value = toLowerCaseOnInput(value);
+    }
+
+
+    checkVendorExists(field, value) {
+
+        let isEdit ;
+        if(this.vendorService.isEditMode){
+            this.editModeData = this.sourceVendor.listCollection;
+        }else{
+            isEdit = undefined;
+        }
+
+        const exists = validateRecordExistsOrNot(field, value, this.allActions, this.editModeData);
+        if (exists.length > 0) {
+            this.disableSaveVenderName = true;
+        }
+        else {
+            this.disableSaveVenderName = false;
+        }
+
+    }
+
     editItemAndCloseModel(goNxt?: any) {
         this.isSaving = true;
         this.isEditMode = true;
@@ -1065,10 +1135,11 @@ export class VendorGeneralInformationComponent implements OnInit {
         }
         this.loadData();
     }
-
+    
     private savesuccessCompleted(user?: any, goNxt?: any) {
         this.isSaving = false;
-        this.alertService.showMessage("Success", `Action was created successfully`, MessageSeverity.success);
+        console.log("vendor service",this.vendorService.isEditMode);    
+        this.alertService.showMessage("Success", `${this.isvendorEditMode ? 'Updated' : 'Saved'  }  General Information  successfully`, MessageSeverity.success);
         if (goNxt === 'goNext') {
             this.nextClick();
         }
@@ -1102,24 +1173,31 @@ export class VendorGeneralInformationComponent implements OnInit {
         this.msgs = [];
         this.msgs.push({ severity: 'info', summary: 'File Uploaded', detail: '' });
     }
-    eventHandler(event) {
-        if (event.target.value != "") {
-            let value = event.target.value.toLowerCase();
-            if (this.selectedActionName) {
-                if (value == this.selectedActionName.toLowerCase()) {
-                    this.disableSaveVenderName = true;
-                    this.disableSaveVenName = true;
-                }
-                else {
-                    this.disableSaveVenderName = false;
-                    this.disableSaveVenName = false;
-                }
-            }
-        }
-    }
+    // eventHandler(event) {
+    //     if (event.target.value != "") {
+    //         let value = event.target.value.toLowerCase();
+    //         if (this.selectedActionName) {
+    //             if (value == this.selectedActionName.toLowerCase()) {
+    //                 this.disableSaveVenderName = true;
+    //                 this.disableSaveVenName = true;
+    //             }
+    //             else {
+    //                 this.disableSaveVenderName = false;
+    //                 this.disableSaveVenName = false;
+    //             }
+    //         }
+    //     }
+    // }
     onVendorselected(object) {
 
-        const exists = selectedValueValidate('vendorName', object, this.sourceVendor)
+        if (this.vendorService.isEditMode === true) {
+            this.selectedEditData = this.sourceVendor
+        } else {
+            this.selectedEditData = undefined;
+        }
+        const exists = selectedValueValidate('vendorName', object, this.selectedEditData);
+        console.log(exists);
+
         this.parentVendorList(getValueFromObjectByKey('vendorId', object));
         this.disableSaveVenderName = !exists;
 
@@ -1135,7 +1213,9 @@ export class VendorGeneralInformationComponent implements OnInit {
         //     }
         // }
     }
-
+    checVendorName(name){
+        this.parentVendorList(this.newvendorId);
+    }
     // checkVendorExist() {
     //     this.disableSaveVenderName = false;
     //     for (let i = 0; i < this.VendorNamecoll.length; i++) {

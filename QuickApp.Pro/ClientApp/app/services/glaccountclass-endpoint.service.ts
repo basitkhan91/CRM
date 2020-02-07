@@ -10,7 +10,7 @@ import { ConfigurationService } from './configuration.service';
 export class GLAccountClassEndpoint extends EndpointFactory {
 
 
-    private readonly _glaccountclassUrl: string = "/api/GlAccountClass/getAll";
+    private readonly _glaccountclassUrl: string = "/api/GlAccountClass/get";
 	private readonly _glaccountclassUrlNew: string = "/api/GlAccountClass/glaccountclasspost";
     private readonly _glaccountclassUrlAuditHistory: string = "/api/GlAccountClass/auditHistoryById";
     private readonly getGlById: string = "/api/GlAccountClass/GLAccountClassauditdetails";

@@ -17,6 +17,7 @@ import { CommonService } from '../../../services/common.service';
 	styleUrls: ['./customer-billing-information.component.scss'],
 
 })
+
 /** anys component*/
 export class CustomerBillingInformationComponent {
 	@Input() savedGeneralInformationData: any = {};
@@ -26,7 +27,7 @@ export class CustomerBillingInformationComponent {
 	@Output() tab = new EventEmitter<any>();
 	@Input() selectedCustomerTab: string = "";
     @Input() customerDataFromExternalComponents : any;
-
+    disableSave:boolean=true;
 	countryList: any[];
 	// countryListOriginal: any[];
     selectedRowForDelete: any;
@@ -122,7 +123,15 @@ export class CustomerBillingInformationComponent {
 		} 
 
       }
-
+	  enableSave() {
+        console.log('hello ,directive');
+               this.disableSave = false;
+       
+       } 
+       closeMyModel(){
+           $("#addBillingInfo").modal("hide");
+           this.disableSave=true;
+       }
 	get userName(): string {
 		return this.authService.currentUser ? this.authService.currentUser.userName : "";
 	}
@@ -179,7 +188,8 @@ export class CustomerBillingInformationComponent {
             }
 
 
-
+            $("#addBillingInfo").modal("hide");
+            this.disableSave=true;
         }
 
 	
@@ -219,7 +229,13 @@ export class CustomerBillingInformationComponent {
 
     }
 	nextClick() {
-		this.tab.emit('Shipping');
+        this.tab.emit('Shipping');
+        this.alertService.showMessage(
+			'Success',
+			` ${this.editMode ? 'Updated' : 'Saved'  } Billing Information Sucessfully `,
+			MessageSeverity.success
+		);
+        
 	}
 	backClick() {
 		this.tab.emit('Financial');

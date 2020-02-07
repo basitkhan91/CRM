@@ -45,13 +45,14 @@
                                             {{col.header}}
                                             <p-sortIcon [field]="col.field"></p-sortIcon>
                                         </th>
-                                        <th></th>
+                                        <th class="Ui-Action-mincount">Actions </th>
                                     </tr>
                                     <tr>
                                         <th *ngFor="let col of columns" [ngSwitch]="col.field">
                                             <input style="width:100%;" pInputText type="text">
                                         </th>
                                         <th></th>
+                                     
                                     </tr>
                                 </ng-template>
 
@@ -60,8 +61,9 @@
                                         <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
                                             {{col.field == 'openDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'closedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
                                         </td>
+                                        
                                         <td>
-                                            <span data-toggle="modal" data-target="#view" (click)="viewSelectedRow(rowData)">
+                                            <!-- <span data-toggle="modal" data-target="#view" (click)="viewSelectedRow(rowData)">
                                                 <a data-toggle="tooltip" pTooltip="View" tooltipPosition="bottom" title="" class="btn btn-primary nobg" data-original-title="View">
                                                     <i class="fa fa-eye"></i>
                                                 </a>
@@ -75,7 +77,19 @@
                                                 <a data-toggle="tooltip" pTooltip="Edit Received Parts" tooltipPosition="bottom" title="" class="btn btn-primary nobg" data-original-title="" edit="">
                                                     <i class="fa fa-edit"></i>
                                                 </a>
+                                            </span> -->
+                                            <div class="ui-reUsable-column_span">
+                                              <span data-toggle="modal" data-target="#view"><a class="btn nobg"  matTooltip="View"  (click)="viewSelectedRow(rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
+                                              <span *ngIf="rowData.statusId == 3" (click)="getSelectedRow(rowData)">
+                                                <a  matTooltip="Receive PO"   class="btn  nobg">
+                                                    <i class=" fa fa-chevron-down"></i>
+                                                </a>
                                             </span>
+                                              <span *ngIf="rowData.statusId == 3"  (click)="editStockLine(rowData)">
+                                                    <a class="btn nobg"  matTooltip="Edit Received Parts" matTooltip="Edit"><i class="fa fa-pencil"></i></a>
+                                                 </span>
+                                            
+                                            </div>
                                         </td>
                                     </tr>
                                 </ng-template>

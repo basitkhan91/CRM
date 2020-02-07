@@ -22,7 +22,7 @@ namespace DAL.Models
         public bool? IsActive { get; set; }
 
         public virtual MasterCompany MasterCompany { get; set; }
-        public bool? IsDeleted { get; set; }
+        public bool? IsDelete { get; set; }
 
     }
 }

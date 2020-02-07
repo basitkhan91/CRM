@@ -14,7 +14,8 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<object> GetWorkOrdersList(Filters<WorkOrderFilters> woFilters);
         IEnumerable<object> WorkOrdersGlobalSearch(string filterText, int pageNumber, int pageSize);
         IEnumerable<object> GetWorkOrderPartList(long workOrderId);
-        WorkOrder WorkOrderById(long workOrderId);
+        WorkOrder WorkOrderById(long workOrderId, long receivingCustomerId);
+        
         object WorkOrderHeaderView(long workOrderId);
         IEnumerable<object> WorkOrderPartsView(long workOrderId);
 
@@ -107,7 +108,7 @@ namespace DAL.Repositories.Interfaces
 
         IEnumerable<object> GetWorkFlowNos(long partId, long workScopeId);
         IEnumerable<object> GetWorkOrderNos(long partId, long workScopeId);
-        IEnumerable<object> GetWorkOrderPartDetails();
+        IEnumerable<object> GetWorkOrderPartDetails(long customerId);
         IEnumerable<object> GetStockLineDetailsByPartNo(long itemMasterId, long conditionId);
         object GetPartSerialNo(long stockLineId);
         IEnumerable<object> GetPartPublications(long itemMasterId);

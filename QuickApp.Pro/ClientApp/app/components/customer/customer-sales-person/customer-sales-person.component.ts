@@ -189,6 +189,7 @@ export class CustomerSalesPersonComponent implements OnInit {
         })]
 
         this.employeeTypeList = employeeTypeList;
+        console.log("sales project details",this.employeeTypeList);
         //const employeeListData = [...this.employeeListOriginal.filter(x => {
         //    return x.firstName.toLowerCase().includes(event.query.toLowerCase())
         //})]
@@ -213,7 +214,7 @@ export class CustomerSalesPersonComponent implements OnInit {
                 this.nextClick();
                 this.alertService.showMessage(
                     'Success',
-                    `Saved Sales Infromation Successfully `,
+                    `${this.editMode ? 'Updated' : 'Saved'  } Customer Sales Infromation Successfully `,
                     MessageSeverity.success
                 );
 

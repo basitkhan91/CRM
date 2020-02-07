@@ -114,6 +114,16 @@
                 <label>Customer Ref<span class="clr-red">*</span></label>
                 <input type="text" pInputText name="customerReferenceName" [(ngModel)]="salesQuote.customerReferenceName" />
               </div>
+              <div class="form-group" *ngIf="isEdit">
+                <label>Status</label>
+                <select name="status" [(ngModel)]="salesQuote.statusId">
+                    <option value='-1'>--Select</option>
+                    <ng-container *ngFor="let s of salesQuote.status">
+                      <option  *ngIf="s.displayInDropdown" [ngValue]="s.id">{{ s.name }}</option>
+                    </ng-container>
+                    
+                </select>
+              </div>
               <div class="form-group">
                 <label>Contract Ref</label>
                 <input type="text" pInputText name="contractReferenceName" [(ngModel)]="salesQuote.contractReferenceName" />
@@ -287,9 +297,9 @@
             <div class="col-md-1 col-sm-1 col-1">
               &nbsp;
             </div>
-            <div class="col-md-11 col-sm-11 col-11">
-              <button type="submit" *ngIf="!isEdit" class="btn btn-success pull-right submit-btn btn btn-primary">Submit</button>
-              <button type="submit" *ngIf="isEdit" class="btn btn-success pull-right submit-btn btn btn-primary">Update</button>
+            <div class="col-md-11 col-sm-11 col-11"> 
+              <button type="submit" *ngIf="!isEdit" class="btn pull-right submit-btn btn btn-primary">Submit</button>
+              <button type="submit" *ngIf="isEdit" class="btn pull-right submit-btn btn btn-primary">Update</button>
             </div>
           </div>
         </form>

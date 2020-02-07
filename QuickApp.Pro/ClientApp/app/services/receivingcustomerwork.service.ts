@@ -67,6 +67,10 @@ export class ReceivingCustomerWorkService {
 
 	updateReason(receivingCustomerWork: any) {
 		return this.receivingCustomerWorkEndpoint.getUpdateReasonEndpoint(receivingCustomerWork, receivingCustomerWork.receivingCustomerWorkId);
+    }
+    
+    updateCustomerWorkReceiving(receivingCustomerWork: any) {
+		return this.receivingCustomerWorkEndpoint.updateCustomerWorkReceivingEndpoint(receivingCustomerWork);
 	}
 
 	//deleteReason(receivingCustomerWorkId: number) {

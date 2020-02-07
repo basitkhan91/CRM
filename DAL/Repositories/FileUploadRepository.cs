@@ -714,7 +714,7 @@ namespace DAL.Repositories
         {
             foreach (var item in workPerformedList)
             {
-                var flag = _appContext.WorkPerformed.Any(p => p.IsDeleted == false && p.WorkPerformedCode.ToLower() == item.WorkPerformedCode.Trim().ToLower());
+                var flag = _appContext.WorkPerformed.Any(p => p.IsDelete == false && p.WorkPerformedCode.ToLower() == item.WorkPerformedCode.Trim().ToLower());
                 if (!flag)
                 {
                     _appContext.WorkPerformed.Add(item);

@@ -75,5 +75,6 @@ namespace QuickApp.Pro.ViewModels.SalesViews
 
         public int StatusId { get; set; }
 
+        public DateTime StatusChangeDate { get; set; }
     }
 }

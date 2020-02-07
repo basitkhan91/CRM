@@ -38,8 +38,10 @@ export class WorkPerformedComponent implements OnInit {
     private table: Table;
     auditHistory: any[] = [];
     disableSaveGroupId: boolean = false;
+    disableSaveForDescriptionMSG: boolean = false;
     PortalList: any;
     disableSaveForDescription: boolean = false;
+    disableSaveWorkperformedMsg: boolean=false;
     disableSaveWorkperformed: boolean = false
     descriptionList: any;
     workPerformedCodeList: any;
@@ -139,17 +141,37 @@ export class WorkPerformedComponent implements OnInit {
     }
 
 
-    checkGroupDescriptionExists(field, value) {
+    //checkGroupDescriptionExists(field, value) {
+    //    console.log(this.selectedRecordForEdit);
+    //    const exists = validateRecordExistsOrNot(field, value, this.originalData, this.selectedRecordForEdit);
+    //    if (exists.length > 0) {
+    //        this.disableSaveWorkperformedMsg = true;
+    //       // this.disableSaveForDescriptionMSG = true;
+    //        this.disableSaveForDescription = true;
+    //    }
+    //    else {
+    //        this.disableSaveWorkperformedMsg = false;
+    //       // this.disableSaveForDescriptionMSG = false;
+    //        this.disableSaveForDescription = false;
+    //    }
+
+    //}
+
+    checkGroupDescriptionExists1(field, value) {
         console.log(this.selectedRecordForEdit);
         const exists = validateRecordExistsOrNot(field, value, this.originalData, this.selectedRecordForEdit);
         if (exists.length > 0) {
+         //   this.disableSaveWorkperformedMsg = true;
+            this.disableSaveForDescriptionMSG = true;
             this.disableSaveForDescription = true;
         }
         else {
+          //  this.disableSaveWorkperformedMsg = false;
+            this.disableSaveForDescriptionMSG = false;
             this.disableSaveForDescription = false;
         }
-
     }
+
     filterDescription(event) {
         this.descriptionList = this.originalData;
 
@@ -163,13 +185,23 @@ export class WorkPerformedComponent implements OnInit {
 
         this.disableSaveForDescription = !exists;
     }
+    getChange() {
+        if (this.disableSaveWorkperformedMsg == false || this.disableSaveForDescriptionMSG == false) {
+            this.disableSaveForDescription = false;
+        }
+    }
     checkGroupworkPerformedExists(field,value){
         const existed = validateRecordExistsOrNot(field,value,this.originalData,this.selectedRecordForEdit);
         if (existed.length > 0) {
-            this.disableSaveWorkperformed = true;
+            this.disableSaveWorkperformedMsg = true;
+            //this.disableSaveForDescriptionMSG = true;
+            this.disableSaveForDescription = true;
         }
         else {
-            this.disableSaveWorkperformed = false;
+          //  this.disableSaveWorkperformed = false;
+            this.disableSaveWorkperformedMsg = false;
+            //this.disableSaveForDescriptionMSG = false;
+            this.disableSaveForDescription = false;
         }
     }
     filterWorkperformed(event){
@@ -216,6 +248,35 @@ export class WorkPerformedComponent implements OnInit {
         }
     }
 
+    onBlur(event) {
+        const value = event.target.value;
+
+        this.disableSaveWorkperformedMsg = false;
+        for (let i = 0; i < this.originalData.length; i++) {
+            let workPerformedCode = this.originalData[i].workPerformedCode;
+            let workPerformedId = this.originalData[i].workPerformedId;
+            if (workPerformedCode.toLowerCase() == value.toLowerCase()) {
+                if (this.isEdit || !this.isEdit) {
+                    this.disableSaveWorkperformedMsg = true;
+                    this.disableSaveForDescription = true;
+                }
+                else if (workPerformedId != this.selectedRecordForEdit.glAccountClassId) {
+                    this.disableSaveWorkperformedMsg = true;
+                    this.disableSaveForDescription = false;
+
+                }
+                else {
+
+                    this.disableSaveWorkperformedMsg = false;
+                    this.disableSaveForDescription = false;
+                }
+                console.log('workPerformedCode :', workPerformedCode);
+                break;
+            }
+        }
+
+    }
+
     resetForm() {
         this.isEdit = false;
         this.selectedRecordForEdit = undefined;
@@ -226,8 +287,9 @@ export class WorkPerformedComponent implements OnInit {
     edit(rowData) {
         console.log(rowData);
         this.isEdit = true;
-        this.disableSaveGroupId = false;
-        this.disableSaveForDescription = false;
+        this.disableSaveWorkperformedMsg = false;
+        this.disableSaveForDescription = true;
+        this.disableSaveForDescriptionMSG = false;
         this.addNew = {
             ...rowData,           
             description: getObjectByValue('description', rowData.description, this.originalData),

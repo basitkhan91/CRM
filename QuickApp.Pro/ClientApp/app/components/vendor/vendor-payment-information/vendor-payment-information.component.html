@@ -7,7 +7,7 @@
                         <div class="col-md-4">
                             <p class="fs12">
                             <label class="control-label labels-font-header" style="width: auto;">Vendor Name: </label>
-                        <span class="span-header-red" style="text-transform: capitalize"> {{local?.vendorName }} </span> </p>
+                        <span class="span-header-red" style="text-transform: capitalize"> {{getVendorName()}} </span> </p>
                         </div>
                         <div class="col-md-4">
                             <p class="fs12">
@@ -39,6 +39,19 @@
                                                 </div>
                                                 <button type="button" class="btn btn-primary" matTooltip="Download Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export Data" (click)="dt.exportCSV()" style="padding:5px 10px !important;"></button>
                                                 <button type="button" class="btn btn-primary" matTooltip="Download Selected Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export Selected Data" (click)="dt.exportCSV({selectionOnly:true})" style="padding:5px 10px !important;"></button>                                                
+                                            
+                                                <div class="excel-upload  excel-upload-cstm">
+                                                    <button type="button" class="btn btn-primary" matTooltip="Download Sample File" matTooltipPosition="above" (click)="sampleExcelDownload()" style="padding: 5px 10px !important;">Sample File Download</button>
+            
+                                                    <input type="file" name="upload[]" id="upload" (change)="customExcelUpload($event)" class="uploaddoc upload-file"
+                                                           accept=".xlsx, .xls, .csv">
+                                                    <label for="upload">
+                                                        <span matTooltip="Upload Data (Excel)" matTooltipPosition="above">
+                                                            <i class="fa fa-upload"></i>
+                                                        </span>
+                                                    </label>
+                                                </div>
+
                                             </div>            
                                         </ng-template>
 
@@ -428,7 +441,7 @@
     <ng-template #contentHist let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static">
         <div class="modal-header">
 
-            <h4 class="modal-title">History of Action</h4>
+            <h4 class="modal-title">History of Payment Info</h4>
             <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
                 <span aria-hidden="true">&times;</span>
             </button>
@@ -449,24 +462,34 @@
                             <th>State</th>
                             <th>Postal Code</th>
                             <th>Country</th>
-                            <th>Status</th>
+                            <th>Is Primary</th>
+                            <th>Is Active</th>
+                            <th>Created By</th>
+                            <th>Created Date</th>
                             <th>Updated By</th>
                             <th>Updated Date</th>
                         </tr>
                     </thead>
-                    <tr *ngFor="let audit of auditHisory">
-                        <!-- <td>{{audit.auditHistoryId}}</td> -->
-                        <td>{{audit.siteName}}</td>
-                        <td>{{audit.address1}}</td>
-                        <td>{{audit.address2}}</td>
-                        <td>{{audit.city}}</td>
-                        <td>{{audit.stateOrProvince}}</td>
-                        <td>{{audit.postalCode}}</td>
-                        <td>{{audit.country}}</td>
-                        <td>{{audit.isActive}}</td>
-                        <td>{{audit.updatedBy}}</td>
-                        <td>{{audit.updatedDate | date: 'MM/dd/yyyy'}}</td>
-                    </tr>
+                    <tbody class="audithistory-cstm">
+                        <tr *ngFor="let audit of auditHisory;let i = index;">
+                            <!-- <td>{{audit.auditHistoryId}}</td> -->
+                            <td [ngStyle]="{'color': getColorCodeForHistory(i, 'siteName', audit.siteName)  ? 'black' : 'red'  }">{{audit.siteName}}</td>
+                            <td [ngStyle]="{'color': getColorCodeForHistory(i, 'address1', audit.address1)  ? 'black' : 'red'  }">{{audit.address1}}</td>
+                            <td [ngStyle]="{'color': getColorCodeForHistory(i, 'address2', audit.address2)  ? 'black' : 'red'  }">{{audit.address2}}</td>
+                            <td [ngStyle]="{'color': getColorCodeForHistory(i, 'city', audit.city)  ? 'black' : 'red'  }">{{audit.city}}</td>
+                            <td [ngStyle]="{'color': getColorCodeForHistory(i, 'stateOrProvince', audit.stateOrProvince)  ? 'black' : 'red'  }">{{audit.stateOrProvince}}</td>
+                            <td [ngStyle]="{'color': getColorCodeForHistory(i, 'postalCode', audit.postalCode)  ? 'black' : 'red'  }">{{audit.postalCode}}</td>
+                            <td [ngStyle]="{'color': getColorCodeForHistory(i, 'countryName', audit.countryName)  ? 'black' : 'red'  }">{{audit.country}}</td>
+                            <td [ngStyle]="{'color': getColorCodeForHistory(i, 'isPrimary', audit.isPrimary)  ? 'black' : 'red'  }">{{audit.isPrimary}}</td>
+
+                            <td [ngStyle]="{'color': getColorCodeForHistory(i, 'isActive', audit.isActive)  ? 'black' : 'red'  }">{{audit.isActive}}</td>
+                            <td>{{audit.createdBy}}</td>
+                            <td>{{audit.createdDate | date: 'dd-MM-yyyy h:mm a ' }}</td>
+
+                            <td>{{audit.updatedBy}}</td>
+                            <td>{{audit.updatedDate | date: 'dd-MM-yyyy h:mm a ' }}</td>
+                        </tr>
+                        </tbody>
                 </table>
             </div>
         </div>
@@ -566,7 +589,7 @@
                                             <label>Country <span class="clr-red">*</span></label>
                                             <div class="inner-addon right-addon inline-block" style="width: 100%">
                                                 <p-autoComplete field="nice_name" class="pautocomp-cstm" (onSelect)="onCountrieselected($event)" (onKeyUp)=eventCountryHandler($event) [(ngModel)]="sourceVendor.country" [ngModelOptions]="{standalone: true}" [suggestions]="countrycollection" (completeMethod)="filtercountry($event)" [size]="30"
-                                                [minLength]="1" [dropdown]="true" required>
+                                                [minLength]="1" [dropdown]="true" [forceSelection]="true" required>
                                                     <!-- <ng-template let-nice_name pTemplate="item">
                                                         <div class="ui-helper-clearfix">{{nice_name}}</div>
                                                     </ng-template> -->

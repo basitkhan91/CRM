@@ -18,6 +18,7 @@ export class ATASubChapter1Endpoint extends EndpointFactory {
     private readonly getSubChaptersListById: string = "/api/ATASubChapter1/ATASubChapterByATAChapterId";
 
 
+    private readonly getSubChaptersList: string = "/api/ATASubChapter1/ATASubChapter";
 
 
     get actionsUrl() { return this.configurations.baseUrl + this._actionsUrl; }
@@ -95,5 +96,11 @@ export class ATASubChapter1Endpoint extends EndpointFactory {
                 return this.handleError(error, () => this.getAtaSubChaptersListByAtaChapterId(ataChapterId));
             });
     }
-
+    getAtaSubChaptersList<T>(): Observable<T> {
+        let endpointUrl = `${this.getSubChaptersList}`;
+        return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getAtaSubChaptersList());
+            });
+    }
 }

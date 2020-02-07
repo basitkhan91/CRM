@@ -8,6 +8,10 @@ import { SalesQuoteService } from "../../../../../../services/salesquote.service
 import { ConditionService } from '../../../../../../services/condition.service';
 import { ISalesQuote } from "../../../../../../models/sales/ISalesQuote.model";
 import { PartSearchParamters } from "../../../../quotes/models/part-search-parameters";
+import { IPartJson } from "../../../models/ipart-json";
+import { ISalesItemMaster } from "../../../models/isales-item-master";
+import { IMultiPartJson } from "../../../models/imulti-part-json";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "app-part-number-filter",
@@ -27,17 +31,19 @@ export class PartNumberFilterComponent {
   historicalDisabled: boolean;
   allConditionInfo: any[] = [];
   displayPartError: boolean = false;
+  enableMultiSearch: boolean = false;
   errorMessages:any[]=[];
   multiPartModal: NgbModalRef;
   multiPartNumbers="";
-    multiSearchResult: any[] = [];
-    part: any;
+  multiSearchResult:IMultiPartJson[]=[];
+  columns: any[];
 
   constructor(
     private modalService: NgbModal,
     private itemMasterService: ItemMasterService,
     private stockLineService: StocklineService,
     private salesQuoteService: SalesQuoteService,
+    private router: Router,
     public conditionService: ConditionService) {
     this.partDetails = [];
     this.query = new ItemMasterSearchQuery();
@@ -59,6 +65,20 @@ this.salesQuoteService.getSearchPartObject()
 
 });
    
+  }
+
+  initColumns() {
+    this.columns = [
+      { field: null, header: '', width: '50px' },
+      { field: 'partNumber', header: 'PN', width: '200px' },
+      { field: 'partNumber', header: 'PN Description', width: '200px' },
+      { field: 'conditionType', header: 'Condition Type', width: '200px' },
+      { field: 'alternatePartNumber', header: 'Alternate PN', width: '200px' },
+      { field: 'qtyAvailable', header: 'Qty Available', width: '200px' },
+      { field: 'qtyOnHand', header: 'Qty On Hand', width: '200px' },
+      { field: 'qtyRequested', header: 'Qty Requested', width: '200px' },
+      { field: '', header: 'Actions', width: '100px' },
+    ]
   }
 
   private loadData()
@@ -139,8 +159,8 @@ private onptnmbersSuccessful(allWorkFlows: any[]) {
     console.log(this.query);
     if (this.query.partSearchParamters.conditionId>0 && this.query.partSearchParamters.partNumber)
           this.searchDisabled = false;
-    else if (this.query.partSearchParamters.conditionId>0 && this.query.partSearchParamters.includeMultiplePartNumber)
-          this.searchDisabled = false;
+   // else if (this.query.partSearchParamters.conditionId>0 && this.query.partSearchParamters.includeMultiplePartNumber)
+    //      this.searchDisabled = false;
   }
   
  /* onPartNumberSelect(event) {
@@ -190,7 +210,7 @@ private onptnmbersSuccessful(allWorkFlows: any[]) {
 
   openMultiPartSearch() {
 
-    this.multiPartModal = this.modalService.open(this.searchMultiPart, { size: "sm" });
+    this.multiPartModal = this.modalService.open(this.searchMultiPart, { size: "lg" });
     this.multiPartModal.result.then(
       () => {
         console.log("When user closes");
@@ -210,10 +230,11 @@ private onptnmbersSuccessful(allWorkFlows: any[]) {
         partSearchParamters.partNumber = this.multiSearchResult[i].partNumber;
         partSearchParamters.partId = this.multiSearchResult[i].partId;
         partSearchParamters.partDescription = this.multiSearchResult[i].partDescription;
+        partSearchParamters.conditionId = this.multiSearchResult[i].conditionType;
         multiParts.push(partSearchParamters);
       }
     }
-    console.log(multiParts);
+    //console.log(multiParts);
     if(multiParts.length>0){
      // this.query.partSearchParamters = new PartSearchParamters();
       this.query.multiPartSearchParamters = multiParts;
@@ -252,18 +273,24 @@ private onptnmbersSuccessful(allWorkFlows: any[]) {
     this.itemMasterService.searchMultiPartNumbers(partSearchParamters).subscribe((response:any[]) => {
       console.log(response);
       this.multiSearchResult = response;
-      if (this.query.partSearchParamters.conditionId>0)
+      if (this.multiSearchResult.length>0)
           this.searchDisabled = false;
-      this.multiPartModal.close();
+     // this.multiPartModal.close();
       
      
     });
 
   }
-  includeMultiplePN(event, part) {
+  includeMultiplePN(event) {
     let checked: boolean = event.srcElement.checked;
     if(checked){
-      this.openMultiPartSearch();
+      //this.openMultiPartSearch();
+      this.enableMultiSearch = true;
+      if (this.multiSearchResult.length>0)
+      this.searchDisabled = false;
+    }else{
+      this.enableMultiSearch = false;
+      this.searchDisabled = true;
     }
     
   }
@@ -272,4 +299,9 @@ private onptnmbersSuccessful(allWorkFlows: any[]) {
     this.multiPartModal.close();
    
   }
+  public navigateToAddItemMaster() {
+
+		this.router.navigateByUrl('/itemmastersmodule/itemmasterpages/app-item-master-stock')
+
+	}
 }

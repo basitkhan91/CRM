@@ -201,14 +201,31 @@
                                                     <span class="clr-red">*</span>
                                                 </label>
 
-                                                <input type="text" class="form-control wo-input" name="contactRef" #contactRef="ngModel" [(ngModel)]="workOrderGeneralInformation.customerReference" required>
+                                                <!--<input type="text" class="form-control wo-input" name="contactRef" #contactRef="ngModel" [(ngModel)]="workOrderGeneralInformation.customerReference" required disabled>
 
 
-                                                <div *ngIf="contactRef.invalid && (contactRef.dirty || contactRef.touched)" class="alert alert-danger alert-danger-cstm">
-                                                    <div *ngIf="contactRef.errors.required">
-                                                        <small> Contact Ref is required </small>
-                                                    </div>
-                                                </div>
+    <div *ngIf="contactRef.invalid && (contactRef.dirty || contactRef.touched)" class="alert alert-danger alert-danger-cstm">
+        <div *ngIf="contactRef.errors.required">
+            <small> Contact Ref is required </small>
+        </div>
+    </div>-->
+                                                <!--<p-dropdown class="p-dropdown-custom-md " placeholder="Select Reference"
+                name="contactRef" #contactRef="ngModel"
+                [options]="customerReferencelist" [(ngModel)]="workOrderGeneralInformation.receivingCustomerWorkId" required>
+        <div *ngIf="contactRef.invalid && (contactRef.dirty || contactRef.touched)" class="alert alert-danger alert-danger-cstm">
+            <div *ngIf="contactRef.errors.required">
+                <small> Contact Ref is required </small>
+            </div>
+        </div>
+    </p-dropdown>-->
+
+                                                <p-dropdown placeholder="Select Reference"
+                                                            name="contactRef"
+                                                            #contactRef="ngModel"
+                                                            [options]="customerReferencelist"
+                                                            class="p-dropdown-custom-md-2"
+                                                            [(ngModel)]="workOrderGeneralInformation.customerReference">
+                                                </p-dropdown>
 
                                             </div>
 
@@ -262,7 +279,7 @@
                                                     <div class="col-md-4">
                                                         <input type="number" class="form-control wo-input"
                                                                name="creditLimit" #creditLimit="ngModel"
-                                                               [(ngModel)]="workOrderGeneralInformation.creditLimit" required>
+                                                               [(ngModel)]="workOrderGeneralInformation.creditLimit" required disabled>
 
                                                         <div *ngIf="creditLimit.invalid && (creditLimit.dirty || creditLimit.touched)" class="alert alert-danger alert-danger-cstm">
                                                             <div *ngIf="creditLimit.errors.required">
@@ -273,7 +290,7 @@
                                                     <div class="col-md-6">
                                                         <p-dropdown class="p-dropdown-custom-md " placeholder="Select CreditTerms"
                                                                     name="creditTermsId" #creditTermsId="ngModel"
-                                                                    [options]="creditTerms" [(ngModel)]="workOrderGeneralInformation.creditTermsId" required>
+                                                                    [options]="creditTerms" [(ngModel)]="workOrderGeneralInformation.creditTermsId" required disabled>
                                                             <div *ngIf="creditTermsId.invalid && (creditTermsId.dirty || creditTermsId.touched)" class="alert alert-danger alert-danger-cstm">
                                                                 <div *ngIf="creditTermsId.errors.required">
                                                                     <small> CreditTerms Type   </small>
@@ -496,21 +513,33 @@
                                                disabled>
                                     </td>
                                     <td>
-                                        <p-dropdown placeholder="Select" [options]="conditionList"
-                                                    name="condition{{i}}" #condition="ngModel"
-                                                    (onChange)="getStockLineByItemMasterId(workOrderPartNumber.masterPartId,workOrderPartNumber.conditionId,  i);"
-                                                    class="p-dropdown-custom-md" [(ngModel)]="workOrderPartNumber.conditionId" required>
-                                        </p-dropdown>
+                                        <!--<p-dropdown placeholder="Select" [options]="conditionList"
+                name="condition{{i}}" #condition="ngModel"
+                (onChange)="getStockLineByItemMasterId(workOrderPartNumber.masterPartId,workOrderPartNumber.conditionId,  i);"
+                class="p-dropdown-custom-md" [(ngModel)]="workOrderPartNumber.conditionId" required>
+    </p-dropdown>-->
+                                        <!--<input type="hidden"
+                                               name="serialNumber{{i}}" #serialNumber="ngModel"
+                                               [(ngModel)]="workOrderPartNumber.conditionId">-->
+
+                                        <input type="text" class="form-control w100"
+                                               name="condition{{i}}" #serialNumber="ngModel"
+                                               [(ngModel)]="workOrderPartNumber.condition" disabled>
                                     </td>
 
                                     <td>
-                                        <p-dropdown placeholder="Select" [options]="getDynamicVariableData('stockLineList',i)"
-                                                    name="stockLine{{i}}" #stockLine="ngModel"
-                                                    class="p-dropdown-custom-md" [(ngModel)]="workOrderPartNumber.stockLineId"
-                                                    (onChange)="getSerialNoByStockLineId(workOrderPartNumber)"
-                                                    required>
-                                        </p-dropdown>
+                                        <!--<p-dropdown placeholder="Select" [options]="getDynamicVariableData('stockLineList',i)"
+                name="stockLine{{i}}" #stockLine="ngModel"
+                class="p-dropdown-custom-md" [(ngModel)]="workOrderPartNumber.stockLineId"
+                required>
+    </p-dropdown>-->
+                                        <!--<input type="hidden"
+                                               name="serialNumber{{i}}" #serialNumber="ngModel"
+                                               [(ngModel)]="workOrderPartNumber.stockLineId">-->
 
+                                        <input type="text" class="form-control w100"
+                                               name="stockLineNumber{{i}}" #serialNumber="ngModel"
+                                               [(ngModel)]="workOrderPartNumber.stockLineNumber" disabled>
                                     </td>
 
 

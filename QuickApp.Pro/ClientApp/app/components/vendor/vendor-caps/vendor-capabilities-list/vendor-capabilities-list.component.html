@@ -61,6 +61,7 @@
                                 </colgroup>
                             </ng-template>
         
+  
                             <ng-template pTemplate="header" let-columns>
                                 <tr>
                                     <th *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
@@ -95,7 +96,7 @@
                                             <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
                                         </ng-container>
                                                 
-                                        <span data-toggle="modal" data-target="#vendorCapesView"><a class="btn nobg" (click)="viewSelectedRow(rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
+                                        <span data-toggle="modal" ><a class="btn nobg" (click)="viewSelectedRow(rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
                                         <span *ngIf="!isViewMode"><a class="btn nobg" (click)="openEdits(rowData)" matTooltip="Edit"><i class="fa fa-pencil"></i></a> </span>
                                         <span><a class="btn nobg" (click)="openHistory(contentAuditHist,rowData)" matTooltip="History"><i class="fa fa-history"></i></a></span>
                                         <span *ngIf="!isViewMode"><a class="btn nobg" (click)="openDelete(content,rowData)" matTooltip="Delete"><i class="fa fa-trash"></i></a> </span>
@@ -155,6 +156,7 @@
                                    
                                     <input style="width: 5%;" [ngModel]="getPageCount(dt._totalRecords,pageSize)" [disabled]="true" pInputText type="text" />
                                 </ng-template>
+
                     </p-table>
                 </div>
             </div>
@@ -201,7 +203,7 @@
                                 <th>Caps Type</th>
                                 <th>Vendor Ranking</th>
                                 <th>TAT</th>
-                                <th>IsActive</th>
+                                <th>Is Active</th>
                                 <th>Updated By</th>
                                 <th>Updated Time</th>
                             </tr>
@@ -240,26 +242,27 @@
 <div class="modal fade" id="vendorCapesView" role="dialog" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog modal-lg">
           <div class="modal-content">
-            <div class="modal-header" *ngIf="vendorCapesGeneralInfo">
+
+            <div class="modal-header" >
               <button type="button" class="close" data-dismiss="modal">&times;</button> <!--data-dismiss="modal"-->
               <h4 class="modal-title">Capability Details of Vendor: <span>"{{vendorCapesGeneralInfo.vendorName}}"</span></h4>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" *ngIf="vendorCapesGeneralInfo">
               <div>
                 <div class="card">
-                    <div class="card-body" *ngIf="vendorCapesGeneralInfo">
+                    <div class="card-body" >
                         <h4 class="po-head">General Information:</h4>
                         <div class="table-responsive default-bg clear vendorCapes-generalInfo">
                             <div class="col-sm-3">
                                 <p><span class="label"><b>Vendor Name: </b></span><span class="value">{{vendorCapesGeneralInfo.vendorName ? vendorCapesGeneralInfo.vendorName : '-'}}</span></p>
                                 <p><span class="label"><b>Vendor Code: </b></span><span class="value">{{vendorCapesGeneralInfo.vendorCode ? vendorCapesGeneralInfo.vendorCode : '-'}}</span></p>
-                                <p><span class="label"><b>PN: </b></span><span class="value">{{vendorCapesGeneralInfo.partNumber ? vendorCapesGeneralInfo.partNumber : '-'}}</span></p>
+                                <p><span class="label"><b>PN:<span class="clr-red">*</span>  </b></span><span class="value">{{vendorCapesGeneralInfo.partNumber ? vendorCapesGeneralInfo.partNumber : '-'}}</span></p>
                                 <p><span class="label"><b>PN Description: </b></span><span class="value">{{vendorCapesGeneralInfo.partDescription ? vendorCapesGeneralInfo.partDescription : '-'}}</span></p>
                             </div>
                             <div class="col-sm-3">
                                 <p><span class="label"><b>PN Mfg: </b></span><span class="value">{{vendorCapesGeneralInfo.manufacturerName ? vendorCapesGeneralInfo.manufacturerName : '-'}}</span></p>
-                                <p><span class="label"><b>Vendor Capability Type: </b></span><span class="value">{{vendorCapesGeneralInfo.capabilityType ? vendorCapesGeneralInfo.capabilityType : '-'}}</span></p>
-                                <p><span class="label"><b>Vendor Ranking: </b></span><span class="value">{{vendorCapesGeneralInfo.vendorRanking ? vendorCapesGeneralInfo.vendorRanking : '-'}}</span></p>
+                                <p><span class="label"><b>Vendor Capability Type: <span class="clr-red">*</span> </b></span><span class="value">{{vendorCapesGeneralInfo.capabilityType ? vendorCapesGeneralInfo.capabilityType : '-'}}</span></p>
+                                <p><span class="label"><b>Vendor Ranking:<span class="clr-red">*</span>  </b></span><span class="value">{{vendorCapesGeneralInfo.vendorRanking ? vendorCapesGeneralInfo.vendorRanking : '-'}}</span></p>
                             </div>
                             <div class="col-sm-3">
                                 <p><span class="label"><b>PMA: </b></span><span class="value">{{vendorCapesGeneralInfo.isPMA ? vendorCapesGeneralInfo.isPMA : '-'}}</span></p>

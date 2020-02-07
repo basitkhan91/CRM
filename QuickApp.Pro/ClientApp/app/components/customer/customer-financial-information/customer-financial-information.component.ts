@@ -31,7 +31,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
     @Input() savedGeneralInformationData: any;
     @Input() editGeneralInformationData;
     @Input() creditTermsListOriginal
-    @Input() editMode;
+    @Input() editMode; 
     @Output() tab = new EventEmitter();
     @ViewChild('taxExemptFileUploadInput') taxExemptFileUploadInput: any;
     taxRatesList: any = [];
@@ -637,13 +637,13 @@ export class CustomerFinancialInformationComponent implements OnInit {
                 this.formData = new FormData();
                 this.toGetCustomerFinanceDocumentsList(this.savedGeneralInformationData.customerId);
             });
-
+console.log("is edit mode",this.editMode )
             this.alertService.showMessage(
                 'Success',
-                `Saved Financal Infromation`,
+                ` ${this.editMode ? 'Updated' : 'Saved'  }  Customer Financal Infromation Sucessfully`,
                 MessageSeverity.success
             );
-            this.nextClick();
+            this.nextClick(); 
         })
     }
     downloadFileUpload(rowData) {

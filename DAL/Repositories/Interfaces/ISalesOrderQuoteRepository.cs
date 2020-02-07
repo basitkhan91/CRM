@@ -11,7 +11,7 @@ namespace DAL.Repositories.Interfaces
 
         SalesOrderQuote UpdateSalesQuote(SalesOrderQuote quote);
 
-        SalesOrderQuote Get(long id);
+        SalesOrderQuote Get(long id, bool enableTracking = true);
 
     }
 }

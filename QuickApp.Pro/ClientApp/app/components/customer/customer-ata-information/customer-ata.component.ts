@@ -270,6 +270,11 @@ export class CustomerATAInformationComponent implements OnInit {
 
     nextClick() {
         this.tab.emit('Financial');
+        this.alertService.showMessage(
+			'Success',
+			` ${this.editMode ? 'Updated' : 'Saved'  } Customer ATA Chapter Information Sucessfully `,
+			MessageSeverity.success
+		);
     }
     backClick() {
         this.tab.emit('AircraftInfo');

@@ -392,7 +392,7 @@
           </div>
     </div>
   </div> -->
-  <div class="card col-md-12" style="background: #f1f1f1; margin-top: 10px;" *ngIf="selectedBuildMethod != ''">
+  <div class="card col-md-12" style="background: #f1f1f1; margin-top: 10px;" *ngIf="selectedWorkFlowOrWorkOrder || selectedBuildMethod === 'build from scratch'">
       <div class="form-group ">
         <button type="button" class="btn" [ngClass]="gridActiveTab === 'materialList'?'btn-primary':'btn-light-cstm'" (click)="gridTabChange('materialList');">Material List</button>
         <button type="button" class="btn" [ngClass]="gridActiveTab === 'labor'?'btn-primary':'btn-light-cstm'" (click)="gridTabChange('labor');">Labor</button>
@@ -402,7 +402,7 @@
       </div>
   </div>
 
-  <div class="table-responsive" *ngIf="gridActiveTab === 'materialList'">
+  <div class="table-responsive" *ngIf="gridActiveTab === 'materialList' && (selectedWorkFlowOrWorkOrder || selectedBuildMethod === 'build from scratch')">
     <div *ngIf="!isView">
         <button  data-target="#addNewMaterials" data-toggle="modal" class="btn btn-primary btn-primary"  style="padding: 6px 12px !important;">Add New Material</button>
     </div>

@@ -14,5 +14,6 @@
         public bool? IsDefaultContact { get; set; }
 
         public string Email { get; set; }
+        public string ContactName { get; set; }
     }
 }

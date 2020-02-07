@@ -140,6 +140,23 @@
                                             Already Exist
                                         </div> -->
                                     </div>
+                                     <!-- REVISED PART-->
+                                     <div class="inline-adjust inline-block display-flex">
+
+                                        <label class="control-label spacing-label">
+                                            Revised Part                                            
+                                        </label>
+                                    </div>
+                                    <div>
+                                        <select [ngModelOptions]="{standalone: true}"
+                                            [(ngModel)]="sourceItemMaster.revisedPartId">
+                                            <option class="form-control" *ngFor="let partCollectionItem of revisedPartNumbersList"
+                                                [ngValue]="partCollectionItem.itemMasterId">
+                                            {{partCollectionItem.partNumber}}
+                                        </option>
+                                    </select>
+                                    </div>
+                                    <!-- /REVISED PART-->
                                     <div class="inline-block display-flex">
                                         <label class="control-label">Serialized</label>
                                         <input class="form-control new-checkbox" type="checkbox"
@@ -672,23 +689,7 @@
                                         </span>
                                         <i class="fa memo fa-info-circle fa-lg" pTooltip="{{memoNotes}}" tooltipPosition="top" data-toggle="modal" data-target="#rro-memo" NTE></i>
                                     </div>
-                                    <!-- REVISED PART-->
-                                    <div class="inline-adjust inline-block display-flex">
-
-                                        <label class="control-label spacing-label">
-                                            Revised Part                                            
-                                        </label>
-                                    </div>
-                                    <div>
-                                        <select [ngModelOptions]="{standalone: true}"
-                                            [(ngModel)]="sourceItemMaster.revisedPartId">
-                                            <option class="form-control" *ngFor="let partCollectionItem of revisedPartNumbersList"
-                                                [ngValue]="partCollectionItem.itemMasterId">
-                                            {{partCollectionItem.partNumber}}
-                                        </option>
-                                    </select>
-                                    </div>
-                                    <!-- /REVISED PART-->
+                                   
                                     <!-- Site-->
                                     <div class="inline-adjust inline-block display-flex">
                                         <label class="control-label spacing-label">
@@ -753,6 +754,14 @@
                                         </select>
                                     </div>
                                     <!-- /Bin-->
+                                     <!--Hot item-->
+                                     <div class="inline-block display-flex">
+                                        <label class="control-label">Hot Item</label>
+                                        <input class="form-control new-checkbox" type="checkbox"
+                                               [ngModelOptions]="{standalone: true}"
+                                               [(ngModel)]="sourceItemMaster.hotItem">
+                                    </div>
+                                    <!--/Hot Item-->
                                     
                                 </div>
                             </div>
@@ -1035,7 +1044,7 @@
                                     </div>
                                     <div class="col-md-1 add-new-align">
                                         <div class="form-group">
-                                            <button class="btn btn-primary mtop20" (click)="searchATA()">
+                                            <button type="button" class="btn btn-primary mtop20" (click)="searchATA()">
                                                 <i class="pi pi-search pi-search"></i>
                                             </button>
                                         </div>
@@ -1458,7 +1467,7 @@
                                         <label class="control-label">
                                             ITAR Num <strong class="clr-red">*</strong>
                                         </label>
-                                        <input type="text" class="input-field-value" required pInputText [(ngModel)]="exportInfo.ITARNumber" name="itarNumber" />
+                                        <input type="text" id="itarNumber" title="ITAR Number" class="input-field-value" required pInputText [(ngModel)]="exportInfo.ITARNumber" name="itarNumber" />
                                         <label class="control-label">Country <span style="color: red">*</span></label>
 
 
@@ -1466,6 +1475,8 @@
                                                         class="p-autoComplete-ctsm"
                                                         [(ngModel)]="exportInfo.ExportCountryId"
                                                         name="exportCountry"
+                                                        id="exportCountry"
+                                                        title=" Country"
                                                         (onSelect)="selectedExportCountry($event)"
                                                         field="nice_name"
                                                         [suggestions]="countrycollection"
@@ -1483,10 +1494,10 @@
                                         </p-autoComplete> -->
 
                                         <label class="control-label">Value <span style="color: red">*</span></label>
-                                        <input type="number" class="input-field-value" pInputText pKeyFilter="num" required maxlength="15" [(ngModel)]="exportInfo.ExportValue" name="exportValue" />
+                                        <input type="number" class="input-field-value" pInputText pKeyFilter="num" required maxlength="15" [(ngModel)]="exportInfo.ExportValue" name="exportValue" id="exportValue" title="Export Value" />
                                         <label class="control-label">Currency <span style="color: red">*</span></label>
                                         <select class="select-value-drop1"
-                                                [(ngModel)]="exportInfo.ExportCurrencyId" (change)="changeValueStringToInt($event.target.value)" required name="ExportCurrencyId">
+                                                [(ngModel)]="exportInfo.ExportCurrencyId" (change)="changeValueStringToInt($event.target.value)" required name="ExportCurrencyId" title="Currency" id="exportCurrencyId">
                                             <option value=null> Select Currency</option>
                                             <option class="form-control" *ngFor="let currencyName of allCurrencyInfo"
                                                     [ngValue]="currencyName.currencyId">
@@ -1504,7 +1515,7 @@
 
                                                 </label>
                                                 <span class="display-flex inline-block">
-                                                    <input type="number" class="input-field-value" pKeyFilter="num" pInputText maxlength="10" required [(ngModel)]="exportInfo.ExportWeight" name="exportWeight" />
+                                                    <input type="number" class="input-field-value" pKeyFilter="num" pInputText maxlength="10" required [(ngModel)]="exportInfo.ExportWeight" name="exportWeight" id="exportWeight" title="Export Weight" />
 
                                                 </span>
                                             </div>
@@ -1513,7 +1524,7 @@
                                                     UOM <strong class="clr-red">*</strong>
                                                 </label>
                                                 <span class="display-flex inline-block">
-                                                    <select class="form-control w80 select-value-drop" id="" name="unitOfMeasureId" required (change)="changeValueStringToInt($event.target.value)" [(ngModel)]="exportInfo.ExportWeightUnit">
+                                                    <select class="form-control w80 select-value-drop" id="ExportWeightUnit" name="ExportWeightUnit" required (change)="changeValueStringToInt($event.target.value)" [(ngModel)]="exportInfo.ExportWeightUnit" title="Weight Unit">
                                                         <option *ngFor="let unitName of allPurchaseUnitOfMeasureinfo"
                                                                 [ngValue]="unitName.unitOfMeasureId">
                                                             {{unitName.shortName}}
@@ -1529,7 +1540,7 @@
                                                    data-target="#ModalUnit" (click)="exportUOmOpen(ModalUnit)"></i>
                                             </span>
                                         </label>
-                                        <select class="select-value-drop1" id="" name="" [(ngModel)]="exportInfo.ExportUomId"
+                                        <select class="select-value-drop1" id="ExportUomId" name="ExportUomId" title="Export UOM" [(ngModel)]="exportInfo.ExportUomId"
                                                 (change)="changeValueStringToInt($event.target.value)" name="exportUOMId" required>
                                             <option *ngFor="let unitName of allPurchaseUnitOfMeasureinfo"
                                                     [ngValue]="unitName.unitOfMeasureId">
@@ -1547,10 +1558,10 @@
                                             </div>
                                                     <div>
                                                         <label for="weight" class="control-label">
-                                                            UOM <strong class="clr-red">*</strong>
+                                                            UOM 
                                                         </label>
                                                         <span class="display-flex inline-block">
-                                                            <select class="form-control w80 select-value-drop" id="" name="unitOfMeasureId" required (change)="changeValueStringToInt($event.target.value)" [(ngModel)]="exportInfo.ExportWeightUnit">
+                                                            <select class="form-control w80 select-value-drop" id="unitOfMeasureId" name="unitOfMeasureId"  (change)="changeValueStringToInt($event.target.value)" [(ngModel)]="exportInfo.unitOfMeasureId">
                                                                 <option *ngFor="let unitName of allPurchaseUnitOfMeasureinfo"
                                                                         [ngValue]="unitName.unitOfMeasureId">
                                                                     {{unitName.shortName}}

@@ -51,14 +51,16 @@ export class CustomerInternationalShipVia{
         this.shippingAccountInfo = '';
         this.shippingId = '';
         this.shippingURL = '';
-        this.memo ='';
+        this.memo = '';
+        this.isPrimary = false;
 
     }
     public shipVia : string;
     public shippingAccountInfo:string;
     public shippingId: string;
     public shippingURL: string;
-    public memo:string;
+    public memo: string;
+    public isPrimary: boolean;
 
 }
 

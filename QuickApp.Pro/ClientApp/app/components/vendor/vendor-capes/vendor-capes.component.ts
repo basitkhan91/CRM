@@ -37,7 +37,7 @@ export class VendorCapesComponent implements OnInit {
     vendorId: number;
     loadList: boolean = false;
     @Input() vendorCapabilityId: number = 0;
-
+    isvendorEditMode:any;
     constructor(public vendorService: VendorService, private router: ActivatedRoute, private route: Router, private authService: AuthService, private alertService: AlertService) {
         if (this.local) {
             this.vendorService.capesCollection = this.local;
@@ -68,7 +68,9 @@ export class VendorCapesComponent implements OnInit {
     }
 
     ngOnInit() {
-
+        this.vendorService.currentEditModeStatus.subscribe(message => {
+            this.isvendorEditMode = message; 
+        }); 
 
         //this.sourceVendor.isdefaultContact = true;
         this.matSpinner = true;
@@ -113,8 +115,16 @@ export class VendorCapesComponent implements OnInit {
     nextClick() {
         this.activeIndex = 3;
         this.vendorService.changeofTab(this.activeIndex);
+        this.alertService.showMessage(
+			'Success',
+			`${this.isvendorEditMode ? 'Updated' : 'Saved'}  Capabilities Sucessfully `,
+			MessageSeverity.success
+		);
         // this.vendorService.indexObj.next(this.activeIndex);
         // this.vendorService.changeStep('Contacts');
         // this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-contacts');
     }
 }
+
+
+// ${this.iseditMode ? 'Updated' : 'Saved'  }

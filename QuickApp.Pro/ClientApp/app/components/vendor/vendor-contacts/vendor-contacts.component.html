@@ -7,7 +7,7 @@
                         <div class="col-md-4">
                             <p class="fs12">
                             <label class="control-label labels-font-header" style="width: auto;">Vendor Name: </label>
-                        <span class="span-header-red" style="text-transform: capitalize"> {{local?.vendorName }} </span> </p>
+                        <span class="span-header-red" style="text-transform: capitalize"> {{getVendorName()}} </span> </p>
                         </div>
                         <div class="col-md-4">
                             <p class="fs12">
@@ -70,6 +70,11 @@
                                 </div>
                             </ng-template>
 
+                            <ng-template pTemplate="colgroup" let-columns>
+                                    <colgroup>
+                                        <col *ngFor="let col of columns" style="width:auto">
+                                    </colgroup>
+                                </ng-template>
                             <ng-template pTemplate="header" let-columns>
                                 <tr>
                                     <th style="width: 40px;">Flag</th>
@@ -102,7 +107,12 @@
 
 
                                     <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
-                                        {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
+                                        {{col.field == 'createdDate'?  
+                                        (rowData[col.field] | date: 'MM/dd/yyyy'):
+                                        rowData[col.field]
+                                         && col.field == 'updatedDate'?  
+                                         (rowData[col.field] | date: 'MM/dd/yyyy')
+                                         :rowData[col.field] }}
                                     </td>
                                     <td class="text-center">
                                         <p-inputSwitch *ngIf="!isViewMode" name="isActive{{i}}" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="handleChanges(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
@@ -188,34 +198,58 @@
 
     </div>
     <div class="modal-body" *ngIf="contactauditHisory">
-        <div class="table-responsive rro-table-cstm">
+        <div class="table-responsive ">
             <table class="table table-bordered" *ngIf="contactauditHisory.length> 0 else noDatavailable">
                 <thead>
                     <tr>
+                       <th>Prefix</th>
                         <th>First Name</th>
+                        <th>Middle Name</th>
                         <th>Last Name</th>
+                        <th>Suffix</th>
                         <th>Contact Title</th>
                         <th>Email</th>
-                        <th>Mobile Phone</th>
                         <th>Work Phone</th>
+                        <th>Mobile Phone</th>
+                        <th>Alternate Phone</th>
                         <th>Fax</th>
-                        <th>IsActive</th>
+                        <th>Primary Contact</th>
+                        <th>Memo</th>
+                        <th>Is Active</th>
+                        <th>Created By</th>
+                        <th>Created Date</th>
                         <th>Updated By</th>
-                        <th>Updated Time</th>
+                        <th>Updated Date</th>
                     </tr>
                 </thead>
                 <tbody class="audithistory-cstm"> <!--*ngIf="auditHistory.length> 0"-->
                     <tr *ngFor="let audit of contactauditHisory; let i = index;">
-                        <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'firstName', audit.firstName)  ? 'black' : 'red'  }">{{audit.firstName}}</td>
-                            <td [ngStyle]="{'color': getColorCodeForHistory(i, 'lastName', audit.lastName)  ? 'black' : 'red'  }">{{audit.lastName}}</td>
-                            <td [ngStyle]="{'color': getColorCodeForHistory(i, 'contactTitle', audit.contactTitle)  ? 'black' : 'red'  }">{{audit.contactTitle}}</td>
-                            <td [ngStyle]="{'color': getColorCodeForHistory(i, 'email', audit.email)  ? 'black' : 'red'  }">{{audit.email}}</td>
-                            <td [ngStyle]="{'color': getColorCodeForHistory(i, 'mobilePhone', audit.mobilePhone)  ? 'black' : 'red'  }">{{audit.mobilePhone}}</td>
-                            <td [ngStyle]="{'color': getColorCodeForHistory(i, 'workPhone', audit.workPhone)  ? 'black' : 'red'  }">{{audit.workPhone}}</td>
-                            <td [ngStyle]="{'color': getColorCodeForHistory(i, 'fax', audit.fax)  ? 'black' : 'red'  }">{{audit.fax}}</td>
-                            <td [ngStyle]="{'color': getColorCodeForHistory(i, 'isActive', audit.isActive)  ? 'black' : 'red'  }">{{audit.isActive}}</td>
-                        <td >{{audit.updatedBy}}</td>
-                        <td>{{audit.updatedDate | date: 'MM-dd-yyyy'}}</td>
+                         <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'prefix', audit.prefix)  ? 'black' : 'red'  }">{{audit.prefix}}</td>
+
+                        <td [ngStyle]="{'color': getColorCodeForHistory(i, 'firstName', audit.firstName)  ? 'black' : 'red'  }">{{audit.firstName}}</td>
+                        <td [ngStyle]="{'color': getColorCodeForHistory(i, 'middleName', audit.middleName)  ? 'black' : 'red'  }">{{audit.middleName}}</td>
+
+                        <td [ngStyle]="{'color': getColorCodeForHistory(i, 'lastName', audit.lastName)  ? 'black' : 'red'  }">{{audit.lastName}}</td>
+                        <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'suffix', audit.suffix)  ? 'black' : 'red'  }">{{audit.suffix}}</td>
+
+                        <td [ngStyle]="{'color': getColorCodeForHistory(i, 'contactTitle', audit.contactTitle)  ? 'black' : 'red'  }">{{audit.contactTitle}}</td>
+                        <td [ngStyle]="{'color': getColorCodeForHistory(i, 'email', audit.email)  ? 'black' : 'red'  }">{{audit.email}}</td>
+
+                        <td [ngStyle]="{'color': getColorCodeForHistory(i, 'fullContact', audit.fullContact)  ? 'black' : 'red'  }">{{audit.fullContact}}</td>
+                        <td [ngStyle]="{'color': getColorCodeForHistory(i, 'mobilePhone', audit.mobilePhone)  ? 'black' : 'red'  }">{{audit.mobilePhone}}</td>
+                        <td [ngStyle]="{'color': getColorCodeForHistory(i, 'alternatePhone', audit.alternatePhone)  ? 'black' : 'red'  }">{{audit.alternatePhone}}</td>
+
+
+                        <td [ngStyle]="{'color': getColorCodeForHistory(i, 'fax', audit.fax)  ? 'black' : 'red'  }">{{audit.fax}}</td>
+                       
+                        <td [ngStyle]="{'color': getColorCodeForHistory(i, 'isDefaultContact', audit.isDefaultContact)  ? 'black' : 'red'  }">{{audit.isDefaultContact}}</td>
+                        <td [ngStyle]="{'color': getColorCodeForHistory(i, 'notes', audit.notes)  ? 'black' : 'red'  }">{{audit.notes}}</td>
+                        <td [ngStyle]="{'color': getColorCodeForHistory(i, 'isActive', audit.isActive)  ? 'black' : 'red'  }">{{audit.isActive}}</td>
+                        <td>{{audit.createdBy}}</td>
+                        <td>{{audit.createdDate | date: 'dd-MM-yyyy h:mm a '}}</td>
+
+                        <td>{{audit.updatedBy}}</td>
+                        <td>{{audit.updatedDate | date: 'dd-MM-yyyy h:mm a '}}</td>
                     </tr>
                 </tbody> 
                 <!-- <tr *ngFor="let audit of contactauditHisory">
@@ -253,20 +287,20 @@
         <div class="modal-body viewform">
             <p><span class="label"><b>Primary Contact: </b></span><span class="value">{{sourceVendorforView.isDefaultContact}}</span></p>
             <p><span class="label"><b>Prefix: </b></span><span class="value">{{sourceVendorforView.prefix}}</span></p>
-            <p><span class="label"><b>First Name: </b></span><span class="value">{{sourceVendorforView.firstName}}</span></p>
+            <p><span class="label"><b>First Name: <span class="clr-red">*</span> </b></span><span class="value">{{sourceVendorforView.firstName}}</span></p>
             <p><span class="label"><b>Middle Name: </b></span><span class="value">{{sourceVendorforView.middleName}}</span></p>
-            <p><span class="label"><b>Last Name: </b></span><span class="value">{{sourceVendorforView.lastName}}</span></p>
+            <p><span class="label"><b>Last Name: <span class="clr-red">*</span> </b></span><span class="value">{{sourceVendorforView.lastName}}</span></p>
             <p><span class="label"><b>Suffix: </b></span><span class="value">{{sourceVendorforView.suffix}}</span></p>
             <p><span class="label"><b>Contact Title: </b></span><span class="value">{{sourceVendorforView.contactTitle}}</span></p>
             <p>
-                <span class="label"><b>Work Phone: </b></span><span class="value">
+                <span class="label"><b>Work Phone: <span class="clr-red">*</span> </b></span><span class="value">
                     {{sourceVendorforView.workPhone}}
                     <span *ngIf="sourceVendorforView.workPhoneExtn">-</span>
                     {{sourceVendorforView.workPhoneExtn}}
                    
                 </span>
             </p>
-            <p><span class="label"><b>Email: </b></span><span class="value">{{sourceVendorforView.email}}</span></p>
+            <p><span class="label"><b>Email: <span class="clr-red">*</span> </b></span><span class="value">{{sourceVendorforView.email}}</span></p>
             <p><span class="label"><b>Mobile Phone : </b></span><span class="value">{{sourceVendorforView.mobilePhone}}</span></p>
             <p><span class="label"><b>Alternate Phone : </b></span><span class="value">{{sourceVendorforView.alternatePhone}}</span></p>
             <p><span class="label"><b>Fax: </b></span><span class="value">{{sourceVendorforView.fax}}</span></p>
@@ -315,35 +349,35 @@
                             <div class="form-group">
                                 <label>First Name <span class="clr-red">*</span></label>
                                 <div class="inner-addon right-addon inline-block" style="width: 100%">
-                                    <p-autoComplete class="pautocomp-cstm" [(ngModel)]="sourceVendor.firstName" (onSelect)="onFirstNameSelected($event)" (onKeyUp)=eventFirstNameHandler($event) name="firstName" [suggestions]="firstNames" (completeMethod)="filterFirstNames($event)" [size]="30" [minLength]="1" [dropdown]="true" required>
+                                    <p-autoComplete class="pautocomp-cstm" [(ngModel)]="sourceVendor.firstName"  name="firstName" [suggestions]="firstNames" (completeMethod)="filterFirstNames($event)" [size]="30" [minLength]="1" [dropdown]="true" required>
                                         <ng-template let-firstName pTemplate="item">
                                             <div class="ui-helper-clearfix">{{firstName}}</div>
                                         </ng-template>
                                     </p-autoComplete>
                                 </div>
-                                <div *ngIf="disablesaveForFirstname" class="clr-red">Entry Already Exists</div>
+                                <!-- <div *ngIf="disablesaveForFirstname" class="clr-red">Entry Already Exists</div> -->
                             </div>
                             <div class="form-group">
                                 <label>Middle Name</label>
                                 <div class="inner-addon right-addon inline-block" style="width: 100%">
-                                    <p-autoComplete class="pautocomp-cstm" [(ngModel)]="sourceVendor.middleName" (onSelect)="onMiddleNameSelected($event)" (onKeyUp)=eventMiddleNameHandler($event) name="middleName" [suggestions]="middleNames" (completeMethod)="filterMiddleNames($event)" [size]="30" [minLength]="1" [dropdown]="true">
+                                    <p-autoComplete class="pautocomp-cstm" [(ngModel)]="sourceVendor.middleName"  name="middleName" [suggestions]="middleNames" (completeMethod)="filterMiddleNames($event)" [size]="30" [minLength]="1" [dropdown]="true">
                                         <ng-template let-middleName pTemplate="item">
                                             <div class="ui-helper-clearfix">{{middleName}}</div>
                                         </ng-template>
                                     </p-autoComplete>
                                 </div>
-                                <div *ngIf="disablesaveForMiddlename" class="clr-red">Entry Already Exists</div>
+                                <!-- <div *ngIf="disablesaveForMiddlename" class="clr-red">Entry Already Exists</div> -->
                             </div>
                             <div class="form-group">
                                 <label>Last Name <span class="clr-red">*</span></label>
                                 <div class="inner-addon right-addon inline-block" style="width: 100%">
-                                    <p-autoComplete class="pautocomp-cstm" [(ngModel)]="sourceVendor.lastName" (onSelect)="onLastNameSelected($event)" (onKeyUp)=eventlastNameHandler($event) name="lastName" [suggestions]="lastNames" (completeMethod)="filterLastNames($event)" [size]="30" [minLength]="1" [dropdown]="true" required>
+                                    <p-autoComplete class="pautocomp-cstm" [(ngModel)]="sourceVendor.lastName"  name="lastName" [suggestions]="lastNames" (completeMethod)="filterLastNames($event)" [size]="30" [minLength]="1" [dropdown]="true" required>
                                         <ng-template let-lastName pTemplate="item">
                                             <div class="ui-helper-clearfix">{{lastName}}</div>
                                         </ng-template>
                                     </p-autoComplete>
                                 </div>
-                                <div *ngIf="disablesaveForlastname" class="clr-red">Entry Already Exists</div>
+                                <!-- <div *ngIf="disablesaveForlastname" class="clr-red">Entry Already Exists</div> -->
                             </div>
                             <div class="form-group">
                                 <label>Suffix</label>

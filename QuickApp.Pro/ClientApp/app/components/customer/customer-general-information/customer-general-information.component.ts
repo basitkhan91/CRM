@@ -688,7 +688,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
                 this.editData = res;
                 this.isEdit = true;
             })
-        } else {
+        } else { 
 
 
             this.customerService.updateAction({

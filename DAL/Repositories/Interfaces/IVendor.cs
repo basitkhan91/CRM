@@ -82,7 +82,23 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<object> UploadVendorBillingAddressCustomData(IFormFile file, long vendorId);
         IEnumerable<object> UploadVendorShippingAddressCustomData(IFormFile file, long vendorId);
         IEnumerable<object> UploadVendorContactsCustomData(IFormFile file, long vendorId);
+        IEnumerable<object> UploadVendorPaymentAddressCustomData(IFormFile file, long vendorId);
         IEnumerable<object> getVendorShipVia(long id);
+
+        VendorInternationalShipping CreateVendorInternationalShippingDetails(VendorInternationalShipping model);
+        object VendorInternationalShippingDetailsById(long id);
+        void VendorInternationalShippingDetailsStatus(long id, bool status, string updatedBy);
+        void DeleteVendorInternationalShippingDetails(long id, string updatedBy);
+        IEnumerable<object> GetVendorInternationalShippingDetails(long VendorId);
+        IEnumerable<object> GetVendorInternationalShippingDetailsAudit(long VendorInternationalShippingId);
+
+        VendorInternationalShipViaDetails CreateVendorInternationalShipViaDetails(VendorInternationalShipViaDetails model);
+        object VendorInternationalShipViaDetailsById(long id);
+        void VendorInternationalShipViaDetailsStatus(long id, bool status, string updatedBy);
+        void DeleteVendorInternationalShipViaDetails(long id, string updatedBy);
+        IEnumerable<object> GetVendorInternationalShipViaDetails(long VendorInternationalShippingId);
+        IEnumerable<object> GetVendorInternationalShipViaDetailsAudit(long VendorInternationalShipViaDetailsId);
+
 
     }
 }

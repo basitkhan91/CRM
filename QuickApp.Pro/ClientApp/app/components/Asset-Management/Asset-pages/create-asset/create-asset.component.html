@@ -92,7 +92,6 @@
                                             <option class="form-control" *ngFor="let asset of allAssetInfo" [ngValue]="asset.assetId">
                                                 {{asset.assetId}}
                                             </option>
-
                                         </select>-->
                                     <p-autoComplete class="pautocomp-cstm" sstyle="font-size: 1px"
                                                     (onKeyUp)=assetIdHandler($event)
@@ -228,7 +227,6 @@
                                         <div class="form-group">
                                             <label>Amort Expense GL</label>
                                             <!--<select disabled="" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentSelectedIntangibleAssetType.amortExpenseGLAccountId">
-
                                                    <option class="form-control" *ngFor="let glinfo of allGlInfo" [ngValue]="glinfo.glAccountId">
                                                        {{glinfo.accountName}}
                                                    </option>
@@ -326,11 +324,10 @@
                                             <option class="form-control" *ngFor="let asset of allAssetInfo"  [ngValue]="asset.assetId">
                                                 {{asset.assetId}}
                                             </option>
-
                                         </select>-->
 
-                                    <p-autoComplete class="pautocomp-cstm" sstyle="font-size: 1px" (onKeyUp)=assetIdHandler($event) 
-                                                    [(ngModel)]="currentAsset.assetParentId" [ngModelOptions]="{standalone: true}" 
+                                    <p-autoComplete class="pautocomp-cstm" sstyle="font-size: 1px" (onKeyUp)=assetIdHandler($event)
+                                                    [(ngModel)]="currentAsset.assetParentId" [ngModelOptions]="{standalone: true}"
                                                     [suggestions]="localCollectionExc" (completeMethod)="filterExcAssetId($event)" [size]="30"
                                                     [minLength]="1" [dropdown]="true">
                                         <ng-template let-assetId pTemplate="item">
@@ -463,7 +460,6 @@
                                             <input class="form-control" type="checkbox" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentAsset.calibrationRequired">
                                         </div>
                                     </div>
-
                                     <div class="form-group col-sm-12">
                                         <label class="control-label col-sm-4">Certification Required</label>
                                         <div class="col-sm-7">

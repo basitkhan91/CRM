@@ -30,7 +30,7 @@ export type RolesChangedEventArg = { roles: Role[] | string[], operation: RolesC
 
 @Injectable()
 export class VendorService {
-
+    // isvendorEditMode:boolean=false;
     enableExternal: boolean = false;
     shippingCollection: any;
     billingCollection: any;
@@ -74,15 +74,25 @@ export class VendorService {
     selectedPoCollection: any;
     activeStep = new Subject();
     stepper = this.activeStep.asObservable();
+     // Observable string stream
+     private isvendorEditMode = new BehaviorSubject(false);
+     currentEditModeStatus = this.isvendorEditMode.asObservable();
     constructor(
         private router: Router,
         private http: HttpClient,
         private authService: AuthService,
-        private actionEndpoint: VendorEndpointService) { let currentUrl = this.router.url; }
+        private actionEndpoint: VendorEndpointService) { let currentUrl = this.router.url;
+
+        }
 
     //pass(data) {
     //	this.mySubject.next(data);
     //}
+    // new event for find edit mode
+    checkVendorEditmode(val) {
+        this.isvendorEditMode.next(val);
+      }
+    //   console.log("is edit mode",this.isvendorEditMode);
 
     changeofTab(activeIndex) {
         this.activeStep.next(activeIndex);
@@ -843,6 +853,9 @@ export class VendorService {
         return this.actionEndpoint.VendorContactFileUpload(file, vendorId);
     }
 
+    PaymentCheckUpload(file, vendorId) {
+        return this.actionEndpoint.VendorCheckPaymentFileUpload(file, vendorId);
+    }
 
 
 }

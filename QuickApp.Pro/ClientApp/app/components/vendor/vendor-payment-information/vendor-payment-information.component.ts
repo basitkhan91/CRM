@@ -24,6 +24,7 @@ import { GMapModule } from 'primeng/gmap';
 import * as $ from 'jquery';
 import { getObjectById, editValueAssignByCondition } from '../../../generic/autocomplete';
 import { VendorStepsPrimeNgComponent } from '../vendor-steps-prime-ng/vendor-steps-prime-ng.component';
+import { ConfigurationService } from '../../../services/configuration.service';
 declare const google: any;
 
 @Component({
@@ -89,7 +90,7 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 	disablesaveforCountry: boolean;
 	disablesavefoInternalrCountry: boolean;
 	disablesaveforBeneficiary: boolean;
-	selectedRowforDelete: any;	
+	selectedRowforDelete: any;
 	@ViewChild(MatPaginator) paginator: MatPaginator;
 	@ViewChild(MatSort) sort: MatSort;
 	filteredBrands: any[];
@@ -131,8 +132,9 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 	pageSize: number = 10;
 	@Input() vendorId: number = 0;
     @Input() isViewMode: boolean = false;
-
-	constructor(private http: HttpClient, private changeDetectorRef: ChangeDetectorRef, private router: ActivatedRoute, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public vendorService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
+	isvendorEditMode:any;
+	formData = new FormData();
+	constructor(private http: HttpClient, private changeDetectorRef: ChangeDetectorRef, private router: ActivatedRoute, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public vendorService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private configurations: ConfigurationService) {
 
 		if (this.vendorService.listCollection !== undefined) {
 			this.vendorService.isEditMode = true;
@@ -192,7 +194,9 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 	}
 
 	ngOnInit() {
-		
+		this.vendorService.currentEditModeStatus.subscribe(message => {
+			this.isvendorEditMode = message;
+		});
 		this.defaultSaveObj.defaultPaymentMethod = 1;
 		this.countrylist();
 		if (this.local) {
@@ -211,12 +215,12 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 		// 	zoom: 12
 		// };
 		this.getbencus();
-		if(this.vendorId != 0) {
-            this.loadData();
-        } else {
-            this.vendorService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-payment-information';
+		if (this.vendorId != 0) {
+			this.loadData();
+		} else {
+			this.vendorService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-payment-information';
 			this.vendorService.bredcrumbObj.next(this.vendorService.currentUrl);
-        }
+		}
 
 	}
 
@@ -657,7 +661,7 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 	}
 
 	saveCheckPaymentInfo() {
-		this.loadData();
+		// this.loadData();
 		this.isSaving = true;
 		if (!(this.sourceVendor.siteName && this.sourceVendor.address1 && this.sourceVendor.city &&
 			this.sourceVendor.stateOrProvince && this.sourceVendor.postalCode && this.sourceVendor.country
@@ -759,10 +763,15 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 				this.sourceVendor.createdBy = this.userName;
 				this.sourceVendor.updatedBy = this.userName;
 				this.sourceVendor.masterCompanyId = 1;
-				this.internationalSaveObj.country = editValueAssignByCondition('countries_id', this.internationalSaveObj.country);
-				this.vendorService.addInternationalinfo(this.internationalSaveObj).subscribe(data => {
+				{ }
+				// this.internationalSaveObj.country = editValueAssignByCondition('countries_id', this.internationalSaveObj.country);
+				this.vendorService.addInternationalinfo({
+					...this.internationalSaveObj,
+					country: editValueAssignByCondition('countries_id', this.internationalSaveObj.country),
+				}).subscribe(data => {
 					this.localCollection = {
 						...data, createdBy: this.userName,
+
 						updatedBy: this.userName
 					};
 					this.vendorService.paymentCollection = this.local;
@@ -776,8 +785,11 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 
 				this.sourceVendor.updatedBy = this.userName;
 				this.sourceVendor.masterCompanyId = 1;
-				this.internationalSaveObj.country = editValueAssignByCondition('countries_id', this.internationalSaveObj.country);
-				this.vendorService.vendorInternationalUpdate(this.internationalSaveObj).subscribe(
+				// this.internationalSaveObj.country = editValueAssignByCondition('countries_id', this.internationalSaveObj.country);
+				this.vendorService.vendorInternationalUpdate({
+					...this.internationalSaveObj,
+					country: editValueAssignByCondition('countries_id', this.internationalSaveObj.country),
+				}).subscribe(
 					data => {
 						this.vendorService.paymentCollection = this.local;
 						this.saveCompleted(this.sourceVendor);
@@ -787,7 +799,7 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 			this.internationalValue = true;
 			this.defaultPaymentValue = false;
 		}
-		this.internationalSaveObj = {};
+		// this.internationalSaveObj = {};
 	}
 
 	saveDefaultPaymentInfo() {
@@ -886,6 +898,11 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 		this.vendorService.changeofTab(this.activeIndex);
 		// this.vendorService.indexObj.next(this.activeIndex);
 		// this.vendorService.changeStep('Shipping Information');
+		this.alertService.showMessage(
+			'Success',
+			`${this.isvendorEditMode ? 'Updated' : 'Saved'}  Payment Information Sucessfully `,
+			MessageSeverity.success
+		);
 		this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-shipping-information');
 		//this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-billing-information');
 	}
@@ -1090,4 +1107,53 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 	getPageCount(totalNoofRecords, pageSize) {
 		return Math.ceil(totalNoofRecords / pageSize)
 	}
+
+	getVendorName() {
+
+
+		if (this.local !== undefined) {
+			return editValueAssignByCondition('vendorName', this.local.vendorName) === undefined ? '' : editValueAssignByCondition('vendorName', this.local.vendorName);
+		} else {
+			return '';
+		}
+	}
+
+
+    getColorCodeForHistory(i, field, value) {
+        const data = this.auditHisory;
+        const dataLength = data.length;
+        if (i >= 0 && i <= dataLength) {
+            if ((i + 1) === dataLength) {
+                return true;
+            } else {
+                return data[i + 1][field] === value
+            }
+        }
+	}
+	
+
+	sampleExcelDownload() {
+        const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=VendorPaymentInfo&fileName=VendorPaymentInfo.xlsx`;
+        window.location.assign(url);
+    }
+
+    customExcelUpload(event) {
+        const file = event.target.files;
+
+        // if (file.length > 0) {
+        //     this.formData.append('file', file[0])
+        //     this.vendorService.PaymentCheckUpload(this.formData, this.local.vendorId).subscribe(res => {
+        //         event.target.value = '';
+
+        //         this.formData = new FormData();
+        //         this.loadData();
+
+        //         this.alertService.showMessage(
+        //             'Success',
+        //             `Successfully Uploaded  `,
+        //             MessageSeverity.success
+        //         );
+        //     })
+        // }
+    }
 }

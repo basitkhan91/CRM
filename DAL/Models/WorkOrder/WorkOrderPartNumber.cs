@@ -42,8 +42,6 @@ namespace DAL.Models
         public bool IsDeleted { get; set; }
 
         [NotMapped]
-        public List<RevisedPart> RevisedParts { get; set; }
-        [NotMapped]
         public string Description { get; set; }
         [NotMapped]
         public string SerialNumber { get; set; }
@@ -51,6 +49,14 @@ namespace DAL.Models
         public string WorkScope { get; set; }
         [NotMapped]
         public string RevisedPartNo { get; set; }
+        [NotMapped]
+        public string Condition { get; set; }
+        [NotMapped]
+        public string StockLineNumber { get; set; }
+        [NotMapped]
+        public string PartNumber { get; set; }
+        [NotMapped]
+        public long ReceivingCustomerWorkId { get; set; }
     }
 
     public class RevisedPart

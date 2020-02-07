@@ -110,6 +110,10 @@ export class AssetCapesComponent implements OnInit {
     dashNumberUnknown = false;
     newValue: any;
     LoadValues: any[] = [];
+    totalRecords: any;
+    pageIndex: number = 0;
+    pageSize: number = 10;
+    totalPages: number;
 
     constructor(private router: ActivatedRoute, private modalService: NgbModal, private alertService: AlertService, public itemMasterService: ItemMasterService, private route: Router,
         private assetServices: AssetService, private dashnumberservices: DashNumberService, private authService: AuthService, private formBuilder: FormBuilder, private commonservice: CommonService
@@ -1123,7 +1127,8 @@ export class AssetCapesComponent implements OnInit {
                 this.modal.close();
             });
         });
-
+        this.totalRecords = this.allCapesInfo.length;
+        this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
     }
 
     resetFormArray(capData) {
@@ -1321,6 +1326,8 @@ export class AssetCapesComponent implements OnInit {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.allCapesInfo = allCapes;
+        this.totalRecords = this.allCapesInfo.length;
+        this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
     }
 
     private loadCapesData() {
@@ -1389,7 +1396,7 @@ export class AssetCapesComponent implements OnInit {
         this.assetServices.indexObj.next(this.activeIndex);
         const { assetId } = this.local;
         this.alertService.showMessage("Success", `Asset capes saved successfully.`, MessageSeverity.success);
-        this.route.navigateByUrl(`/assetmodule/assetpages/app-asset-calibration/${assetId}`);
+        this.route.navigateByUrl(`/assetmodule/assetpages/app-asset-calibration/${this.local.assetRecordId}`);
     }
 
     backClick() {
@@ -1399,7 +1406,7 @@ export class AssetCapesComponent implements OnInit {
         this.assetServices.isEditMode = true;
         this.isSaving = true;
         const { assetId } = this.local;
-        this.route.navigateByUrl(`/assetmodule/assetpages/app-edit-asset/${assetId}`);
+        this.route.navigateByUrl(`/assetmodule/assetpages/app-edit-asset/${this.local.assetRecordId}`);
     }
 
     //turn the item active/inActive

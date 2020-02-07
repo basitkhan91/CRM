@@ -70,7 +70,7 @@ export class VendorBillingInformationComponent {
     country: any;
     selectedShipVia: any;
     shipviacollection: any[];
-    formData = new FormData();    
+    formData = new FormData();
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
     filteredBrands: any[];
@@ -124,7 +124,7 @@ export class VendorBillingInformationComponent {
     public sourceVendor: any = {};
     @Input() vendorId: number = 0;
     @Input() isViewMode: boolean = false;
-
+    isvendorEditMode: any;
     constructor(private http: HttpClient, private router: Router,
         private authService: AuthService, private modalService: NgbModal,
         private activeModal: NgbActiveModal, private _fb: FormBuilder,
@@ -166,12 +166,15 @@ export class VendorBillingInformationComponent {
         }
     }
 
-    ngOnInit() {        
+    ngOnInit() {
+        this.vendorService.currentEditModeStatus.subscribe(message => {
+            this.isvendorEditMode = message;
+        });
         if (this.local) {
             this.loadData();
         }
         this.countrylist();
-        if(this.vendorId != 0) {
+        if (this.vendorId != 0) {
             this.loadData();
         } else {
             this.vendorService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-billing-information';
@@ -181,7 +184,7 @@ export class VendorBillingInformationComponent {
         //     center: { lat: 36.890257, lng: 30.707417 },
         //     zoom: 12
         // };
-    }    
+    }
 
     ngAfterViewInit() {
     }
@@ -241,7 +244,7 @@ export class VendorBillingInformationComponent {
         this.vendorService.getVendorBillAddressGet(vendorId).subscribe(
             results => this.onDataLoadSuccessful(results[0]),
             error => this.onDataLoadFailed(error)
-        );        
+        );
     }
 
     private countrylist() {
@@ -669,6 +672,11 @@ export class VendorBillingInformationComponent {
         // this.vendorService.indexObj.next(this.activeIndex);
         // this.vendorService.changeStep('Warnings');
         // this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-warnings');
+        this.alertService.showMessage(
+            'Success',
+            `${this.isvendorEditMode ? 'Updated' : 'Saved'}  Billing Information Sucessfully `,
+            MessageSeverity.success
+        );
     }
     handleChanges(rowData, e) {
         console.log(rowData);
@@ -820,6 +828,16 @@ export class VendorBillingInformationComponent {
                     MessageSeverity.success
                 );
             })
+        }
+    }
+
+    getVendorName() {
+        console.log(this.local);
+
+        if (this.local !== undefined) {
+            return editValueAssignByCondition('vendorName', this.local.vendorName) === undefined ? '' : editValueAssignByCondition('vendorName', this.local.vendorName);
+        } else {
+            return '';
         }
     }
 

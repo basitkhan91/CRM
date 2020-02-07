@@ -342,7 +342,7 @@ export class VendorsListComponent implements OnInit {
         this.status = status;
         this.lazyLoadEventDataInput.filters = { ...this.lazyLoadEventDataInput.filters, status: status };
         const PagingData = { ...this.lazyLoadEventDataInput, filters: listSearchFilterObjectCreation(this.lazyLoadEventDataInput.filters) }
-            this.getList(PagingData);
+        this.getList(PagingData);
     }
 
     // private loadData() {
@@ -524,6 +524,7 @@ export class VendorsListComponent implements OnInit {
 
     //View Edit
     openEdit(row) {
+        this.vendorService.checkVendorEditmode(true);
         // this.isEditMode = true;
         // this.vendorService.isEditMode = true;
         // this.isSaving = true;
@@ -715,13 +716,13 @@ export class VendorsListComponent implements OnInit {
 
     openView(content, row) {
         this.vendorId = row.vendorId;
-        console.log(this.vendorId);        
+        console.log(this.vendorId);
         this.vendorService.getVendorDataById(row.vendorId).subscribe(res => {
-            console.log(res);
+            console.log(res,row);
             this.vendorData = res;
-        });
+        }); 
 
-        this.loadVendorCapsData(row.vendorId);
+        // this.loadVendorCapsData(row.vendorId);
         this.toGetVendorGeneralDocumentsList(row.vendorId);
         this.getVendorProcess1099FromTransaction(row.vendorId);
         this.getDomesticWithVendorId(row.vendorId);
@@ -1017,6 +1018,14 @@ export class VendorsListComponent implements OnInit {
         const { vendorId } = rowData;
         this.route.navigateByUrl(`vendorsmodule/vendorpages/app-ro-setup/vendor/${vendorId}`);
     }
+    navigateToCreatePO() {
+        $('#purchaseOrderList').modal('hide');
+        this.route.navigateByUrl(`vendorsmodule/vendorpages/app-purchase-setup/vendor/${this.vendorId}`);
+    }
+    navigateToCreateRO() {
+        $('#repairOrderList').modal('hide');
+        this.route.navigateByUrl(`vendorsmodule/vendorpages/app-ro-setup/vendor/${this.vendorId}`);
+    }
 
     toGetVendorGeneralDocumentsList(vendorId) {
         var moduleId = 3;
@@ -1050,7 +1059,7 @@ export class VendorsListComponent implements OnInit {
 
                     }
                 });
-
+console.log("vendor_1099",this.vendorProcess1099Data);
                 for (let j = 0; j < this.vendorProcess1099Data.length; j++) {
                     if (this.vendorProcess1099Data[j].isDefaultRadio == true || this.vendorProcess1099Data[j].isDefaultRadio == "true") {
                         this.vendorProcess1099Data[j].isDefaultRadio = this.vendorProcess1099Data[j].description

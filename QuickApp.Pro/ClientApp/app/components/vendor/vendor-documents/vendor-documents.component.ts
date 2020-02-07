@@ -9,7 +9,7 @@ import { AlertService, MessageSeverity } from '../../../services/alert.service';
 import { MasterComapnyService } from '../../../services/mastercompany.service';
 import { CustomerContactModel } from '../../../models/customer-contact.model';
 import { MatDialog } from '@angular/material';
-import { getObjectByValue, getObjectById, getValueFromObjectByKey } from '../../../generic/autocomplete';
+import { getObjectByValue, getObjectById, getValueFromObjectByKey, editValueAssignByCondition } from '../../../generic/autocomplete';
 import { VendorService } from '../../../services/vendor.service';
 import { ConfigurationService } from '../../../services/configuration.service';
 import { AuditHistory } from '../../../models/audithistory.model';
@@ -134,6 +134,8 @@ export class VendorDocumentsComponent implements OnInit {
 
 
 	fileUploadForDocuments(event) {
+		console.log(event);
+
 		if (event.files.length === 0)
 			return;
 
@@ -141,6 +143,10 @@ export class VendorDocumentsComponent implements OnInit {
 			this.formData.append(file.name, file);
 		}
 		// fileUpload.clear();
+
+	}
+	removeFile(event) {
+		this.formData.delete(event.file.name)
 
 	}
 
@@ -343,6 +349,16 @@ export class VendorDocumentsComponent implements OnInit {
 		}
 	}
 
+
+	getVendorName() {
+
+
+		if (this.local !== undefined) {
+			return editValueAssignByCondition('vendorName', this.local.vendorName) === undefined ? '' : editValueAssignByCondition('vendorName', this.local.vendorName);
+		} else {
+			return '';
+		}
+	}
 	getPageCount(totalNoofRecords, pageSize) {
 		return Math.ceil(totalNoofRecords / pageSize)
 	}

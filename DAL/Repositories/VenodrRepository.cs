@@ -98,8 +98,8 @@ namespace DAL.Repositories
                                 join ad in _appContext.Address on t.AddressId equals ad.AddressId
                                 join vt in _appContext.VendorType on t.VendorTypeId equals vt.VendorTypeId into vtt
                                 from vt in vtt.DefaultIfEmpty()
-                                //join vc in _appContext.VendorClassification on t.VendorClassificationId equals vc.VendorClassificationId into vcd
-                                //from vc in vcd.DefaultIfEmpty()
+                                    //join vc in _appContext.VendorClassification on t.VendorClassificationId equals vc.VendorClassificationId into vcd
+                                    //from vc in vcd.DefaultIfEmpty()
                                 join vca in _appContext.VendorCapabiliy on t.capabilityId equals vca.VendorCapabilityId into vcad
                                 from vca in vcad.DefaultIfEmpty()
                                 where (t.IsDeleted == false || t.IsDeleted == null)
@@ -116,7 +116,7 @@ namespace DAL.Repositories
                                     city = ad.City,
                                     stateOrProvince = ad.StateOrProvince,
                                     //classificationName = vc.ClassificationName,
-                                   classificationName = string.Join(",", _appContext.Vendor
+                                    classificationName = string.Join(",", _appContext.Vendor
                                 .Join(_appContext.ClassificationMapping,
                                 v => v.VendorId,
                                 mp => mp.ReferenceId,
@@ -137,12 +137,12 @@ namespace DAL.Repositories
                         join ad in _appContext.Address on t.AddressId equals ad.AddressId
                         join vt in _appContext.VendorType on t.VendorTypeId equals vt.VendorTypeId into vtt
                         from vt in vtt.DefaultIfEmpty()
-                        //join vc in _appContext.VendorClassification on t.VendorClassificationId equals vc.VendorClassificationId into vcd
-                        //from vc in vcd.DefaultIfEmpty()
+                            //join vc in _appContext.VendorClassification on t.VendorClassificationId equals vc.VendorClassificationId into vcd
+                            //from vc in vcd.DefaultIfEmpty()
                         join vca in _appContext.VendorCapabiliy on t.capabilityId equals vca.VendorCapabilityId into vcad
                         from vca in vcad.DefaultIfEmpty()
                         where (t.IsDeleted == false || t.IsDeleted == null)
-                       
+
                         select new VendorFilters()
 
                         {
@@ -167,7 +167,7 @@ namespace DAL.Repositories
                                   mp1 => mp1.mp.ClasificationId,
                                   vc => vc.VendorClassificationId,
                                 (mp1, vc) => new { mp1, vc })
-                                .Where(p => p.mp1.v.VendorId == t.VendorId && p.mp1.mp.ModuleId== Convert.ToInt32(ModuleEnum.Vendor) )
+                                .Where(p => p.mp1.v.VendorId == t.VendorId && p.mp1.mp.ModuleId == Convert.ToInt32(ModuleEnum.Vendor))
                                 .Select(p => p.vc.ClassificationName)),
                             totalRecords = totalRecords,
 
@@ -179,7 +179,7 @@ namespace DAL.Repositories
 
         }
 
-        public IEnumerable<object> VendorGlobalSearch(string filterText, int pageNumber, int pageSize,bool isActive)
+        public IEnumerable<object> VendorGlobalSearch(string filterText, int pageNumber, int pageSize, bool isActive)
         {
             var take = pageSize;
             var skip = take * (pageNumber);
@@ -194,11 +194,11 @@ namespace DAL.Repositories
                                         join ad in _appContext.Address on t.AddressId equals ad.AddressId
                                         join vt in _appContext.VendorType on t.VendorTypeId equals vt.VendorTypeId into vtt
                                         from vt in vtt.DefaultIfEmpty()
-                                        //join vc in _appContext.VendorClassification on t.VendorClassificationId equals vc.VendorClassificationId into vcd
-                                        //from vc in vcd.DefaultIfEmpty()
+                                            //join vc in _appContext.VendorClassification on t.VendorClassificationId equals vc.VendorClassificationId into vcd
+                                            //from vc in vcd.DefaultIfEmpty()
                                         join vca in _appContext.VendorCapabiliy on t.capabilityId equals vca.VendorCapabilityId into vcad
                                         from vca in vcad.DefaultIfEmpty()
-                                        where (t.IsDeleted == false || t.IsDeleted == null) && t.IsActive== true
+                                        where (t.IsDeleted == false || t.IsDeleted == null) && t.IsActive == true
                                           && (t.VendorName.ToLower().Contains(filterText)
                                           || t.VendorCode.ToLower().Contains(filterText)
                                           || t.VendorEmail.ToLower().Contains(filterText)
@@ -231,8 +231,8 @@ namespace DAL.Repositories
                                 join ad in _appContext.Address on t.AddressId equals ad.AddressId
                                 join vt in _appContext.VendorType on t.VendorTypeId equals vt.VendorTypeId into vtt
                                 from vt in vtt.DefaultIfEmpty()
-                                //join vc in _appContext.VendorClassification on t.VendorClassificationId equals vc.VendorClassificationId into vcd
-                                //from vc in vcd.DefaultIfEmpty()
+                                    //join vc in _appContext.VendorClassification on t.VendorClassificationId equals vc.VendorClassificationId into vcd
+                                    //from vc in vcd.DefaultIfEmpty()
                                 join vca in _appContext.VendorCapabiliy on t.capabilityId equals vca.VendorCapabilityId into vcad
                                 from vca in vcad.DefaultIfEmpty()
                                 where (t.IsDeleted == false || t.IsDeleted == null) && t.IsActive == true
@@ -298,8 +298,8 @@ namespace DAL.Repositories
                                         join ad in _appContext.Address on t.AddressId equals ad.AddressId
                                         join vt in _appContext.VendorType on t.VendorTypeId equals vt.VendorTypeId into vtt
                                         from vt in vtt.DefaultIfEmpty()
-                                        //join vc in _appContext.VendorClassification on t.VendorClassificationId equals vc.VendorClassificationId into vcd
-                                        //from vc in vcd.DefaultIfEmpty()
+                                            //join vc in _appContext.VendorClassification on t.VendorClassificationId equals vc.VendorClassificationId into vcd
+                                            //from vc in vcd.DefaultIfEmpty()
                                         join vca in _appContext.VendorCapabiliy on t.capabilityId equals vca.VendorCapabilityId into vcad
                                         from vca in vcad.DefaultIfEmpty()
                                         where (t.IsDeleted == false || t.IsDeleted == null)
@@ -314,8 +314,8 @@ namespace DAL.Repositories
                                 join ad in _appContext.Address on t.AddressId equals ad.AddressId
                                 join vt in _appContext.VendorType on t.VendorTypeId equals vt.VendorTypeId into vtt
                                 from vt in vtt.DefaultIfEmpty()
-                                //join vc in _appContext.VendorClassification on t.VendorClassificationId equals vc.VendorClassificationId into vcd
-                                //from vc in vcd.DefaultIfEmpty()
+                                    //join vc in _appContext.VendorClassification on t.VendorClassificationId equals vc.VendorClassificationId into vcd
+                                    //from vc in vcd.DefaultIfEmpty()
                                 join vca in _appContext.VendorCapabiliy on t.capabilityId equals vca.VendorCapabilityId into vcad
                                 from vca in vcad.DefaultIfEmpty()
                                 where (t.IsDeleted == false || t.IsDeleted == null)
@@ -362,8 +362,8 @@ namespace DAL.Repositories
                                         join ad in _appContext.Address on t.AddressId equals ad.AddressId
                                         join vt in _appContext.VendorType on t.VendorTypeId equals vt.VendorTypeId into vtt
                                         from vt in vtt.DefaultIfEmpty()
-                                        //join vc in _appContext.VendorClassification on t.VendorClassificationId equals vc.VendorClassificationId into vcd
-                                        //from vc in vcd.DefaultIfEmpty()
+                                            //join vc in _appContext.VendorClassification on t.VendorClassificationId equals vc.VendorClassificationId into vcd
+                                            //from vc in vcd.DefaultIfEmpty()
                                         join vca in _appContext.VendorCapabiliy on t.capabilityId equals vca.VendorCapabilityId into vcad
                                         from vca in vcad.DefaultIfEmpty()
                                         where (t.IsDeleted == false || t.IsDeleted == null)
@@ -399,8 +399,8 @@ namespace DAL.Repositories
                                 join ad in _appContext.Address on t.AddressId equals ad.AddressId
                                 join vt in _appContext.VendorType on t.VendorTypeId equals vt.VendorTypeId into vtt
                                 from vt in vtt.DefaultIfEmpty()
-                                //join vc in _appContext.VendorClassification on t.VendorClassificationId equals vc.VendorClassificationId into vcd
-                                //from vc in vcd.DefaultIfEmpty()
+                                    //join vc in _appContext.VendorClassification on t.VendorClassificationId equals vc.VendorClassificationId into vcd
+                                    //from vc in vcd.DefaultIfEmpty()
                                 join vca in _appContext.VendorCapabiliy on t.capabilityId equals vca.VendorCapabilityId into vcad
                                 from vca in vcad.DefaultIfEmpty()
                                 where (t.IsDeleted == false || t.IsDeleted == null)
@@ -411,7 +411,7 @@ namespace DAL.Repositories
                                         || ad.City.ToLower().Contains(filterText)
                                         || ad.StateOrProvince.ToLower().Contains(filterText)
                                         //|| vc.ClassificationName.Contains(filterText)
-                                        ||  string.Join(",", _appContext.Vendor
+                                        || string.Join(",", _appContext.Vendor
                                 .Join(_appContext.ClassificationMapping,
                                 v => v.VendorId,
                                 mp => mp.ReferenceId,
@@ -436,7 +436,7 @@ namespace DAL.Repositories
                                     ad.City,
                                     ad.StateOrProvince,
                                     //vc.ClassificationName,
-                                    ClassificationName= string.Join(",", _appContext.Vendor
+                                    ClassificationName = string.Join(",", _appContext.Vendor
                                 .Join(_appContext.ClassificationMapping,
                                 v => v.VendorId,
                                 mp => mp.ReferenceId,
@@ -466,8 +466,8 @@ namespace DAL.Repositories
                                         join ad in _appContext.Address on t.AddressId equals ad.AddressId
                                         join vt in _appContext.VendorType on t.VendorTypeId equals vt.VendorTypeId into vtt
                                         from vt in vtt.DefaultIfEmpty()
-                                        //join vc in _appContext.VendorClassification on t.VendorClassificationId equals vc.VendorClassificationId into vcd
-                                        //from vc in vcd.DefaultIfEmpty()
+                                            //join vc in _appContext.VendorClassification on t.VendorClassificationId equals vc.VendorClassificationId into vcd
+                                            //from vc in vcd.DefaultIfEmpty()
                                         join vca in _appContext.VendorCapabiliy on t.capabilityId equals vca.VendorCapabilityId into vcad
                                         from vca in vcad.DefaultIfEmpty()
                                         where (t.IsDeleted == false || t.IsDeleted == null)
@@ -482,8 +482,8 @@ namespace DAL.Repositories
                                 join ad in _appContext.Address on t.AddressId equals ad.AddressId
                                 join vt in _appContext.VendorType on t.VendorTypeId equals vt.VendorTypeId into vtt
                                 from vt in vtt.DefaultIfEmpty()
-                                //join vc in _appContext.VendorClassification on t.VendorClassificationId equals vc.VendorClassificationId into vcd
-                                //from vc in vcd.DefaultIfEmpty()
+                                    //join vc in _appContext.VendorClassification on t.VendorClassificationId equals vc.VendorClassificationId into vcd
+                                    //from vc in vcd.DefaultIfEmpty()
                                 join vca in _appContext.VendorCapabiliy on t.capabilityId equals vca.VendorCapabilityId into vcad
                                 from vca in vcad.DefaultIfEmpty()
                                 where (t.IsDeleted == false || t.IsDeleted == null)
@@ -498,7 +498,7 @@ namespace DAL.Repositories
                                     ad.City,
                                     ad.StateOrProvince,
                                     //vc.ClassificationName,
-                                   ClassificationName= string.Join(",", _appContext.Vendor
+                                    ClassificationName = string.Join(",", _appContext.Vendor
                                 .Join(_appContext.ClassificationMapping,
                                 v => v.VendorId,
                                 mp => mp.ReferenceId,
@@ -522,7 +522,7 @@ namespace DAL.Repositories
                 }
             }
 
-           
+
 
         }
 
@@ -534,16 +534,18 @@ namespace DAL.Repositories
                           from cont in country.DefaultIfEmpty()
                           join vt in _appContext.VendorType on t.VendorTypeId equals vt.VendorTypeId into vtt
                           from vt in vtt.DefaultIfEmpty()
-                          //join vc in _appContext.VendorClassification on t.VendorClassificationId equals vc.VendorClassificationId into vcd
-                          //from vc in vcd.DefaultIfEmpty()
+                              //join vc in _appContext.VendorClassification on t.VendorClassificationId equals vc.VendorClassificationId into vcd
+                              //from vc in vcd.DefaultIfEmpty()
                           join vca in _appContext.VendorCapabiliy on t.capabilityId equals vca.VendorCapabilityId into vcad
                           from vca in vcad.DefaultIfEmpty()
                           join cr in _appContext.CreditTerms on t.CreditTermsId equals cr.CreditTermsId into crr
                           from cr in crr.DefaultIfEmpty()
                           join cu in _appContext.Currency on t.CurrencyId equals cu.CurrencyId into cuu
-                          from cu in cuu.DefaultIfEmpty()
-                          join vp in _appContext.Vendor on t.Parent equals vp.VendorId into vpp
-                          from vp in vpp.DefaultIfEmpty()
+                          from cu in cuu.DefaultIfEmpty()                         
+						  join d in _appContext.Discount on t.DiscountId equals d.DiscountId into dg
+                          from d in dg.DefaultIfEmpty()
+                          join vp1 in _appContext.Vendor on t.VendorParentId equals vp1.VendorId into vpp1
+                          from vp1 in vpp1.DefaultIfEmpty()
 
                               //join inte in _appContext.IntegrationPortalMapping on t.VendorId equals inte.ReferenceId into intee 
                               //from inte in intee.DefaultIfEmpty()
@@ -559,7 +561,7 @@ namespace DAL.Repositories
                               t.DoingBusinessAsName,
                               t.VendorClassificationId,
                               t.Parent,
-                              ParentName = vp.VendorName,
+                              ParentName = vp1.VendorName,
                               t.VendorContractReference,
                               t.AddressId,
                               t.IsVendorAlsoCustomer,
@@ -578,8 +580,9 @@ namespace DAL.Repositories
                               t.AeroExchangeDescription,
                               t.CreditLimit,
                               t.CurrencyId,
-                              t.DiscountLevel,
-                              t.Is1099Required,
+                              t.DiscountLevel,                            
+                              DiscontValue =  d == null?0: d.DiscontValue,
+							  t.Is1099Required,
                               t.CreditTermsId,
                               t.MasterCompanyId,
                               t.CreatedBy,
@@ -589,9 +592,9 @@ namespace DAL.Repositories
                               t.IsActive,
                               t.VendorPhone,
                               t.IsDeleted,
-                              t.DiscountId,
+                              t.DiscountId ,
                               t.capabilityId,
-                              t.VendorParentName,
+                              VendorParentName= vp1.VendorName,
                               t.ManagementStructureId,
                               t.DefaultPaymentTypeId,
                               t.VendorPhoneExt,
@@ -607,9 +610,9 @@ namespace DAL.Repositories
                               Country = cont.countries_name,
                               CountryId = cont.countries_id,
                               CreditTerms = cr.Name,
-                              currency = cu.Symbol, 
-							  t.VendorParentId,
-                              
+                              currency = cu.Symbol,
+                              t.VendorParentId,
+
 
                               //vc.ClassificationName,
                               VendorCapabilityName = vca.capabilityDescription,
@@ -1292,9 +1295,9 @@ namespace DAL.Repositories
                         _appContext.VendorBillingAddress.Update(objContactdata);
 
                         _appContext.SaveChanges();
-                       commonRepository.ShippingBillingAddressHistory(Convert.ToInt64(objContactdata.VendorId), Convert.ToInt32(ModuleEnum.Vendor), Convert.ToInt64(objContactdata.VendorBillingAddressId), Convert.ToInt32(AddressTypeEnum.BillingAddress), objContactdata.UpdatedBy);
+                        commonRepository.ShippingBillingAddressHistory(Convert.ToInt64(objContactdata.VendorId), Convert.ToInt32(ModuleEnum.Vendor), Convert.ToInt64(objContactdata.VendorBillingAddressId), Convert.ToInt32(AddressTypeEnum.BillingAddress), objContactdata.UpdatedBy);
                     }
-                    }
+                }
 
                 if (billingAddress.VendorBillingAddressId > 0)
                 {
@@ -1311,7 +1314,7 @@ namespace DAL.Repositories
 
                     commonRepository.ShippingBillingAddressHistory(Convert.ToInt64(billingAddress.VendorId), Convert.ToInt32(ModuleEnum.Vendor), Convert.ToInt64(billingAddress.VendorBillingAddressId), Convert.ToInt32(AddressTypeEnum.BillingAddress), billingAddress.UpdatedBy);
                 }
-                
+
                 return billingAddress.VendorBillingAddressId;
             }
             catch (Exception ex)
@@ -1434,11 +1437,11 @@ namespace DAL.Repositories
 
                 _appContext.SaveChanges();
                 var data = (from vba in _appContext.VendorBillingAddress
-                           
+
                             where vba.VendorBillingAddressId == billingAddressId
                             select new
                             {
-                               vba.VendorId
+                                vba.VendorId
                             }
                             ).FirstOrDefault();
                 commonRepository.ShippingBillingAddressHistory(Convert.ToInt64(data.VendorId), Convert.ToInt32(ModuleEnum.Vendor), Convert.ToInt64(billingAddress.VendorBillingAddressId), Convert.ToInt32(AddressTypeEnum.BillingAddress), billingAddress.UpdatedBy);
@@ -1696,7 +1699,7 @@ namespace DAL.Repositories
         {
             try
             {
-                return _appContext.VendorDocumentDetailsAudit.Where(p => p.IsActive == true && p.VendorDocumentDetailId == id).OrderByDescending(p => p.UpdatedDate).ToList();
+                return _appContext.VendorDocumentDetailsAudit.Where(p => p.IsActive == true && p.VendorDocumentDetailId == id).OrderByDescending(p => p.CreatedDate).ToList();
 
             }
             catch (Exception ex)
@@ -1880,7 +1883,7 @@ namespace DAL.Repositories
         {
             try
             {
-                return _appContext.Master1099Audit.Where(p => p.Master1099Id == id).OrderByDescending(p => p.UpdatedDate).ToList();
+                return _appContext.Master1099Audit.Where(p => p.Master1099Id == id).OrderByDescending(p => p.CreatedDate).ToList();
 
             }
             catch (Exception ex)
@@ -1949,8 +1952,8 @@ namespace DAL.Repositories
                             AircraftType = art.Description,
                             vc.AircraftModelId,
                             vc.DashNumberId,
-                            AircraftModel = arm.ModelName,
-                            ard.DashNumber,
+                            AircraftModel = (arm.ModelName == null || arm.ModelName == "") ? "Unknown" : arm.ModelName,
+                            DashNumber = (ard.DashNumber == null || ard.DashNumber == "") ? "Unknown" : ard.DashNumber,
                             //vc.PartNumber,                           
                             //vc.AircraftModel,
                             vc.Memo
@@ -2039,7 +2042,7 @@ namespace DAL.Repositories
                             from acd in acdt.DefaultIfEmpty()
 
                             where it.IsActive == true && it.VendorCapabilityId == VendorCapabilityId && myAircraftTypeId.Contains(it.AircraftTypeId) && myAircraftModelId.Contains(it.AircraftModelId) && myDashNumberId.Contains(it.DashNumberId) && it.Memo.Contains(memo) && it.IsDeleted != true
-                            select new { it.ItemMasterId, it.PartNumber, it.AircraftTypeId, it.AircraftModelId, it.DashNumberId, DashNumber = acd.DashNumber, AircraftType = acy.Description, AircraftModel = acm.ModelName, it.Memo, it.MasterCompanyId, it.IsActive, it.IsDeleted }).ToList();
+                            select new { it.ItemMasterId, it.PartNumber, it.AircraftTypeId, it.AircraftModelId, it.DashNumberId, DashNumber = (acd.DashNumber == null || acd.DashNumber == "") ? "Unknown" : acd.DashNumber, AircraftType = acy.Description, AircraftModel = (acm.ModelName == null || acm.ModelName == "") ? "Unknown" : acm.ModelName, it.Memo, it.MasterCompanyId, it.IsActive, it.IsDeleted }).ToList();
                 var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
                 return uniquedata;
             }
@@ -2053,7 +2056,7 @@ namespace DAL.Repositories
                             join acd in _appContext.AircraftDashNumber on it.DashNumberId equals acd.DashNumberId into acdt
                             from acd in acdt.DefaultIfEmpty()
                             where it.IsActive == true && it.VendorCapabilityId == VendorCapabilityId && myAircraftTypeId.Contains(it.AircraftTypeId) && myAircraftModelId.Contains(it.AircraftModelId) && it.Memo.Contains(memo) && it.IsDeleted != true
-                            select new { it.ItemMasterId, it.PartNumber, it.AircraftTypeId, it.AircraftModelId, it.DashNumberId, DashNumber = acd.DashNumber, AircraftType = acy.Description, AircraftModel = acm.ModelName, it.Memo, it.MasterCompanyId, it.IsActive, it.IsDeleted }).ToList();
+                            select new { it.ItemMasterId, it.PartNumber, it.AircraftTypeId, it.AircraftModelId, it.DashNumberId, DashNumber = (acd.DashNumber == null || acd.DashNumber == "") ? "Unknown" : acd.DashNumber, AircraftType = acy.Description, AircraftModel = (acm.ModelName == null || acm.ModelName == "") ? "Unknown" : acm.ModelName, it.Memo, it.MasterCompanyId, it.IsActive, it.IsDeleted }).ToList();
                 var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
                 return uniquedata;
             }
@@ -2067,7 +2070,7 @@ namespace DAL.Repositories
                             join acd in _appContext.AircraftDashNumber on it.DashNumberId equals acd.DashNumberId into acdt
                             from acd in acdt.DefaultIfEmpty()
                             where it.IsActive == true && it.VendorCapabilityId == VendorCapabilityId && myAircraftTypeId.Contains(it.AircraftTypeId) && it.Memo.Contains(memo) && it.IsDeleted != true
-                            select new { it.ItemMasterId, it.PartNumber, it.AircraftTypeId, it.AircraftModelId, it.DashNumberId, DashNumber = acd.DashNumber, AircraftType = acy.Description, AircraftModel = acm.ModelName, it.Memo, it.MasterCompanyId, it.IsActive, it.IsDeleted }).ToList();
+                            select new { it.ItemMasterId, it.PartNumber, it.AircraftTypeId, it.AircraftModelId, it.DashNumberId, DashNumber = (acd.DashNumber == null || acd.DashNumber == "") ? "Unknown" : acd.DashNumber, AircraftType = acy.Description, AircraftModel = (acm.ModelName == null || acm.ModelName == "") ? "Unknown" : acm.ModelName, it.Memo, it.MasterCompanyId, it.IsActive, it.IsDeleted }).ToList();
                 var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
                 return uniquedata;
             }
@@ -2081,7 +2084,7 @@ namespace DAL.Repositories
                             join acd in _appContext.AircraftDashNumber on it.DashNumberId equals acd.DashNumberId into acdt
                             from acd in acdt.DefaultIfEmpty()
                             where it.IsActive == true && it.VendorCapabilityId == VendorCapabilityId && myAircraftTypeId.Contains(it.AircraftTypeId) && myDashNumberId.Contains(it.DashNumberId) && it.Memo.Contains(memo) && it.IsDeleted != true
-                            select new { it.ItemMasterId, it.PartNumber, it.AircraftTypeId, it.AircraftModelId, it.DashNumberId, DashNumber = acd.DashNumber, AircraftType = acy.Description, AircraftModel = acm.ModelName, it.Memo, it.MasterCompanyId, it.IsActive, it.IsDeleted }).ToList();
+                            select new { it.ItemMasterId, it.PartNumber, it.AircraftTypeId, it.AircraftModelId, it.DashNumberId, DashNumber = (acd.DashNumber == null || acd.DashNumber == "") ? "Unknown" : acd.DashNumber, AircraftType = acy.Description, AircraftModel = (acm.ModelName == null || acm.ModelName == "") ? "Unknown" : acm.ModelName, it.Memo, it.MasterCompanyId, it.IsActive, it.IsDeleted }).ToList();
                 var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
                 return uniquedata;
             }
@@ -2095,7 +2098,7 @@ namespace DAL.Repositories
                             join acd in _appContext.AircraftDashNumber on it.DashNumberId equals acd.DashNumberId into acdt
                             from acd in acdt.DefaultIfEmpty()
                             where it.IsActive == true && it.VendorCapabilityId == VendorCapabilityId && myAircraftModelId.Contains(it.AircraftModelId) && myDashNumberId.Contains(it.DashNumberId) && it.Memo.Contains(memo) && it.IsDeleted != true
-                            select new { it.ItemMasterId, it.PartNumber, it.AircraftTypeId, it.AircraftModelId, it.DashNumberId, DashNumber = acd.DashNumber, AircraftType = acy.Description, AircraftModel = acm.ModelName, it.Memo, it.MasterCompanyId, it.IsActive, it.IsDeleted }).ToList();
+                            select new { it.ItemMasterId, it.PartNumber, it.AircraftTypeId, it.AircraftModelId, it.DashNumberId, DashNumber = (acd.DashNumber == null || acd.DashNumber == "") ? "Unknown" : acd.DashNumber, AircraftType = acy.Description, AircraftModel = (acm.ModelName == null || acm.ModelName == "") ? "Unknown" : acm.ModelName, it.Memo, it.MasterCompanyId, it.IsActive, it.IsDeleted }).ToList();
                 var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
                 return uniquedata;
             }
@@ -2109,7 +2112,7 @@ namespace DAL.Repositories
                             join acd in _appContext.AircraftDashNumber on it.DashNumberId equals acd.DashNumberId into acdt
                             from acd in acdt.DefaultIfEmpty()
                             where it.IsActive == true && it.VendorCapabilityId == VendorCapabilityId && myAircraftModelId.Contains(it.AircraftModelId) && it.Memo.Contains(memo) && it.IsDeleted != true
-                            select new { it.ItemMasterId, it.PartNumber, it.AircraftTypeId, it.AircraftModelId, it.DashNumberId, DashNumber = acd.DashNumber, AircraftType = acy.Description, AircraftModel = acm.ModelName, it.Memo, it.MasterCompanyId, it.IsActive, it.IsDeleted }).ToList();
+                            select new { it.ItemMasterId, it.PartNumber, it.AircraftTypeId, it.AircraftModelId, it.DashNumberId, DashNumber = (acd.DashNumber == null || acd.DashNumber == "") ? "Unknown" : acd.DashNumber, AircraftType = acy.Description, AircraftModel = (acm.ModelName == null || acm.ModelName == "") ? "Unknown" : acm.ModelName, it.Memo, it.MasterCompanyId, it.IsActive, it.IsDeleted }).ToList();
                 var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
                 return uniquedata;
             }
@@ -2123,7 +2126,7 @@ namespace DAL.Repositories
                             join acd in _appContext.AircraftDashNumber on it.DashNumberId equals acd.DashNumberId into acdt
                             from acd in acdt.DefaultIfEmpty()
                             where it.IsActive == true && it.VendorCapabilityId == VendorCapabilityId && myDashNumberId.Contains(it.DashNumberId) && it.Memo.Contains(memo) && it.IsDeleted != true
-                            select new { it.ItemMasterId, it.PartNumber, it.AircraftTypeId, it.AircraftModelId, it.DashNumberId, DashNumber = acd.DashNumber, AircraftType = acy.Description, AircraftModel = acm.ModelName, it.Memo, it.MasterCompanyId, it.IsActive, it.IsDeleted }).ToList();
+                            select new { it.ItemMasterId, it.PartNumber, it.AircraftTypeId, it.AircraftModelId, it.DashNumberId, DashNumber = (acd.DashNumber == null || acd.DashNumber == "") ? "Unknown" : acd.DashNumber, AircraftType = acy.Description, AircraftModel = (acm.ModelName == null || acm.ModelName == "") ? "Unknown" : acm.ModelName, it.Memo, it.MasterCompanyId, it.IsActive, it.IsDeleted }).ToList();
                 var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
                 return uniquedata;
             }
@@ -2137,7 +2140,7 @@ namespace DAL.Repositories
                             join acd in _appContext.AircraftDashNumber on it.DashNumberId equals acd.DashNumberId into acdt
                             from acd in acdt.DefaultIfEmpty()
                             where it.IsActive == true && it.VendorCapabilityId == VendorCapabilityId && it.Memo.Contains(memo) && it.IsDeleted != true
-                            select new { it.ItemMasterId, it.PartNumber, it.AircraftTypeId, it.AircraftModelId, it.DashNumberId, DashNumber = acd.DashNumber, AircraftType = acy.Description, AircraftModel = acm.ModelName, it.Memo, it.MasterCompanyId, it.IsActive, it.IsDeleted }).ToList();
+                            select new { it.ItemMasterId, it.PartNumber, it.AircraftTypeId, it.AircraftModelId, it.DashNumberId, DashNumber = (acd.DashNumber == null || acd.DashNumber == "") ? "Unknown" : acd.DashNumber, AircraftType = acy.Description, AircraftModel = (acm.ModelName == null || acm.ModelName == "") ? "Unknown" : acm.ModelName, it.Memo, it.MasterCompanyId, it.IsActive, it.IsDeleted }).ToList();
                 var uniquedata = data.GroupBy(item => new { item.AircraftTypeId, item.AircraftModelId, item.DashNumberId }).Select(group => group.First()).ToList();
                 return uniquedata;
             }
@@ -2274,11 +2277,11 @@ namespace DAL.Repositories
                                                         _appContext.VendorBillingAddress.Attach(ba);
                                                         _appContext.Entry(ba).Property(x => x.IsPrimary).IsModified = true;
                                                         _appContext.Entry(ba).Property(x => x.UpdatedDate).IsModified = true;
-                                                        _appContext.Entry(ba).Property(x => x.UpdatedBy).IsModified = true;                                                     
+                                                        _appContext.Entry(ba).Property(x => x.UpdatedBy).IsModified = true;
                                                         _appContext.SaveChanges();
 
                                                         //Audit History
-                                                        //commonRepository.ShippingBillingAddressHistory(Convert.ToInt64(vendorId), Convert.ToInt32(ModuleEnum.Vendor), Convert.ToInt64(custShipping.VendorBillingAddressId), Convert.ToInt32(AddressTypeEnum.BillingAddress), "System");
+                                                        commonRepository.ShippingBillingAddressHistory(Convert.ToInt64(vendorId), Convert.ToInt32(ModuleEnum.Vendor), Convert.ToInt64(vendShipping.VendorBillingAddressId), Convert.ToInt32(AddressTypeEnum.BillingAddress), "System");
                                                         _appContext.Entry(ba).State = EntityState.Detached;
 
                                                     }
@@ -2311,7 +2314,7 @@ namespace DAL.Repositories
                                             _appContext.VendorBillingAddress.Add(bill);
                                             _appContext.SaveChanges();
                                             //Audit History
-                                           // commonRepository.ShippingBillingAddressHistory(Convert.ToInt64(vendorId), Convert.ToInt32(ModuleEnum.Vendor), Convert.ToInt64(bill.VendorBillingAddressId), Convert.ToInt32(AddressTypeEnum.BillingAddress), "System");
+                                             commonRepository.ShippingBillingAddressHistory(Convert.ToInt64(vendorId), Convert.ToInt32(ModuleEnum.Vendor), Convert.ToInt64(bill.VendorBillingAddressId), Convert.ToInt32(AddressTypeEnum.BillingAddress), "System");
                                             _appContext.Entry(bill).State = EntityState.Detached;
                                         }
 
@@ -2432,11 +2435,11 @@ namespace DAL.Repositories
                                                         _appContext.VendorShippingAddress.Attach(ba);
                                                         _appContext.Entry(ba).Property(x => x.IsPrimary).IsModified = true;
                                                         _appContext.Entry(ba).Property(x => x.UpdatedDate).IsModified = true;
-                                                        _appContext.Entry(ba).Property(x => x.UpdatedBy).IsModified = true;                                                        
+                                                        _appContext.Entry(ba).Property(x => x.UpdatedBy).IsModified = true;
                                                         _appContext.SaveChanges();
 
                                                         //Audit History
-                                                        //commonRepository.ShippingBillingAddressHistory(Convert.ToInt64(vendorId), Convert.ToInt32(ModuleEnum.Vendor), Convert.ToInt64(vendShipping.VendorShippingAddressId), Convert.ToInt32(AddressTypeEnum.ShippingAddress), "System");
+                                                        commonRepository.ShippingBillingAddressHistory(Convert.ToInt64(vendorId), Convert.ToInt32(ModuleEnum.Vendor), Convert.ToInt64(vendShipping.VendorShippingAddressId), Convert.ToInt32(AddressTypeEnum.ShippingAddress), "System");
                                                         _appContext.Entry(ba).State = EntityState.Detached;
 
                                                     }
@@ -2469,7 +2472,7 @@ namespace DAL.Repositories
                                             _appContext.SaveChanges();
 
                                             //Audit History
-                                            //commonRepository.ShippingBillingAddressHistory(Convert.ToInt64(vendorId), Convert.ToInt32(ModuleEnum.Vendor), Convert.ToInt64(ship.VendorShippingAddressId), Convert.ToInt32(AddressTypeEnum.ShippingAddress), "System");
+                                            commonRepository.ShippingBillingAddressHistory(Convert.ToInt64(vendorId), Convert.ToInt32(ModuleEnum.Vendor), Convert.ToInt64(ship.VendorShippingAddressId), Convert.ToInt32(AddressTypeEnum.ShippingAddress), "System");
                                             _appContext.Entry(ship).State = EntityState.Detached;
 
                                         }
@@ -2528,7 +2531,7 @@ namespace DAL.Repositories
                             {
                                 while (reader.Read())
                                 {
-                                    if (count > 0 &&  reader.GetValue(1) != null && reader.GetValue(3) != null && reader.GetValue(6) != null && reader.GetValue(7) != null)
+                                    if (count > 0 && reader.GetValue(1) != null && reader.GetValue(3) != null && reader.GetValue(6) != null && reader.GetValue(7) != null)
                                     {
 
                                         cont = new Contact();
@@ -2600,10 +2603,10 @@ namespace DAL.Repositories
                                                     _appContext.Entry(ba).Property(x => x.IsDefaultContact).IsModified = true;
                                                     _appContext.Entry(ba).Property(x => x.UpdatedDate).IsModified = true;
                                                     _appContext.Entry(ba).Property(x => x.UpdatedBy).IsModified = true;
-                                                    
+
                                                     _appContext.SaveChanges();
                                                     //For Contact Audit History
-                                                    //commonRepository.ContactsHistory(Convert.ToInt64(vendorId), Convert.ToInt32(ModuleEnum.Vendor), Convert.ToInt64(vendContact.VendorContactId), "System");
+                                                    commonRepository.ContactsHistory(Convert.ToInt64(vendorId), Convert.ToInt32(ModuleEnum.Vendor), Convert.ToInt64(vendContact.VendorContactId), "System");
 
                                                     _appContext.Entry(ba).State = EntityState.Detached;
 
@@ -2637,7 +2640,7 @@ namespace DAL.Repositories
                                         _appContext.VendorContact.Add(cCont);
                                         _appContext.SaveChanges();
                                         //Audit History
-                                        //commonRepository.ContactsHistory(Convert.ToInt64(vendorId), Convert.ToInt32(ModuleEnum.Vendor), Convert.ToInt64(cCont.VendorContactId), "System");
+                                        commonRepository.ContactsHistory(Convert.ToInt64(vendorId), Convert.ToInt32(ModuleEnum.Vendor), Convert.ToInt64(cCont.VendorContactId), "System");
 
                                         _appContext.Entry(cCont).State = EntityState.Detached;
                                     }
@@ -2649,7 +2652,7 @@ namespace DAL.Repositories
 
                         }
                     }
-                }               
+                }
 
             }
             catch (Exception ex)
@@ -2660,13 +2663,184 @@ namespace DAL.Repositories
 
         }
 
+        public IEnumerable<object> UploadVendorPaymentAddressCustomData(IFormFile file, long vendorId)
+        {
+            string countryName = string.Empty;
+            //For Future purpose Added object to retun faild records, present we are returning empty object
+            List<object> obj = new List<object>();
+            CommonRepository commonRepository = new CommonRepository(_appContext);
+
+            int count = 0;
+            try
+            {
+                Address addr;
+                CheckPayment chkPayment;
+                VendorCheckPayment vchkPayment;
+
+                string fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+                string filePath = Path.Combine(AppSettings.CustomUploadFilePath, Convert.ToString(ModuleEnum.VendorCheckAddress), DateTime.Now.ToString("yyyy-MM-dd hh-mm-ss"));
+
+                if (!Directory.Exists(filePath))
+                {
+                    Directory.CreateDirectory(filePath);
+                }
+
+                string fullPath = Path.Combine(filePath, fileName);
+
+
+                using (var stream = File.Open(fullPath, FileMode.Create))
+                {
+                    file.CopyTo(stream);
+                    {
+                        using (var reader = ExcelReaderFactory.CreateReader(stream))
+                        {
+                            do
+                            {
+                                while (reader.Read())
+                                {
+                                    if (count > 0 && reader.GetValue(0) != null && reader.GetValue(1) != null && reader.GetValue(3) != null && reader.GetValue(4) != null && reader.GetValue(5) != null && reader.GetValue(6) != null)
+                                    {                                        
+                                         
+                                        addr = new Address();
+                                        chkPayment = new CheckPayment();
+                                        vchkPayment = new VendorCheckPayment();
+                                        if (reader.GetValue(0) != null)
+                                            chkPayment.SiteName = Convert.ToString(reader.GetValue(0));
+
+                                        if (reader.GetValue(1) != null)
+                                            addr.Line1 = Convert.ToString(reader.GetValue(1));
+                                        if (reader.GetValue(2) != null)
+                                            addr.Line2 = Convert.ToString(reader.GetValue(2));
+                                        if (reader.GetValue(3) != null)
+                                            addr.City = Convert.ToString(reader.GetValue(3));
+                                        if (reader.GetValue(4) != null)
+                                            addr.StateOrProvince = Convert.ToString(reader.GetValue(4));
+                                        if (reader.GetValue(5) != null)
+                                            addr.PostalCode = Convert.ToString(reader.GetValue(5));
+
+                                        if (reader.GetValue(6) != null)
+                                            countryName = Convert.ToString(reader.GetValue(6));
+                                        var country = _appContext.Countries.Where(p => p.countries_name == countryName).FirstOrDefault();
+                                        if (country != null)
+                                        {
+                                            addr.Country = country.countries_id.ToString();
+                                                                                       
+                                            addr.MasterCompanyId = 1;
+                                            addr.IsActive = true;
+
+                                            addr.CreatedBy = addr.UpdatedBy = "System";
+                                            addr.UpdatedDate = addr.CreatedDate = DateTime.Now;
+
+                                            _appContext.Address.Add(addr);
+                                            _appContext.SaveChanges();
+
+
+                                            var vendorConcatData = (from cp in _appContext.CheckPayment
+                                                                    join vcp in _appContext.VendorCheckPayment on cp.CheckPaymentId equals vcp.CheckPaymentId
+                                                                    where cp.IsPrimayPayment == true && vcp.VendorId == vendorId
+                                                                    select cp).AsNoTracking().FirstOrDefault();
+
+                                           
+                                            if (vendorConcatData != null)
+                                            {
+                                                if (reader.GetValue(7) != null)
+                                                {
+                                                    if (reader.GetValue(7).ToString().ToLower() == "yes")
+                                                    {
+                                                        chkPayment.IsPrimayPayment = true;
+
+                                                        vendorConcatData.IsPrimayPayment = false;
+
+                                                        CheckPayment ba = new CheckPayment();
+
+                                                        ba.CheckPaymentId = Convert.ToInt64(vendorConcatData.CheckPaymentId);
+                                                        ba.UpdatedDate = DateTime.Now;
+                                                        ba.UpdatedBy = "System";
+                                                        ba.IsPrimayPayment = false;
+                                                        
+                                                        _appContext.Entry(ba).State = EntityState.Detached;
+                                                        _appContext.CheckPayment.Attach(ba);
+                                                        _appContext.Entry(ba).Property(x => x.IsPrimayPayment).IsModified = true;
+                                                        _appContext.Entry(ba).Property(x => x.UpdatedDate).IsModified = true;
+                                                        _appContext.Entry(ba).Property(x => x.UpdatedBy).IsModified = true;
+                                                        _appContext.SaveChanges();
+
+                                                        //Audit History
+                                                        commonRepository.ShippingBillingAddressHistory(Convert.ToInt64(vendorId), Convert.ToInt32(ModuleEnum.Vendor), Convert.ToInt64(vendorConcatData.CheckPaymentId), Convert.ToInt32(AddressTypeEnum.CheckPayment), "System");
+
+                                                        _appContext.Entry(ba).State = EntityState.Detached;
+
+                                                    }
+                                                    else
+                                                    {
+                                                        chkPayment.IsPrimayPayment= false;
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    chkPayment.IsPrimayPayment = false;
+                                                }
+
+                                            }
+                                            else
+                                            {
+                                                chkPayment.IsPrimayPayment = true;
+                                            }
+                                            chkPayment.MasterCompanyId = 1;                                           
+                                            chkPayment.IsActive = true;                                  
+                                            chkPayment.AddressId = Convert.ToInt64(addr.AddressId);
+                                            chkPayment.CreatedBy = chkPayment.UpdatedBy = "System";
+                                            chkPayment.UpdatedDate = chkPayment.CreatedDate = DateTime.Now;
+
+                                            _appContext.Entry(chkPayment).State = EntityState.Detached;
+
+                                            _appContext.CheckPayment.Add(chkPayment);
+                                            _appContext.SaveChanges();
+
+                                            vchkPayment.VendorId = vendorId;
+                                            vchkPayment.IsActive = true;
+                                            vchkPayment.IsDeleted = false;
+                                            vchkPayment.CreatedBy = vchkPayment.UpdatedBy = "System";
+                                            vchkPayment.UpdatedDate = vchkPayment.CreatedDate = DateTime.Now;
+                                            vchkPayment.MasterCompanyId = 1;
+                                            vchkPayment.CheckPaymentId = Convert.ToInt64(chkPayment.CheckPaymentId);
+
+                                            _appContext.Entry(vchkPayment).State = EntityState.Detached;
+
+                                            _appContext.VendorCheckPayment.Add(vchkPayment);
+                                            _appContext.SaveChanges();
+                                            //Audit History
+                                            commonRepository.ShippingBillingAddressHistory(Convert.ToInt64(vendorId), Convert.ToInt32(ModuleEnum.Vendor), Convert.ToInt64(chkPayment.CheckPaymentId), Convert.ToInt32(AddressTypeEnum.CheckPayment), "System");
+                                            _appContext.Entry(chkPayment).State = EntityState.Detached;
+                                        }
+
+
+                                    }
+
+
+                                    count++;
+                                }
+                            } while (reader.NextResult());
+
+                        }
+                    }
+                }
+                return obj;
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return obj;
+        }
+
         public IEnumerable<object> getVendorShipVia(long id)
         {
             var data = (from c in _appContext.VendorShippingAudit
-                        where c.VendorShippingId==id
+                        where c.VendorShippingId == id
                         select new
                         {
-                           
+
                             c.CreatedBy,
                             c.UpdatedBy,
                             c.UpdatedDate,
@@ -2682,6 +2856,385 @@ namespace DAL.Repositories
             return data;
         }
 
+        #region Vendor Internation shipping
+        public VendorInternationalShipping CreateVendorInternationalShippingDetails(VendorInternationalShipping model)
+        {
+            try
+            {
+                if (model.VendorInternationalShippingId > 0)
+                {
+                    if (model.IsPrimary == true)
+                    {
+                        var vendorShipping = _appContext.VendorInternationalShipping.Where(p => p.VendorId == model.VendorId && p.IsPrimary == true).ToList();
+
+                        if (vendorShipping != null)
+                        {
+                            foreach (var item in vendorShipping)
+                            {
+                                item.IsPrimary = false;
+                                item.UpdatedDate = DateTime.Now;
+                                _appContext.VendorInternationalShipping.Update(item);
+                                _appContext.SaveChanges();
+                            }
+                        }
+                    }
+                    model.UpdatedDate = DateTime.Now;
+                    model.UpdatedBy = model.UpdatedBy;
+                    model.IsPrimary = model.IsPrimary;
+
+                    _appContext.VendorInternationalShipping.Update(model);
+                    _appContext.SaveChanges();
+                }
+                else
+                {
+                    model.CreatedDate = model.UpdatedDate = DateTime.Now;
+                    model.IsActive = true;
+                    model.IsDeleted = false;
+                    if (model.IsPrimary == true)
+                    {
+                        var vendorShipping = _appContext.VendorInternationalShipping.Where(p => p.VendorId == model.VendorId && p.IsPrimary == true).ToList();
+
+                        if (vendorShipping != null)
+                        {
+                            foreach (var item in vendorShipping)
+                            {
+                                item.IsPrimary = false;
+                                item.UpdatedDate = DateTime.Now;
+                                _appContext.VendorInternationalShipping.Update(item);
+                                _appContext.SaveChanges();
+                            }
+                        }
+                    }
+                    model.IsPrimary = model.IsPrimary;
+
+                    _appContext.VendorInternationalShipping.Add(model);
+                    _appContext.SaveChanges();
+                }
+                return model;
+
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        public object VendorInternationalShippingDetailsById(long id)
+        {
+            var result = (from vsi in _appContext.VendorInternationalShipping
+                          join co in _appContext.Countries on vsi.ShipToCountryId equals co.countries_id into coo
+                          from co in coo.DefaultIfEmpty()
+                          where vsi.IsDeleted == false && vsi.VendorInternationalShippingId == id
+                          select new
+                          {
+                              vsi.VendorInternationalShippingId,
+                              vsi.VendorId,
+                              vsi.ExportLicense,
+                              vsi.StartDate,
+                              vsi.Amount,
+                              vsi.IsPrimary,
+                              vsi.Description,
+                              vsi.ExpirationDate,
+                              vsi.ShipToCountryId,
+                              vsi.MasterCompanyId,
+                              ShipToCountry = co.countries_name,
+                              vsi.IsActive,
+                              vsi.IsDeleted,
+                              vsi.UpdatedDate,
+                              vsi.CreatedBy,
+                              vsi.UpdatedBy,
+                              vsi.CreatedDate,
+                          }).FirstOrDefault();
+
+            return result;
+        }
+
+        public void VendorInternationalShippingDetailsStatus(long id, bool status, string updatedBy)
+        {
+            VendorInternationalShipping model = new VendorInternationalShipping();
+            model.VendorInternationalShippingId = id;
+            model.UpdatedDate = DateTime.Now;
+            model.IsActive = status;
+            model.UpdatedBy = updatedBy;
+
+            _appContext.VendorInternationalShipping.Attach(model);
+
+            _appContext.Entry(model).Property(x => x.IsActive).IsModified = true;
+            _appContext.Entry(model).Property(x => x.UpdatedDate).IsModified = true;
+            _appContext.Entry(model).Property(x => x.UpdatedBy).IsModified = true;
+
+            _appContext.SaveChanges();
+        }
+
+        public void DeleteVendorInternationalShippingDetails(long id, string updatedBy)
+        {
+            try
+            {
+                VendorInternationalShipping model = new VendorInternationalShipping();
+                model.VendorInternationalShippingId = id;
+                model.UpdatedDate = DateTime.Now;
+                model.IsDeleted = true;
+                model.UpdatedBy = updatedBy;
+
+                _appContext.VendorInternationalShipping.Attach(model);
+
+                _appContext.Entry(model).Property(x => x.IsDeleted).IsModified = true;
+                _appContext.Entry(model).Property(x => x.UpdatedDate).IsModified = true;
+                _appContext.Entry(model).Property(x => x.UpdatedBy).IsModified = true;
+
+                _appContext.SaveChanges();
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public IEnumerable<object> GetVendorInternationalShippingDetails(long VendorId)
+        {
+            var result = (from vsi in _appContext.VendorInternationalShipping
+                          join co in _appContext.Countries on vsi.ShipToCountryId equals co.countries_id into coo
+                          from co in coo.DefaultIfEmpty()
+                          where vsi.IsDeleted == false && vsi.VendorId == VendorId
+                          select new
+                          {
+                              vsi.VendorInternationalShippingId,
+                              vsi.VendorId,
+                              vsi.ExportLicense,
+                              vsi.StartDate,
+                              vsi.Amount,
+                              vsi.IsPrimary,
+                              vsi.Description,
+                              vsi.ExpirationDate,
+                              vsi.ShipToCountryId,
+                              ShipToCountry = co.countries_name,
+                              vsi.IsActive,
+                              vsi.IsDeleted,
+                              vsi.UpdatedDate,
+                              vsi.CreatedBy,
+                              vsi.CreatedDate,
+                          }).OrderByDescending(p => p.CreatedDate).ToList();
+
+            return result;
+        }
+
+        public IEnumerable<object> GetVendorInternationalShippingDetailsAudit(long VendorInternationalShippingId)
+        {
+            var result = (from vsi in _appContext.VendorInternationalShippingAudit
+                          join co in _appContext.Countries on vsi.ShipToCountryId equals co.countries_id into coo
+                          from co in coo.DefaultIfEmpty()
+                          where vsi.VendorInternationalShippingId == VendorInternationalShippingId
+                          select new
+                          {
+                              vsi.AuditVendorInternationalShippingId,
+                              vsi.VendorInternationalShippingId,
+                              vsi.VendorId,
+                              vsi.ExportLicense,
+                              vsi.StartDate,
+                              vsi.Amount,
+                              vsi.IsPrimary,
+                              vsi.Description,
+                              vsi.ExpirationDate,
+                              vsi.ShipToCountryId,
+                              ShipToCountry = co.countries_name,
+                              vsi.IsActive,
+                              vsi.IsDeleted,
+                              vsi.UpdatedDate,
+                              vsi.CreatedBy,
+                              vsi.CreatedDate,
+                          }).OrderByDescending(p => p.AuditVendorInternationalShippingId).ToList();
+
+            return result;
+        }
+
+        #endregion
+
+        #region Vendor international Ship Via
+
+        public VendorInternationalShipViaDetails CreateVendorInternationalShipViaDetails(VendorInternationalShipViaDetails model)
+        {
+            try
+            {
+                if (model.VendorInternationalShipViaDetailsId > 0)
+                {
+                    if (model.IsPrimary == true)
+                    {
+                        var vendorShipVia = _appContext.VendorInternationalShipViaDetails.Where(p => p.VendorInternationalShippingId == model.VendorInternationalShippingId && p.IsPrimary == true).ToList();
+
+                        if (vendorShipVia != null)
+                        {
+                            foreach (var item in vendorShipVia)
+                            {
+                                item.IsPrimary = false;
+                                item.UpdatedDate = DateTime.Now;
+                                _appContext.VendorInternationalShipViaDetails.Update(item);
+                                _appContext.SaveChanges();
+                            }
+                        }
+                    }
+                    model.UpdatedDate = DateTime.Now;
+                    model.UpdatedBy = model.UpdatedBy;
+                    model.IsPrimary = model.IsPrimary;
+
+                    _appContext.VendorInternationalShipViaDetails.Update(model);
+                    _appContext.SaveChanges();
+                }
+                else
+                {
+                    model.CreatedDate = model.UpdatedDate = DateTime.Now;
+                    model.IsActive = true;
+                    model.IsDeleted = false;
+                    if (model.IsPrimary == true)
+                    {
+                        var vendorShipVia = _appContext.VendorInternationalShipViaDetails.Where(p => p.VendorInternationalShippingId == model.VendorInternationalShippingId && p.IsPrimary == true).ToList();
+
+                        if (vendorShipVia != null)
+                        {
+                            foreach (var item in vendorShipVia)
+                            {
+                                item.IsPrimary = false;
+                                item.UpdatedDate = DateTime.Now;
+                                _appContext.VendorInternationalShipViaDetails.Update(item);
+                                _appContext.SaveChanges();
+                            }
+                        }
+                    }
+                    model.IsPrimary = model.IsPrimary;
+
+                    _appContext.VendorInternationalShipViaDetails.Add(model);
+                    _appContext.SaveChanges();
+                }
+                return model;
+
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        public object VendorInternationalShipViaDetailsById(long id)
+        {
+            var result = (from vsi in _appContext.VendorInternationalShipViaDetails
+                          where vsi.IsDeleted == false && vsi.VendorInternationalShippingId == id
+                          select new
+                          {
+                              vsi.VendorInternationalShipViaDetailsId,
+                              vsi.VendorInternationalShippingId,
+                              vsi.IsPrimary,
+                              vsi.ShipVia,
+                              vsi.ShippingAccountInfo,
+                              vsi.Memo,
+                              vsi.MasterCompanyId,
+                              vsi.CreatedBy,
+                              vsi.UpdatedBy,
+                              vsi.CreatedDate,
+                              vsi.UpdatedDate,
+                              vsi.IsActive,
+                              vsi.IsDeleted,
+                          }).FirstOrDefault();
+
+            return result;
+        }
+        public void VendorInternationalShipViaDetailsStatus(long id, bool status, string updatedBy)
+        {
+            try
+            {
+                VendorInternationalShipViaDetails model = new VendorInternationalShipViaDetails();
+                model.VendorInternationalShipViaDetailsId = id;
+                model.UpdatedDate = DateTime.Now;
+                model.IsActive = status;
+                model.UpdatedBy = updatedBy;
+
+                _appContext.VendorInternationalShipViaDetails.Attach(model);
+
+                _appContext.Entry(model).Property(x => x.IsActive).IsModified = true;
+                _appContext.Entry(model).Property(x => x.UpdatedDate).IsModified = true;
+                _appContext.Entry(model).Property(x => x.UpdatedBy).IsModified = true;
+
+                _appContext.SaveChanges();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+           
+        }
+        public void DeleteVendorInternationalShipViaDetails(long id, string updatedBy)
+        {
+            try
+            {
+                VendorInternationalShipViaDetails model = new VendorInternationalShipViaDetails();
+                model.VendorInternationalShipViaDetailsId = id;
+                model.UpdatedDate = DateTime.Now;
+                model.IsDeleted = true;
+                model.UpdatedBy = updatedBy;
+
+                _appContext.VendorInternationalShipViaDetails.Attach(model);
+
+                _appContext.Entry(model).Property(x => x.IsDeleted).IsModified = true;
+                _appContext.Entry(model).Property(x => x.UpdatedDate).IsModified = true;
+                _appContext.Entry(model).Property(x => x.UpdatedBy).IsModified = true;
+
+                _appContext.SaveChanges();
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        public IEnumerable<object> GetVendorInternationalShipViaDetails(long VendorInternationalShippingId)
+        {
+            var result = (from vsi in _appContext.VendorInternationalShipViaDetails
+                          where vsi.IsDeleted == false && vsi.VendorInternationalShippingId == VendorInternationalShippingId
+                          select new
+                          {
+                              vsi.VendorInternationalShipViaDetailsId,
+                              vsi.VendorInternationalShippingId,
+                              vsi.IsPrimary,
+                              vsi.ShipVia,
+                              vsi.ShippingAccountInfo,
+                              vsi.Memo,
+                              vsi.MasterCompanyId,
+                              vsi.CreatedBy,
+                              vsi.UpdatedBy,
+                              vsi.CreatedDate,
+                              vsi.UpdatedDate,
+                              vsi.IsActive,
+                              vsi.IsDeleted,
+                          }).OrderByDescending(p=>p.CreatedDate).ToList();
+
+            return result;
+        }
+        public IEnumerable<object> GetVendorInternationalShipViaDetailsAudit(long VendorInternationalShipViaDetailsId)
+        {
+            var result = (from vsi in _appContext.VendorInternationalShipViaDetailsAudit
+                          where vsi.IsDeleted == false && vsi.VendorInternationalShipViaDetailsId == VendorInternationalShipViaDetailsId
+                          select new
+                          {
+                              vsi.AuditVendorInternationalShipViaDetailsId,
+                              vsi.VendorInternationalShipViaDetailsId,
+                              vsi.VendorInternationalShippingId,
+                              vsi.IsPrimary,
+                              vsi.ShipVia,
+                              vsi.ShippingAccountInfo,
+                              vsi.Memo,
+                              vsi.MasterCompanyId,
+                              vsi.CreatedBy,
+                              vsi.UpdatedBy,
+                              vsi.CreatedDate,
+                              vsi.UpdatedDate,
+                              vsi.IsActive,
+                              vsi.IsDeleted,
+                          }).OrderByDescending(p => p.CreatedDate).ToList();
+
+            return result;
+        }
+
+
+        #endregion
 
     }
 }

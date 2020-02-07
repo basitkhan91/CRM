@@ -77,6 +77,7 @@ namespace DAL.Repositories
                             cs.CustomerShippingAddressId,
                             cs.CreatedDate,
                             cs.UpdatedDate,
+                            cs.IsPrimary,
                             //csa.Amount,
                             //csa.StartDate,
                             //csa.ExpirationDate,
@@ -160,13 +161,13 @@ namespace DAL.Repositories
         public IEnumerable<Object> GetCustomerShippingAudit(long customerId, long customerShippingAddressId, long customerShippingId)
         {
             var data = (from cs in _appContext.CustomerShippingAudit
-                        join csa in _appContext.CustomerShippingAddress on cs.CustomerShippingAddressId equals csa.CustomerShippingAddressId
-                        where ((cs.CustomerShippingAddressId == customerShippingAddressId) && (cs.IsDeleted == false || cs.IsDeleted == null) && cs.CustomerShippingId==customerShippingId && cs.CustomerId==customerId)
+                        
+                        where cs.CustomerShippingAddressId == customerShippingAddressId  && cs.CustomerShippingId==customerShippingId && cs.CustomerId==customerId
 
                         // select new { t, ad, vt }).ToList();
                         select new
                         {
-                            csa.SiteName,
+                           
                             cs.CustomerShippingId,
                             cs.Memo,
                             cs.ShipVia,
@@ -180,7 +181,8 @@ namespace DAL.Repositories
                             cs.UpdatedDate,
                             cs.CreatedBy,
                             cs.UpdatedBy,
-                            cs.AuditCustomerShippingId
+                            cs.AuditCustomerShippingId,
+                            cs.IsPrimary,
                             //csa.Amount,
                             //csa.StartDate,
                             //csa.ExpirationDate,
@@ -188,7 +190,7 @@ namespace DAL.Repositories
                             //csa.ExportLicenseNumber
 
 
-                        }).OrderByDescending(c => c.AuditCustomerShippingId).ToList();
+                        }).OrderByDescending(cs => cs.UpdatedDate).ToList();
             return data;
         }
 

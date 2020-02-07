@@ -83,7 +83,7 @@ namespace QuickApp.Pro.Controllers
                 workperformedobject.Memo = workPerformedViewModel.Memo;
                 workperformedobject.MasterCompanyId = workPerformedViewModel.MasterCompanyId;
                 workperformedobject.IsActive = workPerformedViewModel.IsActive;
-                workperformedobject.IsDeleted = false;
+                workperformedobject.IsDelete = false;
                 workperformedobject.CreatedDate = DateTime.Now;
                 workperformedobject.UpdatedDate = DateTime.Now;
                 workperformedobject.CreatedBy = workPerformedViewModel.CreatedBy;
@@ -134,7 +134,7 @@ namespace QuickApp.Pro.Controllers
         {
             var existingResult = _unitOfWork.WorkPerformed.GetSingleOrDefault(c => c.WorkPerformedId == id);
 
-            existingResult.IsDeleted = true;
+            existingResult.IsDelete = true;
             _unitOfWork.WorkPerformed.Update(existingResult);
 
             //_unitOfWork.WorkPerformed.Remove(existingResult);
