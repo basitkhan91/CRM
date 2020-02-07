@@ -282,11 +282,11 @@
                                 <div class="form-row">
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="Vendor Classification">
+                                            <label for="Vendor Classification"> 
                                                 Vendor Classification <span class="clr-red">*</span>
                                                 <span style="margin-left:3px;cursor:pointer;">
                                                     <i class="fa fa-plus-circle fa-lg"
-                                                       data-toggle="modal" (click)="openClassification(contentEdit)"></i>
+                                                       data-toggle="modal" (click)="openClassification(contentEdit)" matTooltip="Create Vendor Classification" ></i>
                                                 </span>
 
                                             </label>
@@ -317,7 +317,7 @@
                                         <div class="form-group">
                                             <label>
                                                 <span class="pull-left">Integration With</span>
-                                                <span style="margin-left:3px;cursor:pointer;"><a class="fa fa-plus-circle fa-lg" (click)="onAddIntegrationWith()"></a></span>
+                                                <span style="margin-left:3px;cursor:pointer;"><a class="fa fa-plus-circle fa-lg" (click)="onAddIntegrationWith()" matTooltip="Create Integration"></a></span>
                                             </label>
                                            
                                             <p-multiSelect [options]="integrationOriginalList" [(ngModel)]="sourceVendor.integrationPortalIds"  name="integrationPortalIds" defaultLabel="Choose Columns">
@@ -335,7 +335,7 @@
                                                 Capabilities
                                                 <span style="margin-left:3px;cursor:pointer;">
                                                     <i class="fa fa-plus-circle fa-lg"
-                                                       data-toggle="modal" (click)="onAddCapabilities()"></i>
+                                                       data-toggle="modal" (click)="onAddCapabilities()" matTooltip="Create Capabilities"></i>
                                                 </span>
                                             </label>
                                             <select class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceVendor.capabilityId">

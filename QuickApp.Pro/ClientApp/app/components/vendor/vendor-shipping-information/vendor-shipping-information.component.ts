@@ -806,7 +806,8 @@ export class VendorShippingInformationComponent {
     closeAddShipViaDomestic() {
         console.log('Sample');
         // this.shipviapoup.hide();
-        // $("#contentShipVia").dialog('close');
+        // $("#contentShipVia").modal("hide");
+        this.modal.close();
     }
 
     getColorCodeForHistory(i, field, value) {

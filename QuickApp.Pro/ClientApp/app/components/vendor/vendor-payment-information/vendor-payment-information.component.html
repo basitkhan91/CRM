@@ -22,7 +22,7 @@
                                     <div class="col-md-12">
                                         <h4 class="po-head-sm">
                                             Add Payment Info
-                                            <a class="plusicon-cstm" data-target="#addPaymentInfo" data-toggle="modal"><i class="fa fa-plus-circle fa-lg" (click)="onAddPaymentInfo()"></i></a>
+                                            <a class="plusicon-cstm" data-target="#addPaymentInfo" data-toggle="modal"><i class="fa fa-plus-circle fa-lg" (click)="onAddPaymentInfo()" matTooltip="Create Payment Information"></i></a>
                                         </h4>
                                     </div>
                                     <div class="clear"></div>
@@ -107,15 +107,15 @@
                                                     </p-inputSwitch>
             
                                                     <span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openView(view,rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
-                                                    <button class="btn-edit" mat-icon-button data-target="#addPaymentInfo" data-toggle="modal" (click)="openEdit(rowData)" matTooltip="edit">
+                                                    <button class="btn-edit" mat-icon-button data-target="#addPaymentInfo" data-toggle="modal" (click)="openEdit(rowData)" matTooltip="Edit">
                                                         <mat-icon>edit</mat-icon>
                                                     </button>
             
-                                                    <button class="btn-delete" mat-icon-button matTooltip="delete" (click)="deletePaymentInfo(rowData)" data-toggle="modal" data-target="#deletePaymentInfo">
+                                                    <button class="btn-delete" mat-icon-button matTooltip="Delete" (click)="deletePaymentInfo(rowData)" data-toggle="modal" data-target="#deletePaymentInfo">
                                                         <mat-icon color="warn">delete</mat-icon>
                                                     </button>
             
-                                                    <button class="btn-history" mat-icon-button matTooltip="history" (click)="openHist(contentHist,rowData)">
+                                                    <button class="btn-history" mat-icon-button matTooltip="History" (click)="openHist(contentHist,rowData)">
                                                         <mat-icon color="green">history</mat-icon>
                                                     </button>
             
@@ -498,7 +498,7 @@
         </div>
     </ng-template>
 
-    <ng-template #view class="modal fade " id="view" role="dialog">
+    <!-- <ng-template #view class="modal fade " id="view" role="dialog">
 
         <div class="modal-content">
             <div class="modal-header">
@@ -517,13 +517,52 @@
 
                 <div class="clear"></div>
             </div>
+
+
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="dismissModel()">Close</button>
             </div>
         </div>
 
-    </ng-template>
+    </ng-template> -->
 
+    <ng-template #view class="modal fade " id="view" role="dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" (click)="dismissModel()" data-dismiss="modal">×</button>
+                <h4 class="modal-title">View Payment Info</h4>
+            </div>
+            <div class="modal-body viewform">
+                <p class="ui-g"><span class="ui-g-4 label pad_conrtol_05"><b>Primary  </b></span><span class=" ui-g-2">:</span> <span class="ui-g-4">{{isPrimary}}</span></p>
+                <p class="ui-g"><span class="ui-g-4 label pad_conrtol_05"><b>Site Name </b> <span class="clr-red">*</span></span><span class=" ui-g-2">:</span> <span class="ui-g-4">{{siteName}}</span></p>
+                <p class="ui-g"><span class="ui-g-4 label pad_conrtol_05"><b>Address 1 </b><span class="clr-red">*</span></span><span class=" ui-g-2">:</span> <span class="ui-g-4">{{address1}}</span></p>
+                <p class="ui-g"><span class="ui-g-4 label pad_conrtol_05"><b>Address 2 </b></span><span class=" ui-g-2">:</span> <span class="ui-g-4">{{address2}}</span></p>
+                <p class="ui-g"><span class="ui-g-4 label pad_conrtol_05"><b>City </b><span class="clr-red">*</span></span><span class=" ui-g-2">:</span> <span class="ui-g-4">{{city}}</span></p>
+                <p class="ui-g"><span class="ui-g-4 label pad_conrtol_05"><b>State Or Province</b><span class="clr-red">*</span></span><span class=" ui-g-2">:</span> <span class="ui-g-4">{{stateOrProvince}}</span></p>
+                <p class="ui-g"><span class="ui-g-4 label pad_conrtol_05"><b>Postal Code  </b><span class="clr-red">*</span></span><span class=" ui-g-2">:</span> <span class="ui-g-4">{{postalCode}}</span></p>
+                <p class="ui-g"><span class="ui-g-4 label pad_conrtol_05"><b>Country  </b><span class="clr-red">*</span></span><span class=" ui-g-2">:</span> <span class="ui-g-4">{{country}}</span></p>  
+                <div class="clear"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="dismissModel()">Close</button>
+            </div>
+        </div>
+    </ng-template>
 
     <p-dialog header="Alert" [(visible)]="display" [modal]="true" [dismissableMask]="true" maximizedLeft="140px" maximizedTop="140px"
               [width]="350" [minWidth]="200" [responsive]="true"

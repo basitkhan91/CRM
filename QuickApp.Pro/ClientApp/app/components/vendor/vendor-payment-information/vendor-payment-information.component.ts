@@ -1140,20 +1140,20 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
     customExcelUpload(event) {
         const file = event.target.files;
 
-        // if (file.length > 0) {
-        //     this.formData.append('file', file[0])
-        //     this.vendorService.PaymentCheckUpload(this.formData, this.local.vendorId).subscribe(res => {
-        //         event.target.value = '';
+        if (file.length > 0) {
+            this.formData.append('file', file[0])
+            this.vendorService.PaymentCheckUpload(this.formData, this.local.vendorId).subscribe(res => {
+                event.target.value = '';
 
-        //         this.formData = new FormData();
-        //         this.loadData();
+                this.formData = new FormData();
+                this.loadData();
 
-        //         this.alertService.showMessage(
-        //             'Success',
-        //             `Successfully Uploaded  `,
-        //             MessageSeverity.success
-        //         );
-        //     })
-        // }
+                this.alertService.showMessage(
+                    'Success',
+                    `Successfully Uploaded  `,
+                    MessageSeverity.success
+                );
+            })
+        }
     }
 }

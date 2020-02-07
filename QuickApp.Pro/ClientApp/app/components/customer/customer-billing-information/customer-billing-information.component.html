@@ -37,7 +37,7 @@
                                     href="#"
                                     data-toggle="modal"
                                     data-target="#addBillingInfo" 
-                                    ><i class="fa fa-plus-circle fa-lg" (click)="addBillingIfo()"></i
+                                    ><i class="fa fa-plus-circle fa-lg" (click)="addBillingIfo()" matTooltip="Create Billing Information"></i
                                     ></a>
                                     </h4>
                             <!-- <h3 class="po-head pull-left" style="padding: 0 6px;">Billing Information List</h3> -->
@@ -137,16 +137,16 @@
                                     <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="updateActiveorInActiveForBilling(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
                                     <!--<span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openView(view,rowData)" title="View"><i class="fa fa-eye"></i></a> </span>-->
                                     <span data-toggle="modal" data-target="#viewBilling"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openBillingView(rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
-                                    <button class="btn-edit" mat-icon-button (click)="openEdit(rowData)" matTooltip="edit" data-toggle="modal" data-target="#addBillingInfo">
+                                    <button class="btn-edit" mat-icon-button (click)="openEdit(rowData)" matTooltip="Edit" data-toggle="modal" data-target="#addBillingInfo">
                                         <mat-icon>edit</mat-icon>
                                     </button>
 
-                                    <button class="btn-delete" mat-icon-button matTooltip="delete" (click)="deleteBillingInfo(deleteContent,rowData)">
+                                    <button class="btn-delete" mat-icon-button matTooltip="Delete" (click)="deleteBillingInfo(deleteContent,rowData)">
                                         <mat-icon color="warn">delete</mat-icon>
                                     </button>
 
                                     <!--<button (click)="openShipVia(contentShipVia,rowData)" data-target="#VShipVia" class="btn btn-danger nobg" data-toggle="tooltip" title="" data-original-title="View Shipping Via Information"><i class="fa fa-truck"></i></button>-->
-                                    <button class="btn-history" mat-icon-button matTooltip="history" (click)="getCustomerBillingHistory(contentAuditHist,rowData)">
+                                    <button class="btn-history" mat-icon-button matTooltip="History" (click)="getCustomerBillingHistory(contentAuditHist,rowData)">
                                         <mat-icon color="green">history</mat-icon>
                                     </button>
 
