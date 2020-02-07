@@ -93,11 +93,13 @@ export class CustomerWorkSetupComponent implements OnInit {
     textAreaInfo: string;
 	textAreaLabel: string;
 	receivingCustomerWorkId: number;
+	workOrderId: number;
     sourceTimeLife: any = {};
     customerId: number;    
     timeLifeCyclesId: number;    
     disableCondition: boolean = true;
     disableSite: boolean = true;
+    loadingIndicator: boolean;
 
     // firstCollection: any[];
 	// allEmployeeinfo: any[] = [];
@@ -696,6 +698,19 @@ export class CustomerWorkSetupComponent implements OnInit {
 		} else {
 			this.disableCondition = true;
 		}
+    }
+    
+    fileUploadForDocuments(event) {
+		// console.log(event);
+		// if (event.files.length === 0)
+		// 	return;
+
+		// for (let file of event.files) {
+		// 	this.formData.append(file.name, file);
+		// }
+	}
+	removeFile(event) {
+		//this.formData.delete(event.file.name)
 	}
     
     onSaveCustomerReceiving() {
@@ -724,34 +739,34 @@ export class CustomerWorkSetupComponent implements OnInit {
                 $('#workorderpopup').modal('show');
                 console.log(res);
                 this.receivingCustomerWorkId = res.receivingCustomerWorkId;
+                // this.workOrderId = res.workOrderId;
                 this.alertService.showMessage(
                     'Success',
                     `Saved Customer Work Successfully`,
                     MessageSeverity.success
                 );
-                //this.router.navigateByUrl('/receivingmodule/receivingpages/app-customer-works-list');
             });
         } 
         else {
             this.receivingCustomerWorkService.updateCustomerWorkReceiving(receivingInfo).subscribe(res => {
                 $('#workorderpopup').modal('show');
+                // this.workOrderId = res.workOrderId;
                 console.log(res);
                 this.alertService.showMessage(
                     'Success',
                     `Updated Customer Work Successfully`,
                     MessageSeverity.success
                 );
-                //this.router.navigateByUrl('/receivingmodule/receivingpages/app-customer-works-list');
             });
         }
     }
 
     goToWorkOrder() {
-        this.router.navigateByUrl(`/workordersmodule/workorderspages/app-work-order-edit/${this.receivingCustomerWorkId}`);
+        this.router.navigateByUrl(`/workordersmodule/workorderspages/app-work-order-receivingcustworkid/${this.receivingCustomerWorkId}`);
     }
 
     goToCustomerWorkList() {
-        this.router.navigateByUrl('/receivingmodule/receivingpages/app-customer-works-list');
+        this.router.navigateByUrl('/receivingmodule/receivingpages/app-customer-works-list');        
     }
 
 }

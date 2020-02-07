@@ -13,6 +13,30 @@
                 <i class="fa fa-plus-circle fa-lg"></i>
             </a>
         </div>
+
+        <div class="form-row status-radio">
+            <div class="col-md-8">
+                <div class="form-group">
+                    <label class="radiobtn-label">Status:</label>
+                    <div class="pull-left" style="margin-top: 4px; margin-right: 15px;">
+                        <label class="radio-cstm wauto">
+                            <input type="radio" name="custworkstatus" class="form-control" value="1" (click)="getCustWorkStatus(1)" [(ngModel)]="currentStatusCW">
+                            <span class="checkmark"></span>Pending WO Creation</label>
+                    </div>
+                    <div class="pull-left" style="margin-top: 4px; margin-right: 15px;">
+                        <label class="radio-cstm wauto">
+                            <input type="radio" name="custworkstatus" class="form-control" value="2" (click)="getCustWorkStatus(2)" [(ngModel)]="currentStatusCW">
+                            <span class="checkmark"></span>Returned to Customers</label>
+                    </div>
+                    <div class="pull-left" style="margin-top: 4px; margin-right: 15px;">
+                        <label class="radio-cstm wauto">
+                            <input type="radio" name="custworkstatus" class="form-control" value="3" (click)="getCustWorkStatus(3)" [(ngModel)]="currentStatusCW">
+                            <span class="checkmark"></span>All</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <p-table #dt class="rpo-table-cstm lastcol-fix" [value]="allRecevinginfo" [lazy]="true" (onLazyLoad)="loadData($event)" [metaKeySelection]="true" [first]="0" [rows]="pageSize" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[10,20,50,100]" [columns]="selectedColumns" selectionMode="multiple" [(selection)]="selectedColumn" [resizableColumns]="true" [reorderableColumns]="true" [scrollable]="true" scrollHeight="450px" [totalRecords]="totalRecords">
         <ng-template pTemplate="caption">
             <div style="text-align: right;margin-left:-6px !important;min-height: 30px;">
@@ -34,41 +58,57 @@
         </ng-template>
         <ng-template pTemplate="colgroup" let-columns>
             <colgroup>
-                <col *ngFor="let col of columns" style="width:160px">
+                <col *ngFor="let col of columns" style="width:140px">
             </colgroup>
         </ng-template>
         <ng-template pTemplate="header" let-columns>
             <tr>
+                <ng-container *ngFor="let col of columns">
+                <th class="text-center" *ngIf="col.field!='level1' && col.field!='level2' && col.field!='level3' && col.field!='level4'"  pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
+                        {{col.header}}
+                        <p-sortIcon [field]="col.field"></p-sortIcon>
+                </th>
+                <th class="text-center" *ngIf="col.field=='level1'"  colspan="4"  pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
+                   Management Structure
+                </th>
+            </ng-container>
+
+                <th  style="width: 130px; position:sticky">Actions</th>
+
+            </tr>
+            <!-- <tr>
                 <th *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
                     {{col.header}}
                     <p-sortIcon [field]="col.field"></p-sortIcon>
                 </th>
                 <th style="width:130px;position:sticky">Actions</th>
-            </tr>
+            </tr> -->
             <tr>
                 <th style="width:120px" *ngFor="let col of columns" [ngSwitch]="col.field">
-                    <input style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field, 'contains')">
+                    <input type="text" *ngIf="col.field !== 'receivedDate'" style="width:100%;" pInputText (keyup)="dt.filter($event.target.value, col.field, 'contains')">
+                    <input type="date" class="hidePlaceHolder" *ngIf="col.field == 'receivedDate'" name="receivedDate" style="width:100%;" (change)="dt.filter($event.target.value, col.field, 'contains'); enableDateFilter($event.target);">                    
+                    <!-- <input style="width:100%;" pInputText type="text" (keyup)="dt.filter($event.target.value, col.field, 'contains')"> -->
                 </th>
                 <th style="width:130px;position:sticky"></th>
             </tr>
         </ng-template>
         <ng-template pTemplate="body" let-rowData let-columns="columns">
-            <tr [pSelectableRow]="rowData">
+            <tr [pSelectableRow]="rowData" [pSelectableRowDblClick]="rowData" pReorderableRowHandle (dblclick)="viewSelectedRowdbl(rowData)">
 
                 <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
-                    {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
+                    {{col.field == 'receivedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
                 </td>
-
-
                 <td style="width:130px;">
-                    <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="toggleIsActive(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                    <!-- <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="toggleIsActive(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
                     <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="toggleIsActive(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
-                    <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="toggleIsActive(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                    <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="toggleIsActive(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch> -->
 
                     <span data-toggle="modal" data-target="#cusView"><a class="btn nobg" (click)="openView(rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
                     <span><a class="btn nobg" (click)="openEdits(rowData)" matTooltip="Edit"><i class="fa fa-pencil"></i></a> </span>
                     <span><a class="btn nobg" (click)="openDelete(content,rowData)" matTooltip="Delete"><i class="fa fa-trash"></i></a> </span>
                     <span><a class="btn nobg" (click)="openHistory(contentAuditHist,rowData)" matTooltip="History"><i class="fa fa-history"></i></a></span>
+                    <span><a class="btn nobg btn-pluspo-cstm" (click)="gotoWorkOrder(rowData)" matTooltip="Create WO"><i class="fa fa-plus"></i></a> </span>
+                    <span><a class="btn nobg btn-ro-cstm" matTooltip="Return to Customer"><i class="fa fa-list"></i></a></span>
 
                     <!-- <span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openView(view,rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span> -->
                     <!-- <button class="btn-edit" mat-icon-button (click)="openEdits(rowData)" matTooltip="Edit">
@@ -578,7 +618,7 @@
                         </div>
                     </div>
 
-                    <div class="card m-t-10">
+                    <div class="card" style="margin-top: 5px;">
                         <div class="card-body" style="padding: 2px 10px;">
                             <div class="form-row">
                                 <div class="col-md-3">
