@@ -60,7 +60,8 @@ export class CustomerShippingInformationComponent implements OnInit {
         { field: 'city', header: 'City' },
         { field: 'stateOrProvince', header: 'State / Prov' },
         { field: 'postalCode', header: 'Postal Code' },
-        { field: 'countryName', header: 'Country' }
+        { field: 'countryName', header: 'Country' },
+        { field: 'isPrimary', header: 'IsPrimary' }
     ]
     internationalShippingHeaders = [
         { field: 'exportLicense', header: 'Export License' },
@@ -69,7 +70,8 @@ export class CustomerShippingInformationComponent implements OnInit {
         { field: 'startDate', header: 'Start Date' },
         { field: 'expirationDate', header: 'Expiration Date' },
         { field: 'amount', header: 'Amount' },
-        { field: 'shipToCountry', header: 'Country' }
+        { field: 'shipToCountry', header: 'Country' },
+        { field: 'isPrimary', header: 'IsPrimary' }
 
     ]
     selectedColumnsForDomesticTable = this.domesticShippingHeaders;
