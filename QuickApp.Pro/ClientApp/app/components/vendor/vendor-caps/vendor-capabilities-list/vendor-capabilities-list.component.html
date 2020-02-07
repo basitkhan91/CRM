@@ -184,7 +184,7 @@
 </ng-template>
 
 <ng-template #contentAuditHist let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static">
-    <div class="modal-header" *ngIf="vendorCapesGeneralInfo">
+    <div class="modal-header" *ngIf="capabilityauditHisory.length > 0">
         <h4 class="modal-title">History of Vendor Capability: <span>"{{vendorNameHist}}"</span></h4>
         <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
             <span aria-hidden="true">&times;</span>

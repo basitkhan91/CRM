@@ -23,6 +23,7 @@ import { CustomerService } from '../../../services/customer.service';
 import { VendorStepsPrimeNgComponent } from '../vendor-steps-prime-ng/vendor-steps-prime-ng.component';
 import { ConfigurationService } from '../../../services/configuration.service';
 import { getValueFromArrayOfObjectById, editValueAssignByCondition } from '../../../generic/autocomplete';
+
 @Component({
     selector: 'app-vendor-contacts',
     templateUrl: './vendor-contacts.component.html',
@@ -114,7 +115,7 @@ export class VendorContactsComponent implements OnInit {
         { field: 'fullContactNo', header: 'Work Phone' },
         // { field: 'mobilePhone', header: 'Mobile Phone' },
         { field: 'fax', header: 'FAX' },
-        // { field: 'isDefaultContact', header: 'Flag' }
+        { field: 'isDefaultContact', header: 'IsPrimary' }
         // { field: 'isDefaultContact', header: 'Primary Contact' },
         // { field: 'notes', header: 'Memo' }
         //{ field: 'updatedDate', header: 'Updated Date' },
