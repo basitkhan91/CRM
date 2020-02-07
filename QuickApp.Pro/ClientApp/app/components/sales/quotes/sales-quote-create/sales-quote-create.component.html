@@ -114,6 +114,16 @@
                 <label>Customer Ref<span class="clr-red">*</span></label>
                 <input type="text" pInputText name="customerReferenceName" [(ngModel)]="salesQuote.customerReferenceName" />
               </div>
+              <div class="form-group" *ngIf="isEdit">
+                <label>Status</label>
+                <select name="status" [(ngModel)]="salesQuote.statusId">
+                    <option value='-1'>--Select</option>
+                    <ng-container *ngFor="let s of salesQuote.status">
+                      <option  *ngIf="s.displayInDropdown" [ngValue]="s.id">{{ s.name }}</option>
+                    </ng-container>
+                    
+                </select>
+              </div>
               <div class="form-group">
                 <label>Contract Ref</label>
                 <input type="text" pInputText name="contractReferenceName" [(ngModel)]="salesQuote.contractReferenceName" />

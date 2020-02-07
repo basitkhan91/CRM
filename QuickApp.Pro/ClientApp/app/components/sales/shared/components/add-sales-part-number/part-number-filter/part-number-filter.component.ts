@@ -11,6 +11,7 @@ import { PartSearchParamters } from "../../../../quotes/models/part-search-param
 import { IPartJson } from "../../../models/ipart-json";
 import { ISalesItemMaster } from "../../../models/isales-item-master";
 import { IMultiPartJson } from "../../../models/imulti-part-json";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "app-part-number-filter",
@@ -42,6 +43,7 @@ export class PartNumberFilterComponent {
     private itemMasterService: ItemMasterService,
     private stockLineService: StocklineService,
     private salesQuoteService: SalesQuoteService,
+    private router: Router,
     public conditionService: ConditionService) {
     this.partDetails = [];
     this.query = new ItemMasterSearchQuery();
@@ -297,4 +299,9 @@ private onptnmbersSuccessful(allWorkFlows: any[]) {
     this.multiPartModal.close();
    
   }
+  public navigateToAddItemMaster() {
+
+		this.router.navigateByUrl('/itemmastersmodule/itemmasterpages/app-item-master-stock')
+
+	}
 }
