@@ -44,7 +44,8 @@ namespace DAL.Repositories
                          CreditTermId = z.vc1.v.CreditTermsId,
                          CSR = z.con.FirstName + " " + z.con.LastName,
                          Email = z.vc1.v.VendorEmail,
-                         IsDefaultContact = z.vc1.vc.IsDefaultContact
+                         IsDefaultContact = z.vc1.vc.IsDefaultContact,
+                         ContactName = z.con.FirstName + " " + z.con.LastName
                      }).ToList();
 
                 if (contacts != null && contacts.Count > 0)
@@ -119,7 +120,8 @@ namespace DAL.Repositories
                          CreditTermId = z.cc1.cust.CreditTermsId,
                          CSR = z.cc1.cust.CSRName,
                          IsDefaultContact = z.cc1.cc.IsDefaultContact,
-                         Email = z.cc1.cust.Email
+                         Email = z.cc1.cust.Email,
+                         ContactName= z.con.FirstName+ " "+ z.con.LastName
                      }).ToList();
 
                 if (contacts != null && contacts.Count > 0)
@@ -138,6 +140,7 @@ namespace DAL.Repositories
                         objContact.WorkPhone = item.WorkPhone;
                         objContact.Email = item.Email;
                         objContact.IsDefaultContact = item.IsDefaultContact;
+                        objContact.ContactName = item.ContactName;
                         customerContacts.Add(objContact);
                     }
                 }

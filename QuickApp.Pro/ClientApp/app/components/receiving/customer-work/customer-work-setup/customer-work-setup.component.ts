@@ -515,7 +515,7 @@ export class CustomerWorkSetupComponent implements OnInit {
 
 		if (event.query !== undefined && event.query !== null) {
 			const customers = [...this.customerContactList.filter(x => {
-				return x.csr.toLowerCase().includes(event.query.toLowerCase())
+                return x.contactName.toLowerCase().includes(event.query.toLowerCase())
 			})]
 			this.customerContactInfo = customers;
 		}
