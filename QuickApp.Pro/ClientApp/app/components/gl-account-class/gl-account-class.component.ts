@@ -93,7 +93,7 @@ export class GlAccountClassComponent implements OnInit {
     allreasn: any[] = [];
     modal: NgbModalRef;
     /** Actions ctor */
-    private isEditMode: boolean = false;
+    public isEditMode: boolean = false;
     private isDeleteMode: boolean = false;
     glAccountclassName: string;
     selectedData: any;

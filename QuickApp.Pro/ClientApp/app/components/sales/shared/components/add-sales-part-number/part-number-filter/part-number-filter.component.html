@@ -87,7 +87,7 @@
       <div class="col-2 column" style="margin-right: 8px;" *ngIf="enableMultiSearch">
         <div class="form-group">
           <label>&nbsp;</label>
-          <button class="btn btn-primary" (click)="openMultiPartSearch($event)" >
+          <button class="btn btn-primary" (click)="openMultiPartSearch($event)" style="background-color: #f0ad4e !important;">
             Search Multiple PN's
           </button>
         </div>
@@ -199,7 +199,7 @@
                    
                     <td> 
                       <span>
-                      <a class="add-part-number" *ngIf="!part.exist"  (click)="viewSelectedRow(part)">
+                      <a class="add-part-number clr-red" *ngIf="!part.exist" target="_blank" routerLink="/itemmastersmodule/itemmasterpages/app-item-master-stock">
                          Add Part Number
                       </a>
                       

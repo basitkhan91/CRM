@@ -541,9 +541,9 @@ namespace DAL.Repositories
                           join cr in _appContext.CreditTerms on t.CreditTermsId equals cr.CreditTermsId into crr
                           from cr in crr.DefaultIfEmpty()
                           join cu in _appContext.Currency on t.CurrencyId equals cu.CurrencyId into cuu
-                          from cu in cuu.DefaultIfEmpty()
-                          join vp in _appContext.Vendor on t.Parent equals vp.VendorId into vpp
-						  join d in _appContext.Discount on t.DiscountId equals d.DiscountId
+                          from cu in cuu.DefaultIfEmpty()                         
+						  join d in _appContext.Discount on t.DiscountId equals d.DiscountId into dg
+                          from d in dg.DefaultIfEmpty()
                           join vp1 in _appContext.Vendor on t.VendorParentId equals vp1.VendorId into vpp1
                           from vp1 in vpp1.DefaultIfEmpty()
 
@@ -580,8 +580,8 @@ namespace DAL.Repositories
                               t.AeroExchangeDescription,
                               t.CreditLimit,
                               t.CurrencyId,
-                              t.DiscountLevel,
-							  d.DiscontValue,
+                              t.DiscountLevel,                            
+                              DiscontValue =  d == null?0: d.DiscontValue,
 							  t.Is1099Required,
                               t.CreditTermsId,
                               t.MasterCompanyId,
