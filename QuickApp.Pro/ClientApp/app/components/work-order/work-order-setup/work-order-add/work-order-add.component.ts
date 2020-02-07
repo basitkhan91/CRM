@@ -603,8 +603,8 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
             employeeId: editValueAssignByCondition('value', generalInfo.employeeId),
             salesPersonId: editValueAssignByCondition('value', generalInfo.salesPersonId),
             csrId: editValueAssignByCondition('value', generalInfo.csr),
-            receivingCustomerWorkId: editValueAssignByCondition('value', generalInfo.customerReference),
-
+            // receivingCustomerWorkId: editValueAssignByCondition('value', generalInfo.customerReference),
+            receivingCustomerWorkId: 1,
             masterCompanyId: 1,
             customerContactId: 68,
             createdBy: this.userName,

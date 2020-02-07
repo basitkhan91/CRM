@@ -129,8 +129,10 @@ export class WorkOrderChargesComponent implements OnChanges, OnInit {
         }
         else if(type == 'all' && markup.value == this.overAllMarkup){
           this.workOrderChargesList.forEach((mData)=>{
-            mData.markupPercentageId = this.overAllMarkup;
-            mData.chargesCostPlus = Number(mData.extendedCost) + ((Number(mData.extendedCost) / 100) * Number(markup.label))
+            if(mData.billingMethod && mData.billingMethod == 'T&M'){
+              mData.markupPercentageId = this.overAllMarkup;
+              mData.chargesCostPlus = Number(mData.extendedCost) + ((Number(mData.extendedCost) / 100) * Number(markup.label))
+            }
           })
         }
       })
