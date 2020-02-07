@@ -77,6 +77,7 @@ export class AssetListingComponent implements OnInit {
     selectedAsset: any;
     allAssetLocationInfo: any[] = [];
     allAssetLocations: any[] = [];
+    assetwarrantystatusList: any[] = [];
     // comented for asset audit
     //AuditDetails: SingleScreenAuditDetails[];
 
@@ -328,11 +329,17 @@ export class AssetListingComponent implements OnInit {
             error => this.onDataLoadFailed(error)
         );
     }
-
+ 
     getDefaultVendorName(id) {
         for (let i = 0; i < this.allVendorInfo.length; i++) {
             if (id == this.allVendorInfo[i].vendorId)
                 return this.allVendorInfo[i].vendorName;
+        }
+    }
+    getwarrantystatus(id) {
+        for (let i = 0; i < this.assetwarrantystatusList.length; i++) {
+            if (id == this.assetwarrantystatusList[i].value)
+                return this.assetwarrantystatusList[i].label;
         }
     }
     openView(content, row) {
@@ -353,6 +360,7 @@ export class AssetListingComponent implements OnInit {
         this.assetViewList.verificationRequired = row.verificationRequired;
         this.assetViewList.model = row.model;
         this.getAssetAcquisitionTypeList();
+        this.getAssetWarrantyStatus();
         this.vendorList();
         this.assetViewList.assetAcquisitionTypeId = this.getAssetAcqName(row.assetAcquisitionTypeId);
         this.assetViewList.manufacturerName = row.manufacturerName;
@@ -465,7 +473,7 @@ export class AssetListingComponent implements OnInit {
         this.assetViewList.warrantyCompany = row.warrantyCompany;
         this.assetViewList.warrantyStartDate = row.warrantyStartDate;
         this.assetViewList.warrantyEndDate = row.warrantyEndDate;
-        this.assetViewList.warrantyStatus = row.warrantyStatus;
+        this.assetViewList.warrantyStatus = this.getwarrantystatus(row.warrantyStatus);
         this.assetViewList.unexpiredTime = row.unexpiredTime;
 
         if (!this.isWorkOrder) {
@@ -566,6 +574,13 @@ export class AssetListingComponent implements OnInit {
     getAssetAcquisitionTypeList() {
         this.commonservice.smartDropDownList('AssetAcquisitionType', 'AssetAcquisitionTypeId', 'Name').subscribe(res => {
             this.assetAcquisitionTypeList = res;
+
+        })
+    }
+
+    getAssetWarrantyStatus() {
+        this.commonservice.smartDropDownList('AssetWarrantyStatus', 'AssetWarrantyStatusId', 'warrantyStatus').subscribe(res => {
+            this.assetwarrantystatusList = res;
 
         })
     }
