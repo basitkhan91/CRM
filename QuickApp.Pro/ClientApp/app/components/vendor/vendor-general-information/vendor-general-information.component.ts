@@ -436,42 +436,42 @@ export class VendorGeneralInformationComponent implements OnInit {
 
 
 
-        setTimeout(() => {
-            if (this.vendorService.listCollection != null && this.vendorService.isEditMode == true) {
 
-                this.showLable = true;
-                this.viewName = "Edit";
+        if (this.vendorService.listCollection != null && this.vendorService.isEditMode == true) {
 
-                this.local = this.vendorService.listCollection;
+            this.showLable = true;
+            this.viewName = "Edit";
 
-                this.sourceVendor = this.vendorService.listCollection;
-                console.log(this.sourceVendor);
-                this.sourceVendor.vendorName = getObjectById('vendorId', this.sourceVendor.vendorId, this.allActions);
-                this.toGetVendorGeneralDocumentsList(this.sourceVendor.vendorId);
-                this.sourceVendor.address1 = this.vendorService.listCollection.address1;
-                this.sourceVendor.address2 = this.vendorService.listCollection.address2;
-                this.sourceVendor.address3 = this.vendorService.listCollection.address3;
-                this.sourceVendor.city = this.vendorService.listCollection.city;
-                this.sourceVendor.country = getObjectById('countries_id', this.vendorService.listCollection.countryId, this.allCountryinfo);
-                this.sourceVendor.stateOrProvince = this.vendorService.listCollection.stateOrProvince;
-                this.sourceVendor.postalCode = this.vendorService.listCollection.postalCode;
-                this.sourceVendor.vendorClassificationIds = this.sourceVendor.vendorClassifications;
-                if (this.sourceVendor.parent) {
-                    this.sourceVendor.vendorParentId = getObjectById('vendorId', this.sourceVendor.vendorParentId, this.allActions);
-                }
+            this.local = this.vendorService.listCollection;
 
+            this.sourceVendor = this.vendorService.listCollection;
+            console.log(this.sourceVendor);
+            this.sourceVendor.vendorName = getObjectById('vendorId', this.sourceVendor.vendorId, this.allActions);
+            this.toGetVendorGeneralDocumentsList(this.sourceVendor.vendorId);
+            this.sourceVendor.address1 = this.vendorService.listCollection.address1;
+            this.sourceVendor.address2 = this.vendorService.listCollection.address2;
+            this.sourceVendor.address3 = this.vendorService.listCollection.address3;
+            this.sourceVendor.city = this.vendorService.listCollection.city;
+            this.sourceVendor.country = getObjectById('countries_id', this.vendorService.listCollection.countryId, this.allCountryinfo);
+            this.sourceVendor.stateOrProvince = this.vendorService.listCollection.stateOrProvince;
+            this.sourceVendor.postalCode = this.vendorService.listCollection.postalCode;
+            this.sourceVendor.vendorClassificationIds = this.sourceVendor.vendorClassifications;
+            if (this.sourceVendor.parent) {
+                this.sourceVendor.vendorParentId = getObjectById('vendorId', this.sourceVendor.vendorParentId, this.allActions);
             }
-            if (this.customerser.isCustomerAlsoVendor == true) {
-                this.sourceVendor = this.customerser.localCollectiontoVendor;
-                this.sourceVendor.vendorEmail = this.customerser.localCollectiontoVendor.email;
-                this.sourceVendor.vendorPhone = this.customerser.localCollectiontoVendor.customerPhone;
-                this.sourceVendor.vendorName = this.customerser.localCollectiontoVendor.name;
-                this.sourceVendor.vendorCode = this.customerser.localCollectiontoVendor.customerCode;
-                this.sourceVendor.doingBusinessAsName = this.customerser.localCollectiontoVendor.doingBuinessAsName;
-                this.sourceVendor.postalCode = this.customerser.localCollectiontoVendor.postalCode;
 
-            }
-        }, 3000)
+        }
+        if (this.customerser.isCustomerAlsoVendor == true) {
+            this.sourceVendor = this.customerser.localCollectiontoVendor;
+            this.sourceVendor.vendorEmail = this.customerser.localCollectiontoVendor.email;
+            this.sourceVendor.vendorPhone = this.customerser.localCollectiontoVendor.customerPhone;
+            this.sourceVendor.vendorName = this.customerser.localCollectiontoVendor.name;
+            this.sourceVendor.vendorCode = this.customerser.localCollectiontoVendor.customerCode;
+            this.sourceVendor.doingBusinessAsName = this.customerser.localCollectiontoVendor.doingBuinessAsName;
+            this.sourceVendor.postalCode = this.customerser.localCollectiontoVendor.postalCode;
+
+        }
+
 
 
 
@@ -972,7 +972,7 @@ export class VendorGeneralInformationComponent implements OnInit {
                 this.sourceVendor.updatedBy = this.userName;
                 this.sourceVendor.masterCompanyId = 1;
                 this.sourceVendor.isActive = true;
-                console.log('Test');
+
 
                 if (this.sourceVendor.parent) {
 
@@ -1043,6 +1043,7 @@ export class VendorGeneralInformationComponent implements OnInit {
 
             else {
                 const vendorName = editValueAssignByCondition('vendorName', this.sourceVendor.vendorName);
+                const country = editValueAssignByCondition('countries_id', this.sourceVendor.country);
                 let vendorParentId;
                 // this.sourceVendor.vendorName = editValueAssignByCondition('vendorName', this.sourceVendor.vendorName)
                 this.sourceVendor.updatedBy = this.userName;
@@ -1054,7 +1055,7 @@ export class VendorGeneralInformationComponent implements OnInit {
                 if (this.sourceVendor.parent) {
                     vendorParentId = editValueAssignByCondition('vendorId', this.sourceVendor.vendorParentId);
                 }
-                const data = { ...this.sourceVendor, vendorName: vendorName, vendorParentId: vendorParentId };
+                const data = { ...this.sourceVendor, vendorName: vendorName, vendorParentId: vendorParentId, country: country };
                 const { vendorContact, address, ...newSourceVendor } = data;
 
                 this.vendorService.updateVendorDetails(newSourceVendor).subscribe(
