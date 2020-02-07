@@ -157,7 +157,8 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 			{ field: 'city', header: 'City' },
 			{ field: 'stateOrProvince', header: 'State/Prov' },
 			{ field: 'postalCode', header: 'Postal Code' },
-			{ field: 'countryName', header: 'Country' }
+			{ field: 'countryName', header: 'Country' },
+			{field : 'isPrimayPayment', header:'IsPrimary'}
 		];
 		this.selectedColumns = this.cols;
 

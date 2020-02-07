@@ -323,7 +323,7 @@ export class VendorCapabilitiesListComponent implements OnInit {
         const { vendorCapabilityId } = rowData;
         this.getVendorCapabilitiesView(vendorCapabilityId);
         this.getVendorCapesAircraftView(vendorCapabilityId);
-        $("#vendorCapesView").modal('show');
+        // $("#vendorCapesView").modal('show');
     }
 
     getVendorCapabilitiesView(vendorCapesId) {
@@ -336,7 +336,7 @@ export class VendorCapabilitiesListComponent implements OnInit {
     getVendorCapesAircraftView(vendorCapesId) {
         this.vendorCapesService.getVendorAircraftGetDataByCapsId(vendorCapesId).subscribe(res => {
             console.log(res);
-          
+
             this.aircraftListDataValues = res.map(x => {
                 return {
                     ...x,
