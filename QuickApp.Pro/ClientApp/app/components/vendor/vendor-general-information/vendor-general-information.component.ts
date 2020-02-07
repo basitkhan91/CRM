@@ -207,7 +207,7 @@ export class VendorGeneralInformationComponent implements OnInit {
                 this.sourceVendor = res;
 
 
-this.newvendorId=res.vendorId;
+                this.newvendorId = res.vendorId;
                 this.parentVendorList(res.vendorId);
 
                 this.forceSelectionOfVendorName = true;
@@ -323,8 +323,9 @@ this.newvendorId=res.vendorId;
     }
 
     ngOnInit(): void {
+
         this.vendorService.currentEditModeStatus.subscribe(message => {
-            this.isvendorEditMode = message; 
+            this.isvendorEditMode = message;
         });
         // this.countrylist();
         // if(this.vendorService.listCollection == undefined){
@@ -435,6 +436,7 @@ this.newvendorId=res.vendorId;
 
 
 
+
         if (this.vendorService.listCollection != null && this.vendorService.isEditMode == true) {
 
             this.showLable = true;
@@ -471,6 +473,8 @@ this.newvendorId=res.vendorId;
         }
 
 
+
+
     }
 
     closethis() {
@@ -478,15 +482,15 @@ this.newvendorId=res.vendorId;
     }
     public allWorkFlows: any[] = [];
     async  loadData() {
-        this.alertService.startLoadingMessage();
-        this.loadingIndicator = true;
+        // this.alertService.startLoadingMessage();
+        // this.loadingIndicator = true;
         await this.vendorService.getWorkFlows().subscribe(res =>
             this.allActions = res[0]
-           
+
             // results => this.onDataLoadSuccessful(results[0]),
             // error => this.onDataLoadFailed(error)
         );
-        console.log("heler", this.allActions);
+
     }
     private onDataLoadSuccessful(allWorkFlows: any[]) {
         this.alertService.stopLoadingMessage();
@@ -751,7 +755,7 @@ this.newvendorId=res.vendorId;
 
     parentVendorList(id) {
 
-console.log("check id",id)
+        console.log("check id", id)
         this.parentVendorOriginal = [... this.allActions.filter(x => {
             if (x.vendorId != id) {
                 return x;
@@ -764,51 +768,51 @@ console.log("check id",id)
 
     filterVendorParentNames(event) {
         this.vendorParentNames = this.parentVendorOriginal;
-        console.log("vendor info",this.parentVendorOriginal);
+        console.log("vendor info", this.parentVendorOriginal);
         this.vendorParentNames = [...this.parentVendorOriginal.filter(x => {
             return x.vendorName.toLowerCase().includes(event.query.toLowerCase());
-       })]
-     }
+        })]
+    }
 
-    
-        // this.vendorNames = [];
-        // for (let i = 0; i < this.allActions.length; i++) {
-        //     let vendorParentName = this.allActions[i].vendorName;
-        //     if (vendorParentName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-        //         this.vendorNames.push(vendorParentName);
+
+    // this.vendorNames = [];
+    // for (let i = 0; i < this.allActions.length; i++) {
+    //     let vendorParentName = this.allActions[i].vendorName;
+    //     if (vendorParentName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+    //         this.vendorNames.push(vendorParentName);
+    //     }
+    // }
+    selectedParentName(event) {
+
+        // if (this.changeName == false) {
+        //     if (event.name === this.generalInformation1.name) {
+        //         this.disableSaveParentName = true;
+        //     }
+        //     else {
+        //         this.disableSaveParentName = false;
         //     }
         // }
-        selectedParentName(event) {
+        // else {
+        if (event.name === this.sourceVendor.vendorName) {
+            this.disableSaveParentName = true;
+        }
+        else {
+            this.disableSaveParentName = false;
+        }
+        // }
 
-            // if (this.changeName == false) {
-            //     if (event.name === this.generalInformation1.name) {
-            //         this.disableSaveParentName = true;
-            //     }
-            //     else {
-            //         this.disableSaveParentName = false;
-            //     }
-            // }
-            // else {
-                if (event.name === this.sourceVendor.vendorName) {
-                    this.disableSaveParentName = true;
-                }
-                else {
-                    this.disableSaveParentName = false;
-                }
-            // }
-    
+    }
+    checkWithName(event) {
+
+
+        if (event === this.sourceVendor.vendorName) {
+            this.disableSaveParentName = true;
         }
-        checkWithName(event) {
-    
-      
-                if (event === this.sourceVendor.vendorName) {
-                    this.disableSaveParentName = true;
-                }
-                else {
-                    this.disableSaveParentName = false;
-                }
-            
+        else {
+            this.disableSaveParentName = false;
         }
+
+    }
 
     filterVendorCodes(event) {
         this.vendorCodes = [];
@@ -930,10 +934,10 @@ console.log("check id",id)
 
     checkVendorExists(field, value) {
 
-        let isEdit ;
-        if(this.vendorService.isEditMode){
+        let isEdit;
+        if (this.vendorService.isEditMode) {
             this.editModeData = this.sourceVendor.listCollection;
-        }else{
+        } else {
             isEdit = undefined;
         }
 
@@ -959,15 +963,16 @@ console.log("check id",id)
         if (this.sourceVendor.vendorName && this.sourceVendor.vendorCode && this.sourceVendor.vendorEmail && this.sourceVendor.vendorPhone && this.sourceVendor.address1 && this.sourceVendor.city
             && this.sourceVendor.postalCode && this.sourceVendor.country && this.sourceVendor.vendorClassificationIds) {
 
-            this.sourceVendor.country = editValueAssignByCondition('countries_id', this.sourceVendor.country);
-            this.sourceVendor.vendorParentId = editValueAssignByCondition('vendorId', this.sourceVendor.vendorParentId);
+            // this.sourceVendor.country = editValueAssignByCondition('countries_id', this.sourceVendor.country);
+            // this.sourceVendor.vendorParentId = editValueAssignByCondition('vendorId', this.sourceVendor.vendorParentId);
+
             console.log(this.sourceVendor);
             if (!this.sourceVendor.vendorId) {
                 this.sourceVendor.createdBy = this.userName;
                 this.sourceVendor.updatedBy = this.userName;
                 this.sourceVendor.masterCompanyId = 1;
                 this.sourceVendor.isActive = true;
-                console.log('Test');
+
 
                 if (this.sourceVendor.parent) {
 
@@ -980,7 +985,15 @@ console.log("check id",id)
                     this.sourceVendor.vendorParentName = '';
                 }
 
-                this.vendorService.newAction(this.sourceVendor).subscribe(data => {
+                const country = editValueAssignByCondition('countries_id', this.sourceVendor.country);
+                let vendorParentId;
+                if (this.sourceVendor.parent) {
+                    vendorParentId = editValueAssignByCondition('vendorId', this.sourceVendor.vendorParentId);
+                }
+
+                const data = { ...this.sourceVendor, country: country, vendorParentId: vendorParentId };
+
+                this.vendorService.newAction(data).subscribe(data => {
 
                     const vdata = {
                         vendorId: data.vendorId,
@@ -1029,7 +1042,10 @@ console.log("check id",id)
             }
 
             else {
-                this.sourceVendor.vendorName = editValueAssignByCondition('vendorName', this.sourceVendor.vendorName)
+                const vendorName = editValueAssignByCondition('vendorName', this.sourceVendor.vendorName);
+                const country = editValueAssignByCondition('countries_id', this.sourceVendor.country);
+                let vendorParentId;
+                // this.sourceVendor.vendorName = editValueAssignByCondition('vendorName', this.sourceVendor.vendorName)
                 this.sourceVendor.updatedBy = this.userName;
                 if (this.sourceVendor.parent == false || this.sourceVendor.parent == null) {
                     this.sourceVendor.vendorParentName = '';
@@ -1037,9 +1053,10 @@ console.log("check id",id)
 
 
                 if (this.sourceVendor.parent) {
-                    this.sourceVendor.vendorParentId = editValueAssignByCondition('vendorId', this.sourceVendor.vendorParentId);
+                    vendorParentId = editValueAssignByCondition('vendorId', this.sourceVendor.vendorParentId);
                 }
-                const { vendorContact, address, ...newSourceVendor } = this.sourceVendor;
+                const data = { ...this.sourceVendor, vendorName: vendorName, vendorParentId: vendorParentId, country: country };
+                const { vendorContact, address, ...newSourceVendor } = data;
 
                 this.vendorService.updateVendorDetails(newSourceVendor).subscribe(
                     data => {
@@ -1135,11 +1152,11 @@ console.log("check id",id)
         }
         this.loadData();
     }
-    
+
     private savesuccessCompleted(user?: any, goNxt?: any) {
         this.isSaving = false;
-        console.log("vendor service",this.vendorService.isEditMode);    
-        this.alertService.showMessage("Success", `${this.isvendorEditMode ? 'Updated' : 'Saved'  }  General Information  successfully`, MessageSeverity.success);
+        console.log("vendor service", this.vendorService.isEditMode);
+        this.alertService.showMessage("Success", `${this.isvendorEditMode ? 'Updated' : 'Saved'}  General Information  successfully`, MessageSeverity.success);
         if (goNxt === 'goNext') {
             this.nextClick();
         }
@@ -1213,7 +1230,7 @@ console.log("check id",id)
         //     }
         // }
     }
-    checVendorName(name){
+    checVendorName(name) {
         this.parentVendorList(this.newvendorId);
     }
     // checkVendorExist() {

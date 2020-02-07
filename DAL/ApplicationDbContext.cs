@@ -498,6 +498,8 @@ namespace DAL
         public DbSet<VendorInternationalShippingAudit> VendorInternationalShippingAudit { get; set; }
         public DbSet<VendorInternationalShipViaDetails> VendorInternationalShipViaDetails { get; set; }
         public DbSet<VendorInternationalShipViaDetailsAudit> VendorInternationalShipViaDetailsAudit { get; set; }
+        public DbSet<VendorContactATAMapping> VendorContactATAMapping { get; set; }
+        public DbSet<VendorContactATAMappingAudit> VendorContactATAMappingAudit { get; set; }
 
 
 

@@ -2181,6 +2181,17 @@ namespace QuickApp.Pro.Controllers
             return Ok(ModelState);
         }
 
+        [HttpGet("ItemMasterCapsById/{itemMasterCapesId}")]
+        public IActionResult ItemMasterCapesById(long itemMasterCapesId)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = _unitOfWork.itemMaster.ItemMasterCapesById(itemMasterCapesId);
+                return Ok(result);
+            }
+            return Ok(ModelState);
+        }
+
         [HttpGet("deleteitemmastercapes")]
         public IActionResult DeleteItemMasterCapes(long itemMasterCapesId, string updatedBy)
         {

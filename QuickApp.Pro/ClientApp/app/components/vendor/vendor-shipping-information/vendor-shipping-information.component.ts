@@ -97,7 +97,8 @@ export class VendorShippingInformationComponent {
         { field: 'city', header: 'City' },
         { field: 'stateOrProvince', header: 'State/Prov' },
         { field: 'postalCode', header: 'Postal Code' },
-        { field: 'countryName', header: 'Country' }
+        { field: 'countryName', header: 'Country' },
+        { field: 'isPrimary', header: 'IsPrimary' }
     ];
     selectedColumns: any[] = this.cols;
     shipViacols: any[];
@@ -429,7 +430,7 @@ export class VendorShippingInformationComponent {
 
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-        this.shipViaObj = row;
+        // this.shipViaObj = row;
         this.isSaving = true;
         this.vendorService.shipviaHistory(row.vendorShippingId).subscribe(
             results => this.onHistoryLoadSuccessful(results[0], content),
@@ -806,7 +807,8 @@ export class VendorShippingInformationComponent {
     closeAddShipViaDomestic() {
         console.log('Sample');
         // this.shipviapoup.hide();
-        // $("#contentShipVia").dialog('close');
+        // $("#contentShipVia").modal("hide");
+        this.modal.close();
     }
 
     getColorCodeForHistory(i, field, value) {

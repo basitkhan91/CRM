@@ -96,7 +96,8 @@ export class VendorBillingInformationComponent {
         { field: 'city', header: 'City' },
         { field: 'stateOrProvince', header: 'State/Prov' },
         { field: 'postalCode', header: 'Postal Code' },
-        { field: 'countryName', header: 'Country' }
+        { field: 'countryName', header: 'Country' },
+        {field: 'isPrimary', header:'IsPrimary'}
     ];
     selectedColumns: any[] = this.cols;
     billingauditHisory: any[];

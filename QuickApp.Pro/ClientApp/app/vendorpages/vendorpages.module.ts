@@ -76,7 +76,7 @@ import { AircraftModelEndpointService } from "../services/aircraft-model/aircraf
 import { DashNumberEndpointService } from "../services/dash-number/dash-number-endpoint.service";
 import { DropdownModule } from "primeng/dropdown";
 import { VendorCapesComponent } from "../components/vendor/vendor-capes/vendor-capes.component";
-
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 
 @NgModule({
@@ -107,7 +107,8 @@ import { VendorCapesComponent } from "../components/vendor/vendor-capes/vendor-c
 		ValidateAccessModule,
 		TabViewModule,
 		TooltipModule,
-		DropdownModule
+		DropdownModule,
+		MatTooltipModule
 
 	],
 	declarations: [

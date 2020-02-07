@@ -37,7 +37,7 @@
                                     href="#"
                                     data-toggle="modal"
                                     data-target="#addBillingInfo" 
-                                    ><i class="fa fa-plus-circle fa-lg" (click)="addBillingIfo()"></i
+                                    ><i class="fa fa-plus-circle fa-lg" (click)="addBillingIfo()" matTooltip="Create Billing Information"></i
                                     ></a>
                                     </h4>
                             <!-- <h3 class="po-head pull-left" style="padding: 0 6px;">Billing Information List</h3> -->
@@ -102,7 +102,7 @@
                         <ng-template pTemplate="header" let-columns>
                             <tr>
                                 <th style="width: 40px;">Flag</th>
-                                <th *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
+                                <th *ngFor="let col of columns" [hidden]="col.header == 'IsPrimary'" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
                                     {{col.header}}
                                     <p-sortIcon [field]="col.field"></p-sortIcon>
                                 </th>
@@ -110,7 +110,7 @@
                             </tr>
                                 <tr>
                                     <th></th>
-                                    <th style="width:auto" *ngFor="let col of columns" [ngSwitch]="col.field">
+                                    <th style="width:auto" *ngFor="let col of columns" [hidden]="col.field == 'isPrimary'" [ngSwitch]="col.field">
                                         <input style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field, 'contains')">
                                     </th>
                                     <th></th>
@@ -123,11 +123,11 @@
                                     <!-- [ngClass]="{'row-primary': rowData.isPrimary === true}" -->
                                     <td > <span class="flag">
                                             <i  *ngIf="rowData.isPrimary == true"   [ngStyle]="{'color': rowData.isPrimary == true ? 'green' : 'none'}"  
-                                             class="fa fa-flag" aria-hidden="true"></i>
+                                             class="fa fa-flag" matTooltip="Primary" matTooltipPosition="above" aria-hidden="true"></i>
                                             </span>
                                     </td>
 
-                                <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
+                                <td *ngFor="let col of columns" [hidden]="col.field == 'isPrimary'" class="ui-resizable-column" pReorderableRowHandle>
                                     {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
                                 </td>
 
@@ -137,16 +137,16 @@
                                     <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="updateActiveorInActiveForBilling(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
                                     <!--<span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openView(view,rowData)" title="View"><i class="fa fa-eye"></i></a> </span>-->
                                     <span data-toggle="modal" data-target="#viewBilling"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openBillingView(rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
-                                    <button class="btn-edit" mat-icon-button (click)="openEdit(rowData)" matTooltip="edit" data-toggle="modal" data-target="#addBillingInfo">
+                                    <button class="btn-edit" mat-icon-button (click)="openEdit(rowData)" matTooltip="Edit" data-toggle="modal" data-target="#addBillingInfo">
                                         <mat-icon>edit</mat-icon>
                                     </button>
 
-                                    <button class="btn-delete" mat-icon-button matTooltip="delete" (click)="deleteBillingInfo(deleteContent,rowData)">
+                                    <button class="btn-delete" mat-icon-button matTooltip="Delete" (click)="deleteBillingInfo(deleteContent,rowData)">
                                         <mat-icon color="warn">delete</mat-icon>
                                     </button>
 
                                     <!--<button (click)="openShipVia(contentShipVia,rowData)" data-target="#VShipVia" class="btn btn-danger nobg" data-toggle="tooltip" title="" data-original-title="View Shipping Via Information"><i class="fa fa-truck"></i></button>-->
-                                    <button class="btn-history" mat-icon-button matTooltip="history" (click)="getCustomerBillingHistory(contentAuditHist,rowData)">
+                                    <button class="btn-history" mat-icon-button matTooltip="History" (click)="getCustomerBillingHistory(contentAuditHist,rowData)">
                                         <mat-icon color="green">history</mat-icon>
                                     </button>
 

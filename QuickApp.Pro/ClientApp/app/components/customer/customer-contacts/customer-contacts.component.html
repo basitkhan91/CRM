@@ -151,7 +151,7 @@
                                 <ng-container *ngIf="col.field=='isDefaultContact'">
                                     <span class="flag">
                                         <i *ngIf="rowData.isDefaultContact == true" [ngStyle]="{'color': rowData.isDefaultContact == true ? 'green' : 'none'}"
-                                           class="fa fa-flag" aria-hidden="true"></i>
+                                           class="fa fa-flag" matTooltip="Primary" matTooltipPosition="above" aria-hidden="true"></i>
                                     </span>
                                 </ng-container>
                             </td>
