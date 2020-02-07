@@ -27,7 +27,7 @@
                                         href="#"
                                         data-toggle="modal"
                                         data-target="#addBillingInfo" 
-                                        ><i class="fa fa-plus-circle fa-lg" (click)="onAddBillingInfo()"></i
+                                        ><i class="fa fa-plus-circle fa-lg" (click)="onAddBillingInfo()" matTooltip="Create Billing Information"></i
                                         ></a>
                                     </h4>                                   
                                 </div>
@@ -115,16 +115,16 @@
                                                 
                                                 <span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openView(view,rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
         
-                                                <button *ngIf="!isViewMode" class="btn-edit" mat-icon-button (click)="openEdit(rowData)" data-toggle="modal" data-target="#addBillingInfo" matTooltip="edit">
+                                                <button *ngIf="!isViewMode" class="btn-edit" mat-icon-button (click)="openEdit(rowData)" data-toggle="modal" data-target="#addBillingInfo" matTooltip="Edit">
                                                     <mat-icon>edit</mat-icon>
                                                 </button>
         
-                                                <button *ngIf="!isViewMode" class="btn-delete" mat-icon-button matTooltip="delete" data-toggle="modal" data-target="#deleteBillingInfo" (click)="deleteBillingInfo(rowData)">
+                                                <button *ngIf="!isViewMode" class="btn-delete" mat-icon-button matTooltip="Delete" data-toggle="modal" data-target="#deleteBillingInfo" (click)="deleteBillingInfo(rowData)">
                                                     <mat-icon color="warn">delete</mat-icon>
                                                 </button>
         
                                                 <!--<button (click)="openBillVia(contentBillVia,rowData)" data-target="#VBillVia" class="btn btn-danger nobg" data-toggle="tooltip" matTooltip="Add Bill Via" data-original-title="View Billing Via Information"><i class="fa fa-truck"></i></button>-->
-                                                <button class="btn-history" mat-icon-button matTooltip="history" (click)="openBilladdressHistory(contentAuditHist,rowData)">
+                                                <button class="btn-history" mat-icon-button matTooltip="History" (click)="openBilladdressHistory(contentAuditHist,rowData)">
                                                     <mat-icon color="green">history</mat-icon>
                                                 </button>        
                                             </td>        

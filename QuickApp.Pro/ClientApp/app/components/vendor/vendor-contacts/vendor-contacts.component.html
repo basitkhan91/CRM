@@ -27,7 +27,7 @@
                                     href="#"
                                     data-toggle="modal"
                                     data-target="#addContactInfo" 
-                                    ><i class="fa fa-plus-circle fa-lg" (click)="onAddContactInfo()"></i
+                                    ><i class="fa fa-plus-circle fa-lg" (click)="onAddContactInfo()" matTooltip="Create Contact Information"></i
                                     ></a>
                                     </h4>
                            
@@ -118,7 +118,7 @@
                                         <p-inputSwitch *ngIf="!isViewMode" name="isActive{{i}}" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="handleChanges(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
                                         <!--<span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openView(view,rowData)" title="View"><i class="fa fa-eye"></i></a> </span>-->
                                         <span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="opencontactView(view,rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
-                                        <button *ngIf="!isViewMode" class="btn-edit" mat-icon-button (click)="openEdit(contentEdit,rowData)" matTooltip="edit" data-target="#addContactInfo" data-toggle="modal">
+                                        <button *ngIf="!isViewMode" class="btn-edit" mat-icon-button (click)="openEdit(contentEdit,rowData)" matTooltip="Edit" data-target="#addContactInfo" data-toggle="modal">
                                             <mat-icon>edit</mat-icon>
                                         </button>
 
@@ -131,7 +131,7 @@
                                             <mat-icon color="warn">delete</mat-icon>
                                         </button>
 
-                                        <button class="btn-history" mat-icon-button matTooltip="history" (click)="openHist(contentAuditHist,rowData)">
+                                        <button class="btn-history" mat-icon-button matTooltip="History" (click)="openHist(contentAuditHist,rowData)">
                                             <mat-icon color="green">history</mat-icon>
                                         </button>
 
@@ -146,7 +146,7 @@
                                         No records found
                                     </td>
                                 </tr>
-                            </ng-template>
+                            </ng-template>  
                             <ng-template pTemplate="summary" id="footer">
                                 <label id="footer" class="footer">No'of records:</label>
                                 <input style="width: 5%;" [(ngModel)]="dt._totalRecords" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp;
