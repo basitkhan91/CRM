@@ -470,8 +470,10 @@ export class SalesQuoteCreateComponent implements OnInit {
       this.salesQuote.priorities = this.salesQuoteView.priorities;
       this.salesQuote.leadSources = this.salesQuoteView.leadSources;
       this.salesQuote.salesQuoteTypes = this.salesQuoteView.salesQuoteTypes;
+      this.salesQuote.status = this.salesQuoteView.status;
       this.salesQuote.salesOrderQuoteId = this.salesOrderQuoteObj.salesOrderQuoteId;
       this.salesQuote.quoteTypeId = this.salesOrderQuoteObj.quoteTypeId;
+      this.salesQuote.statusId = this.salesOrderQuoteObj.statusId;
       this.salesQuote.openDate = new Date(this.salesOrderQuoteObj.openDate);
       this.salesQuote.customerRequestDate = new Date(
         this.salesOrderQuoteObj.customerRequestDate
@@ -790,6 +792,9 @@ export class SalesQuoteCreateComponent implements OnInit {
         this.salesOrderQuote.shipToContactId
       );
       this.salesOrderQuote.leadSourceId = this.salesQuote.leadSourceId;
+      if (this.id) {
+      this.salesOrderQuote.statusId = this.salesQuote.statusId;
+      }
       this.salesOrderQuote.creditLimit = this.salesQuote.creditLimit;
       this.salesOrderQuote.creditTermId = this.salesQuote.creditLimitTermsId;
       this.salesOrderQuote.restrictPMA = this.salesQuote.restrictPMA;

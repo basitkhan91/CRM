@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel;
 
 namespace DAL.Models.Sales.SalesOrderQuote
 {
@@ -71,5 +72,7 @@ namespace DAL.Models.Sales.SalesOrderQuote
         public bool IsDeleted { get; set; }
 
         public int StatusId { get; set; }
+
+        public DateTime StatusChangeDate { get; set;}
     }
 }
