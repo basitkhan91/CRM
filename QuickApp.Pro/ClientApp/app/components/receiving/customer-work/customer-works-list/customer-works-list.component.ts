@@ -20,6 +20,8 @@ import { MasterComapnyService } from '../../../../services/mastercompany.service
 import { listSearchFilterObjectCreation } from '../../../../generic/autocomplete';
 import { CommonService } from '../../../../services/common.service';
 import { TableModule, Table } from 'primeng/table';
+import { MenuItem } from 'primeng/api';
+import { StocklineService } from '../../../../services/stockline.service';
 @Component({
     selector: 'app-customer-works-list',
     templateUrl: './customer-works-list.component.html',
@@ -27,9 +29,8 @@ import { TableModule, Table } from 'primeng/table';
     animations: [fadeInOut]
 })
 
-export class CustomerWorksListComponent implements OnInit, AfterViewInit{
+export class CustomerWorksListComponent implements OnInit {
    
-
     private isEditMode: boolean = false;
     loadingIndicator: boolean;
     dataSource: any;
@@ -64,7 +65,12 @@ export class CustomerWorksListComponent implements OnInit, AfterViewInit{
     public divsioname: any;
     public biuName: any;
     public compnayname: any;
-          cols = [
+    breadcrumbs: MenuItem[] = [
+        { label: 'Receiving' },
+        { label: 'Customer Work' },
+        { label: 'Customer Work List' }
+    ];
+    cols = [
              
     { field: 'receivingNumber', header: 'Recev.No.' },
     //{ field: 'workOrderNum', header: 'WorkOrderNum' },
@@ -77,23 +83,20 @@ export class CustomerWorksListComponent implements OnInit, AfterViewInit{
     { field: 'customerReference', header: 'Customer Reference' },
 ];
     selectedColumns = this.cols;
+    viewCustWorkInfo: any = {};
+    selectedRowForDelete: any = {};
+    managementStructure: any = {};
+    timeLifeInfo: any = {};
 
-
-    constructor(private receivingCustomerWorkService: ReceivingCustomerWorkService, private masterComapnyService: MasterComapnyService, private _route: Router, private authService: AuthService, private alertService: AlertService, private modalService: NgbModal, private commonService: CommonService) {
+    constructor(private receivingCustomerWorkService: ReceivingCustomerWorkService, private masterComapnyService: MasterComapnyService, private _route: Router, private authService: AuthService, private alertService: AlertService, private modalService: NgbModal, private commonService: CommonService, private stocklineService: StocklineService) {
         this.dataSource = new MatTableDataSource();
         this.receivingCustomerWorkService.isEditMode = false;
        
     }
 
-     
-
-    ngAfterViewInit(): void {
-    }
-    ngOnInit(): void {
+    ngOnInit() {
       
-}
-
-
+    }
 
     public navigateTogeneralInfo() {
         this.receivingCustomerWorkService.isEditMode = false;
@@ -128,6 +131,9 @@ export class CustomerWorksListComponent implements OnInit, AfterViewInit{
             if (res.length > 0) {
                 this.totalRecords = res[0].totalRecords;
                 this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+            } else {
+                this.totalRecords = 0;
+                this.totalPages = 0;
             }
 
         })
@@ -150,185 +156,235 @@ export class CustomerWorksListComponent implements OnInit, AfterViewInit{
        
         this._route.navigateByUrl(`receivingmodule/receivingpages/app-customer-work-setup/edit/${receivingCustomerWorkId}`);
     }
+
+    openView(rowData) {
+        console.log(rowData);   
+        const {receivingCustomerWorkId} = rowData;
+        this.receivingCustomerWorkService.getCustomerWorkdataById(receivingCustomerWorkId).subscribe(res => {
+            console.log(res);
+            this.viewCustWorkInfo = {
+                ...res,
+                tagDate: res.tagDate ? new Date(res.tagDate) : '',
+                mfgDate: res.mfgDate ? new Date(res.mfgDate) : '',
+                expDate: res.expDate ? new Date(res.expDate) : '',
+                timeLifeDate: res.timeLifeDate ? new Date(res.timeLifeDate) : '',
+            }
+            this.getManagementStructureCodes(res.managementStructureId);
+            if(res.timeLifeCyclesId != null  || res.timeLifeCyclesId != 0) {
+                this.getTimeLifeOnEdit(res.timeLifeCyclesId);
+            } 
+        });
+    }
+
+    getManagementStructureCodes(id) {
+        this.commonService.getManagementStructureCodes(id).subscribe(res => {
+			if (res.Level1) {
+				this.managementStructure.level1 = res.Level1;
+            } else {
+                this.managementStructure.level1 = '-';
+            }
+            if (res.Level2) {
+				this.managementStructure.level2 = res.Level2;
+            } else {
+                this.managementStructure.level2 = '-';
+            }
+            if (res.Level3) {
+				this.managementStructure.level3 = res.Level3;
+            } else {
+                this.managementStructure.level3 = '-';
+            }
+            if (res.Level4) {
+				this.managementStructure.level4 = res.Level4;
+			} else {
+                this.managementStructure.level4 = '-';
+            }
+		})
+    }
+
+    getTimeLifeOnEdit(timeLifeId) {
+        this.stocklineService.getStockLineTimeLifeList(timeLifeId).subscribe(res => {
+            this.timeLifeInfo = res[0];
+        });
+    }
   
-    openView(content, row) {
+    // openView(content, row) {
 
-        const { receivingCustomerWorkId } = row;
+    //     const { receivingCustomerWorkId } = row;
 
-        this.receivingCustomerWorkService.getCustomerWorkdataById(receivingCustomerWorkId).subscribe(response => {
+    //     this.receivingCustomerWorkService.getCustomerWorkdataById(receivingCustomerWorkId).subscribe(response => {
 
-            this.receivingCustomerWorkService.listCollection = response[0];
-            row = response[0];
-            this.sourceAction = row;
-            if (row.managmentLegalEntity != null && row.divmanagmentLegalEntity != null && row.biumanagmentLegalEntity != null && row.compmanagmentLegalEntity != null) {
-                this.departname = row.managementStructeInfo.name;
-                this.divsioname = row.divmanagmentLegalEntity.name;
-                this.biuName = row.biumanagmentLegalEntity.name;
-                this.compnayname = row.compmanagmentLegalEntity.name;
+    //         this.receivingCustomerWorkService.listCollection = response[0];
+    //         row = response[0];
+    //         this.sourceAction = row;
+    //         if (row.managmentLegalEntity != null && row.divmanagmentLegalEntity != null && row.biumanagmentLegalEntity != null && row.compmanagmentLegalEntity != null) {
+    //             this.departname = row.managementStructeInfo.name;
+    //             this.divsioname = row.divmanagmentLegalEntity.name;
+    //             this.biuName = row.biumanagmentLegalEntity.name;
+    //             this.compnayname = row.compmanagmentLegalEntity.name;
 
-            }
-            else if (row.biumanagmentLegalEntity != null && row.divmanagmentLegalEntity != null && row.managmentLegalEntity != null) {
+    //         }
+    //         else if (row.biumanagmentLegalEntity != null && row.divmanagmentLegalEntity != null && row.managmentLegalEntity != null) {
 
-                this.divsioname = row.managmentLegalEntity.name;
-                this.biuName = row.divmanagmentLegalEntity.name;
-                this.compnayname = row.biumanagmentLegalEntity.name;
-
-
-
-            }
-            else if (row.divmanagmentLegalEntity != null && row.managmentLegalEntity != null) {
-                this.biuName = row.managmentLegalEntity.name;
-                this.compnayname = row.divmanagmentLegalEntity.name;
+    //             this.divsioname = row.managmentLegalEntity.name;
+    //             this.biuName = row.divmanagmentLegalEntity.name;
+    //             this.compnayname = row.biumanagmentLegalEntity.name;
 
 
-            }
-            else if (row.managementStructeInfo != null) {
 
-                this.compnayname = row.managmentLegalEntity.name;
+    //         }
+    //         else if (row.divmanagmentLegalEntity != null && row.managmentLegalEntity != null) {
+    //             this.biuName = row.managmentLegalEntity.name;
+    //             this.compnayname = row.divmanagmentLegalEntity.name;
 
-            }
-            else {
+
+    //         }
+    //         else if (row.managementStructeInfo != null) {
+
+    //             this.compnayname = row.managmentLegalEntity.name;
+
+    //         }
+    //         else {
                 
-            }
+    //         }
           
-            this.showViewProperties.isTimeLife = row.isTimeLife;
-            this.showViewProperties.receivingCustomerNumber = row.receivingCustomerNumber;
-            this.showViewProperties.customerReference = row.customerReference;
-            this.showViewProperties.contactFirstName = row.contactFirstName;
-            this.showViewProperties.workPhone = row.workPhone;
+    //         this.showViewProperties.isTimeLife = row.isTimeLife;
+    //         this.showViewProperties.receivingCustomerNumber = row.receivingCustomerNumber;
+    //         this.showViewProperties.customerReference = row.customerReference;
+    //         this.showViewProperties.contactFirstName = row.contactFirstName;
+    //         this.showViewProperties.workPhone = row.workPhone;
 
-            this.showViewProperties.partNumber = row.partNumber;
+    //         this.showViewProperties.partNumber = row.partNumber;
 
-            this.showViewProperties.partDescription = row.partDescription;
+    //         this.showViewProperties.partDescription = row.partDescription;
 
-            this.showViewProperties.changePartNumber = row.changePartNumber;
+    //         this.showViewProperties.changePartNumber = row.changePartNumber;
 
-            this.showViewProperties.partCertificationNumber = row.partCertificationNumber;
+    //         this.showViewProperties.partCertificationNumber = row.partCertificationNumber;
 
-            this.showViewProperties.expirationDate = row.expirationDate;
+    //         this.showViewProperties.expirationDate = row.expirationDate;
 
-            this.showViewProperties.quantity = row.quantity;
-            this.showViewProperties.conditionId = row.conditionId;
+    //         this.showViewProperties.quantity = row.quantity;
+    //         this.showViewProperties.conditionId = row.conditionId;
 
-            this.showViewProperties.owner = row.owner;
+    //         this.showViewProperties.owner = row.owner;
 
-            this.showViewProperties.isCustomerStock = row.isCustomerStock;
+    //         this.showViewProperties.isCustomerStock = row.isCustomerStock;
 
             
-            this.showViewProperties.traceableTo = row.traceableTo;
+    //         this.showViewProperties.traceableTo = row.traceableTo;
 
-            switch (parseInt(row.traceableToType)) {
-                case 1: {
-                   this.showViewProperties.traceableToType = 'Customer';
-
-
-                    break;
-                }
-                case 2: {
-                    this.showViewProperties.traceableToType = 'Other';
-                   break;
-                }
-                case 3: {
-                    this.showViewProperties.traceableToType = 'Vendor';
-                   break;
-                }
-                case 4: {
-                    this.showViewProperties.traceableToType = 'Company';
-                       break;
-                }
-            }
-           // this.showViewProperties.obtainFromType = row.obtainFromType;
-            switch (parseInt(row.obtainFromType)) {
-                case 1: {
-                    this.showViewProperties.obtainFromType = 'Customer';
+    //         switch (parseInt(row.traceableToType)) {
+    //             case 1: {
+    //                this.showViewProperties.traceableToType = 'Customer';
 
 
-                    break;
-                }
-                case 2: {
-                    this.showViewProperties.obtainFromType = 'Other';
-                    break;
-                }
-                case 3: {
-                    this.showViewProperties.obtainFromType = 'Vendor';
-                    break;
-                }
-                case 4: {
-                    this.showViewProperties.obtainFromType = 'Company';
-                    break;
-                }
-            }
-            this.showViewProperties.obtainFrom = row.obtainFrom;
-            this.showViewProperties.manufacturingDate = row.manufacturingDate;
-            this.showViewProperties.expirationDate = row.expirationDate;
-            this.showViewProperties.manufacturingTrace = row.manufacturingTrace;
-            this.showViewProperties.manufacturingLotNumber = row.manufacturingLotNumber;
-            this.showViewProperties.timeLifeDate = row.timeLifeDate;
-            this.showViewProperties.timeLifeOrigin = row.timeLifeOrigin;
+    //                 break;
+    //             }
+    //             case 2: {
+    //                 this.showViewProperties.traceableToType = 'Other';
+    //                break;
+    //             }
+    //             case 3: {
+    //                 this.showViewProperties.traceableToType = 'Vendor';
+    //                break;
+    //             }
+    //             case 4: {
+    //                 this.showViewProperties.traceableToType = 'Company';
+    //                    break;
+    //             }
+    //         }
+    //        // this.showViewProperties.obtainFromType = row.obtainFromType;
+    //         switch (parseInt(row.obtainFromType)) {
+    //             case 1: {
+    //                 this.showViewProperties.obtainFromType = 'Customer';
+
+
+    //                 break;
+    //             }
+    //             case 2: {
+    //                 this.showViewProperties.obtainFromType = 'Other';
+    //                 break;
+    //             }
+    //             case 3: {
+    //                 this.showViewProperties.obtainFromType = 'Vendor';
+    //                 break;
+    //             }
+    //             case 4: {
+    //                 this.showViewProperties.obtainFromType = 'Company';
+    //                 break;
+    //             }
+    //         }
+    //         this.showViewProperties.obtainFrom = row.obtainFrom;
+    //         this.showViewProperties.manufacturingDate = row.manufacturingDate;
+    //         this.showViewProperties.expirationDate = row.expirationDate;
+    //         this.showViewProperties.manufacturingTrace = row.manufacturingTrace;
+    //         this.showViewProperties.manufacturingLotNumber = row.manufacturingLotNumber;
+    //         this.showViewProperties.timeLifeDate = row.timeLifeDate;
+    //         this.showViewProperties.timeLifeOrigin = row.timeLifeOrigin;
            
 
             
-               if (row.customer) {
-                this.showViewProperties.customerId = row.customer.name;
-            }
-            else { this.customerId = "" }
-            if (row.employee) {
-                this.showViewProperties.employeeId = row.employee.firstName;
-            }
-            else { this.employeeId = "" }
+    //            if (row.customer) {
+    //             this.showViewProperties.customerId = row.customer.name;
+    //         }
+    //         else { this.customerId = "" }
+    //         if (row.employee) {
+    //             this.showViewProperties.employeeId = row.employee.firstName;
+    //         }
+    //         else { this.employeeId = "" }
 
-            if (row.co) {
-                this.showViewProperties.conditionId = row.co.description;
-            }
-            else { this.conditionId = "" }
-            if (row.si) {
-                this.showViewProperties.siteId = row.si.name;
-            }
-            else { this.siteId = "" }
+    //         if (row.co) {
+    //             this.showViewProperties.conditionId = row.co.description;
+    //         }
+    //         else { this.conditionId = "" }
+    //         if (row.si) {
+    //             this.showViewProperties.siteId = row.si.name;
+    //         }
+    //         else { this.siteId = "" }
 
-            if (row.w) {
-                this.showViewProperties.warehouseId = row.w.name;
-            }
-            else { this.warehouseId = "" }
+    //         if (row.w) {
+    //             this.showViewProperties.warehouseId = row.w.name;
+    //         }
+    //         else { this.warehouseId = "" }
 
-            if (row.l) {
-                this.showViewProperties.locationId = row.l.name;
-            }
-            else { this.locationId = "" }
-            if (row.sh) {
-                this.showViewProperties.shelfId = row.sh.name;
-            }
-            else { this.showViewProperties.shelfId = "" }
+    //         if (row.l) {
+    //             this.showViewProperties.locationId = row.l.name;
+    //         }
+    //         else { this.locationId = "" }
+    //         if (row.sh) {
+    //             this.showViewProperties.shelfId = row.sh.name;
+    //         }
+    //         else { this.showViewProperties.shelfId = "" }
 
-            if (row.bi) {
-                this.showViewProperties.binId = row.bi.name;
-            }
-            else { this.showViewProperties.binId = "" }
-            if (this.receivingCustomerWorkService.listCollection.ti) {
-                this.showViewProperties.cyclesRemaining = row.ti.cyclesRemaining;
-                this.showViewProperties.cyclesSinceNew = row.ti.cyclesSinceNew;
-                this.showViewProperties.cyclesSinceOVH = row.ti.cyclesSinceOVH;
-                this.showViewProperties.cyclesSinceInspection = row.ti.cyclesSinceInspection;
-                this.showViewProperties.cyclesSinceRepair = row.ti.cyclesSinceRepair;
-                this.showViewProperties.timeRemaining = row.ti.timeRemaining;
-                this.showViewProperties.timeSinceNew = row.ti.timeSinceNew;
-                this.showViewProperties.timeSinceOVH = row.ti.timeSinceOVH;
-                this.showViewProperties.timeSinceInspection = row.ti.timeSinceInspection;
-                this.showViewProperties.lastSinceInspection = row.ti.lastSinceInspection;
-                this.showViewProperties.lastSinceOVH = row.ti.lastSinceOVH;
-                this.showViewProperties.lastSinceNew = row.ti.lastSinceNew;
-                this.showViewProperties.timeSinceRepair = row.ti.timeSinceRepair;
-            }
-            else { this.showViewProperties.timeLifeCyclesId = "" }
+    //         if (row.bi) {
+    //             this.showViewProperties.binId = row.bi.name;
+    //         }
+    //         else { this.showViewProperties.binId = "" }
+    //         if (this.receivingCustomerWorkService.listCollection.ti) {
+    //             this.showViewProperties.cyclesRemaining = row.ti.cyclesRemaining;
+    //             this.showViewProperties.cyclesSinceNew = row.ti.cyclesSinceNew;
+    //             this.showViewProperties.cyclesSinceOVH = row.ti.cyclesSinceOVH;
+    //             this.showViewProperties.cyclesSinceInspection = row.ti.cyclesSinceInspection;
+    //             this.showViewProperties.cyclesSinceRepair = row.ti.cyclesSinceRepair;
+    //             this.showViewProperties.timeRemaining = row.ti.timeRemaining;
+    //             this.showViewProperties.timeSinceNew = row.ti.timeSinceNew;
+    //             this.showViewProperties.timeSinceOVH = row.ti.timeSinceOVH;
+    //             this.showViewProperties.timeSinceInspection = row.ti.timeSinceInspection;
+    //             this.showViewProperties.lastSinceInspection = row.ti.lastSinceInspection;
+    //             this.showViewProperties.lastSinceOVH = row.ti.lastSinceOVH;
+    //             this.showViewProperties.lastSinceNew = row.ti.lastSinceNew;
+    //             this.showViewProperties.timeSinceRepair = row.ti.timeSinceRepair;
+    //         }
+    //         else { this.showViewProperties.timeLifeCyclesId = "" }
 
-        });
+    //     });
 
-        this.loadMasterCompanies();
-        this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
-        this.modal.result.then(() => {
-            console.log('When user closes');
-        }, () => { console.log('Backdrop click') })
-    }
+    //     this.loadMasterCompanies();
+    //     this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
+    //     this.modal.result.then(() => {
+    //         console.log('When user closes');
+    //     }, () => { console.log('Backdrop click') })
+    // }
     private loadMasterCompanies() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
@@ -392,7 +448,7 @@ export class CustomerWorksListComponent implements OnInit, AfterViewInit{
      
         this.isEditMode = false;
         this.isDeleteMode = true;
-        this.sourcereceving = row;
+        this.selectedRowForDelete = row;
         this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');

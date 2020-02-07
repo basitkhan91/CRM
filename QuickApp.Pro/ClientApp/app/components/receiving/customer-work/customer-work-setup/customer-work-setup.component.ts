@@ -95,6 +95,7 @@ export class CustomerWorkSetupComponent implements OnInit {
 	receivingCustomerWorkId: number;
     sourceTimeLife: any = {};
     customerId: number;    
+    timeLifeCyclesId: number;    
     disableCondition: boolean = true;
     disableSite: boolean = true;
 
@@ -248,9 +249,9 @@ export class CustomerWorkSetupComponent implements OnInit {
     loadCustomerData() {
         this.commonService.smartDropDownList('Customer', 'CustomerId', 'Name').subscribe(response => {
             this.allCustomersList = response;
-            if(this.isEditMode) {
-                this.receivingForm.referenceId = getObjectById('value', this.receivingForm.referenceId, this.allCustomersList);
-            }
+            // if(this.isEditMode) {
+            //     this.receivingForm.referenceId = getObjectById('value', this.receivingForm.referenceId, this.allCustomersList);
+            // }
         });
     }
     
@@ -320,12 +321,11 @@ export class CustomerWorkSetupComponent implements OnInit {
             this.getSiteDetailsOnEdit(res);
             this.getObtainOwnerTraceOnEdit(res);
             if(res.timeLifeCyclesId != null  || res.timeLifeCyclesId != 0) {
-                this.sourceTimeLife.timeLifeCyclesId = res.timeLifeCyclesId;
+                this.timeLifeCyclesId = res.timeLifeCyclesId;
                 this.getTimeLifeOnEdit(res.timeLifeCyclesId);
             }            
             this.customerList();
             this.loadEmployeeData();
-            this.loadCustomerData();
             this.onChangeSiteName();
             this.onSelectCondition();
         });
@@ -693,35 +693,46 @@ export class CustomerWorkSetupComponent implements OnInit {
             obtainFrom: this.receivingForm.obtainFrom ? editValueAssignByCondition('value', this.receivingForm.obtainFrom) : '',
 			owner: this.receivingForm.owner ? editValueAssignByCondition('value', this.receivingForm.owner) : '',
 			traceableTo: this.receivingForm.traceableTo ? editValueAssignByCondition('value', this.receivingForm.traceableTo) : '',
-            referenceId: this.receivingForm.referenceId ? editValueAssignByCondition('value', this.receivingForm.referenceId) : '',
+            //referenceId: this.receivingForm.referenceId ? editValueAssignByCondition('value', this.receivingForm.referenceId) : '',
             createdBy: this.userName,
             updatedBy: this.userName,
-            timeLife: {...this.sourceTimeLife, updatedDate: new Date()}            
-        }    
+            timeLife: {...this.sourceTimeLife, timeLifeCyclesId: this.timeLifeCyclesId, updatedDate: new Date()}            
+        }
         console.log(this.receivingForm);
         const {customerCode, customerPhone, partDescription, manufacturer, revisePartId, ...receivingInfo} = this.receivingForm;
         if(!this.isEditMode) {
             this.receivingCustomerWorkService.newReason(receivingInfo).subscribe(res => {
+                $('#workorderpopup').modal('show');
                 console.log(res);
+                this.receivingCustomerWorkId = res.receivingCustomerWorkId;
                 this.alertService.showMessage(
                     'Success',
                     `Saved Customer Work Successfully`,
                     MessageSeverity.success
                 );
-                this.router.navigateByUrl('/receivingmodule/receivingpages/app-customer-works-list');
+                //this.router.navigateByUrl('/receivingmodule/receivingpages/app-customer-works-list');
             });
         } 
         else {
             this.receivingCustomerWorkService.updateCustomerWorkReceiving(receivingInfo).subscribe(res => {
+                $('#workorderpopup').modal('show');
                 console.log(res);
                 this.alertService.showMessage(
                     'Success',
                     `Updated Customer Work Successfully`,
                     MessageSeverity.success
                 );
-                this.router.navigateByUrl('/receivingmodule/receivingpages/app-customer-works-list');
+                //this.router.navigateByUrl('/receivingmodule/receivingpages/app-customer-works-list');
             });
         }
+    }
+
+    goToWorkOrder() {
+        this.router.navigateByUrl(`/workordersmodule/workorderspages/app-work-order-edit/${this.receivingCustomerWorkId}`);
+    }
+
+    goToCustomerWorkList() {
+        this.router.navigateByUrl('/receivingmodule/receivingpages/app-customer-works-list');
     }
 
 }

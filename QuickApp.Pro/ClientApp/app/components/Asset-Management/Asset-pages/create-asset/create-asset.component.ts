@@ -68,6 +68,7 @@ export class CreateAssetComponent implements OnInit {
     excludedAssetInfo: any[] = [];
     disableSave: boolean;
     onSelectedId: any;
+    onAssetSelectedId: any;
     localCollection: any[];
     localCollectionExc: any[];
     managementStructureData: any = [];
@@ -110,9 +111,12 @@ export class CreateAssetComponent implements OnInit {
         if (this.assetService.listCollection == undefined && this.AssetId != null) {
             this.GetAssetData(this.AssetId);
         }
+        
         if (this.assetService.listCollection != null && this.assetService.isEditMode == true) {
             this.showLable = true;
             this.currentAsset = this.assetService.listCollection;
+            this.onAssetSelectedId = this.currentAsset.assetId;
+            this.onSelectedId = this.currentAsset.assetId;
             this.updateMode = true;
             if (this.currentAsset.isIntangible == true) {
                 this.currentAsset.isDepreciable = false;
@@ -329,12 +333,12 @@ export class CreateAssetComponent implements OnInit {
             
             for (let i = 0; i < this.allAssets.length; i++) {
                 console.log(this.allAssets[i][0]);
-                if (event == this.allAssets[i][0].assetId 
-                    
-                    ) {
-                    this.currentAsset.assetId = this.allAssets[i].assetId;
-                    this.disableSave = true;
-
+                if (event == this.allAssets[i][0].assetId) {
+                    this.currentAsset.assetId = this.allAssets[i][0].assetId;
+                    if (this.allAssets[i][0].assetId != this.onAssetSelectedId) {
+                        this.disableSave = true;
+                    }
+                    else { this.disableSave = false;}
                     this.onSelectedId = event;
                 }
             }
@@ -494,13 +498,15 @@ export class CreateAssetComponent implements OnInit {
             for (let i = 0; i < this.allAssetInfo.length; i++) {
                 let assetId = this.allAssetInfo[i].assetId;
                 if (assetId) {
-                    if (assetId.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
-                        this.allAssets.push([{
-                            "assetRecordId": this.allAssetInfo[i].assetRecordId,
-                            "assetId": this.allAssetInfo[i].assetId
-                        }]),
-                            this.localCollection.push(assetId)
+                    if (assetId != this.currentAsset.alternateAssetId && assetId != this.currentAsset.assetParentId) {
+                        if (assetId.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+                            this.allAssets.push([{
+                                "assetRecordId": this.allAssetInfo[i].assetRecordId,
+                                "assetId": this.allAssetInfo[i].assetId
+                            }]),
+                                this.localCollection.push(assetId)
 
+                        }
                     }
                 }
             }
@@ -513,6 +519,7 @@ export class CreateAssetComponent implements OnInit {
         if (this.excludedAssetInfo) {
             for (let i = 0; i < this.excludedAssetInfo.length; i++) {
                 let assetId = this.excludedAssetInfo[i].assetId;
+                if (this.onSelectedId != assetId) {
                 if (assetId) {
                     if (assetId.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
                         this.allAssets.push([{
@@ -523,9 +530,11 @@ export class CreateAssetComponent implements OnInit {
 
                     }
                 }
+                }
             }
         }
     }
+
 
     checkMSParents(msId) {
         this.managementStructureData.push(msId);
@@ -1065,7 +1074,7 @@ export class CreateAssetComponent implements OnInit {
                     this.currentAsset = this.assetService.listCollection;
                     this.assetService.indexObj.next(this.activeIndex);
                     const { assetId } = data;
-                    this.route.navigateByUrl(`/assetmodule/assetpages/app-asset-capes/${assetId}`);
+                    this.route.navigateByUrl(`/assetmodule/assetpages/app-asset-capes/${data.assetRecordId}`);
 
 
                 })
@@ -1179,7 +1188,7 @@ export class CreateAssetComponent implements OnInit {
                     this.currentAsset = this.assetService.listCollection;
                     this.assetService.indexObj.next(this.activeIndex);
                     const { assetId } = this.listCollection;
-                    this.route.navigateByUrl(`/assetmodule/assetpages/app-asset-capes/${assetId}`);
+                    this.route.navigateByUrl(`/assetmodule/assetpages/app-asset-capes/${this.listCollection.assetRecordId}`);
 
                 })
             }

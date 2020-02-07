@@ -8,6 +8,9 @@ namespace QuickApp.Pro.ViewModels
     {
         public long GLAccountClassId { get; set; }
 
+       // public string GLAccountClassName { get; set; }
+        public string GLAccountClassMemo { get; set; }
+
         public long GLCID { get; set; }
 
         public string GLAccountClassName { get; set; }
@@ -25,7 +28,7 @@ namespace QuickApp.Pro.ViewModels
 
         public bool? IsActive { get; set; }
 
-        public bool? IsDelete { get; set; }
+        public bool? IsDeleted { get; set; }
 
     }
 }

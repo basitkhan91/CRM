@@ -5,12 +5,12 @@ export class GLAccountClass {
    
   
 	// Note: Using only optional constructor properties without backing store disables typescript's type checking for the type
-    constructor(masterCompany?: MasterCompany, glAccountClassId?: number, glcid?: number, glAccountType?: string, masterCompanyId?: number, createdBy?: string, createdDate?: Date, updatedDate?: Date, updatedBy?: string, isActive?: boolean, isDelete?: boolean, Memo?: string) {
+    constructor(masterCompany?: MasterCompany, glAccountClassId?: number, glcid?: number, glAccountClassName?: string, masterCompanyId?: number, createdBy?: string, createdDate?: Date, updatedDate?: Date, updatedBy?: string, isActive?: boolean, isDelete?: boolean, glAccountClassMemo?: string) {
 
         this.glAccountClassId = glAccountClassId;
-        this.gLCID = glcid;
-        this.gLAccountType = glAccountType;
-        this.memo = Memo;
+        this.gLCID = glcid; 
+        this.glAccountClassName = glAccountClassName;
+        this.glAccountClassMemo = glAccountClassMemo;
 		this.masterCompanyId = masterCompanyId;
 		this.createdBy = createdBy;
 		this.createdDate = createdDate;
@@ -22,8 +22,8 @@ export class GLAccountClass {
 
     public glAccountClassId: number;
     public gLCID: number;
-    public gLAccountType: string;
-    public memo: string;
+    public glAccountClassName: string;
+    public glAccountClassMemo: string;
     public masterCompanyId: number;
 	public createdBy: string;
 	public updatedBy: string;
