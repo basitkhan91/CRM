@@ -164,6 +164,23 @@ namespace QuickApp.Pro.Controllers
             }
         }
 
+        [HttpGet("StocklineDataById/{id}")]
+        [Produces(typeof(StockLine))]
+        public IActionResult GetStocklineDataByStockLineId(long id)
+        {
+
+            try
+            {
+                var result = _unitOfWork.stockLineList.GetStocklineDataByStockLineId(id);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         //For getting the stocklineAdjustment Data
         [HttpGet("AdjustmentGet/{id}")]
         [Produces(typeof(List<StockLAdjustmentViewModel>))]
