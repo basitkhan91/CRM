@@ -371,6 +371,7 @@ namespace QuickApp.Pro.Controllers
                     actionobject.StocklineIntegrationPortalId = item.StocklineIntegrationPortalId.HasValue ? item.StocklineIntegrationPortalId.Value : 0;
                     _context.StocklineIntegrationPortal.Add(actionobject);
                     _context.SaveChanges();
+                    return Ok(stockLineViewModel);
                 }
             }
             return Ok(ModelState);

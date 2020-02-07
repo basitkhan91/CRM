@@ -3236,5 +3236,38 @@ namespace DAL.Repositories
 
         #endregion
 
+        #region Vendor Contact ATA Mapping
+        public IEnumerable<object> GetATAContactMapped(long contactId)
+        {
+            {
+
+                var data = (from ca in _appContext.VendorContactATAMapping
+                            join ataca in _appContext.ATAChapter on ca.ATASubChapterId equals ataca.ATAChapterId into atacag
+                            from ataca in atacag.DefaultIfEmpty()
+                            join atasub in _appContext.ATASubChapter on ca.ATASubChapterId equals atasub.ATASubChapterId into atasubg
+                            from atasub in atasubg.DefaultIfEmpty()
+                            where ca.VendorContactId == contactId && ca.IsDeleted == false
+                            select new
+                            {
+                                ca.VendorContactATAMappingId,
+                                ca.VendorId,
+                                ca.ATAChapterId,
+                                ataca.ATAChapterCode,
+                                ataca.ATAChapterName,
+                                ca.ATASubChapterId,
+                                atasub.ATASubChapterCode,
+                                ATASubChapterDescription = atasub.Description,
+                                ca.CreatedBy,
+                                ca.UpdatedBy,
+                                ca.IsActive,
+                                ca.IsDeleted
+
+                            }).ToList();
+                return data;
+            }
+        }
+
+        #endregion
+
     }
 }

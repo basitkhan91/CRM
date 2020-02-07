@@ -98,6 +98,7 @@ namespace DAL.Repositories.Interfaces
         void DeleteVendorInternationalShipViaDetails(long id, string updatedBy);
         IEnumerable<object> GetVendorInternationalShipViaDetails(long VendorInternationalShippingId);
         IEnumerable<object> GetVendorInternationalShipViaDetailsAudit(long VendorInternationalShipViaDetailsId);
+        IEnumerable<object> GetATAContactMapped(long contactId);
 
 
     }
