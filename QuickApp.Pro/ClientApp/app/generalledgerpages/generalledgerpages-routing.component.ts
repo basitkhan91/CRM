@@ -11,8 +11,6 @@ import { JournalsComponent } from "../components/general-ledger/journals/journal
 import { OpenClosePeriodComponent } from "../components/general-ledger/open-close-period/open-close-period.component";
 import { AccountReportsComponent } from "../components/general-ledger/account-reports/account-reports.component";
 import { AccountSetupComponent } from "../components/general-ledger/account-setup/account-setup.component";
-//import { GeneralLedgerCurrencyComponent } from "../components/general-ledger/general-ledger-currency/general-ledger-currency.component";
-//import { GlAccountCategoriesComponent } from "../components/gl-account-categories/gl-account-categories.component";
 import { ManagementStructureComponent } from '../components/general-ledger/entity/entity-setup/entity-setup.component';
 import { EntityEditComponent } from '../components/general-ledger/entity/legal-entity-list/legal-entity-list.component';
 import { NodeSetupComponent } from "../components/accounting/general-ledger/node-setup/node-setup.component";
@@ -27,6 +25,7 @@ import { AccountingListingCalendarComponent } from '../components/general-ledger
 import { OpenCloseLedgerComponent } from '../components/general-ledger/open-close-ledger/open-close-ledger.component';
 
 import { LegalEntityStepsComponent } from '../components/general-ledger/entity/legal-entity-steps/legal-entity-steps.component';
+import { LegalEntityGeneralInformationComponent } from '../components/general-ledger/entity/legal-entity-general-information/legal-entity-general-information.component';
 
 const generalledgerpageRoutes: Routes = [
     {
@@ -38,7 +37,7 @@ const generalledgerpageRoutes: Routes = [
             { path: "app-legalentity-structure", component: LegalEntityStructureComponent, data: { title: "EntityListComponent" } },
             { path: "app-managemententity-structure", component: ManagementStructureComponent, data: { title: "EntitySetupComponent" } },
             { path: "app-legal-entity-list", component: EntityEditComponent, data: { title: "EntityListComponent" } },
-            
+            { path: "legal-entity-general-information", component: LegalEntityGeneralInformationComponent, data: { title: "EntityGeneralComponent" } },
             { path: "app-legal-entity-add", component: LegalEntityStepsComponent, data: { title: "EntityAddComponent" }},
             { path: "app-legal-entity-edit/:id", component: LegalEntityStepsComponent, data: { title: "EntityAddComponent" }},
            

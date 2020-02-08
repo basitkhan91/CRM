@@ -29,6 +29,9 @@ export class LegalEntityEndpontService extends EndpointFactory {
 	private readonly getLegalEntityAddressByIdURL: string = "/api/legalEntity/legalentityaddressbyid";
     private readonly _contactUrl: string = "/api/LegalEntity/legalentitycontacts";
     private readonly _entityBillViaDetails = "/api/LegalEntity/legalentitybillingaddressbyid";
+	private readonly _countryUrl: string = "/api/Customer/GetcountryList";
+	private readonly _entityUpdateUrl: string = "/api/LegalEntity/UpdateLegalEntityDetails";
+	private readonly _generalEmptyObjurl: string = "/api/LegalEntity/generalEmptyObj";
 
 	get entityurl() { return this.configurations.baseUrl + this._entityurl; }
     get managemententityurl() { return this.configurations.baseUrl + this._managementUrl; }
@@ -38,10 +41,19 @@ export class LegalEntityEndpontService extends EndpointFactory {
 	get entityediturl() { return this.configurations.baseUrl + this._entityediturl; }
     get contactUrl() { return this.configurations.baseUrl + this._contactUrl; }
     get entityBillViaDetails() { return this.configurations.baseUrl + this._entityBillViaDetails; }
+	get countryUrl() { return this.configurations.baseUrl + this._countryUrl; }
+	get generalurl() { return this.configurations.baseUrl + this._generalEmptyObjurl }
 
 	constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
 
 		super(http, configurations, injector);
+	}
+
+	getGeneralrobj<T>(): Observable<T> {
+		return this.http.get<T>(this.generalurl, this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.getGeneralrobj());
+			});
 	}
 
 	getLegalEntityEndpontService<T>(): Observable<T> {
@@ -58,7 +70,28 @@ export class LegalEntityEndpontService extends EndpointFactory {
 			.catch(error => {
 				return this.handleError(error, () => this.getLegalEntityEndpontService());
 			});
-    }
+	}
+
+	getEntityDataById(entityId) {
+		return this.http.get<any>(`${this.configurations.baseUrl}/api/legalEntity/getEntitydatabyid/${entityId}`)
+	}
+
+	updateEntityListDetails<T>(roleObject: any): Observable<T> {
+		let endpointUrl = `${this._entityUpdateUrl}/${roleObject.legalEntityId}`;
+		return this.http.put<T>(endpointUrl, JSON.stringify(roleObject), this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.updateEntityListDetails(roleObject));
+			});
+	}
+
+	getcountryListEndpoint<T>(): Observable<T> {
+
+		return this.http.get<T>(this.countryUrl, this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.getcountryListEndpoint());
+			});
+	}
+
     getManagemtentLengalEntityData<T>(): Observable<T> {
 
         return this.http.get<T>(this.managementlengalentityurl, this.getRequestHeaders())
@@ -127,15 +160,6 @@ export class LegalEntityEndpontService extends EndpointFactory {
 				return this.handleError(error, () => this.getDeleteActionEndpoint(actionId));
 			});
 	}
-
-	//getEditJobTitleEndpoint<T>(actionId?: number): Observable<T> {
-	//	let endpointUrl = actionId ? `${this._JobTilesUrlNew}/${actionId}` : this._JobTilesUrlNew;
-
-	//	return this.http.get<T>(endpointUrl, this.getRequestHeaders())
-	//		.catch(error => {
-	//			return this.handleError(error, () => this.getEditJobTitleEndpoint(actionId));
-	//		});
-	//}
 
     getContcatDetails<T>(): Observable<T> {
         let endpointUrl = `${this.contactUrl}`;
