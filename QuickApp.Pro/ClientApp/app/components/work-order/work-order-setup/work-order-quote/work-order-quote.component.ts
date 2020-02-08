@@ -105,7 +105,7 @@ export class WorkOrderQuoteComponent implements OnInit, OnChanges {
 }
 isQuote: boolean = true;
 editMatData: any[] = [];
-costPlusType: string = "Mark Up";
+costPlusType: Number = 1;
 tabQuoteCreated: Object = {
   'materialList': false,
   'charges': false,
@@ -674,14 +674,16 @@ overAllMarkup: any;
                   "markupFixedPrice":this.costPlusType,
                   "TotalPartsCost":155,
                   "Markup":mList.markup,
-                  "MaterialCostPlus":mList.materialCostPlus,
-                  "FixedAmount":mList.fixedAmount,
                   "masterCompanyId":(mList.masterCompanyId == '')?0:mList.masterCompanyId,
                   "TaskId": mList.taskId,
-              "CreatedBy":"admin",
-              "UpdatedBy":"admin",
-              "IsActive":true,
-              "IsDeleted":mList.isDeleted
+                  "BillingMethodId":Number(mList.billingMethodId),
+                  "TMAmount":mList.TMAmount,
+                  "FlateRate":mList.flateRate,
+                  "HeaderMarkupId":this.overAllMarkup,
+                  "CreatedBy":"admin",
+                  "UpdatedBy":"admin",
+                  "IsActive":true,
+                  "IsDeleted":mList.isDeleted
                 }
     })
     this.workOrderService.saveMaterialListQuote(this.materialListPayload)
@@ -698,6 +700,12 @@ overAllMarkup: any;
         );
       }
     )
+  }
+
+  tmchange(){
+    for(let mData of this.materialListQuotation){
+      mData.billingMethodId = Number(this.costPlusType);
+    }
   }
 
   createLaborQuote(){
@@ -1072,12 +1080,12 @@ markupChanged(matData, type){
   try{
     this.markupList.forEach((markup)=>{
       if(type == 'row' && markup.value == matData.markupPercentageId){
-        matData.materialCostPlus = Number(matData.extendedCost) + ((Number(matData.extendedCost) / 100) * Number(markup.label))
+        matData.TMAmount = Number(matData.extendedCost) + ((Number(matData.extendedCost) / 100) * Number(markup.label))
       }
       else if(type == 'all' && markup.value == this.overAllMarkup){
         this.materialListQuotation.forEach((mData)=>{
           mData.markupPercentageId = this.overAllMarkup;
-          mData.materialCostPlus = Number(mData.extendedCost) + ((Number(mData.extendedCost) / 100) * Number(markup.label))
+          mData.TMAmount = Number(mData.extendedCost) + ((Number(mData.extendedCost) / 100) * Number(markup.label))
         })
       }
     })
@@ -1183,7 +1191,7 @@ getQuoteMaterialListByWorkOrderQuoteId() {
     this.workOrderService.getQuoteMaterialList(this.workOrderQuoteDetailsId, (this.selectedBuildMethod == "use work flow")?1:(this.selectedBuildMethod == "use historical wos")?2:3).subscribe(res => {
         this.materialListQuotation = res;
         if(this.materialListQuotation && this.materialListQuotation.length > 0 && this.materialListQuotation[0].markupFixedPrice){
-          this.costPlusType = this.materialListQuotation[0].markupFixedPrice;
+          this.costPlusType = Number(this.materialListQuotation[0].headerMarkupId);
         }
         if(res.length > 0){
           this.updateWorkOrderQuoteDetailsId(res[0].workOrderQuoteDetailsId)
@@ -1273,8 +1281,8 @@ getMaterialCostPlus(){
   let total = 0;
   this.materialListQuotation.forEach(
     (material)=>{
-      if(material.materialCostPlus){
-        total += material.materialCostPlus;
+      if(material.TMAmount){
+        total += material.TMAmount;
       }
     }
   )
