@@ -738,15 +738,15 @@ namespace DAL.Repositories
                                     join man in _appContext.Manufacturer on stl.ManufacturerId equals man.ManufacturerId into manufa
                                     from man in manufa.DefaultIfEmpty()
                                     where (stl.IsDeleted == false)
-                                    //&& stl.PartNumber.Contains(!string.IsNullOrEmpty(stockListFilters.filters.PartNumber) ? stockListFilters.filters.PartNumber : stl.PartNumber)
-                                    //&& im.PartDescription.Contains(!string.IsNullOrEmpty(stockListFilters.filters.PartDescription) ? stockListFilters.filters.PartDescription : im.PartDescription)
-                                    //&& ig.Description.Contains(!string.IsNullOrEmpty(stockListFilters.filters.ItemGroup) ? stockListFilters.filters.ItemGroup : ig.Description)
-                                    //&& stl.StockLineNumber.Contains(!string.IsNullOrEmpty(stockListFilters.filters.StocklineNumber) ? stockListFilters.filters.StocklineNumber : stl.StockLineNumber)
-                                    //&& stl.SerialNumber.Contains(!string.IsNullOrEmpty(stockListFilters.filters.SerialNumber) ? stockListFilters.filters.SerialNumber : stl.SerialNumber)
-                                    //&& co.Description.Contains(!string.IsNullOrEmpty(stockListFilters.filters.Condition) ? stockListFilters.filters.Condition : co.Description)
-                                    //&& im.GLAccount.AccountName.Contains(!string.IsNullOrEmpty(stockListFilters.filters.GlAccountName) ? stockListFilters.filters.GlAccountName : im.GLAccount.AccountName)
-                                    //&& stl.QuantityAvailable.ToString().Contains(!string.IsNullOrEmpty(stockListFilters.filters.QuantityAvailable) ? stockListFilters.filters.QuantityAvailable : stl.QuantityAvailable.ToString())
-                                    //&& stl.QuantityOnHand.ToString().Contains(!string.IsNullOrEmpty(stockListFilters.filters.QuantityOnHand) ? stockListFilters.filters.QuantityOnHand : stl.QuantityOnHand.ToString())
+                                    && stl.PartNumber.Contains(!string.IsNullOrEmpty(stockListFilters.filters.PartNumber) ? stockListFilters.filters.PartNumber : stl.PartNumber)
+                                    && im.PartDescription.Contains(!string.IsNullOrEmpty(stockListFilters.filters.PartDescription) ? stockListFilters.filters.PartDescription : im.PartDescription)
+                                    && ig.Description.Contains(!string.IsNullOrEmpty(stockListFilters.filters.ItemGroup) ? stockListFilters.filters.ItemGroup : ig.Description)
+                                    && stl.StockLineNumber.Contains(!string.IsNullOrEmpty(stockListFilters.filters.StocklineNumber) ? stockListFilters.filters.StocklineNumber : stl.StockLineNumber)
+                                    && stl.SerialNumber.Contains(!string.IsNullOrEmpty(stockListFilters.filters.SerialNumber) ? stockListFilters.filters.SerialNumber : stl.SerialNumber)
+                                    && co.Description.Contains(!string.IsNullOrEmpty(stockListFilters.filters.Condition) ? stockListFilters.filters.Condition : co.Description)
+                                    && im.GLAccount.AccountName.Contains(!string.IsNullOrEmpty(stockListFilters.filters.GlAccountName) ? stockListFilters.filters.GlAccountName : im.GLAccount.AccountName)
+                                    && stl.QuantityAvailable.ToString().Contains(!string.IsNullOrEmpty(stockListFilters.filters.QuantityAvailable) ? stockListFilters.filters.QuantityAvailable : stl.QuantityAvailable.ToString())
+                                    && stl.QuantityOnHand.ToString().Contains(!string.IsNullOrEmpty(stockListFilters.filters.QuantityOnHand) ? stockListFilters.filters.QuantityOnHand : stl.QuantityOnHand.ToString())
                                     select new
                                     {
                                         stl.StockLineNumber,
@@ -786,15 +786,15 @@ namespace DAL.Repositories
                             join man in _appContext.Manufacturer on stl.ManufacturerId equals man.ManufacturerId into manufa
                             from man in manufa.DefaultIfEmpty()
                             where (stl.IsDeleted == false)
-                            //&& stl.PartNumber.Contains(!string.IsNullOrEmpty(stockListFilters.filters.PartNumber) ? stockListFilters.filters.PartNumber : stl.PartNumber)
-                            //&& im.PartDescription.Contains(!string.IsNullOrEmpty(stockListFilters.filters.PartDescription) ? stockListFilters.filters.PartDescription : im.PartDescription)
-                            //&& ig.Description.Contains(!string.IsNullOrEmpty(stockListFilters.filters.ItemGroup) ? stockListFilters.filters.ItemGroup : ig.Description)
-                            //&& stl.StockLineNumber.Contains(!string.IsNullOrEmpty(stockListFilters.filters.StocklineNumber) ? stockListFilters.filters.StocklineNumber : stl.StockLineNumber)
-                            //&& stl.SerialNumber.Contains(!string.IsNullOrEmpty(stockListFilters.filters.SerialNumber) ? stockListFilters.filters.SerialNumber : stl.SerialNumber)
-                            //&& co.Description.Contains(!string.IsNullOrEmpty(stockListFilters.filters.Condition) ? stockListFilters.filters.Condition : co.Description)
-                            //&& im.GLAccount.AccountName.Contains(!string.IsNullOrEmpty(stockListFilters.filters.GlAccountName) ? stockListFilters.filters.GlAccountName : im.GLAccount.AccountName)
-                            //&& stl.QuantityAvailable.ToString().Contains(!string.IsNullOrEmpty(stockListFilters.filters.QuantityAvailable) ? stockListFilters.filters.QuantityAvailable : stl.QuantityAvailable.ToString())
-                            //&& stl.QuantityOnHand.ToString().Contains(!string.IsNullOrEmpty(stockListFilters.filters.QuantityOnHand) ? stockListFilters.filters.QuantityOnHand : stl.QuantityOnHand.ToString())
+                            && stl.PartNumber.Contains(!string.IsNullOrEmpty(stockListFilters.filters.PartNumber) ? stockListFilters.filters.PartNumber : stl.PartNumber)
+                            && im.PartDescription.Contains(!string.IsNullOrEmpty(stockListFilters.filters.PartDescription) ? stockListFilters.filters.PartDescription : im.PartDescription)
+                            && ig.Description.Contains(!string.IsNullOrEmpty(stockListFilters.filters.ItemGroup) ? stockListFilters.filters.ItemGroup : ig.Description)
+                            && stl.StockLineNumber.Contains(!string.IsNullOrEmpty(stockListFilters.filters.StocklineNumber) ? stockListFilters.filters.StocklineNumber : stl.StockLineNumber)
+                            && stl.SerialNumber.Contains(!string.IsNullOrEmpty(stockListFilters.filters.SerialNumber) ? stockListFilters.filters.SerialNumber : stl.SerialNumber)
+                            && co.Description.Contains(!string.IsNullOrEmpty(stockListFilters.filters.Condition) ? stockListFilters.filters.Condition : co.Description)
+                            && im.GLAccount.AccountName.Contains(!string.IsNullOrEmpty(stockListFilters.filters.GlAccountName) ? stockListFilters.filters.GlAccountName : im.GLAccount.AccountName)
+                            && stl.QuantityAvailable.ToString().Contains(!string.IsNullOrEmpty(stockListFilters.filters.QuantityAvailable) ? stockListFilters.filters.QuantityAvailable : stl.QuantityAvailable.ToString())
+                            && stl.QuantityOnHand.ToString().Contains(!string.IsNullOrEmpty(stockListFilters.filters.QuantityOnHand) ? stockListFilters.filters.QuantityOnHand : stl.QuantityOnHand.ToString())
                             select new
                             {
                                 stl,
