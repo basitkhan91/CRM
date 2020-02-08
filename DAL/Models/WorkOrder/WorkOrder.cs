@@ -70,6 +70,8 @@ namespace DAL.Models
         public string CustomerReference { get; set; }
         [NotMapped]
         public string CSRName { get; set; }
+        [NotMapped]
+        public bool isRecCustomer { get; set; }
        
 
 

@@ -1087,6 +1087,7 @@ namespace DAL.Repositories
                 WorkOrder workOrder = _appContext.Set<WorkOrder>().Where(x => x.WorkOrderId == workOrderId).FirstOrDefault();
                 if (workOrder != null)
                 {
+                    workOrder.isRecCustomer = false;
                     workOrder.PartNumbers = _appContext.Set<WorkOrderPartNumber>().Where(x => x.WorkOrderId == workOrderId && x.IsDeleted == false).OrderBy(x => x.ID).ToList();
 
                     if (workOrder.PartNumbers != null && workOrder.PartNumbers.Count > 0)
@@ -1173,7 +1174,14 @@ namespace DAL.Repositories
                     var recevingCustomer = _appContext.ReceivingCustomerWork.Where(p => p.ReceivingCustomerWorkId == receivingCustomerId).FirstOrDefault();
                     var customer = _appContext.Customer.Where(p => p.CustomerId == recevingCustomer.CustomerId).FirstOrDefault();
 
+                    workOrder.isRecCustomer = true;
+                    workOrder.WorkOrderNum = "";
+                    workOrder.WorkOrderTypeId = 1;
+                    workOrder.IsSinglePN = true;
+                    workOrder.WorkOrderStatusId = 1;
+                    workOrder.OpenDate = DateTime.Now;
                     workOrder.CustomerId = recevingCustomer.CustomerId;
+                    workOrder.EmployeeId = recevingCustomer.EmployeeId;
                     workOrder.ReceivingCustomerWorkId = receivingCustomerId;
                     workOrder.CustomerReference = workOrder.CustomerDetails.CustomerRef = recevingCustomer.Reference;
                     workOrder.CustomerDetails.CustomerName = customer.Name;
@@ -1203,6 +1211,12 @@ namespace DAL.Repositories
                         workOrderPart.MasterPartId = recevingCustomer.ItemMasterId;
                         workOrderPart.ConditionId = recevingCustomer.ConditionId;
                         workOrderPart.StockLineId =Convert.ToInt64(recevingCustomer.StockLineId);
+                        workOrderPart.EstimatedCompletionDate= DateTime.Now;
+                        workOrderPart.EstimatedShipDate= DateTime.Now; ;
+                        workOrderPart.CustomerRequestDate= DateTime.Now;
+                        workOrderPart.PromisedDate = DateTime.Now;
+
+
 
                     }
 

@@ -82,10 +82,10 @@ export class CustomerWorksListComponent implements OnInit {
     { field: 'customerName', header: 'Customer Name' },
     { field: 'stageCode', header: 'Stage Code' },
     { field: 'status', header: 'Status' },
-    { field: 'level1', header: 'Level 01' },
-    { field: 'level2', header: 'Level 02' },
-    { field: 'level3', header: 'Level 03' },
-    { field: 'level4', header: 'Level 04' }
+    { field: 'levelCode1', header: 'Level 01' },
+    { field: 'levelCode2', header: 'Level 02' },
+    { field: 'levelCode3', header: 'Level 03' },
+    { field: 'levelCode4', header: 'Level 04' }
 
     // { field: 'receivingNumber', header: 'Recev.No.' },
     // //{ field: 'workOrderNum', header: 'WorkOrderNum' },
@@ -581,6 +581,7 @@ export class CustomerWorksListComponent implements OnInit {
     gotoWorkOrder(rowData) {
         console.log(rowData);
         const { receivingCustomerWorkId } = rowData;
-        this._route.navigateByUrl(`/workordersmodule/workorderspages/app-work-order-edit/${receivingCustomerWorkId}`);
+       // this._route.navigateByUrl(`/workordersmodule/workorderspages/app-work-order-edit/${receivingCustomerWorkId}`);
+        this._route.navigateByUrl(`/workordersmodule/workorderspages/app-work-order-receivingcustworkid/${receivingCustomerWorkId}`);
     }
 }
