@@ -87,7 +87,10 @@ export interface ISalesQuote {
   memo: string;
 
   notes: string;
+  
   statusId: number;
+
+  statusChangeDate: Date;
 
   priorities: IPriority[];
 

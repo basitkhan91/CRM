@@ -65,6 +65,7 @@ export class SalesOrderQuote implements ISalesOrderQuote {
     updatedOn: string;
     isDeleted: boolean;
     statusId: number;
+    statusChangeDate: Date;
 
     constructor() {}
 }
