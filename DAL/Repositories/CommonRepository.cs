@@ -1434,6 +1434,29 @@ namespace DAL.Repositories
         }
 
 
+        public object GetPartPurchaseSaleDetails(long itemMasterId,string condition)
+        {
+            try
+            {
+                var data = (from ips in _appContext.ItemMasterPurchaseSale
+                            where ips.IsDeleted == false && ips.IsActive == true
+                            && ips.ItemMasterId == itemMasterId && ips.Condition == condition
+                            select new
+                            {
+                                ips.PP_UnitPurchasePrice,
+                                ips.SP_FSP_FlatPriceAmount,
+                                ips.SP_CalSPByPP_MarkUpPercOnListPrice,
+                                ips.SP_CalSPByPP_MarkUpAmount
+
+                            }).FirstOrDefault();
+                return data;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
 
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
     }
