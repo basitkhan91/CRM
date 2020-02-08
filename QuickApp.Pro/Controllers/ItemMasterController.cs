@@ -1977,7 +1977,7 @@ namespace QuickApp.Pro.Controllers
 
             IEnumerable<object> results = GetPartDetails(searchView.partSearchParamters.partId, searchView.partSearchParamters.conditionId, searchView.partSearchParamters.customerId);
 
-            if (results.Any() && searchView.partSearchParamters.includeAlternatePartNumber)
+            if (results.Any() && ( searchView.partSearchParamters.includeAlternatePartNumber || searchView.partSearchParamters.includeEquivalentPartNumber ))
             {
                 results = results.Concat(GetMappedPartNumbers(searchView.partSearchParamters));
             }
