@@ -146,7 +146,7 @@
     <table class="table table-bordered  table-sorting mpn-list-table">
       <thead>
         <tr *ngIf="isQuote">
-          <td colspan="4" *ngIf="laborForm.hoursorClockorScan == 1">
+          <td colspan="4" *ngIf="!laborForm.hoursorClockorScan || laborForm.hoursorClockorScan == 1">
             &nbsp;
           </td>
           <td colspan="7" *ngIf="laborForm.hoursorClockorScan == 2">
@@ -155,23 +155,37 @@
           <td colspan="6" *ngIf="laborForm.hoursorClockorScan == 3">
             &nbsp;
           </td>
-          <td colspan="3" style="display: flex;">
-              <div class="form-group" style="text-align: center;">
+          <td colspan="4">
+            &nbsp;
+          </td>
+          <td colspan="3">
+              <div class="form-group" style="text-align: center; display: flex;">
                 <p-radioButton
                   class="p-radiobutton-label-horizontal p-radio-custom"
                   name="costPlusType"
-                  label="T&M"
-                  value="Mark Up"
+                  label="T&M - Mark Up"
+                  value=1
                   [(ngModel)]="laborForm.costPlusType"
                   [disabled]="isView"
+                  (click)="tmchange()"
                 ></p-radioButton>
-                <div style="display: flex;">
-                  <label style="color: #ffffff;">Mat Mark Up %</label>
-                  <select class="form-control wf-pub-id" (change)="markupChanged({}, 'all')" [(ngModel)]="overAllMarkup" [disabled]="isView || laborForm['costPlusType'] != 'Mark Up'">
+                <div>
+                  <select class="form-control" (change)="markupChanged({}, 'all')" [(ngModel)]="overAllMarkup" [disabled]="isView || laborForm['costPlusType'] != 'Mark Up'" style="margin-top: 10px;">
                     <option value="">Select</option>
                     <option *ngFor="let markUp of markupList" [value]="markUp.value">{{markUp.label}}</option>
                   </select>
                 </div>
+              </div>
+              <div>
+                <p-radioButton
+                  class="p-radiobutton-label-horizontal col-width p-radio-custom"
+                  name="costPlusType"
+                  value=2
+                  label="Actual"
+                  [(ngModel)]="laborForm.costPlusType"
+                  [disabled]="isView"
+                  (click)="tmchange()"
+                ></p-radioButton>
               </div>
               <!-- <div class="form-group" style="color: #fff;">
                 <p-radioButton
@@ -192,22 +206,8 @@
                 ></p-radioButton>
               </div> -->
           </td>
-          <td colspan="4">
-            <div>
-              <p-radioButton
-                class="p-radiobutton-label-horizontal col-width p-radio-custom"
-                name="costPlusType"
-                value="Fixed Mat Price"
-                label="Fixed Mat Price"
-                [(ngModel)]="laborForm.costPlusType"
-                [disabled]="isView"
-              ></p-radioButton>
-            </div>
-          </td>
           <td></td>
           <ng-container *ngIf="isQuote">
-            <td></td>
-            <td></td>
             <td></td>
           </ng-container>
         </tr>
@@ -220,20 +220,20 @@
           <th class="text-center">Billable /NonBillable</th>
           <th
             class="text-center"
-            *ngIf="laborForm.hoursorClockorScan !== 1 && laborForm.hoursorClockorScan !== 3"
+            *ngIf="laborForm.hoursorClockorScan && laborForm.hoursorClockorScan !== 1 && laborForm.hoursorClockorScan !== 3"
           >
             Start/Stop
           </th>
           <th
             class="text-center"
             style="width: 100px;"
-            *ngIf="laborForm.hoursorClockorScan !== 1"
+            *ngIf="laborForm.hoursorClockorScan && laborForm.hoursorClockorScan !== 1"
           >
             Start Date and Time
           </th>
           <th
             class="text-center"
-            *ngIf="laborForm.hoursorClockorScan !== 1"
+            *ngIf="laborForm.hoursorClockorScan && laborForm.hoursorClockorScan !== 1"
           >
             End Date and Time
           </th>
@@ -250,7 +250,7 @@
               Burden Rate Amount
             </th>
             <th>
-              Total Cost/Hour
+              Cost/Hour
             </th>
             <th>
               Total Cost
@@ -290,15 +290,15 @@
             </td>
             <td></td>
             <td
-              *ngIf="laborForm.hoursorClockorScan !== 1 && laborForm.hoursorClockorScan !== 3"
+              *ngIf="laborForm.hoursorClockorScan && laborForm.hoursorClockorScan !== 1 && laborForm.hoursorClockorScan !== 3"
             >
             </td>
             <td
-              *ngIf="laborForm.hoursorClockorScan !== 1"
+              *ngIf="laborForm.hoursorClockorScan && laborForm.hoursorClockorScan !== 1"
             >
             </td>
             <td
-              *ngIf="laborForm.hoursorClockorScan !== 1"
+              *ngIf="laborForm.hoursorClockorScan && laborForm.hoursorClockorScan !== 1"
             >
             </td>
             <td>
@@ -308,10 +308,6 @@
             <td></td>
             <td></td>
             <ng-container *ngIf="isQuote">
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
               <td></td>
               <td></td>
               <td></td>
@@ -390,7 +386,7 @@
                       [disabled]="isView"
                     ></p-dropdown>
                 </td>
-                <td *ngIf="laborForm.hoursorClockorScan !== 1 && laborForm.hoursorClockorScan !== 3">
+                <td *ngIf="laborForm.hoursorClockorScan && laborForm.hoursorClockorScan !== 1 && laborForm.hoursorClockorScan !== 3">
                   <button
                     class="btn btn-primary start-btn"
                     (click)="startandStop(rec)"
@@ -399,7 +395,7 @@
                     Start/Stop
                   </button>
                 </td>
-                <td *ngIf="laborForm.hoursorClockorScan !== 1">
+                <td *ngIf="laborForm.hoursorClockorScan && laborForm.hoursorClockorScan !== 1">
                   <p-calendar
                     [(ngModel)]="rec.startDate"
                     [disabled]="!rec.startDateandTimeIsEdit"
@@ -414,7 +410,7 @@
                   ></p-calendar>
                   <i class="fa fa-pencil" aria-hidden="true"  (click)="isEditTime(rec,'startDateandTimeIsEdit')"></i>
                 </td>
-                  <td *ngIf="laborForm.hoursorClockorScan !== 1 ">
+                  <td *ngIf="laborForm.hoursorClockorScan && laborForm.hoursorClockorScan !== 1 ">
                 
                   <p-calendar [(ngModel)]="rec.endDate" [disabled]="!rec.endDateandTimeIsEdit" [showIcon]="true" 
                   showTime="true" hourFormat="24" class="w150 pcalendar-wo-labor"  
@@ -424,11 +420,11 @@
                   ></p-calendar>
                 <i class="fa fa-pencil" aria-hidden="true"  (click)="isEditTime(rec,'endDateandTimeIsEdit')" *ngIf="!isView"></i>            
                 </td>
-                <td *ngIf="laborForm.hoursorClockorScan !== 1 ">
+                <td *ngIf="laborForm.hoursorClockorScan && laborForm.hoursorClockorScan !== 1 ">
                   {{ rec.hours }}
                 </td>
-                <td *ngIf="laborForm.hoursorClockorScan === 1"> 
-                  <input type="number" (blur)="calculateHoursDifference(rec); calculateTaskHours(task); calculateTotalCost(rec)" [(ngModel)]="rec.hours" name="hours" [disabled]="checkDisability(rec, task.taskId) || isView"> 
+                <td *ngIf="!laborForm.hoursorClockorScan || laborForm.hoursorClockorScan === 1"> 
+                  <input type="number" (blur)="calculateHoursDifference(rec); calculateTaskHours(task); calculateTotalCost(rec); markupChanged(rec, 'row')" [(ngModel)]="rec.hours" name="hours" [disabled]="checkDisability(rec, task.taskId) || isView"> 
                 </td>
                 <ng-container *ngIf="!isQuote">
                   <td>
@@ -440,10 +436,10 @@
                 </ng-container>
                 <ng-container *ngIf="isQuote">
                   <td>
-                    <input type="number" (blur)="calculateTotalCost(rec)" [(ngModel)]="rec.directLaborOHCost" [disabled]="isView"/>
+                    <input type="number" (blur)="calculateTotalCost(rec);markupChanged(rec, 'row')" [(ngModel)]="rec.directLaborOHCost" [disabled]="isView"/>
                   </td>
                   <td>
-                    <input type="number" (blur)="calculateTotalCost(rec)" [(ngModel)]="rec.burdenRateAmount" [disabled]="isView"/>
+                    <input type="number" (blur)="calculateTotalCost(rec);markupChanged(rec, 'row')" [(ngModel)]="rec.burdenRateAmount" [disabled]="isView"/>
                   </td>
                   <td>
                     {{ rec.totalCostPerHour }}
@@ -452,21 +448,20 @@
                     {{ rec.totalCost }}
                   </td>
                   <td>
-                    <select class="form-control" [(ngModel)]="rec.billingMethod" style="width: 130px;">
+                    <select class="form-control" [(ngModel)]="rec.billingMethodId" style="width: 130px;">
                       <option value="">Select</option>
-                      <option value="T&M">T&M</option>
-                      <option value="actual">Actual</option>
+                      <option *ngFor="let bm of [{'label': 'T&M', 'value': 1}, {'label': 'Actual', 'value': 2}]" [value]="bm.value">{{bm.label}}</option>
                     </select>
                   </td>
                   <td>
                       <!-- <input [(ngModel)]="matQuotation.markup" /> -->
-                    <select class="form-control" (change)="markupChanged(rec, 'row')" [(ngModel)]="rec.markupPercentageId" style="width: 130px;" [disabled]="isView || rec.billingMethod != 'T&M'">
+                    <select class="form-control" (change)="markupChanged(rec, 'row')" [(ngModel)]="rec.markupPercentageId" style="width: 130px;" [disabled]="isView || rec.billingMethodId != 1">
                       <option value="">Select</option>
                       <option *ngFor="let markUp of markupList" [value]="markUp.value">{{markUp.label}}</option>
                     </select>
                   </td>
                   <td>
-                      <input type="number" [(ngModel)]="rec.billingRate" [disabled]="isView || rec.billingMethod != 'actual'"/>
+                      <input type="number" [(ngModel)]="rec.billingRate" [disabled]="isView || rec.billingMethodId != 2"/>
                   </td>
                   <td>{{ rec.billingAmount }}</td>
                 </ng-container>
@@ -485,7 +480,7 @@
                 </td>
             </tr>
           </ng-container>
-          <tr *ngIf="laborForm.workOrderLaborList[0][task.description | lowercase].length != 0">
+          <tr *ngIf="laborForm.workOrderLaborList[0][task.description | lowercase].length != 0 && isQuote">
 
             <td>Total</td>
             <td></td>
@@ -494,15 +489,15 @@
             </td>
             
             <td
-              *ngIf="laborForm.hoursorClockorScan !== 1 && laborForm.hoursorClockorScan !== 3"
+              *ngIf="laborForm.hoursorClockorScan && laborForm.hoursorClockorScan !== 1 && laborForm.hoursorClockorScan !== 3"
             >
             </td>
             <td
-              *ngIf="laborForm.hoursorClockorScan !== 1"
+              *ngIf="laborForm.hoursorClockorScan && laborForm.hoursorClockorScan !== 1"
             >
             </td>
             <td
-              *ngIf="laborForm.hoursorClockorScan !== 1"
+              *ngIf="laborForm.hoursorClockorScan && laborForm.hoursorClockorScan !== 1"
             >
             </td>
             <td>
@@ -516,7 +511,7 @@
             <td></td>
             <td>{{getTotalBillingRate(laborForm.workOrderLaborList[0][task.description | lowercase])}}</td>
             <td>{{getTotalBillingAmount(laborForm.workOrderLaborList[0][task.description | lowercase])}}</td>
-            <td></td>
+            <!-- <td></td> -->
             <td *ngIf="!isView">
             </td>
           </tr>

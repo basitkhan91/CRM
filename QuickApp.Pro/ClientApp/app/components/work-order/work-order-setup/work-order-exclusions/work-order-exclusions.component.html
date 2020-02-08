@@ -115,30 +115,38 @@
                   class="p-radiobutton-label-horizontal p-radio-custom"
                   name="costPlusType"
                   label="T&M"
-                  value="Mark Up"
+                  value="T&M"
                   [(ngModel)]="costPlusType"
                   [disabled]="isView"
                 ></p-radioButton>
                 <div style="display: flex;">
                   <label style="color: #ffffff; font-size: 12px !important;
                   font-weight: normal;
-                  margin-right: 25px;">Mat Mark Up %</label>
+                  margin-right: 25px;">T&M - Mark Up %</label>
                   <select class="form-control wf-pub-id" (change)="markupChanged({}, 'all')" [(ngModel)]="overAllMarkup" [disabled]="isView || costPlusType != 'Mark Up'">
                     <option value="">Select</option>
                     <option *ngFor="let markUp of markupList" [value]="markUp.value">{{markUp.label}}</option>
                   </select>
                 </div>
+                <p-radioButton
+                  class="p-radiobutton-label-horizontal col-width p-radio-custom"
+                  name="costPlusType"
+                  value="actual"
+                  label="Actual"
+                  [(ngModel)]="costPlusType"
+                  [disabled]="isView"
+                ></p-radioButton>
               </div>
           </th>
           <th colspan="3">
-              <p-radioButton
+              <!-- <p-radioButton
               class="p-radiobutton-label-horizontal col-width p-radio-custom"
               name="costPlusType"
               value="Fixed Mat Price"
               label="Fixed Mat Price"
               [(ngModel)]="costPlusType"
               [disabled]="isView"
-            ></p-radioButton>
+            ></p-radioButton> -->
           </th>
         </tr>
       <tr>
@@ -149,9 +157,10 @@
           {{ col.header }}
         </th>
         <ng-container *ngIf="isQuote">
-          <th>Mark Up</th>
-          <th tooltip="Time & Materials">T&M Amount</th>
-          <th>Fixed Amount</th>
+          <th>Billing Method</th>
+          <th>Mark Up %</th>
+          <th tooltip="Time & Materials">Billing Rate</th>
+          <th>Billing Amount</th>
           <th colspan="2">Actions</th>
         </ng-container>
       </tr>
@@ -170,27 +179,36 @@
           {{ rowData[col.field] }}
         </td>
         <ng-container *ngIf="isQuote">
-            <td>
-              <select
-                class="form-control"
-                (change)="markupChanged(rowData, 'row')"
-                [(ngModel)]="rowData.markUpPercentageId"
-                [disabled]="isView || costPlusType != 'Mark Up'"
+          <td>
+            <select
+              class="form-control"
+              [(ngModel)]="rowData.billingMethod"
+              [disabled]="isView"
+            >
+              <option value="">Select</option>
+              <option value="T&M">T&M</option>
+              <option value="actual">Actual</option>
+            </select>
+          </td>
+          <td>
+            <select
+              class="form-control"
+              (change)="markupChanged(rowData, 'row')"
+              [(ngModel)]="rowData.markUpPercentageId"
+              [disabled]="isView || rowData.billingMethod != 'T&M'"
+            >
+              <option value="">Select</option>
+              <option
+                *ngFor="let markUp of markupList"
+                [value]="markUp.value"
+                >{{ markUp.label }}</option
               >
-                <option value="">Select</option>
-                <option
-                  *ngFor="let markUp of markupList"
-                  [value]="markUp.value"
-                  >{{ markUp.label }}</option
-                >
-              </select>
-            </td>
-            <td>
-              {{ rowData.costPlusAmount }}
-            </td>
-            <td>
-              <input type="number" [(ngModel)]="rowData.fixedAmount" [disabled]="costPlusType != 'Fixed Mat Price'"/>
-            </td>
+            </select>
+          </td>
+          <td>
+              <input type="number" [(ngModel)]="rowData.billingRate" [disabled]="isView || rowData.billingMethod != 'actual'"/>
+          </td>
+          <td>{{ rowData.billingAmount }}</td>
         </ng-container>
         <td *ngIf="!isView">
           <button
@@ -223,6 +241,7 @@
         <td>&nbsp;</td>
         <td>{{ getTotalQuantity() }}</td>
         <td>{{ getTotalUnitCost() }}</td>
+        <td>&nbsp;</td>
         <td>&nbsp;</td>
         <td>&nbsp;</td>
         <td>&nbsp;</td>

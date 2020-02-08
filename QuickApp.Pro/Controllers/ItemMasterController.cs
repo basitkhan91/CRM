@@ -1977,7 +1977,7 @@ namespace QuickApp.Pro.Controllers
 
             IEnumerable<object> results = GetPartDetails(searchView.partSearchParamters.partId, searchView.partSearchParamters.conditionId, searchView.partSearchParamters.customerId);
 
-            if (results.Any() && searchView.partSearchParamters.includeAlternatePartNumber)
+            if (results.Any() && ( searchView.partSearchParamters.includeAlternatePartNumber || searchView.partSearchParamters.includeEquivalentPartNumber ))
             {
                 results = results.Concat(GetMappedPartNumbers(searchView.partSearchParamters));
             }
@@ -2068,8 +2068,9 @@ namespace QuickApp.Pro.Controllers
             var condition = _context.Condition.Where(c => c.ConditionId == conditionId).FirstOrDefault();
             
             var itemQuantityDetails = from item in _context.ItemMaster
-                                      join stock in _context.StockLine on item.ItemMasterId equals stock.ItemMasterId
-                                      join po in _context.PurchaseOrder on stock.PurchaseOrderId equals po.PurchaseOrderId into stockpo
+                                      join stock in _context.StockLine on item.ItemMasterId equals stock.ItemMasterId into itemMasterStocks
+                                      from itemStock in itemMasterStocks.DefaultIfEmpty()
+                                      join po in _context.PurchaseOrder on itemStock.PurchaseOrderId equals po.PurchaseOrderId into stockpo
                                       from spo in stockpo.DefaultIfEmpty()
                                       join pop in _context.PurchaseOrderPart
                                        on new { poid = spo.PurchaseOrderId ?? 0, imid = item.ItemMasterId ?? 0 }
@@ -2080,14 +2081,14 @@ namespace QuickApp.Pro.Controllers
                                          && (item.IsDeleted.HasValue && !item.IsDeleted == true || !item.IsDeleted.HasValue)
                                          && (item.MasterCompanyId.HasValue && item.MasterCompanyId.Value == 1)
                                          && item.ItemMasterId == partId
-                                         && stock.ConditionId == conditionId
+                                         && ( itemStock.ConditionId.HasValue ? itemStock.ConditionId == conditionId : true  )
                                       select new
                                       {
                                           partNumber = item.PartNumber,
-                                          qtyOnHand = stock.QuantityOnHand,
-                                          qtyAvailable = stock.QuantityAvailable,
-                                          qtyOnOrder = spop.QuantityOrdered,
-                                          unitCost = stock.CoreUnitCost
+                                          qtyOnHand = itemStock.QuantityOnHand ?? 0,
+                                          qtyAvailable = itemStock.QuantityAvailable ?? 0,
+                                          qtyOnOrder = spop.QuantityOrdered ?? 0,
+                                          unitCost = itemStock.CoreUnitCost ?? 0
                                       };
 
 
@@ -2131,10 +2132,10 @@ namespace QuickApp.Pro.Controllers
                          uomDescription = iu.Description,
                          unitCost = itemQuantity.unitCost,
                          unitListPrice = item.ListPrice,
-                         qtyAvailable = itemQuantity.qtyAvailable ?? 0,
-                         qtyOnHand = itemQuantity.qtyOnHand ?? 0,
+                         qtyAvailable =  itemQuantity.qtyAvailable,
+                         qtyOnHand = itemQuantity.qtyOnHand,
                          qtyToOrder = 0,
-                         qtyOnOrder = itemQuantity.qtyOnOrder ?? 0,
+                         qtyOnOrder = itemQuantity.qtyOnOrder,
                          itemClassification = item.ItemClassification,
                          itemGroup = string.Empty,
                          pma = item.PMA,

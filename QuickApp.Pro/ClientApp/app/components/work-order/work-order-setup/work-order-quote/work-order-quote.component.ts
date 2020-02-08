@@ -893,7 +893,13 @@ saveworkOrderLabor(data) {
         "CreatedBy":"admin",
         "UpdatedBy":"admin",
         "IsActive":true,
-        "IsDeleted":labor.isDeleted
+        "IsDeleted":labor.isDeleted,
+        "BurdenRateAmount": labor.burdenRateAmount,
+        "TotalCostPerHour": labor.totalCostPerHour,
+        "TotalCost": labor.totalCost,
+        "BillingMethodId": labor.billingMethodId,
+        "BillingRate":labor.billingRate,
+        "BillingAmount":labor.billingAmount,
     })
     }
   })
