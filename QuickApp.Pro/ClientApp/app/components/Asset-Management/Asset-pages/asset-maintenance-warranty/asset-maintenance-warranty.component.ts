@@ -9,6 +9,7 @@ import { Vendor } from '../../../../models/vendor.model';
 import { AlertService, DialogType, MessageSeverity } from '../../../../services/alert.service';
 //import { Router } from '@angular/router';
 import { ActivatedRoute, Router } from '@angular/router';
+import { CommonService } from '../../../../services/common.service';
 
 @Component({
     selector: 'app-asset-maintenance-warranty',
@@ -30,9 +31,10 @@ export class AssetMaintenanceWarrantyComponent implements OnInit {
     AssetId: any;
     static assetService;
     isSaving: boolean;
+    assetwarrantystatusList: any[] = [];
     /** asset-maintenance-warranty ctor */
     constructor(private router: ActivatedRoute,private assetService: AssetService, private vendorService: VendorService, private route: Router,
-        private authService: AuthService, private alertService: AlertService, private glAccountService: GlAccountService) {
+        private authService: AuthService, private alertService: AlertService, private glAccountService: GlAccountService, private commonservice: CommonService,) {
         this.AssetId = this.router.snapshot.params['id'];
         this.activeIndex = 3;
         if (this.assetService.listCollection == undefined) {
@@ -121,11 +123,18 @@ export class AssetMaintenanceWarrantyComponent implements OnInit {
         this.activeIndex = 3;
         this.glList();
         this.vendorList();
+        this.getAssetWarrantyStatus();
     }
     get userName(): string {
         return this.authService.currentUser ? this.authService.currentUser.userName : "";
     }
 
+    getAssetWarrantyStatus() {
+        this.commonservice.smartDropDownList('AssetWarrantyStatus', 'AssetWarrantyStatusId', 'warrantyStatus').subscribe(res => {
+            this.assetwarrantystatusList = res;
+
+        })
+    }
     saveWarrenty() {
         delete this.currentMaintenance.assetType;
         delete this.currentMaintenance.currency;
