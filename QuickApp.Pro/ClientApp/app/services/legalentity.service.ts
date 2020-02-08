@@ -21,6 +21,7 @@ import { AuditHistory } from '../models/audithistory.model';
 import { Role } from '../models/role.model';
 import { LegalEntityEndpontService } from './legalentity-endpoint.service';
 import { TreeNode } from 'primeng/api';
+import { BehaviorSubject } from 'rxjs';
 
 export type RolesChangedOperation = "add" | "delete" | "modify";
 export type RolesChangedEventArg = { roles: Role[] | string[], operation: RolesChangedOperation };
@@ -33,8 +34,18 @@ export class LegalEntityService {
 	public static readonly roleModifiedOperation: RolesChangedOperation = "modify";
 
 	private _rolesChanged = new Subject<RolesChangedEventArg>();
-    isEditMode: boolean;
-    listCollection: any;
+	isEditMode: boolean;
+	ShowPtab: boolean = true;
+	public currentUrl = this.router.url;
+	public bredcrumbObj = new Subject<any>();
+	public alertObj = new Subject<any>();
+	public indexObj = new Subject<any>();
+	enableExternal: boolean = false;
+	listCollection: any;
+	private isEntityEditMode = new BehaviorSubject(false);
+	currentEditModeStatus = this.isEntityEditMode.asObservable();
+	isReset: boolean = false;
+	activeStep = new Subject();
 
 	constructor(
 		private router: Router,
@@ -42,10 +53,32 @@ export class LegalEntityService {
 		private authService: AuthService,
 		private legalEntityEndpont: LegalEntityEndpontService) { }
 
+	changeofTab(activeIndex) {
+		this.activeStep.next(activeIndex);
+	}
+
+	getGeneralObj() {
+		return Observable.forkJoin(
+			this.legalEntityEndpont.getGeneralrobj<any>());
+	}
+
 	getEntityList() {
 		return Observable.forkJoin(
 			this.legalEntityEndpont.getLegalEntityEndpontService<any[]>());
 	}
+	getEntityDataById(entityId) {
+		return this.legalEntityEndpont.getEntityDataById(entityId);
+	}
+
+	updateEntityDetails(action: any) {
+		return this.legalEntityEndpont.updateEntityListDetails<any>(action);
+	}
+
+	getCountrylist() {
+		return Observable.forkJoin(
+			this.legalEntityEndpont.getcountryListEndpoint<any[]>());
+	}
+
 	getManagemententity() {
 		return Observable.forkJoin(
 			this.legalEntityEndpont.getManagemtentEntityData<any[]>());
@@ -72,6 +105,10 @@ export class LegalEntityService {
 	}
 	getmanagementPost(action: any) {
 		return this.legalEntityEndpont.getmanagementPost<any>(action);
+	}
+
+	checkEntityEditmode(val) {
+		this.isEntityEditMode.next(val);
 	}
 
 	updateEntity(action: any) {
