@@ -127,7 +127,7 @@
                         </div>
                         <div class="form-group">
                             <label>Qty On Hand <span class="clr-red">*</span></label>
-                            <input class="form-control" type="number" name="QuantityOnHand" (keyup)="calculateQtyAvailable()" [(ngModel)]="stockLineForm.QuantityOnHand" #quantityOnHand="ngModel" required>
+                            <input class="form-control" type="number" name="QuantityOnHand" (keyup)="calculateQtyAvailable()" [(ngModel)]="stockLineForm.quantityOnHand" #quantityOnHand="ngModel" required>
                             <div *ngIf="quantityOnHand.invalid && (quantityOnHand.dirty || quantityOnHand.touched)" class="alert alert-danger alert-danger-cstm">
                                 <div *ngIf="quantityOnHand.errors.required">
                                     <small> Qty On Hand is required </small>
@@ -136,11 +136,11 @@
                         </div>
                         <div class="form-group">
                             <label>Qty Reserved</label>
-                            <input class="form-control" type="number" name="QuantityReserved" (keyup)="calculateQtyAvailable()" [(ngModel)]="stockLineForm.QuantityReserved">
+                            <input class="form-control" type="number" name="QuantityReserved" (keyup)="calculateQtyAvailable()" [(ngModel)]="stockLineForm.quantityReserved">
                         </div>
                         <div class="form-group">
                             <label>Qty Issued</label>
-                            <input class="form-control" type="number" name="QuantityIssued" (keyup)="calculateQtyAvailable()" [(ngModel)]="stockLineForm.QuantityIssued">
+                            <input class="form-control" type="number" name="QuantityIssued" (keyup)="calculateQtyAvailable()" [(ngModel)]="stockLineForm.quantityIssued">
                         </div>
                         <div class="form-group">
                             <label>Qty Available</label>
@@ -148,7 +148,7 @@
                         </div>
                         <div class="form-group">
                             <label>Cond Type <span class="clr-red">*</span></label>
-                            <select name="conditionId" [(ngModel)]="stockLineForm.conditionId" (change)="onSelectConditionType()" required>
+                            <select name="conditionId" [(ngModel)]="stockLineForm.conditionId" (change)="onSelectConditionType(stockLineForm.conditionId)" required>
                                 <option value="0">-- Select --</option>
                                 <option *ngFor="let condition of allConditionInfo" [ngValue]="condition.conditionId">{{condition.description}}</option>
                             </select>
@@ -367,9 +367,9 @@
                                 <label>Mfg Lot Num</label>
                                 <input class="form-control" type="text" name="manufacturerLotNumber" [(ngModel)]="stockLineForm.manufacturerLotNumber">
                             </div>
-                            <div class="form-group" *ngIf="stockLineForm.IsManufacturingDateAvailable == 1">
+                            <div class="form-group">
                                 <label>Mfg Date</label>
-                                <p-calendar class="workflow-clder" [showIcon]="true" [maxDate]="minDateValue" name="manufacturingDate" [(ngModel)]="stockLineForm.manufacturingDate"></p-calendar>
+                                <p-calendar class="workflow-clder" [showIcon]="true" name="manufacturingDate" [(ngModel)]="stockLineForm.manufacturingDate"></p-calendar>
                             </div>
                             <div class="form-group">
                                 <label>Mfg Batch Num</label>
@@ -377,7 +377,7 @@
                             </div>
                             <div class="form-group">
                                 <label matTooltip="Engine Serial Number" matTooltipPosition="right">ESN</label>
-                                <input class="form-control" type="text" name="engineSerialNumber" [(ngModel)]="stockLineForm.EngineSerialNumber">
+                                <input class="form-control" type="text" name="engineSerialNumber" [(ngModel)]="stockLineForm.engineSerialNumber">
                             </div>
                             <div class="form-group">
                                 <label matTooltip="Export Control Classification Number" matTooltipPosition="right">ECCN</label>
@@ -440,11 +440,11 @@
                             </div>
                             <div class="form-group">
                                 <label>Order Date</label>
-                                <p-calendar class="workflow-clder" [showIcon]="true" name="orderDate" [(ngModel)]="stockLineForm.orderDate" [disabled]="true"></p-calendar>
+                                <p-calendar class="workflow-clder" [showIcon]="true" name="orderDate" [(ngModel)]="stockLineForm.orderDate" ></p-calendar> <!--[disabled]="true"-->
                             </div>
                             <div class="form-group">
                                 <label>Open Date</label>
-                                <p-calendar class="workflow-clder" [showIcon]="true" name="openDate" [(ngModel)]="stockLineForm.openDate" [disabled]="true"></p-calendar>
+                                <p-calendar class="workflow-clder" [showIcon]="true" name="openDate" [(ngModel)]="stockLineForm.openDate"></p-calendar> <!--[disabled]="true"-->
                             </div>
                             <div class="form-group">
                                 <label>Days Since Received</label>
@@ -558,7 +558,7 @@
                             </div>
                             <div class="form-group">
                                 <label>Lot Cost</label>
-                                <input class="form-control" type="number" name="lotCost" [(ngModel)]="stockLineForm.lotCost" disabled>
+                                <input class="form-control" type="number" name="lotCost" [(ngModel)]="stockLineForm.lotCost">
                             </div>
                             <div class="form-group">
                                 <label>GL Account</label>
@@ -639,7 +639,61 @@
                         </div>
                     </div>
                 </div>
-                <div class="form-row">
+
+                <div class="form-row" *ngIf="sourceTimeLife.timeLife || (timeLifeCyclesId != null  && timeLifeCyclesId != 0)">  
+                    <div class="table-responsive form-group" style="padding: 0 5px;">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th colspan="15" class="text-center"><strong>Time Life Info</strong></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th></th>
+                                    <th class="text-center">Cycles</th>
+                                    <th class="text-center">Time</th>
+                                    <th class="text-center">Last</th>
+                                </tr>
+                                <tr>
+                                    <td>Remaining</td>
+                                    <td class="clr2 text-center"><input type="number" class="w60 form-control" placeholder="hours" name="cyclesRemaining" [(ngModel)]="sourceTimeLife.cyclesRemaining"></td>
+                                    <td class="clr2 text-center"><input type="number" class="w60 form-control" placeholder="hours" name="timeRemaining" [(ngModel)]="sourceTimeLife.timeRemaining"></td>
+                                    <td></td>
+    
+                                </tr>
+                                <tr>
+                                    <td>Since New</td>
+                                    <td class="clr2 text-center"><input type="number" class="w60 form-control" placeholder="hours" name="cyclesSinceNew" [(ngModel)]="sourceTimeLife.cyclesSinceNew"></td>
+                                    <td class="clr2 text-center"><input type="number" class="w60 form-control" placeholder="hours" name="timeSinceNew" [(ngModel)]="sourceTimeLife.timeSinceNew"></td>
+                                    <td class="clr2 text-center"><input type="number" class="w60 form-control" placeholder="hours" name="lastSinceNew" [(ngModel)]="sourceTimeLife.lastSinceNew"></td>
+    
+                                </tr>
+                                <tr>
+                                    <td>Since Ovh</td>
+                                    <td class="clr2 text-center"><input type="number" class="w60 form-control" placeholder="hours" name="cyclesSinceOVH" [(ngModel)]="sourceTimeLife.cyclesSinceOVH"></td>
+                                    <td class="clr2 text-center"><input type="number" class="w60 form-control" placeholder="hours" name="timeSinceOVH" [(ngModel)]="sourceTimeLife.timeSinceOVH"></td>
+                                    <td class="clr2 text-center"><input type="number" class="w60 form-control" placeholder="hours" name="lastSinceOVH" [(ngModel)]="sourceTimeLife.lastSinceOVH"></td>
+    
+                                </tr>
+                                <tr>
+                                    <td>Since Insp</td>
+                                    <td class="clr2 text-center"><input type="number" class="w60 form-control" placeholder="hours" name="cyclesSinceInspection" [(ngModel)]="sourceTimeLife.cyclesSinceInspection"></td>
+                                    <td class="clr2 text-center"><input type="number" class="w60 form-control" placeholder="hours" name="timeSinceInspection" [(ngModel)]="sourceTimeLife.timeSinceInspection"></td>
+                                    <td class="clr2 text-center"><input type="number" class="w60 form-control" placeholder="hours" name="lastSinceInspection" [(ngModel)]="sourceTimeLife.lastSinceInspection"></td>
+                                </tr>
+                                <tr>
+                                    <td>Since Repair</td>
+                                    <td class="clr2 text-center"><input type="number" class="w60 form-control" placeholder="hours" name="cyclesSinceRepair" [(ngModel)]="sourceTimeLife.cyclesSinceRepair"></td>
+                                    <td class="clr2 text-center"><input type="number" class="w60 form-control" placeholder="hours" name="timeSinceRepair" [(ngModel)]="sourceTimeLife.timeSinceRepair"></td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- <div class="form-row">
                     <div class="col-sm-12">
                         <div class="form-group col-sm-12" *ngIf="sourceTimeLife.timeLife || sourceTimeLife.timeLifeCyclesId">
                             <div class="col-sm-12">
@@ -694,9 +748,10 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
+
                 <div class="form-row pull-right">
-                    <button type="submit" class="btn btn-primary" (click)="onSaveStockLine()" [disabled]="!stockLineSetupForm.valid || disableMagmtStruct || disableCondition || disableSiteName">{{isEditMode ? 'Update' : 'Save'}}</button>
+                    <button type="submit" class="btn btn-primary" (click)="onSaveStockLine()" [disabled]="!stockLineSetupForm.valid || disableMagmtStruct || disableCondition || disableSiteName">{{isEditMode ? 'Update' : 'Save'}}</button> <!-- -->
                 </div>
             </form>
         </div>

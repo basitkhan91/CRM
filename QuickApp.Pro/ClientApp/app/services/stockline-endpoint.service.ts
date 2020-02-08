@@ -442,7 +442,7 @@ export class StocklineEndpoint extends EndpointFactory {
 	}
 	
 	getStockLineDetailsById(stockLineId) {
-        return this.http.get<any>(`${this.configurations.baseUrl}/api/StockLine/stocklinedetailsbyid/${stockLineId}`, this.getRequestHeaders())
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/StockLine/StocklineDataById/${stockLineId}`, this.getRequestHeaders())
 	}
 
     //downloadStockLineReport(payload) {
