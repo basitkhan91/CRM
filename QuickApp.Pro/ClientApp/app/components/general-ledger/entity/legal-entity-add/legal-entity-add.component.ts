@@ -85,7 +85,7 @@ export class EntityAddComponent implements OnInit, AfterViewInit {
     isEdit: any = false;
     id: number;
     editData: any;
-
+	disableSaveEntityName: boolean;
     
 
 	constructor(

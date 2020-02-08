@@ -71,6 +71,15 @@ namespace QuickApp.Pro.Controllers
 
         }
 
+
+        [HttpGet("getEntitydatabyid/{entityId}")]
+        public IActionResult GetEntityDataById(long entityId)
+        {
+            var allEntitylistDetails = _unitOfWork.LegalEntity.GetEntityDataById(entityId);
+            return Ok(allEntitylistDetails);
+
+        }
+
         [HttpGet("GetforEdigt")]
         [Produces(typeof(List<LegalEntityViewModel>))]
         public IActionResult GetforEdigt()
@@ -551,6 +560,13 @@ namespace QuickApp.Pro.Controllers
         {
             return Ok(contactViewModel);
 
+        }
+
+        [HttpGet("generalEmptyObj")]
+        [Produces(typeof(List<LegalEntityViewModel>))]
+        public IActionResult getGeneralEmptyObj(LegalEntityViewModel entityViewModel)
+        {
+            return Ok(entityViewModel);
         }
 
         [HttpGet("getLegalEntityShipViaDetails/{Selectedrow}")]

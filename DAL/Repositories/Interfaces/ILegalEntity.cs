@@ -22,7 +22,10 @@ namespace DAL.Repositories.Interfaces
         void LegalEntityShippingDetailsViaStatus(long id, bool status, string updatedBy);
         void DeleteShipViaDetails(long id, string updatedBy);
         void LegalEntityShippingDetailsStatus(long id, bool status, string updatedBy);
-        IEnumerable<object> GetParentEntities();  
+        IEnumerable<object> GetParentEntities();
+
+        object GetEntityDataById(long entityId);
+
         long CreateLegalEntityBillingAddress(LegalEntityBillingAddress billingAddress);
         void UpdateLegalEntityBillingAddress(LegalEntityBillingAddress billingAddress);
         void DeleteLegalEntityBillingAddress(long billingAddressId, string updatedBy);
