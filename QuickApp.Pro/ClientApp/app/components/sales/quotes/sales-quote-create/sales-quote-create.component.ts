@@ -474,6 +474,7 @@ export class SalesQuoteCreateComponent implements OnInit {
       this.salesQuote.salesOrderQuoteId = this.salesOrderQuoteObj.salesOrderQuoteId;
       this.salesQuote.quoteTypeId = this.salesOrderQuoteObj.quoteTypeId;
       this.salesQuote.statusId = this.salesOrderQuoteObj.statusId;
+      this.salesQuote.statusChangeDate = new Date(this.salesOrderQuoteObj.statusChangeDate);
       this.salesQuote.openDate = new Date(this.salesOrderQuoteObj.openDate);
       this.salesQuote.customerRequestDate = new Date(
         this.salesOrderQuoteObj.customerRequestDate
@@ -794,12 +795,13 @@ export class SalesQuoteCreateComponent implements OnInit {
       this.salesOrderQuote.leadSourceId = this.salesQuote.leadSourceId;
       if (this.id) {
       this.salesOrderQuote.statusId = this.salesQuote.statusId;
+      this.salesOrderQuote.statusChangeDate = this.salesQuote.statusChangeDate;
       }
       this.salesOrderQuote.creditLimit = this.salesQuote.creditLimit;
       this.salesOrderQuote.creditTermId = this.salesQuote.creditLimitTermsId;
       this.salesOrderQuote.restrictPMA = this.salesQuote.restrictPMA;
       this.salesOrderQuote.restrictDER = this.salesQuote.restrictDER;
-     // this.salesOrderQuote.quoteApprovedById = this.salesQuote.quoteApprovedById;
+      this.salesOrderQuote.quoteApprovedById = this.salesQuote.quoteApprovedById;
       if (this.salesQuote.approvedDate)
         this.salesOrderQuote.approvedDate = this.salesQuote.approvedDate.toDateString();
       this.salesOrderQuote.currencyId = this.salesQuote.currencyId;
