@@ -65,12 +65,16 @@ export class WorkOrderExclusionsComponent implements OnInit, OnChanges {
     try {
       this.markupList.forEach((markup)=>{
         if(type == 'row' && markup.value == matData.markUpPercentageId){
-          matData.costPlusAmount = Number(matData.extendedCost) + ((Number(matData.extendedCost) / 100) * Number(markup.label))
+          matData.billingRate = Number(matData.extendedCost) + ((Number(matData.extendedCost) / 100) * Number(markup.label))
+          matData['billingAmount'] = Number(matData['billingRate']) * Number(matData.quantity);
         }
         else if(type == 'all' && markup.value == this.overAllMarkup){
           this.workOrderExclusionsList.forEach((mData)=>{
-            mData.markUpPercentageId = this.overAllMarkup;
-            mData.costPlusAmount = Number(mData.extendedCost) + ((Number(mData.extendedCost) / 100) * Number(markup.label))
+            if(mData['billingMethod'] == 'T&M'){
+              mData.markupPercentageId = this.overAllMarkup;
+              mData.billingRate = Number(mData.extendedCost) + ((Number(mData.extendedCost) / 100) * Number(markup.label))
+              mData['billingAmount'] = Number(mData['billingRate']) * Number(mData.quantity);
+            }
           })
         }
       })
@@ -187,8 +191,8 @@ export class WorkOrderExclusionsComponent implements OnInit, OnChanges {
     if(this.workOrderExclusionsList){
       this.workOrderExclusionsList.forEach(
         (material) => {
-          if (material.costPlusAmount) {
-            total += material.costPlusAmount;
+          if (material.billingRate) {
+            total += material.billingRate;
           }
         }
       )
@@ -201,8 +205,8 @@ export class WorkOrderExclusionsComponent implements OnInit, OnChanges {
     if(this.workOrderExclusionsList){
       this.workOrderExclusionsList.forEach(
         (material) => {
-          if (material.fixedAmount) {
-            total += Number(material.fixedAmount);
+          if (material.billingAmount) {
+            total += Number(material.billingAmount);
           }
         }
       )

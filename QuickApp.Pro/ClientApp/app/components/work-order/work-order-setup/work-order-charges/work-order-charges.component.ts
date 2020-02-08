@@ -27,12 +27,12 @@ export class WorkOrderChargesComponent implements OnChanges, OnInit {
   cols = [
     { field: 'chargeType', header: 'Charge Type' },
     { field: 'description', header: 'Description' },
-    { field: 'quantity', header: 'Quantity' },
+    { field: 'vendorName', header: 'Vendor Name' },
+    { field: 'quantity', header: 'QTY' },
     { field: 'unitCost', header: 'Unit Cost' },
     { field: 'extendedCost', header: 'Extented Cost' },
     // { field: 'unitPrice', header: 'Unit Price' },
     // { field: 'extendedPrice', header: 'Extended Price' },
-    { field: 'vendorName', header: 'vendorName' },
   ]
 
   isEdit: boolean = false;
