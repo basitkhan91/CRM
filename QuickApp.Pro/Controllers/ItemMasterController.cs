@@ -2199,6 +2199,13 @@ namespace QuickApp.Pro.Controllers
             return Ok();
         }
 
+        [HttpGet("itemmastercapesAudit/{itemMasterCapesId}")]
+        public IActionResult ItemMasterCapsAudit(long itemMasterCapesId)
+        {
+            var result = _unitOfWork.itemMaster.ItemMasterCapsAudit(itemMasterCapesId);
+            return Ok(result);
+        }
+
         [HttpPost("getitemmastercapes")]
         public IActionResult GetItemMasterCapes([FromBody]Filters<ItemMasterCapesFilters> capesFilters)
         {

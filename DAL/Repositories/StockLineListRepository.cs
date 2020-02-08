@@ -1345,6 +1345,7 @@ namespace DAL.Repositories
                                 conditionId = co.ConditionId,
                                 itemGroup = ig.Description,
                                 stl.IdNumber,
+                                stl.ItemMasterId,
                                 partDescription = im.PartDescription,
                                 ManagementStructureId = stl.ManagementStructureEntityId,
                                 stl.Quantity,
@@ -1466,6 +1467,10 @@ namespace DAL.Repositories
                                 stl.WorkOrderMaterialsId,
                                 stl.ShippingAccount,
                                 stl.ShippingReference,
+                                im.ITARNumber,
+                                im.NationalStockNumber,
+
+
 
                             }).FirstOrDefault();
                 return data;

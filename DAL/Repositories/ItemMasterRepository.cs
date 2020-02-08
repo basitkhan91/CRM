@@ -1364,6 +1364,79 @@ namespace DAL.Repositories
             }
         }
 
+        public IEnumerable<object> ItemMasterCapsAudit(long itemMasterCapesId)
+        {
+            var list = (from imc in _appContext.ItemMasterCapesAudit
+                        join im in _appContext.ItemMaster on imc.ItemMasterId equals im.ItemMasterId
+                        join ct in _appContext.capabilityType on imc.CapabilityTypeId equals ct.CapabilityTypeId
+                        join ver in _appContext.Employee on imc.VerifiedById equals ver.EmployeeId into imcver
+                        from ver in imcver.DefaultIfEmpty()
+                        where imc.ItemMasterCapesId == itemMasterCapesId
+                        select new ItemMasterCapesAuditModel
+                        {
+                            AuditItemMasterCapesId= imc.AuditItemMasterCapesId,
+                            ItemMasterCapesId = imc.ItemMasterCapesId,
+                            partNo = im.PartNumber,
+                            pnDiscription = im.PartDescription,
+                            capabilityType = ct.Description,
+                            isVerified = imc.IsVerified,
+                            verifiedBy = ver == null ? "" : ver.FirstName,
+                            verifiedDate = imc.VerifiedDate,
+                            memo = imc.Memo,
+                            createdDate = imc.CreatedDate,
+                            isActive = imc.IsActive,
+                            ManagementStrId = imc.ManagementStructureId,
+                            UpdatedBy=imc.UpdatedBy,
+                            UpdatedDate=imc.UpdatedDate,
+                            level1 = "",
+                            level2 = "",
+                            level3 = "",
+                            level4 = "",
+                        }).OrderByDescending(p => p.AuditItemMasterCapesId).ToList();
+
+            if (list != null && list.Count() > 0)
+            {
+                string level1 = string.Empty;
+                string level2 = string.Empty;
+                string level3 = string.Empty;
+                string level4 = string.Empty;
+
+                foreach (var item in list)
+                {
+                    level1 = string.Empty;
+                    level2 = string.Empty;
+                    level3 = string.Empty;
+                    level4 = string.Empty;
+
+                    Dictionary<string, string> keyValuePairs = GetManagementStructureCodes(item.ManagementStrId);
+                    if (keyValuePairs != null && keyValuePairs.Count > 0)
+                    {
+                        if (keyValuePairs.TryGetValue("Level1", out level1))
+                            item.level1 = level1;
+                        else
+                            item.level1 = string.Empty;
+
+                        if (keyValuePairs.TryGetValue("Level2", out level2))
+                            item.level2 = level2;
+                        else
+                            item.level2 = string.Empty;
+
+                        if (keyValuePairs.TryGetValue("Level3", out level3))
+                            item.level3 = level3;
+                        else
+                            item.level3 = string.Empty;
+
+                        if (keyValuePairs.TryGetValue("Level4", out level4))
+                            item.level4 = level4;
+                        else
+                            item.level4 = string.Empty;
+                    }
+
+                }
+            }
+            return list;
+        }
+
         public IEnumerable<object> GetItemMasterCapes(Common.Filters<ItemMasterCapesFilters> capesFilters)
         {
 
@@ -1405,7 +1478,7 @@ namespace DAL.Repositories
                 }
 
 
-                filters.Add(capesFilters.filters.ItemMasterId > 0, x => x.ItemMasterId == capesFilters.filters.ItemMasterId);
+                //filters.Add(capesFilters.filters.ItemMasterId > 0, x => x.ItemMasterId == capesFilters.filters.ItemMasterId);
                 filters.Add(!string.IsNullOrEmpty(capesFilters.filters.partNo), x => x.partNo.ToLower().Contains(capesFilters.filters.partNo.ToLower()));
                 filters.Add(!string.IsNullOrEmpty(capesFilters.filters.capabilityType), x => x.capabilityType.ToLower().Contains(capesFilters.filters.capabilityType.ToLower()));
                 filters.Add(capesFilters.filters.isVerified != null, x => x.isVerified == capesFilters.filters.isVerified);
@@ -1421,7 +1494,7 @@ namespace DAL.Repositories
                                     join ct in _appContext.capabilityType on imc.CapabilityTypeId equals ct.CapabilityTypeId
                                     join ver in _appContext.Employee on imc.VerifiedById equals ver.EmployeeId into imcver
                                     from ver in imcver.DefaultIfEmpty()
-                                    where imc.IsDeleted == false
+                                    where imc.IsDeleted == false && imc.ItemMasterId == (capesFilters.filters.ItemMasterId > 0 ? capesFilters.filters.ItemMasterId: imc.ItemMasterId)
                                     && (ver.FirstName == null || ver.FirstName.Contains(!string.IsNullOrEmpty(capesFilters.filters.verifiedBy) ? capesFilters.filters.verifiedBy : ver.FirstName))
                                     select new ItemMasterCapesFilters()
                                     {
@@ -1444,7 +1517,7 @@ namespace DAL.Repositories
                             join ct in _appContext.capabilityType on imc.CapabilityTypeId equals ct.CapabilityTypeId
                             join ver in _appContext.Employee on imc.VerifiedById equals ver.EmployeeId into imcver
                             from ver in imcver.DefaultIfEmpty()
-                            where imc.IsDeleted == false
+                            where imc.IsDeleted == false && imc.ItemMasterId == (capesFilters.filters.ItemMasterId > 0 ? capesFilters.filters.ItemMasterId : imc.ItemMasterId)
                             && (ver.FirstName == null || ver.FirstName.Contains(!string.IsNullOrEmpty(capesFilters.filters.verifiedBy) ? capesFilters.filters.verifiedBy : ver.FirstName))
                             select new ItemMasterCapesFilters()
                             {
