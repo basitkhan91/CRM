@@ -132,13 +132,14 @@
                                         <button *ngIf="!isViewMode" class="btn-edit" mat-icon-button (click)="openEdit(rowData)" data-toggle="modal" data-target="#addShippingInfo" matTooltip="edit">
                                             <mat-icon>edit</mat-icon>
                                         </button> 
-
-                                        <button *ngIf="!isViewMode" [validate] moduleName="app-vendor-contacts" requirePermission="canDelete"
+                                        
+                                        <!-- moduleName="app-vendor-contacts" -->
+                                        <button *ngIf="!isViewMode"   requirePermission="canDelete"
                                                 class="btn-delete" mat-icon-button matTooltip="Delete"
                                                 (click)=" openDelete(deleteContent, rowData)">
                                             <mat-icon color="warn">delete</mat-icon>
                                         </button>
-                                        <button (click)="openShipVia(contentShipVia,rowData)" data-target="#VShipVia" class="btn btn-danger nobg" style="padding: 0px;" data-toggle="tooltip" matTooltip="Add Ship Via" data-original-title="View Shipping Via Information"><i class="fa fa-truck"></i></button>
+                                        <button (click)="openShipVia(contentShipVia,rowData)" data-target="#VShipVia" class="btn btn-danger nobg" style="padding: 0px;"  matTooltip="Add Ship Via" data-original-title="View Shipping Via Information"><i class="fa fa-truck"></i></button>
                                         <button class="btn-history" mat-icon-button matTooltip="history" data-target="#shippingHistory" data-toggle="modal" (click)="shippingInfoHistory(rowData)">
                                             <!--(click)="openShipaddressHistory(contentAuditHist,rowData)"-->
                                             <mat-icon color="green">history</mat-icon>
@@ -223,7 +224,7 @@
 <ng-template #contentShipVia id="contentShipVia" let-c="close" let-d="dismiss" style="width:auto">
     <div class="modal-header">
         <h4 class="modal-title" *ngIf="isEditMode">Edit Ship Via Info</h4>
-        <h4 class="modal-title" *ngIf="!isEditMode"><span class="info_wt" *ngIf="!isViewMode">Add</span> Ship Via Info</h4>
+        <h4 class="modal-title" *ngIf="!isEditMode"><span style="font-weight: normal;color: #ff5663 !important;" *ngIf="!isViewMode">Add</span> Ship Via Info</h4>
         <button type="button" class="close" aria-label="Close" (click)="dismissShipViaModelModel()">
             <span aria-hidden="true">&times;</span>
         </button>
@@ -336,7 +337,7 @@
                                 <mat-icon>edit</mat-icon>
                             </button>
 
-                            <button [validate] moduleName="app-vendor-contacts" requirePermission="canDelete" *ngIf="!isViewMode"
+                            <button requirePermission="canDelete" *ngIf="!isViewMode"
                                     class="btn-delete" mat-icon-button matTooltip="Delete"
                                     (click)=" openDelete(deleteContent1, rowData)">
                                 <mat-icon color="warn">delete</mat-icon>
@@ -598,7 +599,7 @@
     <div class="modal-header">
 
         <h4 class="modal-title">History of  Ship Via  Info</h4>
-        <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
+        <button type="button" class="close" aria-label="Close" data-dismiss="historyModal" (click)="dismissModel()">
             <span aria-hidden="true">&times;</span>
         </button>
 
@@ -643,6 +644,6 @@
         </div>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
+        <button type="button" class="btn btn-danger" data-dismiss="historyModal" (click)="dismissModel()">Close</button>
     </div>
 </ng-template>
