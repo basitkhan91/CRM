@@ -430,7 +430,7 @@ export class VendorShippingInformationComponent {
 
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
-        // this.shipViaObj = row;
+        this.shipViaObj = {};
         this.isSaving = true;
         this.vendorService.shipviaHistory(row.vendorShippingId).subscribe(
             results => this.onHistoryLoadSuccessful(results[0], content),
@@ -543,7 +543,7 @@ export class VendorShippingInformationComponent {
         // this.vendorService.indexObj.next(this.activeIndex);
         // this.vendorService.changeStep('Payment Information');
         // this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-payment-information');
-    }
+    } 
     openShipVia(content, rowData) {
         this.isEditMode = false;
         this.isDeleteMode = false;

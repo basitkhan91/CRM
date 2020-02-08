@@ -217,5 +217,12 @@ namespace QuickApp.Pro.Controllers
             return Ok(result);
         }
 
+        [HttpGet("partpurchasesaledetails")]
+        public IActionResult GetPartPurchaseSaleDetails(long itemMasterId, string condition)
+        {
+            var result = _unitOfWork.CommonRepository.GetPartPurchaseSaleDetails(itemMasterId, condition);
+            return Ok(result);
+        }
+
     }
 }

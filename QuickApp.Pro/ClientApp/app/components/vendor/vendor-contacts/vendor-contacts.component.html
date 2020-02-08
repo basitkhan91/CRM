@@ -128,7 +128,7 @@
                                         <!-- <button class="btn-delete" mat-icon-button matTooltip="delete" (click)="deleteItemAndCloseModel(rowData.contactId)">
                                             <mat-icon color="warn">delete</mat-icon>
                                         </button> -->
-                                        <button *ngIf="!isViewMode" [validate] moduleName="app-vendor-contacts" requirePermission="canDelete"
+                                        <button *ngIf="!isViewMode"  requirePermission="canDelete"
                                                 class="btn-delete" mat-icon-button matTooltip="Delete"
                                                 (click)=" openDelete(deleteContent, rowData)">
                                             <mat-icon color="warn">delete</mat-icon>
@@ -442,8 +442,9 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" [validate] moduleName="app-vendor-contacts" requirePermission="canAdd" *ngIf="sourceVendor.vendorId == undefined" class="btn btn-primary pull-right submit-btn" (click)="editItemAndCloseModel()" data-dismiss="modal" [disabled]="!addContactForm.valid">Save</button>
-                    <button type="button" [validate] moduleName="app-vendor-contacts" requirePermission="canUpdate" *ngIf="sourceVendor.vendorId != undefined && sourceVendor.vendorId !=0" class="btn btn-primary pull-right submit-btn" (click)="editItemAndCloseModel()" data-dismiss="modal" [disabled]="!addContactForm.valid">Update</button>
+                    <!-- [validate] moduleName="app-vendor-contacts" -->
+                    <button type="button"  requirePermission="canAdd" *ngIf="sourceVendor.vendorId == undefined" class="btn btn-primary pull-right submit-btn" (click)="editItemAndCloseModel()" data-dismiss="modal" [disabled]="!addContactForm.valid">Save</button>
+                    <button type="button" requirePermission="canUpdate" *ngIf="sourceVendor.vendorId != undefined && sourceVendor.vendorId !=0" class="btn btn-primary pull-right submit-btn" (click)="editItemAndCloseModel()" data-dismiss="modal" [disabled]="!addContactForm.valid">Update</button>
                     <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                 </div>
             </form>
