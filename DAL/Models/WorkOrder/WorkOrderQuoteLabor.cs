@@ -11,18 +11,17 @@ namespace DAL.Models
         [ForeignKey("WorkOrderQuoteLaborHeaderId")]
         public long WorkOrderQuoteLaborHeaderId { get; set; }
         public long? ExpertiseId { get; set; }
-        public long? EmployeeId { get; set; }
         public int? BillableId { get; set; }
-        public DateTime? StartDate { get; set; }
-        public DateTime? EndDate { get; set; }
         public decimal? Hours { get; set; }
-        public decimal? Adjustments { get; set; }
-        public decimal? AdjustedHours { get; set; }
-        public string Memo { get; set; }
         public int TaskId { get; set; }
         public decimal? DirectLaborOHCost { get; set; }
         public long? MarkupPercentageId { get; set; }
-        public decimal? LabourCostPlus { get; set; }
+        public decimal? BurdenRateAmount { get; set; }
+        public decimal? TotalCostPerHour { get; set; }
+        public decimal? TotalCost { get; set; }
+        public int? BillingMethodId { get; set; }
+        public decimal? BillingRate { get; set; }
+        public decimal? BillingAmount { get; set; }
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }
         public DateTime CreatedDate { get; set; }

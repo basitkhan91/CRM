@@ -4302,10 +4302,6 @@ namespace DAL.Repositories
                                  join l in _appContext.WorkOrderQuoteLabor on lh.WorkOrderQuoteLaborHeaderId equals l.WorkOrderQuoteLaborHeaderId
                                  join deby in _appContext.Employee on lh.DataEnteredBy equals deby.EmployeeId into lhdeby
                                  from deby in lhdeby.DefaultIfEmpty()
-                                 join exp in _appContext.ExpertiseType on lh.ExpertiseId equals exp.ExpertiseTypeId into lhexp
-                                 from exp in lhexp.DefaultIfEmpty()
-                                 join emp in _appContext.Employee on lh.EmployeeId equals emp.EmployeeId into lhemp
-                                 from emp in lhemp.DefaultIfEmpty()
                                  where lh.IsDeleted == false && lh.WorkOrderQuoteDetailsId == workOrderQuoteDetailsId
                                  && wq.BuildMethodId == buildMethodId
                                  select new
@@ -4313,58 +4309,47 @@ namespace DAL.Repositories
                                      lh.CreatedBy,
                                      lh.CreatedDate,
                                      lh.DataEnteredBy,
-                                     lh.EmployeeId,
-                                     lh.HoursorClockorScan,
                                      lh.IsActive,
                                      lh.IsDeleted,
-                                     lh.IsTaskCompletedByOne,
-                                     lh.LabourMemo,
                                      lh.MasterCompanyId,
                                      lh.UpdatedBy,
                                      lh.UpdatedDate,
                                      lh.WorkOrderQuoteDetailsId,
-                                     lh.WorkOrderHoursType,
                                      lh.WorkOrderQuoteLaborHeaderId,
-                                     lh.ExpertiseId,
-                                     lh.TotalWorkHours,
                                      DataEnteredByName = deby.FirstName,
-                                     ExpertiseType = exp.Description,
                                      lh.MarkupFixedPrice,
-                                     EmployeeName = emp.FirstName,
+                                     lh.HeaderMarkupId,
                                      LaborList = (from wol in _appContext.WorkOrderQuoteLabor
                                                   join exp in _appContext.ExpertiseType on wol.ExpertiseId equals exp.ExpertiseTypeId into wolexp
                                                   from exp in wolexp.DefaultIfEmpty()
-                                                  join emp in _appContext.Employee on wol.EmployeeId equals emp.EmployeeId into wolemp
-                                                  from emp in wolemp.DefaultIfEmpty()
+                                                  
                                                   join task in _appContext.Task.Where(p => p.IsActive == true && p.IsDelete == false) on wol.TaskId equals task.TaskId into woltask
                                                   from task in woltask.DefaultIfEmpty()
                                                   where wol.WorkOrderQuoteLaborHeaderId == lh.WorkOrderQuoteLaborHeaderId
                                                   select new
                                                   {
-                                                      wol.AdjustedHours,
-                                                      wol.Adjustments,
                                                       wol.BillableId,
                                                       wol.CreatedBy,
                                                       wol.CreatedDate,
-                                                      wol.EmployeeId,
-                                                      wol.EndDate,
                                                       wol.ExpertiseId,
                                                       Expertise = exp.Description,
                                                       wol.Hours,
                                                       wol.IsActive,
                                                       wol.IsDeleted,
-                                                      wol.Memo,
-                                                      wol.StartDate,
                                                       wol.TaskId,
                                                       Task = task.Description,
                                                       wol.UpdatedBy,
                                                       wol.UpdatedDate,
                                                       wol.WorkOrderQuoteLaborHeaderId,
                                                       wol.WorkOrderQuoteLaborId,
-                                                      EmployeeName = emp.FirstName,
                                                       wol.DirectLaborOHCost,
                                                       wol.MarkupPercentageId,
-                                                      wol.LabourCostPlus
+                                                      wol.BurdenRateAmount,
+                                                      wol.TotalCostPerHour,
+                                                      wol.TotalCost,
+                                                      wol.BillingMethodId,
+                                                      wol.BillingRate,
+                                                      wol.BillingAmount
                                                   }
                                                  ).Distinct().ToList()
                                  }
