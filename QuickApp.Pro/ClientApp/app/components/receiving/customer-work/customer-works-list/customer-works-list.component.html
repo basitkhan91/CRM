@@ -64,11 +64,11 @@
         <ng-template pTemplate="header" let-columns>
             <tr>
                 <ng-container *ngFor="let col of columns">
-                <th class="text-center" *ngIf="col.field!='level1' && col.field!='level2' && col.field!='level3' && col.field!='level4'"  pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
+                <th class="text-center" *ngIf="col.field!='levelCode1' && col.field!='levelCode2' && col.field!='levelCode3' && col.field!='levelCode4'"  pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
                         {{col.header}}
                         <p-sortIcon [field]="col.field"></p-sortIcon>
                 </th>
-                <th class="text-center" *ngIf="col.field=='level1'"  colspan="4"  pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
+                <th class="text-center" *ngIf="col.field=='levelCode1'"  colspan="4"  pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
                    Management Structure
                 </th>
             </ng-container>
@@ -96,7 +96,7 @@
             <tr [pSelectableRow]="rowData" [pSelectableRowDblClick]="rowData" pReorderableRowHandle (dblclick)="viewSelectedRowdbl(rowData)">
 
                 <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
-                    {{col.field == 'receivedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
+                    {{col.field == 'receivedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'woOpenDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
                 </td>
                 <td style="width:130px;">
                     <!-- <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="toggleIsActive(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
@@ -104,10 +104,10 @@
                     <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="toggleIsActive(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch> -->
 
                     <span data-toggle="modal" data-target="#cusView"><a class="btn nobg" (click)="openView(rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
-                    <span><a class="btn nobg" (click)="openEdits(rowData)" matTooltip="Edit"><i class="fa fa-pencil"></i></a> </span>
+                    <span><a class="btn nobg" *ngIf="rowData['woNumber'] == '' || rowData['woNumber'] == null" (click)="openEdits(rowData)" matTooltip="Edit"><i class="fa fa-pencil"></i></a> </span>
                     <span><a class="btn nobg" (click)="openDelete(content,rowData)" matTooltip="Delete"><i class="fa fa-trash"></i></a> </span>
                     <span><a class="btn nobg" (click)="openHistory(contentAuditHist,rowData)" matTooltip="History"><i class="fa fa-history"></i></a></span>
-                    <span><a class="btn nobg btn-pluspo-cstm" (click)="gotoWorkOrder(rowData)" matTooltip="Create WO"><i class="fa fa-plus"></i></a> </span>
+                    <span><a class="btn nobg btn-pluspo-cstm" *ngIf="rowData['woNumber'] == '' || rowData['woNumber'] == null" (click)="gotoWorkOrder(rowData)" matTooltip="Create WO"><i class="fa fa-plus"></i></a> </span>
                     <span><a class="btn nobg btn-ro-cstm" matTooltip="Return to Customer"><i class="fa fa-list"></i></a></span>
 
                     <!-- <span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openView(view,rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span> -->
