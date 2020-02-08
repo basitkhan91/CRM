@@ -494,6 +494,18 @@ namespace QuickApp.Pro.Controllers
                     actionobject1.UpdatedDate = DateTime.Now;
                     _context.StockLine.Update(actionobject1);
                     _context.SaveChanges();
+
+                    if (stockLineViewModel.TimeLifes != null)
+                    {
+                        if(stockLineViewModel.TimeLifes.TimeLifeCyclesId>0)
+                        {
+                            stockLineViewModel.TimeLifes.UpdatedDate = DateTime.Now;
+                            _context.TimeLife.Update(stockLineViewModel.TimeLifes);
+                            _context.SaveChanges();
+                        }
+                     
+                    }
+
                     return Ok(actionobject1);
                 }
                 else
@@ -510,6 +522,8 @@ namespace QuickApp.Pro.Controllers
 
                     _context.ItemMaster.Update(itemobject);
                     _context.SaveChanges();
+                                     
+
 
                     var entityobject = _context.ManagementStructure.Where(a => a.ManagementStructureId == stockLineViewModel.ManagementStructureId).SingleOrDefault();
                     StockLine actionobject1 = new StockLine();
@@ -611,16 +625,26 @@ namespace QuickApp.Pro.Controllers
                     _context.StockLine.Add(actionobject1);
                     _context.SaveChanges();
 
+                   
+
                     if (actionobject1.StockLineId != 0)
                     {
+                        if (stockLineViewModel.TimeLifes != null)
+                        {
+                            stockLineViewModel.TimeLifes.StockLineId = actionobject1.StockLineId;
+                            _context.TimeLife.Add(stockLineViewModel.TimeLifes);
+                            _context.SaveChanges();
+                        }
+
                         var exists = _context.StockLine.Where(a => a.StockLineId == actionobject1.StockLineId).SingleOrDefault();
                         exists.StockLineNumber = "STL-" + actionobject1.StockLineId;
                         exists.ControlNumber = "CNT-" + actionobject1.StockLineId;
                         exists.IdNumber = "Id-" + actionobject1.StockLineId;
+                        exists.TimeLifeCyclesId= stockLineViewModel.TimeLifes.TimeLifeCyclesId;
                         _context.StockLine.Update(exists);
                         _context.SaveChanges();
-                    }
-
+                    }                   
+                     
                     return Ok(actionobject1);
                 }
 

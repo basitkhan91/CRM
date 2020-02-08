@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DAL.Models;
+using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace QuickApp.Pro.ViewModels
@@ -127,5 +128,9 @@ namespace QuickApp.Pro.ViewModels
         public string NHA { get; set; }
         public string tla { get; set; }
         public string NationalStockNumber { get; set; }
+
+        [NotMapped]
+        public TimeLife TimeLifes { get; set; }
+
     }
 }
