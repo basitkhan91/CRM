@@ -677,7 +677,7 @@ overAllMarkup: any;
                   "masterCompanyId":(mList.masterCompanyId == '')?0:mList.masterCompanyId,
                   "TaskId": mList.taskId,
                   "BillingMethodId":Number(mList.billingMethodId),
-                  "TMAmount":mList.TMAmount,
+                  "TMAmount":mList.tmAmount,
                   "FlateRate":mList.flateRate,
                   "HeaderMarkupId":this.overAllMarkup,
                   "CreatedBy":"admin",
@@ -766,20 +766,21 @@ overAllMarkup: any;
         "InvoiceNo":"InvoiceNo 123456",
         "Amount":100,
         "MarkupPercentageId":charge.markupPercentageId,
-        "ChargesCostPlus":charge.chargesCostPlus,
-        "FixedAmount":charge.fixedAmount,
+        "TMAmount":charge.tmAmount,
+        "FlateRate":charge.flateRate,
         "Description":charge.description,
         "UnitCost":charge.unitCost,
         "ExtendedCost":charge.extendedCost,
         "UnitPrice":charge.unitPrice,
         "ExtendedPrice":charge.extendedPrice,
-        "markupFixedPrice": charge.markupFixedPrice,
+        "HeaderMarkupId": charge.headerMarkupId,
         "masterCompanyId":(charge.masterCompanyId == "")?0:charge.masterCompanyId,
         "taskId": charge.taskId,
         "CreatedBy":"admin",
         "UpdatedBy":"admin",
         "IsActive":true,
-        "IsDeleted":charge.isDeleted
+        "IsDeleted":charge.isDeleted,
+        "BillingMethodId": charge.billingMethodId
       }
     })
     this.workOrderService.saveChargesQuote(this.chargesPayload)
@@ -1080,12 +1081,12 @@ markupChanged(matData, type){
   try{
     this.markupList.forEach((markup)=>{
       if(type == 'row' && markup.value == matData.markupPercentageId){
-        matData.TMAmount = Number(matData.extendedCost) + ((Number(matData.extendedCost) / 100) * Number(markup.label))
+        matData.tmAmount = Number(matData.extendedCost) + ((Number(matData.extendedCost) / 100) * Number(markup.label))
       }
       else if(type == 'all' && markup.value == this.overAllMarkup){
         this.materialListQuotation.forEach((mData)=>{
           mData.markupPercentageId = this.overAllMarkup;
-          mData.TMAmount = Number(mData.extendedCost) + ((Number(mData.extendedCost) / 100) * Number(markup.label))
+          mData.tmAmount = Number(mData.extendedCost) + ((Number(mData.extendedCost) / 100) * Number(markup.label))
         })
       }
     })
@@ -1281,8 +1282,8 @@ getMaterialCostPlus(){
   let total = 0;
   this.materialListQuotation.forEach(
     (material)=>{
-      if(material.TMAmount){
-        total += material.TMAmount;
+      if(material.tmAmount){
+        total += material.tmAmount;
       }
     }
   )

@@ -524,7 +524,7 @@
                     <option *ngFor="let markUp of markupList" [value]="markUp.value">{{markUp.label}}</option>
                   </select>
               </td>
-              <td>{{ matQuotation.TMAmount }}</td>
+              <td>{{ matQuotation.tmAmount }}</td>
               <td>
                 <input type="number" [(ngModel)]="matQuotation.flateRate" [disabled]="matQuotation.billingMethodId != 2"/>
               </td>
@@ -698,7 +698,7 @@
                   <option *ngFor="let markUp of markupList" [value]="markUp.value">{{markUp.label}}</option>
                 </select>
             </td>
-            <td>{{ matQuotation.TMAmount }}</td>
+            <td>{{ matQuotation.tmAmount }}</td>
             <td>
               <input type="number" [(ngModel)]="matQuotation.flateRate" [disabled]="matQuotation.billingMethodId != 2"/>
             </td>
