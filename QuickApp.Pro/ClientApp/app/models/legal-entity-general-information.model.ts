@@ -1,12 +1,9 @@
 export class EntityGeneralInformation {
 
     "legalEntityId": Number;
-    "achId": Number;
     "name": string;
     "ledgerName": string;
     "description": string;
-    "legalEntityType": string;
-    "legalEntityCode": string;
     "doingLegalAs": string;
     "addressId": Number;
     "faxNumber": string;
@@ -17,49 +14,24 @@ export class EntityGeneralInformation {
     "cageCode": string;
     "faaLicense": string;
     "taxId": string;
-    "isLastLevel": boolean;
-    "lockBoxAddressId": Number;
-    "domesticWirePaymentId": Number;
-    "internationalWirePaymentId": Number;
     "parentId": Number;
     "masterCompanyId": Number;
     "isActive": boolean;
     "isDeleted": boolean;
     "createdBy": string;
     "updatedBy": string;
-    "updatedDate": Date;
     "createdDate": Date;
+    "updatedDate": Date;
     "address1": string;
     "address2": string;
     "poBox": string;
-    "bankStreetaddress1": string;
-    "bankStreetaddress2": string;
-    "bankCity": string;
-    "bankProvince": string;
     "country": string;
     "postalCode": string;
-    "domesticBankName": string;
-    "domesticIntermediateBank": string;
-    "domesticBenficiaryBankName": string;
-    "domesticBankAccountNumber": string;
-    "domesticABANumber": string;
-    "internationalBankName": string;
-    "internationalIntermediateBank": string;
-    "internationalBenficiaryBankName": string;
-    "internationalBankAccountNumber": string;
-    "internationalSWIFTID": string;
-    "achBankName": string;
-    "achIntermediateBank": string;
-    "achBenficiaryBankName": string;
-    "achBankAccountNumber": string;
-    "achABANumber": string;
-    "achSWIFTID": string;
+    "achId": Number;
     "recordModifiedDate": string;
     "city": string;
     "stateOrProvince": string;
-    "isBankingInfo": boolean;
-    nice_name: string;
-    logo: '';
+    "nice_name": string;
 
     constructor() {
         this.legalEntityId = null;
@@ -67,8 +39,6 @@ export class EntityGeneralInformation {
         this.name = "";
         this.ledgerName = "";
         this.description = "";
-        this.legalEntityType = "";
-        this.legalEntityCode = "";
         this.doingLegalAs = "";
         this.addressId = 0;
         this.faxNumber = "";
@@ -79,10 +49,6 @@ export class EntityGeneralInformation {
         this.cageCode = "";
         this.faaLicense = "";
         this.taxId = "";
-        this.isLastLevel = true;
-        this.lockBoxAddressId = 0;
-        this.domesticWirePaymentId = 0;
-        this.internationalWirePaymentId = 0;
         this.parentId = 0;
         this.masterCompanyId = 0;
         this.isActive = true;
@@ -94,34 +60,12 @@ export class EntityGeneralInformation {
         this.address1 = "";
         this.address2 = "";
         this.poBox = "";
-        this.bankStreetaddress1 = "";
-        this.bankStreetaddress2 = "";
-        this.bankCity = "";
-        this.bankProvince = "";
         this.country = "";
         this.postalCode = "";
-        this.domesticBankName = "";
-        this.domesticIntermediateBank = "";
-        this.domesticBenficiaryBankName = "";
-        this.domesticBankAccountNumber = "";
-        this.domesticABANumber = "";
-        this.internationalBankName = "";
-        this.internationalIntermediateBank = "";
-        this.internationalBenficiaryBankName = "";
-        this.internationalBankAccountNumber = "";
-        this.internationalSWIFTID = "";
-        this.achBankName = "";
-        this.achIntermediateBank = "";
-        this.achBenficiaryBankName = "";
-        this.achBankAccountNumber = "";
-        this.achABANumber = "";
-        this.achSWIFTID = "";
         this.recordModifiedDate = "";
         this.city = "";
         this.stateOrProvince = "";
-        this.isBankingInfo = false;
-        this.nice_name = '';
-        this.logo = '';
+        this.nice_name = "";
     }
 
 

@@ -121,7 +121,7 @@ namespace QuickApp.Pro.Controllers
                 entityobject.IsDeleted = false;
                 entityobject.IsActive = true;
                 entityobject.LedgerName = legalEntityViewModel.LedgerName;
-                entityobject.EntityLogo = legalEntityViewModel.EntityLogo;
+                //entityobject.EntityLogo = legalEntityViewModel.EntityLogo;
 
                 AddAddress(legalEntityViewModel);
 
@@ -193,7 +193,7 @@ namespace QuickApp.Pro.Controllers
                     entityobject.UpdatedDate = DateTime.Now;
                     entityobject.CreatedBy = legalEntityViewModel.CreatedBy;
                     entityobject.UpdatedBy = legalEntityViewModel.UpdatedBy;
-                    entityobject.EntityLogo = legalEntityViewModel.EntityLogo;
+                   // entityobject.EntityLogo = legalEntityViewModel.EntityLogo;
 
                     if (address != null) {
                         address.Line1 = legalEntityViewModel.Address1;
