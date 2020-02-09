@@ -8,7 +8,6 @@ label {
 
 div.row {
   padding: 10px;
-  background-color: #efefef;
 }
 
 button {
@@ -23,4 +22,7 @@ div.filter-method > div {
 }
 .clr-red, .clr-red:hover {
   color: #ff5663 !important;
+}
+.form-control:disabled {
+  background-color: #e9ecef !important;
 }
