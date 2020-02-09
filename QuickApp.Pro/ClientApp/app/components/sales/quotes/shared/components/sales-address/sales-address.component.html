@@ -4,8 +4,8 @@
     <div class="form-group">
       <label class="sales-quote-shipping-label">
         Site Name <span class="clr-red">*</span>
-        <span style="margin-left:3px;cursor:pointer;"><a class="fa fa-plus-circle fa-lg" matTooltip="Add Site Name" matTooltipPosition="above" data-toggle="modal" data-target="#createPOSiteName" (click)="onClickShipSiteName('AddCusSiteName')"></a></span>
-        <span style="margin-left:5px;cursor:pointer;"><a class="fa fa-edit fa-lg" matTooltip="Edit Site Name" matTooltipPosition="above" data-toggle="modal" data-target="#createPOSiteName" (click)="onClickShipSiteName('EditCusSiteName', sourceRoApproval)"></a></span>
+        <span style="margin-left:3px;cursor:pointer;"><a class="fa fa-plus-circle fa-lg" matTooltip="Add Site Name" matTooltipPosition="above" data-toggle="modal" data-target="#createPOSiteName" ></a></span>
+        <span style="margin-left:5px;cursor:pointer;"><a class="fa fa-edit fa-lg" matTooltip="Edit Site Name" matTooltipPosition="above" data-toggle="modal" data-target="#createPOSiteName"></a></span>
       </label>
       <select [(ngModel)]="salesOrderQuote.shipToSiteName" name="shipToSiteName" (change)="onShipSiteSelect(salesOrderQuote.shipToSiteName)" required>
         <option>--Select</option>
@@ -85,8 +85,8 @@
     <div class="form-group">
      
         <label class="sales-quote-shipping-label">SHIP VIA
-          <span style="margin-left:3px;cursor:pointer;"><a class="fa fa-plus-circle fa-lg" matTooltip="Add Ship Via" matTooltipPosition="above" data-toggle="modal" data-target="#shipToShipVia" (click)="resetAddressShipViaForm();"></a></span>
-									<span style="margin-left:5px;cursor:pointer;"><a class="fa fa-edit fa-lg" matTooltip="Edit Ship Via" matTooltipPosition="above" data-toggle="modal" data-target="#shipToShipVia" (click)="onEditShipVia(sourceRoApproval)"></a></span>
+          <span style="margin-left:3px;cursor:pointer;"><a class="fa fa-plus-circle fa-lg" matTooltip="Add Ship Via" matTooltipPosition="above" data-toggle="modal" data-target="#shipToShipVia"></a></span>
+									<span style="margin-left:5px;cursor:pointer;"><a class="fa fa-edit fa-lg" matTooltip="Edit Ship Via" matTooltipPosition="above" data-toggle="modal" data-target="#shipToShipVia"></a></span>
         </label>
      
           <select [(ngModel)]="salesOrderQuote.shipViaName" name="shipViaName" (change)="onShipViaSelect(salesOrderQuote.shipViaName)" required>
@@ -137,8 +137,8 @@
       <div class="form-group">
                    
         <label class="sales-quote-shipping-label">SITE NAME<span class="clr-red">*</span>
-          <span style="margin-left:3px;cursor:pointer;"><a class="fa fa-plus-circle fa-lg" matTooltip="Add Site Name" matTooltipPosition="above" data-toggle="modal" data-target="#createPOSiteName" (click)="onClickShipSiteName('AddCusSiteName')"></a></span>
-          <span style="margin-left:5px;cursor:pointer;"><a class="fa fa-edit fa-lg" matTooltip="Edit Site Name" matTooltipPosition="above" data-toggle="modal" data-target="#createPOSiteName" (click)="onClickShipSiteName('EditCusSiteName', sourceRoApproval)"></a></span>
+          <span style="margin-left:3px;cursor:pointer;"><a class="fa fa-plus-circle fa-lg" matTooltip="Add Site Name" matTooltipPosition="above" data-toggle="modal" data-target="#createPOSiteName"></a></span>
+          <span style="margin-left:5px;cursor:pointer;"><a class="fa fa-edit fa-lg" matTooltip="Edit Site Name" matTooltipPosition="above" data-toggle="modal" data-target="#createPOSiteName"></a></span>
         </label>
      
           <select [(ngModel)]="salesOrderQuote.billToSiteName" name="billToSiteName" (change)="onBillSiteSelect(salesOrderQuote.billToSiteName)" required>
