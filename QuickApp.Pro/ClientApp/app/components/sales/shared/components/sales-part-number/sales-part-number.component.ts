@@ -93,10 +93,10 @@ export class SalesPartNumberComponent {
 
   onCloseMargin(event) {
     this.show = false;
-    this.selectedPart.selected = false;
     this.salesMarginModal.close();
     console.log("close event");
     if(!this.isEdit){
+      this.selectedPart.selected = false;
       this.openPartNumber();
     }
   }

@@ -206,7 +206,10 @@ export class SalesQuoteCreateComponent implements OnInit {
 
     const employeeListData = [
       ...this.allEmployeeinfo.filter(x => {
-        return x.firstName.toLowerCase().includes(event.query.toLowerCase());
+        if(x.firstName.toLowerCase().includes(event.query.toLowerCase())){
+          return x.firstName+''+x.lastName;
+        }
+        
       })
     ];
     this.firstCollection = employeeListData;

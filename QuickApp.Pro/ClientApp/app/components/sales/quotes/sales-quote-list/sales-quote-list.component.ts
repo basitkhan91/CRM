@@ -25,6 +25,7 @@ import { CommonService } from "../../../../services/common.service";
 import { AuthService } from "../../../../services/auth.service";
 import { PartDetail } from "../../shared/models/part-detail";
 import { listSearchFilterObjectCreation } from "../../../../generic/autocomplete";
+import { StocklineViewComponent } from '../../../../shared/components/stockline/stockline-view/stockline-view.component';
 import {
   getValueFromObjectByKey,
   getObjectById,
@@ -43,6 +44,7 @@ export class SalesQuoteListComponent implements OnInit {
   sales: any[];
   selected: any;
   modal: NgbModalRef;
+  partModal: NgbModalRef;
   headers:any[];
   columns: any[];
   selectedColumns:any[];
@@ -183,6 +185,12 @@ export class SalesQuoteListComponent implements OnInit {
 
   dismissModel() {
     this.modal.close();
+  }
+  dismissViewModel() {
+    this.modal.close();
+  }
+  dismissPartViewModel() {
+    this.partModal.close();
   }
 
   openDelete(content, rowData) {
@@ -443,6 +451,16 @@ export class SalesQuoteListComponent implements OnInit {
       this.alertService.stopLoadingMessage();
     });
   }
+  viewSelectedStockLine(rowData) {
+   
+    console.log(rowData);
+    this.partModal = this.modalService.open(StocklineViewComponent, { size: 'lg', backdrop: 'static', keyboard: false });
+    this.partModal.componentInstance.stockLineId = rowData.stockLineId;
+    this.partModal.result.then(() => {
+        console.log('When user closes');
+    }, () => { console.log('Backdrop click') })
+
+}
 
 
 }

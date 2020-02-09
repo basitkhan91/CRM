@@ -25,6 +25,8 @@ export class SalesAddressComponent {
   allCustomer:any[];
   customerNames:any[];
   demosticShippingViaData:any[];
+  tempMemo: any;
+  tempMemoLabel: any;
   constructor(private salesQuoteService: SalesQuoteService,private siteService: SiteService,private customerService: CustomerService) {
     this.salesQuote = new SalesQuote();
 
@@ -219,4 +221,26 @@ filterNames(event) {
           }
         }
   }
+
+  onAddDescription(value) {
+    this.tempMemo = "";
+    if (value == "shipViaMemo") {
+      this.tempMemoLabel = "Ship Via Memo";
+      this.tempMemo = this.salesOrderQuote.shipViaMemo;
+    }
+    if (value == "billToMemo") {
+      this.tempMemoLabel = "Bill To Memo";
+      this.tempMemo = this.salesOrderQuote.billToMemo;
+    }
+  }
+
+  onSaveDescription() {
+    if (this.tempMemoLabel == "Ship Via Memo") {
+      this.salesOrderQuote.shipViaMemo = this.tempMemo;
+    }
+    if (this.tempMemoLabel == "Bill To Memo") {
+      this.salesOrderQuote.billToMemo = this.tempMemo;
+    }
+  }
+
 }

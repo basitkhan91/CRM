@@ -44,7 +44,7 @@
               </div>
               <div class="form-group">
                 <label>Valid For (Days)<span class="clr-red">*</span></label>
-                <input type="text" pInputText name="validForDays" [(ngModel)]="salesQuote.validForDays" />
+                <input type="text" class="form-control" name="validForDays" [(ngModel)]="salesQuote.validForDays" />
               </div>
               <div class="form-group">
                 <label>Quote Exp Date<span class="clr-red">*</span></label>
@@ -67,7 +67,7 @@
               </div>
               <div class="form-group sales-quote-customer-input">
                 <label>Customer Name<span class="clr-red">*</span></label>
-                <input type="text" pInputText [(ngModel)]="salesQuote.customerName" name="customerName"
+                <input type="text" class="form-control" [(ngModel)]="salesQuote.customerName" name="customerName"
                   [disabled]="true" />
                   <span>
                     <a class="btn btn-info boxed-float-btn nobg"
@@ -100,19 +100,19 @@
               </div>
               <div class="form-group">
                 <label>Customer Code<span class="clr-red">*</span></label>
-                <input type="text" pInputText [(ngModel)]="salesQuote.customerCode" name="customerCode"
+                <input type="text" class="form-control" [(ngModel)]="salesQuote.customerCode" name="customerCode"
                   [disabled]="true" />
               </div>
               <div class="form-group">
                 <label>Customer Contact<span class="clr-red">*</span></label>
                 <select [(ngModel)]="salesQuote.customerContactId" [ngModelOptions]="{standalone: true}">
                   <option value='-1'>--Select</option>
-                  <option *ngFor="let contact of customerContactList" [ngValue]="contact.contactId">{{contact.contactTitle}} - {{ contact.workPhone }}</option>
+                  <option *ngFor="let contact of customerContactList" [ngValue]="contact.contactId">{{contact.firstName}} {{contact.lastName}} - {{ contact.workPhone }}</option>
                 </select>
               </div>
               <div class="form-group">
                 <label>Customer Ref<span class="clr-red">*</span></label>
-                <input type="text" pInputText name="customerReferenceName" [(ngModel)]="salesQuote.customerReferenceName" />
+                <input type="text" class="form-control" name="customerReferenceName" [(ngModel)]="salesQuote.customerReferenceName" />
               </div>
               <div class="form-group" *ngIf="isEdit">
                 <label>Status</label>
@@ -127,13 +127,13 @@
                 </div>
                 <div class="col-md-7">
                   
-                  <p-calendar name="statusChangeDate" [(ngModel)]="salesQuote.statusChangeDate" [showIcon]="false" [disabled]="true">
+                  <p-calendar class="statusChangeDate" name="statusChangeDate" [(ngModel)]="salesQuote.statusChangeDate" [showIcon]="false" [disabled]="true">
                   </p-calendar>
                 </div>
               </div>
               <div class="form-group">
                 <label>Contract Ref</label>
-                <input type="text" pInputText name="contractReferenceName" [(ngModel)]="salesQuote.contractReferenceName" />
+                <input type="text" class="form-control" name="contractReferenceName" [(ngModel)]="salesQuote.contractReferenceName" />
               </div>
               <div class="form-group">
                 <label>Sales Person</label>
@@ -205,10 +205,10 @@
               <div class="form-group">
                 <label>Credit Limit &amp; terms</label>
                 <div class="col-md-5">
-                  <input type="text" pInputText name="creditLimit" [(ngModel)]="salesQuote.creditLimit" />
+                  <input type="text" class="form-control" name="creditLimit" [(ngModel)]="salesQuote.creditLimit"  [disabled]="true" />
                 </div>
                 <div class="col-md-7">
-                  <select name="creditLimitTermsId" [(ngModel)]="salesQuote.creditLimitTermsId">
+                  <select name="creditLimitTermsId" [(ngModel)]="salesQuote.creditLimitTermsId"  [disabled]="true">
                       <option value='-1'>--Select</option>
                     <option *ngFor="let ct of creditTerms" [ngValue]="ct.value">{{ ct.label }}</option>
                   </select>
@@ -276,12 +276,12 @@
  
                 <div class="form-group memo-popup-cstm" style="margin-top: 12px;">
 									<label>Memo</label>
-									<span pTooltip="{{salesQuote.memo}}" tooltipPosition="top"><input type="text" name="memo" pInputText class="form-control" value="{{salesQuote.memo}}" disabled /></span>
+									<span pTooltip="{{salesQuote.memo}}" tooltipPosition="top"><input type="text" name="memo" class="form-control" class="form-control" value="{{salesQuote.memo}}" disabled /></span>
 									<i class="fa fa-info-circle fa-lg" data-toggle="modal" data-target="#add-description" pTooltip="{{salesQuote.memo}}" tooltipPosition="top" (click)="onAddDescription('memo')"></i>
                 </div>
                 <div class="form-group memo-popup-cstm" style="margin-top: 12px;">
 									<label>Notes</label>
-									<span pTooltip="{{salesQuote.notes}}" tooltipPosition="top"><input type="text" name="notes" pInputText class="form-control" value="{{salesQuote.notes}}" disabled /></span>
+									<span pTooltip="{{salesQuote.notes}}" tooltipPosition="top"><input type="text" name="notes" class="form-control" class="form-control" value="{{salesQuote.notes}}" disabled /></span>
 									<i class="fa fa-info-circle fa-lg" data-toggle="modal" data-target="#add-description" pTooltip="{{salesQuote.notes}}" tooltipPosition="top" (click)="onAddDescription('notes')"></i>
                 </div>
              

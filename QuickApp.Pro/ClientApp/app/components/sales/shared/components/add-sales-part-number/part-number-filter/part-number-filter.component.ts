@@ -125,6 +125,9 @@ this.salesQuoteService.getSearchPartObject()
     console.log(this.query);
   }
   calculate() {
+    if (this.query.partSearchParamters.conditionId>0 && this.query.partSearchParamters.partNumber  && this.query.partSearchParamters.quantityRequested>0){
+      this.searchDisabled = false;
+      }
     let qr = + this.query.partSearchParamters.quantityRequested;
     if(qr){
       this.query.partSearchParamters.quantityToQuote = qr - this.query.partSearchParamters.quantityAlreadyQuoted;
@@ -152,12 +155,12 @@ private onptnmbersSuccessful(allWorkFlows: any[]) {
     this.query.partSearchParamters.partNumber = part.partNumber;
     this.query.partSearchParamters.partId = part.partId;
     this.query.partSearchParamters.partDescription = part.partDescription;
-    if (this.query.partSearchParamters.conditionId>0)
+    if (this.query.partSearchParamters.conditionId>0 && this.query.partSearchParamters.quantityRequested>0)
           this.searchDisabled = false;
   }
   onConditionSelect() {
     console.log(this.query);
-    if (this.query.partSearchParamters.conditionId>0 && this.query.partSearchParamters.partNumber)
+    if (this.query.partSearchParamters.conditionId>0 && this.query.partSearchParamters.partNumber  && this.query.partSearchParamters.quantityRequested>0)
           this.searchDisabled = false;
    // else if (this.query.partSearchParamters.conditionId>0 && this.query.partSearchParamters.includeMultiplePartNumber)
     //      this.searchDisabled = false;
