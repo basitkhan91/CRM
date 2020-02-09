@@ -19,7 +19,7 @@ namespace DAL.Models
         public long WorkOrderQuoteDetailsId { get; set; }
         public long? DataEnteredBy { get; set; }
         public string MarkupFixedPrice { get; set; }
-        public int? HeaderMarkupId { get; set; }
+        public long? HeaderMarkupId { get; set; }
         public int? MasterCompanyId { get; set; }
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }
