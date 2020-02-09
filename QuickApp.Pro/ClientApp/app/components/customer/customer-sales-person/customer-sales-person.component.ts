@@ -113,12 +113,16 @@ export class CustomerSalesPersonComponent implements OnInit {
     // private isEditMode: boolean = false;
     // private isDeleteMode: boolean = false;
     ngOnInit() {
+            this.employeeListOriginal = this.employeeListOriginal || []; 
+
+            this.employeeListOriginal.forEach(element => {
+                element["fullName"] = element["firstName"] + " " + element["lastName"]
+    
+            });
+        console.log(this.employeeListOriginal, "employeelistoriginal")
 
         if (this.editMode) {
-            for(let i=0; i<this.employeeListOriginal.length; i++){
-                this.employeeListOriginal[i]["fullName"] = this.employeeListOriginal[i]["firstName"] + " " + this.employeeListOriginal[i]["lastName"]
-            }
-
+           
             console.log(this.editGeneralInformationData);
 
             this.id = this.editGeneralInformationData.customerId
@@ -198,9 +202,12 @@ export class CustomerSalesPersonComponent implements OnInit {
             return x.fullName.toLowerCase().includes(event.query.toLowerCase())
         })]
         for(let i=0; i<employeeListData.length; i++){
-            if(this.salesInfo.primarySalesPersonId['employeeId'] == employeeListData[i].employeeId || this.salesInfo.secondarySalesPersonId == employeeListData[i].employeeId){
-                employeeListData.splice(i, 1);
+            if(this.salesInfo.primarySalesPersonId){
+                if(this.salesInfo.primarySalesPersonId['employeeId'] == employeeListData[i].employeeId || this.salesInfo.secondarySalesPersonId == employeeListData[i].employeeId){
+                    employeeListData.splice(i, 1);
+                }
             }
+            
         }
         
 
