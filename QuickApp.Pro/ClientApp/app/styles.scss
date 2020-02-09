@@ -5995,6 +5995,9 @@ h1.block, h2.block, h3.block, h4.block, h5.block, h6.block {
 .m-t-10 {
     margin-top: 10px;
 }
+.m-t-15 {
+    margin-top: 15px;
+}
 
 .duedate, .widget-item .desc_cont {
     margin-top: 10px
@@ -14169,6 +14172,10 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active, .ui-
     padding-top: 2px !important;
    
 }
+ .ui-multiselect-panel .ui-multiselect-header .ui-multiselect-filter-container .ui-inputtext {
+    margin-top: -4px !important;
+
+}
 
 .autocomplete-value .ui-autocomplete .ui-autocomplete-panel {
     min-width: 93% !important;
@@ -14599,6 +14606,10 @@ body .ui-autocomplete .ui-autocomplete-dropdown .ui-button-icon-left:before {
     font-size: 16px !important;
     color: #295d92 !important;
     font-weight: bold;
+}
+p-calendar .ui-calendar-button {
+    padding-top: 2px !important;
+    padding-bottom: 3px !important;
 }
 // .p-autoComplete-ctsm.ng-dirty.ng-invalid > .ui-autocomplete > .ui-inputtext {
 //     border-color: #212121 !important;

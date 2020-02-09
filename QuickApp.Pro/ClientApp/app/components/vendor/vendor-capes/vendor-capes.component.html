@@ -15,7 +15,7 @@
                   class="span-header-red"
                   style="text-transform: capitalize"
                 >
-                  {{ local?.vendorName }}
+                  {{ getVendorName() }}
                 </span>
               </p>
             </div>
@@ -55,7 +55,7 @@
                   data-target="#addCapabilityInfo"
                   data-toggle="modal"
                   (click)="onAddCapsInfo()"
-                  ><i class="fa fa-plus-circle fa-lg"></i
+                  ><i class="fa fa-plus-circle fa-lg" matTooltip="Create Capability Information"></i
                 ></a>
               </h4>
             </div>

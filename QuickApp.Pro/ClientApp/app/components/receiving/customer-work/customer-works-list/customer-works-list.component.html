@@ -13,6 +13,30 @@
                 <i class="fa fa-plus-circle fa-lg"></i>
             </a>
         </div>
+
+        <div class="form-row status-radio">
+            <div class="col-md-8">
+                <div class="form-group">
+                    <label class="radiobtn-label">Status:</label>
+                    <div class="pull-left" style="margin-top: 4px; margin-right: 15px;">
+                        <label class="radio-cstm wauto">
+                            <input type="radio" name="custworkstatus" class="form-control" value="1" (click)="getCustWorkStatus(1)" [(ngModel)]="currentStatusCW">
+                            <span class="checkmark"></span>Pending WO Creation</label>
+                    </div>
+                    <div class="pull-left" style="margin-top: 4px; margin-right: 15px;">
+                        <label class="radio-cstm wauto">
+                            <input type="radio" name="custworkstatus" class="form-control" value="2" (click)="getCustWorkStatus(2)" [(ngModel)]="currentStatusCW">
+                            <span class="checkmark"></span>Returned to Customers</label>
+                    </div>
+                    <div class="pull-left" style="margin-top: 4px; margin-right: 15px;">
+                        <label class="radio-cstm wauto">
+                            <input type="radio" name="custworkstatus" class="form-control" value="3" (click)="getCustWorkStatus(3)" [(ngModel)]="currentStatusCW">
+                            <span class="checkmark"></span>All</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <p-table #dt class="rpo-table-cstm lastcol-fix" [value]="allRecevinginfo" [lazy]="true" (onLazyLoad)="loadData($event)" [metaKeySelection]="true" [first]="0" [rows]="pageSize" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[10,20,50,100]" [columns]="selectedColumns" selectionMode="multiple" [(selection)]="selectedColumn" [resizableColumns]="true" [reorderableColumns]="true" [scrollable]="true" scrollHeight="450px" [totalRecords]="totalRecords">
         <ng-template pTemplate="caption">
             <div style="text-align: right;margin-left:-6px !important;min-height: 30px;">
@@ -34,41 +58,57 @@
         </ng-template>
         <ng-template pTemplate="colgroup" let-columns>
             <colgroup>
-                <col *ngFor="let col of columns" style="width:160px">
+                <col *ngFor="let col of columns" style="width:140px">
             </colgroup>
         </ng-template>
         <ng-template pTemplate="header" let-columns>
             <tr>
+                <ng-container *ngFor="let col of columns">
+                <th class="text-center" *ngIf="col.field!='levelCode1' && col.field!='levelCode2' && col.field!='levelCode3' && col.field!='levelCode4'"  pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
+                        {{col.header}}
+                        <p-sortIcon [field]="col.field"></p-sortIcon>
+                </th>
+                <th class="text-center" *ngIf="col.field=='levelCode1'"  colspan="4"  pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
+                   Management Structure
+                </th>
+            </ng-container>
+
+                <th  style="width: 130px; position:sticky">Actions</th>
+
+            </tr>
+            <!-- <tr>
                 <th *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
                     {{col.header}}
                     <p-sortIcon [field]="col.field"></p-sortIcon>
                 </th>
                 <th style="width:130px;position:sticky">Actions</th>
-            </tr>
+            </tr> -->
             <tr>
                 <th style="width:120px" *ngFor="let col of columns" [ngSwitch]="col.field">
-                    <input style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field, 'contains')">
+                    <input type="text" *ngIf="col.field !== 'receivedDate'" style="width:100%;" pInputText (keyup)="dt.filter($event.target.value, col.field, 'contains')">
+                    <input type="date" class="hidePlaceHolder" *ngIf="col.field == 'receivedDate'" name="receivedDate" style="width:100%;" (change)="dt.filter($event.target.value, col.field, 'contains'); enableDateFilter($event.target);">                    
+                    <!-- <input style="width:100%;" pInputText type="text" (keyup)="dt.filter($event.target.value, col.field, 'contains')"> -->
                 </th>
                 <th style="width:130px;position:sticky"></th>
             </tr>
         </ng-template>
         <ng-template pTemplate="body" let-rowData let-columns="columns">
-            <tr [pSelectableRow]="rowData">
+            <tr [pSelectableRow]="rowData" [pSelectableRowDblClick]="rowData" pReorderableRowHandle (dblclick)="viewSelectedRowdbl(rowData)">
 
                 <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
-                    {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
+                    {{col.field == 'receivedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'woOpenDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
                 </td>
-
-
                 <td style="width:130px;">
-                    <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="toggleIsActive(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                    <!-- <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="toggleIsActive(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
                     <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="toggleIsActive(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
-                    <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="toggleIsActive(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                    <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="toggleIsActive(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch> -->
 
                     <span data-toggle="modal" data-target="#cusView"><a class="btn nobg" (click)="openView(rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
-                    <span><a class="btn nobg" (click)="openEdits(rowData)" matTooltip="Edit"><i class="fa fa-pencil"></i></a> </span>
+                    <span><a class="btn nobg" *ngIf="rowData['woNumber'] == '' || rowData['woNumber'] == null" (click)="openEdits(rowData)" matTooltip="Edit"><i class="fa fa-pencil"></i></a> </span>
                     <span><a class="btn nobg" (click)="openDelete(content,rowData)" matTooltip="Delete"><i class="fa fa-trash"></i></a> </span>
                     <span><a class="btn nobg" (click)="openHistory(contentAuditHist,rowData)" matTooltip="History"><i class="fa fa-history"></i></a></span>
+                    <span><a class="btn nobg btn-pluspo-cstm" *ngIf="rowData['woNumber'] == '' || rowData['woNumber'] == null" (click)="gotoWorkOrder(rowData)" matTooltip="Create WO"><i class="fa fa-plus"></i></a> </span>
+                    <span><a class="btn nobg btn-ro-cstm" matTooltip="Return to Customer"><i class="fa fa-list"></i></a></span>
 
                     <!-- <span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openView(view,rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span> -->
                     <!-- <button class="btn-edit" mat-icon-button (click)="openEdits(rowData)" matTooltip="Edit">
@@ -440,7 +480,7 @@
     </div>
 </ng-template>
 
-    <div id="cusView" class="modal fade" role="dialog">
+    <div id="cusView" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog modal-lg">    
             <div class="modal-content">
                 <div class="modal-header">
@@ -468,29 +508,24 @@
                             <p><span class="label"><b>PN: <span class="text-danger">*</span></b></span><span class="value">{{ viewCustWorkInfo.partNumber }}</span></p>
                             <p><span class="label"><b>PN Description: </b></span><span class="value">{{ viewCustWorkInfo.partDescription ? viewCustWorkInfo.partDescription : '-' }}</span></p>
                             <p><span class="label"><b>Manufacturer: </b></span><span class="value">{{ viewCustWorkInfo.manufacturer ? viewCustWorkInfo.manufacturer : '-' }}</span></p>
-                            <p><span class="label"><b>Revised PN: </b></span><span class="value">{{ viewCustWorkInfo.revisedPart ? viewCustWorkInfo.revisedPart : '-' }}</span></p>
-                            <div class="form-group p-t-10">
-                                <div class="checkbox-cstm">
-                                    <label>
-                                        <input type="checkbox" name="isSerialized"
-                                                [(ngModel)]="viewCustWorkInfo.isSerialized" disabled>
-                                        <span class="cr"><i class="cr-icon pi pi-check"></i></span>
-                                        Is Serialized
-                                    </label>
-                                </div>
-                            </div>
-                            <p class="full-width"><span class="label"><b>Serial Number: </b></span><span class="value">{{ viewCustWorkInfo.serialNumber ? viewCustWorkInfo.serialNumber : '-' }}</span></p>
+                            <p><span class="label"><b>Revised PN: </b></span><span class="value">{{ viewCustWorkInfo.revisedPart ? viewCustWorkInfo.revisedPart : '-' }}</span></p>                            
                             <p><span class="label"><b>Certify By: </b></span><span class="value">{{ viewCustWorkInfo.certifiedBy ? viewCustWorkInfo.certifiedBy : '-' }}</span></p>
                             <p><span class="label"><b>Tag Date: </b></span><span class="value">{{ viewCustWorkInfo.tagDate | date: 'dd-MM-yyyy' }}</span></p>
                             <p><span class="label"><b>Tag Type: </b></span><span class="value">{{ viewCustWorkInfo.tagType ? viewCustWorkInfo.tagType : '-' }}</span></p>
                             <p><span class="label"><b>Parts Cert Num: </b></span><span class="value">{{ viewCustWorkInfo.partCertificationNumber ? viewCustWorkInfo.partCertificationNumber : '-' }}</span></p>
                             <p><span class="label"><b>QTY: </b></span><span class="value">{{ viewCustWorkInfo.quantity ? viewCustWorkInfo.quantity : '-' }}</span></p>   
                             <p><span class="label"><b>Condition: <span class="text-danger">*</span></b></span><span class="value">{{ viewCustWorkInfo.condition }}</span></p>
-                            <p><span class="label"><b>Site: <span class="text-danger">*</span></b></span><span class="value">{{ viewCustWorkInfo.site }}</span></p>
-                            <p><span class="label"><b>Warehouse: </b></span><span class="value">{{ viewCustWorkInfo.warehouse ? viewCustWorkInfo.warehouse : '-' }}</span></p>   
-                            <p><span class="label"><b>Location: </b></span><span class="value">{{ viewCustWorkInfo.location ? viewCustWorkInfo.location : '-' }}</span></p>
-                            <p><span class="label"><b>Shelf: </b></span><span class="value">{{ viewCustWorkInfo.shelf ? viewCustWorkInfo.shelf : '-' }}</span></p>   
-                            <p><span class="label"><b>Bin: </b></span><span class="value">{{ viewCustWorkInfo.bin ? viewCustWorkInfo.bin : '-' }}</span></p>
+                            <div class="form-row">
+                                <div class="col-md-7">
+                                    <div class="shadow-Box" style="padding: 3px 10px;">
+                                        <p><span class="label"><b>Site: <span class="text-danger">*</span></b></span><span class="value">{{ viewCustWorkInfo.site }}</span></p>
+                                        <p><span class="label"><b>Warehouse: </b></span><span class="value">{{ viewCustWorkInfo.warehouse ? viewCustWorkInfo.warehouse : '-' }}</span></p>   
+                                        <p><span class="label"><b>Location: </b></span><span class="value">{{ viewCustWorkInfo.location ? viewCustWorkInfo.location : '-' }}</span></p>
+                                        <p><span class="label"><b>Shelf: </b></span><span class="value">{{ viewCustWorkInfo.shelf ? viewCustWorkInfo.shelf : '-' }}</span></p>   
+                                        <p><span class="label"><b>Bin: </b></span><span class="value">{{ viewCustWorkInfo.bin ? viewCustWorkInfo.bin : '-' }}</span></p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="col-md-6">  
                             <div class="form-row managementstr">
@@ -555,73 +590,109 @@
                                     </label>
                                 </div>
                             </div>
-                            <p class="full-width"><span class="label"><b>Exp Date: </b></span><span class="value">{{ viewCustWorkInfo.expDate | date: 'dd-MM-yyyy' }}</span></p>
-                            <div class="form-group p-t-10">
-                                <div class="checkbox-cstm">
-                                    <label>
-                                        <input type="checkbox" name="isTimeLife"
-                                                [(ngModel)]="viewCustWorkInfo.isTimeLife" disabled>
-                                        <span class="cr"><i class="cr-icon pi pi-check"></i></span>
-                                        Time Life
-                                    </label>
-                                </div>
-                            </div>
-                            <p class="full-width"><span class="label"><b>Time Life Date: </b></span><span class="value">{{ viewCustWorkInfo.timeLifeDate | date: 'dd-MM-yyyy' }}</span></p>
-                            <p><span class="label"><b>Origin: </b></span><span class="value">{{ viewCustWorkInfo.timeLifeOrigin ? viewCustWorkInfo.timeLifeOrigin : '-' }}</span></p>
+                            <p class="full-width"><span class="label"><b>Exp Date: </b></span><span class="value">{{ viewCustWorkInfo.expDate | date: 'dd-MM-yyyy' }}</span></p>                            
                             <p><span class="label"><b>Employee Name: <span class="text-danger">*</span></b></span><span class="value">{{ viewCustWorkInfo.employeeName }}</span></p>
                             <p><span class="label"><b>Memo: </b></span><span class="value">{{ viewCustWorkInfo.memo ? viewCustWorkInfo.memo : '-' }}</span></p>                            
                         </div>
                     </div>
 
-                    <div *ngIf="viewCustWorkInfo.isTimeLife" class="table-responsive form-group col-sm-12" style="margin-top: 20px;">
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th colspan="15" class="text-center"><strong>Time Life Adjustments</strong></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <th></th>
-                                    <th class="text-center">Cycles</th>
-                                    <th class="text-center">Time</th>
-                                    <th class="text-center">Last</th>
-                                </tr>
-                                <tr>
-                                    <td><b>Remaining</b></td>
-                                    <td class="clr2 text-center">
-                                        <span>{{timeLifeInfo.cyclesRemaining ? timeLifeInfo.cyclesRemaining : '-'}}</span>
-                                    </td>
-                                    <td class="clr2 text-center"><span>{{timeLifeInfo.timeRemaining ? timeLifeInfo.timeRemaining : '-'}}</span></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td><b>Since New</b></td>
-                                    <td class="clr2 text-center"><span>{{timeLifeInfo.cyclesSinceNew ? timeLifeInfo.cyclesSinceNew : '-'}}</span></td>
-                                    <td class="clr2 text-center"><span>{{timeLifeInfo.timeSinceNew ? timeLifeInfo.timeSinceNew : '-'}}</span></td>
-                                    <td class="clr2 text-center"><span>{{timeLifeInfo.lastSinceNew ? timeLifeInfo.lastSinceNew : '-'}}</span></td>
-                                </tr>
-                                <tr>
-                                    <td><b>Since Ovh</b></td>
-                                    <td class="clr2 text-center"><span>{{timeLifeInfo.cyclesSinceOVH ? timeLifeInfo.cyclesSinceOVH : '-'}}</span></td>
-                                    <td class="clr2 text-center"><span>{{timeLifeInfo.timeSinceOVH ? timeLifeInfo.timeSinceOVH : '-'}}</span></td>
-                                    <td class="clr2 text-center"><span>{{timeLifeInfo.lastSinceOVH ? timeLifeInfo.lastSinceOVH : '-'}}</span></td>
-                                </tr>
-                                <tr>
-                                    <td><b>Since Insp</b></td>
-                                    <td class="clr2 text-center"><span>{{timeLifeInfo.cyclesSinceInspection ? timeLifeInfo.cyclesSinceInspection : '-'}}</span></td>
-                                    <td class="clr2 text-center"><span>{{timeLifeInfo.timeSinceInspection ? timeLifeInfo.timeSinceInspection : '-'}}</span></td>
-                                    <td class="clr2 text-center"><span>{{timeLifeInfo.lastSinceInspection ? timeLifeInfo.lastSinceInspection : '-'}}</span></td>
-                                </tr>
-                                <tr>
-                                    <td><b>Since Repair</b></td>
-                                    <td class="clr2 text-center"><span>{{timeLifeInfo.cyclesSinceRepair ? timeLifeInfo.cyclesSinceRepair : '-'}}</span></td>
-                                    <td class="clr2 text-center"><span>{{timeLifeInfo.timeSinceRepair ? timeLifeInfo.timeSinceRepair : '-'}}</span></td>
-                                    <td></td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <div class="card">
+                        <div class="card-body" style="padding: 2px 10px;">
+                            <div class="form-row">
+                                <div class="col-md-3">
+                                    <div class="form-group p-t-10">
+                                        <div class="checkbox-cstm">
+                                            <label>
+                                                <input type="checkbox" name="isSerialized"
+                                                        [(ngModel)]="viewCustWorkInfo.isSerialized" disabled>
+                                                <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                                Is Serialized
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <p><span class="label"><b>Serial Number: </b></span><span class="value">{{ viewCustWorkInfo.serialNumber ? viewCustWorkInfo.serialNumber : '-' }}</span></p>
+                                </div>                                                
+                            </div>
+                        </div>
                     </div>
+
+                    <div class="card" style="margin-top: 5px;">
+                        <div class="card-body" style="padding: 2px 10px;">
+                            <div class="form-row">
+                                <div class="col-md-3">
+                                    <div class="form-group p-t-10">
+                                        <div class="checkbox-cstm">
+                                            <label>
+                                                <input type="checkbox" name="isTimeLife"
+                                                        [(ngModel)]="viewCustWorkInfo.isTimeLife" disabled>
+                                                <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                                Time Life
+                                            </label>
+                                        </div>
+                                    </div>                                                                        
+                                </div>
+                                <div class="col-md-4">
+                                    <p><span class="label"><b>Date: </b></span><span class="value">{{ viewCustWorkInfo.timeLifeDate | date: 'dd-MM-yyyy' }}</span></p>
+                                </div> 
+                                <div class="col-md-4">
+                                    <p><span class="label"><b>Origin: </b></span><span class="value">{{ viewCustWorkInfo.timeLifeOrigin ? viewCustWorkInfo.timeLifeOrigin : '-' }}</span></p>
+                                </div>                                               
+                            </div>
+                            <div *ngIf="viewCustWorkInfo.isTimeLife" class="table-responsive form-group col-sm-12">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th colspan="15" class="text-center"><strong>Time Life Info</strong></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th></th>
+                                            <th class="text-center">Cycles</th>
+                                            <th class="text-center">Time</th>
+                                            <th class="text-center">Last</th>
+                                        </tr>
+                                        <tr>
+                                            <td><b>Remaining</b></td>
+                                            <td class="clr2 text-center">
+                                                <span>{{timeLifeInfo.cyclesRemaining ? timeLifeInfo.cyclesRemaining : '-'}}</span>
+                                            </td>
+                                            <td class="clr2 text-center"><span>{{timeLifeInfo.timeRemaining ? timeLifeInfo.timeRemaining : '-'}}</span></td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>Since New</b></td>
+                                            <td class="clr2 text-center"><span>{{timeLifeInfo.cyclesSinceNew ? timeLifeInfo.cyclesSinceNew : '-'}}</span></td>
+                                            <td class="clr2 text-center"><span>{{timeLifeInfo.timeSinceNew ? timeLifeInfo.timeSinceNew : '-'}}</span></td>
+                                            <td class="clr2 text-center"><span>{{timeLifeInfo.lastSinceNew ? timeLifeInfo.lastSinceNew : '-'}}</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>Since Ovh</b></td>
+                                            <td class="clr2 text-center"><span>{{timeLifeInfo.cyclesSinceOVH ? timeLifeInfo.cyclesSinceOVH : '-'}}</span></td>
+                                            <td class="clr2 text-center"><span>{{timeLifeInfo.timeSinceOVH ? timeLifeInfo.timeSinceOVH : '-'}}</span></td>
+                                            <td class="clr2 text-center"><span>{{timeLifeInfo.lastSinceOVH ? timeLifeInfo.lastSinceOVH : '-'}}</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>Since Insp</b></td>
+                                            <td class="clr2 text-center"><span>{{timeLifeInfo.cyclesSinceInspection ? timeLifeInfo.cyclesSinceInspection : '-'}}</span></td>
+                                            <td class="clr2 text-center"><span>{{timeLifeInfo.timeSinceInspection ? timeLifeInfo.timeSinceInspection : '-'}}</span></td>
+                                            <td class="clr2 text-center"><span>{{timeLifeInfo.lastSinceInspection ? timeLifeInfo.lastSinceInspection : '-'}}</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>Since Repair</b></td>
+                                            <td class="clr2 text-center"><span>{{timeLifeInfo.cyclesSinceRepair ? timeLifeInfo.cyclesSinceRepair : '-'}}</span></td>
+                                            <td class="clr2 text-center"><span>{{timeLifeInfo.timeSinceRepair ? timeLifeInfo.timeSinceRepair : '-'}}</span></td>
+                                            <td></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>

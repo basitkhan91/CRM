@@ -186,6 +186,7 @@ namespace DAL
         public DbSet<ACH> ACH { get; set; }
 
         public DbSet<ItemMasterCapes> ItemMasterCapes { get; set; }
+        public DbSet<ItemMasterCapesAudit> ItemMasterCapesAudit { get; set; }
         public DbSet<VendorCapes> VendorCapes { get; set; }
 
         public DbSet<Warning> Warning { get; set; }
@@ -498,6 +499,8 @@ namespace DAL
         public DbSet<VendorInternationalShippingAudit> VendorInternationalShippingAudit { get; set; }
         public DbSet<VendorInternationalShipViaDetails> VendorInternationalShipViaDetails { get; set; }
         public DbSet<VendorInternationalShipViaDetailsAudit> VendorInternationalShipViaDetailsAudit { get; set; }
+        public DbSet<VendorContactATAMapping> VendorContactATAMapping { get; set; }
+        public DbSet<VendorContactATAMappingAudit> VendorContactATAMappingAudit { get; set; }
 
 
 

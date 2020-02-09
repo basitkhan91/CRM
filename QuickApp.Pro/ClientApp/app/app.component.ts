@@ -29,6 +29,7 @@ import { CustomerService } from "./services/customer.service";
 import { Globals } from './globals';
 import { MenuItem } from "primeng/components/common/menuitem"; //Bread crumb
 import { VendorService } from "./services/vendor.service";
+import { LegalEntityService } from "./services/legalentity.service";
 
 @Component({
     selector: "quickapp-pro-app",
@@ -95,6 +96,7 @@ export class AppComponent implements OnInit, AfterViewInit {
         public router: Router,
         public dialog: MatDialog,
         private vendorService: VendorService,
+        private entityService: LegalEntityService,
         changeDetectorRef: ChangeDetectorRef,
 
         media: MediaMatcher, private customerService: CustomerService, private globals: Globals) {
@@ -313,7 +315,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                     {
                         label: 'Customer Work', items: [
                             { label: 'Customer Work List', routerLink: '/receivingmodule/receivingpages/app-customer-works-list' },
-                            { label: 'Create Customer', routerLink: '/receivingmodule/receivingpages/app-customer-work-setup' }
+                            { label: 'Create Customer Work', routerLink: '/receivingmodule/receivingpages/app-customer-work-setup' }
                         ]
                     },
                     { label: 'Purchase Order', routerLink: '/receivingmodule/receivingpages/app-purchase-order' },
@@ -462,6 +464,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                     {
                         label: 'Organisation', items: [
                             { label: 'Legal Entity List', routerLink: '/generalledgermodule/generalledgerpage/app-legal-entity-list' },
+                            { label: 'Create Entity', command: (event?: any) => { this.newLegalEntityClick(); } },
                             { label: 'Legal Structure', routerLink: '/#' },
                             { label: 'Management Structure', routerLink: '/generalledgermodule/generalledgerpage/app-managemententity-structure' },
                         ]
@@ -796,6 +799,17 @@ export class AppComponent implements OnInit, AfterViewInit {
 
         // location.assign(url);
         this.vendorService.checkVendorEditmode(false);
+    }
+    ///generalledgermodule/generalledgerpage / app - legal - entity - list
+    newLegalEntityClick() {
+        this.entityService.isEditMode = false;
+        this.entityService.ShowPtab = true;
+        this.entityService.currentUrl = '/generalledgermodule/generalledgerpage/legal-entity-general-information';
+        this.entityService.bredcrumbObj.next(this.vendorService.currentUrl);
+        this.entityService.alertObj.next(this.vendorService.ShowPtab);
+        this.router.navigateByUrl('/generalledgermodule/generalledgerpage/legal-entity-general-information');
+        this.entityService.listCollection = undefined;
+        this.entityService.checkEntityEditmode(false);
     }
 
     initNotificationsLoading() {

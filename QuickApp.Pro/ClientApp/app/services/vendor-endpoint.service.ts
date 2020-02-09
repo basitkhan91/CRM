@@ -1719,5 +1719,30 @@ export class VendorEndpointService extends EndpointFactory {
 		return this.http.post(`${this.configurations.baseUrl}${this.excelUploadPayment}?vendorId=${vendorId}`, file)
 
 	}
+	getInternationalShippingByVendorId(vendorId){
+		return this.http.get<any>(`${this.configurations.baseUrl}/api/Vendor/internationalshippingdetaillist?VendorId=${vendorId}`)
+	}
+	postInternationalShipping(data){
+		return this.http.post(`${this.configurations.baseUrl}/api/Vendor/createinternationalshipping`, JSON.stringify(data), this.getRequestHeaders())
+	}
 
+	updateInternationalShipping(data){
+		return this.http.post(`${this.configurations.baseUrl}/api/Vendor/createinternationalshipping`, JSON.stringify(data), this.getRequestHeaders())	
+	}
+	getInternationalShippingById(vendorInternationalShippingId){
+		return this.http.get<any>(`${this.configurations.baseUrl}/api/Vendor/internationalshippingdetailsbyid/${vendorInternationalShippingId}`, this.getRequestHeaders())
+	}
+	getVendorInternationalAuditHistory( vendorInternationalShippingId){
+		return this.http.get<any>(`${this.configurations.baseUrl}/api/Vendor/internationalshippingaudit/${vendorInternationalShippingId}`, this.getRequestHeaders());
+	}
+
+	deleteVendorInternationalShipping(vendorId, updatedBy){
+		return this.http.delete(`${this.configurations.baseUrl}/api/Vendor/deleteinternationalshipping?id=${vendorId}&updatedBy=${updatedBy}`, this.getRequestHeaders())
+	}
+
+	updateStatusForInternationalShipping(vendorInternationalShippingId , status, updatedBy){
+		return this.http.put(`${this.configurations.baseUrl}/api/Vendor/internationalshippingstatusupdate?id=${vendorInternationalShippingId}&status=${status}&updatedBy=${updatedBy}`, {}, this.getRequestHeaders());
+
+	}
+	
 }

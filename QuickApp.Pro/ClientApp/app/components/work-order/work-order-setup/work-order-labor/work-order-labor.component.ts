@@ -440,6 +440,14 @@ console.log(this.workOrderLaborList);
     }
   }
 
+  tmchange(){
+    for(let t in this.laborForm.workOrderLaborList[0]){
+      for(let mData of this.laborForm.workOrderLaborList[0][t]){
+        mData.billingMethodId = Number(this.laborForm['costPlusType']);
+      }
+    }
+  }
+
   markupChanged(matData, type) {
       try {
         this.markupList.forEach((markup)=>{
@@ -450,7 +458,7 @@ console.log(this.workOrderLaborList);
           else if(type == 'all' && markup.value == this.overAllMarkup){
             for(let t in this.laborForm.workOrderLaborList[0]){
               for(let mData of this.laborForm.workOrderLaborList[0][t]){
-                if(mData['billingMethod'] == 'T&M'){
+                if(mData['billingMethodId'] == 1){
                   mData.markupPercentageId = this.overAllMarkup;
                   mData['billingRate'] = (mData['totalCostPerHour']) + (((mData['totalCostPerHour']) / 100) * Number(markup.label))
                   mData['billingAmount'] = Number(mData['billingRate']) * Number(mData.hours);

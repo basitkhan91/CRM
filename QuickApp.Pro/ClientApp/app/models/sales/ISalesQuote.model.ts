@@ -4,6 +4,7 @@ import { ICustomerType } from "./ICustomerType";
 import { ICreditTerm } from "./ICreditTerm";
 import { ISalesProbablity } from "./ISalesProbablity";
 import { ILeadSource } from "./ILeadSource";
+import { IStatus } from "./IStatus";
 
 export interface ISalesQuote {
   salesOrderQuoteId: number;
@@ -86,6 +87,10 @@ export interface ISalesQuote {
   memo: string;
 
   notes: string;
+  
+  statusId: number;
+
+  statusChangeDate: Date;
 
   priorities: IPriority[];
 
@@ -98,4 +103,6 @@ export interface ISalesQuote {
   salesProbablity: ISalesProbablity[];
 
   leadSources: ILeadSource[];
+
+  status: IStatus[];
 }

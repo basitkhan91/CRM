@@ -856,7 +856,28 @@ export class VendorService {
     PaymentCheckUpload(file, vendorId) {
         return this.actionEndpoint.VendorCheckPaymentFileUpload(file, vendorId);
     }
+    getInternationalShippingByVendorId(vendorId){
+        return this.actionEndpoint.getInternationalShippingByVendorId(vendorId)
+    }
+    postInternationalShipping(data){
+        return this.actionEndpoint.postInternationalShipping(data);
+    }
 
+    updateInternationalShipping(data){
+        return this.actionEndpoint.updateInternationalShipping(data);
+    }
+    getInternationalShippingById(vendorInternationalShippingId){
+        return this.actionEndpoint.getInternationalShippingById(vendorInternationalShippingId)
+    }
+    getVendorInternationalAuditHistory(vendorInternationalShippingId){
+        return this.actionEndpoint.getVendorInternationalAuditHistory(vendorInternationalShippingId);
+    }
+    deleteVendorInternationalShipping(vendorId, updatedBy){
+        return this.actionEndpoint.deleteVendorInternationalShipping(vendorId, updatedBy);
+    }
+    updateStatusForInternationalShipping(vendorInternationalShippingId , status, updatedBy){
+        return this.actionEndpoint.updateStatusForInternationalShipping(vendorInternationalShippingId , status, updatedBy);
+    }
 
 }
 

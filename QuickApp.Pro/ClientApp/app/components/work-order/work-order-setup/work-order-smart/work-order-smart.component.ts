@@ -38,6 +38,7 @@ export class WorkOrderSmartComponent implements OnInit {
     workOrderStatusList: any;
     partNumberOriginalData: Object;
     workOrderId: any;
+    recCustmoerId: any;
     editWorkOrderGeneralInformation: any;
     workOrderGeneralInformation: workOrderGeneralInfo = new workOrderGeneralInfo();
     isEdit: boolean = false;
@@ -84,14 +85,26 @@ export class WorkOrderSmartComponent implements OnInit {
         } else {
             // get the workOrderId on Edit Mode
             this.workOrderId = this.acRouter.snapshot.params['id'];
+            this.recCustmoerId = this.acRouter.snapshot.params['rcustid'];
+
         }
 
-        if (this.workOrderId) {
-            this.workOrderService.getWorkOrderById(this.workOrderId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
+        if (this.workOrderId || this.recCustmoerId) {
+            if (this.recCustmoerId) {
+                this.showTabsGrid = false;
+                this.workOrderId = 0;
+            }
+            else {
+
+                this.recCustmoerId = 0;
+            }
+            this.workOrderService.getWorkOrderById(this.workOrderId, this.recCustmoerId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
 
                 this.getPartNosByCustomer(res.customerId);
 
                 this.isEdit = true;
+                
+                    
                 const workOrderData = res;
                 const data = {
                     ...res,
@@ -207,9 +220,11 @@ export class WorkOrderSmartComponent implements OnInit {
         })
     }
 
-    getPartNosByCustomer(customerId) {
+    async getPartNosByCustomer(customerId) {
         this.partNumberOriginalData = null;
-        this.workOrderService.getPartNosByCustomer(customerId).subscribe(res => {
+        //this.workOrderService.getPartNosByCustomer(customerId).subscribe(res => {
+        await this.workOrderService.getPartNosByCustomer(customerId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
+
             this.partNumberOriginalData = res;
         });
     }

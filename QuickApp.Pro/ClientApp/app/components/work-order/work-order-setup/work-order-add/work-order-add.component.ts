@@ -58,6 +58,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     // workOrderPartNumbers: WorkOrderPartNumber[];
 
     @Input() isEdit;
+   
     @Input() workOrderTypes;
     @Input() workOrderStatusList;
     @Input() creditTerms;
@@ -88,6 +89,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     // creditTerms: any;
     // customers: Customer[];
     //partNumberOriginalData: any;
+    isRecCustomer: boolean;
     selectedCustomer: Customer;
     selectedEmployee: any;
     selectedsalesPerson: any;
@@ -244,6 +246,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
         this.createModeData();
 
         //  this.showTabsGrid = true;
+
         this.workOrderService.creditTerms = this.creditTerms;
         // this.workOrderService.employeesOriginalData = this.employeesOriginalData;
         this.mpnFlag = true;
@@ -267,16 +270,17 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
                 this.isEditLabor = true;
                 this.addMPN();
                 this.getAllGridModals();
-
+                this.isRecCustomer = false;
 
 
             } else { // edit WorkOrder
 
                 
-
+                
                 console.log(this.workOrderGeneralInformation);
                 this.getWorkOrderQuoteDetail(this.workOrderGeneralInformation.workOrderId, this.workOrderGeneralInformation.workFlowWorkOrderId);
                 const data = this.workOrderGeneralInformation;
+                this.isRecCustomer = data.isRecCustomer;
                 this.commonService.getManagementStructureDetails(data.managementStructureId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
                     this.selectedLegalEntity(res.Level1);
                     this.selectedBusinessUnit(res.Level2);
@@ -340,7 +344,8 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
                 this.savedWorkOrderData = this.workOrderGeneralInformation;
                 this.getWorkOrderWorkFlowNos();
                 // this.billingCreateOrEdit();
-               
+                if (this.isRecCustomer)
+                    this.showTabsGrid = false;
                  
             }
         } else {
@@ -625,7 +630,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
             })
         };
 
-        if (this.isEdit) {
+        if (this.isEdit && this.isRecCustomer===false) {
             this.workOrderService.updateNewWorkOrder(data).pipe(takeUntil(this.onDestroy$)).subscribe(
                 result => {
                     this.saveWorkOrderGridLogic(result, generalInfo)

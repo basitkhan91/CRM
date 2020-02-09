@@ -22,6 +22,7 @@ import { CommonService } from '../../../../services/common.service';
 import { TableModule, Table } from 'primeng/table';
 import { MenuItem } from 'primeng/api';
 import { StocklineService } from '../../../../services/stockline.service';
+import * as $ from 'jquery';
 @Component({
     selector: 'app-customer-works-list',
     templateUrl: './customer-works-list.component.html',
@@ -65,22 +66,36 @@ export class CustomerWorksListComponent implements OnInit {
     public divsioname: any;
     public biuName: any;
     public compnayname: any;
+    currentStatusCW: number = 1;
     breadcrumbs: MenuItem[] = [
         { label: 'Receiving' },
         { label: 'Customer Work' },
         { label: 'Customer Work List' }
     ];
-    cols = [
-             
-    { field: 'receivingNumber', header: 'Recev.No.' },
-    //{ field: 'workOrderNum', header: 'WorkOrderNum' },
+    cols = [             
+    { field: 'receivingNumber', header: 'Receiver Num' },
+    { field: 'receivedDate', header: 'Received Date' },
+    { field: 'woNumber', header: 'WO Num' },
+    { field: 'woOpenDate', header: 'WO Open Date' },
     { field: 'partNumber', header: 'PN' },
     { field: 'partDescription', header: 'PN Description' },
-
-    { field: 'changePartNumber', header: 'Change Part Number' },
-    { field: 'employeeName', header: 'Employee Name' },
     { field: 'customerName', header: 'Customer Name' },
-    { field: 'customerReference', header: 'Customer Reference' },
+    { field: 'stageCode', header: 'Stage Code' },
+    { field: 'status', header: 'Status' },
+    { field: 'levelCode1', header: 'Level 01' },
+    { field: 'levelCode2', header: 'Level 02' },
+    { field: 'levelCode3', header: 'Level 03' },
+    { field: 'levelCode4', header: 'Level 04' }
+
+    // { field: 'receivingNumber', header: 'Recev.No.' },
+    // //{ field: 'workOrderNum', header: 'WorkOrderNum' },
+    // { field: 'partNumber', header: 'PN' },
+    // { field: 'partDescription', header: 'PN Description' },
+
+    // { field: 'changePartNumber', header: 'Change Part Number' },
+    // { field: 'employeeName', header: 'Employee Name' },
+    // { field: 'customerName', header: 'Customer Name' },
+    // { field: 'customerReference', header: 'Customer Reference' },
 ];
     selectedColumns = this.cols;
     viewCustWorkInfo: any = {};
@@ -135,14 +150,15 @@ export class CustomerWorksListComponent implements OnInit {
                 this.totalRecords = 0;
                 this.totalPages = 0;
             }
-
         })
     }
    
-
-      
-
-    
+    getCustWorkStatus(value) {
+        // this.lazyLoadEventData.filters = {...this.lazyLoadEventData.filters, status: value}
+        // //const data = {...this.lazyLoadEventData.filters, status: value}
+        // this.getList(this.lazyLoadEventData);
+    }
+        
     private onDataLoadSuccessful(allWorkFlows: any[]) {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
@@ -158,6 +174,8 @@ export class CustomerWorksListComponent implements OnInit {
     }
 
     openView(rowData) {
+        this.viewCustWorkInfo = {};
+        this.timeLifeInfo = {};
         console.log(rowData);   
         const {receivingCustomerWorkId} = rowData;
         this.receivingCustomerWorkService.getCustomerWorkdataById(receivingCustomerWorkId).subscribe(res => {
@@ -170,10 +188,15 @@ export class CustomerWorksListComponent implements OnInit {
                 timeLifeDate: res.timeLifeDate ? new Date(res.timeLifeDate) : '',
             }
             this.getManagementStructureCodes(res.managementStructureId);
-            if(res.timeLifeCyclesId != null  || res.timeLifeCyclesId != 0) {
+            if(res.timeLifeCyclesId != null  && res.timeLifeCyclesId != 0 && res.timeLifeCyclesId != undefined) {
                 this.getTimeLifeOnEdit(res.timeLifeCyclesId);
             } 
         });
+    }
+
+    viewSelectedRowdbl(rowData) {
+        this.openView(rowData);
+        $('#cusView').modal('show');
     }
 
     getManagementStructureCodes(id) {
@@ -548,9 +571,17 @@ export class CustomerWorksListComponent implements OnInit {
         else {
             this.table.reset();
         }
-      
-
     }
 
-    
+    enableDateFilter(el) {
+        if (el.value === '') { el.classList.add("hidePlaceHolder"); }
+        else el.classList.remove("hidePlaceHolder");
+    }
+
+    gotoWorkOrder(rowData) {
+        console.log(rowData);
+        const { receivingCustomerWorkId } = rowData;
+       // this._route.navigateByUrl(`/workordersmodule/workorderspages/app-work-order-edit/${receivingCustomerWorkId}`);
+        this._route.navigateByUrl(`/workordersmodule/workorderspages/app-work-order-receivingcustworkid/${receivingCustomerWorkId}`);
+    }
 }

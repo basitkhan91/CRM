@@ -310,6 +310,32 @@ namespace DAL.Repositories
             return data;
         }
 
+        public object GetEntityDataById(long entityId)
+        {
+            var result = (from t in _appContext.LegalEntity
+                          join ad in _appContext.Address on t.AddressId equals ad.AddressId
+                          join cont in _appContext.Countries on Convert.ToInt32(ad.Country) equals cont.countries_id into country
+                          from cont in country.DefaultIfEmpty()
+                          join cu in _appContext.Currency on t.ReportingCurrencyId equals cu.CurrencyId into cuu
+                          from cu in cuu.DefaultIfEmpty()
+                          join funcCur in _appContext.Currency on t.FunctionalCurrencyId equals funcCur.CurrencyId into repCur
+                          from cfuncCur in repCur.DefaultIfEmpty()
+                          where (t.IsDeleted == false || t.IsDeleted == null) && t.LegalEntityId == entityId
+                          select new
+                          {
+                              t,
+                              Address1 = ad.Line1,
+                              Address2 = ad.Line2,
+                              ad.City,
+                              ad.StateOrProvince,
+                              ad.PostalCode,
+                              Country = cont.countries_name,
+                              CountryId = cont.countries_id,
+                              currency = cu.Symbol,
+                          }).FirstOrDefault();
+            return result;
+        }
+
         public long CreateLegalEntityBillingAddress(LegalEntityBillingAddress billingAddress)
         {
             try

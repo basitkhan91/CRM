@@ -1087,6 +1087,7 @@ namespace DAL.Repositories
                 WorkOrder workOrder = _appContext.Set<WorkOrder>().Where(x => x.WorkOrderId == workOrderId).FirstOrDefault();
                 if (workOrder != null)
                 {
+                    workOrder.isRecCustomer = false;
                     workOrder.PartNumbers = _appContext.Set<WorkOrderPartNumber>().Where(x => x.WorkOrderId == workOrderId && x.IsDeleted == false).OrderBy(x => x.ID).ToList();
 
                     if (workOrder.PartNumbers != null && workOrder.PartNumbers.Count > 0)
@@ -1173,7 +1174,14 @@ namespace DAL.Repositories
                     var recevingCustomer = _appContext.ReceivingCustomerWork.Where(p => p.ReceivingCustomerWorkId == receivingCustomerId).FirstOrDefault();
                     var customer = _appContext.Customer.Where(p => p.CustomerId == recevingCustomer.CustomerId).FirstOrDefault();
 
+                    workOrder.isRecCustomer = true;
+                    workOrder.WorkOrderNum = "";
+                    workOrder.WorkOrderTypeId = 1;
+                    workOrder.IsSinglePN = true;
+                    workOrder.WorkOrderStatusId = 1;
+                    workOrder.OpenDate = DateTime.Now;
                     workOrder.CustomerId = recevingCustomer.CustomerId;
+                    workOrder.EmployeeId = recevingCustomer.EmployeeId;
                     workOrder.ReceivingCustomerWorkId = receivingCustomerId;
                     workOrder.CustomerReference = workOrder.CustomerDetails.CustomerRef = recevingCustomer.Reference;
                     workOrder.CustomerDetails.CustomerName = customer.Name;
@@ -1203,6 +1211,12 @@ namespace DAL.Repositories
                         workOrderPart.MasterPartId = recevingCustomer.ItemMasterId;
                         workOrderPart.ConditionId = recevingCustomer.ConditionId;
                         workOrderPart.StockLineId =Convert.ToInt64(recevingCustomer.StockLineId);
+                        workOrderPart.EstimatedCompletionDate= DateTime.Now;
+                        workOrderPart.EstimatedShipDate= DateTime.Now; ;
+                        workOrderPart.CustomerRequestDate= DateTime.Now;
+                        workOrderPart.PromisedDate = DateTime.Now;
+
+
 
                     }
 
@@ -4059,30 +4073,26 @@ namespace DAL.Repositories
                                 woc.Quantity,
                                 woc.UnitCost,
                                 woc.ExtendedCost,
-                                woc.UnitPrice,
-                                woc.ExtendedPrice,
                                 woc.VendorId,
                                 v.VendorName,
-                                woc.Amount,
-                                woc.CostPlusAmount,
                                 woc.CreatedBy,
                                 woc.CreatedDate,
-                                woc.FixedAmount,
-                                woc.InvoiceNo,
                                 woc.IsActive,
                                 woc.IsDeleted,
                                 woc.MarkupPercentageId,
                                 woc.MasterCompanyId,
-                                woc.RoNumberId,
                                 woc.UpdatedBy,
                                 woc.UpdatedDate,
                                 woc.WorkOrderQuoteDetailsId,
                                 woc.WorkOrderQuoteChargesId,
                                 WorkflowChargeTypeId = woc.ChargesTypeId,
-                                woc.ChargesCostPlus,
                                 woc.TaskId,
                                 TaskName = ts == null ? "" : ts.Description,
                                 woc.MarkupFixedPrice,
+                                woc.BillingMethodId,
+                                woc.TMAmount,
+                                woc.FlateRate,
+                                woc.HeaderMarkupId,
                             }
                           ).Distinct().ToList();
                 return list;
@@ -4191,10 +4201,6 @@ namespace DAL.Repositories
                                                   OemPmaDer = im.PMA == true && im.DER == true ? "PMA&DER" : (im.PMA == true && im.DER == false ? "PMA" : (im.PMA == false && im.DER == true ? "DER" : "")),
                                                   wom.UnitCost,
                                                   wom.MarkupPercentageId,
-                                                  wom.Price,
-                                                  wom.ExtendedPrice,
-                                                  wom.MaterialCostPlus,
-                                                  wom.FixedAmount,
                                                   wom.WorkOrderQuoteDetailsId,
                                                   wom.WorkOrderQuoteMaterialId,
                                                   wom.ItemClassificationId,
@@ -4202,6 +4208,10 @@ namespace DAL.Repositories
                                                   wom.TaskId,
                                                   TaskName = ts == null ? "" : ts.Description,
                                                   wom.MarkupFixedPrice,
+                                                  wom.BillingMethodId,
+                                                  wom.TMAmount,
+                                                  wom.FlateRate,
+                                                  wom.HeaderMarkupId,
 
                                               }).Distinct().ToList();
 
@@ -4302,10 +4312,6 @@ namespace DAL.Repositories
                                  join l in _appContext.WorkOrderQuoteLabor on lh.WorkOrderQuoteLaborHeaderId equals l.WorkOrderQuoteLaborHeaderId
                                  join deby in _appContext.Employee on lh.DataEnteredBy equals deby.EmployeeId into lhdeby
                                  from deby in lhdeby.DefaultIfEmpty()
-                                 join exp in _appContext.ExpertiseType on lh.ExpertiseId equals exp.ExpertiseTypeId into lhexp
-                                 from exp in lhexp.DefaultIfEmpty()
-                                 join emp in _appContext.Employee on lh.EmployeeId equals emp.EmployeeId into lhemp
-                                 from emp in lhemp.DefaultIfEmpty()
                                  where lh.IsDeleted == false && lh.WorkOrderQuoteDetailsId == workOrderQuoteDetailsId
                                  && wq.BuildMethodId == buildMethodId
                                  select new
@@ -4313,58 +4319,47 @@ namespace DAL.Repositories
                                      lh.CreatedBy,
                                      lh.CreatedDate,
                                      lh.DataEnteredBy,
-                                     lh.EmployeeId,
-                                     lh.HoursorClockorScan,
                                      lh.IsActive,
                                      lh.IsDeleted,
-                                     lh.IsTaskCompletedByOne,
-                                     lh.LabourMemo,
                                      lh.MasterCompanyId,
                                      lh.UpdatedBy,
                                      lh.UpdatedDate,
                                      lh.WorkOrderQuoteDetailsId,
-                                     lh.WorkOrderHoursType,
                                      lh.WorkOrderQuoteLaborHeaderId,
-                                     lh.ExpertiseId,
-                                     lh.TotalWorkHours,
                                      DataEnteredByName = deby.FirstName,
-                                     ExpertiseType = exp.Description,
                                      lh.MarkupFixedPrice,
-                                     EmployeeName = emp.FirstName,
+                                     lh.HeaderMarkupId,
                                      LaborList = (from wol in _appContext.WorkOrderQuoteLabor
                                                   join exp in _appContext.ExpertiseType on wol.ExpertiseId equals exp.ExpertiseTypeId into wolexp
                                                   from exp in wolexp.DefaultIfEmpty()
-                                                  join emp in _appContext.Employee on wol.EmployeeId equals emp.EmployeeId into wolemp
-                                                  from emp in wolemp.DefaultIfEmpty()
+                                                  
                                                   join task in _appContext.Task.Where(p => p.IsActive == true && p.IsDelete == false) on wol.TaskId equals task.TaskId into woltask
                                                   from task in woltask.DefaultIfEmpty()
                                                   where wol.WorkOrderQuoteLaborHeaderId == lh.WorkOrderQuoteLaborHeaderId
                                                   select new
                                                   {
-                                                      wol.AdjustedHours,
-                                                      wol.Adjustments,
                                                       wol.BillableId,
                                                       wol.CreatedBy,
                                                       wol.CreatedDate,
-                                                      wol.EmployeeId,
-                                                      wol.EndDate,
                                                       wol.ExpertiseId,
                                                       Expertise = exp.Description,
                                                       wol.Hours,
                                                       wol.IsActive,
                                                       wol.IsDeleted,
-                                                      wol.Memo,
-                                                      wol.StartDate,
                                                       wol.TaskId,
                                                       Task = task.Description,
                                                       wol.UpdatedBy,
                                                       wol.UpdatedDate,
                                                       wol.WorkOrderQuoteLaborHeaderId,
                                                       wol.WorkOrderQuoteLaborId,
-                                                      EmployeeName = emp.FirstName,
                                                       wol.DirectLaborOHCost,
                                                       wol.MarkupPercentageId,
-                                                      wol.LabourCostPlus
+                                                      wol.BurdenRateAmount,
+                                                      wol.TotalCostPerHour,
+                                                      wol.TotalCost,
+                                                      wol.BillingMethodId,
+                                                      wol.BillingRate,
+                                                      wol.BillingAmount
                                                   }
                                                  ).Distinct().ToList()
                                  }

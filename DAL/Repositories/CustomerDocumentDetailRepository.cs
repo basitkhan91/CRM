@@ -86,6 +86,7 @@ namespace DAL.Repositories
                         where v.AttachmentId == Id && v.ReferenceId == customerId && v.ModuleId==moduleId
                         select new
                         {
+                            v.AuditDocumentId,
                              v.AttachmentId,
                             v.MasterCompanyId,
                             v.CreatedBy,
@@ -95,8 +96,7 @@ namespace DAL.Repositories
                             v.DocMemo,
                             v.DocName,
                             v.UpdatedDate,
-                            v.IsActive,
-                          
+                            v.IsActive,                          
                             v.FileName,
                             v.Link,
                             v.Description
@@ -119,7 +119,7 @@ namespace DAL.Repositories
 
 
 
-                        }).OrderByDescending(p => p.UpdatedDate).ToList();
+                        }).OrderByDescending(p => p.AuditDocumentId).ToList();
             return data;
         }
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;

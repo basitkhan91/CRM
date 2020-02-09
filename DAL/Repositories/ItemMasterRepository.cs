@@ -425,10 +425,10 @@ namespace DAL.Repositories
         public IEnumerable<object> getLegalEntityAccountsData(long value)
         {
             var data = (from e in _appContext.LegalEntity
-                        //join dw in _appContext.DomesticWirePayment on e.DomesticWirePaymentId equals dw.DomesticWirePaymentId into domesticwire
-                        //from domeswire in domesticwire.DefaultIfEmpty()
-                        //join iw in _appContext.InternationalWirePayment on e.InternationalWirePaymentId equals iw.InternationalWirePaymentId into interwire
-                        //from internalwire in interwire.DefaultIfEmpty()
+                            //join dw in _appContext.DomesticWirePayment on e.DomesticWirePaymentId equals dw.DomesticWirePaymentId into domesticwire
+                            //from domeswire in domesticwire.DefaultIfEmpty()
+                            //join iw in _appContext.InternationalWirePayment on e.InternationalWirePaymentId equals iw.InternationalWirePaymentId into interwire
+                            //from internalwire in interwire.DefaultIfEmpty()
                         join ach in _appContext.ACH on e.ACHId equals ach.ACHId into achdetails
                         from achdata in achdetails.DefaultIfEmpty()
 
@@ -858,7 +858,7 @@ namespace DAL.Repositories
                             PP_VendorListPrice = iM.PP_VendorListPrice,
                             SP_CalSPByPP_BaseSalePrice = iM.SP_CalSPByPP_BaseSalePrice,
                             SP_CalSPByPP_LastMarkUpDate = iM.SP_CalSPByPP_LastMarkUpDate,
-                            SP_CalSPByPP_LastSalesDiscDate= iM.SP_CalSPByPP_LastSalesDiscDate,
+                            SP_CalSPByPP_LastSalesDiscDate = iM.SP_CalSPByPP_LastSalesDiscDate,
                             SP_CalSPByPP_MarkUpAmount = iM.SP_CalSPByPP_MarkUpAmount,
                             SP_CalSPByPP_MarkUpPercOnListPrice = iM.SP_CalSPByPP_MarkUpPercOnListPrice,
                             SP_CalSPByPP_SaleDiscAmount = iM.SP_CalSPByPP_SaleDiscAmount,
@@ -1301,6 +1301,46 @@ namespace DAL.Repositories
             }
         }
 
+        public object ItemMasterCapesById(long itemMasterCapesId)
+        {
+            var result = (from imc in _appContext.ItemMasterCapes
+                          join cty in _appContext.capabilityType on imc.CapabilityTypeId equals cty.CapabilityTypeId into ctyg
+                          from cty in ctyg.DefaultIfEmpty()
+                          join im in _appContext.ItemMaster on imc.ItemMasterId equals im.ItemMasterId into img
+                          from im in img.DefaultIfEmpty()
+                          join ma in _appContext.Manufacturer on im.ManufacturerId equals ma.ManufacturerId into mag
+                          from ma in mag.DefaultIfEmpty()
+                          join ver in _appContext.Employee on imc.VerifiedById equals ver.EmployeeId into imcver
+                          from ver in imcver.DefaultIfEmpty()
+
+                          where imc.ItemMasterCapesId == itemMasterCapesId && imc.IsDeleted == false
+                          select new
+                          {
+                              imc.CapabilityTypeId,
+                              imc.CreatedBy,
+                              imc.CreatedDate,
+                              imc.IsActive,
+                              imc.IsDeleted,
+                              imc.IsVerified,
+                              imc.ItemMasterCapesId,
+                              imc.ItemMasterId,
+                              imc.ManagementStructureId,
+                              imc.MasterCompanyId,
+                              imc.Memo,
+                              imc.UpdatedBy,
+                              imc.UpdatedDate,
+                              imc.VerifiedById,
+                              imc.VerifiedDate,
+                              CapabilityType = cty.Description,
+                              im.PartNumber,
+                              im.PartDescription,
+                              Manufacturer = ma.Name,
+                              VerifiedBy = ver != null ? string.Concat(ver.FirstName + " " + ver.LastName) : "",
+                          }).FirstOrDefault();
+
+            return result;
+        }
+
         public void DeleteItemMasterCapes(long itemMasterCapesId, string updatedBy)
         {
             ItemMasterCapes itemMasterCapes = new ItemMasterCapes();
@@ -1324,6 +1364,79 @@ namespace DAL.Repositories
             }
         }
 
+        public IEnumerable<object> ItemMasterCapsAudit(long itemMasterCapesId)
+        {
+            var list = (from imc in _appContext.ItemMasterCapesAudit
+                        join im in _appContext.ItemMaster on imc.ItemMasterId equals im.ItemMasterId
+                        join ct in _appContext.capabilityType on imc.CapabilityTypeId equals ct.CapabilityTypeId
+                        join ver in _appContext.Employee on imc.VerifiedById equals ver.EmployeeId into imcver
+                        from ver in imcver.DefaultIfEmpty()
+                        where imc.ItemMasterCapesId == itemMasterCapesId
+                        select new ItemMasterCapesAuditModel
+                        {
+                            AuditItemMasterCapesId= imc.AuditItemMasterCapesId,
+                            ItemMasterCapesId = imc.ItemMasterCapesId,
+                            partNo = im.PartNumber,
+                            pnDiscription = im.PartDescription,
+                            capabilityType = ct.Description,
+                            isVerified = imc.IsVerified,
+                            verifiedBy = ver == null ? "" : ver.FirstName,
+                            verifiedDate = imc.VerifiedDate,
+                            memo = imc.Memo,
+                            createdDate = imc.CreatedDate,
+                            isActive = imc.IsActive,
+                            ManagementStrId = imc.ManagementStructureId,
+                            UpdatedBy=imc.UpdatedBy,
+                            UpdatedDate=imc.UpdatedDate,
+                            level1 = "",
+                            level2 = "",
+                            level3 = "",
+                            level4 = "",
+                        }).OrderByDescending(p => p.AuditItemMasterCapesId).ToList();
+
+            if (list != null && list.Count() > 0)
+            {
+                string level1 = string.Empty;
+                string level2 = string.Empty;
+                string level3 = string.Empty;
+                string level4 = string.Empty;
+
+                foreach (var item in list)
+                {
+                    level1 = string.Empty;
+                    level2 = string.Empty;
+                    level3 = string.Empty;
+                    level4 = string.Empty;
+
+                    Dictionary<string, string> keyValuePairs = GetManagementStructureCodes(item.ManagementStrId);
+                    if (keyValuePairs != null && keyValuePairs.Count > 0)
+                    {
+                        if (keyValuePairs.TryGetValue("Level1", out level1))
+                            item.level1 = level1;
+                        else
+                            item.level1 = string.Empty;
+
+                        if (keyValuePairs.TryGetValue("Level2", out level2))
+                            item.level2 = level2;
+                        else
+                            item.level2 = string.Empty;
+
+                        if (keyValuePairs.TryGetValue("Level3", out level3))
+                            item.level3 = level3;
+                        else
+                            item.level3 = string.Empty;
+
+                        if (keyValuePairs.TryGetValue("Level4", out level4))
+                            item.level4 = level4;
+                        else
+                            item.level4 = string.Empty;
+                    }
+
+                }
+            }
+            return list;
+        }
+
         public IEnumerable<object> GetItemMasterCapes(Common.Filters<ItemMasterCapesFilters> capesFilters)
         {
 
@@ -1340,7 +1453,7 @@ namespace DAL.Repositories
                 var sorts = new Sorts<ItemMasterCapesFilters>();
                 var filters = new EntityFrameworkPaginate.Filters<ItemMasterCapesFilters>();
 
-                
+
 
                 if (string.IsNullOrEmpty(capesFilters.SortField))
                 {
@@ -1364,11 +1477,11 @@ namespace DAL.Repositories
                     sorts.Add(true, x => propertyInfo.GetValue(x, null));
                 }
 
-                
-                filters.Add(capesFilters.filters.ItemMasterId > 0, x => x.ItemMasterId== capesFilters.filters.ItemMasterId);
+
+                //filters.Add(capesFilters.filters.ItemMasterId > 0, x => x.ItemMasterId == capesFilters.filters.ItemMasterId);
                 filters.Add(!string.IsNullOrEmpty(capesFilters.filters.partNo), x => x.partNo.ToLower().Contains(capesFilters.filters.partNo.ToLower()));
                 filters.Add(!string.IsNullOrEmpty(capesFilters.filters.capabilityType), x => x.capabilityType.ToLower().Contains(capesFilters.filters.capabilityType.ToLower()));
-                filters.Add(capesFilters.filters.isVerified != null, x => x.isVerified== capesFilters.filters.isVerified);
+                filters.Add(capesFilters.filters.isVerified != null, x => x.isVerified == capesFilters.filters.isVerified);
                 filters.Add(capesFilters.filters.verifiedDate != null, x => x.verifiedDate == capesFilters.filters.verifiedDate);
                 filters.Add(!string.IsNullOrEmpty(capesFilters.filters.memo), x => x.memo.ToLower().Contains(capesFilters.filters.memo.ToLower()));
                 filters.Add(!string.IsNullOrEmpty(capesFilters.filters.pnDiscription), x => x.pnDiscription.ToLower().Contains(capesFilters.filters.pnDiscription.ToLower()));
@@ -1381,7 +1494,7 @@ namespace DAL.Repositories
                                     join ct in _appContext.capabilityType on imc.CapabilityTypeId equals ct.CapabilityTypeId
                                     join ver in _appContext.Employee on imc.VerifiedById equals ver.EmployeeId into imcver
                                     from ver in imcver.DefaultIfEmpty()
-                                    where imc.IsDeleted == false
+                                    where imc.IsDeleted == false && imc.ItemMasterId == (capesFilters.filters.ItemMasterId > 0 ? capesFilters.filters.ItemMasterId: imc.ItemMasterId)
                                     && (ver.FirstName == null || ver.FirstName.Contains(!string.IsNullOrEmpty(capesFilters.filters.verifiedBy) ? capesFilters.filters.verifiedBy : ver.FirstName))
                                     select new ItemMasterCapesFilters()
                                     {
@@ -1404,7 +1517,7 @@ namespace DAL.Repositories
                             join ct in _appContext.capabilityType on imc.CapabilityTypeId equals ct.CapabilityTypeId
                             join ver in _appContext.Employee on imc.VerifiedById equals ver.EmployeeId into imcver
                             from ver in imcver.DefaultIfEmpty()
-                            where imc.IsDeleted == false
+                            where imc.IsDeleted == false && imc.ItemMasterId == (capesFilters.filters.ItemMasterId > 0 ? capesFilters.filters.ItemMasterId : imc.ItemMasterId)
                             && (ver.FirstName == null || ver.FirstName.Contains(!string.IsNullOrEmpty(capesFilters.filters.verifiedBy) ? capesFilters.filters.verifiedBy : ver.FirstName))
                             select new ItemMasterCapesFilters()
                             {
@@ -1733,7 +1846,7 @@ namespace DAL.Repositories
                             }
                             ).Distinct()
                             .Paginate(pageNumber, pageSize, sorts, filters).Results;
-                            
+
 
                 if (list != null && list.Count() > 0)
                 {

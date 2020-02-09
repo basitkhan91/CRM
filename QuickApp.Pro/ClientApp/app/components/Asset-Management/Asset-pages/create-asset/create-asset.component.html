@@ -303,9 +303,10 @@
                                     </div>
                                     <div class="form-group">
                                         <label>Asset Location</label>
-                                        <select [ngModelOptions]="{standalone: true}" [(ngModel)]="currentAsset.asset_Location">
+                                        <select [ngModelOptions]="{standalone: true}" style="width:280px;" [(ngModel)]="currentAsset.asset_Location">
                                             <option *ngFor="let location of allAssetLocations" [ngValue]="location.assetLocationId">{{location.code+" - "+location.name}}</option>
                                         </select>
+                                        <a data-dismiss="modal" [routerLink]="['/singlepages/singlepages/asset-location']"><i class="fa fa-plus-circle fa-lg"></i></a>
                                     </div>
                                     <div class="form-group">
                                         <label>Memo</label>

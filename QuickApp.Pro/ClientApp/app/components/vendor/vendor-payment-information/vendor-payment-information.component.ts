@@ -157,7 +157,8 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 			{ field: 'city', header: 'City' },
 			{ field: 'stateOrProvince', header: 'State/Prov' },
 			{ field: 'postalCode', header: 'Postal Code' },
-			{ field: 'countryName', header: 'Country' }
+			{ field: 'countryName', header: 'Country' },
+			{field : 'isPrimayPayment', header:'IsPrimary'}
 		];
 		this.selectedColumns = this.cols;
 
@@ -1140,20 +1141,20 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
     customExcelUpload(event) {
         const file = event.target.files;
 
-        // if (file.length > 0) {
-        //     this.formData.append('file', file[0])
-        //     this.vendorService.PaymentCheckUpload(this.formData, this.local.vendorId).subscribe(res => {
-        //         event.target.value = '';
+        if (file.length > 0) {
+            this.formData.append('file', file[0])
+            this.vendorService.PaymentCheckUpload(this.formData, this.local.vendorId).subscribe(res => {
+                event.target.value = '';
 
-        //         this.formData = new FormData();
-        //         this.loadData();
+                this.formData = new FormData();
+                this.loadData();
 
-        //         this.alertService.showMessage(
-        //             'Success',
-        //             `Successfully Uploaded  `,
-        //             MessageSeverity.success
-        //         );
-        //     })
-        // }
+                this.alertService.showMessage(
+                    'Success',
+                    `Successfully Uploaded  `,
+                    MessageSeverity.success
+                );
+            })
+        }
     }
 }

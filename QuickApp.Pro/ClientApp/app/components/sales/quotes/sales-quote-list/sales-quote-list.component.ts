@@ -297,6 +297,7 @@ export class SalesQuoteListComponent implements OnInit {
 
   getSalesQuoteInstance(salesQuoteId: number, customerId: number) {
     this.alertService.startLoadingMessage();
+    this.selectedParts = [];
     this.salesQuoteService.getSalesQuote(salesQuoteId).subscribe(data => {
       this.salesQuoteView = data && data.length ? data[0] : null;
       this.salesOrderQuote = this.salesQuoteView.salesOrderQuote;

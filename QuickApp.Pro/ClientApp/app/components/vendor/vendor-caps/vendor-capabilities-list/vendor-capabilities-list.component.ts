@@ -180,7 +180,7 @@ export class VendorCapabilitiesListComponent implements OnInit {
         if (this.isEnableVendor) {
             const { vendorCapabilityId } = row;
             this.vendorCapabilityId.emit(vendorCapabilityId);
-        }
+        } 
         else {
             this.vendorService.isEditMode = true;
             this.isSaving = true;
@@ -319,24 +319,25 @@ export class VendorCapabilitiesListComponent implements OnInit {
     }
 
     viewSelectedRow(rowData) {
-        console.log(rowData);
-        const { vendorCapabilityId } = rowData;
-        this.getVendorCapabilitiesView(vendorCapabilityId);
-        this.getVendorCapesAircraftView(vendorCapabilityId);
-        $("#vendorCapesView").modal('show');
+        // console.log(rowData);ole.log(rowData);
+        // const { vendorCapabilityId } = rowData;
+        this.getVendorCapabilitiesView(rowData.vendorCapabilityId);
+        this.getVendorCapesAircraftView(rowData.vendorCapabilityId);
+        $('#vendorCapesView').modal('show');
     }
 
     getVendorCapabilitiesView(vendorCapesId) {
         this.vendorCapesService.getVendorCapabilitybyId(vendorCapesId).subscribe(res => {
-            console.log(res);
+            // console.log(res);
             this.vendorCapesGeneralInfo = res;
+            console.log(this.vendorCapesGeneralInfo);
         })
     }
 
     getVendorCapesAircraftView(vendorCapesId) {
         this.vendorCapesService.getVendorAircraftGetDataByCapsId(vendorCapesId).subscribe(res => {
-            console.log(res);
-          
+            // console.log(res);
+
             this.aircraftListDataValues = res.map(x => {
                 return {
                     ...x,
@@ -351,7 +352,7 @@ export class VendorCapabilitiesListComponent implements OnInit {
 
     viewSelectedRowdbl(rowData) {
         this.viewSelectedRow(rowData);
-        $('#vendorCapesView').modal('show');
+        // $('#vendorCapesView').modal('show');
     }
 
     getPageCount(totalNoofRecords, pageSize) {
