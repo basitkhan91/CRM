@@ -121,6 +121,7 @@ export class ItemMasterCapabilitiesListComponent implements OnInit {
     @Input() isEnableItemMaster: boolean = false;
     @ViewChild("addCapabilityButton") addCapabilityButton: ElementRef;
     selectedCapabilityType: any;
+    isCapViewMode: boolean = false;
 
 
     /** item-master-capabilities-list ctor */
@@ -1289,8 +1290,15 @@ export class ItemMasterCapabilitiesListComponent implements OnInit {
         this.showCapes = true;
         // this.cdRef.detectChanges();
     }
+    onViewCapes(rowData){
+        this.showCapes = true;
+        this.isCapViewMode = true;
+        this.itemMasterId = rowData.itemMasterId;
+    }
     closeCapes() {
         this.showCapes = false;
+        this.isCapViewMode = false;
+        
         $('#capes1').modal('hide');
     }
     closeCapesPopup(data) {

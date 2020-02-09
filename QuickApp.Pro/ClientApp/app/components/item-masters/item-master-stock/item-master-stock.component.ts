@@ -716,7 +716,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
             // binding the export information data on edit
             this.exportInfo = {
-                unitOfMeasureId: this.sourceItemMaster.unitOfMeasureId,
+                unitOfMeasureId: this.sourceItemMaster.unitOfMeasureId || null,
                 ExportECCN: this.sourceItemMaster.exportECCN,
                 ITARNumber: this.sourceItemMaster.itarNumber,
                 ExportUomId: this.sourceItemMaster.exportUomId,
@@ -728,13 +728,13 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                 ExportSizeLength: this.sourceItemMaster.exportSizeLength,
                 ExportSizeWidth: this.sourceItemMaster.exportSizeWidth,
                 ExportSizeHeight: this.sourceItemMaster.exportSizeHeight,
-                IsExportUnspecified: this.sourceItemMaster.isExportUnspecified,
-                IsExportMilitary: this.sourceItemMaster.isExportMilitary,
-                IsExportNONMilitary: this.sourceItemMaster.isExportNONMilitary,
-                IsExportDual: this.sourceItemMaster.isExportDual,
+                IsExportUnspecified: this.sourceItemMaster.isExportUnspecified || false,
+                IsExportMilitary: this.sourceItemMaster.isExportMilitary || false,
+                IsExportNONMilitary: this.sourceItemMaster.isExportNONMilitary || false,
+                IsExportDual: this.sourceItemMaster.isExportDual || false,
             }
             // validate classification required in Export Information
-            this.validateClassificationRequired()
+            this.validateClassificationRequired(this.sourceItemMaster)
             this.getAircraftMappedDataByItemMasterId();
             this.toGetAllDocumentsList(this.ItemMasterId);
         })
@@ -4776,8 +4776,19 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.showexportData = false;
     }
 
-    validateClassificationRequired() {
-
+    validateClassificationRequired(data) {
+        if(this.exportInfo.IsExportUnspecified == null){
+            this.exportInfo.IsExportUnspecified = true
+        }
+        if(this.exportInfo.IsExportMilitary == null){
+            this.exportInfo.IsExportMilitary = true
+        }
+        if(this.exportInfo.IsExportNONMilitary == null){
+            this.exportInfo.IsExportNONMilitary = true
+        }
+        if(this.exportInfo.IsExportDual == null){
+            this.exportInfo.IsExportDual = true
+        }
         if (this.exportInfo.IsExportUnspecified || this.exportInfo.IsExportMilitary || this.exportInfo.IsExportNONMilitary || this.exportInfo.IsExportDual) {
 
             this.isValidClassification = true;
@@ -4804,8 +4815,21 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             this.router.navigate(['itemmastersmodule/itemmasterpages/app-item-master-list'])
         })
     }
-    saveandcreate() {
+    saveandcreate(exportInfoormatiom) {
+
         if (this.isValidClassification) {
+            if(this.exportInfo.IsExportUnspecified == undefined){
+                this.exportInfo.IsExportUnspecified = false
+            }
+            if(this.exportInfo.IsExportMilitary == undefined){
+                this.exportInfo.IsExportMilitary = false
+            }
+            if(this.exportInfo.IsExportNONMilitary == undefined){
+                this.exportInfo.IsExportNONMilitary = false
+            }
+            if(this.exportInfo.IsExportDual == undefined){
+                this.exportInfo.IsExportDual = false
+            }
             const ItemMasterID = this.isEdit === true ? this.itemMasterId : this.collectionofItemMaster.itemMasterId;
             const data = { ...this.exportInfo, ExportCountryId: this.tempExportCountryId, ItemMasterId: parseInt(ItemMasterID) }
 

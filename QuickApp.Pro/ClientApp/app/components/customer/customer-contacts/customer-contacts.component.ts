@@ -106,6 +106,7 @@ export class CustomerContactsComponent implements OnInit {
     search_ataSubChapterList: any;
     search_ataSubChapterList1: any;
 	selectedContact: any;
+	selectedstockColumn: any[];
 	ataHeaders = [
 		{ field: 'ataChapterName', header: 'ATA Chapter' },
 		{ field: 'ataSubChapterDescription', header: 'ATA Sub-Chapter' }
@@ -369,6 +370,13 @@ export class CustomerContactsComponent implements OnInit {
 		this.customerService.getContacts(this.id).subscribe(res => {
 			this.customerContacts = res[0]
 			const re = res[0]
+			for (let i=0; i<re.length; i++){
+				if(re[i]['isDefaultContact'] == true){
+					re[i]['isDefaultContact'] =  "Yes"
+				} else {
+					re[i]['isDefaultContact'] =  ""
+				}
+			}
 			// if (re.length > 0) {
 			//     this.totalRecords = re.length;
 			//     this.totalPages = Math.ceil(this.totalRecords / this.pageSize);

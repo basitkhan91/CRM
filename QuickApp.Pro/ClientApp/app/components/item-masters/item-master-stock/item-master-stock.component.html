@@ -346,9 +346,13 @@
                                                    [(ngModel)]="sourceItemMaster.shelfLife">
                                             &nbsp;
                                             <input *ngIf="sourceItemMaster.shelfLife"
+                                            class="form-control shelf1 number exp-date-inputs w50" type="number" onKeyPress="if(this.value.length==5) return false;" pKeyFilter="int"
+                                            id="exp-shipped-date-input" name="shelfDescription"
+                                            [(ngModel)]="sourceItemMaster.shelfLifeAvailable" required>
+                                            <!-- <input *ngIf="sourceItemMaster.shelfLife"
                                                    class="form-control shelf1 number exp-date-inputs w50" type="number" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==5) return false;" pKeyFilter="int"
                                                    id="exp-shipped-date-input" name="shelfDescription"
-                                                   [(ngModel)]="sourceItemMaster.shelfLifeAvailable" required>
+                                                   [(ngModel)]="sourceItemMaster.shelfLifeAvailable" required> -->
                                             <strong class="shelf"><span *ngIf="sourceItemMaster.shelfLife">Days</span></strong>
                                         </div>
                                         <!--/Shelf Life-->
@@ -1576,14 +1580,14 @@
                                                 <div class="inline-block display-flex">
                                                     <div>
                                                         <label class="control-label">
-                                                            <input type="radio" id="" name="classification" value="unspecified" [(ngModel)]="exportInfo.IsExportUnspecified" (change)="validateClassificationRequired()">
+                                                            <input type="radio" id="IsExportUnspecified" name="IsExportUnspecified" [value]="true"  [(ngModel)]="exportInfo.IsExportUnspecified" [checked]="exportInfo.IsExportUnspecified == true" (change)="validateClassificationRequired(exportInfo)">
 
                                                             Unspecified
                                                         </label>
                                                     </div>
                                                     <div>
                                                         <label class="control-label">
-                                                            <input type="radio" id="" name="classification" value="nonmiltary" [(ngModel)]="exportInfo.IsExportNONMilitary" (change)="validateClassificationRequired()">
+                                                            <input type="radio" id="IsExportUnspecified" name="IsExportNONMilitary" [value]="true" [(ngModel)]="exportInfo.IsExportNONMilitary" [checked]="exportInfo.IsExportNONMilitary == true" (change)="validateClassificationRequired(exportInfo)">
 
                                                             NON-Military
                                                         </label>
@@ -1592,14 +1596,14 @@
                                                 <div class="inline-block display-flex">
                                                     <div>
                                                         <label class="control-label">
-                                                            <input type="radio" id="" name="classification" value="miltary" [(ngModel)]="exportInfo.IsExportMilitary" (change)="validateClassificationRequired()">
+                                                            <input type="radio" id="IsExportUnspecified" name="IsExportMilitary" [value]="true" [(ngModel)]="exportInfo.IsExportMilitary" [checked]="exportInfo.IsExportMilitary == true" (change)="validateClassificationRequired(exportInfo)">
 
                                                             Miltary
                                                         </label>
                                                     </div>
                                                     <div>
                                                         <label class="control-label">
-                                                            <input type="radio" id="" name="classification" value="dual" [(ngModel)]="exportInfo.IsExportDual" (change)="validateClassificationRequired()">
+                                                            <input type="radio" id="IsExportUnspecified" name="IsExportDual" [value]="true" [(ngModel)]="exportInfo.IsExportDual" [checked]="exportInfo.IsExportDual == true" (change)="validateClassificationRequired(exportInfo)">
 
                                                             Dual
                                                         </label>
@@ -1613,7 +1617,7 @@
                         <!--<div class="col-sm-12 mt8">-->
                         <div>
 
-                            <button class="btn btn-primary pull-right submit-btn" type="button" (click)="saveandcreate()" style="height: 30px; width: 115px">Save & Add New</button>
+                            <button class="btn btn-primary pull-right submit-btn" type="button" (click)="saveandcreate(exportInformatiom)" style="height: 30px; width: 115px">Save & Add New</button>
                             &nbsp;
                             <button class="btn btn-primary pull-right submit-btn" type="submit" [disabled]="!exportInformatiom.valid || !isValidClassification" (click)="saveExportInformation()" style="height: 30px; width:80px">save</button>
                             &nbsp;
