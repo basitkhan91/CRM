@@ -259,10 +259,10 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
 	navigateTogeneralInfo() {
 		this.entityService.isEditMode = false;
 		this.entityService.ShowPtab = true;
-		this.entityService.currentUrl = '/generalledgermodule/generalledgerpage/legal-entity-general-information';
+		this.entityService.currentUrl = '/generalledgermodule/generalledgerpage/app-legal-entity-add';
 		this.entityService.bredcrumbObj.next(this.entityService.currentUrl);
 		this.entityService.alertObj.next(this.entityService.ShowPtab);
-		this.route.navigateByUrl('/generalledgermodule/generalledgerpage/legal-entity-general-information');
+		this.route.navigateByUrl('/generalledgermodule/generalledgerpage/app-legal-entity-add');
 		this.entityService.listCollection = undefined;
 	}
 

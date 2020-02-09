@@ -10,7 +10,7 @@ namespace QuickApp.Pro.ViewModels
         public long LegalEntityId { get; set; }
         public  string Name { get; set; }
         public string LedgerName { get; set; }
-        public byte[] EntityLogo { get; set; }
+        //public byte[] EntityLogo { get; set; }
         public string Description { get; set; }
         public string DoingLegalAs { get; set; }
         public long? AddressId { get; set; }
@@ -39,5 +39,6 @@ namespace QuickApp.Pro.ViewModels
         public DateTime RecordModifiedDate { get; set; }
         public string City { get; set; }
         public string StateOrProvince { get; set; }
+        public string nice_name { get; set; }
     }
 }

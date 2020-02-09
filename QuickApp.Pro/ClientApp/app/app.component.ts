@@ -804,10 +804,10 @@ export class AppComponent implements OnInit, AfterViewInit {
     newLegalEntityClick() {
         this.entityService.isEditMode = false;
         this.entityService.ShowPtab = true;
-        this.entityService.currentUrl = '/generalledgermodule/generalledgerpage/legal-entity-general-information';
+        this.entityService.currentUrl = '/generalledgermodule/generalledgerpage/app-legal-entity-add';
         this.entityService.bredcrumbObj.next(this.vendorService.currentUrl);
         this.entityService.alertObj.next(this.vendorService.ShowPtab);
-        this.router.navigateByUrl('/generalledgermodule/generalledgerpage/legal-entity-general-information');
+        this.router.navigateByUrl('/generalledgermodule/generalledgerpage/app-legal-entity-add');
         this.entityService.listCollection = undefined;
         this.entityService.checkEntityEditmode(false);
     }

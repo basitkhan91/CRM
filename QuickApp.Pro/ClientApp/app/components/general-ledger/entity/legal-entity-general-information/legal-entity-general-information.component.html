@@ -1,4 +1,4 @@
-﻿<form   #generalForm="ngForm" method="post" id="" name="" class="form-horizontal add-custustomer">
+﻿<!--<form   #generalForm="ngForm" method="post" id="" name="" class="form-horizontal add-custustomer">
     <div class="form-row" >
         <div class="form-group">
             <div class="form-group col-sm-12 vendor-details-heading" *ngIf="showalert">
@@ -19,23 +19,23 @@
                     <div class="col-md-12">
                         <div class="form-row">
                             <div class="col-md-3">
-                                <!--<div class="form-group">
+                                <div class="form-group">
                                     <label for="entityname">
                                         Parent Company
                                         <span class="clr-red">*</span>
                                     </label>
-                                    <select class="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEntity.parentId">
+                                    <select class="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceentity.parentId">
                                         <option *ngFor="let parentEntity of parentLegalEntity" [ngValue]="parentEntity.parentId">{{parentEntity.name}}</option>
                                     </select>
-                                </div>-->
+                                </div>
 
-                                <!--<div class="form-group">
+                                <div class="form-group">
                                     <label for="entityname">
                                         Company Code
                                         <span class="clr-red">*</span>
                                     </label>
                                     <p-autoComplete class="pautocomp-cstm" (onSelect)="onEntityCodeselected($event)" (onKeyUp)="eventEntityHandler($event)"
-                                                    [(ngModel)]="sourceEntity.name" name="name"
+                                                    [(ngModel)]="sourceentity.name" name="name"
                                                     [suggestions]="entityNames" (completeMethod)="filterEntityNames($event)" [size]="30"
                                                     [minLength]="1" [dropdown]="true" required>
                                         <ng-template let-vendorCode pTemplate="item">
@@ -52,7 +52,7 @@
                                         Company
                                     </label>
                                     <input type="text" class="form-control" name="description"
-                                           [(ngModel)]="sourceEntity.description">
+                                           [(ngModel)]="sourceentity.description">
                                 </div>
 
                                 <div class="form-group ">
@@ -60,7 +60,7 @@
                                         D/B/A
                                     </label>
                                     <input type="text" class="form-control" name="doingLegalAs"
-                                           [(ngModel)]="sourceEntity.doingLegalAs">
+                                           [(ngModel)]="sourceentity.doingLegalAs">
                                 </div>
 
                                 <div class="form-group">
@@ -69,7 +69,7 @@
                                         <span class="clr-red">*</span>
                                     </label>
                                     <input class="form-control" type="text" id="leaddress1" name="address1"
-                                           [(ngModel)]="sourceEntity.address1" required>
+                                           [(ngModel)]="sourceentity.address1" required>
 
                                 </div>
 
@@ -78,7 +78,7 @@
                                         Address Line 2
                                     </label>
                                     <input class="form-control" type="text" id="leaddress2" name="address2"
-                                           [(ngModel)]="sourceEntity.address2">
+                                           [(ngModel)]="sourceentity.address2">
 
                                 </div>
 
@@ -87,7 +87,7 @@
                                         Address Line 3
                                     </label>
                                     <input class="form-control" type="text" id="leaddress3" name="address3"
-                                           [(ngModel)]="sourceEntity.address3">
+                                           [(ngModel)]="sourceentity.address3">
                                 </div>
 
                                 <div class="form-group">
@@ -96,7 +96,7 @@
                                         <span class="clr-red">*</span>
                                     </label>
                                     <input class="form-control" type="text" id="lecity" name="lecity"
-                                           [(ngModel)]="sourceEntity.city" required>
+                                           [(ngModel)]="sourceentity.city" required>
 
                                 </div>
 
@@ -106,7 +106,7 @@
                                         <span class="clr-red">*</span>
                                     </label>
                                     <input class="form-control" type="text" id="lestate" name="lestate"
-                                           [(ngModel)]="sourceEntity.stateOrProvince" required>
+                                           [(ngModel)]="sourceentity.stateOrProvince" required>
                                 </div>
 
                                 <div class="form-group">
@@ -115,7 +115,7 @@
                                         <span class="clr-red">*</span>
                                     </label>
                                     <input class="form-control" type="text" id="lepostal" name="lepostal"
-                                           [(ngModel)]="sourceEntity.postalCode" required>
+                                           [(ngModel)]="sourceentity.postalCode" required>
                                 </div>
 
                                 <div class="form-group">
@@ -124,24 +124,24 @@
                                         <span class="clr-red">*</span>
                                     </label>
                                     <p-autoComplete field="nice_name" class="pautocomp-cstm" (onSelect)="onCountrieselected($event)" (onKeyUp)=eventCountryHandler($event)
-                                                    [(ngModel)]="sourceEntity.country" name="country"
+                                                    [(ngModel)]="sourceentity.country" name="country"
                                                     [forceSelection]="true"
                                                     [suggestions]="countrycollection" (completeMethod)="filtercountry($event)" [size]="30"
                                                     [minLength]="1" [dropdown]="true" required>
                                     </p-autoComplete>
                                     <div *ngIf="disablesave" class="clr-red">Please Select From List</div>
-                                </div>-->
+                                </div>
                             </div>
 
-                            <!--<div class="col-md-3">
+                            <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="address1">
                                         Invoice Address Position
                                     </label><br />
                                     <p-radioButton name="groupname" value="1" label="Top" class="p-radiobutton-label-horizontal p-radiobutton-cstm"
-                                                   [(ngModel)]="sourceEntity.adressPosition"></p-radioButton>
+                                                   [(ngModel)]="sourceentity.adressPosition"></p-radioButton>
                                     <p-radioButton name="groupname" value="2" label="Bottom" class="p-radiobutton-label-horizontal p-radiobutton-cstm"
-                                                   [(ngModel)]="sourceEntity.adressPosition"></p-radioButton>
+                                                   [(ngModel)]="sourceentity.adressPosition"></p-radioButton>
                                 </div>
 
                                 <div class="form-group">
@@ -149,7 +149,7 @@
                                         Logo
                                     </label>
                                     Choose a file: <input class="form-control" type="file" id="entityLogo" name="entityLogo"
-                                                          [(ngModel)]="sourceEntity.entityLogo">
+                                                          [(ngModel)]="sourceentity.entityLogo">
 
                                 </div>
 
@@ -158,7 +158,7 @@
                                     <label for="postal">
                                     </label>
                                     <input class="form-control" type="text" id="lepostal" name="fax"
-                                           [(ngModel)]="sourceEntity.fax" required>
+                                           [(ngModel)]="sourceentity.fax" required>
                                 </div>
 
                                 <div class="form-group">
@@ -166,7 +166,7 @@
                                     <label for="postal">
                                     </label>
                                     <input class="form-control" type="text" id="lepostal" name="phone"
-                                           [(ngModel)]="sourceEntity.phone" required>
+                                           [(ngModel)]="sourceentity.phone" required>
                                 </div>
 
                                 <div class="form-group">
@@ -174,9 +174,9 @@
                                         Invoice Fax/Phone Position
                                     </label><br />
                                     <p-radioButton name="groupname" value="1" label="Top" class="p-radiobutton-label-horizontal p-radiobutton-cstm"
-                                                   [(ngModel)]="sourceEntity.phonePosition"></p-radioButton>
+                                                   [(ngModel)]="sourceentity.phonePosition"></p-radioButton>
                                     <p-radioButton name="groupname" value="2" label="Bottom" class="p-radiobutton-label-horizontal p-radiobutton-cstm"
-                                                   [(ngModel)]="sourceEntity.phonePosition"></p-radioButton>
+                                                   [(ngModel)]="sourceentity.phonePosition"></p-radioButton>
                                 </div>
 
                                 <div class="form-group">
@@ -184,7 +184,7 @@
                                         Functional Currency
                                         <strong class="clr-red">*</strong>
                                     </label>
-                                    <select class="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEntity.functionalCurrencyId">
+                                    <select class="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceentity.functionalCurrencyId">
                                         <option *ngFor="let currencyName of allCurrencyInfo" [ngValue]="currencyName.currencyId">{{currencyName.symbol}}</option>
                                     </select>
                                 </div>
@@ -194,7 +194,7 @@
                                         Reporting Currency
                                         <strong class="clr-red">*</strong>
                                     </label>
-                                    <select class="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceEntity.reportingCurrencyId">
+                                    <select class="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceentity.reportingCurrencyId">
                                         <option *ngFor="let currencyName of allCurrencyInfo" [ngValue]="currencyName.currencyId">{{currencyName.symbol}}</option>
                                     </select>
                                 </div>
@@ -202,7 +202,7 @@
                                 <div class="form-group" style="margin-top: 15px;">
                                     <div class="checkbox-cstm" style="margin-left: 0;">
                                         <label>
-                                            <input type="checkbox" name="isBalancingEntity" [(ngModel)]="sourceEntity.isBalancingEntity">
+                                            <input type="checkbox" name="isBalancingEntity" [(ngModel)]="sourceentity.isBalancingEntity">
                                             <span class="cr"><i class="cr-icon pi pi-check"></i></span>
                                             Balancing Entity
                                         </label>
@@ -214,7 +214,7 @@
                                     <label for="cage">
                                     </label>
                                     <input class="form-control" type="text" id="leCage" name="cageCode"
-                                           [(ngModel)]="sourceEntity.cageCode" required>
+                                           [(ngModel)]="sourceentity.cageCode" required>
                                 </div>
 
                                 <div class="form-group">
@@ -222,7 +222,7 @@
                                     <label for="postal">
                                     </label>
                                     <input class="form-control" type="text" id="faaLic" name="faaLic"
-                                           [(ngModel)]="sourceEntity.faaLicense" required>
+                                           [(ngModel)]="sourceentity.faaLicense" required>
                                 </div>
 
                                 <div class="form-group">
@@ -230,19 +230,19 @@
                                     <label for="postal">
                                     </label>
                                     <input class="form-control" type="text" id="taxId" name="taxId"
-                                           [(ngModel)]="sourceEntity.taxId" required>
+                                           [(ngModel)]="sourceentity.taxId" required>
                                 </div>
 
-                            </div>-->
+                            </div>
 
-                            <!--<div class="col-md-6">
+                            <div class="col-md-6">
                                 <div class="form-row">
                                     <div class="col-md-6">
 
                                         <div class="form-group" style="margin-top: 15px;">
                                             <div class="checkbox-cstm" style="margin-left: 0;">
                                                 <label>
-                                                    <input type="checkbox" name="isLastLevel" [(ngModel)]="sourceEntity.isLastLevel">
+                                                    <input type="checkbox" name="isLastLevel" [(ngModel)]="sourceentity.isLastLevel">
                                                     <span class="cr"><i class="cr-icon pi pi-check"></i></span>
                                                     Last Level
                                                 </label>
@@ -254,17 +254,17 @@
                                             <label for="postal">
                                             </label>
                                             <input class="form-control" type="text" id="tag1" name="tag1"
-                                                   [(ngModel)]="sourceEntity.tag1">
+                                                   [(ngModel)]="sourceentity.tag1">
                                         </div>
 
                                         <div class="form-group">
                                             <input class="form-control" type="text" id="tag2" name="tag2"
-                                                   [(ngModel)]="sourceEntity.tag2" >
+                                                   [(ngModel)]="sourceentity.tag2" >
                                         </div>
 
                                         <div class="form-group">
                                             <input class="form-control" type="text" id="tag3" name="tag3"
-                                                   [(ngModel)]="sourceEntity.tag3" >
+                                                   [(ngModel)]="sourceentity.tag3" >
                                         </div>
 
                                         <div class="form-group">
@@ -272,19 +272,19 @@
                                             <label for="postal">
                                             </label>
                                             <input class="form-control" type="text" id="ledgerName" name="ledgerName"
-                                                   [(ngModel)]="sourceEntity.ledgerName" required>
+                                                   [(ngModel)]="sourceentity.ledgerName" required>
                                         </div>
                                     </div>
                                 </div>
                               
-                            </div>-->
+                            </div>
                         </div>
                     </div>
 
                     <div style="padding-bottom: 7px;">
-                        <!--<button type="button" class="btn btn-primary pull-right " (click)="editItemAndCloseModel('goNext')" [disabled]="!generalForm.valid || disableSaveEntityName">
+                        <button type="button" class="btn btn-primary pull-right " (click)="editItemAndCloseModel('goNext')" [disabled]="!generalForm.valid || disableSaveEntityName">
                             Save & Next
-                        </button>-->
+                        </button>
                     </div>
                 </div>
 
@@ -299,4 +299,4 @@
     <h5 [ngStyle]="{ color: 'red' }">
         Please Enter (*) Mandatory Fields
     </h5>
-</p-dialog>
+</p-dialog>-->

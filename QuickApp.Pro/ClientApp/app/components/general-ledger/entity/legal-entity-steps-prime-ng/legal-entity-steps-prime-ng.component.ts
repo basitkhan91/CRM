@@ -43,32 +43,32 @@ export class LegalEntityStepsPrimeNgComponent implements OnInit {
 		console.log(this.entityService.listCollection);
 		if (value == 1) {
 			this.activeMenuItem = 1;
-			this.route.navigateByUrl('/generalledgermodule/generalledgerpage/legal-entity-general-information');
+			this.route.navigateByUrl('/generalledgermodule/generalledgerpage/app-legal-entity-add');
 		}
 
 		else if (value == 2) {
-			this.activeMenuItem = 2;
-			this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-capes');
+			this.activeMenuItem = 3;
+			this.route.navigateByUrl('/generalledgermodule/generalledgerpage/app-legal-entity-contact');
 		}
 		else if (value == 3) {
 
 			this.activeMenuItem = 3;
-			this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-contacts');
+			this.route.navigateByUrl('/generalledgermodule/generalledgerpage/app-legal-entity-banking');
 		}
 		else if (value == 4) {
 
 			this.activeMenuItem = 4;
-			this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-financial-information');
+			this.route.navigateByUrl('/generalledgermodule/generalledgerpage/app-legal-entity-billing');
 		}
 		else if (value == 5) {
 
 			this.activeMenuItem = 5;
-			this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-payment-information');
+			this.route.navigateByUrl('/generalledgermodule/generalledgerpage/app-legal-entity-shipping');
 		}
 		else if (value == 6) {
 
 			this.activeMenuItem = 6;
-			this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-billing-information');
+			this.route.navigateByUrl('/generalledgermodule/generalledgerpage/app-legal-entity-documents');
 		}
 	}
 
