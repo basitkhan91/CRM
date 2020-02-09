@@ -171,11 +171,11 @@
                                 <button class="btn-delete" type="button" mat-icon-button matTooltip="Delete" (click)="deleteCapability(deleteCapabilityContent, rowData.itemMasterCapesId, rowData.capabilityType)">
                                     <mat-icon color="warn">delete</mat-icon>
                                 </button>
-                                <!-- <span> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openView(viewContent,rowData)" title="View"><i class="fa fa-eye"></i></a> </span>
+                                <span> <a class="btn btn-info boxed-float-btn nobg" data-toggle="modal" data-target="#capes1" (click)="onViewCapes(rowData)"  title="View"><i class="fa fa-eye"></i></a> </span>
 
                                 <button class="btn-edit" mat-icon-button (click)="openEdits(editContent,rowData)" matTooltip="edit">
                                     <mat-icon>edit</mat-icon>
-                                </button> -->
+                                </button>
 
                                 <!--<button class="btn-exposure" mat-icon-button matTooltip="stock Adjustment" (click)="openAdjustment(rowData)">
                                     <mat-icon>exposure</mat-icon>
@@ -220,6 +220,7 @@
 
            <app-item-master-create-capabilities 
            [itemMasterId] ="itemMasterId"
+           [isCapViewMode]="isCapViewMode"
            [isEnableCapesList] ="isEnableCapesList"
            (loadCapesList)="loadCapesList($event)"
            (closeCapesPopup)="closeCapesPopup($event)"

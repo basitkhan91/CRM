@@ -197,6 +197,12 @@ export class CustomerSalesPersonComponent implements OnInit {
         const employeeListData = [...this.employeeTypeList.filter(x => {
             return x.fullName.toLowerCase().includes(event.query.toLowerCase())
         })]
+        for(let i=0; i<employeeListData.length; i++){
+            if(this.salesInfo.primarySalesPersonId['employeeId'] == employeeListData[i].employeeId || this.salesInfo.secondarySalesPersonId == employeeListData[i].employeeId){
+                employeeListData.splice(i, 1);
+            }
+        }
+        
 
         this.employeeList = employeeListData;
     }

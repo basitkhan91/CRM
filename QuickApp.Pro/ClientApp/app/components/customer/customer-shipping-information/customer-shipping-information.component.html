@@ -37,7 +37,6 @@
                     <p-table #domestictable class="rpo-table-cstm" 
                             [value]="domesticShippingData"
                             [(selection)]="selectedrowsFromDomestic"
-                            [metaKeySelection]="true"
                             [rows]="10"
                             [paginator]="true"
                             [pageLinks]="3"
@@ -173,7 +172,6 @@
 
                 <div>
                     <p-table #intlShippingTable class="rpo-table-cstm"
-                             [metaKeySelection]="true"
                              [value]="internationalShippingData"
                              [paginator]="true"
                              [pageLinks]="3"
@@ -884,7 +882,6 @@
                 </div>
                 <p-table #domesShipVia class="rpo-table-cstm"
                          name="domesticShipViaTable"
-                         [metaKeySelection]="true"
                          [rows]="10"
                          [paginator]="true"
                          [pageLinks]="3"
@@ -1116,7 +1113,6 @@
                 <p-table #internationShipVia class="rpo-table-cstm"
                          name="internationalshipViaTable"
                          [rows]="10"
-                         [metaKeySelection]="true"
                          [value]="internationalShippingViaData"
                          [paginator]="true"
                          [pageLinks]="3"
