@@ -22,10 +22,11 @@ import { HttpClient } from '@angular/common/http';
 import { GMapModule } from 'primeng/gmap';
 import { Router } from '@angular/router';
 import * as $ from 'jquery';
-import { editValueAssignByCondition, getObjectById } from '../../../generic/autocomplete';
+import { editValueAssignByCondition, getObjectById, getValueFromObjectByKey } from '../../../generic/autocomplete';
 import { VendorStepsPrimeNgComponent } from '../vendor-steps-prime-ng/vendor-steps-prime-ng.component';
 import { ConfigurationService } from '../../../services/configuration.service';
 import { ModalService } from '../../../services/Index';
+import { CustomerInternationalShippingModel } from '../../../models/customer-internationalshipping.model';
 declare const google: any;
 @Component({
     selector: 'app-vendor-shipping-information',
@@ -100,6 +101,18 @@ export class VendorShippingInformationComponent {
         { field: 'countryName', header: 'Country' },
         { field: 'isPrimary', header: 'IsPrimary' }
     ];
+    internationalShippingHeaders = [
+        { field: 'exportLicense', header: 'Export License' },
+        { field: 'description', header: 'Description' },
+        // { field: 'isPrimary', header: 'Is Primary' },
+        { field: 'startDate', header: 'Start Date' },
+        { field: 'expirationDate', header: 'Expiration Date' },
+        { field: 'amount', header: 'Amount' },
+        { field: 'shipToCountry', header: 'Country' },
+        { field: 'isPrimary', header: 'IsPrimary' }
+
+    ]
+    selectedInternationalColumns = this.internationalShippingHeaders;
     selectedColumns: any[] = this.cols;
     shipViacols: any[];
     shipViaColumns: any[];
@@ -129,6 +142,13 @@ export class VendorShippingInformationComponent {
     @Input() vendorId: number = 0;
     @Input() isViewMode: boolean = false;
     isvendorEditMode: any;
+    internationalShippingData: any = [];
+    internationalShippingInfo = new CustomerInternationalShippingModel()
+    isEditInternational: any;
+    shipViaInternational: any;
+
+    sourceViewforInterShipping: any;
+    intershippingViaauditHisory: any;
     constructor(private http: HttpClient, private router: Router,
         private authService: AuthService, private modalService: NgbModal, private configurations: ConfigurationService, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public vendorService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
         if (this.vendorService.listCollection !== undefined) {
@@ -180,6 +200,7 @@ export class VendorShippingInformationComponent {
             this.vendorService.currentUrl = '/vendorsmodule/vendorpages/app-vendor-shipping-information';
             this.vendorService.bredcrumbObj.next(this.vendorService.currentUrl);
         }
+        this.getInternationalShippingByVendorId();
         // this.options = {
         //     center: { lat: 36.890257, lng: 30.707417 },
         //     zoom: 12
@@ -878,6 +899,127 @@ export class VendorShippingInformationComponent {
     }
 
 
+
+
+    saveInternationalShipping(){
+        
+
+        const data = {
+            ...this.internationalShippingInfo,
+            shipToCountryId: getValueFromObjectByKey('countries_id', this.internationalShippingInfo.shipToCountryId),
+            createdBy: this.userName,
+            updatedBy: this.userName,
+            masterCompanyId: 1,
+            isActive: true,
+            isDeleted: false,
+            vendorId: this.local.vendorId
+
+        }
+        if (!this.isEditInternational) {
+            // save International SDhipping 
+            this.vendorService.postInternationalShipping(data).subscribe((res) => {
+                // this.shipViaInternational = new CustomerInternationalShipVia();
+                this.getInternationalShippingByVendorId()
+                this.alertService.showMessage(
+                    'Success',
+                    `Saved International Shipping Information Sucessfully `,
+                    MessageSeverity.success
+                );
+            })
+        } else {
+            // update international 
+            this.vendorService.updateInternationalShipping(data).subscribe(res => {
+                // this.shipViaInternational = new CustomerInternationalShipVia();
+                this.getInternationalShippingByVendorId()
+                this.isEditInternational = false;
+                this.alertService.showMessage(
+                    'Success',
+                    `Saved International Shipping Information Sucessfully `,
+                    MessageSeverity.success
+                );
+            })
+
+        }
+    }
+
+
+    getInternationalShippingByVendorId(){
+        const vendorId = this.local.vendorId;
+        this.vendorService.getInternationalShippingByVendorId(vendorId).subscribe(res => {
+            this.internationalShippingData = res;
+        })
+    }
+    closeInternationalModal(){
+        $("viewInter").modal('hide');   
+        this.isEditInternational = false;
+    }
+
+    openInternationalView(rowData){
+        this.vendorService.getInternationalShippingById(rowData.vendorInternationalShippingId).subscribe(res => {
+            this.sourceViewforInterShipping = {...res,
+                startDate: new Date(res.startDate),
+                expirationDate: new Date(res.expirationDate),
+                createdDate: new Date(res.expirationDate),
+                updatedDate: new Date(res.expirationDate),
+                shipToCountryId: getObjectById('countries_id', res.shipToCountryId, this.allCountryinfo)
+            };
+            $("viewInter").modal('show');
+        }) 
+    }
+    getInternationalShippingById(rowData){
+        this.isEditInternational = true;
+        this.vendorService.getInternationalShippingById(rowData.vendorInternationalShippingId).subscribe(res => {
+            this.internationalShippingInfo = {...res,
+                startDate: new Date(res.startDate),
+                expirationDate: new Date(res.expirationDate),
+                createdDate: new Date(res.expirationDate),
+                updatedDate: new Date(res.expirationDate),
+                shipToCountryId: getObjectById('countries_id', res.shipToCountryId, this.allCountryinfo)
+            };
+        })
+    }
+
+     openInterShipHistory(content, rowData) {
+        //const { customerShippingAddressId } = rowData.customerShippingAddressId;
+        //const { customerShippingId } = rowData.customerShippingId;
+
+        
+        this.vendorService.getVendorInternationalAuditHistory(rowData.vendorInternationalShippingId).subscribe(
+            results => this.onAuditInterShipViaHistoryLoadSuccessful(results, content),
+            error => this.saveFailedHelper(error));
+    }
+    private onAuditInterShipViaHistoryLoadSuccessful(auditHistory, content) {
+
+
+
+         this.intershippingViaauditHisory = auditHistory;
+
+        this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+    }
+
+    deleteVendorInternationalShipping(rowData){
+        this.vendorService.deleteVendorInternationalShipping(rowData.vendorId , this.userName).subscribe(res => {
+            this.getInternationalShippingByVendorId();
+             this.alertService.showMessage(
+                    'Success',
+                    `sucessfully Deleted Record`,
+                    MessageSeverity.success
+                );
+        })
+    }
+
+    changeOfStatusForInternationalShipping(rowData){
+        this.vendorService.updateStatusForInternationalShipping(rowData.vendorInternationalShippingId , rowData.status, this.userName).subscribe(res => {
+            this.alertService.showMessage(
+                'Success',
+                `sucessfully Updated Status`,
+                MessageSeverity.success
+            );
+        })
+    }
 
 }
 
