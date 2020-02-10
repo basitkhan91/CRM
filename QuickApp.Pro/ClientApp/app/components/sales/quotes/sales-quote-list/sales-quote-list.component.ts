@@ -232,6 +232,7 @@ export class SalesQuoteListComponent implements OnInit {
     let customerId = row.customerId;
     this.salesQuote = new SalesQuote();
     this.salesOrderQuote = new SalesOrderQuote();
+    this.selectedParts = [];
     this.getCustomerWarningsData(customerId);
     this.getSalesQuoteInstance(salesQuoteId, customerId);
     this.modal = this.modalService.open(content, { size: "lg" });
@@ -305,7 +306,7 @@ export class SalesQuoteListComponent implements OnInit {
 
   getSalesQuoteInstance(salesQuoteId: number, customerId: number) {
     this.alertService.startLoadingMessage();
-    this.selectedParts = [];
+    
     this.salesQuoteService.getSalesQuote(salesQuoteId).subscribe(data => {
       this.salesQuoteView = data && data.length ? data[0] : null;
       this.salesOrderQuote = this.salesQuoteView.salesOrderQuote;
@@ -351,7 +352,7 @@ export class SalesQuoteListComponent implements OnInit {
         partNumberObj.unitCostExtended = selectedPart.unitCostExtended;
         this.selectedParts.push(partNumberObj);
       }
-      console.log(this.salesQuoteView);
+     // console.log(this.salesQuoteView);
 
       this.salesQuote.priorities = this.salesQuoteView.priorities;
       this.salesQuote.leadSources = this.salesQuoteView.leadSources;

@@ -122,8 +122,8 @@ export class StocklineViewComponent implements OnInit {
 
     getStocklineListById(stockLineId) {
         this.workFlowtService.getStockLineDetailsById(stockLineId).subscribe(res => {
-            this.data = res[0];
-            let row = res[0];
+            this.data = res;
+            let row = res;
             if (row.compmanagmentLegalEntity) this.company = row.compmanagmentLegalEntity.name;
             if (row.biumanagmentLegalEntity) this.businessUnitName = row.biumanagmentLegalEntity.name;
             if (row.divmanagmentLegalEntity) this.division = row.divmanagmentLegalEntity.name;
