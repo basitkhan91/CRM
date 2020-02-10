@@ -683,11 +683,13 @@
                                                         [(ngModel)]="discontValue"
                                                         pKeyFilter="num"
                                                         (onSelect)="selectedDiscount()"
-                                                        (onKeyUp)="checkDiscountExistss($event)"
+                                                        (keyup)="checkDiscountExists($event)"
                                                         [suggestions]="_discountListForDropdown" field="label" (completeMethod)="filterDiscount($event)"
-                                                        [size]="30" [minLength]="1" [dropdown]="true" required>
+                                                        [size]="30" [minLength]="1" [dropdown]="true" >
                                         </p-autoComplete>
                                         <div *ngIf="isDiscountExists" class="clr-red">Entry Already Exists</div>
+                                        <div *ngIf="isCountdisable" class="clr-red vin_aing" >Discount range should be 0 to 100</div>
+                                        
                                     </div>
                                 </div>
                                 </div>
@@ -695,7 +697,7 @@
                             </div>
                             <div class="modal-footer">
 
-                                <button class="btn btn-primary" data-dismiss="modal" (click)="newDiscountAdd()" [disabled]="!discount.valid || isDiscountExists">Submit</button>
+                                <button class="btn btn-primary" data-dismiss="modal" (click)="newDiscountAdd()" [disabled]="!discount.valid || isDiscountExists || isCountdisable">Submit</button>
                                 <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="restDiscount()">Close</button>
 
                             </div>

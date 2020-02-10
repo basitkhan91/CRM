@@ -95,7 +95,7 @@ export class CustomerAircraftComponent implements OnInit {
     showAdvancedSearchCard: boolean = false;
     isViewMode: boolean = false;
 
-
+    stopmulticlicks:boolean;
     constructor(private route: ActivatedRoute, private itemser: ItemMasterService,
         private aircraftModelService: AircraftModelService,
         private Dashnumservice: DashNumberService,
@@ -104,7 +104,9 @@ export class CustomerAircraftComponent implements OnInit {
         private alertService: AlertService,
         private modalService: NgbModal,
         private activeModal: NgbActiveModal,
-    ) { }
+    ) {
+        this.stopmulticlicks=false;
+     }
     ngOnInit() {
         if (this.editMode) {
             this.id = this.editGeneralInformationData.customerId;
@@ -716,12 +718,16 @@ export class CustomerAircraftComponent implements OnInit {
         this.modal.close();
     }
     nextClick() {
-        this.tab.emit('Atachapter');
+        this.stopmulticlicks=true;
+      this.tab.emit('Atachapter');
         this.alertService.showMessage(
             'Success',
             ` ${this.editMode ? 'Updated' : 'Saved'} Aircraft Information Sucessfully `,
             MessageSeverity.success
         );
+        setTimeout(()=>{
+            this.stopmulticlicks=false;
+        },500)
     }
     backClick() {
 

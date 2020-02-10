@@ -59,7 +59,7 @@ export class CustomerATAInformationComponent implements OnInit {
     pageSize: number = 10;
     totalPages: number = 0;
     originalATASubchapterData: any = [];
-
+    stopmulticlicks:boolean;
       constructor(
         private atasubchapter1service: AtaSubChapter1Service,
         private atamain: AtaMainService,
@@ -69,6 +69,7 @@ export class CustomerATAInformationComponent implements OnInit {
         private modalService: NgbModal,
         private activeModal: NgbActiveModal,
     ) {
+        this.stopmulticlicks=false;
     }
 
     ngOnInit() {
@@ -269,12 +270,16 @@ export class CustomerATAInformationComponent implements OnInit {
 
 
     nextClick() {
+        this.stopmulticlicks=true;
         this.tab.emit('Financial');
         this.alertService.showMessage(
 			'Success',
 			` ${this.editMode ? 'Updated' : 'Saved'  } Customer ATA Chapter Information Sucessfully `,
 			MessageSeverity.success
-		);
+        );
+        setTimeout(()=>{
+            this.stopmulticlicks=false;
+        },500)
     }
     backClick() {
         this.tab.emit('AircraftInfo');

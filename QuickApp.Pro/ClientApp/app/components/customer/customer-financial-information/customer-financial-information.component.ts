@@ -398,11 +398,13 @@ export class CustomerFinancialInformationComponent implements OnInit {
     getAllDiscountList() {
         this.customerService.getDiscountList().subscribe(res => {
             this.discountList = res[0];
-            console.log(this.discountList, "this.discuontList++++")
+            // console.log(this.discountList, "this.discuontList++++")
             for (let i = 0; i < this.discountList.length; i++) {
+                if(this.discountList[i].discontValue >=0 && this.discountList[i].discontValue <=100) {
                 this._discountListForDropdown.push({ label: this.discountList[i].discontValue.toString(), value: this.discountList[i].discontValue })
             }
-            console.log(this._discountListForDropdown, "this._discountListForDropdown++++")
+        }
+            // console.log(this._discountListForDropdown, "this._discountListForDropdown++++")
 
 
         })
@@ -417,61 +419,81 @@ export class CustomerFinancialInformationComponent implements OnInit {
 
 
     filterDiscount(event) {
-
-        console.log();
-        // this._discountList = this.discountList1;
-
-
-        // this._discountList = [...this.discountList1.filter(x => {
-        //     console.log(x);
-        //     return x.label.includes(event.query.toLowerCase())
-
-
-        // })]
         this._discountListForDropdown = this._discountListForDropdown;
-
-
         this._discountListForDropdown = [...this._discountListForDropdown.filter(x => {
-            console.log(x);
+            // console.log(x);
             return x.label.includes(event.query.toLowerCase())
 
 
         })]
+        // console.log("this._discountListForDropdown",this._discountListForDropdown);
+    setTimeout(()=>{
+        this._discountListForDropdown = this._discountListForDropdown;
+    },1000)
     }
 
+    // checkShortNameExists(field, value) {
+    //     // console.log(this.selectedRecordForEdit);
+    //     const exists = validateRecordExistsOrNot(field, value, this.uomData, this.selectedRecordForEdit);
+    //     if (exists.length > 0) {
+    //         this.isDiscountExists = true;
+    //     }
+    //     else {
+    //         this.disableSaveForShortName = false;
+    //     }
 
+    // }
 
     checkDiscountExists(field, value) {
-        const exists = validateRecordExistsOrNot(field, value, this.creditTermsListOriginal)
-        console.log(exists);
+        this.getAllDiscountList();
+        this.isCountdisable = false;
+        this._discountListForDropdown = this._discountListForDropdown;
+        const exists = validateRecordExistsOrNot(field, value, this._discountListForDropdown)
+        // console.log(exists);
+        if(this.discontValue ==undefined &&  this.discontValue ==undefined && this.discontValue ==null && this.discontValue ==''){
+            // this._discountListForDropdown = this._discountListForDropdown;
+            this.isCountdisable = false;
+            this.discontValue ==null
+        }
+        else  if(this.discontValue < 0 || this.discontValue >100){
+                 this.isCountdisable = true;
+                 this.discontValue ==null
+                    // this._discountListForDropdown = this._discountListForDropdown;
+        }
         if (exists.length > 0) {
             this.isDiscountExists = true;
-        } else {
+        } 
+        else if(this.discontValue < 0 || this.discontValue >100){
+            return this.isDiscountExists = false;
+           }else {
             this.isDiscountExists = false;
         }
     }
-    checkDiscountExistss(value) {
-
-        // this.isDiscountExists = false;
-
-        // for (let i = 0; i < this.discountList1.length; i++) {
-        //     if (this.discontValue == this.discountList1[i].label || value == this.discountList[i].label) {
-        //         this.isDiscountExists = true;
-
-        //         return;
-        //     }
-
-        // }
+    isCountdisable:boolean=false;
+    checkDiscountExistss(value) { 
+        // console.log("value" ,value)
         this.isDiscountExists = false;
-
+        
+        if(this.discontValue ==undefined &&  this.discontValue ==undefined && this.discontValue ==null && this.discontValue ==''){
+            // this._discountListForDropdown = this._discountListForDropdown;
+            this.isCountdisable = false;
+        }
+        else  if(this.discontValue < 0 || this.discontValue >100){
+                 this.isCountdisable = true;
+                    // this._discountListForDropdown = this._discountListForDropdown;
+        }else   {
+            this._discountListForDropdown = this._discountListForDropdown;
         for (let i = 0; i < this._discountListForDropdown.length; i++) {
             if (this.discontValue == this._discountListForDropdown[i].label || value == this._discountListForDropdown[i].label) {
                 this.isDiscountExists = true;
 
                 return;
+            }else{
+                this.isDiscountExists = false;
             }
-
         }
+    }
+
     }
 
     selectedDiscount() {
@@ -526,6 +548,11 @@ export class CustomerFinancialInformationComponent implements OnInit {
                 );
                 this.selectedTaxRates = null;
                 this.selectedTaxType = null;
+                this.alertService.showMessage(
+                    'Success',
+                    `Successfully Added Tax Type and  Tax Rate`,
+                    MessageSeverity.success
+                );
             } else {
 
                 this.taxTypeRateMapping.push({
@@ -535,6 +562,8 @@ export class CustomerFinancialInformationComponent implements OnInit {
                     taxRateId: this.selectedTaxRates,
                     taxType: getValueFromArrayOfObjectById('label', 'value', this.selectedTaxType, this.taxTypeList),
                     taxRate: getValueFromObjectByKey('label', getObjectById('value', this.selectedTaxRates, this.taxRatesList))
+                
+            
                 })
 
                 // this.taxTypeRateMapping = []
@@ -552,6 +581,11 @@ export class CustomerFinancialInformationComponent implements OnInit {
 
                 this.selectedTaxRates = null;
                 this.selectedTaxType = null;
+                this.alertService.showMessage(
+                    'Success',
+                    `Successfully Added Tax Type and  Tax Rate`,
+                    MessageSeverity.success
+                );
             }
 
 
@@ -571,7 +605,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
                 this.getMappedTaxTypeRateDetails();
                 this.alertService.showMessage(
                     'Success',
-                    `Successfully Update Tax Type and Rate`,
+                    `Successfully Update Tax Type and Tax Rate`,
                     MessageSeverity.success
                 );
             })
@@ -588,6 +622,11 @@ export class CustomerFinancialInformationComponent implements OnInit {
                 }
             })];
             this.taxTypeRateMapping = data;
+            this.alertService.showMessage(
+                'Success',
+                `Successfully Update Tax Type and  Tax Rate`,
+                MessageSeverity.success
+            );
         }
 
 
@@ -760,6 +799,8 @@ console.log("is edit mode",this.editMode )
 
     restDiscount() {
         this.discontValue = null;
+        this.isDiscountExists = false;
+        this.isCountdisable = false;
     }
 
 
