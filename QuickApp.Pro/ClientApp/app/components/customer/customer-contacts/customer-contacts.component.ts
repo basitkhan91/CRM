@@ -130,6 +130,7 @@ export class CustomerContactsComponent implements OnInit {
             createdDate: new Date(),
             customerContactId:0,
             ataChapterName: "",
+            ataChapterCode:"",
             ataSubChapterDescription:"",
 
         }
@@ -346,9 +347,17 @@ export class CustomerContactsComponent implements OnInit {
 			masterCompanyId: 1,
 			firstName: editValueAssignByCondition('firstName', this.contactInformation.firstName),
 			middleName: editValueAssignByCondition('middleName', this.contactInformation.middleName),
-			lastName: editValueAssignByCondition('lastName', this.contactInformation.lastName)
+            lastName: editValueAssignByCondition('lastName', this.contactInformation.lastName),
+            
 
-		}
+        }
+        if (String(data.isDefaultContact) == "Yes") {
+            data.isDefaultContact = true
+
+        }
+        else if (String(data.isDefaultContact) == "") {
+            data.isDefaultContact = false;
+        }
 		this.customerService.updateContactinfo(data).subscribe(res => {
 			this.getAllContacts();
 			this.getAllCustomerContact();
@@ -554,8 +563,8 @@ export class CustomerContactsComponent implements OnInit {
 		
 		this.customerService.getATAMappedByContactId(this.selectedContact.contactId).subscribe(res => {
 			//console.log(res);
-			this.ataListDataValues = res;
-			
+            this.ataListDataValues = res;
+           
 			for(let i=0; i<this.ataListDataValues.length; i++){
 				this.ataListDataValues[i]['ataChapterName'] = this.ataListDataValues[i]['ataChapterCode'] + ' - ' +this.ataListDataValues[i]['ataChapterName']
 				//this.ataListDataValues[i]['ataSubChapterDescription'] = getValueFromArrayOfObjectById('ataSubChapterCode', 'ataSubChapterId', this.ataListDataValues[i]['ataSubChapterId'], this.originalATASubchapterData) + ' - ' +this.ataListDataValues[i]['ataSubChapterDescription']
@@ -792,6 +801,7 @@ export class CustomerContactsComponent implements OnInit {
             customerContactId: this.selectedContact.contactId,
          
             ataChapterName: getValueFromArrayOfObjectById('label', 'value', this.ataChapterEditData.ataChapterId, this.search_ataChapterList1),
+            ataChapterCode: getValueFromArrayOfObjectById('code', 'value', this.ataChapterEditData.ataChapterId, this.search_ataChapterList1),
 
             ataSubChapterDescription: getValueFromArrayOfObjectById('label', 'value', this.ataChapterEditData.ataSubChapterId, this.search_ataSubChapterList1),
 
@@ -808,7 +818,7 @@ export class CustomerContactsComponent implements OnInit {
     }
     getATASubChapterByATAChapterID(id) {
 
-       
+        
         this.atasubchapter1service.getATASubChapterListByATAChapterId(id).subscribe(atasubchapter => {
         const responseData = atasubchapter[0];
            // console.log(this.add_ataSubChapterList, "this.add_ataSubChapterList++++=")

@@ -381,7 +381,7 @@
                           <input
                             type="number"
                             class="form-control input-value"
-                            [(ngModel)]="rowData.Inventory" (blur)="inventoryValidation($event)"
+                            [(ngModel)]="rowData.Inventory" (onKeyUp)="inventoryValidation($event)"
                             name="Inventory{{row_no}}"
                             [required]="true" [minlength]="1"
                           />
