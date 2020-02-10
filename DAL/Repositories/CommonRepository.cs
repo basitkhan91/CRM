@@ -121,7 +121,7 @@ namespace DAL.Repositories
                          CSR = z.cc1.cust.CSRName,
                          IsDefaultContact = z.cc1.cc.IsDefaultContact,
                          Email = z.cc1.cust.Email,
-                         ContactName= z.con.FirstName+ " "+ z.con.LastName
+                         ContactName = z.con.FirstName + " " + z.con.LastName
                      }).ToList();
 
                 if (contacts != null && contacts.Count > 0)
@@ -1311,7 +1311,7 @@ namespace DAL.Repositories
                     addressId = shippingAddress.AddressId;
 
                 }
-                else if((addressType == Convert.ToInt32(AddressTypeEnum.BillingAddress)))
+                else if ((addressType == Convert.ToInt32(AddressTypeEnum.BillingAddress)))
                 {
                     var billingAddress = _appContext.VendorBillingAddress.AsNoTracking().Where(p => p.VendorBillingAddressId == billingShippingId).FirstOrDefault();
                     audit.AddressId = Convert.ToInt64(billingAddress.VendorBillingAddressId);
@@ -1367,26 +1367,26 @@ namespace DAL.Repositories
             _appContext.ShippingBillingAddressAudit.Add(audit);
             _appContext.SaveChanges();
         }
-        public void ContactsHistory(long referenceId, int moduleId, long contactId,  string updatedBy)
+        public void ContactsHistory(long referenceId, int moduleId, long contactId, string updatedBy)
         {
             ContactAudit audit = new ContactAudit();
             long? contId = 0;
 
             if (moduleId == Convert.ToInt32(ModuleEnum.Customer))
             {
-                
-                    var cont = _appContext.CustomerContact.AsNoTracking().Where(p => p.CustomerContactId == contactId).FirstOrDefault();
-                    audit.ContactId = Convert.ToInt64(cont.CustomerContactId);
-                     audit.IsDefaultContact = Convert.ToBoolean(cont.IsDefaultContact);
-                    audit.IsActive = Convert.ToBoolean(cont.IsActive);
-                    audit.MasterCompanyId = Convert.ToInt32(cont.MasterCompanyId);
-                    audit.ModuleId = moduleId;
-                    audit.ReferenceId = referenceId;
-                    
-                    audit.CreatedBy = audit.UpdatedBy = updatedBy;
-                    audit.CreatedDate = audit.UpdatedDate = DateTime.Now;
+
+                var cont = _appContext.CustomerContact.AsNoTracking().Where(p => p.CustomerContactId == contactId).FirstOrDefault();
+                audit.ContactId = Convert.ToInt64(cont.CustomerContactId);
+                audit.IsDefaultContact = Convert.ToBoolean(cont.IsDefaultContact);
+                audit.IsActive = Convert.ToBoolean(cont.IsActive);
+                audit.MasterCompanyId = Convert.ToInt32(cont.MasterCompanyId);
+                audit.ModuleId = moduleId;
+                audit.ReferenceId = referenceId;
+
+                audit.CreatedBy = audit.UpdatedBy = updatedBy;
+                audit.CreatedDate = audit.UpdatedDate = DateTime.Now;
                 contId = Convert.ToInt64(cont.ContactId);
-                
+
             }
             else
             {
@@ -1434,7 +1434,7 @@ namespace DAL.Repositories
         }
 
 
-        public object GetPartPurchaseSaleDetails(long itemMasterId,string condition)
+        public object GetPartPurchaseSaleDetails(long itemMasterId, string condition)
         {
             try
             {
@@ -1450,6 +1450,75 @@ namespace DAL.Repositories
 
                             }).FirstOrDefault();
                 return data;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public IEnumerable<object> GetEmployeesByJobTitle(long jobTitleId)
+        {
+            try
+            {
+                var list = (from emp in _appContext.Employee
+                            where emp.IsDeleted == false && emp.IsActive == true && emp.JobTitleId == jobTitleId
+                            select new
+                            {
+                                emp.EmployeeId,
+                                emp.EmployeeCode,
+                                Name = emp.FirstName + " " + emp.LastName
+                            }
+                          ).Distinct().ToList();
+                return list;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public IEnumerable<object> GetEmployeesByExpertise(long expertiseId)
+        {
+            try
+            {
+                var list = (from emp in _appContext.Employee
+                            where emp.IsDeleted == false && emp.IsActive == true && emp.EmployeeExpertiseId == expertiseId
+                            select new
+                            {
+                                emp.EmployeeId,
+                                emp.EmployeeCode,
+                                Name = emp.FirstName + " " + emp.LastName
+                            }
+                          ).Distinct().ToList();
+                return list;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public IEnumerable<object> GetEmployeeStation(long employeeId)
+        {
+            try
+            {
+                var list = (from emp in _appContext.Employee
+                            join st in _appContext.EmployeeStation on emp.StationId equals st.EmployeeStationId
+                            where emp.EmployeeId == employeeId
+                            select new
+                            {
+                                emp.EmployeeId,
+                                emp.EmployeeCode,
+                                Name = emp.FirstName + " " + emp.LastName,
+                                emp.StationId,
+                                st.StationName
+                            }
+                          ).Distinct().ToList();
+                return list;
             }
             catch (Exception)
             {

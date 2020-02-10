@@ -775,7 +775,7 @@
                                 <mat-icon color="warn">delete</mat-icon>
                             </button>
                             <button data-target="#VShipVia" class="btn btn-danger nobg" style="padding: 0px;"  matTooltip="Add Ship Via" data-original-title="View Shipping Via Information"><i class="fa fa-truck"></i></button>
-                            <button class="btn-history" mat-icon-button matTooltip="history"  data-toggle="modal" (click)="openInterShipHistory(contentAuditHistInterShip, rowData)">
+                            <button class="btn-history" mat-icon-button matTooltip="history" data-target="#contentAuditHistInterShip" data-toggle="modal" (click)="openInterShipHistory(rowData)">
                                 <!--(click)="openShipaddressHistory(contentAuditHist,rowData)"-->
                                 <mat-icon color="green">history</mat-icon>
                             </button>
@@ -786,7 +786,7 @@
                 </ng-template>
                 <ng-template pTemplate="emptymessage" let-columns>
                     <tr>
-                        <td [attr.colspan]="9" style="color: red; font-weight: bold; text-align: center">
+                        <td [attr.colspan]="8" style="color: red; font-weight: bold; text-align: center">
                             No records found
                         </td>
                     </tr>
@@ -809,50 +809,10 @@
             <button type="button" class="btn btn-primary pull-right" (click)="nextClick()">Next</button>
             <button type="button" class="btn btn-primary pull-right" (click)="previousClick()">Previous</button>
         </div>
-        <ng-template #contentAuditHistInterShip let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static">
-            <!--<div #contentAuditHist id="contentAuditHist" class="modal fade">-->
-            <div class="modal-header">
-                <h4 class="modal-title">History of International  Ship Via  Info</h4>
-                <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="table-responsive">
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>Ship Via</th>
-                                <th>Shipping Account Info</th>
-                                <th>Memo</th>
-                                <th>Is Active</th>
-                                <th>Is Primary</th>
-                                <th>Updated By</th>
-                                <th>Last Updated Time</th>
-                                <th>Created By</th>
-                                <th>Created Time</th>
-                            </tr>
-                        </thead>
-                        <tr *ngFor="let audit of intershippingViaauditHisory; let i = index;">
-                            <td [ngStyle]="{'color':  getColorCodeForInterShipViaHistory(i, 'shipVia', audit.shipVia)  ? 'black' : 'red'  }">{{audit.shipVia}}</td>
-                            <td [ngStyle]="{'color':  getColorCodeForInterShipViaHistory(i, 'shippingAccountInfo', audit.shippingAccountInfo)  ? 'black' : 'red'  }">{{audit.shippingAccountInfo}}</td>
-                            <td [ngStyle]="{'color':  getColorCodeForInterShipViaHistory(i, 'memo', audit.memo)  ? 'black' : 'red'  }">{{audit.memo}}</td>
-                            <td [ngStyle]="{'color':  getColorCodeForInterShipViaHistory(i, 'isActive', audit.isActive)  ? 'black' : 'red'  }">{{audit.isActive}}</td>
-                            <td [ngStyle]="{'color':  getColorCodeForInterShipViaHistory(i, 'isPrimary', audit.isPrimary)  ? 'black' : 'red'  }">{{audit.isPrimary}}</td>
-    
-                            <td>{{audit.updatedBy}}</td>
-                            <td>{{audit.updatedDate | date: 'dd-MM-yyyy h:mm a '}}</td>
-                            <td>{{audit.createdBy}}</td>
-                            <td>{{audit.createdDate | date: 'dd-MM-yyyy h:mm a '}}</td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
-            </div>
-        </ng-template>
+
 </div>
+
+
 
 <div class="modal fade" id="addInternationalShippingInfo" role="dialog" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-lg">
@@ -959,5 +919,60 @@
     </div>
 
 </div>
+
+
+<div id="contentAuditHistInterShip" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+      <div class="modal-header">
+                      <h4 class="modal-title">History of International  Ship Via  Info</h4>
+                      <button type="button" class="close" aria-label="Close" data-dismiss="modal">
+                          <span aria-hidden="true">&times;</span>
+                      </button>
+                  </div>
+                  <div class="modal-body">
+                      <div class="table-responsive">
+                          <table class="table table-bordered">
+                              <thead>
+                                  <tr>
+                                      <th>Export License</th>
+                                      <th>Description</th>
+                                      <th>Start Date</th>
+                                      <th>Expiration Date</th>
+                                      <th>Amount</th>
+                                      <th>Country</th>
+                                      <th>IsPrimary</th>
+                                      <th>Is Active</th>
+                                      <th>Updated By</th>
+                                      <th>Updated Time</th>
+                                  </tr>
+                              </thead>
+                              <tr *ngFor="let audit of intershippingViaauditHisory; let i = index;">
+                                  <td [ngStyle]="{'color':  getColorCodeForInternationalHistory(i, 'exportLicense', audit.exportLicense)  ? 'black' : 'red'  }">{{audit.exportLicense}}</td>
+                                  <td [ngStyle]="{'color':  getColorCodeForInternationalHistory(i, 'description', audit.description)  ? 'black' : 'red'  }">{{audit.description}}</td>
+                                  <td [ngStyle]="{'color':  getColorCodeForInternationalHistory(i, 'startDate', audit.startDate)  ? 'black' : 'red'  }">{{audit.startDate}}</td>
+                                  <td [ngStyle]="{'color':  getColorCodeForInternationalHistory(i, 'expirationDate', audit.expirationDate)  ? 'black' : 'red'  }">{{audit.expirationDate}}</td>
+                                  <td [ngStyle]="{'color':  getColorCodeForInternationalHistory(i, 'amount', audit.amount)  ? 'black' : 'red'  }">{{audit.amount}}</td>
+                                  <td [ngStyle]="{'color':  getColorCodeForInternationalHistory(i, 'shipToCountry', audit.shipToCountry)  ? 'black' : 'red'  }">{{audit.shipToCountry}}</td>
+                                  <td [ngStyle]="{'color':  getColorCodeForInternationalHistory(i, 'isPrimary', audit.isPrimary)  ? 'black' : 'red'  }">{{audit.isPrimary}}</td>
+                                  <td [ngStyle]="{'color':  getColorCodeForInternationalHistory(i, 'isActive', audit.isActive)  ? 'black' : 'red'  }">{{audit.isActive}}</td>
+                                 
+                                 
+          
+                                  <td>{{audit.updatedBy}}</td>
+                                  <td>{{audit.updatedDate | date: 'dd-MM-yyyy h:mm a '}}</td>
+
+                              </tr>
+                          </table>
+                      </div>
+                  </div>
+                  <div class="modal-footer">
+                      <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                  </div>
+                  </div>
+      
+      
+        </div>
+      </div>
 
 

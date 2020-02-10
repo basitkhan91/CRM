@@ -67,5 +67,9 @@ namespace DAL.Repositories.Interfaces
         void ShippingBillingAddressHistory(long referenceId, int moduleId, long billingShippingId, int addressType, string updatedBy);
         void ContactsHistory(long referenceId, int moduleId, long contactId, string updatedBy);
         object GetPartPurchaseSaleDetails(long itemMasterId, string condition);
+
+        IEnumerable<object> GetEmployeesByJobTitle(long jobTitleId);
+        IEnumerable<object> GetEmployeesByExpertise(long expertiseId);
+        IEnumerable<object> GetEmployeeStation(long employeeId);
     }
 }
