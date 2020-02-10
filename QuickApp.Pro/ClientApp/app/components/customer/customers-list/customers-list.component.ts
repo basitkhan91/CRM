@@ -310,7 +310,7 @@ export class CustomersListComponent implements OnInit {
         const { customerId } = rowData;
         this.customerService.getCustomerdataById(customerId).subscribe(res => {
             this.viewDataGeneralInformation = res[0];
-            debugger
+           
             console.log(this.viewDataGeneralInformation);
             
            
@@ -639,7 +639,7 @@ export class CustomersListComponent implements OnInit {
    
         this.dataSource.data = allWorkFlows;
         this.allContacts = allWorkFlows;
-        debugger
+       
         console.log(this.allContacts);
     }
     private onDataLoadFailed(error: any) {

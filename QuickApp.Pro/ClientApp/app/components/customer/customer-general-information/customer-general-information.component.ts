@@ -116,14 +116,14 @@ export class CustomerGeneralInformationComponent implements OnInit {
     modal: NgbModalRef;
     parentCustomer = [];
     parentCustomerOriginal = []
-
+    stopmulticlicks:boolean;
 
 
 
     constructor(public integrationService: IntegrationService, private modalService: NgbModal, public customerClassificationService: CustomerClassificationService, public ataservice: AtaMainService, private authService: AuthService, private alertService: AlertService,
         public customerService: CustomerService, public itemService: ItemMasterService, public vendorser: VendorService, private currencyService: CurrencyService, private commonService: CommonService) {
 
-
+            this.stopmulticlicks=false;
 
 
 
@@ -664,10 +664,11 @@ export class CustomerGeneralInformationComponent implements OnInit {
         }
 
     }
+    
     saveGeneralInformation() {
-
-
+        this.stopmulticlicks=true;
         if (!this.isEdit) {
+          
             this.customerService.newAction({
                 ...this.generalInformation,
                 country: getValueFromObjectByKey('countries_id', this.generalInformation.country),
@@ -688,6 +689,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
                 this.editData = res;
                 this.isEdit = true;
             })
+       
         } else { 
 
 
@@ -722,9 +724,9 @@ export class CustomerGeneralInformationComponent implements OnInit {
                 this.isEdit = true;
             })
         }
-
-
-
+        setTimeout(()=>{
+            this.stopmulticlicks=false;
+        },500)
     }
     checkClassificationExists(value) {
 

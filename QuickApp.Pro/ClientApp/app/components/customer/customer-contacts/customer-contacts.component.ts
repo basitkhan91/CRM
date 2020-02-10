@@ -134,7 +134,8 @@ export class CustomerContactsComponent implements OnInit {
 
         }
 	
-    ataChapterEditData = { ...this.ataChapterEditDat };
+	ataChapterEditData = { ...this.ataChapterEditDat };
+	stopmulticlicks:boolean;
 	constructor(private router: ActivatedRoute,
 
 		private route: Router,
@@ -151,7 +152,7 @@ export class CustomerContactsComponent implements OnInit {
 		private commonService: CommonService,
 
 	) {
-
+		this.stopmulticlicks=false;
 	}
 
     ngOnInit() {
@@ -619,13 +620,16 @@ export class CustomerContactsComponent implements OnInit {
 	}
 
 	nextClick() {
+		this.stopmulticlicks=true;
 		this.tab.emit('AircraftInfo');
 		this.alertService.showMessage(
 			'Success',
 			` ${this.editMode ? 'Updated' : 'Saved'  } Customer Contacts Sucessfully `,
 			MessageSeverity.success
 		);
-
+		setTimeout(()=>{
+            this.stopmulticlicks=false;
+        },500)
 	}
 	backClick() {
 		this.tab.emit('General');
