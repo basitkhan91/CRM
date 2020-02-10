@@ -897,6 +897,18 @@ export class VendorShippingInformationComponent {
             }
         }
     }
+    getColorCodeForInternationalHistory(i, field, value) {
+        const data = this.intershippingViaauditHisory;
+        const dataLength = data.length;
+        if (i >= 0 && i <= dataLength) {
+            if ((i + 1) === dataLength) {
+                return true;
+            } else {
+                return data[i + 1][field] === value
+            }
+        }
+    }
+
 
 
 
@@ -979,25 +991,21 @@ export class VendorShippingInformationComponent {
         })
     }
 
-     openInterShipHistory(content, rowData) {
+     openInterShipHistory(rowData) {
         //const { customerShippingAddressId } = rowData.customerShippingAddressId;
         //const { customerShippingId } = rowData.customerShippingId;
 
         
         this.vendorService.getVendorInternationalAuditHistory(rowData.vendorInternationalShippingId).subscribe(
-            results => this.onAuditInterShipViaHistoryLoadSuccessful(results, content),
+            results => this.onAuditInterShipViaHistoryLoadSuccessful(results),
             error => this.saveFailedHelper(error));
     }
-    private onAuditInterShipViaHistoryLoadSuccessful(auditHistory, content) {
-
-
-
+    private onAuditInterShipViaHistoryLoadSuccessful(auditHistory) {
          this.intershippingViaauditHisory = auditHistory;
-
-        this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
-        this.modal.result.then(() => {
-            console.log('When user closes');
-        }, () => { console.log('Backdrop click') })
+        // this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
+        // this.modal.result.then(() => {
+        //     console.log('When user closes');
+        // }, () => { console.log('Backdrop click') })
     }
 
     deleteVendorInternationalShipping(rowData){

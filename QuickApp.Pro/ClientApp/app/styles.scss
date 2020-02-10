@@ -17,6 +17,12 @@ $theme: mat-light-theme($primary, $accent);
 // }
 
 
+.p-multi-aircraft-dash .ui-multiselect-label {
+    width: calc(100% - 27px);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
 
 .p-autoComplete-ctsm.ng-touched.ng-invalid input {
     border-color: #ff586b;
