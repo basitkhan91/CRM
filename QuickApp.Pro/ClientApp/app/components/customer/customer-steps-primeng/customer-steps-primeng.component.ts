@@ -346,7 +346,6 @@ export class CustomerStepsPrimengComponent {
                     code:x.ataChapterCode
                 }
             })
-			})
 
 		});
 	}
