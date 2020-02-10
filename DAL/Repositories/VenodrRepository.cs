@@ -3150,6 +3150,7 @@ namespace DAL.Repositories
                               vsi.IsActive,
                               vsi.IsDeleted,
                               vsi.UpdatedDate,
+                              vsi.UpdatedBy,
                               vsi.CreatedBy,
                               vsi.CreatedDate,
                           }).OrderByDescending(p => p.CreatedDate).ToList();
@@ -3180,6 +3181,7 @@ namespace DAL.Repositories
                               vsi.IsDeleted,
                               vsi.UpdatedDate,
                               vsi.CreatedBy,
+                              vsi.UpdatedBy,
                               vsi.CreatedDate,
                           }).OrderByDescending(p => p.AuditVendorInternationalShippingId).ToList();
 
@@ -3366,7 +3368,7 @@ namespace DAL.Repositories
                               vsi.UpdatedDate,
                               vsi.IsActive,
                               vsi.IsDeleted,
-                          }).OrderByDescending(p => p.CreatedDate).ToList();
+                          }).OrderByDescending(p => p.AuditVendorInternationalShipViaDetailsId).ToList();
 
             return result;
         }
