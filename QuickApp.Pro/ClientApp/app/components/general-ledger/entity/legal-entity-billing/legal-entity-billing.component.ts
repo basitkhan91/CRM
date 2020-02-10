@@ -1,7 +1,6 @@
 ﻿import { Component, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
-import { CustomerService } from '../../../../services/customer.service';
 import { AlertService, MessageSeverity } from '../../../../services/alert.service';
-import { CustomerBillingAddressModel } from '../../../../models/customer-billing-address.model';
+import { legalEntityBillingAddressModel } from '../../../../models/legalEntity-billing-address.model';
 import { AuthService } from '../../../../services/auth.service';
 import { getValueFromObjectByKey, getObjectByValue, editValueAssignByCondition } from '../../../../generic/autocomplete';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
@@ -25,18 +24,16 @@ export class EntityBillingComponent {
 	@Input() editGeneralInformationData;
 	@Input() editMode;
 	@Output() tab = new EventEmitter<any>();
-	@Input() selectedCustomerTab: string = "";
+	@Input() selectedlegalEntityTab: string = "";
 
 	countryList: any[];
-	// countryListOriginal: any[];
     selectedRowForDelete: any;
-	billingInfo = new CustomerBillingAddressModel()
+	billingInfo = new legalEntityBillingAddressModel()
 	billingInfoList: any;
 	billingInfoTableHeaders = [
 		{ field: 'siteName', header: 'Site Name' },
 		{ field: 'address1', header: 'Address1' },
 		{ field: 'address2', header: 'Address2' },
-	
 		{ field: 'city', header: 'City' },
 		{ field: 'stateOrProvince', header: 'State / Prov' },
 		{ field: 'postalCode', header: 'Postal Code' },
@@ -45,14 +42,14 @@ export class EntityBillingComponent {
     selectedColumns = this.billingInfoTableHeaders;
 	viewData: any;
 	id: number;
-	customerCode: any;
-	customerName: any;
+	legalEntityCode: any;
+	legalEntityName: any;
 	isEditMode: boolean = false;
     billingHistoryData: Object;
     modal: NgbModalRef;
     isDeleteMode: boolean = false;
-    customerBillingAddressId: number;
-    public sourceCustomer: any = {}
+    legalEntityBillingAddressId: number;
+    public sourcelegalEntity: any = {}
     public auditHisory: AuditHistory[] = [];
     billingauditHisory: any[];
     totalRecords: any;
@@ -62,7 +59,7 @@ export class EntityBillingComponent {
     formData = new FormData();
 	
 
-    constructor(public customerService: CustomerService, private authService: AuthService, private alertService: AlertService, private modalService: NgbModal, private configurations: ConfigurationService,
+    constructor(public legalEntityService: LegalEntityService, private authService: AuthService, private alertService: AlertService, private modalService: NgbModal, private configurations: ConfigurationService,
         private activeModal: NgbActiveModal, private commonService: CommonService, public workFlowtService: LegalEntityService,) {
 
     }
@@ -72,25 +69,16 @@ export class EntityBillingComponent {
 
 		if (this.editMode) {
             this.id = this.editGeneralInformationData.legalEntityId;
-			//this.customerCode = this.editGeneralInformationData.customerCode;
-			//this.customerName = this.editGeneralInformationData.name;
 			this.getBillingDataById()
 		} else {
             this.id = this.savedGeneralInformationData.legalEntityId;
-			//this.customerCode = this.savedGeneralInformationData.customerCode;
-            //this.customerName = this.savedGeneralInformationData.name;
-            //Added By Vijay For Customer Create time IsBillingAddess is selected checkbox Then list page we are displaying list
             this.getBillingDataById()
 		}
-
-
-		
-
 	}
 
 	ngOnChanges(changes: SimpleChanges) {
 		for (let property in changes) {
-            if (property == 'selectedCustomerTab') {
+            if (property == 'selectedlegalEntityTab') {
 				if(changes[property].currentValue == "Billing"){
 					this.getBillingDataById()
 				}
@@ -103,14 +91,8 @@ export class EntityBillingComponent {
 		return this.authService.currentUser ? this.authService.currentUser.userName : "";
 	}
 
-
-
-
-
 	filtercountry(event) {
 		this.countryList = this.countryListOriginal;
-
-
 		const countryData = [...this.countryListOriginal.filter(x => {
 			return x.countries_name.toLowerCase().includes(event.query.toLowerCase())
 		})]
@@ -118,22 +100,19 @@ export class EntityBillingComponent {
 
 	}
     saveBillingInformation() {
-    
             const data = {
                 ...this.billingInfo,
                 createdBy: this.userName,
                 updatedBy: this.userName,
                 country: getValueFromObjectByKey('countries_id', this.billingInfo.country),
 	      masterCompanyId: 1,
-               // isPrimary: false,
                 isActive: true,
-                customerId: this.id
+                legalEntityId: this.id
              
             }
-            // create shipping 
             if (!this.isEditMode) {
-                this.customerService.newBillingAdd(data).subscribe(() => {
-                    this.billingInfo = new CustomerBillingAddressModel();
+                this.legalEntityService.newBillingAdd(data).subscribe(() => {
+                    this.billingInfo = new legalEntityBillingAddressModel();
                     this.alertService.showMessage(
                         'Success',
                         `Saved  Billing Information Sucessfully `,
@@ -143,8 +122,8 @@ export class EntityBillingComponent {
                 })
             } else {
                 // update shipping 
-                this.customerService.updateBillinginfo(data).subscribe(() => {
-                    this.billingInfo = new CustomerBillingAddressModel();
+                this.legalEntityService.updateBillinginfo(data).subscribe(() => {
+                    this.billingInfo = new legalEntityBillingAddressModel();
                     this.alertService.showMessage(
                         'Success',
                         `Updated  Billing Information Sucessfully `,
@@ -153,15 +132,12 @@ export class EntityBillingComponent {
                     this.getBillingDataById();
                 })
             }
-
-
-
         }
 
 	
     addBillingIfo() {
         this.isEditMode = false;
-        this.billingInfo = new CustomerBillingAddressModel();
+        this.billingInfo = new legalEntityBillingAddressModel();
     }
 	getBillingDataById() {
         this.workFlowtService.getEntityBillViaDetails(this.id).subscribe(res => {
@@ -179,16 +155,10 @@ export class EntityBillingComponent {
 	openBillingView(data) {
 		console.log(data);
         this.viewData = data;
-
-		// this.isViewModel = false;
     }
     toggledbldisplay(data) {
         this.viewData = data;
-
             $('#view').modal('show');
-   
-
-
     }
 	nextClick() {
 		this.tab.emit('Shipping');
@@ -203,11 +173,11 @@ export class EntityBillingComponent {
 	}
 
   
-    getCustomerBillingHistory(content, row) {
-        const { customerBillingAddressId } = row;
+    getlegalEntityBillingHistory(content, row) {
+        const { legalEntityBillingAddressId } = row;
         this.alertService.startLoadingMessage();
      
-        this.customerService.getCustomerBillingHistory(this.id, customerBillingAddressId).subscribe(
+        this.legalEntityService.getlegalEntityBillingHistory(this.id, legalEntityBillingAddressId).subscribe(
             results => this.onAuditHistoryLoadSuccessful(results, content),
             error => this.saveFailedHelper(error));
     }
@@ -240,7 +210,7 @@ export class EntityBillingComponent {
   
         console.log(rowData);
 
-        await this.customerService.CustomersBillingUpdateforActive(rowData.customerBillingAddressId, rowData.isActive, this.userName).subscribe(res => {
+        await this.legalEntityService.legalEntitysBillingUpdateforActive(rowData.legalEntityBillingAddressId, rowData.isActive, this.userName).subscribe(res => {
 
             this.getBillingDataById();
             this.alertService.showMessage(
@@ -251,8 +221,6 @@ export class EntityBillingComponent {
         })
     }
 
-
-
     dismissModel() {
         this.modal.close();
     }
@@ -262,7 +230,7 @@ export class EntityBillingComponent {
         this.isDeleteMode = true;
 
      
-        this.customerBillingAddressId = rowData.customerBillingAddressId
+        this.legalEntityBillingAddressId = rowData.legalEntityBillingAddressId
         this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
@@ -273,13 +241,13 @@ export class EntityBillingComponent {
             isActive: false,
             addressStatus: false,
             updatedBy: this.userName,
-            customerBillingAddressId: this.customerBillingAddressId
+            legalEntityBillingAddressId: this.legalEntityBillingAddressId
         }
       
-        if (this.customerBillingAddressId>0) {
+        if (this.legalEntityBillingAddressId>0) {
 
-            this.customerService.updateDeleteBillinginfo(obj).subscribe(
-                response => this.saveCompleted(this.sourceCustomer),
+            this.legalEntityService.updateDeleteBillinginfo(obj).subscribe(
+                response => this.saveCompleted(this.sourcelegalEntity),
                 error => this.saveFailedHelper(error));
         }
         this.modal.close();
@@ -305,17 +273,15 @@ export class EntityBillingComponent {
 
 
     sampleExcelDownload() {
-        const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=CustomerBillingAddress&fileName=CustomerBillingAddress.xlsx`;
+        const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=legalEntityBillingAddress&fileName=legalEntityBillingAddress.xlsx`;
         window.location.assign(url);
     }
     customExcelUpload(event) {
         const file = event.target.files;
-
         console.log(file);
         if (file.length > 0) {
-
             this.formData.append('file', file[0])
-            this.customerService.BillingFileUpload(this.formData, this.id).subscribe(res => {
+            this.legalEntityService.BillingFileUpload(this.formData, this.id).subscribe(res => {
                 event.target.value = '';
 
                 this.formData = new FormData();
@@ -326,15 +292,9 @@ export class EntityBillingComponent {
                     MessageSeverity.success
                 );
             })
-
-
-
         }
 
     }
-
-
-
 }
 
 
