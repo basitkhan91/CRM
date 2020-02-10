@@ -54,7 +54,7 @@ namespace QuickApp.Pro.Controllers
                               asc.CreatedBy,
                               asc.CreatedDate,
                               asc.UpdatedBy
-                          }).OrderByDescending(p => p.ATASubChapterId);
+                          }).ToList().OrderBy(p => p.ATAChapterName);
             return Ok(result);
 
             //try
@@ -198,7 +198,7 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("ATASubChapter")]
         public IActionResult getATASubChapterList()
         {
-            var ataSubChapter = _unitOfWork.Repository<ATASubChapter>().Find(x => x.IsDelete != true && x.IsActive == true);
+            var ataSubChapter = _unitOfWork.Repository<ATASubChapter>().Find(x => x.IsDelete != true && x.IsActive == true).OrderBy(p=>p.Description);
             return Ok(ataSubChapter);
         }
 

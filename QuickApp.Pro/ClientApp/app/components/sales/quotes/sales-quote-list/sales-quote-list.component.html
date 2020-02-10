@@ -527,7 +527,7 @@
                                           </td>
                                           <td> 
                                             <span>
-                                            <a class="btn btn-info boxed-float-btn nobg"
+                                            <a *ngIf="part.methodType=='S'" class="btn btn-info boxed-float-btn nobg"
                                                data-toggle="tooltip"
                                                (click)="viewSelectedStockLine(part)"
                                                

@@ -1,16 +1,9 @@
 ﻿
 
+using DAL.Models;
 using DAL.Repositories.Interfaces;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-
-using Microsoft.EntityFrameworkCore;
-
-using System.Threading.Tasks;
-using DAL.Core;
-using DAL.Models;
 
 namespace DAL.Repositories
 {
@@ -27,7 +20,7 @@ namespace DAL.Repositories
         }
 
         public IEnumerable<DAL.Models.IntegrationPortal> getIntegrationAllData()
-        {
+        {          
             return _appContext.IntegrationPortal.Where(c => (c.IsDeleted == false || c.IsDeleted == null)).OrderByDescending(c => c.IntegrationPortalId).ToList();
 
 

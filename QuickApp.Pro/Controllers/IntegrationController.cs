@@ -42,7 +42,7 @@ namespace QuickApp.Pro.Controllers
         public IActionResult GetAll()
         {
             var allIntegrationinfo = _unitOfWork.Integration.getIntegrationAllData(); //.GetAllCustomersData();
-            return Ok(Mapper.Map<IEnumerable<IntegrationViewModel>>(allIntegrationinfo));
+            return Ok(allIntegrationinfo);
 
         }
         /// <summary>

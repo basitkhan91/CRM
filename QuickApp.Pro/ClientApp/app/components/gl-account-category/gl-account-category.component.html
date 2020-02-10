@@ -10,7 +10,7 @@
                             <h3 class="po-head lead">{{header}}</h3>
                             &nbsp;&nbsp;
                             <!--Step x: Customize the data-target-->
-                            <a class="plusicon-cstm new-margin" pTooltip="Add {{rowName}}" tooltipPosition="right" data-target="#editItem" data-toggle="modal" (click)="addNewItem()">
+                            <a class="plusicon-cstm new-margin" matTooltip="Add {{rowName}}" tooltipPosition="right" data-target="#editItem" data-toggle="modal" (click)="addNewItem()">
                                 <i class="fa fa-plus-circle fa-lg"></i>
                             </a>
                         </div>
@@ -40,18 +40,20 @@
                                                    selectedItemsLabel="{0} columns selected"
                                                    defaultLabel="Choose Columns">
                                     </p-multiSelect>
-                                    <button type="button" class="btn btn-primary" pTooltip="Download Selected" tooltipPosition="top"
+                                    <button type="button" class="btn btn-primary" matTooltip="Download All Data" tooltipPosition="top" matTooltipPosition="above"
                                             pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()"></button>
-                                    <button type="button" class="btn btn-primary" pTooltip="Download All Data" tooltipPosition="top"
+                                    <button type="button" class="btn btn-primary" matTooltip="Download Selected" tooltipPosition="top" matTooltipPosition="above"
                                             pButton icon="fa-download" iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})"></button>
                                     <div class="excel-upload excel-upload-cstm">
                                         <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected"
                                                accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" (change)="bulkUpload($event)">
                                         <label for="upload">
-                                            <span matTooltip="Upload Data (Excel)">
+                                            <span matTooltip="Upload Data (Excel)" matTooltipPosition="above" tooltipPosition="top">
                                                 <i class="fa fa-upload"></i>
                                             </span>
                                         </label>
+                                        &nbsp; &nbsp;
+                                        <button class="btn btn-primary" (click)="sampleExcelDownload()" matTooltipPosition="above" matTooltip="Download Sample File" tooltipPosition="top">Sample File Download</button>
                                     </div>
                                 </div>
 
@@ -81,7 +83,13 @@
                                         {{rowData[col.field]}}
                                     </td>
                                     <td style="width:200px" *ngIf="selectedColumns.length> 0">
-                                        <p-inputSwitch [(ngModel)]="rowData['isActive']" name="isActive{{rowIndex}}" (onChange)="toggleActiveStatus(rowData)" matTooltip="Toggle Status"></p-inputSwitch>
+                                        <!--<p-inputSwitch [(ngModel)]="rowData['isActive']" name="isActive{{rowIndex}}" (onChange)="toggleActiveStatus(rowData)" matTooltip="Toggle Status"></p-inputSwitch>-->
+                                        <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="toggleActiveStatus(rowData)"
+                                                       [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                                        <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="toggleActiveStatus(rowData)"
+                                                       [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                                        <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="toggleActiveStatus(rowData)"
+                                                       [(ngModel)]="rowData['isActive']"></p-inputSwitch>
                                         <span data-toggle="modal" data-target="#view">
                                             <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="viewItemDetails(rowData)" data-target="#view" data-toggle="modal" matTooltip="View">
                                                 <i class="fa fa-eye"></i>
@@ -185,20 +193,30 @@
                 <div class="modal-body">
                     <form #AssetType="ngForm">
                         <div class="form-group">
-                            <div class="col-sm-12">
+                            <!--<div class="col-sm-12">
                                 <div class="col-sm-4">
                                     <label for="glcId" class="control-label">GLC Id</label>
                                 </div>
                                 <div class="col-sm-5">
-                                    <textarea class="text-item" #memo="ngModel" id="glcid" name="glcid" [(ngModel)]="currentRow.glcid" minlength="2" format="number" (onChange)="check"></textarea>
+                                    <textarea class="text-item" #memo="ngModel" id="glcid" name="glcid" [(ngModel)]="addNew.glcid" (ngModelChange)="getChange()"
+                                               format="number"></textarea>
                                 </div>
-                            </div>
+                            </div>-->
                             <div class="col-sm-12">
                                 <div class="col-sm-4">
                                     <label for="name" class="control-label">Name</label>
                                 </div>
                                 <div class="col-sm-5">
-                                    <textarea class="text-item" #memo="ngModel" id="name" name="name" [(ngModel)]="currentRow.glAccountCategoryName" minlength="2"></textarea>
+                                    <!--<textarea class="text-item" #memo="ngModel" id="name" name="name" [(ngModel)]="currentRow.glAccountCategoryName" minlength="2"></textarea>-->
+                                    <p-autoComplete field="glAccountCategoryName" [(ngModel)]="addNew.glAccountCategoryName"
+                                                    (onSelect)="selectedGLACategoryType($event)"
+                                                    (onKeyUp)="checkGLACategoryTypeExists('glAccountCategoryName', $event.target.value)"
+                                                    name="glAccountCategoryName" (onBlur)="onBlur($event)" [suggestions]="glAccountCategoryList"
+                                                    (completeMethod)="filterGLACategoryType($event)" [size]="30" [minLength]="1"
+                                                    [dropdown]="true" class="p-autoComplete-ctsm" required>
+
+                                    </p-autoComplete>
+                                    <div *ngIf="disableSaveCatagotytypeMsg" class="clr-red">Already Exists</div>
                                 </div>
                             </div>
                         </div>
@@ -206,20 +224,20 @@
                             <div class="col-sm-6">
                                 <div class="checkbox-cstm">
                                     <label>
-                                        <input type="checkbox" name="isActive" [(ngModel)]="currentRow.isActive">
-                                        <span class="cr">
-                                            <i class="cr-icon pi pi-check"></i>
-                                        </span>
+                                        <input type="checkbox" name="isActive" (ngModelChange)="getChange()" #isActive="ngModel"
+                                               class="form-check-input trigger2" checked id="isActive" [(ngModel)]="addNew.isActive" [ngModelOptions]="{standalone: true}">
+                                        <span class="cr"><i class="cr-icon pi pi-check"></i></span>
                                         Active
-                                    </label>
+                                    </label>                                    
                                 </div>
                             </div>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-primary" data-dismiss="modal" [disabled]="disableSave" (click)="currentModeOfOperation === 2 ? saveNewItem() : updateItem();"> {{currentModeOfOperation == 3 ? 'Update' : 'Save' }}</button>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    <button class="btn btn-primary" data-dismiss="modal" [disabled]="!AssetType.valid || disableSaveGLCategoryName"
+                            (click)="currentModeOfOperation === 2 ? saveNewItem() : updateItem();"> {{currentModeOfOperation == 3 ? 'Update' : 'Save' }}</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="dismissModel()">Close</button>
 
                 </div>
             </div>
@@ -271,10 +289,10 @@
                                     <th>Last Updated Time</th>
                                 </tr>
                             </thead>
-                            <tr *ngFor="let audit of auditHistory">
-                                <td>{{audit.glcid}}</td>
-                                <td>{{audit.glAccountCategoryName}}</td>
-                                <td>{{audit.isActive ? 'true' : 'false'}}</td>
+                            <tr *ngFor="let audit of auditHistory; let i = index;">
+                                <td [ngStyle]="{'color': getColorCodeForHistory(i, 'glcid', audit.glcid)  ? 'black' : 'red'  }">{{audit.glcid}}</td>
+                                <td [ngStyle]="{'color': getColorCodeForHistory(i, 'glAccountCategoryName', audit.glAccountCategoryName)  ? 'black' : 'red'  }">{{audit.glAccountCategoryName}}</td>
+                                <td [ngStyle]="{'color': getColorCodeForHistory(i, 'isActive', audit.isActive)  ? 'black' : 'red'  }">{{audit.isActive}}</td>
                                 <td>{{audit.updatedBy}}</td>
                                 <td>{{audit.updatedDate| date: 'MM/dd/yyyy h:mm:ss a'}}</td>
                             </tr>

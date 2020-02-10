@@ -224,5 +224,28 @@ namespace QuickApp.Pro.Controllers
             return Ok(result);
         }
 
+        [HttpGet("employeesbyjobtitle")]
+        public IActionResult GetEmployeesByJobTitle(long jobTitleId)
+        {
+            var result = _unitOfWork.CommonRepository.GetEmployeesByJobTitle(jobTitleId);
+            return Ok(result);
+        }
+
+        [HttpGet("employeesbyexpertise")]
+        public IActionResult GetEmployeesByExpertise(long expertiseId)
+        {
+            var result = _unitOfWork.CommonRepository.GetEmployeesByExpertise(expertiseId);
+            return Ok(result);
+        }
+
+        [HttpGet("getemployeestation")]
+        public IActionResult GetEmployeeStation(long employeeId)
+        {
+            var result = _unitOfWork.CommonRepository.GetEmployeeStation(employeeId);
+            return Ok(result);
+        }
+
+
+
     }
 }
