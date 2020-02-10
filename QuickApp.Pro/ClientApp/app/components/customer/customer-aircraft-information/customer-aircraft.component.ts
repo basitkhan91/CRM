@@ -656,25 +656,24 @@ export class CustomerAircraftComponent implements OnInit {
             }
         })
     }
-    getCustomerAircraftHistory(content, row) {
+    getCustomerAircraftHistory(row) {
         const { customerAircraftMappingId } = row;
-        this.alertService.startLoadingMessage();
-
-        this.customerService.getMappedAirCraftDetailsAudit(customerAircraftMappingId).subscribe(
-            results => this.onAuditHistoryLoadSuccessful(results, content),
-            error => this.saveFailedHelper(error));
+        // this.alertService.startLoadingMessage();
+        this.customerService.getMappedAirCraftDetailsAudit(customerAircraftMappingId).subscribe(res => {
+            this.aircraftauditHisory = res;
+        });
     }
-    private onAuditHistoryLoadSuccessful(auditHistory, content) {
-        this.alertService.stopLoadingMessage();
+    // private onAuditHistoryLoadSuccessful(auditHistory, content) {
+    //     this.alertService.stopLoadingMessage();
 
 
-        this.aircraftauditHisory = auditHistory;
+    //     this.aircraftauditHisory = auditHistory;
 
-        this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
-        this.modal.result.then(() => {
-            console.log('When user closes');
-        }, () => { console.log('Backdrop click') })
-    }
+    //     this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
+    //     this.modal.result.then(() => {
+    //         console.log('When user closes');
+    //     }, () => { console.log('Backdrop click') })
+    // }
     openAircraftView(data) {
         console.log(data);
         this.viewAircraftData = data;
@@ -695,6 +694,9 @@ export class CustomerAircraftComponent implements OnInit {
     dismissModel() {
         this.modal.close();
     }
+    // dismissModelHist() {
+    //     $('#contentAuditHist').modal('hide');
+    // }
     deleteAircraftMappedInventory(content, rowData) {
 
         this.isDeleteMode = true;

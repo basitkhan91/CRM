@@ -49,7 +49,7 @@
                 </div>
                 <!-- class="rpo-table-cstm rro-table-cstm" -->
                 <p-table #dt
-                         class="rpo-table-cstm"
+                         class="rpo-table-cstm lastcol-fix"
                          [value]="customerContacts"
                          [rows]="10"
                          [first]="0"
@@ -102,8 +102,22 @@
 
                     <ng-template pTemplate="header" let-columns>
                         <tr>
-                            <!-- <th style="width: 40px;">Flag</th> -->
-                            <th *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field" [ngClass]="{'update_withFlag': col.field=='isDefaultContact'}">
+                            <th style="width: 40px;">Flag</th>
+                            <th *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field" [hidden]="col.field == 'isDefaultContact'">
+                                {{col.header}}
+                                <p-sortIcon [field]="col.field"></p-sortIcon>
+                            </th>
+                            <th style="width: 140px;"> Actions</th>
+                        </tr>
+                        <tr>
+                            <th></th>
+                            <th style="width:auto" *ngFor="let col of columns" [hidden]="col.field == 'isDefaultContact'" [ngSwitch]="col.field">
+                                <input style="width:100%;" pInputText type="text" (input)="domestictable.filter($event.target.value, col.field, 'contains')">
+                            </th>
+                            <th style="width:140px;position:sticky"></th>
+                        </tr>
+                        <!-- <tr>
+                            <th *ngFor="let col of columns" pResizableColumn pReorderableColumn [hidden]="col.field == 'isDefaultContact'" [pSortableColumn]="col.field" [ngClass]="{'update_withFlag': col.field=='isDefaultContact'}">
                                 <ng-container *ngIf="col.field=='isDefaultContact'">
                                     Flag
                                 </ng-container>
@@ -119,17 +133,17 @@
 
                                 Actions
                             </th>
-                        </tr>
-                        <tr>
-                            <!-- <th ></th> -->
-                            <th *ngFor="let col of columns" [ngClass]="{'update_withFlag': col.field=='isDefaultContact'}">
+                        </tr> -->
+                        
+                        <!-- <tr>
+                            <th *ngFor="let col of columns" [hidden]="col.field == 'isDefaultContact'" [ngClass]="{'update_withFlag': col.field=='isDefaultContact'}">
                                 <div *ngIf="col.field !='isDefaultContact'" [ngSwitch]="col.field">
                                     <input style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field, 'contains')">
                                 </div>
 
                             </th>
                             <th style="width:140px;position:sticky"></th>
-                        </tr>
+                        </tr> -->
                     </ng-template>
 
                     <ng-template pTemplate="body" let-rowData let-columns="columns" let-i="rowIndex">
@@ -141,20 +155,25 @@
                                      </span>
 
                             </td> -->
+                            <td> 
+                                <span class="flag">
+                                <i  *ngIf="rowData.isDefaultContact == true" [ngStyle]="{'color': rowData.isDefaultContact == true ? 'green' : 'none'}"  class="fa fa-flag" matTooltip="Primary" matTooltipPosition="above" aria-hidden="true"></i>
+                            </span>
+                            </td>
 
-                            <td *ngFor="let col of columns" class="ui-resizable-column " pReorderableRowHandle [ngClass]="{'update_withFlag': col.field=='isDefaultContact'}" style="width:110px">
-                                <ng-container *ngIf="col.field!='workPhone' && col.field!='isDefaultContact'">
+                            <td *ngFor="let col of columns" class="ui-resizable-column" [hidden]="col.field == 'isDefaultContact'" pReorderableRowHandle>
+                                <ng-container *ngIf="col.field!='workPhone' ">
                                     {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
                                 </ng-container>
                                 <ng-container *ngIf="col.field=='workPhone'">
                                     {{rowData.workPhone}} - {{rowData.workPhoneExtn}}
                                 </ng-container>
-                                <ng-container *ngIf="col.field=='isDefaultContact'">
+                                <!-- <ng-container *ngIf="col.field=='isDefaultContact'">
                                     <span class="flag">
                                         <i *ngIf="rowData.isDefaultContact == 'Yes'" [ngStyle]="{'color': rowData.isDefaultContact == 'Yes' ? 'green' : 'none'}"
                                            class="fa fa-flag"  matTooltip="Primary" matTooltipPosition="above" aria-hidden="true"></i>
                                     </span>
-                                </ng-container>
+                                </ng-container> -->
                             </td>
 
                             <td style="width:140px" *ngIf="selectedColumns.length > 0  && isViewMode == false">
@@ -346,8 +365,8 @@
                     <div class="form-row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="tag">Tag <span class="clr-red">*</span></label>
-                                <input type="text" class="form-control" [(ngModel)]="contactInformation.tag" (ngModelChange)="enableSave()" name="tag" required>
+                                <label for="tag">Tag</label>
+                                <input type="text" class="form-control" [(ngModel)]="contactInformation.tag" (ngModelChange)="enableSave()" name="tag">
 
                             </div>
                             <div class="form-group">
@@ -504,7 +523,8 @@
                     <p><span class="label"><b>Suffix: </b></span><span class="value">{{sourceViewforContact.suffix}}</span></p>
                     <p><span class="label"><b>Title: </b></span><span class="value">{{sourceViewforContact.contactTitle}}</span></p>
                     <p><span class="label"><b>Work Phone<span class="clr-red">*</span>: </b></span><span class="value">{{sourceViewforContact.workPhone}} - {{sourceViewforContact.workPhoneExtn}}</span></p>
-                    <p><span class="label"><b>Primary Contact </b></span><span class="value">{{sourceViewforContact.isDefaultContact}}</span></p>
+                    <p><span class="label"><b>Primary Contact </b></span><span class="value">{{sourceViewforContact.isDefaultContact === true ? 
+                       'Yes' : 'No' }}</span></p>
 
                     <p><span class="label"><b>Email<span class="clr-red">*</span>:</b></span><span class="value">{{sourceViewforContact.email}}</span></p>
                     <p><span class="label"><b>WebSite: </b></span><span class="value">{{sourceViewforContact.websiteURL}}</span></p>

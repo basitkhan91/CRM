@@ -728,19 +728,27 @@ export class CustomerGeneralInformationComponent implements OnInit {
             this.stopmulticlicks=false;
         },500)
     }
-    checkClassificationExists(value) {
+    checkClassificationExists(field, value) {
 
-        this.isClassificationAlreadyExists = false;
-
-        for (let i = 0; i < this.allcustomerclassificationInfo.length; i++) {
-            if (this.addNewclassification.description == this.allcustomerclassificationInfo[i].label || value == this.allcustomerclassificationInfo[i].label) {
-                this.isClassificationAlreadyExists = true;
-                // this.disableSave = true;
-
-                return;
-            }
-
+        const exists = validateRecordExistsOrNot(field, value, this.allcustomerclassificationInfo, this.selectedClassificationRecordForEdit);
+        if (exists.length > 0) {
+            this.isClassificationAlreadyExists = true;
         }
+        else {
+            this.isClassificationAlreadyExists = false;
+        }
+
+        // this.isClassificationAlreadyExists = false;
+
+        // for (let i = 0; i < this.allcustomerclassificationInfo.length; i++) {
+        //     if (this.addNewclassification.description == this.allcustomerclassificationInfo[i].label || value == this.allcustomerclassificationInfo[i].label) {
+        //         this.isClassificationAlreadyExists = true;
+        //         // this.disableSave = true;
+
+        //         return;
+        //     }
+
+        // }
 
 
     }
@@ -751,11 +759,6 @@ export class CustomerGeneralInformationComponent implements OnInit {
 
         this.isClassificationAlreadyExists = !exists;
     }
-
-
-
-
-
 
     addClassification() {
         const data = {
