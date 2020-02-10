@@ -40,7 +40,12 @@ namespace DAL.Repositories
 
                     foreach (var file in files)
                     {
-                        long? fileSize = ContentDispositionHeaderValue.Parse(file.ContentDisposition).Size;
+                        //Commented By Vijay on 10-Feb-2020 here we are not getting file size.
+                        //long? fileSize = ContentDispositionHeaderValue.Parse(file.ContentDisposition).Size;
+
+                        decimal? fileSize= file.Length;
+                      
+
                         if (Math.Round(Convert.ToDecimal(fileSize / (1024 * 1024)), 2) <= AppSettings.UploadFileSize)
                         {
 
@@ -104,7 +109,11 @@ namespace DAL.Repositories
 
                     foreach (var file in files)
                     {
-                        long? fileSize = ContentDispositionHeaderValue.Parse(file.ContentDisposition).Size;
+                        //Commented By Vijay on 10-Feb-2020 here we are not getting file size.
+                        //long? fileSize = ContentDispositionHeaderValue.Parse(file.ContentDisposition).Size;
+
+                        decimal? fileSize = file.Length;
+                      
                         if (Math.Round(Convert.ToDecimal(fileSize / (1024 * 1024)), 2) <= AppSettings.UploadFileSize)
                         {
 

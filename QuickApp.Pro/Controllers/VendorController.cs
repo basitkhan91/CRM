@@ -174,7 +174,7 @@ namespace QuickApp.Pro.Controllers
 
         [HttpPost("roListWithFilters")]
         public IActionResult rolist([FromBody]Filters<RepairOrderFilters> roFilters)
-        {
+       {
             var allActions = _unitOfWork.repairOrder.GetRepairOrderlist(roFilters);
             return Ok(allActions);
         }
@@ -5256,7 +5256,7 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpPut("VendorContactATAUpdate/{id}")]
-        public IActionResult InsertVendorContactATA(long id, [FromBody] VendorContactATAMapping vendorContactAtaMapping)
+        public IActionResult UpdateVendorContactATA(long id, [FromBody] VendorContactATAMapping vendorContactAtaMapping)
         {
             if (ModelState.IsValid)
             {
