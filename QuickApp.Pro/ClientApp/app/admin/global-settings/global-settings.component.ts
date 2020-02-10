@@ -76,8 +76,9 @@ export class GlobalSettingsComponent implements OnInit
         let countryObject = this.countriesList.find(x => x.cultureName === this.countryItem);
         let params = {
             GlobalSettingId:this.globalSettingsId,
-            MasterCompanyId:1,
-            CultureId:countryObject.cultureId,
+            CompanyId:1,
+            CultureId: countryObject.cultureId,
+            CultureName: countryObject.cultureName,
             CurrencyFormat:this.countryData.currencyFormat,
             NumberFormat:this.countryData.numberFormat,
             DateFormat:this.countryData.dateFormat,

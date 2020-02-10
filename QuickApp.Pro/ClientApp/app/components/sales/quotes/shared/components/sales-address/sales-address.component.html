@@ -80,7 +80,7 @@
     <div class="form-group memo-popup-cstm" style="margin-top: 12px;">
       <label class="sales-quote-shipping-label">Memo</label>
       <span pTooltip="{{salesOrderQuote.shipViaMemo}}" tooltipPosition="top"><input type="text" name="shipViaMemo" class="form-control" class="form-control" value="{{salesOrderQuote.shipViaMemo}}" disabled /></span>
-      <i class="fa fa-info-circle fa-lg" data-toggle="modal" data-target="#add-description" pTooltip="{{salesOrderQuote.shipViaMemo}}" tooltipPosition="top" (click)="onAddDescription('shipViaMemo')"></i>
+      <i class="fa fa-info-circle fa-lg" data-toggle="modal" data-target="#add-memo-description" pTooltip="{{salesOrderQuote.shipViaMemo}}" tooltipPosition="top" (click)="onAddDescription('shipViaMemo')"></i>
     </div>
     <div class="form-group">
      
@@ -133,7 +133,7 @@
 
     </div>
     <div class="col-md-3">
-      <h5 class="po-head">Ship To</h5>
+      <h5 class="po-head">Bill To</h5>
       <div class="form-group">
                    
         <label class="sales-quote-shipping-label">SITE NAME<span class="clr-red">*</span>
@@ -209,13 +209,13 @@
     <div class="form-group memo-popup-cstm" style="margin-top: 12px;">
       <label class="sales-quote-shipping-label">Memo</label>
       <span pTooltip="{{salesOrderQuote.billToMemo}}" tooltipPosition="top"><input type="text" name="billToMemo" class="form-control" class="form-control" value="{{salesOrderQuote.billToMemo}}" disabled /></span>
-      <i class="fa fa-info-circle fa-lg" data-toggle="modal" data-target="#add-description" pTooltip="{{salesOrderQuote.billToMemo}}" tooltipPosition="top" (click)="onAddDescription('billToMemo')"></i>
+      <i class="fa fa-info-circle fa-lg" data-toggle="modal" data-target="#add-memo-description" pTooltip="{{salesOrderQuote.billToMemo}}" tooltipPosition="top" (click)="onAddDescription('billToMemo')"></i>
     </div>
 
     </div>
 </div>
 
-<div class="modal fade" id="add-description" role="dialog" data-backdrop="static" data-keyboard="false">
+<div class="modal fade" id="add-memo-description" role="dialog" data-backdrop="static" data-keyboard="false">
   <div class="modal-dialog modal-sm" style="max-width: 400px !important;">
     <div class="modal-content">
       <div class="modal-header">

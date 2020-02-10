@@ -13,6 +13,7 @@ export class GLAccountCategoryEndpointService extends EndpointFactory {
     private readonly getAllItemsEndPointTemplate: string = "getAll";
     private readonly getItemByIdEndPointTemplate: string = "getById";
     private readonly addItemEndPointTemplate: string = "add";
+    private readonly _glaccountcategoryUrlNew: string = "/api/GLAccountCategory/update";
     private readonly updateItemEndPointTemplate: string = "update";
     private readonly removeItemByIdEndPointTemplate: string = "removeById";
     private readonly getItemAuditByIdEndPointTemplate: string = "audit";
@@ -22,7 +23,7 @@ export class GLAccountCategoryEndpointService extends EndpointFactory {
     get getAll() { return `${this.configurations.baseUrl}/api/${this.item}/${this.getAllItemsEndPointTemplate}`; }
     get getById() { return `${this.configurations.baseUrl}/api/${this.item}/${this.getItemByIdEndPointTemplate}`; }
     get add() { return `${this.configurations.baseUrl}/api/${this.item}/${this.addItemEndPointTemplate}`; }
-    get update() { return `${this.configurations.baseUrl}/api/${this.item}/${this.updateItemEndPointTemplate}`; }
+  //  get update() { return `${this.configurations.baseUrl}/api/${this.item}/${this.updateItemEndPointTemplate}`; }
     get removeById() { return `${this.configurations.baseUrl}/api/${this.item}/${this.removeItemByIdEndPointTemplate}`; }
     get getAudit() { return `${this.configurations.baseUrl}/api/${this.item}/${this.getItemAuditByIdEndPointTemplate}`; }
     get bulkUpload() { return `${this.configurations.baseUrl}/api/${this.item}/${this.bulkUploadEndPointTemplate}`; }
@@ -32,11 +33,11 @@ export class GLAccountCategoryEndpointService extends EndpointFactory {
         super(http, configurations, injector);
     }
 
-    addItem<T>(item: GLAccountCategory): Observable<T> {
+    addItem<T>(userObject: any): Observable<T> {
         let endpointUrl = this.add;
-        return this.http.post<T>(endpointUrl, JSON.stringify(item), this.getRequestHeaders())
+        return this.http.post<T>(endpointUrl, JSON.stringify(userObject), this.getRequestHeaders())
             .catch(error => {
-                return this.handleError(error, () => this.addItem(item));
+                return this.handleError(error, () => this.addItem(userObject));
             });
     }
 
@@ -80,11 +81,12 @@ export class GLAccountCategoryEndpointService extends EndpointFactory {
             });
     }
 
-    updateItem<T>(item: GLAccountCategory): Observable<T> {
-        let endpointUrl = this.update;
-        return this.http.post<T>(endpointUrl, JSON.stringify(item), this.getRequestHeaders())
+    updateItem<T>(action: any, glAccountCategoryId: number): Observable<T> {
+      //  let endpointUrl = this.update;
+        let endpointUrl = `${this._glaccountcategoryUrlNew}/${glAccountCategoryId}`
+        return this.http.put<T>(endpointUrl, JSON.stringify(action), this.getRequestHeaders())
             .catch(error => {
-                return this.handleError(error, () => this.updateItem(item));
+                return this.handleError(error, () => this.updateItem(action, glAccountCategoryId));
             });
     }
 }

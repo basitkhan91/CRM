@@ -50,7 +50,7 @@ namespace DAL.Repositories
             try
             {
                 var data = (from gs in _appContext.GlobalSettings
-                            where gs.IsActive == true && gs.IsDeleted == false && gs.MasterCompanyId == masterCompanyId
+                            where gs.IsActive == true && gs.IsDeleted == false && gs.CompanyId == masterCompanyId
                             select new
                             {
                                 gs.GlobalSettingId,
@@ -60,6 +60,7 @@ namespace DAL.Repositories
                                 gs.NumberFormat,
                                 gs.PercentFormat,
                                 gs.CreditLimtFormat,
+                                gs.CultureName
                             }).FirstOrDefault();
                 return data;
             }

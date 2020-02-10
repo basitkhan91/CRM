@@ -3469,7 +3469,7 @@ namespace DAL.Repositories
                             c.MasterCompanyId,
                             c.UpdatedBy,
                             c.UpdatedDate
-                        }).ToList();
+                        }).OrderByDescending(p=>p.AuditCustomerTaxTypeRateMappingId).ToList();
             return data;
         }
 
