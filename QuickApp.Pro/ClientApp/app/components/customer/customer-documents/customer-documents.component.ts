@@ -14,48 +14,48 @@ import { getObjectByValue, getObjectById, getValueFromObjectByKey } from '../../
 import { ConfigurationService } from '../../../services/configuration.service';
 import * as $ from 'jquery';
 @Component({
-	selector: 'app-customer-documents',
-	templateUrl: './customer-documents.component.html',
-	styleUrls: ['./customer-documents.component.scss'],
+    selector: 'app-customer-documents',
+    templateUrl: './customer-documents.component.html',
+    styleUrls: ['./customer-documents.component.scss'],
 })
 /** Customer component*/
 export class CustomerDocumentsComponent implements OnInit {
-    disableSave:boolean=true;
-	@Input() savedGeneralInformationData;
-	@Input() editMode;
-	@Input() editGeneralInformationData;
+    disableSave: boolean = true;
+    @Input() savedGeneralInformationData;
+    @Input() editMode;
+    @Input() editGeneralInformationData;
     @Output() tab = new EventEmitter<any>();
     @ViewChild('fileUploadInput') fileUploadInput: any;
-    @Input() customerDataFromExternalComponents : any;
-	documentInformation = {
+    @Input() customerDataFromExternalComponents: any;
+    documentInformation = {
 
-		docName: '',
-		docMemo: '',
-		docDescription: ''
-	}
-	customerDocumentsData: any = [];
+        docName: '',
+        docMemo: '',
+        docDescription: ''
+    }
+    customerDocumentsData: any = [];
     customerDocumentsColumns = [
-        
-		{ field: 'docName', header: 'Name' },
-		{ field: 'docDescription', header: 'Description' },
-		{ field: 'documents', header: 'Documents' },
-		{ field: 'docMemo', header: 'Memo' }
+
+        { field: 'docName', header: 'Name' },
+        { field: 'docDescription', header: 'Description' },
+        { field: 'documents', header: 'Documents' },
+        { field: 'docMemo', header: 'Memo' }
     ];
     sourceViewforDocumentListColumns = [
         { field: 'fileName', header: 'File Name' },
     ]
-	selectedColumns = this.customerDocumentsColumns;
-	formData = new FormData()
-	// ediData: any;
+    selectedColumns = this.customerDocumentsColumns;
+    formData = new FormData()
+    // ediData: any;
     isEditButton: boolean = false;
     isDeleteMode: boolean = false;
-	id: number;
-	customerCode: any;
-	customerName: any;
+    id: number;
+    customerCode: any;
+    customerName: any;
     sourceViewforDocument: any;
     localCollection: any;
     selectedRowForDelete: any;
-	 modal: NgbModalRef;
+    modal: NgbModalRef;
     sourceViewforDocumentList: any = [];
     documentauditHisory: any[];
     headersforAttachment = [
@@ -68,12 +68,12 @@ export class CustomerDocumentsComponent implements OnInit {
     pageSize: number = 10;
     totalPages: number = 0;
 
-	constructor(private router: ActivatedRoute, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public customerService: CustomerService,
+    constructor(private router: ActivatedRoute, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public customerService: CustomerService,
         private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private configurations: ConfigurationService) {
-	}
+    }
 
-	ngOnInit() {
-		if (this.editMode) {
+    ngOnInit() {
+        if (this.editMode) {
             this.id = this.editGeneralInformationData.customerId;
 
             this.customerCode = this.editGeneralInformationData.customerCode;
@@ -94,72 +94,72 @@ export class CustomerDocumentsComponent implements OnInit {
                 this.customerName = this.savedGeneralInformationData.name;
                 this.isViewMode = false;
                 this.getList();
-            }			
+            }
 
         }
-       
-	}
+
+    }
 
     ngOnChanges(changes: SimpleChanges) {
-       
+
         for (let property in changes) {
-          
+
             if (property == 'customerDataFromExternalComponents') {
 
-            if(changes[property].currentValue != {}){
-                this.id = this.customerDataFromExternalComponents.customerId;
-                this.customerCode = this.customerDataFromExternalComponents.customerCode;
-                this.customerName = this.customerDataFromExternalComponents.name;
-                this.getList();
-                this.isViewMode = true;
-                
-              } 
+                if (changes[property].currentValue != {}) {
+                    this.id = this.customerDataFromExternalComponents.customerId;
+                    this.customerCode = this.customerDataFromExternalComponents.customerCode;
+                    this.customerName = this.customerDataFromExternalComponents.name;
+                    this.getList();
+                    this.isViewMode = true;
+
+                }
             }
         }
     }
     enableSave() {
-               this.disableSave = false;
-       
-       } 
-       closeMyModel(type){
-           console.log("check issues")
-           $(type).modal("hide");
-           this.disableSave=true;
-       }
-	get userName(): string {
-		return this.authService.currentUser ? this.authService.currentUser.userName : "";
-	}
+        this.disableSave = false;
 
-	// opencontactView(content, row) {
+    }
+    closeMyModel(type) {
+        console.log("check issues")
+        $(type).modal("hide");
+        this.disableSave = true;
+    }
+    get userName(): string {
+        return this.authService.currentUser ? this.authService.currentUser.userName : "";
+    }
 
-	fileUpload(event) {
+    // opencontactView(content, row) {
+
+    fileUpload(event) {
         console.log(event, "event+++")
-		if (event.files.length === 0)
-			return;
+        if (event.files.length === 0)
+            return;
 
-		for (let file of event.files)
+        for (let file of event.files)
             this.formData.append(file.name, file);
-            this.disableSave=false;
+        // this.disableSave=false;
     }
     removeFile(event) {
-		this.formData.delete(event.file.name)
+        this.formData.delete(event.file.name)
 
-	}
-	
+    }
+
     openDocument(content, row) {
-       
+
         this.customerService.toGetUploadDocumentsList(row.attachmentId, row.customerId, 1).subscribe(res => {
             this.sourceViewforDocumentList = res;
             this.sourceViewforDocument = row;
 
         })
-        
-       
+
+
         //this.modal = this.modalService.open(content, { size: 'sm' });
         //this.modal.result.then(() => {
         //    console.log('When user closes');
         //}, () => { console.log('Backdrop click') })
-    
+
 
     }
     docviewdblclick(data) {
@@ -168,32 +168,36 @@ export class CustomerDocumentsComponent implements OnInit {
 
     }
     toGetUploadDocumentsList(attachmentId, customerId, moduleId) {
-       
+
         this.customerService.toGetUploadDocumentsList(attachmentId, customerId, moduleId).subscribe(res => {
             this.sourceViewforDocumentList = res;
+            if (res.length > 0) {
+                this.disableSave = false;
+                // this.enableSave();
+            }
             console.log(this.sourceViewforDocumentList);
         })
     }
-	getList() {
-		this.customerService.getDocumentList(this.id).subscribe(res => {
+    getList() {
+        this.customerService.getDocumentList(this.id).subscribe(res => {
             this.customerDocumentsData = res;
             if (this.customerDocumentsData.length > 0) {
                 this.totalRecords = this.customerDocumentsData.length;
                 this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
             }
-		})
-	}
-	saveDocumentInformation() {
-		const data = {
-			...this.documentInformation,
-			customerId: this.id,
-			masterCompanyId: 1,
+        })
+    }
+    saveDocumentInformation() {
+        const data = {
+            ...this.documentInformation,
+            customerId: this.id,
+            masterCompanyId: 1,
             updatedBy: this.userName,
             createdBy: this.userName
-		}
+        }
 
-		for (var key in data) {
-			this.formData.append(key, data[key]);
+        for (var key in data) {
+            this.formData.append(key, data[key]);
         }
         if (!this.isEditButton) {
             this.customerService.documentUploadAction(this.formData).subscribe(res => {
@@ -233,32 +237,32 @@ export class CustomerDocumentsComponent implements OnInit {
             })
         }
         $("#addDocumentDetails").modal("hide");
-        this.disableSave=true;
+        this.disableSave = true;
     }
-   
-	updateCustomerDocument() { }
+
+    updateCustomerDocument() { }
 
     editCustomerDocument(rowdata) {
         this.isEditButton = true;
         this.documentInformation = rowdata;
-       
+
         this.customerService.toGetUploadDocumentsList(rowdata.attachmentId, rowdata.customerId, 1).subscribe(res => {
             this.sourceViewforDocumentList = res;
             //this.sourceViewforDocument = rowdata;
         });
-	}
+    }
     addDocumentDetails() {
         this.sourceViewforDocumentList = [];
         this.isEditButton = false;
         this.documentInformation = {
 
-		docName: '',
-		docMemo: '',
-		docDescription: ''
-	}
+            docName: '',
+            docMemo: '',
+            docDescription: ''
+        }
     }
-	backClick() {
-		this.tab.emit('Warnings');
+    backClick() {
+        this.tab.emit('Warnings');
     }
     openDelete(content, row) {
         this.selectedRowForDelete = row;
@@ -275,24 +279,24 @@ export class CustomerDocumentsComponent implements OnInit {
         if (customerDocumentDetailId > 0) {
             //this.isSaving = true;
             this.customerService.getDeleteDocumentListbyId(customerDocumentDetailId).subscribe(
-               
+
                 this.alertService.showMessage(
                     'Success',
                     `Action was deleted successfully `,
                     MessageSeverity.success
                 ));
-        
+
             this.getList();
-           
+
         }
         this.modal.close();
     }
-      dismissModel() {        
-         this.isDeleteMode = false;       
-         this.modal.close();
+    dismissModel() {
+        this.isDeleteMode = false;
+        this.modal.close();
     }
 
-    dismissDocumentPopupModel(){
+    dismissDocumentPopupModel() {
         this.fileUploadInput.clear();
         // this.closeMyModel(type);
         console.log("hiasdsadsad")
@@ -302,10 +306,10 @@ export class CustomerDocumentsComponent implements OnInit {
         const url = `${this.configurations.baseUrl}/api/FileUpload/downloadattachedfile?filePath=${rowData.link}`;
         window.location.assign(url);
     }
-    
-	getPageCount(totalNoofRecords, pageSize) {
-		return Math.ceil(totalNoofRecords / pageSize)
-	}
+
+    getPageCount(totalNoofRecords, pageSize) {
+        return Math.ceil(totalNoofRecords / pageSize)
+    }
 
     openHistory(content, rowData) {
         //const { customerShippingAddressId } = rowData.customerShippingAddressId;
