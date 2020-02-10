@@ -390,7 +390,7 @@ namespace QuickApp.Pro.Controllers
         [Produces(typeof(List<AircraftTypeViewModel>))]
         public IActionResult aircraftGet(AircraftTypeViewModel aircraftTypeViewModel)
         {
-            var aircraftManufacturer = _unitOfWork.aircraftType.getAircraftTypeData().Where(x => x.IsDeleted != true && x.IsActive == true);
+            var aircraftManufacturer = _unitOfWork.aircraftType.getAircraftTypeData().Where(x => x.IsDeleted != true && x.IsActive == true).OrderBy(p=>p.Description);
             return Ok(aircraftManufacturer);
 
         }
