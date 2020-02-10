@@ -1474,11 +1474,11 @@
 
 </ng-template>
 
-<div class="modal fade popup-blur" id="vendorCapesView" role="dialog" data-backdrop="static" data-keyboard="false" style="z-index: 10000;">
+<!-- <div class="modal fade popup-blur" id="vendorCapesView" role="dialog" data-backdrop="static" data-keyboard="false" style="z-index: 10000;">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header" *ngIf="vendorCapesGeneralInfo">
-          <button type="button" class="close" data-dismiss="modal">&times;</button> <!--data-dismiss="modal"-->
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
           <h4 class="modal-title">Capability Details of Vendor: <span>"{{vendorCapesGeneralInfo.vendorName}}"</span></h4>
         </div>
         <div class="modal-body">
@@ -1513,7 +1513,6 @@
                     <p-table class="ptable-custom" [value]="aircraftListDataValues" [rows]="6" [columns]="colsaircraftLD" [scrollable]="true" [style]="{width:'100%'}" [paginator]="true">
                         <ng-template pTemplate="header" let-columns>
                             <tr>
-                                <!-- <th>Id</th> -->
                                 <th *ngFor="let col of columns">
                                     {{col.header}}
                                 </th>
@@ -1521,7 +1520,6 @@
                         </ng-template>
                         <ng-template pTemplate="body" let-i="rowIndex" let-rowData let-columns="columns">
                             <tr>
-                                <!-- <td>{{i+1}}</td> -->
                                 <td *ngFor="let col of columns">
                                     {{rowData[col.field]}}
                                 </td>
@@ -1537,7 +1535,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
 
 <div class="modal fade" id="purchaseOrderList" role="dialog" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-lg">

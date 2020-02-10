@@ -43,14 +43,14 @@
                          </ng-template>
 
                         <ng-template pTemplate="caption" *ngIf="isViewMode == false">
-                            <div style="text-align: right">
+                            <div style="text-align: right;min-height: 30px;">
                                 <p-multiSelect [options]="customerDocumentsColumns" [(ngModel)]="selectedColumns" [ngModelOptions]="{standalone: true}" optionLabel="header" selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
                                 <div class="inner-addon right-addon w200 inline-block g-filter-search-cstm">
                                     <i class="fa fa-search"></i>
                                     <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder=" Filter" style="height: 28px !important;">
                                 </div>
                                 <button type="button" class="btn btn-primary" pButton icon="fa-download" matTooltip="Download  Data" matTooltipPosition="above" iconPos="left" label="Export  Data" (click)="dt.exportCSV()" style="padding: 5px 10px !important;"></button>
-                                <button type="button" class="btn btn-primary" pButton icon="fa-download" matTooltip="Download Selected Data" matTooltipPosition="above" iconPos="left" label="Export Selection Only"  (click)="dt.exportCSV({selectionOnly:true})" style="padding: 5px 10px !important;"></button>
+                                <button type="button" class="btn btn-primary" pButton icon="fa-download" matTooltip="Download Selected Data" matTooltipPosition="above" iconPos="left" label="Export Selected Data"  (click)="dt.exportCSV({selectionOnly:true})" style="padding: 5px 10px !important;"></button>
                                 <!-- <div class="excel-upload excel-upload-cstm">
                                     <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
                                     <label for="upload">

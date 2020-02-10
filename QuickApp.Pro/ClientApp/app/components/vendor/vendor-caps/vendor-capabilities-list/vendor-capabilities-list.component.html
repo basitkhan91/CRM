@@ -96,7 +96,7 @@
                                             <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
                                         </ng-container>
                                                 
-                                        <span data-toggle="modal" ><a class="btn nobg" (click)="viewSelectedRow(rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
+                                        <span data-toggle="modal" data-target="#vendorCapesView"><a class="btn nobg" (click)="viewSelectedRow(rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
                                         <span *ngIf="!isViewMode"><a class="btn nobg" (click)="openEdits(rowData)" matTooltip="Edit"><i class="fa fa-pencil"></i></a> </span>
                                         <span><a class="btn nobg" (click)="openHistory(contentAuditHist,rowData)" matTooltip="History"><i class="fa fa-history"></i></a></span>
                                         <span *ngIf="!isViewMode"><a class="btn nobg" (click)="openDelete(content,rowData)" matTooltip="Delete"><i class="fa fa-trash"></i></a> </span>

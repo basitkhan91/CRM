@@ -323,7 +323,7 @@ export class VendorCapabilitiesListComponent implements OnInit {
         // const { vendorCapabilityId } = rowData;
         this.getVendorCapabilitiesView(rowData.vendorCapabilityId);
         this.getVendorCapesAircraftView(rowData.vendorCapabilityId);
-        $('#vendorCapesView').modal('show');
+        //$('#vendorCapesView').modal('show');
     }
 
     getVendorCapabilitiesView(vendorCapesId) {
@@ -352,7 +352,7 @@ export class VendorCapabilitiesListComponent implements OnInit {
 
     viewSelectedRowdbl(rowData) {
         this.viewSelectedRow(rowData);
-        // $('#vendorCapesView').modal('show');
+        $('#vendorCapesView').modal('show');
     }
 
     getPageCount(totalNoofRecords, pageSize) {

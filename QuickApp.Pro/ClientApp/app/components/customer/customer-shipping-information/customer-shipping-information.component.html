@@ -76,7 +76,7 @@
                         <ng-template pTemplate="header" let-columns>
                             <tr>
                                 <th style="width: 40px;">Flag</th>
-                                <th *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
+                                <th *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field" [hidden]="col.header == 'IsPrimary'">
                                     {{col.header}}
                                     <p-sortIcon [field]="col.field"></p-sortIcon>
                                 </th>
@@ -84,7 +84,7 @@
                             </tr>
                             <tr>
                                 <th></th>
-                                <th style="width:auto" *ngFor="let col of columns" [ngSwitch]="col.field">
+                                <th style="width:auto" *ngFor="let col of columns" [hidden]="col.field == 'isPrimary'" [ngSwitch]="col.field">
                                     <input style="width:100%;" pInputText type="text" (input)="domestictable.filter($event.target.value, col.field, 'contains')">
                                 </th>
                                 <th></th>
@@ -99,7 +99,7 @@
                                         class="fa fa-flag" matTooltip="Primary" matTooltipPosition="above" aria-hidden="true"></i>
                                     </span>
                                 </td>
-                                <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
+                                <td *ngFor="let col of columns" class="ui-resizable-column" [hidden]="col.field == 'isPrimary'" pReorderableRowHandle>
                                     {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
                                 </td>
                                 <td *ngIf="isViewMode == false" style="text-align: center">                                
@@ -238,7 +238,7 @@
                                              class="fa fa-flag" matTooltip="Primary" matTooltipPosition="above" aria-hidden="true"></i>
                                         </span>
                                     </td>
-                                <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
+                                <td *ngFor="let col of columns" class="ui-resizable-column" [hidden]="col.field == 'isPrimary'" pReorderableRowHandle>
                                     {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'expirationDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'startDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
                                 </td>
 

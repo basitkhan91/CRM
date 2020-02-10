@@ -564,49 +564,49 @@ export class VendorsListComponent implements OnInit {
         this.selectedContactColumns = this.contactcols;
     }
     //load Shipping Data
-    private loadShippingData(vendorId) {
-        this.alertService.startLoadingMessage();
-        this.loadingIndicator = true;
-        this.vendorService.getVendorShipAddressGet(vendorId).subscribe(
-            results => this.onShippingDataLoadSuccessful(results[0]),
-            error => this.onDataLoadFailed(error)
-        );
+    // private loadShippingData(vendorId) {
+    //     this.alertService.startLoadingMessage();
+    //     this.loadingIndicator = true;
+    //     this.vendorService.getVendorShipAddressGet(vendorId).subscribe(
+    //         results => this.onShippingDataLoadSuccessful(results[0]),
+    //         error => this.onDataLoadFailed(error)
+    //     );
 
-        this.shippingCol = [
-            { field: 'siteName', header: 'Site Name' },
-            { field: 'address1', header: 'Address1' },
-            { field: 'address2', header: 'Address2' },
-            //{ field: 'address3', header: 'Address3' },
-            { field: 'city', header: 'City' },
-            { field: 'stateOrProvince', header: 'State/Prov' },
-            { field: 'postalCode', header: 'Postal Code' },
-            { field: 'countryName', header: 'Country' }
-        ];
+    //     this.shippingCol = [
+    //         { field: 'siteName', header: 'Site Name' },
+    //         { field: 'address1', header: 'Address1' },
+    //         { field: 'address2', header: 'Address2' },
+    //         //{ field: 'address3', header: 'Address3' },
+    //         { field: 'city', header: 'City' },
+    //         { field: 'stateOrProvince', header: 'State/Prov' },
+    //         { field: 'postalCode', header: 'Postal Code' },
+    //         { field: 'countryName', header: 'Country' }
+    //     ];
 
-        this.selectedShippingColumns = this.shippingCol;
-    }
+    //     this.selectedShippingColumns = this.shippingCol;
+    // }
 
-    private loadBillingData(vendorId) {
-        this.alertService.startLoadingMessage();
-        this.loadingIndicator = true;
-        this.vendorService.getVendorBillAddressGet(vendorId).subscribe(
-            results => this.onBillingDataLoadSuccessful(results[0]),
-            error => this.onDataLoadFailed(error)
-        );
+    // private loadBillingData(vendorId) {
+    //     this.alertService.startLoadingMessage();
+    //     this.loadingIndicator = true;
+    //     this.vendorService.getVendorBillAddressGet(vendorId).subscribe(
+    //         results => this.onBillingDataLoadSuccessful(results[0]),
+    //         error => this.onDataLoadFailed(error)
+    //     );
 
 
-        this.billingCol = [
-            { field: 'siteName', header: 'Site Name' },
-            { field: 'address1', header: 'Address1' },
-            { field: 'address2', header: 'Address2' },
-            { field: 'city', header: 'City' },
-            { field: 'stateOrProvince', header: 'State/Prov' },
-            { field: 'postalCode', header: 'Postal Code' },
-            { field: 'countryName', header: 'Country' }
-        ];
+    //     this.billingCol = [
+    //         { field: 'siteName', header: 'Site Name' },
+    //         { field: 'address1', header: 'Address1' },
+    //         { field: 'address2', header: 'Address2' },
+    //         { field: 'city', header: 'City' },
+    //         { field: 'stateOrProvince', header: 'State/Prov' },
+    //         { field: 'postalCode', header: 'Postal Code' },
+    //         { field: 'countryName', header: 'Country' }
+    //     ];
 
-        this.selectedBillingColumns = this.billingCol;
-    }
+    //     this.selectedBillingColumns = this.billingCol;
+    // }
 
     private loadWarningsData(vendorId) {
         this.vendorService.getVendorWarnings(vendorId).subscribe(
@@ -655,33 +655,33 @@ export class VendorsListComponent implements OnInit {
     }
 
 
-    private loadVendorDocumentsData(vendorId) {
+    // private loadVendorDocumentsData(vendorId) {
 
-        this.vendorService.getDocumentList(vendorId).subscribe(res => {
-            this.vendorDocumentsData = res;
-        });
+    //     this.vendorService.getDocumentList(vendorId).subscribe(res => {
+    //         this.vendorDocumentsData = res;
+    //     });
 
-        this.vendorDocumentsColumns = [
-            { field: 'docName', header: 'Name' },
-            { field: 'docDescription', header: 'Description' },
-            { field: 'documents', header: 'Documents' },
-            { field: 'docMemo', header: 'Memo' }
-        ];
-    }
+    //     this.vendorDocumentsColumns = [
+    //         { field: 'docName', header: 'Name' },
+    //         { field: 'docDescription', header: 'Description' },
+    //         { field: 'documents', header: 'Documents' },
+    //         { field: 'docMemo', header: 'Memo' }
+    //     ];
+    // }
 
-    private onBillingDataLoadSuccessful(allWorkFlows: any[]) {
-        this.alertService.stopLoadingMessage();
-        this.loadingIndicator = false;
-        this.dataSource.data = allWorkFlows;
-        this.billingInfoList = allWorkFlows;
-    }
+    // private onBillingDataLoadSuccessful(allWorkFlows: any[]) {
+    //     this.alertService.stopLoadingMessage();
+    //     this.loadingIndicator = false;
+    //     this.dataSource.data = allWorkFlows;
+    //     this.billingInfoList = allWorkFlows;
+    // }
 
-    private onShippingDataLoadSuccessful(allWorkFlows: any[]) {
-        this.alertService.stopLoadingMessage();
-        this.loadingIndicator = false;
-        this.dataSource.data = allWorkFlows;
-        this.allShippings = allWorkFlows;
-    }
+    // private onShippingDataLoadSuccessful(allWorkFlows: any[]) {
+    //     this.alertService.stopLoadingMessage();
+    //     this.loadingIndicator = false;
+    //     this.dataSource.data = allWorkFlows;
+    //     this.allShippings = allWorkFlows;
+    // }
 
     private onContactDataLoadSuccessful(allWorkFlows: any[]) {
         this.alertService.stopLoadingMessage();
@@ -730,11 +730,11 @@ export class VendorsListComponent implements OnInit {
         this.DefaultWithVendorId(row.vendorId);
         //this.loadContactDataData(row.vendorId);
         this.loadPayamentData(row.vendorId);
-        this.loadShippingData(row.vendorId);
-        this.loadBillingData(row.vendorId);
+        // this.loadShippingData(row.vendorId);
+        // this.loadBillingData(row.vendorId);
         this.loadWarningsData(row.vendorId);
         this.loadMemosData(row.vendorId);
-        this.loadVendorDocumentsData(row.vendorId);
+        // this.loadVendorDocumentsData(row.vendorId);
         this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
@@ -1139,78 +1139,78 @@ console.log("vendor_1099",this.vendorProcess1099Data);
         );
     }
 
-    public loadVendorCapsData(vendorId) {
+    // public loadVendorCapsData(vendorId) {
 
-        const status = 'active';
+    //     const status = 'active';
 
-        if (vendorId != undefined) {
-            this.vendorService.getVendorCapabilityList(status, vendorId).subscribe(
+    //     if (vendorId != undefined) {
+    //         this.vendorService.getVendorCapabilityList(status, vendorId).subscribe(
 
-                // res => {
-                //     this.allvendorCapsList = res[0];
-                //     console.log(this.allvendorCapsList);        
-                // }
-                results => this.onDataLoadVendorCapsSuccessful(results[0]),
-                error => this.onDataLoadFailed(error)
-            );
-        }
+    //             // res => {
+    //             //     this.allvendorCapsList = res[0];
+    //             //     console.log(this.allvendorCapsList);        
+    //             // }
+    //             results => this.onDataLoadVendorCapsSuccessful(results[0]),
+    //             error => this.onDataLoadFailed(error)
+    //         );
+    //     }
 
-        // To display the values in header and column name values
-        this.capsCols = [
-            { field: 'vendorCode', header: 'Vendor Code' },
-            { field: 'vendorName', header: 'Vendor Name' },
-            //{ field: 'capabilityType', header: 'Caps Type' },      
-            { field: 'capabilityType', header: 'Vendor Caps' },
-            { field: 'partNumber', header: 'PN' },
-            { field: 'partDescription', header: 'PN Description' },
-            { field: 'vendorRanking', header: ' Vendor Ranking' },
-            { field: 'tat', header: 'TAT' },
-        ];
+    //     // To display the values in header and column name values
+    //     this.capsCols = [
+    //         { field: 'vendorCode', header: 'Vendor Code' },
+    //         { field: 'vendorName', header: 'Vendor Name' },
+    //         //{ field: 'capabilityType', header: 'Caps Type' },      
+    //         { field: 'capabilityType', header: 'Vendor Caps' },
+    //         { field: 'partNumber', header: 'PN' },
+    //         { field: 'partDescription', header: 'PN Description' },
+    //         { field: 'vendorRanking', header: ' Vendor Ranking' },
+    //         { field: 'tat', header: 'TAT' },
+    //     ];
 
-        this.selectedCapsColumns = this.capsCols;
+    //     this.selectedCapsColumns = this.capsCols;
 
-    }
+    // }
 
-    public onDataLoadVendorCapsSuccessful(allWorkFlows: any[]) {
+    // public onDataLoadVendorCapsSuccessful(allWorkFlows: any[]) {
 
-        // alert('success');
-        this.alertService.stopLoadingMessage();
-        this.loadingIndicator = false;
-        this.dataSource.data = allWorkFlows;
-        this.allvendorCapsList = allWorkFlows;
-        console.log(this.allvendorCapsList);
-    }
+    //     // alert('success');
+    //     this.alertService.stopLoadingMessage();
+    //     this.loadingIndicator = false;
+    //     this.dataSource.data = allWorkFlows;
+    //     this.allvendorCapsList = allWorkFlows;
+    //     console.log(this.allvendorCapsList);
+    // }
 
-    viewSelectedCapsRow(rowData) {
-        const { vendorCapabilityId } = rowData;
-        this.getVendorCapabilitiesView(vendorCapabilityId);
-        this.getVendorCapesAircraftView(vendorCapabilityId);
-    }
+    // viewSelectedCapsRow(rowData) {
+    //     const { vendorCapabilityId } = rowData;
+    //     this.getVendorCapabilitiesView(vendorCapabilityId);
+    //     this.getVendorCapesAircraftView(vendorCapabilityId);
+    // }
 
-    viewSelectedCapsRowonDbl(rowData) {
-        this.viewSelectedCapsRow(rowData);
-        $('#vendorCapesView').modal('show');
-    }
+    // viewSelectedCapsRowonDbl(rowData) {
+    //     this.viewSelectedCapsRow(rowData);
+    //     $('#vendorCapesView').modal('show');
+    // }
 
-    getVendorCapabilitiesView(vendorCapesId) {
-        this.vendorCapesService.getVendorCapabilitybyId(vendorCapesId).subscribe(res => {
-            this.vendorCapesGeneralInfo = res;
-        })
-    }
+    // getVendorCapabilitiesView(vendorCapesId) {
+    //     this.vendorCapesService.getVendorCapabilitybyId(vendorCapesId).subscribe(res => {
+    //         this.vendorCapesGeneralInfo = res;
+    //     })
+    // }
 
-    getVendorCapesAircraftView(vendorCapesId) {
-        this.vendorCapesService.getVendorAircraftGetDataByCapsId(vendorCapesId).subscribe(res => {
-            this.aircraftListDataValues = res.map(x => {
-                return {
-                    ...x,
-                    aircraft: x.aircraftType,
-                    model: x.aircraftModel,
-                    dashNumber: x.dashNumber,
-                    memo: x.memo,
-                }
-            })
-        })
-    }
+    // getVendorCapesAircraftView(vendorCapesId) {
+    //     this.vendorCapesService.getVendorAircraftGetDataByCapsId(vendorCapesId).subscribe(res => {
+    //         this.aircraftListDataValues = res.map(x => {
+    //             return {
+    //                 ...x,
+    //                 aircraft: x.aircraftType,
+    //                 model: x.aircraftModel,
+    //                 dashNumber: x.dashNumber,
+    //                 memo: x.memo,
+    //             }
+    //         })
+    //     })
+    // }
 
     viewFileSelectedCapsRow(rowData) {
         this.sourceViewforDocument = rowData;
