@@ -560,6 +560,11 @@ namespace QuickApp.Pro.Controllers
             address.CreatedDate = DateTime.Now;
             address.UpdatedDate = DateTime.Now;
             actionobject.GeneralCurrencyId = customerViewModel.GeneralCurrencyId;
+            if (actionobject.IsCustomerAlsoVendor== false)
+            {
+
+                actionobject.AllowNettingOfAPAR = false;
+            }
             var flag = _context.Address.Any(a => (a.AddressId == customerViewModel.Addressid) && (a.Line1 == customerViewModel.Address1 && a.Line2 == customerViewModel.Address2 && a.City == customerViewModel.City && a.StateOrProvince == customerViewModel.StateOrProvince && a.Country == customerViewModel.Country && a.PostalCode == customerViewModel.PostalCode));
 
             var custShipping = _context.CustomerShippingAddress.Where(p => p.CustomerId == customerViewModel.CustomerId && p.AddressId == customerViewModel.Addressid && p.IsPrimary == true).AsNoTracking().FirstOrDefault();
@@ -665,6 +670,7 @@ namespace QuickApp.Pro.Controllers
             if (Convert.ToBoolean(actionobject.IsCustomerAlsoVendor))
             {
                 //_unitOfWork.Customer.AddVendor(actionobject);
+               
                 long vendorId = 0;
                 long addressId = 0;
                 var objVendor = _unitOfWork.Vendor.GetSingleOrDefault(a => a.RelatedCustomerId == id);
@@ -2141,7 +2147,10 @@ namespace QuickApp.Pro.Controllers
                 customerObj.IsAeroExchange = customerViewModel.IsAeroExchange;
                 customerObj.IsTaxExempt = customerViewModel.IsTaxExempt;
                 customerObj.AeroExchangeDescription = customerViewModel.AeroExchangeDescription;
-                customerObj.AllowNettingOfAPAR = customerViewModel.AllowNettingOfAPAR;
+                if (customerViewModel.IsCustomerAlsoVendor)
+                {
+                    customerObj.AllowNettingOfAPAR = customerViewModel.AllowNettingOfAPAR;
+                }
                 customerObj.MarkUpPercentageId = customerViewModel.MarkUpPercentageId;
                 customerObj.MasterCompanyId = 1;
                 customerObj.IsActive = true;
@@ -2507,13 +2516,13 @@ namespace QuickApp.Pro.Controllers
                     if (atachapter == null)
                     {
 
-                        foreach (var customerContactAtaMapping in customerContactATAMapping)
-                        {
+                        //foreach (var customerContactAtaMapping in customerContactATAMapping)
+                        //{
 
 
-                            _unitOfWork.Repository<CustomerContactATAMapping>().Add(customerContactAtaMapping);
+                            _unitOfWork.Repository<CustomerContactATAMapping>().Add(customerContactATAMapping[i]);
                             _unitOfWork.SaveChanges();
-                        }
+                       // }
                     }
                     else
                     {
@@ -2549,7 +2558,7 @@ namespace QuickApp.Pro.Controllers
                     custATAData.ATASubChapterDescription = customerContactAtaMapping.ATASubChapterDescription;
                     custATAData.UpdatedBy = customerContactAtaMapping.UpdatedBy;
                     custATAData.UpdatedDate = DateTime.Now;
-
+                    custATAData.IsActive = customerContactAtaMapping.IsActive;
                     _unitOfWork.Repository<CustomerContactATAMapping>().Update(custATAData);
                     _unitOfWork.SaveChanges();
 

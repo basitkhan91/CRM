@@ -162,6 +162,8 @@ export class CustomerFinancialInformationComponent implements OnInit {
         // this.getCreditTermList();
 
         // this.getAllcreditTermList();
+       
+
         if (this.editMode) {
 
             this.id = this.editGeneralInformationData.customerId

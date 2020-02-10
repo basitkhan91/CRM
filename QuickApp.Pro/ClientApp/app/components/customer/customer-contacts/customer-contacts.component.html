@@ -742,7 +742,7 @@
                 [(ngModel)]="ataChapterEditData.ataChapterId"
                 (onChange)="getATASubChapterByATAChapter()"
                 [options]="add_ataChapterList"></p-dropdown>-->
-                                <select name="taxRates" [(ngModel)]="ataChapterEditData.ataChapterId">
+                                <select name="taxRates" [(ngModel)]="ataChapterEditData.ataChapterId" (change)="getATASubChapterByATAChapterID(ataChapterEditData.ataChapterId)">
                                     <option value="">select</option>
                                     <option *ngFor="let atalist of search_ataChapterList" [ngValue]="atalist.value">{{atalist.label}}</option>
                                 </select>

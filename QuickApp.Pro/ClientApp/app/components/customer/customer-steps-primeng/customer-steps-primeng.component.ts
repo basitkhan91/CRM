@@ -269,7 +269,11 @@ export class CustomerStepsPrimengComponent {
 
 
 	updateInformationData(data) {
-		this.editGeneralInformationData = data;
+        this.editGeneralInformationData = data;
+        if (data.isCustomerAlsoVendor != null && data.isCustomerAlsoVendor != undefined) {
+            this.savedGeneralInformationData.isCustomerAlsoVendor = data.isCustomerAlsoVendor;
+        }
+        this.savedGeneralInformationData.allowNettingOfAPAR = data.allowNettingOfAPAR;
 	}
 	getAllCountries() {
 		this.customerService.getCountrylist().subscribe(res => {
@@ -333,14 +337,17 @@ export class CustomerStepsPrimengComponent {
 					value: x.ataChapterId,
 					label: x.ataChapterCode + '-' + x.ataChapterName
 				}
+            })
+
+            this.search_ataChapterList1 = responseData.map(x => {
+                return {
+                    value: x.ataChapterId,
+                    label: x.ataChapterName,
+                    code:x.ataChapterCode
+                }
+            })
 			})
 
-			this.search_ataChapterList1 = responseData.map(x => {
-				return {
-					value: x.ataChapterId,
-					label: x.ataChapterName
-				}
-			})
 		});
 	}
 
@@ -355,7 +362,10 @@ export class CustomerStepsPrimengComponent {
 				'Saved ATA Mapped Data Successfully ',
 				MessageSeverity.success
 			);
-		}, error => {
+        }, error => {
+                this.getMappedContactByCustomerId(data[0].CustomerId)
+                this.getMappedATAByCustomerId(data[0].CustomerId)
+
 			this.alertService.showMessage(
 				'Failed',
 				error.error,
