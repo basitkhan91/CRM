@@ -5,6 +5,7 @@ import { AuthService } from '../services/auth.service';
 import { AuthGuard } from '../services/auth-guard.service';
 import { AssetmanagementComponent } from './assetmanagement.component';
 import { AssetListingComponent } from '../components/Asset-Management/asset-listing/asset-listing.component';
+import { AssetDisposalSaleComponent } from '../components/Asset-Management/asset-disposal-sale/asset-disposal-sale.component';
 import { AssetCalibrationComponent } from '../components/Asset-Management/Asset-pages/asset-calibration/asset-calibration.component';
 import { AssetCapesComponent } from '../components/Asset-Management/Asset-pages/asset-capes/asset-capes.component';
 import { AssetGeneralInformationComponent } from '../components/Asset-Management/Asset-pages/asset-general-information/asset-general-information.component';
@@ -17,6 +18,7 @@ const assetPagesRoutes: Routes = [
         path: 'assetpages',
         component: AssetmanagementComponent,
         children: [
+            { path: "app-asset-disposal-sale", component: AssetDisposalSaleComponent, data: { title: "Disposal Sale" } },
             { path: "app-asset-listing", component: AssetListingComponent, data: { title: "Asset List" } },
             { path: "app-asset-calibration/:id", component: AssetCalibrationComponent, data: { title: "Asset Calibration" } },
             { path: "app-asset-capes/:id", component: AssetCapesComponent, data: { title: "Asset Capes" } },
