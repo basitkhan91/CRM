@@ -597,7 +597,6 @@ export class CustomerShippingInformationComponent implements OnInit {
         }, err => {
             this.loaderForInternational = false;
         })
-    }  })
     }
 
     
