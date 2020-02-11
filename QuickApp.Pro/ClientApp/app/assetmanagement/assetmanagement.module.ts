@@ -25,6 +25,7 @@ import { FileUploadModule } from 'primeng/fileupload';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { AssetmanagementComponent } from "./assetmanagement.component";
 import { AssetListingComponent } from "../components/Asset-Management/asset-listing/asset-listing.component";
+import { AssetDisposalSaleComponent } from "../components/Asset-Management/asset-disposal-sale/asset-disposal-sale.component";
 import { AssetCalibrationComponent } from "../components/Asset-Management/Asset-pages/asset-calibration/asset-calibration.component";
 import { AssetCapesComponent } from "../components/Asset-Management/Asset-pages/asset-capes/asset-capes.component";
 import { AssetGeneralInformationComponent } from "../components/Asset-Management/Asset-pages/asset-general-information/asset-general-information.component";
@@ -64,6 +65,7 @@ import { AssetAdjustmentComponent } from '../components/Asset-Management/Asset-p
     declarations: [
         AssetmanagementComponent,
         AssetListingComponent,
+        AssetDisposalSaleComponent,
         AssetCalibrationComponent,
         AssetCapesComponent,
         AssetGeneralInformationComponent,

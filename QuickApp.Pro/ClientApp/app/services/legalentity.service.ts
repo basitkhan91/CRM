@@ -57,6 +57,27 @@ export class LegalEntityService {
 		this.activeStep.next(activeIndex);
 	}
 
+	newBillingAdd(action: any) {
+		return this.legalEntityEndpont.getNewBillinginfo<any>(action);
+	}
+
+	updateBillinginfo(legalEntityBilling: any) {
+		return this.legalEntityEndpont.updateBillingViainfo(legalEntityBilling, legalEntityBilling.legalEntityBillingAddressId);
+	}
+
+	getlegalEntityBillingHistory(entityId, legalEntityBillingAddressId) {
+		return this.legalEntityEndpont.getlegalEntityBillingHistory(entityId, legalEntityBillingAddressId)
+	}
+	legalEntitysBillingUpdateforActive(id, status, updatedBy) {
+		return this.legalEntityEndpont.LegalEntityBillingUpdateforActive(id, status, updatedBy)
+	}
+	updateDeleteBillinginfo(entityBilling: any) {
+		return this.legalEntityEndpont.deleteBillingAddress(entityBilling, entityBilling.legalEntityBillingAddressId);
+	}
+	BillingFileUpload(file, legalEntityId) {
+		return this.legalEntityEndpont.LegalEntityBillingFileUpload(file, legalEntityId);
+	}
+
 	getGeneralObj() {
 		return Observable.forkJoin(
 			this.legalEntityEndpont.getGeneralrobj<any>());

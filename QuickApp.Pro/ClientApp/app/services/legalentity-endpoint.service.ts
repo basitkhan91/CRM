@@ -32,6 +32,12 @@ export class LegalEntityEndpontService extends EndpointFactory {
 	private readonly _countryUrl: string = "/api/Customer/GetcountryList";
 	private readonly _entityUpdateUrl: string = "/api/LegalEntity/UpdateLegalEntityDetails";
 	private readonly _generalEmptyObjurl: string = "/api/LegalEntity/generalEmptyObj";
+	private readonly _billingInfoUrl: string = "/api/LegalEntity/LegalEntityBillingPost";
+	private readonly _updateBillingViaDetails: string = "/api/LegalEntity/LegalEntityBillAddressdetails";
+	private readonly _legalEntityBillingHistory: string = "/api/LegalEntity/getLegalEntityBillingHistory"
+	private readonly _legalEntityBillingUpdateforActive: string = '/api/LegalEntity/LegalEntityBillingUpdateStatus'
+	private readonly _deleteBillingEntityDettilas: string = "/api/LegalEntity/updateStatusElgalEntityBilling";
+	private readonly excelUpload: string = "/api/LegalEntity/uploadLegalEntitybillingaddress"
 
 	get entityurl() { return this.configurations.baseUrl + this._entityurl; }
     get managemententityurl() { return this.configurations.baseUrl + this._managementUrl; }
@@ -43,10 +49,52 @@ export class LegalEntityEndpontService extends EndpointFactory {
     get entityBillViaDetails() { return this.configurations.baseUrl + this._entityBillViaDetails; }
 	get countryUrl() { return this.configurations.baseUrl + this._countryUrl; }
 	get generalurl() { return this.configurations.baseUrl + this._generalEmptyObjurl }
+	get legalEntityBillingUpdateforActive() { return this.configurations.baseUrl + this._legalEntityBillingUpdateforActive }
 
 	constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
 
 		super(http, configurations, injector);
+	}
+
+	LegalEntityBillingFileUpload(file, entityId) {
+		return this.http.post(`${this.configurations.baseUrl}${this.excelUpload}?customerId=${entityId}`, file)
+	}
+
+	deleteBillingAddress<T>(roleObject: any, customerId: any): Observable<T> {
+		let endpointUrl = `${this._deleteBillingEntityDettilas}/${customerId}`;
+		return this.http.put<T>(endpointUrl, JSON.stringify(roleObject), this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.deleteBillingAddress(roleObject, customerId));
+			});
+	}
+
+	getNewBillinginfo<T>(param: any): Observable<T> {
+
+		let body = JSON.stringify(param);
+		let headers = new Headers({ 'Content-Type': 'application/json; charset=utf-8' })
+		return this.http
+			.post(this._billingInfoUrl, body, this.getRequestHeaders())
+			.map((res: Response) => res)
+			.catch((error: any) => Observable.throw(error.json().error || 'Server error'));
+	}
+
+	updateBillingViainfo<T>(roleObject: any, entityId: any): Observable<T> {
+		let endpointUrl = `${this._updateBillingViaDetails}/${entityId}`;
+		return this.http.put<T>(endpointUrl, JSON.stringify(roleObject), this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.updateBillingViainfo(roleObject, entityId));
+			});
+	}
+
+	getlegalEntityBillingHistory(legalEntityId, legalEntityBillingAddressId) {
+		return this.http.get(`${this.configurations.baseUrl}/${this._legalEntityBillingHistory}?legalEntityId=${legalEntityId}&legalEntityBillingaddressId=${legalEntityBillingAddressId}`)
+	}
+
+	LegalEntityBillingUpdateforActive<T>(id, status, updatedBy) {
+		return this.http.get<T>(`${this.legalEntityBillingUpdateforActive}?id=${id}&status=${status}&updatedBy=${updatedBy}`)
+			.catch(error => {
+				return this.handleError(error, () => this.LegalEntityBillingUpdateforActive(id, status, updatedBy));
+			});
 	}
 
 	getGeneralrobj<T>(): Observable<T> {
