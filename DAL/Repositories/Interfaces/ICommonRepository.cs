@@ -71,5 +71,7 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<object> GetEmployeesByJobTitle(long jobTitleId);
         IEnumerable<object> GetEmployeesByExpertise(long expertiseId);
         IEnumerable<object> GetEmployeeStation(long employeeId);
+        IEnumerable<object> GetJobTitleTypes(long masterCompanyId);
+        IEnumerable<object> GetExpertiseTypes(long masterCompanyId);
     }
 }
