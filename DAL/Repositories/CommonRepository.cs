@@ -1551,11 +1551,11 @@ namespace DAL.Repositories
         {
             try
             {
-                var list = (from et in _appContext.ExpertiseType
+                var list = (from et in _appContext.EmployeeExpertise
                             where et.MasterCompanyId == masterCompanyId
                             select new
                             {
-                                et.ExpertiseTypeId,
+                                et.EmployeeExpertiseId,
                                 ExpertiseType=et.Description
                             }).Distinct().ToList();
                 return list;
