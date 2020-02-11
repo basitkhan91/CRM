@@ -116,7 +116,7 @@
                                     <button class="btn-delete" mat-icon-button matTooltip="delete" (click)="deleteDomesticShipping(deleteContent,rowData)">
                                         <mat-icon color="warn">delete</mat-icon>
                                     </button>
-                                    <button class="btn btn-danger nobg" data-toggle="tooltip" matTooltip="Add Ship Via" data-original-title="View Shipping Via Information">
+                                    <button class="btn btn-danger nobg" data-toggle="tooltip" matTooltip="Add Ship Via" data-original-title="View Shipping Via Information" style="padding: 0;">
                                         <i class="fa fa-truck" data-target="#addDomesticShipVia" data-toggle="modal" (click)="selectedDomesticForShipVia(rowData)"></i>
                                     </button>
 
@@ -126,7 +126,7 @@
                             </td>
                             <td *ngIf="isViewMode == true" style="text-align: center">                                        
                                     <span data-toggle="modal" data-target="#viewShipping"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openShippinggView(rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
-                                    <button class="btn btn-danger nobg" data-toggle="tooltip" matTooltip="Add Ship Via" data-original-title="View Shipping Via Information">
+                                    <button class="btn btn-danger nobg" data-toggle="tooltip" matTooltip="Add Ship Via" data-original-title="View Shipping Via Information" style="padding: 0;">
                                         <i class="fa fa-truck" data-target="#addDomesticShipVia" data-toggle="modal" (click)="selectedDomesticForShipVia(rowData)"></i>
                                     </button>
                                     <button class="btn-history" mat-icon-button matTooltip="history" (click)="openShipaddressHistory(contentAuditHist,rowData)">
@@ -171,7 +171,7 @@
                 <hr />
                 <div class="clear"></div>
 
-                <div>
+                <div> 
                     <p-table #intlShippingTable class="rpo-table-cstm"
                              [value]="internationalShippingData"
                              [paginator]="true"
