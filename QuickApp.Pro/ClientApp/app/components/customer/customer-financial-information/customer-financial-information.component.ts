@@ -1,4 +1,5 @@
 ﻿import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from '@angular/core';
+import { SimpleChanges } from '@angular/core/src/metadata/lifecycle_hooks';
 import { fadeInOut } from '../../../services/animations';
 import { CustomerService } from '../../../services/customer.service';
 import { CurrencyService } from '../../../services/currency.service';
@@ -131,6 +132,10 @@ export class CustomerFinancialInformationComponent implements OnInit {
     indexForTaxRate: any = 1;
     auditDataForTaxData: any= [];
     global_lang: string;
+    showAllowNettingOfAPAR: boolean = false;
+    customerGeneralInformation: any = {};
+    @Input() selectedCustomerTab: string = "";
+
 
     constructor(public taxtypeser: TaxTypeService, public creditTermsService: CreditTermsService,
         public currencyService: CurrencyService,
@@ -151,13 +156,15 @@ export class CustomerFinancialInformationComponent implements OnInit {
     ) {
 
 
-
     }
     // taxType
     taxtypesList = [];
 
-
+   
     ngOnInit(): void {
+        this.getGlobalSettings();
+        this.savedGeneralInformationData = this.savedGeneralInformationData || {}
+       
         console.log(this.creditTermsListOriginal);
 
         // this.getCreditTermList();
@@ -203,11 +210,33 @@ export class CustomerFinancialInformationComponent implements OnInit {
         this.getTaxRates();
         this.getAllDiscountList1();
         this.getAllTaxRates();
-        this.getGlobalSettings();
+
+
+    }
+    ngOnChanges(changes: SimpleChanges) {    
+        for (let property in changes) {
+            if (property == 'selectedCustomerTab') {
+                if (changes[property].currentValue == "Financial") {
+                    this.getCustomerGeneralInformation()
+                }
+            }
+        }
 
     }
 
+    getCustomerGeneralInformation(){
+        this.customerService.getCustomerdataById(this.id).subscribe(response => {
+            console.log(response);
 
+            const res = response[0];
+            this.customerGeneralInformation = res;
+            if(this.customerGeneralInformation.isCustomerAlsoVendor == true && this.customerGeneralInformation.type == 'Customer'){
+                this.showAllowNettingOfAPAR = true;
+            } else {
+                this.showAllowNettingOfAPAR = false;
+            }
+        })
+    }
     get userName(): string {
         return this.authService.currentUser ? this.authService.currentUser.userName : "";
     }
@@ -240,11 +269,14 @@ export class CustomerFinancialInformationComponent implements OnInit {
     }
 
     formatCreditLimit(val){
-        if(isNaN(val) ==  true){
-            val = Number(val.replace(/[^0-9.-]+/g,""));
-          }
-        this.savedGeneralInformationData.creditLimit = new Intl.NumberFormat(this.global_lang, { style: 'decimal', minimumFractionDigits: 2,    maximumFractionDigits: 2}).format(val)
-        console.log(this.savedGeneralInformationData.creditLimit, "this.savedGeneralInformationData.creditLimit")
+        if(val){
+            if(isNaN(val) ==  true){
+                val = Number(val.replace(/[^0-9.-]+/g,""));
+              }
+            this.savedGeneralInformationData.creditLimit = new Intl.NumberFormat(this.global_lang, { style: 'decimal', minimumFractionDigits: 2,    maximumFractionDigits: 2}).format(val)
+            return this.savedGeneralInformationData.creditLimit;
+        }
+        
     }
     getDefaultCurrency() {
         this.legalEntityId = 19;
@@ -645,12 +677,16 @@ export class CustomerFinancialInformationComponent implements OnInit {
 
 
     }
-    getAuditHistoryById(data) {
+    getAuditHistoryById(content, data) {
         const { customerTaxTypeRateMappingId } = data;
         this.customerService.getAuditHistoryForTaxType(customerTaxTypeRateMappingId).subscribe(res => {
             this.auditDataForTaxData = res;
 
         })
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
     }
     fileUpload(event, fileType) {
         if (event.files.length === 0)

@@ -124,6 +124,7 @@
     [resizableColumns]="true" 
     [reorderableColumns]="true"
     selectionMode="multiple"
+    [loading]="loader"
     (onPage)="paginateAircraftTable($event, dt._totalRecords)"
 
   >

@@ -172,5 +172,12 @@ export function toLowerCaseOnInput(value) {
     }
 }
 
-
-
+export function getValueByFieldFromArrayofObject(field, value, originalData) {
+    if ((field !== '' && field !== undefined) && (value !== '' && value !== undefined) && (originalData !== undefined && originalData.length > 0)) {
+        return originalData.filter(x => {
+            if (x[field] === value) {
+                return x;
+            }
+        })
+    }
+}
