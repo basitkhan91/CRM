@@ -117,11 +117,12 @@ export class CustomerAircraftComponent implements OnInit {
             this.isViewMode = false;
 
         } else {
+            this.getAircraftMappedDataByCustomerId();
             if (this.customerDataFromExternalComponents) {
                 this.id = this.customerDataFromExternalComponents.customerId;
                 this.customerCode = this.customerDataFromExternalComponents.customerCode;
                 this.customerName = this.customerDataFromExternalComponents.name;
-                this.getAircraftMappedDataByCustomerId();
+         
                 this.isViewMode = true;
             } else {
                 this.id = this.savedGeneralInformationData.customerId;
@@ -542,6 +543,7 @@ export class CustomerAircraftComponent implements OnInit {
             aircraftModel: this.aircraftdata.aircraftModel
 
         }
+
         this.customerService.updatecustomeraircraft(data, this.aircraftdata.customerAircraftMappingId).subscribe(res => {
 
             this.getAircraftMappedDataByCustomerId();
@@ -562,18 +564,24 @@ export class CustomerAircraftComponent implements OnInit {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
-    inventoryValidation(event) {
-
-        console.log(event.target.value, "event.target.value");
-        if (event.target.value > 0) {
-            return true;
-        } else {
+    inventoryValidation(event,from) {
+        if(from =='fromedit' && (event.target.value ==null || event.target.value =='' || event.target.value ==undefined)){
+            this.disableSave = false;
+        }
+        console.log(event.target.value, "event.target.event.target.value");
+        if (event.target.value && event.target.value == 0) {
+        
             this.alertService.showMessage(
                 'Warn',
                 'Inventory should be greater then 0',
                 MessageSeverity.warn
             );
-            event.target.value = undefined;
+            event.target.value = '';
+            event.target.value=null;
+            console.log("indf",event.target.value)
+            if(from =='fromedit')this.editAirCraftData.inventory='';
+        } else {
+            return true;
 
         }
     }

@@ -140,7 +140,7 @@ export class CustomerDocumentsComponent implements OnInit {
 
         for (let file of event.files)
             this.formData.append(file.name, file);
-        // this.disableSave=false;
+        this.disableSave=false;
     }
     removeFile(event) {
         this.formData.delete(event.file.name)

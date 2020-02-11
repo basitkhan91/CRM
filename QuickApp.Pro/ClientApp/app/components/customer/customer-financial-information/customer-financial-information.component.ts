@@ -464,7 +464,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
 
 
     filterDiscount(event) {
-        this._discountListForDropdown = this._discountListForDropdown;
+        // this._discountListForDropdown = this._discountListForDropdown;
         this._discountListForDropdown = [...this._discountListForDropdown.filter(x => {
             // console.log(x);
             return x.label.includes(event.query.toLowerCase())
@@ -491,6 +491,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
 
     checkDiscountExists(value) {
         this.getAllDiscountList();
+        console.log("value",value);
         this.isCountdisable = false;
         this._discountListForDropdown = this._discountListForDropdown;
         const exists = validateRecordExistsOrNot('field', value, this._discountListForDropdown);
@@ -505,7 +506,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
                  this.discontValue ==null
                     // this._discountListForDropdown = this._discountListForDropdown;
         }
-        if (exists.length > 0) {
+        if (exists && exists.length > 0) {
             this.isDiscountExists = true;
         } 
         else if(this.discontValue < 0 || this.discontValue >100){

@@ -375,14 +375,14 @@
                     >
                       <tr>
       
-                        <td *ngFor="let col of columns">
+                        <td *ngFor="let col of columns; let i = index">
                           {{ rowData[col.field] }}
                         </td>
                         <td>
                           <input
                             type="number"
                             class="form-control input-value"
-                            [(ngModel)]="rowData.Inventory" (onKeyUp)="inventoryValidation($event)"
+                            [(ngModel)]="rowData.Inventory" (keyup)="inventoryValidation($event,'fromadd')"
                             name="Inventory{{row_no}}"
                             [required]="true" [minlength]="1"
                           />
@@ -621,7 +621,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="tag">Inventory <span class="clr-red">*</span></label>
-                                <input type="text" class="form-control" [(ngModel)]="editAirCraftData.inventory" (ngModelChange)="enableSave()" name="tag" required>
+                                <input type="text" class="form-control" [(ngModel)]="editAirCraftData.inventory" (keyup)="inventoryValidation($event,'fromedit')" (ngModelChange)="enableSave()" name="tag" required>
 
                             </div>
                             <div class="form-group">
@@ -634,7 +634,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                     <button type="button"  class="btn btn-primary pull-right submit-btn" style="text-align:center" (click)="updateCustomerAircraft()" [disabled]="disableSave" >Update</button>
+                     <button type="button"  class="btn btn-primary pull-right submit-btn" style="text-align:center" (click)="updateCustomerAircraft()" [disabled]="disableSave || !editAirCraftData.inventory || !ccForm.valid" >Update</button>
                      <button type="button" class="btn btn-danger" (click)="closeMyModel()" >Close</button>  <!--data-dismiss="modal" -->
                 </div>
             </form>
