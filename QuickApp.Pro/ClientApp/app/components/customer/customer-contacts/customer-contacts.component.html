@@ -365,8 +365,8 @@
                     <div class="form-row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="tag">Tag</label>
-                                <input type="text" class="form-control" [(ngModel)]="contactInformation.tag" (ngModelChange)="enableSave()" name="tag">
+                                <label for="tag">Tag <span class="clr-red">*</span></label>
+                                <input type="text" class="form-control" [(ngModel)]="contactInformation.tag" (ngModelChange)="enableSave()" name="tag" required>
 
                             </div>
                             <div class="form-group">
@@ -453,7 +453,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label>Web Site</label>
+                                <label>Website</label>
                                 <input class="form-control" type="text" name="websiteURL" #url="ngModel" [(ngModel)]="contactInformation.websiteURL" (ngModelChange)="enableSave()" [pattern]="urlPattern">
                                 <div *ngIf="url.errors" [ngClass]="'error'">
                                     <div *ngIf="url.errors.pattern">
@@ -527,7 +527,7 @@
                        'Yes' : 'No' }}</span></p>
 
                     <p><span class="label"><b>Email<span class="clr-red">*</span>:</b></span><span class="value">{{sourceViewforContact.email}}</span></p>
-                    <p><span class="label"><b>WebSite: </b></span><span class="value">{{sourceViewforContact.websiteURL}}</span></p>
+                    <p><span class="label"><b>Website: </b></span><span class="value">{{sourceViewforContact.websiteURL}}</span></p>
                     <p><span class="label"><b>Mobile Phone: </b></span><span class="value">{{sourceViewforContact.mobilePhone}}</span></p>
                     <p><span class="label"><b>Alternate Phone:</b></span><span class="value">{{sourceViewforContact.alternatePhone}}</span></p>
 
