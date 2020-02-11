@@ -7,8 +7,7 @@ import { AuthService } from '../../../../services/auth.service';
 import { FormBuilder, NgForm } from '@angular/forms';
 import { AlertService, MessageSeverity } from '../../../../services/alert.service';
 import { MasterComapnyService } from '../../../../services/mastercompany.service';
-import { CustomerService } from '../../../../services/customer.service';
-import { CustomerContactModel } from '../../../../models/customer-contact.model';
+import { LegalEntityService } from '../../../../services/legalentity.service';
 import { MatDialog } from '@angular/material';
 import { getObjectByValue, getObjectById, getValueFromObjectByKey } from '../../../../generic/autocomplete';
 import { ConfigurationService } from '../../../../services/configuration.service';
@@ -20,41 +19,42 @@ import * as $ from 'jquery';
 })
 /** Entity Documents component*/
 export class EntityDocumentsComponent implements OnInit {
-	@Input() savedGeneralInformationData;
-	@Input() editMode;
-	@Input() editGeneralInformationData;
+    disableSave: boolean = true;
+    @Input() savedGeneralInformationData;
+    @Input() editMode;
+    @Input() editGeneralInformationData;
     @Output() tab = new EventEmitter<any>();
     @ViewChild('fileUploadInput') fileUploadInput: any;
-    @Input() customerDataFromExternalComponents : any = {};
-	documentInformation = {
+    @Input() legalEntityDataFromExternalComponents: any;
+    documentInformation = {
 
-		docName: '',
-		docMemo: '',
-		docDescription: ''
-	}
-	customerDocumentsData: any = [];
-    customerDocumentsColumns = [
-        
-		{ field: 'docName', header: 'Name' },
-		{ field: 'docDescription', header: 'Description' },
-		{ field: 'documents', header: 'Documents' },
-		{ field: 'docMemo', header: 'Memo' }
+        docName: '',
+        docMemo: '',
+        docDescription: ''
+    }
+    legalEntityDocumentsData: any = [];
+    legalEntityDocumentsColumns = [
+
+        { field: 'docName', header: 'Name' },
+        { field: 'docDescription', header: 'Description' },
+        { field: 'documents', header: 'Documents' },
+        { field: 'docMemo', header: 'Memo' }
     ];
     sourceViewforDocumentListColumns = [
         { field: 'fileName', header: 'File Name' },
     ]
-	selectedColumns = this.customerDocumentsColumns;
-	formData = new FormData()
-	// ediData: any;
+    selectedColumns = this.legalEntityDocumentsColumns;
+    formData = new FormData()
+    // ediData: any;
     isEditButton: boolean = false;
     isDeleteMode: boolean = false;
-	id: number;
-	customerCode: any;
-	customerName: any;
+    id: number;
+    legalEntityCode: any;
+    legalEntityName: any;
     sourceViewforDocument: any;
     localCollection: any;
     selectedRowForDelete: any;
-	 modal: NgbModalRef;
+    modal: NgbModalRef;
     sourceViewforDocumentList: any = [];
     documentauditHisory: any[];
     headersforAttachment = [
@@ -67,81 +67,92 @@ export class EntityDocumentsComponent implements OnInit {
     pageSize: number = 10;
     totalPages: number = 0;
 
-	constructor(private router: ActivatedRoute, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public customerService: CustomerService,
+    constructor(private router: ActivatedRoute, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public legalEntityService: LegalEntityService,
         private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private configurations: ConfigurationService) {
-	}
+    }
 
-	ngOnInit() {
-		if (this.editMode) {
-            this.id = this.editGeneralInformationData.customerId;
+    ngOnInit() {
+        if (this.editMode) {
+            this.id = this.editGeneralInformationData.legalEntityId;
 
-            this.customerCode = this.editGeneralInformationData.customerCode;
-            this.customerName = this.editGeneralInformationData.name;
+            this.legalEntityCode = this.editGeneralInformationData.legalEntityCode;
+            this.legalEntityName = this.editGeneralInformationData.name;
             this.isViewMode = false;
+            this.getList();
 
-		} else {
-            if(this.customerDataFromExternalComponents != {}){
-                this.id = this.customerDataFromExternalComponents.customerId;
-                this.customerCode = this.customerDataFromExternalComponents.customerCode;
-                this.customerName = this.customerDataFromExternalComponents.name;
+        } else {
+            if (this.legalEntityDataFromExternalComponents) {
+                this.id = this.legalEntityDataFromExternalComponents.legalEntityId;
+                this.legalEntityCode = this.legalEntityDataFromExternalComponents.legalEntityCode;
+                this.legalEntityName = this.legalEntityDataFromExternalComponents.name;
+                this.getList();
                 this.isViewMode = true;
             } else {
-                this.id = this.savedGeneralInformationData.customerId;
-                this.customerCode = this.savedGeneralInformationData.customerCode;
-                this.customerName = this.savedGeneralInformationData.name;
+                this.id = this.savedGeneralInformationData.legalEntityId;
+                this.legalEntityCode = this.savedGeneralInformationData.legalEntityCode;
+                this.legalEntityName = this.savedGeneralInformationData.name;
                 this.isViewMode = false;
-            }			
+                this.getList();
+            }
 
         }
-        this.getList();
-	}
+
+    }
 
     ngOnChanges(changes: SimpleChanges) {
-       
-        for (let property in changes) {
-          
-            if (property == 'customerDataFromExternalComponents') {
 
-            if(changes[property].currentValue != {}){
-                this.id = this.customerDataFromExternalComponents.customerId;
-                this.customerCode = this.customerDataFromExternalComponents.customerCode;
-                this.customerName = this.customerDataFromExternalComponents.name;
-                this.isViewMode = true;
-                this.getList();
-              } 
+        for (let property in changes) {
+
+            if (property == 'legalEntityDataFromExternalComponents') {
+
+                if (changes[property].currentValue != {}) {
+                    this.id = this.legalEntityDataFromExternalComponents.legalEntityId;
+                    this.legalEntityCode = this.legalEntityDataFromExternalComponents.legalEntityCode;
+                    this.legalEntityName = this.legalEntityDataFromExternalComponents.name;
+                    this.getList();
+                    this.isViewMode = true;
+
+                }
             }
         }
     }
+    enableSave() {
+        this.disableSave = false;
 
-	get userName(): string {
-		return this.authService.currentUser ? this.authService.currentUser.userName : "";
-	}
+    }
+    closeMyModel(type) {
+        console.log("check issues")
+        $(type).modal("hide");
+        this.disableSave = true;
+    }
+    get userName(): string {
+        return this.authService.currentUser ? this.authService.currentUser.userName : "";
+    }
 
-	// opencontactView(content, row) {
+    // opencontactView(content, row) {
 
-	fileUpload(event) {
+    fileUpload(event) {
         console.log(event, "event+++")
-		if (event.files.length === 0)
-			return;
+        if (event.files.length === 0)
+            return;
 
-		for (let file of event.files)
-			this.formData.append(file.name, file);
-	}
-	
+        for (let file of event.files)
+            this.formData.append(file.name, file);
+        // this.disableSave=false;
+    }
+    removeFile(event) {
+        this.formData.delete(event.file.name)
+
+    }
+
     openDocument(content, row) {
-       
-        this.customerService.toGetUploadDocumentsList(row.attachmentId, row.customerId, 1).subscribe(res => {
+
+        this.legalEntityService.toGetUploadDocumentsList(row.attachmentId, row.legalEntityId, 1).subscribe(res => {
             this.sourceViewforDocumentList = res;
             this.sourceViewforDocument = row;
 
         })
-        
-       
-        //this.modal = this.modalService.open(content, { size: 'sm' });
-        //this.modal.result.then(() => {
-        //    console.log('When user closes');
-        //}, () => { console.log('Backdrop click') })
-    
+
 
     }
     docviewdblclick(data) {
@@ -149,36 +160,40 @@ export class EntityDocumentsComponent implements OnInit {
         $('#docView').modal('show');
 
     }
-    toGetUploadDocumentsList(attachmentId, customerId, moduleId) {
-       
-        this.customerService.toGetUploadDocumentsList(attachmentId, customerId, moduleId).subscribe(res => {
+    toGetUploadDocumentsList(attachmentId, legalEntityId, moduleId) {
+
+        this.legalEntityService.toGetUploadDocumentsList(attachmentId, legalEntityId, moduleId).subscribe(res => {
             this.sourceViewforDocumentList = res;
+            if (res.length > 0) {
+                this.disableSave = false;
+                // this.enableSave();
+            }
             console.log(this.sourceViewforDocumentList);
         })
     }
-	getList() {
-		this.customerService.getDocumentList(this.id).subscribe(res => {
-            this.customerDocumentsData = res;
-            if (this.customerDocumentsData.length > 0) {
-                this.totalRecords = this.customerDocumentsData.length;
+    getList() {
+        this.legalEntityService.getDocumentList(this.id).subscribe(res => {
+            this.legalEntityDocumentsData = res;
+            if (this.legalEntityDocumentsData.length > 0) {
+                this.totalRecords = this.legalEntityDocumentsData.length;
                 this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
             }
-		})
-	}
-	saveDocumentInformation() {
-		const data = {
-			...this.documentInformation,
-			customerId: this.id,
-			masterCompanyId: 1,
+        })
+    }
+    saveDocumentInformation() {
+        const data = {
+            ...this.documentInformation,
+            legalEntityId: this.id,
+            masterCompanyId: 1,
             updatedBy: this.userName,
             createdBy: this.userName
-		}
+        }
 
-		for (var key in data) {
-			this.formData.append(key, data[key]);
+        for (var key in data) {
+            this.formData.append(key, data[key]);
         }
         if (!this.isEditButton) {
-            this.customerService.documentUploadAction(this.formData).subscribe(res => {
+            this.legalEntityService.documentUploadAction(this.formData).subscribe(res => {
                 this.formData = new FormData()
                 this.documentInformation = {
 
@@ -196,7 +211,7 @@ export class EntityDocumentsComponent implements OnInit {
             })
         }
         else {
-            this.customerService.documentUploadAction(this.formData).subscribe(res => {
+            this.legalEntityService.documentUploadAction(this.formData).subscribe(res => {
                 this.documentInformation = {
 
                     docName: '',
@@ -214,32 +229,33 @@ export class EntityDocumentsComponent implements OnInit {
                 this.dismissDocumentPopupModel()
             })
         }
-
+        $("#addDocumentDetails").modal("hide");
+        this.disableSave = true;
     }
-   
-	updateCustomerDocument() { }
 
-    editCustomerDocument(rowdata) {
+    updatelegalEntityDocument() { }
+
+    editlegalEntityDocument(rowdata) {
         this.isEditButton = true;
         this.documentInformation = rowdata;
-       
-        this.customerService.toGetUploadDocumentsList(rowdata.attachmentId, rowdata.customerId, 1).subscribe(res => {
+
+        this.legalEntityService.toGetUploadDocumentsList(rowdata.attachmentId, rowdata.legalEntityId, 1).subscribe(res => {
             this.sourceViewforDocumentList = res;
             //this.sourceViewforDocument = rowdata;
         });
-	}
+    }
     addDocumentDetails() {
         this.sourceViewforDocumentList = [];
         this.isEditButton = false;
         this.documentInformation = {
 
-		docName: '',
-		docMemo: '',
-		docDescription: ''
-	}
+            docName: '',
+            docMemo: '',
+            docDescription: ''
+        }
     }
-	backClick() {
-		this.tab.emit('Warnings');
+    backClick() {
+        this.tab.emit('Warnings');
     }
     openDelete(content, row) {
         this.selectedRowForDelete = row;
@@ -252,46 +268,44 @@ export class EntityDocumentsComponent implements OnInit {
         }, () => { console.log('Backdrop click') })
     }
     deleteItemAndCloseModel() {
-        let customerDocumentDetailId = this.localCollection.customerDocumentDetailId;
-        if (customerDocumentDetailId > 0) {
+        let legalEntityDocumentDetailId = this.localCollection.legalEntityDocumentDetailId;
+        if (legalEntityDocumentDetailId > 0) {
             //this.isSaving = true;
-            this.customerService.getDeleteDocumentListbyId(customerDocumentDetailId).subscribe(
-               
+            this.legalEntityService.getDeleteDocumentListbyId(legalEntityDocumentDetailId).subscribe(
+
                 this.alertService.showMessage(
                     'Success',
                     `Action was deleted successfully `,
                     MessageSeverity.success
                 ));
-        
+
             this.getList();
-           
+
         }
         this.modal.close();
     }
-      dismissModel() {        
-         this.isDeleteMode = false;       
-         this.modal.close();
+    dismissModel() {
+        this.isDeleteMode = false;
+        this.modal.close();
     }
 
-    dismissDocumentPopupModel(){
+    dismissDocumentPopupModel() {
         this.fileUploadInput.clear();
+        console.log("hiasdsadsad")
     }
 
     downloadFileUpload(rowData) {
         const url = `${this.configurations.baseUrl}/api/FileUpload/downloadattachedfile?filePath=${rowData.link}`;
         window.location.assign(url);
     }
-    
-	getPageCount(totalNoofRecords, pageSize) {
-		return Math.ceil(totalNoofRecords / pageSize)
-	}
+
+    getPageCount(totalNoofRecords, pageSize) {
+        return Math.ceil(totalNoofRecords / pageSize)
+    }
 
     openHistory(content, rowData) {
-        //const { customerShippingAddressId } = rowData.customerShippingAddressId;
-        //const { customerShippingId } = rowData.customerShippingId;
         this.alertService.startLoadingMessage();
-
-        this.customerService.getCustomerDocumentHistory(rowData.customerDocumentDetailId, this.id).subscribe(
+        this.legalEntityService.getlegalEntityDocumentHistory(rowData.legalEntityDocumentDetailId, this.id).subscribe(
             results => this.onAuditHistoryLoadSuccessful(results, content),
             error => this.saveFailedHelper(error));
     }
