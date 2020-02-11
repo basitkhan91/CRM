@@ -587,7 +587,7 @@ export class CustomerShippingInformationComponent implements OnInit {
         // const id = this.savedGeneralInformationData.customerId;
 
         this.customerService.getInternationalShippingByCustomerId(this.id, this.pageIndexForInternational, this.pageSizeForInternational).subscribe(res => {
-            console.log("myresponse international",res);
+            this.loaderForInternational = false;
             this.internationalShippingData = res.paginationList;
             this.totalRecordsForInternationalShipping = res.totalRecordsCount;
             if (this.internationalShippingData.length > 0) {
