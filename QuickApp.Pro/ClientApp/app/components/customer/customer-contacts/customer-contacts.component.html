@@ -61,6 +61,7 @@
                          [resizableColumns]="true"
                          [reorderableColumns]="true"
                          [scrollable]="true"
+                         [loading]="loaderForContacts"
                          scrollHeight="450px">
                     <ng-template pTemplate="caption" *ngIf="isViewMode == false">
                         <div style="text-align: right; min-height: 30px; margin-left: -6px;">
@@ -652,6 +653,7 @@
                          [value]="ataListDataValues"
                          [scrollable]="true"
                          [style]="{ width: '100%' }"
+
                          [paginator]="true">
                     <ng-template pTemplate="header" let-columns>
                         <tr>

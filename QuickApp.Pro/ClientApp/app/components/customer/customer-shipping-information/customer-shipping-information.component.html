@@ -44,6 +44,7 @@
                             [columns]="selectedColumnsForDomesticTable"
                             selectionMode="multiple"
                             [resizableColumns]="true"
+                            [loading]="loaderForDomestic"
                             [reorderableColumns]="true">
                         <ng-template pTemplate="caption" *ngIf="isViewMode == false">
 
@@ -180,6 +181,7 @@
                              selectionMode="multiple"
                              [(selection)]="selectedrowsFromInternational"
                              [resizableColumns]="true"
+                             [loading]="loaderForInternational"
                              [reorderableColumns]="true"
                              [totalRecords]="totalRecordsForInternationalShipping"
                              [rows]="10">
@@ -891,7 +893,9 @@
                          [rowsPerPageOptions]="[10,20,50,100]"
                          selectionMode="multiple"
                          [resizableColumns]="true"
-                         [reorderableColumns]="true">
+                         [reorderableColumns]="true"
+                         [loading]="loaderForDomesticShipVia">
+
                          <ng-template pTemplate="colgroup" let-columns>
                             <colgroup>
                                 <col *ngFor="let col of columns">
@@ -1120,7 +1124,8 @@
                          [columns]="selectedColumnsForInternationShipViaTable"
                          selectionMode="multiple"
                          [resizableColumns]="true"
-                         [reorderableColumns]="true">
+                         [reorderableColumns]="true"
+                         [loading]="loaderForInternationalShipVia">
 
                     <ng-template pTemplate="colgroup" let-columns>
                         <colgroup>
@@ -1182,7 +1187,7 @@
                     <ng-template pTemplate="summary" id="footer">
                         <label id="footer" class="footer">No'of records:</label>
                         <input style="width: 5%;"
-                               [(ngModel)]="interTotalRecords"
+                               [(ngModel)]="internationShipVia._totalRecords"
                                [disabled]="true"
                                name="interTotalRecords"
                                pInputText
@@ -1190,7 +1195,7 @@
                         &nbsp;&nbsp;
                         <label id="footer" class="footer1">Pages Count:</label>
                         <input style="width: 5%;"
-                               [(ngModel)]="interTotalPages"
+                               [ngModel]="getPageCount(internationShipVia._totalRecords,pageSize)"
                                [disabled]="true"
                                name="interTotalPages"
                                pInputText

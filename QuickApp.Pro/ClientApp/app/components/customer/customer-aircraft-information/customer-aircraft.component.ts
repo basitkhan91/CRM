@@ -95,7 +95,8 @@ export class CustomerAircraftComponent implements OnInit {
     showAdvancedSearchCard: boolean = false;
     isViewMode: boolean = false;
 
-    stopmulticlicks:boolean;
+    stopmulticlicks: boolean;
+    loader: boolean = true;
     constructor(private route: ActivatedRoute, private itemser: ItemMasterService,
         private aircraftModelService: AircraftModelService,
         private Dashnumservice: DashNumberService,
@@ -105,8 +106,8 @@ export class CustomerAircraftComponent implements OnInit {
         private modalService: NgbModal,
         private activeModal: NgbActiveModal,
     ) {
-        this.stopmulticlicks=false;
-     }
+        this.stopmulticlicks = false;
+    }
     ngOnInit() {
         if (this.editMode) {
             this.id = this.editGeneralInformationData.customerId;
@@ -562,6 +563,7 @@ export class CustomerAircraftComponent implements OnInit {
         }, () => { console.log('Backdrop click') })
     }
     inventoryValidation(event) {
+
         console.log(event.target.value, "event.target.value");
         if (event.target.value > 0) {
             return true;
@@ -650,10 +652,13 @@ export class CustomerAircraftComponent implements OnInit {
         this.customerService.getMappedAirCraftDetails(this.id).subscribe(res => {
             console.log(res);
             this.aircraftListDataValues = res;
+            this.loader = false;
             if (this.aircraftListDataValues.length > 0) {
                 this.totalRecords = this.aircraftListDataValues.length;
                 this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
             }
+        }, err => {
+            this.loader = false;
         })
     }
     getCustomerAircraftHistory(row) {
@@ -720,16 +725,16 @@ export class CustomerAircraftComponent implements OnInit {
         this.modal.close();
     }
     nextClick() {
-        this.stopmulticlicks=true;
-      this.tab.emit('Atachapter');
+        this.stopmulticlicks = true;
+        this.tab.emit('Atachapter');
         this.alertService.showMessage(
             'Success',
             ` ${this.editMode ? 'Updated' : 'Saved'} Aircraft Information Sucessfully `,
             MessageSeverity.success
         );
-        setTimeout(()=>{
-            this.stopmulticlicks=false;
-        },500)
+        setTimeout(() => {
+            this.stopmulticlicks = false;
+        }, 500)
     }
     backClick() {
 

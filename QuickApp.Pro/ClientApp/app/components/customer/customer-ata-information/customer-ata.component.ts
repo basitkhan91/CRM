@@ -25,10 +25,10 @@ export class CustomerATAInformationComponent implements OnInit {
     @Input() contactList;
     @Output() tab = new EventEmitter();
     @Output() refreshCustomerATAMapped = new EventEmitter();
-       ataChapter: any;
+    ataChapter: any;
     atasubchapterValues: any;
     ataChapterList: { value: any; label: string; }[];
-     search_SelectedATA = []
+    search_SelectedATA = []
     search_SelectedContact = []
     search_SelectedATASubChapter = []
     ataHeaders = [
@@ -37,13 +37,13 @@ export class CustomerATAInformationComponent implements OnInit {
         { field: 'ataSubChapterDescription', header: 'ATA Sub-Chapter' }
 
     ]
-    showAdvancedSearchCard : boolean = false;
+    showAdvancedSearchCard: boolean = false;
     selectedColumns = this.ataHeaders;
-     ataChapterIdUrl: string;
+    ataChapterIdUrl: string;
     contactIdUrl: string;
     ataSubchapterIdUrl: any;
     search_ataSubChapterList: any;
-     id: number;
+    id: number;
     contactid: number;
     searchATAParams: string;
     customerName: any;
@@ -59,8 +59,9 @@ export class CustomerATAInformationComponent implements OnInit {
     pageSize: number = 10;
     totalPages: number = 0;
     originalATASubchapterData: any = [];
-    stopmulticlicks:boolean;
-      constructor(
+    stopmulticlicks: boolean;
+    loader = true;
+    constructor(
         private atasubchapter1service: AtaSubChapter1Service,
         private atamain: AtaMainService,
         private authService: AuthService,
@@ -69,7 +70,7 @@ export class CustomerATAInformationComponent implements OnInit {
         private modalService: NgbModal,
         private activeModal: NgbActiveModal,
     ) {
-        this.stopmulticlicks=false;
+        this.stopmulticlicks = false;
     }
 
     ngOnInit() {
@@ -88,17 +89,17 @@ export class CustomerATAInformationComponent implements OnInit {
             this.customerName = this.savedGeneralInformationData.name;
         }
 
-           this.getAllATASubChapter();
-    
+        this.getAllATASubChapter();
+
     }
-  
+
 
     get userName(): string {
         return this.authService.currentUser ? this.authService.currentUser.userName : "";
     }
 
-   
-   
+
+
 
     // get all subchapters
     getAllATASubChapter() {
@@ -110,36 +111,39 @@ export class CustomerATAInformationComponent implements OnInit {
                 }
             })
             // making copy for the subchapters in both add and seach 
-                 this.search_ataSubChapterList = ataSubChapter;
+            this.search_ataSubChapterList = ataSubChapter;
         })
 
 
     }
 
-     getOriginalATASubchapterList() {
-		this.atasubchapter1service.getAtaSubChapter1List().subscribe(res => {
-			const responseData = res[0];
-            this.originalATASubchapterData = responseData;	
+    getOriginalATASubchapterList() {
+        this.atasubchapter1service.getAtaSubChapter1List().subscribe(res => {
+            const responseData = res[0];
+            this.originalATASubchapterData = responseData;
             this.getMappedATAByCustomerId();
-		
-		})
 
-	}
+        })
+
+    }
 
     // get mapped ata by customer id 
     getMappedATAByCustomerId() {
         this.customerService.getATAMappedByCustomerId(this.id).subscribe(res => {
             this.ataListDataValues = res;
+            this.loader = false;
             console.log(res);
             if (res.length > 0) {
                 this.totalRecords = res.length;
                 this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
             }
-            for(let i=0; i<this.ataListDataValues.length; i++){
-				this.ataListDataValues[i]['ataChapterName'] = this.ataListDataValues[i]['ataChapterCode'] + ' - ' +this.ataListDataValues[i]['ataChapterName']
-				this.ataListDataValues[i]['ataSubChapterDescription'] = getValueFromArrayOfObjectById('ataSubChapterCode', 'ataSubChapterId', this.ataListDataValues[i]['ataSubChapterId'], this.originalATASubchapterData) + ' - ' +this.ataListDataValues[i]['ataSubChapterDescription']
-			}
+            for (let i = 0; i < this.ataListDataValues.length; i++) {
+                this.ataListDataValues[i]['ataChapterName'] = this.ataListDataValues[i]['ataChapterCode'] + ' - ' + this.ataListDataValues[i]['ataChapterName']
+                this.ataListDataValues[i]['ataSubChapterDescription'] = getValueFromArrayOfObjectById('ataSubChapterCode', 'ataSubChapterId', this.ataListDataValues[i]['ataSubChapterId'], this.originalATASubchapterData) + ' - ' + this.ataListDataValues[i]['ataSubChapterDescription']
+            }
 
+        }, err => {
+            this.loader = false;
         })
     }
 
@@ -198,26 +202,26 @@ export class CustomerATAInformationComponent implements OnInit {
     }
 
     getContactsByCustomerId() {
-         this.customerService.getContactsByCustomerId(this.id).subscribe(res => {
+        this.customerService.getContactsByCustomerId(this.id).subscribe(res => {
             const responseData: any = res;
-                this.contactList = responseData.map(x => {
-                    return {
-                        label: x.firstName, value: x.contactId
-                    }
-                })
-
-                
-            
+            this.contactList = responseData.map(x => {
+                return {
+                    label: x.firstName, value: x.contactId
+                }
             })
-        
+
+
+
+        })
+
     }
 
     async searchATA() {
         await this.searchByFieldUrlCreateforATA();
         this.searchATAParams = '';
         // checks where multi select is empty or not and calls the service
-        if (this.ataChapterIdUrl !== '' && this.ataSubchapterIdUrl !== '' && this.contactIdUrl!=='') {
-          
+        if (this.ataChapterIdUrl !== '' && this.ataSubchapterIdUrl !== '' && this.contactIdUrl !== '') {
+
             this.searchATAParams = `contactId=${this.contactIdUrl}&ataChapterId=${
                 this.ataChapterIdUrl
                 }&ataSubChapterId=${this.ataSubchapterIdUrl}`;
@@ -226,7 +230,7 @@ export class CustomerATAInformationComponent implements OnInit {
 
             this.searchATAParams = `contactId=${this.contactIdUrl}&ataChapterId=${this.ataChapterIdUrl}`;
         }
-        else if (this.ataSubchapterIdUrl !== ''  && this.contactIdUrl !== '') {
+        else if (this.ataSubchapterIdUrl !== '' && this.contactIdUrl !== '') {
             this.searchATAParams = `contactId=${this.contactIdUrl}&ataSubChapterId=${this.ataSubchapterIdUrl}`;
         }
         else if (this.ataSubchapterIdUrl !== '' && this.ataChapterIdUrl !== '') {
@@ -246,7 +250,7 @@ export class CustomerATAInformationComponent implements OnInit {
         }
 
         console.log(this.searchATAParams);
-         this.customerService
+        this.customerService
             .searchATAMappedByMultiATAIDATASUBIDByCustomerId(
                 this.id,
                 this.searchATAParams,
@@ -264,22 +268,22 @@ export class CustomerATAInformationComponent implements OnInit {
                 // this.search_SelectedContact = [];
                 // this.search_SelectedATASubChapter = [];
                 // this.search_SelectedATA = [];
-                        });
+            });
     }
 
 
 
     nextClick() {
-        this.stopmulticlicks=true;
+        this.stopmulticlicks = true;
         this.tab.emit('Financial');
         this.alertService.showMessage(
-			'Success',
-			` ${this.editMode ? 'Updated' : 'Saved'  } Customer ATA Chapter Information Sucessfully `,
-			MessageSeverity.success
+            'Success',
+            ` ${this.editMode ? 'Updated' : 'Saved'} Customer ATA Chapter Information Sucessfully `,
+            MessageSeverity.success
         );
-        setTimeout(()=>{
-            this.stopmulticlicks=false;
-        },500)
+        setTimeout(() => {
+            this.stopmulticlicks = false;
+        }, 500)
     }
     backClick() {
         this.tab.emit('AircraftInfo');
@@ -312,8 +316,8 @@ export class CustomerATAInformationComponent implements OnInit {
         this.modal.close();
     }
     getPageCount(totalNoofRecords, pageSize) {
-		return Math.ceil(totalNoofRecords / pageSize)
-	}
+        return Math.ceil(totalNoofRecords / pageSize)
+    }
     private saveCompleted(user?: any) {
 
         if (this.isDeleteMode == true) {
@@ -332,7 +336,7 @@ export class CustomerATAInformationComponent implements OnInit {
         this.alertService.showStickyMessage("Save Error", "The below errors occured whilst saving your changes:", MessageSeverity.error, error);
         this.alertService.showStickyMessage(error, null, MessageSeverity.error);
     }
-    enableDisableAdvancedSearch (val){        
+    enableDisableAdvancedSearch(val) {
         this.showAdvancedSearchCard = val;
         this.search_SelectedContact = [];
         this.search_SelectedATA = [];
