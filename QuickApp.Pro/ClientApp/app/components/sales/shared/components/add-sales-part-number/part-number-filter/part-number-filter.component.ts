@@ -293,6 +293,9 @@ private onptnmbersSuccessful(allWorkFlows: any[]) {
       this.searchDisabled = false;
     }else{
       this.enableMultiSearch = false;
+      if (this.query.partSearchParamters.conditionId>0 && this.query.partSearchParamters.partNumber  && this.query.partSearchParamters.quantityRequested>0)
+          this.searchDisabled = false;
+      else
       this.searchDisabled = true;
     }
     
