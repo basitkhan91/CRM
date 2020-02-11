@@ -21,6 +21,7 @@ using Path = System.IO.Path;
 using Microsoft.EntityFrameworkCore;
 using System.Collections;
 using System.Net.Http.Headers;
+using DAL.Common.Enum;
 
 namespace QuickApp.Pro.Controllers
 {
@@ -2147,9 +2148,13 @@ namespace QuickApp.Pro.Controllers
                 customerObj.IsAeroExchange = customerViewModel.IsAeroExchange;
                 customerObj.IsTaxExempt = customerViewModel.IsTaxExempt;
                 customerObj.AeroExchangeDescription = customerViewModel.AeroExchangeDescription;
-                if (customerViewModel.IsCustomerAlsoVendor)
+                if (customerViewModel.IsCustomerAlsoVendor && customerViewModel.CustomerTypeId == Convert.ToInt32(CustomerTypeEnum.Customer))
                 {
                     customerObj.AllowNettingOfAPAR = customerViewModel.AllowNettingOfAPAR;
+                }
+                else
+                {
+                    customerObj.AllowNettingOfAPAR = false;
                 }
                 customerObj.MarkUpPercentageId = customerViewModel.MarkUpPercentageId;
                 customerObj.MasterCompanyId = 1;
@@ -2159,9 +2164,13 @@ namespace QuickApp.Pro.Controllers
                 customerObj.CreatedBy = customerViewModel.CreatedBy;
                 customerObj.UpdatedBy = customerViewModel.UpdatedBy;
 
+                _unitOfWork.Customer.Update(customerObj);
+                _unitOfWork.SaveChanges();
+
                 customerObj.CustomerTaxTypeRateMapping = new List<CustomerTaxTypeRateMapping>();
                 List<object> result = ToList(_unitOfWork.Customer.GetTaxTypeRateMapped(customerObj.CustomerId));
 
+               
 
                 var newMappingRecord = result.Except(customerViewModel.CustomerTaxTypeRateMapping);
 
@@ -2183,19 +2192,27 @@ namespace QuickApp.Pro.Controllers
                     }
                     else
                     {
-                        //var newMappingRecord = result.Except(customerViewModel.CustomerTaxTypeRateMapping);
-                        customerContactTaxMapping.MasterCompanyId = 1;
-                        customerContactTaxMapping.CreatedBy = customerContactTaxMapping.CreatedBy ?? "admin";
-                        customerContactTaxMapping.UpdatedBy = customerContactTaxMapping.UpdatedBy ?? "admin";
-                        customerContactTaxMapping.CreatedDate = System.DateTime.Now;
-                        customerContactTaxMapping.UpdatedDate = System.DateTime.Now;
-                        customerContactTaxMapping.IsDeleted = false;
-                        customerObj.CustomerTaxTypeRateMapping.Add(customerContactTaxMapping);
+                        var custContChaptr = _unitOfWork.Repository<CustomerTaxTypeRateMapping>().GetSingleOrDefault(c => c.CustomerId == Convert.ToInt64(customerContactTaxMapping.CustomerId) && (c.TaxRateId == Convert.ToInt64(customerContactTaxMapping.TaxRateId)) && (c.TaxTypeId == Convert.ToInt64(customerContactTaxMapping.TaxTypeId)));
+                        if (custContChaptr == null)
+                        {
+                            //var newMappingRecord = result.Except(customerViewModel.CustomerTaxTypeRateMapping);
+                            customerContactTaxMapping.MasterCompanyId = 1;
+                            customerContactTaxMapping.CreatedBy = customerContactTaxMapping.CreatedBy ?? "admin";
+                            customerContactTaxMapping.UpdatedBy = customerContactTaxMapping.UpdatedBy ?? "admin";
+                            customerContactTaxMapping.CreatedDate = System.DateTime.Now;
+                            customerContactTaxMapping.UpdatedDate = System.DateTime.Now;
+                            customerContactTaxMapping.IsDeleted = false;
+                            customerObj.CustomerTaxTypeRateMapping.Add(customerContactTaxMapping);
+                            _unitOfWork.SaveChanges();
+                        }
+                        else
+                        {
+                            return BadRequest("Record already exist with these details");
+                        }
                     }
 
                 }
-                _unitOfWork.Customer.Update(customerObj);
-                _unitOfWork.SaveChanges();
+               
                 return Ok(customerObj);
             }
             return Ok(ModelState);

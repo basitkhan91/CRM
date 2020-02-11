@@ -114,6 +114,8 @@ export class CustomerSalesPersonComponent implements OnInit {
     // private isEditMode: boolean = false;
     // private isDeleteMode: boolean = false;
     ngOnInit() {
+        this.getGlobalSettings();
+
             this.employeeListOriginal = this.employeeListOriginal || []; 
 
             this.employeeListOriginal.forEach(element => {
@@ -132,12 +134,10 @@ export class CustomerSalesPersonComponent implements OnInit {
                 primarySalesPersonId: getObjectById('employeeId', this.editGeneralInformationData.primarySalesPersonId, this.employeeListOriginal),
                 secondarySalesPersonId: getObjectById('employeeId', this.editGeneralInformationData.secondarySalesPersonId, this.employeeListOriginal),
                 csrId: getObjectById('employeeId', this.editGeneralInformationData.csrId, this.employeeListOriginal),
-                saId: getObjectById('employeeId', this.editGeneralInformationData.saId, this.employeeListOriginal),
-                annualRevenuePotential: this.formatannualRevenuePotential(this.salesInfo.annualRevenuePotential),
-                annualQuota: this.formatannualRevenuePotential(this.salesInfo.annualQuota),
+                saId: getObjectById('employeeId', this.editGeneralInformationData.saId, this.employeeListOriginal)
             };
             console.log(this.salesInfo)
-
+            
 
 
             this.customerCode = this.editGeneralInformationData.customerCode;
@@ -152,7 +152,6 @@ export class CustomerSalesPersonComponent implements OnInit {
             this.customerCode = this.savedGeneralInformationData.customerCode;
             this.customerName = this.savedGeneralInformationData.name;
         }
-        this.getGlobalSettings();
 
     }
 
@@ -240,20 +239,24 @@ export class CustomerSalesPersonComponent implements OnInit {
         )
     }
     formatannualRevenuePotential(val){
-        if(isNaN(val) ==  true){
-            alert(2)
-            val = Number(val.replace(/[^0-9.-]+/g,""));
-          }
-        this.salesInfo.annualRevenuePotential = new Intl.NumberFormat(this.global_lang, { style: 'decimal', minimumFractionDigits: 2,    maximumFractionDigits: 2}).format(val)
-        console.log(this.salesInfo.annualRevenuePotential, "this.salesInfo.annualRevenuePotential")
+        if(val){
+            if(isNaN(val) ==  true){
+                val = Number(val.replace(/[^0-9.-]+/g,""));
+              }
+            this.salesInfo.annualRevenuePotential = new Intl.NumberFormat(this.global_lang, { style: 'decimal', minimumFractionDigits: 2,    maximumFractionDigits: 2}).format(val)
+              return this.salesInfo.annualRevenuePotential;
+        }
+        
     }
     formatannualQuota(val){
+        if(val){
+
         if(isNaN(val) ==  true){
-            alert(2)
             val = Number(val.replace(/[^0-9.-]+/g,""));
           }
         this.salesInfo.annualQuota = new Intl.NumberFormat(this.global_lang, { style: 'decimal', minimumFractionDigits: 2,    maximumFractionDigits: 2}).format(val)
-        console.log(this.salesInfo.annualQuota, "this.salesInfo.annualQuota")
+        return this.salesInfo.annualQuota;
+        }
     }
 
 
