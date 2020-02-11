@@ -121,7 +121,7 @@ export class CustomerViewComponent implements OnInit {
     DocumentsList: any = [];
     domesticShippingData: any;
     internationalShippingData: any = [];
-
+    loader:boolean=true;
     filterKeysByValue: object = {};
     taxTypeRateMapping: any = [];
     restrictedPMAParts: any = [];
@@ -242,7 +242,10 @@ export class CustomerViewComponent implements OnInit {
         await this.customerService.getInternationalShippingByCustomerId(customerId, 0, 20).subscribe(res => {
             this.internationalShippingData = res.paginationList || [];
             // this.totalRecordsForInternationalShipping = res.totalRecordsCount;
-        })
+            this.loader = true;
+        }, err => {
+            this.loader = false;
+            })
 
 
 

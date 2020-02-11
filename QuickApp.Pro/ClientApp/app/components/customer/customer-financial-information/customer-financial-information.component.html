@@ -377,7 +377,7 @@
                 </label>
               
             
-                <select name="taxType" [(ngModel)]="taxRateEditData.taxTypeId">
+                <select name="taxType" [(ngModel)]="taxRateEditData.taxTypeId" disabled>
                     <option value="">select</option>
                     <option *ngFor="let Percentlist of taxTypeList" [ngValue]="Percentlist.value">{{Percentlist.label}}</option>
                 </select>
@@ -397,7 +397,7 @@
         </div>
         <div class="col-md-3">
             <div class="form-group">
-                <button class="btn btn-primary" (click)="updateTaxTypeandRate()" data-dismiss="modal">
+                <button class="btn btn-primary mrt_18" (click)="updateTaxTypeandRate()" data-dismiss="modal">
                     Update
                 </button>
             </div>
@@ -683,7 +683,7 @@
                                                         [(ngModel)]="discontValue"
                                                         pKeyFilter="num"
                                                         (onSelect)="selectedDiscount()"
-                                                        (onkeyup)="checkDiscountExists($event)"
+                                                        (keyup)="checkDiscountExists($event)"
                                                         [suggestions]="_discountListForDropdown" field="label" (completeMethod)="filterDiscount($event)"
                                                         [size]="30" [minLength]="1" [dropdown]="true" >
                                         </p-autoComplete>

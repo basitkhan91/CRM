@@ -22,7 +22,7 @@ import { CommonService } from '../../../services/common.service';
 export class CustomerShippingInformationComponent implements OnInit {
 
     // [x: string]: any;
-
+ 
     @Input() savedGeneralInformationData;
     @Input() countryListOriginal;
     @Input() editGeneralInformationData;
@@ -137,7 +137,9 @@ export class CustomerShippingInformationComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-        
+        this.getDomesticShippingByCustomerId();
+        this.getInternationalShippingByCustomerId();
+        console.log("isedits issue")
         if (this.editMode) {
 
             this.id = this.editGeneralInformationData.customerId;
@@ -148,7 +150,8 @@ export class CustomerShippingInformationComponent implements OnInit {
             this.isViewMode = false;
 
         } else {
-
+            // this.getDomesticShippingByCustomerId();
+            // this.getInternationalShippingByCustomerId();
             if (this.customerDataFromExternalComponents) {
                 this.id = this.customerDataFromExternalComponents.customerId;
                 this.customerCode = this.customerDataFromExternalComponents.customerCode;
@@ -163,8 +166,8 @@ export class CustomerShippingInformationComponent implements OnInit {
             
             
             //Added By Vijay For Customer Create time IsShippingAddess is selected checkbox Then list page we are displaying list
-            this.getDomesticShippingByCustomerId();
-            this.getInternationalShippingByCustomerId();
+            // this.getDomesticShippingByCustomerId();
+            // this.getInternationalShippingByCustomerId();
         }
         // this.getInternationalShippingByCustomerId();
         // this.id = this.savedGeneralInformationData.customerId
@@ -265,7 +268,7 @@ export class CustomerShippingInformationComponent implements OnInit {
 
         // const id = this.savedGeneralInformationData.customerId;
         this.customerService.getCustomerShipAddressGet(this.id).subscribe(res => {
-            console.log(res);
+            console.log("myresponse domestic",res);
 
             this.domesticShippingData = res[0];
 
@@ -575,7 +578,7 @@ export class CustomerShippingInformationComponent implements OnInit {
         // const id = this.savedGeneralInformationData.customerId;
 
         this.customerService.getInternationalShippingByCustomerId(this.id, this.pageIndexForInternational, this.pageSizeForInternational).subscribe(res => {
-            console.log(res);
+            console.log("myresponse international",res);
             this.internationalShippingData = res.paginationList;
             this.totalRecordsForInternationalShipping = res.totalRecordsCount;
             if (this.internationalShippingData.length > 0) {
@@ -583,9 +586,6 @@ export class CustomerShippingInformationComponent implements OnInit {
                 this.totalPagesInternationalShipping = Math.ceil(this.totalRecordsInternationalShipping / this.pageSize);
             }
         })
-
-
-
     }
 
     

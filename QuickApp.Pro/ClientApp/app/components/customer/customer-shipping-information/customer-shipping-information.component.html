@@ -181,6 +181,7 @@
                              [(selection)]="selectedrowsFromInternational"
                              [resizableColumns]="true"
                              [reorderableColumns]="true"
+                             [loading]="loader"
                              [totalRecords]="totalRecordsForInternationalShipping"
                              [rows]="10">
                         <ng-template pTemplate="caption" *ngIf="isViewMode == false">
