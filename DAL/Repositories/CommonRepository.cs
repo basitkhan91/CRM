@@ -1527,6 +1527,46 @@ namespace DAL.Repositories
             }
         }
 
+        public IEnumerable<object> GetJobTitleTypes(long masterCompanyId)
+        {
+            try
+            {
+                var list = (from jt in _appContext.JobTitle
+                            where jt.MasterCompanyId == masterCompanyId
+                            select new
+                            {
+                                jt.JobTitleId,
+                                JobTitle = jt.Description
+                            }).Distinct().ToList();
+                return list;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public IEnumerable<object> GetExpertiseTypes(long masterCompanyId)
+        {
+            try
+            {
+                var list = (from et in _appContext.ExpertiseType
+                            where et.MasterCompanyId == masterCompanyId
+                            select new
+                            {
+                                et.ExpertiseTypeId,
+                                ExpertiseType=et.Description
+                            }).Distinct().ToList();
+                return list;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
     }
 }
