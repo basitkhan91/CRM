@@ -135,6 +135,7 @@ overAllMarkup: any;
     console.log(this.quoteForm);
     this.router.queryParams.subscribe((params: Params) => {
       if(params['workorderid']){
+        this.workOrderId = params['workorderid'];
         this.getEmployeeList(params['workorderid']);
         this.getTaskList();
         this.getMarkup();
@@ -355,7 +356,10 @@ overAllMarkup: any;
       if(mpn.label == this.selectedPartNumber){
         msId = mpn.value.masterPartId;
         this.labor.workFlowWorkOrderId = mpn;
+        this.workFlowWorkOrderId = mpn.value.workOrderWorkFlowId;
         this.selectedWorkFlowWorkOrderId = mpn.value.workOrderWorkFlowId;
+        // this.getTabDataFromWorkOrder();
+        this.buildMethodSelected('use work order');
         this.workOrderService.getSavedQuoteDetails(this.selectedWorkFlowWorkOrderId)
         .subscribe(
           (res)=>{
@@ -366,9 +370,12 @@ overAllMarkup: any;
               this.woWorkFlowId = res['selectedId'];
               this.currenttaskId = res['taskId'];
               if(res['buildMethodId'] == 1){
-                this.buildMethodSelected('use work flow');
+                this.buildMethodSelected('use work order');
               }
               else if(res['buildMethodId'] == 2){
+                this.buildMethodSelected('use work flow');
+              }
+              else if(res['buildMethodId'] == 3){
                 this.buildMethodSelected('use historical wos');
               }
               else{
@@ -377,10 +384,10 @@ overAllMarkup: any;
             }
             else{
               this.workOrderQuoteDetailsId = 0;
-              this.historicalWorkOrderId = 0;
-              this.woWorkFlowId = 0;
-              this.selectedBuildMethod = "";
-              this.currenttaskId = 0;
+              // this.historicalWorkOrderId = 0;
+              // this.woWorkFlowId = 0;
+              // this.selectedBuildMethod = "";
+              // this.currenttaskId = 0;
             }
           }
         )
@@ -449,9 +456,50 @@ overAllMarkup: any;
         }
       )
     }
+    else if(buildType == 'use work order'){
+      this.getTabDataFromWorkOrder();
+    }
     this.gridTabChange('materialList');
     
     
+  }
+
+  getTabDataFromWorkOrder(){
+    if(!this.workOrderQuoteDetailsId){
+      this.workorderMainService.getWorkOrderMaterialList(this.workFlowWorkOrderId, this.workOrderId).subscribe(res => {
+          this.workOrderMaterialList = res;
+          if (res.length > 0) {
+            this.materialListQuotation = res;
+          }
+      })
+      this.workorderMainService.getWorkOrderLaborList(this.workFlowWorkOrderId, this.workOrderId).subscribe(res => {
+        let laborList = this.labor.workOrderLaborList;
+        this.labor = {...res, workOrderLaborList: laborList};
+        this.labor.hoursorClockorScan = undefined;
+        this.labor.workFlowWorkOrderId = this.workFlowWorkOrderId;
+        this.taskList.forEach((tl)=>{
+          res.laborList.forEach((rt)=>{
+            if(rt['taskId'] == tl['taskId']){
+              if(this.labor.workOrderLaborList[0][tl['description'].toLowerCase()][0] && this.labor.workOrderLaborList[0][tl['description'].toLowerCase()][0]['expertiseId'] == null && this.labor.workOrderLaborList[0][tl['description'].toLowerCase()][0]['employeeId'] == null){
+                this.labor.workOrderLaborList[0][tl['description'].toLowerCase()] = [];
+              }
+              let labor = {}
+              labor = {...rt, employeeId: {'label':rt.employeeName, 'value': rt.employeeId}}
+              this.labor.workOrderLaborList[0][tl['description'].toLowerCase()].push(labor);
+            }
+          })
+        })
+      })
+      this.workorderMainService.getWorkOrderChargesList(this.workFlowWorkOrderId, this.workOrderId).subscribe((res: any[]) => {
+          this.workOrderChargesList = res;
+      })
+      this.workorderMainService.getWorkOrderExclusionsList(this.workFlowWorkOrderId, this.workOrderId).subscribe((res: any[]) => {
+          this.workOrderExclusionsList = res;
+      })
+      this.workorderMainService.getWorkOrderFrieghtsList(this.workFlowWorkOrderId, this.workOrderId).subscribe((res: any[]) => {
+          this.workOrderFreightList = res;
+      })
+    }
   }
 
   gridTabChange(value) {
@@ -939,27 +987,30 @@ saveworkOrderLabor(data) {
 }
 
 getBuildMethodId(){
-  if(this.selectedBuildMethod === 'use work flow') return 1;
-  else if(this.selectedBuildMethod === 'use historical wos') return 2;
-  else if(this.selectedBuildMethod === 'build from scratch') return 3;
-  else if(this.selectedBuildMethod === 'display 3rd party') return 4;
+  if(this.selectedBuildMethod === 'use work order') return 1;
+  else if(this.selectedBuildMethod === 'use work flow') return 2;
+  else if(this.selectedBuildMethod === 'use historical wos') return 3;
+  else if(this.selectedBuildMethod === 'build from scratch') return 4;
+  else if(this.selectedBuildMethod === 'display 3rd party') return 5;
 }
 
 setBuildMethod(id){
-  if(id === 1) 
-  {
+  if(id === 1) {
+    this.selectedBuildMethod='use work order';
+  }
+  else if(id == 2){
     this.selectedBuildMethod='use work flow';
     // this.buildMethodSelected('use work flow');
   }
-  else if(id === 2) {
+  else if(id === 3) {
     this.selectedBuildMethod='use historical wos';
     // this.buildMethodSelected('use historical wos');
   }
-  else if(id === 3) {
+  else if(id === 4) {
     this.selectedBuildMethod='build from scratch';
     // this.buildMethodSelected('build from scratch');
   }
-  else if(id === 4) {
+  else if(id === 5) {
     this.selectedBuildMethod='display 3rd party';
     // this.buildMethodSelected('display 3rd party');
   }
@@ -1179,7 +1230,8 @@ getQuoteTabData() {
 }
 getQuoteExclusionListByWorkOrderQuoteId() {
   if(this.workOrderQuoteDetailsId){
-    this.workOrderService.getQuoteExclusionList(this.workOrderQuoteDetailsId, (this.selectedBuildMethod == "use work flow")?1:(this.selectedBuildMethod == "use historical wos")?2:3).subscribe(res => {
+    
+    this.workOrderService.getQuoteExclusionList(this.workOrderQuoteDetailsId, (this.selectedBuildMethod === 'use work order')?1:(this.selectedBuildMethod == "use work flow")?2:(this.selectedBuildMethod == "use historical wos")?3:4).subscribe(res => {
         this.workOrderExclusionsList = res;
         if(res.length > 0){
           this.updateWorkOrderQuoteDetailsId(res[0].workOrderQuoteDetailsId)
@@ -1189,7 +1241,7 @@ getQuoteExclusionListByWorkOrderQuoteId() {
 }
 getQuoteMaterialListByWorkOrderQuoteId() {
   if(this.workOrderQuoteDetailsId){
-    this.workOrderService.getQuoteMaterialList(this.workOrderQuoteDetailsId, (this.selectedBuildMethod == "use work flow")?1:(this.selectedBuildMethod == "use historical wos")?2:3).subscribe(res => {
+    this.workOrderService.getQuoteMaterialList(this.workOrderQuoteDetailsId, (this.selectedBuildMethod === 'use work order')?1:(this.selectedBuildMethod == "use work flow")?2:(this.selectedBuildMethod == "use historical wos")?3:4).subscribe(res => {
         this.materialListQuotation = res;
         if(this.materialListQuotation && this.materialListQuotation.length > 0 && this.materialListQuotation[0].markupFixedPrice){
           this.costPlusType = Number(this.materialListQuotation[0].headerMarkupId);
@@ -1203,7 +1255,7 @@ getQuoteMaterialListByWorkOrderQuoteId() {
 
 getQuoteFreightListByWorkOrderQuoteId() {
   if(this.workOrderQuoteDetailsId){
-    this.workOrderService.getQuoteFreightsList(this.workOrderQuoteDetailsId, (this.selectedBuildMethod == "use work flow")?1:(this.selectedBuildMethod == "use historical wos")?2:3).subscribe(res => {
+    this.workOrderService.getQuoteFreightsList(this.workOrderQuoteDetailsId, (this.selectedBuildMethod === 'use work order')?1:(this.selectedBuildMethod == "use work flow")?2:(this.selectedBuildMethod == "use historical wos")?3:4).subscribe(res => {
         this.workOrderFreightList = res;
         if(res.length > 0){
           this.updateWorkOrderQuoteDetailsId(res[0].workOrderQuoteDetailsId)
@@ -1214,7 +1266,7 @@ getQuoteFreightListByWorkOrderQuoteId() {
 
  getQuoteChargesListByWorkOrderQuoteId() {
   if(this.workOrderQuoteDetailsId){
-    this.workOrderService.getQuoteChargesList(this.workOrderQuoteDetailsId, (this.selectedBuildMethod == "use work flow")?1:(this.selectedBuildMethod == "use historical wos")?2:3).subscribe(res => {
+    this.workOrderService.getQuoteChargesList(this.workOrderQuoteDetailsId, (this.selectedBuildMethod === 'use work order')?1:(this.selectedBuildMethod == "use work flow")?2:(this.selectedBuildMethod == "use historical wos")?3:4).subscribe(res => {
         this.workOrderChargesList = res;
         if(res.length > 0){
           this.updateWorkOrderQuoteDetailsId(res[0].workOrderQuoteDetailsId)
@@ -1224,7 +1276,7 @@ getQuoteFreightListByWorkOrderQuoteId() {
 }
  getQuoteLaborListByWorkOrderQuoteId() {
   if(this.workOrderQuoteDetailsId){
-    this.workOrderService.getQuoteLaborList(this.workOrderQuoteDetailsId, (this.selectedBuildMethod == "use work flow")?1:(this.selectedBuildMethod == "use historical wos")?2:3).subscribe(res => {
+    this.workOrderService.getQuoteLaborList(this.workOrderQuoteDetailsId, (this.selectedBuildMethod === 'use work order')?1:(this.selectedBuildMethod == "use work flow")?2:(this.selectedBuildMethod == "use historical wos")?3:4).subscribe(res => {
         if (res) {
             // this.workOrderLaborList = res;
             let wowfId = this.labor.workFlowWorkOrderId;
