@@ -1463,7 +1463,7 @@ namespace DAL.Repositories
             try
             {
                 var list = (from emp in _appContext.Employee
-                            where emp.IsDeleted == false && emp.IsActive == true && emp.JobTitleId == jobTitleId
+                            where (emp.IsDeleted == false || emp.IsDeleted==null) && emp.IsActive == true && emp.JobTitleId == jobTitleId
                             select new
                             {
                                 emp.EmployeeId,
@@ -1485,7 +1485,7 @@ namespace DAL.Repositories
             try
             {
                 var list = (from emp in _appContext.Employee
-                            where emp.IsDeleted == false && emp.IsActive == true && emp.EmployeeExpertiseId == expertiseId
+                            where (emp.IsDeleted == false || emp.IsDeleted == null) && emp.IsActive == true && emp.EmployeeExpertiseId == expertiseId
                             select new
                             {
                                 emp.EmployeeId,
@@ -1518,6 +1518,46 @@ namespace DAL.Repositories
                                 st.StationName
                             }
                           ).Distinct().ToList();
+                return list;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public IEnumerable<object> GetJobTitleTypes(long masterCompanyId)
+        {
+            try
+            {
+                var list = (from jt in _appContext.JobTitle
+                            where jt.MasterCompanyId == masterCompanyId
+                            select new
+                            {
+                                jt.JobTitleId,
+                                JobTitle = jt.Description
+                            }).Distinct().ToList();
+                return list;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public IEnumerable<object> GetExpertiseTypes(long masterCompanyId)
+        {
+            try
+            {
+                var list = (from et in _appContext.EmployeeExpertise
+                            where et.MasterCompanyId == masterCompanyId
+                            select new
+                            {
+                                et.EmployeeExpertiseId,
+                                ExpertiseType=et.Description
+                            }).Distinct().ToList();
                 return list;
             }
             catch (Exception)

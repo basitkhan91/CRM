@@ -245,7 +245,19 @@ namespace QuickApp.Pro.Controllers
             return Ok(result);
         }
 
+        [HttpGet("jobtitletypes")]
+        public IActionResult GetJobTitleTypes(long masterCompanyId)
+        {
+            var result = _unitOfWork.CommonRepository.GetJobTitleTypes(masterCompanyId);
+            return Ok(result);
+        }
 
+        [HttpGet("expertisetypes")]
+        public IActionResult GetExpertiseTypes(long masterCompanyId)
+        {
+            var result = _unitOfWork.CommonRepository.GetExpertiseTypes(masterCompanyId);
+            return Ok(result);
+        }
 
     }
 }
