@@ -25,6 +25,7 @@ export class CustomerATAInformationComponent implements OnInit {
     @Input() contactList;
     @Output() tab = new EventEmitter();
     @Output() refreshCustomerATAMapped = new EventEmitter();
+    @Output() getMappedContactByCustomerId = new EventEmitter();
     ataChapter: any;
     atasubchapterValues: any;
     ataChapterList: { value: any; label: string; }[];
@@ -60,7 +61,7 @@ export class CustomerATAInformationComponent implements OnInit {
     totalPages: number = 0;
     originalATASubchapterData: any = [];
     stopmulticlicks: boolean;
-    loader = true;
+    loaderForATA = true;
     constructor(
         private atasubchapter1service: AtaSubChapter1Service,
         private atamain: AtaMainService,
@@ -76,27 +77,34 @@ export class CustomerATAInformationComponent implements OnInit {
     ngOnInit() {
 
         if (this.editMode) {
+            console.log(this.editGeneralInformationData);
             this.id = this.editGeneralInformationData.customerId;
-
 
             this.customerCode = this.editGeneralInformationData.customerCode;
             this.customerName = this.editGeneralInformationData.name;
             this.getOriginalATASubchapterList();
+            // this.getMappedContactByCustomerId.emit(this.id);
 
         } else {
             this.id = this.savedGeneralInformationData.customerId;
             this.customerCode = this.savedGeneralInformationData.customerCode;
             this.customerName = this.savedGeneralInformationData.name;
+            // this.getMappedContactByCustomerId.emit(this.id);
         }
 
         this.getAllATASubChapter();
 
+
+
     }
+
+
 
 
     get userName(): string {
         return this.authService.currentUser ? this.authService.currentUser.userName : "";
     }
+
 
 
 
@@ -129,9 +137,10 @@ export class CustomerATAInformationComponent implements OnInit {
 
     // get mapped ata by customer id 
     getMappedATAByCustomerId() {
+
         this.customerService.getATAMappedByCustomerId(this.id).subscribe(res => {
+            this.loaderForATA = false;
             this.ataListDataValues = res;
-            this.loader = false;
             console.log(res);
             if (res.length > 0) {
                 this.totalRecords = res.length;
@@ -143,7 +152,7 @@ export class CustomerATAInformationComponent implements OnInit {
             }
 
         }, err => {
-            this.loader = false;
+            this.loaderForATA = false;
         })
     }
 

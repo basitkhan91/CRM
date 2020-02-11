@@ -567,7 +567,7 @@ export class CustomerContactsComponent implements OnInit {
 
 	async getATACustomerContactMapped() {
 
-		this.customerService.getATAMappedByContactId(this.selectedContact.contactId).subscribe(res => {
+		this.customerService.getATAMappedByContactId(this.selectedContact.customerContactId).subscribe(res => {
 			//console.log(res);
 			this.ataListDataValues = res;
 
@@ -806,7 +806,7 @@ export class CustomerContactsComponent implements OnInit {
 			createdBy: this.userName,
 			updatedBy: this.userName,
 			createdDate: new Date(),
-			customerContactId: this.selectedContact.contactId,
+			customerContactId: this.selectedContact.customerContactId,
 
 			ataChapterName: getValueFromArrayOfObjectById('label', 'value', this.ataChapterEditData.ataChapterId, this.search_ataChapterList1),
 			ataChapterCode: getValueFromArrayOfObjectById('code', 'value', this.ataChapterEditData.ataChapterId, this.search_ataChapterList1),

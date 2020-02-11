@@ -1,22 +1,32 @@
 <div style="padding: 2px 6px;">
-  <div class="col-md-12 shadow-box-cstm">        
+  <div class="col-md-12 shadow-box-cstm">
     <div class="col-md-4">
-        <p class="fs12">
-        <label class="control-label labels-font-header" style="width: auto;">Customer Name: </label>
-    <span class="span-header-red" style="text-transform: capitalize"> {{customerName }} </span> </p>
+      <p class="fs12">
+        <label class="control-label labels-font-header" style="width: auto;"
+          >Customer Name:
+        </label>
+        <span class="span-header-red" style="text-transform: capitalize">
+          {{ customerName }}
+        </span>
+      </p>
     </div>
     <div class="col-md-4">
-        <p class="fs12">
-        <label class="control-label labels-font-header" style="width: auto;">Customer Code: </label>
-        <span class="span-header-red" style="text-transform: capitalize"> {{customerCode }} </span> </p>
-    </div>                            
+      <p class="fs12">
+        <label class="control-label labels-font-header" style="width: auto;"
+          >Customer Code:
+        </label>
+        <span class="span-header-red" style="text-transform: capitalize">
+          {{ customerCode }}
+        </span>
+      </p>
+    </div>
   </div>
   <!-- <div class="col-md-12">
         <button class="btn btn-primary btn-sm dropdown-toggle float-right" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             Advanced Search <span class="caret"></span>
         </button>
   </div> -->
-  
+
   <!-- <div class="col-sm-12 font-padding">
     <div class="col-sm-2">
       Customer Name: <span style="color:red">{{ customerName }}</span>
@@ -26,192 +36,305 @@
     </div>
   </div> -->
 
-
-    <div class="card" style="margin-top: 0; padding: 10px">
-        <div class="col-md-12">
-            <h4 class="po-head-sm">ATA chapters</h4>
-            <hr />
+  <div class="card" style="margin-top: 0; padding: 10px">
+    <div class="col-md-12">
+      <h4 class="po-head-sm">ATA chapters</h4>
+      <hr />
+    </div>
+    <div class="advance-search-card" *ngIf="showAdvancedSearchCard == true">
+      <div class="col-md-1">
+        <h4 class="f-s-14" style="margin-top: 26px;">Search:</h4>
+      </div>
+      <div class="col-md-3">
+        <div class="form-group ">
+          <label class="fs12">Contact</label>
+          <p-multiSelect
+            [options]="contactList"
+            name="atasearch"
+            [(ngModel)]="search_SelectedContact"
+            (onChange)="getContactsByCustomerId()"
+            [panelStyle]="{ minWidth: '12em' }"
+            class="pub-multi"
+          ></p-multiSelect>
         </div>
-        <div class="advance-search-card" *ngIf="showAdvancedSearchCard == true">
-            <div class="col-md-1">
-                <h4 class="f-s-14" style="margin-top: 26px;">Search:</h4> 
-            </div>
-            <div class="col-md-3">
-                <div class="form-group ">
-                    <label class="fs12">Contact</label>
-                    <p-multiSelect [options]="contactList"
-                                name="atasearch"
-                                [(ngModel)]="search_SelectedContact"
-                                (onChange)="getContactsByCustomerId()"
-                                [panelStyle]="{ minWidth: '12em' }"
-                                class="pub-multi"></p-multiSelect>
-                </div>
-            </div>
+      </div>
 
-            <div class="col-md-3">
-                <div class="form-group ">
-                    <label class="fs12">ATA Chapter</label>
-                    <p-multiSelect [options]="search_ataChapterList"
-                                name="atasearch"
-                                [(ngModel)]="search_SelectedATA"
-                                (onChange)="getSubChapterByATAChapter()"
-                                [panelStyle]="{ minWidth: '12em' }"
-                                class="pub-multi"></p-multiSelect>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="form-group">
-                    <label class="fs12">
-                        ATA Subchapter
-                    </label>
-                    <p-multiSelect [(ngModel)]="search_SelectedATASubChapter"
-                                [options]="search_ataSubChapterList"
-                                name="ataSubchapter"
-                                [panelStyle]="{ minWidth: '12em' }"
-                                class="pub-multi"></p-multiSelect>
-                </div>
-            </div>
-            <div class="col-md-1 add-new-align">
-                <div class="form-group">
-                    <button class="btn btn-primary mtop20" (click)="searchATA()">
-                        <i class="pi pi-search pi-search"></i>
-                    </button>
-                </div>
-            </div>
-        </div> <!--/advanced search card-->
-        <div class="clear"></div> 
-        <p-table
-        #dt
-        class="rpo-table-cstm"
-        [rows]="6"
-        [value]="ataListDataValues"
-        [scrollable]="true"
-        [style]="{ width: '100%' }"
-        [paginator]="true"
-        [columns]="selectedColumns"
-        [resizableColumns]="true" 
-        [reorderableColumns]="true"
-        [loading]="loader"
-        selectionMode="multiple"
-        >
-        <ng-template pTemplate="caption"  let-columns>
+      <div class="col-md-3">
+        <div class="form-group ">
+          <label class="fs12">ATA Chapter</label>
+          <p-multiSelect
+            [options]="search_ataChapterList"
+            name="atasearch"
+            [(ngModel)]="search_SelectedATA"
+            (onChange)="getSubChapterByATAChapter()"
+            [panelStyle]="{ minWidth: '12em' }"
+            class="pub-multi"
+          ></p-multiSelect>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="form-group">
+          <label class="fs12">
+            ATA Subchapter
+          </label>
+          <p-multiSelect
+            [(ngModel)]="search_SelectedATASubChapter"
+            [options]="search_ataSubChapterList"
+            name="ataSubchapter"
+            [panelStyle]="{ minWidth: '12em' }"
+            class="pub-multi"
+          ></p-multiSelect>
+        </div>
+      </div>
+      <div class="col-md-1 add-new-align">
+        <div class="form-group">
+          <button class="btn btn-primary mtop20" (click)="searchATA()">
+            <i class="pi pi-search pi-search"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+    <!--/advanced search card-->
+    <div class="clear"></div>
+    <p-table
+      #dt
+      class="rpo-table-cstm"
+      [rows]="6"
+      [value]="ataListDataValues"
+      [scrollable]="true"
+      [style]="{ width: '100%' }"
+      [paginator]="true"
+      [columns]="selectedColumns"
+      [resizableColumns]="true"
+      [reorderableColumns]="true"
+      selectionMode="multiple"
+    >
+      <ng-template pTemplate="caption" let-columns>
         <div style="text-align: right; min-height: 30px; margin-left: -6px;">
-            <p-multiSelect [options]="ataHeaders" [(ngModel)]="selectedColumns" [ngModelOptions]="{standalone: true}" optionLabel="header"
-                            selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" style="float:left">
-                            <ng-template let-selectedColumns pTemplate="selectedItems">
-                                    <ng-container >{{selectedColumns?.length}} Columns Selected
-                                    </ng-container>
-                                 </ng-template>
-                        </p-multiSelect>
-            <div class="inner-addon right-addon w200 inline-block g-filter-search-cstm">
-                <i class="fa fa-search"></i>
-                <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Filter" style="height: 28px !important;">
-            </div>
-            <button type="button" class="btn btn-primary" pButton icon="fa-download" iconPos="left" label="Export All Data" matTooltip="Download  Data" matTooltipPosition="above" (click)="dt.exportCSV()" style="padding: 5px 10px !important;"></button>
-            <button type="button" class="btn btn-primary" pButton icon="fa-download" iconPos="left" label="Export Selected Data" matTooltip="Download Selected Data" matTooltipPosition="above" (click)="dt.exportCSV({selectionOnly:true})" style="padding: 5px 10px !important;"></button>
-            <button class="btn btn-primary btn-sm " style="padding: 5px 10px !important;" *ngIf="showAdvancedSearchCard == false"  type="button"  (click)="enableDisableAdvancedSearch(true)">
-                    Advanced Search <i class="fa fa-caret-down"></i>
-            </button>
-            <button class="btn btn-primary btn-sm" style="padding: 5px 10px !important;" *ngIf="showAdvancedSearchCard == true"  type="button"  (click)="enableDisableAdvancedSearch(false)">
-                Advanced Search <i class="fa fa-caret-up"></i>
-            </button>
+          <p-multiSelect
+            [options]="ataHeaders"
+            [(ngModel)]="selectedColumns"
+            [ngModelOptions]="{ standalone: true }"
+            optionLabel="header"
+            selectedItemsLabel="{0} columns selected"
+            [style]="{ minWidth: '200px' }"
+            defaultLabel="Choose Columns"
+            style="float:left"
+          >
+            <ng-template let-selectedColumns pTemplate="selectedItems">
+              <ng-container
+                >{{ selectedColumns?.length }} Columns Selected
+              </ng-container>
+            </ng-template>
+          </p-multiSelect>
+          <div
+            class="inner-addon right-addon w200 inline-block g-filter-search-cstm"
+          >
+            <i class="fa fa-search"></i>
+            <input
+              type="text"
+              pInputText
+              size="50"
+              class="form-control ui-autocomplete-input"
+              (input)="dt.filterGlobal($event.target.value, 'contains')"
+              placeholder="Filter"
+              style="height: 28px !important;"
+            />
+          </div>
+          <button
+            type="button"
+            class="btn btn-primary"
+            pButton
+            icon="fa-download"
+            iconPos="left"
+            label="Export All Data"
+            matTooltip="Download  Data"
+            matTooltipPosition="above"
+            (click)="dt.exportCSV()"
+            style="padding: 5px 10px !important;"
+          ></button>
+          <button
+            type="button"
+            class="btn btn-primary"
+            pButton
+            icon="fa-download"
+            iconPos="left"
+            label="Export Selected Data"
+            matTooltip="Download Selected Data"
+            matTooltipPosition="above"
+            (click)="dt.exportCSV({ selectionOnly: true })"
+            style="padding: 5px 10px !important;"
+          ></button>
+          <button
+            class="btn btn-primary btn-sm "
+            style="padding: 5px 10px !important;"
+            *ngIf="showAdvancedSearchCard == false"
+            type="button"
+            (click)="enableDisableAdvancedSearch(true)"
+          >
+            Advanced Search <i class="fa fa-caret-down"></i>
+          </button>
+          <button
+            class="btn btn-primary btn-sm"
+            style="padding: 5px 10px !important;"
+            *ngIf="showAdvancedSearchCard == true"
+            type="button"
+            (click)="enableDisableAdvancedSearch(false)"
+          >
+            Advanced Search <i class="fa fa-caret-up"></i>
+          </button>
         </div>
-    </ng-template>
-    <ng-template pTemplate="colgroup" let-columns>
+      </ng-template>
+      <ng-template pTemplate="colgroup" let-columns>
         <colgroup>
-            <col *ngFor="let col of columns" style="width:130px">
+          <col *ngFor="let col of columns" style="width:130px" />
         </colgroup>
-    </ng-template>
-        <ng-template pTemplate="header" let-columns>
-            <tr>
-            <!-- <th *ngFor="let col of ataHeaders">
+      </ng-template>
+      <ng-template pTemplate="header" let-columns>
+        <tr>
+          <!-- <th *ngFor="let col of ataHeaders">
                 {{ col.header }}
             </th> -->
-            <th  *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
-                    {{ col.header }} <p-sortIcon [field]="col.field"></p-sortIcon>
-                    </th>
-            <th style="width:70px;position:sticky">Action</th>
-            </tr>
-            <tr>
-            <th style="width:auto" *ngFor="let col of columns" [ngSwitch]="col.field">
-                <input style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field, 'contains')">
-            </th>
-            <th style="width:70px;position:sticky"></th>
-            </tr>
-        </ng-template>
-        <ng-template
-            pTemplate="body"
-            let-i="rowIndex"
-            let-rowData
-            let-columns="columns"
-        >
-            <tr [pSelectableRow]="rowData" [pSelectableRowDblClick]="rowData">
-            <td class="uiTable_td_ovrflw_control" *ngFor="let col of columns" pResizableColumn pReorderableColumn >
-                {{ rowData[col.field] }}
-            </td>
-            <td style="width:70px;position:sticky; text-align: center"> 
-                <!--<button matTooltip="Delete"
+          <th
+            *ngFor="let col of columns"
+            pResizableColumn
+            pReorderableColumn
+            [pSortableColumn]="col.field"
+          >
+            {{ col.header }} <p-sortIcon [field]="col.field"></p-sortIcon>
+          </th>
+          <th style="width:70px;position:sticky">Action</th>
+        </tr>
+        <tr>
+          <th
+            style="width:auto"
+            *ngFor="let col of columns"
+            [ngSwitch]="col.field"
+          >
+            <input
+              style="width:100%;"
+              pInputText
+              type="text"
+              (input)="dt.filter($event.target.value, col.field, 'contains')"
+            />
+          </th>
+          <th style="width:70px;position:sticky"></th>
+        </tr>
+      </ng-template>
+      <ng-template
+        pTemplate="body"
+        let-i="rowIndex"
+        let-rowData
+        let-columns="columns"
+      >
+        <tr [pSelectableRow]="rowData" [pSelectableRowDblClick]="rowData">
+          <td
+            class="uiTable_td_ovrflw_control"
+            *ngFor="let col of columns"
+            pResizableColumn
+            pReorderableColumn
+          >
+            {{ rowData[col.field] }}
+          </td>
+          <td style="width:70px;position:sticky; text-align: center">
+            <!--<button matTooltip="Delete"
                         class="btn btn-danger nobg"
                         (click)="deleteATAMapping(deleteContent,rowData)">
                     <i class="fa fa-trash"></i>
                 </button>-->
-                <span data-toggle="modal"><a class="btn nobg"  (click)="deleteATAMapping(deleteContent,rowData)" matTooltip="Delete"><i class="fa fa-trash"></i></a> </span>
+            <span data-toggle="modal"
+              ><a
+                class="btn nobg"
+                (click)="deleteATAMapping(deleteContent, rowData)"
+                matTooltip="Delete"
+                ><i class="fa fa-trash"></i
+              ></a>
+            </span>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template
+        pTemplate="emptymessage"
+        let-columns
+        *ngIf="ataListDataValues?.length == 0"
+      >
+        <tr>
+          <td [attr.colspan]="4" class="no-records-cstm">
+            No records found
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="summary" id="footer">
+        <label id="footer" class="footer">No'of records:</label>
+        <input
+          style="width: 5%;"
+          [(ngModel)]="dt._totalRecords"
+          [disabled]="true"
+          pInputText
+          type="text"
+        />
+        &nbsp;&nbsp;
+        <label id="footer" class="footer1">Pages Count:</label>
 
-            </td>
-            </tr>
-            
-            </ng-template>
-        <ng-template pTemplate="emptymessage" let-columns *ngIf="ataListDataValues?.length == 0">
-            <tr>               
-                <td [attr.colspan]="4"  class="no-records-cstm">
-                    No records found
-                </td>
-            </tr>
-        </ng-template>
-        <ng-template pTemplate="summary" id="footer">
-            <label id="footer" class="footer">No'of records:</label>
-            <input style="width: 5%;" [(ngModel)]="dt._totalRecords" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp;
-            <label id="footer" class="footer1">Pages Count:</label>
-           
-            <input style="width: 5%;" [ngModel]="getPageCount(dt._totalRecords,pageSize)" [disabled]="true" pInputText type="text" />
-        </ng-template>
-        </p-table>
+        <input
+          style="width: 5%;"
+          [ngModel]="getPageCount(dt._totalRecords, pageSize)"
+          [disabled]="true"
+          pInputText
+          type="text"
+        />
+      </ng-template>
+    </p-table>
 
     <div class="col-md-12">
-        <button
+      <button
         type="button"
         class="btn btn-primary pull-right submit-btn"
-        (click)="nextClick()" [disabled]="stopmulticlicks"
-        >
-        Save &  Next
-        </button>
-        <button
+        (click)="nextClick()"
+        [disabled]="stopmulticlicks"
+      >
+        Save & Next
+      </button>
+      <button
         type="button"
         class="btn btn-primary pull-right submit-btn"
         (click)="backClick()"
-        >
+      >
         Previous
-        </button>
+      </button>
     </div>
-    </div>
+  </div>
   <br />
 </div>
 
 <ng-template #deleteContent let-c="close" let-d="dismiss">
-    <div class="modal-header">
-        <h4 class="modal-title">Are You Sure Want to Delete?</h4>
-        <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-    <div class="modal-body">
-        <strong>
-            Contact Name:
-            <span class="new-label">{{selectedRowForDelete.firstName}}</span>
-        </strong>
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-success" (click)="deleteItemAndCloseModel()">Yes</button>
-        <button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
-    </div>
+  <div class="modal-header">
+    <h4 class="modal-title">Are You Sure Want to Delete?</h4>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="dismissModel()"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <strong>
+      Contact Name:
+      <span class="new-label">{{ selectedRowForDelete.firstName }}</span>
+    </strong>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-success"
+      (click)="deleteItemAndCloseModel()"
+    >
+      Yes
+    </button>
+    <button type="button" class="btn btn-danger" (click)="dismissModel()">
+      No
+    </button>
+  </div>
 </ng-template>

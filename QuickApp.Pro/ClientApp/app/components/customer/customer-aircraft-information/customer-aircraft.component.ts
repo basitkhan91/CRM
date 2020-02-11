@@ -122,7 +122,7 @@ export class CustomerAircraftComponent implements OnInit {
                 this.id = this.customerDataFromExternalComponents.customerId;
                 this.customerCode = this.customerDataFromExternalComponents.customerCode;
                 this.customerName = this.customerDataFromExternalComponents.name;
-         
+
                 this.isViewMode = true;
             } else {
                 this.id = this.savedGeneralInformationData.customerId;
@@ -564,22 +564,22 @@ export class CustomerAircraftComponent implements OnInit {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
-    inventoryValidation(event,from) {
-        if(from =='fromedit' && (event.target.value ==null || event.target.value =='' || event.target.value ==undefined)){
+    inventoryValidation(event, from) {
+        if (from == 'fromedit' && (event.target.value == null || event.target.value == '' || event.target.value == undefined)) {
             this.disableSave = false;
         }
         console.log(event.target.value, "event.target.event.target.value");
         if (event.target.value && event.target.value == 0) {
-        
+
             this.alertService.showMessage(
                 'Warn',
                 'Inventory should be greater then 0',
                 MessageSeverity.warn
             );
             event.target.value = '';
-            event.target.value=null;
-            console.log("indf",event.target.value)
-            if(from =='fromedit')this.editAirCraftData.inventory='';
+            event.target.value = null;
+            console.log("indf", event.target.value)
+            if (from == 'fromedit') this.editAirCraftData.inventory = '';
         } else {
             return true;
 
@@ -659,8 +659,8 @@ export class CustomerAircraftComponent implements OnInit {
     getAircraftMappedDataByCustomerId() {
         this.customerService.getMappedAirCraftDetails(this.id).subscribe(res => {
             console.log(res);
-            this.aircraftListDataValues = res;
             this.loader = false;
+            this.aircraftListDataValues = res;
             if (this.aircraftListDataValues.length > 0) {
                 this.totalRecords = this.aircraftListDataValues.length;
                 this.totalPages = Math.ceil(this.totalRecords / this.pageSize);

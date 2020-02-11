@@ -52,6 +52,9 @@
                     [forceSelection]="true"
                     emptyMessage="No Match Found"
                     field="name"
+                    (onSelect)="
+                      selectedSalesPerson($event, 'PrimarySalesPerson')
+                    "
                     (completeMethod)="filterPrimary($event)"
                     [size]="30"
                     [minLength]="1"
@@ -89,6 +92,9 @@
                     [(ngModel)]="salesInfo.secondarySalesPersonId"
                     [suggestions]="secondarySPList"
                     field="name"
+                    (onSelect)="
+                      selectedSalesPerson($event, 'SecondarySalesPerson')
+                    "
                     (completeMethod)="filterSecondary($event)"
                     [size]="30"
                     [minLength]="1"

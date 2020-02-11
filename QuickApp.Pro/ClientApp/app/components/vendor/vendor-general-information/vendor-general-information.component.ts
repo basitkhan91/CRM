@@ -446,13 +446,21 @@ export class VendorGeneralInformationComponent implements OnInit {
 
             this.sourceVendor = this.vendorService.listCollection;
             console.log(this.sourceVendor);
-            this.sourceVendor.vendorName = getObjectById('vendorId', this.sourceVendor.vendorId, this.allActions);
+            // this.sourceVendor.vendorName = getObjectById('vendorId', this.sourceVendor.vendorId, this.allActions);
+            if (this.sourceVendor.vendorName !== undefined) {
+                this.sourceVendor.vendorName = { vendorId: this.sourceVendor.vendorId, vendorName: this.sourceVendor.vendorName }
+            }
+
             this.toGetVendorGeneralDocumentsList(this.sourceVendor.vendorId);
             this.sourceVendor.address1 = this.vendorService.listCollection.address1;
             this.sourceVendor.address2 = this.vendorService.listCollection.address2;
             this.sourceVendor.address3 = this.vendorService.listCollection.address3;
             this.sourceVendor.city = this.vendorService.listCollection.city;
-            this.sourceVendor.country = getObjectById('countries_id', this.vendorService.listCollection.countryId, this.allCountryinfo);
+            if (this.sourceVendor.country !== undefined) {
+                this.sourceVendor.country = { countryId: this.sourceVendor.countryId, nice_name: this.sourceVendor.country }
+            }
+
+            // this.sourceVendor.country = getObjectById('countries_id', this.vendorService.listCollection.countryId, this.allCountryinfo);
             this.sourceVendor.stateOrProvince = this.vendorService.listCollection.stateOrProvince;
             this.sourceVendor.postalCode = this.vendorService.listCollection.postalCode;
             this.sourceVendor.vendorClassificationIds = this.sourceVendor.vendorClassifications;

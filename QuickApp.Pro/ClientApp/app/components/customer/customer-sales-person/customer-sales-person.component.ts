@@ -38,8 +38,10 @@ export class CustomerSalesPersonComponent implements OnInit {
     agentsOriginalList: any;
     agentList: any[];
     salesPersonOriginalList: any;
-    primarySPList: any[];
-    secondarySPList: any[];
+    primarySPList: any[] = [];
+    secondarySPList: any[] = [];
+    secondarySPListFilterData: any[];
+    primarySPListFilterData: any[];
 
 
     constructor(public vendorservice: VendorService, public customerService: CustomerService,
@@ -56,8 +58,8 @@ export class CustomerSalesPersonComponent implements OnInit {
     ) {
     }
     salesInfo = {
-        primarySalesPersonId: "",
-        secondarySalesPersonId: "",
+        primarySalesPersonId: undefined,
+        secondarySalesPersonId: undefined,
         csrId: "",
         saId: "",
         annualRevenuePotential: "",
@@ -144,16 +146,7 @@ export class CustomerSalesPersonComponent implements OnInit {
     // private isEditMode: boolean = false;
     // private isDeleteMode: boolean = false;
     ngOnInit() {
-        // this.employeeListOriginal = this.employeeListOriginal || [];
         this.getGlobalSettings();
-
-        // this.employeeListOriginal = this.employeeListOriginal || []; 
-
-        // this.employeeListOriginal.forEach(element => {
-        //     element["fullName"] = element["firstName"] + " " + element["lastName"]
-
-        // });
-        // console.log(this.employeeListOriginal, "employeelistoriginal")
         this.getCSRList();
         this.getAgentsList();
         this.getSalesPersonList();
@@ -233,18 +226,47 @@ export class CustomerSalesPersonComponent implements OnInit {
     }
 
     filterPrimary(event) {
-        this.primarySPList = this.salesPersonOriginalList;
-
-        const primarySPData = [...this.salesPersonOriginalList.filter(x => {
+        let data;
+        if (!this.editMode) {
+            if (this.salesInfo.secondarySalesPersonId !== undefined && this.salesInfo.secondarySalesPersonId !== '' && this.salesInfo.secondarySalesPersonId !== null) {
+                data = this.primarySPListFilterData;
+            } else {
+                data = this.salesPersonOriginalList;
+            }
+        } else {
+            data = [...this.salesPersonOriginalList.filter(x => {
+                if (this.salesInfo.secondarySalesPersonId.employeeId !== x.employeeId) {
+                    return x;
+                }
+            })]
+        }
+        this.primarySPList = data;
+        const primarySPData = [...data.filter(x => {
             return x.name.toLowerCase().includes(event.query.toLowerCase())
         })]
         this.primarySPList = primarySPData;
     }
 
     filterSecondary(event) {
-        this.secondarySPList = this.salesPersonOriginalList;
+        let data;
+        if (!this.editMode) {
+            if (this.salesInfo.primarySalesPersonId !== undefined && this.salesInfo.primarySalesPersonId !== '' && this.salesInfo.primarySalesPersonId !== null) {
+                data = this.secondarySPListFilterData;
+            } else {
+                data = this.salesPersonOriginalList;
+            }
+        } else {
+            data = [...this.salesPersonOriginalList.filter(x => {
+                if (this.salesInfo.primarySalesPersonId.employeeId !== x.employeeId) {
+                    return x;
+                }
+            })]
+        }
 
-        const secondarySPData = [...this.salesPersonOriginalList.filter(x => {
+
+        this.secondarySPList = data;
+
+        const secondarySPData = [...data.filter(x => {
             return x.name.toLowerCase().includes(event.query.toLowerCase())
         })]
         this.secondarySPList = secondarySPData;
@@ -270,6 +292,54 @@ export class CustomerSalesPersonComponent implements OnInit {
         this.agentList = agentData;
     }
 
+
+    selectedSalesPerson(object, type) {
+        if (type === 'PrimarySalesPerson') {
+            this.secondarySPListFilterData = [...this.salesPersonOriginalList.filter(x => {
+                if (object.employeeId !== x.employeeId) {
+                    return x;
+                }
+            })]
+
+
+        } else if (type === 'SecondarySalesPerson') {
+            this.primarySPListFilterData = [...this.salesPersonOriginalList.filter(x => {
+                if (object.employeeId !== x.employeeId) {
+                    return x;
+                }
+            })]
+        }
+    }
+
+    // selectedSalesPersonOnKeyup(value, type) {
+    //     (onKeyUp)="
+    //     selectedSalesPersonOnKeyup(
+    //       $event.target.value,
+    //       'SecondarySalesPerson'
+    //     )
+    //   "
+
+    //     (onKeyUp)="
+    //     selectedSalesPersonOnKeyup(
+    //       $event.target.value,
+    //       'SecondarySalesPerson'
+    //     )
+    //   "
+    //     //     console.log(value);
+    //     if (value == '') {
+
+    //         this.secondarySPListFilterData = this.salesPersonOriginalList;
+    //         this.primarySPListFilterData = this.salesPersonOriginalList;
+    //     }
+    //     // if (value == '' && type === 'PrimarySalesPerson') {
+    //     //     this.secondarySPListFilterData = this.salesPersonOriginalList;
+    //     // } else if (value == '' && type === 'SecondarySalesPerson') {
+    //     //     this.primarySPListFilterData = this.salesPersonOriginalList;
+    //     // }
+    // }
+    // this.partListForPMA = this.generalInformation.restrictedPMAParts.reduce((acc, obj) => {
+    //     return acc.filter(x => x.value.itemMasterId !== obj.masterPartId)
+    // }, this.partListOriginal)
 
 
 
