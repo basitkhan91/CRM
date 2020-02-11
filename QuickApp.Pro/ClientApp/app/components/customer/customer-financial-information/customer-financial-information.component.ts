@@ -241,7 +241,6 @@ export class CustomerFinancialInformationComponent implements OnInit {
 
     formatCreditLimit(val){
         if(isNaN(val) ==  true){
-            alert(2)
             val = Number(val.replace(/[^0-9.-]+/g,""));
           }
         this.savedGeneralInformationData.creditLimit = new Intl.NumberFormat(this.global_lang, { style: 'decimal', minimumFractionDigits: 2,    maximumFractionDigits: 2}).format(val)
