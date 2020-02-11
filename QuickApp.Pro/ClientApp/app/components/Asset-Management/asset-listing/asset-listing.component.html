@@ -62,11 +62,15 @@
                             </ng-template>
                             <ng-template pTemplate="header" let-columns style="padding-top: 1% !important">
                                 <tr>
-                                    <th style="width:auto" *ngFor="let col of columns" pResizableColumn pReorderableColumn 
-                                        [pSortableColumn]="col.field" [attr.colspan]="1">
-                                        {{col.header}}
-                                        <p-sortIcon [field]="col.field"></p-sortIcon>
-                                    </th>
+                                    <ng-container *ngFor="let col of columns">
+                                        <th class="text-center" *ngIf="col.field!='companyName' && col.field!='buName' && col.field!='deptName' && col.field!='divName'" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
+                                            {{col.header}}
+                                            <p-sortIcon [field]="col.field"></p-sortIcon>
+                                        </th>
+                                        <th class="text-center" *ngIf="col.field=='companyName'" colspan="4" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
+                                            Management Structure
+                                        </th>
+                                    </ng-container>
                                     <th style="width:150px;position: sticky;" *ngIf="selectedColumns.length> 0">Actions</th>
                                 </tr>
                                 <tr>

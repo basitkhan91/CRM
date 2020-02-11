@@ -683,7 +683,7 @@
                                                         [(ngModel)]="discontValue"
                                                         pKeyFilter="num"
                                                         (onSelect)="selectedDiscount()"
-                                                        (keyup)="checkDiscountExists($event)"
+                                                        (onkeyup)="checkDiscountExists($event)"
                                                         [suggestions]="_discountListForDropdown" field="label" (completeMethod)="filterDiscount($event)"
                                                         [size]="30" [minLength]="1" [dropdown]="true" >
                                         </p-autoComplete>

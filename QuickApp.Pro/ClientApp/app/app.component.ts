@@ -218,7 +218,7 @@ export class AppComponent implements OnInit, AfterViewInit {
                             { label: 'Create Asset', routerLink: '/assetmodule/assetpages/app-create-asset' }]
                     },
                     {
-                        label: 'Disposal Sale', routerLink: '/#'
+                        label: 'Disposal Sale', routerLink: '/assetmodule/assetpages/app-asset-disposal-sale'
                     },
                     { label: 'Periodic Depreciation', routerLink: '/#' },
                     { label: 'Asset Adjustment', routerLink: '/#' },

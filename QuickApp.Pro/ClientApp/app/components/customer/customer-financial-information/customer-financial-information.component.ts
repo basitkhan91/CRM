@@ -461,7 +461,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
         this.getAllDiscountList();
         this.isCountdisable = false;
         this._discountListForDropdown = this._discountListForDropdown;
-        const exists = validateRecordExistsOrNot('field', value, this._discountListForDropdown)
+        const exists = validateRecordExistsOrNot('field', value, this._discountListForDropdown);
         // console.log(exists);
         if(this.discontValue ==undefined &&  this.discontValue ==undefined && this.discontValue ==null && this.discontValue ==''){
             // this._discountListForDropdown = this._discountListForDropdown;
