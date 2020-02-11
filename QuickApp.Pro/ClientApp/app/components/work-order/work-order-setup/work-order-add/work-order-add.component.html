@@ -922,6 +922,7 @@
                                                                (saveRIParts)="saveReservedPartorIssue($event)"
                                                                (saveMaterialListForWO)="saveWorkOrderMaterialList($event)"
                                                                (updateMaterialListForWO)="updateWorkOrderMaterialList($event)"
+                                                               [taskList]="taskList"
                                                                (refreshData)="getMaterialListByWorkOrderId()"></app-work-order-complete-material-list>
                     </div>
 
@@ -968,6 +969,7 @@
                                                 [workOrderChargesList]="workOrderChargesList"
                                                 (saveChargesListForWO)="saveWorkOrderChargesList($event)"
                                                 (updateChargesListForWO)="updateWorkOrderChargesList($event)"
+                                                [taskList]="taskList"
                                                 (refreshData)="getChargesListByWorkOrderId()"></app-work-order-charges>
                     </div>
 
@@ -978,6 +980,7 @@
                                                    [workOrderExclusionsList]="workOrderExclusionsList"
                                                    (saveExclusionsListForWO)="saveWorkOrderExclusionsList($event)"
                                                    (updateExclusionsListForWO)="updateWorkOrderExclusionsList($event)"
+                                                   [taskList]="taskList"
                                                    (refreshData)="getExclusionListByWorkOrderId()"></app-work-order-exclusions>
                     </div>
                     <div *ngIf="workOrderId" class="wf-label-cstm" [ngClass]="{hidedataOthers :  subTabOtherOptions !== 'freight'} ">
@@ -987,6 +990,7 @@
                         (saveFreightListForWO)="saveWorkOrderFreightsList($event)"
                         (updateFreightListForWo)="updateWorkOrderFreightsList($event)"
                         (refreshData)="getFreightListByWorkOrderId()"
+                        [taskList]="taskList"
                         ></app-work-order-freight>
                     </div>
 

@@ -20,7 +20,7 @@
     [paginator]="true"
   >
     <ng-template pTemplate="header" let-columns>
-      <tr>
+      <tr *ngIf="isQuote">
         <th colspan="9">
             &nbsp;
         </th>
@@ -59,7 +59,7 @@
         </th>
       </tr>
       <tr>
-        <ng-container *ngIf="isQuote">
+        <ng-container>
           <th>Task</th>
         </ng-container>
         <th *ngFor="let col of columns">
@@ -75,7 +75,7 @@
     </ng-template>
     <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
       <tr *ngIf="!rowData['isDeleted']">
-        <ng-container *ngIf="isQuote">
+        <ng-container>
           <td>
             <select class="form-control select-read-only" [(ngModel)]="rowData.taskId" disabled>
               <option value="">Select</option>
@@ -148,7 +148,7 @@
         </td>
       </tr>
     </ng-template>
-    <ng-template pTemplate="footer">
+    <ng-template pTemplate="footer" *ngIf="isQuote">
       <tr>
         <td>Total</td>
         <td>&nbsp;</td>
@@ -197,7 +197,7 @@
             <table class="table table-bordered ">
               <thead>
                 <tr>
-                  <th *ngIf="isQuote">Task</th>
+                  <th>Task</th>
                   <th>Carrier</th>
                   <th>Ship Via</th>
                   <th>Dimensions</th>
@@ -210,7 +210,7 @@
               </thead>
               <tbody>
                 <tr *ngFor="let f of freightForm; let i = index">
-                  <td *ngIf="isQuote">
+                  <td>
                     <select class="form-control" [(ngModel)]="f.taskId" [disabled]="isView">
                       <option value="">Select</option>
                       <option *ngFor="let task of taskList" [value]="task.taskId">{{task.description}}</option>

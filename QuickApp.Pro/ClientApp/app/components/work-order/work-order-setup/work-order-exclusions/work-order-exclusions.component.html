@@ -107,7 +107,7 @@
     [rows]="10"
   >
     <ng-template pTemplate="header" let-columns>
-        <tr>
+        <tr *ngIf="isQuote">
           <th colspan="7">&nbsp;</th>
           <th colspan="2">
               <div class="form-group" style="text-align: center;">
@@ -234,7 +234,7 @@
         </td>
       </tr>
     </ng-template>
-    <ng-template pTemplate="footer">
+    <ng-template pTemplate="footer" *ngIf="isQuote">
       <tr>
         <td>Total</td>
         <td>&nbsp;</td>

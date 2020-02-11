@@ -38,6 +38,7 @@
                 <grd-material  *ngIf="!isEdit" 
                 [isWorkOrder]="isWorkOrder" 
                 [workFlow]="workFlowObject" 
+                [taskList]="taskList"
                 (saveMaterialListForWO)="saveMaterialList($event)" ></grd-material>
             
               <grd-material *ngIf="isEdit && editData"
@@ -45,6 +46,7 @@
                 [editData]="editData"
                 [isWorkOrder]="isWorkOrder" 
                 [workFlow]="workFlowObject" 
+                [taskList]="taskList"
                 (updateMaterialListForWO)="updateMaterialList($event)" >
             </grd-material> 
             </div>

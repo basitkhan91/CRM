@@ -17,7 +17,7 @@
       <thead>
         <tr>
           <!-- <th>S.No</th> -->
-          <th *ngIf="isQuote">Task</th>
+          <th>Task</th>
           <th>PN *</th>
           <th>Description *</th>
           <th>Cond *</th>
@@ -42,7 +42,7 @@
             *ngFor="let material of workFlow.materialList; let i = index"
           >
             <!-- <td>{{ (currentPage - 1) * itemsPerPage + i + 1 }}</td> -->
-            <td *ngIf="isQuote">
+            <td>
               <select class="form-control wf-pub-id" [(ngModel)]="material.taskId" name="des_{{i}}">
                 <option value="">Select</option>
                 <option *ngFor="let task of taskList" [value]="task.taskId">{{task.description}}</option>
