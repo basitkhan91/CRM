@@ -853,7 +853,7 @@
                                 <input class="form-control" type="text" name="shippingAccountinfo" [(ngModel)]="shipViaDomestic.shippingAccountInfo" required>
                             </div>
                         </div>
-                        <div class="col-md-2" style="display:none">
+                        <!-- <div class="col-md-2" style="display:none">
                             <div class="form-group">
                                 <label>Shipping Url <span class="clr-red"></span></label>
                                 <input class="form-control" type="text" name="shippingURL" [(ngModel)]="shipViaDomestic.shippingURL">
@@ -864,7 +864,7 @@
                                 <label>Shipping ID <span class="clr-red">*</span></label>
                                 <input class="form-control" type="text" name="shippingId" [(ngModel)]="shipViaDomestic.shippingId" [disabled]="true">
                             </div>
-                        </div>
+                        </div> -->
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label>Memo</label>
@@ -885,16 +885,16 @@
                          [rows]="10"
                          [paginator]="true"
                          [pageLinks]="3"
+                         [first]="0"
                          [value]="demosticShippingViaData"
                          [columns]="selectedColumnsForInternationShipViaTable"
                          [rowsPerPageOptions]="[10,20,50,100]"
                          selectionMode="multiple"
                          [resizableColumns]="true"
-                         [reorderableColumns]="true" [scrollable]="true"
-                         scrollHeight="450px">
+                         [reorderableColumns]="true">
                          <ng-template pTemplate="colgroup" let-columns>
                             <colgroup>
-                                <col *ngFor="let col of columns" style="width:auto">
+                                <col *ngFor="let col of columns">
                             </colgroup>
                         </ng-template>
                     <ng-template pTemplate="header" let-columns>
@@ -1112,7 +1112,7 @@
                 </div>
                 <p-table #internationShipVia class="rpo-table-cstm"
                          name="internationalshipViaTable"
-                         [rows]="10"
+                         [rows]="10" [first]="0"
                          [value]="internationalShippingViaData"
                          [paginator]="true"
                          [pageLinks]="3"
@@ -1120,18 +1120,14 @@
                          [columns]="selectedColumnsForInternationShipViaTable"
                          selectionMode="multiple"
                          [resizableColumns]="true"
-                         [reorderableColumns]="true"
-                         [scrollable]="true"
-                         scrollHeight="450px">
+                         [reorderableColumns]="true">
+
                     <ng-template pTemplate="colgroup" let-columns>
                         <colgroup>
                             <col *ngFor="let col of columns" style="width:auto">
                         </colgroup>
                     </ng-template>
-                    <!-- <ng-template pTemplate="caption">
-        <div style="text-align: right">
-        </div>
-    </ng-template> -->
+
                     <ng-template pTemplate="header" let-columns>
                         <tr>
                             <th style="width: 40px;">Flag</th>
