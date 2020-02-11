@@ -23,7 +23,7 @@ export class CustomerViewComponent implements OnInit {
     viewDataclassification: any[];
     customerContacts: any = [];
     customerContactsColumns: any[];
-    pageSize: number = 5;
+    pageSize: number = 10;
     restrictHeaders = [
         { field: 'partNumber', header: 'PN' },
         { field: 'partDescription', header: 'Description' },
