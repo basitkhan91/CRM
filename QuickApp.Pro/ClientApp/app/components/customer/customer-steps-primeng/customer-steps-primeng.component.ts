@@ -240,7 +240,7 @@ export class CustomerStepsPrimengComponent {
 		} else if (value === 'Atachapter') {
 			this.currentTab = 'Atachapter';
 			this.activeMenuItem = 4;
-			this.getMappedContactByCustomerId(this.customerId);
+			// this.getMappedContactByCustomerId(this.customerId);
 
 
 
@@ -320,7 +320,12 @@ export class CustomerStepsPrimengComponent {
 	// getallCustomers
 	async getAllEmployees() {
 		await this.employeeService.getEmployeeList().subscribe(res => {
-			this.employeeListOriginal = res[0];
+			this.employeeListOriginal = res[0].map(x => {
+				return {
+					...x,
+					name: x.firstName + x.lastName
+				}
+			});
 		})
 	}
 
