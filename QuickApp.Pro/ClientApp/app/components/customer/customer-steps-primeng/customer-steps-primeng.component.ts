@@ -270,10 +270,10 @@ export class CustomerStepsPrimengComponent {
 
 	updateInformationData(data) {
         this.editGeneralInformationData = data;
-        if (data.isCustomerAlsoVendor != null && data.isCustomerAlsoVendor != undefined) {
-            this.savedGeneralInformationData.isCustomerAlsoVendor = data.isCustomerAlsoVendor;
-        }
-        this.savedGeneralInformationData.allowNettingOfAPAR = data.allowNettingOfAPAR;
+        // if (data.isCustomerAlsoVendor != null && data.isCustomerAlsoVendor != undefined) {
+        //     this.savedGeneralInformationData.isCustomerAlsoVendor = data.isCustomerAlsoVendor;
+        // }
+        // this.savedGeneralInformationData.allowNettingOfAPAR = data.allowNettingOfAPAR;
 	}
 	getAllCountries() {
 		this.customerService.getCountrylist().subscribe(res => {
