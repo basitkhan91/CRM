@@ -112,8 +112,9 @@ export class AssetDisposalSaleComponent implements OnInit {
             { field: 'deptName', header: 'Level 03', colspan: '1' },
             { field: 'divName', header: 'Level 04', colspan: '1' },
             { field: 'assetStatus', header: 'Status', colspan: '1' },
-            { field: 'assetClass', header: 'Updated Cost', colspan: '1' },
-            { field: 'assetType', header: 'Existing Book Value', colspan: '1' },
+            { field: '', header: 'Updated Cost', colspan: '1' },
+            { field: '', header: 'Existing Book Value', colspan: '1' },
+            { field: '', header: 'Last Depr Date', colspan: '1' },
         ];
 
         this.selectedColumns = this.cols;
@@ -326,5 +327,13 @@ export class AssetDisposalSaleComponent implements OnInit {
             }
         }
         return '';
+    }
+
+    openHistory(content, row) {
+
+        this.historyModal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
+        this.historyModal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
     }
 }
