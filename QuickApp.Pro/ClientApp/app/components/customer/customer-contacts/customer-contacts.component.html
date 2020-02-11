@@ -113,7 +113,7 @@
                         <tr>
                             <th></th>
                             <th style="width:auto" *ngFor="let col of columns" [hidden]="col.field == 'isDefaultContact'" [ngSwitch]="col.field">
-                                <input style="width:100%;" pInputText type="text" (input)="domestictable.filter($event.target.value, col.field, 'contains')">
+                                <input style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field, 'contains')">
                             </th>
                             <th style="width:140px;position:sticky"></th>
                         </tr>

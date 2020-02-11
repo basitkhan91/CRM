@@ -210,8 +210,8 @@
     <label id="footer" class="footer">No'of records:</label>
     <input style="width: 5%;" [(ngModel)]="dt._totalRecords" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp;
     <label id="footer" class="footer1">Pages Count:</label>
-   
-    <input style="width: 5%;" value="{{totalPages}}" [disabled]="true" pInputText type="text" />
+    <input style="width: 5%;" [ngModel]="getPageCount(dt._totalRecords,pageSize)" [disabled]="true" pInputText type="text" />
+    <!-- <input style="width: 5%;" value="{{totalPages}}" [disabled]="true" pInputText type="text" /> -->
 </ng-template>
 
   </p-table>

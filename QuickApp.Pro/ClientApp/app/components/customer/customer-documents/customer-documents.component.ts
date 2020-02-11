@@ -34,13 +34,28 @@ export class CustomerDocumentsComponent implements OnInit {
         docDescription: ''
     }
     customerDocumentsData: any = [];
+    customerdocumentsDestructuredData = [];
     customerDocumentsColumns = [
 
         { field: 'docName', header: 'Name' },
         { field: 'docDescription', header: 'Description' },
-        { field: 'documents', header: 'Documents' },
+        { field: 'fileName', header: 'FileName' },
+        {field: 'documents' , header: 'documents'},
+        {field: 'fileCreatedDate' , header : 'CreatedDate'},
+        {field: 'fileCreatedBy', header:'Created By'},
+        {field: 'fileUpdatedBy', header:'UpdatedBy'},
+        {field: 'fileUpdatedDate', header:'UpdatedDate'},
+        {field: 'fileSize', header:'fileSize'},
         { field: 'docMemo', header: 'Memo' }
     ];
+
+                  
+    // fileName:x[i].fileName,
+    // fileCreatedDate:x[i].createdDate, 
+    // fileCreatedBy : x[i].createdBy,
+    // fileUpdatedBy:x[i].updatedBy,
+    // fileUpdatedDate:x[i].updatedDate,
+    // fileSize : x[i].fileSize
     sourceViewforDocumentListColumns = [
         { field: 'fileName', header: 'File Name' },
     ]
@@ -147,13 +162,12 @@ export class CustomerDocumentsComponent implements OnInit {
 
     }
 
-    openDocument(content, row) {
-
+    openDocument(row) {
+        this.sourceViewforDocumentList = [];
         this.customerService.toGetUploadDocumentsList(row.attachmentId, row.customerId, 1).subscribe(res => {
             this.sourceViewforDocumentList = res;
             this.sourceViewforDocument = row;
-
-        })
+        });
 
 
         //this.modal = this.modalService.open(content, { size: 'sm' });
@@ -165,6 +179,7 @@ export class CustomerDocumentsComponent implements OnInit {
     }
     docviewdblclick(data) {
         this.sourceViewforDocument = data;
+        this.openDocument(data);
         $('#docView').modal('show');
 
     }
@@ -181,7 +196,23 @@ export class CustomerDocumentsComponent implements OnInit {
     }
     getList() {
         this.customerService.getDocumentList(this.id).subscribe(res => {
-            this.customerDocumentsData = res;
+            this.customerDocumentsData = res.map(x => {
+              for(var i =0 ; i<  x.attachmentDetails.length ; i++){
+                  const y = x.attachmentDetails;
+                this.customerdocumentsDestructuredData.push({
+                    ...x,
+                    documents:y[i].fileName,
+                    fileName:y[i].fileName,
+                    fileCreatedDate:y[i].createdDate, 
+                    fileCreatedBy : y[i].createdBy,
+                    fileUpdatedBy:y[i].updatedBy,
+                    fileUpdatedDate:y[i].updatedDate,
+                    fileSize : y[i].fileSize
+
+                })
+              }
+                //    documents: x.attachmentDetails.reduce((acc , y) => acc + y.fileName, ''),
+            });
             this.loader = false;
             if (this.customerDocumentsData.length > 0) {
                 this.totalRecords = this.customerDocumentsData.length;

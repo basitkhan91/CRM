@@ -252,7 +252,7 @@ export class CustomerEndpoint extends EndpointFactory {
     }
 
     getDocumentList(customerId) {
-        return this.http.get(`${this.configurations.baseUrl}/api/Customer/getCustomerDocumentDetail/${customerId}`, this.getRequestHeaders())
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/Customer/getCustomerDocumentDetail/${customerId}`, this.getRequestHeaders())
     }
 
     postDomesticShipVia<T>(postData) {
