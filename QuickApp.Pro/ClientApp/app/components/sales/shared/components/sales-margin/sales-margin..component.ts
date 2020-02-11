@@ -14,6 +14,7 @@ export class SalesMarginComponent implements OnInit {
   @Output() save: EventEmitter<PartDetail> = new EventEmitter<PartDetail>();
   @Input() part: PartDetail;
   @Input() display: boolean;
+  @Input() isEdit: boolean;
 
   query: ItemMasterSearchQuery;
   percentage: any[] = [];

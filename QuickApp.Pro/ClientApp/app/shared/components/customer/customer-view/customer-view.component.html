@@ -350,12 +350,12 @@
                     </ng-template>
                   </p-table>
                   <!-- <div class="total_records_section" *ngIf="restrictedPMAParts?.length > 0">
-                                        <label  class="footer">No'of records:  <input style="width: 5%;"
-                                            value="{{restrictedPMAParts?.length}}"
-                                            [disabled]="true"
-                                            pInputText
-                                            type="text" /> </label>                                            
-                                    </div> -->
+                                      <label  class="footer">No'of records:  <input style="width: 5%;"
+                                          value="{{restrictedPMAParts?.length}}"
+                                          [disabled]="true"
+                                          pInputText
+                                          type="text" /> </label>                                            
+                                  </div> -->
                 </div>
 
                 <p>
@@ -469,23 +469,23 @@
                       />
                     </ng-template>
                     <!-- <ng-template pTemplate="summary" let-columns *ngIf="countOfRestrictDerParts > 0">
-                                            <div [ngClass]="{'display-none': restrictedDERParts.length > 0}">
-                                                <label  class="footer" [ngClass]="{'display-none': restrictedDERParts.length > 0}">No'of records:</label>
-                                                <input style="width: 5%;"
-                                                        value="{{restrictedDERParts?.length}}"
-                                                        [disabled]="true"
-                                                        pInputText
-                                                        type="text" />  
-                                            </div>
-                                        </ng-template> -->
+                                          <div [ngClass]="{'display-none': restrictedDERParts.length > 0}">
+                                              <label  class="footer" [ngClass]="{'display-none': restrictedDERParts.length > 0}">No'of records:</label>
+                                              <input style="width: 5%;"
+                                                      value="{{restrictedDERParts?.length}}"
+                                                      [disabled]="true"
+                                                      pInputText
+                                                      type="text" />  
+                                          </div>
+                                      </ng-template> -->
                   </p-table>
                   <!-- <div class="total_records_section" *ngIf="restrictedDERParts?.length > 0">
-                                        <label  class="footer">No'of records: <input style="width: 5%;"
-                                            value="{{restrictedDERParts?.length}}"
-                                            [disabled]="true"
-                                            pInputText
-                                            type="text" />  </label>                                            
-                                    </div>                               -->
+                                      <label  class="footer">No'of records: <input style="width: 5%;"
+                                          value="{{restrictedDERParts?.length}}"
+                                          [disabled]="true"
+                                          pInputText
+                                          type="text" />  </label>                                            
+                                  </div>                               -->
                 </div>
               </div>
             </div>
@@ -508,60 +508,60 @@
             ></app-customer-contacts>
 
             <!-- <div class="shadow-Box">
-                            <p-table #table3 class="table-responsive ptable-cus-pma" [paginator]="customerContacts.length > 0" [value]="customerContacts"  [rows]="pageSize" [columns]="contactTableColumns">
-                                <ng-template pTemplate="header" let-columns>
-                                    <tr>
-                                            <th style="width: 40px;">Flag</th>
+                          <p-table #table3 class="table-responsive ptable-cus-pma" [paginator]="customerContacts.length > 0" [value]="customerContacts"  [rows]="pageSize" [columns]="contactTableColumns">
+                              <ng-template pTemplate="header" let-columns>
+                                  <tr>
+                                          <th style="width: 40px;">Flag</th>
 
-                                        <th *ngFor="let col of columns" [pSortableColumn]="col.field">
-                                            {{col.header}}
-                                            <p-sortIcon [field]="col.field"></p-sortIcon>
-                                        </th>
-                                    </tr>
-                                    <tr>
-                                            <th></th>
+                                      <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                                          {{col.header}}
+                                          <p-sortIcon [field]="col.field"></p-sortIcon>
+                                      </th>
+                                  </tr>
+                                  <tr>
+                                          <th></th>
 
-                                            <th style="width:auto" *ngFor="let col of columns" [ngSwitch]="col.field">
-                                                <input style="width:100%;" pInputText type="text" (input)="table3.filter($event.target.value, col.field, 'contains')">
-                                            </th>
-                                        </tr>
-                                </ng-template>
-                                <ng-template pTemplate="body" let-part let-rowData let-columns="columns" let-i="rowIndex">
-                                    <tr [ngClass]="{'row-primary': part.isDefaultContact === true}">
-                                        <td > <span class="flag">
-                                            <i  *ngIf="rowData.isDefaultContact == true"   [ngStyle]="{'color': rowData.isDefaultContact == true ? 'green' : 'none'}"  
-                                                class="fa fa-flag" aria-hidden="true"></i>
-                                                </span>
-                                        
-                                         </td>
-                                        <td *ngFor="let col of columns" >
-                                                <ng-container *ngIf="col.field!='workPhone'">
-                                                    {{part[col.field]}}
-                                                </ng-container>
-                                                <ng-container *ngIf="col.field=='workPhone'">
-                                                        {{part.workPhone}} - {{part.workPhoneExtn}}
-                                                    </ng-container>
-                                        </td>
-                                    </tr>
-                                </ng-template>
-                                <ng-template pTemplate="emptymessage" let-columns *ngIf="customerContacts.length == 0">
-                                    <tr>
-                                        <td [attr.colspan]="columns.length+1" style="color: red; font-weight: bold; text-align: center">
-                                            No records found
-                                        </td>
-                                    </tr>
-                                </ng-template>
-                                <ng-template pTemplate="summary" id="footer">
-                                    <label id="footer" class="footer">No'of records:</label>
-                                    <input style="width: 5%;" [(ngModel)]="table3._totalRecords" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp;
-                                    <label id="footer" class="footer1">Pages Count:</label>
-                                   
-                                    <input style="width: 5%;" [ngModel]="getPageCount(table3._totalRecords,pageSize)" [disabled]="true" pInputText type="text" />
-                                </ng-template>
+                                          <th style="width:auto" *ngFor="let col of columns" [ngSwitch]="col.field">
+                                              <input style="width:100%;" pInputText type="text" (input)="table3.filter($event.target.value, col.field, 'contains')">
+                                          </th>
+                                      </tr>
+                              </ng-template>
+                              <ng-template pTemplate="body" let-part let-rowData let-columns="columns" let-i="rowIndex">
+                                  <tr [ngClass]="{'row-primary': part.isDefaultContact === true}">
+                                      <td > <span class="flag">
+                                          <i  *ngIf="rowData.isDefaultContact == true"   [ngStyle]="{'color': rowData.isDefaultContact == true ? 'green' : 'none'}"  
+                                              class="fa fa-flag" aria-hidden="true"></i>
+                                              </span>
+                                      
+                                       </td>
+                                      <td *ngFor="let col of columns" >
+                                              <ng-container *ngIf="col.field!='workPhone'">
+                                                  {{part[col.field]}}
+                                              </ng-container>
+                                              <ng-container *ngIf="col.field=='workPhone'">
+                                                      {{part.workPhone}} - {{part.workPhoneExtn}}
+                                                  </ng-container>
+                                      </td>
+                                  </tr>
+                              </ng-template>
+                              <ng-template pTemplate="emptymessage" let-columns *ngIf="customerContacts.length == 0">
+                                  <tr>
+                                      <td [attr.colspan]="columns.length+1" style="color: red; font-weight: bold; text-align: center">
+                                          No records found
+                                      </td>
+                                  </tr>
+                              </ng-template>
+                              <ng-template pTemplate="summary" id="footer">
+                                  <label id="footer" class="footer">No'of records:</label>
+                                  <input style="width: 5%;" [(ngModel)]="table3._totalRecords" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp;
+                                  <label id="footer" class="footer1">Pages Count:</label>
+                                 
+                                  <input style="width: 5%;" [ngModel]="getPageCount(table3._totalRecords,pageSize)" [disabled]="true" pInputText type="text" />
+                              </ng-template>
 
-                            </p-table>
- 
-                        </div> -->
+                          </p-table>
+
+                      </div> -->
           </div>
         </div>
       </div>
@@ -582,43 +582,43 @@
               [customerDataFromExternalComponents]="viewDataGeneralInformation"
             ></app-customer-aircraft>
             <!-- <div class="shadow-Box">
-                            <p-table  #aircraftTable class="table-responsive ptable-cus-pma" [paginator]="aircraftListDataValues.length > 0" [value]="aircraftListDataValues" [rows]="pageSize"  [columns]="colsaircraftLD">
-                                <ng-template pTemplate="header" let-columns>
-                                    <tr>
-                                        <th *ngFor="let col of columns"  [pSortableColumn]="col.field">
-                                            {{col.header}}
-                                            <p-sortIcon [field]="col.field"></p-sortIcon>
-                                        </th>
-                                    </tr>
-                                    <tr>
-                                            <th style="width:auto" *ngFor="let col of columns" [ngSwitch]="col.field">
-                                                <input style="width:100%;" pInputText type="text" (input)="aircraftTable.filter($event.target.value, col.field, 'contains')">
-                                            </th>
-                                        </tr>
-                                </ng-template>
-                                <ng-template pTemplate="body" let-part let-rowData let-columns="columns" let-i="rowIndex">
-                                    <tr>
-                                        <td *ngFor="let col of columns">
-                                            {{part[col.field]}}
-                                        </td>
-                                    </tr>
-                                </ng-template>
-                                <ng-template pTemplate="emptymessage" let-columns *ngIf="aircraftListDataValues.length == 0">
-                                    <tr>
-                                        <td [attr.colspan]="columns.length" style="color: red; font-weight: bold; text-align: center">
-                                            No records found
-                                        </td>
-                                    </tr>
-                                </ng-template>
-                                <ng-template pTemplate="summary" id="footer">
-                                    <label id="footer" class="footer">No'of records:</label>
-                                    <input style="width: 5%;" [(ngModel)]="aircraftTable._totalRecords" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp;
-                                    <label id="footer" class="footer1">Pages Count:</label>
-                                   
-                                    <input style="width: 5%;" [ngModel]="getPageCount(aircraftTable._totalRecords,pageSize)" [disabled]="true" pInputText type="text" />
-                                </ng-template>
-                            </p-table>     
-                        </div> -->
+                          <p-table  #aircraftTable class="table-responsive ptable-cus-pma" [paginator]="aircraftListDataValues.length > 0" [value]="aircraftListDataValues" [rows]="pageSize"  [columns]="colsaircraftLD">
+                              <ng-template pTemplate="header" let-columns>
+                                  <tr>
+                                      <th *ngFor="let col of columns"  [pSortableColumn]="col.field">
+                                          {{col.header}}
+                                          <p-sortIcon [field]="col.field"></p-sortIcon>
+                                      </th>
+                                  </tr>
+                                  <tr>
+                                          <th style="width:auto" *ngFor="let col of columns" [ngSwitch]="col.field">
+                                              <input style="width:100%;" pInputText type="text" (input)="aircraftTable.filter($event.target.value, col.field, 'contains')">
+                                          </th>
+                                      </tr>
+                              </ng-template>
+                              <ng-template pTemplate="body" let-part let-rowData let-columns="columns" let-i="rowIndex">
+                                  <tr>
+                                      <td *ngFor="let col of columns">
+                                          {{part[col.field]}}
+                                      </td>
+                                  </tr>
+                              </ng-template>
+                              <ng-template pTemplate="emptymessage" let-columns *ngIf="aircraftListDataValues.length == 0">
+                                  <tr>
+                                      <td [attr.colspan]="columns.length" style="color: red; font-weight: bold; text-align: center">
+                                          No records found
+                                      </td>
+                                  </tr>
+                              </ng-template>
+                              <ng-template pTemplate="summary" id="footer">
+                                  <label id="footer" class="footer">No'of records:</label>
+                                  <input style="width: 5%;" [(ngModel)]="aircraftTable._totalRecords" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp;
+                                  <label id="footer" class="footer1">Pages Count:</label>
+                                 
+                                  <input style="width: 5%;" [ngModel]="getPageCount(aircraftTable._totalRecords,pageSize)" [disabled]="true" pInputText type="text" />
+                              </ng-template>
+                          </p-table>     
+                      </div> -->
           </div>
         </div>
       </div>
@@ -835,16 +835,11 @@
                 <!--<p><span class="label"><b>Tax Type: </b></span><span class="value">{{viewDataGeneralInformation.taxTypeName}}</span></p>-->
 
                 <!-- <p><span class="label"><b>Tax Rate - State/Prov: </b></span><span class="value">{{viewDataGeneralInformation.taxRateName}}</span></p>
-                                <p><span class="label"><b>Tax Rate - Other: </b></span><span class="value">{{viewDataGeneralInformation.taxRateOther}}</span></p> -->
+                              <p><span class="label"><b>Tax Rate - Other: </b></span><span class="value">{{viewDataGeneralInformation.taxRateOther}}</span></p> -->
               </div>
               <div class="col-sm-6">
                 <div>
-                  <p>
-                    <span class="label"><b>Taxable Exempt: </b></span
-                    ><span class="value">{{
-                      viewDataGeneralInformation.isTaxExempt
-                    }}</span>
-                  </p>
+                  <!-- <p><span class="label"><b>Taxable Exempt: </b></span><span class="value">{{viewDataGeneralInformation.isTaxExempt}}</span></p> -->
                   <div>
                     <p>
                       <span class="label"><b>Attachment Details: </b></span>
@@ -1106,52 +1101,52 @@
 
             <!-- <div class="shadow-Box">
 
-                                <p-table #billingTable class="table-responsive ptable-cus-pma" [paginator]="billingInfoList?.length > 0" [value]="billingInfoList"  [rows]="pageSize" [columns]="billingInfoTableHeaders">
-                                    <ng-template pTemplate="header" let-columns>
-                                        <tr>
-                                                <th style="width: 40px;">Flag</th>
-                                            <th *ngFor="let col of columns" [pSortableColumn]="col.field">
-                                                {{col.header}}
-                                                <p-sortIcon [field]="col.field"></p-sortIcon>
+                              <p-table #billingTable class="table-responsive ptable-cus-pma" [paginator]="billingInfoList?.length > 0" [value]="billingInfoList"  [rows]="pageSize" [columns]="billingInfoTableHeaders">
+                                  <ng-template pTemplate="header" let-columns>
+                                      <tr>
+                                              <th style="width: 40px;">Flag</th>
+                                          <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                                              {{col.header}}
+                                              <p-sortIcon [field]="col.field"></p-sortIcon>
 
-                                            </th>
-                                        </tr>
-                                        <tr>
-                                                <th></th>
+                                          </th>
+                                      </tr>
+                                      <tr>
+                                              <th></th>
 
-                                                <th style="width:auto" *ngFor="let col of columns" [ngSwitch]="col.field">
-                                                    <input style="width:100%;" pInputText type="text" (input)="billingTable.filter($event.target.value, col.field, 'contains')">
-                                                </th>
-                                            </tr>
-                                    </ng-template>
-                                    <ng-template pTemplate="body" let-part let-rowData let-columns="columns" let-i="rowIndex">
-                                        <tr>
-                                                <td > <span class="flag">
-                                                        <i  *ngIf="rowData.isPrimary == true"   [ngStyle]="{'color': rowData.isPrimary == true ? 'green' : 'none'}"  
-                                                         class="fa fa-flag" aria-hidden="true"></i>
-                                                        </span>
-                                                </td>
-                                            <td *ngFor="let col of columns">
-                                                {{part[col.field]}}
-                                            </td>
-                                        </tr>
-                                    </ng-template>
-                                    <ng-template pTemplate="emptymessage" let-columns *ngIf="billingInfoList.length == 0">
-                                        <tr>
-                                            <td [attr.colspan]="columns.length+1" style="color: red; font-weight: bold; text-align: center">
-                                                No records found
-                                            </td>
-                                        </tr>
-                                    </ng-template>
-                                    <ng-template pTemplate="summary" id="footer">
-                                        <label id="footer" class="footer">No'of records:</label>
-                                        <input style="width: 5%;" [(ngModel)]="billingTable._totalRecords" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp;
-                                        <label id="footer" class="footer1">Pages Count:</label>
-                                       
-                                        <input style="width: 5%;" [ngModel]="getPageCount(billingTable._totalRecords,pageSize)" [disabled]="true" pInputText type="text" />
-                                    </ng-template>
-                                </p-table> 
-                        </div> -->
+                                              <th style="width:auto" *ngFor="let col of columns" [ngSwitch]="col.field">
+                                                  <input style="width:100%;" pInputText type="text" (input)="billingTable.filter($event.target.value, col.field, 'contains')">
+                                              </th>
+                                          </tr>
+                                  </ng-template>
+                                  <ng-template pTemplate="body" let-part let-rowData let-columns="columns" let-i="rowIndex">
+                                      <tr>
+                                              <td > <span class="flag">
+                                                      <i  *ngIf="rowData.isPrimary == true"   [ngStyle]="{'color': rowData.isPrimary == true ? 'green' : 'none'}"  
+                                                       class="fa fa-flag" aria-hidden="true"></i>
+                                                      </span>
+                                              </td>
+                                          <td *ngFor="let col of columns">
+                                              {{part[col.field]}}
+                                          </td>
+                                      </tr>
+                                  </ng-template>
+                                  <ng-template pTemplate="emptymessage" let-columns *ngIf="billingInfoList.length == 0">
+                                      <tr>
+                                          <td [attr.colspan]="columns.length+1" style="color: red; font-weight: bold; text-align: center">
+                                              No records found
+                                          </td>
+                                      </tr>
+                                  </ng-template>
+                                  <ng-template pTemplate="summary" id="footer">
+                                      <label id="footer" class="footer">No'of records:</label>
+                                      <input style="width: 5%;" [(ngModel)]="billingTable._totalRecords" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp;
+                                      <label id="footer" class="footer1">Pages Count:</label>
+                                     
+                                      <input style="width: 5%;" [ngModel]="getPageCount(billingTable._totalRecords,pageSize)" [disabled]="true" pInputText type="text" />
+                                  </ng-template>
+                              </p-table> 
+                      </div> -->
           </div>
         </div>
       </div>
@@ -1174,110 +1169,110 @@
           </div>
 
           <!-- <div class="col-sm-12">
-                        <h4> Shipping Site Info List </h4>
-                        <div class="shadow-Box">
-                                <p-table #domesticShippingTable class="table-responsive ptable-cus-pma" [paginator]="domesticShippingData?.length > 0" [value]="domesticShippingData"  [rows]="pageSize"  [columns]="domesticShippingHeaders">
-                                        <ng-template pTemplate="header" let-columns>
-                                            <tr>
-                                                    <th style="width: 40px;">Flag</th>
+                      <h4> Shipping Site Info List </h4>
+                      <div class="shadow-Box">
+                              <p-table #domesticShippingTable class="table-responsive ptable-cus-pma" [paginator]="domesticShippingData?.length > 0" [value]="domesticShippingData"  [rows]="pageSize"  [columns]="domesticShippingHeaders">
+                                      <ng-template pTemplate="header" let-columns>
+                                          <tr>
+                                                  <th style="width: 40px;">Flag</th>
 
-                                                <th *ngFor="let col of columns" [pSortableColumn]="col.field">
-                                                    {{col.header}}
-                                                    <p-sortIcon [field]="col.field"></p-sortIcon>
-                                                </th>
-                                            </tr>
-                                            <tr>
-                                                    <th></th>
+                                              <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                                                  {{col.header}}
+                                                  <p-sortIcon [field]="col.field"></p-sortIcon>
+                                              </th>
+                                          </tr>
+                                          <tr>
+                                                  <th></th>
 
-                                                    <th style="width:auto" *ngFor="let col of columns" [ngSwitch]="col.field">
-                                                        <input style="width:100%;" pInputText type="text" (input)="domesticShippingTable.filter($event.target.value, col.field, 'contains')">
-                                                    </th>
-                                                </tr>
-                                        </ng-template>
-                                        <ng-template pTemplate="body" let-part let-rowData let-columns="columns" let-i="rowIndex">
-                                            <tr>
-                                                    <td > 
-                                                            <span class="flag">
-                                                            <i  *ngIf="rowData.isPrimary == true"   [ngStyle]="{'color': rowData.isPrimary == true ? 'green' : 'none'}"  
-                                                            class="fa fa-flag" aria-hidden="true"></i>
-                                                        </span>
-                                                    </td>
-                                                <td *ngFor="let col of columns">
-                                                    {{part[col.field]}}
-                                                </td>
-                                            </tr>
-                                        </ng-template>
-                                        <ng-template pTemplate="emptymessage" let-columns *ngIf="domesticShippingData?.length == 0">
-                                            <tr>
-                                                <td [attr.colspan]="columns.length+1" style="color: red; font-weight: bold; text-align: center">
-                                                    No records found
-                                                </td>
-                                            </tr>
-                                        </ng-template>
-                                        <ng-template pTemplate="summary" id="footer">
-                                                <label id="footer" class="footer">No'of records:</label>
-                                                <input style="width: 5%;" [(ngModel)]="domesticShippingTable._totalRecords" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp;
-                                                <label id="footer" class="footer1">Pages Count:</label>
-                                               
-                                                <input style="width: 5%;" [ngModel]="getPageCount(domesticShippingTable._totalRecords,pageSize)" [disabled]="true" pInputText type="text" />
-                                            </ng-template>
-                                    </p-table> 
-                        </div>
-                    </div>
+                                                  <th style="width:auto" *ngFor="let col of columns" [ngSwitch]="col.field">
+                                                      <input style="width:100%;" pInputText type="text" (input)="domesticShippingTable.filter($event.target.value, col.field, 'contains')">
+                                                  </th>
+                                              </tr>
+                                      </ng-template>
+                                      <ng-template pTemplate="body" let-part let-rowData let-columns="columns" let-i="rowIndex">
+                                          <tr>
+                                                  <td > 
+                                                          <span class="flag">
+                                                          <i  *ngIf="rowData.isPrimary == true"   [ngStyle]="{'color': rowData.isPrimary == true ? 'green' : 'none'}"  
+                                                          class="fa fa-flag" aria-hidden="true"></i>
+                                                      </span>
+                                                  </td>
+                                              <td *ngFor="let col of columns">
+                                                  {{part[col.field]}}
+                                              </td>
+                                          </tr>
+                                      </ng-template>
+                                      <ng-template pTemplate="emptymessage" let-columns *ngIf="domesticShippingData?.length == 0">
+                                          <tr>
+                                              <td [attr.colspan]="columns.length+1" style="color: red; font-weight: bold; text-align: center">
+                                                  No records found
+                                              </td>
+                                          </tr>
+                                      </ng-template>
+                                      <ng-template pTemplate="summary" id="footer">
+                                              <label id="footer" class="footer">No'of records:</label>
+                                              <input style="width: 5%;" [(ngModel)]="domesticShippingTable._totalRecords" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp;
+                                              <label id="footer" class="footer1">Pages Count:</label>
+                                             
+                                              <input style="width: 5%;" [ngModel]="getPageCount(domesticShippingTable._totalRecords,pageSize)" [disabled]="true" pInputText type="text" />
+                                          </ng-template>
+                                  </p-table> 
+                      </div>
+                  </div>
 
-                    <div class="col-sm-12">
-                        <h4> International Shipping Details </h4>
-                        <div class="shadow-Box">
-                                <p-table #internationalShippingTable class="table-responsive ptable-cus-pma" [paginator]="internationalShippingData.length > 0" [value]="internationalShippingData"  [rows]="pageSize"  [columns]="internationalShippingHeaders">
-                                        <ng-template pTemplate="header" let-columns>
-                                            <tr>
-                                                    <th style="width: 40px;">Flag</th>
+                  <div class="col-sm-12">
+                      <h4> International Shipping Details </h4>
+                      <div class="shadow-Box">
+                              <p-table #internationalShippingTable class="table-responsive ptable-cus-pma" [paginator]="internationalShippingData.length > 0" [value]="internationalShippingData"  [rows]="pageSize"  [columns]="internationalShippingHeaders">
+                                      <ng-template pTemplate="header" let-columns>
+                                          <tr>
+                                                  <th style="width: 40px;">Flag</th>
 
-                                                <th *ngFor="let col of columns" [pSortableColumn]="col.field">
-                                                    {{col.header}}
-                                                    <p-sortIcon [field]="col.field"></p-sortIcon>
+                                              <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+                                                  {{col.header}}
+                                                  <p-sortIcon [field]="col.field"></p-sortIcon>
 
-                                                </th>
-                                            </tr>
-                                            <tr>
-                                                    <th></th>
+                                              </th>
+                                          </tr>
+                                          <tr>
+                                                  <th></th>
 
-                                                    <th style="width:auto" *ngFor="let col of columns" [ngSwitch]="col.field">
-                                                        <input style="width:100%;" pInputText type="text" (input)="internationalShippingTable.filter($event.target.value, col.field, 'contains')">
-                                                    </th>
-                                                </tr>
-                                        </ng-template>
-                                        <ng-template pTemplate="body" let-part let-rowData let-columns="columns" let-i="rowIndex">
-                                            <tr>
-                                                    <td > 
-                                                            <span class="flag">
-                                                            <i  *ngIf="rowData.isPrimary == true"   [ngStyle]="{'color': rowData.isPrimary == true ? 'green' : 'none'}"  
-                                                             class="fa fa-flag" aria-hidden="true"></i>
-                                                        </span>
-                                                    </td>
-                                                <td *ngFor="let col of columns">
-                                                    {{part[col.field]}}
-                                                </td>
-                                            </tr>
-                                            
-                                        </ng-template>
-                                        <ng-template pTemplate="emptymessage" let-columns *ngIf="internationalShippingData.length == 0">
-                                            <tr>
-                                                <td [attr.colspan]="columns.length+1" style="color: red; font-weight: bold; text-align: center">
-                                                    No records found
-                                                </td>
-                                            </tr>
-                                        </ng-template>
-                                        <ng-template pTemplate="summary" id="footer">
-                                                <label id="footer" class="footer">No'of records:</label>
-                                                <input style="width: 5%;" [(ngModel)]="internationalShippingTable._totalRecords" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp;
-                                                <label id="footer" class="footer1">Pages Count:</label>
-                                               
-                                                <input style="width: 5%;" [ngModel]="getPageCount(internationalShippingTable._totalRecords,pageSize)" [disabled]="true" pInputText type="text" />
-                                            </ng-template>
-                                    </p-table> 
-                        </div>
-                    </div> -->
+                                                  <th style="width:auto" *ngFor="let col of columns" [ngSwitch]="col.field">
+                                                      <input style="width:100%;" pInputText type="text" (input)="internationalShippingTable.filter($event.target.value, col.field, 'contains')">
+                                                  </th>
+                                              </tr>
+                                      </ng-template>
+                                      <ng-template pTemplate="body" let-part let-rowData let-columns="columns" let-i="rowIndex">
+                                          <tr>
+                                                  <td > 
+                                                          <span class="flag">
+                                                          <i  *ngIf="rowData.isPrimary == true"   [ngStyle]="{'color': rowData.isPrimary == true ? 'green' : 'none'}"  
+                                                           class="fa fa-flag" aria-hidden="true"></i>
+                                                      </span>
+                                                  </td>
+                                              <td *ngFor="let col of columns">
+                                                  {{part[col.field]}}
+                                              </td>
+                                          </tr>
+                                          
+                                      </ng-template>
+                                      <ng-template pTemplate="emptymessage" let-columns *ngIf="internationalShippingData.length == 0">
+                                          <tr>
+                                              <td [attr.colspan]="columns.length+1" style="color: red; font-weight: bold; text-align: center">
+                                                  No records found
+                                              </td>
+                                          </tr>
+                                      </ng-template>
+                                      <ng-template pTemplate="summary" id="footer">
+                                              <label id="footer" class="footer">No'of records:</label>
+                                              <input style="width: 5%;" [(ngModel)]="internationalShippingTable._totalRecords" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp;
+                                              <label id="footer" class="footer1">Pages Count:</label>
+                                             
+                                              <input style="width: 5%;" [ngModel]="getPageCount(internationalShippingTable._totalRecords,pageSize)" [disabled]="true" pInputText type="text" />
+                                          </ng-template>
+                                  </p-table> 
+                      </div>
+                  </div> -->
         </div>
       </div>
     </div>
@@ -1477,64 +1472,64 @@
                 "
               ></app-customer-documents>
               <!-- <p-table #documentsTable class="table-responsive ptable-cus-pma" [paginator]="DocumentsList.length > 0" [value]="DocumentsList" [rows]="pageSize"  [columns]="customerDocumentsColumns">
-                                        <ng-template pTemplate="header" let-columns>
-                                                <tr>
-                                                     <ng-container *ngFor="let col of columns">
-                                                    <th  *ngIf="col.field !== 'documents'" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
-                                                        {{col.header}}
-                                                        <p-sortIcon [field]="col.field"></p-sortIcon>
-                                                    </th>
-                                                    <th *ngIf="col.field == 'documents'">
-                                                        Documents
-                                                    </th>
-                                                    </ng-container>
+                                      <ng-template pTemplate="header" let-columns>
+                                              <tr>
+                                                   <ng-container *ngFor="let col of columns">
+                                                  <th  *ngIf="col.field !== 'documents'" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
+                                                      {{col.header}}
+                                                      <p-sortIcon [field]="col.field"></p-sortIcon>
+                                                  </th>
+                                                  <th *ngIf="col.field == 'documents'">
+                                                      Documents
+                                                  </th>
+                                                  </ng-container>
 
-                                                </tr>
-                                                <tr>
-                                                        <th style="width:auto" *ngFor="let col of columns" [ngSwitch]="col.field">
-                                                            <input style="width:100%;" pInputText type="text" (input)="documentsTable.filter($event.target.value, col.field, 'contains')">
-                                                        </th>
-                                                    </tr>
-                                            </ng-template>
-                    
-                                            <ng-template pTemplate="body" let-rowData let-columns="columns">
-                    
-                    
-                                                <tr >
-                    
-                                                    <ng-container *ngFor="let col of columns">
-                                                    <td  *ngIf="col.field !== 'documents'" class="ui-resizable-column" pReorderableRowHandle>
-                                                        {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
-                                                    </td>
-                                                    <td *ngIf="col.field == 'documents'">
-                    
-                                                        <tr *ngFor="let x of rowData.attachmentDetails">
-                                                            <a class="filelink" (click)="downloadFileUpload(x)"> {{x.fileName}},</a>
-                                                        </tr>
-                    
-                                                    </td>
-                                                    </ng-container>
- 
-                    
-                                                </tr>
-                                            </ng-template>    
-                                    
-                                    
-                                        <ng-template pTemplate="emptymessage" let-columns *ngIf="DocumentsList.length == 0">
-                                            <tr>
-                                                <td [attr.colspan]="columns.length" style="color: red; font-weight: bold; text-align: center">
-                                                    No records found
-                                                </td>
-                                            </tr>
-                                        </ng-template>
-                                        <ng-template pTemplate="summary" id="footer">
-                                                <label id="footer" class="footer">No'of records:</label>
-                                                <input style="width: 5%;" [(ngModel)]="documentsTable._totalRecords" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp;
-                                                <label id="footer" class="footer1">Pages Count:</label>
-                                               
-                                                <input style="width: 5%;" [ngModel]="getPageCount(documentsTable._totalRecords,pageSize)" [disabled]="true" pInputText type="text" />
-                                            </ng-template>
-                                </p-table> -->
+                                              </tr>
+                                              <tr>
+                                                      <th style="width:auto" *ngFor="let col of columns" [ngSwitch]="col.field">
+                                                          <input style="width:100%;" pInputText type="text" (input)="documentsTable.filter($event.target.value, col.field, 'contains')">
+                                                      </th>
+                                                  </tr>
+                                          </ng-template>
+                  
+                                          <ng-template pTemplate="body" let-rowData let-columns="columns">
+                  
+                  
+                                              <tr >
+                  
+                                                  <ng-container *ngFor="let col of columns">
+                                                  <td  *ngIf="col.field !== 'documents'" class="ui-resizable-column" pReorderableRowHandle>
+                                                      {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
+                                                  </td>
+                                                  <td *ngIf="col.field == 'documents'">
+                  
+                                                      <tr *ngFor="let x of rowData.attachmentDetails">
+                                                          <a class="filelink" (click)="downloadFileUpload(x)"> {{x.fileName}},</a>
+                                                      </tr>
+                  
+                                                  </td>
+                                                  </ng-container>
+
+                  
+                                              </tr>
+                                          </ng-template>    
+                                  
+                                  
+                                      <ng-template pTemplate="emptymessage" let-columns *ngIf="DocumentsList.length == 0">
+                                          <tr>
+                                              <td [attr.colspan]="columns.length" style="color: red; font-weight: bold; text-align: center">
+                                                  No records found
+                                              </td>
+                                          </tr>
+                                      </ng-template>
+                                      <ng-template pTemplate="summary" id="footer">
+                                              <label id="footer" class="footer">No'of records:</label>
+                                              <input style="width: 5%;" [(ngModel)]="documentsTable._totalRecords" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp;
+                                              <label id="footer" class="footer1">Pages Count:</label>
+                                             
+                                              <input style="width: 5%;" [ngModel]="getPageCount(documentsTable._totalRecords,pageSize)" [disabled]="true" pInputText type="text" />
+                                          </ng-template>
+                              </p-table> -->
             </div>
           </div>
         </div>

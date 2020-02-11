@@ -48,10 +48,10 @@ export class StocklinePartDetailsComponent implements OnChanges {
 
   initColumns() {
     this.columns = [
-      { field: null, header: '', width: '50px' },
+      { field: 'selected', header: '', width: '50px' },
       { field: 'method', header: 'Method', width: '200px' },
       { field: 'partNumber', header: 'PN', width: '200px' },
-      { field: 'alternamePartNumber', header: 'Alternate For', width: '200px' },
+      { field: 'alternateFor', header: 'Alternate / Equivalency For', width: '200px' },
       { field: 'description', header: 'PN Description', width: '200px' },
       { field: 'conditionType', header: 'Cond Type', width: '200px' },
       { field: 'uom', header: 'UOM', width: '200px' },
@@ -64,7 +64,7 @@ export class StocklinePartDetailsComponent implements OnChanges {
       { field: 'controlName', header: 'Control Name', width: '200px' },
       { field: 'idNumber', header: 'Id Num', width: '200px' },
       { field: 'serialNumber', header: 'Serial Num', width: '200px' },
-      { field: '', header: 'Actions', width: '100px' },
+     // { field: '', header: 'Actions', width: '100px' },
     ]
   }
 

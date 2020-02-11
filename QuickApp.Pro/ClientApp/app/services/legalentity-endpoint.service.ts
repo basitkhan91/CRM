@@ -38,6 +38,10 @@ export class LegalEntityEndpontService extends EndpointFactory {
 	private readonly _legalEntityBillingUpdateforActive: string = '/api/LegalEntity/LegalEntityBillingUpdateStatus'
 	private readonly _deleteBillingEntityDettilas: string = "/api/LegalEntity/updateStatusElgalEntityBilling";
 	private readonly excelUpload: string = "/api/LegalEntity/uploadLegalEntitybillingaddress"
+	private readonly _getlegalEntityDocumentAttachmentslist: string = "/api/FileUpload/getattachmentdetails";
+	private readonly _addDocumentDetails: string = '/api/LegalEntity/legalEntityDocumentUpload';
+	private readonly _deleteLegalEntityDocuments: string = '/api/LegalEntity/deleteLegalEntityDocuments';
+	private readonly _getCustomerDocumentHistory: string = "/api/LegalEntity/getLegalEntityDocumentAudit"
 
 	get entityurl() { return this.configurations.baseUrl + this._entityurl; }
     get managemententityurl() { return this.configurations.baseUrl + this._managementUrl; }
@@ -56,15 +60,35 @@ export class LegalEntityEndpontService extends EndpointFactory {
 		super(http, configurations, injector);
 	}
 
-	LegalEntityBillingFileUpload(file, entityId) {
-		return this.http.post(`${this.configurations.baseUrl}${this.excelUpload}?customerId=${entityId}`, file)
+	GetUploadDocumentsList(attachmentId, legalEntityId, moduleId) {
+		return this.http.get<any>(`${this._getlegalEntityDocumentAttachmentslist}?attachmentId=${attachmentId}&referenceId=${legalEntityId}&moduleId=${moduleId}`, this.getRequestHeaders())
 	}
 
-	deleteBillingAddress<T>(roleObject: any, customerId: any): Observable<T> {
-		let endpointUrl = `${this._deleteBillingEntityDettilas}/${customerId}`;
+	getDocumentList(legalEntityId) {
+		return this.http.get(`${this.configurations.baseUrl}/api/legalEntity/getlegalEntityDocumentDetail/${legalEntityId}`, this.getRequestHeaders())
+	}
+
+	getDocumentUploadEndpoint<T>(file: any): Observable<T> {
+		const headers = new Headers({ 'Content-Type': 'multipart/form-data' });
+		return this.http.post<T>(`${this._addDocumentDetails}`, file);
+	}
+
+	getdeleteDocumentListbyId(legalEntityDocumentId) {
+		return this.http.delete(`${this._deleteLegalEntityDocuments}/${legalEntityDocumentId}`, this.getRequestHeaders())
+	}
+	getLegalEntityDocumentAuditHistory(id, legalEntityId) {
+		return this.http.get<any>(`${this._getCustomerDocumentHistory}?id=${id}&legalEntityId=${legalEntityId}`, this.getRequestHeaders())
+	}
+
+	LegalEntityBillingFileUpload(file, entityId) {
+		return this.http.post(`${this.configurations.baseUrl}${this.excelUpload}?legalEntityId=${entityId}`, file)
+	}
+
+	deleteBillingAddress<T>(roleObject: any, legalEntityId: any): Observable<T> {
+		let endpointUrl = `${this._deleteBillingEntityDettilas}/${legalEntityId}`;
 		return this.http.put<T>(endpointUrl, JSON.stringify(roleObject), this.getRequestHeaders())
 			.catch(error => {
-				return this.handleError(error, () => this.deleteBillingAddress(roleObject, customerId));
+				return this.handleError(error, () => this.deleteBillingAddress(roleObject, legalEntityId));
 			});
 	}
 

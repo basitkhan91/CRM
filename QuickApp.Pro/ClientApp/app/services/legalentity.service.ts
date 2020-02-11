@@ -57,6 +57,24 @@ export class LegalEntityService {
 		this.activeStep.next(activeIndex);
 	}
 
+	toGetUploadDocumentsList(attachmentId, customerId, moduleId) {
+		return this.legalEntityEndpont.GetUploadDocumentsList(attachmentId, customerId, moduleId);
+	}
+
+	getDocumentList(customerId) {
+		return this.legalEntityEndpont.getDocumentList(customerId)
+	}
+
+	documentUploadAction(action: any) {
+		return this.legalEntityEndpont.getDocumentUploadEndpoint<any>(action);
+	}
+
+	getDeleteDocumentListbyId(customerDocumentId) {
+		return this.legalEntityEndpont.getdeleteDocumentListbyId(customerDocumentId)
+	}
+	getlegalEntityDocumentHistory(id, legalEntityId) {
+		return this.legalEntityEndpont.getLegalEntityDocumentAuditHistory(id, legalEntityId)
+	}
 	newBillingAdd(action: any) {
 		return this.legalEntityEndpont.getNewBillinginfo<any>(action);
 	}
