@@ -33,6 +33,26 @@ export class CustomerSalesPersonComponent implements OnInit {
     global_lang: any;
 
 
+    constructor(public vendorservice: VendorService, public customerService: CustomerService,
+        // public conditionService: ConditionService, 
+        // public itemser: ItemMasterService, 
+        public employeeService: EmployeeService,
+        // public CreditTermsService: CreditTermsService, 
+        // public currencyService: CurrencyService, 
+        // public workFlowtService: CustomerService ,
+        private authService: AuthService,
+        private alertService: AlertService,
+        private localStorage: LocalStoreManager,
+    ) {
+    }
+    salesInfo = {
+        primarySalesPersonId: "",
+        secondarySalesPersonId: "",
+        csrId: "",
+        saId: "",
+        annualRevenuePotential: "",
+        annualQuota: "",
+    }
     // activeIndex: number;
     // showCurrency: boolean;
     // showCreditTearms: boolean;
@@ -114,16 +134,16 @@ export class CustomerSalesPersonComponent implements OnInit {
     // private isEditMode: boolean = false;
     // private isDeleteMode: boolean = false;
     ngOnInit() {
-            this.employeeListOriginal = this.employeeListOriginal || []; 
+        this.employeeListOriginal = this.employeeListOriginal || [];
 
-            this.employeeListOriginal.forEach(element => {
-                element["fullName"] = element["firstName"] + " " + element["lastName"]
-    
-            });
+        this.employeeListOriginal.forEach(element => {
+            element["fullName"] = element["firstName"] + " " + element["lastName"]
+
+        });
         console.log(this.employeeListOriginal, "employeelistoriginal")
 
         if (this.editMode) {
-           
+
             console.log(this.editGeneralInformationData);
 
             this.id = this.editGeneralInformationData.customerId
@@ -156,27 +176,8 @@ export class CustomerSalesPersonComponent implements OnInit {
 
     }
 
-    constructor(public vendorservice: VendorService, public customerService: CustomerService,
-        // public conditionService: ConditionService, 
-        // public itemser: ItemMasterService, 
-        public employeeService: EmployeeService,
-        // public CreditTermsService: CreditTermsService, 
-        // public currencyService: CurrencyService, 
-        // public workFlowtService: CustomerService ,
-        private authService: AuthService,
-        private alertService: AlertService,
-        private localStorage: LocalStoreManager,
-    ) {
-    }
-    salesInfo = {
-        primarySalesPersonId: "",
-        secondarySalesPersonId: "",
-        csrId: "",
-        saId: "",
-        annualRevenuePotential: "",
-        annualQuota: "",
-    }
-    getGlobalSettings(){
+
+    getGlobalSettings() {
         this.globalSettings = this.localStorage.getDataObject<any>(DBkeys.GLOBAL_SETTINGS) || {};
         this.global_lang = this.globalSettings.cultureName;
 
@@ -188,7 +189,7 @@ export class CustomerSalesPersonComponent implements OnInit {
 
     filteremployee(event, type) {
 
-       
+
 
         this.employeeList = this.employeeListOriginal;
 
@@ -198,7 +199,7 @@ export class CustomerSalesPersonComponent implements OnInit {
         })]
 
         this.employeeTypeList = employeeTypeList;
-        console.log("sales project details",this.employeeTypeList);
+        console.log("sales project details", this.employeeTypeList);
         //const employeeListData = [...this.employeeListOriginal.filter(x => {
         //    return x.firstName.toLowerCase().includes(event.query.toLowerCase())
         //})]
@@ -206,15 +207,15 @@ export class CustomerSalesPersonComponent implements OnInit {
         const employeeListData = [...this.employeeTypeList.filter(x => {
             return x.fullName.toLowerCase().includes(event.query.toLowerCase())
         })]
-        for(let i=0; i<employeeListData.length; i++){
-            if(this.salesInfo.primarySalesPersonId){
-                if(this.salesInfo.primarySalesPersonId['employeeId'] == employeeListData[i].employeeId || this.salesInfo.secondarySalesPersonId == employeeListData[i].employeeId){
+        for (let i = 0; i < employeeListData.length; i++) {
+            if (this.salesInfo.primarySalesPersonId) {
+                if (this.salesInfo.primarySalesPersonId['employeeId'] == employeeListData[i].employeeId || this.salesInfo.secondarySalesPersonId == employeeListData[i].employeeId) {
                     employeeListData.splice(i, 1);
                 }
             }
-            
+
         }
-        
+
 
         this.employeeList = employeeListData;
     }
@@ -232,27 +233,27 @@ export class CustomerSalesPersonComponent implements OnInit {
                 this.nextClick();
                 this.alertService.showMessage(
                     'Success',
-                    `${this.editMode ? 'Updated' : 'Saved'  } Customer Sales Infromation Successfully `,
+                    `${this.editMode ? 'Updated' : 'Saved'} Customer Sales Infromation Successfully `,
                     MessageSeverity.success
                 );
 
             }
         )
     }
-    formatannualRevenuePotential(val){
-        if(isNaN(val) ==  true){
+    formatannualRevenuePotential(val) {
+        if (isNaN(val) == true) {
             alert(2)
-            val = Number(val.replace(/[^0-9.-]+/g,""));
-          }
-        this.salesInfo.annualRevenuePotential = new Intl.NumberFormat(this.global_lang, { style: 'decimal', minimumFractionDigits: 2,    maximumFractionDigits: 2}).format(val)
+            val = Number(val.replace(/[^0-9.-]+/g, ""));
+        }
+        this.salesInfo.annualRevenuePotential = new Intl.NumberFormat(this.global_lang, { style: 'decimal', minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(val)
         console.log(this.salesInfo.annualRevenuePotential, "this.salesInfo.annualRevenuePotential")
     }
-    formatannualQuota(val){
-        if(isNaN(val) ==  true){
+    formatannualQuota(val) {
+        if (isNaN(val) == true) {
             alert(2)
-            val = Number(val.replace(/[^0-9.-]+/g,""));
-          }
-        this.salesInfo.annualQuota = new Intl.NumberFormat(this.global_lang, { style: 'decimal', minimumFractionDigits: 2,    maximumFractionDigits: 2}).format(val)
+            val = Number(val.replace(/[^0-9.-]+/g, ""));
+        }
+        this.salesInfo.annualQuota = new Intl.NumberFormat(this.global_lang, { style: 'decimal', minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(val)
         console.log(this.salesInfo.annualQuota, "this.salesInfo.annualQuota")
     }
 

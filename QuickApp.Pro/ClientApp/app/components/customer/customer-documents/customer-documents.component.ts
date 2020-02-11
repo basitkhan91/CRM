@@ -67,6 +67,7 @@ export class CustomerDocumentsComponent implements OnInit {
     pageIndex: number = 0;
     pageSize: number = 10;
     totalPages: number = 0;
+    loader : boolean = true;
 
     constructor(private router: ActivatedRoute, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public customerService: CustomerService,
         private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private configurations: ConfigurationService) {
@@ -181,10 +182,13 @@ export class CustomerDocumentsComponent implements OnInit {
     getList() {
         this.customerService.getDocumentList(this.id).subscribe(res => {
             this.customerDocumentsData = res;
+            this.loader = false;
             if (this.customerDocumentsData.length > 0) {
                 this.totalRecords = this.customerDocumentsData.length;
                 this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
             }
+        }, err => {
+            this.loader = false;
         })
     }
     saveDocumentInformation() {

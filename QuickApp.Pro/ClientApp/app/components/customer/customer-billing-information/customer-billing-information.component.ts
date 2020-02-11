@@ -63,6 +63,7 @@ export class CustomerBillingInformationComponent {
     totalPages: number;
     formData = new FormData();
     isViewMode: boolean = false;
+    loader: boolean =  true;
 
 
     constructor(public customerService: CustomerService, private authService: AuthService, private alertService: AlertService, private modalService: NgbModal, private configurations: ConfigurationService,
@@ -201,14 +202,16 @@ export class CustomerBillingInformationComponent {
 	getBillingDataById() {
 		this.customerService.getCustomerBillViaDetails(this.id).subscribe(res => {
             this.billingInfoList = res[0]
-
+            this.loader = false;
 
             // if (res.length > 0) {
             //     this.totalRecords = this.billingInfoList.length;
             //     this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
             // }
 
-		})
+		}, err => {
+            this.loader = false;
+        })
     }
     
 	getPageCount(totalNoofRecords, pageSize) {

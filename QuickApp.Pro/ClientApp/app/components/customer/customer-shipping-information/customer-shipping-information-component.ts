@@ -130,6 +130,10 @@ export class CustomerShippingInformationComponent implements OnInit {
     isViewMode: boolean = false;
     totalRecordsInternationalShipping: any = 0;
     totalPagesInternationalShipping: number = 0;
+    loaderForDomestic: boolean =  true;
+    loaderForInternational: boolean =  true;
+    loaderForDomesticShipVia: boolean =  true;
+    loaderForInternationalShipVia : boolean = true;
 
     constructor(private customerService: CustomerService, private authService: AuthService,
         private alertService: AlertService, private activeModal: NgbActiveModal, private modalService: NgbModal, private configurations: ConfigurationService,
@@ -217,6 +221,8 @@ export class CustomerShippingInformationComponent implements OnInit {
         })]
 
     }
+
+
     // save Domestic Shipping 
     saveDomesticShipping() {
         // const id = this.savedGeneralInformationData.customerId;
@@ -268,6 +274,7 @@ export class CustomerShippingInformationComponent implements OnInit {
             console.log(res);
 
             this.domesticShippingData = res[0];
+            this.loaderForDomestic = false;
 
 
             if (res.length > 0) {
@@ -276,6 +283,8 @@ export class CustomerShippingInformationComponent implements OnInit {
             }
 
 
+        }, err => {
+            this.loaderForDomestic = false;
         })
     }
     // View Details  data
@@ -576,12 +585,15 @@ export class CustomerShippingInformationComponent implements OnInit {
 
         this.customerService.getInternationalShippingByCustomerId(this.id, this.pageIndexForInternational, this.pageSizeForInternational).subscribe(res => {
             console.log(res);
+            this.loaderForInternational = false;
             this.internationalShippingData = res.paginationList;
             this.totalRecordsForInternationalShipping = res.totalRecordsCount;
             if (this.internationalShippingData.length > 0) {
                 this.totalRecordsInternationalShipping = this.internationalShippingData.length;
                 this.totalPagesInternationalShipping = Math.ceil(this.totalRecordsInternationalShipping / this.pageSize);
             }
+        }, err => {
+            this.loaderForInternational = false;
         })
 
 
@@ -806,10 +818,13 @@ export class CustomerShippingInformationComponent implements OnInit {
 
 
             this.demosticShippingViaData = res;
+            this.loaderForDomesticShipVia = false;
             if (this.demosticShippingViaData.length > 0) {
                 this.totalRecordsShipVia = this.demosticShippingViaData.length;
                 this.totalPagesShipVia = Math.ceil(this.totalRecords / this.pageSize);
             }
+        }, err => {
+            this.loaderForDomesticShipVia = false;
         })
     }
 
@@ -829,10 +844,13 @@ export class CustomerShippingInformationComponent implements OnInit {
             //}
 
             this.internationalShippingViaData = res;
+            this.loaderForInternationalShipVia = false
             if (this.internationalShippingViaData.length > 0) {
                 this.interTotalRecords = this.internationalShippingViaData.length;
                 this.interTotalPages = Math.ceil(this.interTotalRecords / this.pageSize);
             }
+        }, err => {
+            this.loaderForInternationalShipVia = false;
         })
 
     }

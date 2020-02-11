@@ -66,6 +66,7 @@ export class CustomerContactsComponent implements OnInit {
 	disableSaveMiddleName: boolean;
 	disableSaveLastName: boolean;
 	disablesaveForlastname: boolean;
+	loaderForContacts = true;
     //ataChapterEditData: any;
 	customerContactsColumns = [
 		{ field: 'isDefaultContact', header: 'Primary Contact' },
@@ -379,6 +380,7 @@ export class CustomerContactsComponent implements OnInit {
 		// get Customer Contatcs 
 		this.customerService.getContacts(this.id).subscribe(res => {
 			this.customerContacts = res[0]
+			this.loaderForContacts = false;
 			// const re = res[0]
 			// for (let i=0; i<re.length; i++){
 			// 	if(re[i]['isDefaultContact'] == true){
@@ -391,6 +393,8 @@ export class CustomerContactsComponent implements OnInit {
 			//     this.totalRecords = re.length;
 			//     this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
 			// }
+		}, err => {
+			this.loaderForContacts = false;	
 		})
 	}
 

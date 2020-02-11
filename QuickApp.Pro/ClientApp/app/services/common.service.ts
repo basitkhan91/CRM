@@ -84,16 +84,16 @@ export class CommonService {
         return this.http.get<any>(`${this.baseUrl}/api/Common/integrationmappings?referenceId=${id}&moduleId=${moduleId}`, this.authService.getRequestHeaders())
     }
 
-    getLegalEntityList(){
+    getLegalEntityList() {
         return this.http.get<any>(`${this.baseUrl}/api/common/levelonedata`, this.authService.getRequestHeaders());
     }
-    getBusinessUnitListByLegalEntityId(legalEntityId){
+    getBusinessUnitListByLegalEntityId(legalEntityId) {
         return this.http.get<any>(`${this.baseUrl}/api/common/leveltwodata?parentId=${legalEntityId}`, this.authService.getRequestHeaders());
     }
-    getDivisionListByBU(businessUnitId){
+    getDivisionListByBU(businessUnitId) {
         return this.http.get<any>(`${this.baseUrl}/api/common/levelthreedata?parentId=${businessUnitId}`, this.authService.getRequestHeaders());
     }
-    getDepartmentListByDivisionId(divisionId){
+    getDepartmentListByDivisionId(divisionId) {
         return this.http.get<any>(`${this.baseUrl}/api/common/levelfourdata?parentId=${divisionId}`, this.authService.getRequestHeaders());
     }
 
@@ -109,19 +109,22 @@ export class CommonService {
         return this.http.delete(`${this.baseUrl}/api/FileUpload/AttachmentDelete/${attachmentDetailId}?updatedBy=${updatedBy}`, this.authService.getRequestHeaders())
     }
 
-    uploadDocumentsEndpoint<T>(file: any): Observable<T> {        
-		const headers = new Headers({ 'Content-Type': 'multipart/form-data' });
-		return this.http.post<T>(`${this.baseUrl}/api/FileUpload/commonDocumentUpload`, file);
+    uploadDocumentsEndpoint<T>(file: any): Observable<T> {
+        const headers = new Headers({ 'Content-Type': 'multipart/form-data' });
+        return this.http.post<T>(`${this.baseUrl}/api/FileUpload/commonDocumentUpload`, file);
     }
-    
+
     toDownLoadFile(fileUrl) {
         const url = `${this.baseUrl}/api/FileUpload/downloadattachedfile?filePath=${fileUrl}`;
-		window.location.assign(url);  
+        window.location.assign(url);
     }
-    
+
     getReceivingCustomers(value) {
         return this.http.get(`${this.baseUrl}/api/receivingcustomerwork/getreceivingcustomerslist?value=${value}`, this.authService.getRequestHeaders());
     }
 
-    
+    getEmployeesByCategory(value) {
+        return this.http.get(`${this.baseUrl}/api/common/employeesbyjobtitle?jobTitleId=${value}`)
+    }
+
 }
