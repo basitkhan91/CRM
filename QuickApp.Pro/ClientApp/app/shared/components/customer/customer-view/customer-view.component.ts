@@ -121,7 +121,10 @@ export class CustomerViewComponent implements OnInit {
     DocumentsList: any = [];
     domesticShippingData: any;
     internationalShippingData: any = [];
-    loader:boolean=true;
+    // loader:boolean=true;
+    ataloader:boolean=true;
+    salesloader:boolean=true;
+    warningsloader:boolean=true;
     filterKeysByValue: object = {};
     taxTypeRateMapping: any = [];
     restrictedPMAParts: any = [];
@@ -153,14 +156,14 @@ export class CustomerViewComponent implements OnInit {
         ];
         let customerId = this.customerId;
         this.customerService.getCustomerdataById(customerId).subscribe(res => {
-
+            this.salesloader=false;
             this.getAllEmployees();
-            this.getAllCustomerContact(customerId);
+            // this.getAllCustomerContact(customerId);
             this.getAircraftMappedDataByCustomerId(customerId);
             this.getMappedATAByCustomerId(customerId);
-            this.getBillingDataById(customerId);
-            this.getDomesticShippingByCustomerId(customerId);
-            this.getInternationalShippingByCustomerId(customerId);
+            // this.getBillingDataById(customerId);
+            // this.getDomesticShippingByCustomerId(customerId);
+            // this.getInternationalShippingByCustomerId(customerId);
             this.getCustomerWaringByCustomerId(customerId);
             this.getCustomerDocumentsByCustomerId(customerId);
             this.getMappedTaxTypeRateDetails(customerId);
@@ -168,10 +171,13 @@ export class CustomerViewComponent implements OnInit {
             this.getCustomerRestrictedDERByCustomerId(customerId);
             this.getCustomerClassificationByCustomerId(customerId);
             this.getCustomerIntegrationTypesByCustomerId(customerId);
-            this.toGetCustomerFinanceDocumentsList(customerId)
+            this.toGetCustomerFinanceDocumentsList(customerId);
             this.viewDataGeneralInformation = res[0];
             //debugger
             console.log(this.viewDataGeneralInformation);
+        
+       }, err => {
+            this.salesloader=false;
         })
         // this.openStep1();
 
@@ -218,6 +224,9 @@ export class CustomerViewComponent implements OnInit {
         // const id = this.savedGeneralInformationData.customerId;
         await this.customerService.getATAMappedByCustomerId(customerId).subscribe(res => {
             this.ataListDataValues = res || [];
+            this.ataloader=false;
+        }, err => {
+            this.ataloader=false;
         })
     }
     async getBillingDataById(customerId) {
@@ -242,9 +251,9 @@ export class CustomerViewComponent implements OnInit {
         await this.customerService.getInternationalShippingByCustomerId(customerId, 0, 20).subscribe(res => {
             this.internationalShippingData = res.paginationList || [];
             // this.totalRecordsForInternationalShipping = res.totalRecordsCount;
-            this.loader = true;
+            // this.loader = true;
         }, err => {
-            this.loader = false;
+            // this.loader = false;
             })
 
 
@@ -253,6 +262,7 @@ export class CustomerViewComponent implements OnInit {
 
     async getCustomerWaringByCustomerId(customerId) {
         await this.customerService.getCustomerWarnings(customerId).subscribe(res => {
+            this.warningsloader=false;
             this.waringInfoList = res[0].map(x => {
                 return {
                     ...x,
@@ -263,6 +273,8 @@ export class CustomerViewComponent implements OnInit {
             }) || [];
 
 
+        }, err => {
+            this.warningsloader=false;
         })
     }
 
