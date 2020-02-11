@@ -109,7 +109,7 @@
                                             </div>
 
                                         <div class="col-md-2">
-                                            <div class="form-group" style="margin-top: 15px;" *ngIf="savedGeneralInformationData.isCustomerAlsoVendor">
+                                            <div class="form-group" style="margin-top: 15px;" *ngIf="showAllowNettingOfAPAR == true">
                                                 <span class="checkbox-cstm">
                                                     <label>
                                                         <input type="checkbox" name="allowNettingOfAPAR" [(ngModel)]="savedGeneralInformationData.allowNettingOfAPAR">
@@ -207,8 +207,8 @@
 
 
                                                             <td>
-                                                                    <span data-toggle="modal" data-target="#contentAuditHist"><a class="btn nobg" 
-                                                                        (click)="getAuditHistoryById(rowData)" 
+                                                                    <span><a class="btn nobg" 
+                                                                        (click)="getAuditHistoryById(contentAuditHist, rowData)" 
                                                                         matTooltip="History"><i class="fa fa-history"></i></a></span>
                                                                     <button
                                                                     class="btn-edit"
@@ -416,13 +416,9 @@
 
 
       <!-- Modal -->
-<div id="contentAuditHist" class="modal fade" role="dialog">
-    <div class="modal-dialog">
-  
-      <!-- Modal content-->
-      <div class="modal-content">
+    <ng-template #contentAuditHist let-c="close" let-d="dismiss" data-backdrop="static">
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <button type="button" class="close" (click)="dismissModel()">&times;</button>
           <h4 class="modal-title">History For Tax </h4>
         </div>
         <div class="modal-body" *ngIf="auditDataForTaxData.length > 0">
@@ -446,12 +442,9 @@
 
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
         </div>
-      </div>
-  
-    </div>
-  </div>
+    </ng-template>
 
     <div  *ngIf="selectedRowFileForDelete" #delete id="delete"  class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog">
