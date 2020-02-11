@@ -1463,7 +1463,7 @@ namespace DAL.Repositories
             try
             {
                 var list = (from emp in _appContext.Employee
-                            where emp.IsDeleted == false && emp.IsActive == true && emp.JobTitleId == jobTitleId
+                            where (emp.IsDeleted == false || emp.IsDeleted==null) && emp.IsActive == true && emp.JobTitleId == jobTitleId
                             select new
                             {
                                 emp.EmployeeId,
@@ -1485,7 +1485,7 @@ namespace DAL.Repositories
             try
             {
                 var list = (from emp in _appContext.Employee
-                            where emp.IsDeleted == false && emp.IsActive == true && emp.EmployeeExpertiseId == expertiseId
+                            where (emp.IsDeleted == false || emp.IsDeleted == null) && emp.IsActive == true && emp.EmployeeExpertiseId == expertiseId
                             select new
                             {
                                 emp.EmployeeId,
