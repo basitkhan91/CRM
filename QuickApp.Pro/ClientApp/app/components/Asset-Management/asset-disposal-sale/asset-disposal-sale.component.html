@@ -76,15 +76,32 @@
                                     </td>
                                     <td class="action-icons-cstm" style="width:150px" *ngIf="selectedColumns.length> 0">
                                         <div>
-                                        <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on"
-                                                       offLabel="off" (onChange)="toggleIsActive(rowData,$event)"
-                                                       [(ngModel)]="rowData['isActive']"></p-inputSwitch>
-                                        <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on"
-                                                       offLabel="off" (onChange)="toggleIsActive(rowData,$event)"
-                                                       [(ngModel)]="rowData['isActive']"></p-inputSwitch>
-                                        <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on"
-                                                       offLabel="off" (onChange)="toggleIsActive(rowData,$event)"
-                                                       [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                                            <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on"
+                                                           offLabel="off" (onChange)="toggleIsActive(rowData,$event)"
+                                                           [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                                            <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on"
+                                                           offLabel="off" (onChange)="toggleIsActive(rowData,$event)"
+                                                           [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                                            <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on"
+                                                           offLabel="off" (onChange)="toggleIsActive(rowData,$event)"
+                                                           [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+
+                                            <button class="btn-history" mat-icon-button matTooltip="Sale"
+                                                    data-target="#contentHist" data-toggle="modal"
+                                                    (click)="openSaleHistory(history,rowData)">
+                                                <mat-icon color="green">history</mat-icon>
+                                            </button>
+                                            <button class="btn-history" mat-icon-button matTooltip="Write Off"
+                                                    data-target="#contentWriteOffHist" data-toggle="modal"
+                                                    (click)="openSaleHistory(history,rowData)">
+                                                <mat-icon color="green">history</mat-icon>
+                                            </button>
+                                            <button class="btn-history" mat-icon-button matTooltip="Write Down"
+                                                    data-target="#contentWriteDownHist" data-toggle="modal"
+                                                    (click)="openSaleHistory(history,rowData)">
+                                                <mat-icon color="green">history</mat-icon>
+                                            </button>
+                                            
                                         </div>
                                     </td>
 
@@ -102,6 +119,445 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+
+
+
+
+    <div id="contentHist" #contentHist class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-lg">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">
+                        Disposal Type: Sale
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="table-responsive rro-table-cstm">
+                        <div class="col-sm-3">
+                            <p><span class="label"><b>Asset ID: </b></span><span class="value"></span></p>
+                            <p><span class="label"><b>Alt Asset ID: </b></span><span class="value"></span></p>
+                            <p><span class="label"><b>Existing Cost: </b></span><span class="value"></span></p>
+                        </div>
+                        <div class="col-sm-3">
+                            <p><span class="label"><b>Asset Name: </b></span><span class="value"></span></p>
+                            <p><span class="label"><b>AD: </b></span><span class="value"></span></p>
+                        </div>
+                        <div class="col-sm-3">
+                            <p><span class="label"><b>In service Date: </b></span><span class="value"></span></p>
+                            <p><span class="label"><b>Existing Book Value: </b></span><span class="value"></span></p>
+                        </div>
+                        <div class="col-sm-3">
+                            <p><span class="label"><b>Last Depr Date: </b></span><span class="value"></span></p>
+                            <p><span class="label"><b>Control Num: </b></span><span class="value"></span></p>
+                        </div>
+                        <div class="clear"></div>
+                        <hr>
+
+                        <div class="col-sm-6">
+                            <div class="form-group col-sm-12">
+                                <label class="control-label col-sm-4">Disposal Type</label>
+                                <div class="col-sm-7">
+                                    <select class="form-control" disabled="">
+                                        <option>Sale</option>
+                                        <option>Write Off</option>
+                                        <option>Write Down</option>
+                                    </select>
+                                  
+
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-12">
+                                <label class="control-label col-sm-4">Select Customer</label>
+                                <div class="col-sm-7">
+                                    <div class="inner-addon right-addon inline-block">
+                                        <i class="fa fa-pencil"></i>
+                                        <input type="text" class="form-control names ui-autocomplete-input" id="" name="" value="" autocomplete="off">
+                                    </div>
+
+                                
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-12">
+                                <label class="control-label col-sm-4">Currency</label>
+                                <div class="col-sm-7">
+                                    <select>
+                                        <option>-- Select --</option>
+                                    </select>
+                                
+
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-12">
+                                <label class="control-label col-sm-4">Disposal Proceeds</label>
+                                <div class="col-sm-7">
+                                    <input type="text" class="form-control" id="" name="" value="">
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-12">
+                                <label class="control-label col-sm-4">Sales Tax</label>
+                               
+
+                                <div class="col-sm-2">
+                                    <input type="text" autocomplete="off" class="autosuggest es-input">
+                                    
+                                </div>
+                                <div class="col-sm-2">
+                                    <input type="text" class="form-control" id="" name="" value="" disabled="">
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-12">
+                                <label class="control-label col-sm-4">Taxes Other</label>
+                               
+
+                                <div class="col-sm-2">
+                                    <input type="text" autocomplete="off" class="autosuggest es-input">
+                                    
+                                </div>
+                                <div class="col-sm-2">
+                                    <input type="text" class="form-control" id="" name="" value="" disabled="">
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-12">
+                                <label class="control-label col-sm-4">Effective Date </label>
+                                <div class="col-sm-7">
+                                    <input type="text" class="form-control datepicker hasDatepicker" id="" name="">
+                                  
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-12">
+                                <label class="control-label col-sm-4">Accounting Period  </label>
+                                <div class="col-sm-7">
+                                    <input type="text" class="form-control" id="" name="" value="" disabled="">
+                                  
+
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="col-sm-6">
+
+                            <div class="form-group col-sm-12">
+                                <label class="control-label col-sm-4">Upload Documents</label>
+                                <div class="col-sm-7">
+                                    <div class="upload">
+                                       
+                                    </div>
+                                   
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-12">
+                                <label class="control-label col-sm-4">Disposal Memo</label>
+                                <div class="col-sm-7">
+                                    <textarea class="form-control h50"></textarea>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-info" data-dismiss="modal" id="" name="">Process</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" id="" name="">Cancel</button>
+                </div>
+                
+            </div>
+
+        </div>
+    </div>
+
+    <div id="contentWriteOffHist" #contentWriteOffHist class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-lg">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">
+                        Disposal Type: Write Off
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="table-responsive rro-table-cstm">
+                        <div class="col-sm-3">
+                            <p><span class="label"><b>Asset ID: </b></span><span class="value"></span></p>
+                            <p><span class="label"><b>Alt Asset ID: </b></span><span class="value"></span></p>
+                            <p><span class="label"><b>Existing Cost: </b></span><span class="value"></span></p>
+                        </div>
+                        <div class="col-sm-3">
+                            <p><span class="label"><b>Asset Name: </b></span><span class="value"></span></p>
+                            <p><span class="label"><b>AD: </b></span><span class="value"></span></p>
+                        </div>
+                        <div class="col-sm-3">
+                            <p><span class="label"><b>In service Date: </b></span><span class="value"></span></p>
+                            <p><span class="label"><b>Existing Book Value: </b></span><span class="value"></span></p>
+                        </div>
+                        <div class="col-sm-3">
+                            <p><span class="label"><b>Last Depr Date: </b></span><span class="value"></span></p>
+                            <p><span class="label"><b>Control Num: </b></span><span class="value"></span></p>
+                        </div>
+                        <div class="clear"></div>
+                        <hr>
+
+                        <div class="col-sm-6">
+                            <div class="form-group col-sm-12">
+                                <label class="control-label col-sm-4">Disposal Type</label>
+                                <div class="col-sm-7">
+                                    <select class="form-control" disabled="">
+                                        <option>Sale</option>
+                                        <option>Write Off</option>
+                                        <option>Write Down</option>
+                                    </select>
+
+
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-12">
+                                <label class="control-label col-sm-4">Select Customer</label>
+                                <div class="col-sm-7">
+                                    <div class="inner-addon right-addon inline-block">
+                                        <i class="fa fa-pencil"></i>
+                                        <input type="text" class="form-control names ui-autocomplete-input" id="" name="" value="" autocomplete="off">
+                                    </div>
+
+
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-12">
+                                <label class="control-label col-sm-4">Currency</label>
+                                <div class="col-sm-7">
+                                    <select>
+                                        <option>-- Select --</option>
+                                    </select>
+
+
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-12">
+                                <label class="control-label col-sm-4">Disposal Proceeds</label>
+                                <div class="col-sm-7">
+                                    <input type="text" class="form-control" id="" name="" value="">
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-12">
+                                <label class="control-label col-sm-4">Sales Tax</label>
+
+
+                                <div class="col-sm-2">
+                                    <input type="text" autocomplete="off" class="autosuggest es-input">
+
+                                </div>
+                                <div class="col-sm-2">
+                                    <input type="text" class="form-control" id="" name="" value="" disabled="">
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-12">
+                                <label class="control-label col-sm-4">Taxes Other</label>
+
+
+                                <div class="col-sm-2">
+                                    <input type="text" autocomplete="off" class="autosuggest es-input">
+
+                                </div>
+                                <div class="col-sm-2">
+                                    <input type="text" class="form-control" id="" name="" value="" disabled="">
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-12">
+                                <label class="control-label col-sm-4">Effective Date </label>
+                                <div class="col-sm-7">
+                                    <input type="text" class="form-control datepicker hasDatepicker" id="" name="">
+
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-12">
+                                <label class="control-label col-sm-4">Accounting Period  </label>
+                                <div class="col-sm-7">
+                                    <input type="text" class="form-control" id="" name="" value="" disabled="">
+
+
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="col-sm-6">
+
+                            <div class="form-group col-sm-12">
+                                <label class="control-label col-sm-4">Upload Documents</label>
+                                <div class="col-sm-7">
+                                    <div class="upload">
+
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-12">
+                                <label class="control-label col-sm-4">Disposal Memo</label>
+                                <div class="col-sm-7">
+                                    <textarea class="form-control h50"></textarea>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-info" data-dismiss="modal" id="" name="">Process</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" id="" name="">Cancel</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="contentWriteDownHist" #contentWriteDownHist class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-lg">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">
+                        Disposal Type: Write Down
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="table-responsive rro-table-cstm">
+                        <div class="col-sm-3">
+                            <p><span class="label"><b>Asset ID: </b></span><span class="value"></span></p>
+                            <p><span class="label"><b>Alt Asset ID: </b></span><span class="value"></span></p>
+                            <p><span class="label"><b>Existing Cost: </b></span><span class="value"></span></p>
+                        </div>
+                        <div class="col-sm-3">
+                            <p><span class="label"><b>Asset Name: </b></span><span class="value"></span></p>
+                            <p><span class="label"><b>AD: </b></span><span class="value"></span></p>
+                        </div>
+                        <div class="col-sm-3">
+                            <p><span class="label"><b>In service Date: </b></span><span class="value"></span></p>
+                            <p><span class="label"><b>Existing Book Value: </b></span><span class="value"></span></p>
+                        </div>
+                        <div class="col-sm-3">
+                            <p><span class="label"><b>Last Depr Date: </b></span><span class="value"></span></p>
+                            <p><span class="label"><b>Control Num: </b></span><span class="value"></span></p>
+                        </div>
+                        <div class="clear"></div>
+                        <hr>
+
+                        <div class="col-sm-6">
+                            <div class="form-group col-sm-12">
+                                <label class="control-label col-sm-4">Disposal Type</label>
+                                <div class="col-sm-7">
+                                    <select class="form-control" disabled="">
+                                        <option>Sale</option>
+                                        <option>Write Off</option>
+                                        <option>Write Down</option>
+                                    </select>
+
+
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-12">
+                                <label class="control-label col-sm-4">Select Customer</label>
+                                <div class="col-sm-7">
+                                    <div class="inner-addon right-addon inline-block">
+                                        <i class="fa fa-pencil"></i>
+                                        <input type="text" class="form-control names ui-autocomplete-input" id="" name="" value="" autocomplete="off">
+                                    </div>
+
+
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-12">
+                                <label class="control-label col-sm-4">Currency</label>
+                                <div class="col-sm-7">
+                                    <select>
+                                        <option>-- Select --</option>
+                                    </select>
+
+
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-12">
+                                <label class="control-label col-sm-4">Disposal Proceeds</label>
+                                <div class="col-sm-7">
+                                    <input type="text" class="form-control" id="" name="" value="">
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-12">
+                                <label class="control-label col-sm-4">Sales Tax</label>
+
+
+                                <div class="col-sm-2">
+                                    <input type="text" autocomplete="off" class="autosuggest es-input">
+
+                                </div>
+                                <div class="col-sm-2">
+                                    <input type="text" class="form-control" id="" name="" value="" disabled="">
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-12">
+                                <label class="control-label col-sm-4">Taxes Other</label>
+
+
+                                <div class="col-sm-2">
+                                    <input type="text" autocomplete="off" class="autosuggest es-input">
+
+                                </div>
+                                <div class="col-sm-2">
+                                    <input type="text" class="form-control" id="" name="" value="" disabled="">
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-12">
+                                <label class="control-label col-sm-4">Effective Date </label>
+                                <div class="col-sm-7">
+                                    <input type="text" class="form-control datepicker hasDatepicker" id="" name="">
+
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-12">
+                                <label class="control-label col-sm-4">Accounting Period  </label>
+                                <div class="col-sm-7">
+                                    <input type="text" class="form-control" id="" name="" value="" disabled="">
+
+
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="col-sm-6">
+
+                            <div class="form-group col-sm-12">
+                                <label class="control-label col-sm-4">Upload Documents</label>
+                                <div class="col-sm-7">
+                                    <div class="upload">
+
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-12">
+                                <label class="control-label col-sm-4">Disposal Memo</label>
+                                <div class="col-sm-7">
+                                    <textarea class="form-control h50"></textarea>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-info" data-dismiss="modal" id="" name="">Process</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" id="" name="">Cancel</button>
+                </div>
+            </div>
+
         </div>
     </div>
 </div>
