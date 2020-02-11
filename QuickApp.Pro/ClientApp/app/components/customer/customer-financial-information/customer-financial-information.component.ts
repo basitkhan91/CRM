@@ -130,6 +130,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
     taxRateEditData: any;
     indexForTaxRate: any = 1;
     auditDataForTaxData: any= [];
+    global_lang: string;
 
     constructor(public taxtypeser: TaxTypeService, public creditTermsService: CreditTermsService,
         public currencyService: CurrencyService,
@@ -176,6 +177,9 @@ export class CustomerFinancialInformationComponent implements OnInit {
                 ...this.editGeneralInformationData,
                 creditTermsId: getObjectById('value', this.editGeneralInformationData.creditTermsId, this.creditTermsListOriginal)
             }
+            this.savedGeneralInformationData.creditLimit =  this.formatCreditLimit(this.editGeneralInformationData.creditLimit);
+
+
 
 
             if (this.editGeneralInformationData.currency == null || this.editGeneralInformationData.currency == 0) {
@@ -210,6 +214,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
 
     getGlobalSettings() {
         this.globalSettings = this.localStorage.getDataObject<any>(DBkeys.GLOBAL_SETTINGS) || {};
+        this.global_lang = this.globalSettings.cultureName;
     }
 
 
@@ -232,6 +237,14 @@ export class CustomerFinancialInformationComponent implements OnInit {
 
             this.allCurrencyInfo = res[0];
         })
+    }
+
+    formatCreditLimit(val){
+        if(isNaN(val) ==  true){
+            val = Number(val.replace(/[^0-9.-]+/g,""));
+          }
+        this.savedGeneralInformationData.creditLimit = new Intl.NumberFormat(this.global_lang, { style: 'decimal', minimumFractionDigits: 2,    maximumFractionDigits: 2}).format(val)
+        console.log(this.savedGeneralInformationData.creditLimit, "this.savedGeneralInformationData.creditLimit")
     }
     getDefaultCurrency() {
         this.legalEntityId = 19;

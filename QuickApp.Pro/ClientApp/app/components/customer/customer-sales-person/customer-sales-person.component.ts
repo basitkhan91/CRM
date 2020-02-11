@@ -30,6 +30,7 @@ export class CustomerSalesPersonComponent implements OnInit {
     customerCode: any;
     numberValidate = "^\d+$";
     globalSettings: any = {};
+    global_lang: any;
 
 
     // activeIndex: number;
@@ -132,6 +133,8 @@ export class CustomerSalesPersonComponent implements OnInit {
                 secondarySalesPersonId: getObjectById('employeeId', this.editGeneralInformationData.secondarySalesPersonId, this.employeeListOriginal),
                 csrId: getObjectById('employeeId', this.editGeneralInformationData.csrId, this.employeeListOriginal),
                 saId: getObjectById('employeeId', this.editGeneralInformationData.saId, this.employeeListOriginal),
+                annualRevenuePotential: this.formatannualRevenuePotential(this.salesInfo.annualRevenuePotential),
+                annualQuota: this.formatannualRevenuePotential(this.salesInfo.annualQuota),
             };
             console.log(this.salesInfo)
 
@@ -175,6 +178,8 @@ export class CustomerSalesPersonComponent implements OnInit {
     }
     getGlobalSettings(){
         this.globalSettings = this.localStorage.getDataObject<any>(DBkeys.GLOBAL_SETTINGS) || {};
+        this.global_lang = this.globalSettings.cultureName;
+
     }
 
     get userName(): string {
@@ -233,6 +238,22 @@ export class CustomerSalesPersonComponent implements OnInit {
 
             }
         )
+    }
+    formatannualRevenuePotential(val){
+        if(isNaN(val) ==  true){
+            alert(2)
+            val = Number(val.replace(/[^0-9.-]+/g,""));
+          }
+        this.salesInfo.annualRevenuePotential = new Intl.NumberFormat(this.global_lang, { style: 'decimal', minimumFractionDigits: 2,    maximumFractionDigits: 2}).format(val)
+        console.log(this.salesInfo.annualRevenuePotential, "this.salesInfo.annualRevenuePotential")
+    }
+    formatannualQuota(val){
+        if(isNaN(val) ==  true){
+            alert(2)
+            val = Number(val.replace(/[^0-9.-]+/g,""));
+          }
+        this.salesInfo.annualQuota = new Intl.NumberFormat(this.global_lang, { style: 'decimal', minimumFractionDigits: 2,    maximumFractionDigits: 2}).format(val)
+        console.log(this.salesInfo.annualQuota, "this.salesInfo.annualQuota")
     }
 
 
