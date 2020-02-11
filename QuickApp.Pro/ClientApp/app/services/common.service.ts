@@ -123,8 +123,12 @@ export class CommonService {
         return this.http.get(`${this.baseUrl}/api/receivingcustomerwork/getreceivingcustomerslist?value=${value}`, this.authService.getRequestHeaders());
     }
 
+    getJobTitles() {
+        return this.http.get(`${this.baseUrl}/api/common/jobtitletypes?masterCompanyId=1`, this.authService.getRequestHeaders())
+    }
+
     getEmployeesByCategory(value) {
-        return this.http.get(`${this.baseUrl}/api/common/employeesbyjobtitle?jobTitleId=${value}`)
+        return this.http.get(`${this.baseUrl}/api/common/employeesbyjobtitle?jobTitleId=${value}`, this.authService.getRequestHeaders())
     }
 
 }

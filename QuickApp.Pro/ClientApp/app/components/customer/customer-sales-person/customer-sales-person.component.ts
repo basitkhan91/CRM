@@ -4,10 +4,11 @@ import { AuthService } from '../../../services/auth.service';
 import { CustomerService } from '../../../services/customer.service';
 import { EmployeeService } from '../../../services/employee.service';
 import { VendorService } from '../../../services/vendor.service';
-import { getValueFromObjectByKey, getObjectById, editValueAssignByCondition, getObjectByValue } from '../../../generic/autocomplete';
+import { getValueFromObjectByKey, getObjectById, editValueAssignByCondition, getObjectByValue, getValueFromArrayOfObjectById, getValueByFieldFromArrayofObject } from '../../../generic/autocomplete';
 import { AlertService, MessageSeverity } from '../../../services/alert.service';
 import { LocalStoreManager } from '../../../services/local-store-manager.service';
 import { DBkeys } from '../../../services/db-Keys';
+import { CommonService } from '../../../services/common.service';
 
 @Component({
     selector: 'app-customer-sales-person',
@@ -21,6 +22,7 @@ export class CustomerSalesPersonComponent implements OnInit {
     @Input() editGeneralInformationData;
     @Input() editMode;
     @Input() employeeListOriginal: any = [];
+    @Input() jobTitles;
     @Output() tab = new EventEmitter();
     employeeList: any[];
     employeeTypeList: any[];
@@ -31,12 +33,20 @@ export class CustomerSalesPersonComponent implements OnInit {
     numberValidate = "^\d+$";
     globalSettings: any = {};
     global_lang: any;
+    csrOriginalList: any;
+    csrList: any;
+    agentsOriginalList: any;
+    agentList: any[];
+    salesPersonOriginalList: any;
+    primarySPList: any[];
+    secondarySPList: any[];
 
 
     constructor(public vendorservice: VendorService, public customerService: CustomerService,
         // public conditionService: ConditionService, 
         // public itemser: ItemMasterService, 
         public employeeService: EmployeeService,
+        private commonService: CommonService,
         // public CreditTermsService: CreditTermsService, 
         // public currencyService: CurrencyService, 
         // public workFlowtService: CustomerService ,
@@ -134,14 +144,16 @@ export class CustomerSalesPersonComponent implements OnInit {
     // private isEditMode: boolean = false;
     // private isDeleteMode: boolean = false;
     ngOnInit() {
-        this.employeeListOriginal = this.employeeListOriginal || [];
+        // this.employeeListOriginal = this.employeeListOriginal || [];
 
-        this.employeeListOriginal.forEach(element => {
-            element["fullName"] = element["firstName"] + " " + element["lastName"]
+        // this.employeeListOriginal.forEach(element => {
+        //     element["fullName"] = element["firstName"] + " " + element["lastName"]
 
-        });
-        console.log(this.employeeListOriginal, "employeelistoriginal")
-
+        // });
+        // console.log(this.employeeListOriginal, "employeelistoriginal")
+        this.getCSRList();
+        this.getAgentsList();
+        this.getSalesPersonList();
         if (this.editMode) {
 
             console.log(this.editGeneralInformationData);
@@ -177,6 +189,8 @@ export class CustomerSalesPersonComponent implements OnInit {
     }
 
 
+
+
     getGlobalSettings() {
         this.globalSettings = this.localStorage.getDataObject<any>(DBkeys.GLOBAL_SETTINGS) || {};
         this.global_lang = this.globalSettings.cultureName;
@@ -187,38 +201,78 @@ export class CustomerSalesPersonComponent implements OnInit {
         return this.authService.currentUser ? this.authService.currentUser.userName : "";
     }
 
-    filteremployee(event, type) {
-
-
-
-        this.employeeList = this.employeeListOriginal;
-
-
-        const employeeTypeList = [...this.employeeListOriginal.filter(x => {
-            return x.jobTitle.includes(type)
-        })]
-
-        this.employeeTypeList = employeeTypeList;
-        console.log("sales project details", this.employeeTypeList);
-        //const employeeListData = [...this.employeeListOriginal.filter(x => {
-        //    return x.firstName.toLowerCase().includes(event.query.toLowerCase())
-        //})]
-
-        const employeeListData = [...this.employeeTypeList.filter(x => {
-            return x.fullName.toLowerCase().includes(event.query.toLowerCase())
-        })]
-        for (let i = 0; i < employeeListData.length; i++) {
-            if (this.salesInfo.primarySalesPersonId) {
-                if (this.salesInfo.primarySalesPersonId['employeeId'] == employeeListData[i].employeeId || this.salesInfo.secondarySalesPersonId == employeeListData[i].employeeId) {
-                    employeeListData.splice(i, 1);
-                }
-            }
-
+    getCSRList() {
+        console.log(this.jobTitles);
+        const id = getValueByFieldFromArrayofObject('jobTitle', 'CSR', this.jobTitles);
+        if (id !== undefined) {
+            this.commonService.getEmployeesByCategory(id[0].jobTitleId).subscribe(res => {
+                this.csrOriginalList = res;
+            })
         }
 
-
-        this.employeeList = employeeListData;
     }
+    getAgentsList() {
+        console.log(this.jobTitles);
+        const id = getValueByFieldFromArrayofObject('jobTitle', 'Agents', this.jobTitles);
+        if (id !== undefined) {
+            this.commonService.getEmployeesByCategory(id[0].jobTitleId).subscribe(res => {
+                this.agentsOriginalList = res;
+            })
+        }
+    }
+    getSalesPersonList() {
+        console.log(this.jobTitles);
+        const id = getValueByFieldFromArrayofObject('jobTitle', 'Sales ', this.jobTitles);
+        console.log(id);
+        if (id !== undefined) {
+            this.commonService.getEmployeesByCategory(id[0].jobTitleId).subscribe(res => {
+                console.log(res);
+                this.salesPersonOriginalList = res;
+            })
+        }
+    }
+
+    filterPrimary(event) {
+        this.primarySPList = this.salesPersonOriginalList;
+
+        const primarySPData = [...this.salesPersonOriginalList.filter(x => {
+            return x.name.toLowerCase().includes(event.query.toLowerCase())
+        })]
+        this.primarySPList = primarySPData;
+    }
+
+    filterSecondary(event) {
+        this.secondarySPList = this.salesPersonOriginalList;
+
+        const secondarySPData = [...this.salesPersonOriginalList.filter(x => {
+            return x.name.toLowerCase().includes(event.query.toLowerCase())
+        })]
+        this.secondarySPList = secondarySPData;
+    }
+
+
+
+    filterCSR(event) {
+        this.csrList = this.csrOriginalList;
+
+        const CSRData = [...this.csrOriginalList.filter(x => {
+            return x.name.toLowerCase().includes(event.query.toLowerCase())
+        })]
+        this.csrList = CSRData;
+    }
+
+    filterAgents(event) {
+        this.agentList = this.agentsOriginalList;
+
+        const agentData = [...this.agentsOriginalList.filter(x => {
+            return x.name.toLowerCase().includes(event.query.toLowerCase())
+        })]
+        this.agentList = agentData;
+    }
+
+
+
+
     saveSalesInformation() {
         this.customerService.updatesalesinfo({
             ...this.salesInfo,

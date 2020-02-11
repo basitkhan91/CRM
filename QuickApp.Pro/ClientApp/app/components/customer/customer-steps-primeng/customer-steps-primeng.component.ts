@@ -34,6 +34,7 @@ export class CustomerStepsPrimengComponent {
 	ataListDataValues: any[] = [];
 	contactList: any;
 	breadcrumbs: MenuItem[];
+	jobTitles: Object;
 	// ifvalue: boolean;
 	// generalcollection: any;
 	// collection: any;
@@ -79,6 +80,7 @@ export class CustomerStepsPrimengComponent {
 		this.getAllCountries();
 		this.getAllCustomers();
 		this.getAllEmployees();
+		this.getJobTitles();
 		this.getAllATAChapter();
 		this.getAllCustomersData();
 		this.getAllCreditTerms();
@@ -269,11 +271,11 @@ export class CustomerStepsPrimengComponent {
 
 
 	updateInformationData(data) {
-        this.editGeneralInformationData = data;
-        if (data.isCustomerAlsoVendor != null && data.isCustomerAlsoVendor != undefined) {
-            this.savedGeneralInformationData.isCustomerAlsoVendor = data.isCustomerAlsoVendor;
-        }
-        this.savedGeneralInformationData.allowNettingOfAPAR = data.allowNettingOfAPAR;
+		this.editGeneralInformationData = data;
+		if (data.isCustomerAlsoVendor != null && data.isCustomerAlsoVendor != undefined) {
+			this.savedGeneralInformationData.isCustomerAlsoVendor = data.isCustomerAlsoVendor;
+		}
+		this.savedGeneralInformationData.allowNettingOfAPAR = data.allowNettingOfAPAR;
 	}
 	getAllCountries() {
 		this.customerService.getCountrylist().subscribe(res => {
@@ -295,12 +297,28 @@ export class CustomerStepsPrimengComponent {
 
 		})
 	}
+
 	getAllCustomers() {
 		this.customerService.getCustomers().subscribe(res => {
 			this.customerListOriginal = res[0];
 			console.log(res[0]);
 		})
 	}
+	async getJobTitles() {
+		await this.commonservice.getJobTitles().subscribe(res => {
+			this.jobTitles = res;
+		})
+	}
+
+
+
+	// getallCustomers
+	async getAllEmployees() {
+		await this.employeeService.getEmployeeList().subscribe(res => {
+			this.employeeListOriginal = res[0];
+		})
+	}
+
 
 	getAllCustomersData() {
 		this.customerService.getallCustomers().subscribe(res => {
@@ -310,12 +328,6 @@ export class CustomerStepsPrimengComponent {
 	}
 
 
-	getallCustomers
-	async getAllEmployees() {
-		await this.employeeService.getEmployeeList().subscribe(res => {
-			this.employeeListOriginal = res[0];
-		})
-	}
 
 
 
@@ -337,15 +349,15 @@ export class CustomerStepsPrimengComponent {
 					value: x.ataChapterId,
 					label: x.ataChapterCode + '-' + x.ataChapterName
 				}
-            })
+			})
 
-            this.search_ataChapterList1 = responseData.map(x => {
-                return {
-                    value: x.ataChapterId,
-                    label: x.ataChapterName,
-                    code:x.ataChapterCode
-                }
-            })
+			this.search_ataChapterList1 = responseData.map(x => {
+				return {
+					value: x.ataChapterId,
+					label: x.ataChapterName,
+					code: x.ataChapterCode
+				}
+			})
 
 		});
 	}
@@ -361,9 +373,9 @@ export class CustomerStepsPrimengComponent {
 				'Saved ATA Mapped Data Successfully ',
 				MessageSeverity.success
 			);
-        }, error => {
-                this.getMappedContactByCustomerId(data[0].CustomerId)
-                this.getMappedATAByCustomerId(data[0].CustomerId)
+		}, error => {
+			this.getMappedContactByCustomerId(data[0].CustomerId)
+			this.getMappedATAByCustomerId(data[0].CustomerId)
 
 			this.alertService.showMessage(
 				'Failed',
