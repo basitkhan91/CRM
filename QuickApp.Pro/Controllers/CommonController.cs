@@ -258,6 +258,11 @@ namespace QuickApp.Pro.Controllers
             var result = _unitOfWork.CommonRepository.GetExpertiseTypes(masterCompanyId);
             return Ok(result);
         }
-
+        [HttpDelete("attachmentDelete/{id}")]
+        public IActionResult GetDelete(long id, string updatedBy)
+        {
+            var deleteStatus = _unitOfWork.CommonRepository.GetDelete(id, updatedBy);
+            return Ok(deleteStatus);
+        }
     }
 }

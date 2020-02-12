@@ -73,5 +73,6 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<object> GetEmployeeStation(long employeeId);
         IEnumerable<object> GetJobTitleTypes(long masterCompanyId);
         IEnumerable<object> GetExpertiseTypes(long masterCompanyId);
+        bool GetDelete(long id, string updatedBy);
     }
 }
