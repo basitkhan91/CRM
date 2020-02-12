@@ -1715,6 +1715,32 @@ namespace DAL.Repositories
                 throw;
             }
         }
+        public bool GetDelete(long id, string updatedBy)
+        {
+            bool result = false;
+            try
+            {
+                AttachmentDetails attachmentDetails = new AttachmentDetails();
+                attachmentDetails.AttachmentDetailId = id;
+                attachmentDetails.UpdatedDate = DateTime.Now;
+                attachmentDetails.UpdatedBy = updatedBy;
+                attachmentDetails.IsDeleted = true;
+
+                _appContext.AttachmentDetails.Attach(attachmentDetails);
+                _appContext.Entry(attachmentDetails).Property(x => x.IsDeleted).IsModified = true;
+                _appContext.Entry(attachmentDetails).Property(x => x.UpdatedDate).IsModified = true;
+                _appContext.Entry(attachmentDetails).Property(x => x.UpdatedBy).IsModified = true;
+                _appContext.SaveChanges();
+                result = true;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            return result;
+
+        }
 
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
     }
