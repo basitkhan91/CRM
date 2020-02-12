@@ -231,6 +231,10 @@ export class CustomerContactsComponent implements OnInit {
 	getPageCount(totalNoofRecords, pageSize) {
 		return Math.ceil(totalNoofRecords / pageSize)
 	}
+
+	pageIndexChange(event) {
+		this.pageSize = event.rows;
+	}
 	getAllContacts() {
 		this.customerService.getContactsFirstName().subscribe(res => {
 			this.contactsListOriginal = res[0];
@@ -419,17 +423,23 @@ export class CustomerContactsComponent implements OnInit {
 
 	openDelete(content, rowData) {
 
-		this.selectedRowforDelete = rowData;
+		if (!rowData.isDefaultContact) {
+			this.selectedRowforDelete = rowData;
 
-		this.sourceViewforContact = '';
-		this.isDeleteMode = true;
+			this.sourceViewforContact = '';
+			this.isDeleteMode = true;
 
-		this.contactId = rowData.contactId;
-		this.customerContactId = rowData.customerContactId
-		this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
-		this.modal.result.then(() => {
-			console.log('When user closes');
-		}, () => { console.log('Backdrop click') })
+			this.contactId = rowData.contactId;
+			this.customerContactId = rowData.customerContactId
+			this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
+			this.modal.result.then(() => {
+				console.log('When user closes');
+			}, () => { console.log('Backdrop click') })
+		} else {
+			$('#deleteoops').modal('show');
+		}
+
+
 	}
 	deleteItemAndCloseModel() {
 		let contactId = this.contactId;

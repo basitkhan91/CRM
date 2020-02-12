@@ -40,16 +40,16 @@ export class CustomerDocumentsComponent implements OnInit {
         { field: 'docName', header: 'Name' },
         { field: 'docDescription', header: 'Description' },
         { field: 'fileName', header: 'FileName' },
-        {field: 'documents' , header: 'documents'},
-        {field: 'fileCreatedDate' , header : 'CreatedDate'},
-        {field: 'fileCreatedBy', header:'Created By'},
-        {field: 'fileUpdatedBy', header:'UpdatedBy'},
-        {field: 'fileUpdatedDate', header:'UpdatedDate'},
-        {field: 'fileSize', header:'fileSize'},
+        { field: 'documents', header: 'documents' },
+        { field: 'fileCreatedDate', header: 'CreatedDate' },
+        { field: 'fileCreatedBy', header: 'Created By' },
+        { field: 'fileUpdatedBy', header: 'UpdatedBy' },
+        { field: 'fileUpdatedDate', header: 'UpdatedDate' },
+        { field: 'fileSize', header: 'fileSize' },
         { field: 'docMemo', header: 'Memo' }
     ];
 
-                  
+
     // fileName:x[i].fileName,
     // fileCreatedDate:x[i].createdDate, 
     // fileCreatedBy : x[i].createdBy,
@@ -82,7 +82,7 @@ export class CustomerDocumentsComponent implements OnInit {
     pageIndex: number = 0;
     pageSize: number = 10;
     totalPages: number = 0;
-    loader : boolean = true;
+    loader: boolean = true;
 
     constructor(private router: ActivatedRoute, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public customerService: CustomerService,
         private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private configurations: ConfigurationService) {
@@ -155,7 +155,7 @@ export class CustomerDocumentsComponent implements OnInit {
 
         for (let file of event.files)
             this.formData.append(file.name, file);
-        this.disableSave=false;
+        this.disableSave = false;
     }
     removeFile(event) {
         this.formData.delete(event.file.name)
@@ -197,20 +197,20 @@ export class CustomerDocumentsComponent implements OnInit {
     getList() {
         this.customerService.getDocumentList(this.id).subscribe(res => {
             this.customerDocumentsData = res.map(x => {
-              for(var i =0 ; i<  x.attachmentDetails.length ; i++){
-                  const y = x.attachmentDetails;
-                this.customerdocumentsDestructuredData.push({
-                    ...x,
-                    documents:y[i].fileName,
-                    fileName:y[i].fileName,
-                    fileCreatedDate:y[i].createdDate, 
-                    fileCreatedBy : y[i].createdBy,
-                    fileUpdatedBy:y[i].updatedBy,
-                    fileUpdatedDate:y[i].updatedDate,
-                    fileSize : y[i].fileSize
+                for (var i = 0; i < x.attachmentDetails.length; i++) {
+                    const y = x.attachmentDetails;
+                    this.customerdocumentsDestructuredData.push({
+                        ...x,
+                        documents: y[i].fileName,
+                        fileName: y[i].fileName,
+                        fileCreatedDate: y[i].createdDate,
+                        fileCreatedBy: y[i].createdBy,
+                        fileUpdatedBy: y[i].updatedBy,
+                        fileUpdatedDate: y[i].updatedDate,
+                        fileSize: y[i].fileSize
 
-                })
-              }
+                    })
+                }
                 //    documents: x.attachmentDetails.reduce((acc , y) => acc + y.fileName, ''),
             });
             this.loader = false;
@@ -345,7 +345,9 @@ export class CustomerDocumentsComponent implements OnInit {
     getPageCount(totalNoofRecords, pageSize) {
         return Math.ceil(totalNoofRecords / pageSize)
     }
-
+    pageIndexChange(event) {
+        this.pageSize = event.rows;
+    }
     openHistory(content, rowData) {
         //const { customerShippingAddressId } = rowData.customerShippingAddressId;
         //const { customerShippingId } = rowData.customerShippingId;
