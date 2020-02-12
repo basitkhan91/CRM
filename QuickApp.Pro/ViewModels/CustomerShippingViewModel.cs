@@ -7,9 +7,9 @@ namespace QuickApp.Pro.ViewModels
 {
     public class CustomerShippingViewModel
     {
-        public long? CustomerShippingId { get; set; }
-        public long? CustomerId { get; set; }
-        public long? CustomerShippingAddressId { get; set; }
+        public long CustomerShippingId { get; set; }
+        public long CustomerId { get; set; }
+        public long CustomerShippingAddressId { get; set; }
         public string SiteName { get; set; }
         public string ShipVia { get; set; }
         public string ShippingAccountinfo { get; set; }

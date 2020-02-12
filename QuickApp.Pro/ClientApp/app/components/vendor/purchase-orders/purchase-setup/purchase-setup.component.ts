@@ -1953,9 +1953,10 @@ export class PurchaseSetupComponent implements OnInit {
 		//this.sourcePoApproval.handlingCost = null;
 		this.sourcePoApproval.shippingAcctNum = null;
 		this.sourcePoApproval.shippingId = null;
-		this.sourcePoApproval.shippingURL = '';
+        this.sourcePoApproval.shippingURL = '';
+        var userType = this.sourcePoApproval.shipToUserTypeId ? parseInt(this.sourcePoApproval.shipToUserTypeId) : 0;
 
-		this.commonService.getShipViaDetailsById(id).subscribe(res => {
+        this.commonService.getShipViaDetailsById(id, userType).subscribe(res => {
 			const responseData = res;
 			this.sourcePoApproval.shippingAcctNum = responseData.shippingAccountInfo;
 			this.sourcePoApproval.shippingURL = responseData.shippingURL;
@@ -3571,7 +3572,7 @@ export class PurchaseSetupComponent implements OnInit {
 		}
 
 		if (this.sourcePoApproval.shipToUserTypeId == 1) {
-			const customerData = { ...data, ReferenceId: getValueFromObjectByKey('value', this.sourcePoApproval.shipToUserId) }
+            const customerData = { ...data, ReferenceId: getValueFromObjectByKey('value', this.sourcePoApproval.shipToUserId), AddressId: this.sourcePoApproval.shipToAddressId ? this.sourcePoApproval.shipToAddressId : 0 }
 			if (!this.isEditModeShipVia) {
 				await this.commonService.createShipVia(customerData).subscribe(response => {
 					this.getShipViaDetailsForShipTo(response.shippingViaId);
@@ -3594,7 +3595,7 @@ export class PurchaseSetupComponent implements OnInit {
 			}
 		}
 		if (this.sourcePoApproval.shipToUserTypeId == 2) {
-			const vendorData = { ...data, ReferenceId: getValueFromObjectByKey('vendorId', this.sourcePoApproval.shipToUserId) }
+            const vendorData = { ...data, ReferenceId: getValueFromObjectByKey('vendorId', this.sourcePoApproval.shipToUserId), AddressId: this.sourcePoApproval.shipToAddressId ? this.sourcePoApproval.shipToAddressId : 0 }
 			if (!this.isEditModeShipVia) {
 				await this.commonService.createShipVia(vendorData).subscribe(response => {
 					this.getShipViaDetailsForShipTo(response.shippingViaId);
@@ -3619,7 +3620,7 @@ export class PurchaseSetupComponent implements OnInit {
 
 		}
 		if (this.sourcePoApproval.shipToUserTypeId == 3) {
-			const companyData = { ...data, ReferenceId: getValueFromObjectByKey('value', this.sourcePoApproval.shipToUserId) }
+            const companyData = { ...data, ReferenceId: getValueFromObjectByKey('value', this.sourcePoApproval.shipToUserId), AddressId: this.sourcePoApproval.shipToAddressId ? this.sourcePoApproval.shipToAddressId : 0 }
 			if (!this.isEditModeShipVia) {
 				await this.commonService.createShipVia(companyData).subscribe(response => {
 					this.getShipViaDetailsForShipTo(response.shippingViaId);
