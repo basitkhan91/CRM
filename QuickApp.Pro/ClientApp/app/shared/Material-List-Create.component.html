@@ -17,7 +17,7 @@
       <thead>
         <tr>
           <!-- <th>S.No</th> -->
-          <th>Task</th>
+          <th>Task *</th>
           <th>PN *</th>
           <th>Description *</th>
           <th>Cond *</th>
@@ -43,7 +43,7 @@
           >
             <!-- <td>{{ (currentPage - 1) * itemsPerPage + i + 1 }}</td> -->
             <td>
-              <select class="form-control wf-pub-id" [(ngModel)]="material.taskId" name="des_{{i}}">
+              <select class="form-control wf-pub-id" [(ngModel)]="material.taskId" name="task_{{i}}" required>
                 <option value="">Select</option>
                 <option *ngFor="let task of taskList" [value]="task.taskId">{{task.description}}</option>
               </select>

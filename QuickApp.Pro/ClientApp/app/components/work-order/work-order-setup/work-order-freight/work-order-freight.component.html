@@ -194,121 +194,129 @@
         </div>
         <div class="tab-content">
           <div class="table-responsive table-overflow" style="height: 300px;">
-            <table class="table table-bordered ">
-              <thead>
-                <tr>
-                  <th>Task</th>
-                  <th>Carrier</th>
-                  <th>Ship Via</th>
-                  <th>Dimensions</th>
-                  <th>Weight</th>
-                  <th>Memo</th>
-                  <th>Amount</th>
-                  <th>Fixed Freight</th>
-                  <th *ngIf="!isQuote">Fixed Amount</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let f of freightForm; let i = index">
-                  <td>
-                    <select class="form-control" [(ngModel)]="f.taskId" [disabled]="isView">
-                      <option value="">Select</option>
-                      <option *ngFor="let task of taskList" [value]="task.taskId">{{task.description}}</option>
-                    </select>
-                  </td>
-                  <td>
-                    <p-dropdown
-                      placeholder="Select Carrier"
-                      name="carrier{{ i }}"
-                      #carrier="ngModel"
-                      [options]="carrierList"
-                      class="p-dropdown-custom-md"
-                      [(ngModel)]="f.carrierId"
-                    >
-                    </p-dropdown>
-                  </td>
-                  <td>
-                    <p-dropdown
-                      placeholder="Select Site Name"
-                      name="shipVia{{ i }}"
-                      #shipVia="ngModel"
-                      [options]="shipViaList"
-                      class="p-dropdown-custom-md"
-                      [(ngModel)]="f.shipViaId"
-                    >
-                    </p-dropdown>
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      name="length{{ i }}"
-                      [(ngModel)]="f.length"
-                      #length="ngModel"
-                      class="form-control w50"
-                    />
-                    L -
-                    <input
-                      type="text"
-                      name="width{{ i }}"
-                      #width="ngModel"
-                      [(ngModel)]="f.width"
-                      class="form-control w50"
-                    />
-                    W -
-                    <input
-                      type="text"
-                      name="height{{ i }}"
-                      #height="ngModel"
-                      [(ngModel)]="f.height"
-                      class="form-control w50"
-                    />H
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      name="weight{{ i }}"
-                      #weight="ngModel"
-                      [(ngModel)]="f.weight"
-                      class="form-control w50"
-                    />
-                  </td>
-                  <td>
-                    <textarea
-                      name="memo{{ i }}"
-                      cols="30"
-                      rows="4"
-                      [(ngModel)]="f.memo"
-                    ></textarea>
-                  </td>
-                  <td>
-                    <input
-                      type="number"
-                      name="amount{{ i }}"
-                      #amount="ngModel"
-                      [(ngModel)]="f.amount"
-                      class="form-control w50"
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="checkbox"
-                      name="fixed{{ i }}"
-                      #fixed="ngModel"
-                      [(ngModel)]="f.isFixedFreight"
-                    />
-                  </td>
-                  <td *ngIf="!isQuote">
-                    <input
-                      type="number"
-                      name="fixedAmount{{ i }}"
-                      #fixedAmount="ngModel"
-                      [(ngModel)]="f.fixedAmount"
-                      class="form-control w50"
-                    />
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+              <form #frieghtsCreateForm="ngForm">
+                <table class="table table-bordered ">
+                  <thead>
+                    <tr>
+                      <th>Task</th>
+                      <th>Carrier *</th>
+                      <th>Ship Via *</th>
+                      <th>Dimensions *</th>
+                      <th>Weight</th>
+                      <th>Memo</th>
+                      <th>Amount*</th>
+                      <th>Fixed Freight</th>
+                      <th *ngIf="!isQuote">Fixed Amount</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let f of freightForm; let i = index">
+                      <td>
+                        <select class="form-control" [(ngModel)]="f.taskId" [disabled]="isView" name="task_{{i}}">
+                          <option value="">Select</option>
+                          <option *ngFor="let task of taskList" [value]="task.taskId">{{task.description}}</option>
+                        </select>
+                      </td>
+                      <td>
+                        <p-dropdown
+                          placeholder="Select Carrier"
+                          name="carrier{{ i }}"
+                          #carrier="ngModel"
+                          [options]="carrierList"
+                          class="p-dropdown-custom-md"
+                          [(ngModel)]="f.carrierId"
+                          required
+                        >
+                        </p-dropdown>
+                      </td>
+                      <td>
+                        <p-dropdown
+                          placeholder="Select Site Name"
+                          name="shipVia{{ i }}"
+                          #shipVia="ngModel"
+                          [options]="shipViaList"
+                          class="p-dropdown-custom-md"
+                          [(ngModel)]="f.shipViaId"
+                          required
+                        >
+                        </p-dropdown>
+                      </td>
+                      <td>
+                        <input
+                          type="text"
+                          name="length{{ i }}"
+                          [(ngModel)]="f.length"
+                          #length="ngModel"
+                          class="form-control w50"
+                          required
+                        />
+                        L -
+                        <input
+                          type="text"
+                          name="width{{ i }}"
+                          #width="ngModel"
+                          [(ngModel)]="f.width"
+                          class="form-control w50"
+                          required
+                        />
+                        W -
+                        <input
+                          type="text"
+                          name="height{{ i }}"
+                          #height="ngModel"
+                          [(ngModel)]="f.height"
+                          class="form-control w50"
+                          required
+                        />H
+                      </td>
+                      <td>
+                        <input
+                          type="text"
+                          name="weight{{ i }}"
+                          #weight="ngModel"
+                          [(ngModel)]="f.weight"
+                          class="form-control w50"
+                        />
+                      </td>
+                      <td>
+                        <textarea
+                          name="memo{{ i }}"
+                          cols="30"
+                          rows="4"
+                          [(ngModel)]="f.memo"
+                        ></textarea>
+                      </td>
+                      <td>
+                        <input
+                          type="number"
+                          name="amount{{ i }}"
+                          #amount="ngModel"
+                          [(ngModel)]="f.amount"
+                          class="form-control w50"
+                          required
+                        />
+                      </td>
+                      <td>
+                        <input
+                          type="checkbox"
+                          name="fixed{{ i }}"
+                          #fixed="ngModel"
+                          [(ngModel)]="f.isFixedFreight"
+                        />
+                      </td>
+                      <td *ngIf="!isQuote">
+                        <input
+                          type="number"
+                          name="fixedAmount{{ i }}"
+                          #fixedAmount="ngModel"
+                          [(ngModel)]="f.fixedAmount"
+                          class="form-control w50"
+                        />
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </form>
           </div>
         </div>
       </div>
@@ -316,6 +324,7 @@
         <button
           class="btn btn-primary pull-right"
           (click)="saveFreightList()"
+          [disabled]="!frieghtsCreateForm.valid"
         >
           {{ isEdit ? 'Update' : (isQuote)?'Save Freights':'Save' }}
         </button>
