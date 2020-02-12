@@ -49,7 +49,7 @@ namespace DAL.Repositories.Interfaces
         void DeleteCustomerInternationalShippingDetails(long id, string updatedBy);
         void CustomerInternationalShippingDetailsStatus(long id, bool status, string updatedBy);
         GetData<CustomerInternationalShipping> GetCustomerInternationalShippingDetails(CustomerInternationalShipping model);
-        GetData<CustomerInternationalShipping> GetCustomerInternationalShippingDetails(long customerId, int pageNumber, int pageSize);
+        IEnumerable<object> GetCustomerInternationalShippingDetails(long customerId);
         CustomerInternationalShipping GetCustomerInternationalShippingDetailsById(long id);
 
 
