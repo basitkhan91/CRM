@@ -195,6 +195,7 @@ export class CustomerDocumentsComponent implements OnInit {
         })
     }
     getList() {
+        this.customerdocumentsDestructuredData=[];
         this.customerService.getDocumentList(this.id).subscribe(res => {
             this.customerDocumentsData = res.map(x => {
               for(var i =0 ; i<  x.attachmentDetails.length ; i++){

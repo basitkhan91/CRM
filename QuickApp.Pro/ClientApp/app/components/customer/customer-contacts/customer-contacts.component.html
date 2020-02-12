@@ -71,7 +71,7 @@
                                 <i class="fa fa-search"></i>
                                 <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Filter" style="height: 28px !important;">
                             </div>
-                            <button type="button" class="btn btn-primary" pButton icon="fa-download" iconPos="left" label="Export  Data" matTooltip="Download  Data" matTooltipPosition="above" (click)="dt.exportCSV()" style="padding: 5px 10px !important;"></button>
+                            <button type="button" class="btn btn-primary" pButton icon="fa-download"  iconPos="left" label="Export  Data" matTooltip="Download  Data" matTooltipPosition="above" (click)="dt.exportCSV()" style="padding: 5px 10px !important;"></button>
                             <button type="button" class="btn btn-primary" pButton icon="fa-download" iconPos="left" label="Export Selected Data" matTooltip="Download Selected Data" matTooltipPosition="above" (click)="dt.exportCSV({selectionOnly:true})" style="padding: 5px 10px !important;"></button>
                             <!--<div class="excel-upload excel-upload-cstm">
                                 <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
@@ -203,7 +203,7 @@
                     </ng-template>
                     <ng-template pTemplate="emptymessage" let-columns *ngIf="customerContacts.length == 0">
                         <tr>
-                            <td colspan="10" style="color: red; font-weight: bold; text-align: center">
+                            <td colspan="9" style="color: red; font-weight: bold; text-align: center">
                                 No records found
                             </td>
                         </tr>
@@ -633,7 +633,7 @@
                                 </label>
                                 <p-multiSelect class="imstock-pmselect"
                                                [options]="add_ataSubChapterList"
-                                               [(ngModel)]="add_SelectedModels"
+                                               [(ngModel)]="add_SelectedModels" 
                                                name="popUpATASubchapter"
                                                [panelStyle]="{ minWidth: '12em' }"></p-multiSelect>
                             </div>
@@ -649,7 +649,7 @@
                         </div>
                     </div>
                 </form>
-                <p-table [rows]="6"
+                <p-table [rows]="10" #ata
                          [value]="ataListDataValues"
                          [scrollable]="true"
                          [style]="{ width: '100%' }"
@@ -689,6 +689,13 @@
                             </td>
 
                         </tr>
+                    </ng-template>
+                    <ng-template pTemplate="summary" id="footer">
+                        <label id="footer" class="footer">No'of records:</label>
+                        <input style="width: 5%;" [(ngModel)]="ata._totalRecords" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp;
+                        <label id="footer" class="footer1">Pages Count:</label>
+
+                        <input style="width: 5%;" [ngModel]="getPageCount(ata._totalRecords,pageSize)" [disabled]="true" pInputText type="text" />
                     </ng-template>
                 </p-table>
 

@@ -182,8 +182,8 @@
                                                     </div>
                                                 </div><!--/Form-row for Add Tax Info-->                                           
 
-                                                <p-table #taxInfoTable class="rpo-table-cstm" [value]="taxTypeRateMapping" [paginator]="true" [rows]="3" [columns]="taxInfoTableColumns" *ngIf="taxTypeRateMapping.length>0">
-                                                    <ng-template pTemplate="header" let-columns>
+                                                <p-table #taxInfoTable class="rpo-table-cstm" [value]="taxTypeRateMapping" [paginator]="taxTypeRateMapping.length>0" [rows]="3" [columns]="taxInfoTableColumns" *ngIf="taxTypeRateMapping.length>0">
+                                                    <ng-template pTemplate="header" let-columns >
                                                         <tr>
                                                             <th *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
                                                                 {{col.header}}
@@ -199,7 +199,7 @@
                                                             <th></th>
                                                         </tr>
                                                     </ng-template>
-                                                    <ng-template pTemplate="body" let-i="rowIndex" let-rowData let-columns="columns">
+                                                    <ng-template pTemplate="body"   let-columns="columns" t-part let-rowData let-columns="columns" let-i="rowIndex">
                                                         <tr >
                                                                     <td *ngFor="let col of columns">
                                                                 {{rowData[col.field]}}

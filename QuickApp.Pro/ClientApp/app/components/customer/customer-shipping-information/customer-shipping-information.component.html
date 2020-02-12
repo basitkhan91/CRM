@@ -57,7 +57,7 @@
                                 </div>
 
                                 <button type="button" class="btn btn-primary" matTooltip="Download  Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export  Data" (click)="domestictable.exportCSV()" style="padding: 5px 10px !important;"></button>
-                                <button type="button" class="btn btn-primary" matTooltip="Download Selected Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})" style="padding: 5px 10px !important;"></button>
+                                <button type="button" class="btn btn-primary" matTooltip="Download Selected Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export Selection Only" (click)="domestictable.exportCSV({selectionOnly:true})" style="padding: 5px 10px !important;"></button>
 
                                 <div class="excel-upload  excel-upload-cstm">
                                     <button type="button" class="btn btn-primary" matTooltip="Download Sample File" matTooltipPosition="above" (click)="sampleExcelDownload()" style="padding: 5px 10px !important;">Sample File Download</button>
@@ -557,7 +557,7 @@
                 <h4 class="modal-title">Details of Customer Shipping</h4>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
-
+ 
             <!-- Modal body -->
             <div class="modal-body" *ngIf="sourceViewforShipping">
                 <div class="col-sm-12">
@@ -571,7 +571,7 @@
                     <p><span class="label"><b>Ship To State / Prov<span class="clr-red">*</span> : </b></span><span class="value">{{sourceViewforShipping.stateOrProvince}}</span></p>
                     <p><span class="label"><b>Ship To Postal Code <span class="clr-red">*</span> : </b></span><span class="value">{{sourceViewforShipping.postalCode}}</span></p>
                     <p><span class="label"><b>Ship To Country<span class="clr-red">*</span> : </b></span><span class="value">{{sourceViewforShipping.countryName}}</span></p>
-                    <p><span class="label"><b>Is Primary : </b></span><span class="value">{{sourceViewforShipping.isPrimary === true ? 'Yes' : 'No'}}</span></p>
+                    <!-- <p><span class="label"><b>Is Primary : </b></span><span class="value">{{sourceViewforShipping.isPrimary === true ? 'Yes' : 'No'}}</span></p> -->
                     <p><span class="label"><b>In Active : </b></span><span class="value"> {{sourceViewforShipping.isActive === true ? 'Yes' : 'No'}}</span></p>
                     <div class="clear"></div>
                 </div>
@@ -812,7 +812,7 @@
                     <p><span class="label"><b>Expiration Date: </b></span><span class="value">{{sourceViewforInterShipping.expirationDate | date:'dd-MM-yyyy'}}</span></p>
                     <p><span class="label"><b>Amount: </b></span><span class="value">{{sourceViewforInterShipping.amount}}</span></p>
                     <p><span class="label"><b>Country<span class="clr-red">*</span> : </b></span><span class="value">{{sourceViewforInterShipping.shipToCountry}}</span></p>
-                    <p><span class="label"><b>Is Primary : </b></span><span class="value">{{sourceViewforInterShipping.isPrimary === true ? 'Yes' : 'No'}}</span></p>
+                    <!-- <p><span class="label"><b>Is Primary : </b></span><span class="value">{{sourceViewforInterShipping.isPrimary === true ? 'Yes' : 'No'}}</span></p> -->
                     <p><span class="label"><b>In Active: </b></span><span class="value">{{sourceViewforInterShipping.isActive === true ? 'Yes' : 'No'}}</span></p>
 
                     <div class="clear"></div>
@@ -924,7 +924,7 @@
                             <td style="width: 40px;">
                                 <span class="flag">
                                     <i *ngIf="rowData.isPrimary == true" [ngStyle]="{'color': rowData.isPrimary == true ? 'green' : 'none'}"
-                                       class="fa fa-flag" matTooltip="Primary" matTooltipPosition="above" aria-hidden="true"></i>
+                                       class="fa fa-flag" pTooltip="Primary" tooltipPosition="bottom" tooltipEvent="focus" matTooltip="Primary" matTooltipPosition="above" aria-hidden="true"></i>
                                 </span>
                             </td>
                             <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
@@ -1155,7 +1155,7 @@
                         <tr [pSelectableRow]="rowData" [pSelectableRowDblClick]="rowData" (dblclick)="toggledbldisplayShipVia(rowData)">
                             <td style="width: 40px;">
                                 <span class="flag">
-                                    <i *ngIf="rowData.isPrimary == true" [ngStyle]="{'color': rowData.isPrimary == true ? 'green' : 'none'}"
+                                    <i *ngIf="rowData.isPrimary == true"  [ngStyle]="{'color': rowData.isPrimary == true ? 'green' : 'none'}"
                                        class="fa fa-flag" matTooltip="Primary" matTooltipPosition="above" aria-hidden="true"></i>
                                 </span>
                             </td>

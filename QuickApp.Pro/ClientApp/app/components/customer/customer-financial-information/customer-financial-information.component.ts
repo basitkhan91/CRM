@@ -594,12 +594,12 @@ export class CustomerFinancialInformationComponent implements OnInit {
                 );
                 this.selectedTaxRates = null;
                 this.selectedTaxType = null;
-                this.alertService.showMessage(
-                    'Success',
-                    `Successfully Added Tax Type and  Tax Rate`,
-                    MessageSeverity.success
-                );
-            } else {
+                // this.alertService.showMessage(
+                //     'Success',
+                //     `Successfully Added Tax Type and  Tax Rate`,
+                //     MessageSeverity.success
+                // );
+            } else { 
 
                 this.taxTypeRateMapping.push({
                     customerId: this.id,
@@ -627,11 +627,11 @@ export class CustomerFinancialInformationComponent implements OnInit {
 
                 this.selectedTaxRates = null;
                 this.selectedTaxType = null;
-                this.alertService.showMessage(
-                    'Success',
-                    `Successfully Added Tax Type and  Tax Rate`,
-                    MessageSeverity.success
-                );
+                // this.alertService.showMessage(
+                //     'Success',
+                //     `Successfully Added Tax Type and  Tax Rate`,
+                //     MessageSeverity.success
+                // );
             }
 
 
@@ -701,7 +701,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
 
     saveFinancialInformation() {
 
-
+ 
         this.customerService.updatefinanceinfo({
             ...this.savedGeneralInformationData,
             CustomerTaxTypeRateMapping: this.taxTypeRateMapping,
@@ -728,12 +728,12 @@ export class CustomerFinancialInformationComponent implements OnInit {
                 this.formData = new FormData();
                 this.toGetCustomerFinanceDocumentsList(this.savedGeneralInformationData.customerId);
             });
-console.log("is edit mode",this.editMode )
             this.alertService.showMessage(
                 'Success',
                 ` ${this.editMode ? 'Updated' : 'Saved'  }  Customer Financal Infromation Sucessfully`,
                 MessageSeverity.success
             );
+            this.getMappedTaxTypeRateDetails();
             this.nextClick(); 
         })
     }

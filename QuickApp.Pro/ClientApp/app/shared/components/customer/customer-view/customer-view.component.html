@@ -255,6 +255,7 @@
                     [metaKeySelection]="true"
                     [paginator]="true"
                     [pageLinks]="3"
+                    (onPage)="pageIndexChange1($event)"
                     [rowsPerPageOptions]="[10, 20, 50, 100]"
                     [rows]="pageSize"
                     [columns]="customerPMAColumns"
@@ -378,6 +379,7 @@
                     [rowsPerPageOptions]="[10, 20, 50, 100]"
                     [value]="restrictedDERParts"
                     [metaKeySelection]="true"
+                    (onPage)="pageIndexChange2($event)"
                     [rows]="pageSize"
                     [columns]="customerDERColumns"
                     [resizableColumns]="true"
@@ -870,7 +872,7 @@
 
                       <ng-template pTemplate="header" let-columns>
                         <tr>
-                          <th
+                          <th  style="width:70%"
                             *ngFor="let col of columns"
                             [pSortableColumn]="col.field"
                           >
@@ -884,7 +886,7 @@
 
                         <tr>
                           <th
-                            style="width:auto"
+                            style="width:70%"
                             *ngFor="let col of columns"
                             [ngSwitch]="col.field"
                           >
@@ -912,7 +914,7 @@
                         let-i="rowIndex"
                       >
                         <tr>
-                          <td *ngFor="let col of columns">
+                          <td *ngFor="let col of columns"  style="width:70%">
                             <ng-container *ngIf="col.field != 'link'">
                               {{ part[col.field] }}
                             </ng-container>
@@ -1354,7 +1356,8 @@
                 [rowsPerPageOptions]="[10, 20, 50, 100]"
                 [value]="waringInfoList"
                 [metaKeySelection]="true"
-                [rows]="pageSize"
+                [rows]="pageSize" 
+                (onPage)="pageIndexChange($event)"
                 [columns]="warningHeaders"
                 [resizableColumns]="true"
                 [reorderableColumns]="true"
@@ -1374,16 +1377,16 @@
                       [pSortableColumn]="col.field"
                     >
                       {{ col.header }}
-                      <p-sortIcon [field]="col.field"></p-sortIcon>
+                      <p-sortIcon *ngIf="col.field !='isActive'" [field]="col.field"></p-sortIcon>
                     </th>
                   </tr>
                   <tr>
                     <th
                       style="width:auto"
                       *ngFor="let col of columns"
-                      [ngSwitch]="col.field"
+                      [ngSwitch]="col.field" 
                     >
-                      <input
+                      <input *ngIf="col.field !='isActive' "
                         style="width:100%;"
                         pInputText
                         type="text"
@@ -1406,8 +1409,12 @@
                   let-i="rowIndex"
                 >
                   <tr>
-                    <td *ngFor="let col of columns">
-                      {{ part[col.field] }}
+                    <td *ngFor="let col of columns" [ngClass]="{'align_center': col.field =='isActive' }">
+                      <p *ngIf="col.field !='isActive'">{{ part[col.field] }}</p>
+                      <input *ngIf="col.field =='isActive'" type="checkbox"
+                      name="isIsBillingAddress"
+                      [(ngModel)]=" part[col.field]" disabled
+                    />
                     </td>
                   </tr>
                 </ng-template>

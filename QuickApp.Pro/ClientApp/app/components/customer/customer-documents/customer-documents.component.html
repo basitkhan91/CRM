@@ -123,7 +123,7 @@
 
                                     <!--<span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openDocument(view,rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>-->
                                     <span>
-                                        <a class="btn btn-info boxed-float-btn nobg" data-toggle="modal" data-target="#docView" (click)="openDocument(rowData)" matTooltip="View">
+                                        <a class="btn btn-info boxed-float-btn nobg docs" data-toggle="modal" data-target="#docView" (click)="openDocument(rowData)" matTooltip="View">
                                             <i class="fa fa-eye"></i>
                                         </a>
                                     </span>
@@ -163,10 +163,10 @@
                         </ng-template>
                         <ng-template pTemplate="emptymessage" let-columns *ngIf="customerDocumentsData?.length == 0">
                             <tr>
-                                <td [attr.colspan]="5"  *ngIf="isViewMode == false" style="color: red; font-weight: bold; text-align: center">
+                                <td [attr.colspan]="10"  *ngIf="isViewMode == false" style="color: red; font-weight: bold; text-align: center">
                                     No records found
                                 </td>
-                                <td [attr.colspan]="5"  *ngIf="isViewMode == true" style="color: red; font-weight: bold; text-align: center">
+                                <td [attr.colspan]="10"  *ngIf="isViewMode == true" style="color: red; font-weight: bold; text-align: center">
                                     No records found
                                 </td>
                             </tr>
