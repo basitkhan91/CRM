@@ -28,6 +28,7 @@ export class WorkOrderCompleteMaterialListComponent {
     @Input() isWorkOrder;
     @Input() workFlowObject;
     @Input() savedWorkOrderData;
+    @Input() taskList: any[] = [];
     @Input() materialStatus;
     @Input() mpnId;
     @Output() saveMaterialListForWO = new EventEmitter();

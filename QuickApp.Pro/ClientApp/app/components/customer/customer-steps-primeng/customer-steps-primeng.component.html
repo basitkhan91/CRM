@@ -156,7 +156,7 @@
       </div>
     </div>
   </div>
-  <div class="card" >
+  <div class="card">
     <div [ngClass]="{ hideTab: currentTab !== 'General' }">
       <div *ngIf="countryListOriginal && customerallListOriginal">
         <app-customer-general-information
@@ -219,6 +219,7 @@
           [editGeneralInformationData]="editGeneralInformationData"
           [savedGeneralInformationData]="savedGeneralInformationData"
           (tab)="changeOfTab($event)"
+          [selectedCustomerTab]="currentTab"
           [creditTermsListOriginal]="creditTermsListOriginal"
         ></app-customer-financial-information>
       </div>
@@ -255,6 +256,7 @@
           [editGeneralInformationData]="editGeneralInformationData"
           [savedGeneralInformationData]="savedGeneralInformationData"
           [employeeListOriginal]="employeeListOriginal"
+          [jobTitles]="jobTitles"
           (tab)="changeOfTab($event)"
         ></app-customer-sales-person>
       </div>
@@ -280,6 +282,5 @@
       </div>
     </div>
   </div>
- 
 </div>
 <!-- <img src="../../../assets/images/loader.gif" /> -->

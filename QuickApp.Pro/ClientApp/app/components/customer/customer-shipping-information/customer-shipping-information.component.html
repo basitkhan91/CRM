@@ -1,326 +1,791 @@
-﻿
-<div class="right_col" role="main"  style="padding: 2px 6px">
-    <div style="">
-        <div class="x_content">
-            <div *ngIf="isViewMode == false">
-                <div class="col-md-12 shadow-box-cstm">        
-                    <div class="col-md-4">
-                        <p class="fs12">
-                        <label class="control-label labels-font-header" style="width: auto;">Customer Name: </label>
-                    <span class="span-header-red" style="text-transform: capitalize"> {{customerName }} </span> </p>
-                    </div>
-                    <div class="col-md-4">
-                        <p class="fs12">
-                        <label class="control-label labels-font-header" style="width: auto;">Customer Code: </label>
-                        <span class="span-header-red" style="text-transform: capitalize"> {{customerCode }} </span> </p>
-                    </div>                            
-                </div>
-            </div>
-            <div class="card" style="padding: 10px">
-                <div >
-                    <div class="col-md-12">
-                        <h4 class="po-head-sm"> <!--class="float-right"-->
-                            Domestic Shipping Info
-                            <a class="plusicon-cstm" *ngIf="isViewMode == false"
-                            data-toggle="modal"
-                            data-target="#addShippingInfo" (click)="addDomesticShipping()">
-                                <i class="fa fa-plus-circle fa-lg" matTooltip="Create  Domestic Shipping Information"></i>
-                            </a>
-                        </h4>                          
-                    </div>
-                    <div class="clear"></div>
-                    <hr />
-                </div>
-
-                <div>
-                    <!--<p class="lead"></p>-->
-                    <p-table #domestictable class="rpo-table-cstm" 
-                            [value]="domesticShippingData"
-                            [(selection)]="selectedrowsFromDomestic"
-                            [rows]="10"
-                            [paginator]="true"
-                            [pageLinks]="3"
-                            [rowsPerPageOptions]="[10,20,50,100]"
-                            [columns]="selectedColumnsForDomesticTable"
-                            selectionMode="multiple"
-                            [resizableColumns]="true"
-                            [reorderableColumns]="true">
-                        <ng-template pTemplate="caption" *ngIf="isViewMode == false">
-
-                            <div style="text-align: right">
-                                <p-multiSelect [options]="domesticShippingHeaders" [(ngModel)]="selectedColumnsForDomesticTable" name="domesticShiipingTable" optionLabel="header"
-                                               selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
-                                <div class="inner-addon right-addon w200 inline-block g-filter-search-cstm">
-                                    <i class="fa fa-search"></i>
-                                    <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="domestictable.filterGlobal($event.target.value, 'contains')" placeholder=" Filter" style="height: 28px !important;">
-                                </div>
-
-                                <button type="button" class="btn btn-primary" matTooltip="Download  Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export  Data" (click)="domestictable.exportCSV()" style="padding: 5px 10px !important;"></button>
-                                <button type="button" class="btn btn-primary" matTooltip="Download Selected Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})" style="padding: 5px 10px !important;"></button>
-
-                                <div class="excel-upload  excel-upload-cstm">
-                                    <button type="button" class="btn btn-primary" matTooltip="Download Sample File" matTooltipPosition="above" (click)="sampleExcelDownload()" style="padding: 5px 10px !important;">Sample File Download</button>
-
-                                    <input type="file" name="upload1[]" id="upload1" (change)="customShippingExcelUpload($event)" class="uploaddoc upload-file"
-                                           accept=".xlsx, .xls, .csv">
-                                    <label for="upload1">
-                                        <span matTooltip="Upload Data (Excel)" matTooltipPosition="above">
-                                            <i class="fa fa-upload"></i>
-                                        </span>
-                                    </label>
-
-                                </div>
-                            </div>
-                        </ng-template>
-
-                        <ng-template pTemplate="header" let-columns>
-                            <tr>
-                                <th style="width: 40px;">Flag</th>
-                                <th *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field" [hidden]="col.header == 'IsPrimary'">
-                                    {{col.header}}
-                                    <p-sortIcon [field]="col.field"></p-sortIcon>
-                                </th>
-                                <th style="width: 140px;"> Actions</th>
-                            </tr>
-                            <tr>
-                                <th></th>
-                                <th style="width:auto" *ngFor="let col of columns" [hidden]="col.field == 'isPrimary'" [ngSwitch]="col.field">
-                                    <input style="width:100%;" pInputText type="text" (input)="domestictable.filter($event.target.value, col.field, 'contains')">
-                                </th>
-                                <th></th>
-                            </tr>
-                        </ng-template>
-
-                        <ng-template pTemplate="body" let-rowData let-columns="columns">
-                            <tr [pSelectableRow]="rowData" [pSelectableRowDblClick]="rowData" (dblclick)="viewSelectedRowdbl(rowData)" >
-                                <td > 
-                                        <span class="flag">
-                                        <i  *ngIf="rowData.isPrimary == true"   [ngStyle]="{'color': rowData.isPrimary == true ? 'green' : 'none'}"  
-                                        class="fa fa-flag" matTooltip="Primary" matTooltipPosition="above" aria-hidden="true"></i>
-                                    </span>
-                                </td>
-                                <td *ngFor="let col of columns" class="ui-resizable-column" [hidden]="col.field == 'isPrimary'" pReorderableRowHandle>
-                                    {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
-                                </td>
-                                <td *ngIf="isViewMode == false" style="text-align: center">                                
-                                    <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="updateActiveorInActiveForShipping(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
-                                    <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="updateActiveorInActiveForShipping(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
-                                    <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="updateActiveorInActiveForShipping(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
-                                    <span data-toggle="modal" data-target="#viewShipping"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openShippinggView(rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
-
-                                    <button class="btn-edit" mat-icon-button (click)="openEditDomestic(rowData)" matTooltip="edit" data-toggle="modal" data-target="#addShippingInfo">
-                                        <mat-icon>edit</mat-icon>
-                                    </button>
-
-                                    <button class="btn-delete" mat-icon-button matTooltip="delete" (click)="deleteDomesticShipping(deleteContent,rowData)">
-                                        <mat-icon color="warn">delete</mat-icon>
-                                    </button>
-                                    <button class="btn btn-danger nobg" data-toggle="tooltip" matTooltip="Add Ship Via" data-original-title="View Shipping Via Information">
-                                        <i class="fa fa-truck" data-target="#addDomesticShipVia" data-toggle="modal" (click)="selectedDomesticForShipVia(rowData)"></i>
-                                    </button>
-
-                                    <button class="btn-history" mat-icon-button matTooltip="history" (click)="openShipaddressHistory(contentAuditHist,rowData)">
-                                        <mat-icon color="green">history</mat-icon>
-                                    </button>
-                            </td>
-                            <td *ngIf="isViewMode == true" style="text-align: center">                                        
-                                    <span data-toggle="modal" data-target="#viewShipping"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openShippinggView(rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
-                                    <button class="btn btn-danger nobg" data-toggle="tooltip" matTooltip="Add Ship Via" data-original-title="View Shipping Via Information">
-                                        <i class="fa fa-truck" data-target="#addDomesticShipVia" data-toggle="modal" (click)="selectedDomesticForShipVia(rowData)"></i>
-                                    </button>
-                                    <button class="btn-history" mat-icon-button matTooltip="history" (click)="openShipaddressHistory(contentAuditHist,rowData)">
-                                        <mat-icon color="green">history</mat-icon>
-                                    </button>
-                                </td>
-
-                            </tr>
-                        </ng-template>
-                        <ng-template pTemplate="emptymessage" let-columns *ngIf="domesticShippingData?.length == 0">
-                            <tr>
-                                <td [attr.colspan]="9" style="color: red; font-weight: bold; text-align: center">
-                                    No records found
-                                </td>
-                            </tr>
-                        </ng-template>
-                        <ng-template pTemplate="summary" id="footer">
-                            <label id="footer" class="footer">No'of records:</label>
-                            <input style="width: 5%;" [(ngModel)]="domestictable._totalRecords" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp;
-                            <label id="footer" class="footer1">Pages Count:</label>
-                           
-                            <input style="width: 5%;" [ngModel]="getPageCount(domestictable._totalRecords,pageSize)" [disabled]="true" pInputText type="text" />
-                        </ng-template>
-                    </p-table>
-                </div>
-                <div class="clear"></div>
-
-            <!-- <form class="form-horizontal" style="margin-top: 30px;"> -->
-                    <!-- <h3 class="po-head pull-left" style="padding: 0 6px;">International Shipping Info</h3> -->
-                <div class="col-md-12">
-                    <h4 class="po-head-sm"> <!--class="float-right"-->
-                        International Shipping Info
-                        <a class="plusicon-cstm" *ngIf="isViewMode == false"
-                           data-toggle="modal"
-                           data-target="#addInternationalShippingInfo" (click)="addInternationalShipping()">
-                            <i class="fa fa-plus-circle fa-lg"  matTooltip="Create International Shipping Information"></i>
-                        </a>
-                    </h4>               
-                   
-                </div>
-                <div class="clear"></div>
-                <hr />
-                <div class="clear"></div>
-
-                <div>
-                    <p-table #intlShippingTable class="rpo-table-cstm"
-                             [value]="internationalShippingData"
-                             [paginator]="true"
-                             [pageLinks]="3"
-                             [rowsPerPageOptions]="[10,20,50,100]"
-                             [columns]="selectedColumnsForInternationTable"
-                             selectionMode="multiple"
-                             [(selection)]="selectedrowsFromInternational"
-                             [resizableColumns]="true"
-                             [reorderableColumns]="true"
-                             [totalRecords]="totalRecordsForInternationalShipping"
-                             [rows]="10">
-                        <ng-template pTemplate="caption" *ngIf="isViewMode == false">
-
-                            <div style="text-align: right">
-                                <p-multiSelect [options]="internationalShippingHeaders" [(ngModel)]="selectedColumnsForInternationTable" [ngModelOptions]="{standalone: true}" optionLabel="header"
-                                               selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
-                                <div class="inner-addon right-addon w200 inline-block g-filter-search-cstm">
-                                    <i class="fa fa-search"></i>
-                                    <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="intlShippingTable.filterGlobal($event.target.value, 'contains')" placeholder=" Filter" style="height: 28px !important;">
-                                </div>
-                                <button type="button" class="btn btn-primary" matTooltip="Download  Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export  Data" (click)="intlShippingTable.exportCSV()" style="padding: 5px 10px !important;"></button>
-                                <button type="button" class="btn btn-primary" matTooltip="Download Selected Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export Selection Only" (click)="intlShippingTable.exportCSV({selectionOnly:true})" style="padding: 5px 10px !important;"></button>
-
-
-                                <div class="excel-upload  excel-upload-cstm">
-                                    <button name="intershippingdownload" id="intershippingdownload" type="button" class="btn btn-primary" matTooltip="Download Sample File" matTooltipPosition="above" (click)="sampleExcelDownloadForInternationalShipping()" style="padding: 5px 10px !important;">Sample File Download</button>
-
-                                    <input type="file" name="upload2[]" id="upload2" (change)="customInternationalShippingExcelUpload($event)" class="uploaddoc upload-file"
-                                           accept=".xlsx, .xls, .csv">
-                                    <label for="upload2">
-                                        <span matTooltip="Upload Data (Excel)" matTooltipPosition="above">
-                                            <i class="fa fa-upload"></i>
-                                        </span>
-                                    </label>
-
-                                </div>
-                            </div>
-                        </ng-template>
-
-                        <ng-template pTemplate="header" let-columns>
-                            <tr>
-                                    <th style="width: 40px;">Flag</th>
-                                <th *ngFor="let col of columns" [hidden]="col.header == 'IsPrimary'" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
-                                    {{col.header}}
-                                    <p-sortIcon [field]="col.field"></p-sortIcon>
-                                </th>
-                                <th style="width: 140px;" *ngIf="selectedColumnsForInternationTable.length > 0"> Actions</th>
-                            </tr>
-                            <tr>
-                                <th></th>
-                                <th style="width:auto" *ngFor="let col of columns" [hidden]="col.field == 'isPrimary'" [ngSwitch]="col.field">
-                                    <input style="width:100%;" pInputText type="text" (input)="intlShippingTable.filter($event.target.value, col.field, 'contains')">
-                                </th>
-                                <th></th>
-                            </tr>
-                        </ng-template>
-
-                        <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
-                            <tr [pSelectableRow]="rowData" [pSelectableRowDblClick]="rowData" (dblclick)="viewInterShipping(rowData)" >
-                                    <!-- [ngClass]="{'row-primary': rowData.isPrimary === true}" -->
-                                    <td > 
-                                            <span class="flag">
-                                            <i  *ngIf="rowData.isPrimary == true"   [ngStyle]="{'color': rowData.isPrimary == true ? 'green' : 'none'}"  
-                                             class="fa fa-flag" matTooltip="Primary" matTooltipPosition="above" aria-hidden="true"></i>
-                                        </span>
-                                    </td>
-                                <td *ngFor="let col of columns" class="ui-resizable-column" [hidden]="col.field == 'isPrimary'" pReorderableRowHandle>
-                                    {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'expirationDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'startDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
-                                </td>
-
-                                <td  *ngIf="isViewMode == false" style="text-align: center">
-                                    <p-inputSwitch [(ngModel)]="rowData['isActive']" name="isActiveIS{{rowIndex}}" (onChange)="updateActiveorInActiveForIS(rowData)"></p-inputSwitch>
-                                    <span data-toggle="modal" data-target="#viewInter"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openInterShippingView(rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
-                                    <button class="btn-edit" mat-icon-button data-toggle="modal"
-                                            data-target="#addInternationalShippingInfo" (click)="getInternationalShippingById(rowData)" matTooltip="edit">
-                                        <mat-icon>edit</mat-icon>
-                                    </button>
-
-                                    <button class="btn-delete" mat-icon-button matTooltip="delete" (click)="deleteInternationalShipping(deleteContent1,rowData)">
-                                        <mat-icon color="warn">delete</mat-icon>
-                                    </button>
-
-                                    <button class="btn btn-danger nobg" data-toggle="tooltip" matTooltip="Add Ship Via " data-original-title="View Shipping Via Info">
-                                        <i class="fa fa-truck" data-target="#addInternationShipVia" data-toggle="modal" (click)="selectedInternationalShipForShipVia(rowData)"></i>
-                                    </button>
-
-                                    <button class="btn-history" mat-icon-button matTooltip="history" (click)="openInterShippingHistory(contentAuditHistInter,rowData)">
-                                        <mat-icon color="green">history</mat-icon>
-                                    </button>
-                                </td>
-                                <td *ngIf="isViewMode == true" style="text-align: center">
-                                    <span data-toggle="modal" data-target="#viewInter"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openInterShippingView(rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
-                                    <button class="btn btn-danger nobg" data-toggle="tooltip" matTooltip="Add Ship Via " data-original-title="View Shipping Via Info">
-                                        <i class="fa fa-truck" data-target="#addInternationShipVia" data-toggle="modal" (click)="selectedInternationalShipForShipVia(rowData)"></i>
-                                    </button>
-                                    <button class="btn-history" mat-icon-button matTooltip="history" (click)="openInterShippingHistory(contentAuditHistInter,rowData)">
-                                        <mat-icon color="green">history</mat-icon>
-                                    </button>
-                                </td>
-
-                            </tr>
-
-                        </ng-template> 
-                        <ng-template pTemplate="emptymessage" let-columns *ngIf="internationalShippingData?.length == 0">
-                            <tr>
-                                <td [attr.colspan]="8" style="color: red; font-weight: bold; text-align: center">
-                                    No records found
-                                </td>
-                            </tr>
-                        </ng-template>                       
-                        <ng-template pTemplate="summary" id="footer">
-                            <label id="footer" class="footer">No'of records:</label>
-                            <input style="width: 5%;" [(ngModel)]="intlShippingTable._totalRecords" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp;
-                            <label id="footer" class="footer1">Pages Count:</label>
-                           
-                            <input style="width: 5%;" [ngModel]="getPageCount(intlShippingTable._totalRecords,pageSize)" [disabled]="true" pInputText type="text" />
-                        </ng-template>
-                      
-                        <!-- <ng-template pTemplate="summary" id="footer">
-                                <label id="footer" class="footer">No'of records:</label>
-                                <input style="width: 5%;" [(ngModel)]="totalRecordsForInternationalShipping" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp;
-                                <label id="footer" class="footer1">Pages Count:</label>
-                                <input style="width: 5%;" [(ngModel)]="totalPagesInter" [disabled]="true" pInputText type="text" />
-                            </ng-template> -->
-                    </p-table>
-                </div>
-            <!-- </form> -->
-                 <div class="clear"></div>
-                 <div class="margin-top: 10px">
-                    <button type="button"  *ngIf="isViewMode == false" class="btn btn-primary pull-right" (click)="nextClick()">Save & Next</button>
-                    <button type="button" *ngIf="isViewMode == false" class="btn btn-primary pull-right submit-btn" (click)="backClick()">Previous</button>
-                </div>
-            </div><!--/Card-->
+﻿<div class="right_col" role="main" style="padding: 2px 6px">
+  <div style="">
+    <div class="x_content">
+      <div *ngIf="isViewMode == false">
+        <div class="col-md-12 shadow-box-cstm">
+          <div class="col-md-4">
+            <p class="fs12">
+              <label
+                class="control-label labels-font-header"
+                style="width: auto;"
+                >Customer Name:
+              </label>
+              <span class="span-header-red" style="text-transform: capitalize">
+                {{ customerName }}
+              </span>
+            </p>
+          </div>
+          <div class="col-md-4">
+            <p class="fs12">
+              <label
+                class="control-label labels-font-header"
+                style="width: auto;"
+                >Customer Code:
+              </label>
+              <span class="span-header-red" style="text-transform: capitalize">
+                {{ customerCode }}
+              </span>
+            </p>
+          </div>
         </div>
+      </div>
+      <div class="card" style="padding: 10px">
+        <div>
+          <div class="col-md-12">
+            <h4 class="po-head-sm">
+              <!--class="float-right"-->
+              Domestic Shipping Info
+              <a
+                class="plusicon-cstm"
+                *ngIf="isViewMode == false"
+                data-toggle="modal"
+                data-target="#addShippingInfo"
+                (click)="addDomesticShipping()"
+              >
+                <i
+                  class="fa fa-plus-circle fa-lg"
+                  matTooltip="Create  Domestic Shipping Information"
+                ></i>
+              </a>
+            </h4>
+          </div>
+          <div class="clear"></div>
+          <hr />
+        </div>
+
+        <div>
+          <p-table
+            #domestictable
+            class="rpo-table-cstm"
+            [value]="domesticShippingData"
+            [(selection)]="selectedrowsFromDomestic"
+            [rows]="pageSizeForDomestic"
+            [paginator]="true"
+            [pageLinks]="3"
+            [rowsPerPageOptions]="[10, 20, 50, 100]"
+            [columns]="selectedColumnsForDomesticTable"
+            selectionMode="multiple"
+            [resizableColumns]="true"
+            [loading]="loaderForDomestic"
+            (onPage)="pageIndexChangeForDomestic($event)"
+            [reorderableColumns]="true"
+          >
+            <ng-template pTemplate="caption" *ngIf="isViewMode == false">
+              <div style="text-align: right">
+                <p-multiSelect
+                  [options]="domesticShippingHeaders"
+                  [(ngModel)]="selectedColumnsForDomesticTable"
+                  name="domesticShiipingTable"
+                  optionLabel="header"
+                  selectedItemsLabel="{0} columns selected"
+                  [style]="{ minWidth: '200px' }"
+                  defaultLabel="Choose Columns"
+                  style="float:left"
+                ></p-multiSelect>
+                <div
+                  class="inner-addon right-addon w200 inline-block g-filter-search-cstm"
+                >
+                  <i class="fa fa-search"></i>
+                  <input
+                    type="text"
+                    pInputText
+                    size="50"
+                    class="form-control ui-autocomplete-input"
+                    (input)="
+                      domestictable.filterGlobal(
+                        $event.target.value,
+                        'contains'
+                      )
+                    "
+                    placeholder=" Filter"
+                    style="height: 28px !important;"
+                  />
+                </div>
+
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  matTooltip="Download  Data"
+                  matTooltipPosition="above"
+                  pButton
+                  icon="fa-download"
+                  iconPos="left"
+                  label="Export  Data"
+                  (click)="domestictable.exportCSV()"
+                  style="padding: 5px 10px !important;"
+                ></button>
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  matTooltip="Download Selected Data"
+                  matTooltipPosition="above"
+                  pButton
+                  icon="fa-download"
+                  iconPos="left"
+                  label="Export Selection Only"
+                  (click)="domestictable.exportCSV({ selectionOnly: true })"
+                  style="padding: 5px 10px !important;"
+                ></button>
+
+                <div class="excel-upload  excel-upload-cstm">
+                  <button
+                    type="button"
+                    class="btn btn-primary"
+                    matTooltip="Download Sample File"
+                    matTooltipPosition="above"
+                    (click)="sampleExcelDownload()"
+                    style="padding: 5px 10px !important;"
+                  >
+                    Sample File Download
+                  </button>
+
+                  <input
+                    type="file"
+                    name="upload1[]"
+                    id="upload1"
+                    (change)="customShippingExcelUpload($event)"
+                    class="uploaddoc upload-file"
+                    accept=".xlsx, .xls, .csv"
+                  />
+                  <label for="upload1">
+                    <span
+                      matTooltip="Upload Data (Excel)"
+                      matTooltipPosition="above"
+                    >
+                      <i class="fa fa-upload"></i>
+                    </span>
+                  </label>
+                </div>
+              </div>
+            </ng-template>
+
+            <ng-template pTemplate="header" let-columns>
+              <tr>
+                <th style="width: 40px;">Flag</th>
+                <th
+                  *ngFor="let col of columns"
+                  pResizableColumn
+                  pReorderableColumn
+                  [pSortableColumn]="col.field"
+                  [hidden]="col.header == 'IsPrimary'"
+                >
+                  {{ col.header }}
+                  <p-sortIcon [field]="col.field"></p-sortIcon>
+                </th>
+                <th style="width: 140px;">Actions</th>
+              </tr>
+              <tr>
+                <th></th>
+                <th
+                  style="width:auto"
+                  *ngFor="let col of columns"
+                  [hidden]="col.field == 'isPrimary'"
+                  [ngSwitch]="col.field"
+                >
+                  <input
+                    style="width:100%;"
+                    pInputText
+                    type="text"
+                    (input)="
+                      domestictable.filter(
+                        $event.target.value,
+                        col.field,
+                        'contains'
+                      )
+                    "
+                  />
+                </th>
+                <th></th>
+              </tr>
+            </ng-template>
+
+            <ng-template pTemplate="body" let-rowData let-columns="columns">
+              <tr
+                [pSelectableRow]="rowData"
+                [pSelectableRowDblClick]="rowData"
+                (dblclick)="viewSelectedRowdbl(rowData)"
+              >
+                <td>
+                  <span class="flag">
+                    <i
+                      *ngIf="rowData.isPrimary == true"
+                      [ngStyle]="{
+                        color: rowData.isPrimary == true ? 'green' : 'none'
+                      }"
+                      class="fa fa-flag"
+                      matTooltip="Primary"
+                      matTooltipPosition="above"
+                      aria-hidden="true"
+                    ></i>
+                  </span>
+                </td>
+                <td
+                  *ngFor="let col of columns"
+                  class="ui-resizable-column"
+                  [hidden]="col.field == 'isPrimary'"
+                  pReorderableRowHandle
+                >
+                  {{
+                    col.field == 'createdDate'
+                      ? (rowData[col.field] | date: 'MM/dd/yyyy')
+                      : rowData[col.field] && col.field == 'updatedDate'
+                      ? (rowData[col.field] | date: 'MM/dd/yyyy')
+                      : rowData[col.field]
+                  }}
+                </td>
+                <td *ngIf="isViewMode == false" style="text-align: center">
+                  <p-inputSwitch
+                    *ngIf="rowData['isActive'] == true"
+                    matTooltip="Active"
+                    onLabel="on"
+                    offLabel="off"
+                    (onChange)="updateActiveorInActiveForShipping(rowData)"
+                    [(ngModel)]="rowData['isActive']"
+                  ></p-inputSwitch>
+                  <p-inputSwitch
+                    *ngIf="rowData['isActive'] == false"
+                    matTooltip="In Active"
+                    onLabel="on"
+                    offLabel="off"
+                    (onChange)="updateActiveorInActiveForShipping(rowData)"
+                    [(ngModel)]="rowData['isActive']"
+                  ></p-inputSwitch>
+                  <p-inputSwitch
+                    *ngIf="rowData['isActive'] == null"
+                    matTooltip="In Active"
+                    onLabel="on"
+                    offLabel="off"
+                    (onChange)="updateActiveorInActiveForShipping(rowData)"
+                    [(ngModel)]="rowData['isActive']"
+                  ></p-inputSwitch>
+                  <span data-toggle="modal" data-target="#viewShipping">
+                    <a
+                      class="btn btn-info boxed-float-btn nobg"
+                      data-toggle="tooltip"
+                      (click)="openShippinggView(rowData)"
+                      matTooltip="View"
+                      ><i class="fa fa-eye"></i
+                    ></a>
+                  </span>
+
+                  <button
+                    class="btn-edit"
+                    mat-icon-button
+                    (click)="openEditDomestic(rowData)"
+                    matTooltip="edit"
+                    data-toggle="modal"
+                    data-target="#addShippingInfo"
+                  >
+                    <mat-icon>edit</mat-icon>
+                  </button>
+
+                  <button
+                    class="btn-delete"
+                    mat-icon-button
+                    matTooltip="delete"
+                    (click)="deleteDomesticShipping(deleteContent, rowData)"
+                  >
+                    <mat-icon color="warn">delete</mat-icon>
+                  </button>
+                  <button
+                    class="btn btn-danger nobg"
+                    data-toggle="tooltip"
+                    matTooltip="Add Ship Via"
+                    data-original-title="View Shipping Via Information"
+                    style="padding: 0;"
+                  >
+                    <i
+                      class="fa fa-truck"
+                      data-target="#addDomesticShipVia"
+                      data-toggle="modal"
+                      (click)="selectedDomesticForShipVia(rowData)"
+                    ></i>
+                  </button>
+
+                  <button
+                    class="btn-history"
+                    mat-icon-button
+                    matTooltip="history"
+                    (click)="openShipaddressHistory(contentAuditHist, rowData)"
+                  >
+                    <mat-icon color="green">history</mat-icon>
+                  </button>
+                </td>
+                <td *ngIf="isViewMode == true" style="text-align: center">
+                  <span data-toggle="modal" data-target="#viewShipping">
+                    <a
+                      class="btn btn-info boxed-float-btn nobg"
+                      data-toggle="tooltip"
+                      (click)="openShippinggView(rowData)"
+                      matTooltip="View"
+                      ><i class="fa fa-eye"></i
+                    ></a>
+                  </span>
+                  <button
+                    class="btn btn-danger nobg"
+                    data-toggle="tooltip"
+                    matTooltip="Add Ship Via"
+                    data-original-title="View Shipping Via Information"
+                    style="padding: 0;"
+                  >
+                    <i
+                      class="fa fa-truck"
+                      data-target="#addDomesticShipVia"
+                      data-toggle="modal"
+                      (click)="selectedDomesticForShipVia(rowData)"
+                    ></i>
+                  </button>
+                  <button
+                    class="btn-history"
+                    mat-icon-button
+                    matTooltip="history"
+                    (click)="openShipaddressHistory(contentAuditHist, rowData)"
+                  >
+                    <mat-icon color="green">history</mat-icon>
+                  </button>
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template
+              pTemplate="emptymessage"
+              let-columns
+              *ngIf="domesticShippingData?.length == 0"
+            >
+              <tr>
+                <td
+                  [attr.colspan]="9"
+                  style="color: red; font-weight: bold; text-align: center"
+                >
+                  No records found
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="summary" id="footer">
+              <label id="footer" class="footer">No'of records:</label>
+              <input
+                style="width: 5%;"
+                [(ngModel)]="domestictable._totalRecords"
+                [disabled]="true"
+                pInputText
+                type="text"
+              />
+              &nbsp;&nbsp;
+              <label id="footer" class="footer1">Pages Count:</label>
+
+              <input
+                style="width: 5%;"
+                [ngModel]="getPageCount(domestictable._totalRecords, pageSize)"
+                [disabled]="true"
+                pInputText
+                type="text"
+              />
+            </ng-template>
+          </p-table>
+        </div>
+        <div class="clear"></div>
+        <div class="col-md-12">
+          <h4 class="po-head-sm">
+            International Shipping Info
+            <a
+              class="plusicon-cstm"
+              *ngIf="isViewMode == false"
+              data-toggle="modal"
+              data-target="#addInternationalShippingInfo"
+              (click)="addInternationalShipping()"
+            >
+              <i
+                class="fa fa-plus-circle fa-lg"
+                matTooltip="Create International Shipping Information"
+              ></i>
+            </a>
+          </h4>
+        </div>
+        <div class="clear"></div>
+        <hr />
+        <div class="clear"></div>
+
+        <div>
+          <p-table
+            #intlShippingTable
+            class="rpo-table-cstm"
+            [value]="internationalShippingData"
+            [paginator]="true"
+            [pageLinks]="3"
+            [rowsPerPageOptions]="[10, 20, 50, 100]"
+            [columns]="selectedColumnsForInternationTable"
+            selectionMode="multiple"
+            [(selection)]="selectedrowsFromInternational"
+            [resizableColumns]="true"
+            [loading]="loaderForInternational"
+            [reorderableColumns]="true"
+            [loading]="loader"
+            (onPage)="pageIndexChangeForInt($event)"
+            [rows]="pageSizeForInt"
+          >
+            <ng-template pTemplate="caption" *ngIf="isViewMode == false">
+              <div style="text-align: right">
+                <p-multiSelect
+                  [options]="internationalShippingHeaders"
+                  [(ngModel)]="selectedColumnsForInternationTable"
+                  [ngModelOptions]="{ standalone: true }"
+                  optionLabel="header"
+                  selectedItemsLabel="{0} columns selected"
+                  [style]="{ minWidth: '200px' }"
+                  defaultLabel="Choose Columns"
+                  style="float:left"
+                ></p-multiSelect>
+                <div
+                  class="inner-addon right-addon w200 inline-block g-filter-search-cstm"
+                >
+                  <i class="fa fa-search"></i>
+                  <input
+                    type="text"
+                    pInputText
+                    size="50"
+                    class="form-control ui-autocomplete-input"
+                    (input)="
+                      intlShippingTable.filterGlobal(
+                        $event.target.value,
+                        'contains'
+                      )
+                    "
+                    placeholder=" Filter"
+                    style="height: 28px !important;"
+                  />
+                </div>
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  matTooltip="Download  Data"
+                  matTooltipPosition="above"
+                  pButton
+                  icon="fa-download"
+                  iconPos="left"
+                  label="Export  Data"
+                  (click)="intlShippingTable.exportCSV()"
+                  style="padding: 5px 10px !important;"
+                ></button>
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  matTooltip="Download Selected Data"
+                  matTooltipPosition="above"
+                  pButton
+                  icon="fa-download"
+                  iconPos="left"
+                  label="Export Selection Only"
+                  (click)="intlShippingTable.exportCSV({ selectionOnly: true })"
+                  style="padding: 5px 10px !important;"
+                ></button>
+
+                <div class="excel-upload  excel-upload-cstm">
+                  <button
+                    name="intershippingdownload"
+                    id="intershippingdownload"
+                    type="button"
+                    class="btn btn-primary"
+                    matTooltip="Download Sample File"
+                    matTooltipPosition="above"
+                    (click)="sampleExcelDownloadForInternationalShipping()"
+                    style="padding: 5px 10px !important;"
+                  >
+                    Sample File Download
+                  </button>
+
+                  <input
+                    type="file"
+                    name="upload2[]"
+                    id="upload2"
+                    (change)="customInternationalShippingExcelUpload($event)"
+                    class="uploaddoc upload-file"
+                    accept=".xlsx, .xls, .csv"
+                  />
+                  <label for="upload2">
+                    <span
+                      matTooltip="Upload Data (Excel)"
+                      matTooltipPosition="above"
+                    >
+                      <i class="fa fa-upload"></i>
+                    </span>
+                  </label>
+                </div>
+              </div>
+            </ng-template>
+
+            <ng-template pTemplate="header" let-columns>
+              <tr>
+                <th style="width: 40px;">Flag</th>
+                <th
+                  *ngFor="let col of columns"
+                  [hidden]="col.header == 'IsPrimary'"
+                  pResizableColumn
+                  pReorderableColumn
+                  [pSortableColumn]="col.field"
+                >
+                  {{ col.header }}
+                  <p-sortIcon [field]="col.field"></p-sortIcon>
+                </th>
+                <th
+                  style="width: 140px;"
+                  *ngIf="selectedColumnsForInternationTable.length > 0"
+                >
+                  Actions
+                </th>
+              </tr>
+              <tr>
+                <th></th>
+                <th
+                  style="width:auto"
+                  *ngFor="let col of columns"
+                  [hidden]="col.field == 'isPrimary'"
+                  [ngSwitch]="col.field"
+                >
+                  <input
+                    style="width:100%;"
+                    pInputText
+                    type="text"
+                    (input)="
+                      intlShippingTable.filter(
+                        $event.target.value,
+                        col.field,
+                        'contains'
+                      )
+                    "
+                  />
+                </th>
+                <th></th>
+              </tr>
+            </ng-template>
+
+            <ng-template
+              pTemplate="body"
+              let-rowData
+              let-columns="columns"
+              let-rowIndex="rowIndex"
+            >
+              <tr
+                [pSelectableRow]="rowData"
+                [pSelectableRowDblClick]="rowData"
+                (dblclick)="viewInterShipping(rowData)"
+              >
+                <!-- [ngClass]="{'row-primary': rowData.isPrimary === true}" -->
+                <td>
+                  <span class="flag">
+                    <i
+                      *ngIf="rowData.isPrimary == true"
+                      [ngStyle]="{
+                        color: rowData.isPrimary == true ? 'green' : 'none'
+                      }"
+                      class="fa fa-flag"
+                      matTooltip="Primary"
+                      matTooltipPosition="above"
+                      aria-hidden="true"
+                    ></i>
+                  </span>
+                </td>
+                <td
+                  *ngFor="let col of columns"
+                  class="ui-resizable-column"
+                  [hidden]="col.field == 'isPrimary'"
+                  pReorderableRowHandle
+                >
+                  {{
+                    col.field == 'createdDate'
+                      ? (rowData[col.field] | date: 'MM/dd/yyyy')
+                      : rowData[col.field] && col.field == 'updatedDate'
+                      ? (rowData[col.field] | date: 'MM/dd/yyyy')
+                      : rowData[col.field] && col.field == 'expirationDate'
+                      ? (rowData[col.field] | date: 'MM/dd/yyyy')
+                      : rowData[col.field] && col.field == 'startDate'
+                      ? (rowData[col.field] | date: 'MM/dd/yyyy')
+                      : rowData[col.field]
+                  }}
+                </td>
+
+                <td *ngIf="isViewMode == false" style="text-align: center">
+                  <p-inputSwitch
+                    [(ngModel)]="rowData['isActive']"
+                    name="isActiveIS{{ rowIndex }}"
+                    (onChange)="updateActiveorInActiveForIS(rowData)"
+                  ></p-inputSwitch>
+                  <span data-toggle="modal" data-target="#viewInter">
+                    <a
+                      class="btn btn-info boxed-float-btn nobg"
+                      data-toggle="tooltip"
+                      (click)="openInterShippingView(rowData)"
+                      matTooltip="View"
+                      ><i class="fa fa-eye"></i
+                    ></a>
+                  </span>
+                  <button
+                    class="btn-edit"
+                    mat-icon-button
+                    data-toggle="modal"
+                    data-target="#addInternationalShippingInfo"
+                    (click)="getInternationalShippingById(rowData)"
+                    matTooltip="edit"
+                  >
+                    <mat-icon>edit</mat-icon>
+                  </button>
+
+                  <button
+                    class="btn-delete"
+                    mat-icon-button
+                    matTooltip="delete"
+                    (click)="
+                      deleteInternationalShipping(deleteContent1, rowData)
+                    "
+                  >
+                    <mat-icon color="warn">delete</mat-icon>
+                  </button>
+
+                  <button
+                    class="btn btn-danger nobg"
+                    data-toggle="tooltip"
+                    matTooltip="Add Ship Via "
+                    data-original-title="View Shipping Via Info"
+                  >
+                    <i
+                      class="fa fa-truck"
+                      data-target="#addInternationShipVia"
+                      data-toggle="modal"
+                      (click)="selectedInternationalShipForShipVia(rowData)"
+                    ></i>
+                  </button>
+
+                  <button
+                    class="btn-history"
+                    mat-icon-button
+                    matTooltip="history"
+                    (click)="
+                      openInterShippingHistory(contentAuditHistInter, rowData)
+                    "
+                  >
+                    <mat-icon color="green">history</mat-icon>
+                  </button>
+                </td>
+                <td *ngIf="isViewMode == true" style="text-align: center">
+                  <span data-toggle="modal" data-target="#viewInter">
+                    <a
+                      class="btn btn-info boxed-float-btn nobg"
+                      data-toggle="tooltip"
+                      (click)="openInterShippingView(rowData)"
+                      matTooltip="View"
+                      ><i class="fa fa-eye"></i
+                    ></a>
+                  </span>
+                  <button
+                    class="btn btn-danger nobg"
+                    data-toggle="tooltip"
+                    matTooltip="Add Ship Via "
+                    data-original-title="View Shipping Via Info"
+                  >
+                    <i
+                      class="fa fa-truck"
+                      data-target="#addInternationShipVia"
+                      data-toggle="modal"
+                      (click)="selectedInternationalShipForShipVia(rowData)"
+                    ></i>
+                  </button>
+                  <button
+                    class="btn-history"
+                    mat-icon-button
+                    matTooltip="history"
+                    (click)="
+                      openInterShippingHistory(contentAuditHistInter, rowData)
+                    "
+                  >
+                    <mat-icon color="green">history</mat-icon>
+                  </button>
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template
+              pTemplate="emptymessage"
+              let-columns
+              *ngIf="internationalShippingData?.length == 0"
+            >
+              <tr>
+                <td
+                  [attr.colspan]="8"
+                  style="color: red; font-weight: bold; text-align: center"
+                >
+                  No records found
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="summary" id="footer">
+              <label id="footer" class="footer">No'of records:</label>
+              <input
+                style="width: 5%;"
+                [(ngModel)]="intlShippingTable._totalRecords"
+                [disabled]="true"
+                pInputText
+                type="text"
+              />
+              &nbsp;&nbsp;
+              <label id="footer" class="footer1">Pages Count:</label>
+
+              <input
+                style="width: 5%;"
+                [ngModel]="
+                  getPageCount(intlShippingTable._totalRecords, pageSize)
+                "
+                [disabled]="true"
+                pInputText
+                type="text"
+              />
+            </ng-template>
+          </p-table>
+        </div>
+        <div class="clear"></div>
+        <div class="margin-top: 10px">
+          <button
+            type="button"
+            *ngIf="isViewMode == false"
+            class="btn btn-primary pull-right"
+            (click)="nextClick()"
+          >
+            Save & Next
+          </button>
+          <button
+            type="button"
+            *ngIf="isViewMode == false"
+            class="btn btn-primary pull-right submit-btn"
+            (click)="backClick()"
+          >
+            Previous
+          </button>
+        </div>
+      </div>
     </div>
+  </div>
 </div>
 
-<div class="modal fade success-msg" id="success-popup" role="dialog" data-backdrop="static">
-    <div class="modal-dialog modal-sm popup-timeout">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="btn btn-primary-cstm" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                <h4> <i class="fa fa-check"></i>&nbsp; You Added Successfully !</h4>
-            </div>
-        </div>
+<div
+  class="modal fade success-msg"
+  id="success-popup"
+  role="dialog"
+  data-backdrop="static"
+>
+  <div class="modal-dialog modal-sm popup-timeout">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button
+          type="button"
+          class="btn btn-primary-cstm"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">×</span>
+        </button>
+        <h4><i class="fa fa-check"></i>&nbsp; You Added Successfully !</h4>
+      </div>
     </div>
+  </div>
 </div>
 
-<ng-template #contentShipVia let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static">
+<!-- <ng-template #contentShipVia let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static">
     <div class="modal-header">
         <h4 class="modal-title" *ngIf="isEditMode">Edit Ship Via Info</h4>
         <h4 class="modal-title" *ngIf="!isEditMode">Add Ship Via Info</h4>
@@ -393,7 +858,19 @@
             </div>
 
             <div class="clear"></div>
-            <p-table #dt class="rpo-table-cstm rro-table-cstm" [value]="allShipViaDetails" [metaKeySelection]="true" [rows]="20" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[20,50,100]" [columns]="selectedShipViaColumn" selectionMode="multiple" [(selection)]="selectedShipViaColumns" [resizableColumns]="true" [reorderableColumns]="true">
+            <p-table #dt class="rpo-table-cstm rro-table-cstm" 
+            [value]="allShipViaDetails"
+             [metaKeySelection]="true"
+              [rows]="pageSizeForShipViaDomestic" 
+              [paginator]="true"
+               [pageLinks]="3" 
+               [rowsPerPageOptions]="[10,20,50,100]" 
+               [columns]="selectedShipViaColumn" 
+               selectionMode="multiple" 
+               [(selection)]="selectedShipViaColumns" 
+               [resizableColumns]="true" 
+               (onPage)="pageIndexChangeForShipViaDom($event)"
+               [reorderableColumns]="true">
 
                 <ng-template pTemplate="caption">
                     <div style="text-align: right">
@@ -459,9 +936,9 @@
             </div>
         </form>
     </div>
-</ng-template>
+</ng-template> -->
 
-<ng-template #contentHist let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static">
+<!-- <ng-template #contentHist let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static">
     <div class="modal-header">
         <h4 class="modal-title">History of Shipping</h4>
         <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
@@ -496,9 +973,9 @@
     <div class="modal-footer">
         <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
     </div>
-</ng-template>
+</ng-template> -->
 
-<ng-template #modelEdit let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static">
+<!-- <ng-template #modelEdit let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static">
     <div class="modal-header">
         <h4 class="modal-title" *ngIf="isEditMode">Edit Country</h4>
         <h4 class="modal-title" *ngIf="!isEditMode">Add Country</h4>
@@ -542,699 +1019,1508 @@
         </form>
     </div>
 
-</ng-template>
+</ng-template> -->
 
 <!-- The Modal -->
-<div  class="modal popup-blur" id="viewShipping"  data-backdrop="static">
-    <div class="modal-dialog">
-        <div class="modal-content">
+<div class="modal popup-blur" id="viewShipping" data-backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Details of Customer Shipping</h4>
+        <button type="button" class="close" data-dismiss="modal">
+          &times;
+        </button>
+      </div>
 
-            <!-- Modal Header -->
-            <div class="modal-header">
-                <h4 class="modal-title">Details of Customer Shipping</h4>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-            </div>
+      <!-- Modal body -->
+      <div class="modal-body" *ngIf="sourceViewforShipping">
+        <div class="col-sm-12">
+          <p>
+            <span class="label"><b> Primary: </b></span
+            ><span class="value">{{
+              sourceViewforShipping.isPrimary === true ? 'Yes' : 'No'
+            }}</span>
+          </p>
 
-            <!-- Modal body -->
-            <div class="modal-body" *ngIf="sourceViewforShipping">
-                <div class="col-sm-12">
-                    <p><span class="label"><b> Primary: </b></span><span class="value">{{sourceViewforShipping.isPrimary === true ? 'Yes' : 'No'}}</span></p>
-
-                    <p><span class="label"><b>Site Name<span class="clr-red">*</span> : </b></span><span class="value">{{sourceViewforShipping.siteName}}</span></p>
-                    <p><span class="label"><b>Ship To Address 1<span class="clr-red">*</span> :   </b></span><span class="value">{{sourceViewforShipping.address1}}</span></p>
-                    <p><span class="label"><b>Ship To Address 2: </b></span><span class="value">{{sourceViewforShipping.address2}}</span></p>
-                    <p style="display:none"><span class="label"><b>ship To Address 3: </b></span><span class="value">{{sourceViewforShipping.address3}}</span></p>
-                    <p><span class="label"><b>Ship To City<span class="clr-red">*</span> : </b></span><span class="value">{{sourceViewforShipping.city}}</span></p>
-                    <p><span class="label"><b>Ship To State / Prov<span class="clr-red">*</span> : </b></span><span class="value">{{sourceViewforShipping.stateOrProvince}}</span></p>
-                    <p><span class="label"><b>Ship To Postal Code <span class="clr-red">*</span> : </b></span><span class="value">{{sourceViewforShipping.postalCode}}</span></p>
-                    <p><span class="label"><b>Ship To Country<span class="clr-red">*</span> : </b></span><span class="value">{{sourceViewforShipping.countryName}}</span></p>
-                    <p><span class="label"><b>Is Primary : </b></span><span class="value">{{sourceViewforShipping.isPrimary === true ? 'Yes' : 'No'}}</span></p>
-                    <p><span class="label"><b>In Active : </b></span><span class="value"> {{sourceViewforShipping.isActive === true ? 'Yes' : 'No'}}</span></p>
-                    <div class="clear"></div>
-                </div>
-            </div>
-            <!-- Modal footer -->
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-            </div>
+          <p>
+            <span class="label"
+              ><b>Site Name<span class="clr-red">*</span> : </b></span
+            ><span class="value">{{ sourceViewforShipping.siteName }}</span>
+          </p>
+          <p>
+            <span class="label"
+              ><b>Ship To Address 1<span class="clr-red">*</span> : </b></span
+            ><span class="value">{{ sourceViewforShipping.address1 }}</span>
+          </p>
+          <p>
+            <span class="label"><b>Ship To Address 2: </b></span
+            ><span class="value">{{ sourceViewforShipping.address2 }}</span>
+          </p>
+          <p style="display:none">
+            <span class="label"><b>ship To Address 3: </b></span
+            ><span class="value">{{ sourceViewforShipping.address3 }}</span>
+          </p>
+          <p>
+            <span class="label"
+              ><b>Ship To City<span class="clr-red">*</span> : </b></span
+            ><span class="value">{{ sourceViewforShipping.city }}</span>
+          </p>
+          <p>
+            <span class="label"
+              ><b
+                >Ship To State / Prov<span class="clr-red">*</span> :
+              </b></span
+            ><span class="value">{{
+              sourceViewforShipping.stateOrProvince
+            }}</span>
+          </p>
+          <p>
+            <span class="label"
+              ><b
+                >Ship To Postal Code <span class="clr-red">*</span> :
+              </b></span
+            ><span class="value">{{ sourceViewforShipping.postalCode }}</span>
+          </p>
+          <p>
+            <span class="label"
+              ><b>Ship To Country<span class="clr-red">*</span> : </b></span
+            ><span class="value">{{ sourceViewforShipping.countryName }}</span>
+          </p>
+          <p>
+            <span class="label"><b>Is Primary : </b></span
+            ><span class="value">{{
+              sourceViewforShipping.isPrimary === true ? 'Yes' : 'No'
+            }}</span>
+          </p>
+          <p>
+            <span class="label"><b>In Active : </b></span
+            ><span class="value">
+              {{ sourceViewforShipping.isActive === true ? 'Yes' : 'No' }}</span
+            >
+          </p>
+          <div class="clear"></div>
         </div>
+      </div>
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">
+          Close
+        </button>
+      </div>
     </div>
+  </div>
 </div>
-<div class="modal fade" id="addShippingInfo" role="dialog" data-backdrop="static">
+
+<!-- Domestic Shipping Add -->
+<div
+  class="modal fade"
+  id="addShippingInfo"
+  role="dialog"
+  data-backdrop="static"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button
+          type="button"
+          class="close"
+          (click)="closeMyModel('#addShippingInfo')"
+        >
+          &times;
+        </button>
+        <h4 class="modal-title">
+          {{ isEditDomestic ? 'Edit' : 'Add' }} Ship to Information
+        </h4>
+        <div class="col-md-12 shadow-box-cstm">
+          <div class="col-md-4">
+            <p class="fs12">
+              <label
+                class="control-label labels-font-header"
+                style="width: auto;"
+                >Customer Name:
+              </label>
+              <span class="span-header-red" style="text-transform: capitalize">
+                {{ customerName }}
+              </span>
+            </p>
+          </div>
+          <div class="col-md-4">
+            <p class="fs12">
+              <label
+                class="control-label labels-font-header"
+                style="width: auto;"
+                >Customer Code:
+              </label>
+              <span class="span-header-red" style="text-transform: capitalize">
+                {{ customerCode }}
+              </span>
+            </p>
+          </div>
+        </div>
+      </div>
+      <form #addShippingForm="ngForm" class="form-horizontal">
+        <div class="modal-body">
+          <div class="form-row">
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>Ship To <span class="clr-red">*</span></label>
+                <input
+                  class="form-control"
+                  type="text"
+                  id="vssitename"
+                  name="siteName"
+                  [(ngModel)]="domesticShippingInfo.siteName"
+                  (ngModelChange)="enableSave()"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label
+                  >Ship To State / Prov <span class="clr-red">*</span></label
+                >
+                <input
+                  class="form-control"
+                  id="csstate"
+                  type="text"
+                  name="stateOrProvince"
+                  [(ngModel)]="domesticShippingInfo.stateOrProvince"
+                  (ngModelChange)="enableSave()"
+                  required
+                />
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>Ship To Address 1 <span class="clr-red">*</span></label>
+                <input
+                  class="form-control"
+                  id="csaddress1"
+                  type="text"
+                  name="address1"
+                  [(ngModel)]="domesticShippingInfo.address1"
+                  (ngModelChange)="enableSave()"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label>Ship To Country <span class="clr-red">*</span></label>
+                <div class="inner-addon right-addon inline-block">
+                  <p-autoComplete
+                    class="autocomp-customer-cstm"
+                    field="nice_name"
+                    [(ngModel)]="domesticShippingInfo.country"
+                    (ngModelChange)="enableSave()"
+                    name="country"
+                    [suggestions]="countrycollection"
+                    (completeMethod)="filterCountries($event)"
+                    [size]="30"
+                    [forceSelection]="true"
+                    [minLength]="1"
+                    [dropdown]="true"
+                    required
+                  >
+                  </p-autoComplete>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>Ship To Address 2</label>
+                <input
+                  class="form-control"
+                  id="csaddress2"
+                  type="text"
+                  name="address2"
+                  [(ngModel)]="domesticShippingInfo.address2"
+                  (ngModelChange)="enableSave()"
+                />
+              </div>
+              <div class="form-group">
+                <label
+                  >Ship To Postal Code <span class="clr-red">*</span></label
+                >
+                <input
+                  class="form-control"
+                  id="cspostal"
+                  type="text"
+                  name="postalCode"
+                  [(ngModel)]="domesticShippingInfo.postalCode"
+                  (ngModelChange)="enableSave()"
+                  required
+                />
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>Ship To City <span class="clr-red">*</span></label>
+                <input
+                  class="form-control"
+                  id="cscity"
+                  type="text"
+                  name="city"
+                  [(ngModel)]="domesticShippingInfo.city"
+                  (ngModelChange)="enableSave()"
+                  required
+                />
+              </div>
+              <div class="col-md-3"></div>
+              <div class="form-group" style="margin-top: 15px;">
+                <div class="checkbox-cstm" style="margin-left: 0;">
+                  <label>
+                    <input
+                      type="checkbox"
+                      checked
+                      id="isPrimary"
+                      name="isPrimary"
+                      [(ngModel)]="domesticShippingInfo.isPrimary"
+                      (ngModelChange)="enableSave()"
+                    />
+                    <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                    Primary
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-primary pull-right"
+            [disabled]="!addShippingForm.valid || disableSave"
+            (click)="saveDomesticShipping()"
+          >
+            {{ isEditDomestic ? 'Update' : 'Save' }}
+          </button>
+          <button
+            type="button"
+            class="btn btn-danger"
+            (click)="closeMyModel('#addShippingInfo')"
+          >
+            Close
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <ng-template
+    #contentAuditHistShipVia
+    let-c="close"
+    let-d="dismiss"
+    style="width:auto"
+    data-backdrop="static"
+    class="popup-blur"
+  >
+    <!--<div #contentAuditHist id="contentAuditHist" class="modal fade">-->
+    <div class="modal-header">
+      <h4 class="modal-title">History of Ship Via Info</h4>
+      <button
+        type="button"
+        class="close"
+        aria-label="Close"
+        (click)="dismissModel()"
+      >
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="table-responsive">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Ship Via</th>
+              <th>Shipping Account Info</th>
+              <th>Memo</th>
+              <th>IsActive</th>
+              <th>Is Primary</th>
+              <th>Updated By</th>
+              <th>Last Updated Time</th>
+              <th>Created By</th>
+              <th>Created Time</th>
+            </tr>
+          </thead>
+          <tr *ngFor="let audit of shippingViaauditHisory; let i = index">
+            <td
+              [ngStyle]="{
+                color: getColorCodeForShipViaHistory(
+                  i,
+                  'shipVia',
+                  audit.shipVia
+                )
+                  ? 'black'
+                  : 'red'
+              }"
+            >
+              {{ audit.shipVia }}
+            </td>
+            <td
+              [ngStyle]="{
+                color: getColorCodeForShipViaHistory(
+                  i,
+                  'shippingAccountInfo',
+                  audit.shippingAccountInfo
+                )
+                  ? 'black'
+                  : 'red'
+              }"
+            >
+              {{ audit.shippingAccountInfo }}
+            </td>
+            <td
+              [ngStyle]="{
+                color: getColorCodeForShipViaHistory(i, 'memo', audit.memo)
+                  ? 'black'
+                  : 'red'
+              }"
+            >
+              {{ audit.memo }}
+            </td>
+            <td
+              [ngStyle]="{
+                color: getColorCodeForShipViaHistory(
+                  i,
+                  'isActive',
+                  audit.isActive
+                )
+                  ? 'black'
+                  : 'red'
+              }"
+            >
+              {{ audit.isActive }}
+            </td>
+            <td
+              [ngStyle]="{
+                color: getColorCodeForShipViaHistory(
+                  i,
+                  'isPrimary',
+                  audit.isPrimary
+                )
+                  ? 'black'
+                  : 'red'
+              }"
+            >
+              {{ audit.isPrimary }}
+            </td>
+
+            <td>{{ audit.updatedBy }}</td>
+            <td>{{ audit.updatedDate | date: 'dd-MM-yyyy h:mm a ' }}</td>
+            <td>{{ audit.createdBy }}</td>
+            <td>{{ audit.createdDate | date: 'dd-MM-yyyy h:mm a ' }}</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-danger" (click)="dismissModel()">
+        Close
+      </button>
+    </div>
+  </ng-template>
+</div>
+
+<!-- Add International Shipping  -->
+<div
+  class="modal fade"
+  id="addInternationalShippingInfo"
+  role="dialog"
+  data-backdrop="static"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button
+          type="button"
+          class="close"
+          (click)="closeMyModel('#addInternationalShippingInfo')"
+        >
+          &times;
+        </button>
+        <!--<h4 class="modal-title">Add International Shipping Info</h4>-->
+        <h4 class="modal-title">
+          {{ isEditInternational ? 'Edit' : 'Add' }} International Shipping Info
+        </h4>
+        <div class="col-md-12 shadow-box-cstm">
+          <div class="col-md-4">
+            <p class="fs12">
+              <label
+                class="control-label labels-font-header"
+                style="width: auto;"
+                >Customer Name:
+              </label>
+              <span class="span-header-red" style="text-transform: capitalize">
+                {{ customerName }}
+              </span>
+            </p>
+          </div>
+          <div class="col-md-4">
+            <p class="fs12">
+              <label
+                class="control-label labels-font-header"
+                style="width: auto;"
+                >Customer Code:
+              </label>
+              <span class="span-header-red" style="text-transform: capitalize">
+                {{ customerCode }}
+              </span>
+            </p>
+          </div>
+        </div>
+      </div>
+      <form #addIShippingForm="ngForm" class="form-horizontal">
+        <div class="modal-body">
+          <div class="form-row">
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>Export License #</label>
+                <input
+                  class="form-control"
+                  type="text"
+                  name="exportLicenseNumber"
+                  [(ngModel)]="internationalShippingInfo.exportLicense"
+                  (ngModelChange)="enableSave()"
+                />
+              </div>
+              <div class="form-group">
+                <label>Description</label>
+                <input
+                  class="form-control"
+                  type="text"
+                  name="description"
+                  [(ngModel)]="internationalShippingInfo.description"
+                  (ngModelChange)="enableSave()"
+                />
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>Start Date</label>
+                <p-calendar
+                  class="p-calendar-cstm"
+                  [showIcon]="true"
+                  name="startDate"
+                  [(ngModel)]="internationalShippingInfo.startDate"
+                  (ngModelChange)="enableSave()"
+                ></p-calendar>
+              </div>
+              <div class="form-group">
+                <label>Expiration Date</label>
+                <p-calendar
+                  class="p-calendar-cstm"
+                  [showIcon]="true"
+                  [minDate]="
+                    internationalShippingInfo.startDate == undefined
+                      ? currentDate
+                      : internationalShippingInfo.startDate
+                  "
+                  name="expirationDate"
+                  [(ngModel)]="internationalShippingInfo.expirationDate"
+                  (ngModelChange)="enableSave()"
+                ></p-calendar>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label>Amount</label>
+                <input
+                  class="form-control"
+                  type="number"
+                  name="amount"
+                  [(ngModel)]="internationalShippingInfo.amount"
+                  (ngModelChange)="enableSave()"
+                />
+              </div>
+              <div class="form-group">
+                <label>Ship To Country <span class="clr-red">*</span></label>
+                <div class="inner-addon right-addon inline-block">
+                  <p-autoComplete
+                    class="autocomp-customer-cstm"
+                    field="nice_name"
+                    [(ngModel)]="internationalShippingInfo.shipToCountryId"
+                    name="country"
+                    [suggestions]="countrycollection"
+                    (completeMethod)="filterCountries($event)"
+                    [size]="30"
+                    [forceSelection]="true"
+                    (ngModelChange)="enableSave()"
+                    [minLength]="1"
+                    [dropdown]="true"
+                    required
+                  >
+                  </p-autoComplete>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <div class="checkbox-cstm">
+                  <label style="margin-top:17px;">
+                    <input
+                      type="checkbox"
+                      name="isPrimary"
+                      class="form-check-input"
+                      checked
+                      id="isPrimary"
+                      [(ngModel)]="internationalShippingInfo.isPrimary"
+                      (ngModelChange)="enableSave()"
+                    />
+                    <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                    Primary
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-primary pull-right"
+            [disabled]="!addIShippingForm.valid || disableSave"
+            (click)="saveInternationalShipping()"
+          >
+            {{ isEditInternational ? 'Update' : 'Save' }}
+          </button>
+          <button
+            type="button"
+            class="btn btn-danger"
+            (click)="closeMyModel('#addInternationalShippingInfo')"
+          >
+            Close
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- view International  -->
+<div class="modal popup-blur" id="viewInter" data-backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Details of Customer Shipping</h4>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          (click)="closeInternationalModal()"
+        >
+          &times;
+        </button>
+      </div>
+      <!-- Modal body -->
+      <div class="modal-body" *ngIf="sourceViewforInterShipping">
+        <div class="col-sm-12">
+          <p>
+            <span class="label"><b> Primary: </b></span
+            ><span class="value">{{
+              sourceViewforInterShipping.isPrimary === true ? 'Yes' : 'No'
+            }}</span>
+          </p>
+
+          <p>
+            <span class="label"><b>Export License#: </b></span
+            ><span class="value">{{
+              sourceViewforInterShipping.exportLicense
+            }}</span>
+          </p>
+          <p>
+            <span class="label"><b>Description: </b></span
+            ><span class="value">{{
+              sourceViewforInterShipping.description
+            }}</span>
+          </p>
+          <p>
+            <span class="label"><b>Start Date: </b></span
+            ><span class="value">{{
+              sourceViewforInterShipping.startDate | date: 'dd-MM-yyyy'
+            }}</span>
+          </p>
+          <p>
+            <span class="label"><b>Expiration Date: </b></span
+            ><span class="value">{{
+              sourceViewforInterShipping.expirationDate | date: 'dd-MM-yyyy'
+            }}</span>
+          </p>
+          <p>
+            <span class="label"><b>Amount: </b></span
+            ><span class="value">{{ sourceViewforInterShipping.amount }}</span>
+          </p>
+          <p>
+            <span class="label"
+              ><b>Country<span class="clr-red">*</span> : </b></span
+            ><span class="value">{{
+              sourceViewforInterShipping.shipToCountry
+            }}</span>
+          </p>
+          <p>
+            <span class="label"><b>Is Primary : </b></span
+            ><span class="value">{{
+              sourceViewforInterShipping.isPrimary === true ? 'Yes' : 'No'
+            }}</span>
+          </p>
+          <p>
+            <span class="label"><b>In Active: </b></span
+            ><span class="value">{{
+              sourceViewforInterShipping.isActive === true ? 'Yes' : 'No'
+            }}</span>
+          </p>
+
+          <div class="clear"></div>
+        </div>
+      </div>
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-danger"
+          data-dismiss="modal"
+          (click)="closeInternationalModal()"
+        >
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add Domestic Ship Via -->
+<div
+  class="modal fade popup-blur"
+  id="addDomesticShipVia"
+  data-backdrop="static"
+>
+  <form #addShippingVia="ngForm">
     <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close"  (click)="closeMyModel('#addShippingInfo')">&times;</button>
-                <h4 class="modal-title">{{isEditDomestic ? 'Edit' : 'Add' }} Ship to Information   </h4>
-                <div class="col-md-12 shadow-box-cstm">
-                    <div class="col-md-4">
-                        <p class="fs12">
-                            <label class="control-label labels-font-header" style="width: auto;">Customer Name: </label>
-                            <span class="span-header-red" style="text-transform: capitalize"> {{customerName }} </span>
-                        </p>
-                    </div>
-                    <div class="col-md-4">
-                        <p class="fs12">
-                            <label class="control-label labels-font-header" style="width: auto;">Customer Code: </label>
-                            <span class="span-header-red" style="text-transform: capitalize"> {{customerCode }} </span>
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <form #addShippingForm="ngForm" class="form-horizontal">
-                <div class="modal-body">
-                    <div class="form-row">
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label>Ship To <span class="clr-red">*</span></label>
-                                <input class="form-control" type="text" id="vssitename" name="siteName" [(ngModel)]="domesticShippingInfo.siteName"  (ngModelChange)="enableSave()" required>
-                            </div>
-                            <div class="form-group">
-                                <label>Ship To State / Prov <span class="clr-red">*</span></label>
-                                <input class="form-control" id="csstate" type="text" name="stateOrProvince" [(ngModel)]="domesticShippingInfo.stateOrProvince"  (ngModelChange)="enableSave()" required>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label>Ship To Address 1 <span class="clr-red">*</span></label>
-                                <input class="form-control" id="csaddress1" type="text" name="address1" [(ngModel)]="domesticShippingInfo.address1"  (ngModelChange)="enableSave()" required>
-                            </div>
-                            <div class="form-group">
-                                <label>Ship To Country <span class="clr-red">*</span></label>
-                                <div class="inner-addon right-addon inline-block">
-                                    <p-autoComplete class="autocomp-customer-cstm" field="nice_name" [(ngModel)]="domesticShippingInfo.country"  (ngModelChange)="enableSave()" name="country" [suggestions]="countrycollection" (completeMethod)="filterCountries($event)" [size]="30"
-                                                    [forceSelection]="true" [minLength]="1" [dropdown]="true" required>
-                                    </p-autoComplete>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label>Ship To Address 2</label>
-                                <input class="form-control" id="csaddress2" type="text" name="address2" [(ngModel)]="domesticShippingInfo.address2"  (ngModelChange)="enableSave()">
-                            </div>
-                            <div class="form-group">
-                                <label>Ship To Postal Code <span class="clr-red">*</span></label>
-                                <input class="form-control" id="cspostal" type="text" name="postalCode" [(ngModel)]="domesticShippingInfo.postalCode"  (ngModelChange)="enableSave()" required>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label>Ship To City <span class="clr-red">*</span></label>
-                                <input class="form-control" id="cscity" type="text" name="city" [(ngModel)]="domesticShippingInfo.city "  (ngModelChange)="enableSave()" required>
-                            </div>
-                            <div class="col-md-3">
-                            </div>
-                            <div class="form-group" style="margin-top: 15px;">
-                                <div class="checkbox-cstm" style="margin-left: 0;">
-                                    <label>
-                                        <input type="checkbox" checked id="isPrimary" name="isPrimary" [(ngModel)]="domesticShippingInfo.isPrimary"  (ngModelChange)="enableSave()">
-                                        <span class="cr"><i class="cr-icon pi pi-check"></i></span>
-                                        Primary
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary pull-right" [disabled]="!addShippingForm.valid || disableSave" (click)="saveDomesticShipping()">{{isEditDomestic ? 'Update' : 'Save'}}</button>
-                    <button type="button" class="btn btn-danger" (click)="closeMyModel('#addShippingInfo')">Close</button>
-                </div>
-            </form>
-        </div>
-    </div>
-    <ng-template #contentAuditHistShipVia let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static" class="popup-blur">
-        <!--<div #contentAuditHist id="contentAuditHist" class="modal fade">-->
+      <div class="modal-content">
         <div class="modal-header">
-            <h4 class="modal-title">History of  Ship Via  Info</h4>
-            <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
-                <span aria-hidden="true">&times;</span>
-            </button>
+          <h4 class="modal-title">Add Shipping Info</h4>
+          <!--{{isEditDomesticShipVia ? 'Edit' : 'Add'}} Shipping -->
+          <button type="button" class="close" data-dismiss="modal">
+            &times;
+          </button>
         </div>
         <div class="modal-body">
-            <div class="table-responsive">
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>Ship Via</th>
-                            <th>Shipping Account Info</th>
-                            <th>Memo</th>
-                            <th>IsActive</th>
-                            <th>Is Primary</th>
-                            <th>Updated By</th>
-                            <th>Last Updated Time</th>
-                            <th>Created By</th>
-                            <th>Created Time</th>
-                        </tr>
-                    </thead>
-                    <tr *ngFor="let audit of shippingViaauditHisory; let i = index;">
-                        <td [ngStyle]="{'color':  getColorCodeForShipViaHistory(i, 'shipVia', audit.shipVia)  ? 'black' : 'red'  }">{{audit.shipVia}}</td>
-                        <td [ngStyle]="{'color':  getColorCodeForShipViaHistory(i, 'shippingAccountInfo', audit.shippingAccountInfo)  ? 'black' : 'red'  }">{{audit.shippingAccountInfo}}</td>
-                        <td [ngStyle]="{'color':  getColorCodeForShipViaHistory(i, 'memo', audit.memo)  ? 'black' : 'red'  }">{{audit.memo}}</td>
-                        <td [ngStyle]="{'color':  getColorCodeForShipViaHistory(i, 'isActive', audit.isActive)  ? 'black' : 'red'  }">{{audit.isActive}}</td>
-                        <td [ngStyle]="{'color':  getColorCodeForShipViaHistory(i, 'isPrimary', audit.isPrimary)  ? 'black' : 'red'  }">{{audit.isPrimary}}</td>
-
-
-                        <td>{{audit.updatedBy}}</td>
-                        <td>{{audit.updatedDate | date: 'dd-MM-yyyy h:mm a '}}</td>
-                        <td>{{audit.createdBy}}</td>
-                        <td>{{audit.createdDate | date: 'dd-MM-yyyy h:mm a '}}</td>
-                    </tr>
-                </table>
+          <div class="form-row" *ngIf="isViewMode == false">
+            <div class="form-group" style="margin-top: 2px;margin-right:15px;">
+              <div class="checkbox-cstm" style="margin-left: 0;">
+                <label>
+                  <input
+                    type="checkbox"
+                    checked
+                    id="isPrimaryDomestic"
+                    name="isPrimaryDomestic"
+                    [(ngModel)]="shipViaDomestic.isPrimary"
+                  />
+                  <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                  Primary
+                </label>
+              </div>
             </div>
+            <div class="col-md-2">
+              <div class="form-group">
+                <label>Ship Via <span class="clr-red">*</span></label>
+                <input
+                  class="form-control"
+                  type="text"
+                  name="shipvia"
+                  [(ngModel)]="shipViaDomestic.shipVia"
+                  required
+                />
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="form-group">
+                <label
+                  >Shipping Account Info <span class="clr-red">*</span></label
+                >
+                <input
+                  class="form-control"
+                  type="text"
+                  name="shippingAccountinfo"
+                  [(ngModel)]="shipViaDomestic.shippingAccountInfo"
+                  required
+                />
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="form-group">
+                <label>Memo</label>
+                <textarea
+                  class="form-control"
+                  name="memo"
+                  rows="2"
+                  [(ngModel)]="shipViaDomestic.memo"
+                ></textarea>
+              </div>
+            </div>
+
+            <div class="col-md-2">
+              <div class="form-group">
+                <br />
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  [disabled]="!addShippingVia.valid"
+                  (click)="saveshipViaDomestic()"
+                >
+                  {{
+                    isEditDomesticShipVia ? 'Update Ship Via' : 'Save Ship Via'
+                  }}
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
+        <p-table
+          #domesShipVia
+          class="rpo-table-cstm"
+          name="domesticShipViaTable"
+          [rows]="pageSizeForShipViaDomestic"
+          [paginator]="true"
+          [pageLinks]="3"
+          [first]="0"
+          [value]="demosticShippingViaData"
+          [columns]="selectedColumnsForInternationShipViaTable"
+          [rowsPerPageOptions]="[10, 20, 50, 100]"
+          selectionMode="multiple"
+          [resizableColumns]="true"
+          [reorderableColumns]="true"
+          (onPage)="pageIndexChangeForShipViaDom($event)"
+          [loading]="loaderForDomesticShipVia"
+        >
+          <ng-template pTemplate="colgroup" let-columns>
+            <colgroup>
+              <col *ngFor="let col of columns" />
+            </colgroup>
+          </ng-template>
+          <ng-template pTemplate="header" let-columns>
+            <tr>
+              <th style="width: 40px;">Flag</th>
+              <th
+                *ngFor="let col of columns"
+                [hidden]="col.header == 'IsPrimary'"
+                pResizableColumn
+                pReorderableColumn
+                [pSortableColumn]="col.field"
+              >
+                {{ col.header }}
+                <p-sortIcon [field]="col.field"></p-sortIcon>
+              </th>
+              <th style="width: 140px;" *ngIf="isViewMode == false">Actions</th>
+            </tr>
+            <tr>
+              <th></th>
+              <th
+                style="width:auto"
+                *ngFor="let col of columns"
+                [hidden]="col.field == 'isPrimary'"
+                [ngSwitch]="col.field"
+              >
+                <input
+                  style="width:100%;"
+                  pInputText
+                  type="text"
+                  (input)="
+                    domesShipVia.filter(
+                      $event.target.value,
+                      col.field,
+                      'contains'
+                    )
+                  "
+                />
+              </th>
+              <th *ngIf="isViewMode == false"></th>
+            </tr>
+          </ng-template>
+          <ng-template
+            pTemplate="body"
+            let-rowData
+            let-columns="columns"
+            let-rowIndex="rowIndex"
+          >
+            <tr [pSelectableRow]="rowData" [pSelectableRowDblClick]="rowData">
+              <td style="width: 40px;">
+                <span class="flag">
+                  <i
+                    *ngIf="rowData.isPrimary == true"
+                    [ngStyle]="{
+                      color: rowData.isPrimary == true ? 'green' : 'none'
+                    }"
+                    class="fa fa-flag"
+                    matTooltip="Primary"
+                    matTooltipPosition="above"
+                    aria-hidden="true"
+                  ></i>
+                </span>
+              </td>
+              <td
+                *ngFor="let col of columns"
+                class="ui-resizable-column"
+                pReorderableRowHandle
+              >
+                {{
+                  col.field == 'createdDate'
+                    ? (rowData[col.field] | date: 'MM/dd/yyyy')
+                    : rowData[col.field] && col.field == 'updatedDate'
+                    ? (rowData[col.field] | date: 'MM/dd/yyyy')
+                    : rowData[col.field]
+                }}
+              </td>
+              <td style="width: 140px;" *ngIf="isViewMode == false">
+                <p-inputSwitch
+                  [(ngModel)]="rowData['isActive']"
+                  name="isActiveIS{{ rowIndex }}"
+                  (onChange)="updateActiveorInActiveForS(rowData)"
+                ></p-inputSwitch>
+                <span data-toggle="modal" data-target="#viewDomesticVia">
+                  <a
+                    class="btn btn-info boxed-float-btn nobg"
+                    data-toggle="tooltip"
+                    matTooltip="View"
+                    (click)="openDomesticShippingViewVia(rowData)"
+                    ><i class="fa fa-eye"></i
+                  ></a>
+                </span>
+                <!-- (click)="openInterShippingView(rowData)" -->
+                <button
+                  class="btn-edit"
+                  mat-icon-button
+                  data-toggle="modal"
+                  matTooltip="edit"
+                  (click)="editDomesticShipVia(rowData)"
+                >
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button
+                  class="btn-delete"
+                  mat-icon-button
+                  matTooltip="delete"
+                  (click)="deleteShipVia(deleteContent2, rowData)"
+                >
+                  <mat-icon color="warn">delete</mat-icon>
+                </button>
+                <button
+                  class="btn-history"
+                  mat-icon-button
+                  matTooltip="history"
+                  (click)="openShipViaHistory(contentAuditHistShipVia, rowData)"
+                >
+                  <mat-icon color="green">history</mat-icon>
+                </button>
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template
+            pTemplate="emptymessage"
+            let-columns
+            *ngIf="demosticShippingViaData.length == 0"
+          >
+            <tr>
+              <td
+                colspan="4"
+                style="color: red; font-weight: bold; text-align: center"
+              >
+                No records found
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="summary" id="footer">
+            <label id="footer" class="footer">No'of records:</label>
+            <input
+              style="width: 5%;"
+              [(ngModel)]="domesShipVia._totalRecords"
+              name="totalRecords"
+              [disabled]="true"
+              pInputText
+              type="text"
+            />
+            &nbsp;&nbsp;
+            <label id="footer" class="footer1">Pages Count:</label>
+            <input
+              style="width: 5%;"
+              [ngModel]="getPageCount(domesShipVia._totalRecords, pageSize)"
+              name="pagecount"
+              [disabled]="true"
+              pInputText
+              type="text"
+            />
+          </ng-template>
+        </p-table>
         <div class="modal-footer">
-            <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
+          <button
+            type="button"
+            class="btn btn-danger"
+            data-dismiss="modal"
+            (click)="resetShipViaDomestic()"
+          >
+            Close
+          </button>
         </div>
-    </ng-template>
-</div>
-<div class="modal fade" id="addInternationalShippingInfo" role="dialog" data-backdrop="static">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" (click)="closeMyModel('#addInternationalShippingInfo')">&times;</button>
-                <!--<h4 class="modal-title">Add International Shipping Info</h4>-->
-                <h4 class="modal-title">{{isEditInternational ? 'Edit' : 'Add' }}  International Shipping Info</h4>
-                <div class="col-md-12 shadow-box-cstm">
-                    <div class="col-md-4">
-                        <p class="fs12">
-                            <label class="control-label labels-font-header" style="width: auto;">Customer Name: </label>
-                            <span class="span-header-red" style="text-transform: capitalize"> {{customerName }} </span>
-                        </p>
-                    </div>
-                    <div class="col-md-4">
-                        <p class="fs12">
-                            <label class="control-label labels-font-header" style="width: auto;">Customer Code: </label>
-                            <span class="span-header-red" style="text-transform: capitalize"> {{customerCode }} </span>
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <form #addIShippingForm="ngForm" class="form-horizontal">
-                <div class="modal-body">
-                    <div class="form-row">
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label>Export License #</label>
-                                <input class="form-control" type="text" name="exportLicenseNumber" [(ngModel)]="internationalShippingInfo.exportLicense" (ngModelChange)="enableSave()">
-                            </div>
-                            <div class="form-group">
-                                <label>Description</label>
-                                <input class="form-control" type="text" name="description" [(ngModel)]="internationalShippingInfo.description" (ngModelChange)="enableSave()">
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label>Start Date</label>
-                                <p-calendar class="p-calendar-cstm" [showIcon]="true" name="startDate" [(ngModel)]="internationalShippingInfo.startDate" (ngModelChange)="enableSave()"></p-calendar>
-                            </div>
-                            <div class="form-group">
-                                <label>Expiration Date</label>
-                                <p-calendar class="p-calendar-cstm" [showIcon]="true" name="expirationDate" [(ngModel)]="internationalShippingInfo.expirationDate " (ngModelChange)="enableSave()"></p-calendar>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label>Amount</label>
-                                <input class="form-control" type="number" name="amount" [(ngModel)]="internationalShippingInfo.amount" (ngModelChange)="enableSave()">
-                            </div>
-                            <div class="form-group">
-                                <label>Ship To Country <span class="clr-red">*</span></label>
-                                <div class="inner-addon right-addon inline-block">
-                                    <p-autoComplete class="autocomp-customer-cstm" field="nice_name" [(ngModel)]="internationalShippingInfo.shipToCountryId" name="country" [suggestions]="countrycollection"
-                                                    (completeMethod)="filterCountries($event)" [size]="30" [forceSelection]="true" (ngModelChange)="enableSave()"
-                                                    [minLength]="1" [dropdown]="true" required>
-                                    </p-autoComplete>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <div class="checkbox-cstm">
-                                    <label style="margin-top:17px;">
-                                        <input type="checkbox" name="isPrimary" class="form-check-input" checked id="isPrimary" [(ngModel)]="internationalShippingInfo.isPrimary" (ngModelChange)="enableSave()">
-                                        <span class="cr"><i class="cr-icon pi pi-check"></i></span>
-                                    Primary
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary pull-right"  [disabled]=" !addIShippingForm.valid || disableSave" (click)="saveInternationalShipping()">{{isEditInternational ? 'Update' : 'Save'}}</button>
-                    <button type="button" class="btn btn-danger" (click)="closeMyModel('#addInternationalShippingInfo')">Close</button>
-                </div>
-            </form>
-        </div>
+      </div>
     </div>
-</div>
-<div  class="modal popup-blur" id="viewInter" data-backdrop="static">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <!-- Modal Header -->
-            <div class="modal-header">
-                <h4 class="modal-title">Details of Customer Shipping</h4>
-                <button type="button" class="close" data-dismiss="modal" (click)="closeInternationalModal()">&times;</button>
-            </div>
-            <!-- Modal body -->
-            <div class="modal-body" *ngIf="sourceViewforInterShipping">
-                <div class="col-sm-12">
-                    <p><span class="label"><b> Primary: </b></span><span class="value">{{sourceViewforInterShipping.isPrimary === true ? 'Yes' : 'No'}}</span></p>
-
-                    <p><span class="label"><b>Export License#: </b></span><span class="value">{{sourceViewforInterShipping.exportLicense}}</span></p>
-                    <p><span class="label"><b>Description: </b></span><span class="value">{{sourceViewforInterShipping.description}}</span></p>
-                    <p><span class="label"><b>Start Date: </b></span><span class="value">{{sourceViewforInterShipping.startDate | date:'dd-MM-yyyy'}}</span></p>
-                    <p><span class="label"><b>Expiration Date: </b></span><span class="value">{{sourceViewforInterShipping.expirationDate | date:'dd-MM-yyyy'}}</span></p>
-                    <p><span class="label"><b>Amount: </b></span><span class="value">{{sourceViewforInterShipping.amount}}</span></p>
-                    <p><span class="label"><b>Country<span class="clr-red">*</span> : </b></span><span class="value">{{sourceViewforInterShipping.shipToCountry}}</span></p>
-                    <p><span class="label"><b>Is Primary : </b></span><span class="value">{{sourceViewforInterShipping.isPrimary === true ? 'Yes' : 'No'}}</span></p>
-                    <p><span class="label"><b>In Active: </b></span><span class="value">{{sourceViewforInterShipping.isActive === true ? 'Yes' : 'No'}}</span></p>
-
-                    <div class="clear"></div>
-                </div>
-            </div>
-            <!-- Modal footer -->
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="closeInternationalModal()">Close</button>
-            </div>
-        </div>
+  </form>
+  <ng-template
+    #deleteContent2
+    let-c="close"
+    let-d="dismiss"
+    data-backdrop="static"
+  >
+    <div class="modal-header">
+      <h4 class="modal-title">Are You Sure Want to Delete?</h4>
+      <button
+        type="button"
+        class="close"
+        aria-label="Close"
+        (click)="dismissModel()"
+      >
+        <span aria-hidden="true">&times;</span>
+      </button>
     </div>
-</div>
-<div class="modal fade popup-blur" id="addDomesticShipVia" data-backdrop="static">
-    <form #addShippingVia="ngForm">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Add Shipping Info</h4> <!--{{isEditDomesticShipVia ? 'Edit' : 'Add'}} Shipping -->
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                </div>
-                <div class="modal-body">
-                    <div class="form-row" *ngIf="isViewMode == false">
-                        <div class="form-group" style="margin-top: 2px;margin-right:15px;">
-                            <div class="checkbox-cstm" style="margin-left: 0;">
-                                <label>
-                                    <input type="checkbox" checked id="isPrimaryDomestic" name="isPrimaryDomestic" [(ngModel)]="shipViaDomestic.isPrimary">
-                                    <span class="cr"><i class="cr-icon pi pi-check"></i></span>
-                                    Primary
-                                </label>
-                            </div>
-                        </div>
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <label>Ship Via <span class="clr-red">*</span></label>
-                                <input class="form-control" type="text" name="shipvia" [(ngModel)]="shipViaDomestic.shipVia" required>
-                            </div>
-                        </div>
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <label>Shipping Account Info <span class="clr-red">*</span></label>
-                                <input class="form-control" type="text" name="shippingAccountinfo" [(ngModel)]="shipViaDomestic.shippingAccountInfo" required>
-                            </div>
-                        </div>
-                        <div class="col-md-2" style="display:none">
-                            <div class="form-group">
-                                <label>Shipping Url <span class="clr-red"></span></label>
-                                <input class="form-control" type="text" name="shippingURL" [(ngModel)]="shipViaDomestic.shippingURL">
-                            </div>
-                        </div>
-                        <div class="col-md-2" style="display:none">
-                            <div class="form-group">
-                                <label>Shipping ID <span class="clr-red">*</span></label>
-                                <input class="form-control" type="text" name="shippingId" [(ngModel)]="shipViaDomestic.shippingId" [disabled]="true">
-                            </div>
-                        </div>
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <label>Memo</label>
-                                <textarea class="form-control" name="memo" rows="2" [(ngModel)]="shipViaDomestic.memo"></textarea>
-                            </div>
-                        </div>
+    <div class="modal-body">
+      <strong>
+        Ship Via:
+        <span class="new-label">{{ selectedRowForDeleteVia.shipVia }}</span>
+      </strong>
+    </div>
+    <div class="modal-footer">
+      <button
+        type="button"
+        class="btn btn-success"
+        (click)="deleteItemAndCloseModel2()"
+      >
+        Yes
+      </button>
+      <button type="button" class="btn btn-danger" (click)="dismissModel()">
+        No
+      </button>
+    </div>
+  </ng-template>
+  <ng-template
+    #contentAuditHistInterShipVia
+    let-c="close"
+    let-d="dismiss"
+    style="width:auto"
+    data-backdrop="static"
+  >
+    <!--<div #contentAuditHist id="contentAuditHist" class="modal fade">-->
+    <div class="modal-header">
+      <h4 class="modal-title">History of International Ship Via Info</h4>
+      <button
+        type="button"
+        class="close"
+        aria-label="Close"
+        (click)="dismissModel()"
+      >
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="table-responsive">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Ship Via</th>
+              <th>Shipping Account Info</th>
+              <th>Memo</th>
+              <th>Is Active</th>
+              <th>Is Primary</th>
+              <th>Updated By</th>
+              <th>Last Updated Time</th>
+              <th>Created By</th>
+              <th>Created Time</th>
+            </tr>
+          </thead>
+          <tr *ngFor="let audit of intershippingViaauditHisory; let i = index">
+            <td
+              [ngStyle]="{
+                color: getColorCodeForInterShipViaHistory(
+                  i,
+                  'shipVia',
+                  audit.shipVia
+                )
+                  ? 'black'
+                  : 'red'
+              }"
+            >
+              {{ audit.shipVia }}
+            </td>
+            <td
+              [ngStyle]="{
+                color: getColorCodeForInterShipViaHistory(
+                  i,
+                  'shippingAccountInfo',
+                  audit.shippingAccountInfo
+                )
+                  ? 'black'
+                  : 'red'
+              }"
+            >
+              {{ audit.shippingAccountInfo }}
+            </td>
+            <td
+              [ngStyle]="{
+                color: getColorCodeForInterShipViaHistory(i, 'memo', audit.memo)
+                  ? 'black'
+                  : 'red'
+              }"
+            >
+              {{ audit.memo }}
+            </td>
+            <td
+              [ngStyle]="{
+                color: getColorCodeForInterShipViaHistory(
+                  i,
+                  'isActive',
+                  audit.isActive
+                )
+                  ? 'black'
+                  : 'red'
+              }"
+            >
+              {{ audit.isActive }}
+            </td>
+            <td
+              [ngStyle]="{
+                color: getColorCodeForInterShipViaHistory(
+                  i,
+                  'isPrimary',
+                  audit.isPrimary
+                )
+                  ? 'black'
+                  : 'red'
+              }"
+            >
+              {{ audit.isPrimary }}
+            </td>
 
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <br>
-                                <button type="button" class="btn btn-primary" [disabled]="!addShippingVia.valid" (click)="saveshipViaDomestic()">{{isEditDomesticShipVia ? 'Update Ship Via' : 'Save Ship Via'}}</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <p-table #domesShipVia class="rpo-table-cstm"
-                         name="domesticShipViaTable"
-                         [rows]="10"
-                         [paginator]="true"
-                         [pageLinks]="3"
-                         [value]="demosticShippingViaData"
-                         [columns]="selectedColumnsForInternationShipViaTable"
-                         [rowsPerPageOptions]="[10,20,50,100]"
-                         selectionMode="multiple"
-                         [resizableColumns]="true"
-                         [reorderableColumns]="true" [scrollable]="true"
-                         scrollHeight="450px">
-                         <ng-template pTemplate="colgroup" let-columns>
-                            <colgroup>
-                                <col *ngFor="let col of columns" style="width:auto">
-                            </colgroup>
-                        </ng-template>
-                    <ng-template pTemplate="header" let-columns>
-                        <tr>
-                            <th style="width: 40px;">Flag</th>
-                            <th *ngFor="let col of columns" [hidden]="col.header == 'IsPrimary'" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
-                                {{col.header}}
-                                <p-sortIcon [field]="col.field"></p-sortIcon>
-                            </th>
-                            <th style="width: 140px;" *ngIf="isViewMode == false"> Actions</th>
-                        </tr>
-                        <tr>
-                            <th></th>
-                            <th style="width:auto" *ngFor="let col of columns" [hidden]="col.field == 'isPrimary'" [ngSwitch]="col.field">
-                                <input style="width:100%;" pInputText type="text" (input)="domesShipVia.filter($event.target.value, col.field, 'contains')">
-                            </th>
-                            <th *ngIf="isViewMode == false"></th>
-                        </tr>
-                    </ng-template>
-                    <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
-                        <tr [pSelectableRow]="rowData" [pSelectableRowDblClick]="rowData">
-                            <td style="width: 40px;">
-                                <span class="flag">
-                                    <i *ngIf="rowData.isPrimary == true" [ngStyle]="{'color': rowData.isPrimary == true ? 'green' : 'none'}"
-                                       class="fa fa-flag" matTooltip="Primary" matTooltipPosition="above" aria-hidden="true"></i>
-                                </span>
-                            </td>
-                            <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
-                                {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
-                            </td>
-                            <td style="width: 140px;" *ngIf="isViewMode == false">
-                                <p-inputSwitch [(ngModel)]="rowData['isActive']" name="isActiveIS{{rowIndex}}" (onChange)="updateActiveorInActiveForS(rowData)"></p-inputSwitch>
-                                <span data-toggle="modal" data-target="#viewDomesticVia"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" matTooltip="View" (click)="openDomesticShippingViewVia(rowData)"><i class="fa fa-eye"></i></a> </span> <!-- (click)="openInterShippingView(rowData)" -->
-                                <button class="btn-edit" mat-icon-button data-toggle="modal" matTooltip="edit" (click)="editDomesticShipVia(rowData)">
-                                    <mat-icon>edit</mat-icon>
-                                </button>
-                                <button class="btn-delete" mat-icon-button matTooltip="delete" (click)="deleteShipVia(deleteContent2,rowData)">
-                                    <mat-icon color="warn">delete</mat-icon>
-                                </button>
-                                <button class="btn-history" mat-icon-button matTooltip="history" (click)="openShipViaHistory(contentAuditHistShipVia,rowData)">
-                                    <mat-icon color="green">history</mat-icon>
-                                </button>
-                            </td>
-                        </tr>
-                    </ng-template>
-                    <ng-template pTemplate="emptymessage" let-columns *ngIf="demosticShippingViaData.length == 0">
-                        <tr>
-                            <td colspan="4" style="color: red; font-weight: bold; text-align: center">
-                                No records found
-                            </td>
-                        </tr>
-                    </ng-template>
-                    <ng-template pTemplate="summary" id="footer">
-                        <label id="footer" class="footer">No'of records:</label>
-                        <input style="width: 5%;" [(ngModel)]="domesShipVia._totalRecords" name="totalRecords" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp;
-                        <label id="footer" class="footer1">Pages Count:</label>
-                        <input style="width: 5%;" [ngModel]="getPageCount(domesShipVia._totalRecords,pageSize)" name="pagecount" [disabled]="true" pInputText type="text" />
-                    </ng-template>
-                    </p-table>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="resetShipViaDomestic()">Close</button>
-                </div>
-            </div>
-        </div>
-    </form>
-    <ng-template #deleteContent2 let-c="close" let-d="dismiss" data-backdrop="static">
-        <div class="modal-header">
-            <h4 class="modal-title">Are You Sure Want to Delete?</h4>
-            <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        <div class="modal-body">
-            <strong>
-                Ship Via:
-                <span class="new-label">{{selectedRowForDeleteVia.shipVia}}</span>
-            </strong>
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-success" (click)="deleteItemAndCloseModel2()">Yes</button>
-            <button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
-        </div>
-    </ng-template>
-    <ng-template #contentAuditHistInterShipVia let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static">
-        <!--<div #contentAuditHist id="contentAuditHist" class="modal fade">-->
-        <div class="modal-header">
-            <h4 class="modal-title">History of International  Ship Via  Info</h4>
-            <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        <div class="modal-body">
-            <div class="table-responsive">
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>Ship Via</th>
-                            <th>Shipping Account Info</th>
-                            <th>Memo</th>
-                            <th>Is Active</th>
-                            <th>Is Primary</th>
-                            <th>Updated By</th>
-                            <th>Last Updated Time</th>
-                            <th>Created By</th>
-                            <th>Created Time</th>
-                        </tr>
-                    </thead>
-                    <tr *ngFor="let audit of intershippingViaauditHisory; let i = index;">
-                        <td [ngStyle]="{'color':  getColorCodeForInterShipViaHistory(i, 'shipVia', audit.shipVia)  ? 'black' : 'red'  }">{{audit.shipVia}}</td>
-                        <td [ngStyle]="{'color':  getColorCodeForInterShipViaHistory(i, 'shippingAccountInfo', audit.shippingAccountInfo)  ? 'black' : 'red'  }">{{audit.shippingAccountInfo}}</td>
-                        <td [ngStyle]="{'color':  getColorCodeForInterShipViaHistory(i, 'memo', audit.memo)  ? 'black' : 'red'  }">{{audit.memo}}</td>
-                        <td [ngStyle]="{'color':  getColorCodeForInterShipViaHistory(i, 'isActive', audit.isActive)  ? 'black' : 'red'  }">{{audit.isActive}}</td>
-                        <td [ngStyle]="{'color':  getColorCodeForInterShipViaHistory(i, 'isPrimary', audit.isPrimary)  ? 'black' : 'red'  }">{{audit.isPrimary}}</td>
-
-                        <td>{{audit.updatedBy}}</td>
-                        <td>{{audit.updatedDate | date: 'dd-MM-yyyy h:mm a '}}</td>
-                        <td>{{audit.createdBy}}</td>
-                        <td>{{audit.createdDate | date: 'dd-MM-yyyy h:mm a '}}</td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
-        </div>
-    </ng-template>
+            <td>{{ audit.updatedBy }}</td>
+            <td>{{ audit.updatedDate | date: 'dd-MM-yyyy h:mm a ' }}</td>
+            <td>{{ audit.createdBy }}</td>
+            <td>{{ audit.createdDate | date: 'dd-MM-yyyy h:mm a ' }}</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-danger" (click)="dismissModel()">
+        Close
+      </button>
+    </div>
+  </ng-template>
 </div>
+
+<!-- Add International Ship Via  -->
 <div class="modal fade" id="addInternationShipVia" data-backdrop="static">
-    <div *ngIf="sourceViewforInterShipping" class="modal" id="viewInter">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <!-- Modal Header -->
-                <div class="modal-header">
-                    <h4 class="modal-title">Details of Customer Shipping</h4>
-                    <button type="button" class="btn btn-primary-cstm" data-dismiss="modal" (click)="closeInternationalModal()">&times;</button>
-                </div>
-                <!-- Modal body -->
-                <div class="modal-body">
-                    <div class="col-sm-12">
-                        <p><span class="label"><b>Export License#: </b></span><span class="value">{{sourceViewforInterShipping.exportLicense}}</span></p>
-                        <p><span class="label"><b>Description: </b></span><span class="value">{{sourceViewforInterShipping.description}}</span></p>
-                        <p><span class="label"><b>Start Date: </b></span><span class="value">{{sourceViewforInterShipping.startDate | date:'dd-MM-yyyy'}}</span></p>
-                        <p><span class="label"><b>Expiration Date: </b></span><span class="value">{{sourceViewforInterShipping.expirationDate | date:'dd-MM-yyyy'}}</span></p>
-                        <p><span class="label"><b>Amount: </b></span><span class="value">{{sourceViewforInterShipping.amount}}</span></p>
-                        <p><span class="label"><b>Country<span class="clr-red">*</span> : </b></span><span class="value">{{sourceViewforInterShipping.shipToCountry}}</span></p>
-                       
-                        <div class="clear"></div>
-                    </div>
-                </div>
-                <!-- Modal footer -->
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="closeInternationalModal()">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <form #addInterShipVia="ngForm">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-
-                    <h4 class="modal-title">Add Shipping Info</h4> <!--{{isEditInternationalShipVia ? 'Edit' : 'Add'}} International -->
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                </div>
-                <div class="modal-body">
-                    <div class="form-row" *ngIf="isViewMode == false">
-                        <div class="form-group" style="margin-top: 2px;margin-right:15px;">
-                            <div class="checkbox-cstm" style="margin-left: 0;">
-                                <label>
-                                    <input type="checkbox" checked id="isPrimaryInter" name="isPrimaryDomesticInter" [(ngModel)]="shipViaInternational.isPrimary">
-                                    <span class="cr"><i class="cr-icon pi pi-check"></i></span>
-                                    Primary
-                                </label>
-                            </div>
-                        </div>
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <label>Ship Via <span class="clr-red">*</span></label>
-                                <input class="form-control" type="text" name="shipvia" [(ngModel)]="shipViaInternational.shipVia" required>
-                            </div>
-                        </div>
-
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <label>Shipping Account Info <span class="clr-red">*</span></label>
-                                <input class="form-control" type="text" name="shippingAccountinfo" [(ngModel)]="shipViaInternational.shippingAccountInfo" required>
-                            </div>
-                        </div>
-                        <!--<div class="col-md-2" style="display:none">
-        <div class="form-group">
-            <label>Shipping Url <span class="clr-red"></span></label>
-            <input class="form-control" type="text" name="shippingURL" [(ngModel)]="shipViaInternational.shippingURL">
-        </div>
-    </div>
-    <div class="col-md-2" style="display:none">
-        <div class="form-group">
-            <label>Shipping ID <span class="clr-red">*</span></label>
-            <input class="form-control" type="text" name="shippingId" [(ngModel)]="shipViaInternational.shippingId" required>
-        </div>
-    </div>-->
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <label>Memo</label>
-                                <textarea class="form-control" name="memo" rows="2" [(ngModel)]="shipViaInternational.memo"></textarea>
-                            </div>
-                        </div>
-
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <br>
-                                <button type="button" class="btn btn-primary" [disabled]="!addInterShipVia.valid" (click)="saveshipViaInternational()">{{isEditInternationalShipVia ? 'Update Ship Via' : 'Save Ship Via'}}</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <p-table #internationShipVia class="rpo-table-cstm"
-                         name="internationalshipViaTable"
-                         [rows]="10"
-                         [value]="internationalShippingViaData"
-                         [paginator]="true"
-                         [pageLinks]="3"
-                         [rowsPerPageOptions]="[10,20,50,100]"
-                         [columns]="selectedColumnsForInternationShipViaTable"
-                         selectionMode="multiple"
-                         [resizableColumns]="true"
-                         [reorderableColumns]="true"
-                         [scrollable]="true"
-                         scrollHeight="450px">
-                    <ng-template pTemplate="colgroup" let-columns>
-                        <colgroup>
-                            <col *ngFor="let col of columns" style="width:auto">
-                        </colgroup>
-                    </ng-template>
-                    <!-- <ng-template pTemplate="caption">
-        <div style="text-align: right">
-        </div>
-    </ng-template> -->
-                    <ng-template pTemplate="header" let-columns>
-                        <tr>
-                            <th style="width: 40px;">Flag</th>
-                            <th *ngFor="let col of columns" [hidden]="col.header == 'IsPrimary'" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
-                                {{col.header}}
-                                <p-sortIcon [field]="col.field"></p-sortIcon>
-                            </th>
-                            <th style="width: 140px;" *ngIf="isViewMode == false"> Actions</th>
-                        </tr>
-                        <tr>
-                            <th></th>
-                            <th style="width:auto" *ngFor="let col of columns" [hidden]="col.field == 'isPrimary'" [ngSwitch]="col.field">
-                                <input style="width:100%;" pInputText type="text" (input)="internationShipVia.filter($event.target.value, col.field, 'contains')">
-                            </th>
-                            <th *ngIf="isViewMode == false"></th>
-                        </tr>
-                    </ng-template>
-                    <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
-                        <tr [pSelectableRow]="rowData" [pSelectableRowDblClick]="rowData" (dblclick)="toggledbldisplayShipVia(rowData)">
-                            <td style="width: 40px;">
-                                <span class="flag">
-                                    <i *ngIf="rowData.isPrimary == true" [ngStyle]="{'color': rowData.isPrimary == true ? 'green' : 'none'}"
-                                       class="fa fa-flag" matTooltip="Primary" matTooltipPosition="above" aria-hidden="true"></i>
-                                </span>
-                            </td>
-                            <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
-                                {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
-                            </td>
-                            <td style="width: 140px;" *ngIf="isViewMode == false">
-                                <p-inputSwitch [(ngModel)]="rowData['isActive']" name="isActive{{rowIndex}}" (onChange)="updateActiveorInActiveShipViaForIS(rowData)"></p-inputSwitch>
-                                <span data-toggle="modal" data-target="#viewInterVia"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openInterShippingViewVia(rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
-                                <button class="btn-edit" mat-icon-button data-toggle="modal"
-                                        (click)="editInternationalShipVia(rowData)" matTooltip="edit">
-                                    <mat-icon>edit</mat-icon>
-                                </button>
-                                <button class="btn-delete" mat-icon-button matTooltip="delete" (click)="deleteInternationalShippingVia(deleteContent3,rowData)">
-                                    <mat-icon color="warn">delete</mat-icon>
-                                </button>
-                                <button class="btn-history" mat-icon-button matTooltip="history" (click)="openInterShipViaHistory(contentAuditHistInterShipVia,rowData)">
-                                    <mat-icon color="green">history</mat-icon>
-                                </button>
-                            </td>
-                        </tr>
-                    </ng-template>
-                    <ng-template pTemplate="emptymessage" let-columns *ngIf="internationalShippingViaData.length == 0">
-                        <tr>
-                            <td colspan="4" style="color: red; font-weight: bold; text-align: center">
-                                No records found
-                            </td>
-                        </tr>
-                    </ng-template>
-                    <ng-template pTemplate="summary" id="footer">
-                        <label id="footer" class="footer">No'of records:</label>
-                        <input style="width: 5%;"
-                               [(ngModel)]="interTotalRecords"
-                               [disabled]="true"
-                               name="interTotalRecords"
-                               pInputText
-                               type="text" />
-                        &nbsp;&nbsp;
-                        <label id="footer" class="footer1">Pages Count:</label>
-                        <input style="width: 5%;"
-                               [(ngModel)]="interTotalPages"
-                               [disabled]="true"
-                               name="interTotalPages"
-                               pInputText
-                               type="text" />
-                    </ng-template>
-                </p-table>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="resetShipViaInternational()">Close</button>
-                </div>
-            </div>
-        </div>
-    </form>
-    <ng-template #deleteContent3 let-c="close" let-d="dismiss" data-backdrop="static">
+  <div *ngIf="sourceViewforInterShipping" class="modal" id="viewInter">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <!-- Modal Header -->
         <div class="modal-header">
-            <h4 class="modal-title">Are You Sure Want to Delete?</h4>
-            <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
-                <span aria-hidden="true">&times;</span>
-            </button>
+          <h4 class="modal-title">Details of Customer Shipping</h4>
+          <button
+            type="button"
+            class="btn btn-primary-cstm"
+            data-dismiss="modal"
+            (click)="closeInternationalModal()"
+          >
+            &times;
+          </button>
+        </div>
+        <!-- Modal body -->
+        <div class="modal-body">
+          <div class="col-sm-12">
+            <p>
+              <span class="label"><b>Export License#: </b></span
+              ><span class="value">{{
+                sourceViewforInterShipping.exportLicense
+              }}</span>
+            </p>
+            <p>
+              <span class="label"><b>Description: </b></span
+              ><span class="value">{{
+                sourceViewforInterShipping.description
+              }}</span>
+            </p>
+            <p>
+              <span class="label"><b>Start Date: </b></span
+              ><span class="value">{{
+                sourceViewforInterShipping.startDate | date: 'dd-MM-yyyy'
+              }}</span>
+            </p>
+            <p>
+              <span class="label"><b>Expiration Date: </b></span
+              ><span class="value">{{
+                sourceViewforInterShipping.expirationDate | date: 'dd-MM-yyyy'
+              }}</span>
+            </p>
+            <p>
+              <span class="label"><b>Amount: </b></span
+              ><span class="value">{{
+                sourceViewforInterShipping.amount
+              }}</span>
+            </p>
+            <p>
+              <span class="label"
+                ><b>Country<span class="clr-red">*</span> : </b></span
+              ><span class="value">{{
+                sourceViewforInterShipping.shipToCountry
+              }}</span>
+            </p>
+
+            <div class="clear"></div>
+          </div>
+        </div>
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-danger"
+            data-dismiss="modal"
+            (click)="closeInternationalModal()"
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <form #addInterShipVia="ngForm">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Add Shipping Info</h4>
+          <!--{{isEditInternationalShipVia ? 'Edit' : 'Add'}} International -->
+          <button type="button" class="close" data-dismiss="modal">
+            &times;
+          </button>
         </div>
         <div class="modal-body">
-            <strong>
-                Ship Via:
-                <span class="new-label">{{selectedRowForDeleteInterVia.shipVia}}</span>
-            </strong>
+          <div class="form-row" *ngIf="isViewMode == false">
+            <div class="form-group" style="margin-top: 2px;margin-right:15px;">
+              <div class="checkbox-cstm" style="margin-left: 0;">
+                <label>
+                  <input
+                    type="checkbox"
+                    checked
+                    id="isPrimaryInter"
+                    name="isPrimaryDomesticInter"
+                    [(ngModel)]="shipViaInternational.isPrimary"
+                  />
+                  <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                  Primary
+                </label>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="form-group">
+                <label>Ship Via <span class="clr-red">*</span></label>
+                <input
+                  class="form-control"
+                  type="text"
+                  name="shipvia"
+                  [(ngModel)]="shipViaInternational.shipVia"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="col-md-2">
+              <div class="form-group">
+                <label
+                  >Shipping Account Info <span class="clr-red">*</span></label
+                >
+                <input
+                  class="form-control"
+                  type="text"
+                  name="shippingAccountinfo"
+                  [(ngModel)]="shipViaInternational.shippingAccountInfo"
+                  required
+                />
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="form-group">
+                <label>Memo</label>
+                <textarea
+                  class="form-control"
+                  name="memo"
+                  rows="2"
+                  [(ngModel)]="shipViaInternational.memo"
+                ></textarea>
+              </div>
+            </div>
+
+            <div class="col-md-2">
+              <div class="form-group">
+                <br />
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  [disabled]="!addInterShipVia.valid"
+                  (click)="saveshipViaInternational()"
+                >
+                  {{
+                    isEditInternationalShipVia
+                      ? 'Update Ship Via'
+                      : 'Save Ship Via'
+                  }}
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
+        <p-table
+          #internationShipVia
+          class="rpo-table-cstm"
+          name="internationalshipViaTable"
+          [rows]="pageSizeForShipViaInt"
+          [first]="0"
+          [value]="internationalShippingViaData"
+          [paginator]="true"
+          [pageLinks]="3"
+          [rowsPerPageOptions]="[10, 20, 50, 100]"
+          [columns]="selectedColumnsForInternationShipViaTable"
+          selectionMode="multiple"
+          [resizableColumns]="true"
+          [reorderableColumns]="true"
+          (onPage)="pageIndexChangeForShipViaInt($event)"
+          [loading]="loaderForInternationalShipVia"
+        >
+          <ng-template pTemplate="colgroup" let-columns>
+            <colgroup>
+              <col *ngFor="let col of columns" style="width:auto" />
+            </colgroup>
+          </ng-template>
+
+          <ng-template pTemplate="header" let-columns>
+            <tr>
+              <th style="width: 40px;">Flag</th>
+              <th
+                *ngFor="let col of columns"
+                [hidden]="col.header == 'IsPrimary'"
+                pResizableColumn
+                pReorderableColumn
+                [pSortableColumn]="col.field"
+              >
+                {{ col.header }}
+                <p-sortIcon [field]="col.field"></p-sortIcon>
+              </th>
+              <th style="width: 140px;" *ngIf="isViewMode == false">Actions</th>
+            </tr>
+            <tr>
+              <th></th>
+              <th
+                style="width:auto"
+                *ngFor="let col of columns"
+                [hidden]="col.field == 'isPrimary'"
+                [ngSwitch]="col.field"
+              >
+                <input
+                  style="width:100%;"
+                  pInputText
+                  type="text"
+                  (input)="
+                    internationShipVia.filter(
+                      $event.target.value,
+                      col.field,
+                      'contains'
+                    )
+                  "
+                />
+              </th>
+              <th *ngIf="isViewMode == false"></th>
+            </tr>
+          </ng-template>
+          <ng-template
+            pTemplate="body"
+            let-rowData
+            let-columns="columns"
+            let-rowIndex="rowIndex"
+          >
+            <tr
+              [pSelectableRow]="rowData"
+              [pSelectableRowDblClick]="rowData"
+              (dblclick)="toggledbldisplayShipVia(rowData)"
+            >
+              <td style="width: 40px;">
+                <span class="flag">
+                  <i
+                    *ngIf="rowData.isPrimary == true"
+                    [ngStyle]="{
+                      color: rowData.isPrimary == true ? 'green' : 'none'
+                    }"
+                    class="fa fa-flag"
+                    matTooltip="Primary"
+                    matTooltipPosition="above"
+                    aria-hidden="true"
+                  ></i>
+                </span>
+              </td>
+              <td
+                *ngFor="let col of columns"
+                class="ui-resizable-column"
+                pReorderableRowHandle
+              >
+                {{
+                  col.field == 'createdDate'
+                    ? (rowData[col.field] | date: 'MM/dd/yyyy')
+                    : rowData[col.field] && col.field == 'updatedDate'
+                    ? (rowData[col.field] | date: 'MM/dd/yyyy')
+                    : rowData[col.field]
+                }}
+              </td>
+              <td style="width: 140px;" *ngIf="isViewMode == false">
+                <p-inputSwitch
+                  [(ngModel)]="rowData['isActive']"
+                  name="isActive{{ rowIndex }}"
+                  (onChange)="updateActiveorInActiveShipViaForIS(rowData)"
+                ></p-inputSwitch>
+                <span data-toggle="modal" data-target="#viewInterVia">
+                  <a
+                    class="btn btn-info boxed-float-btn nobg"
+                    data-toggle="tooltip"
+                    (click)="openInterShippingViewVia(rowData)"
+                    matTooltip="View"
+                    ><i class="fa fa-eye"></i
+                  ></a>
+                </span>
+                <button
+                  class="btn-edit"
+                  mat-icon-button
+                  data-toggle="modal"
+                  (click)="editInternationalShipVia(rowData)"
+                  matTooltip="edit"
+                >
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button
+                  class="btn-delete"
+                  mat-icon-button
+                  matTooltip="delete"
+                  (click)="
+                    deleteInternationalShippingVia(deleteContent3, rowData)
+                  "
+                >
+                  <mat-icon color="warn">delete</mat-icon>
+                </button>
+                <button
+                  class="btn-history"
+                  mat-icon-button
+                  matTooltip="history"
+                  (click)="
+                    openInterShipViaHistory(
+                      contentAuditHistInterShipVia,
+                      rowData
+                    )
+                  "
+                >
+                  <mat-icon color="green">history</mat-icon>
+                </button>
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template
+            pTemplate="emptymessage"
+            let-columns
+            *ngIf="internationalShippingViaData.length == 0"
+          >
+            <tr>
+              <td
+                colspan="4"
+                style="color: red; font-weight: bold; text-align: center"
+              >
+                No records found
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="summary" id="footer">
+            <label id="footer" class="footer">No'of records:</label>
+            <input
+              style="width: 5%;"
+              [(ngModel)]="internationShipVia._totalRecords"
+              [disabled]="true"
+              name="interTotalRecords"
+              pInputText
+              type="text"
+            />
+            &nbsp;&nbsp;
+            <label id="footer" class="footer1">Pages Count:</label>
+            <input
+              style="width: 5%;"
+              [ngModel]="
+                getPageCount(internationShipVia._totalRecords, pageSize)
+              "
+              [disabled]="true"
+              name="interTotalPages"
+              pInputText
+              type="text"
+            />
+          </ng-template>
+        </p-table>
         <div class="modal-footer">
-            <button type="button" class="btn btn-success" (click)="deleteItemAndCloseModel3()">Yes</button>
-            <button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
+          <button
+            type="button"
+            class="btn btn-danger"
+            data-dismiss="modal"
+            (click)="resetShipViaInternational()"
+          >
+            Close
+          </button>
         </div>
-    </ng-template>
+      </div>
+    </div>
+  </form>
+  <ng-template
+    #deleteContent3
+    let-c="close"
+    let-d="dismiss"
+    data-backdrop="static"
+  >
+    <div class="modal-header">
+      <h4 class="modal-title">Are You Sure Want to Delete?</h4>
+      <button
+        type="button"
+        class="close"
+        aria-label="Close"
+        (click)="dismissModel()"
+      >
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <strong>
+        Ship Via:
+        <span class="new-label">{{
+          selectedRowForDeleteInterVia.shipVia
+        }}</span>
+      </strong>
+    </div>
+    <div class="modal-footer">
+      <button
+        type="button"
+        class="btn btn-success"
+        (click)="deleteItemAndCloseModel3()"
+      >
+        Yes
+      </button>
+      <button type="button" class="btn btn-danger" (click)="dismissModel()">
+        No
+      </button>
+    </div>
+  </ng-template>
 </div>
-<div *ngIf="sourceViewforInterShipping" class="modal" id="viewInterSipVia" data-backdrop="static">
+
+<!-- <div *ngIf="sourceViewforInterShipping" class="modal" id="viewInterSipVia" data-backdrop="static">
     <div class="modal-dialog">
         <div class="modal-content">
-            <!-- Modal Header -->
+
             <div class="modal-header">
                 <h4 class="modal-title">Details of Customer Shipping</h4>
                 <button type="button" class="close" data-dismiss="modal" (click)="closeInternationalModal()">&times;</button>
             </div>
-            <!-- Modal body -->
             <div class="modal-body">
                 <div class="col-sm-12">
                     <p><span class="label"><b>Export License#: </b></span><span class="value">{{sourceViewforInterShipping.exportLicense}}</span></p>
@@ -1249,230 +2535,596 @@
                     <div class="clear"></div>
                 </div>
             </div>
-            <!-- Modal footer -->
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="closeInternationalModal()">Close</button>
             </div>
         </div>
     </div>
-</div>
-<div  class="modal popup-blur" id="viewInterVia" data-backdrop="static">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <!-- Modal Header -->
-            <div class="modal-header">
-                <h4 class="modal-title">Details of Customer Shipping</h4>
-                <button type="button" class="close" data-dismiss="modal" (click)="closeInternationalModal()">&times;</button>
-            </div>
-            <!-- Modal body -->
-            <div class="modal-body" *ngIf="sourceViewforInterShippingVia">
-                <div class="col-sm-12">
-                    <p><span class="label"><b>Ship Via: </b></span><span class="value">{{sourceViewforInterShippingVia.shipVia}}</span></p>
-                    <p><span class="label"><b>Shipping Account Info: </b></span><span class="value">{{sourceViewforInterShippingVia.shippingAccountInfo}}</span></p>
-                    <!--<p><span class="label"><b>Shipping URL: </b></span><span class="value">{{sourceViewforInterShippingVia.shippingURL}}</span></p>
+</div> -->
+
+<!-- View International Ship Via  -->
+<div class="modal popup-blur" id="viewInterVia" data-backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Details of Customer Shipping</h4>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          (click)="closeInternationalModal()"
+        >
+          &times;
+        </button>
+      </div>
+      <!-- Modal body -->
+      <div class="modal-body" *ngIf="sourceViewforInterShippingVia">
+        <div class="col-sm-12">
+          <p>
+            <span class="label"><b>Ship Via: </b></span
+            ><span class="value">{{
+              sourceViewforInterShippingVia.shipVia
+            }}</span>
+          </p>
+          <p>
+            <span class="label"><b>Shipping Account Info: </b></span
+            ><span class="value">{{
+              sourceViewforInterShippingVia.shippingAccountInfo
+            }}</span>
+          </p>
+          <!--<p><span class="label"><b>Shipping URL: </b></span><span class="value">{{sourceViewforInterShippingVia.shippingURL}}</span></p>
     <p><span class="label"><b>ShippingId: </b></span><span class="value">{{sourceViewforInterShippingVia.shippingId}}</span></p>-->
-                    <p><span class="label"><b>Memo: </b></span><span class="value">{{sourceViewforInterShippingVia.memo}}</span></p>
-                    <p><span class="label"><b>In Active : </b></span><span class="value"> {{sourceViewforInterShippingVia.isActive === true ? 'Yes' : 'No'}}</span></p>
-                    <p><span class="label"><b>Is Primary : </b></span><span class="value"> {{sourceViewforInterShippingVia.isPrimary === true ? 'Yes' : 'No'}}</span></p>
+          <p>
+            <span class="label"><b>Memo: </b></span
+            ><span class="value">{{ sourceViewforInterShippingVia.memo }}</span>
+          </p>
+          <p>
+            <span class="label"><b>In Active : </b></span
+            ><span class="value">
+              {{
+                sourceViewforInterShippingVia.isActive === true ? 'Yes' : 'No'
+              }}</span
+            >
+          </p>
+          <p>
+            <span class="label"><b>Is Primary : </b></span
+            ><span class="value">
+              {{
+                sourceViewforInterShippingVia.isPrimary === true ? 'Yes' : 'No'
+              }}</span
+            >
+          </p>
 
-                    <div class="clear"></div>
-                </div>
-            </div>
-            <!-- Modal footer -->
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="closeInternationalModal()">Close</button>
-            </div>
+          <div class="clear"></div>
         </div>
+      </div>
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-danger"
+          data-dismiss="modal"
+          (click)="closeInternationalModal()"
+        >
+          Close
+        </button>
+      </div>
     </div>
+  </div>
 </div>
+
+<!-- View Domestic Ship Via  -->
 <div class="modal" id="viewDomesticVia" data-backdrop="static">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <!-- Modal Header -->
-            <div class="modal-header">
-                <h4 class="modal-title">Details of Customer Shipping</h4>
-                <button type="button" class="close" data-dismiss="modal" (click)="closeInternationalModal()">&times;</button>
-            </div>
-            <!-- Modal body -->
-            <div class="modal-body">
-                <div class="col-sm-12" *ngIf="sourceViewforDomesticShippingVia">
-                    <p><span class="label"><b>Ship Via: </b></span><span class="value">{{sourceViewforDomesticShippingVia.shipVia}}</span></p>
-                    <p><span class="label"><b>Shipping Account Info: </b></span><span class="value">{{sourceViewforDomesticShippingVia.shippingAccountInfo}}</span></p>
-                    <!--<p><span class="label"><b>Shipping URL: </b></span><span class="value">{{sourceViewforDomesticShippingVia.shippingURL}}</span></p>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Details of Customer Shipping</h4>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          (click)="closeInternationalModal()"
+        >
+          &times;
+        </button>
+      </div>
+      <!-- Modal body -->
+      <div class="modal-body">
+        <div class="col-sm-12" *ngIf="sourceViewforDomesticShippingVia">
+          <p>
+            <span class="label"><b>Ship Via: </b></span
+            ><span class="value">{{
+              sourceViewforDomesticShippingVia.shipVia
+            }}</span>
+          </p>
+          <p>
+            <span class="label"><b>Shipping Account Info: </b></span
+            ><span class="value">{{
+              sourceViewforDomesticShippingVia.shippingAccountInfo
+            }}</span>
+          </p>
+          <!--<p><span class="label"><b>Shipping URL: </b></span><span class="value">{{sourceViewforDomesticShippingVia.shippingURL}}</span></p>
     <p><span class="label"><b>ShippingId: </b></span><span class="value">{{sourceViewforDomesticShippingVia.shippingId}}</span></p>-->
-                    <p><span class="label"><b>Memo: </b></span><span class="value">{{sourceViewforDomesticShippingVia.memo}}</span></p>
-                    <p><span class="label"><b>In Active : </b></span><span class="value"> {{sourceViewforDomesticShippingVia.isActive === true ? 'Yes' : 'No'}}</span></p>
-                    <p><span class="label"><b>Is Primary : </b></span><span class="value"> {{sourceViewforDomesticShippingVia.isPrimary === true ? 'Yes' : 'No'}}</span></p>
+          <p>
+            <span class="label"><b>Memo: </b></span
+            ><span class="value">{{
+              sourceViewforDomesticShippingVia.memo
+            }}</span>
+          </p>
+          <p>
+            <span class="label"><b>In Active : </b></span
+            ><span class="value">
+              {{
+                sourceViewforDomesticShippingVia.isActive === true
+                  ? 'Yes'
+                  : 'No'
+              }}</span
+            >
+          </p>
+          <p>
+            <span class="label"><b>Is Primary : </b></span
+            ><span class="value">
+              {{
+                sourceViewforDomesticShippingVia.isPrimary === true
+                  ? 'Yes'
+                  : 'No'
+              }}</span
+            >
+          </p>
 
-                    <div class="clear"></div>
-                </div>
-            </div>
-            <!-- Modal footer -->
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="closeInternationalModal()">Close</button>
-            </div>
+          <div class="clear"></div>
         </div>
+      </div>
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-danger"
+          data-dismiss="modal"
+          (click)="closeInternationalModal()"
+        >
+          Close
+        </button>
+      </div>
     </div>
+  </div>
 </div>
-<ng-template #deleteContent let-c="close" let-d="dismiss" data-backdrop="static">
-    <div class="modal-header">
-        <h4 class="modal-title">Are You Sure Want to Delete?</h4>
-        <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-    <div class="modal-body">
-        <strong>
-            Site Name:
-            <span class="new-label">{{selectedRowForDelete.siteName}}</span>
-        </strong>
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-success" (click)="deleteItemAndCloseModel()">Yes</button>
-        <button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
-    </div>
+
+<ng-template
+  #deleteContent
+  let-c="close"
+  let-d="dismiss"
+  data-backdrop="static"
+>
+  <div class="modal-header">
+    <h4 class="modal-title">Are You Sure Want to Delete?</h4>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="dismissModel()"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <strong>
+      Site Name:
+      <span class="new-label">{{ selectedRowForDelete.siteName }}</span>
+    </strong>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-success"
+      (click)="deleteItemAndCloseModel()"
+    >
+      Yes
+    </button>
+    <button type="button" class="btn btn-danger" (click)="dismissModel()">
+      No
+    </button>
+  </div>
 </ng-template>
-<ng-template #deleteContent1 let-c="close" let-d="dismiss" data-backdrop="static">
-    <div class="modal-header">
-        <h4 class="modal-title">Are You Sure Want to Delete?</h4>
-        <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-    <div class="modal-body">
-        <strong>
-            Export License:
-            <span class="new-label">{{selectedRowForDeleteInter.exportLicense}}</span>
-        </strong>
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-success" (click)="deleteItemAndCloseModel1()">Yes</button>
-        <button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
-    </div>
+
+<ng-template
+  #deleteContent1
+  let-c="close"
+  let-d="dismiss"
+  data-backdrop="static"
+>
+  <div class="modal-header">
+    <h4 class="modal-title">Are You Sure Want to Delete?</h4>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="dismissModel()"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <strong>
+      Export License:
+      <span class="new-label">{{
+        selectedRowForDeleteInter.exportLicense
+      }}</span>
+    </strong>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-success"
+      (click)="deleteItemAndCloseModel1()"
+    >
+      Yes
+    </button>
+    <button type="button" class="btn btn-danger" (click)="dismissModel()">
+      No
+    </button>
+  </div>
 </ng-template>
-<ng-template #contentAuditHist let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static">
-    <!--<div #contentAuditHist id="contentAuditHist" class="modal fade">-->
-    <div class="modal-header">
-        <h4 class="modal-title">History of Shipping Info</h4>
-        <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
-            <span aria-hidden="true">&times;</span>
-        </button>
-        <div class="col-md-12 shadow-box-cstm">
-            <div class="col-md-4">
-                <p class="fs12">
-                    <label class="control-label labels-font-header" style="width: auto;">Customer Name: </label>
-                    <span class="span-header-red" style="text-transform: capitalize"> {{customerName }} </span>
-                </p>
-            </div>
-            <div class="col-md-4">
-                <p class="fs12">
-                    <label class="control-label labels-font-header" style="width: auto;">Customer Code: </label>
-                    <span class="span-header-red" style="text-transform: capitalize"> {{customerCode }} </span>
-                </p>
-            </div>
-        </div>
+
+<ng-template
+  #contentAuditHist
+  let-c="close"
+  let-d="dismiss"
+  style="width:auto"
+  data-backdrop="static"
+>
+  <!--<div #contentAuditHist id="contentAuditHist" class="modal fade">-->
+  <div class="modal-header">
+    <h4 class="modal-title">History of Shipping Info</h4>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="dismissModel()"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <div class="col-md-12 shadow-box-cstm">
+      <div class="col-md-4">
+        <p class="fs12">
+          <label class="control-label labels-font-header" style="width: auto;"
+            >Customer Name:
+          </label>
+          <span class="span-header-red" style="text-transform: capitalize">
+            {{ customerName }}
+          </span>
+        </p>
+      </div>
+      <div class="col-md-4">
+        <p class="fs12">
+          <label class="control-label labels-font-header" style="width: auto;"
+            >Customer Code:
+          </label>
+          <span class="span-header-red" style="text-transform: capitalize">
+            {{ customerCode }}
+          </span>
+        </p>
+      </div>
     </div>
-    <div class="modal-body">
-        <div class="table-responsive">
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>Site Name</th>
-                        <th>Address1</th>
-                        <th>Address2</th>
-                        <th>City</th>
-                        <th>State</th>
-                        <th>Postal Code</th>
-                        <th>Country</th>
-                        <th>Is Active</th>
-                        <th>Is Primary</th>
-                        <th>Updated By</th>
-                        <th>Last Updated Time</th>
-                        <th>Created By</th>
-                        <th>Created Time</th>
-                    </tr>
-                </thead>
-                <tr *ngFor="let audit of shippingauditHisory; let i = index;">
-                    <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'siteName', audit.siteName)  ? 'black' : 'red'  }">{{audit.siteName}}</td>
-                    <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'address1', audit.address1)  ? 'black' : 'red'  }">{{audit.address1}}</td>
-                    <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'address2', audit.address2)  ? 'black' : 'red'  }">{{audit.address2}}</td>
-                    <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'city', audit.city)  ? 'black' : 'red'  }">{{audit.city}}</td>
-                    <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'stateOrProvince', audit.stateOrProvince)  ? 'black' : 'red'  }">{{audit.stateOrProvince}}</td>
-                    <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'postalCode', audit.postalCode)  ? 'black' : 'red'  }">{{audit.postalCode}}</td>
-                    <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'country', audit.country)  ? 'black' : 'red'  }">{{audit.country}}</td>
-                    <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'isActive', audit.isActive)  ? 'black' : 'red'  }">{{audit.isActive}}</td>
-                    <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'isPrimary', audit.isPrimary)  ? 'black' : 'red'  }">{{audit.isPrimary}}</td>
-                    <td>{{audit.updatedBy}}</td>
-                    <td>{{audit.updatedDate | date: 'dd-MM-yyyy h:mm a '}}</td>
-                    <td>{{audit.createdBy}}</td>
-                    <td>{{audit.createdDate | date: 'dd-MM-yyyy h:mm a '}}</td>
-                </tr>
-            </table>
-        </div>
+  </div>
+  <div class="modal-body">
+    <div class="table-responsive">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>Site Name</th>
+            <th>Address1</th>
+            <th>Address2</th>
+            <th>City</th>
+            <th>State</th>
+            <th>Postal Code</th>
+            <th>Country</th>
+            <th>Is Active</th>
+            <th>Is Primary</th>
+            <th>Updated By</th>
+            <th>Last Updated Time</th>
+            <th>Created By</th>
+            <th>Created Time</th>
+          </tr>
+        </thead>
+        <tr *ngFor="let audit of shippingauditHisory; let i = index">
+          <td
+            [ngStyle]="{
+              color: getColorCodeForHistory(i, 'siteName', audit.siteName)
+                ? 'black'
+                : 'red'
+            }"
+          >
+            {{ audit.siteName }}
+          </td>
+          <td
+            [ngStyle]="{
+              color: getColorCodeForHistory(i, 'address1', audit.address1)
+                ? 'black'
+                : 'red'
+            }"
+          >
+            {{ audit.address1 }}
+          </td>
+          <td
+            [ngStyle]="{
+              color: getColorCodeForHistory(i, 'address2', audit.address2)
+                ? 'black'
+                : 'red'
+            }"
+          >
+            {{ audit.address2 }}
+          </td>
+          <td
+            [ngStyle]="{
+              color: getColorCodeForHistory(i, 'city', audit.city)
+                ? 'black'
+                : 'red'
+            }"
+          >
+            {{ audit.city }}
+          </td>
+          <td
+            [ngStyle]="{
+              color: getColorCodeForHistory(
+                i,
+                'stateOrProvince',
+                audit.stateOrProvince
+              )
+                ? 'black'
+                : 'red'
+            }"
+          >
+            {{ audit.stateOrProvince }}
+          </td>
+          <td
+            [ngStyle]="{
+              color: getColorCodeForHistory(i, 'postalCode', audit.postalCode)
+                ? 'black'
+                : 'red'
+            }"
+          >
+            {{ audit.postalCode }}
+          </td>
+          <td
+            [ngStyle]="{
+              color: getColorCodeForHistory(i, 'country', audit.country)
+                ? 'black'
+                : 'red'
+            }"
+          >
+            {{ audit.country }}
+          </td>
+          <td
+            [ngStyle]="{
+              color: getColorCodeForHistory(i, 'isActive', audit.isActive)
+                ? 'black'
+                : 'red'
+            }"
+          >
+            {{ audit.isActive }}
+          </td>
+          <td
+            [ngStyle]="{
+              color: getColorCodeForHistory(i, 'isPrimary', audit.isPrimary)
+                ? 'black'
+                : 'red'
+            }"
+          >
+            {{ audit.isPrimary }}
+          </td>
+          <td>{{ audit.updatedBy }}</td>
+          <td>{{ audit.updatedDate | date: 'dd-MM-yyyy h:mm a ' }}</td>
+          <td>{{ audit.createdBy }}</td>
+          <td>{{ audit.createdDate | date: 'dd-MM-yyyy h:mm a ' }}</td>
+        </tr>
+      </table>
     </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
-    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-danger" (click)="dismissModel()">
+      Close
+    </button>
+  </div>
 </ng-template>
-<ng-template #contentAuditHistInter let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static">
-    <!--<div #contentAuditHist id="contentAuditHist" class="modal fade">-->
-    <div class="modal-header">
-        <h4 class="modal-title">History of International Shipping Info</h4>
-        <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
-            <span aria-hidden="true">&times;</span>
-        </button>
-        <div class="col-md-12 shadow-box-cstm">
-            <div class="col-md-4">
-                <p class="fs12">
-                    <label class="control-label labels-font-header" style="width: auto;">Customer Name: </label>
-                    <span class="span-header-red" style="text-transform: capitalize"> {{customerName }} </span>
-                </p>
-            </div>
-            <div class="col-md-4">
-                <p class="fs12">
-                    <label class="control-label labels-font-header" style="width: auto;">Customer Code: </label>
-                    <span class="span-header-red" style="text-transform: capitalize"> {{customerCode }} </span>
-                </p>
-            </div>
-        </div>
+
+<ng-template
+  #contentAuditHistInter
+  let-c="close"
+  let-d="dismiss"
+  style="width:auto"
+  data-backdrop="static"
+>
+  <!--<div #contentAuditHist id="contentAuditHist" class="modal fade">-->
+  <div class="modal-header">
+    <h4 class="modal-title">History of International Shipping Info</h4>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="dismissModel()"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <div class="col-md-12 shadow-box-cstm">
+      <div class="col-md-4">
+        <p class="fs12">
+          <label class="control-label labels-font-header" style="width: auto;"
+            >Customer Name:
+          </label>
+          <span class="span-header-red" style="text-transform: capitalize">
+            {{ customerName }}
+          </span>
+        </p>
+      </div>
+      <div class="col-md-4">
+        <p class="fs12">
+          <label class="control-label labels-font-header" style="width: auto;"
+            >Customer Code:
+          </label>
+          <span class="span-header-red" style="text-transform: capitalize">
+            {{ customerCode }}
+          </span>
+        </p>
+      </div>
     </div>
-    <div class="modal-body">
-        <div class="table-responsive">
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>Export License</th>
-                        <th>Description</th>
-                        <th>Start Date</th>
-                        <th>Expiration Date</th>
-                        <th>Amount</th>
-                        <th>Country</th>
-                        <th>Is Primary</th>
-                        <th>Is Active</th>
-                        <th>Updated By</th>
-                        <th>Last Updated Time</th>
-                        <th>Created By</th>
-                        <th>Created Time</th>
-                    </tr>
-                </thead>
-                <tr *ngFor="let audit of interShippingauditHisory; let i = index;">
-                    <td [ngStyle]="{'color':  getColorCodeForInterHistory(i, 'exportLicense', audit.exportLicense)  ? 'black' : 'red'  }">{{audit.exportLicense}}</td>
-                    <td [ngStyle]="{'color':  getColorCodeForInterHistory(i, 'description', audit.description)  ? 'black' : 'red'  }">{{audit.description}}</td>
-                    <td [ngStyle]="{'color':  getColorCodeForInterHistory(i, 'startDate', audit.startDate)  ? 'black' : 'red'  }">{{audit.startDate}}</td>
-                    <td [ngStyle]="{'color':  getColorCodeForInterHistory(i, 'expirationDate', audit.expirationDate)  ? 'black' : 'red'  }">{{audit.expirationDate}}</td>
-                    <td [ngStyle]="{'color':  getColorCodeForInterHistory(i, 'amount', audit.amount)  ? 'black' : 'red'  }">{{audit.amount}}</td>
-                    <td [ngStyle]="{'color':  getColorCodeForInterHistory(i, 'countryName', audit.countryName)  ? 'black' : 'red'  }">{{audit.countryName}}</td>
-                    <td [ngStyle]="{'color':  getColorCodeForInterHistory(i, 'isPrimary', audit.isPrimary)  ? 'black' : 'red'  }">{{audit.isPrimary}}</td>
-                    <td [ngStyle]="{'color':  getColorCodeForInterHistory(i, 'isActive', audit.isActive)  ? 'black' : 'red'  }">{{audit.isActive}}</td>
-                    <td>{{audit.updatedBy}}</td>
-                    <td>{{audit.updatedDate | date: 'dd-MM-yyyy h:mm a '}}</td>
-                    <td>{{audit.createdBy}}</td>
-                    <td>{{audit.createdDate | date: 'dd-MM-yyyy h:mm a '}}</td>
-                </tr>
-            </table>
-        </div>
+  </div>
+  <div class="modal-body">
+    <div class="table-responsive">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>Export License</th>
+            <th>Description</th>
+            <th>Start Date</th>
+            <th>Expiration Date</th>
+            <th>Amount</th>
+            <th>Country</th>
+            <th>Is Primary</th>
+            <th>Is Active</th>
+            <th>Updated By</th>
+            <th>Last Updated Time</th>
+            <th>Created By</th>
+            <th>Created Time</th>
+          </tr>
+        </thead>
+        <tr *ngFor="let audit of interShippingauditHisory; let i = index">
+          <td
+            [ngStyle]="{
+              color: getColorCodeForInterHistory(
+                i,
+                'exportLicense',
+                audit.exportLicense
+              )
+                ? 'black'
+                : 'red'
+            }"
+          >
+            {{ audit.exportLicense }}
+          </td>
+          <td
+            [ngStyle]="{
+              color: getColorCodeForInterHistory(
+                i,
+                'description',
+                audit.description
+              )
+                ? 'black'
+                : 'red'
+            }"
+          >
+            {{ audit.description }}
+          </td>
+          <td
+            [ngStyle]="{
+              color: getColorCodeForInterHistory(
+                i,
+                'startDate',
+                audit.startDate
+              )
+                ? 'black'
+                : 'red'
+            }"
+          >
+            {{ audit.startDate }}
+          </td>
+          <td
+            [ngStyle]="{
+              color: getColorCodeForInterHistory(
+                i,
+                'expirationDate',
+                audit.expirationDate
+              )
+                ? 'black'
+                : 'red'
+            }"
+          >
+            {{ audit.expirationDate }}
+          </td>
+          <td
+            [ngStyle]="{
+              color: getColorCodeForInterHistory(i, 'amount', audit.amount)
+                ? 'black'
+                : 'red'
+            }"
+          >
+            {{ audit.amount }}
+          </td>
+          <td
+            [ngStyle]="{
+              color: getColorCodeForInterHistory(
+                i,
+                'countryName',
+                audit.countryName
+              )
+                ? 'black'
+                : 'red'
+            }"
+          >
+            {{ audit.countryName }}
+          </td>
+          <td
+            [ngStyle]="{
+              color: getColorCodeForInterHistory(
+                i,
+                'isPrimary',
+                audit.isPrimary
+              )
+                ? 'black'
+                : 'red'
+            }"
+          >
+            {{ audit.isPrimary }}
+          </td>
+          <td
+            [ngStyle]="{
+              color: getColorCodeForInterHistory(i, 'isActive', audit.isActive)
+                ? 'black'
+                : 'red'
+            }"
+          >
+            {{ audit.isActive }}
+          </td>
+          <td>{{ audit.updatedBy }}</td>
+          <td>{{ audit.updatedDate | date: 'dd-MM-yyyy h:mm a ' }}</td>
+          <td>{{ audit.createdBy }}</td>
+          <td>{{ audit.createdDate | date: 'dd-MM-yyyy h:mm a ' }}</td>
+        </tr>
+      </table>
     </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
-    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-danger" (click)="dismissModel()">
+      Close
+    </button>
+  </div>
 </ng-template>
+
+<div id="deleteoopsShipping" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">
+          &times;
+        </button>
+        <h4 class="modal-title">Alert !</h4>
+      </div>
+      <div class="modal-body">
+        <p>
+          Primary Record Cannot be Deleted
+          <img
+            class="delete-emoji"
+            src="../../../assets/images/oopsimage.png"
+          />
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

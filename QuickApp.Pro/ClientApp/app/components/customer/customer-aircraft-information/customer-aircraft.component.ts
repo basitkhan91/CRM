@@ -95,7 +95,8 @@ export class CustomerAircraftComponent implements OnInit {
     showAdvancedSearchCard: boolean = false;
     isViewMode: boolean = false;
 
-    stopmulticlicks:boolean;
+    stopmulticlicks: boolean;
+    loader: boolean = true;
     constructor(private route: ActivatedRoute, private itemser: ItemMasterService,
         private aircraftModelService: AircraftModelService,
         private Dashnumservice: DashNumberService,
@@ -105,8 +106,8 @@ export class CustomerAircraftComponent implements OnInit {
         private modalService: NgbModal,
         private activeModal: NgbActiveModal,
     ) {
-        this.stopmulticlicks=false;
-     }
+        this.stopmulticlicks = false;
+    }
     ngOnInit() {
         if (this.editMode) {
             this.id = this.editGeneralInformationData.customerId;
@@ -116,11 +117,12 @@ export class CustomerAircraftComponent implements OnInit {
             this.isViewMode = false;
 
         } else {
+            this.getAircraftMappedDataByCustomerId();
             if (this.customerDataFromExternalComponents) {
                 this.id = this.customerDataFromExternalComponents.customerId;
                 this.customerCode = this.customerDataFromExternalComponents.customerCode;
                 this.customerName = this.customerDataFromExternalComponents.name;
-                this.getAircraftMappedDataByCustomerId();
+
                 this.isViewMode = true;
             } else {
                 this.id = this.savedGeneralInformationData.customerId;
@@ -399,10 +401,13 @@ export class CustomerAircraftComponent implements OnInit {
     getPageCount(totalNoofRecords, pageSize) {
         return Math.ceil(totalNoofRecords / pageSize)
     }
-    paginateAircraftTable(event, totalNoofRecords) {
-        this.totalPages = Math.ceil(totalNoofRecords / event.rows)
-
+    pageIndexChange(event) {
+        this.pageSize = event.rows;
     }
+    // paginateAircraftTable(event, totalNoofRecords) {
+    //     this.totalPages = Math.ceil(totalNoofRecords / event.rows)
+
+    // }
 
 
     // add Inventory pop Functions
@@ -423,7 +428,7 @@ export class CustomerAircraftComponent implements OnInit {
 
             });
             this.add_SelectedModel = [];
-            this.add_AircraftDashNumberList = [];
+            this.add_SelectedDashNumber = [];
         }
     }
 
@@ -541,6 +546,7 @@ export class CustomerAircraftComponent implements OnInit {
             aircraftModel: this.aircraftdata.aircraftModel
 
         }
+
         this.customerService.updatecustomeraircraft(data, this.aircraftdata.customerAircraftMappingId).subscribe(res => {
 
             this.getAircraftMappedDataByCustomerId();
@@ -561,17 +567,24 @@ export class CustomerAircraftComponent implements OnInit {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
-    inventoryValidation(event) {
-        console.log(event.target.value, "event.target.value");
-        if (event.target.value > 0) {
-            return true;
-        } else {
+    inventoryValidation(event, from) {
+        if (from == 'fromedit' && (event.target.value == null || event.target.value == '' || event.target.value == undefined)) {
+            this.disableSave = false;
+        }
+        console.log(event.target.value, "event.target.event.target.value");
+        if (event.target.value && event.target.value == 0) {
+
             this.alertService.showMessage(
                 'Warn',
                 'Inventory should be greater then 0',
                 MessageSeverity.warn
             );
-            event.target.value = undefined;
+            event.target.value = '';
+            event.target.value = null;
+            console.log("indf", event.target.value)
+            if (from == 'fromedit') this.editAirCraftData.inventory = '';
+        } else {
+            return true;
 
         }
     }
@@ -649,11 +662,14 @@ export class CustomerAircraftComponent implements OnInit {
     getAircraftMappedDataByCustomerId() {
         this.customerService.getMappedAirCraftDetails(this.id).subscribe(res => {
             console.log(res);
+            this.loader = false;
             this.aircraftListDataValues = res;
             if (this.aircraftListDataValues.length > 0) {
                 this.totalRecords = this.aircraftListDataValues.length;
                 this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
             }
+        }, err => {
+            this.loader = false;
         })
     }
     getCustomerAircraftHistory(row) {
@@ -720,16 +736,16 @@ export class CustomerAircraftComponent implements OnInit {
         this.modal.close();
     }
     nextClick() {
-        this.stopmulticlicks=true;
-      this.tab.emit('Atachapter');
+        this.stopmulticlicks = true;
+        this.tab.emit('Atachapter');
         this.alertService.showMessage(
             'Success',
             ` ${this.editMode ? 'Updated' : 'Saved'} Aircraft Information Sucessfully `,
             MessageSeverity.success
         );
-        setTimeout(()=>{
-            this.stopmulticlicks=false;
-        },500)
+        setTimeout(() => {
+            this.stopmulticlicks = false;
+        }, 500)
     }
     backClick() {
 

@@ -41,7 +41,7 @@ namespace DAL.Repositories.Interfaces
 
         long CreateShippingVia(ShippingVia shippingVia);
         void UpdateShippingVia(ShippingVia shippingVia);
-        object GetShippingViaDetails(long shippingViaId);
+        object GetShippingViaDetails(long shippingViaId, int userType);
         IEnumerable<object> BindShipViaDetails(int userType, long referenceId);
 
         long? CreateAddress(Address address);
@@ -71,5 +71,8 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<object> GetEmployeesByJobTitle(long jobTitleId);
         IEnumerable<object> GetEmployeesByExpertise(long expertiseId);
         IEnumerable<object> GetEmployeeStation(long employeeId);
+        IEnumerable<object> GetJobTitleTypes(long masterCompanyId);
+        IEnumerable<object> GetExpertiseTypes(long masterCompanyId);
+        bool GetDelete(long id, string updatedBy);
     }
 }

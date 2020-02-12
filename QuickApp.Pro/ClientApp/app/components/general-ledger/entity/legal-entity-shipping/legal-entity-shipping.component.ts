@@ -24,6 +24,7 @@ export class EntityShippingComponent implements OnInit {
     @Input() editGeneralInformationData;
     @Input() editMode;
     @Output() tab = new EventEmitter();
+
     @Input() selectedlegalEntityTab: string = "";
     @Input() legalEntityDataFromExternalComponents: any;
     disableSave: boolean = true;
@@ -32,6 +33,7 @@ export class EntityShippingComponent implements OnInit {
 
     internationalShippingViaData: any = [];
     demosticShippingViaData: any = [];
+
     totalRecordsForInternationalShipVia: any;
     isEditInternationalShipVia: boolean = false;
     isEditDomesticShipVia: boolean = false;
@@ -146,6 +148,7 @@ export class EntityShippingComponent implements OnInit {
                 this.id = this.legalEntityDataFromExternalComponents.legalEntityId;
                 this.legalEntityCode = this.legalEntityDataFromExternalComponents.legalEntityCode;
                 this.legalEntityName = this.legalEntityDataFromExternalComponents.name;
+
                 this.isViewMode = true;
             } else {
                 this.id = this.savedGeneralInformationData.legalEntityId;
@@ -156,6 +159,7 @@ export class EntityShippingComponent implements OnInit {
 
             this.getDomesticShippingBylegalEntityId();
             this.getInternationalShippingBylegalEntityId();
+
         }
     }
 
@@ -486,6 +490,7 @@ export class EntityShippingComponent implements OnInit {
 
     getInternationalShippingBylegalEntityId() {
         this.legalEntityService.getInternationalShippingBylegalEntityId(this.id, this.pageIndexForInternational, this.pageSizeForInternational).subscribe(res => {
+
             console.log(res);
             this.internationalShippingData = res.paginationList;
             this.totalRecordsForInternationalShipping = res.totalRecordsCount;

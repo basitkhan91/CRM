@@ -706,7 +706,8 @@ namespace DAL.Repositories
 
                 var totalRecords = (from stl in _appContext.StockLine
                                     join im in _appContext.ItemMaster on stl.ItemMasterId equals im.ItemMasterId
-                                    join co in _appContext.Condition on stl.ConditionId equals co.ConditionId
+                                    join co in _appContext.Condition on stl.ConditionId equals co.ConditionId into cog
+                                    from co in cog.DefaultIfEmpty()
                                     join ig in _appContext.Itemgroup on im.ItemGroupId equals ig.ItemGroupId into itemgroup
                                     from ig in itemgroup.DefaultIfEmpty()
                                     join si in _appContext.Site on stl.SiteId equals si.SiteId into sit
@@ -742,7 +743,8 @@ namespace DAL.Repositories
                                     && im.PartDescription.Contains(!string.IsNullOrEmpty(stockListFilters.filters.PartDescription) ? stockListFilters.filters.PartDescription : im.PartDescription)
                                     && ig.Description.Contains(!string.IsNullOrEmpty(stockListFilters.filters.ItemGroup) ? stockListFilters.filters.ItemGroup : ig.Description)
                                     && stl.StockLineNumber.Contains(!string.IsNullOrEmpty(stockListFilters.filters.StocklineNumber) ? stockListFilters.filters.StocklineNumber : stl.StockLineNumber)
-                                    && stl.SerialNumber.Contains(!string.IsNullOrEmpty(stockListFilters.filters.SerialNumber) ? stockListFilters.filters.SerialNumber : stl.SerialNumber)
+                                    //&& stl.SerialNumber.Contains(!string.IsNullOrEmpty(stockListFilters.filters.SerialNumber) ? stockListFilters.filters.SerialNumber : stl.SerialNumber)
+                                     && (stl.SerialNumber == null || stl.SerialNumber.Contains(!string.IsNullOrEmpty(stockListFilters.filters.SerialNumber) ? stockListFilters.filters.SerialNumber : stl.SerialNumber))
                                     && co.Description.Contains(!string.IsNullOrEmpty(stockListFilters.filters.Condition) ? stockListFilters.filters.Condition : co.Description)
                                     && im.GLAccount.AccountName.Contains(!string.IsNullOrEmpty(stockListFilters.filters.GlAccountName) ? stockListFilters.filters.GlAccountName : im.GLAccount.AccountName)
                                     && stl.QuantityAvailable.ToString().Contains(!string.IsNullOrEmpty(stockListFilters.filters.QuantityAvailable) ? stockListFilters.filters.QuantityAvailable : stl.QuantityAvailable.ToString())
@@ -754,7 +756,8 @@ namespace DAL.Repositories
 
                 var data = (from stl in _appContext.StockLine
                             join im in _appContext.ItemMaster on stl.ItemMasterId equals im.ItemMasterId
-                            join co in _appContext.Condition on stl.ConditionId equals co.ConditionId
+                            join co in _appContext.Condition on stl.ConditionId equals co.ConditionId into cog
+                            from co in cog.DefaultIfEmpty()
                             join ig in _appContext.Itemgroup on im.ItemGroupId equals ig.ItemGroupId into itemgroup
                             from ig in itemgroup.DefaultIfEmpty()
                             join si in _appContext.Site on stl.SiteId equals si.SiteId into sit
@@ -790,7 +793,8 @@ namespace DAL.Repositories
                             && im.PartDescription.Contains(!string.IsNullOrEmpty(stockListFilters.filters.PartDescription) ? stockListFilters.filters.PartDescription : im.PartDescription)
                             && ig.Description.Contains(!string.IsNullOrEmpty(stockListFilters.filters.ItemGroup) ? stockListFilters.filters.ItemGroup : ig.Description)
                             && stl.StockLineNumber.Contains(!string.IsNullOrEmpty(stockListFilters.filters.StocklineNumber) ? stockListFilters.filters.StocklineNumber : stl.StockLineNumber)
-                            && stl.SerialNumber.Contains(!string.IsNullOrEmpty(stockListFilters.filters.SerialNumber) ? stockListFilters.filters.SerialNumber : stl.SerialNumber)
+                            //&& stl.SerialNumber.Contains(!string.IsNullOrEmpty(stockListFilters.filters.SerialNumber) ? stockListFilters.filters.SerialNumber : stl.SerialNumber)
+                            && (stl.SerialNumber == null || stl.SerialNumber.Contains(!string.IsNullOrEmpty(stockListFilters.filters.SerialNumber) ? stockListFilters.filters.SerialNumber : stl.SerialNumber))
                             && co.Description.Contains(!string.IsNullOrEmpty(stockListFilters.filters.Condition) ? stockListFilters.filters.Condition : co.Description)
                             && im.GLAccount.AccountName.Contains(!string.IsNullOrEmpty(stockListFilters.filters.GlAccountName) ? stockListFilters.filters.GlAccountName : im.GLAccount.AccountName)
                             && stl.QuantityAvailable.ToString().Contains(!string.IsNullOrEmpty(stockListFilters.filters.QuantityAvailable) ? stockListFilters.filters.QuantityAvailable : stl.QuantityAvailable.ToString())
@@ -799,22 +803,23 @@ namespace DAL.Repositories
                             {
                                 stl,
                                 stl.StockLineId,
-                                im,
-                                man,
+                                ItemTypeId = im== null ?0: im.ItemTypeId,
+                                ExpirationDate = im == null ? null : im.ExpirationDate,
+                                glAccountName = im == null ?"": im.GLAccount.AccountName,
+                                partDescription = im == null ?"": im.PartDescription,
                                 partNumber = stl.PartNumber,
                                 stockLineNumber = stl.StockLineNumber,
                                 stl.ControlNumber,
                                 stl.TagDate,
-                                glGLAccountId = stl.GLAccountId,
-                                glAccountName = im.GLAccount.AccountName,
-                                location = l.Name,
-                                warehouse = w.Name,
-                                im.ExpirationDate,
+                                glGLAccountId = stl.GLAccountId,                                
+                                location = l==null?"": l.Name,
+                                warehouse = w== null ?"": w.Name,                               
                                 stl.SerialNumber,
-                                conditionId = co.ConditionId,
-                                itemGroup = ig.Description,
-                                stl.IdNumber,
-                                partDescription = im.PartDescription,
+                                conditionId = co== null ?0: co.ConditionId,
+                                condition = co == null ? "" : co.Description,
+                                itemGroup = ig== null?"": ig.Description,
+                                conditionType = co == null ? "" : co.Description,
+                                stl.IdNumber,                               
                                 stl.ManagementStructureEntityId,
                                 stl.QuantityOnOrder,
                                 stl.QuantityAvailable,
@@ -829,12 +834,11 @@ namespace DAL.Repositories
                                 stl.BlackListed,
                                 stl.BlackListedReason,
                                 stl.EngineSerialNumber,
-                                stl.AircraftTailNumber,
-                                condition = co.Description,
+                                stl.AircraftTailNumber,                              
                                 stl.ShelfLifeExpirationDate,
-                                siteName = si.Name,
-                                shelfName = sh.Name,
-                                binName = bi.Name,
+                                siteName = si== null?"": si.Name,
+                                shelfName = sh == null ? "" : sh.Name,
+                                binName = bi == null ? "" : bi.Name,
                                 siteId = stl.SiteId,
                                 stl.ShelfId,
                                 stl.BinId,
@@ -854,13 +858,12 @@ namespace DAL.Repositories
                                 stl.CertifiedDueDate,
                                 stl.CalibrationMemo,
                                 stl.OrderDate,
-                                po.PurchaseOrderNumber,
                                 stl.PurchaseOrderUnitCost,
-                                ro.RepairOrderNumber,
+                                PurchaseOrderNumber= po==null?"": po.PurchaseOrderNumber,                               
+                                RepairOrderNumber = ro == null ? "" : ro.RepairOrderNumber,
                                 stl.RepairOrderUnitCost,
                                 stl.InventoryUnitCost,
-                                stl.ReceivedDate,
-                                man.Name,
+                                stl.ReceivedDate,                               
                                 stl.ReconciliationNumber,
                                 stl.UnitSalesPrice,
                                 stl.CoreUnitCost,
@@ -879,27 +882,28 @@ namespace DAL.Repositories
                                 stl.UnitSalePriceAdjustmentReasonTypeId,
                                 stl.TimeLifeCyclesId,
                                 stl.isActive,
-                                ti.CyclesRemaining,
-                                ti.CyclesSinceNew,
-                                ti.CyclesSinceOVH,
-                                ti.CyclesSinceRepair,
-                                ti.CyclesSinceInspection,
-                                ti.TimeRemaining,
-                                ti.TimeSinceInspection,
-                                ti.TimeSinceNew,
-                                ti.TimeSinceOVH,
-                                ti.TimeSinceRepair,
-                                ti.LastSinceInspection,
-                                ti.LastSinceNew,
-                                ti.LastSinceOVH,
-                                mana.Code,
+                                CyclesRemaining= ti == null ? 0:ti.CyclesRemaining,
+                                CyclesSinceNew = ti == null ? 0 : ti.CyclesSinceNew,
+                                CyclesSinceOVH = ti == null ? 0 : ti.CyclesSinceOVH,
+                                CyclesSinceRepair = ti == null ? 0 : ti.CyclesSinceRepair,
+                                CyclesSinceInspection = ti == null ? 0 : ti.CyclesSinceInspection,
+                                TimeRemaining = ti == null ? 0 : ti.TimeRemaining,
+                                TimeSinceInspection = ti == null ? 0 : ti.TimeSinceInspection,
+                                TimeSinceNew = ti == null ? 0 : ti.TimeSinceNew,
+                                TimeSinceOVH = ti == null ? 0 : ti.TimeSinceOVH,
+                                TimeSinceRepair = ti == null ? 0 : ti.TimeSinceRepair,
+                                LastSinceInspection = ti == null ? 0 : ti.LastSinceInspection,
+                                LastSinceNew = ti == null ? 0 : ti.LastSinceNew,
+                                LastSinceOVH = ti == null ? 0 : ti.LastSinceOVH,
+                                Name = man== null?"": man.Name,
+                                Code= mana == null ? "" : mana.Code,
+                                im,
+                                man,
                                 co,
                                 w,
                                 l,
                                 po,
-                                ro,
-                                conditionType = co.Description,
-                                im.ItemTypeId,
+                                ro, 
                                 managmentLegalEntity,
                                 divmanagmentLegalEntity,
                                 biumanagmentLegalEntity,

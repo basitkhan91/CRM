@@ -99,9 +99,9 @@ namespace QuickApp.Pro.Controllers
 
         [HttpGet]
         [Route("shippingviadetails")]
-        public IActionResult GetShippingViaDetails(long shippingViaId)
+        public IActionResult GetShippingViaDetails(long shippingViaId, int userType)
         {
-            var result = _unitOfWork.CommonRepository.GetShippingViaDetails(shippingViaId);
+            var result = _unitOfWork.CommonRepository.GetShippingViaDetails(shippingViaId, userType);
             return Ok(result);
 
         }
@@ -245,7 +245,24 @@ namespace QuickApp.Pro.Controllers
             return Ok(result);
         }
 
+        [HttpGet("jobtitletypes")]
+        public IActionResult GetJobTitleTypes(long masterCompanyId)
+        {
+            var result = _unitOfWork.CommonRepository.GetJobTitleTypes(masterCompanyId);
+            return Ok(result);
+        }
 
-
+        [HttpGet("expertisetypes")]
+        public IActionResult GetExpertiseTypes(long masterCompanyId)
+        {
+            var result = _unitOfWork.CommonRepository.GetExpertiseTypes(masterCompanyId);
+            return Ok(result);
+        }
+        [HttpDelete("attachmentDelete/{id}")]
+        public IActionResult GetDelete(long id, string updatedBy)
+        {
+            var deleteStatus = _unitOfWork.CommonRepository.GetDelete(id, updatedBy);
+            return Ok(deleteStatus);
+        }
     }
 }

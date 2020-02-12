@@ -61,10 +61,10 @@
                                                 </select>
                                             </div>
                                             <div class="form-group">
-                                                <label>Credit Limit <span class="clr-red">*</span>
+                                                <label>Credit Limit<span class="clr-red">*</span>
                                                     <span style="margin-left:3px;cursor:pointer;"><a href="#" class="fa fa-info-circle fa-lg" matTooltip="Format: {{globalSettings.creditLimtFormat}}"></a></span>
                                                 </label>
-                                                <input class="form-control" type="number" id="" name="creditLimit" [(ngModel)]="savedGeneralInformationData.creditLimit" required>
+                                                <input class="form-control" type="text" id="" name="creditLimit" [(ngModel)]="savedGeneralInformationData.creditLimit" required (blur)="formatCreditLimit($event.target.value)">
                                             </div>
                                             <div class="form-group">
                                                 <label>
@@ -109,7 +109,7 @@
                                             </div>
 
                                         <div class="col-md-2">
-                                            <div class="form-group" style="margin-top: 15px;" *ngIf="savedGeneralInformationData.isCustomerAlsoVendor">
+                                            <div class="form-group" style="margin-top: 15px;" *ngIf="showAllowNettingOfAPAR == true">
                                                 <span class="checkbox-cstm">
                                                     <label>
                                                         <input type="checkbox" name="allowNettingOfAPAR" [(ngModel)]="savedGeneralInformationData.allowNettingOfAPAR">
@@ -207,8 +207,8 @@
 
 
                                                             <td>
-                                                                    <span data-toggle="modal" data-target="#contentAuditHist"><a class="btn nobg" 
-                                                                        (click)="getAuditHistoryById(rowData)" 
+                                                                    <span><a class="btn nobg" 
+                                                                        (click)="getAuditHistoryById(contentAuditHist, rowData)" 
                                                                         matTooltip="History"><i class="fa fa-history"></i></a></span>
                                                                     <button
                                                                     class="btn-edit"
@@ -253,18 +253,8 @@
                                                             </colgroup>
                                                         </ng-template>
                                                         <ng-template pTemplate="header" let-columns>
-                                                            <!-- <tr>
-                                                                <th >
-                                                                    File Name
-                                                                </th>
-                                                                <th >
-                                                                    Download
-                                                                </th>
-                                                                <th >
-                                                                    Delete
-                                                                </th>
-                                                            </tr> -->
-                                                            <tr>
+                                 
+                                                            <tr [ngClass]="{'row-primary': part.isDefaultContact === true}">
                                                                 <th *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field"  >
                                                                     
                                                                             {{col.header}}
@@ -286,7 +276,7 @@
                                                             </tr>
                                                         </ng-template>
                                                         <ng-template pTemplate="body" let-part let-rowData let-columns="columns" let-i="rowIndex">
-                                                            <tr [ngClass]="{'row-primary': part.isDefaultContact === true}">
+                                                            <tr >
                                                                 <td *ngFor="let col of columns">
                                                                     <ng-container *ngIf="col.field=='fileName'">
                                                                         {{part[col.field]}}
@@ -377,7 +367,7 @@
                 </label>
               
             
-                <select name="taxType" [(ngModel)]="taxRateEditData.taxTypeId">
+                <select name="taxType" [(ngModel)]="taxRateEditData.taxTypeId" disabled>
                     <option value="">select</option>
                     <option *ngFor="let Percentlist of taxTypeList" [ngValue]="Percentlist.value">{{Percentlist.label}}</option>
                 </select>
@@ -397,7 +387,7 @@
         </div>
         <div class="col-md-3">
             <div class="form-group">
-                <button class="btn btn-primary" (click)="updateTaxTypeandRate()" data-dismiss="modal">
+                <button class="btn btn-primary mrt_18" (click)="updateTaxTypeandRate()" data-dismiss="modal">
                     Update
                 </button>
             </div>
@@ -416,13 +406,9 @@
 
 
       <!-- Modal -->
-<div id="contentAuditHist" class="modal fade" role="dialog">
-    <div class="modal-dialog">
-  
-      <!-- Modal content-->
-      <div class="modal-content">
+    <ng-template #contentAuditHist let-c="close" let-d="dismiss" data-backdrop="static">
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <button type="button" class="close" (click)="dismissModel()">&times;</button>
           <h4 class="modal-title">History For Tax </h4>
         </div>
         <div class="modal-body" *ngIf="auditDataForTaxData.length > 0">
@@ -446,12 +432,9 @@
 
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
         </div>
-      </div>
-  
-    </div>
-  </div>
+    </ng-template>
 
     <div  *ngIf="selectedRowFileForDelete" #delete id="delete"  class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog">
@@ -683,7 +666,7 @@
                                                         [(ngModel)]="discontValue"
                                                         pKeyFilter="num"
                                                         (onSelect)="selectedDiscount()"
-                                                        (onkeyup)="checkDiscountExists($event)"
+                                                        (keyup)="checkDiscountExists($event)"
                                                         [suggestions]="_discountListForDropdown" field="label" (completeMethod)="filterDiscount($event)"
                                                         [size]="30" [minLength]="1" [dropdown]="true" >
                                         </p-autoComplete>

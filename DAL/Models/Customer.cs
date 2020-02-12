@@ -3,15 +3,10 @@
 // www.ebenmonney.com/quickapp-pro
 // ===============================
 
-using DAL.Core;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DAL.Common;
 
 namespace DAL.Models
 {

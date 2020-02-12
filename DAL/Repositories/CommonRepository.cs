@@ -709,21 +709,99 @@ namespace DAL.Repositories
         {
             try
             {
-                shippingVia.UpdatedDate = DateTime.Now;
-                shippingVia.IsActive = true;
-                shippingVia.IsDeleted = false;
-                if (shippingVia.ShippingViaId > 0)
+                if (shippingVia.UserType==1)
                 {
-                    _appContext.ShippingVia.Update(shippingVia);
+                    CustomerShipping shipping = new CustomerShipping();
+                    shipping.CreatedBy =  shippingVia.CreatedBy;
+                    shipping.CustomerId = shippingVia.ReferenceId;
+                    shipping.CustomerShippingAddressId = shippingVia.AddressId;
+                    shipping.CustomerShippingId = shippingVia.ShippingViaId;
+                    shipping.IsActive =true;
+                    shipping.IsDeleted = false;
+                    shipping.IsPrimary=false;
+                    shipping.MasterCompanyId = shippingVia.MasterCompanyId;
+                    shipping.Memo = shippingVia.Memo;
+                    shipping.ShippingAccountinfo = shippingVia.ShippingAccountInfo;
+                    shipping.ShippingId = shippingVia.ShippingId;
+                    shipping.ShippingURL = shippingVia.ShippingURL;
+                    shipping.ShipVia = shippingVia.Name;
+                    shipping.UpdatedBy = shippingVia.UpdatedBy;
+                    shipping.UpdatedDate = DateTime.Now;
+
+                    if(shipping.CustomerShippingId>0)
+                    {
+                        _appContext.CustomerShipping.Update(shipping);
+                    }
+                    else
+                    {
+                        shipping.CreatedDate = DateTime.Now;
+                        _appContext.CustomerShipping.Add(shipping);
+                    }
+                    
+                    _appContext.SaveChanges();
+                    return shipping.CustomerShippingId;
+                }
+                if (shippingVia.UserType == 2)
+                {
+                    VendorShipping shipping = new VendorShipping();
+                    shipping.CreatedBy = shippingVia.CreatedBy;
+                    shipping.VendorId = shippingVia.ReferenceId;
+                    shipping.VendorShippingAddressId = shippingVia.AddressId;
+                    shipping.VendorShippingId = shippingVia.ShippingViaId;
+                    shipping.IsActive = true;
+                    shipping.IsDeleted = false;
+                    shipping.MasterCompanyId = shippingVia.MasterCompanyId;
+                    shipping.Memo = shippingVia.Memo;
+                    shipping.ShippingAccountinfo = shippingVia.ShippingAccountInfo;
+                    shipping.ShippingId = shippingVia.ShippingId;
+                    shipping.ShippingURL = shippingVia.ShippingURL;
+                    shipping.ShipVia = shippingVia.Name;
+                    shipping.UpdatedBy = shippingVia.UpdatedBy;
+                    shipping.UpdatedDate = DateTime.Now;
+
+                    if (shipping.VendorShippingId > 0)
+                    {
+                        _appContext.VendorShipping.Update(shipping);
+                    }
+                    else
+                    {
+                        shipping.CreatedDate = DateTime.Now;
+                        _appContext.VendorShipping.Add(shipping);
+                    }
+
+                    _appContext.SaveChanges();
+                    return shipping.VendorShippingId;
                 }
                 else
                 {
-                    shippingVia.CreatedDate = DateTime.Now;
-                    _appContext.ShippingVia.Add(shippingVia);
+                    LegalEntityShipping shipping = new LegalEntityShipping();
+                    shipping.CreatedBy = shippingVia.CreatedBy;
+                    shipping.LegalEntityShippingId = shippingVia.ReferenceId;
+                    shipping.LegalEntityShippingAddressId = shippingVia.AddressId;
+                    shipping.LegalEntityShippingId = shippingVia.ShippingViaId;
+                    shipping.IsActive = true;
+                    shipping.IsDeleted = false;
+                    shipping.MasterCompanyId = shippingVia.MasterCompanyId;
+                    shipping.Memo = shippingVia.Memo;
+                    shipping.ShippingAccountinfo = shippingVia.ShippingAccountInfo;
+                    shipping.ShippingId = shippingVia.ShippingId;
+                    shipping.ShippingURL = shippingVia.ShippingURL;
+                    shipping.ShipVia = shippingVia.Name;
+                    shipping.UpdatedBy = shippingVia.UpdatedBy;
+                    shipping.UpdatedDate = DateTime.Now;
+                    if (shipping.LegalEntityShippingId > 0)
+                    {
+                        _appContext.LegalEntityShipping.Update(shipping);
+                    }
+                    else
+                    {
+                        shipping.CreatedDate = DateTime.Now;
+                        _appContext.LegalEntityShipping.Add(shipping);
+                    }
+                    _appContext.SaveChanges();
+                    return shipping.LegalEntityShippingId;
                 }
 
-                _appContext.SaveChanges();
-                return shippingVia.ShippingViaId;
             }
             catch (Exception ex)
             {
@@ -745,19 +823,57 @@ namespace DAL.Repositories
             }
         }
 
-        public object GetShippingViaDetails(long shippingViaId)
+        public object GetShippingViaDetails(long shippingViaId, int userType)
         {
-            var data = (from sv in _appContext.ShippingVia
-                        where sv.IsDeleted == false && sv.ShippingViaId == shippingViaId
-                        select new
-                        {
-                            ShipVia = sv.Name,
-                            sv.ShippingAccountInfo,
-                            sv.ShippingURL,
-                            sv.ShippingId,
-                            sv.Memo
-                        }).FirstOrDefault();
-            return data;
+            try
+            {
+                if (userType == 1) // Customer
+                {
+                    var data = (from sv in _appContext.CustomerShipping
+                                where sv.CustomerShippingId == shippingViaId
+                                select new
+                                {
+                                    ShippingId = sv.CustomerShippingId,
+                                    sv.ShipVia,
+                                    ShippingAccountInfo = sv.ShippingAccountinfo,
+                                    sv.ShippingURL,
+                                    sv.Memo
+                                }).FirstOrDefault();
+                    return data;
+                }
+                else if (userType == 2) // Vendor
+                {
+                    var data = (from sv in _appContext.VendorShipping
+                                where sv.VendorShippingId == shippingViaId
+                                select new
+                                {
+                                    ShippingId = sv.VendorShippingId,
+                                    sv.ShipVia,
+                                    ShippingAccountInfo = sv.ShippingAccountinfo,
+                                    sv.ShippingURL,
+                                    sv.Memo
+                                }).FirstOrDefault();
+                    return data;
+                }
+                else // Company
+                {
+                    var data = (from sv in _appContext.LegalEntityShipping
+                                where sv.LegalEntityShippingId == shippingViaId
+                                select new
+                                {
+                                    ShippingId = sv.LegalEntityShippingId,
+                                    sv.ShipVia,
+                                    ShippingAccountInfo = sv.ShippingAccountinfo,
+                                    sv.ShippingURL,
+                                    sv.Memo
+                                }).FirstOrDefault();
+                    return data;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
 
@@ -765,18 +881,51 @@ namespace DAL.Repositories
         {
             try
             {
-                var list = (from sv in _appContext.ShippingVia
-                            where sv.IsDeleted == false && sv.UserType == userType && sv.ReferenceId == referenceId
-                            select new
-                            {
-                                sv.ShippingViaId,
-                                sv.Name,
-                                sv.ShippingAccountInfo,
-                                sv.ShippingURL,
-                                sv.ShippingId,
-                                sv.Memo
-                            }).OrderBy(p => p.Name).ToList();
-                return list;
+                if (userType == 1) // Customer
+                {
+                    var list = (from sv in _appContext.CustomerShipping
+                                where (sv.IsDeleted == null || sv.IsDeleted == false) &&sv.IsActive==true && sv.CustomerId == referenceId
+                                select new
+                                {
+                                    ShippingViaId = sv.CustomerShippingId,
+                                    Name = sv.ShipVia,
+                                    ShippingAccountInfo = sv.ShippingAccountinfo,
+                                    sv.ShippingURL,
+                                    sv.ShippingId,
+                                    sv.Memo
+                                }).OrderBy(p => p.Name).ToList();
+                    return list;
+                }
+                else if(userType==2) // Vendor
+                {
+                    var list = (from sv in _appContext.VendorShipping
+                                where sv.IsDeleted == false && sv.IsActive == true && sv.VendorId == referenceId
+                                select new
+                                {
+                                    ShippingViaId = sv.VendorShippingId,
+                                    Name = sv.ShipVia,
+                                    ShippingAccountInfo = sv.ShippingAccountinfo,
+                                    sv.ShippingURL,
+                                    sv.ShippingId,
+                                    sv.Memo
+                                }).OrderBy(p => p.Name).ToList();
+                    return list;
+                }
+                else // Company
+                {
+                    var list = (from sv in _appContext.LegalEntityShipping
+                                where (sv.IsDeleted == null || sv.IsDeleted == false) && sv.IsActive == true  && sv.LegalEntityId == referenceId
+                                select new
+                                {
+                                    ShippingViaId = sv.LegalEntityShippingId,
+                                    Name = sv.ShipVia,
+                                    ShippingAccountInfo = sv.ShippingAccountinfo,
+                                    sv.ShippingURL,
+                                    sv.ShippingId,
+                                    sv.Memo
+                                }).OrderBy(p => p.Name).ToList();
+                    return list;
+                }
             }
             catch (Exception ex)
             {
@@ -1463,7 +1612,7 @@ namespace DAL.Repositories
             try
             {
                 var list = (from emp in _appContext.Employee
-                            where emp.IsDeleted == false && emp.IsActive == true && emp.JobTitleId == jobTitleId
+                            where (emp.IsDeleted == false || emp.IsDeleted == null) && emp.IsActive == true && emp.JobTitleId == jobTitleId
                             select new
                             {
                                 emp.EmployeeId,
@@ -1485,7 +1634,7 @@ namespace DAL.Repositories
             try
             {
                 var list = (from emp in _appContext.Employee
-                            where emp.IsDeleted == false && emp.IsActive == true && emp.EmployeeExpertiseId == expertiseId
+                            where (emp.IsDeleted == false || emp.IsDeleted == null) && emp.IsActive == true && emp.EmployeeExpertiseId == expertiseId
                             select new
                             {
                                 emp.EmployeeId,
@@ -1525,6 +1674,72 @@ namespace DAL.Repositories
 
                 throw;
             }
+        }
+
+        public IEnumerable<object> GetJobTitleTypes(long masterCompanyId)
+        {
+            try
+            {
+                var list = (from jt in _appContext.JobTitle
+                            where jt.MasterCompanyId == masterCompanyId
+                            select new
+                            {
+                                jt.JobTitleId,
+                                JobTitle = jt.Description
+                            }).Distinct().ToList();
+                return list;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public IEnumerable<object> GetExpertiseTypes(long masterCompanyId)
+        {
+            try
+            {
+                var list = (from et in _appContext.EmployeeExpertise
+                            where et.MasterCompanyId == masterCompanyId
+                            select new
+                            {
+                                et.EmployeeExpertiseId,
+                                ExpertiseType = et.Description
+                            }).Distinct().ToList();
+                return list;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+        public bool GetDelete(long id, string updatedBy)
+        {
+            bool result = false;
+            try
+            {
+                AttachmentDetails attachmentDetails = new AttachmentDetails();
+                attachmentDetails.AttachmentDetailId = id;
+                attachmentDetails.UpdatedDate = DateTime.Now;
+                attachmentDetails.UpdatedBy = updatedBy;
+                attachmentDetails.IsDeleted = true;
+
+                _appContext.AttachmentDetails.Attach(attachmentDetails);
+                _appContext.Entry(attachmentDetails).Property(x => x.IsDeleted).IsModified = true;
+                _appContext.Entry(attachmentDetails).Property(x => x.UpdatedDate).IsModified = true;
+                _appContext.Entry(attachmentDetails).Property(x => x.UpdatedBy).IsModified = true;
+                _appContext.SaveChanges();
+                result = true;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            return result;
+
         }
 
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;

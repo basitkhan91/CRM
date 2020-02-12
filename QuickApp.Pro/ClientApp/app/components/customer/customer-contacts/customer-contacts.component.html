@@ -1,882 +1,1718 @@
 ﻿<div class="right_col" role="main">
-    <div>
-        <div class="x_content">
-            <div class="col-md-12 shadow-box-cstm" *ngIf="isViewMode == false">
-                <div class="col-md-4">
-                    <p class="fs12">
-                        <label class="control-label labels-font-header" style="width: auto;">Customer Name: </label>
-                        <span class="span-header-red" style="text-transform: capitalize"> {{customerName }} </span>
-                    </p>
-                </div>
-                <div class="col-md-4">
-                    <p class="fs12">
-                        <label class="control-label labels-font-header" style="width: auto;">Customer Code: </label>
-                        <span class="span-header-red" style="text-transform: capitalize"> {{customerCode }} </span>
-                    </p>
-                </div>
-            </div>
-            <!-- <div class="clear"></div>
-            <hr /> -->
-            <!-- <div class="form-group col-sm-4 Customer-details-heading" style="display: inline-block;margin: 10px 5px 0 5px;">
-                <p class="fs10">
-                    <label class="control-label w100">Customer Name:</label>
-                    {{customerName}}
-                </p>
-            </div>
-            <div class="form-group col-sm-4 Customer-details-heading" style="display: inline-block;margin: 10px 5px 0 5px;">
-                <p class="fs10">
-                    <label class="control-label w100">Customer Code:</label>
-                    {{customerCode}}
-                </p>
-            </div> -->
-
-            <div class="card" style="padding: 10px;">
-                <div>
-                    <div class="col-md-12">
-                        <h4 class="po-head-sm">
-                            <!--class="float-right"-->
-                            Contacts
-                            <a class="plusicon-cstm" *ngIf="isViewMode == false"
-                               href="#"
-                               data-toggle="modal" matTooltip="Add Contact" matTooltipPosition="above"
-                               data-target="#addContactDetails">
-                                <i class="fa fa-plus-circle fa-lg" (click)="onAddContactInfo()"></i>
-                            </a>
-                        </h4>
-                    </div>
-                    <div class="clear"></div>
-                    <hr />
-                </div>
-                <!-- class="rpo-table-cstm rro-table-cstm" -->
-                <p-table #dt
-                         class="rpo-table-cstm lastcol-fix"
-                         [value]="customerContacts"
-                         [rows]="10"
-                         [first]="0"
-                         [paginator]="true"
-                         [pageLinks]="3"
-                         [rowsPerPageOptions]="[10,50,100]"
-                         [columns]="selectedColumns"
-                         selectionMode="multiple"
-                         [resizableColumns]="true"
-                         [reorderableColumns]="true"
-                         [scrollable]="true"
-                         scrollHeight="450px">
-                    <ng-template pTemplate="caption" *ngIf="isViewMode == false">
-                        <div style="text-align: right; min-height: 30px; margin-left: -6px;">
-                            <p-multiSelect [options]="customerContactsColumns" [(ngModel)]="selectedColumns" [ngModelOptions]="{standalone: true}" optionLabel="header"
-                                           selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
-                            <div class="inner-addon right-addon w200 inline-block g-filter-search-cstm">
-                                <i class="fa fa-search"></i>
-                                <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Filter" style="height: 28px !important;">
-                            </div>
-                            <button type="button" class="btn btn-primary" pButton icon="fa-download" iconPos="left" label="Export  Data" matTooltip="Download  Data" matTooltipPosition="above" (click)="dt.exportCSV()" style="padding: 5px 10px !important;"></button>
-                            <button type="button" class="btn btn-primary" pButton icon="fa-download" iconPos="left" label="Export Selected Data" matTooltip="Download Selected Data" matTooltipPosition="above" (click)="dt.exportCSV({selectionOnly:true})" style="padding: 5px 10px !important;"></button>
-                            <!--<div class="excel-upload excel-upload-cstm">
-                                <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
-                                <label for="upload">
-                                    <span matTooltip="Upload Data (Excel)"><i class="fa fa-upload"></i></span>
-                                </label>
-                            </div>-->
-                            <div class="excel-upload  excel-upload-cstm">
-                                <button name="download" id="download" type="button" class="btn btn-primary" matTooltip="Download Sample File" matTooltipPosition="above" (click)="sampleExcelDownloadForContact()" style="padding: 5px 10px !important;">Sample File Download</button>
-
-                                <input type="file" name="upload3[]" id="upload3" (change)="customContactExcelUpload($event)" class="uploaddoc upload-file"
-                                       accept=".xlsx, .xls, .csv">
-                                <label for="upload3">
-                                    <span matTooltip="Upload Data (Excel)" matTooltipPosition="above">
-                                        <i class="fa fa-upload"></i>
-                                    </span>
-                                </label>
-                                &nbsp; &nbsp;
-
-                            </div>
-                        </div>
-                    </ng-template>
-
-                    <ng-template pTemplate="colgroup" let-columns>
-                        <colgroup>
-                            <col *ngFor="let col of columns" style="width:130px"  [ngClass]="{'update_withFlag': col.field=='isDefaultContact'}">
-                        </colgroup>
-                    </ng-template>
-
-                    <ng-template pTemplate="header" let-columns>
-                        <tr>
-                            <th style="width: 40px;">Flag</th>
-                            <th *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field" [hidden]="col.field == 'isDefaultContact'">
-                                {{col.header}}
-                                <p-sortIcon [field]="col.field"></p-sortIcon>
-                            </th>
-                            <th style="width: 140px;"> Actions</th>
-                        </tr>
-                        <tr>
-                            <th></th>
-                            <th style="width:auto" *ngFor="let col of columns" [hidden]="col.field == 'isDefaultContact'" [ngSwitch]="col.field">
-                                <input style="width:100%;" pInputText type="text" (input)="domestictable.filter($event.target.value, col.field, 'contains')">
-                            </th>
-                            <th style="width:140px;position:sticky"></th>
-                        </tr>
-                        <!-- <tr>
-                            <th *ngFor="let col of columns" pResizableColumn pReorderableColumn [hidden]="col.field == 'isDefaultContact'" [pSortableColumn]="col.field" [ngClass]="{'update_withFlag': col.field=='isDefaultContact'}">
-                                <ng-container *ngIf="col.field=='isDefaultContact'">
-                                    Flag
-                                </ng-container>
-                                <ng-container *ngIf="col.field!='isDefaultContact'">
-
-                                    {{col.header}}
-                                    <p-sortIcon [field]="col.field"></p-sortIcon>
-                                </ng-container>
-
-
-                            </th>
-                            <th style="width:140px;position:sticky" *ngIf="selectedColumns.length > 0">
-
-                                Actions
-                            </th>
-                        </tr> -->
-                        
-                        <!-- <tr>
-                            <th *ngFor="let col of columns" [hidden]="col.field == 'isDefaultContact'" [ngClass]="{'update_withFlag': col.field=='isDefaultContact'}">
-                                <div *ngIf="col.field !='isDefaultContact'" [ngSwitch]="col.field">
-                                    <input style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field, 'contains')">
-                                </div>
-
-                            </th>
-                            <th style="width:140px;position:sticky"></th>
-                        </tr> -->
-                    </ng-template>
-
-                    <ng-template pTemplate="body" let-rowData let-columns="columns" let-i="rowIndex">
-                        <tr [pSelectableRow]="rowData" [pContextMenuRow]="rowData"
-                          (dblclick)="viewSelectedRowdbl(viewdbl,rowData)">
-                            <!-- <td > <span class="flag">
-                                    <i  *ngIf="rowData.isDefaultContact == true"   [ngStyle]="{'color': rowData.isDefaultContact == true ? 'green' : 'none'}"
-                                     class="fa fa-flag" aria-hidden="true"></i>
-                                     </span>
-
-                            </td> -->
-                            <td> 
-                                <span class="flag">
-                                <i  *ngIf="rowData.isDefaultContact == true" [ngStyle]="{'color': rowData.isDefaultContact == true ? 'green' : 'none'}"  class="fa fa-flag" matTooltip="Primary" matTooltipPosition="above" aria-hidden="true"></i>
-                            </span>
-                            </td>
-
-                            <td *ngFor="let col of columns" class="ui-resizable-column" [hidden]="col.field == 'isDefaultContact'" pReorderableRowHandle>
-                                <ng-container *ngIf="col.field!='workPhone' ">
-                                    {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
-                                </ng-container>
-                                <ng-container *ngIf="col.field=='workPhone'">
-                                    {{rowData.workPhone}} - {{rowData.workPhoneExtn}}
-                                </ng-container>
-                                <!-- <ng-container *ngIf="col.field=='isDefaultContact'">
-                                    <span class="flag">
-                                        <i *ngIf="rowData.isDefaultContact == 'Yes'" [ngStyle]="{'color': rowData.isDefaultContact == 'Yes' ? 'green' : 'none'}"
-                                           class="fa fa-flag"  matTooltip="Primary" matTooltipPosition="above" aria-hidden="true"></i>
-                                    </span>
-                                </ng-container> -->
-                            </td>
-
-                            <td style="width:140px" *ngIf="selectedColumns.length > 0  && isViewMode == false">
-                                <p-inputSwitch matTooltip="Active" onLabel="on" offLabel="off" (onChange)="handleChange(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
-                                <span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="viewSelectedRow(rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
-
-                                <span data-toggle="modal" data-target="#addContactDetails"><a class="btn nobg" (click)="editCustomerContact(rowData)" matTooltip="Edit"><i class="fa fa-pencil"></i></a> </span>
-                                <span data-toggle="modal"><a class="btn nobg" (click)="openDelete(deleteContent,rowData)" matTooltip="Delete"><i class="fa fa-trash"></i></a> </span>
-                                <button class="btn-history" mat-icon-button matTooltip="ATAChapters" data-target="#ATAADD" data-toggle="modal" (click)="addATAChapter(rowData)">
-                                    <i class="material-icons">
-                                        add
-                                    </i>
-                                </button>
-
-                                <span data-toggle="modal" data-target="#contentHist"><a class="btn nobg" (click)="getAuditHistoryById(rowData)" matTooltip="History"><i class="fa fa-history"></i></a></span>
-                            </td>
-                            <td style="width:140px" *ngIf="selectedColumns.length > 0  && isViewMode == true">
-                                <span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="viewSelectedRow(rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
-
-
-
-                                <span data-toggle="modal" data-target="#contentHist"><a class="btn nobg" (click)="getAuditHistoryById(rowData)" matTooltip="History"><i class="fa fa-history"></i></a></span>
-                            </td>
-
-                        </tr>
-                    </ng-template>
-                    <ng-template pTemplate="emptymessage" let-columns *ngIf="customerContacts.length == 0">
-                        <tr>
-                            <td colspan="10" style="color: red; font-weight: bold; text-align: center">
-                                No records found
-                            </td>
-                        </tr>
-                    </ng-template>
-                    <ng-template pTemplate="summary" id="footer">
-                        <label id="footer" class="footer">No'of records:</label>
-                        <input style="width: 5%;" [(ngModel)]="dt._totalRecords" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp;
-                        <label id="footer" class="footer1">Pages Count:</label>
-
-                        <input style="width: 5%;" [ngModel]="getPageCount(dt._totalRecords,pageSize)" [disabled]="true" pInputText type="text" />
-                    </ng-template>
-
-
-
-                </p-table>
-                <!-- <div *ngIf="customerContacts.length<=0" class="no-records-cstm">
-                    No Records
-                </div> -->
-                <div style="margin-top: 10px;" *ngIf="isViewMode == false">
-                    <button type="button" class="btn btn-primary pull-right submit-btn" (click)="nextClick()" [disabled]="stopmulticlicks">Save & Next</button>
-                    <button type="button" class="btn btn-primary pull-right submit-btn" (click)="backClick()">Previous</button>
-                </div>
-            </div>
+  <div>
+    <div class="x_content">
+      <div class="col-md-12 shadow-box-cstm" *ngIf="isViewMode == false">
+        <div class="col-md-4">
+          <p class="fs12">
+            <label class="control-label labels-font-header" style="width: auto;"
+              >Customer Name:
+            </label>
+            <span class="span-header-red" style="text-transform: capitalize">
+              {{ customerName }}
+            </span>
+          </p>
         </div>
-    </div>
+        <div class="col-md-4">
+          <p class="fs12">
+            <label class="control-label labels-font-header" style="width: auto;"
+              >Customer Code:
+            </label>
+            <span class="span-header-red" style="text-transform: capitalize">
+              {{ customerCode }}
+            </span>
+          </p>
+        </div>
+      </div>
+      <div class="card" style="padding: 10px;">
+        <div>
+          <div class="col-md-12">
+            <h4 class="po-head-sm">
+              <!--class="float-right"-->
+              Contacts
+              <a
+                class="plusicon-cstm"
+                *ngIf="isViewMode == false"
+                href="#"
+                data-toggle="modal"
+                matTooltip="Add Contact"
+                matTooltipPosition="above"
+                data-target="#addContactDetails"
+              >
+                <i
+                  class="fa fa-plus-circle fa-lg"
+                  (click)="onAddContactInfo()"
+                ></i>
+              </a>
+            </h4>
+          </div>
+          <div class="clear"></div>
+          <hr />
+        </div>
+        <!-- class="rpo-table-cstm rro-table-cstm" -->
+        <p-table
+          #dt
+          class="rpo-table-cstm lastcol-fix"
+          [value]="customerContacts"
+          [rows]="pageSize"
+          [first]="0"
+          [paginator]="true"
+          [pageLinks]="3"
+          [rowsPerPageOptions]="[10, 20, 50, 100]"
+          [columns]="selectedColumns"
+          selectionMode="multiple"
+          [resizableColumns]="true"
+          [reorderableColumns]="true"
+          [scrollable]="true"
+          [loading]="loaderForContacts"
+          (onPage)="pageIndexChange($event)"
+          scrollHeight="450px"
+        >
+          <ng-template pTemplate="caption" *ngIf="isViewMode == false">
+            <div
+              style="text-align: right; min-height: 30px; margin-left: -6px;"
+            >
+              <p-multiSelect
+                [options]="customerContactsColumns"
+                [(ngModel)]="selectedColumns"
+                [ngModelOptions]="{ standalone: true }"
+                optionLabel="header"
+                selectedItemsLabel="{0} columns selected"
+                [style]="{ minWidth: '200px' }"
+                defaultLabel="Choose Columns"
+                style="float:left"
+              ></p-multiSelect>
+              <div
+                class="inner-addon right-addon w200 inline-block g-filter-search-cstm"
+              >
+                <i class="fa fa-search"></i>
+                <input
+                  type="text"
+                  pInputText
+                  size="50"
+                  class="form-control ui-autocomplete-input"
+                  (input)="dt.filterGlobal($event.target.value, 'contains')"
+                  placeholder="Filter"
+                  style="height: 28px !important;"
+                />
+              </div>
+              <button
+                type="button"
+                class="btn btn-primary"
+                pButton
+                icon="fa-download"
+                iconPos="left"
+                label="Export  Data"
+                matTooltip="Download  Data"
+                matTooltipPosition="above"
+                (click)="dt.exportCSV()"
+                style="padding: 5px 10px !important;"
+              ></button>
+              <button
+                type="button"
+                class="btn btn-primary"
+                pButton
+                icon="fa-download"
+                iconPos="left"
+                label="Export Selected Data"
+                matTooltip="Download Selected Data"
+                matTooltipPosition="above"
+                (click)="dt.exportCSV({ selectionOnly: true })"
+                style="padding: 5px 10px !important;"
+              ></button>
+              <div class="excel-upload  excel-upload-cstm">
+                <button
+                  name="download"
+                  id="download"
+                  type="button"
+                  class="btn btn-primary"
+                  matTooltip="Download Sample File"
+                  matTooltipPosition="above"
+                  (click)="sampleExcelDownloadForContact()"
+                  style="padding: 5px 10px !important;"
+                >
+                  Sample File Download
+                </button>
 
+                <input
+                  type="file"
+                  name="upload3[]"
+                  id="upload3"
+                  (change)="customContactExcelUpload($event)"
+                  class="uploaddoc upload-file"
+                  accept=".xlsx, .xls, .csv"
+                />
+                <label for="upload3">
+                  <span
+                    matTooltip="Upload Data (Excel)"
+                    matTooltipPosition="above"
+                  >
+                    <i class="fa fa-upload"></i>
+                  </span>
+                </label>
+                &nbsp; &nbsp;
+              </div>
+            </div>
+          </ng-template>
+
+          <ng-template pTemplate="colgroup" let-columns>
+            <colgroup>
+              <col
+                *ngFor="let col of columns"
+                style="width:130px"
+                [ngClass]="{ update_withFlag: col.field == 'isDefaultContact' }"
+              />
+            </colgroup>
+          </ng-template>
+
+          <ng-template pTemplate="header" let-columns>
+            <tr>
+              <th style="width: 40px;">Flag</th>
+              <th
+                *ngFor="let col of columns"
+                pResizableColumn
+                pReorderableColumn
+                [pSortableColumn]="col.field"
+                [hidden]="col.field == 'isDefaultContact'"
+              >
+                {{ col.header }}
+                <p-sortIcon [field]="col.field"></p-sortIcon>
+              </th>
+              <th style="width: 140px;">Actions</th>
+            </tr>
+            <tr>
+              <th></th>
+              <th
+                style="width:auto"
+                *ngFor="let col of columns"
+                [hidden]="col.field == 'isDefaultContact'"
+                [ngSwitch]="col.field"
+              >
+                <input
+                  style="width:100%;"
+                  pInputText
+                  type="text"
+                  (input)="
+                    dt.filter($event.target.value, col.field, 'contains')
+                  "
+                />
+              </th>
+              <th style="width:140px;position:sticky"></th>
+            </tr>
+          </ng-template>
+
+          <ng-template
+            pTemplate="body"
+            let-rowData
+            let-columns="columns"
+            let-i="rowIndex"
+          >
+            <tr
+              [pSelectableRow]="rowData"
+              [pContextMenuRow]="rowData"
+              (dblclick)="viewSelectedRowdbl(viewdbl, rowData)"
+            >
+              <td>
+                <span class="flag">
+                  <i
+                    *ngIf="rowData.isDefaultContact == true"
+                    [ngStyle]="{
+                      color: rowData.isDefaultContact == true ? 'green' : 'none'
+                    }"
+                    class="fa fa-flag"
+                    matTooltip="Primary"
+                    matTooltipPosition="above"
+                    aria-hidden="true"
+                  ></i>
+                </span>
+              </td>
+
+              <td
+                *ngFor="let col of columns"
+                class="ui-resizable-column"
+                [hidden]="col.field == 'isDefaultContact'"
+                pReorderableRowHandle
+              >
+                <ng-container *ngIf="col.field != 'workPhone'">
+                  {{
+                    col.field == 'createdDate'
+                      ? (rowData[col.field] | date: 'MM/dd/yyyy')
+                      : rowData[col.field] && col.field == 'updatedDate'
+                      ? (rowData[col.field] | date: 'MM/dd/yyyy')
+                      : rowData[col.field]
+                  }}
+                </ng-container>
+                <ng-container *ngIf="col.field == 'workPhone'">
+                  {{ rowData.workPhone }} - {{ rowData.workPhoneExtn }}
+                </ng-container>
+              </td>
+
+              <td
+                style="width:140px"
+                *ngIf="selectedColumns.length > 0 && isViewMode == false"
+              >
+                <p-inputSwitch
+                  matTooltip="Active"
+                  onLabel="on"
+                  offLabel="off"
+                  (onChange)="handleChange(rowData)"
+                  [(ngModel)]="rowData['isActive']"
+                ></p-inputSwitch>
+                <span data-toggle="modal" data-target="#view">
+                  <a
+                    class="btn btn-info boxed-float-btn nobg"
+                    data-toggle="tooltip"
+                    (click)="viewSelectedRow(rowData)"
+                    matTooltip="View"
+                    ><i class="fa fa-eye"></i
+                  ></a>
+                </span>
+
+                <span data-toggle="modal" data-target="#addContactDetails"
+                  ><a
+                    class="btn nobg"
+                    (click)="editCustomerContact(rowData)"
+                    matTooltip="Edit"
+                    ><i class="fa fa-pencil"></i
+                  ></a>
+                </span>
+                <span data-toggle="modal"
+                  ><a
+                    class="btn nobg"
+                    (click)="openDelete(deleteContent, rowData)"
+                    matTooltip="Delete"
+                    ><i class="fa fa-trash"></i
+                  ></a>
+                </span>
+                <button
+                  class="btn-history"
+                  mat-icon-button
+                  matTooltip="ATAChapters"
+                  data-target="#ATAADD"
+                  data-toggle="modal"
+                  (click)="addATAChapter(rowData)"
+                >
+                  <i class="material-icons">
+                    add
+                  </i>
+                </button>
+
+                <span data-toggle="modal" data-target="#contentHist"
+                  ><a
+                    class="btn nobg"
+                    (click)="getAuditHistoryById(rowData)"
+                    matTooltip="History"
+                    ><i class="fa fa-history"></i></a
+                ></span>
+              </td>
+              <td
+                style="width:140px"
+                *ngIf="selectedColumns.length > 0 && isViewMode == true"
+              >
+                <span data-toggle="modal" data-target="#view">
+                  <a
+                    class="btn btn-info boxed-float-btn nobg"
+                    data-toggle="tooltip"
+                    (click)="viewSelectedRow(rowData)"
+                    matTooltip="View"
+                    ><i class="fa fa-eye"></i
+                  ></a>
+                </span>
+
+                <span data-toggle="modal" data-target="#contentHist"
+                  ><a
+                    class="btn nobg"
+                    (click)="getAuditHistoryById(rowData)"
+                    matTooltip="History"
+                    ><i class="fa fa-history"></i></a
+                ></span>
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template
+            pTemplate="emptymessage"
+            let-columns
+            *ngIf="customerContacts.length == 0"
+          >
+            <tr>
+              <td
+                colspan="10"
+                style="color: red; font-weight: bold; text-align: center"
+              >
+                No records found
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="summary" id="footer">
+            <label id="footer" class="footer">No'of records:</label>
+            <input
+              style="width: 5%;"
+              [(ngModel)]="dt._totalRecords"
+              [disabled]="true"
+              pInputText
+              type="text"
+            />
+            &nbsp;&nbsp;
+            <label id="footer" class="footer1">Pages Count:</label>
+
+            <input
+              style="width: 5%;"
+              [ngModel]="getPageCount(dt._totalRecords, pageSize)"
+              [disabled]="true"
+              pInputText
+              type="text"
+            />
+          </ng-template>
+        </p-table>
+        <div style="margin-top: 10px;" *ngIf="isViewMode == false">
+          <button
+            type="button"
+            class="btn btn-primary pull-right submit-btn"
+            (click)="nextClick()"
+            [disabled]="stopmulticlicks"
+          >
+            Save & Next
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary pull-right submit-btn"
+            (click)="backClick()"
+          >
+            Previous
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
-
-
-<div *ngIf="auditHistory" id="contentHist" #contentHist class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog modal-lg">
-
-        <!-- Modal content-->
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <div class="col-md-12 shadow-box-cstm">
-                    <div class="col-md-4">
-                        <p class="fs12">
-                            <label class="control-label labels-font-header" style="width: auto;">Customer Name: </label>
-                            <span class="span-header-red" style="text-transform: capitalize"> {{customerName }} </span>
-                        </p>
-                    </div>
-                    <div class="col-md-4">
-                        <p class="fs12">
-                            <label class="control-label labels-font-header" style="width: auto;">Customer Code: </label>
-                            <span class="span-header-red" style="text-transform: capitalize"> {{customerCode }} </span>
-                        </p>
-                    </div>
-                </div>
-                <h4 class="modal-title">History of Customer Contact</h4>
-            </div>
-            <div class="modal-body">
-                <div class="table-responsive">
-                    <table class="table table-bordered" *ngIf="auditHistory.length> 0 else noDatavailable">
-                        <thead>
-                            <tr>
-
-
-                                <th>Tag</th>
-                                <th>Prefix</th>
-                                <th>First Name</th>
-                                <th>Middle Name</th>
-                                <th>Last Name</th>
-                                <th>Suffix</th>
-                                <th>Contact Title</th>
-                                <th>Email</th>
-                                <th>Work Phone</th>
-                                <th>Mobile Phone</th>
-                                <th>Alternate Phone</th>
-                                <th>Fax</th>
-
-                                <th>Website URL</th>
-                                <th>Primary Contact</th>
-                                <th>Memo</th>
-                                <th>Is Active</th>
-                                <th>Created By</th>
-                                <th>Created Date</th>
-                                <th>Updated By</th>
-                                <th>Updated Date</th>
-                            </tr>
-                        </thead>
-                        <tbody *ngIf="auditHistory.length> 0">
-                            <tr *ngFor="let audit of auditHistory; let i = index;">
-
-                                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'tag', audit.tag)  ? 'black' : 'red'  }">{{audit.tag}}</td>
-                                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'prefix', audit.prefix)  ? 'black' : 'red'  }">{{audit.prefix}}</td>
-
-                                <td [ngStyle]="{'color': getColorCodeForHistory(i, 'firstName', audit.firstName)  ? 'black' : 'red'  }">{{audit.firstName}}</td>
-                                <td [ngStyle]="{'color': getColorCodeForHistory(i, 'middleName', audit.middleName)  ? 'black' : 'red'  }">{{audit.middleName}}</td>
-
-                                <td [ngStyle]="{'color': getColorCodeForHistory(i, 'lastName', audit.lastName)  ? 'black' : 'red'  }">{{audit.lastName}}</td>
-                                <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'suffix', audit.suffix)  ? 'black' : 'red'  }">{{audit.suffix}}</td>
-
-                                <td [ngStyle]="{'color': getColorCodeForHistory(i, 'contactTitle', audit.contactTitle)  ? 'black' : 'red'  }">{{audit.contactTitle}}</td>
-                                <td [ngStyle]="{'color': getColorCodeForHistory(i, 'email', audit.email)  ? 'black' : 'red'  }">{{audit.email}}</td>
-
-                                <td [ngStyle]="{'color': getColorCodeForHistory(i, 'fullContact', audit.fullContact)  ? 'black' : 'red'  }">{{audit.fullContact}}</td>
-                                <td [ngStyle]="{'color': getColorCodeForHistory(i, 'mobilePhone', audit.mobilePhone)  ? 'black' : 'red'  }">{{audit.mobilePhone}}</td>
-                                <td [ngStyle]="{'color': getColorCodeForHistory(i, 'alternatePhone', audit.alternatePhone)  ? 'black' : 'red'  }">{{audit.alternatePhone}}</td>
-
-
-                                <td [ngStyle]="{'color': getColorCodeForHistory(i, 'fax', audit.fax)  ? 'black' : 'red'  }">{{audit.fax}}</td>
-                                <td [ngStyle]="{'color': getColorCodeForHistory(i, 'websiteURL', audit.websiteURL)  ? 'black' : 'red'  }">{{audit.websiteURL}}</td>
-
-                                <td [ngStyle]="{'color': getColorCodeForHistory(i, 'isDefaultContact', audit.isDefaultContact)  ? 'black' : 'red'  }">{{audit.isDefaultContact}}</td>
-                                <td [ngStyle]="{'color': getColorCodeForHistory(i, 'notes', audit.notes)  ? 'black' : 'red'  }">{{audit.notes}}</td>
-                                <td [ngStyle]="{'color': getColorCodeForHistory(i, 'isActive', audit.isActive)  ? 'black' : 'red'  }">{{audit.isActive}}</td>
-                                <td>{{audit.createdBy}}</td>
-                                <td>{{audit.createdDate | date: 'dd-MM-yyyy h:mm a '}}</td>
-
-                                <td>{{audit.updatedBy}}</td>
-                                <td>{{audit.updatedDate | date: 'dd-MM-yyyy h:mm a '}}</td>
-                            </tr>
-                        </tbody>
-
-
-                    </table>
-                    <ng-template #noDatavailable>
-                        <div class="text-center">
-                            <h4 style="color: #ff5663;">No History Found </h4>
-                        </div>
-
-                    </ng-template>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-            </div>
+<div
+  *ngIf="auditHistory"
+  id="contentHist"
+  #contentHist
+  class="modal fade"
+  role="dialog"
+  data-backdrop="static"
+  data-keyboard="false"
+>
+  <div class="modal-dialog modal-lg">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">
+          &times;
+        </button>
+        <div class="col-md-12 shadow-box-cstm">
+          <div class="col-md-4">
+            <p class="fs12">
+              <label
+                class="control-label labels-font-header"
+                style="width: auto;"
+                >Customer Name:
+              </label>
+              <span class="span-header-red" style="text-transform: capitalize">
+                {{ customerName }}
+              </span>
+            </p>
+          </div>
+          <div class="col-md-4">
+            <p class="fs12">
+              <label
+                class="control-label labels-font-header"
+                style="width: auto;"
+                >Customer Code:
+              </label>
+              <span class="span-header-red" style="text-transform: capitalize">
+                {{ customerCode }}
+              </span>
+            </p>
+          </div>
         </div>
+        <h4 class="modal-title">History of Customer Contact</h4>
+      </div>
+      <div class="modal-body">
+        <div class="table-responsive">
+          <table
+            class="table table-bordered"
+            *ngIf="auditHistory.length > 0; else noDatavailable"
+          >
+            <thead>
+              <tr>
+                <th>Tag</th>
+                <th>Prefix</th>
+                <th>First Name</th>
+                <th>Middle Name</th>
+                <th>Last Name</th>
+                <th>Suffix</th>
+                <th>Contact Title</th>
+                <th>Email</th>
+                <th>Work Phone</th>
+                <th>Mobile Phone</th>
+                <th>Alternate Phone</th>
+                <th>Fax</th>
 
+                <th>Website URL</th>
+                <th>Primary Contact</th>
+                <th>Memo</th>
+                <th>Is Active</th>
+                <th>Created By</th>
+                <th>Created Date</th>
+                <th>Updated By</th>
+                <th>Updated Date</th>
+              </tr>
+            </thead>
+            <tbody *ngIf="auditHistory.length > 0">
+              <tr *ngFor="let audit of auditHistory; let i = index">
+                <td
+                  [ngStyle]="{
+                    color: getColorCodeForHistory(i, 'tag', audit.tag)
+                      ? 'black'
+                      : 'red'
+                  }"
+                >
+                  {{ audit.tag }}
+                </td>
+                <td
+                  [ngStyle]="{
+                    color: getColorCodeForHistory(i, 'prefix', audit.prefix)
+                      ? 'black'
+                      : 'red'
+                  }"
+                >
+                  {{ audit.prefix }}
+                </td>
+
+                <td
+                  [ngStyle]="{
+                    color: getColorCodeForHistory(
+                      i,
+                      'firstName',
+                      audit.firstName
+                    )
+                      ? 'black'
+                      : 'red'
+                  }"
+                >
+                  {{ audit.firstName }}
+                </td>
+                <td
+                  [ngStyle]="{
+                    color: getColorCodeForHistory(
+                      i,
+                      'middleName',
+                      audit.middleName
+                    )
+                      ? 'black'
+                      : 'red'
+                  }"
+                >
+                  {{ audit.middleName }}
+                </td>
+
+                <td
+                  [ngStyle]="{
+                    color: getColorCodeForHistory(i, 'lastName', audit.lastName)
+                      ? 'black'
+                      : 'red'
+                  }"
+                >
+                  {{ audit.lastName }}
+                </td>
+                <td
+                  [ngStyle]="{
+                    color: getColorCodeForHistory(i, 'suffix', audit.suffix)
+                      ? 'black'
+                      : 'red'
+                  }"
+                >
+                  {{ audit.suffix }}
+                </td>
+
+                <td
+                  [ngStyle]="{
+                    color: getColorCodeForHistory(
+                      i,
+                      'contactTitle',
+                      audit.contactTitle
+                    )
+                      ? 'black'
+                      : 'red'
+                  }"
+                >
+                  {{ audit.contactTitle }}
+                </td>
+                <td
+                  [ngStyle]="{
+                    color: getColorCodeForHistory(i, 'email', audit.email)
+                      ? 'black'
+                      : 'red'
+                  }"
+                >
+                  {{ audit.email }}
+                </td>
+
+                <td
+                  [ngStyle]="{
+                    color: getColorCodeForHistory(
+                      i,
+                      'fullContact',
+                      audit.fullContact
+                    )
+                      ? 'black'
+                      : 'red'
+                  }"
+                >
+                  {{ audit.fullContact }}
+                </td>
+                <td
+                  [ngStyle]="{
+                    color: getColorCodeForHistory(
+                      i,
+                      'mobilePhone',
+                      audit.mobilePhone
+                    )
+                      ? 'black'
+                      : 'red'
+                  }"
+                >
+                  {{ audit.mobilePhone }}
+                </td>
+                <td
+                  [ngStyle]="{
+                    color: getColorCodeForHistory(
+                      i,
+                      'alternatePhone',
+                      audit.alternatePhone
+                    )
+                      ? 'black'
+                      : 'red'
+                  }"
+                >
+                  {{ audit.alternatePhone }}
+                </td>
+
+                <td
+                  [ngStyle]="{
+                    color: getColorCodeForHistory(i, 'fax', audit.fax)
+                      ? 'black'
+                      : 'red'
+                  }"
+                >
+                  {{ audit.fax }}
+                </td>
+                <td
+                  [ngStyle]="{
+                    color: getColorCodeForHistory(
+                      i,
+                      'websiteURL',
+                      audit.websiteURL
+                    )
+                      ? 'black'
+                      : 'red'
+                  }"
+                >
+                  {{ audit.websiteURL }}
+                </td>
+
+                <td
+                  [ngStyle]="{
+                    color: getColorCodeForHistory(
+                      i,
+                      'isDefaultContact',
+                      audit.isDefaultContact
+                    )
+                      ? 'black'
+                      : 'red'
+                  }"
+                >
+                  {{ audit.isDefaultContact }}
+                </td>
+                <td
+                  [ngStyle]="{
+                    color: getColorCodeForHistory(i, 'notes', audit.notes)
+                      ? 'black'
+                      : 'red'
+                  }"
+                >
+                  {{ audit.notes }}
+                </td>
+                <td
+                  [ngStyle]="{
+                    color: getColorCodeForHistory(i, 'isActive', audit.isActive)
+                      ? 'black'
+                      : 'red'
+                  }"
+                >
+                  {{ audit.isActive }}
+                </td>
+                <td>{{ audit.createdBy }}</td>
+                <td>{{ audit.createdDate | date: 'dd-MM-yyyy h:mm a ' }}</td>
+
+                <td>{{ audit.updatedBy }}</td>
+                <td>{{ audit.updatedDate | date: 'dd-MM-yyyy h:mm a ' }}</td>
+              </tr>
+            </tbody>
+          </table>
+          <ng-template #noDatavailable>
+            <div class="text-center">
+              <h4 style="color: #ff5663;">No History Found</h4>
+            </div>
+          </ng-template>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">
+          Close
+        </button>
+      </div>
     </div>
+  </div>
 </div>
 
-
-<div class="modal fade" id="addContactDetails" role="dialog" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog modal-md">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" (click)="closeMyModel()">&times;</button>
-                <div class="col-md-12 shadow-box-cstm">
-                    <div class="col-md-6">
-                        <p class="fs12">
-                            <label class="control-label labels-font-header" style="width: auto;">Customer Name: </label>
-                            <span class="span-header-red" style="text-transform: capitalize"> {{customerName }} </span>
-                        </p>
-                    </div>
-                    <div class="col-md-6">
-                        <p class="fs12">
-                            <label class="control-label labels-font-header" style="width: auto;">Customer Code: </label>
-                            <span class="span-header-red" style="text-transform: capitalize"> {{customerCode }} </span>
-                        </p>
-                    </div>
-                </div>
-                <h4 class="modal-title">{{isEditButton ? 'Edit' : 'Add' }} Contact Details   </h4>
-            </div>
-            <form #ccForm="ngForm" #addContactForm="ngForm" class="form-horizontal" id="">
-                <div class="modal-body">
-                    <div class="form-row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="tag">Tag</label>
-                                <input type="text" class="form-control" [(ngModel)]="contactInformation.tag" (ngModelChange)="enableSave()" name="tag">
-
-                            </div>
-                            <div class="form-group">
-                                <label>Prefix</label>
-                                <select name="preifx" [(ngModel)]="contactInformation.prefix" (ngModelChange)="enableSave()">
-                                    <option value="" selected>None selected</option>
-                                    <option value="Dr.">Dr.</option>
-                                    <option value="Mr.">Mr.</option>
-                                    <option value="Mrs.">Mrs.</option>
-                                    <option value="Ms.">Ms.</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label>First Name <span class="clr-red">*</span></label>
-                                <div class="inner-addon right-addon inline-block" style="width: 100%">
-                                    <p-autoComplete class="autocomp-customer-cstm"
-                                                    [(ngModel)]="contactInformation.firstName" (ngModelChange)="enableSave()" name="firstName" field="firstName" [suggestions]="firstNamesList" (completeMethod)="filterFirstNames($event)" [size]="30"
-                                                    [minLength]="1" [dropdown]="true" [inputStyle]="{'width': '100%'}" required>
-
-
-                                    </p-autoComplete>
-                                </div>
-                                <!-- <div *ngIf="disablesaveForFirstname" class="clr-red">Entry Already Exists</div>  -->
-
-                            </div>
-                            <div class="form-group">
-                                <label>Middle Name</label>
-                                <div class="inner-addon right-addon inline-block" style="width: 100%">
-                                    <p-autoComplete class="autocomp-customer-cstm" [(ngModel)]="contactInformation.middleName" (ngModelChange)="enableSave()"
-                                                    name="middleName" [suggestions]="middleNamesList" field="middleName" (completeMethod)="filterMiddleNames($event)" [size]="30"
-                                                    [minLength]="1" [dropdown]="true" [inputStyle]="{'width': '100%'}">
-
-                                    </p-autoComplete>
-                                </div>
-
-                                <!-- <div *ngIf="disableSaveMiddleName" class="clr-red">Entry Already Exists</div>  -->
-                            </div>
-                            <div class="form-group">
-                                <label>Last Name <span class="clr-red">*</span></label>
-                                <div class="inner-addon right-addon inline-block" style="width: 100%">
-                                    <p-autoComplete class="autocomp-customer-cstm" [(ngModel)]="contactInformation.lastName" (ngModelChange)="enableSave()"
-                                                    name="lastName" [suggestions]="lastNamesList" field="lastName" (completeMethod)="filterLastNames($event)"
-                                                    [size]="30" [minLength]="1" [dropdown]="true" [inputStyle]="{'width': '100%'}" required>
-
-                                    </p-autoComplete>
-                                    <!-- <div *ngIf="disableSaveLastName" class="clr-red">Entry Already Exists</div>  -->
-                                </div>
-
-                            </div>
-                            <div class="form-group">
-                                <label>Suffix</label>
-                                <select name="suffix" [(ngModel)]="contactInformation.suffix" (ngModelChange)="enableSave()">
-                                    <option value="">None selected</option>
-                                    <option value="II">II</option>
-                                    <option value="III">III</option>
-                                    <option value="Jr.">Jr.</option>
-                                    <option value="Sr.">Sr.</option>
-
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label>Title</label>
-                                <input class="form-control" type="text" name="contactTitle" [(ngModel)]="contactInformation.contactTitle" (ngModelChange)="enableSave()">
-                            </div>
-                            <div class="form-group" style="width:300px;margin-top:20px;">
-                                <label>Work Phone <span class="clr-red" style="margin-right:110px;">*</span></label>
-                                <div class="col-md-12">
-                                    <input class="form-control" type="text" required name="workPhone" [(ngModel)]="contactInformation.workPhone" (ngModelChange)="enableSave()" style="width: calc(62% - 63px) !important;" (keypress)="patternMobilevalidationWithSpl($event)" maxlength="20">
-                                    -
-                                    <input class="form-control" type="text" name="workPhoneExtn" [(ngModel)]="contactInformation.workPhoneExtn" (ngModelChange)="enableSave()" style="width: calc(43% - 63px) !important;">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <div class="form-group" style="margin-top: 15px; margin-bottom: 20px;">
-                                    <span class="checkbox-cstm">
-                                        <label>
-                                            <input type="checkbox" name="isDefaultContact" [(ngModel)]="contactInformation.isDefaultContact" (ngModelChange)="enableSave()">
-                                            <span class="cr"><i class="cr-icon pi pi-check"></i></span>
-                                            Primary Contact
-                                        </label>
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label>Web Site</label>
-                                <input class="form-control" type="text" name="websiteURL" #url="ngModel" [(ngModel)]="contactInformation.websiteURL" (ngModelChange)="enableSave()" [pattern]="urlPattern">
-                                <div *ngIf="url.errors" [ngClass]="'error'">
-                                    <div *ngIf="url.errors.pattern">
-                                        <span style="color:red">URL not valid</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label>Mobile Phone</label>
-                                <input class="form-control" type="text" name="mobilePhone" [(ngModel)]="contactInformation.mobilePhone" (ngModelChange)="enableSave()" (keypress)="patternMobilevalidationWithSpl($event)" maxlength="20">
-                            </div>
-                            <div class="form-group">
-                                <label>Alternate Phone</label>
-                                <input class="form-control" type="text" name="alternatePhone" [(ngModel)]="contactInformation.alternatePhone" (ngModelChange)="enableSave()" (keypress)="patternMobilevalidationWithSpl($event)" maxlength="20">
-                            </div>
-                            <div class="form-group">
-                                <label>Fax</label>
-                                <input class="form-control" pKeyFilter="pint" type="text" name="fax" [(ngModel)]="contactInformation.fax" (ngModelChange)="enableSave()" maxlength="20">
-                            </div>
-
-                            <div class="form-group">
-                                <label>Memo</label>
-                                <textarea name="notes" [(ngModel)]="contactInformation.notes" (ngModelChange)="enableSave()"></textarea>
-                            </div>
-
-                            <div class="form-group">
-                                <label>Email <span class="clr-red">*</span></label>
-                                <input class="form-control" email type="text" name="email" [pattern]="emailPattern" #contactEmail="ngModel" [(ngModel)]="contactInformation.email" (ngModelChange)="enableSave()" required>
-                                <div *ngIf="contactEmail.errors" [ngClass]="'error'">
-                                    <div *ngIf="contactEmail.errors.pattern">
-                                        <span style="color:red">Contact Email  not valid</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" *ngIf="!isEditButton" class="btn btn-primary pull-right submit-btn" style="text-align:center" [disabled]="!addContactForm.valid ||contactEmail.errors || disablesaveForFirstname || disableSaveMiddleName ||disableSaveLastName || disableSave" (click)="saveContactInformation()" data-dismiss="modal">Save</button>
-                    <button type="button" *ngIf="isEditButton" class="btn btn-primary pull-right submit-btn" style="text-align:center" [disabled]="!addContactForm.valid ||contactEmail.errors || disablesaveForFirstname || disableSaveMiddleName ||disableSaveLastName || disableSave" (click)="updateCustomerContact()">Update</button>
-                    <!-- [disabled]="(!addContactForm.valid ||contactEmail.errors|| disablesaveForFirstname ||disableSaveMiddleName ||disableSaveLastName)&& disableSave" -->
-                    <button type="button" class="btn btn-danger" (click)="closeMyModel()" data-dismiss="modal">Close</button>
-                </div>
-            </form>
+<div
+  class="modal fade"
+  id="addContactDetails"
+  role="dialog"
+  data-backdrop="static"
+  data-keyboard="false"
+>
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" (click)="closeMyModel()">
+          &times;
+        </button>
+        <div class="col-md-12 shadow-box-cstm">
+          <div class="col-md-6">
+            <p class="fs12">
+              <label
+                class="control-label labels-font-header"
+                style="width: auto;"
+                >Customer Name:
+              </label>
+              <span class="span-header-red" style="text-transform: capitalize">
+                {{ customerName }}
+              </span>
+            </p>
+          </div>
+          <div class="col-md-6">
+            <p class="fs12">
+              <label
+                class="control-label labels-font-header"
+                style="width: auto;"
+                >Customer Code:
+              </label>
+              <span class="span-header-red" style="text-transform: capitalize">
+                {{ customerCode }}
+              </span>
+            </p>
+          </div>
         </div>
+        <h4 class="modal-title">
+          {{ isEditButton ? 'Edit' : 'Add' }} Contact Details
+        </h4>
+      </div>
+      <form
+        #ccForm="ngForm"
+        #addContactForm="ngForm"
+        class="form-horizontal"
+        id=""
+      >
+        <div class="modal-body">
+          <div class="form-row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="tag">Tag <span class="clr-red">*</span></label>
+                <input
+                  type="text"
+                  class="form-control"
+                  [(ngModel)]="contactInformation.tag"
+                  (ngModelChange)="enableSave()"
+                  name="tag"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label>Prefix</label>
+                <select
+                  name="preifx"
+                  [(ngModel)]="contactInformation.prefix"
+                  (ngModelChange)="enableSave()"
+                >
+                  <option value="" selected>None selected</option>
+                  <option value="Dr.">Dr.</option>
+                  <option value="Mr.">Mr.</option>
+                  <option value="Mrs.">Mrs.</option>
+                  <option value="Ms.">Ms.</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>First Name <span class="clr-red">*</span></label>
+                <div
+                  class="inner-addon right-addon inline-block"
+                  style="width: 100%"
+                >
+                  <p-autoComplete
+                    class="autocomp-customer-cstm"
+                    [(ngModel)]="contactInformation.firstName"
+                    (ngModelChange)="enableSave()"
+                    name="firstName"
+                    field="firstName"
+                    [suggestions]="firstNamesList"
+                    (completeMethod)="filterFirstNames($event)"
+                    [size]="30"
+                    [minLength]="1"
+                    [dropdown]="true"
+                    [inputStyle]="{ width: '100%' }"
+                    required
+                  >
+                  </p-autoComplete>
+                </div>
+                <!-- <div *ngIf="disablesaveForFirstname" class="clr-red">Entry Already Exists</div>  -->
+              </div>
+              <div class="form-group">
+                <label>Middle Name</label>
+                <div
+                  class="inner-addon right-addon inline-block"
+                  style="width: 100%"
+                >
+                  <p-autoComplete
+                    class="autocomp-customer-cstm"
+                    [(ngModel)]="contactInformation.middleName"
+                    (ngModelChange)="enableSave()"
+                    name="middleName"
+                    [suggestions]="middleNamesList"
+                    field="middleName"
+                    (completeMethod)="filterMiddleNames($event)"
+                    [size]="30"
+                    [minLength]="1"
+                    [dropdown]="true"
+                    [inputStyle]="{ width: '100%' }"
+                  >
+                  </p-autoComplete>
+                </div>
 
+                <!-- <div *ngIf="disableSaveMiddleName" class="clr-red">Entry Already Exists</div>  -->
+              </div>
+              <div class="form-group">
+                <label>Last Name <span class="clr-red">*</span></label>
+                <div
+                  class="inner-addon right-addon inline-block"
+                  style="width: 100%"
+                >
+                  <p-autoComplete
+                    class="autocomp-customer-cstm"
+                    [(ngModel)]="contactInformation.lastName"
+                    (ngModelChange)="enableSave()"
+                    name="lastName"
+                    [suggestions]="lastNamesList"
+                    field="lastName"
+                    (completeMethod)="filterLastNames($event)"
+                    [size]="30"
+                    [minLength]="1"
+                    [dropdown]="true"
+                    [inputStyle]="{ width: '100%' }"
+                    required
+                  >
+                  </p-autoComplete>
+                  <!-- <div *ngIf="disableSaveLastName" class="clr-red">Entry Already Exists</div>  -->
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Suffix</label>
+                <select
+                  name="suffix"
+                  [(ngModel)]="contactInformation.suffix"
+                  (ngModelChange)="enableSave()"
+                >
+                  <option value="">None selected</option>
+                  <option value="II">II</option>
+                  <option value="III">III</option>
+                  <option value="Jr.">Jr.</option>
+                  <option value="Sr.">Sr.</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Title</label>
+                <input
+                  class="form-control"
+                  type="text"
+                  name="contactTitle"
+                  [(ngModel)]="contactInformation.contactTitle"
+                  (ngModelChange)="enableSave()"
+                />
+              </div>
+              <div class="form-group" style="width:300px;margin-top:20px;">
+                <label
+                  >Work Phone
+                  <span class="clr-red" style="margin-right:110px;"
+                    >*</span
+                  ></label
+                >
+                <div class="col-md-12">
+                  <input
+                    class="form-control"
+                    type="text"
+                    required
+                    name="workPhone"
+                    [(ngModel)]="contactInformation.workPhone"
+                    (ngModelChange)="enableSave()"
+                    style="width: calc(62% - 63px) !important;"
+                    (keypress)="patternMobilevalidationWithSpl($event)"
+                    maxlength="20"
+                  />
+                  -
+                  <input
+                    class="form-control"
+                    type="text"
+                    name="workPhoneExtn"
+                    [(ngModel)]="contactInformation.workPhoneExtn"
+                    (ngModelChange)="enableSave()"
+                    style="width: calc(43% - 63px) !important;"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <div
+                  class="form-group"
+                  style="margin-top: 15px; margin-bottom: 20px;"
+                >
+                  <span class="checkbox-cstm">
+                    <label>
+                      <input
+                        type="checkbox"
+                        name="isDefaultContact"
+                        [(ngModel)]="contactInformation.isDefaultContact"
+                        (ngModelChange)="enableSave()"
+                      />
+                      <span class="cr"
+                        ><i class="cr-icon pi pi-check"></i
+                      ></span>
+                      Primary Contact
+                    </label>
+                  </span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Website</label>
+                <input
+                  class="form-control"
+                  type="text"
+                  name="websiteURL"
+                  #url="ngModel"
+                  [(ngModel)]="contactInformation.websiteURL"
+                  (ngModelChange)="enableSave()"
+                  [pattern]="urlPattern"
+                />
+                <div *ngIf="url.errors" [ngClass]="'error'">
+                  <div *ngIf="url.errors.pattern">
+                    <span style="color:red">URL not valid</span>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Mobile Phone</label>
+                <input
+                  class="form-control"
+                  type="text"
+                  name="mobilePhone"
+                  [(ngModel)]="contactInformation.mobilePhone"
+                  (ngModelChange)="enableSave()"
+                  (keypress)="patternMobilevalidationWithSpl($event)"
+                  maxlength="20"
+                />
+              </div>
+              <div class="form-group">
+                <label>Alternate Phone</label>
+                <input
+                  class="form-control"
+                  type="text"
+                  name="alternatePhone"
+                  [(ngModel)]="contactInformation.alternatePhone"
+                  (ngModelChange)="enableSave()"
+                  (keypress)="patternMobilevalidationWithSpl($event)"
+                  maxlength="20"
+                />
+              </div>
+              <div class="form-group">
+                <label>Fax</label>
+                <input
+                  class="form-control"
+                  pKeyFilter="pint"
+                  type="text"
+                  name="fax"
+                  [(ngModel)]="contactInformation.fax"
+                  (ngModelChange)="enableSave()"
+                  maxlength="20"
+                />
+              </div>
+
+              <div class="form-group">
+                <label>Memo</label>
+                <textarea
+                  name="notes"
+                  [(ngModel)]="contactInformation.notes"
+                  (ngModelChange)="enableSave()"
+                ></textarea>
+              </div>
+
+              <div class="form-group">
+                <label>Email <span class="clr-red">*</span></label>
+                <input
+                  class="form-control"
+                  email
+                  type="text"
+                  name="email"
+                  [pattern]="emailPattern"
+                  #contactEmail="ngModel"
+                  [(ngModel)]="contactInformation.email"
+                  (ngModelChange)="enableSave()"
+                  required
+                />
+                <div *ngIf="contactEmail.errors" [ngClass]="'error'">
+                  <div *ngIf="contactEmail.errors.pattern">
+                    <span style="color:red">Contact Email not valid</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            *ngIf="!isEditButton"
+            class="btn btn-primary pull-right submit-btn"
+            style="text-align:center"
+            [disabled]="
+              !addContactForm.valid ||
+              contactEmail.errors ||
+              disablesaveForFirstname ||
+              disableSaveMiddleName ||
+              disableSaveLastName ||
+              disableSave
+            "
+            (click)="saveContactInformation()"
+            data-dismiss="modal"
+          >
+            Save
+          </button>
+          <button
+            type="button"
+            *ngIf="isEditButton"
+            class="btn btn-primary pull-right submit-btn"
+            style="text-align:center"
+            [disabled]="
+              !addContactForm.valid ||
+              contactEmail.errors ||
+              disablesaveForFirstname ||
+              disableSaveMiddleName ||
+              disableSaveLastName ||
+              disableSave
+            "
+            (click)="updateCustomerContact()"
+          >
+            Update
+          </button>
+          <!-- [disabled]="(!addContactForm.valid ||contactEmail.errors|| disablesaveForFirstname ||disableSaveMiddleName ||disableSaveLastName)&& disableSave" -->
+          <button
+            type="button"
+            class="btn btn-danger"
+            (click)="closeMyModel()"
+            data-dismiss="modal"
+          >
+            Close
+          </button>
+        </div>
+      </form>
     </div>
+  </div>
 </div>
 
+<div
+  id="view"
+  #view
+  class="modal fade"
+  role="dialog"
+  *ngIf="sourceViewforContact"
+  data-backdrop="static"
+  data-keyboard="false"
+>
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">
+          &times;
+        </button>
+        <h4 class="modal-title">Details of Customer Contact</h4>
+      </div>
+      <div class="modal-body">
+        <div class="col-sm-12">
+          <p>
+            <span class="label"
+              ><b>Tag<span class="clr-red">*</span>: </b></span
+            ><span class="value">{{ sourceViewforContact.tag }}</span>
+          </p>
+          <p>
+            <span class="label"><b>Prefix: </b></span
+            ><span class="value">{{ sourceViewforContact.prefix }}</span>
+          </p>
+          <p>
+            <span class="label"
+              ><b>First Name<span class="clr-red">*</span>: </b></span
+            ><span class="value">{{ sourceViewforContact.firstName }}</span>
+          </p>
+          <p>
+            <span class="label"><b>Middle Name: </b></span
+            ><span class="value">{{ sourceViewforContact.middleName }}</span>
+          </p>
+          <p>
+            <span class="label"
+              ><b>Last Name<span class="clr-red">*</span>:</b></span
+            ><span class="value">{{ sourceViewforContact.lastName }}</span>
+          </p>
+          <p>
+            <span class="label"><b>Suffix: </b></span
+            ><span class="value">{{ sourceViewforContact.suffix }}</span>
+          </p>
+          <p>
+            <span class="label"><b>Title: </b></span
+            ><span class="value">{{ sourceViewforContact.contactTitle }}</span>
+          </p>
+          <p>
+            <span class="label"
+              ><b>Work Phone<span class="clr-red">*</span>: </b></span
+            ><span class="value"
+              >{{ sourceViewforContact.workPhone }} -
+              {{ sourceViewforContact.workPhoneExtn }}</span
+            >
+          </p>
+          <p>
+            <span class="label"><b>Primary Contact </b></span
+            ><span class="value">{{
+              sourceViewforContact.isDefaultContact === true ? 'Yes' : 'No'
+            }}</span>
+          </p>
 
-<div id="view" #view class="modal fade" role="dialog" *ngIf="sourceViewforContact" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog">
+          <p>
+            <span class="label"
+              ><b>Email<span class="clr-red">*</span>:</b></span
+            ><span class="value">{{ sourceViewforContact.email }}</span>
+          </p>
+          <p>
+            <span class="label"><b>Website: </b></span
+            ><span class="value">{{ sourceViewforContact.websiteURL }}</span>
+          </p>
+          <p>
+            <span class="label"><b>Mobile Phone: </b></span
+            ><span class="value">{{ sourceViewforContact.mobilePhone }}</span>
+          </p>
+          <p>
+            <span class="label"><b>Alternate Phone:</b></span
+            ><span class="value">{{
+              sourceViewforContact.alternatePhone
+            }}</span>
+          </p>
 
-        <!-- Modal content-->
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Details of Customer Contact</h4>
-            </div>
-            <div class="modal-body">
-                <div class="col-sm-12">
-                    <p><span class="label"><b>Tag<span class="clr-red">*</span>: </b></span><span class="value">{{sourceViewforContact.tag}}</span></p>
-                    <p><span class="label"><b>Prefix: </b></span><span class="value">{{sourceViewforContact.prefix}}</span></p>
-                    <p><span class="label"><b>First Name<span class="clr-red">*</span>: </b></span><span class="value">{{sourceViewforContact.firstName}}</span></p>
-                    <p><span class="label"><b>Middle Name: </b></span><span class="value">{{sourceViewforContact.middleName}}</span></p>
-                    <p><span class="label"><b>Last Name<span class="clr-red">*</span>:</b></span><span class="value">{{sourceViewforContact.lastName}}</span></p>
-                    <p><span class="label"><b>Suffix: </b></span><span class="value">{{sourceViewforContact.suffix}}</span></p>
-                    <p><span class="label"><b>Title: </b></span><span class="value">{{sourceViewforContact.contactTitle}}</span></p>
-                    <p><span class="label"><b>Work Phone<span class="clr-red">*</span>: </b></span><span class="value">{{sourceViewforContact.workPhone}} - {{sourceViewforContact.workPhoneExtn}}</span></p>
-                    <p><span class="label"><b>Primary Contact </b></span><span class="value">{{sourceViewforContact.isDefaultContact === true ? 
-                       'Yes' : 'No' }}</span></p>
+          <p>
+            <span class="label"><b>Fax: </b></span
+            ><span class="value">{{ sourceViewforContact.fax }}</span>
+          </p>
+          <p>
+            <span class="label"><b>Memo: </b></span
+            ><span class="value">{{ sourceViewforContact.notes }}</span>
+          </p>
+          <p>
+            <span class="label"><b>Active: </b></span
+            ><span class="value">{{ sourceViewforContact.isActive }}</span>
+          </p>
 
-                    <p><span class="label"><b>Email<span class="clr-red">*</span>:</b></span><span class="value">{{sourceViewforContact.email}}</span></p>
-                    <p><span class="label"><b>WebSite: </b></span><span class="value">{{sourceViewforContact.websiteURL}}</span></p>
-                    <p><span class="label"><b>Mobile Phone: </b></span><span class="value">{{sourceViewforContact.mobilePhone}}</span></p>
-                    <p><span class="label"><b>Alternate Phone:</b></span><span class="value">{{sourceViewforContact.alternatePhone}}</span></p>
-
-                    <p><span class="label"><b>Fax: </b></span><span class="value">{{sourceViewforContact.fax}}</span></p>
-                    <p><span class="label"><b>Memo: </b></span><span class="value">{{sourceViewforContact.notes}}</span></p>
-                    <p><span class="label"><b>Active: </b></span><span class="value">{{sourceViewforContact.isActive}}</span></p>
-
-                    <div class="clear"></div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-            </div>
+          <div class="clear"></div>
         </div>
-
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">
+          Close
+        </button>
+      </div>
     </div>
+  </div>
 </div>
 <ng-template #viewdbl class="modal fade " id="viewdbl" role="dialog">
+  <div role="dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" (click)="dismissModel()">
+          &times;
+        </button>
+        <h4 class="modal-title">Details of Customer Contact</h4>
+      </div>
+      <div class="modal-body">
+        <div class="col-sm-12">
+          <p>
+            <span class="label"
+              ><b>Tag<span class="clr-red">*</span> : </b></span
+            ><span class="value">{{ sourceViewforContact.tag }}</span>
+          </p>
+          <p>
+            <span class="label"><b>Prefix: </b></span
+            ><span class="value">{{ sourceViewforContact.prefix }}</span>
+          </p>
+          <p>
+            <span class="label"
+              ><b>First Name<span class="clr-red">*</span>: </b></span
+            ><span class="value">{{ sourceViewforContact.firstName }}</span>
+          </p>
+          <p>
+            <span class="label"><b>Middle Name: </b></span
+            ><span class="value">{{ sourceViewforContact.middleName }}</span>
+          </p>
+          <p>
+            <span class="label"
+              ><b>Last Name<span class="clr-red">*</span>: </b></span
+            ><span class="value">{{ sourceViewforContact.lastName }}</span>
+          </p>
+          <p>
+            <span class="label"><b>Suffix: </b></span
+            ><span class="value">{{ sourceViewforContact.suffix }}</span>
+          </p>
+          <p>
+            <span class="label"><b>Title: </b></span
+            ><span class="value">{{ sourceViewforContact.contactTitle }}</span>
+          </p>
+          <p>
+            <span class="label"
+              ><b>Work Phone<span class="clr-red">*</span>: </b></span
+            ><span class="value"
+              >{{ sourceViewforContact.workPhone }} -
+              {{ sourceViewforContact.workPhoneExtn }}</span
+            >
+          </p>
+          <p>
+            <span class="label"><b>Primary Contact: </b></span
+            ><span class="value">{{
+              sourceViewforContact.isDefaultContact
+            }}</span>
+          </p>
 
+          <p>
+            <span class="label"
+              ><b>Email<span class="clr-red">*</span>: </b></span
+            ><span class="value">{{ sourceViewforContact.email }}</span>
+          </p>
+          <p>
+            <span class="label"><b>WebSite: </b></span
+            ><span class="value">{{ sourceViewforContact.websiteURL }}</span>
+          </p>
+          <p>
+            <span class="label"><b>Mobile Phone: </b></span
+            ><span class="value">{{ sourceViewforContact.mobilePhone }}</span>
+          </p>
+          <p>
+            <span class="label"><b>Alternate Phone:</b></span
+            ><span class="value">{{
+              sourceViewforContact.alternatePhone
+            }}</span>
+          </p>
 
-    <div role="dialog">
+          <p>
+            <span class="label"><b>Fax: </b></span
+            ><span class="value">{{ sourceViewforContact.fax }}</span>
+          </p>
+          <p>
+            <span class="label"><b>Memo: </b></span
+            ><span class="value">{{ sourceViewforContact.notes }}</span>
+          </p>
+          <p>
+            <span class="label"><b>Active: </b></span
+            ><span class="value">{{ sourceViewforContact.isActive }}</span>
+          </p>
 
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" (click)="dismissModel()">&times;</button>
-                <h4 class="modal-title">Details of Customer Contact</h4>
-            </div>
-            <div class="modal-body">
-                <div class="col-sm-12">
-                    <p><span class="label"><b>Tag<span class="clr-red">*</span> : </b></span><span class="value">{{sourceViewforContact.tag}}</span></p>
-                    <p><span class="label"><b>Prefix: </b></span><span class="value">{{sourceViewforContact.prefix}}</span></p>
-                    <p><span class="label"><b>First Name<span class="clr-red">*</span>: </b></span><span class="value">{{sourceViewforContact.firstName}}</span></p>
-                    <p><span class="label"><b>Middle Name: </b></span><span class="value">{{sourceViewforContact.middleName}}</span></p>
-                    <p><span class="label"><b>Last Name<span class="clr-red">*</span>: </b></span><span class="value">{{sourceViewforContact.lastName}}</span></p>
-                    <p><span class="label"><b>Suffix: </b></span><span class="value">{{sourceViewforContact.suffix}}</span></p>
-                    <p><span class="label"><b>Title: </b></span><span class="value">{{sourceViewforContact.contactTitle}}</span></p>
-                    <p><span class="label"><b>Work Phone<span class="clr-red">*</span>: </b></span><span class="value">{{sourceViewforContact.workPhone}} - {{sourceViewforContact.workPhoneExtn}}</span></p>
-                    <p><span class="label"><b>Primary Contact: </b></span><span class="value">{{sourceViewforContact.isDefaultContact}}</span></p>
-
-                    <p><span class="label"><b>Email<span class="clr-red">*</span>: </b></span><span class="value">{{sourceViewforContact.email}}</span></p>
-                    <p><span class="label"><b>WebSite: </b></span><span class="value">{{sourceViewforContact.websiteURL}}</span></p>
-                    <p><span class="label"><b>Mobile Phone: </b></span><span class="value">{{sourceViewforContact.mobilePhone}}</span></p>
-                    <p><span class="label"><b>Alternate Phone:</b></span><span class="value">{{sourceViewforContact.alternatePhone}}</span></p>
-
-                    <p><span class="label"><b>Fax: </b></span><span class="value">{{sourceViewforContact.fax}}</span></p>
-                    <p><span class="label"><b>Memo: </b></span><span class="value">{{sourceViewforContact.notes}}</span></p>
-                    <p><span class="label"><b>Active: </b></span><span class="value">{{sourceViewforContact.isActive}}</span></p>
-
-                    <div class="clear"></div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
-            </div>
+          <div class="clear"></div>
         </div>
-
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" (click)="dismissModel()">
+          Close
+        </button>
+      </div>
     </div>
+  </div>
 </ng-template>
 
-<div id="ATAADD" class="modal fade custom-popup" role="dialog" #ATAADD data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog modal-full">
-
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">×</button>
-                <h4 class="modal-title">Add ATA Information</h4>
+<div
+  id="ATAADD"
+  class="modal fade custom-popup"
+  role="dialog"
+  #ATAADD
+  data-backdrop="static"
+  data-keyboard="false"
+>
+  <div class="modal-dialog modal-full">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">×</button>
+        <h4 class="modal-title">Add ATA Information</h4>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-row">
+            <div class="col-md-5">
+              <div class="form-group">
+                <div class="col-md-12">
+                  <label class="popup-plusicon-cstm">
+                    ATA Chapter
+                    <a
+                      data-dismiss="modal"
+                      [routerLink]="['/singlepages/singlepages/app-ata-main']"
+                    >
+                      <i class="fa fa-plus-circle fa-lg"></i>
+                    </a>
+                  </label>
+                </div>
+                <div class="col-md-12">
+                  <p-dropdown
+                    name="ataPopUp"
+                    placeholder="Select ATA Chapter"
+                    class="p-dropdown-custom-md p-dropdown-cus-fullwidth"
+                    [(ngModel)]="add_SelectedId"
+                    (onChange)="getATASubChapterByATAChapter()"
+                    [options]="add_ataChapterList"
+                  ></p-dropdown>
+                </div>
+              </div>
             </div>
-            <div class="modal-body">
-                <form>
-                    <div class="form-row">
-                        <div class="col-md-5">
-                            <div class="form-group">
-                                <div class="col-md-12">
-                                    <label class="popup-plusicon-cstm">
-                                        ATA Chapter
-                                        <a data-dismiss="modal"
-                                           [routerLink]="['/singlepages/singlepages/app-ata-main']">
-                                            <i class="fa fa-plus-circle fa-lg"></i>
-                                        </a>
-                                    </label>
-                                </div>
-                                <div class="col-md-12">
-                                    <p-dropdown name="ataPopUp"
-                                                placeholder="Select ATA Chapter"
-                                                class="p-dropdown-custom-md p-dropdown-cus-fullwidth"
-                                                [(ngModel)]="add_SelectedId"
-                                                (onChange)="getATASubChapterByATAChapter()"
-                                                [options]="add_ataChapterList"></p-dropdown>
-                                </div>
-                            </div>
-                        </div>
 
-                        <div class="col-md-5">
-                            <div class="form-group">
-                                <label class="popup-plusicon-cstm"
-                                       style="width: 170px !important;">
-                                    ATA SubChapters
-                                    <a data-dismiss="modal"
-                                       [routerLink]="[
-                        '/singlepages/singlepages/app-ata-sub-chapter1'
-                      ]"><i class="fa fa-plus-circle fa-lg"></i></a>
-                                </label>
-                                <p-multiSelect class="imstock-pmselect"
-                                               [options]="add_ataSubChapterList"
-                                               [(ngModel)]="add_SelectedModels"
-                                               name="popUpATASubchapter"
-                                               [panelStyle]="{ minWidth: '12em' }"></p-multiSelect>
-                            </div>
-                        </div>
-
-                        <div class="col-md-2">
-                            <button style="margin-top: 20px;"
-                                    type="button"
-                                    class="btn btn-primary"
-                                    (click)="addATAMapping()">
-                                Save
-                            </button>
-                        </div>
-                    </div>
-                </form>
-                <p-table [rows]="6"
-                         [value]="ataListDataValues"
-                         [scrollable]="true"
-                         [style]="{ width: '100%' }"
-                         [paginator]="true">
-                    <ng-template pTemplate="header" let-columns>
-                        <tr>
-                            <th *ngFor="let col of ataHeaders">
-                                {{ col.header }}
-                            </th>
-                            <th class="action-width">Action</th>
-                        </tr>
-                    </ng-template>
-                    <ng-template pTemplate="body"
-                                 let-i="rowIndex"
-                                 let-rowData
-                                 let-columns="columns">
-                        <tr>
-                            <td class="uiTable_td_ovrflw_control" *ngFor="let col of ataHeaders">
-                                {{ rowData[col.field] }}
-                            </td>
-                            <td class="action-width">
-                                <span data-toggle="modal" data-target="#editATAChapter"><a class="btn nobg" (click)="editContactATAChapters(rowData)" matTooltip="Edit"><i class="fa fa-pencil"></i></a> </span>
-
-
-
-                                <button class="btn btn-danger nobg"
-                                        (click)="deleteATAMapped(deleteContent1,rowData)">
-                                    <i class="fa fa-trash"></i>
-                                </button>
-                                <span data-toggle="modal" data-target="#contentATAChapterHist"><a class="btn nobg" (click)="getATAAuditHistoryById(rowData)" matTooltip="History"><i class="fa fa-history"></i></a></span>
-
-
-
-
-
-                            </td>
-
-                        </tr>
-                    </ng-template>
-                </p-table>
-
+            <div class="col-md-5">
+              <div class="form-group">
+                <label
+                  class="popup-plusicon-cstm"
+                  style="width: 170px !important;"
+                >
+                  ATA SubChapters
+                  <a
+                    data-dismiss="modal"
+                    [routerLink]="[
+                      '/singlepages/singlepages/app-ata-sub-chapter1'
+                    ]"
+                    ><i class="fa fa-plus-circle fa-lg"></i
+                  ></a>
+                </label>
+                <p-multiSelect
+                  class="imstock-pmselect"
+                  [options]="add_ataSubChapterList"
+                  [(ngModel)]="add_SelectedModels"
+                  name="popUpATASubchapter"
+                  [panelStyle]="{ minWidth: '12em' }"
+                ></p-multiSelect>
+              </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal">
-                    Close
+
+            <div class="col-md-2">
+              <button
+                style="margin-top: 20px;"
+                type="button"
+                class="btn btn-primary"
+                (click)="addATAMapping()"
+              >
+                Save
+              </button>
+            </div>
+          </div>
+        </form>
+        <p-table
+          [rows]="6"
+          [value]="ataListDataValues"
+          [scrollable]="true"
+          [style]="{ width: '100%' }"
+          [paginator]="true"
+        >
+          <ng-template pTemplate="header" let-columns>
+            <tr>
+              <th *ngFor="let col of ataHeaders">
+                {{ col.header }}
+              </th>
+              <th class="action-width">Action</th>
+            </tr>
+          </ng-template>
+          <ng-template
+            pTemplate="body"
+            let-i="rowIndex"
+            let-rowData
+            let-columns="columns"
+          >
+            <tr>
+              <td
+                class="uiTable_td_ovrflw_control"
+                *ngFor="let col of ataHeaders"
+              >
+                {{ rowData[col.field] }}
+              </td>
+              <td class="action-width">
+                <span data-toggle="modal" data-target="#editATAChapter"
+                  ><a
+                    class="btn nobg"
+                    (click)="editContactATAChapters(rowData)"
+                    matTooltip="Edit"
+                    ><i class="fa fa-pencil"></i
+                  ></a>
+                </span>
+
+                <button
+                  class="btn btn-danger nobg"
+                  (click)="deleteATAMapped(deleteContent1, rowData)"
+                >
+                  <i class="fa fa-trash"></i>
                 </button>
-            </div>
-        </div>
+                <span data-toggle="modal" data-target="#contentATAChapterHist"
+                  ><a
+                    class="btn nobg"
+                    (click)="getATAAuditHistoryById(rowData)"
+                    matTooltip="History"
+                    ><i class="fa fa-history"></i></a
+                ></span>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">
+          Close
+        </button>
+      </div>
     </div>
+  </div>
 </div>
 <ng-template #deleteContent let-c="close" let-d="dismiss">
-    <div class="modal-header">
-        <h4 class="modal-title">Are You Sure Want to Delete?</h4>
+  <div class="modal-header">
+    <h4 class="modal-title">Are You Sure Want to Delete?</h4>
 
-        <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-    <div class="modal-body">
-        <strong>
-            Contact Name:
-            <span class="new-label">{{selectedRowforDelete.firstName}}</span>
-        </strong>
-    </div>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="dismissModel()"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <strong>
+      Contact Name:
+      <span class="new-label">{{ selectedRowforDelete.firstName }}</span>
+    </strong>
+  </div>
 
-    <div class="modal-footer">
-        <button type="button" class="btn btn-success" (click)="deleteItemAndCloseModel()">Yes</button>
-        <button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
-    </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-success"
+      (click)="deleteItemAndCloseModel()"
+    >
+      Yes
+    </button>
+    <button type="button" class="btn btn-danger" (click)="dismissModel()">
+      No
+    </button>
+  </div>
 </ng-template>
 <ng-template #deleteContent1 let-c="close" let-d="dismiss">
-    <div class="modal-header">
-        <h4 class="modal-title">Are You Sure Want to Delete?</h4>
-        <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-    <div class="modal-body">
-        <strong>
-            AtaChapter Name:
-            <span class="new-label">{{selectedAtappedRowforDelete.ataChapterCode}} - {{selectedAtappedRowforDelete.ataChapterName}}</span>
-        </strong>
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-success" (click)="deleteItemAndCloseModel1()">Yes</button>
-        <button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
-    </div>
+  <div class="modal-header">
+    <h4 class="modal-title">Are You Sure Want to Delete?</h4>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="dismissModel()"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <strong>
+      AtaChapter Name:
+      <span class="new-label"
+        >{{ selectedAtappedRowforDelete.ataChapterCode }} -
+        {{ selectedAtappedRowforDelete.ataChapterName }}</span
+      >
+    </strong>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-success"
+      (click)="deleteItemAndCloseModel1()"
+    >
+      Yes
+    </button>
+    <button type="button" class="btn btn-danger" (click)="dismissModel()">
+      No
+    </button>
+  </div>
 </ng-template>
 <div id="editATAChapter" class="modal fade" role="dialog">
-    <div class="modal-dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">
+          &times;
+        </button>
+        <h4 class="modal-title">Edit Contact ATA Chapters</h4>
+      </div>
+      <div class="modal-body" *ngIf="ataChapterEditData">
+        <div class="card">
+          <div class="form-row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label class="fs12">
+                  ATA Chapter
+                </label>
 
-        <!-- Modal content-->
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Edit Contact ATA Chapters </h4>
-            </div>
-            <div class="modal-body" *ngIf="ataChapterEditData">
-                <div class="card">
-                    <div class="form-row">
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label class="fs12">
-                                    ATA Chapter
-                                </label>
-
-
-                                <!--<p-dropdown name="ataPopUp" filter="true"
+                <!--<p-dropdown name="ataPopUp" filter="true"
                 placeholder="Select ATA Chapter"
                 class="p-dropdown-custom-md p-dropdown-cus-fullwidth"
                 [(ngModel)]="ataChapterEditData.ataChapterId"
                 (onChange)="getATASubChapterByATAChapter()"
                 [options]="add_ataChapterList"></p-dropdown>-->
-                                <select name="taxRates" [(ngModel)]="ataChapterEditData.ataChapterId" (change)="getATASubChapterByATAChapterID(ataChapterEditData.ataChapterId)">
-                                    <option value="">select</option>
-                                    <option *ngFor="let atalist of search_ataChapterList" [ngValue]="atalist.value">{{atalist.label}}</option>
-                                </select>
+                <select
+                  name="taxRates"
+                  [(ngModel)]="ataChapterEditData.ataChapterId"
+                  (change)="
+                    getATASubChapterByATAChapterID(
+                      ataChapterEditData.ataChapterId
+                    )
+                  "
+                >
+                  <option value="">select</option>
+                  <option
+                    *ngFor="let atalist of search_ataChapterList"
+                    [ngValue]="atalist.value"
+                    >{{ atalist.label }}</option
+                  >
+                </select>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label
+                  label
+                  class="popup-plusicon-cstm"
+                  style="width: 170px !important;"
+                >
+                  ATA Sub Chapters
+                </label>
 
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label label class="popup-plusicon-cstm"
-                                       style="width: 170px !important;">
-                                    ATA Sub Chapters
-                                </label>
-
-                                <!--<p-multiSelect class="imstock-pmselect"
+                <!--<p-multiSelect class="imstock-pmselect"
                                                [options]="search_ataSubChapterList"
                                                [(ngModel)]="ataChapterEditData.ataSubChapterId"
                                                name="popUpATASubchapter"
                                                [panelStyle]="{ minWidth: '12em' }"></p-multiSelect>-->
-                                <select name="taxRatess" [(ngModel)]="ataChapterEditData.ataSubChapterId">
-                                    <option value="">select</option>
-                                    <option *ngFor="let atasublist of search_ataSubChapterList" [ngValue]="atasublist.value">{{atasublist.label}}</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <button class="btn btn-primary" (click)="updateATAChapters()" data-dismiss="modal" style="margin-top:20px;">
-                                    Update
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <select
+                  name="taxRatess"
+                  [(ngModel)]="ataChapterEditData.ataSubChapterId"
+                >
+                  <option value="">select</option>
+                  <option
+                    *ngFor="let atasublist of search_ataSubChapterList"
+                    [ngValue]="atasublist.value"
+                    >{{ atasublist.label }}</option
+                  >
+                </select>
+              </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            <div class="col-md-3">
+              <div class="form-group">
+                <button
+                  class="btn btn-primary"
+                  (click)="updateATAChapters()"
+                  data-dismiss="modal"
+                  style="margin-top:20px;"
+                >
+                  Update
+                </button>
+              </div>
             </div>
+          </div>
         </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">
+          Close
+        </button>
+      </div>
     </div>
+  </div>
 </div>
-<div  id="contentATAChapterHist" #contentATAChapterHist class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog modal-lg">
-
-        <!-- Modal content-->
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <div class="col-md-12 shadow-box-cstm">
-                    <div class="col-md-4">
-                        <p class="fs12">
-                            <label class="control-label labels-font-header" style="width: auto;">Customer Name: </label>
-                            <span class="span-header-red" style="text-transform: capitalize"> {{customerName }} </span>
-                        </p>
-                    </div>
-                    <div class="col-md-4">
-                        <p class="fs12">
-                            <label class="control-label labels-font-header" style="width: auto;">Customer Code: </label>
-                            <span class="span-header-red" style="text-transform: capitalize"> {{customerCode }} </span>
-                        </p>
-                    </div>
-                </div>
-                <h4 class="modal-title">History of ATA Chapter</h4>
-            </div>
-            <div class="modal-body" *ngIf="auditHistory1">
-                <div class="table-responsive">
-                    <table class="table table-bordered" *ngIf="auditHistory1.length> 0 else noDatavailable">
-                        <thead>
-                            <tr>
-
-                                <th>Contact</th>
-                                <th>ATA Chapter Code</th>
-                                <th>ATA Chapter Name</th>
-                                <th>ATA Sub Chapter</th>
-
-                                <th>Created By</th>
-                                <th>Created Date</th>
-                                <th>Last Updated By</th>
-                                <th>Last Updated Date</th>
-
-
-                            </tr>
-                        </thead>
-                        <tbody *ngIf="auditHistory1.length> 0">
-                            <tr *ngFor="let audit of auditHistory1; let i = index;">
-                                <td [ngStyle]="{'color':  getColorCodeForHistoryATA(i, 'firstName', audit.firstName)  ? 'black' : 'red'  }">{{audit.firstName}}</td>
-
-                                <td [ngStyle]="{'color':  getColorCodeForHistoryATA(i, 'ataChapterCode', audit.ataChapterCode)  ? 'black' : 'red'  }">{{audit.ataChapterCode}}</td>
-
-                                <td [ngStyle]="{'color':  getColorCodeForHistoryATA(i, 'ataChapterName', audit.ataChapterName)  ? 'black' : 'red'  }">{{audit.ataChapterName}}</td>
-                                <td [ngStyle]="{'color':  getColorCodeForHistoryATA(i, 'ataSubChapterDescription', audit.ataSubChapterDescription)  ? 'black' : 'red'  }">{{audit.ataSubChapterDescription}}</td>
-
-
-                                <td>{{audit.createdBy}}</td>
-                                <td>{{audit.createdDate | date: 'dd-MM-yyyy h:mm a '}}</td>
-
-                                <td>{{audit.updatedBy}}</td>
-                                <td>{{audit.updatedDate | date: 'dd-MM-yyyy h:mm a '}}</td>
-                            </tr>
-                        </tbody>
-
-
-                    </table>
-                    <ng-template #noDatavailable>
-                        <div class="text-center">
-                            <h4 style="color: #ff5663;">No History Found </h4>
-                        </div>
-
-                    </ng-template>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-            </div>
+<div
+  id="contentATAChapterHist"
+  #contentATAChapterHist
+  class="modal fade"
+  role="dialog"
+  data-backdrop="static"
+  data-keyboard="false"
+>
+  <div class="modal-dialog modal-lg">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">
+          &times;
+        </button>
+        <div class="col-md-12 shadow-box-cstm">
+          <div class="col-md-4">
+            <p class="fs12">
+              <label
+                class="control-label labels-font-header"
+                style="width: auto;"
+                >Customer Name:
+              </label>
+              <span class="span-header-red" style="text-transform: capitalize">
+                {{ customerName }}
+              </span>
+            </p>
+          </div>
+          <div class="col-md-4">
+            <p class="fs12">
+              <label
+                class="control-label labels-font-header"
+                style="width: auto;"
+                >Customer Code:
+              </label>
+              <span class="span-header-red" style="text-transform: capitalize">
+                {{ customerCode }}
+              </span>
+            </p>
+          </div>
         </div>
+        <h4 class="modal-title">History of ATA Chapter</h4>
+      </div>
+      <div class="modal-body" *ngIf="auditHistory1">
+        <div class="table-responsive">
+          <table
+            class="table table-bordered"
+            *ngIf="auditHistory1.length > 0; else noDatavailable"
+          >
+            <thead>
+              <tr>
+                <th>Contact</th>
+                <th>ATA Chapter Code</th>
+                <th>ATA Chapter Name</th>
+                <th>ATA Sub Chapter</th>
 
+                <th>Created By</th>
+                <th>Created Date</th>
+                <th>Last Updated By</th>
+                <th>Last Updated Date</th>
+              </tr>
+            </thead>
+            <tbody *ngIf="auditHistory1.length > 0">
+              <tr *ngFor="let audit of auditHistory1; let i = index">
+                <td
+                  [ngStyle]="{
+                    color: getColorCodeForHistoryATA(
+                      i,
+                      'firstName',
+                      audit.firstName
+                    )
+                      ? 'black'
+                      : 'red'
+                  }"
+                >
+                  {{ audit.firstName }}
+                </td>
+
+                <td
+                  [ngStyle]="{
+                    color: getColorCodeForHistoryATA(
+                      i,
+                      'ataChapterCode',
+                      audit.ataChapterCode
+                    )
+                      ? 'black'
+                      : 'red'
+                  }"
+                >
+                  {{ audit.ataChapterCode }}
+                </td>
+
+                <td
+                  [ngStyle]="{
+                    color: getColorCodeForHistoryATA(
+                      i,
+                      'ataChapterName',
+                      audit.ataChapterName
+                    )
+                      ? 'black'
+                      : 'red'
+                  }"
+                >
+                  {{ audit.ataChapterName }}
+                </td>
+                <td
+                  [ngStyle]="{
+                    color: getColorCodeForHistoryATA(
+                      i,
+                      'ataSubChapterDescription',
+                      audit.ataSubChapterDescription
+                    )
+                      ? 'black'
+                      : 'red'
+                  }"
+                >
+                  {{ audit.ataSubChapterDescription }}
+                </td>
+
+                <td>{{ audit.createdBy }}</td>
+                <td>{{ audit.createdDate | date: 'dd-MM-yyyy h:mm a ' }}</td>
+
+                <td>{{ audit.updatedBy }}</td>
+                <td>{{ audit.updatedDate | date: 'dd-MM-yyyy h:mm a ' }}</td>
+              </tr>
+            </tbody>
+          </table>
+          <ng-template #noDatavailable>
+            <div class="text-center">
+              <h4 style="color: #ff5663;">No History Found</h4>
+            </div>
+          </ng-template>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">
+          Close
+        </button>
+      </div>
     </div>
+  </div>
+</div>
+
+<div id="deleteoops" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">
+          &times;
+        </button>
+        <h4 class="modal-title">Alert !</h4>
+      </div>
+      <div class="modal-body">
+        <p>
+          Primary Record Cannot be Deleted
+          <img
+            class="delete-emoji"
+            src="../../../assets/images/oopsimage.png"
+          />
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
 </div>
