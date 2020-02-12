@@ -144,26 +144,26 @@ namespace DAL.Repositories
                                  t.PrimarySalesPersonFirstName.Contains(customerFilters.filters.salesPersonPrimary)
                         select new CustomerFilters()
                         {
-                           CustomerId= t.CustomerId,
-                            name=t.Name,
-                            customerCode=t.CustomerCode,
-                            email=t.Email,
+                            CustomerId = t.CustomerId,
+                            name = t.Name,
+                            customerCode = t.CustomerCode,
+                            email = t.Email,
                             accountType = type.Description,
                             customerClassification = ct.Description,
                             city = ad.City,
                             stateOrProvince = ad.StateOrProvince,
                             contact = t.CustomerPhone == null ? "-" : t.CustomerPhone,
                             salesPersonPrimary = t.PrimarySalesPersonFirstName == null ? "-" : t.PrimarySalesPersonFirstName,
-                            createdDate=t.CreatedDate,
-                           isActive= t.IsActive,
-                           isDeleted= t.IsDeleted,
+                            createdDate = t.CreatedDate,
+                            isActive = t.IsActive,
+                            isDeleted = t.IsDeleted,
                             customerType = AccountTyp.description,
                             totalRecords = totalRecords
                         }).Distinct()
                         .Paginate(pageNumber, pageSize, sorts).Results;
 
 
-           
+
 
             return (data);
         }
@@ -273,7 +273,7 @@ namespace DAL.Repositories
                                 t.CustomerCode,
                                 t.Email,
                                 AccountType = type.Description,
-                                CustomerType=ctype.description,
+                                CustomerType = ctype.description,
                                 CustomerClassification = ct.Description,
                                 City = ad.City,
                                 StateOrProvince = ad.StateOrProvince,
@@ -634,7 +634,7 @@ namespace DAL.Repositories
                                 isAddressForBilling = t.IsAddressForBilling,
                                 isAddressForShipping = t.IsAddressForShipping,
                                 customerAffiliationId = vt.CustomerAffiliationId,
-                              Type= type.Description,
+                                Type = type.Description,
                                 customerTypeId = t.CustomerTypeId,
                                 name = t.Name,
                                 customerPhone = t.CustomerPhone,
@@ -800,62 +800,60 @@ namespace DAL.Repositories
 
         public IEnumerable<object> GetATAMapped(long customerId)
         {
-            {
+            
+            var data = (from ca in _appContext.CustomerContactATAMapping
+                        join cont in _appContext.CustomerContact on ca.CustomerContactId equals cont.CustomerContactId
+                        join contt in _appContext.Contact on cont.ContactId equals contt.ContactId into conttt
+                        from contt in conttt.DefaultIfEmpty()
 
-                var data = (from ca in _appContext.CustomerContactATAMapping
-                            join cont in _appContext.CustomerContact on ca.CustomerContactId equals cont.ContactId
-                            join contt in _appContext.Contact on cont.ContactId equals contt.ContactId into conttt
-                            from contt in conttt.DefaultIfEmpty()
+                        where ca.CustomerId == customerId && ca.IsDeleted == false && cont.IsDeleted != true
+                        select new
+                        {
+                            ca.CustomerContactATAMappingId,
+                            ca.CustomerId,
+                            ca.ATAChapterId,
+                            ca.ATAChapterCode,
+                            ca.ATAChapterName,
 
-                            where ca.CustomerId == customerId && ca.IsDeleted == false && cont.IsDeleted !=true
-                            select new
-                            {
-                                ca.CustomerContactATAMappingId,
-                                ca.CustomerId,
-                                ca.ATAChapterId,
-                                ca.ATAChapterCode,
-                                ca.ATAChapterName,
-
-                                ca.ATASubChapterId,
-                                ca.ATASubChapterDescription,
-                                contt.FirstName,
-                                contt.ContactId
+                            ca.ATASubChapterId,
+                            ca.ATASubChapterDescription,
+                            contt.FirstName,
+                            contt.ContactId
 
 
-                            }).ToList();
-                return data;
-            }
+                        }).ToList();
+            return data;
         }
 
         public IEnumerable<object> GetATAMappedAudit(long CustomerContactATAMappingId)
-        {            
-                var data = (from ca in _appContext.CustomerContactATAMappingAudit
-                            join cont in _appContext.CustomerContact on ca.CustomerContactId equals cont.ContactId
-                            join contt in _appContext.Contact on cont.ContactId equals contt.ContactId into conttt
-                            from contt in conttt.DefaultIfEmpty()
+        {
+            var data = (from ca in _appContext.CustomerContactATAMappingAudit
+                        join cont in _appContext.CustomerContact on ca.CustomerContactId equals cont.CustomerContactId
+                        join contt in _appContext.Contact on cont.ContactId equals contt.ContactId into conttt
+                        from contt in conttt.DefaultIfEmpty()
 
-                            where ca.CustomerContactATAMappingId == CustomerContactATAMappingId
-                            select new
-                            {
-                                ca.AuditCustomerContactATAMappingId,
-                                ca.CustomerContactATAMappingId,
-                                ca.CustomerId,
-                                ca.ATAChapterId,
-                                ca.ATAChapterCode,
-                                ca.ATAChapterName,
-                                ca.ATASubChapterId,
-                                ca.ATASubChapterDescription,
-                                contt.FirstName,
-                                contt.ContactId,
-                                ca.UpdatedBy,
-                                ca.UpdatedDate,
-                                ca.CreatedBy,
-                                ca.CreatedDate,
+                        where ca.CustomerContactATAMappingId == CustomerContactATAMappingId
+                        select new
+                        {
+                            ca.AuditCustomerContactATAMappingId,
+                            ca.CustomerContactATAMappingId,
+                            ca.CustomerId,
+                            ca.ATAChapterId,
+                            ca.ATAChapterCode,
+                            ca.ATAChapterName,
+                            ca.ATASubChapterId,
+                            ca.ATASubChapterDescription,
+                            contt.FirstName,
+                            contt.ContactId,
+                            ca.UpdatedBy,
+                            ca.UpdatedDate,
+                            ca.CreatedBy,
+                            ca.CreatedDate,
 
-                            }).ToList();
-                return data;            
+                        }).ToList();
+            return data;
         }
-        
+
 
         public IEnumerable<object> GetATAContactMapped(long contactId)
         {
@@ -966,9 +964,9 @@ namespace DAL.Repositories
                 model.IsDeleted = false;
                 if (model.IsPrimary == true)
                 {
-                    var customershipping = _appContext.CustomerInternationalShipping.Where(p => p.CustomerId == model.CustomerId &&p.IsPrimary==true).ToList();
+                    var customershipping = _appContext.CustomerInternationalShipping.Where(p => p.CustomerId == model.CustomerId && p.IsPrimary == true).ToList();
 
-                    if (customershipping != null )
+                    if (customershipping != null)
                     {
                         foreach (var item in customershipping)
                         {
@@ -979,9 +977,9 @@ namespace DAL.Repositories
                         }
                     }
                 }
-                    model.IsPrimary = model.IsPrimary;
+                model.IsPrimary = model.IsPrimary;
 
-                    _appContext.CustomerInternationalShipping.Add(model);
+                _appContext.CustomerInternationalShipping.Add(model);
                 _appContext.SaveChanges();
 
             }
@@ -1004,14 +1002,14 @@ namespace DAL.Repositories
 
                     CustomerInternationalShipping ship = customershipping.Where(p => p.IsPrimary == true).FirstOrDefault();
 
-                    if (ship != null && model.InternationalShippingId!=ship.InternationalShippingId)
+                    if (ship != null && model.InternationalShippingId != ship.InternationalShippingId)
                     {
 
                         ship.IsPrimary = false;
                         ship.UpdatedDate = DateTime.Now;
-                            _appContext.CustomerInternationalShipping.Update(ship);
-                            _appContext.SaveChanges();
-                        
+                        _appContext.CustomerInternationalShipping.Update(ship);
+                        _appContext.SaveChanges();
+
                     }
                 }
 
@@ -1030,7 +1028,7 @@ namespace DAL.Repositories
                 shipping.Amount = model.Amount;
                 shipping.Description = model.Description;
                 shipping.CustomerId = model.CustomerId;
-                    _appContext.CustomerInternationalShipping.Update(shipping);
+                _appContext.CustomerInternationalShipping.Update(shipping);
                 _appContext.SaveChanges();
 
             }
@@ -1167,83 +1165,109 @@ namespace DAL.Repositories
             }
         }
 
-        public GetData<CustomerInternationalShipping> GetCustomerInternationalShippingDetails(long customerId, int pageNumber, int pageSize)
+        public IEnumerable<object> GetCustomerInternationalShippingDetails(long customerId)
         {
-            GetData<CustomerInternationalShipping> getData = new GetData<CustomerInternationalShipping>();
-            CustomerInternationalShipping intShipping;
-            var totalRecords = 0;
-            try
-            {
-                pageNumber = pageNumber + 1;
-                var take = pageSize;
-                var skip = take * (pageNumber - 1);
+            var data = (from c in _appContext.CustomerInternationalShipping
 
-                totalRecords = _appContext.CustomerInternationalShipping
-                 .Join(_appContext.Countries,
-                           cis => cis.ShipToCountryId,
-                           c => c.countries_id,
-                           (cis, c) => new { cis, c })
-                 .Where(p => p.cis.IsDeleted == false && p.cis.CustomerId == customerId)
-                 .Count();
+                        join co in _appContext.Countries on c.ShipToCountryId equals co.countries_id into adc
+                        from co in adc.DefaultIfEmpty()
+                        where (c.IsDeleted != true && c.CustomerId == customerId)
+                        select new
+                        {
 
-                var result = _appContext.CustomerInternationalShipping
-                 .Join(_appContext.Countries,
-                           cis => cis.ShipToCountryId,
-                           c => c.countries_id,
-                           (cis, c) => new { cis, c })
-                 .Where(p => p.cis.IsDeleted == false && p.cis.CustomerId == customerId)
-                 .Select(p => new
-                 {
-                     InternationalShippingId = p.cis.InternationalShippingId,
-                     CustomerId = p.cis.CustomerId,
-                     ExportLicense = p.cis.ExportLicense,
-                     StartDate = p.cis.StartDate,
-                     Amount = p.cis.Amount,
-                     IsPrimary = p.cis.IsPrimary,
-                     Description = p.cis.Description,
-                     ExpirationDate = p.cis.ExpirationDate,
-                     ShipToCountryId = p.cis.ShipToCountryId,
-                     ShipToCountry = p.c.countries_name,
-                     IsActive = p.cis.IsActive,
-                     IsDeleted = p.cis.IsDeleted,
-                     UpdatedDate = p.cis.UpdatedDate
-                 })
+                            c.InternationalShippingId,
+                            c.Amount,
+                            c.StartDate,
+                            c.ExpirationDate,
+                            c.Description,
+                            c.CreatedDate,
+                            c.UpdatedDate,
+                            c.CustomerId,
+                            c.IsActive,
+                            c.IsPrimary,
+                            c.ExportLicense,
+                            ShipToCountry = co.countries_name,
+                            ShipToCountryId = co.countries_id,
+                            c.CreatedBy,
+                            c.UpdatedBy                            
 
-                 .OrderByDescending(p => p.UpdatedDate)
-                 .Skip(skip)
-                 .Take(take)
-                 .ToList();
+                        }).OrderByDescending(c => c.CreatedDate).ToList();
+            return data;
+            //GetData<CustomerInternationalShipping> getData = new GetData<CustomerInternationalShipping>();
+            //CustomerInternationalShipping intShipping;
+            //var totalRecords = 0;
+            //try
+            //{
+            //    pageNumber = pageNumber + 1;
+            //    var take = pageSize;
+            //    var skip = take * (pageNumber - 1);
 
-                if (result != null && result.Count > 0)
-                {
-                    getData.PaginationList = new List<CustomerInternationalShipping>();
-                    foreach (var item in result)
-                    {
-                        intShipping = new CustomerInternationalShipping();
-                        intShipping.Amount = item.Amount;
-                        intShipping.Description = item.Description;
-                        intShipping.ExpirationDate = item.ExpirationDate;
-                        intShipping.ExportLicense = item.ExportLicense;
-                        intShipping.InternationalShippingId = item.InternationalShippingId;
-                        intShipping.IsActive = item.IsActive;
-                        intShipping.IsPrimary = item.IsPrimary;
-                        intShipping.ShipToCountry = item.ShipToCountry;
-                        intShipping.StartDate = item.StartDate;
-                        getData.PaginationList.Add(intShipping);
-                    }
-                }
-                else
-                {
-                    getData.PaginationList = new List<CustomerInternationalShipping>();
-                }
-                getData.TotalRecordsCount = totalRecords;
+            //    totalRecords = _appContext.CustomerInternationalShipping
+            //     .Join(_appContext.Countries,
+            //               cis => cis.ShipToCountryId,
+            //               c => c.countries_id,
+            //               (cis, c) => new { cis, c })
+            //     .Where(p => p.cis.IsDeleted == false && p.cis.CustomerId == customerId)
+            //     .Count();
 
-                return getData;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            //    var result = _appContext.CustomerInternationalShipping
+            //     .Join(_appContext.Countries,
+            //               cis => cis.ShipToCountryId,
+            //               c => c.countries_id,
+            //               (cis, c) => new { cis, c })
+            //     .Where(p => p.cis.IsDeleted == false && p.cis.CustomerId == customerId)
+            //     .Select(p => new
+            //     {
+            //         InternationalShippingId = p.cis.InternationalShippingId,
+            //         CustomerId = p.cis.CustomerId,
+            //         ExportLicense = p.cis.ExportLicense,
+            //         StartDate = p.cis.StartDate,
+            //         Amount = p.cis.Amount,
+            //         IsPrimary = p.cis.IsPrimary,
+            //         Description = p.cis.Description,
+            //         ExpirationDate = p.cis.ExpirationDate,
+            //         ShipToCountryId = p.cis.ShipToCountryId,
+            //         ShipToCountry = p.c.countries_name,
+            //         IsActive = p.cis.IsActive,
+            //         IsDeleted = p.cis.IsDeleted,
+            //         UpdatedDate = p.cis.UpdatedDate
+            //     })
+
+            //     .OrderByDescending(p => p.UpdatedDate)
+            //     .Skip(skip)
+            //     .Take(take)
+            //     .ToList();
+
+            //    if (result != null && result.Count > 0)
+            //    {
+            //        getData.PaginationList = new List<CustomerInternationalShipping>();
+            //        foreach (var item in result)
+            //        {
+            //            intShipping = new CustomerInternationalShipping();
+            //            intShipping.Amount = item.Amount;
+            //            intShipping.Description = item.Description;
+            //            intShipping.ExpirationDate = item.ExpirationDate;
+            //            intShipping.ExportLicense = item.ExportLicense;
+            //            intShipping.InternationalShippingId = item.InternationalShippingId;
+            //            intShipping.IsActive = item.IsActive;
+            //            intShipping.IsPrimary = item.IsPrimary;
+            //            intShipping.ShipToCountry = item.ShipToCountry;
+            //            intShipping.StartDate = item.StartDate;
+            //            getData.PaginationList.Add(intShipping);
+            //        }
+            //    }
+            //    else
+            //    {
+            //        getData.PaginationList = new List<CustomerInternationalShipping>();
+            //    }
+            //    getData.TotalRecordsCount = totalRecords;
+
+            //    return getData;
+            //}
+            //catch (Exception ex)
+            //{
+            //    throw ex;
+            //}
         }
 
         public CustomerInternationalShipping GetCustomerInternationalShippingDetailsById(long id)
@@ -1409,7 +1433,7 @@ namespace DAL.Repositories
                 {
                     var customerContact = _appContext.ShippingViaDetails.AsNoTracking().Where(p => p.InternationalShippingId == model.InternationalShippingId && p.IsPrimary == true).FirstOrDefault();
 
-                    if (customerContact != null && customerContact.ShippingViaDetailsId!=model.ShippingViaDetailsId)
+                    if (customerContact != null && customerContact.ShippingViaDetailsId != model.ShippingViaDetailsId)
                     {
 
                         customerContact.IsPrimary = false;
@@ -1723,7 +1747,7 @@ namespace DAL.Repositories
                             from contt in conttt.DefaultIfEmpty()
 
                             where cATA.CustomerId == customerId && myATAChapterId.Contains(cATA.ATAChapterId) && myATASubChapterID.Contains(cATA.ATASubChapterId) && mycontactID.Contains(cATA.CustomerContactId) && cATA.IsDeleted != true
-                            select new { cATA.CustomerContactATAMappingId, cATA.CustomerId, cATA.ATAChapterId, cATA.ATAChapterCode, cATA.ATAChapterName, cATA.ATASubChapterId, cATA.ATASubChapterDescription, contt.FirstName ,contt.ContactId}).ToList();
+                            select new { cATA.CustomerContactATAMappingId, cATA.CustomerId, cATA.ATAChapterId, cATA.ATAChapterCode, cATA.ATAChapterName, cATA.ATASubChapterId, cATA.ATASubChapterDescription, contt.FirstName, contt.ContactId }).ToList();
                 //var uniquedata = data.GroupBy(item => new { item.ATAChapterId, item.ATASubChapterId }).Select(group => group.First()).ToList();
                 return data;
             }
@@ -1748,7 +1772,7 @@ namespace DAL.Repositories
                             from contt in conttt.DefaultIfEmpty()
 
                             where cATA.CustomerId == customerId && myATAChapterId.Contains(cATA.ATAChapterId) && mycontactID.Contains(cATA.CustomerContactId) && cATA.IsDeleted != true
-                            select new { cATA.CustomerContactATAMappingId, cATA.CustomerId, cATA.ATAChapterId, cATA.ATAChapterCode, cATA.ATAChapterName, cATA.ATASubChapterId, cATA.ATASubChapterDescription,contt.FirstName,contt.ContactId }).ToList();
+                            select new { cATA.CustomerContactATAMappingId, cATA.CustomerId, cATA.ATAChapterId, cATA.ATAChapterCode, cATA.ATAChapterName, cATA.ATASubChapterId, cATA.ATASubChapterDescription, contt.FirstName, contt.ContactId }).ToList();
                 //var uniquedata = data.GroupBy(item => new { item.ATAChapterId, item.ATASubChapterId }).Select(group => group.First()).ToList();
                 return data;
 
@@ -1761,7 +1785,7 @@ namespace DAL.Repositories
                             from contt in conttt.DefaultIfEmpty()
 
                             where cATA.CustomerId == customerId && myATASubChapterID.Contains(cATA.ATASubChapterId) && mycontactID.Contains(cATA.CustomerContactId) && cATA.IsDeleted != true
-                            select new { cATA.CustomerContactATAMappingId, cATA.CustomerId, cATA.ATAChapterId, cATA.ATAChapterCode, cATA.ATAChapterName, cATA.ATASubChapterId, cATA.ATASubChapterDescription , contt.FirstName, contt.ContactId }).ToList();
+                            select new { cATA.CustomerContactATAMappingId, cATA.CustomerId, cATA.ATAChapterId, cATA.ATAChapterCode, cATA.ATAChapterName, cATA.ATASubChapterId, cATA.ATASubChapterDescription, contt.FirstName, contt.ContactId }).ToList();
                 //var uniquedata = data.GroupBy(item => new { item.ATAChapterId, item.ATASubChapterId }).Select(group => group.First()).ToList();
                 return data;
 
@@ -1799,7 +1823,7 @@ namespace DAL.Repositories
                             join contt in _appContext.Contact on cont.ContactId equals contt.ContactId into conttt
                             from contt in conttt.DefaultIfEmpty()
 
-                            where cATA.CustomerId == customerId && mycontactID.Contains(cATA.CustomerContactId)  && cATA.IsDeleted != true
+                            where cATA.CustomerId == customerId && mycontactID.Contains(cATA.CustomerContactId) && cATA.IsDeleted != true
                             select new { cATA.CustomerContactATAMappingId, cATA.CustomerId, cATA.ATAChapterId, cATA.ATAChapterCode, cATA.ATAChapterName, cATA.ATASubChapterId, cATA.ATASubChapterDescription, contt.FirstName, contt.ContactId }).ToList();
                 //var uniquedata = data.GroupBy(item => new { item.ATAChapterId, item.ATASubChapterId }).Select(group => group.First()).ToList();
                 return data;
@@ -1852,7 +1876,7 @@ namespace DAL.Repositories
                     value = "";
                 var list = (from cust in _appContext.Customer
 
-                            join cc in _appContext.CustomerContact.Where(p=>p.IsDefaultContact==true) on cust.CustomerId equals cc.CustomerId into custcc
+                            join cc in _appContext.CustomerContact.Where(p => p.IsDefaultContact == true) on cust.CustomerId equals cc.CustomerId into custcc
                             from cc in custcc.DefaultIfEmpty()
                             join con in _appContext.Contact on cc.ContactId equals con.ContactId into custcon
                             from con in custcon.DefaultIfEmpty()
@@ -2203,7 +2227,7 @@ namespace DAL.Repositories
                     _appContext.SaveChanges();
 
 
-                   
+
                     CommonRepository commonRepository = new CommonRepository(_appContext);
 
                     commonRepository.ContactsHistory(Convert.ToInt64(objCustomer.CustomerId), Convert.ToInt32(ModuleEnum.Customer), Convert.ToInt64(customercontactObj.CustomerContactId), objCustomer.UpdatedBy);
@@ -2482,7 +2506,7 @@ namespace DAL.Repositories
                 _appContext.Entry(model).Property(x => x.UpdatedBy).IsModified = true;
 
                 _appContext.SaveChanges();
-             
+
             }
             catch (Exception ex)
             {
@@ -2493,7 +2517,7 @@ namespace DAL.Repositories
         {
             try
             {
-             
+
 
                 CustomerBillingAddress model = new CustomerBillingAddress();
                 model.CustomerBillingAddressId = id;
@@ -2509,7 +2533,7 @@ namespace DAL.Repositories
                 _appContext.SaveChanges();
 
 
-              
+
 
             }
             catch (Exception ex)
@@ -2637,7 +2661,7 @@ namespace DAL.Repositories
                             join vt in _appContext.CustomerAffiliation on t.CustomerAffiliationId equals vt.CustomerAffiliationId into vtt
                             from vt in vtt.DefaultIfEmpty()
 
-                              join cc in _appContext.CustomerClassification on t.CustomerClassificationId equals cc.CustomerClassificationId
+                            join cc in _appContext.CustomerClassification on t.CustomerClassificationId equals cc.CustomerClassificationId
 
                             join mup in _appContext.Percent on Convert.ToInt32(t.MarkUpPercentageId) equals mup.PercentId
                             into tmup
@@ -2685,7 +2709,7 @@ namespace DAL.Repositories
                                 restrictPMAMemo = t.RestrictPMAMemo,
                                 restrictBER = t.RestrictBER,
                                 restrictBERMemo = t.RestrictBERMemo,
-                                 isCustomerAlsoVendor = t.IsCustomerAlsoVendor,
+                                isCustomerAlsoVendor = t.IsCustomerAlsoVendor,
                                 ediDescription = t.EDIDescription,
                                 createdBy = t.CreatedBy,
                                 updatedBy = t.UpdatedBy,
@@ -2693,8 +2717,8 @@ namespace DAL.Repositories
                                 CreatedDate = t.CreatedDate,
                                 masterCompanyId = t.MasterCompanyId,
                                 isActive = t.IsActive,
-                               customerId = t.CustomerId,
-                               ClassificationName = cc.Description,
+                                customerId = t.CustomerId,
+                                ClassificationName = cc.Description,
                                 IntegrationWith = intepo.Description,
                                 AccountType = v.description,
                             }).OrderByDescending(a => a.UpdatedDate).ToList();
@@ -2708,7 +2732,7 @@ namespace DAL.Repositories
             {
 
                 var data = (from c in _appContext.CustomerAircraftMappingAudit
-                            where c.CustomerAircraftMappingId == customerAircraftMappingId 
+                            where c.CustomerAircraftMappingId == customerAircraftMappingId
                             select new
                             {
                                 c.CustomerAircraftMappingId,
@@ -2739,7 +2763,7 @@ namespace DAL.Repositories
                             join cont in _appContext.Countries on c.ShipToCountryId equals cont.countries_id into country
                             from cont in country.DefaultIfEmpty()
 
-                            where c.CustomerId == customerId && c.InternationalShippingId== internationalShippingId
+                            where c.CustomerId == customerId && c.InternationalShippingId == internationalShippingId
                             select new
                             {
                                 c.InternationalShippingId,
@@ -2756,31 +2780,31 @@ namespace DAL.Repositories
                                 c.UpdatedDate,
                                 c.CreatedDate,
                                 c.IsActive,
-                               countryName=cont.countries_name,
-                               
+                                countryName = cont.countries_name,
+
                                 c.MasterCompanyId
                             }).OrderByDescending(c => c.UpdatedDate).ToList();
                 return data;
             }
         }
-        public IEnumerable<object> GetAuditShippingViaDetailsById(long customerId, long internationalShippingId,long ShippingViaDetailsId)
+        public IEnumerable<object> GetAuditShippingViaDetailsById(long customerId, long internationalShippingId, long ShippingViaDetailsId)
         {
             var data = (from c in _appContext.ShippingViaDetailsAudit
-                        where c.CustomerId == customerId && c.ShippingViaDetailsId == ShippingViaDetailsId && c.InternationalShippingId==internationalShippingId
+                        where c.CustomerId == customerId && c.ShippingViaDetailsId == ShippingViaDetailsId && c.InternationalShippingId == internationalShippingId
                         select new
                         {
                             c.AuditShippingViaDetailsId,
                             c.ShippingViaDetailsId,
                             c.CustomerId,
-                            
+
                             c.CreatedBy,
                             c.UpdatedBy,
                             c.UpdatedDate,
                             c.CreatedDate,
-                           
+
                             c.Memo,
-                           c.ShipVia,
-                           c.ShippingAccountInfo,
+                            c.ShipVia,
+                            c.ShippingAccountInfo,
                             c.ShippingURL,
                             c.MasterCompanyId,
                             c.IsActive,
@@ -2873,9 +2897,9 @@ namespace DAL.Repositories
                                                 bill.SiteName = Convert.ToString(reader.GetValue(6));
                                             var custShipping = _appContext.CustomerBillingAddress.AsNoTracking().Where(p => p.IsPrimary == true && p.CustomerId == customerId).FirstOrDefault();
 
-                                               
-                                                if (custShipping != null)
-                                                {
+
+                                            if (custShipping != null)
+                                            {
                                                 if (reader.GetValue(7) != null)
                                                 {
                                                     if (reader.GetValue(7).ToString().ToLower() == "yes")
@@ -2913,7 +2937,7 @@ namespace DAL.Repositories
                                                 {
                                                     bill.IsPrimary = false;
                                                 }
-                                                
+
                                             }
                                             else
                                             {
@@ -3029,7 +3053,7 @@ namespace DAL.Repositories
                                                 ship.SiteName = Convert.ToString(reader.GetValue(6));
                                             var custShipping = _appContext.CustomerShippingAddress.AsNoTracking().Where(p => p.IsPrimary == true && p.CustomerId == customerId).FirstOrDefault();
 
-                                         
+
                                             if (custShipping != null)
                                             {
                                                 if (reader.GetValue(7) != null)
@@ -3079,7 +3103,7 @@ namespace DAL.Repositories
                                             ship.CustomerId = customerId;
                                             ship.IsActive = true;
                                             ship.IsDelete = false;
-                                           
+
                                             ship.AddressId = addr.AddressId;
                                             ship.CreatedBy = ship.UpdatedBy = "System";
                                             ship.UpdatedDate = ship.CreatedDate = DateTime.Now;
@@ -3119,7 +3143,7 @@ namespace DAL.Repositories
             int count = 0;
             try
             {
-                
+
                 CustomerInternationalShipping ship;
 
                 string fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
@@ -3143,7 +3167,7 @@ namespace DAL.Repositories
                             {
                                 while (reader.Read())
                                 {
-                                    if (count > 0 &&  reader.GetValue(4) != null)
+                                    if (count > 0 && reader.GetValue(4) != null)
                                     {
 
                                         ship = new CustomerInternationalShipping();
@@ -3194,7 +3218,7 @@ namespace DAL.Repositories
                                                         //_appContext.CustomerBillingAddress.Update(custShipping);
                                                         _appContext.SaveChanges();
 
-                                                                _appContext.Entry(ba).State = EntityState.Detached;
+                                                        _appContext.Entry(ba).State = EntityState.Detached;
 
                                                     }
                                                     else
@@ -3226,7 +3250,7 @@ namespace DAL.Repositories
                                             _appContext.Entry(ship).State = EntityState.Detached;
 
                                         }
-                                      
+
 
 
                                     }
@@ -3239,13 +3263,13 @@ namespace DAL.Repositories
                         }
                     }
                 }
-              
+
             }
             catch (Exception ex)
             {
 
             }
-            
+
         }
 
         public void UploadCustomerContactsCustomData(IFormFile file, long customerId)
@@ -3281,7 +3305,7 @@ namespace DAL.Repositories
                             {
                                 while (reader.Read())
                                 {
-                                    if (count > 0 && reader.GetValue(0) != null &&reader.GetValue(2) != null && reader.GetValue(4) != null && reader.GetValue(7) != null && reader.GetValue(8) != null)
+                                    if (count > 0 && reader.GetValue(0) != null && reader.GetValue(2) != null && reader.GetValue(4) != null && reader.GetValue(7) != null && reader.GetValue(8) != null)
                                     {
 
                                         cont = new Contact();
@@ -3401,13 +3425,13 @@ namespace DAL.Repositories
                         }
                     }
                 }
-                
+
             }
             catch (Exception ex)
             {
 
             }
-           
+
         }
 
         public IEnumerable<Object> GetInterShippingViaDetails(long internationalShippingId)
@@ -3444,7 +3468,7 @@ namespace DAL.Repositories
             return data;
 
 
-          
+
 
         }
 
@@ -3455,7 +3479,7 @@ namespace DAL.Repositories
                         from ty in tyy.DefaultIfEmpty()
                         join tr in _appContext.TaxRate on c.TaxRateId equals tr.TaxRateId into trr
                         from tr in trr.DefaultIfEmpty()
-                        where c.CustomerTaxTypeRateMappingId == CustomerTaxTypeRateMappingId 
+                        where c.CustomerTaxTypeRateMappingId == CustomerTaxTypeRateMappingId
                         select new
                         {
                             c.AuditCustomerTaxTypeRateMappingId,
@@ -3469,7 +3493,7 @@ namespace DAL.Repositories
                             c.MasterCompanyId,
                             c.UpdatedBy,
                             c.UpdatedDate
-                        }).OrderByDescending(p=>p.AuditCustomerTaxTypeRateMappingId).ToList();
+                        }).OrderByDescending(p => p.AuditCustomerTaxTypeRateMappingId).ToList();
             return data;
         }
 
