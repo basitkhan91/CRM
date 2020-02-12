@@ -482,6 +482,10 @@ namespace DAL.Repositories
                                                     {
                                                         property.SetValue(model, Convert.ToInt64(reader.GetValue(propCount)));
                                                     }
+                                                    if (reader.GetValue(propCount).GetType().Name == "Double" && property.PropertyType.Name == "String")
+                                                    {
+                                                        property.SetValue(model, Convert.ToString(reader.GetValue(propCount)));
+                                                    }
                                                     else if(property.Name.Equals("SequenceNo") && property.PropertyType.Name == "Int32")
                                                     {
                                                         var sequenceData = reader.GetValue(propCount);
@@ -495,9 +499,24 @@ namespace DAL.Repositories
                                                         }
                                                        
                                                     }
-                                                   
                                                     else
+                                                    if (property.PropertyType.Name == "Decimal")
+                                                    {
+                                                        property.SetValue(model, Convert.ToDecimal(reader.GetValue(propCount)));
+
+                                                    }
+                                                    else if (property.PropertyType.Name == "Byte")
+                                                    {
+                                                        property.SetValue(model, Convert.ToByte(reader.GetValue(propCount)));
+
+                                                    }
+                                                    else
+                                                    {
                                                         property.SetValue(model, reader.GetValue(propCount));
+
+                                                    }
+                                                    //else
+                                                    //   property.SetValue(model, reader.GetValue(propCount));
                                                     propCount++;
                                                 }
                                             }
