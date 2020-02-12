@@ -123,7 +123,7 @@
                   icon="fa-download"
                   iconPos="left"
                   label="Export Selection Only"
-                  (click)="dt.exportCSV({ selectionOnly: true })"
+                  (click)="domestictable.exportCSV({ selectionOnly: true })"
                   style="padding: 5px 10px !important;"
                 ></button>
 
@@ -419,7 +419,6 @@
             [loading]="loaderForInternational"
             [reorderableColumns]="true"
             [loading]="loader"
-            [totalRecords]="totalRecordsForInternationalShipping"
             (onPage)="pageIndexChangeForInt($event)"
             [rows]="pageSizeForInt"
           >
@@ -1509,6 +1508,11 @@
                 <p-calendar
                   class="p-calendar-cstm"
                   [showIcon]="true"
+                  [minDate]="
+                    internationalShippingInfo.startDate == undefined
+                      ? currentDate
+                      : internationalShippingInfo.startDate
+                  "
                   name="expirationDate"
                   [(ngModel)]="internationalShippingInfo.expirationDate"
                   (ngModelChange)="enableSave()"

@@ -53,13 +53,14 @@
 
         <div>
           <p-table
-            #dt
+            #documents
             class="rpo-table-cstm"
             [value]="customerdocumentsDestructuredData"
             [loading]="loader"
             [rows]="pageSize"
             [paginator]="true"
             [pageLinks]="3"
+            [first]="0"
             [rowsPerPageOptions]="[10, 50, 100]"
             [columns]="selectedColumns"
             selectionMode="multiple"
@@ -96,7 +97,9 @@
                     pInputText
                     size="50"
                     class="form-control ui-autocomplete-input"
-                    (input)="dt.filterGlobal($event.target.value, 'contains')"
+                    (input)="
+                      documents.filterGlobal($event.target.value, 'contains')
+                    "
                     placeholder=" Filter"
                     style="height: 28px !important;"
                   />
@@ -110,7 +113,7 @@
                   matTooltipPosition="above"
                   iconPos="left"
                   label="Export  Data"
-                  (click)="dt.exportCSV()"
+                  (click)="documents.exportCSV()"
                   style="padding: 5px 10px !important;"
                 ></button>
                 <button
@@ -122,15 +125,9 @@
                   matTooltipPosition="above"
                   iconPos="left"
                   label="Export Selected Data"
-                  (click)="dt.exportCSV({ selectionOnly: true })"
+                  (click)="documents.exportCSV({ selectionOnly: true })"
                   style="padding: 5px 10px !important;"
                 ></button>
-                <!-- <div class="excel-upload excel-upload-cstm">
-                                    <input type="file" name="upload[]" id="upload" class="uploaddoc upload-file" data-multiple-caption="{count} files selected" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
-                                    <label for="upload">
-                                        <span matTooltip="Upload Data (Excel)"><i class="fa fa-upload"></i></span>
-                                    </label>
-                                </div> -->
               </div>
             </ng-template>
 
@@ -138,9 +135,7 @@
               <tr>
                 <ng-container *ngFor="let col of columns">
                   <th
-                    *ngIf="
-                      col.field !== 'documents' && col.field !== 'fileName'
-                    "
+                    *ngIf="col.field !== 'fileName' && col.field !== 'fileName'"
                     pResizableColumn
                     pReorderableColumn
                     [pSortableColumn]="col.field"
@@ -148,11 +143,9 @@
                     {{ col.header }}
                     <p-sortIcon [field]="col.field"></p-sortIcon>
                   </th>
-                  <th *ngIf="col.field == 'documents'">
-                    Documents
+                  <th *ngIf="col.field == 'fileName'">
+                    File Name
                   </th>
-                  <!-- 
-                                <th *ngIf="isViewMode == false">Actions</th> -->
                 </ng-container>
                 <th>Actions</th>
               </tr>
@@ -161,14 +154,17 @@
                   style="width:auto"
                   *ngFor="let col of columns"
                   [ngSwitch]="col.field"
-                  [hidden]="col.field == 'fileName'"
                 >
                   <input
                     style="width:100%;"
                     pInputText
                     type="text"
                     (input)="
-                      dt.filter($event.target.value, col.field, 'contains')
+                      documents.filter(
+                        $event.target.value,
+                        col.field,
+                        'contains'
+                      )
                     "
                   />
                 </th>
@@ -184,39 +180,23 @@
               >
                 <ng-container *ngFor="let col of columns">
                   <td
-                    *ngIf="col.field != 'documents' && col.field != 'fileName'"
+                    *ngIf="col.field != 'fileName'"
                     class="ui-resizable-column"
                     pReorderableRowHandle
                   >
                     {{
-                      col.field == 'createdDate'
+                      col.field == 'fileCreatedDate'
                         ? (rowData[col.field] | date: 'MM/dd/yyyy')
-                        : rowData[col.field] && col.field == 'updatedDate'
+                        : rowData[col.field] && col.field == 'fileUpdatedDate'
                         ? (rowData[col.field] | date: 'MM/dd/yyyy')
                         : rowData[col.field]
                     }}
                   </td>
-                  <td *ngIf="col.field == 'documents'">
+                  <td *ngIf="col.field == 'fileName'">
                     <a class="filelink" (click)="downloadFileUpload(x)">
                       {{ rowData[col.field] }}</a
                     >
                   </td>
-
-                  <!-- <td *ngIf="col.field == 'documents'"> -->
-
-                  <!-- <tr *ngFor="let x of rowData.attachmentDetails">
-                                        
-                                    </tr>
-                                    <table *ngFor="let x of rowData.attachmentDetails">
-                                        <tr>
-                                            <td><a class="filelink" (click)="downloadFileUpload(x)"> {{x.fileName}},</a></td>
-                                            <td>{{x.updatedDate | date: 'MM/dd/yyyy'}}</td>
-                                            <td>{{x.updatedBy}}</td>
-                                            <td>{{x.fileSize}}</td>
-                                        </tr>
-                                    </table> -->
-
-                  <!-- </td> -->
                 </ng-container>
 
                 <td class="text-center" *ngIf="isViewMode == false">
@@ -263,7 +243,6 @@
                   </button>
                 </td>
                 <td class="text-center" *ngIf="isViewMode == true">
-                  <!--<span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openDocument(view,rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>-->
                   <span>
                     <a
                       class="btn btn-info boxed-float-btn nobg"
@@ -290,7 +269,7 @@
             <ng-template
               pTemplate="emptymessage"
               let-columns
-              *ngIf="customerDocumentsData?.length == 0"
+              *ngIf="customerdocumentsDestructuredData.length == 0"
             >
               <tr>
                 <td
@@ -313,17 +292,18 @@
               <label id="footer" class="footer">No'of records:</label>
               <input
                 style="width: 5%;"
-                [(ngModel)]="dt._totalRecords"
+                [(ngModel)]="documents._totalRecords"
                 [disabled]="true"
                 pInputText
                 type="text"
               />
+
               &nbsp;&nbsp;
               <label id="footer" class="footer1">Pages Count:</label>
 
               <input
                 style="width: 5%;"
-                [ngModel]="getPageCount(dt._totalRecords, pageSize)"
+                [ngModel]="getPageCount(documents._totalRecords, pageSize)"
                 [disabled]="true"
                 pInputText
                 type="text"
@@ -486,20 +466,6 @@
                 </tr>
               </ng-template>
             </p-table>
-            <!-- <table class="table table-bordered ">
-                                <tr>
-                                    <th>File Name</th>
-                                    <th>Actions</th>
-                                </tr>
-                                <tr *ngFor="let f of sourceViewforDocumentList ">
-                                    <td>{{f.fileName}}</td>
-
-                                     <td><a (click)="downloadFileUpload(f)" matTooltip="Download" class="btn nobg btn-cstm"><span><i class="fa fa-download"></i></span></a> </td>
-
-
-                                </tr>
-
-                            </table> -->
           </div>
           <div class="clear"></div>
         </div>
@@ -646,20 +612,6 @@
                   </tr>
                 </ng-template>
               </p-table>
-
-              <!-- <table class="table table-bordered ">
-                                <tr>
-                                    <th>File Name</th>
-                                    <th>Actions</th>
-                                </tr>
-                                <tr *ngFor="let f of sourceViewforDocumentList ">
-                                    <td>{{f.fileName}}</td>
-                                     <td><a (click)="downloadFileUpload(f)" matTooltip="Download" class="btn nobg btn-cstm"><span><i class="fa fa-download"></i></span></a> </td>
-
-
-                                </tr>
-
-                            </table> -->
             </div>
           </div>
         </div>

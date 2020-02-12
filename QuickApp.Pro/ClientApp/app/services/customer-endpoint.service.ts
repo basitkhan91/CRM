@@ -231,7 +231,7 @@ export class CustomerEndpoint extends EndpointFactory {
     get InternatioanlShipViaByInternationalShippingId() { return this.configurations.baseUrl + this._internationalShipViaByShippingIdList }
     get customerContacATAHistory() { return this.configurations.baseUrl + this._customerContacATAHistory }
 
-    
+
 
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
 
@@ -404,10 +404,12 @@ export class CustomerEndpoint extends EndpointFactory {
 
     }
 
-    getInternationalShippingByCustomerId<T>(customerId, pageIndex, pageSize) {
-        return this.http.get<T>(`${this.InternationalShippingList}?customerId=${customerId}&pageNumber=${pageIndex}&pageSize=${pageSize}`)
+    getInternationalShippingByCustomerId<T>(customerId) {
+        console.log(customerId);
+
+        return this.http.get<T>(`${this.InternationalShippingList}?customerId=${customerId}`)
             .catch(error => {
-                return this.handleError(error, () => this.getInternationalShippingByCustomerId(customerId, pageIndex, pageSize));
+                return this.handleError(error, () => this.getInternationalShippingByCustomerId(customerId));
             });
     }
 
@@ -440,7 +442,7 @@ export class CustomerEndpoint extends EndpointFactory {
         const url = `${this.configurations.baseUrl}/api/Customer/CustomerTaxTypeRateUpdate/${data.customerTaxTypeRateMappingId}`
         return this.http.put(url, JSON.stringify(data), this.getRequestHeaders());
     }
-    getAuditHistoryForTaxType(customerTaxTypeRateMappingId){
+    getAuditHistoryForTaxType(customerTaxTypeRateMappingId) {
         return this.http.get<any>(`${this.configurations.baseUrl}/api/Customer/CustomerTaxTypeRateAudit/${customerTaxTypeRateMappingId}`)
     }
 
@@ -1431,7 +1433,7 @@ export class CustomerEndpoint extends EndpointFactory {
                 return this.handleError(error, () => this.getInternationalShipViaByInternationalShippingId(id));
             });
     }
-   
+
     getCustomerContactATAAuditDetails<T>(customerContactATAMappingId: any): Observable<T> {
         let url = `${this.customerContacATAHistory}/${customerContactATAMappingId}`;
         return this.http.get<T>(url, this.getRequestHeaders())

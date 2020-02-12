@@ -13,6 +13,7 @@ import { MatDialog } from '@angular/material';
 import { getObjectByValue, getObjectById, getValueFromObjectByKey } from '../../../generic/autocomplete';
 import { ConfigurationService } from '../../../services/configuration.service';
 import * as $ from 'jquery';
+import { Table } from 'primeng/table';
 @Component({
     selector: 'app-customer-documents',
     templateUrl: './customer-documents.component.html',
@@ -28,11 +29,11 @@ export class CustomerDocumentsComponent implements OnInit {
     @ViewChild('fileUploadInput') fileUploadInput: any;
     @Input() customerDataFromExternalComponents: any;
     documentInformation = {
-
         docName: '',
         docMemo: '',
         docDescription: ''
     }
+    @ViewChild('documents') Table;
     customerDocumentsData: any = [];
     customerdocumentsDestructuredData = [];
     customerDocumentsColumns = [
@@ -40,12 +41,12 @@ export class CustomerDocumentsComponent implements OnInit {
         { field: 'docName', header: 'Name' },
         { field: 'docDescription', header: 'Description' },
         { field: 'fileName', header: 'FileName' },
-        { field: 'documents', header: 'documents' },
+        // { field: 'documents', header: 'documents' },
         { field: 'fileCreatedDate', header: 'CreatedDate' },
         { field: 'fileCreatedBy', header: 'Created By' },
         { field: 'fileUpdatedBy', header: 'UpdatedBy' },
         { field: 'fileUpdatedDate', header: 'UpdatedDate' },
-        { field: 'fileSize', header: 'fileSize' },
+        { field: 'fileSize', header: 'FileSize' },
         { field: 'docMemo', header: 'Memo' }
     ];
 
@@ -83,6 +84,7 @@ export class CustomerDocumentsComponent implements OnInit {
     pageSize: number = 10;
     totalPages: number = 0;
     loader: boolean = true;
+    lastValueItegrated: any;
 
     constructor(private router: ActivatedRoute, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public customerService: CustomerService,
         private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private configurations: ConfigurationService) {
@@ -195,18 +197,20 @@ export class CustomerDocumentsComponent implements OnInit {
         })
     }
     getList() {
+        this.customerdocumentsDestructuredData = [];
         this.customerService.getDocumentList(this.id).subscribe(res => {
             this.customerDocumentsData = res.map(x => {
                 for (var i = 0; i < x.attachmentDetails.length; i++) {
                     const y = x.attachmentDetails;
                     this.customerdocumentsDestructuredData.push({
                         ...x,
-                        documents: y[i].fileName,
+                        // documents: y[i].fileName,
                         fileName: y[i].fileName,
                         fileCreatedDate: y[i].createdDate,
                         fileCreatedBy: y[i].createdBy,
                         fileUpdatedBy: y[i].updatedBy,
                         fileUpdatedDate: y[i].updatedDate,
+                        // fileSize: `${y[i].fileSize} MB`
                         fileSize: y[i].fileSize
 
                     })
@@ -214,11 +218,12 @@ export class CustomerDocumentsComponent implements OnInit {
                 //    documents: x.attachmentDetails.reduce((acc , y) => acc + y.fileName, ''),
             });
             this.loader = false;
-            if (this.customerDocumentsData.length > 0) {
-                this.totalRecords = this.customerDocumentsData.length;
-                this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
-            }
+            // if (this.customerDocumentsData.length > 0) {
+            //     this.totalRecords = this.customerDocumentsData.length;
+            //     this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+            // }
         }, err => {
+            this.customerdocumentsDestructuredData = [];
             this.loader = false;
         })
     }
@@ -313,15 +318,17 @@ export class CustomerDocumentsComponent implements OnInit {
         let customerDocumentDetailId = this.localCollection.customerDocumentDetailId;
         if (customerDocumentDetailId > 0) {
             //this.isSaving = true;
-            this.customerService.getDeleteDocumentListbyId(customerDocumentDetailId).subscribe(
-
+            this.customerService.getDeleteDocumentListbyId(customerDocumentDetailId).subscribe(res => {
+                this.getList()
                 this.alertService.showMessage(
                     'Success',
-                    `Action was deleted successfully `,
+                    `Deleted  Documents Successfully `,
                     MessageSeverity.success
-                ));
+                );
 
-            this.getList();
+            })
+
+
 
         }
         this.modal.close();
@@ -386,6 +393,9 @@ export class CustomerDocumentsComponent implements OnInit {
         this.alertService.showStickyMessage("Save Error", "The below errors occured whilst saving your changes:", MessageSeverity.error, error);
         this.alertService.showStickyMessage(error, null, MessageSeverity.error);
     }
+
+
+
 
 }
 

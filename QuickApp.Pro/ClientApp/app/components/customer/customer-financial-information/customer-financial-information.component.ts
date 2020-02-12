@@ -32,7 +32,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
     @Input() savedGeneralInformationData: any;
     @Input() editGeneralInformationData;
     @Input() creditTermsListOriginal
-    @Input() editMode; 
+    @Input() editMode;
     @Output() tab = new EventEmitter();
     @ViewChild('taxExemptFileUploadInput') taxExemptFileUploadInput: any;
     taxRatesList: any = [];
@@ -122,15 +122,22 @@ export class CustomerFinancialInformationComponent implements OnInit {
         { field: "taxType", header: "Tax Type" },
         { field: "taxRate", header: "Tax Rate" },
     ];
+
+
     taxExemptTableColumns: any[] = [
-        { field: "fileName", header: "File Name" }
+        { field: "fileName", header: "File Name" },
+        { field: 'createdDate', header: 'Created Date' },
+        { field: 'createdBy', header: 'CreatedBy' },
+        { field: 'updatedDate', header: 'Updated Date' },
+        { field: 'updatedBy', header: 'UpdatedBy' }, ,
+        { field: '', header: '' },
     ];
     globalSettings: any = {};
     _discountListForDropdown: any = [];
     selectedRowFileForDelete: any;
     taxRateEditData: any;
     indexForTaxRate: any = 1;
-    auditDataForTaxData: any= [];
+    auditDataForTaxData: any = [];
     global_lang: string;
     showAllowNettingOfAPAR: boolean = false;
     customerGeneralInformation: any = {};
@@ -160,17 +167,17 @@ export class CustomerFinancialInformationComponent implements OnInit {
     // taxType
     taxtypesList = [];
 
-   
+
     ngOnInit(): void {
         this.getGlobalSettings();
         this.savedGeneralInformationData = this.savedGeneralInformationData || {}
-       
+
         console.log(this.creditTermsListOriginal);
 
         // this.getCreditTermList();
 
         // this.getAllcreditTermList();
-       
+
 
         if (this.editMode) {
 
@@ -184,7 +191,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
                 ...this.editGeneralInformationData,
                 creditTermsId: getObjectById('value', this.editGeneralInformationData.creditTermsId, this.creditTermsListOriginal)
             }
-            this.savedGeneralInformationData.creditLimit =  this.formatCreditLimit(this.editGeneralInformationData.creditLimit);
+            this.savedGeneralInformationData.creditLimit = this.formatCreditLimit(this.editGeneralInformationData.creditLimit);
 
 
 
@@ -213,7 +220,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
 
 
     }
-    ngOnChanges(changes: SimpleChanges) {    
+    ngOnChanges(changes: SimpleChanges) {
         for (let property in changes) {
             if (property == 'selectedCustomerTab') {
                 if (changes[property].currentValue == "Financial") {
@@ -224,13 +231,13 @@ export class CustomerFinancialInformationComponent implements OnInit {
 
     }
 
-    getCustomerGeneralInformation(){
+    getCustomerGeneralInformation() {
         this.customerService.getCustomerdataById(this.id).subscribe(response => {
             console.log(response);
 
             const res = response[0];
             this.customerGeneralInformation = res;
-            if(this.customerGeneralInformation.isCustomerAlsoVendor == true && this.customerGeneralInformation.type == 'Customer'){
+            if (this.customerGeneralInformation.isCustomerAlsoVendor == true && this.customerGeneralInformation.type == 'Customer') {
                 this.showAllowNettingOfAPAR = true;
             } else {
                 this.showAllowNettingOfAPAR = false;
@@ -268,15 +275,15 @@ export class CustomerFinancialInformationComponent implements OnInit {
         })
     }
 
-    formatCreditLimit(val){
-        if(val){
-            if(isNaN(val) ==  true){
-                val = Number(val.replace(/[^0-9.-]+/g,""));
-              }
-            this.savedGeneralInformationData.creditLimit = new Intl.NumberFormat(this.global_lang, { style: 'decimal', minimumFractionDigits: 2,    maximumFractionDigits: 2}).format(val)
+    formatCreditLimit(val) {
+        if (val) {
+            if (isNaN(val) == true) {
+                val = Number(val.replace(/[^0-9.-]+/g, ""));
+            }
+            this.savedGeneralInformationData.creditLimit = new Intl.NumberFormat(this.global_lang, { style: 'decimal', minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(val)
             return this.savedGeneralInformationData.creditLimit;
         }
-        
+
     }
     getDefaultCurrency() {
         this.legalEntityId = 19;
@@ -445,10 +452,10 @@ export class CustomerFinancialInformationComponent implements OnInit {
             this.discountList = res[0];
             // console.log(this.discountList, "this.discuontList++++")
             for (let i = 0; i < this.discountList.length; i++) {
-                if(this.discountList[i].discontValue >=0 && this.discountList[i].discontValue <=100) {
-                this._discountListForDropdown.push({ label: this.discountList[i].discontValue.toString(), value: this.discountList[i].discontValue })
+                if (this.discountList[i].discontValue >= 0 && this.discountList[i].discontValue <= 100) {
+                    this._discountListForDropdown.push({ label: this.discountList[i].discontValue.toString(), value: this.discountList[i].discontValue })
+                }
             }
-        }
             // console.log(this._discountListForDropdown, "this._discountListForDropdown++++")
 
 
@@ -472,9 +479,9 @@ export class CustomerFinancialInformationComponent implements OnInit {
 
         })]
         // console.log("this._discountListForDropdown",this._discountListForDropdown);
-    setTimeout(()=>{
-        this._discountListForDropdown = this._discountListForDropdown;
-    },1000)
+        setTimeout(() => {
+            this._discountListForDropdown = this._discountListForDropdown;
+        }, 1000)
     }
 
     // checkShortNameExists(field, value) {
@@ -491,54 +498,54 @@ export class CustomerFinancialInformationComponent implements OnInit {
 
     checkDiscountExists(value) {
         this.getAllDiscountList();
-        console.log("value",value);
+        console.log("value", value);
         this.isCountdisable = false;
         this._discountListForDropdown = this._discountListForDropdown;
         const exists = validateRecordExistsOrNot('field', value, this._discountListForDropdown);
         // console.log(exists);
-        if(this.discontValue ==undefined &&  this.discontValue ==undefined && this.discontValue ==null && this.discontValue ==''){
+        if (this.discontValue == undefined && this.discontValue == undefined && this.discontValue == null && this.discontValue == '') {
             // this._discountListForDropdown = this._discountListForDropdown;
             this.isCountdisable = false;
-            this.discontValue ==null
+            this.discontValue == null
         }
-        else  if(this.discontValue < 0 || this.discontValue >100){
-                 this.isCountdisable = true;
-                 this.discontValue ==null
-                    // this._discountListForDropdown = this._discountListForDropdown;
+        else if (this.discontValue < 0 || this.discontValue > 100) {
+            this.isCountdisable = true;
+            this.discontValue == null
+            // this._discountListForDropdown = this._discountListForDropdown;
         }
         if (exists && exists.length > 0) {
             this.isDiscountExists = true;
-        } 
-        else if(this.discontValue < 0 || this.discontValue >100){
+        }
+        else if (this.discontValue < 0 || this.discontValue > 100) {
             return this.isDiscountExists = false;
-           }else {
+        } else {
             this.isDiscountExists = false;
         }
     }
-    isCountdisable:boolean=false;
-    checkDiscountExistss(value) { 
+    isCountdisable: boolean = false;
+    checkDiscountExistss(value) {
         // console.log("value" ,value)
         this.isDiscountExists = false;
-        
-        if(this.discontValue ==undefined &&  this.discontValue ==undefined && this.discontValue ==null && this.discontValue ==''){
+
+        if (this.discontValue == undefined && this.discontValue == undefined && this.discontValue == null && this.discontValue == '') {
             // this._discountListForDropdown = this._discountListForDropdown;
             this.isCountdisable = false;
         }
-        else  if(this.discontValue < 0 || this.discontValue >100){
-                 this.isCountdisable = true;
-                    // this._discountListForDropdown = this._discountListForDropdown;
-        }else   {
+        else if (this.discontValue < 0 || this.discontValue > 100) {
+            this.isCountdisable = true;
+            // this._discountListForDropdown = this._discountListForDropdown;
+        } else {
             this._discountListForDropdown = this._discountListForDropdown;
-        for (let i = 0; i < this._discountListForDropdown.length; i++) {
-            if (this.discontValue == this._discountListForDropdown[i].label || value == this._discountListForDropdown[i].label) {
-                this.isDiscountExists = true;
+            for (let i = 0; i < this._discountListForDropdown.length; i++) {
+                if (this.discontValue == this._discountListForDropdown[i].label || value == this._discountListForDropdown[i].label) {
+                    this.isDiscountExists = true;
 
-                return;
-            }else{
-                this.isDiscountExists = false;
+                    return;
+                } else {
+                    this.isDiscountExists = false;
+                }
             }
         }
-    }
 
     }
 
@@ -608,8 +615,8 @@ export class CustomerFinancialInformationComponent implements OnInit {
                     taxRateId: this.selectedTaxRates,
                     taxType: getValueFromArrayOfObjectById('label', 'value', this.selectedTaxType, this.taxTypeList),
                     taxRate: getValueFromObjectByKey('label', getObjectById('value', this.selectedTaxRates, this.taxRatesList))
-                
-            
+
+
                 })
 
                 // this.taxTypeRateMapping = []
@@ -728,13 +735,13 @@ export class CustomerFinancialInformationComponent implements OnInit {
                 this.formData = new FormData();
                 this.toGetCustomerFinanceDocumentsList(this.savedGeneralInformationData.customerId);
             });
-console.log("is edit mode",this.editMode )
+            console.log("is edit mode", this.editMode)
             this.alertService.showMessage(
                 'Success',
-                ` ${this.editMode ? 'Updated' : 'Saved'  }  Customer Financal Infromation Sucessfully`,
+                ` ${this.editMode ? 'Updated' : 'Saved'}  Customer Financal Infromation Sucessfully`,
                 MessageSeverity.success
             );
-            this.nextClick(); 
+            this.nextClick();
         })
     }
     downloadFileUpload(rowData) {

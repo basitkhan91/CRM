@@ -137,7 +137,7 @@ export class CustomerShippingInformationComponent implements OnInit {
     pageSizeForInt: number = 10;
     pageSizeForShipViaDomestic: number = 10;
     pageSizeForShipViaInt: number = 10;
-    ;
+    currentDate = new Date();
 
     constructor(private customerService: CustomerService, private authService: AuthService,
         private alertService: AlertService, private activeModal: NgbActiveModal, private modalService: NgbModal, private configurations: ConfigurationService,
@@ -207,7 +207,6 @@ export class CustomerShippingInformationComponent implements OnInit {
 
     }
     enableSave() {
-        console.log('hello ,directive');
         this.disableSave = false;
 
     }
@@ -284,10 +283,10 @@ export class CustomerShippingInformationComponent implements OnInit {
             this.loaderForDomestic = false;
 
 
-            if (res.length > 0) {
-                this.totalRecords = this.domesticShippingData.length;
-                this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
-            }
+            // if (res.length > 0) {
+            //     this.totalRecords = this.domesticShippingData.length;
+            //     this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+            // }
 
 
         }, err => {
@@ -608,18 +607,19 @@ export class CustomerShippingInformationComponent implements OnInit {
 
         // const id = this.savedGeneralInformationData.customerId;
 
-        // this.customerService.getInternationalShippingByCustomerId(this.id, this.pageIndexForInternational, this.pageSizeForInternational).subscribe(res => {
-        this.loaderForInternational = false;
-        //     console.log("myresponse international",res.paginationList);
-        //     this.internationalShippingData = res.paginationList;
-        //     this.totalRecordsForInternationalShipping = res.totalRecordsCount;
-        //     if (this.internationalShippingData.length > 0) {
-        //         this.totalRecordsInternationalShipping = this.internationalShippingData.length;
-        //         this.totalPagesInternationalShipping = Math.ceil(this.totalRecordsInternationalShipping / this.pageSize);
-        //     }
-        // }, err => {
-        //     this.loaderForInternational = false;
-        // })
+        console.log(this.id);
+
+        this.customerService.getInternationalShippingByCustomerId(this.id).subscribe(res => {
+            this.loaderForInternational = false;
+            this.internationalShippingData = res;
+            // this.totalRecordsForInternationalShipping = res.totalRecordsCount;
+            // if (this.internationalShippingData.length > 0) {
+            //     this.totalRecordsInternationalShipping = this.internationalShippingData.length;
+            //     this.totalPagesInternationalShipping = Math.ceil(this.totalRecordsInternationalShipping / this.pageSize);
+            // }
+        }, err => {
+            this.loaderForInternational = false;
+        })
     }
 
 
@@ -856,10 +856,10 @@ export class CustomerShippingInformationComponent implements OnInit {
 
             this.demosticShippingViaData = res;
             this.loaderForDomesticShipVia = false;
-            if (this.demosticShippingViaData.length > 0) {
-                this.totalRecordsShipVia = this.demosticShippingViaData.length;
-                this.totalPagesShipVia = Math.ceil(this.totalRecords / this.pageSize);
-            }
+            // if (this.demosticShippingViaData.length > 0) {
+            //     this.totalRecordsShipVia = this.demosticShippingViaData.length;
+            //     this.totalPagesShipVia = Math.ceil(this.totalRecords / this.pageSize);
+            // }
         }, err => {
             this.loaderForDomesticShipVia = false;
         })

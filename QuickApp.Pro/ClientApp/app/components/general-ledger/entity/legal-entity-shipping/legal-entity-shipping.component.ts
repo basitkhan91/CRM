@@ -27,7 +27,7 @@ export class EntityShippingComponent implements OnInit {
     @Input() editMode;
     @Output() tab = new EventEmitter();
     @Input() selectedCustomerTab: string = "";
-    @Input() customerDataFromExternalComponents : any = {};
+    @Input() customerDataFromExternalComponents: any = {};
 
     domesticShippingInfo = new CustomerShippingModel()
     internationalShippingInfo = new CustomerInternationalShippingModel()
@@ -69,7 +69,7 @@ export class EntityShippingComponent implements OnInit {
     ]
     selectedColumnsForDomesticTable = this.domesticShippingHeaders;
     selectedColumnsForInternationTable = this.internationalShippingHeaders;
-   
+
     domesticShippingData: any[] = [];
     sourceViewforShipping: any;
     isEditDomestic: boolean = false;
@@ -127,7 +127,7 @@ export class EntityShippingComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-        
+
         if (this.editMode) {
 
             this.id = this.editGeneralInformationData.customerId;
@@ -138,8 +138,8 @@ export class EntityShippingComponent implements OnInit {
             this.isViewMode = false;
 
         } else {
-           
-            if(this.customerDataFromExternalComponents != {}){
+
+            if (this.customerDataFromExternalComponents != {}) {
                 this.id = this.customerDataFromExternalComponents.customerId;
                 this.customerCode = this.customerDataFromExternalComponents.customerCode;
                 this.customerName = this.customerDataFromExternalComponents.name;
@@ -150,8 +150,8 @@ export class EntityShippingComponent implements OnInit {
                 this.customerName = this.savedGeneralInformationData.name;
                 this.isViewMode = false;
             }
-            
-            
+
+
             //Added By Vijay For Customer Create time IsShippingAddess is selected checkbox Then list page we are displaying list
             this.getDomesticShippingByCustomerId();
             this.getInternationalShippingByCustomerId();
@@ -539,7 +539,7 @@ export class EntityShippingComponent implements OnInit {
 
         // const id = this.savedGeneralInformationData.customerId;
 
-        this.customerService.getInternationalShippingByCustomerId(this.id, this.pageIndexForInternational, this.pageSizeForInternational).subscribe(res => {
+        this.customerService.getInternationalShippingByCustomerId(this.id).subscribe(res => {
             console.log(res);
             this.internationalShippingData = res.paginationList;
             this.totalRecordsForInternationalShipping = res.totalRecordsCount;

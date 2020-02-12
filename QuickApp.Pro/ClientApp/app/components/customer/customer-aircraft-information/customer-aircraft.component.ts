@@ -428,7 +428,7 @@ export class CustomerAircraftComponent implements OnInit {
 
             });
             this.add_SelectedModel = [];
-            this.add_AircraftDashNumberList = [];
+            this.add_SelectedDashNumber = [];
         }
     }
 

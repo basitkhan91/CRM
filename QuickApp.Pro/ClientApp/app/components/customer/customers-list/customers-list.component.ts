@@ -25,7 +25,7 @@ import { listSearchFilterObjectCreation } from '../../../generic/autocomplete';
 import { CommonService } from '../../../services/common.service';
 import { CustomerViewComponent } from '../../../shared/components/customer/customer-view/customer-view.component';
 import { ConfigurationService } from '../../../services/configuration.service';
-import {CustomerShippingInformationComponent } from '../customer-shipping-information/customer-shipping-information-component'
+import { CustomerShippingInformationComponent } from '../customer-shipping-information/customer-shipping-information-component'
 
 
 
@@ -38,7 +38,7 @@ import {CustomerShippingInformationComponent } from '../customer-shipping-inform
 /** CustomersList component*/
 export class CustomersListComponent implements OnInit {
 
-     totalRecords: number = 0;
+    totalRecords: number = 0;
     totalPages: number = 0;
     isDeleteMode: boolean = false;
     allCustomerFinanceDocumentsList: any = [];
@@ -169,12 +169,12 @@ export class CustomersListComponent implements OnInit {
         { field: 'docDescription', header: 'Description' },
         //{ field: 'documents', header: 'Documents' },
         { field: 'docMemo', header: 'Memo' },
-       
+
     ];
     customerPMAColumns = [
         { field: 'partNumber', header: 'Part Number' },
         { field: 'partDescription', header: 'Description' },
-        {field:'manufacturerName',header:'Manufacturer'}
+        { field: 'manufacturerName', header: 'Manufacturer' }
     ];
     customerDERColumns = [
         { field: 'partNumber', header: 'Part Number' },
@@ -201,7 +201,7 @@ export class CustomersListComponent implements OnInit {
     filteredText: string;
     dataSource: MatTableDataSource<any>;
     breadcrumbs: MenuItem[];
-  
+
     constructor(private _route: Router,
         private authService: AuthService,
         private modalService: NgbModal,
@@ -213,22 +213,22 @@ export class CustomersListComponent implements OnInit {
         private masterComapnyService: MasterComapnyService,
         private commonService: CommonService,
         private configurations: ConfigurationService) {
-          this.dataSource = new MatTableDataSource();
+        this.dataSource = new MatTableDataSource();
 
 
     }
     ngOnInit() {
         // this.getList();
         this.breadcrumbs = [
-            {label:'Customers'},
-            {label:'Customers List'},
+            { label: 'Customers' },
+            { label: 'Customers List' },
         ];
     }
 
     getList(data) {
-        
+
         console.log(data.sortField);
-             const PagingData = { ...data, filters: listSearchFilterObjectCreation(data.filters) }
+        const PagingData = { ...data, filters: listSearchFilterObjectCreation(data.filters) }
         this.customerService.getCustomerAll(PagingData).subscribe(res => {
             this.data = res;
             if (res.length > 0) {
@@ -258,18 +258,18 @@ export class CustomersListComponent implements OnInit {
         else {
             this.table.reset();
         }
-       
+
 
     }
     loadData(event) {
-       
+
         this.lazyLoadEventData = event;
         const pageIndex = parseInt(event.first) / event.rows;;
         this.pageIndex = pageIndex;
         this.pageSize = event.rows;
         event.first = pageIndex;
-           this.getList(event)
-        
+        this.getList(event)
+
         console.log(event);
     }
 
@@ -279,8 +279,8 @@ export class CustomersListComponent implements OnInit {
         console.log(data);
     }
     getPageCount(totalNoofRecords, pageSize) {
-		return Math.ceil(totalNoofRecords / pageSize)
-	}
+        return Math.ceil(totalNoofRecords / pageSize)
+    }
     changeStatus(rowData) {
 
         this.customerService.updateActionforActive(rowData, this.userName).subscribe(res => {
@@ -296,9 +296,9 @@ export class CustomersListComponent implements OnInit {
 
     viewSelectedRow(rowData) {
         const { customerId } = rowData;
-        this.modal = this.modalService.open(CustomerViewComponent, { size: 'lg' , backdrop: 'static', keyboard: false});
+        this.modal = this.modalService.open(CustomerViewComponent, { size: 'lg', backdrop: 'static', keyboard: false });
         this.modal.componentInstance.customerId = customerId;
-         this.modal.result.then(() => {
+        this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
 
@@ -310,17 +310,17 @@ export class CustomersListComponent implements OnInit {
         const { customerId } = rowData;
         this.customerService.getCustomerdataById(customerId).subscribe(res => {
             this.viewDataGeneralInformation = res[0];
-           
+
             console.log(this.viewDataGeneralInformation);
-            
-           
+
+
         })
         this.getAllCustomerContact(customerId);
         this.getAircraftMappedDataByCustomerId(customerId);
         this.getMappedATAByCustomerId(customerId);
         this.getBillingDataById(customerId);
         this.getDomesticShippingByCustomerId(customerId);
-        this.getInternationalShippingByCustomerId(customerId);
+        // this.getInternationalShippingByCustomerId(customerId);
         this.getCustomerWaringByCustomerId(customerId);
         this.getCustomerDocumentsByCustomerId(customerId);
         this.getMappedTaxTypeRateDetails(customerId);
@@ -338,7 +338,7 @@ export class CustomersListComponent implements OnInit {
     }
 
     getAllCustomerContact(customerId) {
-         this.customerService.getContacts(customerId).subscribe(res => {
+        this.customerService.getContacts(customerId).subscribe(res => {
             this.customerContacts = res[0]
         })
     }
@@ -349,7 +349,7 @@ export class CustomersListComponent implements OnInit {
         })
     }
     getMappedATAByCustomerId(customerId) {
-         this.customerService.getATAMappedByCustomerId(customerId).subscribe(res => {
+        this.customerService.getATAMappedByCustomerId(customerId).subscribe(res => {
             this.ataListDataValues = res;
             console.log(res);
 
@@ -364,23 +364,23 @@ export class CustomersListComponent implements OnInit {
 
     // get domestic shipping by customer Id 
     getDomesticShippingByCustomerId(customerId) {
-            this.customerService.getCustomerShipAddressGet(customerId).subscribe(res => {
+        this.customerService.getCustomerShipAddressGet(customerId).subscribe(res => {
             console.log(res);
             this.domesticShippingData = res[0];
         })
     }
 
-    getInternationalShippingByCustomerId(customerId) {
-
-     
-        this.customerService.getInternationalShippingByCustomerId(customerId, 0, 20).subscribe(res => {
-            console.log(res);
-            this.internationalShippingData = res.paginationList;
-           })
+    // getInternationalShippingByCustomerId(customerId) {
 
 
+    //     this.customerService.getInternationalShippingByCustomerId(customerId, 0, 20).subscribe(res => {
+    //         console.log(res);
+    //         this.internationalShippingData = res.paginationList;
+    //        })
 
-    }
+
+
+    // }
 
     getCustomerWaringByCustomerId(customerId) {
         this.customerService.getCustomerWarnings(customerId).subscribe(res => {
@@ -402,7 +402,7 @@ export class CustomersListComponent implements OnInit {
         this.customerService.getDocumentList(customerId).subscribe(res => {
             this.DocumentsList = res;
 
-           
+
 
         })
     }
@@ -441,22 +441,22 @@ export class CustomersListComponent implements OnInit {
         this.customerService.getCustomerClassificationMapping(customerId).subscribe(res => {
             this.viewDataclassification = res.map(x => x.description);
 
-              });
+        });
     }
-      getCustomerIntegrationTypesByCustomerId(customerId) {
-       
-             this.commonService.getIntegrationMapping(customerId, 1).subscribe(res => {
-                 this.viewDataIntegration = res.map(x => x.description);
+    getCustomerIntegrationTypesByCustomerId(customerId) {
 
-            });
-        
+        this.commonService.getIntegrationMapping(customerId, 1).subscribe(res => {
+            this.viewDataIntegration = res.map(x => x.description);
+
+        });
+
 
     }
     toGetCustomerFinanceDocumentsList(customerId) {
         var moduleId = 1;
         this.customerService.GetCustomerFinanceDocumentsList(customerId, moduleId).subscribe(res => {
             this.allCustomerFinanceDocumentsList = res;
-            
+
         })
     }
     toGetUploadDocumentsList(attachmentId, customerId) {
@@ -464,7 +464,7 @@ export class CustomersListComponent implements OnInit {
 
         this.customerService.toGetUploadDocumentsList(attachmentId, customerId, 1).subscribe(res => {
             this.viewDocumnets = res;
-                  })
+        })
     }
     openDocument(content, row) {
         this.customerService.toGetUploadDocumentsList(row.attachmentId, row.customerId, 1).subscribe(res => {
@@ -473,8 +473,8 @@ export class CustomersListComponent implements OnInit {
             this.sourceViewforDocument = row;
         })
 
-        }
-   globalSearch(value) {
+    }
+    globalSearch(value) {
         this.pageIndex = 0;
         this.filteredText = value;
         this.customerService.getGlobalSearch(value, this.pageIndex, this.pageSize).subscribe(res => {
@@ -485,7 +485,7 @@ export class CustomersListComponent implements OnInit {
             }
         })
     }
-      ExpandAllCustomerDetailsModel() {
+    ExpandAllCustomerDetailsModel() {
         $('#step1').collapse('show');
         $('#step2').collapse('show');
         $('#step3').collapse('show');
@@ -540,7 +540,7 @@ export class CustomersListComponent implements OnInit {
 
 
 
-    
+
     dismissModel() {
         this.isDeleteMode = false;
 
@@ -606,7 +606,7 @@ export class CustomersListComponent implements OnInit {
         // this.loadContactDataData(row.customerId);
     }
 
-    openDocumentsList(content, row){
+    openDocumentsList(content, row) {
         this.selectedRow = row;
         this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
@@ -616,7 +616,7 @@ export class CustomersListComponent implements OnInit {
 
     private loadContactDataData(customerId) {
         this.alertService.startLoadingMessage();
-       
+
         this.customerService.getContacts(customerId).subscribe(
             results => this.onContactDataLoadSuccessful(results[0]),
             error => this.onDataLoadFailed(error)
@@ -631,23 +631,23 @@ export class CustomersListComponent implements OnInit {
             { field: 'workPhone', header: 'Work Phone' },
             { field: 'mobilePhone', header: 'Mobile Phone' },
             { field: 'fax', header: 'Fax' }
-                 ];
+        ];
         this.selectedContactColumns = this.contactcols;
     }
     private onContactDataLoadSuccessful(allWorkFlows: any[]) {
         this.alertService.stopLoadingMessage();
-   
+
         this.dataSource.data = allWorkFlows;
         this.allContacts = allWorkFlows;
-       
+
         console.log(this.allContacts);
     }
     private onDataLoadFailed(error: any) {
         this.alertService.stopLoadingMessage();
-        
+
     }
     getAuditHistoryById(content, row) {
-        
+
         this.alertService.startLoadingMessage();
 
         this.customerService.getCustomerHistory(row.customerId).subscribe(
@@ -660,12 +660,12 @@ export class CustomersListComponent implements OnInit {
 
         this.customerauditHisory = auditHistory;
 
-        this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false});
+        this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
-  
+
     getColorCodeForHistory(i, field, value) {
         const data = this.customerauditHisory;
         const dataLength = data.length;
@@ -684,12 +684,12 @@ export class CustomersListComponent implements OnInit {
     }
 
     viewContactSelectedRow(rowData) {
-		this.sourceViewforContact = rowData;
+        this.sourceViewforContact = rowData;
 
     }
-    
-   
-  
+
+
+
 
 }
 

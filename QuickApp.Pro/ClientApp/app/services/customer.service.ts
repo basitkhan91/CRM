@@ -472,10 +472,10 @@ export class CustomerService {
     postCustomerTaxTypeRate(data) {
         return Observable.forkJoin(this.customerEndpoint.postCustomerTaxTypeRate<any>(data));
     }
-    updateCustomerTaxTypeRate(data){
+    updateCustomerTaxTypeRate(data) {
         return this.customerEndpoint.updateCustomerTaxTypeRate(data);
     }
-    getAuditHistoryForTaxType(customerTaxTypeRateMappingId){
+    getAuditHistoryForTaxType(customerTaxTypeRateMappingId) {
         return this.customerEndpoint.getAuditHistoryForTaxType(customerTaxTypeRateMappingId);
     }
     newItemMasterAircarftClass(action: any) {
@@ -488,8 +488,8 @@ export class CustomerService {
     postInternationalShippingPost(data) {
         return this.customerEndpoint.postInternationalShippingPost(data);
     }
-    getInternationalShippingByCustomerId(customerId, pageIndex, pageSize) {
-        return this.customerEndpoint.getInternationalShippingByCustomerId(customerId, pageIndex, pageSize);
+    getInternationalShippingByCustomerId(customerId) {
+        return this.customerEndpoint.getInternationalShippingByCustomerId(customerId);
     }
     updateStatusForInternationalShippings(id, status, updatedBy) {
         return this.customerEndpoint.updateStatusForInternationalShipping(id, status, updatedBy)
@@ -628,8 +628,8 @@ export class CustomerService {
     getCustomerInterShipViaHistory(customerId, internationalShippingId, shippingViaDetailsId) {
         return this.customerEndpoint.getCustomerInterShipViaHistory(customerId, internationalShippingId, shippingViaDetailsId)
     }
-    getCustomerDocumentHistory(id,customerId) {
-        return this.customerEndpoint.getCustomerDocumentAuditHistory(id,customerId)
+    getCustomerDocumentHistory(id, customerId) {
+        return this.customerEndpoint.getCustomerDocumentAuditHistory(id, customerId)
     }
 
     BillingFileUpload(file, customerId) {
@@ -641,8 +641,8 @@ export class CustomerService {
     InternationalShippingUpload(file, customerId) {
         return this.customerEndpoint.CustomerInternationalShippingFileUpload(file, customerId);
     }
-   ContactUpload(file, customerId) {
-       return this.customerEndpoint.CustomerContactFileUpload(file, customerId);
+    ContactUpload(file, customerId) {
+        return this.customerEndpoint.CustomerContactFileUpload(file, customerId);
     }
 
     getInternationalShipViaByInternationalShippingId(id) {
