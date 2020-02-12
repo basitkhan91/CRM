@@ -26,6 +26,8 @@ import { ATAChapter } from '../../models/atachapter.model';
 import { SingleScreenAuditDetails, AuditChanges } from "../../models/single-screen-audit-details.model";
 import { validateRecordExistsOrNot, selectedValueValidate, editValueAssignByCondition, getObjectByValue, getObjectById } from '../../generic/autocomplete';
 import { ConfigurationService } from '../../services/configuration.service';
+
+import { CommonService } from '../../services/common.service';
 @Component({
 	selector: 'app-ata-sub-chapter1',
 	templateUrl: './ata-sub-chapter1.component.html',
@@ -83,7 +85,9 @@ export class AtaSubChapter1Component implements OnInit {
 		private alertService: AlertService,
 		public atasubchapterService: AtaSubChapter1Service,
 		private ataChapterService: AtaMainService,
-		private dialog: MatDialog, private configurations: ConfigurationService) {
+        private dialog: MatDialog, private configurations: ConfigurationService,
+        
+        private commonService: CommonService) {
 	}
 	ngOnInit(): void {
 		this.getList();
@@ -134,26 +138,27 @@ export class AtaSubChapter1Component implements OnInit {
 
 
 	customExcelUpload(event) {
-		// const file = event.target.files;
+        const file = event.target.files;
 
-		// console.log(file);
-		// if (file.length > 0) {
+        console.log(file);
+        if (file.length > 0) {
 
-		//     this.formData.append('file', file[0])
-		//     this.unitofmeasureService.UOMFileUpload(this.formData).subscribe(res => {
-		//         event.target.value = '';
+            this.formData.append('ModuleName', 'ATASubChapter')
+            this.formData.append('file', file[0])
 
-		//         this.formData = new FormData();
-		//         this.existingRecordsResponse = res;
-		//         this.getList();
-		//         this.alertService.showMessage(
-		//             'Success',
-		//             `Successfully Uploaded  `,
-		//             MessageSeverity.success
-		//         );
 
-		//     })
-		// }
+            this.commonService.smartExcelFileUpload(this.formData).subscribe(res => {
+                event.target.value = '';
+                this.formData = new FormData();
+                this.getList();
+                this.alertService.showMessage(
+                    'Success',
+                    `Successfully Uploaded  `,
+                    MessageSeverity.success
+                );
+
+            })
+        }
 
 	}
 	sampleExcelDownload() {
