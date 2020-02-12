@@ -57,20 +57,116 @@ export class LegalEntityService {
 		this.activeStep.next(activeIndex);
 	}
 
-	toGetUploadDocumentsList(attachmentId, customerId, moduleId) {
-		return this.legalEntityEndpont.GetUploadDocumentsList(attachmentId, customerId, moduleId);
+	newShippingAdd(action: any) {
+		return this.legalEntityEndpont.getNewShipppinginfo<any>(action);
 	}
 
-	getDocumentList(customerId) {
-		return this.legalEntityEndpont.getDocumentList(customerId)
+	updateshippinginfo(legalEntityshipping: any) {
+		return this.legalEntityEndpont.updateShippinginfo(legalEntityshipping, legalEntityshipping.legalEntityShippingAddressId);
+	}
+	updateStatusHipping(legalEntityshipping: any) {
+		return this.legalEntityEndpont.updateStatusShippinginfo(legalEntityshipping, legalEntityshipping.legalEntityShippingAddressId);
+	}
+
+	getlegalEntityShipAddressGet(legalEntityId: any) {
+		return Observable.forkJoin(
+			this.legalEntityEndpont.getCusHippingaddresdetails<any[]>(legalEntityId));
+	}
+	getlegalEntityShipAddressGetWIthAddressId(legalEntityId: any) {
+		return Observable.forkJoin(
+			this.legalEntityEndpont.getCusHippingaddresdetailswithid<any>(legalEntityId));
+	}
+	ShippingFileUpload(file, legalEntityId) {
+		return this.legalEntityEndpont.legalEntityShippingFileUpload(file, legalEntityId);
+	}
+	InternationalShippingUpload(file, legalEntityId) {
+		return this.legalEntityEndpont.legalEntityInternationalShippingFileUpload(file, legalEntityId);
+	}
+	getlegalEntityShippingHistory(legalEntityId, legalEntityShippingAddressId) {
+		return this.legalEntityEndpont.getlegalEntityShippingHistory(legalEntityId, legalEntityShippingAddressId)
+	}
+	getlegalEntityInterShippingHistory(legalEntityId, legalEntityInterShippingId) {
+		return this.legalEntityEndpont.getlegalEntityInterShippingHistory(legalEntityId, legalEntityInterShippingId)
+	}
+
+	getlegalEntityShipViaHistory(legalEntityId, legalEntityShippingAddressId, legalEntityShippingId) {
+		return this.legalEntityEndpont.getlegalEntityShipViaHistory(legalEntityId, legalEntityShippingAddressId, legalEntityShippingId)
+	}
+	getlegalEntityInterShipViaHistory(legalEntityId, internationalShippingId, shippingViaDetailsId) {
+		return this.legalEntityEndpont.getlegalEntityInterShipViaHistory(legalEntityId, internationalShippingId, shippingViaDetailsId)
+	}
+	updateStatusForShippingDetails(id, status, updatedBy) {
+		return this.legalEntityEndpont.updateStatusForShippingDetails(id, status, updatedBy)
+	}
+	Shippingdetailsviastatus(id, status, updatedBy) {
+		return this.legalEntityEndpont.Shippingdetailsviastatus(id, status, updatedBy)
+	}
+
+	getInternationalShipViaByInternationalShippingId(id) {
+		return this.legalEntityEndpont.getInternationalShipViaByInternationalShippingId(id);
+	}
+	getShipViaByDomesticShippingId(legalEntityShippingId) {
+		return this.legalEntityEndpont.getShipViaByDomesticShippingId(legalEntityShippingId);
+	}
+	updateshippingViainfo(legalEntityshipping: any) {
+		return this.legalEntityEndpont.updateShippingViainfo(legalEntityshipping, legalEntityshipping.legalEntityShippingId);
+	}
+	newShippingViaAdd(action: any) {
+		return this.legalEntityEndpont.postDomesticShipVia<any>(action);
+	}
+	updateShipViaInternational(data) {
+		return this.legalEntityEndpont.updateShipViaInternational(data);
+	}
+	getInternationalShippingById(id) {
+		return this.legalEntityEndpont.getInternationalShippingById(id);
+	}
+	updateInternationalShipping(data) {
+		return this.legalEntityEndpont.updateInternationalShipping(data);
+	}
+	postInternationalShipVia(data) {
+		return this.legalEntityEndpont.postInternationalShipVia(data);
+	}
+
+	getShipViaByInternationalShippingId(id, pageIndex, pageSize) {
+		return this.legalEntityEndpont.getShipViaByInternationalShippingId(id, pageIndex, pageSize);
+	}
+
+	postInternationalShippingPost(data) {
+		return this.legalEntityEndpont.postInternationalShippingPost(data);
+	}
+	getInternationalShippingBylegalEntityId(legalEntityId, pageIndex, pageSize) {
+		return this.legalEntityEndpont.getInternationalShippingBylegalEntityId(legalEntityId, pageIndex, pageSize);
+	}
+	updateStatusForInternationalShippings(id, status, updatedBy) {
+		return this.legalEntityEndpont.updateStatusForInternationalShipping(id, status, updatedBy)
+	}
+	updateStatusForInternationalShippingsVia(id, status, updatedBy) {
+		return this.legalEntityEndpont.updateStatusForInternationalShippingVia(id, status, updatedBy)
+	}
+
+	deleteInternationalShipViaId(id, updatedBy) {
+		return this.legalEntityEndpont.deleteInternationalShipViaId(id, updatedBy)
+	}
+	deleteShipViaDetails(id, updatedBy) {
+		return this.legalEntityEndpont.deleteShipViaDetails(id, updatedBy)
+	}
+	deleteInternationalShipping(id, updatedBy) {
+		return this.legalEntityEndpont.deleteInternationalShipping(id, updatedBy)
+	}
+	toGetUploadDocumentsList(attachmentId, legalEntityId, moduleId) {
+		return this.legalEntityEndpont.GetUploadDocumentsList(attachmentId, legalEntityId, moduleId);
+	}
+
+	getDocumentList(legalEntityId) {
+		return this.legalEntityEndpont.getDocumentList(legalEntityId)
 	}
 
 	documentUploadAction(action: any) {
 		return this.legalEntityEndpont.getDocumentUploadEndpoint<any>(action);
 	}
 
-	getDeleteDocumentListbyId(customerDocumentId) {
-		return this.legalEntityEndpont.getdeleteDocumentListbyId(customerDocumentId)
+	getDeleteDocumentListbyId(legalEntityDocumentId) {
+		return this.legalEntityEndpont.getdeleteDocumentListbyId(legalEntityDocumentId)
 	}
 	getlegalEntityDocumentHistory(id, legalEntityId) {
 		return this.legalEntityEndpont.getLegalEntityDocumentAuditHistory(id, legalEntityId)
