@@ -591,6 +591,9 @@ export class CustomerService {
     UpdateCustomerDocument(action: any) {
         return this.customerEndpoint.UpdateDocumentUpload<any>(action);
     }
+    deleteDocumentByCustomerAttachementId(customerAttachementId) {
+        return this.customerEndpoint.deleteDocumentByCustomerAttachementId(customerAttachementId);
+    }
     customerFinanceFileUpload(action: any) {
 
         return this.customerEndpoint.customerFinanceFileUploadEndpoint<any>(action);

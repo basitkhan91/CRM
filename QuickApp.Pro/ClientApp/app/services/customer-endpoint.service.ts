@@ -1350,6 +1350,9 @@ export class CustomerEndpoint extends EndpointFactory {
         const headers = new Headers({ 'Content-Type': 'multipart/form-data' });
         return this.http.put<T>(`${this._updateCustomerDocument}`, file);
     }
+    deleteDocumentByCustomerAttachementId(customerAttachementId) {
+        return this.http.delete(`${this.configurations.baseUrl}/api/common/attachmentDelete/${customerAttachementId}`, this.getRequestHeaders())
+    }
 
     customerFinanceFileUploadEndpoint<T>(file: any): Observable<T> {
         const headers = new Headers({ 'Content-Type': 'multipart/form-data' });

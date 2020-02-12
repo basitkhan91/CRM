@@ -126,11 +126,10 @@ export class CustomerFinancialInformationComponent implements OnInit {
 
     taxExemptTableColumns: any[] = [
         { field: "fileName", header: "File Name" },
-        { field: 'createdDate', header: 'Created Date' },
-        { field: 'createdBy', header: 'CreatedBy' },
-        { field: 'updatedDate', header: 'Updated Date' },
-        { field: 'updatedBy', header: 'UpdatedBy' }, ,
-        { field: '', header: '' },
+        // { field: 'createdDate', header: 'Created Date' },
+        // { field: 'createdBy', header: 'CreatedBy' },
+        // { field: 'updatedDate', header: 'Updated Date' },
+        // { field: 'updatedBy', header: 'UpdatedBy' },
     ];
     globalSettings: any = {};
     _discountListForDropdown: any = [];

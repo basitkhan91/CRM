@@ -315,10 +315,11 @@ export class CustomerDocumentsComponent implements OnInit {
         }, () => { console.log('Backdrop click') })
     }
     deleteItemAndCloseModel() {
-        let customerDocumentDetailId = this.localCollection.customerDocumentDetailId;
-        if (customerDocumentDetailId > 0) {
+        // let customerDocumentDetailId = this.localCollection.customerDocumentDetailId;
+        let attachmentDetailId = this.localCollection.AttachmentDetailId;
+        if (attachmentDetailId > 0) {
             //this.isSaving = true;
-            this.customerService.getDeleteDocumentListbyId(customerDocumentDetailId).subscribe(res => {
+            this.customerService.deleteDocumentByCustomerAttachementId(attachmentDetailId).subscribe(res => {
                 this.getList()
                 this.alertService.showMessage(
                     'Success',
