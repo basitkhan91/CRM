@@ -62,8 +62,8 @@ export class CreditTermsComponent implements OnInit {
         {
             name: "",
             percentage: null,
-            days: null,
-            netDays:null,
+            days: 0,
+            netDays:0,
             masterCompanyId: 1,
             isActive: true,
             isDeleted: false,
