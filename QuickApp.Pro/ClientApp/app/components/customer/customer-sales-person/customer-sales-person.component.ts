@@ -234,13 +234,23 @@ export class CustomerSalesPersonComponent implements OnInit {
                 data = this.salesPersonOriginalList;
             }
         } else {
-            data = [...this.salesPersonOriginalList.filter(x => {
-                if (this.salesInfo.secondarySalesPersonId.employeeId !== x.employeeId) {
-                    return x;
-                }
-            })]
+            console.log(this.salesInfo.secondarySalesPersonId);
+
+            if (this.salesInfo.secondarySalesPersonId !== undefined) {
+                data = [...this.salesPersonOriginalList.filter(x => {
+                    if (this.salesInfo.secondarySalesPersonId.employeeId !== x.employeeId) {
+                        return x;
+                    }
+                })]
+            } else {
+                data = this.salesPersonOriginalList;
+            }
+
+
         }
+        console.log(data);
         this.primarySPList = data;
+
         const primarySPData = [...data.filter(x => {
             return x.name.toLowerCase().includes(event.query.toLowerCase())
         })]
@@ -256,11 +266,16 @@ export class CustomerSalesPersonComponent implements OnInit {
                 data = this.salesPersonOriginalList;
             }
         } else {
-            data = [...this.salesPersonOriginalList.filter(x => {
-                if (this.salesInfo.primarySalesPersonId.employeeId !== x.employeeId) {
-                    return x;
-                }
-            })]
+            if (this.salesInfo.primarySalesPersonId !== undefined) {
+                data = [...this.salesPersonOriginalList.filter(x => {
+                    if (this.salesInfo.primarySalesPersonId.employeeId !== x.employeeId) {
+                        return x;
+                    }
+                })]
+            } else {
+                data = this.salesPersonOriginalList;
+            }
+
         }
 
 

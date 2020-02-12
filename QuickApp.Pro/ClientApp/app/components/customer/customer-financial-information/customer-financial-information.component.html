@@ -253,18 +253,8 @@
                                                             </colgroup>
                                                         </ng-template>
                                                         <ng-template pTemplate="header" let-columns>
-                                                            <!-- <tr>
-                                                                <th >
-                                                                    File Name
-                                                                </th>
-                                                                <th >
-                                                                    Download
-                                                                </th>
-                                                                <th >
-                                                                    Delete
-                                                                </th>
-                                                            </tr> -->
-                                                            <tr>
+                                 
+                                                            <tr [ngClass]="{'row-primary': part.isDefaultContact === true}">
                                                                 <th *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field"  >
                                                                     
                                                                             {{col.header}}
@@ -286,7 +276,7 @@
                                                             </tr>
                                                         </ng-template>
                                                         <ng-template pTemplate="body" let-part let-rowData let-columns="columns" let-i="rowIndex">
-                                                            <tr [ngClass]="{'row-primary': part.isDefaultContact === true}">
+                                                            <tr >
                                                                 <td *ngFor="let col of columns">
                                                                     <ng-container *ngIf="col.field=='fileName'">
                                                                         {{part[col.field]}}

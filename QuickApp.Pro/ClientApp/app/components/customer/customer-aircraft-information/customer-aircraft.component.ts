@@ -401,10 +401,13 @@ export class CustomerAircraftComponent implements OnInit {
     getPageCount(totalNoofRecords, pageSize) {
         return Math.ceil(totalNoofRecords / pageSize)
     }
-    paginateAircraftTable(event, totalNoofRecords) {
-        this.totalPages = Math.ceil(totalNoofRecords / event.rows)
-
+    pageIndexChange(event) {
+        this.pageSize = event.rows;
     }
+    // paginateAircraftTable(event, totalNoofRecords) {
+    //     this.totalPages = Math.ceil(totalNoofRecords / event.rows)
+
+    // }
 
 
     // add Inventory pop Functions
@@ -425,7 +428,7 @@ export class CustomerAircraftComponent implements OnInit {
 
             });
             this.add_SelectedModel = [];
-            this.add_AircraftDashNumberList = [];
+            this.add_SelectedDashNumber = [];
         }
     }
 
