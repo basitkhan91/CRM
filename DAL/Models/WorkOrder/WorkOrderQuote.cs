@@ -24,8 +24,8 @@ namespace DAL.Models
         public long CurrencyId { get; set; }
         public string DSO { get; set; }
         public decimal AccountsReceivableBalance { get; set; }
-        public long SalesPersonId { get; set; }
-        public long EmployeeId { get; set; }
+        public long? SalesPersonId { get; set; }
+        public long? EmployeeId { get; set; }
         public string Memo { get; set; }
         public string Warnings { get; set; }
         public int? MasterCompanyId { get; set; }

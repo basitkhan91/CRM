@@ -2810,14 +2810,14 @@ namespace DAL.Repositories
                                               where wom.IsDeleted == false && wom.WorkFlowWorkOrderId == wfwoId
                                               select new
                                               {
-                                                  sl.StockLineNumber,
+                                                  StockLineNumber= sl ==null?"":sl.StockLineNumber,
                                                   im.PartNumber,
                                                   im.PartDescription,
-                                                  pop.AltPartNumber,
-                                                  sl.SerialNumber,
-                                                  Provision = p.Description,
+                                                  AltPartNumber= pop==null?"":pop.AltPartNumber,
+                                                  SerialNumber = sl == null ? "" : sl.SerialNumber,
+                                                  Provision =p==null?"": p.Description,
                                                   Oem = im.PMA == true && im.DER == true ? "PMA&DER" : (im.PMA == true && im.DER == false ? "PMA" : (im.PMA == false && im.DER == true ? "DER" : "")),
-                                                  Control = sl.IdNumber,
+                                                  Control = sl == null ? "" : sl.IdNumber,
                                                   Condition = c.Description,
                                                   ItemType = string.Empty,
                                                   QunatityRequried = wom.Quantity,
@@ -2828,9 +2828,9 @@ namespace DAL.Repositories
                                                   QunatityRemaining = 0,
                                                   wom.UnitCost,
                                                   wom.ExtendedCost,
-                                                  Currency = cur.DisplayName,
-                                                  po.PurchaseOrderNumber,
-                                                  ro.RepairOrderNumber,
+                                                  Currency = cur == null ? "" : cur.DisplayName,
+                                                  PurchaseOrderNumber= po == null ? "" : po.PurchaseOrderNumber,
+                                                  RepairOrderNumber= ro == null ? "" : ro.RepairOrderNumber,
                                                   PartQuantityOnHand = 0,
                                                   PartQuantityAvailable = sl == null ? 0 : sl.QuantityOnHand,
                                                   PartQuantityOnOrder = 0,
@@ -2841,11 +2841,11 @@ namespace DAL.Repositories
                                                   wo.WorkOrderNumber,
                                                   SubWorkOrder = string.Empty,
                                                   SalesOrder = string.Empty,
-                                                  TimeLife = tl.TimeRemaining,
-                                                  WareHouse = wh.Name,
-                                                  Location = lo.Name,
-                                                  Shelf = sh.Name,
-                                                  Bin = bi.Name,
+                                                  TimeLife = tl==null?0: tl.TimeRemaining,
+                                                  WareHouse =wh==null?"": wh.Name,
+                                                  Location =lo==null?"": lo.Name,
+                                                  Shelf = sh==null?"":sh.Name,
+                                                  Bin =bi==null?"": bi.Name,
                                                   PartStatusId = wom.PartStatusId == null ? 0 : wom.PartStatusId,
                                                   wom.QuantityIssued,
                                                   wom.QuantityReserved,
@@ -3631,8 +3631,10 @@ namespace DAL.Repositories
                                       join wo in _appContext.WorkOrder on wq.WorkOrderId equals wo.WorkOrderId
                                       join cust in _appContext.Customer on wq.CustomerId equals cust.CustomerId
                                       join cur in _appContext.Currency on wq.CurrencyId equals cur.CurrencyId
-                                      join emp in _appContext.Employee on wq.EmployeeId equals emp.EmployeeId
-                                      join sp in _appContext.Employee on wq.SalesPersonId equals sp.EmployeeId
+                                      join emp in _appContext.Employee on wq.EmployeeId equals emp.EmployeeId into wqemp
+                                      from emp in wqemp.DefaultIfEmpty()
+                                      join sp in _appContext.Employee on wq.SalesPersonId equals sp.EmployeeId into wqsp
+                                      from sp in wqsp.DefaultIfEmpty()
                                       join cc in _appContext.CustomerContact on cust.CustomerId equals cc.CustomerId into custcc
                                       from cc in custcc.DefaultIfEmpty()
                                       join con in _appContext.Contact on cc.ContactId equals con.ContactId into cccon
@@ -3657,8 +3659,8 @@ namespace DAL.Repositories
                                           CreditLimit = cust.CreditLimit,
                                           CreditTermId = ct == null ? 0 : ct.CreditTermsId,
                                           CreditTerm = ct == null ? "" : ct.Name,
-                                          SalesPersonName = sp.FirstName + ' ' + sp.LastName,
-                                          EmployeeName = emp.FirstName + ' ' + emp.LastName,
+                                          SalesPersonName = emp == null ? "" : sp.FirstName + ' ' + sp.LastName,
+                                          EmployeeName = emp==null?"": emp.FirstName + ' ' + emp.LastName,
                                           wq.Warnings,
                                           wq.Memo,
                                           wq.AccountsReceivableBalance,
@@ -3829,7 +3831,6 @@ namespace DAL.Repositories
                                                && wq.BuildMethodId == buildMethodId
                                                select new
                                                {
-                                                   we.CostPlusAmount,
                                                    we.CreatedBy,
                                                    we.CreatedDate,
                                                    Epn = im.PartNumber,
@@ -3837,7 +3838,6 @@ namespace DAL.Repositories
                                                    we.ExstimtPercentOccuranceId,
                                                    ExstimtPercentOccurance = eo.Name == null ? "" : eo.Name,
                                                    we.ExtendedCost,
-                                                   we.FixedAmount,
                                                    we.IsActive,
                                                    we.IsDeleted,
                                                    we.ItemMasterId,
@@ -3846,9 +3846,6 @@ namespace DAL.Repositories
                                                    we.MasterCompanyId,
                                                    we.Memo,
                                                    we.Quantity,
-                                                   we.Reference,
-                                                   we.SourceId,
-                                                   Source = we.SourceId == 0 ? "" : (we.SourceId == 1 ? "Manual" : "Workflow"),
                                                    we.UnitCost,
                                                    we.UpdatedBy,
                                                    we.UpdatedDate,
@@ -3856,7 +3853,11 @@ namespace DAL.Repositories
                                                    we.WorkOrderQuoteExclusionsId,
                                                    we.TaskId,
                                                    TaskName = ts == null ? "" : ts.Description,
-                                                   we.MarkupFixedPrice
+                                                   we.MarkupFixedPrice,
+                                                   we.HeaderMarkupId,
+                                                   we.BillingMethodId,
+                                                   we.BillingRate,
+                                                   we.BillingAmount,
                                                }).Distinct()
                              .ToList();
                 return workOrderExclusionsList;
@@ -3953,7 +3954,7 @@ namespace DAL.Repositories
                                                 wf.CarrierId,
                                                 wf.CreatedBy,
                                                 wf.CreatedDate,
-                                                wf.FixedAmount,
+                                                
                                                 wf.Height,
                                                 wf.IsActive,
                                                 wf.IsDeleted,
@@ -3968,13 +3969,15 @@ namespace DAL.Repositories
                                                 wf.Width,
                                                 wf.WorkOrderQuoteDetailsId,
                                                 wf.WorkOrderQuoteFreightId,
-                                                ShipViaName = _appContext.ShippingVia.Where(p => p.ReferenceId == woq.CustomerId && p.UserType == 1).Select(p => p.Name).FirstOrDefault(),
+                                                ShipViaName = _appContext.CustomerShipping.Where(p =>p.CustomerShippingId==wf.ShipViaId).Select(p => p.ShipVia).FirstOrDefault(),
                                                 CarrierName = car.Description,
                                                 wf.MarkupPercentageId,
-                                                wf.FreightCostPlus,
-                                                wf.MarkupFixedPrice,
                                                 wf.TaskId,
                                                 TaskName = ts == null ? "" : ts.Description,
+                                                wf.HeaderMarkupId,
+                                                wf.BillingMethodId,
+                                                wf.BillingRate,
+                                                wf.BillingAmount,
                                             }).Distinct().ToList();
 
                 return workOrderFreightList;
@@ -4090,8 +4093,8 @@ namespace DAL.Repositories
                                 TaskName = ts == null ? "" : ts.Description,
                                 woc.MarkupFixedPrice,
                                 woc.BillingMethodId,
-                                woc.TMAmount,
-                                woc.FlateRate,
+                                woc.BillingAmount,
+                                woc.BillingRate,
                                 woc.HeaderMarkupId,
                             }
                           ).Distinct().ToList();
@@ -4209,8 +4212,8 @@ namespace DAL.Repositories
                                                   TaskName = ts == null ? "" : ts.Description,
                                                   wom.MarkupFixedPrice,
                                                   wom.BillingMethodId,
-                                                  wom.TMAmount,
-                                                  wom.FlateRate,
+                                                  wom.BillingAmount,
+                                                  wom.BillingRate,
                                                   wom.HeaderMarkupId,
 
                                               }).Distinct().ToList();
@@ -4688,6 +4691,8 @@ namespace DAL.Repositories
                 var workOrderFreightList = (from wf in _appContext.WorkOrderFreight
                                             join car in _appContext.Carrier on wf.CarrierId equals car.CarrierId
                                             join sv in _appContext.CustomerShipping on wf.ShipViaId equals sv.CustomerShippingId
+                                            join ts in _appContext.Task on wf.TaskId equals ts.TaskId into wfts
+                                            from ts in wfts.DefaultIfEmpty()
                                             where wf.IsDeleted == false && wf.WorkFlowWorkOrderId == wfwoId
                                             select new
                                             {
@@ -4712,7 +4717,9 @@ namespace DAL.Repositories
                                                 wf.WorkOrderFreightId,
                                                 wf.WorkOrderId,
                                                 sv.ShipVia,
-                                                CarrierName = car.Description
+                                                CarrierName = car.Description,
+                                                wf.TaskId,
+                                                TaskName = ts == null ? "" : ts.Description
                                             }).Distinct().ToList();
 
                 return workOrderFreightList;
