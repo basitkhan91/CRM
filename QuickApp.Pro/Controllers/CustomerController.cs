@@ -43,10 +43,7 @@ namespace QuickApp.Pro.Controllers
             try
             {
                 var result = _unitOfWork.Customer.GetAllCustomersData();
-                if (result.Count() > 0)
-                    return Ok(result);
-                else
-                    return NoContent();
+                return Ok(result);
             }
             catch (Exception ex)
             {
@@ -61,10 +58,7 @@ namespace QuickApp.Pro.Controllers
             try
             {
                 var result = _unitOfWork.Customer.GetCustomersData();
-                if (result.Count() > 0)
-                    return Ok(result);
-                else
-                    return NoContent();
+                return Ok(result);
             }
             catch (Exception ex)
             {
@@ -80,10 +74,7 @@ namespace QuickApp.Pro.Controllers
             try
             {
                 var result = _unitOfWork.Discount.GetAllDiscountData();
-                if (result.Count() > 0)
-                    return Ok(result);
-                else
-                    return NoContent();
+                return Ok(result);
             }
             catch (Exception ex)
             {
@@ -99,10 +90,7 @@ namespace QuickApp.Pro.Controllers
             try
             {
                 var result = _unitOfWork.Customer.SearchCustomer(name, DAL.Models.Enums.CustomerSearchType.ContainsName);
-                if (result.Count() > 0)
-                    return Ok(result);
-                else
-                    return NoContent();
+                return Ok(result);
             }
             catch (Exception ex)
             {
@@ -120,10 +108,7 @@ namespace QuickApp.Pro.Controllers
             try
             {
                 var result = _unitOfWork.customerType.GetCustomerTypes();
-                if (result.Count() > 0)
-                    return Ok(result);
-                else
-                    return NoContent();
+                return Ok(result);
             }
             catch (Exception ex)
             {
@@ -138,10 +123,7 @@ namespace QuickApp.Pro.Controllers
             try
             {
                 var result = _context.Countries.OrderBy(c => c.nice_name).ToList();
-                if (result.Count() > 0)
-                    return Ok(result);
-                else
-                    return NoContent();
+                return Ok(result);
             }
             catch (Exception ex)
             {
@@ -156,10 +138,7 @@ namespace QuickApp.Pro.Controllers
             try
             {
                 var result = _unitOfWork.aircraftModel.GetAllAircraftModelData(id);
-                if (result.Count() > 0)
-                    return Ok(result);
-                else
-                    return NoContent();
+                return Ok(result);
             }
             catch (Exception ex)
             {
@@ -175,10 +154,7 @@ namespace QuickApp.Pro.Controllers
             try
             {
                 var result = _unitOfWork.Customer.GetCustomerWithid(customerId);
-                if (result.Count() > 0)
-                    return Ok(result);
-                else
-                    return NoContent();
+                return Ok(result);
             }
             catch (Exception ex)
             {
@@ -193,10 +169,7 @@ namespace QuickApp.Pro.Controllers
             try
             {
                 var result = _unitOfWork.Customer.GetCustomerRowByid(customerId);
-                if (result.Count() > 0)
-                    return Ok(result);
-                else
-                    return NoContent();
+                return Ok(result);
             }
             catch (Exception ex)
             {
@@ -211,10 +184,7 @@ namespace QuickApp.Pro.Controllers
             try
             {
                 var result = _unitOfWork.ATAChapter.GetATAChapterData();
-                if (result.Count() > 0)
-                    return Ok(result);
-                else
-                    return NoContent();
+                return Ok(result);
             }
             catch (Exception ex)
             {
@@ -230,10 +200,7 @@ namespace QuickApp.Pro.Controllers
             try
             {
                 var result = _unitOfWork.CustomerBillingInformation.GetAllCusBillingDetails(id);
-                if (result.Count() > 0)
-                    return Ok(result);
-                else
-                    return NoContent();
+                return Ok(result);
             }
             catch (Exception ex)
             {
@@ -249,10 +216,7 @@ namespace QuickApp.Pro.Controllers
             try
             {
                 var result = _unitOfWork.CustomerBillingInformation.GetAllCusBillingDetails(id);
-                if (result.Count() > 0)
-                    return Ok(result);
-                else
-                    return NoContent();
+                return Ok(result);
             }
             catch (Exception ex)
             {
@@ -268,10 +232,7 @@ namespace QuickApp.Pro.Controllers
             try
             {
                 var result = _unitOfWork.CustomerShippingAddress.GetAllShippingAddressDetails(id);
-                if (result.Count() > 0)
-                    return Ok(result);
-                else
-                    return NoContent();
+                return Ok(result);
             }
             catch (Exception ex)
             {
@@ -287,10 +248,7 @@ namespace QuickApp.Pro.Controllers
             try
             {
                 var result = _unitOfWork.aircraftType.getAircraftTypeData();
-                if (result.Count() > 0)
-                    return Ok(result);
-                else
-                    return NoContent();
+                return Ok(result);
             }
             catch (Exception ex)
             {
@@ -308,10 +266,7 @@ namespace QuickApp.Pro.Controllers
                 var aircraft = _unitOfWork.customerAircraftType.GetAll();
                 var result = aircraft.Where(a => a.CustomerId == id).ToList();
 
-                if (result.Count() > 0)
-                    return Ok(result);
-                else
-                    return NoContent();
+                return Ok(result);
             }
             catch (Exception ex)
             {
@@ -327,10 +282,7 @@ namespace QuickApp.Pro.Controllers
             try
             {
                 var result = _unitOfWork.Address.GetAddresses();
-                if (result.Count() > 0)
-                    return Ok(result);
-                else
-                    return NoContent();
+                return Ok(result);
             }
             catch (Exception ex)
             {
@@ -433,10 +385,7 @@ namespace QuickApp.Pro.Controllers
             try
             {
                 var result = _unitOfWork.Customer.GetCustomerBynameList(name);
-                if (result.Count() > 0)
-                    return Ok(result);
-                else
-                    return NoContent();
+                return Ok(result);
             }
             catch (Exception ex)
             {
@@ -1080,10 +1029,7 @@ namespace QuickApp.Pro.Controllers
             try
             {
                 var result = _unitOfWork.CustomerShippingAddress.GetAllShipViaDetails(Selectedrow);
-                if (result.Count() > 0)
-                    return Ok(result);
-                else
-                    return NoContent();
+                return Ok(result);
             }
             catch (Exception ex)
             {
@@ -1099,10 +1045,7 @@ namespace QuickApp.Pro.Controllers
             try
             {
                 var result = _unitOfWork.ContactRepository.GetCustomerContacts(contactId);
-                if (result.Count() > 0)
-                    return Ok(result);
-                else
-                    return NoContent();
+                return Ok(result);
             }
             catch (Exception ex)
             {
@@ -1117,10 +1060,7 @@ namespace QuickApp.Pro.Controllers
             try
             {
                 var result = _unitOfWork.ContactRepository.GetCompleteContacts();
-                if (result.Count() > 0)
-                    return Ok(result);
-                else
-                    return NoContent();
+                return Ok(result);
             }
             catch (Exception ex)
             {
@@ -1136,10 +1076,7 @@ namespace QuickApp.Pro.Controllers
             try
             {
                 var result = _unitOfWork.CustomerWarning.GetCustomerwarningWithid(Selectedrow);
-                if (result.Count() > 0)
-                    return Ok(result);
-                else
-                    return NoContent();
+                return Ok(result);
             }
             catch (Exception ex)
             {
@@ -1155,10 +1092,7 @@ namespace QuickApp.Pro.Controllers
             try
             {
                 var result = _unitOfWork.CustomerWarning.GetCustomerwarning(Selectedrow);
-                if (result.Count() > 0)
-                    return Ok(result);
-                else
-                    return NoContent();
+                return Ok(result);
             }
             catch (Exception ex)
             {
@@ -1379,10 +1313,7 @@ namespace QuickApp.Pro.Controllers
             try
             {
                 var result = _unitOfWork.CommonRepository.GetContactAudit(customerId, Convert.ToInt32(ModuleEnum.Customer), customercontactId);
-                if (result.Count() > 0)
-                    return Ok(result);
-                else
-                    return NoContent();
+                return Ok(result);
             }
             catch (Exception ex)
             {
@@ -1541,10 +1472,7 @@ namespace QuickApp.Pro.Controllers
             try
             {
                 var result = _unitOfWork.Customer.GetList(customerFilters);
-                if (result.Count() > 0)
-                    return Ok(result);
-                else
-                    return NoContent();
+                return Ok(result);
             }
             catch (Exception ex)
             {
@@ -1559,10 +1487,7 @@ namespace QuickApp.Pro.Controllers
             try
             {
                 var result = _unitOfWork.Customer.GetListGlobalFilter(value, pageNumber, pageSize);
-                if (result.Count() > 0)
-                    return Ok(result);
-                else
-                    return NoContent();
+                return Ok(result);
             }
             catch (Exception ex)
             {
@@ -2057,14 +1982,7 @@ namespace QuickApp.Pro.Controllers
         public IActionResult GetShipvia(long id, [FromBody] CustomerShippingViewModel CustomerShippingViewModel)
         {
             var result = _unitOfWork.CustomerShippingAddress.GetAllShipViaDetails(id);
-            if (result == null)
-            {
-                return NoContent();
-            }
-            else
-            {
-                return Ok(result);
-            }
+            return Ok(result);
         }
 
 
@@ -2072,14 +1990,7 @@ namespace QuickApp.Pro.Controllers
         public IActionResult GetShipviaAudit(long customerId, long customerShippingAddressId, long customerShippingId)
         {
             var result = _unitOfWork.CustomerShippingAddress.GetCustomerShippingAudit(customerId, customerShippingAddressId, customerShippingId);
-            if (result == null)
-            {
-                return NoContent();
-            }
-            else
-            {
-                return Ok(result);
-            }
+            return Ok(result);
         }
 
         #endregion
@@ -2849,14 +2760,7 @@ namespace QuickApp.Pro.Controllers
             try
             {
                 var result = _unitOfWork.Customer.GetAircraftMapped(customerId);
-                if (result.Count() > 0)
-                {
-                    return Ok(result);
-                }
-                else
-                {
-                    return NoContent();
-                }
+                return Ok(result);
             }
             catch (Exception ex)
             {
@@ -2989,14 +2893,7 @@ namespace QuickApp.Pro.Controllers
             try
             {
                 var result = _unitOfWork.Customer.GetAircraftMappedAudit(customerAircraftMappingId);
-                if (result.Count() > 0)
-                {
-                    return NoContent();
-                }
-                else
-                {
-                    return Ok(result);
-                }
+                return Ok(result);
             }
             catch (Exception ex)
             {
@@ -3015,14 +2912,7 @@ namespace QuickApp.Pro.Controllers
             try
             {
                 var result = _unitOfWork.Customer.GetATAMapped(customerId);
-                if (result.Count() > 0)
-                {
-                    return NoContent();
-                }
-                else
-                {
-                    return Ok(result);
-                }
+                return Ok(result);
             }
             catch (Exception ex)
             {
@@ -3038,14 +2928,7 @@ namespace QuickApp.Pro.Controllers
             try
             {
                 var result = _unitOfWork.Customer.GetATAMappedAudit(CustomerContactATAMappingId);
-                if (result.Count() > 0)
-                {
-                    return NoContent();
-                }
-                else
-                {
-                    return Ok(result);
-                }
+                return Ok(result);
             }
             catch (Exception ex)
             {
@@ -3099,14 +2982,7 @@ namespace QuickApp.Pro.Controllers
             try
             {
                 var result = _unitOfWork.Customer.GetATAContactMapped(contactId);
-                if (result.Count() > 0)
-                {
-                    return NoContent();
-                }
-                else
-                {
-                    return Ok(result);
-                }
+                return Ok(result);
             }
             catch (Exception ex)
             {
@@ -3225,14 +3101,7 @@ namespace QuickApp.Pro.Controllers
             try
             {
                 var result = _unitOfWork.Customer.GetTaxTypeRateMapped(customerId);
-                if (result.Count() > 0)
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    return Ok(result);
-                }
+                return Ok(result);
             }
             catch (Exception ex)
             {
@@ -3323,14 +3192,7 @@ namespace QuickApp.Pro.Controllers
             try
             {
                 var result = _unitOfWork.Customer.CustomerTaxTypeRateInfoAudit(id);
-                if (result.Count() > 0)
-                {
-                    return NoContent();
-                }
-                else
-                {
-                    return Ok(result);
-                }
+                return Ok(result);
             }
             catch (Exception ex)
             {
@@ -3409,10 +3271,7 @@ namespace QuickApp.Pro.Controllers
             try
             {
                 var result = _unitOfWork.aircraftModel.GetSelectedAircraftModeldata(id);
-                if (result.Count() > 0)
-                    return Ok(result);
-                else
-                    return NoContent();
+                return Ok(result);
             }
             catch (Exception ex)
             {
@@ -3549,10 +3408,7 @@ namespace QuickApp.Pro.Controllers
             try
             {
                 var result = _unitOfWork.Customer.getIntegrationData(id);
-                if (result.Count() > 0)
-                    return Ok(result);
-                else
-                    return NoContent();
+                return Ok(result);
             }
             catch (Exception ex)
             {
@@ -3567,10 +3423,7 @@ namespace QuickApp.Pro.Controllers
             try
             {
                 var result = _unitOfWork.Customer.getAllCustomer();
-                if (result.Count() > 0)
-                    return Ok(result);
-                else
-                    return NoContent();
+                return Ok(result);
 
             }
             catch (Exception ex)
@@ -3585,10 +3438,7 @@ namespace QuickApp.Pro.Controllers
             try
             {
                 var result = _unitOfWork.Customer.getAllCustomersInfo();
-                if (result.Count() > 0)
-                    return Ok(result);
-                else
-                    return NoContent();
+                return Ok(result);
 
             }
             catch (Exception ex)
@@ -3925,10 +3775,7 @@ namespace QuickApp.Pro.Controllers
             try
             {
                 var result = _unitOfWork.Customer.GetCustomerInternationalShippingDetails(customerId);
-                if (result.Count() > 0)
-                    return Ok(result);
-                else
-                    return NoContent();
+                return Ok(result);
             }
             catch (Exception ex)
             {
@@ -3943,10 +3790,7 @@ namespace QuickApp.Pro.Controllers
             try
             {
                 var result = _unitOfWork.Customer.GetCustomerInternationalShippingDetailsById(id);
-                if (result == null)
-                    return NoContent();
-                else
-                    return Ok(result);
+                return Ok(result);
 
             }
             catch (Exception ex)
@@ -4062,7 +3906,7 @@ namespace QuickApp.Pro.Controllers
             {
                 return BadRequest(ex.InnerException.ToString());
             }
-           
+
         }
         [HttpGet("getauditshippingviadetailsbyid")]
         public IActionResult GetShippingViaDetailsById(long customerId, long internationalShippingId, long shippingViaDetailsId)
@@ -4070,16 +3914,13 @@ namespace QuickApp.Pro.Controllers
             try
             {
                 var result = _unitOfWork.Customer.GetAuditShippingViaDetailsById(customerId, internationalShippingId, shippingViaDetailsId);
-                if (result.Count() > 0)
-                    return Ok(result);
-                else
-                    return NoContent();
+                return Ok(result);
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.InnerException.ToString());
-            }           
-          
+            }
+
         }
 
         [HttpGet("getrestrictedparts")]
@@ -4088,15 +3929,12 @@ namespace QuickApp.Pro.Controllers
             try
             {
                 var result = _unitOfWork.CommonRepository.GetRestrictedParts(moduleId, referenceId, partType);
-                if (result.Count() > 0)
-                    return Ok(result);
-                else
-                    return NoContent();
+                return Ok(result);
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.InnerException.ToString());
-            } 
+            }
         }
 
         [HttpGet("getRestrictsPmaList")]
@@ -4105,16 +3943,13 @@ namespace QuickApp.Pro.Controllers
             try
             {
                 var result = _unitOfWork.CommonRepository.GetRestrictPmaList(itemMasterId, customerId);
-                if (result.Count() > 0)
-                    return Ok(result);
-                else
-                    return NoContent();
+                return Ok(result);
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.InnerException.ToString());
             }
-          
+
         }
 
         [HttpGet("getRestrictsBerList")]
@@ -4123,10 +3958,7 @@ namespace QuickApp.Pro.Controllers
             try
             {
                 var result = _unitOfWork.CommonRepository.GetRestrictDerList(itemMasterId, customerId);
-                if (result.Count() > 0)
-                    return Ok(result);
-                else
-                    return NoContent();
+                return Ok(result);
             }
             catch (Exception ex)
             {
@@ -4148,15 +3980,12 @@ namespace QuickApp.Pro.Controllers
             {
                 var result = _unitOfWork.Customer.searchgetCustomerATAMappingDataByMultiTypeIdATAIDATASUBID(customerId, contactId, ATAChapterId, ATASubChapterID);
 
-                if (result.Count() > 0)
-                    return Ok(result);
-                else
-                    return NoContent();
+                return Ok(result);
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.InnerException.ToString());
-            }           
+            }
         }
 
 
@@ -4258,6 +4087,65 @@ namespace QuickApp.Pro.Controllers
                             }
                         }
 
+                        _context.DocumentsAudit.Add(obj);
+                        _context.SaveChanges();
+                    }
+
+                    return Ok(objCustomerDocumentDetail);
+                }
+                else
+                {
+                    return BadRequest(ModelState);
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.InnerException.ToString());
+            }
+        }
+
+        [HttpPut("customerDocumentUpdate")]
+        public IActionResult customerDocumentUpdate()
+        {
+            try
+            {
+                CustomerDocumentDetail objCustomerDocumentDetail = new CustomerDocumentDetail();
+                if (ModelState.IsValid)
+                {
+                    if (Request.Form == null)
+                        return BadRequest($"{nameof(objCustomerDocumentDetail)} cannot be null");
+
+                    objCustomerDocumentDetail.CustomerId = Convert.ToInt64(Request.Form["CustomerId"]);
+                    var customerDocObj = _unitOfWork.Customer.GetCustomerDocumentDetailById(objCustomerDocumentDetail.CustomerId);
+                    objCustomerDocumentDetail.MasterCompanyId = 1;
+                    objCustomerDocumentDetail.UpdatedBy = Request.Form["UpdatedBy"];
+                    objCustomerDocumentDetail.DocName = Request.Form["DocName"];
+                    objCustomerDocumentDetail.DocMemo = Request.Form["DocMemo"];
+                    objCustomerDocumentDetail.DocDescription = Request.Form["DocDescription"];
+                    objCustomerDocumentDetail.AttachmentId = _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, objCustomerDocumentDetail.CustomerId,
+                        Convert.ToInt32(ModuleEnum.Customer), Convert.ToString(ModuleEnum.Customer), objCustomerDocumentDetail.UpdatedBy, objCustomerDocumentDetail.MasterCompanyId);
+
+                    _unitOfWork.CreateDocumentDetails.Update(objCustomerDocumentDetail);
+                    _unitOfWork.SaveChanges();
+
+                    AttachmentDetails data = _context.AttachmentDetails.AsNoTracking().Where(p => p.AttachmentId == objCustomerDocumentDetail.AttachmentId).FirstOrDefault();
+                    if (data != null)
+                    {
+                        DocumentsAudit obj = new DocumentsAudit();
+
+                        obj.UpdatedDate = obj.CreatedDate = DateTime.Now;
+                        obj.CreatedBy = obj.UpdatedBy = Request.Form["UpdatedBy"];
+                        obj.MasterCompanyId = 1;
+                        obj.ModuleId = Convert.ToInt32(ModuleEnum.Customer);
+                        obj.ReferenceId = Convert.ToInt64(Request.Form["CustomerId"]);
+                        obj.DocDescription = Request.Form["DocDescription"];
+                        obj.DocMemo = Request.Form["DocMemo"];
+                        obj.DocName = Request.Form["DocName"];
+                        obj.FileName = data.FileName;
+                        obj.Link = data.Link;
+                        obj.Description = data.Description;
+                        obj.IsActive = true;
+                        obj.AttachmentId = objCustomerDocumentDetail.CustomerDocumentDetailId;
 
                         _context.DocumentsAudit.Add(obj);
                         _context.SaveChanges();
@@ -4265,72 +4153,16 @@ namespace QuickApp.Pro.Controllers
 
                     return Ok(objCustomerDocumentDetail);
                 }
-
-
-
-
-                return Ok(ModelState);
+                else
+                {
+                    return BadRequest(ModelState);
+                }
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(ex.InnerException.ToString());
             }
-        }
 
-        [HttpPut("customerDocumentUpdate")]
-        public IActionResult customerDocumentUpdate()
-        {
-            CustomerDocumentDetail objCustomerDocumentDetail = new CustomerDocumentDetail();
-            if (ModelState.IsValid)
-            {
-                if (Request.Form == null)
-                    return BadRequest($"{nameof(objCustomerDocumentDetail)} cannot be null");
-
-
-
-
-                objCustomerDocumentDetail.CustomerId = Convert.ToInt64(Request.Form["CustomerId"]);
-                var customerDocObj = _unitOfWork.Customer.GetCustomerDocumentDetailById(objCustomerDocumentDetail.CustomerId);
-                objCustomerDocumentDetail.MasterCompanyId = 1;
-                objCustomerDocumentDetail.UpdatedBy = Request.Form["UpdatedBy"];
-                objCustomerDocumentDetail.DocName = Request.Form["DocName"];
-                objCustomerDocumentDetail.DocMemo = Request.Form["DocMemo"];
-                objCustomerDocumentDetail.DocDescription = Request.Form["DocDescription"];
-                objCustomerDocumentDetail.AttachmentId = _unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, objCustomerDocumentDetail.CustomerId,
-                    Convert.ToInt32(ModuleEnum.Customer), Convert.ToString(ModuleEnum.Customer), objCustomerDocumentDetail.UpdatedBy, objCustomerDocumentDetail.MasterCompanyId);
-
-                _unitOfWork.CreateDocumentDetails.Update(objCustomerDocumentDetail);
-                _unitOfWork.SaveChanges();
-
-                AttachmentDetails data = _context.AttachmentDetails.AsNoTracking().Where(p => p.AttachmentId == objCustomerDocumentDetail.AttachmentId).FirstOrDefault();
-                if (data != null)
-                {
-                    DocumentsAudit obj = new DocumentsAudit();
-
-                    obj.UpdatedDate = obj.CreatedDate = DateTime.Now;
-                    obj.CreatedBy = obj.UpdatedBy = Request.Form["UpdatedBy"];
-                    obj.MasterCompanyId = 1;
-                    obj.ModuleId = Convert.ToInt32(ModuleEnum.Customer);
-                    obj.ReferenceId = Convert.ToInt64(Request.Form["CustomerId"]);
-                    obj.DocDescription = Request.Form["DocDescription"];
-                    obj.DocMemo = Request.Form["DocMemo"];
-                    obj.DocName = Request.Form["DocName"];
-                    obj.FileName = data.FileName;
-                    obj.Link = data.Link;
-                    obj.Description = data.Description;
-                    obj.IsActive = true;
-                    obj.AttachmentId = objCustomerDocumentDetail.CustomerDocumentDetailId;
-
-
-
-
-                    _context.DocumentsAudit.Add(obj);
-                    _context.SaveChanges();
-                }
-
-                return Ok(objCustomerDocumentDetail);
-            }
-            return Ok(ModelState);
         }
 
 
@@ -4338,8 +4170,15 @@ namespace QuickApp.Pro.Controllers
         [Produces(typeof(List<CustomerDocumentDetail>))]
         public IActionResult GetCustomerDocumentDetail(long id, CustomerDocumentDetail cstomerDocumentDetail)
         {
-            var allcusDoc = _unitOfWork.CreateDocumentDetails.GetAllDataById(id);
-            return Ok(allcusDoc);
+            try
+            {
+                var result = _unitOfWork.CreateDocumentDetails.GetAllDataById(id);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.InnerException.ToString());
+            }
 
         }
 
@@ -4349,21 +4188,37 @@ namespace QuickApp.Pro.Controllers
         [Produces(typeof(CustomerViewModel))]
         public IActionResult DeleteDocumentAction(long id)
         {
-            var existingResult = _unitOfWork.Publication.GetSingleOrDefault(c => c.PublicationRecordId == id);
+            try
+            {
+                var existingResult = _unitOfWork.Publication.GetSingleOrDefault(c => c.PublicationRecordId == id);
 
-            existingResult.IsDeleted = true;
-            _unitOfWork.Publication.Update(existingResult);
-            //_unitOfWork.Publication.Remove(existingResult);
-            _unitOfWork.SaveChanges();
-            return Ok(id);
+                existingResult.IsDeleted = true;
+                _unitOfWork.Publication.Update(existingResult);
+                //_unitOfWork.Publication.Remove(existingResult);
+                _unitOfWork.SaveChanges();
+                return Ok(id);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.InnerException.ToString());
+            }
+
+
         }
 
         [HttpGet("getCustomerDocumentAudit")]
         [Produces(typeof(CustomerDocumentDetailAudit))]
         public IActionResult GetCustomerDocumentDetailAudit(long id, long customerId)
         {
-            var allvendorsDoc = _unitOfWork.CreateDocumentDetails.GetAllAudotHistoryById(id, customerId, Convert.ToInt32(ModuleEnum.Customer));
-            return Ok(allvendorsDoc);
+            try
+            {
+                var result = _unitOfWork.CreateDocumentDetails.GetAllAudotHistoryById(id, customerId, Convert.ToInt32(ModuleEnum.Customer));
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.InnerException.ToString());
+            }
 
         }
         #endregion
@@ -4372,8 +4227,15 @@ namespace QuickApp.Pro.Controllers
         [Produces(typeof(List<CustomerBillingAddress>))]
         public IActionResult getCustomerBillingHistory(long id, CustomerBillingAddress cstomerBillingAddress)
         {
-            var allCusbilldetails = _unitOfWork.CustomerBillingInformation.GetAllCusBillingHistory(id); //.GetAllCustomersData();
-            return Ok(allCusbilldetails);
+            try
+            {
+                var result = _unitOfWork.CustomerBillingInformation.GetAllCusBillingHistory(id);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.InnerException.ToString());
+            }
 
         }
 
@@ -4381,9 +4243,15 @@ namespace QuickApp.Pro.Controllers
         [Produces(typeof(List<CustomerShippingAddress>))]
         public IActionResult getCustomerShippingHistory(long id, CustomerShippingAddress cstomerShippingAddress)
         {
-            var allCusShippingdetails = _unitOfWork.CustomerShippingAddress.GetAllCusShippingHistory(id); //.GetAllCustomersData();
-            return Ok(allCusShippingdetails);
-
+            try
+            {
+                var result = _unitOfWork.CustomerShippingAddress.GetAllCusShippingHistory(id);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.InnerException.ToString());
+            }
         }
 
 
@@ -4391,8 +4259,15 @@ namespace QuickApp.Pro.Controllers
         [Produces(typeof(List<CustomerShippingAddress>))]
         public IActionResult GetCustomerShipviaDetails(long customerId, long addressId)
         {
-            var allCusShippingdetails = _unitOfWork.Customer.GetCustomerShipviaDetails(customerId, addressId);
-            return Ok(allCusShippingdetails);
+            try
+            {
+                var result = _unitOfWork.Customer.GetCustomerShipviaDetails(customerId, addressId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.InnerException.ToString());
+            }
 
         }
 
@@ -4400,8 +4275,15 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("customernameandcodes")]
         public IActionResult GetCustomerNameAndCodes(string value)
         {
-            var custmoerNameAndCodes = _unitOfWork.Customer.GetCustomerNameAndCodes(value);
-            return Ok(custmoerNameAndCodes);
+            try
+            {
+                var result = _unitOfWork.Customer.GetCustomerNameAndCodes(value);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.InnerException.ToString());
+            }
 
         }
 
@@ -4409,8 +4291,16 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("customerclassificationmappings")]
         public IActionResult GetCustomerClassificationMappings(long referenceId)
         {
-            var result = _unitOfWork.CommonRepository.GetCustomerClassificationMappings(Convert.ToInt32(ModuleEnum.Customer), referenceId);
-            return Ok(result);
+            try
+            {
+                var result = _unitOfWork.CommonRepository.GetCustomerClassificationMappings(Convert.ToInt32(ModuleEnum.Customer), referenceId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.InnerException.ToString());
+            }
+
         }
 
 
@@ -4419,8 +4309,15 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("customernameandcodesbyId")]
         public IActionResult GetCustomerNameAndCodesByCustomerId(long customerId)
         {
-            var custmoerNameAndCodes = _unitOfWork.Customer.GetCustomerNameAndCodesByCustomerId(customerId);
-            return Ok(custmoerNameAndCodes);
+            try
+            {
+                var result = _unitOfWork.Customer.GetCustomerNameAndCodesByCustomerId(customerId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.InnerException.ToString());
+            }
 
         }
 
@@ -4438,11 +4335,16 @@ namespace QuickApp.Pro.Controllers
         [ApiExplorerSettings(IgnoreApi = true)]
         public IActionResult GetAllCustomerBillingAddressAudit(long customerId, long customerBillingaddressId)
         {
-            //var allCusBillingDetails = _unitOfWork.CustomerBillingInformation.GetAllCustomerBillingAddressAudit(customerId, customerBillingaddressId);
-            //return Ok(allCusBillingDetails);
-            var allCusBillingDetails = _unitOfWork.CommonRepository.GetShippingBillingAddressAudit(customerId, customerBillingaddressId, Convert.ToInt32(AddressTypeEnum.BillingAddress), Convert.ToInt32(ModuleEnum.Customer));
+            try
+            {
+                var result = _unitOfWork.CommonRepository.GetShippingBillingAddressAudit(customerId, customerBillingaddressId, Convert.ToInt32(AddressTypeEnum.BillingAddress), Convert.ToInt32(ModuleEnum.Customer));
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.InnerException.ToString());
+            }
 
-            return Ok(allCusBillingDetails);
         }
         /// <summary>
         /// Added By Vijay on 15-11-2019
@@ -4455,90 +4357,141 @@ namespace QuickApp.Pro.Controllers
         [ApiExplorerSettings(IgnoreApi = true)]
         public IActionResult GetAllCustomerShippingAddressAudit(long customerId, long customerShippingAddressId)
         {
-            var allCusShippingDetails = _unitOfWork.CommonRepository.GetShippingBillingAddressAudit(customerId, customerShippingAddressId, Convert.ToInt32(AddressTypeEnum.ShippingAddress), Convert.ToInt32(ModuleEnum.Customer));
-            return Ok(allCusShippingDetails);
+            try
+            {
+                var result = _unitOfWork.CommonRepository.GetShippingBillingAddressAudit(customerId, customerShippingAddressId, Convert.ToInt32(AddressTypeEnum.ShippingAddress), Convert.ToInt32(ModuleEnum.Customer));
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.InnerException.ToString());
+            }
+
         }
 
         [HttpGet("deletesRestrictedParts")]
         public IActionResult DeleteRestrictedParts(long id, string updatedBy)
         {
-            _unitOfWork.Customer.DeleteRestrictedParts(id, updatedBy);
-            return Ok();
+            try
+            {
+                _unitOfWork.Customer.DeleteRestrictedParts(id, updatedBy);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.InnerException.ToString());
+            }
+
         }
         [HttpGet("shippingdetailsstatus")]
         public IActionResult CustomerShippingDetailsStatus(long id, bool status, string updatedBy)
         {
+            try
+            {
+                _unitOfWork.Customer.CustomerShippingDetailsStatus(id, status, updatedBy);
+                var data = (from t in _context.CustomerShippingAddress
+                            where t.CustomerShippingAddressId == id
+                            select new
+                            {
+                                CustomerId = t.CustomerId,
 
-            _unitOfWork.Customer.CustomerShippingDetailsStatus(id, status, updatedBy);
+                            }).FirstOrDefault();
 
-            var data = (from t in _context.CustomerShippingAddress
-                        where t.CustomerShippingAddressId == id
-                        select new
-                        {
+                _unitOfWork.CommonRepository.ShippingBillingAddressHistory(Convert.ToInt64(data.CustomerId), Convert.ToInt32(ModuleEnum.Customer), Convert.ToInt64(id), Convert.ToInt32(AddressTypeEnum.ShippingAddress), updatedBy);
 
-                            CustomerId = t.CustomerId,
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.InnerException.ToString());
+            }
 
-                        }).FirstOrDefault();
-
-
-            _unitOfWork.CommonRepository.ShippingBillingAddressHistory(Convert.ToInt64(data.CustomerId), Convert.ToInt32(ModuleEnum.Customer), Convert.ToInt64(id), Convert.ToInt32(AddressTypeEnum.ShippingAddress), updatedBy);
-
-
-            return Ok();
         }
         [HttpGet("customersBillingUpdateStatus")]
         public IActionResult CustomerBillingStatus(long id, bool status, string updatedBy)
         {
+            try
+            {
+                _unitOfWork.Customer.CustomerBillingStatus(id, status, updatedBy);
+                var data = (from t in _context.CustomerBillingAddress
+                            where t.CustomerBillingAddressId == id
+                            select new
+                            {
 
-            _unitOfWork.Customer.CustomerBillingStatus(id, status, updatedBy);
-            var data = (from t in _context.CustomerBillingAddress
-                        where t.CustomerBillingAddressId == id
-                        select new
-                        {
+                                CustomerId = t.CustomerId,
 
-                            CustomerId = t.CustomerId,
+                            }).FirstOrDefault();
 
-                        }).FirstOrDefault();
+                _unitOfWork.CommonRepository.ShippingBillingAddressHistory(Convert.ToInt64(data.CustomerId), Convert.ToInt32(ModuleEnum.Customer), Convert.ToInt64(id), Convert.ToInt32(AddressTypeEnum.BillingAddress), updatedBy);
 
-            _unitOfWork.CommonRepository.ShippingBillingAddressHistory(Convert.ToInt64(data.CustomerId), Convert.ToInt32(ModuleEnum.Customer), Convert.ToInt64(id), Convert.ToInt32(AddressTypeEnum.BillingAddress), updatedBy);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.InnerException.ToString());
+            }
 
-            return Ok();
 
         }
         [HttpGet("searchCustomerAircraftMappingDataByMultiTypeIdModelIDDashID")]
         public IActionResult searchCustomerAircraftMappingDataByMultiTypeIdModelIDDashID(long customerId, string AircraftTypeId, string AircraftModelId, string DashNumberId, string memo)
         {
-            var result = _unitOfWork.Customer.searchCustomerAircraftMappingDataByMultiTypeIdModelIDDashID(customerId, AircraftTypeId, AircraftModelId, DashNumberId, memo);
+            try
+            {
+                var result = _unitOfWork.Customer.searchCustomerAircraftMappingDataByMultiTypeIdModelIDDashID(customerId, AircraftTypeId, AircraftModelId, DashNumberId, memo);
 
-            if (result == null)
-            {
-                return BadRequest();
-            }
-            else
-            {
                 return Ok(result);
             }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.InnerException.ToString());
+            }
+
         }
         [HttpGet("deleteshipviadetails")]
         public IActionResult DeleteShipViaDetails(long id, string updatedBy)
         {
-            _unitOfWork.Customer.DeleteShipViaDetails(id, updatedBy);
-            return Ok();
+            try
+            {
+                _unitOfWork.Customer.DeleteShipViaDetails(id, updatedBy);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.InnerException.ToString());
+            }
+
         }
         [HttpGet("shippingdetailsviastatus")]
         public IActionResult CustomerShippingDetailsViaStatus(long id, bool status, string updatedBy)
         {
-            _unitOfWork.Customer.CustomerShippingDetailsViaStatus(id, status, updatedBy);
-            return Ok();
+            try
+            {
+                _unitOfWork.Customer.CustomerShippingDetailsViaStatus(id, status, updatedBy);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.InnerException.ToString());
+            }
+
         }
         [HttpDelete("deleteCustomerDocuments/{id}")]
         public IActionResult DeleteCustomerDocuments(long id)
         {
-            var existingResult = _unitOfWork.Repository<CustomerDocumentDetail>().GetSingleOrDefault(c => c.CustomerDocumentDetailId == id);
-            existingResult.IsDeleted = true;
-            _unitOfWork.Repository<CustomerDocumentDetail>().Update(existingResult);
-            _unitOfWork.SaveChanges();
-            return Ok(id);
+            try
+            {
+                var existingResult = _unitOfWork.Repository<CustomerDocumentDetail>().GetSingleOrDefault(c => c.CustomerDocumentDetailId == id);
+                existingResult.IsDeleted = true;
+                _unitOfWork.Repository<CustomerDocumentDetail>().Update(existingResult);
+                _unitOfWork.SaveChanges();
+                return Ok(id);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.InnerException.ToString());
+            }
+
         }
 
         [HttpPost("customerFinanceDocumentUpload")]
@@ -4579,80 +4532,161 @@ namespace QuickApp.Pro.Controllers
 
                     return Ok(objCustomerDocumentDetail);
                 }
-                return Ok(ModelState);
+                else
+                {
+                    return BadRequest(ModelState);
+                }
+
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(ex.InnerException.ToString());
             }
         }
         [HttpGet("getCustmerFinanceDocumentDetail/{id}")]
         public IActionResult GetCustomerFinanceDocumentDetail(long id, int moduleId)
         {
-            var allcustomerFinanceDocs = _unitOfWork.Customer.GetCustomerFinanceDocumentDetailById(id, moduleId);
-            return Ok(allcustomerFinanceDocs);
+            try
+            {
+                var result = _unitOfWork.Customer.GetCustomerFinanceDocumentDetailById(id, moduleId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.InnerException.ToString());
+            }
+
         }
         [HttpDelete("customerAttachmentDelete/{id}")]
         public IActionResult GetCustomerFinanceDocumentDelete(long id, string updatedBy)
         {
-            var deleteStatus = _unitOfWork.Customer.GetCustomerFinanceDocumentDelete(id, updatedBy);
-            return Ok(deleteStatus);
+            try
+            {
+                var result = _unitOfWork.Customer.GetCustomerFinanceDocumentDelete(id, updatedBy);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.InnerException.ToString());
+            }
+
         }
         [HttpGet("GetCustomerContacts")]
         // [Produces(typeof(List<ATAChapterViewModel>))]
         public IActionResult GetCustomerContacts(long id)
         {
-            var allATAMaininfo = _unitOfWork.Customer.GetCustomerContacts(id);
-            return Ok(allATAMaininfo);
+            try
+            {
+                var result = _unitOfWork.Customer.GetCustomerContacts(id);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.InnerException.ToString());
+            }           
 
         }
         [HttpGet("GetCustomerAuditHistoryByid")]
         [Produces(typeof(List<CustomerViewModel>))]
         public IActionResult GetCustomerAuditHistoryByid(long customerId)
         {
-            var customerDtails = _unitOfWork.Customer.GetCustomerAuditHistoryByid(customerId); //.GetAllCustomersData();
-            return Ok(customerDtails);
+            try
+            {
+                var result = _unitOfWork.Customer.GetCustomerAuditHistoryByid(customerId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.InnerException.ToString());
+            }          
 
         }
         [HttpGet("GetCustomerInternationalShippingAuditHistoryByid")]
         [Produces(typeof(List<CustomerViewModel>))]
         public IActionResult GetCustomerInternationalShippingAuditHistoryByid(long customerId, long internationalShippingId)
         {
-            var customerDtails = _unitOfWork.Customer.GetCustomerInternationalShippingAuditHistoryByid(customerId, internationalShippingId); //.GetAllCustomersData();
-            return Ok(customerDtails);
-
+            try
+            {
+                var result = _unitOfWork.Customer.GetCustomerInternationalShippingAuditHistoryByid(customerId, internationalShippingId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.InnerException.ToString());
+            }          
         }
 
         [HttpPost("uploadcustomerbillingaddress")]
         public IActionResult UploadBillingCustomData(long customerId)
         {
-            var result = _unitOfWork.Customer.UploadCustomerBillingAddressCustomData(Request.Form.Files[0], customerId);
-            return Ok(result);
+            try
+            {
+                var result = _unitOfWork.Customer.UploadCustomerBillingAddressCustomData(Request.Form.Files[0], customerId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.InnerException.ToString());
+            }
+           
+         
         }
 
         [HttpPost("uploadcustomershippingaddress")]
         public IActionResult UploadShippingCustomData(long customerId)
         {
-            var result = _unitOfWork.Customer.UploadCustomerShippingAddressCustomData(Request.Form.Files[0], customerId);
-            return Ok(result);
+            try
+            {
+                var result = _unitOfWork.Customer.UploadCustomerShippingAddressCustomData(Request.Form.Files[0], customerId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.InnerException.ToString());
+            }
+          
         }
         [HttpPost("uploadcustomerinternationalshipping")]
         public IActionResult UploadInternationalCustomData(long customerId)
         {
-            _unitOfWork.Customer.UploadCustomerInternationalCustomData(Request.Form.Files[0], customerId);
-            return Ok();
+            try
+            {
+                _unitOfWork.Customer.UploadCustomerInternationalCustomData(Request.Form.Files[0], customerId);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.InnerException.ToString());
+            }
+           
         }
         [HttpPost("uploadcustomercontacts")]
         public IActionResult UploadContactsCustomData(long customerId)
         {
-            _unitOfWork.Customer.UploadCustomerContactsCustomData(Request.Form.Files[0], customerId);
-            return Ok();
+            try
+            {
+                _unitOfWork.Customer.UploadCustomerContactsCustomData(Request.Form.Files[0], customerId);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.InnerException.ToString());
+            }
+           
         }
         [HttpGet("getinternationalshippingviadetails")]
         public IActionResult GetShippingViaDetails(long internationalShippingId)
         {
-            var result = _unitOfWork.Customer.GetInterShippingViaDetails(internationalShippingId);
-            return Ok(result);
+            try
+            {
+                var result = _unitOfWork.Customer.GetInterShippingViaDetails(internationalShippingId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.InnerException.ToString());
+            }
+           
         }
 
     }
