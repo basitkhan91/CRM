@@ -27,60 +27,51 @@ namespace QuickApp.Pro.Controllers
             _emailer = emailer;
         }
 
-        // GET: api/values
-
-        //[HttpGet("Get")]
-        //[Produces(typeof(List<ATAChapterViewModel>))]
-        //public IActionResult Get()
-        //{
-        //    var result = _unitOfWork.ATAMains.GetAllATAMainnData(); //.GetAllCustomersData();
-
-
-        //    try
-        //    {
-        //        var resul1 = Mapper.Map<IEnumerable<ATAChapterViewModel>>(result);
-
-        //        return Ok(resul1);
-        //    }
-        //    catch (Exception ex)
-        //    {
-
-        //        throw;
-        //    }
-
-
-
-        //}
+      
 
         [HttpGet("Get")]
-       // [Produces(typeof(List<ATAChapterViewModel>))]
+     
         public IActionResult Get()
         {
-            var allATAMaininfo = _unitOfWork.ATAMains.GetAllATAMainnData();
-            return Ok(allATAMaininfo);
+
+            try
+            {
+                var allATAMaininfo = _unitOfWork.ATAMains.GetAllATAMainnData();
+                if (allATAMaininfo.Count() > 0)
+                    return Ok(allATAMaininfo);
+                else
+                    return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.InnerException.ToString());
+            }
+             
 
         }
         [HttpGet("GetAll")]
-        // [Produces(typeof(List<ATAChapterViewModel>))]
+      
         public IActionResult GetAll()
         {
-            var allATAMaininfo = _unitOfWork.ATAMains.GetAllATAMainData();
-            return Ok(allATAMaininfo);
+            try
+            {
+                var allATAMaininfo = _unitOfWork.ATAMains.GetAllATAMainData();
+                if (allATAMaininfo.Count() > 0)
+                    return Ok(allATAMaininfo);
+                else
+                    return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.InnerException.ToString());
+            }
 
         }
         [HttpGet("ataauditHistoryById/{id}")]
         [Produces(typeof(List<ATAChapterAudit>))]
         public IActionResult GetAuditHostoryById(long id)
         {
-            //var result = _unitOfWork.AuditHistory.GetAllHistory("ATAMain", id); //.GetAllCustomersData();
-
-
-            //try
-            //{
-            //    var resul1 = Mapper.Map<IEnumerable<AuditHistoryViewModel>>(result);
-
-            //    return Ok(resul1);
-            //}
+           
 
             try
             {
@@ -98,7 +89,6 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpPost("actions")]
-        //[Authorize(Authorization.Policies.ManageAllRolesPolicy)]
         public IActionResult CreateAction([FromBody] ATAChapter ataMainViewModel)
         {
             try

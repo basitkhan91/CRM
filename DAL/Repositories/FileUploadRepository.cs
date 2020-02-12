@@ -363,7 +363,9 @@ namespace DAL.Repositories
                 case "AircraftType":
                     UploadAircraftType(BindCustomData<AircraftType>(file, "AircraftTypeId", moduleName));
                     break;
-              
+                case "ATASubChapter":
+                    UploadATASubChapter(BindCustomData<ATASubChapter>(file, "ATASubChapterId,ATAChapterId", moduleName));
+                    break;
 
                 default:
                     break;
@@ -499,6 +501,15 @@ namespace DAL.Repositories
                                                         }
                                                        
                                                     }
+                                                    else if (property.Name.Equals("ATASubChapterCode"))
+                                                    {
+                                                        var subChapterCode = reader.GetValue(propCount);
+                                                        if (subChapterCode != null)
+                                                        {
+                                                            property.SetValue(model, Convert.ToInt32(subChapterCode));
+                                                        }
+                                                       
+                                                    }
                                                     else
                                                     if (property.PropertyType.Name == "Decimal")
                                                     {
@@ -508,6 +519,16 @@ namespace DAL.Repositories
                                                     else if (property.PropertyType.Name == "Byte")
                                                     {
                                                         property.SetValue(model, Convert.ToByte(reader.GetValue(propCount)));
+
+                                                    }
+                                                    else if (property.PropertyType.Name == "String")
+                                                    {
+                                                        property.SetValue(model, Convert.ToString(reader.GetValue(propCount)));
+
+                                                    }
+                                                    else if (property.PropertyType.Name == "Double")
+                                                    {
+                                                        property.SetValue(model, Convert.ToDouble(reader.GetValue(propCount)));
 
                                                     }
                                                     else
@@ -1080,6 +1101,30 @@ namespace DAL.Repositories
                 {
                     _appContext.AircraftType.Add(item);
                     _appContext.SaveChanges();
+                }
+            }
+        }
+        private void UploadATASubChapter(List<ATASubChapter> ataSubChapterList)
+        {
+
+
+            var ataChapters = _appContext.ATAChapter.Where(p => p.IsDeleted == false).ToList();
+
+            foreach (var item in ataSubChapterList)
+            {
+                var ataChapter = ataChapters.Where(p => p.ATAChapterName.ToLower() == item.ATAChapterName.ToLower()).FirstOrDefault();
+
+                if (ataChapter != null && ataChapter.ATAChapterId > 0)
+                {
+                    item.ATAChapterId = Convert.ToInt32(ataChapter.ATAChapterId);
+
+
+                    var flag = _appContext.ATASubChapter.Any(p => p.IsDelete == false && ((p.ATASubChapterCode == item.ATASubChapterCode && p.ATAChapterId == item.ATAChapterId) || (p.Description == item.Description && p.ATAChapterId == item.ATAChapterId)));
+                    if (!flag)
+                    {
+                        _appContext.ATASubChapter.Add(item);
+                        _appContext.SaveChanges();
+                    }
                 }
             }
         }
