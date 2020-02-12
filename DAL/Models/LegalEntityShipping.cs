@@ -1,19 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
 
 namespace DAL.Models
 {
-   public class LegalEntityShipping
+    public class LegalEntityShipping
     {
-    
-        public long? LegalEntityShippingId { get; set; }
 
-        public long? LegalEntityId { get; set; }
-        public long? LegalEntityShippingAddressId { get; set; }
-
+        [Key]
+        public long LegalEntityShippingId { get; set; }
+        public long LegalEntityId { get; set; }
+        public long LegalEntityShippingAddressId { get; set; }
         public string ShipVia { get; set; }
         public string ShippingId { get; set; }
         public string ShippingAccountinfo { get; set; }

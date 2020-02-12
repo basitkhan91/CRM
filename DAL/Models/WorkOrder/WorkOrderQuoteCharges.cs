@@ -20,8 +20,8 @@ namespace DAL.Models
         public long? TaskId { get; set; }
         public string MarkupFixedPrice { get; set; }
         public int? BillingMethodId { get; set; }
-        public decimal? TMAmount { get; set; }
-        public decimal? FlateRate { get; set; }
+        public decimal? BillingAmount { get; set; }
+        public decimal? BillingRate { get; set; }
         public long? HeaderMarkupId { get; set; }
         public int MasterCompanyId { get; set; }
         public string CreatedBy { get; set; }

@@ -29,8 +29,8 @@ export class CommonService {
     getShipViaDetailsByModule(moduleId, referenceId) {
         return this.http.get<any>(`${this.baseUrl}/api/Common/bindshipviadetails?userType=${moduleId}&referenceId=${referenceId}`, this.authService.getRequestHeaders())
     }
-    getShipViaDetailsById(shipViaId) {
-        return this.http.get<any>(`${this.baseUrl}/api/Common/shippingviadetails?shippingViaId=${shipViaId}`, this.authService.getRequestHeaders())
+    getShipViaDetailsById(shipViaId, userType) {
+        return this.http.get<any>(`${this.baseUrl}/api/Common/shippingviadetails?shippingViaId=${shipViaId}&userType=${userType}`, this.authService.getRequestHeaders())
 
     }
     createAddress(object) {

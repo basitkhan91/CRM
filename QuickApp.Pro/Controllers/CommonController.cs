@@ -99,9 +99,9 @@ namespace QuickApp.Pro.Controllers
 
         [HttpGet]
         [Route("shippingviadetails")]
-        public IActionResult GetShippingViaDetails(long shippingViaId)
+        public IActionResult GetShippingViaDetails(long shippingViaId, int userType)
         {
-            var result = _unitOfWork.CommonRepository.GetShippingViaDetails(shippingViaId);
+            var result = _unitOfWork.CommonRepository.GetShippingViaDetails(shippingViaId, userType);
             return Ok(result);
 
         }

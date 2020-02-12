@@ -8,8 +8,8 @@ namespace DAL.Models
    public class CustomerShippingAddress
     {
         [Key]
-        public long? CustomerShippingAddressId { get; set; }
-        public long? CustomerId { get; set; }
+        public long CustomerShippingAddressId { get; set; }
+        public long CustomerId { get; set; }
         public string SiteName { get; set; }
         public long? AddressId { get; set; }
         public string ExportLicenseNumber { get; set; }

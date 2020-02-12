@@ -16,7 +16,7 @@ namespace DAL.Models
         public long? ItemMasterId { get; set; }
         public int SourceId { get; set; }
         public string Reference { get; set; }
-        public int EstimtPercentOccurranceId { get; set; } 
+        public int? EstimtPercentOccurranceId { get; set; } 
         public string Memo { get; set; }
         public int? Quantity { get; set; }
         public decimal? UnitCost { get; set; }
