@@ -29,7 +29,7 @@ export class LegalEntityEndpontService extends EndpointFactory {
 	private readonly getLegalEntityAddressByIdURL: string = "/api/legalEntity/legalentityaddressbyid";
     private readonly _contactUrl: string = "/api/LegalEntity/legalentitycontacts";
     private readonly _entityBillViaDetails = "/api/LegalEntity/legalentitybillingaddressbyid";
-	private readonly _countryUrl: string = "/api/Customer/GetcountryList";
+	private readonly _countryUrl: string = "/api/legalEntity/GetcountryList";
 	private readonly _entityUpdateUrl: string = "/api/LegalEntity/UpdateLegalEntityDetails";
 	private readonly _generalEmptyObjurl: string = "/api/LegalEntity/generalEmptyObj";
 	private readonly _billingInfoUrl: string = "/api/LegalEntity/LegalEntityBillingPost";
@@ -41,7 +41,44 @@ export class LegalEntityEndpontService extends EndpointFactory {
 	private readonly _getlegalEntityDocumentAttachmentslist: string = "/api/FileUpload/getattachmentdetails";
 	private readonly _addDocumentDetails: string = '/api/LegalEntity/legalEntityDocumentUpload';
 	private readonly _deleteLegalEntityDocuments: string = '/api/LegalEntity/deleteLegalEntityDocuments';
-	private readonly _getCustomerDocumentHistory: string = "/api/LegalEntity/getLegalEntityDocumentAudit"
+	private readonly _getlegalEntityDocumentHistory: string = "/api/LegalEntity/getLegalEntityDocumentAudit"
+
+	private readonly _updateShippingViaDetails: string = "/api/legalEntity/updateShipViaDetails";
+	private readonly _legalEntityShipAddressdetails: string = "/api/legalEntity/legalEntityShippingAddressDetails";
+	private readonly _legalEntityShippingUrlNew: string = "/api/legalEntity/updateStatuslegalEntityShipping";
+	private readonly _getShipViaByShippingId: string = "/api/legalEntity/GetShipVia";
+	private readonly _getShipViaHistory: string = "/api/legalEntity/getShipViaHistory";
+	private readonly _shippingInfoUrl: string = "/api/legalEntity/legalEntityShippingPost";
+	private readonly _saveShipViaDetails: string = "/api/legalEntity/addShipViaDetails";
+	private readonly _updatshippingAddressDetails: string = "/api/legalEntity/cusShippingUpdate";
+	private readonly _updateStatuslegalEntityShipping: string = "/api/legalEntity/updateStatuslegalEntityShipping";
+	private readonly _legalEntityShipViaDetails: string = "/api/legalEntity/getlegalEntityShipViaDetails";
+	private readonly _cusShippingGeturl = "/api/legalEntity/cusshippingGet";
+	private readonly _cusShippingGeturlwithId = "/api/Vendor/cusshippingGetwithid";
+	private readonly _internationalshippingpost: string = '/api/legalEntity/createinternationalshipping'
+	private readonly _internationalshippingget: string = '/api/legalEntity/internationalshippingdetaillist'
+	private readonly _internationalstatus: string = '/api/legalEntity/internationalshippingdetailsstatus'
+	private readonly _internationalShippingDelete: string = '/api/legalEntity/deleteinternationalshipping';
+	private readonly _internationalshippingdetailsbyid: string = '/api/legalEntity/internationalshippingdetailsbyid';
+	private readonly _updateinternationalshipping: string = '/api/legalEntity/updateinternationalshipping';
+	private readonly _createinternationalshippingviadetails: string = '/api/legalEntity/createshippingviadetails';
+	private readonly _internationalShipViaList: string = '/api/legalEntity/getshippingviadetails';
+	private readonly _updateshippingviadetails: string = '/api/legalEntity/updateshippingviadetails';
+	private readonly excelUploadShipping: string = "/api/legalEntity/uploadlegalEntityshippingaddress"
+	private readonly excelUploadInterShipping: string = "/api/legalEntity/uploadlegalEntityinternationalshipping"
+	private readonly _legalEntityShippingHistory: string = "/api/legalEntity/getlegalEntityShippingHistory"
+	private readonly _legalEntityInterShippingHistory: string = "/api/legalEntity/GetlegalEntityInternationalShippingAuditHistoryByid";
+	private readonly _legalEntityShipViaHistory: string = "/api/legalEntity/GetShipViaAudit"
+	private readonly _legalEntityInterShipViaHistory: string = "/api/legalEntity/getauditshippingviadetailsbyid"
+	private readonly _deleteInternationalShippingViaMapUrl: string = '/api/legalEntity/deleteshippingviadetails';
+	private readonly _deleteShipVia: string = '/api/legalEntity/deleteshipviadetails';
+	private readonly _internationalShipViaByShippingIdList: string = '/api/legalEntity/getinternationalshippingviadetails';
+	private readonly _addShipViaDetails: string = '/api/legalEntity/addShipViaDetails';
+	private readonly _shippingDetailsStatus: string = '/api/legalEntity/shippingdetailsstatus';
+	private readonly _shippingdetailsviastatus: string = '/api/legalEntity/shippingdetailsviastatus'
+
+	get cusShippingUrl() { return this.configurations.baseUrl + this._cusShippingGeturl; }
+	get cusShippingUrlwithaddressid() { return this.configurations.baseUrl + this._cusShippingGeturlwithId; }
 
 	get entityurl() { return this.configurations.baseUrl + this._entityurl; }
     get managemententityurl() { return this.configurations.baseUrl + this._managementUrl; }
@@ -54,11 +91,213 @@ export class LegalEntityEndpontService extends EndpointFactory {
 	get countryUrl() { return this.configurations.baseUrl + this._countryUrl; }
 	get generalurl() { return this.configurations.baseUrl + this._generalEmptyObjurl }
 	get legalEntityBillingUpdateforActive() { return this.configurations.baseUrl + this._legalEntityBillingUpdateforActive }
+	get InternationalShippingPost() { return this.configurations.baseUrl + this._internationalshippingpost }
+	get InternationalShippingList() { return this.configurations.baseUrl + this._internationalshippingget }
+	get InternationalShippingStatus() { return this.configurations.baseUrl + this._internationalstatus }
+	get InternationalShippingDelete() { return this.configurations.baseUrl + this._internationalShippingDelete }
+	get InternationalShippingById() { return this.configurations.baseUrl + this._internationalshippingdetailsbyid }
+	get UpdateInternationalshipping() { return this.configurations.baseUrl + this._updateinternationalshipping }
+	get InternationalShipVia() { return this.configurations.baseUrl + this._createinternationalshippingviadetails }
+	get ShipViaByInternationalShippingId() { return this.configurations.baseUrl + this._internationalShipViaList }
+	get UpdateShipViaInternational() { return this.configurations.baseUrl + this._updateshippingviadetails }
+	get deleteShipVia() { return this.configurations.baseUrl + this._deleteShipVia; }
+	get InternatioanlShipViaByInternationalShippingId() { return this.configurations.baseUrl + this._internationalShipViaByShippingIdList }
+	get domesticShipVia() { return this.configurations.baseUrl + this._addShipViaDetails }
+	get ShippingDetailsStatus() { return this.configurations.baseUrl + this._shippingDetailsStatus }
+	get shippingdetailsviastatus() { return this.configurations.baseUrl + this._shippingdetailsviastatus }
 
 	constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
 
 		super(http, configurations, injector);
 	}
+
+	updateShippingViainfo<T>(roleObject: any, legalEntityId: any): Observable<T> {
+		let endpointUrl = `${this._updateShippingViaDetails}/${legalEntityId}`;
+		return this.http.put<T>(endpointUrl, JSON.stringify(roleObject), this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.updateShippingViainfo(roleObject, legalEntityId));
+			});
+	}
+	updateShippinginfo<T>(roleObject: any, legalEntityId: any): Observable<T> {
+		let endpointUrl = `${this._updatshippingAddressDetails}/${roleObject.legalEntityShippingAddressId}`;
+		return this.http.put<T>(endpointUrl, JSON.stringify(roleObject), this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.updateShippinginfo(roleObject, legalEntityId));
+			});
+	}
+
+	updateStatusShippinginfo<T>(roleObject: any, legalEntityId: any): Observable<T> {
+		let endpointUrl = `${this._updateStatuslegalEntityShipping}/${roleObject.legalEntityShippingAddressId}`;
+		return this.http.put<T>(endpointUrl, JSON.stringify(roleObject), this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.updateStatusShippinginfo(roleObject, legalEntityId));
+			});
+	}
+	getCusHippingaddresdetails<T>(legalEntityId: any): Observable<T> {
+		let endpointurl = `${this.cusShippingUrl}/${legalEntityId}`;
+		return this.http.get<T>(endpointurl, this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.getlegalEntityEndpoint());
+			});
+	}
+	getCusHippingaddresdetailswithid<T>(legalEntityId: any): Observable<T> {
+		let endpointurl = `${this.cusShippingUrlwithaddressid}/${legalEntityId}`;
+		return this.http.get<T>(endpointurl, this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.getlegalEntityEndpoint());
+			});
+	}
+
+	getlegalEntityEndpoint<T>(): Observable<T> {
+
+		return this.http.get<T>(this._entityUrlNew, this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.getlegalEntityEndpoint());
+			});
+	}
+
+	legalEntityShippingFileUpload(file, legalEntityId) {
+		return this.http.post(`${this.configurations.baseUrl}${this.excelUploadShipping}?legalEntityId=${legalEntityId}`, file)
+	}
+	legalEntityInternationalShippingFileUpload(file, legalEntityId) {
+		return this.http.post(`${this.configurations.baseUrl}${this.excelUploadInterShipping}?legalEntityId=${legalEntityId}`, file)
+	}
+	getlegalEntityShippingHistory(legalEntityId, legalEntityShippingAddressId) {
+		return this.http.get(`${this.configurations.baseUrl}/${this._legalEntityShippingHistory}?legalEntityId=${legalEntityId}&legalEntityShippingAddressId=${legalEntityShippingAddressId}`)
+	}
+	getlegalEntityInterShippingHistory(legalEntityId, legalEntityInterShippingId) {
+		return this.http.get(`${this.configurations.baseUrl}/${this._legalEntityInterShippingHistory}?legalEntityId=${legalEntityId}&internationalShippingId=${legalEntityInterShippingId}`)
+	}
+
+	getlegalEntityShipViaHistory(legalEntityId, legalEntityShippingAddressId, legalEntityShippingId) {
+		return this.http.get(`${this.configurations.baseUrl}/${this._legalEntityShipViaHistory}?legalEntityId=${legalEntityId}&legalEntityShippingAddressId=${legalEntityShippingAddressId}&legalEntityShippingId=${legalEntityShippingId}`)
+	}
+	getlegalEntityInterShipViaHistory(legalEntityId, internationalShippingId, shippingViaDetailsId) {
+		return this.http.get(`${this.configurations.baseUrl}/${this._legalEntityInterShipViaHistory}?legalEntityId=${legalEntityId}&internationalShippingId=${internationalShippingId}&shippingViaDetailsId=${shippingViaDetailsId}`)
+	}
+
+	getNewShipppinginfo<T>(param: any): Observable<T> {
+
+		let body = JSON.stringify(param);
+		let headers = new Headers({ 'Content-Type': 'application/json; charset=utf-8' })
+		return this.http
+			.post(this._shippingInfoUrl, body, this.getRequestHeaders())
+			.map((res: Response) => res)
+			.catch((error: any) => Observable.throw(error.json().error || 'Server error'));
+	}
+
+	updateStatusForShippingDetails<T>(id, status, updatedBy) {
+		return this.http.get<T>(`${this.ShippingDetailsStatus}?id=${id}&status=${status}&updatedBy=${updatedBy}`)
+			.catch(error => {
+				return this.handleError(error, () => this.updateStatusForShippingDetails(id, status, updatedBy));
+			});
+	}
+	Shippingdetailsviastatus<T>(id, status, updatedBy) {
+		return this.http.get<T>(`${this.shippingdetailsviastatus}?id=${id}&status=${status}&updatedBy=${updatedBy}`)
+			.catch(error => {
+				return this.handleError(error, () => this.Shippingdetailsviastatus(id, status, updatedBy));
+			});
+	}
+
+	getInternationalShipViaByInternationalShippingId<T>(id) {
+		return this.http.get<T>(`${this.InternatioanlShipViaByInternationalShippingId}?internationalShippingId=${id}`)
+			.catch(error => {
+				return this.handleError(error, () => this.getInternationalShipViaByInternationalShippingId(id));
+			});
+	}
+	getShipViaByDomesticShippingId(legalEntityShippingId) {
+		return this.http.get(`${this.configurations.baseUrl}/${this._getShipViaByShippingId}/${legalEntityShippingId}`, this.getRequestHeaders())
+
+	}
+	postDomesticShipVia<T>(postData) {
+		return this.http.post<T>(this.domesticShipVia, JSON.stringify(postData), this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.postDomesticShipVia(postData));
+			});
+	}
+
+	updateShipViaInternational<T>(postData) {
+
+		return this.http.post<T>(this.UpdateShipViaInternational, JSON.stringify(postData), this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.updateShipViaInternational(postData));
+			});
+	}
+	getShipViaByInternationalShippingId<T>(id, pageIndex, pageSize) {
+		return this.http.get<T>(`${this.ShipViaByInternationalShippingId}?internationalShippingId=${id}&pageNumber=${pageIndex}&pageSize=${pageSize}`)
+			.catch(error => {
+				return this.handleError(error, () => this.getShipViaByInternationalShippingId(id, pageIndex, pageSize));
+			});
+	}
+	postInternationalShipVia<T>(postData) {
+
+		return this.http.post<T>(this.InternationalShipVia, JSON.stringify(postData), this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.postInternationalShipVia(postData));
+			});
+	}
+
+	updateInternationalShipping<T>(postData) {
+
+		return this.http.post<T>(this.UpdateInternationalshipping, JSON.stringify(postData), this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.updateInternationalShipping(postData));
+			});
+	}
+
+	getInternationalShippingById<T>(id) {
+		return this.http.get<T>(`${this.InternationalShippingById}?id=${id}`)
+			.catch(error => {
+				return this.handleError(error, () => this.getInternationalShippingById(id));
+			});
+	}
+
+	deleteInternationalShipping<T>(id, updatedBy) {
+		return this.http.get<T>(`${this.InternationalShippingDelete}?id=${id}&updatedBy=${updatedBy}`)
+			.catch(error => {
+				return this.handleError(error, () => this.deleteInternationalShipping(id, updatedBy));
+			});
+	}
+
+	updateStatusForInternationalShipping<T>(id, status, updatedBy) {
+		return this.http.get<T>(`${this.InternationalShippingStatus}?id=${id}&status=${status}&updatedBy=${updatedBy}`)
+			.catch(error => {
+				return this.handleError(error, () => this.updateStatusForInternationalShipping(id, status, updatedBy));
+			});
+	}
+	updateStatusForInternationalShippingVia(id, status, updatedBy) {
+		return this.http.get(`${this.configurations.baseUrl}/api/legalEntity/shippingviadetailsstatus?id=${id}&status=${status}&updatedBy=${updatedBy}`)
+
+	}
+
+	getInternationalShippingBylegalEntityId<T>(legalEntityId, pageIndex, pageSize) {
+		return this.http.get<T>(`${this.InternationalShippingList}?legalEntityId=${legalEntityId}&pageNumber=${pageIndex}&pageSize=${pageSize}`)
+			.catch(error => {
+				return this.handleError(error, () => this.getInternationalShippingBylegalEntityId(legalEntityId, pageIndex, pageSize));
+			});
+	}
+
+	deleteInternationalShipViaId<T>(id, updatedBy) {
+		return this.http.get<T>(`${this._deleteInternationalShippingViaMapUrl}?id=${id}&updatedBy=${updatedBy}`)
+			.catch(error => {
+				return this.handleError(error, () => this.deleteInternationalShipViaId(id, updatedBy));
+			});
+	}
+
+	deleteShipViaDetails<T>(id, updatedBy) {
+		return this.http.get<T>(`${this._deleteShipVia}?id=${id}&updatedBy=${updatedBy}`)
+			.catch(error => {
+				return this.handleError(error, () => this.deleteShipViaDetails(id, updatedBy));
+			});
+	}
+
+	postInternationalShippingPost<T>(postData) {
+		return this.http.post<T>(this.InternationalShippingPost, JSON.stringify(postData), this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.postInternationalShippingPost(postData));
+			});
+	}
+
 
 	GetUploadDocumentsList(attachmentId, legalEntityId, moduleId) {
 		return this.http.get<any>(`${this._getlegalEntityDocumentAttachmentslist}?attachmentId=${attachmentId}&referenceId=${legalEntityId}&moduleId=${moduleId}`, this.getRequestHeaders())
@@ -77,7 +316,7 @@ export class LegalEntityEndpontService extends EndpointFactory {
 		return this.http.delete(`${this._deleteLegalEntityDocuments}/${legalEntityDocumentId}`, this.getRequestHeaders())
 	}
 	getLegalEntityDocumentAuditHistory(id, legalEntityId) {
-		return this.http.get<any>(`${this._getCustomerDocumentHistory}?id=${id}&legalEntityId=${legalEntityId}`, this.getRequestHeaders())
+		return this.http.get<any>(`${this._getlegalEntityDocumentHistory}?id=${id}&legalEntityId=${legalEntityId}`, this.getRequestHeaders())
 	}
 
 	LegalEntityBillingFileUpload(file, entityId) {
