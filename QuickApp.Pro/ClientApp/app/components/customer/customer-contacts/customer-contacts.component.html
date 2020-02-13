@@ -74,7 +74,7 @@
               <p-multiSelect
                 [options]="customerContactsColumns"
                 [(ngModel)]="selectedColumns"
-                [ngModelOptions]="{ standalone: true }"
+                name="customerContactsm1"
                 optionLabel="header"
                 selectedItemsLabel="{0} columns selected"
                 [style]="{ minWidth: '200px' }"
@@ -1259,124 +1259,157 @@
       <div class="modal-body">
         <form>
           <div class="form-row">
-            <div class="col-md-5">
-              <div class="form-group">
-                <div class="col-md-12">
-                  <label class="popup-plusicon-cstm">
-                    ATA Chapter
-                    <a
-                      data-dismiss="modal"
-                      [routerLink]="['/singlepages/singlepages/app-ata-main']"
+            <div class="modal-body">
+              <form>
+                <div class="form-row">
+                  <div class="col-md-5">
+                    <div class="form-group">
+                      <div class="col-md-12">
+                        <label class="popup-plusicon-cstm">
+                          ATA Chapter
+                          <a
+                            data-dismiss="modal"
+                            [routerLink]="[
+                              '/singlepages/singlepages/app-ata-main'
+                            ]"
+                          >
+                            <i class="fa fa-plus-circle fa-lg"></i>
+                          </a>
+                        </label>
+                      </div>
+                      <div class="col-md-12">
+                        <p-dropdown
+                          name="ataPopUp"
+                          placeholder="Select ATA Chapter"
+                          class="p-dropdown-custom-md p-dropdown-cus-fullwidth"
+                          [(ngModel)]="add_SelectedId"
+                          (onChange)="getATASubChapterByATAChapter()"
+                          [options]="add_ataChapterList"
+                        ></p-dropdown>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-5">
+                    <div class="form-group">
+                      <label
+                        class="popup-plusicon-cstm"
+                        style="width: 170px !important;"
+                      >
+                        ATA SubChapters
+                        <a
+                          data-dismiss="modal"
+                          [routerLink]="[
+                            '/singlepages/singlepages/app-ata-sub-chapter1'
+                          ]"
+                          ><i class="fa fa-plus-circle fa-lg"></i
+                        ></a>
+                      </label>
+                      <p-multiSelect
+                        class="imstock-pmselect"
+                        [options]="add_ataSubChapterList"
+                        [(ngModel)]="add_SelectedModels"
+                        name="popUpATASubchapter"
+                        [panelStyle]="{ minWidth: '12em' }"
+                      ></p-multiSelect>
+                    </div>
+                  </div>
+
+                  <div class="col-md-2">
+                    <button
+                      style="margin-top: 20px;"
+                      type="button"
+                      class="btn btn-primary"
+                      (click)="addATAMapping()"
                     >
-                      <i class="fa fa-plus-circle fa-lg"></i>
-                    </a>
-                  </label>
+                      Save
+                    </button>
+                  </div>
                 </div>
-                <div class="col-md-12">
-                  <p-dropdown
-                    name="ataPopUp"
-                    placeholder="Select ATA Chapter"
-                    class="p-dropdown-custom-md p-dropdown-cus-fullwidth"
-                    [(ngModel)]="add_SelectedId"
-                    (onChange)="getATASubChapterByATAChapter()"
-                    [options]="add_ataChapterList"
-                  ></p-dropdown>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-md-5">
-              <div class="form-group">
-                <label
-                  class="popup-plusicon-cstm"
-                  style="width: 170px !important;"
-                >
-                  ATA SubChapters
-                  <a
-                    data-dismiss="modal"
-                    [routerLink]="[
-                      '/singlepages/singlepages/app-ata-sub-chapter1'
-                    ]"
-                    ><i class="fa fa-plus-circle fa-lg"></i
-                  ></a>
-                </label>
-                <p-multiSelect
-                  class="imstock-pmselect"
-                  [options]="add_ataSubChapterList"
-                  [(ngModel)]="add_SelectedModels"
-                  name="popUpATASubchapter"
-                  [panelStyle]="{ minWidth: '12em' }"
-                ></p-multiSelect>
-              </div>
-            </div>
-
-            <div class="col-md-2">
-              <button
-                style="margin-top: 20px;"
-                type="button"
-                class="btn btn-primary"
-                (click)="addATAMapping()"
+              </form>
+              <p-table
+                [rows]="10"
+                #ata
+                [value]="ataListDataValues"
+                [scrollable]="true"
+                [style]="{ width: '100%' }"
+                [paginator]="true"
               >
-                Save
-              </button>
+                <ng-template pTemplate="header" let-columns>
+                  <tr>
+                    <th *ngFor="let col of ataHeaders">
+                      {{ col.header }}
+                    </th>
+                    <th class="action-width">Action</th>
+                  </tr>
+                </ng-template>
+                <ng-template
+                  pTemplate="body"
+                  let-i="rowIndex"
+                  let-rowData
+                  let-columns="columns"
+                >
+                  <tr>
+                    <td
+                      class="uiTable_td_ovrflw_control"
+                      *ngFor="let col of ataHeaders"
+                    >
+                      {{ rowData[col.field] }}
+                    </td>
+                    <td class="action-width">
+                      <span data-toggle="modal" data-target="#editATAChapter"
+                        ><a
+                          class="btn nobg"
+                          (click)="editContactATAChapters(rowData)"
+                          matTooltip="Edit"
+                          ><i class="fa fa-pencil"></i
+                        ></a>
+                      </span>
+
+                      <button
+                        class="btn btn-danger nobg"
+                        (click)="deleteATAMapped(deleteContent1, rowData)"
+                      >
+                        <i class="fa fa-trash"></i>
+                      </button>
+                      <span
+                        data-toggle="modal"
+                        data-target="#contentATAChapterHist"
+                        ><a
+                          class="btn nobg"
+                          (click)="getATAAuditHistoryById(rowData)"
+                          matTooltip="History"
+                          ><i class="fa fa-history"></i></a
+                      ></span>
+                    </td>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="summary" id="footer">
+                  <label id="footer" class="footer">No'of records:</label>
+                  <input
+                    style="width: 5%;"
+                    [(ngModel)]="ata._totalRecords"
+                    pInputText
+                    name="noofrecordsata"
+                    type="text"
+                    disabled
+                  />
+                  &nbsp;&nbsp;
+                  <label id="footer" class="footer1">Pages Count:</label>
+
+                  <input
+                    style="width: 5%;"
+                    name="pagecountata"
+                    [ngModel]="getPageCount(ata._totalRecords, pageSize)"
+                    pInputText
+                    type="text"
+                    disabled
+                  />
+                </ng-template>
+              </p-table>
             </div>
           </div>
         </form>
-        <p-table
-          [rows]="6"
-          [value]="ataListDataValues"
-          [scrollable]="true"
-          [style]="{ width: '100%' }"
-          [paginator]="true"
-        >
-          <ng-template pTemplate="header" let-columns>
-            <tr>
-              <th *ngFor="let col of ataHeaders">
-                {{ col.header }}
-              </th>
-              <th class="action-width">Action</th>
-            </tr>
-          </ng-template>
-          <ng-template
-            pTemplate="body"
-            let-i="rowIndex"
-            let-rowData
-            let-columns="columns"
-          >
-            <tr>
-              <td
-                class="uiTable_td_ovrflw_control"
-                *ngFor="let col of ataHeaders"
-              >
-                {{ rowData[col.field] }}
-              </td>
-              <td class="action-width">
-                <span data-toggle="modal" data-target="#editATAChapter"
-                  ><a
-                    class="btn nobg"
-                    (click)="editContactATAChapters(rowData)"
-                    matTooltip="Edit"
-                    ><i class="fa fa-pencil"></i
-                  ></a>
-                </span>
-
-                <button
-                  class="btn btn-danger nobg"
-                  (click)="deleteATAMapped(deleteContent1, rowData)"
-                >
-                  <i class="fa fa-trash"></i>
-                </button>
-                <span data-toggle="modal" data-target="#contentATAChapterHist"
-                  ><a
-                    class="btn nobg"
-                    (click)="getATAAuditHistoryById(rowData)"
-                    matTooltip="History"
-                    ><i class="fa fa-history"></i></a
-                ></span>
-              </td>
-            </tr>
-          </ng-template>
-        </p-table>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-danger" data-dismiss="modal">

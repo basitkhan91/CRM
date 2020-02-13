@@ -14244,6 +14244,9 @@ p-dropdown .ui-dropdown-label {
 }
 
 p-dropdown .accountdropdown .ui-widget label.ui-dropdown-label {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   text-align: left;
 }
 
@@ -14940,6 +14943,9 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active,
 .p-dropdown-custom .ui-dropdown label.ui-dropdown-label {
   text-align: left;
   font-size: 12px !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .p-dropdown-custom .ui-dropdown {
@@ -14953,6 +14959,9 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active,
 .p-dropdown-custom-2 .ui-dropdown label.ui-dropdown-label {
   text-align: left;
   font-size: 12px !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .p-dropdown-custom-md .ui-dropdown {
@@ -14972,6 +14981,10 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active,
 
 .p-dropdown-cus-aircraft .ui-dropdown label.ui-dropdown-label {
   font-size: 11px !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 11px !important;
 }
 
 .p-checkbox-label-2 .ui-chkbox-label {
@@ -14989,16 +15002,25 @@ body .ui-panelmenu .ui-panelmenu-content .ui-menuitem-link.ui-state-active,
 .p-dropdown-custom-md-Header .ui-dropdown label.ui-dropdown-label {
   text-align: left;
   font-size: 12px !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .p-dropdown-custom-md-2 .ui-dropdown label.ui-dropdown-label {
   text-align: left;
   font-size: 12px !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .p-dropdown-custom-md .ui-dropdown label.ui-dropdown-label {
   text-align: left;
   font-size: 12px !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .p-Treetable-view .ui-treetable .ui-treetable-tbody > tr > td {
