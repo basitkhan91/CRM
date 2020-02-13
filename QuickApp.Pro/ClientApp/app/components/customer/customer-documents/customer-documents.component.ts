@@ -13,6 +13,7 @@ import { MatDialog } from '@angular/material';
 import { getObjectByValue, getObjectById, getValueFromObjectByKey } from '../../../generic/autocomplete';
 import { ConfigurationService } from '../../../services/configuration.service';
 import * as $ from 'jquery';
+import { Table } from 'primeng/table';
 @Component({
     selector: 'app-customer-documents',
     templateUrl: './customer-documents.component.html',
@@ -28,11 +29,11 @@ export class CustomerDocumentsComponent implements OnInit {
     @ViewChild('fileUploadInput') fileUploadInput: any;
     @Input() customerDataFromExternalComponents: any;
     documentInformation = {
-
         docName: '',
         docMemo: '',
         docDescription: ''
     }
+    @ViewChild('documents') Table;
     customerDocumentsData: any = [];
     customerdocumentsDestructuredData = [];
     customerDocumentsColumns = [
@@ -40,16 +41,16 @@ export class CustomerDocumentsComponent implements OnInit {
         { field: 'docName', header: 'Name' },
         { field: 'docDescription', header: 'Description' },
         { field: 'fileName', header: 'FileName' },
-        {field: 'documents' , header: 'documents'},
-        {field: 'fileCreatedDate' , header : 'CreatedDate'},
-        {field: 'fileCreatedBy', header:'Created By'},
-        {field: 'fileUpdatedBy', header:'UpdatedBy'},
-        {field: 'fileUpdatedDate', header:'UpdatedDate'},
-        {field: 'fileSize', header:'fileSize'},
+        // { field: 'documents', header: 'documents' },
+        { field: 'fileCreatedDate', header: 'CreatedDate' },
+        { field: 'fileCreatedBy', header: 'Created By' },
+        { field: 'fileUpdatedBy', header: 'UpdatedBy' },
+        { field: 'fileUpdatedDate', header: 'UpdatedDate' },
+        { field: 'fileSize', header: 'FileSize' },
         { field: 'docMemo', header: 'Memo' }
     ];
 
-                  
+
     // fileName:x[i].fileName,
     // fileCreatedDate:x[i].createdDate, 
     // fileCreatedBy : x[i].createdBy,
@@ -82,7 +83,8 @@ export class CustomerDocumentsComponent implements OnInit {
     pageIndex: number = 0;
     pageSize: number = 10;
     totalPages: number = 0;
-    loader : boolean = true;
+    loader: boolean = true;
+    lastValueItegrated: any;
 
     constructor(private router: ActivatedRoute, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public customerService: CustomerService,
         private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private configurations: ConfigurationService) {
@@ -155,7 +157,7 @@ export class CustomerDocumentsComponent implements OnInit {
 
         for (let file of event.files)
             this.formData.append(file.name, file);
-        this.disableSave=false;
+        this.disableSave = false;
     }
     removeFile(event) {
         this.formData.delete(event.file.name)
@@ -195,31 +197,34 @@ export class CustomerDocumentsComponent implements OnInit {
         })
     }
     getList() {
-        this.customerdocumentsDestructuredData=[];
+        this.customerdocumentsDestructuredData = [];
         this.customerService.getDocumentList(this.id).subscribe(res => {
             this.customerDocumentsData = res.map(x => {
-              for(var i =0 ; i<  x.attachmentDetails.length ; i++){
-                  const y = x.attachmentDetails;
-                this.customerdocumentsDestructuredData.push({
-                    ...x,
-                    documents:y[i].fileName,
-                    fileName:y[i].fileName,
-                    fileCreatedDate:y[i].createdDate, 
-                    fileCreatedBy : y[i].createdBy,
-                    fileUpdatedBy:y[i].updatedBy,
-                    fileUpdatedDate:y[i].updatedDate,
-                    fileSize : y[i].fileSize
+                for (var i = 0; i < x.attachmentDetails.length; i++) {
+                    const y = x.attachmentDetails;
+                    this.customerdocumentsDestructuredData.push({
+                        ...x,
+                        // documents: y[i].fileName,
+                        fileName: y[i].fileName,
+                        fileCreatedDate: y[i].createdDate,
+                        fileCreatedBy: y[i].createdBy,
+                        fileUpdatedBy: y[i].updatedBy,
+                        fileUpdatedDate: y[i].updatedDate,
+                        // fileSize: `${y[i].fileSize} MB`
+                        fileSize: y[i].fileSize,
+                        attachmentDetailId: y[i].attachmentDetailId
 
-                })
-              }
+                    })
+                }
                 //    documents: x.attachmentDetails.reduce((acc , y) => acc + y.fileName, ''),
             });
             this.loader = false;
-            if (this.customerDocumentsData.length > 0) {
-                this.totalRecords = this.customerDocumentsData.length;
-                this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
-            }
+            // if (this.customerDocumentsData.length > 0) {
+            //     this.totalRecords = this.customerDocumentsData.length;
+            //     this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+            // }
         }, err => {
+            this.customerdocumentsDestructuredData = [];
             this.loader = false;
         })
     }
@@ -311,18 +316,21 @@ export class CustomerDocumentsComponent implements OnInit {
         }, () => { console.log('Backdrop click') })
     }
     deleteItemAndCloseModel() {
-        let customerDocumentDetailId = this.localCollection.customerDocumentDetailId;
-        if (customerDocumentDetailId > 0) {
+        // let customerDocumentDetailId = this.localCollection.customerDocumentDetailId;
+        let attachmentDetailId = this.localCollection.AttachmentDetailId;
+        if (attachmentDetailId > 0) {
             //this.isSaving = true;
-            this.customerService.getDeleteDocumentListbyId(customerDocumentDetailId).subscribe(
-
+            this.customerService.deleteDocumentByCustomerAttachementId(attachmentDetailId).subscribe(res => {
+                this.getList()
                 this.alertService.showMessage(
                     'Success',
-                    `Action was deleted successfully `,
+                    `Deleted  Documents Successfully `,
                     MessageSeverity.success
-                ));
+                );
 
-            this.getList();
+            })
+
+
 
         }
         this.modal.close();
@@ -346,7 +354,9 @@ export class CustomerDocumentsComponent implements OnInit {
     getPageCount(totalNoofRecords, pageSize) {
         return Math.ceil(totalNoofRecords / pageSize)
     }
-
+    pageIndexChange(event) {
+        this.pageSize = event.rows;
+    }
     openHistory(content, rowData) {
         //const { customerShippingAddressId } = rowData.customerShippingAddressId;
         //const { customerShippingId } = rowData.customerShippingId;
@@ -385,6 +395,9 @@ export class CustomerDocumentsComponent implements OnInit {
         this.alertService.showStickyMessage("Save Error", "The below errors occured whilst saving your changes:", MessageSeverity.error, error);
         this.alertService.showStickyMessage(error, null, MessageSeverity.error);
     }
+
+
+
 
 }
 

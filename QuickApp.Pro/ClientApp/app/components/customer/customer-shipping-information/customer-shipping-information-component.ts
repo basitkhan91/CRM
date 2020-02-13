@@ -19,6 +19,9 @@ import { CommonService } from '../../../services/common.service';
 })
 /** anys component*/
 export class CustomerShippingInformationComponent implements OnInit {
+
+    // [x: string]: any;
+
     @Input() savedGeneralInformationData;
     @Input() countryListOriginal;
     @Input() editGeneralInformationData;
@@ -77,7 +80,6 @@ export class CustomerShippingInformationComponent implements OnInit {
     selectedrowsFromDomestic: any;
     selectedrowsFromInternational: any;
     pageIndexForInternational: number = 0;
-    pageSizeForInternational: number = 10;
     pageIndexForInternationalShipVia: number = 0;
     pageSizeForInternationalShipVia: number = 10;
     totalRecordsForInternationalShipping: any;
@@ -92,6 +94,7 @@ export class CustomerShippingInformationComponent implements OnInit {
     totalRecords: any;
     pageIndex: number = 0;
     pageSize: number = 10;
+    pageSizeForDomestic: number = 10;
     totalPages: number;
     totalRecordsInter: any;
     totalPagesInter: number;
@@ -124,6 +127,11 @@ export class CustomerShippingInformationComponent implements OnInit {
     loaderForInternational: boolean = true;
     loaderForDomesticShipVia: boolean = true;
     loaderForInternationalShipVia: boolean = true;
+    pageSizeForInt: number = 10;
+    pageSizeForShipViaDomestic: number = 10;
+    pageSizeForShipViaInt: number = 10;
+    currentDate = new Date();
+
     constructor(private customerService: CustomerService, private authService: AuthService,
         private alertService: AlertService, private activeModal: NgbActiveModal, private modalService: NgbModal, private configurations: ConfigurationService,
         private commonService: CommonService,
@@ -159,6 +167,11 @@ export class CustomerShippingInformationComponent implements OnInit {
                 this.getDomesticShippingByCustomerId();
                 this.getInternationalShippingByCustomerId();
             }
+
+
+            //Added By Vijay For Customer Create time IsShippingAddess is selected checkbox Then list page we are displaying list
+            // this.getDomesticShippingByCustomerId();
+            // this.getInternationalShippingByCustomerId();
         }
     }
     ngOnChanges(changes: SimpleChanges) {
@@ -171,9 +184,9 @@ export class CustomerShippingInformationComponent implements OnInit {
                 }
             }
             if (property == 'customerDataFromExternalComponents') {
+
                 if (changes[property].currentValue != {}) {
                     this.id = this.customerDataFromExternalComponents.customerId;
-                    console.log("this.check id view if,onchanges", this.customerDataFromExternalComponents.customerId, this.customerDataFromExternalComponents);
                     this.customerCode = this.customerDataFromExternalComponents.customerCode;
                     this.customerName = this.customerDataFromExternalComponents.name;
                     this.isViewMode = true;
@@ -240,13 +253,18 @@ export class CustomerShippingInformationComponent implements OnInit {
     getDomesticShippingByCustomerId() {
         console.log("doemstic shipping", this.id);
         this.customerService.getCustomerShipAddressGet(this.id).subscribe(res => {
-            console.log("doemstic shipping", res[0]);
+            console.log("myresponse domestic", res);
+
             this.domesticShippingData = res[0];
             this.loaderForDomestic = false;
-            if (res.length > 0) {
-                this.totalRecords = this.domesticShippingData.length;
-                this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
-            }
+
+
+            // if (res.length > 0) {
+            //     this.totalRecords = this.domesticShippingData.length;
+            //     this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+            // }
+
+
         }, err => {
             this.loaderForDomestic = false;
         })
@@ -300,13 +318,19 @@ export class CustomerShippingInformationComponent implements OnInit {
 
     //}
     deleteDomesticShipping(content, rowData) {
-        this.isDeleteMode = true;
-        this.selectedRowForDelete = rowData;
-        this.customerShippingAddressId = rowData.customerShippingAddressId
-        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
-        this.modal.result.then(() => {
-            console.log('When user closes');
-        }, () => { console.log('Backdrop click') })
+        if (!rowData.isPrimary) {
+
+            this.isDeleteMode = true;
+            this.selectedRowForDelete = rowData;
+            this.customerShippingAddressId = rowData.customerShippingAddressId
+
+            this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
+            this.modal.result.then(() => {
+                console.log('When user closes');
+            }, () => { console.log('Backdrop click') })
+        } else {
+            $('#deleteoopsShipping').modal('show');
+        }
     }
     deleteItemAndCloseModel() {
         const obj = {
@@ -339,14 +363,18 @@ export class CustomerShippingInformationComponent implements OnInit {
         this.alertService.showStickyMessage(error, null, MessageSeverity.error);
     }
     deleteInternationalShipping(content, rowData) {
-        this.isDeleteMode = true;
-        this.selectedRowForDeleteInter = rowData;
-        this.internationalShippingId = rowData.internationalShippingId
+        if (!rowData.isPrimary) {
+            this.isDeleteMode = true;
+            this.selectedRowForDeleteInter = rowData;
+            this.internationalShippingId = rowData.internationalShippingId
 
-        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
-        this.modal.result.then(() => {
-            console.log('When user closes');
-        }, () => { console.log('Backdrop click') })
+            this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
+            this.modal.result.then(() => {
+                console.log('When user closes');
+            }, () => { console.log('Backdrop click') })
+        } else {
+            $('#deleteoopsShipping').modal('show');
+        }
     }
     deleteItemAndCloseModel1() {
         if (this.internationalShippingId > 0) {
@@ -374,14 +402,19 @@ export class CustomerShippingInformationComponent implements OnInit {
         this.alertService.showStickyMessage(error, null, MessageSeverity.error);
     }
     deleteShipVia(content, rowData) {
-        this.isDeleteMode = true;
-        this.selectedRowForDeleteVia = rowData;
-        this.customerShippingAddressId = rowData.customerShippingAddressId;
-        this.customerShippingId = rowData.customerShippingId
-        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
-        this.modal.result.then(() => {
-            console.log('When user closes');
-        }, () => { console.log('Backdrop click') })
+        if (!rowData.isPrimary) {
+            this.isDeleteMode = true;
+            this.selectedRowForDeleteVia = rowData;
+            this.customerShippingAddressId = rowData.customerShippingAddressId;
+            this.customerShippingId = rowData.customerShippingId
+
+            this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
+            this.modal.result.then(() => {
+                console.log('When user closes');
+            }, () => { console.log('Backdrop click') })
+        } else {
+            $('#deleteoopsShipping').modal('show');
+        }
     }
     deleteItemAndCloseModel2() {
         if (this.customerShippingId > 0) {
@@ -408,15 +441,21 @@ export class CustomerShippingInformationComponent implements OnInit {
         this.alertService.showStickyMessage(error, null, MessageSeverity.error);
     }
     deleteInternationalShippingVia(content, rowData) {
-        this.isDeleteMode = true;
-        this.selectedRowForDeleteInterVia = rowData;
-        this.shippingViaDetailsId = rowData.shippingViaDetailsId;
-        //this.customerShippingId = rowData.customerShippingId
-        this.getShipViaDataByInternationalShippingId();
-        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
-        this.modal.result.then(() => {
-            console.log('When user closes');
-        }, () => { console.log('Backdrop click') })
+        if (!rowData.isPrimary) {
+            this.isDeleteMode = true;
+            this.selectedRowForDeleteInterVia = rowData;
+            this.shippingViaDetailsId = rowData.shippingViaDetailsId;
+            //this.customerShippingId = rowData.customerShippingId
+            this.getShipViaDataByInternationalShippingId();
+
+            this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
+            this.modal.result.then(() => {
+                console.log('When user closes');
+            }, () => { console.log('Backdrop click') })
+        } else {
+            $('#deleteoopsShipping').modal('show');
+        }
+
     }
     deleteItemAndCloseModel3() {
         if (this.shippingViaDetailsId > 0) {
@@ -514,27 +553,47 @@ export class CustomerShippingInformationComponent implements OnInit {
     // get International shipping by customer id 
     getInternationalShippingByCustomerId() {
         // const id = this.savedGeneralInformationData.customerId;
-        console.log("check ", this.id, this.pageIndexForInternational, this.pageSizeForInternational);
-        this.customerService.getInternationalShippingByCustomerId(this.id, this.pageIndexForInternational, this.pageSizeForInternational).subscribe(res => {
+
+        console.log(this.id);
+
+        this.customerService.getInternationalShippingByCustomerId(this.id).subscribe(res => {
             this.loaderForInternational = false;
-            console.log("myresponse international", res.paginationList);
-            this.internationalShippingData = res.paginationList;
-            this.totalRecordsForInternationalShipping = res.totalRecordsCount;
-            if (this.internationalShippingData.length > 0) {
-                this.totalRecordsInternationalShipping = this.internationalShippingData.length;
-                this.totalPagesInternationalShipping = Math.ceil(this.totalRecordsInternationalShipping / this.pageSize);
-            }
+            this.internationalShippingData = res;
+            // this.totalRecordsForInternationalShipping = res.totalRecordsCount;
+            // if (this.internationalShippingData.length > 0) {
+            //     this.totalRecordsInternationalShipping = this.internationalShippingData.length;
+            //     this.totalPagesInternationalShipping = Math.ceil(this.totalRecordsInternationalShipping / this.pageSize);
+            // }
         }, err => {
             this.loaderForInternational = false;
         })
     }
+
+
     getPageCount(totalNoofRecords, pageSize) {
         return Math.ceil(totalNoofRecords / pageSize)
     }
+    pageIndexChangeForDomestic(event) {
+        this.pageSizeForDomestic = event.rows;
+    }
+    pageIndexChangeForInt(event) {
+        this.pageSizeForInt = event.rows;
+    }
+
+    pageIndexChangeForShipViaDom(event) {
+        this.pageSizeForShipViaDomestic = event.rows;
+    }
+    pageIndexChangeForShipViaInt(event) {
+        this.pageSizeForShipViaInt = event.rows;
+    }
+
+
+
+
     internationalShippingPagination(event: { first: any; rows: number }) {
         const pageIndex = parseInt(event.first) / event.rows;
-        this.pageIndexForInternational = pageIndex;
-        this.pageSizeForInternational = event.rows;
+        // this.pageIndexForInternational = pageIndex;
+        // this.pageSizeForInternational = event.rows;
         this.getInternationalShippingByCustomerId();
     }
     async updateActiveorInActiveForIS(rowData) {
@@ -548,7 +607,7 @@ export class CustomerShippingInformationComponent implements OnInit {
         })
     }
     async  updateActiveorInActiveShipViaForIS(rowData) {
-              await this.customerService.updateStatusForInternationalShippingsVia(rowData.shippingViaDetailsId, rowData.isActive, this.userName).subscribe(res => {
+        await this.customerService.updateStatusForInternationalShippingsVia(rowData.shippingViaDetailsId, rowData.isActive, this.userName).subscribe(res => {
             this.getShipViaDataByInternationalShippingId();
 
             this.alertService.showMessage(
@@ -705,10 +764,10 @@ export class CustomerShippingInformationComponent implements OnInit {
         this.customerService.getShipViaByDomesticShippingId(customerShippingAddressId).subscribe(res => {
             this.demosticShippingViaData = res;
             this.loaderForDomesticShipVia = false;
-            if (this.demosticShippingViaData.length > 0) {
-                this.totalRecordsShipVia = this.demosticShippingViaData.length;
-                this.totalPagesShipVia = Math.ceil(this.totalRecords / this.pageSize);
-            }
+            // if (this.demosticShippingViaData.length > 0) {
+            //     this.totalRecordsShipVia = this.demosticShippingViaData.length;
+            //     this.totalPagesShipVia = Math.ceil(this.totalRecords / this.pageSize);
+            // }
         }, err => {
             this.loaderForDomesticShipVia = false;
         })
@@ -920,4 +979,6 @@ export class CustomerShippingInformationComponent implements OnInit {
             })
         }
     }
+
+
 }

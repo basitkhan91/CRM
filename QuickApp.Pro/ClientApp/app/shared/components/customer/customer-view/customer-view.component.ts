@@ -125,9 +125,9 @@ export class CustomerViewComponent implements OnInit {
     domesticShippingData: any;
     internationalShippingData: any = [];
     // loader:boolean=true;
-    ataloader:boolean=true;
-    salesloader:boolean=true;
-    warningsloader:boolean=true;
+    ataloader: boolean = true;
+    salesloader: boolean = true;
+    warningsloader: boolean = true;
     filterKeysByValue: object = {};
     taxTypeRateMapping: any = [];
     restrictedPMAParts: any = [];
@@ -166,7 +166,7 @@ export class CustomerViewComponent implements OnInit {
         ];
         let customerId = this.customerId;
         this.customerService.getCustomerdataById(customerId).subscribe(res => {
-            this.salesloader=false;
+            this.salesloader = false;
             this.getAllEmployees();
             // this.getAllCustomerContact(customerId);
             this.getAircraftMappedDataByCustomerId(customerId);
@@ -187,9 +187,9 @@ export class CustomerViewComponent implements OnInit {
             this.getGlobalSettings();
             //debugger
             console.log(this.viewDataGeneralInformation);
-        
-       }, err => {
-            this.salesloader=false;
+
+        }, err => {
+            this.salesloader = false;
         })
         // this.openStep1();
 
@@ -258,9 +258,9 @@ export class CustomerViewComponent implements OnInit {
         // const id = this.savedGeneralInformationData.customerId;
         await this.customerService.getATAMappedByCustomerId(customerId).subscribe(res => {
             this.ataListDataValues = res || [];
-            this.ataloader=false;
+            this.ataloader = false;
         }, err => {
-            this.ataloader=false;
+            this.ataloader = false;
         })
     }
     async getBillingDataById(customerId) {
@@ -282,13 +282,13 @@ export class CustomerViewComponent implements OnInit {
 
         // const id = this.savedGeneralInformationData.customerId;
 
-        await this.customerService.getInternationalShippingByCustomerId(customerId, 0, 20).subscribe(res => {
+        await this.customerService.getInternationalShippingByCustomerId(customerId).subscribe(res => {
             this.internationalShippingData = res.paginationList || [];
             // this.totalRecordsForInternationalShipping = res.totalRecordsCount;
             // this.loader = true;
         }, err => {
             // this.loader = false;
-            })
+        })
 
 
 
@@ -296,7 +296,7 @@ export class CustomerViewComponent implements OnInit {
 
     async getCustomerWaringByCustomerId(customerId) {
         await this.customerService.getCustomerWarnings(customerId).subscribe(res => {
-            this.warningsloader=false;
+            this.warningsloader = false;
             this.waringInfoList = res[0].map(x => {
                 return {
                     ...x,
@@ -309,7 +309,7 @@ export class CustomerViewComponent implements OnInit {
 
 
         }, err => {
-            this.warningsloader=false;
+            this.warningsloader = false;
         })
     }
 

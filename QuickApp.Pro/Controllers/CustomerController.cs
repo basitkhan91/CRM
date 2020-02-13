@@ -2490,6 +2490,7 @@ namespace QuickApp.Pro.Controllers
                     CustomerShippingAddressObj.UpdatedDate = DateTime.Now;
                     CustomerShippingAddressObj.CreatedBy = customerBillingAddressViewModel.CreatedBy;
                     CustomerShippingAddressObj.UpdatedBy = customerBillingAddressViewModel.UpdatedBy;
+                    CustomerShippingAddressObj.IsDeleted = false;
 
                     if (customerBillingAddressViewModel.IsPrimary == true)
                     {

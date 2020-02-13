@@ -155,6 +155,26 @@ namespace DAL.Repositories
             }
             return Currencys;
         }
+        public Object GetCurrencyAuditDetails(long id)
+        {
+            return (from asc in _appContext.CurrencyAudit
+                     where asc.CurrencyId == id
+                    select new
+                    {
+                     asc.DisplayName,
+                     asc.CurrencyId,
+                     asc.Code,
+                     asc.Symbol,
+                     asc.Memo,
+                     asc.MasterCompanyId,
+                     asc.IsActive,
+                     asc.UpdatedDate,
+                    
+                        asc.CreatedBy,
+                        asc.CreatedDate,
+                        asc.UpdatedBy
+                    }).OrderByDescending(p => p.UpdatedDate).ToList();
+        }
 
 
     }
