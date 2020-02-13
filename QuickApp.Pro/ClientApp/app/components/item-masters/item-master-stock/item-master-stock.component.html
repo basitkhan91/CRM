@@ -158,10 +158,11 @@
                                     </div>
                                     <!-- /REVISED PART-->
                                     <div class="inline-block display-flex">
-                                        <label class="control-label">Serialized</label>
-                                        <input class="form-control new-checkbox" type="checkbox"
+                                        <label class="control-label">Yes or No</label>
+                                        <input class="form-control new-checkbox" type="checkbox" mattooltip="Serialized"
                                                [ngModelOptions]="{standalone: true}"
                                                [(ngModel)]="sourceItemMaster.isSerialized">
+                                        <label class="control-label">Serialized</label>
                                     </div>
                                     <div class="inline-block display-flex">
                                         <label class="control-label">Time Life</label>
@@ -376,7 +377,7 @@
                                         </select>
                                     </div>
                                     <div class="inline-block display-flex" style="margin-top: 5px;">
-                                        <label class="control-label">Hazardous Material</label>
+                                        <label class="control-label">Hazardous Material</label>  &nbsp; &nbsp;
                                         <input class="form-control new-checkbox" type="checkbox"
                                                [ngModelOptions]="{standalone: true}"
                                                [(ngModel)]="sourceItemMaster.isHazardousMaterial">
@@ -697,11 +698,11 @@
                                     <!-- Site-->
                                     <div class="inline-adjust inline-block display-flex">
                                         <label class="control-label spacing-label">
-                                            Site                                           
+                                            Site <strong class="clr-red">*</strong>                                          
                                         </label>
                                     </div>
                                     <div>
-                                        <select [(ngModel)]="sourceItemMaster.siteId" [ngModelOptions]="{standalone: true}" (ngModelChange)="siteValueChange()">
+                                        <select id="siteId" name="siteId" [(ngModel)]="sourceItemMaster.siteId" required (ngModelChange)="siteValueChange()">
                                             <option *ngFor="let site of allSites" [ngValue]="site.siteId">{{site.name}}</option>
                                         </select>
                                     </div>
@@ -710,11 +711,11 @@
                                     <div class="inline-adjust inline-block display-flex">
 
                                         <label class="control-label spacing-label">
-                                            Warehouse                                           
+                                            Warehouse  <strong class="clr-red">*</strong>                                         
                                         </label>
                                     </div>
                                     <div>
-                                        <select [(ngModel)]="sourceItemMaster.warehouseId" [ngModelOptions]="{standalone: true}" (ngModelChange)="wareHouseValueChange()">
+                                        <select id="warehouseId" name="warehouseId" [(ngModel)]="sourceItemMaster.warehouseId" required (ngModelChange)="wareHouseValueChange()">
                                             <option *ngFor="let warehouse of wareHouseData" [ngValue]="warehouse.warehouseId">{{warehouse.warehouse}}</option>
                                         </select>
                                     </div>
@@ -723,11 +724,11 @@
                                     <div class="inline-adjust inline-block display-flex">
 
                                         <label class="control-label spacing-label">
-                                            Location                                           
+                                            Location <strong class="clr-red">*</strong>                                          
                                         </label>
                                     </div>
                                     <div>
-                                        <select [(ngModel)]="sourceItemMaster.locationId" [ngModelOptions]="{standalone: true}" (ngModelChange)="locationValueChange()">
+                                        <select id="locationId" name="locationId" [(ngModel)]="sourceItemMaster.locationId" required (ngModelChange)="locationValueChange()">
                                             <option *ngFor="let location of locationData" [ngValue]="location.locationId">{{location.location}}</option>
                                         </select>
                                     </div>
@@ -1375,56 +1376,61 @@
                     <div class="clear"></div>
                     <div class="md-stepper-horizontal orange">
                         <div class="md-step"
-                                [ngClass]="{ active: activeNTAEMenuItem >= 1 , editable : activeNTAEMenuItem === 1}" 
-                                (click)="changeOfNTAETab('NHA')">
+                             [ngClass]="{ active: activeNTAEMenuItem >= 1 , editable : activeNTAEMenuItem === 1}"
+                             (click)="changeOfNTAETab('NHA')">
                             <div class="md-step-title">NHA</div>
                             <div class="md-step-bar-left"></div>
                             <div class="md-step-bar-right"></div>
                         </div>
                         <div class="md-step"
-                                [ngClass]="{ active: activeNTAEMenuItem >= 2, editable : activeNTAEMenuItem === 2 }"
-                                (click)="changeOfNTAETab('TLA')"
-                                [class.isDisabled]="!isNTAEDisabledSteps">
+                             [ngClass]="{ active: activeNTAEMenuItem >= 2, editable : activeNTAEMenuItem === 2 }"
+                             (click)="changeOfNTAETab('TLA')"
+                             [class.isDisabled]="!isNTAEDisabledSteps">
                             <div class="md-step-title">TLA</div>
                             <div class="md-step-bar-left"></div>
                             <div class="md-step-bar-right"></div>
                         </div>
                         <div class="md-step"
-                                [ngClass]="{ active: activeNTAEMenuItem >= 3 , editable : activeNTAEMenuItem === 3 }"
-                                (click)="changeOfNTAETab('Alternate')"
-                                [class.isDisabled]="!isNTAEDisabledSteps">
+                             [ngClass]="{ active: activeNTAEMenuItem >= 3 , editable : activeNTAEMenuItem === 3 }"
+                             (click)="changeOfNTAETab('Alternate')"
+                             [class.isDisabled]="!isNTAEDisabledSteps">
                             <div class="md-step-title">Alternate</div>
                             <div class="md-step-bar-left"></div>
                             <div class="md-step-bar-right"></div>
                         </div>
 
                         <div class="md-step"
-                                [ngClass]="{ active: activeNTAEMenuItem >= 4 , editable : activeNTAEMenuItem === 4}"
-                                (click)="changeOfNTAETab('Equivalency')"
-                                [class.isDisabled]="!isNTAEDisabledSteps">
+                             [ngClass]="{ active: activeNTAEMenuItem >= 4 , editable : activeNTAEMenuItem === 4}"
+                             (click)="changeOfNTAETab('Equivalency')"
+                             [class.isDisabled]="!isNTAEDisabledSteps">
                             <div class="md-step-title">Equivalency</div>
                             <div class="md-step-bar-left"></div>
                             <div class="md-step-bar-right"></div>
-                        </div>    
+                        </div>
                     </div>
                     <div *ngIf="currentNTAETab != ''">
                         <app-ntae-alternate [selectedTab]="currentNTAETab"></app-ntae-alternate>
                     </div>
-                       
-                    <!-- <div [ngClass]="{hideTab : currentNTAETab !== 'NHA'}">
-                        <app-ntae-alternate [selectedTab]="currentNTAETab"></app-ntae-alternate>
-                    </div>
-                    <div [ngClass]="{hideTab : currentNTAETab !== 'TLA'}">
-                            <app-ntae-alternate [selectedTab]="currentNTAETab"></app-ntae-alternate>
-                    </div>
-                    <div [ngClass]="{hideTab : currentNTAETab !== 'Alternate'}">
-                            <app-ntae-alternate [selectedTab]="currentNTAETab"></app-ntae-alternate>
-                        </div>
-                    <div [ngClass]="{hideTab : currentNTAETab !== 'Equivalency'}">
-                         <app-ntae-alternate [selectedTab]="currentNTAETab"></app-ntae-alternate>
 
-                    </div> -->
-                                           
+                    <!-- <div [ngClass]="{hideTab : currentNTAETab !== 'NHA'}">
+        <app-ntae-alternate [selectedTab]="currentNTAETab"></app-ntae-alternate>
+    </div>
+    <div [ngClass]="{hideTab : currentNTAETab !== 'TLA'}">
+            <app-ntae-alternate [selectedTab]="currentNTAETab"></app-ntae-alternate>
+    </div>
+    <div [ngClass]="{hideTab : currentNTAETab !== 'Alternate'}">
+            <app-ntae-alternate [selectedTab]="currentNTAETab"></app-ntae-alternate>
+        </div>
+    <div [ngClass]="{hideTab : currentNTAETab !== 'Equivalency'}">
+         <app-ntae-alternate [selectedTab]="currentNTAETab"></app-ntae-alternate>
+
+    </div> -->
+
+                    <button class="btn btn-primary pull-right submit-btn" (click)="moveExportInformations()" type="button" style="height: 30px; width: 100px">Save & Next</button> &nbsp;
+
+                    <button class="btn btn-primary pull-right submit-btn" type="button" (click)="movePurchaseSales()" style="height: 30px">Previous</button>
+
+
                 </div>
                 <!-- NHA, TLA, Alternate, Equivalency CLOSE-->
                 <!--Exchange and loans Tab  -->
@@ -1462,20 +1468,20 @@
                                 <div class="col-md-3" style="margin-left: 13px">
                                     <div class="form-group">
                                         <label for="eccn" class="control-label">
-                                            ECCN
+                                            ECCN <span style="color: red;">*</span>
                                         </label>
 
-                                        <input type="text" class="input-field-value" maxlength="10" 
+                                        <input type="text" class="input-field-value" maxlength="10" required pInputText
            [pattern]="'^[a-zA-Z0-9 \'\-]+$'"  [(ngModel)]="exportInfo.ExportECCN" name="ExportECCN" />
 
                                         <label class="control-label">
-                                            ITAR Num <strong class="clr-red">*</strong>
+                                            ITAR Num 
                                         </label>
-                                        <input type="text" id="itarNumber" title="ITAR Number" class="input-field-value" required pInputText [(ngModel)]="exportInfo.ITARNumber" name="itarNumber" />
-                                        <label class="control-label">Country <span style="color: red">*</span></label>
+                                        <input type="text" id="itarNumber" title="ITAR Number" class="input-field-value" [(ngModel)]="exportInfo.ITARNumber" name="itarNumber" />
+                                        <label class="control-label">Country </label>
 
 
-                                        <p-autoComplete required
+                                        <p-autoComplete 
                                                         class="p-autoComplete-ctsm"
                                                         [(ngModel)]="exportInfo.ExportCountryId"
                                                         name="exportCountry"
@@ -1497,11 +1503,11 @@
                                             </ng-template>
                                         </p-autoComplete> -->
 
-                                        <label class="control-label">Value <span style="color: red">*</span></label>
-                                        <input type="number" class="input-field-value" pInputText pKeyFilter="num" required maxlength="15" [(ngModel)]="exportInfo.ExportValue" name="exportValue" id="exportValue" title="Export Value" />
-                                        <label class="control-label">Currency <span style="color: red">*</span></label>
+                                        <label class="control-label">Value </label>
+                                        <input type="number" class="input-field-value" pInputText pKeyFilter="num"  maxlength="15" [(ngModel)]="exportInfo.ExportValue" name="exportValue" id="exportValue" title="Export Value" />
+                                        <label class="control-label">Currency </label>
                                         <select class="select-value-drop1"
-                                                [(ngModel)]="exportInfo.ExportCurrencyId" (change)="changeValueStringToInt($event.target.value)" required name="ExportCurrencyId" title="Currency" id="exportCurrencyId">
+                                                [(ngModel)]="exportInfo.ExportCurrencyId" (change)="changeValueStringToInt($event.target.value)" name="ExportCurrencyId" title="Currency" id="exportCurrencyId">
                                             <option value=null> Select Currency</option>
                                             <option class="form-control" *ngFor="let currencyName of allCurrencyInfo"
                                                     [ngValue]="currencyName.currencyId">
@@ -1515,20 +1521,20 @@
                                         <div class="inline-block display-flex">
                                             <div>
                                                 <label for="weight" class="control-label">
-                                                    Weight <strong class="clr-red">*</strong> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+                                                    Weight &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
 
                                                 </label>
                                                 <span class="display-flex inline-block">
-                                                    <input type="number" class="input-field-value" pKeyFilter="num" pInputText maxlength="10" required [(ngModel)]="exportInfo.ExportWeight" name="exportWeight" id="exportWeight" title="Export Weight" />
+                                                    <input type="number" class="input-field-value" pKeyFilter="num" pInputText maxlength="10" [(ngModel)]="exportInfo.ExportWeight" name="exportWeight" id="exportWeight" title="Export Weight" />
 
                                                 </span>
                                             </div>
                                             <div>
                                                 <label for="weight" class="control-label">
-                                                    UOM <strong class="clr-red">*</strong>
+                                                    UOM 
                                                 </label>
                                                 <span class="display-flex inline-block">
-                                                    <select class="form-control w80 select-value-drop" id="ExportWeightUnit" name="ExportWeightUnit" required (change)="changeValueStringToInt($event.target.value)" [(ngModel)]="exportInfo.ExportWeightUnit" title="Weight Unit">
+                                                    <select class="form-control w80 select-value-drop" id="ExportWeightUnit" name="ExportWeightUnit" (change)="changeValueStringToInt($event.target.value)" [(ngModel)]="exportInfo.ExportWeightUnit" title="Weight Unit">
                                                         <option *ngFor="let unitName of allPurchaseUnitOfMeasureinfo"
                                                                 [ngValue]="unitName.unitOfMeasureId">
                                                             {{unitName.shortName}}
@@ -1538,7 +1544,7 @@
                                             </div>
                                         </div>
                                         <label class="control-label">
-                                            Export UOM <span style="color: red;">*</span>
+                                            Export UOM 
                                             <span style="margin-left: 3px; margin-top: 5px; cursor: pointer;" matTooltip="Add Export UOM" tooltipPosition="top" matTooltipPosition="above">
                                                 <i class="fa fa-plus-circle fa-lg" data-toggle="modal"
                                                    data-target="#ModalUnit" (click)="exportUOmOpen(ModalUnit)"></i>
@@ -1576,7 +1582,7 @@
                                                
                                            
                                             </div>
-                                                <label class="control-label">Classification <span style="color: red;">*</span></label>
+                                                <label class="control-label">Classification </label>
                                                 <div class="inline-block display-flex">
                                                     <div>
                                                         <label class="control-label">
@@ -1769,7 +1775,7 @@
                             </div>
 
                             <div class="col-md-2">
-                                <button style="margin-top: 20px;" type="button" class="btn btn-primary" (click)="addATAMapping();" data-dismiss="modal">Add</button>
+                                <!--<button style="margin-top: 20px;" type="button" class="btn btn-primary" (click)="addATAMapping();" data-dismiss="modal">Add</button>-->
                             </div>
                         </div>
                     </form>
@@ -1777,6 +1783,7 @@
 
                 </div>
                 <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" (click)="addATAMapping();" data-dismiss="modal">Add</button>
                     <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                 </div>
             </div>
