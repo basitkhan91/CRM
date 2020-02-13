@@ -850,7 +850,7 @@ namespace DAL.Repositories
                             ca.CreatedBy,
                             ca.CreatedDate,
 
-                        }).ToList();
+                        }).OrderByDescending(p => p.UpdatedDate).ToList();
             return data;
         }
 
