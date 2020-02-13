@@ -216,8 +216,8 @@
                                     </div>
                                     <div>
                                             <!--<select [ngModelOptions]="{standalone: true}" required class="select-drop"-->
-                                            <select name="itemGroupId" class="select-drop"
-                                                    [(ngModel)]="sourceItemMaster.AssetAcquistionTypeId">
+                                            <select name="assetAcquistionTypeId" class="select-drop"
+                                                    [(ngModel)]="sourceItemMaster.assetAcquistionTypeId">
                                                 <ng-container *ngFor="let acquisitionTypeItem of AssetAcquisitionTypeList">
                                                     <option [ngValue]="acquisitionTypeItem.assetAcquisitionTypeId" >
                                                         {{acquisitionTypeItem.name}}
