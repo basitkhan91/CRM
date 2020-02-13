@@ -6,6 +6,8 @@ import { NgbModal, NgbActiveModal, NgbModalRef, ModalDismissReasons } from '@ng-
 import * as $ from 'jquery';
 import { ConfigurationService } from '../../../../services/configuration.service';
 import { EmployeeService } from '../../../../services/employee.service';
+import { LocalStoreManager } from '../../../../services/local-store-manager.service';
+import { DBkeys } from '../../../../services/db-Keys';
 
 
 
@@ -76,7 +78,8 @@ export class CustomerViewComponent implements OnInit {
     warningHeaders = [
         { field: 'sourceModule', header: 'Module' },
         { field: 'warningMessage', header: 'Warning Message' },
-        { field: 'restrictMessage', header: 'Restrict Message' }
+        { field: 'restrictMessage', header: 'Restrict Message' },
+        { field: 'isActive', header: 'Is Active' }
 
     ]
     customerDocumentsColumns = [
@@ -136,7 +139,14 @@ export class CustomerViewComponent implements OnInit {
     countOfRestrictDerParts: any = 0;
     countOfRestrictPMAParts: any = 0;
     employeeListOriginal: any = [];
-    constructor(public customerService: CustomerService, private commonService: CommonService, private activeModal: NgbActiveModal, private configurations: ConfigurationService, public employeeService: EmployeeService
+    globalSettings: any = {};
+    global_lang: string;
+    constructor(public customerService: CustomerService, private commonService: CommonService,
+         private activeModal: NgbActiveModal,
+          private configurations: ConfigurationService,
+           public employeeService: EmployeeService,
+           private localStorage: LocalStoreManager,
+
     ) {
 
 
@@ -173,6 +183,8 @@ export class CustomerViewComponent implements OnInit {
             this.getCustomerIntegrationTypesByCustomerId(customerId);
             this.toGetCustomerFinanceDocumentsList(customerId);
             this.viewDataGeneralInformation = res[0];
+            this.viewDataGeneralInformation.creditLimit= this.formatCreditLimit(this.viewDataGeneralInformation.creditLimit)
+            this.getGlobalSettings();
             //debugger
             console.log(this.viewDataGeneralInformation);
 
@@ -183,7 +195,29 @@ export class CustomerViewComponent implements OnInit {
 
 
     }
-
+    getGlobalSettings() {
+        this.globalSettings = this.localStorage.getDataObject<any>(DBkeys.GLOBAL_SETTINGS) || {};
+        this.global_lang = this.globalSettings.cultureName;
+    }
+    formatCreditLimit(val){
+        if(val){
+            if(isNaN(val) ==  true){
+                val = Number(val.replace(/[^0-9.-]+/g,""));
+              }
+            this.viewDataGeneralInformation.creditLimit = new Intl.NumberFormat(this.global_lang, { style: 'decimal', minimumFractionDigits: 2,    maximumFractionDigits: 2}).format(val)
+            return this.viewDataGeneralInformation.creditLimit;
+        }
+        
+    }
+    pageIndexChange(event) {
+        this.pageSize = event.rows;
+    }
+    pageIndexChange1(event) {
+        this.pageSize = event.rows;
+    }
+    pageIndexChange2(event) {
+        this.pageSize = event.rows;
+    }
     getPageCount(totalNoofRecords, pageSize) {
         return Math.ceil(totalNoofRecords / pageSize)
     }
@@ -268,7 +302,8 @@ export class CustomerViewComponent implements OnInit {
                     ...x,
                     sourceModule: `${x.t.sourceModule == null ? '' : x.t.sourceModule}`,
                     warningMessage: `${x.t.warningMessage == null ? '' : x.t.warningMessage}`,
-                    restrictMessage: `${x.t.restrictMessage == null ? '' : x.t.restrictMessage}`
+                    restrictMessage: `${x.t.restrictMessage == null ? '' : x.t.restrictMessage}`,
+                    isActive: `${x.t.isActive == null ? '' : x.t.isActive}`
                 };
             }) || [];
 

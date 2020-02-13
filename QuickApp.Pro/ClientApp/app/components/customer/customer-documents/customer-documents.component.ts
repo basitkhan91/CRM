@@ -211,7 +211,8 @@ export class CustomerDocumentsComponent implements OnInit {
                         fileUpdatedBy: y[i].updatedBy,
                         fileUpdatedDate: y[i].updatedDate,
                         // fileSize: `${y[i].fileSize} MB`
-                        fileSize: y[i].fileSize
+                        fileSize: y[i].fileSize,
+                        attachmentDetailId: y[i].attachmentDetailId
 
                     })
                 }

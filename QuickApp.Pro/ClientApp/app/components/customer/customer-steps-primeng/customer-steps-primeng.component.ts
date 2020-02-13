@@ -72,10 +72,7 @@ export class CustomerStepsPrimengComponent {
 
 	ngOnInit() {
 		this.customerId = this.acRouter.snapshot.params['id'];
-		if (this.customerId) {
-			this.isDisabledSteps = true;
-			this.editMode = true;
-		}
+
 
 		this.getAllCountries();
 		this.getAllCustomers();
@@ -224,6 +221,10 @@ export class CustomerStepsPrimengComponent {
 		// 			this.route.navigateByUrl('/customersmodule/customerpages/app-customer-warnings');
 		// 		}
 		// 	}];
+		if (this.customerId) {
+			this.isDisabledSteps = true;
+			this.editMode = true;
+		}
 	}
 	changeOfTab(value) {
 		if (value === 'General') {

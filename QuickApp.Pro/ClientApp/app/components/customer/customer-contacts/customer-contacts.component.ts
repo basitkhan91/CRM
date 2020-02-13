@@ -465,6 +465,7 @@ export class CustomerContactsComponent implements OnInit {
 	addATAChapter(rowData) {
 		this.sourceViewforContact = '';
 		this.add_SelectedModels = undefined;
+		this.add_SelectedModels=''
 		this.add_SelectedId = undefined;
 		this.selectedContact = rowData;
 		this.ataListDataValues = [];
@@ -508,7 +509,8 @@ export class CustomerContactsComponent implements OnInit {
 
 	// get subchapter by Id in the add ATA Mapping
 	getATASubChapterByATAChapter() {
-
+		this.add_SelectedModels = [];
+		// this.add_SelectedId = undefined;
 		const selectedATAId = getValueFromObjectByKey('ataChapterId', this.add_SelectedId)
 		this.atasubchapter1service.getATASubChapterListByATAChapterId(selectedATAId).subscribe(atasubchapter => {
 			const responseData = atasubchapter[0];
@@ -546,7 +548,6 @@ export class CustomerContactsComponent implements OnInit {
 
 		this.add_SelectedModels = undefined;
 		this.add_SelectedId = undefined;
-		this.add_ataSubChapterList = '';
 		await this.saveCustomerContactATAMapped.emit(ataMappingData);
 
 		setTimeout(() => {
@@ -848,6 +849,7 @@ export class CustomerContactsComponent implements OnInit {
 			})
 
 		})
+		this.add_SelectedModels = undefined;
 	}
 
 }
