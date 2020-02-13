@@ -123,9 +123,9 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpGet("workordernos")]
-        public IActionResult GetWorkOrderNos(long partId, long workScopeId)
+        public IActionResult GetWorkOrderNos(long customerId)
         {
-            var result = unitOfWork.WorkOrderRepository.GetWorkOrderNos(partId, workScopeId);
+            var result = unitOfWork.WorkOrderRepository.GetWorkOrderNos(customerId);
             return Ok(result);
         }
 
@@ -913,6 +913,13 @@ namespace QuickApp.Pro.Controllers
         public IActionResult WorkOrderQuoteView(long workOrderQuoteId)
         {
             var result = unitOfWork.WorkOrderRepository.WorkOrderQuoteView(workOrderQuoteId);
+            return Ok(result);
+        }
+
+        [HttpGet("historicalworkorderquotes")]
+        public IActionResult HistoricalWorkOrderQuotes(long customerId)
+        {
+            var result = unitOfWork.WorkOrderRepository.HistoricalWorkOrderQuotes(customerId);
             return Ok(result);
         }
 
