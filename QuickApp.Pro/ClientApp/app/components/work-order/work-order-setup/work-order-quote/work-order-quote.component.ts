@@ -725,9 +725,9 @@ overAllMarkup: any;
                   "masterCompanyId":(mList.masterCompanyId == '')?0:mList.masterCompanyId,
                   "TaskId": mList.taskId,
                   "BillingMethodId":Number(mList.billingMethodId),
-                  "TMAmount":mList.tmAmount,
-                  "FlateRate":mList.flateRate,
-                  "HeaderMarkupId":this.overAllMarkup,
+                  "BillingRate":mList.billingRate,
+                  "BillingAmount":mList.billingAmount,
+                  "headerMarkupId":this.costPlusType,
                   "CreatedBy":"admin",
                   "UpdatedBy":"admin",
                   "IsActive":true,
@@ -814,8 +814,8 @@ overAllMarkup: any;
         "InvoiceNo":"InvoiceNo 123456",
         "Amount":100,
         "MarkupPercentageId":charge.markupPercentageId,
-        "TMAmount":charge.tmAmount,
-        "FlateRate":charge.flateRate,
+        // "TMAmount":charge.tmAmount,
+        // "FlateRate":charge.flateRate,
         "Description":charge.description,
         "UnitCost":charge.unitCost,
         "ExtendedCost":charge.extendedCost,
@@ -828,7 +828,9 @@ overAllMarkup: any;
         "UpdatedBy":"admin",
         "IsActive":true,
         "IsDeleted":charge.isDeleted,
-        "BillingMethodId": charge.billingMethodId
+        "BillingMethodId": charge.billingMethodId,
+        "BillingRate":charge.billingRate,
+        "BillingAmount":charge.billingAmount,
       }
     })
     this.workOrderService.saveChargesQuote(this.chargesPayload)
@@ -945,7 +947,7 @@ saveworkOrderLabor(data) {
         "markupPercentageId": labor.markupPercentageId,
         "directLaborOHCost": labor.directLaborOHCost,
         "markupFixedPrice": labor.markupFixedPrice,
-        "fixedAmount": labor.fixedAmount,
+        // "fixedAmount": labor.fixedAmount,
         "CreatedBy":"admin",
         "UpdatedBy":"admin",
         "IsActive":true,
@@ -1132,11 +1134,14 @@ markupChanged(matData, type){
     this.markupList.forEach((markup)=>{
       if(type == 'row' && markup.value == matData.markupPercentageId){
         matData.tmAmount = Number(matData.extendedCost) + ((Number(matData.extendedCost) / 100) * Number(markup.label))
+        matData['billingRate'] = (matData['unitCost']) + (((matData['unitCost']) / 100) * Number(markup.label))
+        matData['billingAmount'] = Number(matData['billingRate']) * Number(matData.quantity);
       }
       else if(type == 'all' && markup.value == this.overAllMarkup){
         this.materialListQuotation.forEach((mData)=>{
           mData.markupPercentageId = this.overAllMarkup;
-          mData.tmAmount = Number(mData.extendedCost) + ((Number(mData.extendedCost) / 100) * Number(markup.label))
+          mData['billingRate'] = (mData['unitCost']) + (((mData['unitCost']) / 100) * Number(markup.label))
+          mData['billingAmount'] = Number(mData['billingRate']) * Number(mData.quantity);
         })
       }
     })
@@ -1329,24 +1334,24 @@ getTotalUnitCost(){
   return total;
 }
 
-getMaterialCostPlus(){
+totalMaterialBillingRate(){
   let total = 0;
   this.materialListQuotation.forEach(
     (material)=>{
-      if(material.tmAmount){
-        total += material.tmAmount;
+      if(material.billingRate){
+        total += Number(material.billingRate);
       }
     }
   )
   return total;
 }
 
-getTotalFixedAmount(){
+totalMaterialBillingAmount(){
   let total = 0;
   this.materialListQuotation.forEach(
     (material)=>{
-      if(material.fixedAmount){
-        total += Number(material.fixedAmount);
+      if(material.billingAmount){
+        total += Number(material.billingAmount);
       }
     }
   )
