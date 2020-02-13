@@ -4628,6 +4628,57 @@ namespace DAL.Repositories
             }
         }
 
+        public IEnumerable<object> HistoricalWorkOrderQuotes(long customerId)
+        {
+
+            try
+            {
+                var list = (from woq in _appContext.WorkOrderQuote
+                            join wo in _appContext.WorkOrder on woq.WorkOrderId equals wo.WorkOrderId
+                            join wop in _appContext.WorkOrderPartNumber on woq.WorkOrderId equals wop.WorkOrderId
+                            join wqs in _appContext.WorkOrderStatus on woq.QuoteStatusId equals wqs.Id
+                            join cust in _appContext.Customer on woq.CustomerId equals cust.CustomerId
+                            where woq.IsDeleted == false && woq.CustomerId==customerId
+                            select new WOQuoteFilters()
+                            {
+                                WorkOrderQuoteId = woq.WorkOrderQuoteId,
+                                WorkOrderId = wo.WorkOrderId,
+                                quoteNumber = woq.QuoteNumber,
+                                workOrderNum = wo.WorkOrderNum,
+                                customerName = cust.Name,
+                                customerCode = cust.CustomerCode,
+                                openDate = woq.OpenDate,
+
+                                promisedDate = string.Join(",", _appContext.WorkOrderPartNumber
+                                                              .Where(p => p.WorkOrderId == wo.WorkOrderId)
+                                                              .Select(p => p.PromisedDate.Date)),
+
+
+                                estShipDate = string.Join(",", _appContext.WorkOrderPartNumber
+                                                              .Where(p => p.WorkOrderId == wo.WorkOrderId)
+                                                              .Select(p => p.EstimatedShipDate.Date)),
+
+
+                                estCompletionDate = string.Join(",", _appContext.WorkOrderPartNumber
+                                                              .Where(p => p.WorkOrderId == wo.WorkOrderId)
+                                                              .Select(p => p.EstimatedCompletionDate.Date)),
+
+                                quoteStatus = wqs.Description,
+                                quoteStatusId = woq.QuoteStatusId,
+                                isActive = woq.IsActive,
+                                createdDate = woq.CreatedDate,
+                            }).Distinct()
+                            .ToList();
+
+                return list;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
         #endregion
 
         #region Work Order Freight
@@ -5184,7 +5235,7 @@ namespace DAL.Repositories
             }
         }
 
-        public IEnumerable<object> GetWorkOrderNos(long partId, long workScopeId)
+        public IEnumerable<object> GetWorkOrderNos(long customerId)
         {
             try
             {
@@ -5197,7 +5248,7 @@ namespace DAL.Repositories
                                     join wowf in _appContext.WorkOrderWorkFlow on wo.WorkOrderId equals wowf.WorkOrderId
 
                                     where wo.IsDeleted == false && wo.IsActive == true
-                                          && wop.MasterPartId == partId && wop.WorkOrderScopeId == workScopeId
+                                          && wo.CustomerId==customerId
                                      && wo.WorkOrderStatusId == 2 //Closed
                                     select new
                                     {
@@ -5258,7 +5309,41 @@ namespace DAL.Repositories
             }
         }
 
+        public IEnumerable<object> GetWorkOrderPartDetails()
+        {
+            try
+            {
+                var list = (from sl in _appContext.StockLine
+                            join im in _appContext.ItemMaster on sl.ItemMasterId equals im.ItemMasterId
+                            where im.IsActive == true && (im.IsDeleted == false || im.IsDeleted == null)
+                            select new
+                            {
+                                sl.ItemMasterId,
+                                im.PartNumber,
+                                im.PartDescription,
+                                im.DER,
+                                PMA = im.isPma,
+                                NTEOverhaulHours = im.OverhaulHours == null ? 0 : im.OverhaulHours,
+                                NTERepairHours = im.RPHours == null ? 0 : im.RPHours,
+                                NTEMfgHours = im.mfgHours == null ? 0 : im.mfgHours,
+                                NTEBenchTestHours = im.TestHours == null ? 0 : im.TestHours,
+                                TurnTimeOverhaulHours = im.TurnTimeOverhaulHours == null ? 0 : im.TurnTimeOverhaulHours,
+                                TurnTimeRepairHours = im.TurnTimeRepairHours == null ? 0 : im.TurnTimeRepairHours,
+                                TurnTimeMfg = im.turnTimeMfg == null ? 0 : im.turnTimeMfg,
+                                TurnTimeBenchTest = im.turnTimeBenchTest == null ? 0 : im.turnTimeBenchTest,
+                                RevisedPartId = im.RevisedPartId == null ? 0 : im.RevisedPartId,
+                                RevisedPartNo = im.RevisedPartId == null ? "" : (_appContext.ItemMaster.Where(p => p.ItemMasterId == im.RevisedPartId).Select(p => p.PartNumber).FirstOrDefault().ToString())
+                            })
+                            .Distinct()
+                            .ToList();
+                return list;
+            }
+            catch (Exception)
+            {
 
+                throw;
+            }
+        }
 
         public IEnumerable<object> GetStockLineDetailsByPartNo(long itemMasterId, long conditionId)
         {
