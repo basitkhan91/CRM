@@ -93,7 +93,7 @@
           </button>
         </div>
       </div>
-    </div>
+    </div> 
     <!--/advanced search card-->
     <div class="clear"></div>
     <p-table
@@ -109,6 +109,7 @@
       [resizableColumns]="true"
       [reorderableColumns]="true"
       selectionMode="multiple"
+      (onPage)="pageIndexChange($event)"
     >
       <ng-template pTemplate="caption" let-columns>
         <div style="text-align: right; min-height: 30px; margin-left: -6px;">

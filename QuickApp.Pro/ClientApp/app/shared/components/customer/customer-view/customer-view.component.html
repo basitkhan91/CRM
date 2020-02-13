@@ -641,6 +641,7 @@
                 class="rpo-table-cstm"
                 [paginator]="true"
                 [value]="ataListDataValues"
+                [rowsPerPageOptions]="[10, 20, 50, 100]"
                 [rows]="pageSize"
                 [columns]="ataHeaders"
                 [metaKeySelection]="true"
@@ -649,6 +650,7 @@
                 [reorderableColumns]="true"
                 [scrollable]="true"
                 scrollHeight="450px"
+                (onPage)="pageIndexChange5($event)"
               >
                 <ng-template pTemplate="colgroup" let-columns>
                   <colgroup>
@@ -839,7 +841,7 @@
                 <!-- <p><span class="label"><b>Tax Rate - State/Prov: </b></span><span class="value">{{viewDataGeneralInformation.taxRateName}}</span></p>
                               <p><span class="label"><b>Tax Rate - Other: </b></span><span class="value">{{viewDataGeneralInformation.taxRateOther}}</span></p> -->
               </div>
-              <div class="col-sm-6">
+              <div class="col-sm-6"> 
                 <div>
                   <!-- <p><span class="label"><b>Taxable Exempt: </b></span><span class="value">{{viewDataGeneralInformation.isTaxExempt}}</span></p> -->
                   <div>
@@ -877,7 +879,7 @@
                             [pSortableColumn]="col.field"
                           >
                             {{ col.header }}
-                            <p-sortIcon [field]="col.field"></p-sortIcon>
+                            <p-sortIcon *ngIf="col.field !='download' && col.field !='delete'"  [field]="col.field"></p-sortIcon>
                           </th>
                           <th>
                             Download
@@ -890,7 +892,7 @@
                             *ngFor="let col of columns"
                             [ngSwitch]="col.field"
                           >
-                            <input
+                            <input *ngIf="col.field !='download' && col.field !='delete'"
                               style="width:100%;"
                               pInputText
                               type="text"
@@ -915,18 +917,40 @@
                       >
                         <tr>
                           <td *ngFor="let col of columns"  style="width:70%">
-                            <ng-container *ngIf="col.field != 'link'">
+                            <!-- <ng-container *ngIf="col.field != 'link'">
                               {{ part[col.field] }}
-                            </ng-container>
+                            </ng-container> -->
+
+                            <ng-container *ngIf="col.field !='download' && col.field !='delete'">
+                                 <!-- {{ rowData.field | json}} -->
+                              {{
+                                col.field == 'createdDate'
+                                 ? (rowData[col.field] | date: 'MM/dd/yyyy')
+                                 : rowData[col.field] && col.field == 'updatedDate'
+                                 ? (rowData[col.field] | date: 'MM/dd/yyyy')
+                                 : rowData[col.field]
+                             }}
+                           </ng-container>
+                           <ng-container *ngIf="col.field =='download'" class="align_center">
+                            <a
+                            (click)="downloadFileUpload(part)"
+                            matTooltip="Download"
+                            class="btn nobg btn-cstm"
+                            ><span><i class="fa fa-download"></i></span
+                          ></a>
+                           </ng-container>
+
+
+
                           </td>
-                          <td>
+                          <!-- <td>
                             <a
                               (click)="downloadFileUpload(part)"
                               matTooltip="Download"
                               class="btn nobg btn-cstm"
                               ><span><i class="fa fa-download"></i></span
                             ></a>
-                          </td>
+                          </td> -->
                         </tr>
                       </ng-template>
                       <ng-template
@@ -936,7 +960,7 @@
                       >
                         <tr>
                           <td
-                            [attr.colspan]="2"
+                            [attr.colspan]="6"
                             style="color: red; font-weight: bold; text-align: center"
                           >
                             No records found
