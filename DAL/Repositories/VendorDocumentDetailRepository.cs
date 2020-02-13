@@ -47,7 +47,21 @@ namespace DAL.Repositories
                      .Join(_appContext.AttachmentDetails,
                            custDoc => custDoc.AttachmentId,
                            atd => atd.AttachmentId,
-                           (custDoc, atd) => new { atd.AttachmentDetailId, atd.AttachmentId, atd.FileName, atd.Link, atd.IsActive, atd.Description,atd.IsDeleted }
+                           (custDoc, atd) => new {
+
+                               atd.AttachmentDetailId,
+                               atd.AttachmentId,
+                               atd.FileName,
+                               atd.Link,
+                               atd.FileSize,
+                               atd.CreatedBy,
+                               atd.CreatedDate,
+                               atd.UpdatedBy,
+                               atd.UpdatedDate,
+                               atd.Description,
+                               atd.IsActive,
+                               atd.IsDeleted,                     
+                           }
                           ).Where(p => p.AttachmentId == v.AttachmentId && p.IsActive == true && p.IsDeleted == false)
 
 

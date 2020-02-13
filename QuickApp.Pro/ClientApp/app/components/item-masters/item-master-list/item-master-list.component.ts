@@ -543,7 +543,7 @@ export class ItemMasterListComponent implements OnInit, AfterViewInit {
         { field: "aircraft", header: "Aircraft" },
         { field: "model", header: "Model" },
         { field: "dashNumber", header: "Dash Numbers" },
-        { field: "memo", header: "Memo" }
+        // { field: "memo", header: "Memo" }
 	];
 
     atasub : any[] = [

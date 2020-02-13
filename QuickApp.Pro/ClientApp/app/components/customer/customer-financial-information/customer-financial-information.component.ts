@@ -21,11 +21,13 @@ import { getValueFromObjectByKey, getObjectByValue, getObjectById, selectedValue
 import { Pipe, PipeTransform } from '@angular/core';
 import { DBkeys } from '../../../services/db-Keys';
 import { LocalStoreManager } from '../../../services/local-store-manager.service';
+// import { DatePipe } from '@angular/common';
 @Component({
     selector: 'app-customer-financial-information',
     templateUrl: './customer-financial-information.component.html',
     styleUrls: ['./customers-financial-information.component.scss'],
-    animations: [fadeInOut]
+    animations: [fadeInOut],
+    // providers: [DatePipe]
 })
 /** anys component*/
 export class CustomerFinancialInformationComponent implements OnInit {
@@ -36,7 +38,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
     @Output() tab = new EventEmitter();
     @ViewChild('taxExemptFileUploadInput') taxExemptFileUploadInput: any;
     taxRatesList: any = [];
-
+    pageSize: number = 10;
     discountList: any;
     discountList1: any;
 
@@ -126,10 +128,12 @@ export class CustomerFinancialInformationComponent implements OnInit {
 
     taxExemptTableColumns: any[] = [
         { field: "fileName", header: "File Name" },
-        // { field: 'createdDate', header: 'Created Date' },
-        // { field: 'createdBy', header: 'CreatedBy' },
-        // { field: 'updatedDate', header: 'Updated Date' },
-        // { field: 'updatedBy', header: 'UpdatedBy' },
+        { field: 'createdDate', header: 'Created Date' },
+        { field: 'createdBy', header: 'CreatedBy' },
+        { field: 'updatedDate', header: 'Updated Date' },
+        { field: 'updatedBy', header: 'UpdatedBy' },
+        { field: 'download', header: 'Download' },
+        { field: 'delete', header: 'Delete' },
     ];
     globalSettings: any = {};
     _discountListForDropdown: any = [];
@@ -157,7 +161,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
         private configurations: ConfigurationService,
         public creditTermService: CreditTermsService,
         private localStorage: LocalStoreManager,
-
+        // private datePipe: DatePipe
 
     ) {
 
@@ -578,8 +582,12 @@ export class CustomerFinancialInformationComponent implements OnInit {
         })
     }
 
-
-
+    getPageCount(totalNoofRecords, pageSize) {
+        return Math.ceil(totalNoofRecords / pageSize)
+    }
+    pageIndexChange(event) {
+        this.pageSize = event.rows;
+    }
     getMappedTaxTypeRateDetails() {
 
         this.customerService.getMappedTaxTypeRateDetails(this.id).subscribe(res => {
@@ -590,6 +598,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
     mapTaxTypeandRate() {
         console.log(this.selectedTaxRates, this.selectedTaxType);
 
+        // let arr = [];
         if (this.selectedTaxRates && this.selectedTaxType) {
             const index = this.taxTypeRateMapping.findIndex(item => item.taxType === getValueFromArrayOfObjectById('label', 'value', this.selectedTaxType, this.taxTypeList));
             if (index > -1) {
@@ -617,7 +626,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
 
 
                 })
-
+                console.log("this.sdfsfsf",this.taxTypeRateMapping)
                 // this.taxTypeRateMapping = []
 
                 // [...this.taxTypeRateMapping.map((x, index) => {
@@ -639,6 +648,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
                 //     MessageSeverity.success
                 // );
             }
+            // this.taxTypeRateMapping = arr;
 
 
         }
@@ -748,14 +758,14 @@ export class CustomerFinancialInformationComponent implements OnInit {
         const url = `${this.configurations.baseUrl}/api/FileUpload/downloadattachedfile?filePath=${rowData.link}`;
         window.location.assign(url);
     }
-
+    CREDITTERMDATA:any=[];
     toGetCustomerFinanceDocumentsList(customerId) {
         var moduleId = 1;
         this.customerService.GetCustomerFinanceDocumentsList(customerId, moduleId).subscribe(res => {
             this.allCustomerFinanceDocumentsList = res;
             console.log(this.allCustomerFinanceDocumentsList);
         })
-    }
+    } 
 
     deleteFile(rowData) {
         this.selectedRowFileForDelete = rowData;

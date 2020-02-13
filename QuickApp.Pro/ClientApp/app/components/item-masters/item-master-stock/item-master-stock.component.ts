@@ -53,6 +53,8 @@ import { Site } from '../../../models/site.model';
 import { StocklineService } from '../../../services/stockline.service';
 import { DBkeys } from '../../../services/db-Keys';
 import { getObjectByValue, getPageCount, getObjectById, getValueFromObjectByKey, editValueAssignByCondition, getValueFromArrayOfObjectById } from '../../../generic/autocomplete';
+import { AssetAcquisitionType } from '../../../models/asset-acquisition-type.model';
+import { AssetAcquisitionTypeService } from "../../../services/asset-acquisition-type/asset-acquisition-type.service";
 
 
 @Component({
@@ -310,7 +312,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     ManufacturerValue: any;
     alternatePn: any;
     ataform: FormGroup;
-    memoNotes: string = 'This is Itemmaster memo';
+    memoNotes: string = 'Add Memo Entry';
     manufacturerValue: FormGroup;
     ataChaptherSelected: any;
     modelUnknown = false;
@@ -420,6 +422,11 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     binData: any[] = [];
     isEnableItemMaster: boolean = true;
     orginalAtaSubChapterValues: any[] = [];
+    AssetAcquisitionTypeList: AssetAcquisitionType[] = [];
+    aircraftTablePageSize: number = 10;
+    totalAircraftRecords: any;
+    totalAircraftPages: number;
+    selectedItemClassificationName: any = "";
 
     // errorLogForPS: string = '';
 
@@ -430,7 +437,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         public priority: PriorityService, public inteService: IntegrationService,
         public workFlowtService: ItemClassificationService, public itemservice: ItemGroupService,
         public proService: ProvisionService, private dialog: MatDialog,
-        private masterComapnyService: MasterComapnyService, public commonService: CommonService, @Inject(DOCUMENT) document, private configurations: ConfigurationService, public siteService: SiteService, public stockLineService: StocklineService) {
+        private masterComapnyService: MasterComapnyService, public commonService: CommonService, @Inject(DOCUMENT) document, private configurations: ConfigurationService, public siteService: SiteService, public stockLineService: StocklineService, private AssetAcquisitionTypeService: AssetAcquisitionTypeService) {
         this.itemser.currentUrl = '/itemmastersmodule/itemmasterpages/app-item-master-stock';
         this.itemser.bredcrumbObj.next(this.itemser.currentUrl);//Bread Crumb
         this.displayedColumns.push('action');
@@ -488,12 +495,12 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         selectedAircraftModelTypes: [], selectedAircraftTypes: [], selectedManufacturer: [], selectedModel: []
     }];
 
-    colsaircraftLD: any[] = [
+    colsaircraftLD = [
         { field: "aircraft", header: "Aircraft" },
         { field: "model", header: "Model" },
-        { field: "dashNumber", header: "Dash Numbers" },
-        { field: "memo", header: "Memo" }
+        { field: "dashNumber", header: "Dash Numbers" }
     ];
+    selectedAircraftLDColumns = this.colsaircraftLD;
     colaircraft: any[] = [
         { field: "AircraftType", header: "Aircraft" },
         { field: "AircraftModel", header: "Model" },
@@ -522,8 +529,10 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         { field: 'tat', header: "TAT" },
         { field: 'memo', header: "MEMO" },
     ];
-    aircraftListDataValues: any;
+    aircraftListDataValues: any = [];
     capesListDataValues: any;
+    showAdvancedSearchCard: boolean = false;
+
 
     ngOnInit(): void {
         this.defaultRotableId = DBkeys.DEFAULT_ROTABLE_ID;
@@ -617,6 +626,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.getCapabilityType();
         this.getConditionsList();
         this.loadSiteData();
+        this.getAcquisitionTypeList();
 
 
 
@@ -652,11 +662,20 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
     }
 
+    //Gneral Infor - Get Acquisition Types List
+    getAcquisitionTypeList() {
+        this.AssetAcquisitionTypeService.getAll().subscribe(data => {
+            this.AssetAcquisitionTypeList = data[0].columnData;
+            console.log(this.AssetAcquisitionTypeList, "this.AssetAcquisitionTypeList+++")
+        });
+    }
+
     getItemMasterDetailsById(){
         this.itemser.getItemMasterDetailById(this.itemMasterId).subscribe(res => {
             const responseDataOfEdit = res;
             this.isDisabledSteps = true;
             this.sourceItemMaster = responseDataOfEdit[0];
+            this.onItemClassificationChange(this.sourceItemMaster.itemClassificationId)
             if (this.sourceItemMaster.siteId) {
                 this.siteValueChange()
             }
@@ -903,6 +922,25 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             results => this.onAircarftmodelloadsuccessfull(results[0]),
             error => this.onDataLoadFailed(error)
         );
+    }
+
+    onItemClassificationChange(val){
+        this.selectedItemClassificationName = getValueFromArrayOfObjectById('description', 'itemClassificationId', this.sourceItemMaster.itemClassificationId, this.allitemclassificationInfo)  
+    }
+
+    enableDisableAdvancedSearch(val) {
+        this.showAdvancedSearchCard = val;
+        // this.search_SelectedContact = [];
+        // this.search_SelectedATA = [];
+        // this.search_SelectedATASubChapter = [];
+        // this.getMappedATAByCustomerId();
+        this.selectAircraftManfacturer = '';
+        this.selectedAircraftModel = [];
+        this.selectedDashNumbers = [];
+        this.aircraftManfacturerIdsUrl = '';
+        this.aircraftModelsIdUrl = '';
+        this.dashNumberIdUrl = '';
+        this.getAircraftMappedDataByItemMasterId();
     }
 
 
@@ -4200,7 +4238,15 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                     memo: x.memo,
                 }
             })
+            if (this.aircraftListDataValues.length > 0) {
+                this.totalAircraftRecords = this.aircraftListDataValues.length;
+                this.totalAircraftPages = Math.ceil(this.totalAircraftRecords / this.aircraftTablePageSize);
+            }
         });
+    }
+
+    getPageCount(totalNoofRecords, pageSize) {
+        return Math.ceil(totalNoofRecords / pageSize)
     }
 
 

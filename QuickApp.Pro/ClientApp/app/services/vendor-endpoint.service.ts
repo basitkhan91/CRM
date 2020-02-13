@@ -185,12 +185,12 @@ export class VendorEndpointService extends EndpointFactory {
 	private readonly _deleteVendorBillingAddressDelete: string = "/api/Vendor/deletevendorbillingaddress";
 	private readonly _updateVendorBillingAddressStatus: string = "/api/Vendor/vendorbillingaddressstatus";
 	private readonly _vendorListsUrl: string = "/api/Vendor/vendorlist";
-	
-    private readonly excelUploadBilling: string = "/api/Vendor/uploadvendorbillingaddress"
-    private readonly excelUploadShipping: string = "/api/Vendor/uploadvendorshippingaddress" 
+
+	private readonly excelUploadBilling: string = "/api/Vendor/uploadvendorbillingaddress"
+	private readonly excelUploadShipping: string = "/api/Vendor/uploadvendorshippingaddress"
 	private readonly excelUploadContact: string = "/api/Vendor/uploadvendorrcontacts"
 	private readonly excelUploadPayment: string = "/api/Vendor/uploadvendorpaymentaddress"
-	
+
 
 	get capabilityTypeListUrl() { return this.configurations.baseUrl + this._capabilityListUrl; }
 	get vendorlistsUrl() { return this.configurations.baseUrl + this._vendrUrl; }
@@ -1138,7 +1138,7 @@ export class VendorEndpointService extends EndpointFactory {
 				return this.handleError(error, () => this.gethistoryOfcheckpayment(vendorId));
 			});
 	}
-    getShipviaHistory<T>(vendorId: number): Observable<T> {
+	getShipviaHistory<T>(vendorId: number): Observable<T> {
 
 		let endpointUrl = `${this.getShipViaHistory}/${vendorId}`;
 		return this.http.get<T>(endpointUrl, this.getRequestHeaders())
@@ -1622,7 +1622,7 @@ export class VendorEndpointService extends EndpointFactory {
 	}
 
 	getDocumentList(vendorId) {
-		return this.http.get(`${this._getVendorDocslist}/${vendorId}`, this.getRequestHeaders())
+		return this.http.get<any>(`${this._getVendorDocslist}/${vendorId}`, this.getRequestHeaders())
 	}
 
 
@@ -1711,23 +1711,23 @@ export class VendorEndpointService extends EndpointFactory {
 
 	repairOrderGlobalSearch(filterText, pageNumber, pageSize, vendorId) {
 		return this.http.get<any>(`${this.configurations.baseUrl}/api/Vendor/roglobalsearch?filterText=${filterText}&pageNumber=${pageNumber}&pageSize=${pageSize}&vendorId=${vendorId}`)
-	  }
+	}
 
 
-	  GetVendorBillingAddressDeleteEndpoint(billingAddressId, updatedBy) {
+	GetVendorBillingAddressDeleteEndpoint(billingAddressId, updatedBy) {
 		return this.http.get<any>(`${this._deleteVendorBillingAddressDelete}?billingAddressId=${billingAddressId}&updatedBy=${updatedBy}`, this.getRequestHeaders())
 	}
 
-	GetUpdateVendorBillingAddressStatusEndpoint(billingAddressId,status, updatedBy) {
+	GetUpdateVendorBillingAddressStatusEndpoint(billingAddressId, status, updatedBy) {
 		return this.http.get<any>(`${this._updateVendorBillingAddressStatus}?billingAddressId=${billingAddressId}&status=${status}&updatedBy=${updatedBy}`, this.getRequestHeaders())
 	}
-	
+
 	getHistoryForVendor(vendorId) {
-	return this.http.get<any>(`${this.configurations.baseUrl}/api/Vendor/GetVendorAuditHistory/${vendorId}`)
+		return this.http.get<any>(`${this.configurations.baseUrl}/api/Vendor/GetVendorAuditHistory/${vendorId}`)
 	}
 
 	getVendorCapabilityByVendorId(vendorId) {
-	return this.http.get<any>(`${this.configurations.baseUrl}/api/Vendor/getVendorCapabilityByVendorId?vendorId=${vendorId}`)
+		return this.http.get<any>(`${this.configurations.baseUrl}/api/Vendor/getVendorCapabilityByVendorId?vendorId=${vendorId}`)
 	}
 
 	getVendorDataById(vendorId) {
@@ -1743,51 +1743,49 @@ export class VendorEndpointService extends EndpointFactory {
 
 	vendorListGlobalSearch(filterText, pageNumber, pageSize, isActive) {
 		return this.http.get<any>(`${this.configurations.baseUrl}/api/Vendor/vendorglobalsearch?filterText=${filterText}&pageNumber=${pageNumber}&pageSize=${pageSize}&isActive=${isActive}`)
-	  }
+	}
 	VendorBillingFileUpload(file, vendorId) {
-        return this.http.post(`${this.configurations.baseUrl}${this.excelUploadBilling}?vendorId=${vendorId}`, file)
-
-    }
-    VendorShippingFileUpload(file, vendorId) {
-        return this.http.post(`${this.configurations.baseUrl}${this.excelUploadShipping}?vendorId=${vendorId}`, file)
-    }
-   
-    VendorContactFileUpload(file, vendorId) {
-        return this.http.post(`${this.configurations.baseUrl}${this.excelUploadContact}?vendorId=${vendorId}`, file)
+		return this.http.post(`${this.configurations.baseUrl}${this.excelUploadBilling}?vendorId=${vendorId}`, file)
 
 	}
-	
-	VendorCheckPaymentFileUpload(file, vendorId)
-	{
+	VendorShippingFileUpload(file, vendorId) {
+		return this.http.post(`${this.configurations.baseUrl}${this.excelUploadShipping}?vendorId=${vendorId}`, file)
+	}
+
+	VendorContactFileUpload(file, vendorId) {
+		return this.http.post(`${this.configurations.baseUrl}${this.excelUploadContact}?vendorId=${vendorId}`, file)
+
+	}
+
+	VendorCheckPaymentFileUpload(file, vendorId) {
 		return this.http.post(`${this.configurations.baseUrl}${this.excelUploadPayment}?vendorId=${vendorId}`, file)
 
 	}
-	getInternationalShippingByVendorId(vendorId){
+	getInternationalShippingByVendorId(vendorId) {
 		return this.http.get<any>(`${this.configurations.baseUrl}/api/Vendor/internationalshippingdetaillist?VendorId=${vendorId}`)
 	}
-	postInternationalShipping(data){
+	postInternationalShipping(data) {
 		return this.http.post(`${this.configurations.baseUrl}/api/Vendor/createinternationalshipping`, JSON.stringify(data), this.getRequestHeaders())
 	}
 
-	updateInternationalShipping(data){
-		return this.http.post(`${this.configurations.baseUrl}/api/Vendor/createinternationalshipping`, JSON.stringify(data), this.getRequestHeaders())	
+	updateInternationalShipping(data) {
+		return this.http.post(`${this.configurations.baseUrl}/api/Vendor/createinternationalshipping`, JSON.stringify(data), this.getRequestHeaders())
 	}
-	getInternationalShippingById(vendorInternationalShippingId){
+	getInternationalShippingById(vendorInternationalShippingId) {
 		return this.http.get<any>(`${this.configurations.baseUrl}/api/Vendor/internationalshippingdetailsbyid/${vendorInternationalShippingId}`, this.getRequestHeaders())
 	}
-	getVendorInternationalAuditHistory( vendorInternationalShippingId){
+	getVendorInternationalAuditHistory(vendorInternationalShippingId) {
 		return this.http.get<any>(`${this.configurations.baseUrl}/api/Vendor/internationalshippingaudit/${vendorInternationalShippingId}`, this.getRequestHeaders());
 	}
 
-	deleteVendorInternationalShipping(vendorId, updatedBy){
+	deleteVendorInternationalShipping(vendorId, updatedBy) {
 		return this.http.delete(`${this.configurations.baseUrl}/api/Vendor/deleteinternationalshipping?id=${vendorId}&updatedBy=${updatedBy}`, this.getRequestHeaders())
 	}
 
-	updateStatusForInternationalShipping(vendorInternationalShippingId , status, updatedBy){
+	updateStatusForInternationalShipping(vendorInternationalShippingId, status, updatedBy) {
 		return this.http.put(`${this.configurations.baseUrl}/api/Vendor/internationalshippingstatusupdate?id=${vendorInternationalShippingId}&status=${status}&updatedBy=${updatedBy}`, {}, this.getRequestHeaders());
 
 	}
-
 	updateStatusForInternationalShippingVia(id, status, updatedBy) {
         return this.http.get(`${this.configurations.baseUrl}/api/Vendor/internationalshipviastatusupdate?id=${id}&status=${status}&updatedBy=${updatedBy}`)
 
