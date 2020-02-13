@@ -124,7 +124,7 @@
                                     <div class="form-group">
                                         <label class="control-label">Default Vendor</label>
                                         <select [ngModelOptions]="{standalone: true}" [(ngModel)]="currentMaintenance.defaultVendorId">
-                                            <option>--Select--</option>
+                                            <option>--NON Selected--</option>
                                             <option class="form-control" *ngFor="let vendors of allVendorInfo" [ngValue]="vendors.vendorId">
                                                 {{vendors.vendorName}}
                                             </option>
@@ -133,7 +133,7 @@
                                     <div class="form-group">
                                         <label class="control-label">GL Account</label>
                                         <select [ngModelOptions]="{standalone: true}" [(ngModel)]="currentMaintenance.glAccountId">
-                                            <option>--Select--</option>
+                                            <option>--NON Selected--</option>
                                             <option class="form-control" *ngFor="let glAccounts of allGlInfo" [ngValue]="glAccounts.glAccountId">
                                                 {{glAccounts.accountName}}
                                             </option>
@@ -211,7 +211,7 @@
                                             <option value="2">Expired</option>
                                         </select>-->
                                         <select [ngModelOptions]="{standalone: true}" [(ngModel)]="currentMaintenance.warrantyStatus">
-                                            <option ng-option value="">--Select--</option>
+                                            <option ng-option value="">--NON Selected--</option>
                                             <option *ngFor="let m of assetwarrantystatusList" [ngValue]="m.value">{{m.label}}</option>
                                         </select>
                                     </div>

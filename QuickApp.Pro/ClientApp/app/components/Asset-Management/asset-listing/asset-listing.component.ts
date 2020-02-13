@@ -357,7 +357,7 @@ export class AssetListingComponent implements OnInit {
         this.assetViewList.buName = row.buName;
         this.assetViewList.deptName = row.deptName;
         this.assetViewList.divName = row.divName;
-        this.assetViewList.depreOrIntang = row.isDepreciable == true ? 'Depreciable' : 'Intangible';
+        this.assetViewList.depreOrIntang = row.isDepreciable == true ? 'Intangible' : 'Intangible';
         this.assetViewList.calibrationRequired = row.calibrationRequired;
         this.assetViewList.certificationRequired = row.certificationRequired;
         this.assetViewList.inspectionRequired = row.inspectionRequired;
@@ -372,7 +372,7 @@ export class AssetListingComponent implements OnInit {
         this.assetViewList.model = row.model;
         this.assetViewList.isSerialized = row.isSerialized == true ? 'Yes' : 'No';
         if (row.currency) {
-            this.assetViewList.currencyId = row.currency.symbol;
+            this.assetViewList.currencyId = row.currency.code;
         }
         else {
             this.assetViewList.currencyId = ""
