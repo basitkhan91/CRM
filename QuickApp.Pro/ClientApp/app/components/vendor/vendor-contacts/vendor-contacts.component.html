@@ -1,261 +1,396 @@
 ﻿﻿<!-- <div class="card">
     <div class="card-body"> -->
-        <div class="card">
-            <div class="card-body" style="padding: 1px 5px;">
-                <div class="x_content">
-                    <div class="col-md-12 shadow-box-cstm" *ngIf="!isViewMode">        
-                        <div class="col-md-4">
-                            <p class="fs12">
-                            <label class="control-label labels-font-header" style="width: auto;">Vendor Name: </label>
-                        <span class="span-header-red" style="text-transform: capitalize"> {{getVendorName()}} </span> </p>
-                        </div>
-                        <div class="col-md-4">
-                            <p class="fs12">
-                            <label class="control-label labels-font-header" style="width: auto;">Vendor Code: </label>
-                            <span class="span-header-red" style="text-transform: capitalize"> {{local?.vendorCode }} </span> </p>
-                        </div>                            
-                    </div>
-                  
-                    <div [ngClass]="!isViewMode ? 'card' : ''" style="padding: 10px;">
-                    <div>
-                        <div *ngIf="!isViewMode">
-                            <div class="col-md-12">
-                                 <h4 class="po-head-sm">
-                                    Add Contact
-                                        <a
-                                    class="plusicon-cstm"
-                                    href="#"
-                                    data-toggle="modal"
-                                    data-target="#addContactInfo" 
-                                    ><i class="fa fa-plus-circle fa-lg" (click)="onAddContactInfo()" matTooltip="Create Contact Information"></i
-                                    ></a>
-                                    </h4>
-                           
-                                  </div>
-                             <!-- <div class="col-md-12" style="margin-bottom: -10px;">
+<div class="card">
+  <div class="card-body" style="padding: 1px 5px;">
+    <div class="x_content">
+      <div class="col-md-12 shadow-box-cstm" *ngIf="!isViewMode">
+        <div class="col-md-4">
+          <p class="fs12">
+            <label class="control-label labels-font-header" style="width: auto;">Vendor Name:
+            </label>
+            <span class="span-header-red" style="text-transform: capitalize">
+              {{ getVendorName() }}
+            </span>
+          </p>
+        </div>
+        <div class="col-md-4">
+          <p class="fs12">
+            <label class="control-label labels-font-header" style="width: auto;">Vendor Code:
+            </label>
+            <span class="span-header-red" style="text-transform: capitalize">
+              {{ local?.vendorCode }}
+            </span>
+          </p>
+        </div>
+      </div>
+
+      <div [ngClass]="!isViewMode ? 'card' : ''" style="padding: 10px;">
+        <div>
+          <div *ngIf="!isViewMode">
+            <div class="col-md-12">
+              <h4 class="po-head-sm">
+                Add Contact
+                <a class="plusicon-cstm" href="#" data-toggle="modal" data-target="#addContactInfo"><i
+                    class="fa fa-plus-circle fa-lg" (click)="onAddContactInfo()"
+                    matTooltip="Create Contact Information"></i></a>
+              </h4>
+            </div>
+            <!-- <div class="col-md-12" style="margin-bottom: -10px;">
                                 <h4 class="float-right">
                                     Add Contact
                                     <a class="plusicon-cstm" data-target="#addContactInfo" data-toggle="modal"><i class="fa fa-plus-circle fa-lg" (click)="onAddContactInfo()"></i></a>
                                 </h4>
                              </div> -->
 
-                            <div class="clear"></div>
-                            <hr />
+            <div class="clear"></div>
+            <hr />
+          </div>
 
-                        </div>
-                       
-                        <p-table #dt class="ptable-custom" [value]="allActions" [metaKeySelection]="true" [rows]="10" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[10,20,50,100]" [columns]="selectedColumns" selectionMode="multiple" [(selection)]="selectedColumn" [resizableColumns]="true" [reorderableColumns]="true" [scrollable]="true">
-                            <ng-template pTemplate="caption" *ngIf="!isViewMode" >
-                                <div style="text-align: right; min-height: 30px;">
-                                    <p-multiSelect [options]="vendorContactsColumns" [(ngModel)]="selectedColumns" [ngModelOptions]="{standalone: true}" optionLabel="header"
-                                                   selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
-                                    <div class="inner-addon right-addon w200 inline-block g-filter-search-cstm">
-                                        <i class="fa fa-search"></i>
-                                        <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder=" Filter" style="height: 28px !important;">
-                                    </div>
-                                    <button type="button" class="btn btn-primary" matTooltip="Download Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export Data" (click)="dt.exportCSV()" style="padding:5px 10px !important;"></button>
-                                    <button type="button" class="btn btn-primary" matTooltip="Download Selected Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export Selected Data" (click)="dt.exportCSV({selectionOnly:true})" style="padding:5px 10px !important;"></button>
-                                    
-                                    <div class="excel-upload excel-upload-cstm">
-                                        <button type="button" class="btn btn-primary" matTooltip="Download Sample File" matTooltipPosition="above" (click)="sampleExcelDownload()" style="padding: 5px 10px !important;">Sample File Download</button>
-    
-                                        <input type="file" name="upload[]" id="upload" (change)="customExcelUpload($event)" class="uploaddoc upload-file"
-                                               accept=".xlsx, .xls, .csv">
-                                        <label for="upload">
-                                            <span matTooltip="Upload Data (Excel)" matTooltipPosition="above">
-                                                <i class="fa fa-upload"></i>
-                                            </span>
-                                        </label>
-                                    </div>
-                                </div>
-                            </ng-template>
+          <p-table #dt class="ptable-custom" [value]="allActions" [metaKeySelection]="true" [rows]="pageSize"
+            [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[10, 20, 50, 100]" [columns]="selectedColumns"
+            selectionMode="multiple" [(selection)]="selectedColumn" [resizableColumns]="true"
+            [reorderableColumns]="true" [scrollable]="true" (onPage)="pageIndexChange($event)">
+            <ng-template pTemplate="caption" *ngIf="!isViewMode">
+              <div style="text-align: right; min-height: 30px;">
+                <p-multiSelect [options]="vendorContactsColumns" [(ngModel)]="selectedColumns"
+                  [ngModelOptions]="{ standalone: true }" optionLabel="header" selectedItemsLabel="{0} columns selected"
+                  [style]="{ minWidth: '200px' }" defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
+                <div class="inner-addon right-addon w200 inline-block g-filter-search-cstm">
+                  <i class="fa fa-search"></i>
+                  <input type="text" pInputText size="50" class="form-control ui-autocomplete-input"
+                    (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder=" Filter"
+                    style="height: 28px !important;" />
+                </div>
+                <button type="button" class="btn btn-primary" matTooltip="Download Data" matTooltipPosition="above"
+                  pButton icon="fa-download" iconPos="left" label="Export Data" (click)="dt.exportCSV()"
+                  style="padding:5px 10px !important;"></button>
+                <button type="button" class="btn btn-primary" matTooltip="Download Selected Data"
+                  matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export Selected Data"
+                  (click)="dt.exportCSV({ selectionOnly: true })" style="padding:5px 10px !important;"></button>
 
-                            <ng-template pTemplate="colgroup" let-columns>
-                                    <colgroup>
-                                        <col *ngFor="let col of columns" style="width:auto">
-                                    </colgroup>
-                                </ng-template>
-                            <ng-template pTemplate="header" let-columns>
-                                <tr>
-                                    <th style="width: 40px;">Flag</th>
-                                    
-                                    <th *ngFor="let col of columns" [hidden]="col.header == 'IsPrimary'" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
-                                        {{col.header}}
-                                        <p-sortIcon [field]="col.field"></p-sortIcon>
-                                    </th>
+                <div class="excel-upload excel-upload-cstm">
+                  <button type="button" class="btn btn-primary" matTooltip="Download Sample File"
+                    matTooltipPosition="above" (click)="sampleExcelDownload()" style="padding: 5px 10px !important;">
+                    Sample File Download
+                  </button>
 
-                                    <th>Actions</th>
+                  <input type="file" name="upload[]" id="upload" (change)="customExcelUpload($event)"
+                    class="uploaddoc upload-file" accept=".xlsx, .xls, .csv" />
+                  <label for="upload">
+                    <span matTooltip="Upload Data (Excel)" matTooltipPosition="above">
+                      <i class="fa fa-upload"></i>
+                    </span>
+                  </label>
+                </div>
+              </div>
+            </ng-template>
 
-                                </tr>
+            <ng-template pTemplate="colgroup" let-columns>
+              <colgroup>
+                <col *ngFor="let col of columns" style="width:auto" />
+              </colgroup>
+            </ng-template>
+            <ng-template pTemplate="header" let-columns>
+              <tr>
+                <th style="width: 40px;">Flag</th>
 
-                                <tr>
-                                    <th></th>
-                                    <th style="width:auto" *ngFor="let col of columns" [ngSwitch]="col.field" [hidden]="col.field == 'isDefaultContact'">
-                                        <input style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field, 'contains')">
-                                    </th>
-                                    <th></th>
-                                </tr>
-                            </ng-template>
+                <th *ngFor="let col of columns" [hidden]="col.header == 'IsPrimary'" pResizableColumn pReorderableColumn
+                  [pSortableColumn]="col.field">
+                  {{ col.header }}
+                  <p-sortIcon [field]="col.field"></p-sortIcon>
+                </th>
 
-                            <ng-template pTemplate="body" let-rowData let-columns="columns" >                                 
-                                <tr [pSelectableRow]="rowData"  [pSelectableRowDblClick]="rowData" pReorderableRowHandle (dblclick)="opencontactView(view,rowData)">
-                                
-                                    <td style="width: 40px;"> <span class="flag">
-                                        <i  *ngIf="rowData.isDefaultContact == true"   [ngStyle]="{'color': rowData.isDefaultContact == true ? 'green' : 'none'}"  
-                                         class="fa fa-flag" aria-hidden="true" matTooltip="Primary ">
-                                        
-                                        </i>
-                                        </span>
-                                    </td>
+                <th>Actions</th>
+              </tr>
 
+              <tr>
+                <th></th>
+                <th style="width:auto" *ngFor="let col of columns" [ngSwitch]="col.field"
+                  [hidden]="col.field == 'isDefaultContact'">
+                  <input style="width:100%;" pInputText type="text" (input)="
+                      dt.filter($event.target.value, col.field, 'contains')
+                    " />
+                </th>
+                <th></th>
+              </tr>
+            </ng-template>
 
-                                    <td *ngFor="let col of columns" [hidden]="col.field == 'isDefaultContact'" class="ui-resizable-column" pReorderableRowHandle>
-                                        {{col.field == 'createdDate'?  
-                                        (rowData[col.field] | date: 'MM/dd/yyyy'):
-                                        rowData[col.field]
-                                         && col.field == 'updatedDate'?  
-                                         (rowData[col.field] | date: 'MM/dd/yyyy')
-                                         :rowData[col.field] }}
-                                    </td>
-                                    <td class="text-center">
-                                        <p-inputSwitch *ngIf="!isViewMode" name="isActive{{i}}" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="handleChanges(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
-                                        <!--<span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openView(view,rowData)" title="View"><i class="fa fa-eye"></i></a> </span>-->
-                                        <span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="opencontactView(view,rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
-                                        <button *ngIf="!isViewMode" class="btn-edit" mat-icon-button (click)="openEdit(contentEdit,rowData)" matTooltip="Edit" data-target="#addContactInfo" data-toggle="modal">
-                                            <mat-icon>edit</mat-icon>
-                                        </button>
+            <ng-template pTemplate="body" let-rowData let-columns="columns">
+              <tr [pSelectableRow]="rowData" [pSelectableRowDblClick]="rowData" pReorderableRowHandle
+                (dblclick)="opencontactView(view, rowData)">
+                <td style="width: 40px;">
+                  <span class="flag">
+                    <i *ngIf="rowData.isDefaultContact == true" [ngStyle]="{
+                        color:
+                          rowData.isDefaultContact == true ? 'green' : 'none'
+                      }" class="fa fa-flag" aria-hidden="true" matTooltip="Primary ">
+                    </i>
+                  </span>
+                </td>
 
-                                        <!-- <button class="btn-delete" mat-icon-button matTooltip="delete" (click)="deleteItemAndCloseModel(rowData.contactId)">
+                <td *ngFor="let col of columns" [hidden]="col.field == 'isDefaultContact'" class="ui-resizable-column"
+                  pReorderableRowHandle>
+                  {{
+                    col.field == 'createdDate'
+                      ? (rowData[col.field] | date: 'MM/dd/yyyy')
+                      : rowData[col.field] && col.field == 'updatedDate'
+                      ? (rowData[col.field] | date: 'MM/dd/yyyy')
+                      : rowData[col.field]
+                  }}
+                </td>
+                <td class="text-center">
+                  <p-inputSwitch *ngIf="!isViewMode" name="isActive{{ i }}" matTooltip="Active" onLabel="on"
+                    offLabel="off" (onChange)="handleChanges(rowData, $event)" [(ngModel)]="rowData['isActive']">
+                  </p-inputSwitch>
+                  <!--<span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openView(view,rowData)" title="View"><i class="fa fa-eye"></i></a> </span>-->
+                  <span data-toggle="modal" data-target="#view">
+                    <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip"
+                      (click)="opencontactView(view, rowData)" matTooltip="View"><i class="fa fa-eye"></i></a>
+                  </span>
+                  <button *ngIf="!isViewMode" class="btn-edit" mat-icon-button (click)="openEdit(contentEdit, rowData)"
+                    matTooltip="Edit" data-target="#addContactInfo" data-toggle="modal">
+                    <mat-icon>edit</mat-icon>
+                  </button>
+
+                  <!-- <button class="btn-delete" mat-icon-button matTooltip="delete" (click)="deleteItemAndCloseModel(rowData.contactId)">
                                             <mat-icon color="warn">delete</mat-icon>
                                         </button> -->
-                                        <button *ngIf="!isViewMode"  requirePermission="canDelete"
-                                                class="btn-delete" mat-icon-button matTooltip="Delete"
-                                                (click)=" openDelete(deleteContent, rowData)">
-                                            <mat-icon color="warn">delete</mat-icon>
-                                        </button>
+                  <button *ngIf="!isViewMode" requirePermission="canDelete" class="btn-delete" mat-icon-button
+                    matTooltip="Delete" (click)="openDelete(deleteContent, rowData)">
+                    <mat-icon color="warn">delete</mat-icon>
+                  </button>
 
-                                        <button class="btn-history" mat-icon-button matTooltip="History" (click)="openHist(contentAuditHist,rowData)">
-                                            <mat-icon color="green">history</mat-icon>
-                                        </button>
+                  <button class="btn-history" mat-icon-button matTooltip="History"
+                    (click)="openHist(contentAuditHist, rowData)">
+                    <mat-icon color="green">history</mat-icon>
+                  </button>
+                </td>
+              </tr>
+            </ng-template>
 
-                                    </td>
+            <ng-template pTemplate="emptymessage" let-columns>
+              <tr>
+                <td [attr.colspan]="9" style="color: red; font-weight: bold; text-align: center">
+                  No records found
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="summary" id="footer">
+              <label id="footer" class="footer">No'of records:</label>
+              <input style="width: 5%;" [(ngModel)]="dt._totalRecords" [disabled]="true" pInputText type="text" />
+              &nbsp;&nbsp;
+              <label id="footer" class="footer1">Pages Count:</label>
 
-                                </tr>
-                            </ng-template>
-
-                            <ng-template pTemplate="emptymessage" let-columns>
-                                <tr>                                  
-                                    <td [attr.colspan]="9" style="color: red; font-weight: bold; text-align: center">
-                                        No records found
-                                    </td>
-                                </tr>
-                            </ng-template>  
-                            <ng-template pTemplate="summary" id="footer">
-                                <label id="footer" class="footer">No'of records:</label>
-                                <input style="width: 5%;" [(ngModel)]="dt._totalRecords" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp;
-                                <label id="footer" class="footer1">Pages Count:</label>
-                               
-                                <input style="width: 5%;" [ngModel]="getPageCount(dt._totalRecords,pageSize)" [disabled]="true" pInputText type="text" />
-                            </ng-template>
-                        </p-table>
-                      
-                    </div>
-                    <div  *ngIf="!isViewMode">
-                    <button type="button" class="btn btn-primary pull-right submit-btn" (click)="nextClick()">Next</button>
-                    <button type="button" class="btn btn-primary pull-right submit-btn" (click)="previousClick()">Previous</button>
-                </div>
-                </div>
-                </div>
-            </div>
+              <input style="width: 5%;" [ngModel]="getPageCount(dt._totalRecords, pageSize)" [disabled]="true"
+                pInputText type="text" />
+            </ng-template>
+          </p-table>
         </div>
-    <!-- </div>
+        <div *ngIf="!isViewMode">
+          <button type="button" class="btn btn-primary pull-right submit-btn" (click)="nextClick()">
+            Next
+          </button>
+          <button type="button" class="btn btn-primary pull-right submit-btn" (click)="previousClick()">
+            Previous
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- </div>
 </div> -->
 
 <ng-template #deleteContent let-c="close" let-d="dismiss" data-backdrop="static">
-    <div class="modal-header">
-        <h4 class="modal-title">Are You Sure Want to Delete ?</h4>
-        <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-    <div class="modal-body">
-        <strong>First Name:
-            <span class="new-label">{{selectedRowforDelete.firstName}}</span>
-        </strong>
-    </div>
+  <div class="modal-header">
+    <h4 class="modal-title">Are You Sure Want to Delete ?</h4>
+    <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <strong>First Name:
+      <span class="new-label">{{ selectedRowforDelete.firstName }}</span>
+    </strong>
+  </div>
 
-    <div class="modal-footer">
-        <button type="button" class="btn btn-primary" (click)="deleteItemAndCloseModel()">Yes</button>
-        <button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
-    </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" (click)="deleteItemAndCloseModel()">
+      Yes
+    </button>
+    <button type="button" class="btn btn-danger" (click)="dismissModel()">
+      No
+    </button>
+  </div>
 </ng-template>
 
 <ng-template #contentAuditHist let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static">
-    <div class="modal-header">
+  <div class="modal-header">
+    <h4 class="modal-title">History of Contact Information</h4>
+    <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body" *ngIf="contactauditHisory">
+    <div class="table-responsive ">
+      <table class="table table-bordered" *ngIf="contactauditHisory.length > 0; else noDatavailable">
+        <thead>
+          <tr>
+            <th>Prefix</th>
+            <th>First Name</th>
+            <th>Middle Name</th>
+            <th>Last Name</th>
+            <th>Suffix</th>
+            <th>Contact Title</th>
+            <th>Email</th>
+            <th>Work Phone</th>
+            <th>Mobile Phone</th>
+            <th>Alternate Phone</th>
+            <th>Fax</th>
+            <th>Primary Contact</th>
+            <th>Memo</th>
+            <th>Is Active</th>
+            <th>Created By</th>
+            <th>Created Date</th>
+            <th>Updated By</th>
+            <th>Updated Date</th>
+          </tr>
+        </thead>
+        <tbody class="audithistory-cstm">
+          <!--*ngIf="auditHistory.length> 0"-->
+          <tr *ngFor="let audit of contactauditHisory; let i = index">
+            <td [ngStyle]="{
+                color: getColorCodeForHistory(i, 'prefix', audit.prefix)
+                  ? 'black'
+                  : 'red'
+              }">
+              {{ audit.prefix }}
+            </td>
 
-        <h4 class="modal-title">History of Contact Information</h4>
-        <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
-            <span aria-hidden="true">&times;</span>
-        </button>
+            <td [ngStyle]="{
+                color: getColorCodeForHistory(i, 'firstName', audit.firstName)
+                  ? 'black'
+                  : 'red'
+              }">
+              {{ audit.firstName }}
+            </td>
+            <td [ngStyle]="{
+                color: getColorCodeForHistory(i, 'middleName', audit.middleName)
+                  ? 'black'
+                  : 'red'
+              }">
+              {{ audit.middleName }}
+            </td>
 
+            <td [ngStyle]="{
+                color: getColorCodeForHistory(i, 'lastName', audit.lastName)
+                  ? 'black'
+                  : 'red'
+              }">
+              {{ audit.lastName }}
+            </td>
+            <td [ngStyle]="{
+                color: getColorCodeForHistory(i, 'suffix', audit.suffix)
+                  ? 'black'
+                  : 'red'
+              }">
+              {{ audit.suffix }}
+            </td>
 
-    </div>
-    <div class="modal-body" *ngIf="contactauditHisory">
-        <div class="table-responsive ">
-            <table class="table table-bordered" *ngIf="contactauditHisory.length> 0 else noDatavailable">
-                <thead>
-                    <tr>
-                       <th>Prefix</th>
-                        <th>First Name</th>
-                        <th>Middle Name</th>
-                        <th>Last Name</th>
-                        <th>Suffix</th>
-                        <th>Contact Title</th>
-                        <th>Email</th>
-                        <th>Work Phone</th>
-                        <th>Mobile Phone</th>
-                        <th>Alternate Phone</th>
-                        <th>Fax</th>
-                        <th>Primary Contact</th>
-                        <th>Memo</th>
-                        <th>Is Active</th>
-                        <th>Created By</th>
-                        <th>Created Date</th>
-                        <th>Updated By</th>
-                        <th>Updated Date</th>
-                    </tr>
-                </thead>
-                <tbody class="audithistory-cstm"> <!--*ngIf="auditHistory.length> 0"-->
-                    <tr *ngFor="let audit of contactauditHisory; let i = index;">
-                         <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'prefix', audit.prefix)  ? 'black' : 'red'  }">{{audit.prefix}}</td>
+            <td [ngStyle]="{
+                color: getColorCodeForHistory(
+                  i,
+                  'contactTitle',
+                  audit.contactTitle
+                )
+                  ? 'black'
+                  : 'red'
+              }">
+              {{ audit.contactTitle }}
+            </td>
+            <td [ngStyle]="{
+                color: getColorCodeForHistory(i, 'email', audit.email)
+                  ? 'black'
+                  : 'red'
+              }">
+              {{ audit.email }}
+            </td>
 
-                        <td [ngStyle]="{'color': getColorCodeForHistory(i, 'firstName', audit.firstName)  ? 'black' : 'red'  }">{{audit.firstName}}</td>
-                        <td [ngStyle]="{'color': getColorCodeForHistory(i, 'middleName', audit.middleName)  ? 'black' : 'red'  }">{{audit.middleName}}</td>
+            <td [ngStyle]="{
+                color: getColorCodeForHistory(
+                  i,
+                  'fullContact',
+                  audit.fullContact
+                )
+                  ? 'black'
+                  : 'red'
+              }">
+              {{ audit.fullContact }}
+            </td>
+            <td [ngStyle]="{
+                color: getColorCodeForHistory(
+                  i,
+                  'mobilePhone',
+                  audit.mobilePhone
+                )
+                  ? 'black'
+                  : 'red'
+              }">
+              {{ audit.mobilePhone }}
+            </td>
+            <td [ngStyle]="{
+                color: getColorCodeForHistory(
+                  i,
+                  'alternatePhone',
+                  audit.alternatePhone
+                )
+                  ? 'black'
+                  : 'red'
+              }">
+              {{ audit.alternatePhone }}
+            </td>
 
-                        <td [ngStyle]="{'color': getColorCodeForHistory(i, 'lastName', audit.lastName)  ? 'black' : 'red'  }">{{audit.lastName}}</td>
-                        <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'suffix', audit.suffix)  ? 'black' : 'red'  }">{{audit.suffix}}</td>
+            <td [ngStyle]="{
+                color: getColorCodeForHistory(i, 'fax', audit.fax)
+                  ? 'black'
+                  : 'red'
+              }">
+              {{ audit.fax }}
+            </td>
 
-                        <td [ngStyle]="{'color': getColorCodeForHistory(i, 'contactTitle', audit.contactTitle)  ? 'black' : 'red'  }">{{audit.contactTitle}}</td>
-                        <td [ngStyle]="{'color': getColorCodeForHistory(i, 'email', audit.email)  ? 'black' : 'red'  }">{{audit.email}}</td>
+            <td [ngStyle]="{
+                color: getColorCodeForHistory(
+                  i,
+                  'isDefaultContact',
+                  audit.isDefaultContact
+                )
+                  ? 'black'
+                  : 'red'
+              }">
+              {{ audit.isDefaultContact }}
+            </td>
+            <td [ngStyle]="{
+                color: getColorCodeForHistory(i, 'notes', audit.notes)
+                  ? 'black'
+                  : 'red'
+              }">
+              {{ audit.notes }}
+            </td>
+            <td [ngStyle]="{
+                color: getColorCodeForHistory(i, 'isActive', audit.isActive)
+                  ? 'black'
+                  : 'red'
+              }">
+              {{ audit.isActive }}
+            </td>
+            <td>{{ audit.createdBy }}</td>
+            <td>{{ audit.createdDate | date: 'dd-MM-yyyy h:mm a ' }}</td>
 
-                        <td [ngStyle]="{'color': getColorCodeForHistory(i, 'fullContact', audit.fullContact)  ? 'black' : 'red'  }">{{audit.fullContact}}</td>
-                        <td [ngStyle]="{'color': getColorCodeForHistory(i, 'mobilePhone', audit.mobilePhone)  ? 'black' : 'red'  }">{{audit.mobilePhone}}</td>
-                        <td [ngStyle]="{'color': getColorCodeForHistory(i, 'alternatePhone', audit.alternatePhone)  ? 'black' : 'red'  }">{{audit.alternatePhone}}</td>
-
-
-                        <td [ngStyle]="{'color': getColorCodeForHistory(i, 'fax', audit.fax)  ? 'black' : 'red'  }">{{audit.fax}}</td>
-                       
-                        <td [ngStyle]="{'color': getColorCodeForHistory(i, 'isDefaultContact', audit.isDefaultContact)  ? 'black' : 'red'  }">{{audit.isDefaultContact}}</td>
-                        <td [ngStyle]="{'color': getColorCodeForHistory(i, 'notes', audit.notes)  ? 'black' : 'red'  }">{{audit.notes}}</td>
-                        <td [ngStyle]="{'color': getColorCodeForHistory(i, 'isActive', audit.isActive)  ? 'black' : 'red'  }">{{audit.isActive}}</td>
-                        <td>{{audit.createdBy}}</td>
-                        <td>{{audit.createdDate | date: 'dd-MM-yyyy h:mm a '}}</td>
-
-                        <td>{{audit.updatedBy}}</td>
-                        <td>{{audit.updatedDate | date: 'dd-MM-yyyy h:mm a '}}</td>
-                    </tr>
-                </tbody> 
-                <!-- <tr *ngFor="let audit of contactauditHisory">
+            <td>{{ audit.updatedBy }}</td>
+            <td>{{ audit.updatedDate | date: 'dd-MM-yyyy h:mm a ' }}</td>
+          </tr>
+        </tbody>
+        <!-- <tr *ngFor="let audit of contactauditHisory">
                     <td>{{audit.firstName}}</td>
                     <td>{{audit.lastName}}</td>
                     <td>{{audit.email}}</td>
@@ -266,188 +401,278 @@
                     <td>{{audit.createdDate | date: 'dd-MM-yyyy h:mm a '}}</td>
 
                 </tr> -->
-            </table>
-            <ng-template #noDatavailable>
-                <div class="text-center"> 
-                        <img src="../../../assets/images/binoculars.png" style="height: 100px; width: 100px;">
-                        <h4 style="color: #ff5663;">No History Found </h4>
-                </div>
-            </ng-template> 
+      </table>
+      <ng-template #noDatavailable>
+        <div class="text-center">
+          <img src="../../../assets/images/binoculars.png" style="height: 100px; width: 100px;" />
+          <h4 style="color: #ff5663;">No History Found</h4>
         </div>
+      </ng-template>
     </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
-    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-danger" (click)="dismissModel()">
+      Close
+    </button>
+  </div>
 </ng-template>
 
 <ng-template #view class="modal fade " id="view" role="dialog">
-
-    <div class="modal-content">
-        <div class="modal-header">
-            <button type="button" class="close" (click)="dismissModel()" data-dismiss="modal" id="" name="">×</button>
-            <h4 class="modal-title">View Contact Info</h4>
-        </div>
-        <div class="modal-body viewform">
-            <p><span class="label"><b>Primary Contact: </b></span><span class="value">{{sourceVendorforView.isDefaultContact}}</span></p>
-            <p><span class="label"><b>Prefix: </b></span><span class="value">{{sourceVendorforView.prefix}}</span></p>
-            <p><span class="label"><b>First Name: <span class="clr-red">*</span> </b></span><span class="value">{{sourceVendorforView.firstName}}</span></p>
-            <p><span class="label"><b>Middle Name: </b></span><span class="value">{{sourceVendorforView.middleName}}</span></p>
-            <p><span class="label"><b>Last Name: <span class="clr-red">*</span> </b></span><span class="value">{{sourceVendorforView.lastName}}</span></p>
-            <p><span class="label"><b>Suffix: </b></span><span class="value">{{sourceVendorforView.suffix}}</span></p>
-            <p><span class="label"><b>Contact Title: </b></span><span class="value">{{sourceVendorforView.contactTitle}}</span></p>
-            <p>
-                <span class="label"><b>Work Phone: <span class="clr-red">*</span> </b></span><span class="value">
-                    {{sourceVendorforView.workPhone}}
-                    <span *ngIf="sourceVendorforView.workPhoneExtn">-</span>
-                    {{sourceVendorforView.workPhoneExtn}}
-                   
-                </span>
-            </p>
-            <p><span class="label"><b>Email: <span class="clr-red">*</span> </b></span><span class="value">{{sourceVendorforView.email}}</span></p>
-            <p><span class="label"><b>Mobile Phone : </b></span><span class="value">{{sourceVendorforView.mobilePhone}}</span></p>
-            <p><span class="label"><b>Alternate Phone : </b></span><span class="value">{{sourceVendorforView.alternatePhone}}</span></p>
-            <p><span class="label"><b>Fax: </b></span><span class="value">{{sourceVendorforView.fax}}</span></p>
-            <p><span class="label"><b>Memo: </b></span><span class="value">{{sourceVendorforView.notes}}</span></p>
-
-            <div class="clear"></div>
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="dismissModel()">Close</button>
-        </div>
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" (click)="dismissModel()" data-dismiss="modal" id="" name="">
+        ×
+      </button>
+      <h4 class="modal-title">View Contact Info</h4>
     </div>
+    <div class="modal-body viewform">
+      <p>
+        <span class="label"><b>Primary Contact: </b></span><span
+          class="value">{{ sourceVendorforView.isDefaultContact }}</span>
+      </p>
+      <p>
+        <span class="label"><b>Prefix: </b></span><span class="value">{{ sourceVendorforView.prefix }}</span>
+      </p>
+      <p>
+        <span class="label"><b>First Name: <span class="clr-red">*</span> </b></span><span
+          class="value">{{ sourceVendorforView.firstName }}</span>
+      </p>
+      <p>
+        <span class="label"><b>Middle Name: </b></span><span class="value">{{ sourceVendorforView.middleName }}</span>
+      </p>
+      <p>
+        <span class="label"><b>Last Name: <span class="clr-red">*</span> </b></span><span
+          class="value">{{ sourceVendorforView.lastName }}</span>
+      </p>
+      <p>
+        <span class="label"><b>Suffix: </b></span><span class="value">{{ sourceVendorforView.suffix }}</span>
+      </p>
+      <p>
+        <span class="label"><b>Contact Title: </b></span><span
+          class="value">{{ sourceVendorforView.contactTitle }}</span>
+      </p>
+      <p>
+        <span class="label"><b>Work Phone: <span class="clr-red">*</span> </b></span><span class="value">
+          {{ sourceVendorforView.workPhone }}
+          <span *ngIf="sourceVendorforView.workPhoneExtn">-</span>
+          {{ sourceVendorforView.workPhoneExtn }}
+        </span>
+      </p>
+      <p>
+        <span class="label"><b>Email: <span class="clr-red">*</span> </b></span><span
+          class="value">{{ sourceVendorforView.email }}</span>
+      </p>
+      <p>
+        <span class="label"><b>Mobile Phone : </b></span><span
+          class="value">{{ sourceVendorforView.mobilePhone }}</span>
+      </p>
+      <p>
+        <span class="label"><b>Alternate Phone : </b></span><span
+          class="value">{{ sourceVendorforView.alternatePhone }}</span>
+      </p>
+      <p>
+        <span class="label"><b>Fax: </b></span><span class="value">{{ sourceVendorforView.fax }}</span>
+      </p>
+      <p>
+        <span class="label"><b>Memo: </b></span><span class="value">{{ sourceVendorforView.notes }}</span>
+      </p>
 
+      <div class="clear"></div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="dismissModel()">
+        Close
+      </button>
+    </div>
+  </div>
 </ng-template>
 
-
-<p-dialog header="Alert" [(visible)]="display" [modal]="true" [dismissableMask]="true" maximizedLeft="140px" maximizedTop="140px"
-          [width]="350" [minWidth]="200" [responsive]="true"
-          [minY]="1050" [baseZIndex]="1100000">
-    <h5 [ngStyle]="{'color':'red'}">
-        Please Enter (*) Mandatory Fields
-    </h5>
-
+<p-dialog header="Alert" [(visible)]="display" [modal]="true" [dismissableMask]="true" maximizedLeft="140px"
+  maximizedTop="140px" [width]="350" [minWidth]="200" [responsive]="true" [minY]="1050" [baseZIndex]="1100000">
+  <h5 [ngStyle]="{ color: 'red' }">
+    Please Enter (*) Mandatory Fields
+  </h5>
 </p-dialog>
 
 <div class="modal fade" id="addContactInfo" role="dialog" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog modal-sm">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">{{isEditContactInfo ? 'Edit' : 'Add'}} Contact Details</h4>
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">
+          &times;
+        </button>
+        <h4 class="modal-title">
+          {{ isEditContactInfo ? 'Edit' : 'Add' }} Contact Details
+        </h4>
+      </div>
+      <form #addContactForm="ngForm" class="form-horizontal">
+        <div class="modal-body">
+          <div class="form-row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Prefix</label>
+                <select name="preifx" [(ngModel)]="sourceVendor.prefix" (ngModelChange)="enableSave()">
+                  <option value="Dr.">Dr.</option>
+                  <option value="Mr.">Mr.</option>
+                  <option value="Mrs.">Mrs.</option>
+                  <option value="Ms.">Ms.</option>
+                  <option value="None selected">None selected</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>First Name <span class="clr-red">*</span></label>
+                <div class="inner-addon right-addon inline-block" style="width: 100%">
+                  <p-autoComplete class="pautocomp-cstm" [(ngModel)]="sourceVendor.firstName" name="firstName"
+                    (ngModelChange)="enableSave()" [suggestions]="firstNames"
+                    (completeMethod)="filterFirstNames($event)" [size]="30" [minLength]="1" [dropdown]="true" required>
+                    <ng-template let-firstName pTemplate="item">
+                      <div class="ui-helper-clearfix">{{ firstName }}</div>
+                    </ng-template>
+                  </p-autoComplete>
+                </div>
+                <!-- <div *ngIf="disablesaveForFirstname" class="clr-red">Entry Already Exists</div> -->
+              </div>
+              <div class="form-group">
+                <label>Middle Name</label>
+                <div class="inner-addon right-addon inline-block" style="width: 100%">
+                  <p-autoComplete class="pautocomp-cstm" [(ngModel)]="sourceVendor.middleName" name="middleName"
+                    (ngModelChange)="enableSave()" [suggestions]="middleNames"
+                    (completeMethod)="filterMiddleNames($event)" [size]="30" [minLength]="1" [dropdown]="true">
+                    <ng-template let-middleName pTemplate="item">
+                      <div class="ui-helper-clearfix">{{ middleName }}</div>
+                    </ng-template>
+                  </p-autoComplete>
+                </div>
+                <!-- <div *ngIf="disablesaveForMiddlename" class="clr-red">Entry Already Exists</div> -->
+              </div>
+              <div class="form-group">
+                <label>Last Name <span class="clr-red">*</span></label>
+                <div class="inner-addon right-addon inline-block" style="width: 100%">
+                  <p-autoComplete class="pautocomp-cstm" [(ngModel)]="sourceVendor.lastName" name="lastName"
+                    (ngModelChange)="enableSave()" [suggestions]="lastNames" (completeMethod)="filterLastNames($event)"
+                    [size]="30" [minLength]="1" [dropdown]="true" required>
+                    <ng-template let-lastName pTemplate="item">
+                      <div class="ui-helper-clearfix">{{ lastName }}</div>
+                    </ng-template>
+                  </p-autoComplete>
+                </div>
+                <!-- <div *ngIf="disablesaveForlastname" class="clr-red">Entry Already Exists</div> -->
+              </div>
+              <div class="form-group">
+                <label>Suffix</label>
+                <select name="suffix" [(ngModel)]="sourceVendor.suffix" (ngModelChange)="enableSave()">
+                  <option value="II">II</option>
+                  <option value="III">III</option>
+                  <option value="Jr.">Jr.</option>
+                  <option value="Sr.">Sr.</option>
+                  <option value="None selected">None selected</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Title</label>
+                <input class="form-control" type="text" name="contactTitle" (ngModelChange)="enableSave()"
+                  [(ngModel)]="sourceVendor.contactTitle" />
+              </div>
+              <div class="form-group">
+                <label>Work Phone <span class="clr-red">*</span></label>
+                <div>
+                  <input class="form-control" type="text" maxlength="20"
+                    (keypress)="patternMobilevalidationWithSpl($event)" (ngModelChange)="enableSave()" name="workPhone"
+                    [(ngModel)]="sourceVendor.workPhone" style="width: calc(100% - 63px) !important;" required />
+                  -
+                  <input class="form-control w50" type="text" name="workPhoneExtn" (ngModelChange)="enableSave()"
+                    [(ngModel)]="sourceVendor.workPhoneExtn" maxlength="15" />
+                </div>
+              </div>
             </div>
-            <form #addContactForm="ngForm" class="form-horizontal">
-                <div class="modal-body">
-                    <div class="form-row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label>Prefix</label>
-                                <select name="preifx" [(ngModel)]="sourceVendor.prefix">
-                                    <option value="Dr.">Dr.</option>
-                                    <option value="Mr.">Mr.</option>
-                                    <option value="Mrs.">Mrs.</option>
-                                    <option value="Ms.">Ms.</option>
-                                    <option value="None selected">None selected</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label>First Name <span class="clr-red">*</span></label>
-                                <div class="inner-addon right-addon inline-block" style="width: 100%">
-                                    <p-autoComplete class="pautocomp-cstm" [(ngModel)]="sourceVendor.firstName"  name="firstName" [suggestions]="firstNames" (completeMethod)="filterFirstNames($event)" [size]="30" [minLength]="1" [dropdown]="true" required>
-                                        <ng-template let-firstName pTemplate="item">
-                                            <div class="ui-helper-clearfix">{{firstName}}</div>
-                                        </ng-template>
-                                    </p-autoComplete>
-                                </div>
-                                <!-- <div *ngIf="disablesaveForFirstname" class="clr-red">Entry Already Exists</div> -->
-                            </div>
-                            <div class="form-group">
-                                <label>Middle Name</label>
-                                <div class="inner-addon right-addon inline-block" style="width: 100%">
-                                    <p-autoComplete class="pautocomp-cstm" [(ngModel)]="sourceVendor.middleName"  name="middleName" [suggestions]="middleNames" (completeMethod)="filterMiddleNames($event)" [size]="30" [minLength]="1" [dropdown]="true">
-                                        <ng-template let-middleName pTemplate="item">
-                                            <div class="ui-helper-clearfix">{{middleName}}</div>
-                                        </ng-template>
-                                    </p-autoComplete>
-                                </div>
-                                <!-- <div *ngIf="disablesaveForMiddlename" class="clr-red">Entry Already Exists</div> -->
-                            </div>
-                            <div class="form-group">
-                                <label>Last Name <span class="clr-red">*</span></label>
-                                <div class="inner-addon right-addon inline-block" style="width: 100%">
-                                    <p-autoComplete class="pautocomp-cstm" [(ngModel)]="sourceVendor.lastName"  name="lastName" [suggestions]="lastNames" (completeMethod)="filterLastNames($event)" [size]="30" [minLength]="1" [dropdown]="true" required>
-                                        <ng-template let-lastName pTemplate="item">
-                                            <div class="ui-helper-clearfix">{{lastName}}</div>
-                                        </ng-template>
-                                    </p-autoComplete>
-                                </div>
-                                <!-- <div *ngIf="disablesaveForlastname" class="clr-red">Entry Already Exists</div> -->
-                            </div>
-                            <div class="form-group">
-                                <label>Suffix</label>
-                                <select name="suffix" [(ngModel)]="sourceVendor.suffix">
-                                    <option value="II">II</option>
-                                    <option value="III">III</option>
-                                    <option value="Jr.">Jr.</option>
-                                    <option value="Sr.">Sr.</option>
-                                    <option value="None selected">None selected</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label>Title</label>
-                                <input class="form-control" type="text" name="contactTitle" [(ngModel)]="sourceVendor.contactTitle">
-                            </div>
-                            <div class="form-group">
-                                <label>Work Phone <span class="clr-red">*</span></label>
-                                <div>
-                                    <input class="form-control" type="text" maxlength="20" (keypress)="patternMobilevalidationWithSpl($event)" name="workPhone" [(ngModel)]="sourceVendor.workPhone" style="width: calc(100% - 63px) !important;" required>
-                                    -
-                                    <input class="form-control w50" type="text" name="workPhoneExtn" [(ngModel)]="sourceVendor.workPhoneExtn" maxlength="15">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <div class="form-group" style="margin-top: 15px; margin-bottom: 20px;">
-                                    <!--<div class="label-cstm" style="margin-right: 10px;">Primary Contact</div>-->
-                                    <span class="checkbox-cstm">
-                                        <label>
-                                            <input type="checkbox" name="isDefaultContact" [(ngModel)]="sourceVendor.isDefaultContact">
-                                            <span class="cr"><i class="cr-icon pi pi-check"></i></span> Primary Contact
-                                        </label>
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label>Email <span class="clr-red">*</span></label>
-                                <input class="form-control" email type="text" name="email" [(ngModel)]="sourceVendor.email" required>
-                            </div>
-                            <div class="form-group">
-                                <label>Mobile Phone</label>
-                                <input class="form-control" type="text" maxlength="20" (keypress)="patternMobilevalidationWithSpl($event)" name="mobilePhone" [(ngModel)]="sourceVendor.mobilePhone">
-                            </div>
-                            <div class="form-group">
-                                <label>Alternate Phone</label>
-                                <input class="form-control" type="text" maxlength="20" (keypress)="patternMobilevalidationWithSpl($event)" name="alternatePhone" [(ngModel)]="sourceVendor.alternatePhone">
-                            </div>
-                            <div class="form-group">
-                                <label>Fax</label>
-                                <input class="form-control" type="text" maxlength="20" (keypress)="patternMobilevalidationWithSpl($event)" name="fax" [(ngModel)]="sourceVendor.fax">
-                            </div>
-                            <div class="form-group">
-                                <label>Memo</label>
-                                <textarea class="form-control" name="notes" [(ngModel)]="sourceVendor.notes"></textarea>
-                            </div>
-
-                        </div>
-                    </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <div class="form-group" style="margin-top: 15px; margin-bottom: 20px;">
+                  <!--<div class="label-cstm" style="margin-right: 10px;">Primary Contact</div>-->
+                  <span class="checkbox-cstm">
+                    <label>
+                      <input type="checkbox" name="isDefaultContact" (ngModelChange)="enableSave()"
+                        [(ngModel)]="sourceVendor.isDefaultContact" />
+                      <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                      Primary Contact
+                    </label>
+                  </span>
                 </div>
-                <div class="modal-footer">
-                    <!-- [validate] moduleName="app-vendor-contacts" -->
-                    <button type="button"  requirePermission="canAdd" *ngIf="sourceVendor.vendorId == undefined" class="btn btn-primary pull-right submit-btn" (click)="editItemAndCloseModel()" data-dismiss="modal" [disabled]="!addContactForm.valid">Save</button>
-                    <button type="button" requirePermission="canUpdate" *ngIf="sourceVendor.vendorId != undefined && sourceVendor.vendorId !=0" class="btn btn-primary pull-right submit-btn" (click)="editItemAndCloseModel()" data-dismiss="modal" [disabled]="!addContactForm.valid">Update</button>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                </div>
-            </form>
+              </div>
+              <div class="form-group">
+                <label>Email <span class="clr-red">*</span></label>
+                <input class="form-control" email type="text" name="email" (ngModelChange)="enableSave()"
+                  [(ngModel)]="sourceVendor.email" required />
+              </div>
+              <div class="form-group">
+                <label>Mobile Phone</label>
+                <input class="form-control" type="text" maxlength="20" (ngModelChange)="enableSave()"
+                  (keypress)="patternMobilevalidationWithSpl($event)" name="mobilePhone"
+                  [(ngModel)]="sourceVendor.mobilePhone" />
+              </div>
+              <div class="form-group">
+                <label>Alternate Phone</label>
+                <input class="form-control" type="text" maxlength="20" (ngModelChange)="enableSave()"
+                  (keypress)="patternMobilevalidationWithSpl($event)" name="alternatePhone"
+                  [(ngModel)]="sourceVendor.alternatePhone" />
+              </div>
+              <div class="form-group">
+                <label>Fax</label>
+                <input class="form-control" type="text" maxlength="20" (ngModelChange)="enableSave()"
+                  (keypress)="patternMobilevalidationWithSpl($event)" name="fax" [(ngModel)]="sourceVendor.fax" />
+              </div>
+              <div class="form-group">
+                <label>Memo</label>
+                <textarea class="form-control" name="notes" (ngModelChange)="enableSave()"
+                  [(ngModel)]="sourceVendor.notes"></textarea>
+              </div>
+            </div>
+          </div>
         </div>
+        <div class="modal-footer">
+          <!-- [validate] moduleName="app-vendor-contacts" -->
+          <button type="button" requirePermission="canAdd" *ngIf="sourceVendor.vendorId == undefined"
+            class="btn btn-primary pull-right submit-btn" (click)="editItemAndCloseModel()" data-dismiss="modal"
+            [disabled]="!addContactForm.valid">
+            Save
+          </button>
+          <button type="button" requirePermission="canUpdate" *ngIf="
+              (sourceVendor.vendorId != undefined &&
+                sourceVendor.vendorId != 0) 
+            " class="btn btn-primary pull-right submit-btn" (click)="editItemAndCloseModel()" data-dismiss="modal"
+            [disabled]="!addContactForm.valid ||
+            disableSave">
+            Update
+          </button>
+          <button type="button" class="btn btn-danger" data-dismiss="modal">
+            Close
+          </button>
+        </div>
+      </form>
     </div>
+  </div>
+</div>
+
+<div id="deleteoops" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">
+          &times;
+        </button>
+        <h4 class="modal-title">Alert !</h4>
+      </div>
+      <div class="modal-body">
+        <p>
+          Primary Record Cannot be Deleted
+          <img class="delete-emoji" src="../../../assets/images/oopsimage.png" />
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
 </div>

@@ -97,7 +97,7 @@ export class VendorBillingInformationComponent {
         { field: 'stateOrProvince', header: 'State/Prov' },
         { field: 'postalCode', header: 'Postal Code' },
         { field: 'countryName', header: 'Country' },
-        {field: 'isPrimary', header:'IsPrimary'}
+        { field: 'isPrimary', header: 'IsPrimary' }
     ];
     selectedColumns: any[] = this.cols;
     billingauditHisory: any[];
@@ -597,14 +597,21 @@ export class VendorBillingInformationComponent {
         }
     }
 
-    deleteItemBillingCloseModel(vendorBillingId) {
-        this.isSaving = true;
-        this.shipViaObj.isActive = true;
-        this.shipViaObj.updatedBy = this.userName;
-        this.shipViaObj.vendorBillingId = vendorBillingId;
-        this.vendorService.deleteVendorAcion(this.shipViaObj).subscribe(data => {
-            this.loadShipViaCollection(data);
-        })
+    deleteItemBillingCloseModel(row) {
+
+        if (!row.isPrimary) {
+
+
+            this.isSaving = true;
+            this.shipViaObj.isActive = true;
+            this.shipViaObj.updatedBy = this.userName;
+            this.shipViaObj.vendorBillingId = row.vendorBillingId;
+            this.vendorService.deleteVendorAcion(this.shipViaObj).subscribe(data => {
+                this.loadShipViaCollection(data);
+            })
+        } else {
+            $('#deletebilling').modal('show');
+        }
     }
     dismissShipViaModelModel() {
         this.isDeleteMode = false;
@@ -844,6 +851,9 @@ export class VendorBillingInformationComponent {
 
     getPageCount(totalNoofRecords, pageSize) {
         return Math.ceil(totalNoofRecords / pageSize)
+    }
+    pageIndexChange(event) {
+        this.pageSize = event.rows;
     }
 
 

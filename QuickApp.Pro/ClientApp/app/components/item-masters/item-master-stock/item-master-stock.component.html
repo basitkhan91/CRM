@@ -184,7 +184,7 @@
                                     </div>
                                     <div>                             
                                         <select name="itemClassificationId" id="itemClassificationId" title="Item Classification" required class="select-drop"
-                                                [(ngModel)]="sourceItemMaster.itemClassificationId">
+                                                [(ngModel)]="sourceItemMaster.itemClassificationId" (change)="onItemClassificationChange($event.target.value)">
                                             <ng-container *ngFor="let itemName of allitemclassificationInfo">
                                                 <option 
                                                         [ngValue]="itemName.itemClassificationId" *ngIf="itemName.isActive">
@@ -195,14 +195,14 @@
                                     </div> 
                                     <div class="inline-block display-flex spacing-label">
                                         <label class="control-label">
-                                            Item Group  <strong class="clr-red" *ngIf="sourceItemMaster.itemClassificationId == defaultRotableId">*</strong>
+                                            Item Group  <strong class="clr-red" *ngIf="selectedItemClassificationName == 'Rotable'">*</strong>
                                             <span style="margin-left:3px;margin-top:5px;cursor:pointer;" matTooltip="Add Item Group" tooltipPosition="top" matTooltipPosition="above"><i class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#addCustomerClass" (click)="item(contentEdits)"></i></span>
                                         </label>
 
                                     </div>
                                     <div>
                                         <!--<select [ngModelOptions]="{standalone: true}" required class="select-drop"-->
-                                        <select name="itemGroupId" required="{{sourceItemMaster.itemClassificationId == defaultRotableId}}" class="select-drop"
+                                        <select name="itemGroupId" required="{{selectedItemClassificationName == 'Rotable'}}" class="select-drop"
                                                 [(ngModel)]="sourceItemMaster.itemGroupId">
                                             <ng-container *ngFor="let itemGroupName of allitemgroupobjInfo">
                                                 <option [ngValue]="itemGroupName.itemGroupId" *ngIf="itemGroupName.isActive">
@@ -212,8 +212,20 @@
                                         </select>
                                     </div>
                                     <div class="inline-block display-flex spacing-label">
-                                        <label class="control-label">Acquired?</label>
-                                        <div class="radio-value">
+                                        <label class="control-label">Acquisition Type:</label>
+                                    </div>
+                                    <div>
+                                            <!--<select [ngModelOptions]="{standalone: true}" required class="select-drop"-->
+                                            <select name="itemGroupId" class="select-drop"
+                                                    [(ngModel)]="sourceItemMaster.AssetAcquistionTypeId">
+                                                <ng-container *ngFor="let acquisitionTypeItem of AssetAcquisitionTypeList">
+                                                    <option [ngValue]="acquisitionTypeItem.assetAcquisitionTypeId" >
+                                                        {{acquisitionTypeItem.name}}
+                                                    </option>
+                                                </ng-container>
+                                            </select>
+                                        
+                                        <!-- <div class="radio-value">
                                             <label class="radio-inline">
                                                 <input type="radio" [value]="true" [ngModelOptions]="{standalone: true}"
                                                        [(ngModel)]="sourceItemMaster.isAcquiredMethodBuy">
@@ -224,7 +236,7 @@
                                                        [(ngModel)]="sourceItemMaster.isAcquiredMethodBuy">
                                                 Make
                                             </label>
-                                        </div>
+                                        </div> -->
                                     </div>
                                     <!--Expiration Date-->
                                     <div class="inline-block display-flex spacing-label">
@@ -375,6 +387,11 @@
                                             </option>
                                         </select>
                                     </div>
+                                    <div class="inline-block display-flex">
+                                        <label class="control-label ">DER</label>
+                                        <input class="form-control new-checkbox" type="checkbox"
+                                               [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceItemMaster.der">
+                                    </div>
                                     <div class="inline-block display-flex" style="margin-top: 5px;">
                                         <label class="control-label">Hazardous Material</label>
                                         <input class="form-control new-checkbox" type="checkbox"
@@ -400,11 +417,7 @@
 
                                     </div>
                                     <div class="clear"></div>
-                                    <div class="inline-block display-flex">
-                                        <label class="control-label ">DER</label>
-                                        <input class="form-control new-checkbox" type="checkbox"
-                                               [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceItemMaster.der">
-                                    </div>
+                                    
                                     <div class="inline-block display-flex spacing-label">
                                         <label class="control-label">
                                             Manufacturer <strong class="clr-red">*</strong>
@@ -782,8 +795,9 @@
                                                     <tr>
                                                         <th>Overhaul</th>
                                                         <th>Repair</th>
-                                                        <th>Mfg</th>
                                                         <th>Bench Test</th>
+                                                        <th>Mfg</th>
+                                                        
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -805,17 +819,18 @@
                                                         <td>
                                                             <strong>Hours</strong>
                                                             <br />
-                                                            <input type="number" pKeyFilter="int" class="form-control w50 time control-bottom"
-                                                                   [ngModelOptions]="{standalone: true}" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==5) return false;"
-                                                                   [(ngModel)]="sourceItemMaster.mfgHours">
-                                                        </td>
-                                                        <td>
-                                                            <strong>Hours</strong>
-                                                            <br />
                                                             <input type="number" pKeyFilter="int" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==5) return false;" class="form-control w50 time control-bottom"
                                                                    [ngModelOptions]="{standalone: true}"
                                                                    [(ngModel)]="sourceItemMaster.testHours">
                                                         </td>
+                                                        <td>
+                                                            <strong>Hours</strong>
+                                                            <br />
+                                                            <input type="number" pKeyFilter="int" class="form-control w50 time control-bottom"
+                                                                   [ngModelOptions]="{standalone: true}" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==5) return false;"
+                                                                   [(ngModel)]="sourceItemMaster.mfgHours">
+                                                        </td>
+                                                        
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -834,8 +849,8 @@
                                                     <tr>
                                                         <th>Overhaul</th>
                                                         <th>Repair</th>
-                                                        <th>Mfg</th>
                                                         <th>Bench Test</th>
+                                                        <th>Mfg</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -859,15 +874,15 @@
                                                             <br />
                                                             <input type="number" pKeyFilter="int" class="form-control w50 time control-bottom"
                                                                    [ngModelOptions]="{standalone: true}" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==5) return false;"
-                                                                   [(ngModel)]="sourceItemMaster.turnTimeMfg">
+                                                                   [(ngModel)]="sourceItemMaster.turnTimeBenchTest">
                                                         </td>
                                                         <td>
                                                             <strong>Days</strong>
                                                             <br />
                                                             <input type="number" pKeyFilter="int" class="form-control w50 time control-bottom"
                                                                    [ngModelOptions]="{standalone: true}" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==5) return false;"
-                                                                   [(ngModel)]="sourceItemMaster.turnTimeBenchTest">
-                                                        </td>
+                                                                   [(ngModel)]="sourceItemMaster.turnTimeMfg">
+                                                        </td>                                                        
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -888,123 +903,290 @@
                 </div>
                 <!--Jyotsna Code-->
                 <div [ngClass]="{hideTab : currentTab !== 'AircraftInfo'}">
-                    <div class="card">
-                        <div class="col-sm-12 font-padding">
-                            <div class="col-sm-2">
-                                PN: <span style="color:red">{{pnvalue}}</span>
+                    <div class="card" style="padding: 5px;">
+                        <div class="col-md-12 shadow-box-cstm" >
+
+                            <div class="col-sm-12">
+                                <div class="col-sm-2">
+                                    PN: <span style="color:red">{{pnvalue}}</span>
+                                </div>
+                                <div class="col-sm-5">
+                                    PN Description: <span style="color:red">{{pnDescription}}</span>
+                                </div>
+                                <!-- <div class="col-sm-3">
+                                    Alternate PN: <span style="color:red">{{alternatePn}}</span>
+                                </div> -->
+                                <div class="col-sm-3">
+                                    Manufacturer: <span style="color:red">{{ManufacturerValue}}</span>
+                                </div>
                             </div>
-                            <div class="col-sm-3">
-                                PN Description: <span style="color:red">{{pnDescription}}</span>
-                            </div>
-                            <!-- <div class="col-sm-3">
-                                Alternate PN: <span style="color:red">{{alternatePn}}</span>
-                            </div> -->
-                            <div class="col-sm-3">
-                                Manufacturer: <span style="color:red">{{ManufacturerValue}}</span>
-                            </div>
+                            
                         </div>
-                        <div class="col-md-12">
-                            <div class="col-md-12 ">
-                                <div class="shadow-Box">
-                                    <div class="col-sm-12">
-                                        <h5 class="float-left">Search Aircraft Information</h5>
-                                        <h5 class="float-right">
-                                            Add Aircraft Information
-                                            <a class="plusicon-cstm" href="#" data-toggle="modal" data-target="#ModalDashNumber"><i class="fa fa-plus-circle fa-lg"></i></a>
-                                        </h5>
+                        <div class="card">
+                            <div class="col-md-12">
+                                <h4 class="po-head-sm">
+                                Inventory
+                                <!-- <a
+                                    class="plusicon-cstm"
+                                    href="#"
+                                    matTooltip="Add Inventory" matTooltipPosition="above"
+                                    data-toggle="modal"
+                                    data-target="#addInventory"
+                                    ><i class="fa fa-plus-circle fa-lg"></i
+                                    ></a> -->
+                                    <a class="plusicon-cstm" href="#" data-toggle="modal" data-target="#ModalDashNumber"><i class="fa fa-plus-circle fa-lg"></i></a>
+                                </h4>
+                                <hr />
+                            </div>
+                            <div
+                            class="advance-search-card"
+                            *ngIf="showAdvancedSearchCard == true"
+                        >
+                                <div class="col-md-12">
+                                    <div class="col-md-12 ">
+                                            <div class="col-md-1">
+                                                <h4 class="f-s-14" style="margin-top: 26px;">Search :</h4>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group ">
+                                                    <label class="fs12">Aircraft </label>
+                                                    <p-multiSelect [options]="manufacturerData" [ngModelOptions]="{standalone: true}" [(ngModel)]="selectAircraftManfacturer" (onChange)="getAircraftModelByManfacturerType()"
+                                                                class="pub-multi"></p-multiSelect>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label class="fs12">
+                                                        Aircraft Model
+                                                    </label>
+                                                    <p-multiSelect [maxSelectedLabels]="2" [options]="aircraftModelList" [(ngModel)]="selectedAircraftModel" [ngModelOptions]="{standalone: true}"
+                                                                class="pub-multi" (onChange)="getDashNumberByManfacturerandModel()" [selectionLimit]="30"></p-multiSelect>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label class="fs12">DashNumber </label>
+                                                    <p-multiSelect [maxSelectedLabels]="2" [options]="dashNumberList" [(ngModel)]="selectedDashNumbers" [ngModelOptions]="{standalone: true}"
+                                                                class="pub-multi" [selectionLimit]="30"></p-multiSelect>
+                                                </div>
+                                            </div>
+                                            <!-- <div class="col-md-2">
+                                                <div class="form-group">
+                                                    <label class="fs12">Memo </label>
+                                                    <input type="text" style="height: 27px !important" pInputText />
+                                                </div>
+                                            </div> -->
+                                            <div class="col-md-1">
+                                                <div class="form-group">
+                                                    <button class="btn btn-primary mtop20" type="button" (click)="searchAircraftInformation()">
+                                                        <i class="pi pi-search pi-search"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div class="clear"></div>
+                                        
                                     </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group ">
-                                            <label class="fs12">Aircraft </label>
-                                            <p-multiSelect [options]="manufacturerData" [ngModelOptions]="{standalone: true}" [(ngModel)]="selectAircraftManfacturer" (onChange)="getAircraftModelByManfacturerType()"
-                                                           class="pub-multi"></p-multiSelect>
-                                        </div>
+                                </div>
+                            </div> <!--/advance-search-card-->
+
+                            <p-table 
+                            #dt 
+                            [value]="aircraftListDataValues" 
+                            class="rpo-table-cstm"
+                            [rows]="aircraftTablePageSize"
+                            [columns]="colsaircraftLD"
+                            [scrollable]="true" 
+                            [style]="{width:'100%'}" 
+                            [paginator]="true"
+                            [rowsPerPageOptions]="[10, 20, 50, 100]"
+                            [resizableColumns]="true"
+                            [reorderableColumns]="true"
+                            selectionMode="multiple"
+
+
+                            >
+                                <ng-template pTemplate="caption"  let-columns>
+                                    <div style="text-align: right; min-height: 30px; margin-left: -6px;">
+                                    <p-multiSelect
+                                        [options]="colsaircraftLD"
+                                        [(ngModel)]="selectedAircraftLDColumns"
+                                        [ngModelOptions]="{ standalone: true }"
+                                        optionLabel="header"
+                                        selectedItemsLabel="{0} columns selected"
+                                        [style]="{ minWidth: '200px' }"
+                                        defaultLabel="Choose Columns"
+                                        style="float:left"
+                                    > <ng-template let-selectedAircraftLDColumns pTemplate="selectedItems">
+                                        <ng-container
+                                          >{{ selectedAircraftLDColumns?.length }} Columns Selected
+                                        </ng-container>
+                                      </ng-template>
+                                </p-multiSelect>
+                                    <div
+                                        class="inner-addon right-addon w200 inline-block g-filter-search-cstm"
+                                    >
+                                        <i class="fa fa-search"></i>
+                                        <input
+                                        type="text"
+                                        pInputText
+                                        size="50"
+                                        class="form-control ui-autocomplete-input"
+                                        (input)="dt.filterGlobal($event.target.value, 'contains')"
+                                        placeholder="Filter"
+                                        style="height: 28px !important;"
+                                        />
                                     </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label class="fs12">
-                                                Aircraft Model
-                                            </label>
-                                            <p-multiSelect [maxSelectedLabels]="2" [options]="aircraftModelList" [(ngModel)]="selectedAircraftModel" [ngModelOptions]="{standalone: true}"
-                                                           class="pub-multi" (onChange)="getDashNumberByManfacturerandModel()" [selectionLimit]="30"></p-multiSelect>
-                                        </div>
+                                    <button
+                                        type="button"
+                                        class="btn btn-primary"
+                                        pButton
+                                        icon="fa-download"
+                                        iconPos="left"
+                                        label="Export All Data"
+                                        matTooltip="Download  Data"
+                                        matTooltipPosition="above"
+                                        (click)="dt.exportCSV()"
+                                        style="padding: 5px 10px !important;"
+                                    ></button>
+                                    <button
+                                        type="button"
+                                        class="btn btn-primary"
+                                        pButton
+                                        icon="fa-download"
+                                        iconPos="left"
+                                        label="Export Selected Data"
+                                        matTooltip="Download Selected Data"
+                                        matTooltipPosition="above"
+                                        (click)="dt.exportCSV({ selectionOnly: true })"
+                                        style="padding: 5px 10px !important;"
+                                    ></button>
+                                    <button
+                                        class="btn btn-primary btn-sm "
+                                        style="padding: 5px 10px !important;"
+                                        *ngIf="showAdvancedSearchCard == false"
+                                        type="button"
+                                        (click)="enableDisableAdvancedSearch(true)"
+                                    >
+                                        Advanced Search <i class="fa fa-caret-down"></i>
+                                    </button>
+                                    <button
+                                        class="btn btn-primary btn-sm"
+                                        style="padding: 5px 10px !important;"
+                                        *ngIf="showAdvancedSearchCard == true"
+                                        type="button"
+                                        (click)="enableDisableAdvancedSearch(false)"
+                                    >
+                                        Advanced Search <i class="fa fa-caret-up"></i>
+                                    </button>
                                     </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label class="fs12">DashNumber </label>
-                                            <p-multiSelect [maxSelectedLabels]="2" [options]="dashNumberList" [(ngModel)]="selectedDashNumbers" [ngModelOptions]="{standalone: true}"
-                                                           class="pub-multi" [selectionLimit]="30"></p-multiSelect>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <div class="form-group">
-                                            <label class="fs12">Memo </label>
-                                            <input type="text" style="height: 27px !important" pInputText />
-                                        </div>
-                                    </div>
-                                    <div class="col-md-1 add-new-align">
-                                        <div class="form-group">
-                                            <button class="btn btn-primary mtop20" (click)="searchAircraftInformation()">
-                                                <i class="pi pi-search pi-search"></i>
+                                </ng-template>
+                            
+                                <ng-template pTemplate="colgroup" let-columns>
+                                    <colgroup>
+                                    <col *ngFor="let col of columns" style="width:130px" />
+                                    </colgroup>
+                                </ng-template>
+                                <ng-template pTemplate="header" let-columns>
+                                    <tr>
+                                        <th *ngFor="let col of columns"   pResizableColumn
+                                        pReorderableColumn
+                                        [pSortableColumn]="col.field">
+                                            {{col.header}}
+                                            <p-sortIcon [field]="col.field"></p-sortIcon>
+                                        </th>
+                                        <th style="width:70px;position:sticky">Action</th>
+                                    </tr>
+                                    <tr>
+                                        <th
+                                          style="width:auto"
+                                          *ngFor="let col of columns"
+                                          [ngSwitch]="col.field"
+                                        >
+                                          <input
+                                            style="width:100%;"
+                                            pInputText
+                                            type="text"
+                                            (input)="dt.filter($event.target.value, col.field, 'contains')"
+                                          />
+                                        </th>
+                                        <th style="width:70px;position:sticky"></th>
+                                      </tr>
+                                </ng-template>
+                                <ng-template pTemplate="body" let-i="rowIndex" let-rowData let-columns="columns">
+                                    <tr [pSelectableRow]="rowData"
+                                    [pSelectableRowDblClick]="rowData">
+                                        <td *ngFor="let col of columns" ResizableColumn
+                                        pReorderableColumn>
+                                            {{rowData[col.field]}}
+                                        </td>
+                                        <td style="width:70px"
+                                        *ngIf="colsaircraftLD.length > 0">
+                                            <button class="btn btn-danger nobg" (click)="deleteAircraftMapped(rowData)">
+                                                <i class="fa fa-trash"></i>
                                             </button>
-                                        </div>
-                                    </div>
-                                    <div class="clear"></div>
+                                        </td>
+                                    </tr>
+                                </ng-template>
+                                <ng-template
+      pTemplate="emptymessage"
+      let-columns
+      *ngIf="aircraftListDataValues?.length == 0"
+    >
+                                    <tr>
+                                        <td [attr.colspan]="6" class="no-records-cstm">
+                                        No records found
+                                        </td>
+                                    </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="summary" id="footer">
+                                    <label id="footer" class="footer">No'of records:</label>
+                                    <input
+                                        style="width: 5%;"
+                                        [ngModelOptions]="{standalone: true}"
+                                        [(ngModel)]="dt._totalRecords"
+                                        [disabled]="true"
+                                        pInputText
+                                        type="text"
+                                    />
+                                    &nbsp;&nbsp;
+                                    <label id="footer" class="footer1">Pages Count:</label>
+                                    <input
+                                        style="width: 5%;"
+                                        [ngModelOptions]="{standalone: true}"
+                                        [ngModel]="getPageCount(dt._totalRecords, aircraftTablePageSize)"
+                                        [disabled]="true"
+                                        pInputText
+                                        type="text"
+                                    />
+                                    <!-- <input style="width: 5%;" value="{{totalPages}}" [disabled]="true" pInputText type="text" /> -->
+                                    </ng-template>
+                            </p-table>
+                            <br />
+                            <!-- <div class="col-sm-12">
+                                <div class="col-sm-3 font">
+                                    Schematic: <input type="checkbox" data-md-icheck (change)="onSchematic($event)" />
                                 </div>
-                            </div>
+                                <div class="col-sm-6 font inline-block display-flex" *ngIf="schematic">
+                                    Attach Drawing..
+                                    <div class="upload">
+                                        <input type="file" name="upload[]" id="upload" class="inputfile upload-file" data-multiple-caption="{count} files selected" multiple="">
+                                        <label>
+                                            <figure><i class="fa fa-upload"></i></figure>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div> -->
+
+                        </div>
+                        <div style="margin-top: 10px;">                  
+                            <button class="btn btn-primary pull-right submit-btn"  (click)="moveAtachapter()" type="button" style="height: 30px; width: 100px">Save & Next</button> &nbsp;
+                            <button class="btn btn-primary pull-right submit-btn"  type="button" (click)="moveGeneralInfromation(); changeOfTab('General')" style="height: 30px">Previous</button>
                         </div>
                     </div>
-
-                    <br />
-                    <div class="card">
-                        <p-table [value]="aircraftListDataValues" [rows]="6" [columns]="colsaircraftLD" [scrollable]="true" [style]="{width:'100%'}" [paginator]="true">
-                            <ng-template pTemplate="header" let-columns>
-                                <tr>
-                                    <th *ngFor="let col of columns">
-                                        {{col.header}}
-                                    </th>
-                                    <th>Action</th>
-                                </tr>
-                            </ng-template>
-                            <ng-template pTemplate="body" let-i="rowIndex" let-rowData let-columns="columns">
-                                <tr>
-                                    <td *ngFor="let col of columns">
-                                        {{rowData[col.field]}}
-                                    </td>
-                                    <td>
-                                        <button class="btn btn-danger nobg" (click)="deleteAircraftMapped(rowData)">
-                                            <i class="fa fa-trash"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                            </ng-template>
-                        </p-table>
-                        <br />
-                        <!-- <div class="col-sm-12">
-                            <div class="col-sm-3 font">
-                                Schematic: <input type="checkbox" data-md-icheck (change)="onSchematic($event)" />
-                            </div>
-                            <div class="col-sm-6 font inline-block display-flex" *ngIf="schematic">
-                                Attach Drawing..
-                                <div class="upload">
-                                    <input type="file" name="upload[]" id="upload" class="inputfile upload-file" data-multiple-caption="{count} files selected" multiple="">
-                                    <label>
-                                        <figure><i class="fa fa-upload"></i></figure>
-                                    </label>
-                                </div>
-                            </div>
-                        </div> -->
-
-                    </div>
-                   
-                    <button class="btn btn-primary pull-right submit-btn"  (click)="moveAtachapter()" type="button" style="height: 30px; width: 100px">Save & Next</button> &nbsp;
-
-                    <button class="btn btn-primary pull-right submit-btn"  type="button" (click)="moveGeneralInfromation(); changeOfTab('General')" style="height: 30px">Previous</button>
-                    
                 </div>
                 <div [ngClass]="{hideTab : currentTab !== 'Atachapter'}">
                     <div class="card">
-                        <div class="col-sm-12 font-padding">
+                        <div class="col-sm-12">
                             <div class="col-sm-2">
                                 PN: <span style="color:red">{{pnvalue}}</span>
                             </div>
@@ -1619,7 +1801,7 @@
 
                             <button class="btn btn-primary pull-right submit-btn" type="button" (click)="saveandcreate(exportInformatiom)" style="height: 30px; width: 115px">Save & Add New</button>
                             &nbsp;
-                            <button class="btn btn-primary pull-right submit-btn" type="submit" [disabled]="!exportInformatiom.valid || !isValidClassification" (click)="saveExportInformation()" style="height: 30px; width:80px">save</button>
+                            <button class="btn btn-primary pull-right submit-btn" type="submit" [disabled]="!exportInformatiom.valid || !isValidClassification" (click)="saveExportInformation()" style="height: 30px; width:80px">Save</button>
                             &nbsp;
                             <button class="btn btn-primary pull-right submit-btn" type="button" (click)="changeOfTab('Exchange')" style="height: 30px; width: 100px">Previous</button>
 
@@ -1693,7 +1875,7 @@
                                     <th *ngFor="let col of columns">
                                         {{col.header}}
                                     </th>
-                                    <th>Memo</th>
+                                    <!-- <th>Memo</th> -->
 
                                 </tr>
                             </ng-template>
@@ -1714,9 +1896,9 @@
                                     <td *ngFor="let col of columns">
                                         {{rowData[col.field]}}
                                     </td>
-                                    <td>
+                                    <!-- <td>
                                         <input type="text" class="form-control input-value" [(ngModel)]="rowData.Memo" name="Memo"  />
-                                    </td>
+                                    </td> -->
                                 </tr>
                             </ng-template>
                         </p-table>

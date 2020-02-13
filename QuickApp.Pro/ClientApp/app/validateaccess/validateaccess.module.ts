@@ -2,10 +2,12 @@
 import { CommonModule } from "@angular/common";
 import { ValidateAccessDirective } from "../directive/validateaccess.directive";
 import { AuthService } from "../services/auth.service";
+import { ChangeButtonStatus } from "../directive/changebutton.directive";
 
 @NgModule({
-	declarations: [
-		ValidateAccessDirective
+    declarations: [
+        ValidateAccessDirective,
+        ChangeButtonStatus
     ],
 
     imports: [
@@ -13,14 +15,15 @@ import { AuthService } from "../services/auth.service";
     ],
 
     exports: [
-        ValidateAccessDirective
+        ValidateAccessDirective,
+        ChangeButtonStatus
     ],
 
     providers: [
         AuthService
     ],
 
-    bootstrap: [        
+    bootstrap: [
     ],
 
 })

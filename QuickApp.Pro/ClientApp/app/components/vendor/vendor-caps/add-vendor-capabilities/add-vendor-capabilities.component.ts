@@ -48,7 +48,7 @@ export class AddVendorCapabilitiesComponent implements OnInit {
 	sourceVendorCap: any = {};
 	disableSaveVenName: boolean;
 	disableSaveVenderName: boolean;
-	disableSave: boolean;
+	disableSave: boolean = true;
 	selectedVendorActionName: any;
 	vendorNames: any[];
 	VendorCodesColl: any[] = [];
@@ -1593,13 +1593,17 @@ export class AddVendorCapabilitiesComponent implements OnInit {
 		$("#aircraftDelete").modal("hide");
 	}
 	getVendorName() {
-        if (this.sselectedVendorName !== undefined) {
-            return editValueAssignByCondition('vendorName', this.sselectedVendorName);
-        }
-    }
+		if (this.sselectedVendorName !== undefined) {
+			return editValueAssignByCondition('vendorName', this.sselectedVendorName);
+		}
+	}
 
 	getPageCount(totalNoofRecords, pageSize) {
 
 		return Math.ceil(totalNoofRecords / pageSize)
+	}
+	enableSave() {
+		this.disableSave = false;
+
 	}
 }

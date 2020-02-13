@@ -61,7 +61,7 @@
             [paginator]="true"
             [pageLinks]="3"
             [first]="0"
-            [rowsPerPageOptions]="[10, 50, 100]"
+            [rowsPerPageOptions]="[10, 20,  50, 100]"
             [columns]="selectedColumns"
             selectionMode="multiple"
             [resizableColumns]="true"
@@ -353,8 +353,7 @@
     <button
       type="button"
       class="btn btn-success"
-      (click)="deleteItemAndCloseModel()"
-    >
+      (click)="deleteItemAndCloseModel()">
       Yes
     </button>
     <button type="button" class="btn btn-danger" (click)="dismissModel()">
@@ -545,6 +544,7 @@
                   [showCancelButton]="false"
                   [showUploadButton]="false"
                   customUpload="true"
+                  (ngModelChange)="enableSave()"
                   (onSelect)="fileUpload($event)"
                   (onRemove)="removeFile($event)"
                 ></p-fileUpload>
