@@ -72,7 +72,7 @@
                     <ng-template pTemplate="body" let-rowData let-columns="columns">
                         <tr>
                             <td>
-                                <select class="form-control wf-pub-id select-read-only" [(ngModel)]="rowData.taskId" [disabled]="isView" disabled>
+                                <select class="form-control select-read-only" [(ngModel)]="rowData.taskId" [disabled]="isView" disabled>
                                     <option value="">Select</option>
                                     <option *ngFor="let task of taskList" [value]="task.taskId">{{task.description}}</option>
                                 </select>

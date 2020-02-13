@@ -67,7 +67,7 @@ export class ChargesCreateComponent implements OnInit, OnChanges {
                 this.workFlow.totalChargesCost = 0;
 
                 this.row = this.workFlow.charges[0];
-                this.addRow();
+                // this.addRow();
             }
 
 
@@ -103,7 +103,7 @@ export class ChargesCreateComponent implements OnInit, OnChanges {
     }
 
     ngOnChanges(): void {
-
+        this.addRow();
     }
 
     reCalculate() {
@@ -171,13 +171,15 @@ export class ChargesCreateComponent implements OnInit, OnChanges {
         var newRow = Object.assign({}, this.row);
         newRow.workflowChargesListId = "0";
         newRow.vendor = {};
-        this.taskList.forEach(
-            task=>{
-                if(task.description == "Assemble"){
-                    newRow.taskId = task.taskId;
+        if(this.taskList){
+            this.taskList.forEach(
+                task=>{
+                    if(task.description == "Assemble"){
+                        newRow.taskId = task.taskId;
+                    }
                 }
-            }
-        )
+            )
+        }
         newRow.currencyId = "0";
         newRow.description = "";
         newRow.extendedCost = "";

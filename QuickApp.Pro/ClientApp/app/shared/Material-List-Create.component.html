@@ -81,6 +81,7 @@
                 id="ddlMaterialCondition"
                 [(ngModel)]="material.conditionCodeId"
                 name="cond_{{i}}"
+                (change)="getPNDetails(material)"
                 required
               >
                 <option value="">Select</option>

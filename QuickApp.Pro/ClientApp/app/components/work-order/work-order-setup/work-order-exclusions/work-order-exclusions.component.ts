@@ -44,13 +44,15 @@ export class WorkOrderExclusionsComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     if(this.workOrderExclusionsList && this.workOrderExclusionsList.length > 0 && this.workOrderExclusionsList[0].headerMarkupId){
-      this.costPlusType = this.workOrderExclusionsList[0].headerMarkupId
+      this.costPlusType = this.workOrderExclusionsList[0].markupFixedPrice;
+      this.overAllMarkup = Number(this.workOrderExclusionsList[0].headerMarkupId);
     }
   }
 
   ngOnChanges() {
     if(this.workOrderExclusionsList && this.workOrderExclusionsList.length > 0 && this.workOrderExclusionsList[0].headerMarkupId){
-      this.costPlusType = this.workOrderExclusionsList[0].headerMarkupId
+      this.costPlusType = this.workOrderExclusionsList[0].markupFixedPrice;
+      this.overAllMarkup = Number(this.workOrderExclusionsList[0].headerMarkupId);
     }
   }
 
@@ -92,7 +94,7 @@ export class WorkOrderExclusionsComponent implements OnInit, OnChanges {
 
   tmchange(){
     for(let mData of this.workOrderExclusionsList){
-      mData.billingMethodId = Number(this.costPlusType);
+      mData.billingMethodId = this.costPlusType;
     }
   }
 
@@ -134,7 +136,7 @@ export class WorkOrderExclusionsComponent implements OnInit, OnChanges {
       this.workOrderExclusionsList = [];
     }
     if (this.isQuote) {
-      this.workOrderExclusionsList = [...this.workOrderExclusionsList, ...event['exclusions'].map(x => { return { ...x, epn: x.partNumber, epnDescription: x.partDescription, headerMarkupId: Number(this.costPlusType) } })];
+      this.workOrderExclusionsList = [...this.workOrderExclusionsList, ...event['exclusions'].map(x => { return { ...x, epn: x.partNumber, epnDescription: x.partDescription, markupFixedPrice: this.costPlusType, headerMarkupId: Number(this.overAllMarkup) } })];
       $('#addNewExclusions').modal('hide');
     }
     else {
@@ -160,7 +162,7 @@ export class WorkOrderExclusionsComponent implements OnInit, OnChanges {
 
   saveQuotation() {
     this.workOrderExclusionsList = this.workOrderExclusionsList.map(exc=>{
-      return {...exc, headerMarkupId: this.costPlusType}
+      return {...exc, headerMarkupId: Number(this.overAllMarkup), markupFixedPrice: this.costPlusType,}
     })
     this.saveExclusionsListForWO.emit(this.workOrderExclusionsList);
   }

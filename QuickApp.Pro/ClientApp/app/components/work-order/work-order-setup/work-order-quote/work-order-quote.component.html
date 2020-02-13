@@ -431,13 +431,13 @@
                       class="p-radiobutton-label-horizontal p-radio-custom"
                       name="costPlusType"
                       label="T&M - Mark Up"
-                      value=1
+                      value="1"
                       [(ngModel)]="costPlusType"
                       [disabled]="isView"
                       (click)="tmchange()"
                     ></p-radioButton>
                     <div>
-                      <select class="form-control" (change)="markupChanged({}, 'all')" [(ngModel)]="overAllMarkup" [disabled]="isView || costPlusType != 1" style="margin-top: 10px;">
+                      <select class="form-control" (change)="markupChanged({}, 'all')" [(ngModel)]="overAllMarkup" [disabled]="isView || costPlusType != '1'" style="margin-top: 10px;">
                         <option value="">Select</option>
                         <option *ngFor="let markUp of markupList" [value]="markUp.value">{{markUp.label}}</option>
                       </select>
@@ -447,7 +447,7 @@
                     <p-radioButton
                       class="p-radiobutton-label-horizontal col-width p-radio-custom"
                       name="costPlusType"
-                      value=2
+                      value="2"
                       label="Actual"
                       [(ngModel)]="costPlusType"
                       [disabled]="isView"
@@ -514,11 +514,11 @@
               <td>
                 <select class="form-control" [(ngModel)]="matQuotation.billingMethodId" style="width: 130px;">
                   <option value="">Select</option>
-                  <option *ngFor="let bm of [{'label': 'T&M', 'value': 1}, {'label': 'Actual', 'value': 2}]" [value]="bm.value">{{bm.label}}</option>
+                  <option *ngFor="let bm of [{'label': 'T&M', 'value': '1'}, {'label': 'Actual', 'value': '2'}]" [value]="bm.value">{{bm.label}}</option>
                 </select>
               </td>
               <td>
-                  <select class="form-control wf-pub-id" (change)="markupChanged(matQuotation, 'row')" [(ngModel)]="matQuotation.markupPercentageId" [disabled]="isView || matQuotation.billingMethodId != 1">
+                  <select class="form-control wf-pub-id" (change)="markupChanged(matQuotation, 'row')" [(ngModel)]="matQuotation.markupPercentageId" [disabled]="isView || matQuotation.billingMethodId != '1'">
                     <option value="">Select</option>
                     <option *ngFor="let markUp of markupList" [value]="markUp.value">{{markUp.label}}</option>
                   </select>

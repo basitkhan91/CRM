@@ -50,12 +50,14 @@ export class WorkOrderChargesComponent implements OnChanges, OnInit {
   ngOnChanges() {
     console.log(this.markupList);
     if(this.workOrderChargesList && this.workOrderChargesList.length > 0 && this.workOrderChargesList[0].headerMarkupId){
-      this.costPlusType = Number(this.workOrderChargesList[0].headerMarkupId);
+      this.costPlusType = Number(this.workOrderChargesList[0].markupFixedPrice);
+      this.overAllMarkup = this.workOrderChargesList[0].headerMarkupId;
     }
   }
   ngOnInit() {
     if(this.workOrderChargesList && this.workOrderChargesList.length > 0 && this.workOrderChargesList[0].markupFixedPrice){
-      this.costPlusType = this.workOrderChargesList[0].markupFixedPrice
+      this.costPlusType = Number(this.workOrderChargesList[0].markupFixedPrice);
+      this.overAllMarkup = this.workOrderChargesList[0].headerMarkupId;
     }
     if(!this.isQuote){
       this.cols = [...this.cols, { field: 'extendedPrice', header: 'Extended Price' }, { field: 'unitPrice', header: 'Unit Price' },]
@@ -116,7 +118,7 @@ export class WorkOrderChargesComponent implements OnChanges, OnInit {
 
   createChargeQuote() {
     this.workOrderChargesList = this.workOrderChargesList.map(charge=>{
-      return {...charge, markupFixedPrice: this.costPlusType, headerMarkupId: Number(this.costPlusType)}
+      return {...charge, markupFixedPrice: this.costPlusType, headerMarkupId: Number(this.overAllMarkup) }
     })
     this.createQuote.emit(this.workOrderChargesList);
   }
@@ -155,7 +157,7 @@ export class WorkOrderChargesComponent implements OnChanges, OnInit {
 
   tmchange(){
     for(let mData of this.workOrderChargesList){
-      mData.billingMethodId = Number(this.costPlusType);
+      mData.billingMethodId = this.costPlusType;
     }
   }
 

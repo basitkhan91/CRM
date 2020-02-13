@@ -57,7 +57,7 @@ export class ExclusionsCreateComponent implements OnInit, OnChanges {
             if (!this.UpdateMode) {
                 this.workFlow.exclusions = [];
                 this.row = this.workFlow.exclusions[0];
-                this.addRow();
+                // this.addRow();
             }
         }
         
@@ -88,6 +88,7 @@ export class ExclusionsCreateComponent implements OnInit, OnChanges {
         console.log(this.taskList);
         console.log(this.isEdit);
         console.log(this.isQuote);
+        this.addRow();
     }
     reCalculate() {
         this.calculateQtySummation();
@@ -98,13 +99,15 @@ export class ExclusionsCreateComponent implements OnInit, OnChanges {
         var newRow = Object.assign({}, this.row);
         newRow.workflowExclusionId = "0";
         // newRow.taskId = this.workFlow.taskId;
-        this.taskList.forEach(
-            task=>{
-                if(task.description == "Assemble"){
-                    newRow.taskId = task.taskId;
+        if(this.taskList){
+            this.taskList.forEach(
+                task=>{
+                    if(task.description == "Assemble"){
+                        newRow.taskId = task.taskId;
+                    }
                 }
-            }
-        )
+            )
+        }
         newRow.partDescription = "";
         newRow.estimtPercentOccurrance = "";
         newRow.extendedCost = "";
