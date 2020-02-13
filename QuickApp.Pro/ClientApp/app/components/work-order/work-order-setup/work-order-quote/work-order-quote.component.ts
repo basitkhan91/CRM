@@ -679,6 +679,7 @@ overAllMarkup: any;
         "BillingRate":fre.billingRate,
         "BillingAmount":fre.billingAmount,
         "headerMarkupId":fre.headerMarkupId,
+        "markupFixedPrice":fre.markupFixedPrice,
       }
     })
 
@@ -722,7 +723,6 @@ overAllMarkup: any;
                   "Memo":mList.memo,
                   "IsDefered":mList.isDeferred,
                   "markupPercentageId":mList.markupPercentageId,
-                  "markupFixedPrice":this.costPlusType,
                   "TotalPartsCost":155,
                   "Markup":mList.markup,
                   "masterCompanyId":(mList.masterCompanyId == '')?0:mList.masterCompanyId,
@@ -730,7 +730,8 @@ overAllMarkup: any;
                   "BillingMethodId":Number(mList.billingMethodId),
                   "BillingRate":mList.billingRate,
                   "BillingAmount":mList.billingAmount,
-                  "headerMarkupId":this.costPlusType,
+                  "headerMarkupId":this.overAllMarkup,
+                  "markupFixedPrice":this.costPlusType,
                   "CreatedBy":"admin",
                   "UpdatedBy":"admin",
                   "IsActive":true,
@@ -755,7 +756,7 @@ overAllMarkup: any;
 
   tmchange(){
     for(let mData of this.materialListQuotation){
-      mData.billingMethodId = Number(this.costPlusType);
+      mData.billingMethodId = this.costPlusType;
     }
   }
 
@@ -834,6 +835,7 @@ overAllMarkup: any;
         "BillingMethodId": charge.billingMethodId,
         "BillingRate":charge.billingRate,
         "BillingAmount":charge.billingAmount,
+        "markupFixedPrice":charge.markupFixedPrice,
       }
     })
     this.workOrderService.saveChargesQuote(this.chargesPayload)
@@ -923,6 +925,7 @@ saveworkOrderLabor(data) {
   this.laborPayload.WorkOrderQuoteLaborHeader.TotalWorkHours = data.totalWorkHours
   this.laborPayload.WorkOrderQuoteLaborHeader.masterCompanyId = data.masterCompanyId; 
   this.laborPayload.WorkOrderQuoteLaborHeader['headerMarkupId'] = data.headerMarkupId;
+  this.laborPayload.WorkOrderQuoteLaborHeader['markupFixedPrice'] = data.markupFixedPrice;
   this.laborPayload.WorkOrderQuoteLaborHeader.CreatedBy = "admin"
   this.laborPayload.WorkOrderQuoteLaborHeader.UpdatedBy = "admin" 
   this.laborPayload.WorkOrderQuoteLaborHeader.IsActive = true 
@@ -961,6 +964,7 @@ saveworkOrderLabor(data) {
         "BillingMethodId": labor.billingMethodId,
         "BillingRate":labor.billingRate,
         "BillingAmount":labor.billingAmount,
+        "markupFixedPrice":labor.markupFixedPrice,
     })
     }
   })
@@ -1052,6 +1056,7 @@ saveWorkOrderExclusionsList(data) {
       "BillingRate":ex.billingRate,
       "BillingAmount":ex.billingAmount,
       "headerMarkupId":ex.headerMarkupId,
+      "markupFixedPrice":ex.markupFixedPrice,
     }
   })
   this.workOrderService.saveExclusionsQuote(this.exclusionPayload)
@@ -1110,6 +1115,11 @@ saveWorkOrderChargesList(data){
 }
 
 saveMaterialListForWO(data){
+  data['materialList'].forEach(
+    mData => {
+      mData['billingAmount'] = mData.quantity * mData.billingRate;
+    }
+  )
   if(!this.editMatData || this.editMatData.length == 0){
     this.materialListQuotation = [...this.materialListQuotation, ...data['materialList']];
   }
@@ -1254,7 +1264,8 @@ getQuoteMaterialListByWorkOrderQuoteId() {
     this.workOrderService.getQuoteMaterialList(this.workOrderQuoteDetailsId, (this.selectedBuildMethod === 'use work order')?1:(this.selectedBuildMethod == "use work flow")?2:(this.selectedBuildMethod == "use historical wos")?3:4).subscribe(res => {
         this.materialListQuotation = res;
         if(this.materialListQuotation && this.materialListQuotation.length > 0 && this.materialListQuotation[0].headerMarkupId){
-          this.costPlusType = Number(this.materialListQuotation[0].headerMarkupId);
+          this.costPlusType = Number(this.materialListQuotation[0].markupFixedPrice);
+          this.overAllMarkup = Number(this.materialListQuotation[0].headerMarkupId);
         }
         if(res.length > 0){
           this.updateWorkOrderQuoteDetailsId(res[0].workOrderQuoteDetailsId)
@@ -1297,11 +1308,12 @@ getQuoteFreightListByWorkOrderQuoteId() {
               this.labor = {...res, workOrderLaborList: laborList};
               this.labor.workFlowWorkOrderId = wowfId;
               this.taskList.forEach((tl)=>{
+                this.labor.workOrderLaborList[0][tl['description'].toLowerCase()] = [];
                 res.laborList.forEach((rt)=>{
                   if(rt['taskId'] == tl['taskId']){
-                    if(this.labor.workOrderLaborList[0][tl['description'].toLowerCase()][0] && this.labor.workOrderLaborList[0][tl['description'].toLowerCase()][0]['expertiseId'] == null && this.labor.workOrderLaborList[0][tl['description'].toLowerCase()][0]['employeeId'] == null){
-                      this.labor.workOrderLaborList[0][tl['description'].toLowerCase()] = [];
-                    }
+                    // if(this.labor.workOrderLaborList[0][tl['description'].toLowerCase()][0] && this.labor.workOrderLaborList[0][tl['description'].toLowerCase()][0]['expertiseId'] == null && this.labor.workOrderLaborList[0][tl['description'].toLowerCase()][0]['employeeId'] == null){
+                    //   this.labor.workOrderLaborList[0][tl['description'].toLowerCase()] = [];
+                    // }
                     let labor = {}
                     labor = {...rt, employeeId: {'label':rt.employeeName, 'value': rt.employeeId}}
                     this.labor.workOrderLaborList[0][tl['description'].toLowerCase()].push(labor);

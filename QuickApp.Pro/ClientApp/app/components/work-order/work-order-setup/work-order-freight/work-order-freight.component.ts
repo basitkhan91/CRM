@@ -58,7 +58,8 @@ export class WorkOrderFreightComponent implements OnInit {
         this.getShipViaByCustomerId();
         this.getCarrierList();
         if(this.workOrderFreightList && this.workOrderFreightList.length>0 && this.workOrderFreightList[0].headerMarkupId){
-            this.costPlusType = this.workOrderFreightList[0].headerMarkupId;
+            this.costPlusType = this.workOrderFreightList[0].markupFixedPrice;
+            this.overAllMarkup = Number(this.workOrderFreightList[0].headerMarkupId);
         }
     }
 
@@ -92,7 +93,15 @@ export class WorkOrderFreightComponent implements OnInit {
         this.freightForm = [new Freight()];
     }
     addNewRow() {
-        this.freightForm = [...this.freightForm, new Freight()];
+        let newFreight = new Freight();
+        this.taskList.forEach(
+            task=>{
+                if(task.description == "Assemble"){
+                    newFreight['taskId'] = task.taskId;
+                }
+            }
+        )
+        this.freightForm = [...this.freightForm, newFreight];
     }
     edit(rowData, index) {
         this.editingIndex = index;
@@ -132,7 +141,7 @@ export class WorkOrderFreightComponent implements OnInit {
 
     createFreightsQuote() {
         this.workOrderFreightList = this.workOrderFreightList.map((f)=>{
-            return {...f, headerMarkupId: Number(this.costPlusType)}
+            return {...f, headerMarkupId: Number(this.overAllMarkup), markupFixedPrice: this.costPlusType}
         })
         this.saveFreightListForWO.emit(this.workOrderFreightList);
     }
@@ -186,7 +195,7 @@ export class WorkOrderFreightComponent implements OnInit {
 
     tmchange(){
         for(let mData of this.workOrderFreightList){
-            mData.billingMethodId = Number(this.costPlusType);
+            mData.billingMethodId = this.costPlusType;
         }
     }
     

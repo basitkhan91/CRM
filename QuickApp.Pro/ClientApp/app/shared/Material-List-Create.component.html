@@ -3,7 +3,7 @@
 >
   <div>
     <span class="cat-heading cat4" *ngIf="!isEdit">
-      Add New Material List<i (click)="addRow()" class="fa fa-plus"></i>
+      Add New PN<i (click)="addRow()" class="fa fa-plus"></i>
       <span class="float-right">
         Deferred &nbsp;<input
           type="checkbox"
@@ -81,6 +81,7 @@
                 id="ddlMaterialCondition"
                 [(ngModel)]="material.conditionCodeId"
                 name="cond_{{i}}"
+                (change)="getPNDetails(material)"
                 required
               >
                 <option value="">Select</option>

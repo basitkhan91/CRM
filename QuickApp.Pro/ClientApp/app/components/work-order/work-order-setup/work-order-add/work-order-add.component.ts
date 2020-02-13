@@ -1058,6 +1058,8 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
                     this.taskList.forEach(task => {
                         this.labor.workOrderLaborList[0][task.description.toLowerCase()] = [];
                     });
+                    this.gridTabChange('materialList');
+                    this.getMaterialListByWorkOrderId();
                 },
                 (error) => {
                     console.log(error);

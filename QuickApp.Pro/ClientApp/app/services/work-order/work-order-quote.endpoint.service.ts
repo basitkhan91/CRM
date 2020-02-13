@@ -42,6 +42,9 @@ export class QuoteEndpointService extends EndpointFactory {
     getSavedQuoteDetails(wfwoid) {
         return this.http.get(`${this.configurations.baseUrl}/api/workorder/buildmethoddetails?workflowWorkorderId=${wfwoid}`);
     }
+    getPartDetails(itemMasterId, conditionId){
+        return this.http.get(`${this.configurations.baseUrl}/api/common/partpurchasesaledetails?itemMasterId=${itemMasterId}&condition=${conditionId}`);
+    }
 
 
 }

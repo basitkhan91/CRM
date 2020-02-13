@@ -30,13 +30,13 @@
                 class="p-radiobutton-label-horizontal p-radio-custom"
                 name="costPlusType"
                 label="T&M - Mark Up"
-                value=1
+                value="1"
                 [(ngModel)]="costPlusType"
                 [disabled]="isView"
                 (click)="tmchange()"
               ></p-radioButton>
               <div>
-                <select class="form-group" (change)="markupChanged({}, 'all')" [(ngModel)]="overAllMarkup" [disabled]="isView || costPlusType != 1" style="margin-top: 10px;">
+                <select class="form-group" (change)="markupChanged({}, 'all')" [(ngModel)]="overAllMarkup" [disabled]="isView || costPlusType != '1'" style="margin-top: 10px;">
                   <option value="">Select</option>
                   <option *ngFor="let markUp of markupList" [value]="markUp.value">{{markUp.label}}</option>
                 </select>
@@ -46,7 +46,7 @@
               <p-radioButton
                 class="p-radiobutton-label-horizontal col-width p-radio-custom"
                 name="costPlusType"
-                value=2
+                value="2"
                 label="Actual"
                 [(ngModel)]="costPlusType"
                 [disabled]="isView"
@@ -87,9 +87,7 @@
         </th> -->
       </tr>
       <tr>
-        <ng-container>
-          <th>Task</th>
-        </ng-container>
+        <th>Task</th>
         <th *ngFor="let col of columns">
           {{ col.header }}
         </th>
@@ -106,14 +104,12 @@
     </ng-template>
     <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
       <tr *ngIf="!rowData['isDeleted']">
-        <ng-container>
-          <td>
-            <select class="form-control select-read-only" [(ngModel)]="rowData.taskId" disabled>
-              <option value="">Select</option>
-              <option *ngFor="let task of taskList" [value]="task.taskId">{{task.description}}</option>
-            </select>
-          </td>
-        </ng-container>
+        <td>
+          <select class="form-control select-read-only" [(ngModel)]="rowData.taskId" disabled>
+            <option value="">Select</option>
+            <option *ngFor="let task of taskList" [value]="task.taskId">{{task.description}}</option>
+          </select>
+        </td>
         <ng-container *ngFor="let col of columns">
           <td *ngIf="col.field != 'shipVia' && col.field != 'carrierName'">
             {{rowData[col.field]}}
@@ -138,7 +134,7 @@
             <td>
               <select class="form-control" [(ngModel)]="rowData.billingMethodId">
                 <option value="">Select</option>
-                <option *ngFor="let bm of [{'label': 'T&M', 'value': 1}, {'label': 'Actual', 'value': 2}]" [value]="bm.value">{{bm.label}}</option>
+                <option *ngFor="let bm of [{'label': 'T&M', 'value': '1'}, {'label': 'Actual', 'value': '2'}]" [value]="bm.value">{{bm.label}}</option>
               </select>
             </td>
             <td>
@@ -146,7 +142,7 @@
                 class="form-control"
                 (change)="markupChanged(rowData, 'row')"
                 [(ngModel)]="rowData.markupPercentageId"
-                [disabled]="isView || rowData.billingMethodId != 1"
+                [disabled]="isView || rowData.billingMethodId != '1'"
               >
                 <option value="">Select</option>
                 <option
@@ -163,7 +159,7 @@
               <input type="number" [(ngModel)]="rowData.fixedAmount" [disabled]="costPlusType != 'Fixed Mat Price'"/>
             </td> -->
             <td>
-                <input type="number" [(ngModel)]="rowData.billingRate" (change)="rowData.billingAmount = rowData.billingRate*rowData.weight" [disabled]="isView || rowData.billingMethodId != 2"/>
+                <input type="number" [(ngModel)]="rowData.billingRate" (change)="rowData.billingAmount = rowData.billingRate*rowData.weight" [disabled]="isView || rowData.billingMethodId != '2'"/>
             </td>
             <td>{{ rowData.billingAmount }}</td>
         </ng-container>
