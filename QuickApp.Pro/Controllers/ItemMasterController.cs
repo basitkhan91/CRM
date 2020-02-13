@@ -569,7 +569,8 @@ namespace QuickApp.Pro.Controllers
 
                     itemmaserObj.ItemGroupId = itemMasterViewModel.ItemGroupId;
                     itemmaserObj.ItemClassificationId = itemMasterViewModel.ItemClassificationId;
-                    itemmaserObj.IsAcquiredMethodBuy = itemMasterViewModel.IsAcquiredMethodBuy;
+                    //itemmaserObj.IsAcquiredMethodBuy = itemMasterViewModel.IsAcquiredMethodBuy;
+                    itemmaserObj.AssetAcquistionTypeId = itemMasterViewModel.AssetAcquistionTypeId;
                     itemmaserObj.IsHazardousMaterial = itemMasterViewModel.IsHazardousMaterial;
                     itemmaserObj.IsExpirationDateAvailable = itemMasterViewModel.IsExpirationDateAvailable;
                     itemmaserObj.ExpirationDate = itemMasterViewModel.ExpirationDate;

@@ -57,7 +57,6 @@ namespace DAL.Repositories
                                 iM.IsSerialized,
                                 iM.ItemGroupId,
                                 iM.ItemClassificationId,
-                                iM.IsAcquiredMethodBuy,
                                 iM.IsHazardousMaterial,
                                 iM.IsExpirationDateAvailable,
                                 iM.ExpirationDate,
@@ -162,6 +161,7 @@ namespace DAL.Repositories
                                 iM.LocationId,
                                 iM.ShelfId,
                                 iM.BinId,
+                                iM.AssetAcquistionTypeId,
 
                                 ManufacturerName = mfgs == null ? "" : mfgs.Name,
                                 SiteName = sites == null ? "" : sites.Name,

@@ -37,8 +37,17 @@ export class VendorDocumentsComponent implements OnInit {
 	vendorDocumentsColumns = [
 		{ field: 'docName', header: 'Name' },
 		{ field: 'docDescription', header: 'Description' },
-		{ field: 'documents', header: 'Documents' },
-		{ field: 'docMemo', header: 'Memo' },
+		{ field: 'fileName', header: 'FileName' },
+		{ field: 'fileCreatedDate', header: 'CreatedDate' },
+		{ field: 'fileCreatedBy', header: 'Created By' },
+		{ field: 'fileUpdatedBy', header: 'UpdatedBy' },
+		{ field: 'fileUpdatedDate', header: 'UpdatedDate' },
+		{ field: 'fileSize', header: 'FileSize' },
+		{ field: 'docMemo', header: 'Memo' }
+		// { field: 'docName', header: 'Name' },
+		// { field: 'docDescription', header: 'Description' },
+		// { field: 'documents', header: 'Documents' },
+		// { field: 'docMemo', header: 'Memo' },
 
 	];
 	selectedColumns = this.vendorDocumentsColumns;
@@ -76,6 +85,7 @@ export class VendorDocumentsComponent implements OnInit {
 	totalPages: number = 0;
 	@Input() vendorId: number = 0;
 	@Input() viewMode: boolean = false;
+	documentsDestructuredData: any = [];
 
 	constructor(public vendorService: VendorService, private router: ActivatedRoute, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService,
 		private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private configurations: ConfigurationService) {
@@ -152,8 +162,35 @@ export class VendorDocumentsComponent implements OnInit {
 
 	getList() {
 		const vendorId = this.vendorId != 0 ? this.vendorId : this.local.vendorId;
+		this.documentsDestructuredData = [];
 		this.vendorService.getDocumentList(vendorId).subscribe(res => {
-			this.vendorDocumentsData = res;
+			let arr = [];
+
+			const data = res.map(x => {
+				for (var i = 0; i < x.attachmentDetails.length; i++) {
+					const y = x.attachmentDetails;
+					arr.push({
+						...x,
+						// documents: y[i].fileName,
+						fileName: y[i].fileName,
+						fileCreatedDate: y[i].createdDate,
+						fileCreatedBy: y[i].createdBy,
+						fileUpdatedBy: y[i].updatedBy,
+						fileUpdatedDate: y[i].updatedDate,
+						// fileSize: `${y[i].fileSize} MB`
+						fileSize: y[i].fileSize,
+						attachmentDetailId: y[i].attachmentDetailId
+
+					})
+				}
+				this.documentsDestructuredData = arr;
+				console.log(arr);
+				console.log(this.documentsDestructuredData);
+
+
+			})
+		}, err => {
+			this.documentsDestructuredData = [];
 		})
 	}
 	getListById(vendorDocId) {
@@ -362,6 +399,9 @@ export class VendorDocumentsComponent implements OnInit {
 	getPageCount(totalNoofRecords, pageSize) {
 		return Math.ceil(totalNoofRecords / pageSize)
 	}
+	pageIndexChange(event) {
+        this.pageSize = event.rows;
+    }
 
 	// resetVendorDocument()
 	// {

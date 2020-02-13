@@ -229,6 +229,7 @@ import { StageCodeService } from './services/work-order-stagecode.service';
 import { RefreshAlert } from './directive/refreshalert.directive';
 
 import { CustomerPagesModule } from './customerpages/customerpages.module';
+import { ChangeButtonStatus } from './directive/changebutton.directive';
 
 @NgModule({
     imports: [
@@ -284,7 +285,9 @@ import { CustomerPagesModule } from './customerpages/customerpages.module';
         CustomerViewComponent,
         StocklineViewComponent,
         StocklineHistoryComponent,
-        RefreshAlert
+        RefreshAlert,
+
+
     ],
     providers: [
         { provide: 'BASE_URL', useFactory: getBaseUrl },

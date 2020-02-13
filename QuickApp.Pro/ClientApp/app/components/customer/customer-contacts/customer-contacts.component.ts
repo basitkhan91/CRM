@@ -216,7 +216,6 @@ export class CustomerContactsComponent implements OnInit {
 
 	}
 	enableSave() {
-		console.log('hello ,directive');
 		this.disableSave = false;
 
 	}
@@ -470,7 +469,7 @@ this.getAllCustomerContact();
 	addATAChapter(rowData) {
 		this.sourceViewforContact = '';
 		this.add_SelectedModels = undefined;
-		this.add_SelectedModels=''
+		this.add_SelectedModels = ''
 		this.add_SelectedId = undefined;
 		this.selectedContact = rowData;
 		this.ataListDataValues = [];

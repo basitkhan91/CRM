@@ -1,6 +1,6 @@
 export class WorkOrderLabor {
     workOrderLaborHeaderId: number;
-  workFlowWorkOrderId: number;
+  workFlowWorkOrderId: any;
   dataEnteredBy: number;
   expertiseId: number;
   employeeId: any;
