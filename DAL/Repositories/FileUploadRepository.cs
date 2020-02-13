@@ -173,7 +173,7 @@ namespace DAL.Repositories
 
                  attachmentDetails = (from at in _appContext.Attachment
                               join atd in _appContext.AttachmentDetails on at.AttachmentId equals atd.AttachmentId
-                              where atd.IsActive == true && at.AttachmentId == attachmentId && at.ModuleId == moduleId && at.ReferenceId == referenceId
+                              where atd.IsActive == true && atd.IsDeleted!=true && at.AttachmentId == attachmentId && at.ModuleId == moduleId && at.ReferenceId == referenceId
                               select atd).ToList();
 
                 //var result = _appContext.Attachment
