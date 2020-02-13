@@ -43,7 +43,9 @@ export class VendorShippingInformationComponent {
     public overlays: any[];
     // options: any;
     shipViaCollection: any;
+    shipviaIntercollection: any;
     allShipViaDetails: any[];
+    allShipViaInterDetails: any = [];
     updatedCollection: {};
     vendorshippingAddressdetails: any;
     local: any;
@@ -60,6 +62,7 @@ export class VendorShippingInformationComponent {
     createddate: any = "";
     updatedDate: any = "";
     shipViaObj: any = {};
+    shipViaInterObj: any = {};
     checkAddress: boolean = false;
     viewName: string = "Create";
     siteName: any;
@@ -88,6 +91,7 @@ export class VendorShippingInformationComponent {
     loadingIndicator: boolean;
     closeResult: string;
     selectedColumn: any[];
+    selectedInterColumn: any[];
     //selectedColumns: any[];
     selectedShipViaColumn: any[];
     selectedShipViaColumns: any[];
@@ -132,6 +136,8 @@ export class VendorShippingInformationComponent {
     private isDeleteMode: boolean = false;
     isEditShippingInfo: boolean = false;
     selectedRowforDelete: any;
+    selectedInterRowforDelete: any = {};
+    selectedInterShipViaRowforDelete: any = {};
     auditHistory: any = [];
     formData = new FormData();
     totalRecords: number = 0;
@@ -146,9 +152,26 @@ export class VendorShippingInformationComponent {
     internationalShippingInfo = new CustomerInternationalShippingModel()
     isEditInternational: any;
     shipViaInternational: any;
-
     sourceViewforInterShipping: any;
     intershippingViaauditHisory: any;
+    shipViaIntercols = [
+        { field: 'shipVia', header: 'Ship Via' },
+        { field: 'shippingAccountInfo', header: 'Shipping Account Info' },
+        // { field: 'shippingURL', header: 'Shipping Url' },
+        // { field: 'shippingId', header: 'Shipping Id' },
+        { field: 'memo', header: 'Memo' }
+    ];
+    selectedShipViaInterColumns: any = [];
+    auditHistoryInterShipvia: any = [];
+    isEditInterShipVia: boolean = false;
+    isEditDomesticShipVia: boolean = false;
+    interShippingViaView: any = {};
+    domesticShippingViaView: any = {};
+    pageSizeForInt : number = 10;
+    pageSizeForDomestic: number = 10;
+    pageSizeForShipViaDomestic: number = 10;
+    pageSizeForShipViaInt: number = 10;
+
     constructor(private http: HttpClient, private router: Router,
         private authService: AuthService, private modalService: NgbModal, private configurations: ConfigurationService, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public vendorService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
         if (this.vendorService.listCollection !== undefined) {
@@ -201,6 +224,7 @@ export class VendorShippingInformationComponent {
             this.vendorService.bredcrumbObj.next(this.vendorService.currentUrl);
         }
         this.getInternationalShippingByVendorId();
+        // this.selectedShipViaInterColumns = this.shipViaIntercols;
         // this.options = {
         //     center: { lat: 36.890257, lng: 30.707417 },
         //     zoom: 12
@@ -294,8 +318,8 @@ export class VendorShippingInformationComponent {
         this.shipViacols = [
             { field: 'shipVia', header: 'Ship Via' },
             { field: 'shippingAccountinfo', header: 'Shipping Account Info' },
-            { field: 'shippingURL', header: 'Shipping Url' },
-            { field: 'shippingId', header: 'Shipping Id' },
+            // { field: 'shippingURL', header: 'Shipping Url' },
+            // { field: 'shippingId', header: 'Shipping Id' },
             { field: 'memo', header: 'Memo' }
         ];
         this.selectedShipViaColumns = this.shipViacols;
@@ -303,7 +327,8 @@ export class VendorShippingInformationComponent {
     openShipViaEdit(rowObject) {
         this.isEditMode = true;
         this.isSaving = true;
-        this.shipViaObj = rowObject;
+        this.shipViaObj = {...rowObject};
+        this.isEditDomesticShipVia = true;
         this.loadMasterCompanies();
     }
     private loadMasterCompanies() {
@@ -401,6 +426,8 @@ export class VendorShippingInformationComponent {
         }, () => { console.log('Backdrop click') })
     }
     openDelete(content, row) {
+        if(!row.isPrimary){
+
         this.isEditMode = false;
         this.isDeleteMode = true;
         //this.sourceVendor = row;
@@ -410,6 +437,9 @@ export class VendorShippingInformationComponent {
         this.modal.result.then(() => {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
+    } else {
+        $('#deleteshipping').modal('show');
+    }
     }
 
     openEdit(row) {
@@ -534,6 +564,7 @@ export class VendorShippingInformationComponent {
                     this.shipViaObj.memo = "";
                     this.shipViaObj.vendorShippingId = 0;
                 }
+                this.isEditDomesticShipVia = false;
             })
         }
         else {
@@ -553,6 +584,7 @@ export class VendorShippingInformationComponent {
                     this.shipViaObj.memo = "";
                     this.shipViaObj.vendorShippingId = 0;
                 }
+                this.isEditDomesticShipVia = false;
             })
         }
 
@@ -565,7 +597,7 @@ export class VendorShippingInformationComponent {
         // this.vendorService.changeStep('Payment Information');
         // this.router.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-payment-information');
     } 
-    openShipVia(content, rowData) {
+    openShipVia(rowData) {
         this.isEditMode = false;
         this.isDeleteMode = false;
         this.shipViaObj = rowData;
@@ -578,10 +610,10 @@ export class VendorShippingInformationComponent {
         this.loadShipViaCollection(rowData);
         this.loadMasterCompanies();
         this.sourceAction.isActive = true;
-        this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
-        this.modal.result.then(() => {
-            console.log('When user closes');
-        }, () => { console.log('Backdrop click') })
+        // this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
+        // this.modal.result.then(() => {
+        //     console.log('When user closes');
+        // }, () => { console.log('Backdrop click') })
     }
 
     updateVendorShippingAddress(updateObj: any) {
@@ -596,16 +628,21 @@ export class VendorShippingInformationComponent {
         })
     }
 
-    deleteItemAndCloseModel(vendorShippingAddressId) {
-        this.isSaving = true;
-        this.sourceVendor.isActive = false;
-        this.sourceVendor.addressStatus = false;
-        this.sourceVendor.updatedBy = this.userName;
-        this.sourceVendor.vendorShippingAddressId = vendorShippingAddressId;
-        this.vendorService.deleteAcion(this.sourceVendor).subscribe(
-            response => this.saveCompleted(this.sourceVendor),
-            error => this.saveFailedHelper(error));
-    }
+    // deleteItemAndCloseModel(vendorShippingAddressId) {
+    //     if(!row.isPrimary){
+            
+    //         this.isSaving = true;
+    //         this.sourceVendor.isActive = false;
+    //         this.sourceVendor.addressStatus = false;
+    //         this.sourceVendor.updatedBy = this.userName;
+    //         this.sourceVendor.vendorShippingAddressId = vendorShippingAddressId;
+    //         this.vendorService.deleteAcion(this.sourceVendor).subscribe(
+    //             response => this.saveCompleted(this.sourceVendor),
+    //             error => this.saveFailedHelper(error));
+    //     } else {
+    //                $('#deleteshipping').modal('show');
+    //            }
+    // }
 
     deleteVendorShippingAddress() {
         this.isSaving = true;
@@ -620,6 +657,7 @@ export class VendorShippingInformationComponent {
     }
 
     deleteItemShippingCloseModel() {
+
         this.isSaving = true;
 
         this.localCollection.isActive = false;
@@ -640,11 +678,12 @@ export class VendorShippingInformationComponent {
         //this.loadShipViaCollection(this.localCollection);
         this.modal.close();
     }
-    dismissShipViaModelModel() {
-        this.isDeleteMode = false;
-        this.isEditMode = false;
-        this.modal.close();
-    }
+    dismissShipViaDomesticModel() {
+        // this.isDeleteMode = false;
+        // this.isEditMode = false;
+        // this.modal.close();
+        $('#contentShipVia').modal('hide');
+    }    
     dismissModel() {
         this.isDeleteMode = false;
         this.isEditMode = false;
@@ -846,6 +885,7 @@ export class VendorShippingInformationComponent {
 
     onAddShippingInfo() {
         this.sourceVendor = {};
+        this.internationalShippingInfo = new CustomerInternationalShippingModel();
         this.isEditShippingInfo = false;
     }
 
@@ -975,7 +1015,7 @@ export class VendorShippingInformationComponent {
                 updatedDate: new Date(res.expirationDate),
                 shipToCountryId: getObjectById('countries_id', res.shipToCountryId, this.allCountryinfo)
             };
-            $("viewInter").modal('show');
+            $("#viewInter").modal('show');
         }) 
     }
     getInternationalShippingById(rowData){
@@ -1008,12 +1048,22 @@ export class VendorShippingInformationComponent {
         // }, () => { console.log('Backdrop click') })
     }
 
-    deleteVendorInternationalShipping(rowData){
-        this.vendorService.deleteVendorInternationalShipping(rowData.vendorId , this.userName).subscribe(res => {
+    deleteVendorInterShipping(row) {
+        if(!row.isPrimary){
+       
+        this.selectedInterRowforDelete = row;
+        $('#deleteInterShipInfo').modal('show');
+    } else {
+        $('#deleteshipping').modal('show');
+    }
+    }
+
+    confirmDeleteVendorInterShipping(){
+        this.vendorService.deleteVendorInternationalShipping(this.selectedInterRowforDelete.vendorId , this.userName).subscribe(res => {
             this.getInternationalShippingByVendorId();
              this.alertService.showMessage(
                     'Success',
-                    `sucessfully Deleted Record`,
+                    `Sucessfully Deleted Record`,
                     MessageSeverity.success
                 );
         })
@@ -1028,6 +1078,195 @@ export class VendorShippingInformationComponent {
             );
         })
     }
+
+    openDomesticShippingViewVia(rowData) {
+        this.domesticShippingViaView = {};
+        this.domesticShippingViaView = rowData;
+    }
+
+    openDomesticShipViaonDbl(rowData) {
+        this.openDomesticShippingViewVia(rowData);
+        $('#viewDomesticVia').modal('show');
+    }
+
+    dismissShipViaInterModel() {
+        $('#internationalShipVia').modal('hide');
+    }
+
+    onClickInterShipvia(rowData) {
+        console.log(rowData);        
+        // this.selectedShipViaInterColumns = this.shipViaIntercols;
+        this.shipViaInterObj = {};
+        this.loadShipViaInterCollection(rowData);
+    }
+
+    filterInterShipVia(event) {
+        this.shipviaIntercollection = [];
+        if (this.allShipViaInterDetails.length > 0) {
+            for (let i = 0; i < this.allShipViaInterDetails.length; i++) {
+                let shipName = this.allShipViaInterDetails[i].shipVia;
+                if (shipName.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+                    this.shipviaIntercollection.push(shipName);
+                }
+            }
+        }
+    }
+
+    onSelectInterShipVia(event) {
+        if (this.allShipViaInterDetails) {
+            for (let i = 0; i < this.allShipViaInterDetails.length; i++) {
+                if (event == this.allShipViaInterDetails[i].shipVia) {
+                    this.shipViaInterObj.shipVia = this.allShipViaInterDetails[i].shipVia;
+                    this.selectedShipVia = event;
+                }
+            }
+        }
+    }
+
+    saveInterShipViaDetails() {
+        // this.isSaving = true;
+        // if (this.shipViaInterObj.shipVia == null || this.shipViaInterObj.shipVia == "") {
+        //     this.alertService.showMessage("Empty", 'Cannot Submit Empty', MessageSeverity.warn);
+        //     return;
+        // }
+
+       // if (this.shipViaInterObj.vendorShippingId > 0) {
+            this.shipViaInterObj.createdBy = this.userName;
+            this.shipViaInterObj.updatedBy = this.userName;
+            this.shipViaInterObj.masterCompanyId = 1;
+            this.shipViaInterObj.isActive = true;
+
+            this.vendorService.saveInterShipViaDetails(this.shipViaInterObj).subscribe(data => {
+                this.shipviaIntercollection = data;
+                this.loadShipViaInterCollection(this.shipviaIntercollection);
+                if (this.shipviaIntercollection) {
+                    this.shipViaInterObj.shipVia = "";
+                    this.shipViaInterObj.shippingAccountInfo = "";
+                    // this.shipViaInterObj.shippingURL = "";
+                    // this.shipViaInterObj.shippingId = "";
+                    this.shipViaInterObj.memo = "";
+                    this.shipViaInterObj.vendorShippingId = 0;
+                }
+                if(this.isEditInterShipVia) {
+                    this.alertService.showMessage(
+                        'Success',
+                        `Sucessfully Updated Ship Via for International Shipping`,
+                        MessageSeverity.success
+                    );
+                } else {
+                    this.alertService.showMessage(
+                        'Success',
+                        `Sucessfully Added Ship Via for International Shipping`,
+                        MessageSeverity.success
+                    );
+                }
+                this.isEditInterShipVia = false;
+            })
+        //}
+        // else {
+        //     this.shipViaInterObj.createdBy = this.userName;
+        //     this.shipViaInterObj.updatedBy = this.userName;
+        //     this.shipViaInterObj.masterCompanyId = 1;
+        //     this.shipViaInterObj.isActive = true;
+
+        //     this.vendorService.saveInterShipViaDetails(this.shipViaInterObj).subscribe(data => {
+        //         this.shipviaIntercollection = data;
+        //         this.loadShipViaInterCollection(this.shipviaIntercollection);
+        //         if (this.shipviaIntercollection) {
+        //             this.shipViaInterObj.shipVia = "";
+        //             this.shipViaInterObj.shippingAccountinfo = "";
+        //             this.shipViaInterObj.shippingURL = "";
+        //             this.shipViaInterObj.shippingId = "";
+        //             this.shipViaInterObj.memo = "";
+        //             this.shipViaInterObj.vendorShippingId = 0;
+        //         }
+        //     })
+        // }
+    }
+
+    loadShipViaInterCollection(rowData) {
+        // this.selectedShipViaInterColumns = this.shipViaIntercols;
+        this.vendorService.getVendorShipViaInterDetails(rowData.vendorInternationalShippingId).subscribe(res => {
+            this.allShipViaInterDetails = res[0];
+        });
+    }
+
+    openShipViaInterEdit(rowObject) {
+        this.shipViaInterObj = {...rowObject};
+        this.isEditInterShipVia = true;
+    }
+
+    delShipViaInter(row) {
+        if(!row.isPrimary){
+       // this.selectedShipViaInterColumns = this.shipViaIntercols;
+       this.selectedInterShipViaRowforDelete = row;
+            $('#shipViaInterDel').modal('show');  
+        } else {
+                   $('#deleteshipping').modal('show');
+               }
+       
+        
+ 
+    }
+    confirmDelShipviaInter() {
+        this.vendorService.getDeletevendorshipViaInter(this.selectedInterShipViaRowforDelete).subscribe(data => {
+            this.loadShipViaInterCollection(this.selectedInterShipViaRowforDelete);
+            this.alertService.showMessage(
+                'Success',
+                `Action was deleted successfully`,
+                MessageSeverity.success
+            );
+        });
+        this.modal.close();
+    }
+
+    openHistInterShipvia(row) {
+        // this.selectedShipViaInterColumns = this.shipViaIntercols;
+        this.shipViaInterObj = {};
+        this.vendorService.getShipviaHistoryInter(row.vendorInternationalShippingId).subscribe(res => {
+            this.auditHistoryInterShipvia = res[0];
+            this.loadShipViaInterCollection(row);
+
+        });
+    }
+
+    openInterShippingViewVia(rowData) {
+        this.interShippingViaView = {};
+        this.interShippingViaView = rowData;
+    }
+
+    openInterShipViaonDbl(rowData) {
+        this.openInterShippingViewVia(rowData);
+        $('#viewInterVia').modal('show');
+    }
+
+    async  updateActiveorInActiveShipViaForIS(rowData) {
+        await this.vendorService.updateStatusForInternationalShippingVia(rowData.vendorInternationalShipViaDetailsId, rowData.isActive, this.userName).subscribe(res => {
+            this.loadShipViaInterCollection(rowData);
+
+            this.alertService.showMessage(
+                'Success',
+                `Sucessfully Updated International Ship Via Status`,
+                MessageSeverity.success
+            );
+        })
+    }
+
+    pageIndexChangeForDomestic(event) {
+        this.pageSizeForDomestic = event.rows;
+    }
+    pageIndexChangeForInt(event) {
+        this.pageSizeForInt = event.rows;
+    }
+
+    pageIndexChangeForShipViaDom(event) {
+        this.pageSizeForShipViaDomestic = event.rows;
+    }
+    pageIndexChangeForShipViaInt(event) {
+        console.log(event);        
+        this.pageSizeForShipViaInt = event.rows;
+    }
+
 
 }
 

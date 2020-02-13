@@ -54,6 +54,7 @@ export class VendorEndpointService extends EndpointFactory {
 	private readonly _vendorShippingUrlNew: string = "/api/Vendor/updateStatusVendorShipping";
 	private readonly _vendorShippingAddressUrlDelete: string = "/api/Vendor/deletevendorshippingaddress";
 	private readonly _vendorShippingAddressViaUrlDelete: string = "/api/Vendor/deletevendorshippingviaaddress";
+	private readonly _vendorShippingAddressViaInterUrlDelete: string = "/api/Vendor/deleteinternationalshipvia";
 	private readonly _vendorsContctUrl: string = "/api/Vendor/vendorContactPost";
 	private readonly _checkPaymntUpdateUrl: string = "/api/Vendor/checkPaymentUpdate";
 	private readonly _domesticUpdate: string = "/api/Vendor/domesticPaymentUpdate";
@@ -75,6 +76,7 @@ export class VendorEndpointService extends EndpointFactory {
 	private readonly _billingInfoUrl: string = "/api/Vendor/vendorBillingPost";
 	private readonly _billingInfoNew: string = "/api/Vendor/createvendorbillingaddress";
 	private readonly _saveShipViaDetails: string = "/api/Vendor/addShipViaDetails";
+	private readonly _saveShipViaInterDetails: string = "/api/Vendor/createinternationalshipvia";
 	private readonly _saveBillViaDetails: string = "/api/Vendor/addBillViaDetails";
 	private readonly _addShipViaDetails: string = "/api/Vendor/updateShipviaAddress";
 	private readonly _updateShipAddressDetails: string = "/api/Vendor/updateShipAddress";
@@ -86,12 +88,14 @@ export class VendorEndpointService extends EndpointFactory {
 	private readonly _getSitesAddress: string = "/api/Vendor/getSitesAddress";
 	private readonly _vendorwarningsUrl: string = "/api/Vendor/vendorWarningsget";
 	private readonly _vendorShipViaDetilas: string = "/api/Vendor/getVendorShipViaDetails";
+	private readonly _vendorShipViaInterDetails: string = "/api/Vendor/internationalshipviadetaillist";
 	private readonly _vendorBillViaDetails: string = "/api/Vendor/getVendorBillViaDetails";
 	private readonly _getContactHistroty: string = "/api/Vendor/getContactHistroty";
 	private readonly _getCheckPayHist: string = "/api/Vendor/getCheckPayHist";
 	private readonly _getVendorhistory: string = "/api/Vendor/getVendorHistory";
 	private readonly _getcheckhistory: string = "/api/Vendor/getcheckHistory";
 	private readonly _getShipViaHistory: string = "/api/Vendor/getShipViaHistory";
+	private readonly _getShipViaHistoryInter: string = "/api/Vendor/internationalshipviaaudit";
 	private readonly _getBillViaHistory: string = "/api/Vendor/getBillViaHistory";
 	private readonly _getshipaddresshistory: string = "/api/Vendor/getshipaddresshistory";
 	private readonly _getbilladdresshistory: string = "/api/Vendor/getbilladdresshistory";
@@ -209,6 +213,7 @@ export class VendorEndpointService extends EndpointFactory {
 	get getSiteAddress() { return this.configurations.baseUrl + this._getSitesAddress; }
 	get vendorWarningsDetails() { return this.configurations.baseUrl + this._vendorwarningsUrl; }
 	get vendorShipViaDetails() { return this.configurations.baseUrl + this._vendorShipViaDetilas; }
+	get vendorShipViaInterDetails() { return this.configurations.baseUrl + this._vendorShipViaInterDetails; }
 	get vendorBillViaDetails() { return this.configurations.baseUrl + this._vendorBillViaDetails; }
 	get contctsUrl() { return this.configurations.baseUrl + this._contacturl; }
 	get contctsCompleteUrl() { return this.configurations.baseUrl + this._contactGeturl; }
@@ -224,6 +229,7 @@ export class VendorEndpointService extends EndpointFactory {
 	get getVendorhistory() { return this.configurations.baseUrl + this._getVendorhistory; }
 	get getcheckhistory() { return this.configurations.baseUrl + this._getcheckhistory; }
 	get getShipViaHistory() { return this.configurations.baseUrl + this._getShipViaHistory; }
+	get getShipViaHistoryInter() { return this.configurations.baseUrl + this._getShipViaHistoryInter; }
 	get getBillViaHistory() { return this.configurations.baseUrl + this._getBillViaHistory; }
 	get getshipaddresshistory() { return this.configurations.baseUrl + this._getshipaddresshistory; }
 	get getbilladdresshistory() { return this.configurations.baseUrl + this._getbilladdresshistory; }
@@ -488,6 +494,13 @@ export class VendorEndpointService extends EndpointFactory {
 				return this.handleError(error, () => this.getVendorShipViaDetails(roleObject));
 			});
 	}
+	getVendorShipViaInterDetails<T>(id: any): Observable<T> {
+		let endpointUrl = `${this.vendorShipViaInterDetails}?VendorInternationalShippingId=${id}`;
+		return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.getVendorShipViaDetails(id));
+			});
+	}
 	getVendorBillViaDetails<T>(roleObject: any): Observable<T> {
 		let endpointUrl = `${this.vendorBillViaDetails}/${roleObject.vendorBillingAddressId}`;
 		return this.http.get<T>(endpointUrl, this.getRequestHeaders())
@@ -724,6 +737,20 @@ export class VendorEndpointService extends EndpointFactory {
 			.map((res: Response) => res)
 			.catch((error: any) => Observable.throw(error.json().error || 'Server error'));
 	}
+
+	saveInterShipViaDetails<T>(param: any): Observable<T> {
+
+		let body = JSON.stringify(param);
+		let headers = new Headers({ 'Content-Type': 'application/json; charset=utf-8' })
+		//let options = new RequestOptions({ headers: headers });  // create a request option
+
+		// post request to create new book
+		return this.http
+			.post(this._saveShipViaInterDetails, body, this.getRequestHeaders())
+			.map((res: Response) => res)
+			.catch((error: any) => Observable.throw(error.json().error || 'Server error'));
+	}
+
 	saveBillViaDetails<T>(param: any): Observable<T> {
 
 		let body = JSON.stringify(param);
@@ -1075,6 +1102,14 @@ export class VendorEndpointService extends EndpointFactory {
 			});
 	}
 
+	getDeletevendorshipViaInterEndpoint<T>(roleObject: any): Observable<T> {
+		let endpointUrl = `${this._vendorShippingAddressViaInterUrlDelete}/?id=${roleObject.vendorInternationalShipViaDetailsId}&updatedBy=${roleObject.updatedBy}`;
+		return this.http.delete<T>(endpointUrl, this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.getDeletevendorshipViaInterEndpoint(roleObject));
+			});
+	}
+
 	getHistoryvendorEndpoint<T>(vendorId: number): Observable<T> {
 		let endpointUrl = `${this.getContactHistory}/${vendorId}`;
 		return this.http.get<T>(endpointUrl, this.getRequestHeaders())
@@ -1109,6 +1144,14 @@ export class VendorEndpointService extends EndpointFactory {
 		return this.http.get<T>(endpointUrl, this.getRequestHeaders())
 			.catch(error => {
 				return this.handleError(error, () => this.getShipviaHistory(vendorId));
+			});
+	}
+	getShipviaHistoryInter<T>(id: number): Observable<T> {
+
+		let endpointUrl = `${this.getShipViaHistoryInter}/${id}`;
+		return this.http.get<T>(endpointUrl, this.getRequestHeaders())
+			.catch(error => {
+				return this.handleError(error, () => this.getShipviaHistoryInter(id));
 			});
 	}
 	getBillviaHistory<T>(vendorId: number): Observable<T> {
@@ -1744,5 +1787,9 @@ export class VendorEndpointService extends EndpointFactory {
 		return this.http.put(`${this.configurations.baseUrl}/api/Vendor/internationalshippingstatusupdate?id=${vendorInternationalShippingId}&status=${status}&updatedBy=${updatedBy}`, {}, this.getRequestHeaders());
 
 	}
-	
+
+	updateStatusForInternationalShippingVia(id, status, updatedBy) {
+        return this.http.get(`${this.configurations.baseUrl}/api/Vendor/internationalshipviastatusupdate?id=${id}&status=${status}&updatedBy=${updatedBy}`)
+
+    }
 }
