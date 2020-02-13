@@ -105,7 +105,7 @@ export class WorkOrderQuoteComponent implements OnInit, OnChanges {
 }
 isQuote: boolean = true;
 editMatData: any[] = [];
-costPlusType: Number = 1;
+costPlusType: Number;
 tabQuoteCreated: Object = {
   'materialList': false,
   'charges': false,
@@ -669,13 +669,16 @@ overAllMarkup: any;
         "markupPercentageId": fre.markupPercentageId,
         "freightCostPlus": fre.freightCostPlus,
         "taskId": fre.taskId,
-        "markupFixedPrice": fre.markupFixedPrice,
         "CreatedBy":"admin",
         "UpdatedBy":"admin",
         "CreatedDate":"2019-10-31T09:06:59.68",
         "UpdatedDate":"2019-10-31T09:06:59.68",
         "IsActive":true,
-        "IsDeleted":false
+        "IsDeleted":false,
+        "BillingMethodId":Number(fre.billingMethodId),
+        "BillingRate":fre.billingRate,
+        "BillingAmount":fre.billingAmount,
+        "headerMarkupId":fre.headerMarkupId,
       }
     })
 
@@ -919,7 +922,7 @@ saveworkOrderLabor(data) {
   this.laborPayload.WorkOrderQuoteLaborHeader.ExpertiseId = data.expertiseId;
   this.laborPayload.WorkOrderQuoteLaborHeader.TotalWorkHours = data.totalWorkHours
   this.laborPayload.WorkOrderQuoteLaborHeader.masterCompanyId = data.masterCompanyId; 
-  this.laborPayload.WorkOrderQuoteLaborHeader['markupFixedPrice'] = data.markupFixedPrice;
+  this.laborPayload.WorkOrderQuoteLaborHeader['headerMarkupId'] = data.headerMarkupId;
   this.laborPayload.WorkOrderQuoteLaborHeader.CreatedBy = "admin"
   this.laborPayload.WorkOrderQuoteLaborHeader.UpdatedBy = "admin" 
   this.laborPayload.WorkOrderQuoteLaborHeader.IsActive = true 
@@ -946,7 +949,7 @@ saveworkOrderLabor(data) {
         "laborOverheadCost": labor.laborOverheadCost,
         "markupPercentageId": labor.markupPercentageId,
         "directLaborOHCost": labor.directLaborOHCost,
-        "markupFixedPrice": labor.markupFixedPrice,
+        "headerMarkupId": labor.headerMarkupId,
         // "fixedAmount": labor.fixedAmount,
         "CreatedBy":"admin",
         "UpdatedBy":"admin",
@@ -1036,16 +1039,19 @@ saveWorkOrderExclusionsList(data) {
       "Quantity":ex.quantity,
       "UnitCost":ex.unitCost,
       "ExtendedCost":ex.extendedCost,
-      "MarkUpPercentageId":ex.markUpPercentageId,
+      "MarkupPercentageId":ex.markupPercentageId,
       "CostPlusAmount":ex.costPlusAmount,
       "FixedAmount":ex.fixedAmount,
-      "markupFixedPrice": ex.markupFixedPrice,
       "taskId": ex.taskId,
       "masterCompanyId":(ex.masterCompanyId == '')?0:ex.masterCompanyId,
       "CreatedBy":"admin",
       "UpdatedBy":"admin",
       "IsActive":true,
-      "IsDeleted":ex.isDeleted
+      "IsDeleted":ex.isDeleted,
+      "BillingMethodId":Number(ex.billingMethodId),
+      "BillingRate":ex.billingRate,
+      "BillingAmount":ex.billingAmount,
+      "headerMarkupId":ex.headerMarkupId,
     }
   })
   this.workOrderService.saveExclusionsQuote(this.exclusionPayload)
@@ -1247,7 +1253,7 @@ getQuoteMaterialListByWorkOrderQuoteId() {
   if(this.workOrderQuoteDetailsId){
     this.workOrderService.getQuoteMaterialList(this.workOrderQuoteDetailsId, (this.selectedBuildMethod === 'use work order')?1:(this.selectedBuildMethod == "use work flow")?2:(this.selectedBuildMethod == "use historical wos")?3:4).subscribe(res => {
         this.materialListQuotation = res;
-        if(this.materialListQuotation && this.materialListQuotation.length > 0 && this.materialListQuotation[0].markupFixedPrice){
+        if(this.materialListQuotation && this.materialListQuotation.length > 0 && this.materialListQuotation[0].headerMarkupId){
           this.costPlusType = Number(this.materialListQuotation[0].headerMarkupId);
         }
         if(res.length > 0){

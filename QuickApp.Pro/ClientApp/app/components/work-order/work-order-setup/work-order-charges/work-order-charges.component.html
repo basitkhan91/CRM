@@ -176,7 +176,7 @@
             <input type="number" [(ngModel)]="rowData.flateRate" [disabled]="rowData.billingMethodId != 2"/>
           </td> -->
           <td>
-              <input type="number" [(ngModel)]="rowData.billingRate" [disabled]="isView || rowData.billingMethodId != 2"/>
+              <input type="number" [(ngModel)]="rowData.billingRate" (change)="rowData.billingAmount = rowData.billingRate*rowData.quantity" [disabled]="isView || rowData.billingMethodId != 2"/>
           </td>
           <td>{{ rowData.billingAmount }}</td>
         </ng-container>
