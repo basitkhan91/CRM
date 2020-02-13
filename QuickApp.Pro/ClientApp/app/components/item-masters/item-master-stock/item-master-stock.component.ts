@@ -5466,6 +5466,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
 
     private onIntegrationData(getEmployeeCerficationList: any[]) {
+        this.integrationvalues = [];
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.dataSource.data = getEmployeeCerficationList;
