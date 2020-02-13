@@ -78,6 +78,10 @@ namespace DAL.Repositories
                 {
                     statusId = 4;
                 }
+                else
+                {
+                    statusId = 5;
+                }
 
             }
 
