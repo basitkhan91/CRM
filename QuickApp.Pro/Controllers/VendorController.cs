@@ -58,15 +58,30 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("vendorglobalsearch")]
         public IActionResult VendorGlobalSearch(string filterText, int pageNumber = 0, int pageSize = 10, bool isActive = false)
         {
-            var result = _unitOfWork.Vendor.VendorGlobalSearch(filterText, pageNumber, pageSize, isActive);
-            return Ok(result);
+            try
+            {
+                var result = _unitOfWork.Vendor.VendorGlobalSearch(filterText, pageNumber, pageSize, isActive);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.InnerException.ToString());
+            }
+           
         }
 
         [HttpGet("getvendordatabyid/{vendorId}")]
         public IActionResult GetVendorDataById(long vendorId)
         {
-            var allVendorlistDetails = _unitOfWork.Vendor.GetVendorDataById(vendorId);
-            return Ok(allVendorlistDetails);
+            try
+            {
+                var allVendorlistDetails = _unitOfWork.Vendor.GetVendorDataById(vendorId);
+                return Ok(allVendorlistDetails);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.InnerException.ToString());
+            }           
 
         }
 
@@ -75,16 +90,30 @@ namespace QuickApp.Pro.Controllers
         [Produces(typeof(List<VendorViewModel>))]
         public IActionResult Get()
         {
-            var allActions = _unitOfWork.Vendor.GetVendors(); //.GetAllCustomersData();
-            return Ok(allActions);
-
+            try
+            {
+                var allActions = _unitOfWork.Vendor.GetVendors(); //.GetAllCustomersData();
+                return Ok(allActions);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.InnerException.ToString());
+            }
+           
         }
 
         [HttpGet("GetVendorAuditHistory/{vendorId}")]
         public IActionResult GetVendorAuditListDetails(long vendorId)
         {
-            var allVendorlistDetails = _unitOfWork.Vendor.GetVendorsAuditHistory(vendorId);
-            return Ok(allVendorlistDetails);
+            try
+            {
+                var allVendorlistDetails = _unitOfWork.Vendor.GetVendorsAuditHistory(vendorId);
+                return Ok(allVendorlistDetails);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.InnerException.ToString());
+            }         
 
         }
 
@@ -96,9 +125,16 @@ namespace QuickApp.Pro.Controllers
         [Produces(typeof(List<VendorBaseViewModel>))]
         public IActionResult GetBasicList()
         {
-            var basicvendorList = _unitOfWork.Vendor.GetVendorsLite();
-            var mappedList = Mapper.Map<IEnumerable<VendorBaseViewModel>>(basicvendorList);
-            return Ok(mappedList);
+            try
+            {
+                var basicvendorList = _unitOfWork.Vendor.GetVendorsLite();
+                var mappedList = Mapper.Map<IEnumerable<VendorBaseViewModel>>(basicvendorList);
+                return Ok(mappedList);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.InnerException.ToString());
+            }            
         }
 
         [HttpGet("GetmanagementSiteList/{companyId}")]
@@ -106,8 +142,15 @@ namespace QuickApp.Pro.Controllers
 
         public IActionResult GetmanagementSiteList(long companyId)
         {
-            var allActions = _unitOfWork.Vendor.GetmanagementSiteList(companyId); //.GetAllCustomersData();
-            return Ok(allActions);
+            try
+            {
+                var allActions = _unitOfWork.Vendor.GetmanagementSiteList(companyId); //.GetAllCustomersData();
+                return Ok(allActions);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.InnerException.ToString());
+            }          
 
         }
 
@@ -116,8 +159,15 @@ namespace QuickApp.Pro.Controllers
         [Produces(typeof(List<Countries>))]
         public IActionResult GetcountryList()
         {
-            var allvendortype = _context.Countries.OrderByDescending(c => c.countries_id).ToList();
-            return Ok(allvendortype);
+            try
+            {
+                var allvendortype = _context.Countries.OrderByDescending(c => c.countries_id).ToList();
+                return Ok(allvendortype);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.InnerException.ToString());
+            }           
 
         }
 
@@ -126,24 +176,46 @@ namespace QuickApp.Pro.Controllers
 
         public IActionResult capabilityTypeList()
         {
-            var allActions = _unitOfWork.capabilityTypeRepository.GetAllCapabilityListData(); //.GetAllCustomersData();
-            return Ok(allActions);
-
+            try
+            {
+                var allActions = _unitOfWork.capabilityTypeRepository.GetAllCapabilityListData(); //.GetAllCustomersData();
+                return Ok(allActions);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.InnerException.ToString());
+            }           
         }
 
 
         [HttpPost("polist")]
         public IActionResult polist([FromBody]Filters<PurchaseOrderFilters> poFilters)
         {
-            var allActions = _unitOfWork.purchaseOrder.GetPurchaseOrderlist(poFilters); //.GetAllCustomersData();
-            return Ok(allActions);
+            try
+            {
+                var allActions = _unitOfWork.purchaseOrder.GetPurchaseOrderlist(poFilters); //.GetAllCustomersData();
+                return Ok(allActions);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.InnerException.ToString());
+            }
+           
         }
 
         [HttpGet("stocklinePOList")]
         public IActionResult stocklinePOList()
         {
-            var allActions = _unitOfWork.purchaseOrder.StockLinePOList(); //.GetAllCustomersData();
-            return Ok(allActions);
+            try
+            {
+                var allActions = _unitOfWork.purchaseOrder.StockLinePOList(); //.GetAllCustomersData();
+                return Ok(allActions);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.InnerException.ToString());
+            }
+           
         }
 
         //[HttpGet("POListById")]
@@ -156,15 +228,31 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("recevingpolist")]
         public IActionResult RecevingPolist()
         {
-            var allActions = _unitOfWork.purchaseOrder.RecevingPolist(); //.GetAllCustomersData();
-            return Ok(allActions);
+            try
+            {
+                var allActions = _unitOfWork.purchaseOrder.RecevingPolist(); //.GetAllCustomersData();
+                return Ok(allActions);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.InnerException.ToString());
+            }
+           
         }
 
         [HttpGet("recevingRoList")]
         public IActionResult RecevingRolist()
         {
-            var roList = _unitOfWork.repairOrder.RecevingRolist();
-            return Ok(roList);
+            try
+            {
+                var roList = _unitOfWork.repairOrder.RecevingRolist();
+                return Ok(roList);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.InnerException.ToString());
+            }
+           
         }
 
         [HttpGet("rolist")]
@@ -172,18 +260,34 @@ namespace QuickApp.Pro.Controllers
 
         public IActionResult rolist()
         {
-            var allActions = _context.RepairOrder
-                .Where(x => x.IsDeleted == false)
-                .OrderByDescending(c => c.RepairOrderId).ToList();
-            return Ok(allActions);
+            try
+            {
+                var allActions = _context.RepairOrder
+               .Where(x => x.IsDeleted == false)
+               .OrderByDescending(c => c.RepairOrderId).ToList();
+                return Ok(allActions);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.InnerException.ToString());
+            }
+           
 
         }
 
         [HttpPost("roListWithFilters")]
         public IActionResult rolist([FromBody]Filters<RepairOrderFilters> roFilters)
-       {
-            var allActions = _unitOfWork.repairOrder.GetRepairOrderlist(roFilters);
-            return Ok(allActions);
+        {
+            try
+            {
+                var allActions = _unitOfWork.repairOrder.GetRepairOrderlist(roFilters);
+                return Ok(allActions);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.InnerException.ToString());
+            }
+           
         }
 
         [HttpGet("BencusAddress")]
@@ -191,8 +295,15 @@ namespace QuickApp.Pro.Controllers
 
         public IActionResult BencusGet()
         {
-            var allActions = _unitOfWork.Vendor.GetPayments(); //.GetAllCustomersData();
-            return Ok(allActions);
+            try
+            {
+                var allActions = _unitOfWork.Vendor.GetPayments(); //.GetAllCustomersData();
+                return Ok(allActions);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.InnerException.ToString());
+            }          
 
         }
 
@@ -218,9 +329,16 @@ namespace QuickApp.Pro.Controllers
         [Produces(typeof(List<Capability>))]
         public IActionResult GetCapabilityList()
         {
-
-            var obj = _context.Capability.OrderByDescending(c => c.CapabilityId).ToList();
-            return Ok(obj);
+            try
+            {
+                var obj = _context.Capability.OrderByDescending(c => c.CapabilityId).ToList();
+                return Ok(obj);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.InnerException.ToString());
+            }
+           
         }
 
 
@@ -252,8 +370,16 @@ namespace QuickApp.Pro.Controllers
         [Produces(typeof(List<VendorViewModel>))]
         public IActionResult GetVendorDetailsWithData(bool isActive = false)
         {
-            var allVendorlistDetails = _unitOfWork.Vendor.GetVendorListDetails(isActive); //.GetAllCustomersData();
-            return Ok(allVendorlistDetails);
+            try
+            {
+                var allVendorlistDetails = _unitOfWork.Vendor.GetVendorListDetails(isActive); //.GetAllCustomersData();
+                return Ok(allVendorlistDetails);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.InnerException.ToString());
+            }
+           
 
         }
         [HttpGet("GetVendorsListwithId/{vendorId}")]
