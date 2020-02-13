@@ -207,6 +207,7 @@
                               [suggestions]="parentCustomer"
                               [forceSelection]="true"
                               emptyMessage="No Match Found"
+                              (onClear)="onClearParent()"
                               (completeMethod)="
                                 filterCustomerParentNames($event)
                               "
