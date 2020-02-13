@@ -73,7 +73,7 @@
                                             <div class="form-group">
                                                 <label class="popup-plusicon-cstm-caps">Capability Types </label>
                                                 <select [(ngModel)]="capabilityForm.CapabilityTypeId" (change)="onCapabilityTypeSelection(capabilityForm.CapabilityTypeId)" [ngModelOptions]="{standalone: true}">
-                                                    <option>--Select--</option>
+                                                    <option>--NON Selected--</option>
                                                     <option *ngFor="let cap of capabilityTypeData" [ngValue]="cap.value">{{cap.label}}</option>
                                                 </select>
                                             </div>
@@ -104,7 +104,7 @@
                                                         [ngModelOptions]="{standalone: true}"
                                                         id="aircraftModelId"
                                                         style="width: 150px !important;">
-                                                    <option>--Select--</option>
+                                                    <option>--NON Selected--</option>
                                                     <option *ngFor="let m of manufacturerData" [ngValue]="m.value">{{m.label}}</option>
                                                 </select>
                                             </div>
