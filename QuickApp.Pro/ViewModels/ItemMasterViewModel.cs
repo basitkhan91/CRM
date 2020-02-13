@@ -43,8 +43,7 @@ namespace QuickApp.Pro.ViewModels
 
                public string AssetNumber { get; set; }
 
-        public bool? IsAcquiredMethodBuy { get; set; }
-
+        public long? AssetAcquistionTypeId { get; set; }
         public bool? IsHazardousMaterial { get; set; }
 
         public bool? IsExpirationDateAvailable { get; set; }
