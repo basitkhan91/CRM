@@ -1297,11 +1297,12 @@ getQuoteFreightListByWorkOrderQuoteId() {
               this.labor = {...res, workOrderLaborList: laborList};
               this.labor.workFlowWorkOrderId = wowfId;
               this.taskList.forEach((tl)=>{
+                this.labor.workOrderLaborList[0][tl['description'].toLowerCase()] = [];
                 res.laborList.forEach((rt)=>{
                   if(rt['taskId'] == tl['taskId']){
-                    if(this.labor.workOrderLaborList[0][tl['description'].toLowerCase()][0] && this.labor.workOrderLaborList[0][tl['description'].toLowerCase()][0]['expertiseId'] == null && this.labor.workOrderLaborList[0][tl['description'].toLowerCase()][0]['employeeId'] == null){
-                      this.labor.workOrderLaborList[0][tl['description'].toLowerCase()] = [];
-                    }
+                    // if(this.labor.workOrderLaborList[0][tl['description'].toLowerCase()][0] && this.labor.workOrderLaborList[0][tl['description'].toLowerCase()][0]['expertiseId'] == null && this.labor.workOrderLaborList[0][tl['description'].toLowerCase()][0]['employeeId'] == null){
+                    //   this.labor.workOrderLaborList[0][tl['description'].toLowerCase()] = [];
+                    // }
                     let labor = {}
                     labor = {...rt, employeeId: {'label':rt.employeeName, 'value': rt.employeeId}}
                     this.labor.workOrderLaborList[0][tl['description'].toLowerCase()].push(labor);

@@ -114,9 +114,7 @@
           </th>
       </tr>
       <tr>
-        <ng-container *ngIf="isQuote">
-          <th>Task</th>
-        </ng-container>
+        <th>Task</th>
         <th *ngFor="let col of columns" >
           {{ col.header }}
         </th>
@@ -138,14 +136,12 @@
     </ng-template>
     <ng-template pTemplate="body" let-rowData let-columns="columns">
       <tr *ngIf="!rowData['isDeleted']">
-        <ng-container *ngIf="isQuote">
-          <td>
-            <select class="form-control select-read-only" [(ngModel)]="rowData.taskId"disabled>
-              <option value="">Select</option>
-              <option *ngFor="let task of taskList" [value]="task.taskId">{{task.description}}</option>
-            </select>
-          </td>
-        </ng-container>
+        <td>
+          <select class="form-control select-read-only" [(ngModel)]="rowData.taskId"disabled>
+            <option value="">Select</option>
+            <option *ngFor="let task of taskList" [value]="task.taskId">{{task.description}}</option>
+          </select>
+        </td>
         <td *ngFor="let col of columns">
           {{ rowData[col.field] }}
         </td>

@@ -212,6 +212,13 @@ console.log(this.workOrderLaborList);
     let taskData = new AllTasks();
     taskData.expertiseId = Number(this.laborForm.expertiseId);
     taskData.employeeId = this.laborForm.employeeId;
+    this.taskList.forEach(
+        task=>{
+            if(task.description == "Assemble"){
+              taskData.taskId = task.taskId;
+            }
+        }
+    )
     this.laborForm.workOrderLaborList[0][taskName].push(taskData);
     }
 

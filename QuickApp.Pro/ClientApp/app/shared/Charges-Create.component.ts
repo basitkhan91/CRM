@@ -171,7 +171,13 @@ export class ChargesCreateComponent implements OnInit, OnChanges {
         var newRow = Object.assign({}, this.row);
         newRow.workflowChargesListId = "0";
         newRow.vendor = {};
-        newRow.taskId = this.workFlow.taskId;
+        this.taskList.forEach(
+            task=>{
+                if(task.description == "Assemble"){
+                    newRow.taskId = task.taskId;
+                }
+            }
+        )
         newRow.currencyId = "0";
         newRow.description = "";
         newRow.extendedCost = "";

@@ -92,6 +92,14 @@ export class WorkOrderFreightComponent implements OnInit {
         this.freightForm = [new Freight()];
     }
     addNewRow() {
+        let newFreight = new Freight();
+        this.taskList.forEach(
+            task=>{
+                if(task.description == "Assemble"){
+                    newFreight['taskId'] = task.taskId;
+                }
+            }
+        )
         this.freightForm = [...this.freightForm, new Freight()];
     }
     edit(rowData, index) {

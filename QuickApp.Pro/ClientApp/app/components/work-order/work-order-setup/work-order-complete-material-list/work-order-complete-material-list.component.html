@@ -9,7 +9,7 @@
 
 
     <div>
-        <button  data-target="#addNewMaterials" data-toggle="modal" class="btn btn-primary btn-primary" (click)="createNew(); " style="padding: 6px 12px !important;">Add New Material</button>
+        <button  data-target="#addNewMaterials" data-toggle="modal" class="btn btn-primary btn-primary" (click)="createNew(); " style="padding: 6px 12px !important;">Add Part No</button>
 
 
 
@@ -62,6 +62,7 @@
             <p-table class="rpo-table-cstm rro-table-cstm pub-ptable-cstm" [columns]="cols" [value]="workOrderMaterialList" [paginator]="true" [rows]="10">
                     <ng-template pTemplate="header" let-columns>
                         <tr>
+                            <th>Task</th>
                             <th *ngFor="let col of columns">
                                 {{col.header}}
                             </th>
@@ -70,6 +71,12 @@
                     </ng-template>
                     <ng-template pTemplate="body" let-rowData let-columns="columns">
                         <tr>
+                            <td>
+                                <select class="form-control wf-pub-id select-read-only" [(ngModel)]="rowData.taskId" [disabled]="isView" disabled>
+                                    <option value="">Select</option>
+                                    <option *ngFor="let task of taskList" [value]="task.taskId">{{task.description}}</option>
+                                </select>
+                            </td>
                             <td *ngFor="let col of columns">
                                 {{rowData[col.field]}}
                             </td>
