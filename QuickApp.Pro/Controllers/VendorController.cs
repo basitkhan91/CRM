@@ -44,8 +44,15 @@ namespace QuickApp.Pro.Controllers
         [HttpPost("vendorlist")]
         public IActionResult GetVendorsList([FromBody]Filters<VendorFilters> vendorFilters)
         {
-            var result = _unitOfWork.Vendor.GetVendorsList(vendorFilters);
-            return Ok(result);
+            try
+            {
+                var result = _unitOfWork.Vendor.GetVendorsList(vendorFilters);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.InnerException.ToString());
+            }
         }
 
         [HttpGet("vendorglobalsearch")]

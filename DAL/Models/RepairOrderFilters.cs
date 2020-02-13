@@ -8,6 +8,7 @@ namespace DAL.Models
         [Key]
         public long RepairOrderId { get; set; }
         public string RepairOrderNumber { get; set; }
+        public string RepairOrderNo { get; set; }
         public DateTime? OpenDate { get; set; }
         public DateTime? ClosedDate { get; set; }
         public string VendorName { get; set; }
