@@ -105,7 +105,7 @@ export class WorkOrderQuoteComponent implements OnInit, OnChanges {
 }
 isQuote: boolean = true;
 editMatData: any[] = [];
-costPlusType: Number = 1;
+costPlusType: Number;
 tabQuoteCreated: Object = {
   'materialList': false,
   'charges': false,
@@ -669,13 +669,16 @@ overAllMarkup: any;
         "markupPercentageId": fre.markupPercentageId,
         "freightCostPlus": fre.freightCostPlus,
         "taskId": fre.taskId,
-        "markupFixedPrice": fre.markupFixedPrice,
         "CreatedBy":"admin",
         "UpdatedBy":"admin",
         "CreatedDate":"2019-10-31T09:06:59.68",
         "UpdatedDate":"2019-10-31T09:06:59.68",
         "IsActive":true,
-        "IsDeleted":false
+        "IsDeleted":false,
+        "BillingMethodId":Number(fre.billingMethodId),
+        "BillingRate":fre.billingRate,
+        "BillingAmount":fre.billingAmount,
+        "headerMarkupId":fre.headerMarkupId,
       }
     })
 
@@ -725,9 +728,9 @@ overAllMarkup: any;
                   "masterCompanyId":(mList.masterCompanyId == '')?0:mList.masterCompanyId,
                   "TaskId": mList.taskId,
                   "BillingMethodId":Number(mList.billingMethodId),
-                  "TMAmount":mList.tmAmount,
-                  "FlateRate":mList.flateRate,
-                  "HeaderMarkupId":this.overAllMarkup,
+                  "BillingRate":mList.billingRate,
+                  "BillingAmount":mList.billingAmount,
+                  "headerMarkupId":this.costPlusType,
                   "CreatedBy":"admin",
                   "UpdatedBy":"admin",
                   "IsActive":true,
@@ -814,8 +817,8 @@ overAllMarkup: any;
         "InvoiceNo":"InvoiceNo 123456",
         "Amount":100,
         "MarkupPercentageId":charge.markupPercentageId,
-        "TMAmount":charge.tmAmount,
-        "FlateRate":charge.flateRate,
+        // "TMAmount":charge.tmAmount,
+        // "FlateRate":charge.flateRate,
         "Description":charge.description,
         "UnitCost":charge.unitCost,
         "ExtendedCost":charge.extendedCost,
@@ -828,7 +831,9 @@ overAllMarkup: any;
         "UpdatedBy":"admin",
         "IsActive":true,
         "IsDeleted":charge.isDeleted,
-        "BillingMethodId": charge.billingMethodId
+        "BillingMethodId": charge.billingMethodId,
+        "BillingRate":charge.billingRate,
+        "BillingAmount":charge.billingAmount,
       }
     })
     this.workOrderService.saveChargesQuote(this.chargesPayload)
@@ -917,12 +922,11 @@ saveworkOrderLabor(data) {
   this.laborPayload.WorkOrderQuoteLaborHeader.ExpertiseId = data.expertiseId;
   this.laborPayload.WorkOrderQuoteLaborHeader.TotalWorkHours = data.totalWorkHours
   this.laborPayload.WorkOrderQuoteLaborHeader.masterCompanyId = data.masterCompanyId; 
-  this.laborPayload.WorkOrderQuoteLaborHeader['markupFixedPrice'] = data.markupFixedPrice;
+  this.laborPayload.WorkOrderQuoteLaborHeader['headerMarkupId'] = data.headerMarkupId;
   this.laborPayload.WorkOrderQuoteLaborHeader.CreatedBy = "admin"
   this.laborPayload.WorkOrderQuoteLaborHeader.UpdatedBy = "admin" 
   this.laborPayload.WorkOrderQuoteLaborHeader.IsActive = true 
   this.laborPayload.WorkOrderQuoteLaborHeader.IsDeleted = false;
-  this.laborPayload.WorkOrderQuoteLaborHeader['WorkFlowWorkOrderId'] = data.workFlowWorkOrderId.value;
   var laborList = [];
   for (let labor in data.workOrderLaborList){
     laborList = [...laborList, ...data.workOrderLaborList[labor]];
@@ -945,8 +949,8 @@ saveworkOrderLabor(data) {
         "laborOverheadCost": labor.laborOverheadCost,
         "markupPercentageId": labor.markupPercentageId,
         "directLaborOHCost": labor.directLaborOHCost,
-        "markupFixedPrice": labor.markupFixedPrice,
-        "fixedAmount": labor.fixedAmount,
+        "headerMarkupId": labor.headerMarkupId,
+        // "fixedAmount": labor.fixedAmount,
         "CreatedBy":"admin",
         "UpdatedBy":"admin",
         "IsActive":true,
@@ -1035,16 +1039,19 @@ saveWorkOrderExclusionsList(data) {
       "Quantity":ex.quantity,
       "UnitCost":ex.unitCost,
       "ExtendedCost":ex.extendedCost,
-      "MarkUpPercentageId":ex.markUpPercentageId,
+      "MarkupPercentageId":ex.markupPercentageId,
       "CostPlusAmount":ex.costPlusAmount,
       "FixedAmount":ex.fixedAmount,
-      "markupFixedPrice": ex.markupFixedPrice,
       "taskId": ex.taskId,
       "masterCompanyId":(ex.masterCompanyId == '')?0:ex.masterCompanyId,
       "CreatedBy":"admin",
       "UpdatedBy":"admin",
       "IsActive":true,
-      "IsDeleted":ex.isDeleted
+      "IsDeleted":ex.isDeleted,
+      "BillingMethodId":Number(ex.billingMethodId),
+      "BillingRate":ex.billingRate,
+      "BillingAmount":ex.billingAmount,
+      "headerMarkupId":ex.headerMarkupId,
     }
   })
   this.workOrderService.saveExclusionsQuote(this.exclusionPayload)
@@ -1133,11 +1140,14 @@ markupChanged(matData, type){
     this.markupList.forEach((markup)=>{
       if(type == 'row' && markup.value == matData.markupPercentageId){
         matData.tmAmount = Number(matData.extendedCost) + ((Number(matData.extendedCost) / 100) * Number(markup.label))
+        matData['billingRate'] = (matData['unitCost']) + (((matData['unitCost']) / 100) * Number(markup.label))
+        matData['billingAmount'] = Number(matData['billingRate']) * Number(matData.quantity);
       }
       else if(type == 'all' && markup.value == this.overAllMarkup){
         this.materialListQuotation.forEach((mData)=>{
           mData.markupPercentageId = this.overAllMarkup;
-          mData.tmAmount = Number(mData.extendedCost) + ((Number(mData.extendedCost) / 100) * Number(markup.label))
+          mData['billingRate'] = (mData['unitCost']) + (((mData['unitCost']) / 100) * Number(markup.label))
+          mData['billingAmount'] = Number(mData['billingRate']) * Number(mData.quantity);
         })
       }
     })
@@ -1243,7 +1253,7 @@ getQuoteMaterialListByWorkOrderQuoteId() {
   if(this.workOrderQuoteDetailsId){
     this.workOrderService.getQuoteMaterialList(this.workOrderQuoteDetailsId, (this.selectedBuildMethod === 'use work order')?1:(this.selectedBuildMethod == "use work flow")?2:(this.selectedBuildMethod == "use historical wos")?3:4).subscribe(res => {
         this.materialListQuotation = res;
-        if(this.materialListQuotation && this.materialListQuotation.length > 0 && this.materialListQuotation[0].markupFixedPrice){
+        if(this.materialListQuotation && this.materialListQuotation.length > 0 && this.materialListQuotation[0].headerMarkupId){
           this.costPlusType = Number(this.materialListQuotation[0].headerMarkupId);
         }
         if(res.length > 0){
@@ -1330,24 +1340,24 @@ getTotalUnitCost(){
   return total;
 }
 
-getMaterialCostPlus(){
+totalMaterialBillingRate(){
   let total = 0;
   this.materialListQuotation.forEach(
     (material)=>{
-      if(material.tmAmount){
-        total += material.tmAmount;
+      if(material.billingRate){
+        total += Number(material.billingRate);
       }
     }
   )
   return total;
 }
 
-getTotalFixedAmount(){
+totalMaterialBillingAmount(){
   let total = 0;
   this.materialListQuotation.forEach(
     (material)=>{
-      if(material.fixedAmount){
-        total += Number(material.fixedAmount);
+      if(material.billingAmount){
+        total += Number(material.billingAmount);
       }
     }
   )

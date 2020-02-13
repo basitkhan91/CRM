@@ -70,7 +70,7 @@ console.log(this.workOrderLaborList);
       }
     }
     if(this.laborForm['costPlusType']){
-      this.laborForm['costPlusType'] = this.laborForm['markupFixedPrice'];
+      this.laborForm['costPlusType'] = Number(this.laborForm['headerMarkupId']);
     }
   }
 
@@ -103,7 +103,7 @@ console.log(this.workOrderLaborList);
       }
     }
     if(this.laborForm['costPlusType']){
-      this.laborForm['costPlusType'] = this.laborForm['markupFixedPrice'];
+      this.laborForm['costPlusType'] = Number(this.laborForm['headerMarkupId']);
     }
   }
 
@@ -333,7 +333,7 @@ console.log(this.workOrderLaborList);
       this.saveFormdata['workOrderHoursType'] = 3;
     }
     if(this.isQuote){
-      this.saveFormdata.markupFixedPrice = this.laborForm['costPlusType'];
+      this.saveFormdata.headerMarkupId = this.laborForm['costPlusType'];
       // for(let labor in this.saveFormdata.workOrderLaborList){
       //   this.saveFormdata.workOrderLaborList[labor].forEach(
       //     (lab)=>{
@@ -450,27 +450,29 @@ console.log(this.workOrderLaborList);
 
   markupChanged(matData, type) {
       try {
-        this.markupList.forEach((markup)=>{
-          if(type == 'row' && markup.value == matData.markupPercentageId){
-            matData['billingRate'] = (matData['totalCostPerHour']) + (((matData['totalCostPerHour']) / 100) * Number(markup.label))
-            matData['billingAmount'] = Number(matData['billingRate']) * Number(matData.hours);
-          }
-          else if(type == 'all' && markup.value == this.overAllMarkup){
-            for(let t in this.laborForm.workOrderLaborList[0]){
-              for(let mData of this.laborForm.workOrderLaborList[0][t]){
-                if(mData['billingMethodId'] == 1){
-                  mData.markupPercentageId = this.overAllMarkup;
-                  mData['billingRate'] = (mData['totalCostPerHour']) + (((mData['totalCostPerHour']) / 100) * Number(markup.label))
-                  mData['billingAmount'] = Number(mData['billingRate']) * Number(mData.hours);
+        if(this.markupList){
+          this.markupList.forEach((markup)=>{
+            if(type == 'row' && markup.value == matData.markupPercentageId){
+              matData['billingRate'] = (matData['totalCostPerHour']) + (((matData['totalCostPerHour']) / 100) * Number(markup.label))
+              matData['billingAmount'] = Number(matData['billingRate']) * Number(matData.hours);
+            }
+            else if(type == 'all' && markup.value == this.overAllMarkup){
+              for(let t in this.laborForm.workOrderLaborList[0]){
+                for(let mData of this.laborForm.workOrderLaborList[0][t]){
+                  if(mData['billingMethodId'] == 1){
+                    mData.markupPercentageId = this.overAllMarkup;
+                    mData['billingRate'] = (mData['totalCostPerHour']) + (((mData['totalCostPerHour']) / 100) * Number(markup.label))
+                    mData['billingAmount'] = Number(mData['billingRate']) * Number(mData.hours);
+                  }
                 }
               }
+              // this.materialListQuotation.forEach((mData)=>{
+              //   mData.markupPercentageId = this.overAllMarkup;
+              //   mData.materialCostPlus = Number(mData.extendedCost) + ((Number(mData.extendedCost) / 100) * Number(markup.label))
+              // })
             }
-            // this.materialListQuotation.forEach((mData)=>{
-            //   mData.markupPercentageId = this.overAllMarkup;
-            //   mData.materialCostPlus = Number(mData.extendedCost) + ((Number(mData.extendedCost) / 100) * Number(markup.label))
-            // })
-          }
-        })
+          })
+        }
 
           // this.markupList.forEach((markup) => {
           // if (markup.value == matData.markupPercentageId) {

@@ -157,5 +157,10 @@ namespace DAL.Repositories.Interfaces
         object GetQuoteBuildMethodDetails(long workflowWorkorderId);
         IEnumerable<object> HistoricalWorkOrderQuotes(long customerId);
 
+
+        WorkOrderTeardown CreateTeardown(WorkOrderTeardown tearDown);
+        WorkOrderTeardown GetWorkOrderTeardown(long wowfId);
+        object WorkOrderTeardownView(long wowfId);
+
     }
 }

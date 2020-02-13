@@ -482,8 +482,12 @@
             <th>Total Part Cost</th>
             <th>Billing Method</th>
             <th>Mark Up</th>
-            <th tooltip="Time & Materials">T&M Amount</th>
-            <th>Flate Rate</th>
+            <th>
+              Billing Rate
+            </th>
+            <th>
+              Billing Amount
+            </th>
             <th *ngIf="!isView"></th>
             <th *ngIf="!isView"></th>
           </tr>
@@ -519,10 +523,10 @@
                     <option *ngFor="let markUp of markupList" [value]="markUp.value">{{markUp.label}}</option>
                   </select>
               </td>
-              <td>{{ matQuotation.tmAmount }}</td>
               <td>
-                <input type="number" [(ngModel)]="matQuotation.flateRate" [disabled]="matQuotation.billingMethodId != 2"/>
+                  <input type="number" [(ngModel)]="matQuotation.billingRate" (change)="matQuotation.billingAmount = matQuotation.billingRate*matQuotation.quantity" [disabled]="isView || matQuotation.billingMethodId != 2"/>
               </td>
+              <td>{{ matQuotation.billingAmount }}</td>
               <td *ngIf="!isView">
                   <button
                     class="btn-edit ptable-wo-btns"
@@ -565,8 +569,8 @@
             <td>&nbsp;</td>
             <td>&nbsp;</td>
             <td>&nbsp;</td>
-            <td>{{getMaterialCostPlus()}}</td>
-            <td>{{getTotalFixedAmount()}}</td>
+            <td>{{totalMaterialBillingRate()}}</td>
+            <td>{{totalMaterialBillingAmount()}}</td>
             <td *ngIf="!isView"></td>
             <td *ngIf="!isView"></td>
           </tr>
@@ -657,8 +661,12 @@
             <th>Total Part Cost</th>
             <th>Billing Method</th>
             <th>Mark Up</th>
-            <th tooltip="Time & Materials">T&M Amount</th>
-            <th>Flate Rate</th>
+            <th>
+              Billing Rate
+            </th>
+            <th>
+              Billing Amount
+            </th>
             <th *ngIf="!isView"></th>
             <th *ngIf="!isView"></th>
           </tr>
@@ -693,10 +701,10 @@
                   <option *ngFor="let markUp of markupList" [value]="markUp.value">{{markUp.label}}</option>
                 </select>
             </td>
-            <td>{{ matQuotation.tmAmount }}</td>
             <td>
-              <input type="number" [(ngModel)]="matQuotation.flateRate" [disabled]="matQuotation.billingMethodId != 2"/>
+                <input type="number" [(ngModel)]="matQuotation.billingRate" (change)="matQuotation.billingAmount = matQuotation.billingRate*matQuotation.quantity" [disabled]="isView || matQuotation.billingMethodId != 2"/>
             </td>
+            <td>{{ matQuotation.billingAmount }}</td>
             <td *ngIf="!isView">
                 <button
                   class="btn-edit ptable-wo-btns"
@@ -738,8 +746,8 @@
             <td>&nbsp;</td>
             <td>&nbsp;</td>
             <td>&nbsp;</td>
-            <td>{{getMaterialCostPlus()}}</td>
-            <td>{{getTotalFixedAmount()}}</td>
+            <td>{{totalMaterialBillingRate()}}</td>
+            <td>{{totalMaterialBillingAmount()}}</td>
             <td *ngIf="!isView"></td>
             <td *ngIf="!isView"></td>
           </tr>

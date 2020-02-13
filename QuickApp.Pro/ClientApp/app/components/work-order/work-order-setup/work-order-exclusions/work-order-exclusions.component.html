@@ -109,44 +109,35 @@
     <ng-template pTemplate="header" let-columns>
         <tr *ngIf="isQuote">
           <th colspan="7">&nbsp;</th>
-          <th colspan="2">
-              <div class="form-group" style="text-align: center;">
+          <th colspan="6">
+              <div class="form-group" style="text-align: center; display: flex;">
                 <p-radioButton
                   class="p-radiobutton-label-horizontal p-radio-custom"
                   name="costPlusType"
-                  label="T&M"
-                  value="T&M"
+                  label="T&M - Mark Up"
+                  value=1
                   [(ngModel)]="costPlusType"
                   [disabled]="isView"
+                  (click)="tmchange()"
                 ></p-radioButton>
-                <div style="display: flex;">
-                  <label style="color: #ffffff; font-size: 12px !important;
-                  font-weight: normal;
-                  margin-right: 25px;">T&M - Mark Up %</label>
-                  <select class="form-control wf-pub-id" (change)="markupChanged({}, 'all')" [(ngModel)]="overAllMarkup" [disabled]="isView || costPlusType != 'Mark Up'">
+                <div>
+                  <select class="form-group" (change)="markupChanged({}, 'all')" [(ngModel)]="overAllMarkup" [disabled]="isView || costPlusType != 1" style="margin-top: 10px;">
                     <option value="">Select</option>
                     <option *ngFor="let markUp of markupList" [value]="markUp.value">{{markUp.label}}</option>
                   </select>
                 </div>
+              </div>
+              <div style="float: left;">
                 <p-radioButton
                   class="p-radiobutton-label-horizontal col-width p-radio-custom"
                   name="costPlusType"
-                  value="actual"
+                  value=2
                   label="Actual"
                   [(ngModel)]="costPlusType"
                   [disabled]="isView"
+                  (click)="tmchange()"
                 ></p-radioButton>
               </div>
-          </th>
-          <th colspan="3">
-              <!-- <p-radioButton
-              class="p-radiobutton-label-horizontal col-width p-radio-custom"
-              name="costPlusType"
-              value="Fixed Mat Price"
-              label="Fixed Mat Price"
-              [(ngModel)]="costPlusType"
-              [disabled]="isView"
-            ></p-radioButton> -->
           </th>
         </tr>
       <tr>
@@ -180,22 +171,17 @@
         </td>
         <ng-container *ngIf="isQuote">
           <td>
-            <select
-              class="form-control"
-              [(ngModel)]="rowData.billingMethod"
-              [disabled]="isView"
-            >
+            <select class="form-control" [(ngModel)]="rowData.billingMethodId">
               <option value="">Select</option>
-              <option value="T&M">T&M</option>
-              <option value="actual">Actual</option>
+              <option *ngFor="let bm of [{'label': 'T&M', 'value': 1}, {'label': 'Actual', 'value': 2}]" [value]="bm.value">{{bm.label}}</option>
             </select>
           </td>
           <td>
             <select
               class="form-control"
               (change)="markupChanged(rowData, 'row')"
-              [(ngModel)]="rowData.markUpPercentageId"
-              [disabled]="isView || rowData.billingMethod != 'T&M'"
+              [(ngModel)]="rowData.markupPercentageId"
+              [disabled]="isView || rowData.billingMethodId != 1"
             >
               <option value="">Select</option>
               <option
@@ -206,7 +192,7 @@
             </select>
           </td>
           <td>
-              <input type="number" [(ngModel)]="rowData.billingRate" [disabled]="isView || rowData.billingMethod != 'actual'"/>
+              <input type="number" [(ngModel)]="rowData.billingRate" (change)="rowData.billingAmount = rowData.billingRate*rowData.quantity" [disabled]="isView || rowData.billingMethodId != 2"/>
           </td>
           <td>{{ rowData.billingAmount }}</td>
         </ng-container>
@@ -245,8 +231,8 @@
         <td>&nbsp;</td>
         <td>&nbsp;</td>
         <td>&nbsp;</td>
-        <td>{{ getCostPlus() }}</td>
-        <td>{{ getTotalFixedAmount() }}</td>
+        <td>{{ getTotalBillingRate() }}</td>
+        <td>{{ getTotalBillingAmount() }}</td>
         <td>&nbsp;</td>
         <td *ngIf="!isView">&nbsp;</td>
       </tr>

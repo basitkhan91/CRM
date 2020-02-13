@@ -38,7 +38,7 @@ export class WorkOrderChargesComponent implements OnChanges, OnInit {
   isEdit: boolean = false;
   editData: any;
   editingIndex: number;
-  costPlusType: number = 1;
+  costPlusType: number = 0;
   overAllMarkup: any;
 
   constructor(private workOrderService: WorkOrderService, private authService: AuthService,
@@ -125,13 +125,18 @@ export class WorkOrderChargesComponent implements OnChanges, OnInit {
     try {
       this.markupList.forEach((markup)=>{
         if(type == 'row' && markup.value == matData.markupPercentageId){
-          matData.tmAmount = Number(matData.extendedCost) + ((Number(matData.extendedCost) / 100) * Number(markup.label))
+          // matData.tmAmount = Number(matData.extendedCost) + ((Number(matData.extendedCost) / 100) * Number(markup.label))
+          matData['billingRate'] = (matData['unitCost']) + (((matData['unitCost']) / 100) * Number(markup.label))
+          matData['billingAmount'] = Number(matData['billingRate']) * Number(matData.quantity);
         }
         else if(type == 'all' && markup.value == this.overAllMarkup){
           this.workOrderChargesList.forEach((mData)=>{
             if(mData.billingMethodId && Number(mData.billingMethodId) == 1){
+              // mData.markupPercentageId = this.overAllMarkup;
+              // mData.tmAmount = Number(mData.extendedCost) + ((Number(mData.extendedCost) / 100) * Number(markup.label))
               mData.markupPercentageId = this.overAllMarkup;
-              mData.tmAmount = Number(mData.extendedCost) + ((Number(mData.extendedCost) / 100) * Number(markup.label))
+              mData['billingRate'] = (mData['unitCost']) + (((mData['unitCost']) / 100) * Number(markup.label))
+              mData['billingAmount'] = Number(mData['billingRate']) * Number(mData.quantity);
             }
           })
         }
@@ -182,13 +187,13 @@ export class WorkOrderChargesComponent implements OnChanges, OnInit {
     return total;
   }
 
-  getChargesCostPlus() {
+  getTotalBillingRate() {
     let total = 0;
     if(this.workOrderChargesList){
       this.workOrderChargesList.forEach(
         (material) => {
-          if (material.tmAmount) {
-            total += Number(material.tmAmount);
+          if (material.billingRate) {
+            total += Number(material.billingRate);
           }
         }
       )
@@ -196,13 +201,13 @@ export class WorkOrderChargesComponent implements OnChanges, OnInit {
     return total;
   }
 
-  getTotalFixedAmount() {
+  getTotalBillingAmount() {
     let total = 0;
     if(this.workOrderChargesList){
       this.workOrderChargesList.forEach(
         (material) => {
-          if (material.flateRate) {
-            total += Number(material.flateRate);
+          if (material.billingAmount) {
+            total += Number(material.billingAmount);
           }
         }
       )

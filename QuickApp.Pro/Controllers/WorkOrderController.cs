@@ -1199,6 +1199,39 @@ namespace QuickApp.Pro.Controllers
 
         #endregion
 
+        #region Teardown
+
+        [HttpPost("createteardown")]
+        public IActionResult CreateTeardown([FromBody]WorkOrderTeardown tearDown)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = unitOfWork.WorkOrderRepository.CreateTeardown(tearDown);
+                return Ok(result);
+            }
+            else
+            {
+                return BadRequest(ModelState.Values.FirstOrDefault().Errors);
+            }
+
+        }
+
+        [HttpGet("getwoteardown")]
+        public IActionResult GetWorkOrderTeardown(long wowfId)
+        {
+             var result = unitOfWork.WorkOrderRepository.GetWorkOrderTeardown(wowfId);
+            return Ok(result);
+        }
+
+        [HttpGet("woteardownview")]
+        public IActionResult WorkOrderTeardownView(long wowfId)
+        {
+            var result = unitOfWork.WorkOrderRepository.WorkOrderTeardownView(wowfId);
+            return Ok(result);
+        }
+
+        #endregion
+
         [HttpGet("getAll")]
         public IActionResult Index()
         {
