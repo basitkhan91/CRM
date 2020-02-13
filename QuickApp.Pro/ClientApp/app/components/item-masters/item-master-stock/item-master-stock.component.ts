@@ -4453,7 +4453,24 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             );
         })
     }
+
+    movePurchaseSales() {
+        this.changeOfTab('PurchaseSales');
+    }
+    moveExportInformations() {
+        this.alertService.showMessage(
+            'Success',
+            `Action Saved Successfully `,
+            MessageSeverity.success
+        );
+        this.changeOfTab('Exchange');
+    }
     moveAtachapter() {
+        this.alertService.showMessage(
+            'Success',
+            `Saved Air CraftInfo Successfully `,
+            MessageSeverity.success
+        );
         this.changeOfTab('Atachapter');
         // this.activeTab = 2
         // this.showAtachapter = true;
@@ -4732,6 +4749,11 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
 
     movePurchaseInformation() {
+        this.alertService.showMessage(
+            'Success',
+            `Saved Ata Chapter Successfully `,
+            MessageSeverity.success
+        );
         this.changeOfTab('PurchaseSales');
         // this.showpurchaseData = true;
         // this.showGeneralData = false;
