@@ -16,6 +16,21 @@ namespace DAL
         // Test Changes....
         public string CurrentUserId { get; set; }
 
+
+        public DbSet<WorkOrderAdditionalComments> WorkOrderAdditionalComments { get; set; }
+        public DbSet<WorkOrderBulletinsModification> WorkOrderBulletinsModification { get; set; }
+        public DbSet<WorkOrderDiscovery> WorkOrderDiscovery { get; set; }
+        public DbSet<WorkOrderFinalInspection> WorkOrderFinalInspection { get; set; }
+        public DbSet<WorkOrderFinalTest> WorkOrderFinalTest { get; set; }
+        public DbSet<WorkOrderPmaDerBulletins> WorkOrderPmaDerBulletins { get; set; }
+        public DbSet<WorkOrderPreAssemblyInspection> WorkOrderPreAssemblyInspection { get; set; }
+        public DbSet<WorkOrderPreAssmentResults> WorkOrderPreAssmentResults { get; set; }
+        public DbSet<WorkOrderPreliinaryReview> WorkOrderPreliinaryReview { get; set; }
+        public DbSet<WorkOrderRemovalReasons> WorkOrderRemovalReasons { get; set; }
+        public DbSet<WorkOrderTeardown> WorkOrderTeardown { get; set; }
+        public DbSet<WorkOrderTestDataUsed> WorkOrderTestDataUsed { get; set; }
+        public DbSet<WorkOrderWorkPerformed> WorkOrderWorkPerformed { get; set; }
+
         public DbSet<CodeTypes> CodeTypes { get; set; }
         public DbSet<CodePrefixes> CodePrefixes { get; set; }
         public DbSet<GlobalSettings> GlobalSettings { get; set; }

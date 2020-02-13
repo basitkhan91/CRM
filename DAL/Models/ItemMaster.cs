@@ -19,7 +19,7 @@ namespace DAL.Models
         public Int32? ItemTypeId { get; set; }
         public long? ItemGroupId { get; set; }
         public long? ItemClassificationId { get; set; }
-        public bool? IsAcquiredMethodBuy { get; set; }
+        
         public bool? IsHazardousMaterial { get; set; }
         public bool? IsExpirationDateAvailable { get; set; }
         public DateTime? ExpirationDate { get; set; }
@@ -178,7 +178,7 @@ namespace DAL.Models
         public long? LocationId { get; set; }
         public long? ShelfId { get; set; }
         public long? BinId { get; set; }
-
+        public long? AssetAcquistionTypeId { get; set; }
 
 
 
