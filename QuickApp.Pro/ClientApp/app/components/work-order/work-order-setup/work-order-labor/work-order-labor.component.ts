@@ -70,7 +70,7 @@ console.log(this.workOrderLaborList);
       }
     }
     if(this.laborForm['costPlusType']){
-      this.laborForm['costPlusType'] = this.laborForm['markupFixedPrice'];
+      this.laborForm['costPlusType'] = Number(this.laborForm['markupFixedPrice']);
     }
   }
 
@@ -103,7 +103,7 @@ console.log(this.workOrderLaborList);
       }
     }
     if(this.laborForm['costPlusType']){
-      this.laborForm['costPlusType'] = this.laborForm['markupFixedPrice'];
+      this.laborForm['costPlusType'] = Number(this.laborForm['markupFixedPrice']);
     }
   }
 

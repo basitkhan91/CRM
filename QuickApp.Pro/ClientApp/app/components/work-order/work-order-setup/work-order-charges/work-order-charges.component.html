@@ -123,10 +123,16 @@
         <ng-container *ngIf="isQuote">
           <th>Billing Method</th>
           <th>Mark Up</th>
-          <th tooltip="Time & Materials">T&M Amount</th>
-          <th>Flate Rate</th>
-          <th colspan="2">Action</th>
+          <!-- <th tooltip="Time & Materials">T&M Amount</th>
+          <th>Flate Rate</th> -->
+          <th>
+            Billing Rate
+          </th>
+          <th>
+            Billing Amount
+          </th>
         </ng-container>
+        <th colspan="2">Action</th>
         <!-- <th colspan="4" class="text-center" *ngIf="!isView"></th> -->
       </tr>
     </ng-template>
@@ -165,11 +171,16 @@
               >
             </select>
           </td>
-          <td>{{ rowData.tmAmount }}</td>
+          <!-- <td>{{ rowData.tmAmount }}</td>
           <td>
             <input type="number" [(ngModel)]="rowData.flateRate" [disabled]="rowData.billingMethodId != 2"/>
+          </td> -->
+          <td>
+              <input type="number" [(ngModel)]="rowData.billingRate" [disabled]="isView || rowData.billingMethodId != 2"/>
           </td>
-          <td *ngIf="!isView">
+          <td>{{ rowData.billingAmount }}</td>
+        </ng-container>
+        <td *ngIf="!isView">
             <button
               class="btn-edit ptable-wo-btns"
               mat-icon-button
@@ -191,7 +202,6 @@
               <mat-icon color="warn">delete</mat-icon>
             </button>
           </td>
-        </ng-container>
       </tr>
     </ng-template>
     <ng-template pTemplate="footer" *ngIf="isQuote">
@@ -205,8 +215,8 @@
         <td>&nbsp;</td>
         <td>&nbsp;</td>
         <td>&nbsp;</td>
-        <td>{{ getChargesCostPlus() }}</td>
-        <td>{{ getTotalFixedAmount() }}</td>
+        <td>{{ getTotalBillingRate() }}</td>
+        <td>{{ getTotalBillingAmount() }}</td>
         <td>&nbsp;</td>
         <td *ngIf="!isView">&nbsp;</td>
       </tr>
