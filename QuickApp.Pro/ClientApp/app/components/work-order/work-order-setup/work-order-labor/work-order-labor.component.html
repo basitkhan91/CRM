@@ -461,7 +461,7 @@
                     </select>
                   </td>
                   <td>
-                      <input type="number" [(ngModel)]="rec.billingRate" [disabled]="isView || rec.billingMethodId != 2"/>
+                      <input type="number" [(ngModel)]="rec.billingRate" (change)="rec.billingAmount = rec.billingRate*rec.hours" [disabled]="isView || rec.billingMethodId != 2"/>
                   </td>
                   <td>{{ rec.billingAmount }}</td>
                 </ng-container>

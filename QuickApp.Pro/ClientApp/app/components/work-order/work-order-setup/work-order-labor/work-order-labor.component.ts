@@ -70,7 +70,7 @@ console.log(this.workOrderLaborList);
       }
     }
     if(this.laborForm['costPlusType']){
-      this.laborForm['costPlusType'] = Number(this.laborForm['markupFixedPrice']);
+      this.laborForm['costPlusType'] = Number(this.laborForm['headerMarkupId']);
     }
   }
 
@@ -103,7 +103,7 @@ console.log(this.workOrderLaborList);
       }
     }
     if(this.laborForm['costPlusType']){
-      this.laborForm['costPlusType'] = Number(this.laborForm['markupFixedPrice']);
+      this.laborForm['costPlusType'] = Number(this.laborForm['headerMarkupId']);
     }
   }
 
@@ -333,7 +333,7 @@ console.log(this.workOrderLaborList);
       this.saveFormdata['workOrderHoursType'] = 3;
     }
     if(this.isQuote){
-      this.saveFormdata.markupFixedPrice = this.laborForm['costPlusType'];
+      this.saveFormdata.headerMarkupId = this.laborForm['costPlusType'];
       // for(let labor in this.saveFormdata.workOrderLaborList){
       //   this.saveFormdata.workOrderLaborList[labor].forEach(
       //     (lab)=>{

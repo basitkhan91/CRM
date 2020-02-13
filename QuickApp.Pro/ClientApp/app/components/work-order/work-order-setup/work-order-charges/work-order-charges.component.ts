@@ -38,7 +38,7 @@ export class WorkOrderChargesComponent implements OnChanges, OnInit {
   isEdit: boolean = false;
   editData: any;
   editingIndex: number;
-  costPlusType: number = 1;
+  costPlusType: number = 0;
   overAllMarkup: any;
 
   constructor(private workOrderService: WorkOrderService, private authService: AuthService,

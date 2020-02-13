@@ -524,7 +524,7 @@
                   </select>
               </td>
               <td>
-                  <input type="number" [(ngModel)]="matQuotation.billingRate" [disabled]="isView || matQuotation.billingMethodId != 2"/>
+                  <input type="number" [(ngModel)]="matQuotation.billingRate" (change)="matQuotation.billingAmount = matQuotation.billingRate*matQuotation.quantity" [disabled]="isView || matQuotation.billingMethodId != 2"/>
               </td>
               <td>{{ matQuotation.billingAmount }}</td>
               <td *ngIf="!isView">
@@ -702,7 +702,7 @@
                 </select>
             </td>
             <td>
-                <input type="number" [(ngModel)]="matQuotation.billingRate" [disabled]="isView || matQuotation.billingMethodId != 2"/>
+                <input type="number" [(ngModel)]="matQuotation.billingRate" (change)="matQuotation.billingAmount = matQuotation.billingRate*matQuotation.quantity" [disabled]="isView || matQuotation.billingMethodId != 2"/>
             </td>
             <td>{{ matQuotation.billingAmount }}</td>
             <td *ngIf="!isView">
