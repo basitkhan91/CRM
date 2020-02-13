@@ -280,7 +280,9 @@ export class CustomerATAInformationComponent implements OnInit {
             });
     }
 
-
+    pageIndexChange(event) {
+        this.pageSize = event.rows;
+    }
 
     nextClick() {
         this.stopmulticlicks = true;

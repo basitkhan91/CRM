@@ -234,7 +234,9 @@ export class CustomerContactsComponent implements OnInit {
 
 	pageIndexChange(event) {
 		this.pageSize = event.rows;
+		console.log("event",event);
 	}
+
 	getAllContacts() {
 		this.customerService.getContactsFirstName().subscribe(res => {
 			this.contactsListOriginal = res[0];
@@ -297,6 +299,7 @@ export class CustomerContactsComponent implements OnInit {
 					// get all contacts
 					this.getAllContacts();
 					// get Customer Contatcs 
+					this.customerContacts=[];
 					this.getAllCustomerContact();
 					this.refreshCustomerContactMapped.emit(this.id);
 
@@ -309,6 +312,7 @@ export class CustomerContactsComponent implements OnInit {
 		})
 		$("#addContactDetails").modal("hide");
 		this.disableSave = true;
+	
 	}
 
 
@@ -366,6 +370,7 @@ export class CustomerContactsComponent implements OnInit {
 		}
 		this.customerService.updateContactinfo(data).subscribe(res => {
 			this.getAllContacts();
+			this.customerContacts=[];
 			this.getAllCustomerContact();
 
 			this.alertService.showMessage(
@@ -438,8 +443,8 @@ export class CustomerContactsComponent implements OnInit {
 		} else {
 			$('#deleteoops').modal('show');
 		}
-
-
+		this.customerContacts=[];
+this.getAllCustomerContact();
 	}
 	deleteItemAndCloseModel() {
 		let contactId = this.contactId;
