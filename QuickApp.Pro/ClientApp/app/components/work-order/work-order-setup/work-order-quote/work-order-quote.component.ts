@@ -922,7 +922,6 @@ saveworkOrderLabor(data) {
   this.laborPayload.WorkOrderQuoteLaborHeader.UpdatedBy = "admin" 
   this.laborPayload.WorkOrderQuoteLaborHeader.IsActive = true 
   this.laborPayload.WorkOrderQuoteLaborHeader.IsDeleted = false;
-  this.laborPayload.WorkOrderQuoteLaborHeader['WorkFlowWorkOrderId'] = data.workFlowWorkOrderId.value;
   var laborList = [];
   for (let labor in data.workOrderLaborList){
     laborList = [...laborList, ...data.workOrderLaborList[labor]];
