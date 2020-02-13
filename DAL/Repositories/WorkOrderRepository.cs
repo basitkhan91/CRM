@@ -2460,6 +2460,11 @@ namespace DAL.Repositories
                 var workOrderAssetsList = (from wa in _appContext.WorkOrderAssetAudit
                                            join a in _appContext.Asset on wa.AssetRecordId equals a.AssetRecordId
                                            join at in _appContext.AssetType on a.AssetTypeId equals at.AssetTypeId
+                                           join cb in _appContext.Employee on wa.CheckedInById equals cb.EmployeeId into wacb
+                                           from cb in wacb.DefaultIfEmpty()
+                                           join co in _appContext.Employee on wa.CheckedInById equals co.EmployeeId into waco
+                                           from co in waco.DefaultIfEmpty()
+
                                            where wa.WorkOrderAssetId == workOrderAssetId
                                            select new
                                            {
@@ -2478,7 +2483,9 @@ namespace DAL.Repositories
                                                wa.CheckedInDate,
                                                wa.CheckedOutById,
                                                wa.CheckedOutDate,
-                                               wa.CheckInOutStatus
+                                               wa.CheckInOutStatus,
+                                               CheckedInBy=cb==null?"":cb.FirstName+" "+cb.LastName,
+                                               CheckedOutBy=co==null?"":co.FirstName+" "+co.LastName,
                                            }).Distinct().ToList();
 
                 return workOrderAssetsList;
