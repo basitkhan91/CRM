@@ -1152,12 +1152,12 @@ namespace DAL.Repositories
 
                         if (customerContact != null)
                         {
-                            workOrder.CustomerContact= workOrder.CustomerDetails.CustomerContact = customerContact.con.FirstName;
+                            workOrder.CustomerContact = workOrder.CustomerDetails.CustomerContact = customerContact.con.FirstName;
                         }
                     }
 
-                   
-                    
+
+
 
                     if (workOrder.IsSinglePN)
                     {
@@ -3659,7 +3659,7 @@ namespace DAL.Repositories
                                       from emp in wqemp.DefaultIfEmpty()
                                       join sp in _appContext.Employee on wq.SalesPersonId equals sp.EmployeeId into wqsp
                                       from sp in wqsp.DefaultIfEmpty()
-                                      join cc in _appContext.CustomerContact.Where(p=>p.IsDefaultContact==true) on cust.CustomerId equals cc.CustomerId into custcc
+                                      join cc in _appContext.CustomerContact.Where(p => p.IsDefaultContact == true) on cust.CustomerId equals cc.CustomerId into custcc
                                       from cc in custcc.DefaultIfEmpty()
                                       join con in _appContext.Contact on cc.ContactId equals con.ContactId into cccon
                                       from con in cccon.DefaultIfEmpty()
@@ -4001,7 +4001,8 @@ namespace DAL.Repositories
                                                 wf.BillingMethodId,
                                                 wf.BillingRate,
                                                 wf.BillingAmount,
-                                                wf.MarkupFixedPrice
+                                                wf.MarkupFixedPrice,
+
                                             }).Distinct().ToList();
 
                 return workOrderFreightList;
@@ -4239,7 +4240,7 @@ namespace DAL.Repositories
                                                   wom.TMAmount,
                                                   wom.FlateRate,
                                                   wom.HeaderMarkupId,
-
+                                                  wom.ExtendedCost
                                               }).Distinct().ToList();
 
                 return workOrderMaterialsList;
@@ -4362,7 +4363,7 @@ namespace DAL.Repositories
 
                                                   join task in _appContext.Task.Where(p => p.IsActive == true && p.IsDelete == false) on wol.TaskId equals task.TaskId into woltask
                                                   from task in woltask.DefaultIfEmpty()
-                                                  where wol.WorkOrderQuoteLaborHeaderId == lh.WorkOrderQuoteLaborHeaderId
+                                                  where wol.WorkOrderQuoteLaborHeaderId == lh.WorkOrderQuoteLaborHeaderId && wol.IsDeleted == true
                                                   select new
                                                   {
                                                       wol.BillableId,
@@ -4652,17 +4653,144 @@ namespace DAL.Repositories
             }
         }
 
-        public IEnumerable<object> HistoricalWorkOrderQuotes(long customerId)
+        //public IEnumerable<object> HistoricalWorkOrderQuotes(long customerId)
+        //{
+
+        //    try
+        //    {
+        //        var list = (from woq in _appContext.WorkOrderQuote
+        //                    join wo in _appContext.WorkOrder on woq.WorkOrderId equals wo.WorkOrderId
+        //                    join wop in _appContext.WorkOrderPartNumber on woq.WorkOrderId equals wop.WorkOrderId
+        //                    join wqs in _appContext.WorkOrderStatus on woq.QuoteStatusId equals wqs.Id
+        //                    join cust in _appContext.Customer on woq.CustomerId equals cust.CustomerId
+        //                    where woq.IsDeleted == false && woq.CustomerId == customerId
+        //                    select new WOQuoteFilters()
+        //                    {
+        //                        WorkOrderQuoteId = woq.WorkOrderQuoteId,
+        //                        WorkOrderId = wo.WorkOrderId,
+        //                        quoteNumber = woq.QuoteNumber,
+        //                        workOrderNum = wo.WorkOrderNum,
+        //                        customerName = cust.Name,
+        //                        customerCode = cust.CustomerCode,
+        //                        openDate = woq.OpenDate,
+
+        //                        promisedDate = string.Join(",", _appContext.WorkOrderPartNumber
+        //                                                      .Where(p => p.WorkOrderId == wo.WorkOrderId)
+        //                                                      .Select(p => p.PromisedDate.Date)),
+
+
+        //                        estShipDate = string.Join(",", _appContext.WorkOrderPartNumber
+        //                                                      .Where(p => p.WorkOrderId == wo.WorkOrderId)
+        //                                                      .Select(p => p.EstimatedShipDate.Date)),
+
+
+        //                        estCompletionDate = string.Join(",", _appContext.WorkOrderPartNumber
+        //                                                      .Where(p => p.WorkOrderId == wo.WorkOrderId)
+        //                                                      .Select(p => p.EstimatedCompletionDate.Date)),
+
+        //                        quoteStatus = wqs.Description,
+        //                        quoteStatusId = woq.QuoteStatusId,
+        //                        isActive = woq.IsActive,
+        //                        createdDate = woq.CreatedDate,
+        //                    }).Distinct()
+        //                    .ToList();
+
+        //        return list;
+        //    }
+        //    catch (Exception)
+        //    {
+
+        //        throw;
+        //    }
+        //}
+
+        public IEnumerable<object> HistoricalWorkOrderQuotes(Common.Filters<WOQuoteFilters> woQuoteFilters)
         {
+
+            if (woQuoteFilters.filters == null)
+                woQuoteFilters.filters = new WOQuoteFilters();
+            var pageNumber = woQuoteFilters.first + 1;
+            var pageSize = woQuoteFilters.rows;
+
+            string sortColumn = string.Empty;
+
+            var sorts = new Sorts<WOQuoteFilters>();
+            var filters = new EntityFrameworkPaginate.Filters<WOQuoteFilters>();
+
+
+
+            if (string.IsNullOrEmpty(woQuoteFilters.SortField))
+            {
+                sortColumn = "createdDate";
+                woQuoteFilters.SortOrder = -1;
+                sorts.Add(sortColumn == "createdDate", x => x.createdDate, true);
+            }
+            else
+            {
+                sortColumn = woQuoteFilters.SortField;
+            }
+
+            var propertyInfo = typeof(WOQuoteFilters).GetProperty(sortColumn);
+
+            if (woQuoteFilters.SortOrder == -1)
+            {
+                sorts.Add(true, x => propertyInfo.GetValue(x, null), true);
+            }
+            else
+            {
+                sorts.Add(true, x => propertyInfo.GetValue(x, null));
+            }
+
+            filters.Add(!string.IsNullOrEmpty(woQuoteFilters.filters.quoteNumber), x => x.quoteNumber.Contains(woQuoteFilters.filters.quoteNumber));
+            filters.Add(!string.IsNullOrEmpty(woQuoteFilters.filters.workOrderNum), x => x.workOrderNum.Contains(woQuoteFilters.filters.workOrderNum));
+            filters.Add(!string.IsNullOrEmpty(woQuoteFilters.filters.customerName), x => x.customerName.Contains(woQuoteFilters.filters.customerName));
+            filters.Add(!string.IsNullOrEmpty(woQuoteFilters.filters.customerCode), x => x.customerCode.Contains(woQuoteFilters.filters.customerCode));
+            filters.Add(woQuoteFilters.filters.openDate != null, x => x.openDate == woQuoteFilters.filters.openDate);
+            filters.Add(!string.IsNullOrEmpty(woQuoteFilters.filters.promisedDate), x => x.promisedDate.Contains(woQuoteFilters.filters.promisedDate));
+            filters.Add(!string.IsNullOrEmpty(woQuoteFilters.filters.estCompletionDate), x => x.estCompletionDate.Contains(woQuoteFilters.filters.estCompletionDate));
+            filters.Add(!string.IsNullOrEmpty(woQuoteFilters.filters.estShipDate), x => x.estShipDate.Contains(woQuoteFilters.filters.estShipDate));
+            filters.Add(!string.IsNullOrEmpty(woQuoteFilters.filters.estShipDate), x => x.estShipDate.Contains(woQuoteFilters.filters.estShipDate));
+            filters.Add(woQuoteFilters.filters.StatusId != null && woQuoteFilters.filters.StatusId == 1, x => x.CusomerId == woQuoteFilters.filters.CusomerId);
+            filters.Add(woQuoteFilters.filters.ItemMasterId != null && woQuoteFilters.filters.ItemMasterId > 0, x => x.ItemMasterId == woQuoteFilters.filters.ItemMasterId);
+            filters.Add(woQuoteFilters.filters.WorkScopeId != null && woQuoteFilters.filters.WorkScopeId > 0, x => x.WorkScopeId == woQuoteFilters.filters.WorkScopeId);
 
             try
             {
+
+                var totalRecords = (from woq in _appContext.WorkOrderQuote
+                                    join wo in _appContext.WorkOrder on woq.WorkOrderId equals wo.WorkOrderId
+                                    join wop in _appContext.WorkOrderPartNumber on woq.WorkOrderId equals wop.WorkOrderId
+                                    join wqs in _appContext.WorkOrderStatus on woq.QuoteStatusId equals wqs.Id
+                                    join cust in _appContext.Customer on woq.CustomerId equals cust.CustomerId
+                                    where woq.IsDeleted == false
+                                    select new WOQuoteFilters()
+                                    {
+                                        WorkOrderQuoteId = woq.WorkOrderQuoteId,
+                                        WorkOrderId = wo.WorkOrderId,
+                                        quoteNumber = woq.QuoteNumber,
+                                        workOrderNum = wo.WorkOrderNum,
+                                        customerName = cust.Name,
+                                        customerCode = cust.CustomerCode,
+                                        openDate = woq.OpenDate,
+                                        promisedDate = wop.PromisedDate.ToString(),
+                                        estShipDate = wop.PromisedDate.ToString(),
+                                        estCompletionDate = wop.EstimatedCompletionDate.Date.ToString(),
+                                        quoteStatus = wqs.Description,
+                                        quoteStatusId = woq.QuoteStatusId,
+                                        isActive = woq.IsActive,
+                                        createdDate = woq.CreatedDate,
+                                        CusomerId=woq.CustomerId,
+                                        ItemMasterId=wop.MasterPartId,
+                                        WorkScopeId=wop.WorkOrderScopeId,
+                                    }).Distinct()
+                            .Paginate(pageNumber, pageSize, sorts, filters).RecordCount;
+
                 var list = (from woq in _appContext.WorkOrderQuote
                             join wo in _appContext.WorkOrder on woq.WorkOrderId equals wo.WorkOrderId
                             join wop in _appContext.WorkOrderPartNumber on woq.WorkOrderId equals wop.WorkOrderId
                             join wqs in _appContext.WorkOrderStatus on woq.QuoteStatusId equals wqs.Id
                             join cust in _appContext.Customer on woq.CustomerId equals cust.CustomerId
-                            where woq.IsDeleted == false && woq.CustomerId == customerId
+                            where woq.IsDeleted == false
                             select new WOQuoteFilters()
                             {
                                 WorkOrderQuoteId = woq.WorkOrderQuoteId,
@@ -4672,27 +4800,20 @@ namespace DAL.Repositories
                                 customerName = cust.Name,
                                 customerCode = cust.CustomerCode,
                                 openDate = woq.OpenDate,
-
-                                promisedDate = string.Join(",", _appContext.WorkOrderPartNumber
-                                                              .Where(p => p.WorkOrderId == wo.WorkOrderId)
-                                                              .Select(p => p.PromisedDate.Date)),
-
-
-                                estShipDate = string.Join(",", _appContext.WorkOrderPartNumber
-                                                              .Where(p => p.WorkOrderId == wo.WorkOrderId)
-                                                              .Select(p => p.EstimatedShipDate.Date)),
-
-
-                                estCompletionDate = string.Join(",", _appContext.WorkOrderPartNumber
-                                                              .Where(p => p.WorkOrderId == wo.WorkOrderId)
-                                                              .Select(p => p.EstimatedCompletionDate.Date)),
-
+                                promisedDate = wop.PromisedDate.ToString(),
+                                estShipDate = wop.PromisedDate.ToString(),
+                                estCompletionDate = wop.EstimatedCompletionDate.Date.ToString(),
                                 quoteStatus = wqs.Description,
                                 quoteStatusId = woq.QuoteStatusId,
                                 isActive = woq.IsActive,
                                 createdDate = woq.CreatedDate,
+                                CusomerId = woq.CustomerId,
+                                ItemMasterId = wop.MasterPartId,
+                                WorkScopeId = wop.WorkOrderScopeId,
+                                totalRecords = totalRecords
+
                             }).Distinct()
-                            .ToList();
+                            .Paginate(pageNumber, pageSize, sorts, filters).Results; ;
 
                 return list;
             }
@@ -5289,100 +5410,100 @@ namespace DAL.Repositories
         {
             try
             {
-                    var data = (from td in _appContext.WorkOrderTeardown
-                                join ac in _appContext.WorkOrderAdditionalComments on td.WorkOrderTeardownId equals ac.WorkOrderTeardownId
-                                join bm in _appContext.WorkOrderBulletinsModification on td.WorkOrderTeardownId equals bm.WorkOrderTeardownId
-                                join wd in _appContext.WorkOrderDiscovery on td.WorkOrderTeardownId equals wd.WorkOrderTeardownId
-                                join wf in _appContext.WorkOrderFinalInspection on td.WorkOrderTeardownId equals wf.WorkOrderTeardownId
-                                join ft in _appContext.WorkOrderFinalTest on td.WorkOrderTeardownId equals ft.WorkOrderTeardownId
-                                join pd in _appContext.WorkOrderPmaDerBulletins on td.WorkOrderTeardownId equals pd.WorkOrderTeardownId
-                                join pa in _appContext.WorkOrderPreAssemblyInspection on td.WorkOrderTeardownId equals pa.WorkOrderTeardownId
-                                join par in _appContext.WorkOrderPreAssmentResults on td.WorkOrderTeardownId equals par.WorkOrderTeardownId
-                                join pr in _appContext.WorkOrderPreliinaryReview on td.WorkOrderTeardownId equals pr.WorkOrderTeardownId
-                                join rr in _appContext.WorkOrderRemovalReasons on td.WorkOrderTeardownId equals rr.WorkOrderTeardownId
-                                join tdu in _appContext.WorkOrderTestDataUsed on td.WorkOrderTeardownId equals tdu.WorkOrderTeardownId
-                                join wp in _appContext.WorkOrderWorkPerformed on td.WorkOrderTeardownId equals wp.WorkOrderTeardownId
+                var data = (from td in _appContext.WorkOrderTeardown
+                            join ac in _appContext.WorkOrderAdditionalComments on td.WorkOrderTeardownId equals ac.WorkOrderTeardownId
+                            join bm in _appContext.WorkOrderBulletinsModification on td.WorkOrderTeardownId equals bm.WorkOrderTeardownId
+                            join wd in _appContext.WorkOrderDiscovery on td.WorkOrderTeardownId equals wd.WorkOrderTeardownId
+                            join wf in _appContext.WorkOrderFinalInspection on td.WorkOrderTeardownId equals wf.WorkOrderTeardownId
+                            join ft in _appContext.WorkOrderFinalTest on td.WorkOrderTeardownId equals ft.WorkOrderTeardownId
+                            join pd in _appContext.WorkOrderPmaDerBulletins on td.WorkOrderTeardownId equals pd.WorkOrderTeardownId
+                            join pa in _appContext.WorkOrderPreAssemblyInspection on td.WorkOrderTeardownId equals pa.WorkOrderTeardownId
+                            join par in _appContext.WorkOrderPreAssmentResults on td.WorkOrderTeardownId equals par.WorkOrderTeardownId
+                            join pr in _appContext.WorkOrderPreliinaryReview on td.WorkOrderTeardownId equals pr.WorkOrderTeardownId
+                            join rr in _appContext.WorkOrderRemovalReasons on td.WorkOrderTeardownId equals rr.WorkOrderTeardownId
+                            join tdu in _appContext.WorkOrderTestDataUsed on td.WorkOrderTeardownId equals tdu.WorkOrderTeardownId
+                            join wp in _appContext.WorkOrderWorkPerformed on td.WorkOrderTeardownId equals wp.WorkOrderTeardownId
 
-                                join wdt in _appContext.Employee on wd.TechnicianId equals wdt.EmployeeId into wdwdt
-                                from wdt in wdwdt.DefaultIfEmpty()
-                                join wdi in _appContext.Employee on wd.InspectorId equals wdi.EmployeeId into wdwdi
-                                from wdi in wdwdi.DefaultIfEmpty()
+                            join wdt in _appContext.Employee on wd.TechnicianId equals wdt.EmployeeId into wdwdt
+                            from wdt in wdwdt.DefaultIfEmpty()
+                            join wdi in _appContext.Employee on wd.InspectorId equals wdi.EmployeeId into wdwdi
+                            from wdi in wdwdi.DefaultIfEmpty()
 
-                                join wfi in _appContext.Employee on wf.InspectorId equals wfi.EmployeeId into wfwfi
-                                from wfi in wfwfi.DefaultIfEmpty()
+                            join wfi in _appContext.Employee on wf.InspectorId equals wfi.EmployeeId into wfwfi
+                            from wfi in wfwfi.DefaultIfEmpty()
 
-                                join ftt in _appContext.Employee on ft.TechnicianId equals ftt.EmployeeId into ftts
-                                from ftt in ftts.DefaultIfEmpty()
-                                join ftti in _appContext.Employee on ft.InspectorId equals ftti.EmployeeId into fttis
-                                from ftti in fttis.DefaultIfEmpty()
+                            join ftt in _appContext.Employee on ft.TechnicianId equals ftt.EmployeeId into ftts
+                            from ftt in ftts.DefaultIfEmpty()
+                            join ftti in _appContext.Employee on ft.InspectorId equals ftti.EmployeeId into fttis
+                            from ftti in fttis.DefaultIfEmpty()
 
-                                join pai in _appContext.Employee on pa.TechnicianId equals pai.EmployeeId into papai
-                                from pai in papai.DefaultIfEmpty()
-                                join pat in _appContext.Employee on pa.InspectorId equals pat.EmployeeId into papat
-                                from pat in papat.DefaultIfEmpty()
+                            join pai in _appContext.Employee on pa.TechnicianId equals pai.EmployeeId into papai
+                            from pai in papai.DefaultIfEmpty()
+                            join pat in _appContext.Employee on pa.InspectorId equals pat.EmployeeId into papat
+                            from pat in papat.DefaultIfEmpty()
 
-                                join pari in _appContext.Employee on par.TechnicianId equals pari.EmployeeId into parpari
-                                from pari in parpari.DefaultIfEmpty()
-                                join part in _appContext.Employee on par.InspectorId equals part.EmployeeId into parpart
-                                from part in parpart.DefaultIfEmpty()
+                            join pari in _appContext.Employee on par.TechnicianId equals pari.EmployeeId into parpari
+                            from pari in parpari.DefaultIfEmpty()
+                            join part in _appContext.Employee on par.InspectorId equals part.EmployeeId into parpart
+                            from part in parpart.DefaultIfEmpty()
 
-                                join pri in _appContext.Employee on pr.InspectorId equals pri.EmployeeId into parpri
-                                from pri in parpri.DefaultIfEmpty()
+                            join pri in _appContext.Employee on pr.InspectorId equals pri.EmployeeId into parpri
+                            from pri in parpri.DefaultIfEmpty()
 
-                                join wpi in _appContext.Employee on wp.TechnicianId equals wpi.EmployeeId into wpwpi
-                                from wpi in wpwpi.DefaultIfEmpty()
-                                join wpt in _appContext.Employee on wp.InspectorId equals wpt.EmployeeId into wpwpt
-                                from wpt in wpwpt.DefaultIfEmpty()
+                            join wpi in _appContext.Employee on wp.TechnicianId equals wpi.EmployeeId into wpwpi
+                            from wpi in wpwpi.DefaultIfEmpty()
+                            join wpt in _appContext.Employee on wp.InspectorId equals wpt.EmployeeId into wpwpt
+                            from wpt in wpwpt.DefaultIfEmpty()
 
 
-                                where td.WorkFlowWorkOrderId == wowfId
-                                select new 
-                                {
-                                    
-                                    DiscoveryTechnician = wdt == null ? "" : wdt.FirstName + " " + wdt.LastName,
-                                    DiscoveryInspector = wdi == null ? "" : wdi.FirstName + " " + wdi.LastName,
-                                    FinalInspectionInspector=wfi==null?"": wfi.FirstName + " " + wfi.LastName,
-                                    FinalTestTechnician = ftt == null ? "" : ftt.FirstName + " " + ftt.LastName,
-                                    FinalTestInspector = ftti == null ? "" : ftti.FirstName + " " + ftti.LastName,
-                                    AssemblyInspectionTechnician = pat == null ? "" : pat.FirstName + " " + pat.LastName,
-                                    AssemblyInspectionInspector = pai == null ? "" : pai.FirstName + " " + pai.LastName,
-                                    AssmentResultsTechnician = part == null ? "" : part.FirstName + " " + part.LastName,
-                                    AssmentResultsInspector = pari == null ? "" : pari.FirstName + " " + pari.LastName,
-                                    PreliinaryReviewInspector = pri == null ? "" : pri.FirstName + " " + pri.LastName,
-                                    WorkPerformedTechnician = wpt == null ? "" : wpt.FirstName + " " + wpt.LastName,
-                                    WorkPerformedInspector = wpi == null ? "" : wpi.FirstName + " " + pari.LastName,
-                                    AdditionalCommentsMemo=ac.Memo,
-                                    BulletinsModificationMemo=bm.Memo,
-                                    DiscoveryManualEntry=wd.ManualEntry,
-                                    DiscoveryMemo=wd.Memo,
-                                    DiscoveryTechnicianDate=wd.TechnicianDate,
-                                    DiscoveryInspectorDate=wd.InspectorDate,
-                                    FinalInspectionMemo=wf.Memo,
-                                    FinalInspectionInspectorDate=wf.InspectorDate,
-                                    FinalTestMemo=ft.Memo,
-                                    FinalTestInspectorDate=ft.InspectorDate,
-                                    FinalTestTechnicianDate=ft.TechnicianDate,
-                                    pd.DERRepairs,
-                                    pd.MandatoryService,
-                                    pd.ManualEntry,
-                                    pd.PMAParts,
-                                    pd.RequestedService,
-                                    pd.ServiceLetters,
-                                    AssmentResultsManualEntry = par.ManualEntry,
-                                    AssmentResultsMemo = par.Memo,
-                                    AssmentResultsTechnicianDate = par.TechnicianDate,
-                                    AssmentResultsInspectorDate = par.InspectorDate,
-                                    PreliinaryReviewMemo = pr.Memo,
-                                    PreliinaryReviewInspectorDate = pr.InspectorDate,
-                                    RemovalReasonsManualEntry = rr.ManualEntry,
-                                    RemovalReasonsMemo = rr.Memo,
-                                    DataUsedMemo=tdu.Memo,
-                                    WorkPerformedManualEntry = wp.ManualEntry,
-                                    WorkPerformedMemo = wp.Memo,
-                                    WorkPerformedTechnicianDate = wp.TechnicianDate,
-                                    WorkPerformedInspectorDate = wp.InspectorDate,
+                            where td.WorkFlowWorkOrderId == wowfId
+                            select new
+                            {
 
-                                }).FirstOrDefault();
+                                DiscoveryTechnician = wdt == null ? "" : wdt.FirstName + " " + wdt.LastName,
+                                DiscoveryInspector = wdi == null ? "" : wdi.FirstName + " " + wdi.LastName,
+                                FinalInspectionInspector = wfi == null ? "" : wfi.FirstName + " " + wfi.LastName,
+                                FinalTestTechnician = ftt == null ? "" : ftt.FirstName + " " + ftt.LastName,
+                                FinalTestInspector = ftti == null ? "" : ftti.FirstName + " " + ftti.LastName,
+                                AssemblyInspectionTechnician = pat == null ? "" : pat.FirstName + " " + pat.LastName,
+                                AssemblyInspectionInspector = pai == null ? "" : pai.FirstName + " " + pai.LastName,
+                                AssmentResultsTechnician = part == null ? "" : part.FirstName + " " + part.LastName,
+                                AssmentResultsInspector = pari == null ? "" : pari.FirstName + " " + pari.LastName,
+                                PreliinaryReviewInspector = pri == null ? "" : pri.FirstName + " " + pri.LastName,
+                                WorkPerformedTechnician = wpt == null ? "" : wpt.FirstName + " " + wpt.LastName,
+                                WorkPerformedInspector = wpi == null ? "" : wpi.FirstName + " " + pari.LastName,
+                                AdditionalCommentsMemo = ac.Memo,
+                                BulletinsModificationMemo = bm.Memo,
+                                DiscoveryManualEntry = wd.ManualEntry,
+                                DiscoveryMemo = wd.Memo,
+                                DiscoveryTechnicianDate = wd.TechnicianDate,
+                                DiscoveryInspectorDate = wd.InspectorDate,
+                                FinalInspectionMemo = wf.Memo,
+                                FinalInspectionInspectorDate = wf.InspectorDate,
+                                FinalTestMemo = ft.Memo,
+                                FinalTestInspectorDate = ft.InspectorDate,
+                                FinalTestTechnicianDate = ft.TechnicianDate,
+                                pd.DERRepairs,
+                                pd.MandatoryService,
+                                pd.ManualEntry,
+                                pd.PMAParts,
+                                pd.RequestedService,
+                                pd.ServiceLetters,
+                                AssmentResultsManualEntry = par.ManualEntry,
+                                AssmentResultsMemo = par.Memo,
+                                AssmentResultsTechnicianDate = par.TechnicianDate,
+                                AssmentResultsInspectorDate = par.InspectorDate,
+                                PreliinaryReviewMemo = pr.Memo,
+                                PreliinaryReviewInspectorDate = pr.InspectorDate,
+                                RemovalReasonsManualEntry = rr.ManualEntry,
+                                RemovalReasonsMemo = rr.Memo,
+                                DataUsedMemo = tdu.Memo,
+                                WorkPerformedManualEntry = wp.ManualEntry,
+                                WorkPerformedMemo = wp.Memo,
+                                WorkPerformedTechnicianDate = wp.TechnicianDate,
+                                WorkPerformedInspectorDate = wp.InspectorDate,
+
+                            }).FirstOrDefault();
                 return data;
             }
             catch (Exception)
@@ -5391,6 +5512,32 @@ namespace DAL.Repositories
                 throw;
             }
 
+        }
+
+        #endregion
+
+        #region Analysis
+
+        public object WorkOrderAnalysis(long workOrderId)
+        {
+            var data = (from wo in _appContext.WorkOrder
+                        join wop in _appContext.WorkOrderPartNumber on wo.WorkOrderId equals wop.WorkOrderId
+                        join woq in _appContext.WorkOrderQuote on wo.WorkOrderId equals woq.WorkOrderId
+                        join wqd in _appContext.WorkOrderQuoteDetails on woq.WorkOrderQuoteId equals wqd.WorkOrderQuoteId
+                        join wom in _appContext.WorkOrderQuoteMaterial on wqd.WorkOrderQuoteDetailsId equals wom.WorkOrderQuoteDetailsId
+                        join im in _appContext.ItemMaster on wop.MasterPartId equals im.ItemMasterId
+                        join rp in _appContext.ItemMaster on wop.RevisedPartId equals rp.ItemMasterId into woprp
+                        from rp in woprp.DefaultIfEmpty()
+                        where wom.IsDeleted == false && wo.WorkOrderId == workOrderId
+                        group wom by new { wom.Quantity, wom.UnitCost, ExtendedCost = (wom.Quantity * wom.UnitCost), im.PartNumber, im.PartDescription, RevisedPartNo = rp.PartNumber } into list
+                        select new
+                        {
+                            list.Key.PartNumber,
+                            list.Key.PartDescription,
+                            list.Key.RevisedPartNo,
+                            MaterialCost = list.Sum(s => s.ExtendedCost)
+                        }).FirstOrDefault();
+            return data;
         }
 
         #endregion
@@ -5429,39 +5576,154 @@ namespace DAL.Repositories
             }
         }
 
-        public IEnumerable<object> GetWorkOrderNos(long customerId)
+        //public IEnumerable<object> GetWorkOrderNos(long customerId)
+        //{
+        //    try
+        //    {
+
+        //        var workOrderNos = (from wo in _appContext.WorkOrder
+        //                            join wop in _appContext.WorkOrderPartNumber on wo.WorkOrderId equals wop.WorkOrderId
+        //                            join c in _appContext.Customer on wo.CustomerId equals c.CustomerId
+        //                            join im in _appContext.ItemMaster on wop.MasterPartId equals im.ItemMasterId
+        //                            join ws in _appContext.WorkScope on wop.WorkOrderScopeId equals ws.WorkScopeId
+        //                            join wowf in _appContext.WorkOrderWorkFlow on wo.WorkOrderId equals wowf.WorkOrderId
+
+        //                            where wo.IsDeleted == false && wo.IsActive == true
+        //                                  && wo.CustomerId == customerId
+        //                             && wo.WorkOrderStatusId == 2 //Closed
+        //                            select new
+        //                            {
+        //                                wo.WorkOrderNum,
+        //                                wo.WorkOrderId,
+        //                                WorkOrderPartNumberId = wop.ID,
+        //                                wowf.WorkFlowWorkOrderId,
+        //                                CustomerName = c.Name,
+        //                                im.PartNumber,
+        //                                im.PartDescription,
+        //                                WorkScope = ws.Description,
+
+        //                            }).Distinct().ToList();
+
+        //        return workOrderNos;
+        //    }
+        //    catch (Exception)
+        //    {
+
+        //        throw;
+        //    }
+        //}
+
+        public IEnumerable<object> GetHistoricalWorkOrders(Common.Filters<HistoricalWOFilter> woFilters)
         {
+            if (woFilters.filters == null)
+                woFilters.filters = new HistoricalWOFilter();
+            var pageNumber = woFilters.first + 1;
+            var pageSize = woFilters.rows;
+
+
+            string sortColumn = string.Empty;
+
+            int totalRecords = 0;
+            var sorts = new Sorts<HistoricalWOFilter>();
+            var filters = new EntityFrameworkPaginate.Filters<HistoricalWOFilter>();
+
+            if (string.IsNullOrEmpty(woFilters.SortField))
+            {
+                sortColumn = "createdDate";
+                woFilters.SortOrder = -1;
+                sorts.Add(sortColumn == "createdDate", x => x.createdDate, true);
+            }
+            else
+            {
+                sortColumn = woFilters.SortField;
+            }
+
+            var propertyInfo = typeof(HistoricalWOFilter).GetProperty(sortColumn);
+
+            if (woFilters.SortOrder == -1)
+            {
+                sorts.Add(true, x => propertyInfo.GetValue(x, null), true);
+            }
+            else
+            {
+                sorts.Add(true, x => propertyInfo.GetValue(x, null));
+            }
+
+            filters.Add(!string.IsNullOrEmpty(woFilters.filters.workOrderNum), x => x.workOrderNum.ToLower().Contains(woFilters.filters.workOrderNum.ToLower()));
+            filters.Add(!string.IsNullOrEmpty(woFilters.filters.customerName), x => x.customerName.ToLower().Contains(woFilters.filters.customerName.ToLower()));
+            filters.Add(!string.IsNullOrEmpty(woFilters.filters.customerCode), x => x.customerCode.ToLower().Contains(woFilters.filters.customerCode.ToLower()));
+            filters.Add(!string.IsNullOrEmpty(woFilters.filters.woType), x => x.woType.ToLower().Contains(woFilters.filters.woType.ToLower()));
+            filters.Add(woFilters.filters.openDate != null, x => x.openDate == woFilters.filters.openDate);
+            filters.Add(!string.IsNullOrEmpty(woFilters.filters.partNo), x => x.partNo.Contains(woFilters.filters.partNo));
+            filters.Add(!string.IsNullOrEmpty(woFilters.filters.pnDescription), x => x.pnDescription.Contains(woFilters.filters.pnDescription));
+            filters.Add(woFilters.filters.promisedDate != null, x => x.promisedDate == woFilters.filters.promisedDate);
+            filters.Add(woFilters.filters.estimatedCompletionDate != null, x => x.estimatedCompletionDate == woFilters.filters.estimatedCompletionDate);
+            filters.Add(woFilters.filters.estimatedShipDate != null, x => x.estimatedShipDate == woFilters.filters.estimatedShipDate);
+            filters.Add(woFilters.filters.statusId == 1, x => x.customerId == woFilters.filters.customerId);
+            filters.Add(woFilters.filters.ItemMasterId > 0, x => x.ItemMasterId == woFilters.filters.ItemMasterId);
+            filters.Add(woFilters.filters.WorkScopeId > 0, x => x.WorkScopeId == woFilters.filters.WorkScopeId);
+
             try
             {
 
-                var workOrderNos = (from wo in _appContext.WorkOrder
-                                    join wop in _appContext.WorkOrderPartNumber on wo.WorkOrderId equals wop.WorkOrderId
-                                    join c in _appContext.Customer on wo.CustomerId equals c.CustomerId
-                                    join im in _appContext.ItemMaster on wop.MasterPartId equals im.ItemMasterId
-                                    join ws in _appContext.WorkScope on wop.WorkOrderScopeId equals ws.WorkScopeId
-                                    join wowf in _appContext.WorkOrderWorkFlow on wo.WorkOrderId equals wowf.WorkOrderId
+                totalRecords = (from wo in _appContext.WorkOrder
+                                join wop in _appContext.WorkOrderPartNumber on wo.WorkOrderId equals wop.WorkOrderId
+                                join wowf in _appContext.WorkOrderWorkFlow on wop.ID equals wowf.WorkOrderPartNoId
+                                join cust in _appContext.Customer on wo.CustomerId equals cust.CustomerId
+                                join im in _appContext.ItemMaster on wop.MasterPartId equals im.ItemMasterId
+                                where wo.IsDeleted == false && wo.WorkOrderStatusId == 2 // Closed
+                                select new HistoricalWOFilter()
+                                {
+                                    WorkOrderId = wo.WorkOrderId,
+                                    workOrderNum = wo.WorkOrderNum,
+                                    customerName = cust.Name,
+                                    customerCode = cust.CustomerCode,
+                                    woType = wo.WorkOrderTypeId == 1 ? "Customer" : (wo.WorkOrderTypeId == 2 ? "Internal" : (wo.WorkOrderTypeId == 3 ? "Tear Down" : "Shop Services")),
+                                    openDate = wo.OpenDate.Date,
+                                    promisedDate = wop.PromisedDate,
+                                    estimatedCompletionDate = wop.EstimatedCompletionDate,
+                                    estimatedShipDate = wop.EstimatedShipDate,
+                                    customerId = wo.CustomerId,
+                                    partNo = im.PartNumber,
+                                    pnDescription = im.PartDescription,
+                                    createdDate = wo.CreatedDate,
+                                    WorkScopeId = wop.WorkOrderScopeId,
+                                    ItemMasterId = wop.MasterPartId
+                                }
+                      ).Distinct()
+                      .Paginate(pageNumber, pageSize, sorts, filters).RecordCount;
 
-                                    where wo.IsDeleted == false && wo.IsActive == true
-                                          && wo.CustomerId == customerId
-                                     && wo.WorkOrderStatusId == 2 //Closed
-                                    select new
-                                    {
-                                        wo.WorkOrderNum,
-                                        wo.WorkOrderId,
-                                        WorkOrderPartNumberId = wop.ID,
-                                        wowf.WorkFlowWorkOrderId,
-                                        CustomerName = c.Name,
-                                        im.PartNumber,
-                                        im.PartDescription,
-                                        WorkScope = ws.Description,
-
-                                    }).Distinct().ToList();
-
-                return workOrderNos;
+                var list = (from wo in _appContext.WorkOrder
+                            join wop in _appContext.WorkOrderPartNumber on wo.WorkOrderId equals wop.WorkOrderId
+                            join wowf in _appContext.WorkOrderWorkFlow on wop.ID equals wowf.WorkOrderPartNoId
+                            join cust in _appContext.Customer on wo.CustomerId equals cust.CustomerId
+                            join im in _appContext.ItemMaster on wop.MasterPartId equals im.ItemMasterId
+                            where wo.IsDeleted == false && wo.WorkOrderStatusId == 2
+                            select new HistoricalWOFilter()
+                            {
+                                WorkOrderId = wo.WorkOrderId,
+                                workOrderNum = wo.WorkOrderNum,
+                                customerName = cust.Name,
+                                customerCode = cust.CustomerCode,
+                                woType = wo.WorkOrderTypeId == 1 ? "Customer" : (wo.WorkOrderTypeId == 2 ? "Internal" : (wo.WorkOrderTypeId == 3 ? "Tear Down" : "Shop Services")),
+                                openDate = wo.OpenDate.Date,
+                                promisedDate = wop.PromisedDate,
+                                estimatedCompletionDate = wop.EstimatedCompletionDate,
+                                estimatedShipDate = wop.EstimatedShipDate,
+                                customerId = wo.CustomerId,
+                                partNo = im.PartNumber,
+                                pnDescription = im.PartDescription,
+                                createdDate = wo.CreatedDate,
+                                WorkScopeId = wop.WorkOrderScopeId,
+                                ItemMasterId = wop.MasterPartId,
+                                TotalRecords = totalRecords,
+                            }
+                      ).Distinct()
+                      .Paginate(pageNumber, pageSize, sorts, filters).Results;
+                return list;
             }
             catch (Exception)
             {
-
                 throw;
             }
         }

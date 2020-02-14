@@ -56,7 +56,10 @@ namespace DAL.Repositories
                     t.IsActive,
                     t.IsRestrict,
                     t.IsAllow,
-                    t.IsWarning
+                    t.IsWarning,
+                    t.Allow,
+                    t.Restrict,
+                    t.Warning
                 }).ToList();
             return data;
         }

@@ -26,7 +26,7 @@ export class WorkOrderLaborComponent implements OnInit, OnChanges {
   @Input() isView: boolean = false;
   @Input() isEdit: boolean = false;
 
-    totalHours: number;
+  totalHours: number;
   workOrderWorkFlowList: any;
   employeesOriginalData: any;
   employeeList: any;
@@ -39,51 +39,58 @@ export class WorkOrderLaborComponent implements OnInit, OnChanges {
   billableList = [
     { label: 'Billable', value: 1 },
     { label: 'Non-Billable', value: 2 }
-    ];
+  ];
   overAllMarkup: any;
 
 
   constructor(private workOrderService: WorkOrderService,
     private authService: AuthService,
-      private commonService: CommonService) { }
-    
+    private commonService: CommonService) { }
+
 
   ngOnInit() {
 
-    
+    console.log(this.laborForm);
+    console.log(this.workOrderLaborList.laborList);
+
     this.workOrderWorkFlowList = this.workOrderWorkFlowOriginalData;
     this.laborForm['costPlusType'] = 'Mark Up';
-console.log(this.workOrderLaborList);
-    if(this.workOrderLaborList){
+    console.log(this.workOrderLaborList);
+    if (this.workOrderLaborList) {
       this.laborForm.workFlowWorkOrderId = this.workOrderLaborList['workFlowWorkOrderId'];
       this.laborForm.dataEnteredBy = this.workOrderLaborList['dataEnteredBy'];
       this.laborForm.employeeId = this.workOrderLaborList['employeeId'];
       this.laborForm.isTaskCompletedByOne = this.workOrderLaborList['isTaskCompletedByOne'];
       this.laborForm.expertiseId = this.workOrderLaborList['expertiseId'];
+
+
+      // const laborList = this.workOrderLaborList.laborList.map((x, index) => {
+      //   this.getExpertiseEmployeeByExpertiseId(x.expertiseId, index);
+      // })
     }
-    this.getAllEmployees();
+    // this.getAllEmployees();
     this.getAllExpertiseType();
     this.id = this.savedWorkOrderData.workOrderId;
-    if(this.isView || this.isEdit){
-      for(let task of this.taskList){
+    if (this.isView || this.isEdit) {
+      for (let task of this.taskList) {
         this.calculateTaskHours(task);
       }
     }
-    if(this.laborForm['costPlusType']){
+    if (this.laborForm['costPlusType']) {
       this.laborForm['costPlusType'] = this.laborForm['markupFixedPrice'];
       this.overAllMarkup = Number(this.laborForm['headerMarkupId']);
     }
   }
 
-  ngOnChanges(){
-    this.getAllEmployees();
+  ngOnChanges() {
+    // this.getAllEmployees();
     this.laborForm['costPlusType'] = 'Mark Up'
     this.workOrderWorkFlowList = this.workOrderWorkFlowOriginalData;
-    if(this.laborForm['workOrderHoursType']){
-      if(this.laborForm['workOrderHoursType'] == 1){
+    if (this.laborForm['workOrderHoursType']) {
+      if (this.laborForm['workOrderHoursType'] == 1) {
         this.laborForm.workFloworSpecificTaskorWorkOrder = 'workFlow';
       }
-      else if(this.laborForm['workOrderHoursType'] == 2){
+      else if (this.laborForm['workOrderHoursType'] == 2) {
         this.laborForm.workFloworSpecificTaskorWorkOrder = 'specificTasks';
       }
       else {
@@ -91,19 +98,19 @@ console.log(this.workOrderLaborList);
       }
     }
     this.calculateTotalWorkHours();
-    if(this.workOrderLaborList){
+    if (this.workOrderLaborList) {
       this.laborForm.workFlowWorkOrderId = this.workOrderLaborList['workFlowWorkOrderId'];
       this.laborForm.dataEnteredBy = this.workOrderLaborList['dataEnteredBy'];
       this.laborForm.employeeId = this.workOrderLaborList['employeeId'];
       this.laborForm.isTaskCompletedByOne = this.workOrderLaborList['isTaskCompletedByOne'];
-        this.laborForm.expertiseId = this.workOrderLaborList['expertiseId'];
+      this.laborForm.expertiseId = this.workOrderLaborList['expertiseId'];
     }
-    if(this.isView || this.isEdit){
-      for(let task of this.taskList){
+    if (this.isView || this.isEdit) {
+      for (let task of this.taskList) {
         this.calculateTaskHours(task);
       }
     }
-    if(this.laborForm['costPlusType']){
+    if (this.laborForm['costPlusType']) {
       this.laborForm['costPlusType'] = this.laborForm['markupFixedPrice'];
       this.overAllMarkup = Number(this.laborForm['headerMarkupId']);
     }
@@ -125,8 +132,8 @@ console.log(this.workOrderLaborList);
     console.log(this.laborForm);
   }
 
-  calculateHoursDifference(obj){
-    if(obj.hours != null && obj.adjustments != null){
+  calculateHoursDifference(obj) {
+    if (obj.hours != null && obj.adjustments != null) {
       this.totalWorkHours = 0;
 
       // let hoursArr = obj.hours.split(':');
@@ -149,7 +156,7 @@ console.log(this.workOrderLaborList);
       // this.totalWorkHours = totalHours;
     }
     this.calculateTotalWorkHours();
-    }
+  }
 
   filterWorkFlowNumbers(event): void {
 
@@ -167,12 +174,12 @@ console.log(this.workOrderLaborList);
     this.commonService.smartDropDownList('Employee', 'EmployeeId', 'FirstName').subscribe(res => {
       this.employeesOriginalData = res;
       this.employeeList = res;
-      if(this.laborForm.dataEnteredBy != null){
-        this.employeeList.forEach(emp=>{
-          if(this.laborForm.dataEnteredBy == emp.value){
+      if (this.laborForm.dataEnteredBy != null) {
+        this.employeeList.forEach(emp => {
+          if (this.laborForm.dataEnteredBy == emp.value) {
             this.laborForm.dataEnteredBy = emp;
           }
-          if(this.laborForm.employeeId == emp.value){
+          if (this.laborForm.employeeId == emp.value) {
             this.laborForm.employeeId = emp;
           }
         })
@@ -205,9 +212,41 @@ console.log(this.workOrderLaborList);
   }
 
   getAllExpertiseType() {
-    this.commonService.smartDropDownList('ExpertiseType', 'ExpertiseTypeId', 'Description').subscribe(res => {
-      this.expertiseTypeList = res;
+    this.commonService.getExpertise().subscribe(res => {
+      this.expertiseTypeList = res.map(x => {
+        return {
+          label: x.expertiseType,
+          value: x.employeeExpertiseId
+        }
+      });
     })
+    // this.commonService.smartDropDownList('ExpertiseType', 'ExpertiseTypeId', 'Description').subscribe(res => {
+    //   this.expertiseTypeList = res;
+    // })
+  }
+
+  getExpertiseEmployeeByExpertiseId(value, index) {
+    console.log(value, index);
+
+    this.commonService.getExpertiseEmployeesByCategory(value).subscribe(res => {
+      this['expertiseEmployeeOriginalData' + index] = res;
+    })
+  }
+  getDynamicVariableData(variable, index) {
+    return this[variable + index]
+  }
+
+  filterExpertiseEmployee(event, index) {
+    this['expertiseEmployee' + index] = this['expertiseEmployeeOriginalData' + index]
+
+
+    if (event.query !== undefined && event.query !== null) {
+      const partNumbers = [...this['expertiseEmployeeOriginalData' + index].filter(x => {
+
+        return x.name.toLowerCase().includes(event.query.toLowerCase())
+      })]
+      this['expertiseEmployee' + index] = partNumbers;
+    }
   }
 
   addNewTask(taskName) {
@@ -215,14 +254,14 @@ console.log(this.workOrderLaborList);
     taskData.expertiseId = Number(this.laborForm.expertiseId);
     taskData.employeeId = this.laborForm.employeeId;
     this.taskList.forEach(
-        task=>{
-            if(task.description == "Assemble"){
-              taskData.taskId = task.taskId;
-            }
+      task => {
+        if (task.description == "Assemble") {
+          taskData.taskId = task.taskId;
         }
+      }
     )
     this.laborForm.workOrderLaborList[0][taskName].push(taskData);
-    }
+  }
 
   startandStop(currentRecord) {
     if (currentRecord.startDate === null) {
@@ -263,13 +302,13 @@ console.log(this.workOrderLaborList);
   }
 
   // moment(new Date()).format('DD/MM/YYYY, h:mm:ss a');
-    saveLabor() {
-        var wolHeaderId = 0;
-        if (this.workOrderLaborList !== undefined && this.workOrderLaborList !== null) {
+  saveLabor() {
+    var wolHeaderId = 0;
+    if (this.workOrderLaborList !== undefined && this.workOrderLaborList !== null) {
 
-            wolHeaderId = this.workOrderLaborList.workOrderLaborHeaderId;
-        }
-      console.log(this.laborForm);
+      wolHeaderId = this.workOrderLaborList.workOrderLaborHeaderId;
+    }
+    console.log(this.laborForm);
     const excessParams = {
       createdBy: this.userName,
       updatedBy: this.userName,
@@ -279,23 +318,23 @@ console.log(this.workOrderLaborList);
       IsDeleted: false,
     }
 
-        let tasksData = this.laborForm.workOrderLaborList[0];
-        console.log(tasksData);
+    let tasksData = this.laborForm.workOrderLaborList[0];
+    console.log(tasksData);
     let formedData = {}
-        for (let tdata in tasksData) {
-            console.log('Suresh');
-            console.log(tdata);
-            if (tdata != 'length') {
-                formedData[tdata] = tasksData[tdata].map(x => {
-                    console.log(x);
-                    return {
-                        ...x,
-                        ...excessParams,
-                        taskId: this.getTaksId(tdata),
-                        employeeId: getValueFromObjectByKey('value', x.employeeId)
-                    }
-                })
-            }
+    for (let tdata in tasksData) {
+      console.log('Suresh');
+      console.log(tdata);
+      if (tdata != 'length') {
+        formedData[tdata] = tasksData[tdata].map(x => {
+          console.log(x);
+          return {
+            ...x,
+            ...excessParams,
+            taskId: this.getTaksId(tdata),
+            employeeId: getValueFromObjectByKey('value', x.employeeId)
+          }
+        })
+      }
     }
     this.saveFormdata = {
       ...this.laborForm,
@@ -305,10 +344,10 @@ console.log(this.workOrderLaborList);
       masterCompanyId: 1,
       ...excessParams,
       workOrderId: this.id,
-        workFlowWorkOrderId: getValueFromObjectByKey('value', this.laborForm.workFlowWorkOrderId),
-        workOrderLaborHeaderId: wolHeaderId,
-        workOrderLaborList: formedData,
-        totalWorkHours:this.laborForm.totalWorkHours
+      workFlowWorkOrderId: getValueFromObjectByKey('value', this.laborForm.workFlowWorkOrderId),
+      workOrderLaborHeaderId: wolHeaderId,
+      workOrderLaborList: formedData,
+      totalWorkHours: this.laborForm.totalWorkHours
     }
 
 
@@ -332,16 +371,16 @@ console.log(this.workOrderLaborList);
     //     workOrderId : this.id }]
     //   };
     // }
-    if(this.laborForm.workFloworSpecificTaskorWorkOrder == 'workFlow'){
+    if (this.laborForm.workFloworSpecificTaskorWorkOrder == 'workFlow') {
       this.saveFormdata['workOrderHoursType'] = 1;
     }
-    else if(this.laborForm.workFloworSpecificTaskorWorkOrder == 'specificTasks'){
+    else if (this.laborForm.workFloworSpecificTaskorWorkOrder == 'specificTasks') {
       this.saveFormdata['workOrderHoursType'] = 2;
     }
     else {
       this.saveFormdata['workOrderHoursType'] = 3;
     }
-    if(this.isQuote){
+    if (this.isQuote) {
       this.saveFormdata.headerMarkupId = Number(this.overAllMarkup);
       this.saveFormdata.markupFixedPrice = this.laborForm['costPlusType'];
       // for(let labor in this.saveFormdata.workOrderLaborList){
@@ -353,11 +392,11 @@ console.log(this.workOrderLaborList);
       // }
     }
 
-    this.saveworkOrderLabor.emit(this.saveFormdata);  
+    this.saveworkOrderLabor.emit(this.saveFormdata);
 
   }
 
-  getExpertise(expertiseType, taskId){
+  getExpertise(expertiseType, taskId) {
 
     // try{
     //   if(this.workOrderLaborList){
@@ -367,20 +406,20 @@ console.log(this.workOrderLaborList);
     //   }
     // }
     // catch{
-      try{
-        if(this.workOrderLaborList){
-          for(let workOrdLList of this.workOrderLaborList['laborList']){
-            if (workOrdLList['taskId'] == taskId && workOrdLList['expertiseId'] == expertiseType['value']){
-              return true;
-            }
+    try {
+      if (this.workOrderLaborList) {
+        for (let workOrdLList of this.workOrderLaborList['laborList']) {
+          if (workOrdLList['taskId'] == taskId && workOrdLList['expertiseId'] == expertiseType['value']) {
+            return true;
           }
-          return false
         }
-        return true;
+        return false
       }
-      catch{
-        return true;
-      }
+      return true;
+    }
+    catch{
+      return true;
+    }
     // }
     // console.log(expertiseTypeList)
     // console.log(taskId);
@@ -388,19 +427,19 @@ console.log(this.workOrderLaborList);
     // return expertiseTypeList;
   }
 
-  getTaksId(taskName){
-    for(let t of this.taskList){
-        if (t['description'].toLowerCase() == taskName.toLowerCase()) {
+  getTaksId(taskName) {
+    for (let t of this.taskList) {
+      if (t['description'].toLowerCase() == taskName.toLowerCase()) {
         return t['taskId']
       }
     }
   }
 
-  isAllowedTask(taskId){
-    try{
-      if(this.workOrderLaborList){
-        for(let workOrdLList of this.workOrderLaborList['laborList']){
-          if (workOrdLList['taskId'] == taskId){
+  isAllowedTask(taskId) {
+    try {
+      if (this.workOrderLaborList) {
+        for (let workOrdLList of this.workOrderLaborList['laborList']) {
+          if (workOrdLList['taskId'] == taskId) {
             return true;
           }
         }
@@ -413,15 +452,15 @@ console.log(this.workOrderLaborList);
     }
   }
 
-  checkDisability(record, taskId){
-    try{
-      if(this.workOrderLaborList){
-        if(this.laborForm['workFloworSpecificTaskorWorkOrder'] == 'workOrder'){
+  checkDisability(record, taskId) {
+    try {
+      if (this.workOrderLaborList) {
+        if (this.laborForm['workFloworSpecificTaskorWorkOrder'] == 'workOrder') {
           return true;
         }
-        else if (this.laborForm['workFloworSpecificTaskorWorkOrder'] == 'workFlow'){
-          for(let workOrdLList of this.workOrderLaborList['laborList']){
-            if (workOrdLList['taskId'] == taskId && workOrdLList['expertiseId'] == record['expertiseId']){
+        else if (this.laborForm['workFloworSpecificTaskorWorkOrder'] == 'workFlow') {
+          for (let workOrdLList of this.workOrderLaborList['laborList']) {
+            if (workOrdLList['taskId'] == taskId && workOrdLList['expertiseId'] == record['expertiseId']) {
               record['hours'] = workOrdLList['hours'];
               this.calculateHoursDifference(record);
             }
@@ -434,89 +473,89 @@ console.log(this.workOrderLaborList);
     catch{
       return false;
     }
-    
+
   }
 
-  deleteLabor(taskName, index){
+  deleteLabor(taskName, index) {
     this.laborForm.workOrderLaborList[0][taskName.toLowerCase()][index].isDeleted = true;
   }
 
-  calculateTotalCost(rec){
-    if(rec['directLaborOHCost'] && rec['burdenRateAmount']){
-      rec.totalCostPerHour = Number(rec['directLaborOHCost'])+Number(rec['burdenRateAmount']);
-      if(rec.hours){
+  calculateTotalCost(rec) {
+    if (rec['directLaborOHCost'] && rec['burdenRateAmount']) {
+      rec.totalCostPerHour = Number(rec['directLaborOHCost']) + Number(rec['burdenRateAmount']);
+      if (rec.hours) {
         rec['totalCost'] = Number(rec.totalCostPerHour) * Number(rec.hours);
       }
     }
   }
 
-  tmchange(){
-    for(let t in this.laborForm.workOrderLaborList[0]){
-      for(let mData of this.laborForm.workOrderLaborList[0][t]){
+  tmchange() {
+    for (let t in this.laborForm.workOrderLaborList[0]) {
+      for (let mData of this.laborForm.workOrderLaborList[0][t]) {
         mData.billingMethodId = Number(this.laborForm['costPlusType']);
       }
     }
   }
 
   markupChanged(matData, type) {
-      try {
-        if(this.markupList){
-          this.markupList.forEach((markup)=>{
-            if(type == 'row' && markup.value == matData.markupPercentageId){
-              matData['billingRate'] = (matData['totalCostPerHour']) + (((matData['totalCostPerHour']) / 100) * Number(markup.label))
-              matData['billingAmount'] = Number(matData['billingRate']) * Number(matData.hours);
-            }
-            else if(type == 'all' && markup.value == this.overAllMarkup){
-              for(let t in this.laborForm.workOrderLaborList[0]){
-                for(let mData of this.laborForm.workOrderLaborList[0][t]){
-                  if(mData['billingMethodId'] == 1){
-                    mData.markupPercentageId = this.overAllMarkup;
-                    mData['billingRate'] = (mData['totalCostPerHour']) + (((mData['totalCostPerHour']) / 100) * Number(markup.label))
-                    mData['billingAmount'] = Number(mData['billingRate']) * Number(mData.hours);
-                  }
+    try {
+      if (this.markupList) {
+        this.markupList.forEach((markup) => {
+          if (type == 'row' && markup.value == matData.markupPercentageId) {
+            matData['billingRate'] = (matData['totalCostPerHour']) + (((matData['totalCostPerHour']) / 100) * Number(markup.label))
+            matData['billingAmount'] = Number(matData['billingRate']) * Number(matData.hours);
+          }
+          else if (type == 'all' && markup.value == this.overAllMarkup) {
+            for (let t in this.laborForm.workOrderLaborList[0]) {
+              for (let mData of this.laborForm.workOrderLaborList[0][t]) {
+                if (mData['billingMethodId'] == 1) {
+                  mData.markupPercentageId = this.overAllMarkup;
+                  mData['billingRate'] = (mData['totalCostPerHour']) + (((mData['totalCostPerHour']) / 100) * Number(markup.label))
+                  mData['billingAmount'] = Number(mData['billingRate']) * Number(mData.hours);
                 }
               }
-              // this.materialListQuotation.forEach((mData)=>{
-              //   mData.markupPercentageId = this.overAllMarkup;
-              //   mData.materialCostPlus = Number(mData.extendedCost) + ((Number(mData.extendedCost) / 100) * Number(markup.label))
-              // })
             }
-          })
-        }
+            // this.materialListQuotation.forEach((mData)=>{
+            //   mData.markupPercentageId = this.overAllMarkup;
+            //   mData.materialCostPlus = Number(mData.extendedCost) + ((Number(mData.extendedCost) / 100) * Number(markup.label))
+            // })
+          }
+        })
+      }
 
-          // this.markupList.forEach((markup) => {
-          // if (markup.value == matData.markupPercentageId) {
-          //     matData.labourCostPlus = (matData.directLaborOHCost) + (((matData.directLaborOHCost) / 100) * Number(markup.label))
-          // }
-          // })
-      }
-      catch (e) {
-          console.log(e);
-      }
+      // this.markupList.forEach((markup) => {
+      // if (markup.value == matData.markupPercentageId) {
+      //     matData.labourCostPlus = (matData.directLaborOHCost) + (((matData.directLaborOHCost) / 100) * Number(markup.label))
+      // }
+      // })
+    }
+    catch (e) {
+      console.log(e);
+    }
   }
 
-  calculateTotalWorkHours(){
+  calculateTotalWorkHours() {
     this.laborForm.totalWorkHours = 0;
-    if(this.laborForm.workOrderLaborList){
-      for(let task in this.laborForm.workOrderLaborList[0]){
-        if(this.laborForm.workOrderLaborList[0][task][0] && this.laborForm.workOrderLaborList[0][task][0]['hours'] != null){
-          for (let taskList of this.laborForm.workOrderLaborList[0][task] ){
+    if (this.laborForm.workOrderLaborList) {
+      for (let task in this.laborForm.workOrderLaborList[0]) {
+        if (this.laborForm.workOrderLaborList[0][task][0] && this.laborForm.workOrderLaborList[0][task][0]['hours'] != null) {
+          for (let taskList of this.laborForm.workOrderLaborList[0][task]) {
             // hoursArr = taskList['hours'].split(":");
             // if(hoursArr.length == 1){ hoursArr.push(0)}
             // hoursInSeconds = (+hoursArr[0]) * 60 * 60 + (+hoursArr[1]) * 60;
-              this.laborForm.totalWorkHours += taskList['hours'];
-              
+            this.laborForm.totalWorkHours += taskList['hours'];
+
           }
         }
       }
     }
   }
 
-  getTotalCostPlusAmount(){
+  getTotalCostPlusAmount() {
     let total = 0;
     this.laborForm.workOrderLaborList.forEach(
-      (material)=>{
-        if(material.labourCostPlus){
+      (material) => {
+        if (material.labourCostPlus) {
           total += material.labourCostPlus;
         }
       }
@@ -524,109 +563,109 @@ console.log(this.workOrderLaborList);
     return total;
   }
 
-  getTotalFixedAmount(taskList){
+  getTotalFixedAmount(taskList) {
     let total = 0;
-    for(let labor of taskList){
-      if(labor.fixedAmount){
+    for (let labor of taskList) {
+      if (labor.fixedAmount) {
         total += labor.fixedAmount;
       }
     }
     return total;
   }
 
-  getTotalLaborOHCost(taskList){
+  getTotalLaborOHCost(taskList) {
     let total = 0;
-    for(let labor of taskList){
-      if(labor.directLaborOHCost){
+    for (let labor of taskList) {
+      if (labor.directLaborOHCost) {
         total += labor.directLaborOHCost;
       }
     }
     return total;
   }
 
-  getTotalLaborBurdenRate(taskList){
+  getTotalLaborBurdenRate(taskList) {
     let total = 0;
-    for(let labor of taskList){
-      if(labor.burdenRateAmount){
+    for (let labor of taskList) {
+      if (labor.burdenRateAmount) {
         total += labor.burdenRateAmount;
       }
     }
     return total;
   }
 
-  getTotalCostPerHour(taskList){
+  getTotalCostPerHour(taskList) {
     let total = 0;
-    for(let labor of taskList){
-      if(labor.totalCostPerHour){
+    for (let labor of taskList) {
+      if (labor.totalCostPerHour) {
         total += labor.totalCostPerHour;
       }
     }
     return total;
   }
 
-  getTotalCost(taskList){
+  getTotalCost(taskList) {
     let total = 0;
-    for(let labor of taskList){
-      if(labor.totalCost){
+    for (let labor of taskList) {
+      if (labor.totalCost) {
         total += labor.totalCost;
       }
     }
     return total;
   }
 
-  getTotalBillingRate(taskList){
+  getTotalBillingRate(taskList) {
     let total = 0;
-    for(let labor of taskList){
-      if(labor.billingRate){
+    for (let labor of taskList) {
+      if (labor.billingRate) {
         total += labor.billingRate;
       }
     }
     return total;
   }
 
-  getTotalBillingAmount(taskList){
+  getTotalBillingAmount(taskList) {
     let total = 0;
-    for(let labor of taskList){
-      if(labor.billingAmount){
+    for (let labor of taskList) {
+      if (labor.billingAmount) {
         total += labor.billingAmount;
       }
     }
     return total;
   }
 
-  getTotalCostPlus(taskList){
+  getTotalCostPlus(taskList) {
     let total = 0;
-    for(let labor of taskList){
-      if(labor.labourCostPlus){
+    for (let labor of taskList) {
+      if (labor.labourCostPlus) {
         total += labor.labourCostPlus;
       }
     }
     return total;
   }
 
-  getTotalHours(taskList){
+  getTotalHours(taskList) {
     let total = 0;
-    for(let labor of taskList){
-      if(labor.labourCostPlus){
+    for (let labor of taskList) {
+      if (labor.labourCostPlus) {
         total += labor.labourCostPlus;
       }
     }
     return total;
   }
 
-  calculateTotalHours(){
+  calculateTotalHours() {
     this.laborForm.totalWorkHours = 0;
-    for(let task of this.taskList){
-      if(task.totalWorkHours){
+    for (let task of this.taskList) {
+      if (task.totalWorkHours) {
         this.laborForm.totalWorkHours += task.totalWorkHours;
       }
     }
   }
 
-  calculateTaskHours(task){
+  calculateTaskHours(task) {
     task.totalWorkHours = 0;
-    if(this.laborForm.workOrderLaborList[0] && this.laborForm.workOrderLaborList[0][task.description.toLowerCase()]){
-      for(let taskData of this.laborForm.workOrderLaborList[0][task.description.toLowerCase()]){
+    if (this.laborForm.workOrderLaborList[0] && this.laborForm.workOrderLaborList[0][task.description.toLowerCase()]) {
+      for (let taskData of this.laborForm.workOrderLaborList[0][task.description.toLowerCase()]) {
         task.totalWorkHours += taskData.hours;
       }
     }

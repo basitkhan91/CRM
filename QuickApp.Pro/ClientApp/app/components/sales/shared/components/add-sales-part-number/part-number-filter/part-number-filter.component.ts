@@ -180,18 +180,21 @@ private onptnmbersSuccessful(allWorkFlows: any[]) {
 
   searchPartByPartNumber(event) {
     this.searchDisabled = true;
-    let partSearchParamters={
-      'partNumber':event.query,
-      "restrictPMA": this.salesQuote.restrictPMA,
-      "restrictDER": this.salesQuote.restrictDER,  
-      "customerId": this.salesQuote.customerId
-    }
-    this.itemMasterService.searchPartNumberAdvanced(partSearchParamters).subscribe(
-      (result: any[]) => {
-        this.partDetails = result.length > 0 ? result : [];
-       // console.log(result);
+    if(event.query.length>0){
+      let partSearchParamters={
+        'partNumber':event.query,
+        "restrictPMA": this.salesQuote.restrictPMA,
+        "restrictDER": this.salesQuote.restrictDER,  
+        "customerId": this.salesQuote.customerId
       }
-    );
+      this.itemMasterService.searchPartNumberAdvanced(partSearchParamters).subscribe(
+        (result: any[]) => {
+          this.partDetails = result.length > 0 ? result : [];
+         // console.log(result);
+        }
+      );
+    }
+
   }
 
 

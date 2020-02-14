@@ -107,7 +107,7 @@ namespace DAL.Repositories.Interfaces
         void DeleteWorkOrderFreight(long workOrderFreightId, string updatedBy);
 
         IEnumerable<object> GetWorkFlowNos(long partId, long workScopeId);
-        IEnumerable<object> GetWorkOrderNos(long customerId);
+        IEnumerable<object> GetHistoricalWorkOrders(Common.Filters<HistoricalWOFilter> woFilters);
         IEnumerable<object> GetWorkOrderPartDetails(long customerId);
         IEnumerable<object> GetStockLineDetailsByPartNo(long itemMasterId, long conditionId);
         object GetPartSerialNo(long stockLineId);
@@ -155,12 +155,15 @@ namespace DAL.Repositories.Interfaces
         object GetNTESTDValues(long itemMasterId, string workScope);
 
         object GetQuoteBuildMethodDetails(long workflowWorkorderId);
-        IEnumerable<object> HistoricalWorkOrderQuotes(long customerId);
+        IEnumerable<object> HistoricalWorkOrderQuotes(Filters<WOQuoteFilters> woQuoteFilters);
 
 
         WorkOrderTeardown CreateTeardown(WorkOrderTeardown tearDown);
         WorkOrderTeardown GetWorkOrderTeardown(long wowfId);
         object WorkOrderTeardownView(long wowfId);
+
+
+        object WorkOrderAnalysis(long workOrderId);
 
     }
 }
