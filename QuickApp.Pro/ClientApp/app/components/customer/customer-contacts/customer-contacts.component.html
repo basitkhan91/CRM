@@ -66,6 +66,7 @@
           [loading]="loaderForContacts"
           (onPage)="pageIndexChange($event)"
           scrollHeight="450px" 
+          (onRowSelect)="onRowSelect($event)" 
         >
           <ng-template pTemplate="caption" *ngIf="isViewMode == false">
             <div
@@ -1275,7 +1276,7 @@
                       <div class="col-md-12">
                         <label class="popup-plusicon-cstm">
                           ATA Chapter
-                          <a
+                          <a matTooltip="Add ATA Chapter" matTooltipPosition="above"
                             data-dismiss="modal"
                             [routerLink]="[
                               '/singlepages/singlepages/app-ata-main'
@@ -1305,7 +1306,7 @@
                         style="width: 170px !important;"
                       >
                         ATA SubChapters
-                        <a
+                        <a matTooltip="Add ATA SubChapters" matTooltipPosition="above"
                           data-dismiss="modal"
                           [routerLink]="[
                             '/singlepages/singlepages/app-ata-sub-chapter1'
@@ -1377,8 +1378,7 @@
 
                       <button
                         class="btn btn-danger nobg"
-                        (click)="deleteATAMapped(deleteContent1, rowData)"
-                      >
+                        (click)="deleteATAMapped(deleteContent1, rowData)" matTooltip="Delete" atTooltipPosition="above">
                         <i class="fa fa-trash"></i>
                       </button>
                       <span
@@ -1645,7 +1645,7 @@
                 <th>ATA Chapter Code</th>
                 <th>ATA Chapter Name</th>
                 <th>ATA Sub Chapter</th>
-
+                <th>ATA Sub Code</th>
                 <th>Created By</th>
                 <th>Created Date</th>
                 <th>Last Updated By</th>
@@ -1708,7 +1708,7 @@
                 >
                   {{ audit.ataSubChapterDescription }}
                 </td>
-
+<td>{{audit.ataSubChapterId}}</td>
                 <td>{{ audit.createdBy }}</td>
                 <td>{{ audit.createdDate | date: 'dd-MM-yyyy h:mm a ' }}</td>
 

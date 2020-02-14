@@ -215,6 +215,10 @@ export class CustomerContactsComponent implements OnInit {
 		}
 
 	}
+
+	onRowSelect(event){
+console.log("event",event);
+	}
 	enableSave() {
 		this.disableSave = false;
 

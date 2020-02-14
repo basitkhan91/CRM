@@ -610,14 +610,25 @@
                         : rowData[col.field]
                     }}
                   </td>
-
+                  <!-- *ngIf="rowData['isActive'] == false" -->
                   <td *ngIf="isViewMode == false" style="text-align: center">
-                    <p-inputSwitch
-                      [(ngModel)]="rowData['isActive']"
-                      name="isActiveIS{{ rowIndex }}"
-                      (onChange)="updateActiveorInActiveForIS(rowData)"
-                    ></p-inputSwitch>
-                    <span data-toggle="modal" data-target="#viewInter">
+                  <p-inputSwitch
+                    *ngIf="rowData['isActive'] == true"
+                    matTooltip="Active"
+                    onLabel="on"
+                    offLabel="off"
+                    name="isActiveIS{{ rowIndex }}"
+                    (onChange)="updateActiveorInActiveForIS(rowData)"
+                     [(ngModel)]="rowData['isActive']" ></p-inputSwitch>
+                  <p-inputSwitch
+                    *ngIf="rowData['isActive'] == false"
+                    matTooltip="In Active"
+                    name="isActiveIS{{ rowIndex }}"
+                    onLabel="on"
+                    offLabel="off"
+                    (onChange)="updateActiveorInActiveForIS(rowData)"
+                     [(ngModel)]="rowData['isActive']" ></p-inputSwitch>
+                    <span data-toggle="modal"   data-target="#viewInter">
                       <a
                         class="btn btn-info boxed-float-btn nobg"
                         data-toggle="tooltip"
@@ -1742,7 +1753,7 @@
             <div class="form-row" *ngIf="isViewMode == false">
               <div
                 class="form-group"
-                style="margin-top: 2px;margin-right:15px;"
+                style="margin-top: 22px;margin-right:15px;"
               >
                 <div class="checkbox-cstm" style="margin-left: 0;">
                   <label>
@@ -1914,7 +1925,7 @@
                 </td>
                 <td style="width: 140px;" *ngIf="isViewMode == false">
                   <p-inputSwitch
-                    [(ngModel)]="rowData['isActive']"
+                    [(ngModel)]="rowData['isActive']"  matTooltip="Is Active"
                     name="isActiveIS{{ rowIndex }}"
                     (onChange)="updateActiveorInActiveForS(rowData)"
                   ></p-inputSwitch>
