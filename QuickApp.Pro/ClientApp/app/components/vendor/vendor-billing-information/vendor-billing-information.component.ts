@@ -126,6 +126,7 @@ export class VendorBillingInformationComponent {
     @Input() vendorId: number = 0;
     @Input() isViewMode: boolean = false;
     isvendorEditMode: any;
+    loaderForBillingInfo: boolean;
     constructor(private http: HttpClient, private router: Router,
         private authService: AuthService, private modalService: NgbModal,
         private activeModal: NgbActiveModal, private _fb: FormBuilder,
@@ -241,6 +242,7 @@ export class VendorBillingInformationComponent {
     private loadData() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
+        this.loaderForBillingInfo = true;
         const vendorId = this.vendorId != 0 ? this.vendorId : this.local.vendorId;
         this.vendorService.getVendorBillAddressGet(vendorId).subscribe(
             results => this.onDataLoadSuccessful(results[0]),
@@ -320,6 +322,7 @@ export class VendorBillingInformationComponent {
         this.loadingIndicator = false;
         this.dataSource.data = allWorkFlows;
         this.allActions = allWorkFlows;
+        this.loaderForBillingInfo = false;
     }
     private onShipViadetails(allWorkFlows: any) {
         this.alertService.stopLoadingMessage();
@@ -357,6 +360,7 @@ export class VendorBillingInformationComponent {
     private onDataLoadFailed(error: any) {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
+        this.loaderForBillingInfo = false;
     }
 
     open(content) {

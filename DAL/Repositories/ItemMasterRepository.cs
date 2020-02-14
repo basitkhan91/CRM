@@ -174,6 +174,7 @@ namespace DAL.Repositories
                                 //IPortalIDS = iPortalIds.Select(e => e.IntegrationPortalId).ToList(),
                                 IntegrationPortalIds = iPortalIds.Select(e => e.IntegrationPortalId).ToList(),
                                 //IntegrationPortalIds = iPortalIds.ToList(),
+                                iM.IsHotItem, // Hot Item added
                                 oemPNData = Imast.ToList(),
 
 

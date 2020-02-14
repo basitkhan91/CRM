@@ -163,7 +163,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
                     ...this.editData,
                     name: getObjectByValue('name', res.name, this.customerallListOriginal),
                     country: getObjectById('countries_id', res.country, this.countryListOriginal),
-                    customerParentName: getObjectByValue('name', res.customerParentName, this.customerallListOriginal),
+                    parentId: getObjectById('customerId', res.parentId, this.customerallListOriginal),
                     customerCode: getObjectByValue('customerCode', res.customerCode, this.customerallListOriginal),
                     customerAffiliationId: String(res.customerAffiliationId)
 
@@ -172,7 +172,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
                     ...this.editData,
 
                     country: getObjectById('countries_id', res.country, this.countryListOriginal),
-                    customerParentName: getObjectByValue('name', res.customerParentName, this.customerallListOriginal),
+                    parentId: getObjectByValue('customerId', res.parentId, this.customerallListOriginal),
                     customerCode: getObjectByValue('customerCode', res.customerCode, this.customerallListOriginal),
 
 
@@ -675,7 +675,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
 
                 restrictedDERParts: (typeof this.generalInformation.restrictedDERParts === 'undefined') ? null : this.generalInformation.restrictedDERParts.map(x => { return { ...x, partType: 'DER' } }),
                 restrictedPMAParts: typeof this.generalInformation.restrictedPMAParts === 'undefined' ? null : this.generalInformation.restrictedPMAParts.map(x => { return { ...x, partType: 'PMA' } }),
-                customerParentName: getValueFromObjectByKey('name', this.generalInformation.customerParentName),
+                parentId: getValueFromObjectByKey('customerId', this.generalInformation.parentId),
                 createdBy: this.userName, updatedBy: this.userName, masterCompanyId: 1
             }).subscribe(res => {
                 this.alertService.showMessage(
@@ -704,7 +704,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
                 customerCode: editValueAssignByCondition('customerCode', this.generalInformation.customerCode),
                 //country: getValueFromObjectByKey('nice_name', this.generalInformation.country),
                 country: getValueFromObjectByKey('countries_id', this.generalInformation.country),
-                customerParentName: getValueFromObjectByKey('name', this.generalInformation.customerParentName),
+                parentId: getValueFromObjectByKey('customerId', this.generalInformation.parentId),
                 createdBy: this.userName, updatedBy: this.userName, masterCompanyId: 1
             }).subscribe(res => {
                 this.alertService.showMessage(
@@ -857,7 +857,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
     }
 
     onClearParent() {
-        this.generalInformation.customerParentName = undefined;
+        this.generalInformation.parentId = undefined;
     }
 
 

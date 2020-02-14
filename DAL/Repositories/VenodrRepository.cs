@@ -1826,6 +1826,21 @@ namespace DAL.Repositories
             _appContext.SaveChanges();
         }
 
+        public void VendorShippingStatus(long id, bool status, string updatedBy)
+        {
+            VendorShipping vendorShipping = new VendorShipping();
+            vendorShipping.VendorShippingId = id;
+            vendorShipping.UpdatedDate = DateTime.Now;
+            vendorShipping.UpdatedBy = updatedBy;
+            vendorShipping.IsActive = status;
+
+            _appContext.VendorShipping.Attach(vendorShipping);
+            _appContext.Entry(vendorShipping).Property(x => x.IsActive).IsModified = true;
+            _appContext.Entry(vendorShipping).Property(x => x.UpdatedDate).IsModified = true;
+            _appContext.Entry(vendorShipping).Property(x => x.UpdatedBy).IsModified = true;
+            _appContext.SaveChanges();
+        }
+
         public void VendorProcess1099Delete(long id, string updatedBy)
         {
             Master1099 vMaster1099 = new Master1099();

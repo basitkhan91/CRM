@@ -171,6 +171,10 @@ export class VendorShippingInformationComponent {
     pageSizeForDomestic: number = 10;
     pageSizeForShipViaDomestic: number = 10;
     pageSizeForShipViaInt: number = 10;
+    loaderForDomesticShipping: boolean;
+    loaderForDomesticShipVia: boolean;
+    loaderForInterShipping: boolean;
+    loaderForInterShipVia: boolean;
 
     constructor(private http: HttpClient, private router: Router,
         private authService: AuthService, private modalService: NgbModal, private configurations: ConfigurationService, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public vendorService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService) {
@@ -285,6 +289,7 @@ export class VendorShippingInformationComponent {
     private loadData() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
+        this.loaderForDomesticShipping = true;
         const vendorId = this.vendorId != 0 ? this.vendorId : this.local.vendorId;
         this.vendorService.getVendorShipAddressGet(vendorId).subscribe(
             results => this.onDataLoadSuccessful(results[0]),
@@ -311,6 +316,7 @@ export class VendorShippingInformationComponent {
     private loadShipViaCollection(rowData) {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
+        this.loaderForDomesticShipVia = true;
         this.vendorService.getVendorShipViaDetails(rowData).subscribe(
             results => this.onShipViadetails(results[0]),
             error => this.onDataLoadFailed(error)
@@ -365,12 +371,14 @@ export class VendorShippingInformationComponent {
         this.loadingIndicator = false;
         this.dataSource.data = allWorkFlows;
         this.allActions = allWorkFlows;
+        this.loaderForDomesticShipping = false;
     }
     private onShipViadetails(allWorkFlows: any) {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.dataSource.data = allWorkFlows;
         this.allShipViaDetails = allWorkFlows;
+        this.loaderForDomesticShipVia = false;
     }
 
     filterActions(event) {
@@ -412,6 +420,8 @@ export class VendorShippingInformationComponent {
     private onDataLoadFailed(error: any) {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
+        this.loaderForDomesticShipping = false;
+        this.loaderForDomesticShipVia = false;
     }
 
     open(content) {
@@ -996,9 +1006,14 @@ export class VendorShippingInformationComponent {
 
 
     getInternationalShippingByVendorId(){
+        this.loaderForInterShipping = true;
         const vendorId = this.local.vendorId;
         this.vendorService.getInternationalShippingByVendorId(vendorId).subscribe(res => {
             this.internationalShippingData = res;
+            this.loaderForInterShipping = false;
+        },
+        err => {
+            this.loaderForInterShipping = false;
         })
     }
     closeInternationalModal(){
@@ -1186,8 +1201,13 @@ export class VendorShippingInformationComponent {
 
     loadShipViaInterCollection(rowData) {
         // this.selectedShipViaInterColumns = this.shipViaIntercols;
+        this.loaderForInterShipVia = true;
         this.vendorService.getVendorShipViaInterDetails(rowData.vendorInternationalShippingId).subscribe(res => {
             this.allShipViaInterDetails = res[0];
+            this.loaderForInterShipVia = false;
+        },
+        err => {
+            this.loaderForInterShipVia = false;
         });
     }
 

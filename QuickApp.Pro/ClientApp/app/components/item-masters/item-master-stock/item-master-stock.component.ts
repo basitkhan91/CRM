@@ -675,6 +675,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             const responseDataOfEdit = res;
             this.isDisabledSteps = true;
             this.sourceItemMaster = responseDataOfEdit[0];
+            console.log(this.sourceItemMaster);
             this.onItemClassificationChange(this.sourceItemMaster.itemClassificationId)
             if (this.sourceItemMaster.siteId) {
                 this.siteValueChange()
@@ -753,7 +754,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                 IsExportDual: this.sourceItemMaster.isExportDual || false,
             }
             // validate classification required in Export Information
-            this.validateClassificationRequired(this.sourceItemMaster)
+            this.validateClassificationRequired()
             this.getAircraftMappedDataByItemMasterId();
             this.toGetAllDocumentsList(this.ItemMasterId);
         })
@@ -4844,7 +4845,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.showexportData = false;
     }
 
-    validateClassificationRequired(data) {
+    validateClassificationRequired() {
         if(this.exportInfo.IsExportUnspecified == null){
             this.exportInfo.IsExportUnspecified = true
         }
@@ -4857,12 +4858,12 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         if(this.exportInfo.IsExportDual == null){
             this.exportInfo.IsExportDual = true
         }
-        if (this.exportInfo.IsExportUnspecified || this.exportInfo.IsExportMilitary || this.exportInfo.IsExportNONMilitary || this.exportInfo.IsExportDual) {
+      //  if (this.exportInfo.IsExportUnspecified || this.exportInfo.IsExportMilitary || this.exportInfo.IsExportNONMilitary || this.exportInfo.IsExportDual) {
 
             this.isValidClassification = true;
-        } else {
-            this.isValidClassification = false;
-        }
+        //} else {
+        //    this.isValidClassification = false;
+        //}
 
 
 
