@@ -344,7 +344,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     }
     aircraftData: any;
     selectedAtAChapther: ATAChapter[];
-    ataMappedList: any;
+    ataMappedList: any = [];
     enableDNMemo: boolean = true;
     indexOfrow: any;
     activeMenuItem: number = 1;
@@ -424,8 +424,11 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     orginalAtaSubChapterValues: any[] = [];
     AssetAcquisitionTypeList: AssetAcquisitionType[] = [];
     aircraftTablePageSize: number = 10;
+    ataChapterTablePageSize: number = 10;
     totalAircraftRecords: any;
     totalAircraftPages: number;
+    totalAtaChapterRecords: any;
+    totalAtaChapterPages: number;
     selectedItemClassificationName: any = "";
 
     // errorLogForPS: string = '';
@@ -532,6 +535,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     aircraftListDataValues: any = [];
     capesListDataValues: any;
     showAdvancedSearchCard: boolean = false;
+    showAdvancedSearchCardAtaChapter: boolean = false;
 
 
     ngOnInit(): void {
@@ -622,7 +626,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.getAllDashNumbers();
         this.getAllATAChapter();
         // this.getAllATASubChapter();
-        this.getAllSubChapters();
+        // this.getAllSubChapters();
         this.getCapabilityType();
         this.getConditionsList();
         this.loadSiteData();
@@ -941,6 +945,12 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.aircraftModelsIdUrl = '';
         this.dashNumberIdUrl = '';
         this.getAircraftMappedDataByItemMasterId();
+    }
+    enableDisableAdvancedSearchAtaChapter(val) {
+        this.showAdvancedSearchCardAtaChapter = val;
+        this.selectedATAchapter = [];
+        this.selectedATASubChapter = [];
+        this.getATAMappedDataByItemMasterId();
     }
 
 
@@ -4465,6 +4475,22 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         );
         this.changeOfTab('Exchange');
     }
+    moveNTAETab() {
+        this.alertService.showMessage(
+            'Success',
+            `Action Saved Successfully `,
+            MessageSeverity.success
+        );
+        this.changeOfTab('NhaTlaAlternateTab');
+    }
+    moveToExchangeTab(){
+        this.alertService.showMessage(
+            'Success',
+            `Action Saved Successfully `,
+            MessageSeverity.success
+        );
+        this.changeOfTab('Exchange');
+    }
     moveAtachapter() {
         this.alertService.showMessage(
             'Success',
@@ -4805,7 +4831,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
                 MessageSeverity.success
             );
             this.exchLoan.loadData(this.ItemMasterId);
-            this.changeOfTab('Exchange');
+            this.changeOfTab('NhaTlaAlternateTab');
             // console.log(datas);
         })
 

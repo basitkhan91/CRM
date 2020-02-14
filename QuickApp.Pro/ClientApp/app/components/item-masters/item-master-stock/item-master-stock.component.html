@@ -101,10 +101,10 @@
                 </div>
                 <!-- <p-tabMenu [model]="items1" [activeItem]="items1[activeTab]" class="panel-menu"></p-tabMenu>-->
                 <div [ngClass]="{hideTab : currentTab !== 'General'}">
-                    <div class="card">
+                    <div class="card" style="padding: 5px">
                         <div class="form-row col-row col-row1">
                             <div class="col-md-3">
-                                <div class="form-group" style="margin-left: 13px">
+                                <div class="form-group" >
                                     <div>
                                         <label for="customerName" class="control-label">
                                             PN<strong class="clr-red">*</strong>
@@ -908,14 +908,15 @@
                                 </div>
                             </div>
                         </div>
+                        <div style="margin-top: 10px;">                  
+                            <button class="btn btn-primary pull-right" 				  [disabled]="!addCustomerWorkForm.valid"  type="submit"  >Save &amp; Next</button>
+                            <!-- <button class="btn btn-primary float-right" pButton type="button" (click)="saveItemMasterGeneralInformation()" icon="pi pi-angle-right" iconPos="right" label="Save & Next" style="padding: 0 !important;"></button> -->
+                        </div>
                     </div>
                     <!--<div class="col-sm-12 mt8">
                         <div class="col-sm-6">
                         </div>-->
-                        <div class="form-row pull-right">
-                            <button class="btn btn-primary submit-btn" 				  [disabled]="!addCustomerWorkForm.valid" pButton type="submit" style="height: 30px" >Save &amp; Next</button>
-                            <!-- <button class="btn btn-primary float-right" pButton type="button" (click)="saveItemMasterGeneralInformation()" icon="pi pi-angle-right" iconPos="right" label="Save & Next" style="padding: 0 !important;"></button> -->
-                        </div>
+                        
                     <!--/div>-->
                 </div>
                 <!--Jyotsna Code-->
@@ -1193,21 +1194,22 @@
                                     </div>
                                 </div>
                             </div> -->
+                            <div style="margin-top: 10px;">                  
+                                <button class="btn btn-primary pull-right"  (click)="moveAtachapter()" type="button" >Save & Next</button> &nbsp;
+                                <button class="btn btn-primary pull-right"  type="button" (click)="moveGeneralInfromation(); changeOfTab('General')" >Previous</button>
+                            </div>
 
                         </div>
-                        <div style="margin-top: 10px;">                  
-                            <button class="btn btn-primary pull-right submit-btn"  (click)="moveAtachapter()" type="button" style="height: 30px; width: 100px">Save & Next</button> &nbsp;
-                            <button class="btn btn-primary pull-right submit-btn"  type="button" (click)="moveGeneralInfromation(); changeOfTab('General')" style="height: 30px">Previous</button>
-                        </div>
+                        
                     </div>
                 </div>
                 <div [ngClass]="{hideTab : currentTab !== 'Atachapter'}">
-                    <div class="card">
-                        <div class="col-sm-12">
+                    <div class="card" style="padding: 5px;">
+                        <div class="col-md-12 shadow-box-cstm" >
                             <div class="col-sm-2">
                                 PN: <span style="color:red">{{pnvalue}}</span>
                             </div>
-                            <div class="col-sm-3">
+                            <div class="col-sm-5">
                                 PN Description: <span style="color:red">{{pnDescription}}</span>
                             </div>
                             <!-- <div class="col-sm-3">
@@ -1218,93 +1220,224 @@
                             </div>
                         </div>
 
-                        <div class="col-md-12">
+                        <div class="card" style="padding: 10px;">
                             <div class="col-md-12 ">
-                                <div class="shadow-Box">
-                                    <div class="col-sm-12">
-                                        <h5 class="float-left">Search ATA chapters</h5>
-                                        <h5 class="float-right">
-                                            Add ATA Information
-                                            <a class="plusicon-cstm" href="#" data-toggle="modal" data-target="#ATAADD" (click)="addNewATA()"><i class="fa fa-plus-circle fa-lg"></i></a>
-                                        </h5>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group ">
-                                            <label class="fs12">ATA Chapter</label>
-                                            <p-multiSelect [options]="LoadAtachapter"
-                                                           [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedATAchapter" (onChange)=" getSubChapterByATAChapter()"
-                                                           [panelStyle]="{minWidth:'12em'}" class="pub-multi"></p-multiSelect>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label class="fs12">
-                                                ATA Subchapter
-                                            </label>
-                                            <p-multiSelect [options]="atasubchapterValues" [ngModelOptions]="{standalone: true}"
-                                                           [(ngModel)]="selectedATASubChapter" [panelStyle]="{minWidth:'12em'}" class="pub-multi"></p-multiSelect>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-1 add-new-align">
-                                        <div class="form-group">
-                                            <button type="button" class="btn btn-primary mtop20" (click)="searchATA()">
-                                                <i class="pi pi-search pi-search"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div class="clear"></div>
+                                <h4 class="po-head-sm">ATA Information
+                                    <a class="plusicon-cstm" href="#" data-toggle="modal" data-target="#ATAADD" (click)="addNewATA()"><i class="fa fa-plus-circle fa-lg"></i></a>
+                                </h4>
+                                <hr />
+                            </div>
+                            <div
+                            class="advance-search-card"
+                            *ngIf="showAdvancedSearchCardAtaChapter == true"
+                        >       <div class="col-md-1">
+                                    <h4 class="f-s-14" style="margin-top: 26px;">Search :</h4>
                                 </div>
+                                <div class="col-md-3">
+                                    <div class="form-group ">
+                                        <label class="fs12">ATA Chapter</label>
+                                        <p-multiSelect [options]="LoadAtachapter"
+                                                    [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedATAchapter" (onChange)=" getSubChapterByATAChapter()"
+                                                    [panelStyle]="{minWidth:'12em'}" class="pub-multi"></p-multiSelect>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label class="fs12">
+                                            ATA Subchapter
+                                        </label>
+                                        <p-multiSelect [options]="atasubchapterValues" [ngModelOptions]="{standalone: true}"
+                                                    [(ngModel)]="selectedATASubChapter" [panelStyle]="{minWidth:'12em'}" class="pub-multi"></p-multiSelect>
+                                    </div>
+                                </div>
+                                <div class="col-md-1">
+                                    <div class="form-group">
+                                        <button type="button" class="btn btn-primary mtop20" (click)="searchATA()">
+                                            <i class="pi pi-search pi-search"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>  <!--/advance-search-card-->                                
+                            <p-table #ataDataTable class="rpo-table-cstm" [value]="ataMappedList" [rows]="6" [columns]="atasub" [scrollable]="true" [style]="{width:'100%'}" [paginator]="true">
+                                <ng-template pTemplate="caption"  let-columns>
+                                    <div style="text-align: right; min-height: 30px; margin-left: -6px;">
+                                    <p-multiSelect
+                                        [options]="colsaircraftLD"
+                                        [(ngModel)]="selectedAircraftLDColumns"
+                                        [ngModelOptions]="{ standalone: true }"
+                                        optionLabel="header"
+                                        selectedItemsLabel="{0} columns selected"
+                                        [style]="{ minWidth: '200px' }"
+                                        defaultLabel="Choose Columns"
+                                        style="float:left"
+                                    > <ng-template let-selectedAircraftLDColumns pTemplate="selectedItems">
+                                        <ng-container
+                                        >{{ selectedAircraftLDColumns?.length }} Columns Selected
+                                        </ng-container>
+                                    </ng-template>
+                                </p-multiSelect>
+                                    <div
+                                        class="inner-addon right-addon w200 inline-block g-filter-search-cstm"
+                                    >
+                                        <i class="fa fa-search"></i>
+                                        <input
+                                        type="text"
+                                        pInputText
+                                        size="50"
+                                        class="form-control ui-autocomplete-input"
+                                        (input)="ataDataTable.filterGlobal($event.target.value, 'contains')"
+                                        placeholder="Filter"
+                                        style="height: 28px !important;"
+                                        />
+                                    </div>
+                                    <button
+                                        type="button"
+                                        class="btn btn-primary"
+                                        pButton
+                                        icon="fa-download"
+                                        iconPos="left"
+                                        label="Export All Data"
+                                        matTooltip="Download  Data"
+                                        matTooltipPosition="above"
+                                        (click)="ataDataTable.exportCSV()"
+                                        style="padding: 5px 10px !important;"
+                                    ></button>
+                                    <button
+                                        type="button"
+                                        class="btn btn-primary"
+                                        pButton
+                                        icon="fa-download"
+                                        iconPos="left"
+                                        label="Export Selected Data"
+                                        matTooltip="Download Selected Data"
+                                        matTooltipPosition="above"
+                                        (click)="ataDataTable.exportCSV({ selectionOnly: true })"
+                                        style="padding: 5px 10px !important;"
+                                    ></button>
+                                    <button
+                                        class="btn btn-primary btn-sm "
+                                        style="padding: 5px 10px !important;"
+                                        *ngIf="showAdvancedSearchCardAtaChapter == false"
+                                        type="button"
+                                        (click)="enableDisableAdvancedSearchAtaChapter(true)"
+                                    >
+                                        Advanced Search <i class="fa fa-caret-down"></i>
+                                    </button>
+                                    <button
+                                        class="btn btn-primary btn-sm"
+                                        style="padding: 5px 10px !important;"
+                                        *ngIf="showAdvancedSearchCardAtaChapter == true"
+                                        type="button"
+                                        (click)="enableDisableAdvancedSearchAtaChapter(false)"
+                                    >
+                                        Advanced Search <i class="fa fa-caret-up"></i>
+                                    </button>
+                                    </div>
+                                </ng-template>
+                            
+                                <ng-template pTemplate="colgroup" let-columns>
+                                    <colgroup>
+                                    <col *ngFor="let col of columns" style="width:130px" />
+                                    </colgroup>
+                                </ng-template>
+                                <ng-template pTemplate="header" let-columns>
+                                    <tr>
+                                        <th *ngFor="let col of atasub" pResizableColumn
+                                        pReorderableColumn
+                                        [pSortableColumn]="col.field">
+                                            {{col.header}}
+                                            <p-sortIcon [field]="col.field"></p-sortIcon>
+                                        </th>
+                                        <th style="width:70px;position:sticky">Action</th>
+                                    </tr>
+                                    <tr>
+                                        <th
+                                          style="width:auto"
+                                          *ngFor="let col of columns"
+                                          [ngSwitch]="col.field"
+                                        >
+                                          <input
+                                            style="width:100%;"
+                                            pInputText
+                                            type="text"
+                                            (input)="ataDataTable.filter($event.target.value, col.field, 'contains')"
+                                          />
+                                        </th>
+                                        <th style="width:70px;position:sticky"></th>
+                                      </tr>
+                                </ng-template>
+                                <ng-template pTemplate="body" let-i="rowIndex" let-rowData let-columns="columns">
+                                    <tr [pSelectableRow]="rowData"
+                                    [pSelectableRowDblClick]="rowData">
+                                        <td *ngFor="let col of atasub" ResizableColumn
+                                        pReorderableColumn>
+                                            {{rowData[col.field]}}
+                                        </td>
+                                        <td style="width:70px"> 
+                                            <button class="btn btn-danger nobg" (click)="deleteATAMapped(rowData)">
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </ng-template>
+                                <ng-template
+                                pTemplate="emptymessage"
+                                let-columns
+                                *ngIf="ataMappedList?.length == 0"
+                              >
+                                                              <tr>
+                                                                  <td [attr.colspan]="6" class="no-records-cstm">
+                                                                  No records found
+                                                                  </td>
+                                                              </tr>
+                                                              </ng-template>
+                                                              <ng-template pTemplate="summary" id="footer">
+                                                              <label id="footer" class="footer">No'of records:</label>
+                                                              <input
+                                                                  style="width: 5%;"
+                                                                  [ngModelOptions]="{standalone: true}"
+                                                                  [(ngModel)]="ataDataTable._totalRecords"
+                                                                  [disabled]="true"
+                                                                  pInputText
+                                                                  type="text"
+                                                              />
+                                                              &nbsp;&nbsp;
+                                                              <label id="footer" class="footer1">Pages Count:</label>
+                                                              <input
+                                                                  style="width: 5%;"
+                                                                  [ngModelOptions]="{standalone: true}"
+                                                                  [ngModel]="getPageCount(ataDataTable._totalRecords, ataChapterTablePageSize)"
+                                                                  [disabled]="true"
+                                                                  pInputText
+                                                                  type="text"
+                                                              />
+                                                              <!-- <input style="width: 5%;" value="{{totalPages}}" [disabled]="true" pInputText type="text" /> -->
+                                                              </ng-template>
+                            </p-table>
+                            <div style="margin-top: 10px;">                  
+                                <button class="btn btn-primary pull-right" (click)="movePurchaseInformation(); changeOfTab('Capes');" type="button"  >Save & Next</button> &nbsp;
+        
+                                <button class="btn btn-primary pull-right"  type="button" (click)="moveAircraftInformation(); changeOfTab('AircraftInfo');" >Previous</button>
                             </div>
                         </div>
-
-                        <br />
                     </div>
-                    <div class="col-sm-12">
-                        <p-table [value]="ataMappedList" [rows]="6" [columns]="atasub" [scrollable]="true" [style]="{width:'100%'}" [paginator]="true">
-                            <ng-template pTemplate="header" let-columns>
-                                <tr>
-                                    <th *ngFor="let col of atasub">
-                                        {{col.header}}
-                                    </th>
-                                    <th>Action</th>
-                                </tr>
-                            </ng-template>
-                            <ng-template pTemplate="body" let-i="rowIndex" let-rowData let-columns="columns">
-                                <tr>
-                                    <td *ngFor="let col of atasub">
-                                        {{rowData[col.field]}}
-                                    </td>
-                                    <td>
-                                        <button class="btn btn-danger nobg" (click)="deleteATAMapped(rowData)">
-                                            <i class="fa fa-trash"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                            </ng-template>
-                        </p-table>
-                        <br />
-                    </div>
-                    <div>
-                        <button class="btn btn-primary pull-right submit-btn" (click)="movePurchaseInformation(); changeOfTab('PurchaseSales');" type="button"  style="height: 30px; width: 100px">Save & Next</button> &nbsp;
-
-                        <button class="btn btn-primary pull-right submit-btn"  type="button" (click)="moveAircraftInformation(); changeOfTab('AircraftInfo');" style="height: 30px; width: 100px">Previous</button>
-                    </div>
-
                 </div>
                 <div  [ngClass]="{hideTab : currentTab !== 'Capes'}">
-                    <div class="card">
-                        <div class="col-sm-12 font-padding">
-                            <div class="col-sm-2">
-                                PN: <span style="color:red">{{pnvalue}}</span>
-                            </div>
-                            <div class="col-sm-3">
-                                PN Description: <span style="color:red">{{pnDescription}}</span>
-                            </div>
-                            <!-- <div class="col-sm-3">
-                                Alternate PN: <span style="color:red">{{alternatePn}}</span>
-                            </div> -->
-                            <div class="col-sm-3">
-                                Manufacturer: <span style="color:red">{{ManufacturerValue}}</span>
+                    <div class="card" style="padding: 5px;">
+                        <div class="col-md-12 shadow-box-cstm" >
+                            <div class="col-sm-12">
+                                <div class="col-sm-2">
+                                    PN: <span style="color:red">{{pnvalue}}</span>
+                                </div>
+                                <div class="col-sm-5">
+                                    PN Description: <span style="color:red">{{pnDescription}}</span>
+                                </div>
+                                <!-- <div class="col-sm-3">
+                                    Alternate PN: <span style="color:red">{{alternatePn}}</span>
+                                </div> -->
+                                <div class="col-sm-3">
+                                    Manufacturer: <span style="color:red">{{ManufacturerValue}}</span>
+                                </div>
                             </div>
                         </div>
                         <!-- <div class="col-md-12">
@@ -1322,11 +1455,12 @@
                                 </div>
                             </div>
                         </div> -->
-                    </div>
-                    <br />
-
-                    <div> 
+                    
                         <app-item-master-capabilities-list [isEnableItemMaster]="isEnableItemMaster" [itemMasterId]="ItemMasterId"></app-item-master-capabilities-list>
+                        <div style="margin-top: 10px;">                  
+                            <button class="btn btn-primary pull-right"  (click)="changeOfTab('PurchaseSales');" type="button" >Save & Next</button> &nbsp;
+                            <button class="btn btn-primary pull-right"  type="button" (click)="changeOfTab('Atachapter');" >Previous</button>
+                        </div>
                     </div>
                     <!-- <div class="card">
                         <p-table [value]="capesListDataValues" [rows]="6" [columns]="capesColumns" [scrollable]="true" [style]="{width:'100%'}" [paginator]="true">
@@ -1373,12 +1507,12 @@
                 </div>
                 <div [ngClass]="{hideTab : currentTab !== 'PurchaseSales'}">
                     <!--New Changes in Purchase and Sales page-->
-                    <div class="card">
-                        <div class="col-sm-12 font-padding">
+                    <div class="card" style="padding: 5px;">
+                        <div class="col-md-12 shadow-box-cstm" >
                             <div class="col-sm-2">
                                 PN: <span style="color:red">{{pnvalue}}</span>
                             </div>
-                            <div class="col-sm-3">
+                            <div class="col-sm-5">
                                 PN Description: <span style="color:red">{{pnDescription}}</span>
                             </div>
                             <!-- <div class="col-sm-3">
@@ -1389,14 +1523,15 @@
                             </div>
                         </div>
 
-                        <div class="col-sm-12">
-                            <h5 class="float-right">
+                        <div class="card" style="padding: 10px;">
+                            <div class="col-md-12 ">
+                                <h4 class="po-head-sm">
                                 Add Purchase and Sales
                                 <!--<button type="button" (click)="addFieldValue();" class="btn"><i class="fa fa-plus-circle fa-lg" matTooltip="Add Purchase and Sales"  tooltipPosition="top" matTooltipPosition="left"></i></button>-->
-                                <span class="plusicon-cstm" (click)="addFieldValue();"><i class="fa fa-plus-circle fa-lg"></i></span>
-                            </h5>
+                                    <span class="plusicon-cstm" (click)="addFieldValue();"><i class="fa fa-plus-circle fa-lg"></i></span>
+                                </h4>
+                                <hr />
                             </div>
-                    </div>
                     <form #purchaseSales="ngForm">
                         <div class="table-responsive ">
 
@@ -1562,12 +1697,14 @@
                             </table>
 
                         </div>
-                        <div>
-                            <button class="btn btn-primary pull-right submit-btn"  (click)="moveExportInformation()" [disabled]="!purchaseSales.valid" type="submit" style="height: 30px; width: 100px">Save & Next</button> &nbsp;
+                        <div style="margin-top: 10px;">   
+                            <button class="btn btn-primary pull-right"  (click)="savePurchaseandSales()" [disabled]="!purchaseSales.valid" type="submit" >Save & Next</button> &nbsp;
 
-                            <button class="btn btn-primary pull-right submit-btn"  type="button" (click)="moveAtachapter()" style="height: 30px; width: 100px">Previous</button>
+                            <button class="btn btn-primary pull-right"  type="button" (click)="changeOfTab('Capes');" >Previous</button>
                         </div>
                     </form>
+                    </div>
+                    </div>
                 </div>
                 <!-- NHA, TLA, Alternate, Equivalency OPEN-->
                 <div class="ntae-section" [ngClass]="{hideTab : currentTab !== 'NhaTlaAlternateTab'}">
@@ -1607,7 +1744,27 @@
                         </div>
                     </div>
                     <div *ngIf="currentNTAETab != ''">
-                        <app-ntae-alternate [selectedTab]="currentNTAETab"></app-ntae-alternate>
+                        <div class="card" style="padding: 5px">
+                            <div class="col-md-12 shadow-box-cstm" >
+                                <div class="col-sm-12">
+                        
+                                    <div class="col-sm-2">
+                                        PN: <span style="color:red">{{pnvalue}}</span>
+                                    </div>
+                                    <div class="col-sm-5">
+                                        PN Description: <span style="color:red">{{pnDescription}}</span>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        Manufacturer: <span style="color:red">{{ManufacturerValue}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <app-ntae-alternate [selectedTab]="currentNTAETab"></app-ntae-alternate>
+                            <div style="margin-top: 10px">
+                                <button class="btn btn-primary pull-right" (click)="moveToExchangeTab()" type="button" >Save & Next</button> &nbsp;
+                                <button class="btn btn-primary pull-right" type="button" (click)="movePurchaseSales()" >Previous</button>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- <div [ngClass]="{hideTab : currentNTAETab !== 'NHA'}">
@@ -1624,15 +1781,28 @@
 
     </div> -->
 
-                    <button class="btn btn-primary pull-right submit-btn" (click)="moveExportInformations()" type="button" style="height: 30px; width: 100px">Save & Next</button> &nbsp;
-
-                    <button class="btn btn-primary pull-right submit-btn" type="button" (click)="movePurchaseSales()" style="height: 30px">Previous</button>
+                    
 
 
                 </div>
                 <!-- NHA, TLA, Alternate, Equivalency CLOSE-->
                 <!--Exchange and loans Tab  -->
                 <div [ngClass]="{hideTab : currentTab !== 'Exchange'}">
+                    <div class="card" style="padding: 5px">
+                        <div class="col-md-12 shadow-box-cstm" >
+                            <div class="col-sm-12">
+                    
+                                <div class="col-sm-2">
+                                    PN: <span style="color:red">{{pnvalue}}</span>
+                                </div>
+                                <div class="col-sm-5">
+                                    PN Description: <span style="color:red">{{pnDescription}}</span>
+                                </div>
+                                <div class="col-sm-3">
+                                    Manufacturer: <span style="color:red">{{ManufacturerValue}}</span>
+                                </div>
+                            </div>
+                        </div>
                         <app-item-master-exch-loan  #exchLoan
                         (onTabChange)="changeOfTab($event)" 
                         [partNumber]="pnvalue" 
@@ -1640,201 +1810,203 @@
                         [manufacturer]="ManufacturerValue"
                         [itemMasterId]="ItemMasterId"
                         ></app-item-master-exch-loan>
+                    </div>
                 </div>
                 <!-- End of exchange and loans tab-->
                 <div [ngClass]="{hideTab : currentTab !== 'ExportInfo'}">
-
-                    <form #exportInformatiom="ngForm">
-                        <div class="card">
-                            <div class="col-sm-12 font-padding">
+                    <div class="card" style="padding: 5px">
+                        <div class="col-md-12 shadow-box-cstm" >
+                            <div class="col-sm-12">
+                    
                                 <div class="col-sm-2">
                                     PN: <span style="color:red">{{pnvalue}}</span>
                                 </div>
-                                <div class="col-sm-3">
+                                <div class="col-sm-5">
                                     PN Description: <span style="color:red">{{pnDescription}}</span>
                                 </div>
-                                <!-- <div class="col-sm-3">
-                                    Alternate PN: <span style="color:red">{{alternatePn}}</span>
-                                </div> -->
                                 <div class="col-sm-3">
                                     Manufacturer: <span style="color:red">{{ManufacturerValue}}</span>
                                 </div>
                             </div>
+                        </div>
+                        <div class="card" style="padding: 10px;">
+                            <div class="col-md-12 ">
+                                <h4 class="po-head-sm">Export Info
+                                </h4>
+                                <hr />
+                            </div>
+                            <form #exportInformatiom="ngForm">
+                                <div class="form-row col-row">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="eccn" class="control-label">
+                                                ECCN <span style="color: red;">*</span>
+                                            </label>
 
-                            <br />
-                            <div class="form-row col-row">
-                                <div class="col-md-3" style="margin-left: 13px">
-                                    <div class="form-group">
-                                        <label for="eccn" class="control-label">
-                                            ECCN <span style="color: red;">*</span>
-                                        </label>
+                                            <input type="text" class="input-field-value" maxlength="10" required pInputText
+            [pattern]="'^[a-zA-Z0-9 \'\-]+$'"  [(ngModel)]="exportInfo.ExportECCN" name="ExportECCN" />
 
-                                        <input type="text" class="input-field-value" maxlength="10" required pInputText
-           [pattern]="'^[a-zA-Z0-9 \'\-]+$'"  [(ngModel)]="exportInfo.ExportECCN" name="ExportECCN" />
-
-                                        <label class="control-label">
-                                            ITAR Num 
-                                        </label>
-                                        <input type="text" id="itarNumber" title="ITAR Number" class="input-field-value" [(ngModel)]="exportInfo.ITARNumber" name="itarNumber" />
-                                        <label class="control-label">Country </label>
-
-
-                                        <p-autoComplete 
-                                                        class="p-autoComplete-ctsm"
-                                                        [(ngModel)]="exportInfo.ExportCountryId"
-                                                        name="exportCountry"
-                                                        id="exportCountry"
-                                                        title=" Country"
-                                                        (onSelect)="selectedExportCountry($event)"
-                                                        field="nice_name"
-                                                        [suggestions]="countrycollection"
-                                                        (completeMethod)="filtercountry($event)" [size]="30" [minLength]="1"
-                                                        [dropdown]="true">
-
-                                        </p-autoComplete>
+                                            <label class="control-label">
+                                                ITAR Num 
+                                            </label>
+                                            <input type="text" id="itarNumber" title="ITAR Number" class="input-field-value" [(ngModel)]="exportInfo.ITARNumber" name="itarNumber" />
+                                            <label class="control-label">Country </label>
 
 
-                                        <!-- <p-autoComplete [ngModelOptions]="{standalone: true}" [suggestions]="countrycollection" (completeMethod)="filtercountry($event)" [size]="30"
-                                                        [minLength]="1" [dropdown]="true" class="autocomplete-customer3" name="countryId" >
-                                            <ng-template let-countryName pTemplate="item">
-                                                <div class="ui-helper-clearfix">{{countryName}}</div>
-                                            </ng-template>
-                                        </p-autoComplete> -->
+                                            <p-autoComplete 
+                                                            class="p-autoComplete-ctsm"
+                                                            [(ngModel)]="exportInfo.ExportCountryId"
+                                                            name="exportCountry"
+                                                            id="exportCountry"
+                                                            title=" Country"
+                                                            (onSelect)="selectedExportCountry($event)"
+                                                            field="nice_name"
+                                                            [suggestions]="countrycollection"
+                                                            (completeMethod)="filtercountry($event)" [size]="30" [minLength]="1"
+                                                            [dropdown]="true">
 
-                                        <label class="control-label">Value </label>
-                                        <input type="number" class="input-field-value" pInputText pKeyFilter="num"  maxlength="15" [(ngModel)]="exportInfo.ExportValue" name="exportValue" id="exportValue" title="Export Value" />
-                                        <label class="control-label">Currency </label>
-                                        <select class="select-value-drop1"
-                                                [(ngModel)]="exportInfo.ExportCurrencyId" (change)="changeValueStringToInt($event.target.value)" name="ExportCurrencyId" title="Currency" id="exportCurrencyId">
-                                            <option value=null> Select Currency</option>
-                                            <option class="form-control" *ngFor="let currencyName of allCurrencyInfo"
-                                                    [ngValue]="currencyName.currencyId">
-                                                {{currencyName.code}}
-                                            </option>
-                                        </select>
+                                            </p-autoComplete>
+
+
+                                            <!-- <p-autoComplete [ngModelOptions]="{standalone: true}" [suggestions]="countrycollection" (completeMethod)="filtercountry($event)" [size]="30"
+                                                            [minLength]="1" [dropdown]="true" class="autocomplete-customer3" name="countryId" >
+                                                <ng-template let-countryName pTemplate="item">
+                                                    <div class="ui-helper-clearfix">{{countryName}}</div>
+                                                </ng-template>
+                                            </p-autoComplete> -->
+
+                                            <label class="control-label">Value </label>
+                                            <input type="number" class="input-field-value" pInputText pKeyFilter="num"  maxlength="15" [(ngModel)]="exportInfo.ExportValue" name="exportValue" id="exportValue" title="Export Value" />
+                                            <label class="control-label">Currency </label>
+                                            <select class="select-value-drop1"
+                                                    [(ngModel)]="exportInfo.ExportCurrencyId" (change)="changeValueStringToInt($event.target.value)" name="ExportCurrencyId" title="Currency" id="exportCurrencyId">
+                                                <option value=null> Select Currency</option>
+                                                <option class="form-control" *ngFor="let currencyName of allCurrencyInfo"
+                                                        [ngValue]="currencyName.currencyId">
+                                                    {{currencyName.code}}
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <div class="inline-block display-flex">
+                                                <div>
+                                                    <label for="weight" class="control-label">
+                                                        Weight &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+
+                                                    </label>
+                                                    <span class="display-flex inline-block">
+                                                        <input type="number" class="input-field-value" pKeyFilter="num" pInputText maxlength="10" [(ngModel)]="exportInfo.ExportWeight" name="exportWeight" id="exportWeight" title="Export Weight" />
+
+                                                    </span>
+                                                </div>
+                                                <div>
+                                                    <label for="weight" class="control-label">
+                                                        UOM 
+                                                    </label>
+                                                    <span class="display-flex inline-block">
+                                                        <select class="form-control w80 select-value-drop" id="ExportWeightUnit" name="ExportWeightUnit" (change)="changeValueStringToInt($event.target.value)" [(ngModel)]="exportInfo.ExportWeightUnit" title="Weight Unit">
+                                                            <option *ngFor="let unitName of allPurchaseUnitOfMeasureinfo"
+                                                                    [ngValue]="unitName.unitOfMeasureId">
+                                                                {{unitName.shortName}}
+                                                            </option>
+                                                        </select>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <label class="control-label">
+                                                Export UOM 
+                                                <span style="margin-left: 3px; margin-top: 5px; cursor: pointer;" matTooltip="Add Export UOM" tooltipPosition="top" matTooltipPosition="above">
+                                                    <i class="fa fa-plus-circle fa-lg" data-toggle="modal"
+                                                    data-target="#ModalUnit" (click)="exportUOmOpen(ModalUnit)"></i>
+                                                </span>
+                                            </label>
+                                            <select class="select-value-drop1" id="ExportUomId" name="ExportUomId" title="Export UOM" [(ngModel)]="exportInfo.ExportUomId"
+                                                    (change)="changeValueStringToInt($event.target.value)" name="exportUOMId">
+                                                <option *ngFor="let unitName of allPurchaseUnitOfMeasureinfo"
+                                                        [ngValue]="unitName.unitOfMeasureId">
+                                                    {{unitName.shortName}}
+                                                </option>
+                                            </select>
+                                            <div class="inline-block display-flex">
+                                                <div>
+                                                    <label class="control-label">Size (L,W,H)</label>
+                                                    <span class="display-flex inline-block">
+                                                        <input type="number" name="exportLength" class="input-field-value" pInputText pKeyFilter="num" maxlength="10" [(ngModel)]="exportInfo.ExportSizeLength" />&nbsp;
+                                                        <input type="number" name="exportWidth" class="input-field-value" pInputText pKeyFilter="num" maxlength="10" [(ngModel)]="exportInfo.ExportSizeWidth" />&nbsp;
+                                                        <input type="number" name="exportHeight" class="input-field-value" pInputText pKeyFilter="num" maxlength="10" [(ngModel)]="exportInfo.ExportSizeHeight" />
+                                                    </span>
+                                                </div>
+                                                        <div>
+                                                            <label for="weight" class="control-label">
+                                                                UOM 
+                                                            </label>
+                                                            <span class="display-flex inline-block">
+                                                                <select class="form-control w80 select-value-drop" id="unitOfMeasureId" name="unitOfMeasureId"  (change)="changeValueStringToInt($event.target.value)" [(ngModel)]="exportInfo.unitOfMeasureId">
+                                                                    <option *ngFor="let unitName of allPurchaseUnitOfMeasureinfo"
+                                                                            [ngValue]="unitName.unitOfMeasureId">
+                                                                        {{unitName.shortName}}
+                                                                    </option>
+                                                                </select>
+                                                            </span>
+                                                        </div>
+                                                
+                                            
+                                                </div>
+                                                    <label class="control-label">Classification </label>
+                                                    <div class="inline-block display-flex">
+                                                        <div>
+                                                            <label class="control-label">
+                                                                <input type="radio" id="IsExportUnspecified" name="IsExportUnspecified" [value]="true"  [(ngModel)]="exportInfo.IsExportUnspecified" [checked]="exportInfo.IsExportUnspecified == true" (change)="validateClassificationRequired()">
+
+                                                                Unspecified
+                                                            </label>
+                                                        </div>
+                                                        <div>
+                                                            <label class="control-label">
+                                                                <input type="radio" id="IsExportUnspecified" name="IsExportNONMilitary" [value]="true" [(ngModel)]="exportInfo.IsExportNONMilitary" [checked]="exportInfo.IsExportNONMilitary == true" (change)="validateClassificationRequired()">
+
+                                                                NON-Military
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="inline-block display-flex">
+                                                        <div>
+                                                            <label class="control-label">
+                                                                <input type="radio" id="IsExportUnspecified" name="IsExportMilitary" [value]="true" [(ngModel)]="exportInfo.IsExportMilitary" [checked]="exportInfo.IsExportMilitary == true" (change)="validateClassificationRequired()">
+
+                                                                Miltary
+                                                            </label>
+                                                        </div>
+                                                        <div>
+                                                            <label class="control-label">
+                                                                <input type="radio" id="IsExportUnspecified" name="IsExportDual" [value]="true" [(ngModel)]="exportInfo.IsExportDual" [checked]="exportInfo.IsExportDual == true" (change)="validateClassificationRequired()">
+
+                                                                Dual
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <div class="inline-block display-flex">
-                                            <div>
-                                                <label for="weight" class="control-label">
-                                                    Weight &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
 
-                                                </label>
-                                                <span class="display-flex inline-block">
-                                                    <input type="number" class="input-field-value" pKeyFilter="num" pInputText maxlength="10" [(ngModel)]="exportInfo.ExportWeight" name="exportWeight" id="exportWeight" title="Export Weight" />
+                                <!--<div class="col-sm-12 mt8">-->
+                                <div style="margin-top: 10px;">
 
-                                                </span>
-                                            </div>
-                                            <div>
-                                                <label for="weight" class="control-label">
-                                                    UOM 
-                                                </label>
-                                                <span class="display-flex inline-block">
-                                                    <select class="form-control w80 select-value-drop" id="ExportWeightUnit" name="ExportWeightUnit" (change)="changeValueStringToInt($event.target.value)" [(ngModel)]="exportInfo.ExportWeightUnit" title="Weight Unit">
-                                                        <option *ngFor="let unitName of allPurchaseUnitOfMeasureinfo"
-                                                                [ngValue]="unitName.unitOfMeasureId">
-                                                            {{unitName.shortName}}
-                                                        </option>
-                                                    </select>
-                                                </span>
-                                            </div>
-                                        </div>
-                                        <label class="control-label">
-                                            Export UOM 
-                                            <span style="margin-left: 3px; margin-top: 5px; cursor: pointer;" matTooltip="Add Export UOM" tooltipPosition="top" matTooltipPosition="above">
-                                                <i class="fa fa-plus-circle fa-lg" data-toggle="modal"
-                                                   data-target="#ModalUnit" (click)="exportUOmOpen(ModalUnit)"></i>
-                                            </span>
-                                        </label>
-                                        <select class="select-value-drop1" id="ExportUomId" name="ExportUomId" title="Export UOM" [(ngModel)]="exportInfo.ExportUomId"
-                                                (change)="changeValueStringToInt($event.target.value)" name="exportUOMId">
-                                            <option *ngFor="let unitName of allPurchaseUnitOfMeasureinfo"
-                                                    [ngValue]="unitName.unitOfMeasureId">
-                                                {{unitName.shortName}}
-                                            </option>
-                                        </select>
-                                        <div class="inline-block display-flex">
-                                            <div>
-                                                <label class="control-label">Size (L,W,H)</label>
-                                                <span class="display-flex inline-block">
-                                                    <input type="number" name="exportLength" class="input-field-value" pInputText pKeyFilter="num" maxlength="10" [(ngModel)]="exportInfo.ExportSizeLength" />&nbsp;
-                                                    <input type="number" name="exportWidth" class="input-field-value" pInputText pKeyFilter="num" maxlength="10" [(ngModel)]="exportInfo.ExportSizeWidth" />&nbsp;
-                                                    <input type="number" name="exportHeight" class="input-field-value" pInputText pKeyFilter="num" maxlength="10" [(ngModel)]="exportInfo.ExportSizeHeight" />
-                                                </span>
-                                            </div>
-                                                    <div>
-                                                        <label for="weight" class="control-label">
-                                                            UOM 
-                                                        </label>
-                                                        <span class="display-flex inline-block">
-                                                            <select class="form-control w80 select-value-drop" id="unitOfMeasureId" name="unitOfMeasureId"  (change)="changeValueStringToInt($event.target.value)" [(ngModel)]="exportInfo.unitOfMeasureId">
-                                                                <option *ngFor="let unitName of allPurchaseUnitOfMeasureinfo"
-                                                                        [ngValue]="unitName.unitOfMeasureId">
-                                                                    {{unitName.shortName}}
-                                                                </option>
-                                                            </select>
-                                                        </span>
-                                                    </div>
-                                               
-                                           
-                                            </div>
-                                                <label class="control-label">Classification </label>
-                                                <div class="inline-block display-flex">
-                                                    <div>
-                                                        <label class="control-label">
-                                                            <input type="radio" id="IsExportUnspecified" name="IsExportUnspecified" [value]="true"  [(ngModel)]="exportInfo.IsExportUnspecified" [checked]="exportInfo.IsExportUnspecified == true" (change)="validateClassificationRequired()">
+                                    <button class="btn btn-primary pull-right" type="button" (click)="saveandcreate(exportInformatiom)">Save & Add New</button>
+                                    &nbsp;
+                                    <button class="btn btn-primary pull-right" type="submit" [disabled]="!exportInformatiom.valid || !isValidClassification" (click)="saveExportInformation()" >Save</button>
+                                    &nbsp;
+                                    <button class="btn btn-primary pull-right" type="button" (click)="changeOfTab('Exchange')" >Previous</button>
 
-                                                            Unspecified
-                                                        </label>
-                                                    </div>
-                                                    <div>
-                                                        <label class="control-label">
-                                                            <input type="radio" id="IsExportUnspecified" name="IsExportNONMilitary" [value]="true" [(ngModel)]="exportInfo.IsExportNONMilitary" [checked]="exportInfo.IsExportNONMilitary == true" (change)="validateClassificationRequired()">
-
-                                                            NON-Military
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                                <div class="inline-block display-flex">
-                                                    <div>
-                                                        <label class="control-label">
-                                                            <input type="radio" id="IsExportUnspecified" name="IsExportMilitary" [value]="true" [(ngModel)]="exportInfo.IsExportMilitary" [checked]="exportInfo.IsExportMilitary == true" (change)="validateClassificationRequired()">
-
-                                                            Miltary
-                                                        </label>
-                                                    </div>
-                                                    <div>
-                                                        <label class="control-label">
-                                                            <input type="radio" id="IsExportUnspecified" name="IsExportDual" [value]="true" [(ngModel)]="exportInfo.IsExportDual" [checked]="exportInfo.IsExportDual == true" (change)="validateClassificationRequired()">
-
-                                                            Dual
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                            </div>
+                                </div>
+                                <!--</div>-->
+                            </form>
                         </div>
-
-                        <!--<div class="col-sm-12 mt8">-->
-                        <div>
-
-                            <button class="btn btn-primary pull-right submit-btn" type="button" (click)="saveandcreate(exportInformatiom)" style="height: 30px; width: 115px">Save & Add New</button>
-                            &nbsp;
-                            <button class="btn btn-primary pull-right submit-btn" type="submit" [disabled]="!exportInformatiom.valid || !isValidClassification" (click)="saveExportInformation()" style="height: 30px; width:80px">Save</button>
-                            &nbsp;
-                            <button class="btn btn-primary pull-right submit-btn" type="button" (click)="changeOfTab('Exchange')" style="height: 30px; width: 100px">Previous</button>
-
-                        </div>
-                        <!--</div>-->
-                    </form>
+                    </div>
                 </div>
-
-
             </div>
-
         </div>
     </form>
 
@@ -2175,7 +2347,6 @@
             </form>
         </div>
     </ng-template>
-    <div class="pull-right"> © 2018 <a href="#">PAS</a> </div>
 </div>
 <ng-template #contentEdit let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static">
     <div class="modal-header">
@@ -2262,7 +2433,7 @@
             </div>
             <div class="clear"></div>
             <div class="modal-footer">
-                <button class="btn btn-primary pull-right submit-btn" [disabled]="!itemForm.valid || disableSaveItemClassficationCode || disableClassdesc || disabletypeSave"
+                <button class="btn btn-primary pull-right" [disabled]="!itemForm.valid || disableSaveItemClassficationCode || disableClassdesc || disabletypeSave"
                         (click)="saveitemclassification()">
                     Save
                 </button>
@@ -2335,7 +2506,7 @@
             <div class="clear"></div>
             <div class="modal-footer">
 
-                <button class="btn btn-primary pull-right submit-btn" [disabled]="!userForm.valid || disableSaveItemGroup"
+                <button class="btn btn-primary pull-right" [disabled]="!userForm.valid || disableSaveItemGroup"
                         (click)="saveitemgroup()">
                     Save
                 </button>
@@ -2404,7 +2575,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-primary pull-right submit-btn" [disabled]="!provisionForm.valid || disableSaveProvision"
+                <button class="btn btn-primary pull-right" [disabled]="!provisionForm.valid || disableSaveProvision"
                         (click)="saveprovision()">
                     Save
                 </button>
@@ -2484,7 +2655,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-primary pull-right submit-btn" [disabled]="!purchaseForm.valid || disableSavePurchaseUOM"
+                    <button class="btn btn-primary pull-right" [disabled]="!purchaseForm.valid || disableSavePurchaseUOM"
                             (click)=" savePurchaseunitofmeasure()">
                         Save
                     </button>
@@ -2565,7 +2736,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-primary pull-right submit-btn" [disabled]="!stockForm.valid || disableSaveStockUOM"
+                    <button class="btn btn-primary pull-right" [disabled]="!stockForm.valid || disableSaveStockUOM"
                             (click)=" saveStockunitofmeasure()">
                         Save
                     </button>
@@ -2734,7 +2905,7 @@
 
             <div class="modal-footer">
 
-                <button class="btn btn-success pull-right submit-btn" [disabled]="disableSaveSOLD"
+                <button class="btn btn-success pull-right" [disabled]="disableSaveSOLD"
                         (click)=" saveSOLDunitofmeasure()">
                     Submit
                 </button>
@@ -2804,7 +2975,7 @@
                     </div>
 
                     <div>
-                        <button class="btn btn-success pull-right submit-btn"
+                        <button class="btn btn-success pull-right"
                                 (click)="dismissAircraftModel()">
                             Save
                         </button>
@@ -2874,7 +3045,7 @@
 
             <div class="modal-footer">
 
-                <button class="btn btn-success pull-right submit-btn" [disabled]="disableSaveATAChapter"
+                <button class="btn btn-success pull-right" [disabled]="disableSaveATAChapter"
                         (click)="saveatamain()">
                     Submit
                 </button>
@@ -2941,7 +3112,7 @@
 
             <div class="modal-footer">
 
-                <button class="btn btn-success pull-right submit-btn" [disabled]="disableSaveATAChapter"
+                <button class="btn btn-success pull-right" [disabled]="disableSaveATAChapter"
                         (click)="saveatamain()">
                     Submit
                 </button>

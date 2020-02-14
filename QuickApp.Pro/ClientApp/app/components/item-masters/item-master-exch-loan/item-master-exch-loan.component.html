@@ -1,36 +1,13 @@
-<div class="card">
-        <div class="col-sm-12 font-padding">
-            <div class="col-sm-2">
-                PN: <span style="color:red">{{partNumber}}</span>
-            </div>
-            <div class="col-sm-3">
-                PN Description: <span style="color:red">{{partDescription}}</span>
-            </div>
-            <!-- <div class="col-sm-3">
-                Alternate PN: <span style="color:red">{{alternatePn}}</span>
-            </div> -->
-            <div class="col-sm-3">
-                Manufacturer: <span style="color:red">{{manufacturer}}</span>
-            </div>
-        </div>
-        <div class="col-md-12">
-            <div class="col-md-12 ">
-                <div class="shadow-Box">
-                    <div class="col-sm-12">
-                        <h5 class="float-left">Exchange and Loans</h5>
-                        <h4 class="float-right">
-                          
-                        </h4>
-                    </div>
-                    
-                    <div class="clear"></div>
-                </div>
-            </div>
-        </div>
+<div class="card" style="padding: 10px;">
+<div class="col-md-12 ">
+    <h4 class="po-head-sm">Exchange and Loans
+    </h4>
+    <hr />
 </div>
+
 <div class="col-sm-12">
     <form #exchloan>
-    <div class="col-sm-3">
+<div class="col-sm-3">
         <div class="card">
                 <div class="card-header"  > Exchange <input type="checkbox" name="chkExchange" [(ngModel)]="showExchange"  (change)="handleExchangeCheck()"/></div> 
                 <div class="card-body" *ngIf="showExchange">
@@ -101,8 +78,9 @@
     </div>
 </form>
 </div>
-<div>
-    <button class="btn btn-primary pull-right submit-btn" (click)="saveAndMove()" type="button" style="height: 30px; width: 100px">Save & Next</button> &nbsp;
+<div style="margin-top: 10px;">
+    <button class="btn btn-primary pull-right " (click)="saveAndMove()" type="button" >Save & Next</button> &nbsp;
 
-    <button class="btn btn-primary pull-right submit-btn" type="button" (click)=" moveTab('PurchaseSales');" style="height: 30px; width: 100px">Previous</button> 
+    <button class="btn btn-primary pull-right" type="button" (click)=" moveTab('NhaTlaAlternateTab');" >Previous</button> 
+</div>
 </div>
