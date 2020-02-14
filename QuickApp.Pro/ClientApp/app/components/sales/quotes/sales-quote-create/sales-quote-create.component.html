@@ -25,7 +25,7 @@
               </div>
               <div class="form-group">
                 <label>Open Date<span class="clr-red">*</span></label>
-                <p-calendar name="openDate" [(ngModel)]="salesQuote.openDate" [showIcon]="true" (change)="onChangeOpenDate()"></p-calendar>
+                <p-calendar name="openDate" [(ngModel)]="salesQuote.openDate" [showIcon]="true" (onSelect)="onChangeOpenDate()"></p-calendar>
               </div>
               <div class="form-group">
                 <label>Cust Request Date<span class="clr-red">*</span></label>
@@ -48,7 +48,7 @@
               </div>
               <div class="form-group">
                 <label>Quote Exp Date<span class="clr-red">*</span></label>
-                <p-calendar name="quoteExpiryDate" [(ngModel)]="salesQuote.quoteExpiryDate" [showIcon]="true" (change)="onChangeQuoteExpiryDate()">
+                <p-calendar name="quoteExpiryDate" [(ngModel)]="salesQuote.quoteExpiryDate" [showIcon]="true" (onSelect)="onChangeQuoteExpiryDate()">
                 </p-calendar>
               </div>
               <div class="form-group">
@@ -152,25 +152,26 @@
             >
             </p-autoComplete>
               </div>
-              <div class="form-group">
-                <label>Agent</label>
-              <p-autoComplete
-              class="autocomp-customer-cstm"
-              name="agentName"
-              [(ngModel)]="salesQuote.agentName"
-              [suggestions]="firstCollection"
-              [forceSelection]="true"
-              emptyMessage="No Match Found"
-              field="firstName"
-              (completeMethod)="filterfirstName($event)"
-              [size]="30"
-              [minLength]="1"
-              [dropdown]="true"
-            >
-            </p-autoComplete>
-              </div>
+             
             </div>
             <div class="col-md-2 column column-seperator">
+                <div class="form-group">
+                    <label>Agent</label>
+                  <p-autoComplete
+                  class="autocomp-customer-cstm"
+                  name="agentName"
+                  [(ngModel)]="salesQuote.agentName"
+                  [suggestions]="firstCollection"
+                  [forceSelection]="true"
+                  emptyMessage="No Match Found"
+                  field="firstName"
+                  (completeMethod)="filterfirstName($event)"
+                  [size]="30"
+                  [minLength]="1"
+                  [dropdown]="true"
+                >
+                </p-autoComplete>
+                  </div>
               <div class="form-group">
                 <label>Customer Service Rep</label>
               <p-autoComplete
@@ -242,7 +243,7 @@
               </div>
             </div>
             <div class="col-md-2 column column-seperator" >
-              <div class="form-group" *ngIf="selectedApprovers>0">
+              <div class="form-group" *ngIf="selectedApprovers.length>0">
                 <label>Quote Approved By</label>
                 <select name="quoteApprovedById" [(ngModel)]="salesQuote.quoteApprovedById">
                   <option value='-1'>--Select</option>
@@ -251,7 +252,7 @@
                       </option>
                 </select>
               </div>
-              <div class="form-group" *ngIf="selectedApprovers>0">
+              <div class="form-group" *ngIf="selectedApprovers.length>0">
                 <label>Approved Date</label>
                 <p-calendar name="approvedDate" [(ngModel)]="salesQuote.approvedDate" [showIcon]="true"></p-calendar>
               </div>

@@ -140,6 +140,7 @@ private onDestroy$: Subject<void> = new Subject<void>();
     this.getAllCustomerContact();
     this.getCustomerWarningsData();
     this.getAccountTypes();
+    this.getLegalEntity();
 
     if (this.id) {
       this.getSalesQuoteInstance(this.id);
@@ -618,16 +619,27 @@ private onDestroy$: Subject<void> = new Subject<void>();
       });
   }
   onChangeValidForDays(){
-    this.salesQuote.quoteExpiryDate.setDate( this.salesQuote.openDate.getDate() + this.salesQuote.validForDays );
+    let od = new Date(this.salesQuote.openDate);
+    let validForDays =+ this.salesQuote.validForDays
+    let ed = new Date(this.salesQuote.openDate);
+    ed.setDate( od.getDate() + validForDays );
+    this.salesQuote.quoteExpiryDate = ed;
   }
   onChangeQuoteExpiryDate(){
-      let Difference_In_Time = this.salesQuote.quoteExpiryDate.getTime() - this.salesQuote.openDate.getTime(); 
+    let od = new Date(this.salesQuote.openDate);
+    let ed = new Date(this.salesQuote.quoteExpiryDate);
+      let Difference_In_Time = ed.getTime() - od.getTime(); 
       let Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24); 
       this.salesQuote.validForDays = Difference_In_Days;
+      console.log(this.salesQuote);
     //this.salesQuote.quoteExpiryDate.setDate( this.salesQuote.openDate.getDate() + this.salesQuote.validForDays );
   }
   onChangeOpenDate(){
-    this.salesQuote.quoteExpiryDate.setDate( this.salesQuote.openDate.getDate() + this.salesQuote.validForDays );
+    let od = new Date(this.salesQuote.openDate);
+    let validForDays =+ this.salesQuote.validForDays
+    let ed = new Date(this.salesQuote.openDate);
+    ed.setDate( od.getDate() + validForDays );
+    this.salesQuote.quoteExpiryDate = ed;
   }
 
   searchCustomerByName(event) {
