@@ -566,7 +566,7 @@ namespace QuickApp.Pro.Controllers
                     {
                         itemmaserObj.IsSerialized = itemMasterViewModel.IsSerialized;
                     }
-
+                    itemmaserObj.IsHotItem = itemMasterViewModel.IsHotItem;
                     itemmaserObj.ItemGroupId = itemMasterViewModel.ItemGroupId;
                     itemmaserObj.ItemClassificationId = itemMasterViewModel.ItemClassificationId;
                     //itemmaserObj.IsAcquiredMethodBuy = itemMasterViewModel.IsAcquiredMethodBuy;
