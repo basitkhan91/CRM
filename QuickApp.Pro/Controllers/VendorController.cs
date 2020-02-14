@@ -2842,6 +2842,7 @@ namespace QuickApp.Pro.Controllers
                 vendorshipping.UpdatedBy = vendorshipping.UpdatedBy;
                 vendorshipping.CreatedDate = DateTime.Now;
                 vendorshipping.UpdatedDate = DateTime.Now;
+
                 address.Line1 = vendorshipping.Address1;
                 address.Line2 = vendorshipping.Address2;
                 address.Line3 = vendorshipping.Address3;
@@ -3565,6 +3566,7 @@ namespace QuickApp.Pro.Controllers
                 actionobject.UpdatedDate = DateTime.Now;
                 actionobject.CreatedBy = vendorShippingDetailsViewModel.CreatedBy;
                 actionobject.UpdatedBy = vendorShippingDetailsViewModel.UpdatedBy;
+                actionobject.IsPrimary = vendorShippingDetailsViewModel.IsPrimary;
                 _unitOfWork.Shipping.Add(actionobject);
                 _unitOfWork.SaveChanges();
                 return Ok(actionobject);
@@ -3593,6 +3595,7 @@ namespace QuickApp.Pro.Controllers
                 checkPaymentObj.UpdatedDate = DateTime.Now;
                 checkPaymentObj.CreatedBy = vendorShippingViewModel.CreatedBy;
                 checkPaymentObj.UpdatedBy = vendorShippingViewModel.UpdatedBy;
+                checkPaymentObj.IsPrimary = vendorShippingViewModel.IsPrimary;
 
                 _unitOfWork.Shipping.Update(checkPaymentObj);
                 _unitOfWork.SaveChanges();
@@ -4550,6 +4553,13 @@ namespace QuickApp.Pro.Controllers
         public IActionResult VendorProcesStatusUpdate(long id, bool status, string updatedBy)
         {
             _unitOfWork.Vendor.VendorProcess1099StatusUpdate(id, status, updatedBy);
+            return Ok();
+        }
+
+        [HttpPut("vendorshippingstatus")]
+        public IActionResult VendorShippingStatus(long id, bool status, string updatedBy)
+        {
+            _unitOfWork.Vendor.VendorShippingStatus(id, status, updatedBy);
             return Ok();
         }
 

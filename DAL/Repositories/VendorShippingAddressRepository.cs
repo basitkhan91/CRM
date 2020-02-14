@@ -70,7 +70,8 @@ namespace DAL.Repositories
                             vs.VendorId,
                             vs.VendorShippingAddressId,
                             vs.CreatedDate,
-                            vs.UpdatedDate
+                            vs.UpdatedDate,
+                            vs.IsPrimary
                        
 
                         }).ToList();
