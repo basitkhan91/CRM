@@ -20,6 +20,7 @@ export class ExclusionsCreateComponent implements OnInit, OnChanges {
     @Input() markupList;
     @Input() editData;
     @Input() taskList: any = [];
+    @Input() isWorkFlow: boolean = false;
     @Output() saveExclusionsListForWO = new EventEmitter();
     @Output() updateExclusionsListForWO = new EventEmitter();
 
@@ -57,7 +58,7 @@ export class ExclusionsCreateComponent implements OnInit, OnChanges {
             if (!this.UpdateMode) {
                 this.workFlow.exclusions = [];
                 this.row = this.workFlow.exclusions[0];
-                // this.addRow();
+                this.addRow();
             }
         }
         
@@ -85,10 +86,9 @@ export class ExclusionsCreateComponent implements OnInit, OnChanges {
 
 
     ngOnChanges(): void {
-        console.log(this.taskList);
-        console.log(this.isEdit);
-        console.log(this.isQuote);
-        this.addRow();
+        if(!this.isWorkFlow){
+            this.addRow();
+        }
     }
     reCalculate() {
         this.calculateQtySummation();

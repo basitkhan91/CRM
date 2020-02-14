@@ -35,6 +35,7 @@ export class MaterialListCreateComponent implements OnInit, OnChanges {
     @Input() workFlow: IWorkFlow;
     @Input() markupList;
     @Input() UpdateMode: boolean;
+    @Input() isWorkFlow: boolean = false;
     @Output() workFlowChange = new EventEmitter();
     @Output() saveMaterialListForWO = new EventEmitter();
     @Output() updateMaterialListForWO = new EventEmitter();
@@ -89,7 +90,7 @@ export class MaterialListCreateComponent implements OnInit, OnChanges {
             } else {
                 this.workFlow.materialList = [];
                 this.row = this.workFlow.materialList[0];
-                // this.addRow();
+                this.addRow();
                 this.workFlow.materialQtySummation = 0;
                 this.workFlow.materialExtendedCostSummation = 0;
                 this.workFlow.totalMaterialCost = 0;
@@ -151,7 +152,9 @@ export class MaterialListCreateComponent implements OnInit, OnChanges {
         else if (this.isQuote) {
             this.workFlow.materialList = [];
         }
-        this.addRow();
+        if(!this.isWorkFlow){
+            this.addRow();
+        }
     }
 
     reCalculate() {

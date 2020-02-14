@@ -461,7 +461,7 @@
                     </select>
                   </td>
                   <td>
-                      <input type="number" [(ngModel)]="rec.billingRate" (change)="rec.billingAmount = rec.billingRate*rec.hours" [disabled]="isView || rec.billingMethodId != 2"/>
+                      <input type="number" [(ngModel)]="rec.billingRate" (change)="rec.billingAmount = (rec.billingRate*rec.hours).toFixed(2)" [disabled]="isView || rec.billingMethodId != 2"/>
                   </td>
                   <td>{{ rec.billingAmount }}</td>
                 </ng-container>
@@ -503,20 +503,57 @@
             <td>
                 <input type="number" [(ngModel)]="task.totalWorkHours" (change)="calculateTotalHours()" [disabled]="laborForm.workFloworSpecificTaskorWorkOrder == 'specificTasks'"/>
             </td>
-            <td>{{getTotalLaborOHCost(laborForm.workOrderLaborList[0][task.description | lowercase])}}</td>
-            <td>{{getTotalLaborBurdenRate(laborForm.workOrderLaborList[0][task.description | lowercase])}}</td>
-            <td>{{getTotalCostPerHour(laborForm.workOrderLaborList[0][task.description | lowercase])}}</td>
+            <td></td>
+            <td></td>
+            <td></td>
             <td>{{getTotalCost(laborForm.workOrderLaborList[0][task.description | lowercase])}}</td>
             <td></td>
             <td></td>
-            <td>{{getTotalBillingRate(laborForm.workOrderLaborList[0][task.description | lowercase])}}</td>
+            <td></td>
             <td>{{getTotalBillingAmount(laborForm.workOrderLaborList[0][task.description | lowercase])}}</td>
             <!-- <td></td> -->
             <td *ngIf="!isView">
             </td>
           </tr>
           <!-- </ng-container> -->
-          </ng-container>
+        </ng-container>
+        <ng-container *ngIf="isQuote">
+          <tr>
+
+            <td>Total MPN Cost</td>
+            <td></td>
+            <td>
+                
+            </td>
+            
+            <td
+              *ngIf="laborForm.hoursorClockorScan && laborForm.hoursorClockorScan !== 1 && laborForm.hoursorClockorScan !== 3"
+            >
+            </td>
+            <td
+              *ngIf="laborForm.hoursorClockorScan && laborForm.hoursorClockorScan !== 1"
+            >
+            </td>
+            <td
+              *ngIf="laborForm.hoursorClockorScan && laborForm.hoursorClockorScan !== 1"
+            >
+            </td>
+            <td>
+                {{getOverAlltotal('Hours')}}
+            </td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>{{getOverAlltotal('Cost')}}</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>{{getOverAlltotal('BillingAmount')}}</td>
+            <!-- <td></td> -->
+            <td *ngIf="!isView">
+            </td>
+          </tr>
+        </ng-container>
       </tbody>
     </table>
   </div>

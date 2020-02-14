@@ -11,7 +11,7 @@
     <table class="table table-bordered table-fixed workflow-table-charges">
       <tr>
         <!-- <th><label>S.No</label></th> -->
-        <th><label>Task *</label></th>
+        <th *ngIf="!isWorkFlow"><label>Task *</label></th>
         <th><label>Type *</label></th>
         <th><label>Description</label></th>
         <th><label>QTY *</label></th>
@@ -30,7 +30,7 @@
         *ngFor="let charge of workFlow.charges; let i = index"
       >
         <!-- <td>{{ (currentPage - 1) * itemsPerPage + i + 1 }}</td> -->
-        <td>
+        <td *ngIf="!isWorkFlow">
           <select class="form-control" [(ngModel)]="charge.taskId" name="task_{{i}}" required>
             <option value="">Select</option>
             <option *ngFor="let task of taskList" [value]="task.taskId">{{task.description}}</option>
@@ -157,7 +157,7 @@
         <!-- <td>
           <b>Total : </b>
         </td> -->
-        <td *ngIf="isQuote">&nbsp;</td>
+        <td *ngIf="!isWorkFlow">&nbsp;</td>
         <td>&nbsp;</td>
         <td>&nbsp;</td>
         <td>&nbsp;</td>

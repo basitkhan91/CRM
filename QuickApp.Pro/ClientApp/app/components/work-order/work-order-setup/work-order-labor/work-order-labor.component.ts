@@ -445,7 +445,7 @@ console.log(this.workOrderLaborList);
     if(rec['directLaborOHCost'] && rec['burdenRateAmount']){
       rec.totalCostPerHour = Number(rec['directLaborOHCost'])+Number(rec['burdenRateAmount']);
       if(rec.hours){
-        rec['totalCost'] = Number(rec.totalCostPerHour) * Number(rec.hours);
+        rec['totalCost'] = (Number(rec.totalCostPerHour) * Number(rec.hours)).toFixed(2);
       }
     }
   }
@@ -463,16 +463,16 @@ console.log(this.workOrderLaborList);
         if(this.markupList){
           this.markupList.forEach((markup)=>{
             if(type == 'row' && markup.value == matData.markupPercentageId){
-              matData['billingRate'] = (matData['totalCostPerHour']) + (((matData['totalCostPerHour']) / 100) * Number(markup.label))
-              matData['billingAmount'] = Number(matData['billingRate']) * Number(matData.hours);
+              matData['billingRate'] = ((matData['totalCostPerHour']) + (((matData['totalCostPerHour']) / 100) * Number(markup.label))).toFixed(2)
+              matData['billingAmount'] = (Number(matData['billingRate']) * Number(matData.hours)).toFixed(2);
             }
             else if(type == 'all' && markup.value == this.overAllMarkup){
               for(let t in this.laborForm.workOrderLaborList[0]){
                 for(let mData of this.laborForm.workOrderLaborList[0][t]){
                   if(mData['billingMethodId'] == 1){
                     mData.markupPercentageId = this.overAllMarkup;
-                    mData['billingRate'] = (mData['totalCostPerHour']) + (((mData['totalCostPerHour']) / 100) * Number(markup.label))
-                    mData['billingAmount'] = Number(mData['billingRate']) * Number(mData.hours);
+                    mData['billingRate'] = ((mData['totalCostPerHour']) + (((mData['totalCostPerHour']) / 100) * Number(markup.label))).toFixed(2)
+                    mData['billingAmount'] = (Number(mData['billingRate']) * Number(mData.hours)).toFixed(2);
                   }
                 }
               }
@@ -531,7 +531,7 @@ console.log(this.workOrderLaborList);
         total += labor.fixedAmount;
       }
     }
-    return total;
+    return total.toFixed(2);
   }
 
   getTotalLaborOHCost(taskList){
@@ -541,7 +541,7 @@ console.log(this.workOrderLaborList);
         total += labor.directLaborOHCost;
       }
     }
-    return total;
+    return total.toFixed(2);
   }
 
   getTotalLaborBurdenRate(taskList){
@@ -551,7 +551,7 @@ console.log(this.workOrderLaborList);
         total += labor.burdenRateAmount;
       }
     }
-    return total;
+    return total.toFixed(2);
   }
 
   getTotalCostPerHour(taskList){
@@ -561,7 +561,7 @@ console.log(this.workOrderLaborList);
         total += labor.totalCostPerHour;
       }
     }
-    return total;
+    return total.toFixed(2);
   }
 
   getTotalCost(taskList){
@@ -571,7 +571,7 @@ console.log(this.workOrderLaborList);
         total += labor.totalCost;
       }
     }
-    return total;
+    return total.toFixed(2);
   }
 
   getTotalBillingRate(taskList){
@@ -581,7 +581,7 @@ console.log(this.workOrderLaborList);
         total += labor.billingRate;
       }
     }
-    return total;
+    return total.toFixed(2);
   }
 
   getTotalBillingAmount(taskList){
@@ -591,7 +591,7 @@ console.log(this.workOrderLaborList);
         total += labor.billingAmount;
       }
     }
-    return total;
+    return total.toFixed(2);
   }
 
   getTotalCostPlus(taskList){
@@ -601,7 +601,7 @@ console.log(this.workOrderLaborList);
         total += labor.labourCostPlus;
       }
     }
-    return total;
+    return total.toFixed(2);
   }
 
   getTotalHours(taskList){
@@ -611,7 +611,7 @@ console.log(this.workOrderLaborList);
         total += labor.labourCostPlus;
       }
     }
-    return total;
+    return total.toFixed(2);
   }
 
   calculateTotalHours(){
@@ -631,6 +631,47 @@ console.log(this.workOrderLaborList);
       }
     }
   }
+
+  getOverAlltotal(type){
+    let htotal = 0;
+    let loTotal = 0;
+    let burTotal = 0;
+    let cpTotal = 0;
+    let costTotal = 0;
+    let bRTotal = 0;
+    let bATotal = 0;
+    for (let task in this.laborForm.workOrderLaborList[0]){
+      this.laborForm.workOrderLaborList[0][task].forEach(
+        data => {
+          switch(type){
+            case "Hours": {
+              if(data.hours) htotal += data.hours;
+            }
+            case "LaborOHCost":{
+              if(data.directLaborOHCost) loTotal += data.directLaborOHCost;
+            }
+            case "LaborBurdenRate":{
+              if(data.burdenRateAmount) burTotal += data.burdenRateAmount;
+            }
+            case "CostPerHour":{
+              if(data.totalCostPerHour) cpTotal += data.totalCostPerHour;
+            }
+            case "Cost":{
+              if(data.totalCost) costTotal += data.totalCost;
+            }
+            case "BillingRate":{
+              if(data.billingRate) bRTotal += data.billingRate;
+            }
+            default:{
+              if(data.billingAmount) bATotal += data.billingAmount;
+            }
+          }
+        }
+      )
+    }
+    return (type == 'Hours')?htotal.toFixed(2):(type == 'LaborOHCost')?loTotal.toFixed(2):(type == 'LaborBurdenRate')?burTotal.toFixed(2):(type == 'CostPerHour')?cpTotal.toFixed(2):(type == 'Cost')?costTotal.toFixed(2):(type == 'BillingRate')?bRTotal.toFixed(2):bATotal.toFixed(2);
+  }
+
   // tasks : this.laborForm.tasks[0][keysArray[i]].map(x => {
   //   return {
   //     ...x,

@@ -80,6 +80,8 @@ import { DashNumberService } from '../services/dash-number/dash-number.service';
 import { DashNumberEndpointService } from '../services/dash-number/dash-number-endpoint.service';
 import { WorkOrderService } from '../services/work-order/work-order.service';
 import { WorkOrderEndpointService } from '../services/work-order/work-order-endpoint.service';
+import { WorkOrderQuoteService } from '../services/work-order/work-order-quote.service';
+import { QuoteEndpointService } from '../services/work-order/work-order-quote.endpoint.service';
 
 @NgModule({
   imports: [
@@ -167,7 +169,9 @@ import { WorkOrderEndpointService } from '../services/work-order/work-order-endp
         DashNumberService,
         DashNumberEndpointService,
         WorkOrderService,
-        WorkOrderEndpointService
+        WorkOrderEndpointService,
+        WorkOrderQuoteService,
+        QuoteEndpointService
     ],
   entryComponents: []
 })

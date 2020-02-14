@@ -128,8 +128,8 @@ export class WorkOrderChargesComponent implements OnChanges, OnInit {
       this.markupList.forEach((markup)=>{
         if(type == 'row' && markup.value == matData.markupPercentageId){
           // matData.tmAmount = Number(matData.extendedCost) + ((Number(matData.extendedCost) / 100) * Number(markup.label))
-          matData['billingRate'] = (matData['unitCost']) + (((matData['unitCost']) / 100) * Number(markup.label))
-          matData['billingAmount'] = Number(matData['billingRate']) * Number(matData.quantity);
+          matData['billingRate'] = ((matData['unitCost']) + (((matData['unitCost']) / 100) * Number(markup.label))).toFixed(2);
+          matData['billingAmount'] = (Number(matData['billingRate']) * Number(matData.quantity)).toFixed(2);
         }
         else if(type == 'all' && markup.value == this.overAllMarkup){
           this.workOrderChargesList.forEach((mData)=>{
@@ -137,8 +137,8 @@ export class WorkOrderChargesComponent implements OnChanges, OnInit {
               // mData.markupPercentageId = this.overAllMarkup;
               // mData.tmAmount = Number(mData.extendedCost) + ((Number(mData.extendedCost) / 100) * Number(markup.label))
               mData.markupPercentageId = this.overAllMarkup;
-              mData['billingRate'] = (mData['unitCost']) + (((mData['unitCost']) / 100) * Number(markup.label))
-              mData['billingAmount'] = Number(mData['billingRate']) * Number(mData.quantity);
+              mData['billingRate'] = ((mData['unitCost']) + (((mData['unitCost']) / 100) * Number(markup.label))).toFixed(2);
+              mData['billingAmount'] = (Number(mData['billingRate']) * Number(mData.quantity)).toFixed(2);
             }
           })
         }
@@ -180,13 +180,13 @@ export class WorkOrderChargesComponent implements OnChanges, OnInit {
     if(this.workOrderChargesList){
       this.workOrderChargesList.forEach(
         (material) => {
-          if (material.unitCost) {
-            total += Number(material.unitCost);
+          if (material.extendedCost) {
+            total += Number(material.extendedCost);
           }
         }
       )
     }
-    return total;
+    return total.toFixed(2);
   }
 
   getTotalBillingRate() {
@@ -200,7 +200,7 @@ export class WorkOrderChargesComponent implements OnChanges, OnInit {
         }
       )
     }
-    return total;
+    return total.toFixed(2);
   }
 
   getTotalBillingAmount() {
@@ -214,7 +214,7 @@ export class WorkOrderChargesComponent implements OnChanges, OnInit {
         }
       )
     }
-    return total;
+    return total.toFixed(2);
   }
 
 }

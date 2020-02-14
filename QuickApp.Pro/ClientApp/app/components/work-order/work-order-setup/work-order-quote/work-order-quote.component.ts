@@ -425,14 +425,24 @@ overAllMarkup: any;
     this.selectedBuildMethod = buildType;
     this.gridActiveTab = '';
     this.selectedWorkFlowOrWorkOrder = undefined;
-    var partId;
-    var workScopeId;
+    
     if(buildType == 'use work flow'){
       this.labor.workFloworSpecificTaskorWorkOrder = 'workFlow';
     }
     else if(buildType == 'use historical wos'){
       this.labor.workFloworSpecificTaskorWorkOrder = 'specificTasks';
     }
+    if(buildType == 'use work order'){
+      this.getTabDataFromWorkOrder();
+    }
+    this.gridTabChange('materialList');
+    
+    
+  }
+
+  getDisplayData(buildType){
+    var partId;
+    var workScopeId;
     this.mpnPartNumbersList.forEach(element => {
       if(element['label'] == this.selectedPartNumber){
         partId = element['value']['masterPartId'];
@@ -456,12 +466,6 @@ overAllMarkup: any;
         }
       )
     }
-    else if(buildType == 'use work order'){
-      this.getTabDataFromWorkOrder();
-    }
-    this.gridTabChange('materialList');
-    
-    
   }
 
   getTabDataFromWorkOrder(){
@@ -676,7 +680,6 @@ overAllMarkup: any;
         "IsActive":true,
         "IsDeleted":false,
         "BillingMethodId":Number(fre.billingMethodId),
-        "BillingRate":fre.billingRate,
         "BillingAmount":fre.billingAmount,
         "headerMarkupId":fre.headerMarkupId,
         "markupFixedPrice":fre.markupFixedPrice,
@@ -1150,14 +1153,14 @@ markupChanged(matData, type){
     this.markupList.forEach((markup)=>{
       if(type == 'row' && markup.value == matData.markupPercentageId){
         matData.tmAmount = Number(matData.extendedCost) + ((Number(matData.extendedCost) / 100) * Number(markup.label))
-        matData['billingRate'] = (matData['unitCost']) + (((matData['unitCost']) / 100) * Number(markup.label))
-        matData['billingAmount'] = Number(matData['billingRate']) * Number(matData.quantity);
+        matData['billingRate'] = (Number(matData['unitCost']) + ((Number(matData['unitCost']) / 100) * Number(markup.label))).toFixed(2)
+        matData['billingAmount'] = (Number(matData['billingRate']) * Number(matData.quantity)).toFixed(2);
       }
       else if(type == 'all' && markup.value == this.overAllMarkup){
         this.materialListQuotation.forEach((mData)=>{
           mData.markupPercentageId = this.overAllMarkup;
-          mData['billingRate'] = (mData['unitCost']) + (((mData['unitCost']) / 100) * Number(markup.label))
-          mData['billingAmount'] = Number(mData['billingRate']) * Number(mData.quantity);
+          mData['billingRate'] = ((mData['unitCost']) + (((mData['unitCost']) / 100) * Number(markup.label))).toFixed(2)
+          mData['billingAmount'] = (Number(mData['billingRate']) * Number(mData.quantity)).toFixed(2);
         })
       }
     })
@@ -1344,12 +1347,12 @@ getTotalUnitCost(){
   let total = 0;
   this.materialListQuotation.forEach(
     (material)=>{
-      if(material.unitCost){
-        total += Number(material.unitCost);
+      if(material.unitCost && material.quantity){
+        total += Number(material.quantity * material.unitCost);
       }
     }
   )
-  return total;
+  return total.toFixed(2);
 }
 
 totalMaterialBillingRate(){
@@ -1361,7 +1364,7 @@ totalMaterialBillingRate(){
       }
     }
   )
-  return total;
+  return total.toFixed(2);
 }
 
 totalMaterialBillingAmount(){
@@ -1373,7 +1376,7 @@ totalMaterialBillingAmount(){
       }
     }
   )
-  return total;
+  return total.toFixed(2);
 }
 
 getEmpData(empId): object{

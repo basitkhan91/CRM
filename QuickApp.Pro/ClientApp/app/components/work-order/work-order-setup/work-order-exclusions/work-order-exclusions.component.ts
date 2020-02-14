@@ -67,15 +67,15 @@ export class WorkOrderExclusionsComponent implements OnInit, OnChanges {
     try {
       this.markupList.forEach((markup)=>{
         if(type == 'row' && markup.value == matData.markupPercentageId){
-          matData.billingRate = Number(matData.unitCost) + ((Number(matData.unitCost) / 100) * Number(markup.label))
-          matData['billingAmount'] = Number(matData['billingRate']) * Number(matData.quantity);
+          matData.billingRate = (Number(matData.unitCost) + ((Number(matData.unitCost) / 100) * Number(markup.label))).toFixed(2);
+          matData['billingAmount'] = (Number(matData['billingRate']) * Number(matData.quantity)).toFixed(2);
         }
         else if(type == 'all' && markup.value == this.overAllMarkup){
           this.workOrderExclusionsList.forEach((mData)=>{
             if(mData.billingMethodId && Number(mData.billingMethodId) == 1){
               mData.markupPercentageId = Number(this.overAllMarkup);
-              mData.billingRate = Number(mData.unitCost) + ((Number(mData.unitCost) / 100) * Number(markup.label))
-              mData['billingAmount'] = Number(mData['billingRate']) * Number(mData.quantity);
+              mData.billingRate = (Number(mData.unitCost) + ((Number(mData.unitCost) / 100) * Number(markup.label))).toFixed(2)
+              mData['billingAmount'] = (Number(mData['billingRate']) * Number(mData.quantity)).toFixed(2);
             }
           })
         }
@@ -185,13 +185,13 @@ export class WorkOrderExclusionsComponent implements OnInit, OnChanges {
     if(this.workOrderExclusionsList){
       this.workOrderExclusionsList.forEach(
         (material) => {
-          if (material.unitCost) {
-            total += Number(material.unitCost);
+          if (material.extendedCost) {
+            total += Number(material.extendedCost);
           }
         }
       )
     }
-    return total;
+    return total.toFixed(2);
   }
 
   getTotalBillingRate() {
@@ -205,7 +205,7 @@ export class WorkOrderExclusionsComponent implements OnInit, OnChanges {
         }
       )
     }
-    return total;
+    return total.toFixed(2);
   }
 
   getTotalBillingAmount() {
@@ -219,7 +219,7 @@ export class WorkOrderExclusionsComponent implements OnInit, OnChanges {
         }
       )
     }
-    return total;
+    return total.toFixed(2);
   }
 
   //   saveChargesList(event){
