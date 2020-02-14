@@ -688,7 +688,7 @@ export class AssetCapesComponent implements OnInit {
                             this.search_AircraftDashNumberList = responseData.map(dashnumbers => {
                                 console.log(dashnumbers);
                                 return {
-                                    label: dashnumbers.dashNumber,
+                                    label: dashnumbers.modelName + "-" + dashnumbers.dashNumber,
                                     value: dashnumbers.dashNumberId,
                                     modelId: dashnumbers.aircraftModelId,
                                 };
@@ -916,7 +916,7 @@ export class AssetCapesComponent implements OnInit {
                     return {
                         AircraftType: x.aircraft,
                         AircraftModel: x.model,
-                        DashNumber: x.dashNumber,
+                        DashNumber: x.model + "-" + x.dashNumber,
                         AircraftModelId: x.modelid,
                         DashNumberId: x.dashNumberId,
                         CapibilityType: capdata.selectedCap,

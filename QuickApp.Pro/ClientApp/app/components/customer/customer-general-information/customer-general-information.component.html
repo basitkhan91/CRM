@@ -179,7 +179,8 @@
                               type="checkbox"
                               name="cparent"
                               id="cparent"
-                              [(ngModel)]="generalInformation.parent"
+                              (click)="onClearParent()"
+                              [(ngModel)]="generalInformation.isParent"
                             />
                             <span class="cr"
                               ><i class="cr-icon pi pi-check"></i
@@ -189,11 +190,11 @@
                         </div>
                         <p
                           style="min-height: 10px;"
-                          *ngIf="!generalInformation.parent"
+                          *ngIf="!generalInformation.isParent"
                         ></p>
                         <div
                           class="cparent-input cust-name input-icon1"
-                          *ngIf="generalInformation.parent"
+                          *ngIf="generalInformation.isParent"
                         >
                           <div class="inner-addon right-addon inline-block">
                             <i class="fa fa-search"></i>
@@ -201,12 +202,13 @@
                               class="autocomp-customer-cstm"
                               name="parentName"
                               [(ngModel)]="
-                                generalInformation.customerParentName
+                                generalInformation.parentId
                               "
                               field="name"
                               [suggestions]="parentCustomer"
                               [forceSelection]="true"
                               emptyMessage="No Match Found"
+                              (onClear)="onClearParent()"
                               (completeMethod)="
                                 filterCustomerParentNames($event)
                               "
@@ -218,7 +220,7 @@
                               [dropdown]="true"
                               required
                             >
-                            </p-autoComplete>
+                            </p-autoComplete> <!--customerParentName-->
                           </div>
                           <div *ngIf="disableSaveParentName" style="color:red">
                             Parent name can't be same as customer name

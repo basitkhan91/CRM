@@ -107,12 +107,12 @@
                                 <div class="form-group" style="margin-left: 13px">
                                     <div>
                                         <label for="customerName" class="control-label">
-                                            PN<strong class="clr-red">*</strong> 
+                                            PN<strong class="clr-red">*</strong>
                                         </label>
                                     </div>
                                     <div>
                                         <p-autoComplete id="partNumber" title="Part Number" [(ngModel)]="sourceItemMaster.partNumber"
-                                                        (onKeyUp)=eventHandler($event) (onSelect)="partnmId($event)"   
+                                                        (onKeyUp)=eventHandler($event) (onSelect)="partnmId($event)"
                                                         [suggestions]="partCollection" name="partNumber" required
                                                         (completeMethod)="filterpartItems($event)" [size]="30" [minLength]="1"
                                                         [dropdown]="true" class="autocomplete-customer">
@@ -122,6 +122,24 @@
                                         </p-autoComplete>
                                     </div>
                                     <div *ngIf="disableSavepartNumber" style="color:red">Already Exists</div>
+                                    <div class="inline-block display-flex">
+                                        <label class="control-label">PMA</label>
+                                        <input class="form-control new-checkbox" type="checkbox"
+                                               [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceItemMaster.isPma">
+                                    </div>
+                                    <div *ngIf="sourceItemMaster.isPma">
+                                        <label class="control-label col-sm-3">OEM PN</label>
+                                        <p-autoComplete [(ngModel)]="sourceItemMaster.oemPNId"
+                                                        name="oemPNId"
+                                                        (onSelect)="selectedOEM($event)"
+                                                        field="partNumber"
+                                                        [suggestions]="oempnCollection"
+                                                        (completeMethod)="filterpn($event)" [size]="30" [minLength]="1"
+                                                        [dropdown]="true" class="p-autoComplete-ctsm col-sm-9">
+
+                                        </p-autoComplete>
+
+                                    </div>
                                     <label class="control-label">
                                         PN Description <strong class="clr-red">*</strong>
                                     </label>
@@ -137,31 +155,32 @@
                                             </ng-template>
                                         </p-autoComplete>
                                         <!-- <div *ngIf="disableSavepartDescription" style="color:red">
-                                            Already Exist
-                                        </div> -->
+            Already Exist
+        </div> -->
                                     </div>
-                                     <!-- REVISED PART-->
-                                     <div class="inline-adjust inline-block display-flex">
+                                    <!-- REVISED PART-->
+                                    <div class="inline-adjust inline-block display-flex">
 
                                         <label class="control-label spacing-label">
-                                            Revised Part                                            
+                                            Revised Part
                                         </label>
                                     </div>
                                     <div>
                                         <select [ngModelOptions]="{standalone: true}"
-                                            [(ngModel)]="sourceItemMaster.revisedPartId">
+                                                [(ngModel)]="sourceItemMaster.revisedPartId">
                                             <option class="form-control" *ngFor="let partCollectionItem of revisedPartNumbersList"
-                                                [ngValue]="partCollectionItem.itemMasterId">
-                                            {{partCollectionItem.partNumber}}
-                                        </option>
-                                    </select>
+                                                    [ngValue]="partCollectionItem.itemMasterId">
+                                                {{partCollectionItem.partNumber}}
+                                            </option>
+                                        </select>
                                     </div>
                                     <!-- /REVISED PART-->
                                     <div class="inline-block display-flex">
-                                        <label class="control-label">Serialized</label>
-                                        <input class="form-control new-checkbox" type="checkbox"
+                                        <label class="control-label">Yes or No</label>
+                                        <input class="form-control new-checkbox" type="checkbox" mattooltip="Serialized"
                                                [ngModelOptions]="{standalone: true}"
                                                [(ngModel)]="sourceItemMaster.isSerialized">
+                                        <label class="control-label">Serialized</label>
                                     </div>
                                     <div class="inline-block display-flex">
                                         <label class="control-label">Time Life</label>
@@ -178,21 +197,20 @@
                                     <div class="inline-block display-flex spacing-label">
                                         <label class="control-label">
                                             Item Classification <strong class="clr-red">*</strong>
-                                            <span style="margin-left:3px;margin-top:5px;cursor:pointer;"  matTooltip="Add Item Classification"  tooltipPosition="top" matTooltipPosition="above"><i class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#addCustomerClass" (click)="itemclassification(contentEdit)"></i></span>
+                                            <span style="margin-left:3px;margin-top:5px;cursor:pointer;" matTooltip="Add Item Classification" tooltipPosition="top" matTooltipPosition="above"><i class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#addCustomerClass" (click)="itemclassification(contentEdit)"></i></span>
                                         </label>
 
                                     </div>
-                                    <div>                             
+                                    <div>
                                         <select name="itemClassificationId" id="itemClassificationId" title="Item Classification" required class="select-drop"
                                                 [(ngModel)]="sourceItemMaster.itemClassificationId" (change)="onItemClassificationChange($event.target.value)">
                                             <ng-container *ngFor="let itemName of allitemclassificationInfo">
-                                                <option 
-                                                        [ngValue]="itemName.itemClassificationId" *ngIf="itemName.isActive">
+                                                <option [ngValue]="itemName.itemClassificationId" *ngIf="itemName.isActive">
                                                     {{itemName.description}}
                                                 </option>
                                             </ng-container>
                                         </select>
-                                    </div> 
+                                    </div>
                                     <div class="inline-block display-flex spacing-label">
                                         <label class="control-label">
                                             Item Group  <strong class="clr-red" *ngIf="selectedItemClassificationName == 'Rotable'">*</strong>
@@ -215,167 +233,166 @@
                                         <label class="control-label">Acquisition Type:</label>
                                     </div>
                                     <div>
-                                            <!--<select [ngModelOptions]="{standalone: true}" required class="select-drop"-->
-                                            <select name="itemGroupId" class="select-drop"
-                                                    [(ngModel)]="sourceItemMaster.AssetAcquistionTypeId">
-                                                <ng-container *ngFor="let acquisitionTypeItem of AssetAcquisitionTypeList">
-                                                    <option [ngValue]="acquisitionTypeItem.assetAcquisitionTypeId" >
-                                                        {{acquisitionTypeItem.name}}
-                                                    </option>
-                                                </ng-container>
-                                            </select>
-                                        
+                                        <!--<select [ngModelOptions]="{standalone: true}" required class="select-drop"-->
+                                        <select name="assetAcquistionTypeId" class="select-drop"
+                                                [(ngModel)]="sourceItemMaster.assetAcquistionTypeId">
+                                            <ng-container *ngFor="let acquisitionTypeItem of AssetAcquisitionTypeList">
+                                                <option [ngValue]="acquisitionTypeItem.assetAcquisitionTypeId">
+                                                    {{acquisitionTypeItem.name}}
+                                                </option>
+                                            </ng-container>
+                                        </select>
+
                                         <!-- <div class="radio-value">
-                                            <label class="radio-inline">
-                                                <input type="radio" [value]="true" [ngModelOptions]="{standalone: true}"
-                                                       [(ngModel)]="sourceItemMaster.isAcquiredMethodBuy">
-                                                Buy
-                                            </label>
-                                            <label class="radio-inline">
-                                                <input type="radio" [value]="false" [ngModelOptions]="{standalone: true}"
-                                                       [(ngModel)]="sourceItemMaster.isAcquiredMethodBuy">
-                                                Make
-                                            </label>
-                                        </div> -->
+            <label class="radio-inline">
+                <input type="radio" [value]="true" [ngModelOptions]="{standalone: true}"
+                       [(ngModel)]="sourceItemMaster.isAcquiredMethodBuy">
+                Buy
+            </label>
+            <label class="radio-inline">
+                <input type="radio" [value]="false" [ngModelOptions]="{standalone: true}"
+                       [(ngModel)]="sourceItemMaster.isAcquiredMethodBuy">
+                Make
+            </label>
+        </div> -->
                                     </div>
                                     <!--Expiration Date-->
                                     <div class="inline-block display-flex spacing-label">
-                                            <label class="control-label">Expiration Date</label>
-                                            <input class="form-control new-checkbox" type="checkbox"
-                                                   [ngModelOptions]="{standalone: true}"
-                                                   [(ngModel)]="sourceItemMaster.isExpirationDateAvailable">
+                                        <label class="control-label">Expiration Date</label>
+                                        <input class="form-control new-checkbox" type="checkbox"
+                                               [ngModelOptions]="{standalone: true}"
+                                               [(ngModel)]="sourceItemMaster.isExpirationDateAvailable">
+                                    </div>
+                                    <div class="expdate-input"
+                                         *ngIf="sourceItemMaster.isExpirationDateAvailable">
+                                        <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}"
+                                                    [(ngModel)]="sourceItemMaster.expirationDate"></p-calendar>
+                                    </div>
+                                    <div class="snumber-block2" *ngIf="sourceItemMaster.isExpirationDateAvailable">
+                                        <div class="form-group col-sm-12">
+                                            <label class="control-label control-alter1 col-sm-5">Rec'd date</label>
+                                            <div class="col-sm-7">
+                                                <label class="wauto">
+                                                    <input type="checkbox" name="exp-date-radio" style="margin-left:11px; margin-top: 10px !important"
+                                                           id="exp-rec-date-radio" [ngModelOptions]="{standalone: true}"
+                                                           [(ngModel)]="sourceItemMaster.isReceivedDateAvailable">
+                                                </label>
+                                                <input *ngIf="sourceItemMaster.isReceivedDateAvailable"
+                                                       class="form-control number exp-date-inputs w48" type="number" pKeyFilter="int"
+                                                       id="exp-rec-date-input" name="" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==5) return false;"
+                                                       [ngModelOptions]="{standalone: true}"
+                                                       [(ngModel)]="sourceItemMaster.daysReceived">
+                                                <span *ngIf="sourceItemMaster.isReceivedDateAvailable" style="margin-left: 8px;">Days</span>
+                                            </div>
                                         </div>
-                                        <div class="expdate-input"
-                                             *ngIf="sourceItemMaster.isExpirationDateAvailable">
-                                            <p-calendar [showIcon]="true" [ngModelOptions]="{standalone: true}"
-                                                        [(ngModel)]="sourceItemMaster.expirationDate"></p-calendar>
+                                        <div class="form-group col-sm-12">
+                                            <label class="control-label control-alter col-sm-5">Mfg date</label>
+                                            <div class="col-sm-7">
+                                                <label class="wauto">
+                                                    <input type="checkbox" style="margin-left:11px !important" name="exp-date-radio"
+                                                           id="exp-rec-date-radio" [ngModelOptions]="{standalone: true}"
+                                                           [(ngModel)]="sourceItemMaster.isManufacturingDateAvailable">
+                                                </label>
+                                                <input *ngIf="sourceItemMaster.isManufacturingDateAvailable"
+                                                       class="form-control number exp-date-inputs w48" type="number" pKeyFilter="int"
+                                                       id="exp-rec-date-input" name="" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==5) return false;"
+                                                       [ngModelOptions]="{standalone: true}"
+                                                       [(ngModel)]="sourceItemMaster.manufacturingDays">
+                                                <span *ngIf="sourceItemMaster.isManufacturingDateAvailable" style="margin-left: 8px;">Days</span>
+                                            </div>
                                         </div>
-                                        <div class="snumber-block2" *ngIf="sourceItemMaster.isExpirationDateAvailable">
-                                            <div class="form-group col-sm-12">
-                                                <label class="control-label control-alter1 col-sm-5">Rec'd date</label>
-                                                <div class="col-sm-7">
-                                                    <label class="wauto">
-                                                        <input type="checkbox" name="exp-date-radio" style="margin-left:11px; margin-top: 10px !important"
-                                                               id="exp-rec-date-radio" [ngModelOptions]="{standalone: true}"
-                                                               [(ngModel)]="sourceItemMaster.isReceivedDateAvailable">
-                                                    </label>
-                                                    <input *ngIf="sourceItemMaster.isReceivedDateAvailable"
-                                                           class="form-control number exp-date-inputs w48" type="number" pKeyFilter="int"
-                                                           id="exp-rec-date-input" name="" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==5) return false;"
-                                                           [ngModelOptions]="{standalone: true}"
-                                                           [(ngModel)]="sourceItemMaster.daysReceived">
-                                                    <span *ngIf="sourceItemMaster.isReceivedDateAvailable" style="margin-left: 8px;">Days</span>
-                                                </div>
+                                        <div class="form-group col-sm-12">
+                                            <label class="control-label control-alter col-sm-5">Tag date</label>
+                                            <div class="col-sm-7">
+                                                <label class="wauto">
+                                                    <input type="checkbox" name="exp-date-radio" style="margin-left:11px !important"
+                                                           id="exp-tag-date-radio" [ngModelOptions]="{standalone: true}"
+                                                           [(ngModel)]="sourceItemMaster.isTagDateAvailable">
+                                                </label>
+                                                <input *ngIf="sourceItemMaster.isTagDateAvailable"
+                                                       class="form-control number exp-date-inputs w48" type="text" pKeyFilter="int"
+                                                       id="exp-tag-date-input" name="" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==5) return false;"
+                                                       [ngModelOptions]="{standalone: true}"
+                                                       [(ngModel)]="sourceItemMaster.tagDays">
+                                                <span *ngIf="sourceItemMaster.isTagDateAvailable" style="margin-left: 8px;">Days</span>
                                             </div>
-                                            <div class="form-group col-sm-12">
-                                                <label class="control-label control-alter col-sm-5">Mfg date</label>
-                                                <div class="col-sm-7">
-                                                    <label class="wauto">
-                                                        <input type="checkbox" style="margin-left:11px !important" name="exp-date-radio"
-                                                               id="exp-rec-date-radio" [ngModelOptions]="{standalone: true}"
-                                                               [(ngModel)]="sourceItemMaster.isManufacturingDateAvailable">
-                                                    </label>
-                                                    <input *ngIf="sourceItemMaster.isManufacturingDateAvailable"
-                                                           class="form-control number exp-date-inputs w48" type="number" pKeyFilter="int"
-                                                           id="exp-rec-date-input" name="" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==5) return false;"
-                                                           [ngModelOptions]="{standalone: true}"
-                                                           [(ngModel)]="sourceItemMaster.manufacturingDays">
-                                                    <span *ngIf="sourceItemMaster.isManufacturingDateAvailable" style="margin-left: 8px;">Days</span>
-                                                </div>
-                                            </div>
-                                            <div class="form-group col-sm-12">
-                                                <label class="control-label control-alter col-sm-5">Tag date</label>
-                                                <div class="col-sm-7">
-                                                    <label class="wauto">
-                                                        <input type="checkbox" name="exp-date-radio" style="margin-left:11px !important"
-                                                               id="exp-tag-date-radio" [ngModelOptions]="{standalone: true}"
-                                                               [(ngModel)]="sourceItemMaster.isTagDateAvailable">
-                                                    </label>
-                                                    <input *ngIf="sourceItemMaster.isTagDateAvailable"
-                                                           class="form-control number exp-date-inputs w48" type="text" pKeyFilter="int"
-                                                           id="exp-tag-date-input" name="" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==5) return false;"
-                                                           [ngModelOptions]="{standalone: true}"
-                                                           [(ngModel)]="sourceItemMaster.tagDays">
-                                                    <span *ngIf="sourceItemMaster.isTagDateAvailable" style="margin-left: 8px;">Days</span>
-                                                </div>
-                                            </div>
-                                            <div class="form-group col-sm-12">
-                                                <label class="control-label control-alter col-sm-5">Open date</label>
-                                                <div class="col-sm-7">
-                                                    <label class="wauto">
-                                                        <input type="checkbox" name="exp-date-radio" style="margin-left:11px !important"
-                                                               id="exp-open-date-radio" [ngModelOptions]="{standalone: true}"
-                                                               [(ngModel)]="sourceItemMaster.isOpenDateAvailable">
-                                                    </label>
-                                                    <input *ngIf="sourceItemMaster.isOpenDateAvailable"
-                                                           class="form-control number exp-date-inputs w48" type="number" pKeyFilter="int"
-                                                           id="exp-open-date-input" name="" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==5) return false;"
-                                                           [ngModelOptions]="{standalone: true}"
-                                                           [(ngModel)]="sourceItemMaster.openDays">
-                                                    <span *ngIf="sourceItemMaster.isOpenDateAvailable" style="margin-left: 8px;">Days</span>
-                                                </div>
-                                            </div>
-                                            <div class="form-group col-sm-12">
-                                                <label class="control-label control-alter col-sm-5">Shipped date</label>
-                                                <div class="col-sm-7">
-                                                    <label class="wauto">
-                                                        <input type="checkbox" name="exp-date-radio" style="margin-left:11px !important" id="exp-shipped-date-radio"
-                                                               [ngModelOptions]="{standalone: true}"
-                                                               [(ngModel)]="sourceItemMaster.isShippedDateAvailable">
-                                                    </label>
-                                                    <input *ngIf="sourceItemMaster.isShippedDateAvailable"
-                                                           class="form-control number exp-date-inputs w48" type="number" pKeyFilter="int"
-                                                           id="exp-shipped-date-input" name="" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==5) return false;"
-                                                           [ngModelOptions]="{standalone: true}"
-                                                           [(ngModel)]="sourceItemMaster.shippedDays">
-                                                    <span *ngIf="sourceItemMaster.isShippedDateAvailable" style="margin-left: 8px;">Days</span>
-                                                </div>
-                                            </div>
-                                            <div class="form-group col-sm-12">
-                                                <label class="control-label control-alter col-sm-5">Other date</label>
-                                                <div class="col-sm-7">
-                                                    <label class="wauto">
-                                                        <input type="checkbox" name="exp-date-radio" style="margin-left:11px !important" id="exp-shipped-date-radio"
-                                                               [ngModelOptions]="{standalone: true}"
-                                                               [(ngModel)]="sourceItemMaster.isOtherDateAvailable">
-                                                    </label>
-                                                    <input *ngIf="sourceItemMaster.isOtherDateAvailable"
-                                                           class="form-control number exp-date-inputs w48" type="number" pKeyFilter="int"
-                                                           id="exp-shipped-date-input" name="" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==5) return false;"
-                                                           [ngModelOptions]="{standalone: true}"
-                                                           [(ngModel)]="sourceItemMaster.otherDays">
-                                                    <span *ngIf="sourceItemMaster.isOtherDateAvailable" style="margin-left: 8px;">Days</span>
-                                                </div>
-                                            </div>
-                                            <div class="clear"></div>
                                         </div>
-                                        <!--/Expiration Date-->
-                                        <!--Shelf Life-->
-                                        <div class="inline-block display-flex">
-                                            <label class="control-label">Shelf Life</label>
-                                            <input class="form-control new-checkbox" type="checkbox"
-                                                   [ngModelOptions]="{standalone: true}"
-                                                   [(ngModel)]="sourceItemMaster.shelfLife">
-                                            &nbsp;
-                                            <input *ngIf="sourceItemMaster.shelfLife"
-                                            class="form-control shelf1 number exp-date-inputs w50" type="number" onKeyPress="if(this.value.length==5) return false;" pKeyFilter="int"
-                                            id="exp-shipped-date-input" name="shelfDescription"
-                                            [(ngModel)]="sourceItemMaster.shelfLifeAvailable" required>
-                                            <!-- <input *ngIf="sourceItemMaster.shelfLife"
-                                                   class="form-control shelf1 number exp-date-inputs w50" type="number" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==5) return false;" pKeyFilter="int"
-                                                   id="exp-shipped-date-input" name="shelfDescription"
-                                                   [(ngModel)]="sourceItemMaster.shelfLifeAvailable" required> -->
-                                            <strong class="shelf"><span *ngIf="sourceItemMaster.shelfLife">Days</span></strong>
+                                        <div class="form-group col-sm-12">
+                                            <label class="control-label control-alter col-sm-5">Open date</label>
+                                            <div class="col-sm-7">
+                                                <label class="wauto">
+                                                    <input type="checkbox" name="exp-date-radio" style="margin-left:11px !important"
+                                                           id="exp-open-date-radio" [ngModelOptions]="{standalone: true}"
+                                                           [(ngModel)]="sourceItemMaster.isOpenDateAvailable">
+                                                </label>
+                                                <input *ngIf="sourceItemMaster.isOpenDateAvailable"
+                                                       class="form-control number exp-date-inputs w48" type="number" pKeyFilter="int"
+                                                       id="exp-open-date-input" name="" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==5) return false;"
+                                                       [ngModelOptions]="{standalone: true}"
+                                                       [(ngModel)]="sourceItemMaster.openDays">
+                                                <span *ngIf="sourceItemMaster.isOpenDateAvailable" style="margin-left: 8px;">Days</span>
+                                            </div>
                                         </div>
-                                        <!--/Shelf Life-->
+                                        <div class="form-group col-sm-12">
+                                            <label class="control-label control-alter col-sm-5">Shipped date</label>
+                                            <div class="col-sm-7">
+                                                <label class="wauto">
+                                                    <input type="checkbox" name="exp-date-radio" style="margin-left:11px !important" id="exp-shipped-date-radio"
+                                                           [ngModelOptions]="{standalone: true}"
+                                                           [(ngModel)]="sourceItemMaster.isShippedDateAvailable">
+                                                </label>
+                                                <input *ngIf="sourceItemMaster.isShippedDateAvailable"
+                                                       class="form-control number exp-date-inputs w48" type="number" pKeyFilter="int"
+                                                       id="exp-shipped-date-input" name="" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==5) return false;"
+                                                       [ngModelOptions]="{standalone: true}"
+                                                       [(ngModel)]="sourceItemMaster.shippedDays">
+                                                <span *ngIf="sourceItemMaster.isShippedDateAvailable" style="margin-left: 8px;">Days</span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-sm-12">
+                                            <label class="control-label control-alter col-sm-5">Other date</label>
+                                            <div class="col-sm-7">
+                                                <label class="wauto">
+                                                    <input type="checkbox" name="exp-date-radio" style="margin-left:11px !important" id="exp-shipped-date-radio"
+                                                           [ngModelOptions]="{standalone: true}"
+                                                           [(ngModel)]="sourceItemMaster.isOtherDateAvailable">
+                                                </label>
+                                                <input *ngIf="sourceItemMaster.isOtherDateAvailable"
+                                                       class="form-control number exp-date-inputs w48" type="number" pKeyFilter="int"
+                                                       id="exp-shipped-date-input" name="" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==5) return false;"
+                                                       [ngModelOptions]="{standalone: true}"
+                                                       [(ngModel)]="sourceItemMaster.otherDays">
+                                                <span *ngIf="sourceItemMaster.isOtherDateAvailable" style="margin-left: 8px;">Days</span>
+                                            </div>
+                                        </div>
+                                        <div class="clear"></div>
+                                    </div>
+                                    <!--/Expiration Date-->
+                                    <!--Shelf Life-->
+                                    <div class="inline-block display-flex">
+                                        <label class="control-label">Shelf Life</label>
+                                        <input class="form-control new-checkbox" type="checkbox"
+                                               [ngModelOptions]="{standalone: true}"
+                                               [(ngModel)]="sourceItemMaster.shelfLife">
+                                        &nbsp;
+                                        <input *ngIf="sourceItemMaster.shelfLife"
+                                               class="form-control shelf1 number exp-date-inputs w50" type="number" onKeyPress="if(this.value.length==5) return false;" pKeyFilter="int"
+                                               id="exp-shipped-date-input" name="shelfDescription"
+                                               [(ngModel)]="sourceItemMaster.shelfLifeAvailable" required>
+                                        <!-- <input *ngIf="sourceItemMaster.shelfLife"
+               class="form-control shelf1 number exp-date-inputs w50" type="number" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==5) return false;" pKeyFilter="int"
+               id="exp-shipped-date-input" name="shelfDescription"
+               [(ngModel)]="sourceItemMaster.shelfLifeAvailable" required> -->
+                                        <strong class="shelf"><span *ngIf="sourceItemMaster.shelfLife">Days</span></strong>
+                                    </div>
+                                    <!--/Shelf Life-->
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">                                    
-                                    <div class="inline-block display-flex inline-adjust spacing-label">
+                                    <!--<div class="inline-block display-flex inline-adjust spacing-label">
                                         <label class="control-label">
                                             Provision
-                                            <!-- <span style="margin-left:3px;margin-top:5px;cursor:pointer;"><i class="fa fa-plus-circle fa-lg" data-toggle="modal" data-target="#addCustomerClass" (click)="provisionope(contents)"></i></span> -->
                                         </label>
                                     </div>
                                     <div>
@@ -386,19 +403,19 @@
                                                 {{provisionName.description}}
                                             </option>
                                         </select>
-                                    </div>
+                                    </div>-->
                                     <div class="inline-block display-flex">
                                         <label class="control-label ">DER</label>
                                         <input class="form-control new-checkbox" type="checkbox"
                                                [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceItemMaster.der">
                                     </div>
                                     <div class="inline-block display-flex" style="margin-top: 5px;">
-                                        <label class="control-label">Hazardous Material</label>
+                                        <label class="control-label">Hazardous Material</label>  &nbsp; &nbsp;
                                         <input class="form-control new-checkbox" type="checkbox"
                                                [ngModelOptions]="{standalone: true}"
                                                [(ngModel)]="sourceItemMaster.isHazardousMaterial">
                                     </div>
-                                    <div class="inline-block display-flex">
+                                    <!--<div class="inline-block display-flex">
                                         <label class="control-label">PMA</label>
                                         <input class="form-control new-checkbox" type="checkbox"
                                                [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceItemMaster.isPma">
@@ -415,7 +432,7 @@
 
                                         </p-autoComplete>
 
-                                    </div>
+                                    </div>-->
                                     <div class="clear"></div>
                                     
                                     <div class="inline-block display-flex spacing-label">
@@ -710,11 +727,11 @@
                                     <!-- Site-->
                                     <div class="inline-adjust inline-block display-flex">
                                         <label class="control-label spacing-label">
-                                            Site                                           
+                                            Site <strong class="clr-red">*</strong>                                          
                                         </label>
                                     </div>
                                     <div>
-                                        <select [(ngModel)]="sourceItemMaster.siteId" [ngModelOptions]="{standalone: true}" (ngModelChange)="siteValueChange()">
+                                        <select id="siteId" name="siteId" [(ngModel)]="sourceItemMaster.siteId" required (ngModelChange)="siteValueChange()">
                                             <option *ngFor="let site of allSites" [ngValue]="site.siteId">{{site.name}}</option>
                                         </select>
                                     </div>
@@ -723,11 +740,11 @@
                                     <div class="inline-adjust inline-block display-flex">
 
                                         <label class="control-label spacing-label">
-                                            Warehouse                                           
+                                            Warehouse  <strong class="clr-red">*</strong>                                         
                                         </label>
                                     </div>
                                     <div>
-                                        <select [(ngModel)]="sourceItemMaster.warehouseId" [ngModelOptions]="{standalone: true}" (ngModelChange)="wareHouseValueChange()">
+                                        <select id="warehouseId" name="warehouseId" [(ngModel)]="sourceItemMaster.warehouseId" required (ngModelChange)="wareHouseValueChange()">
                                             <option *ngFor="let warehouse of wareHouseData" [ngValue]="warehouse.warehouseId">{{warehouse.warehouse}}</option>
                                         </select>
                                     </div>
@@ -736,11 +753,11 @@
                                     <div class="inline-adjust inline-block display-flex">
 
                                         <label class="control-label spacing-label">
-                                            Location                                           
+                                            Location <strong class="clr-red">*</strong>                                          
                                         </label>
                                     </div>
                                     <div>
-                                        <select [(ngModel)]="sourceItemMaster.locationId" [ngModelOptions]="{standalone: true}" (ngModelChange)="locationValueChange()">
+                                        <select id="locationId" name="locationId" [(ngModel)]="sourceItemMaster.locationId" required (ngModelChange)="locationValueChange()">
                                             <option *ngFor="let location of locationData" [ngValue]="location.locationId">{{location.location}}</option>
                                         </select>
                                     </div>
@@ -776,7 +793,7 @@
                                         <label class="control-label">Hot Item</label>
                                         <input class="form-control new-checkbox" type="checkbox"
                                                [ngModelOptions]="{standalone: true}"
-                                               [(ngModel)]="sourceItemMaster.hotItem">
+                                               [(ngModel)]="sourceItemMaster.isHotItem">
                                     </div>
                                     <!--/Hot Item-->
                                     
@@ -1557,56 +1574,61 @@
                     <div class="clear"></div>
                     <div class="md-stepper-horizontal orange">
                         <div class="md-step"
-                                [ngClass]="{ active: activeNTAEMenuItem >= 1 , editable : activeNTAEMenuItem === 1}" 
-                                (click)="changeOfNTAETab('NHA')">
+                             [ngClass]="{ active: activeNTAEMenuItem >= 1 , editable : activeNTAEMenuItem === 1}"
+                             (click)="changeOfNTAETab('NHA')">
                             <div class="md-step-title">NHA</div>
                             <div class="md-step-bar-left"></div>
                             <div class="md-step-bar-right"></div>
                         </div>
                         <div class="md-step"
-                                [ngClass]="{ active: activeNTAEMenuItem >= 2, editable : activeNTAEMenuItem === 2 }"
-                                (click)="changeOfNTAETab('TLA')"
-                                [class.isDisabled]="!isNTAEDisabledSteps">
+                             [ngClass]="{ active: activeNTAEMenuItem >= 2, editable : activeNTAEMenuItem === 2 }"
+                             (click)="changeOfNTAETab('TLA')"
+                             [class.isDisabled]="!isNTAEDisabledSteps">
                             <div class="md-step-title">TLA</div>
                             <div class="md-step-bar-left"></div>
                             <div class="md-step-bar-right"></div>
                         </div>
                         <div class="md-step"
-                                [ngClass]="{ active: activeNTAEMenuItem >= 3 , editable : activeNTAEMenuItem === 3 }"
-                                (click)="changeOfNTAETab('Alternate')"
-                                [class.isDisabled]="!isNTAEDisabledSteps">
+                             [ngClass]="{ active: activeNTAEMenuItem >= 3 , editable : activeNTAEMenuItem === 3 }"
+                             (click)="changeOfNTAETab('Alternate')"
+                             [class.isDisabled]="!isNTAEDisabledSteps">
                             <div class="md-step-title">Alternate</div>
                             <div class="md-step-bar-left"></div>
                             <div class="md-step-bar-right"></div>
                         </div>
 
                         <div class="md-step"
-                                [ngClass]="{ active: activeNTAEMenuItem >= 4 , editable : activeNTAEMenuItem === 4}"
-                                (click)="changeOfNTAETab('Equivalency')"
-                                [class.isDisabled]="!isNTAEDisabledSteps">
+                             [ngClass]="{ active: activeNTAEMenuItem >= 4 , editable : activeNTAEMenuItem === 4}"
+                             (click)="changeOfNTAETab('Equivalency')"
+                             [class.isDisabled]="!isNTAEDisabledSteps">
                             <div class="md-step-title">Equivalency</div>
                             <div class="md-step-bar-left"></div>
                             <div class="md-step-bar-right"></div>
-                        </div>    
+                        </div>
                     </div>
                     <div *ngIf="currentNTAETab != ''">
                         <app-ntae-alternate [selectedTab]="currentNTAETab"></app-ntae-alternate>
                     </div>
-                       
-                    <!-- <div [ngClass]="{hideTab : currentNTAETab !== 'NHA'}">
-                        <app-ntae-alternate [selectedTab]="currentNTAETab"></app-ntae-alternate>
-                    </div>
-                    <div [ngClass]="{hideTab : currentNTAETab !== 'TLA'}">
-                            <app-ntae-alternate [selectedTab]="currentNTAETab"></app-ntae-alternate>
-                    </div>
-                    <div [ngClass]="{hideTab : currentNTAETab !== 'Alternate'}">
-                            <app-ntae-alternate [selectedTab]="currentNTAETab"></app-ntae-alternate>
-                        </div>
-                    <div [ngClass]="{hideTab : currentNTAETab !== 'Equivalency'}">
-                         <app-ntae-alternate [selectedTab]="currentNTAETab"></app-ntae-alternate>
 
-                    </div> -->
-                                           
+                    <!-- <div [ngClass]="{hideTab : currentNTAETab !== 'NHA'}">
+        <app-ntae-alternate [selectedTab]="currentNTAETab"></app-ntae-alternate>
+    </div>
+    <div [ngClass]="{hideTab : currentNTAETab !== 'TLA'}">
+            <app-ntae-alternate [selectedTab]="currentNTAETab"></app-ntae-alternate>
+    </div>
+    <div [ngClass]="{hideTab : currentNTAETab !== 'Alternate'}">
+            <app-ntae-alternate [selectedTab]="currentNTAETab"></app-ntae-alternate>
+        </div>
+    <div [ngClass]="{hideTab : currentNTAETab !== 'Equivalency'}">
+         <app-ntae-alternate [selectedTab]="currentNTAETab"></app-ntae-alternate>
+
+    </div> -->
+
+                    <button class="btn btn-primary pull-right submit-btn" (click)="moveExportInformations()" type="button" style="height: 30px; width: 100px">Save & Next</button> &nbsp;
+
+                    <button class="btn btn-primary pull-right submit-btn" type="button" (click)="movePurchaseSales()" style="height: 30px">Previous</button>
+
+
                 </div>
                 <!-- NHA, TLA, Alternate, Equivalency CLOSE-->
                 <!--Exchange and loans Tab  -->
@@ -1644,20 +1666,20 @@
                                 <div class="col-md-3" style="margin-left: 13px">
                                     <div class="form-group">
                                         <label for="eccn" class="control-label">
-                                            ECCN
+                                            ECCN <span style="color: red;">*</span>
                                         </label>
 
-                                        <input type="text" class="input-field-value" maxlength="10" 
+                                        <input type="text" class="input-field-value" maxlength="10" required pInputText
            [pattern]="'^[a-zA-Z0-9 \'\-]+$'"  [(ngModel)]="exportInfo.ExportECCN" name="ExportECCN" />
 
                                         <label class="control-label">
-                                            ITAR Num <strong class="clr-red">*</strong>
+                                            ITAR Num 
                                         </label>
-                                        <input type="text" id="itarNumber" title="ITAR Number" class="input-field-value" required pInputText [(ngModel)]="exportInfo.ITARNumber" name="itarNumber" />
-                                        <label class="control-label">Country <span style="color: red">*</span></label>
+                                        <input type="text" id="itarNumber" title="ITAR Number" class="input-field-value" [(ngModel)]="exportInfo.ITARNumber" name="itarNumber" />
+                                        <label class="control-label">Country </label>
 
 
-                                        <p-autoComplete required
+                                        <p-autoComplete 
                                                         class="p-autoComplete-ctsm"
                                                         [(ngModel)]="exportInfo.ExportCountryId"
                                                         name="exportCountry"
@@ -1679,11 +1701,11 @@
                                             </ng-template>
                                         </p-autoComplete> -->
 
-                                        <label class="control-label">Value <span style="color: red">*</span></label>
-                                        <input type="number" class="input-field-value" pInputText pKeyFilter="num" required maxlength="15" [(ngModel)]="exportInfo.ExportValue" name="exportValue" id="exportValue" title="Export Value" />
-                                        <label class="control-label">Currency <span style="color: red">*</span></label>
+                                        <label class="control-label">Value </label>
+                                        <input type="number" class="input-field-value" pInputText pKeyFilter="num"  maxlength="15" [(ngModel)]="exportInfo.ExportValue" name="exportValue" id="exportValue" title="Export Value" />
+                                        <label class="control-label">Currency </label>
                                         <select class="select-value-drop1"
-                                                [(ngModel)]="exportInfo.ExportCurrencyId" (change)="changeValueStringToInt($event.target.value)" required name="ExportCurrencyId" title="Currency" id="exportCurrencyId">
+                                                [(ngModel)]="exportInfo.ExportCurrencyId" (change)="changeValueStringToInt($event.target.value)" name="ExportCurrencyId" title="Currency" id="exportCurrencyId">
                                             <option value=null> Select Currency</option>
                                             <option class="form-control" *ngFor="let currencyName of allCurrencyInfo"
                                                     [ngValue]="currencyName.currencyId">
@@ -1697,20 +1719,20 @@
                                         <div class="inline-block display-flex">
                                             <div>
                                                 <label for="weight" class="control-label">
-                                                    Weight <strong class="clr-red">*</strong> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+                                                    Weight &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
 
                                                 </label>
                                                 <span class="display-flex inline-block">
-                                                    <input type="number" class="input-field-value" pKeyFilter="num" pInputText maxlength="10" required [(ngModel)]="exportInfo.ExportWeight" name="exportWeight" id="exportWeight" title="Export Weight" />
+                                                    <input type="number" class="input-field-value" pKeyFilter="num" pInputText maxlength="10" [(ngModel)]="exportInfo.ExportWeight" name="exportWeight" id="exportWeight" title="Export Weight" />
 
                                                 </span>
                                             </div>
                                             <div>
                                                 <label for="weight" class="control-label">
-                                                    UOM <strong class="clr-red">*</strong>
+                                                    UOM 
                                                 </label>
                                                 <span class="display-flex inline-block">
-                                                    <select class="form-control w80 select-value-drop" id="ExportWeightUnit" name="ExportWeightUnit" required (change)="changeValueStringToInt($event.target.value)" [(ngModel)]="exportInfo.ExportWeightUnit" title="Weight Unit">
+                                                    <select class="form-control w80 select-value-drop" id="ExportWeightUnit" name="ExportWeightUnit" (change)="changeValueStringToInt($event.target.value)" [(ngModel)]="exportInfo.ExportWeightUnit" title="Weight Unit">
                                                         <option *ngFor="let unitName of allPurchaseUnitOfMeasureinfo"
                                                                 [ngValue]="unitName.unitOfMeasureId">
                                                             {{unitName.shortName}}
@@ -1720,14 +1742,14 @@
                                             </div>
                                         </div>
                                         <label class="control-label">
-                                            Export UOM <span style="color: red;">*</span>
+                                            Export UOM 
                                             <span style="margin-left: 3px; margin-top: 5px; cursor: pointer;" matTooltip="Add Export UOM" tooltipPosition="top" matTooltipPosition="above">
                                                 <i class="fa fa-plus-circle fa-lg" data-toggle="modal"
                                                    data-target="#ModalUnit" (click)="exportUOmOpen(ModalUnit)"></i>
                                             </span>
                                         </label>
                                         <select class="select-value-drop1" id="ExportUomId" name="ExportUomId" title="Export UOM" [(ngModel)]="exportInfo.ExportUomId"
-                                                (change)="changeValueStringToInt($event.target.value)" name="exportUOMId" required>
+                                                (change)="changeValueStringToInt($event.target.value)" name="exportUOMId">
                                             <option *ngFor="let unitName of allPurchaseUnitOfMeasureinfo"
                                                     [ngValue]="unitName.unitOfMeasureId">
                                                 {{unitName.shortName}}
@@ -1758,18 +1780,18 @@
                                                
                                            
                                             </div>
-                                                <label class="control-label">Classification <span style="color: red;">*</span></label>
+                                                <label class="control-label">Classification </label>
                                                 <div class="inline-block display-flex">
                                                     <div>
                                                         <label class="control-label">
-                                                            <input type="radio" id="IsExportUnspecified" name="IsExportUnspecified" [value]="true"  [(ngModel)]="exportInfo.IsExportUnspecified" [checked]="exportInfo.IsExportUnspecified == true" (change)="validateClassificationRequired(exportInfo)">
+                                                            <input type="radio" id="IsExportUnspecified" name="IsExportUnspecified" [value]="true"  [(ngModel)]="exportInfo.IsExportUnspecified" [checked]="exportInfo.IsExportUnspecified == true" (change)="validateClassificationRequired()">
 
                                                             Unspecified
                                                         </label>
                                                     </div>
                                                     <div>
                                                         <label class="control-label">
-                                                            <input type="radio" id="IsExportUnspecified" name="IsExportNONMilitary" [value]="true" [(ngModel)]="exportInfo.IsExportNONMilitary" [checked]="exportInfo.IsExportNONMilitary == true" (change)="validateClassificationRequired(exportInfo)">
+                                                            <input type="radio" id="IsExportUnspecified" name="IsExportNONMilitary" [value]="true" [(ngModel)]="exportInfo.IsExportNONMilitary" [checked]="exportInfo.IsExportNONMilitary == true" (change)="validateClassificationRequired()">
 
                                                             NON-Military
                                                         </label>
@@ -1778,14 +1800,14 @@
                                                 <div class="inline-block display-flex">
                                                     <div>
                                                         <label class="control-label">
-                                                            <input type="radio" id="IsExportUnspecified" name="IsExportMilitary" [value]="true" [(ngModel)]="exportInfo.IsExportMilitary" [checked]="exportInfo.IsExportMilitary == true" (change)="validateClassificationRequired(exportInfo)">
+                                                            <input type="radio" id="IsExportUnspecified" name="IsExportMilitary" [value]="true" [(ngModel)]="exportInfo.IsExportMilitary" [checked]="exportInfo.IsExportMilitary == true" (change)="validateClassificationRequired()">
 
                                                             Miltary
                                                         </label>
                                                     </div>
                                                     <div>
                                                         <label class="control-label">
-                                                            <input type="radio" id="IsExportUnspecified" name="IsExportDual" [value]="true" [(ngModel)]="exportInfo.IsExportDual" [checked]="exportInfo.IsExportDual == true" (change)="validateClassificationRequired(exportInfo)">
+                                                            <input type="radio" id="IsExportUnspecified" name="IsExportDual" [value]="true" [(ngModel)]="exportInfo.IsExportDual" [checked]="exportInfo.IsExportDual == true" (change)="validateClassificationRequired()">
 
                                                             Dual
                                                         </label>
@@ -1951,7 +1973,7 @@
                             </div>
 
                             <div class="col-md-2">
-                                <button style="margin-top: 20px;" type="button" class="btn btn-primary" (click)="addATAMapping();" data-dismiss="modal">Add</button>
+                                <!--<button style="margin-top: 20px;" type="button" class="btn btn-primary" (click)="addATAMapping();" data-dismiss="modal">Add</button>-->
                             </div>
                         </div>
                     </form>
@@ -1959,6 +1981,7 @@
 
                 </div>
                 <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" (click)="addATAMapping();" data-dismiss="modal">Add</button>
                     <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                 </div>
             </div>

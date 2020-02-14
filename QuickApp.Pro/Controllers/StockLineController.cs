@@ -363,7 +363,7 @@ namespace QuickApp.Pro.Controllers
                     actionobject.IntegrationPortalId = item.IntegrationPortalId;
                     actionobject.IsListed = item.IsListed;
                     actionobject.CreatedDate = item.CreatedDate.HasValue ? item.CreatedDate.Value : DateTime.Now;
-                    actionobject.UpdatedDate = item.UpdatedDate;
+                    actionobject.UpdatedDate =Convert.ToDateTime(item.UpdatedDate);
                     actionobject.CreatedBy = item.CreatedBy;
                     actionobject.UpdatedBy = item.UpdatedBy;
                     actionobject.IsActive = true;
@@ -497,13 +497,13 @@ namespace QuickApp.Pro.Controllers
 
                     if (stockLineViewModel.TimeLifes != null)
                     {
-                        if(stockLineViewModel.TimeLifes.TimeLifeCyclesId>0)
+                        if (stockLineViewModel.TimeLifes.TimeLifeCyclesId > 0)
                         {
                             stockLineViewModel.TimeLifes.UpdatedDate = DateTime.Now;
                             _context.TimeLife.Update(stockLineViewModel.TimeLifes);
                             _context.SaveChanges();
                         }
-                     
+
                     }
 
                     return Ok(actionobject1);
@@ -511,7 +511,7 @@ namespace QuickApp.Pro.Controllers
                 else
                 {
                     var itemobject = _unitOfWork.itemMaster.GetSingleOrDefault(a => a.ItemMasterId == stockLineViewModel.ItemMasterId);
-                    if(itemobject != null)
+                    if (itemobject != null)
                     {
                         itemobject.NationalStockNumber = stockLineViewModel.NationalStockNumber;
                         itemobject.ExportECCN = stockLineViewModel.ExportECCN;
@@ -524,7 +524,7 @@ namespace QuickApp.Pro.Controllers
                         _context.ItemMaster.Update(itemobject);
                         _context.SaveChanges();
                     }
-                    
+
                     var entityobject = _context.ManagementStructure.Where(a => a.ManagementStructureId == stockLineViewModel.ManagementStructureId).SingleOrDefault();
                     StockLine actionobject1 = new StockLine();
 
@@ -625,7 +625,7 @@ namespace QuickApp.Pro.Controllers
                     _context.StockLine.Add(actionobject1);
                     _context.SaveChanges();
 
-                   
+
 
                     if (actionobject1.StockLineId != 0)
                     {
@@ -640,11 +640,11 @@ namespace QuickApp.Pro.Controllers
                         exists.StockLineNumber = "STL-" + actionobject1.StockLineId;
                         exists.ControlNumber = "CNT-" + actionobject1.StockLineId;
                         exists.IdNumber = "Id-" + actionobject1.StockLineId;
-                        exists.TimeLifeCyclesId= stockLineViewModel.TimeLifes.TimeLifeCyclesId;
+                        exists.TimeLifeCyclesId = stockLineViewModel.TimeLifes.TimeLifeCyclesId;
                         _context.StockLine.Update(exists);
                         _context.SaveChanges();
-                    }                   
-                     
+                    }
+
                     return Ok(actionobject1);
                 }
 
@@ -1266,9 +1266,10 @@ namespace QuickApp.Pro.Controllers
         {
             if (searchView == null
                    || searchView.partSearchParamters == null
-                   || !searchView.partSearchParamters.partId.HasValue)
+                   || !searchView.partSearchParamters.partId.HasValue
+                   || !searchView.partSearchParamters.conditionId.HasValue)
             {
-                return BadRequest(new Exception("Invalid request parameter, partId not passed"));
+                return BadRequest(new Exception("Invalid request parameter, part id (or) condition id not passed"));
             }
 
             IEnumerable<object> results = GetPartDetails(searchView.partSearchParamters.partId, searchView.partSearchParamters.conditionId, searchView.partSearchParamters.customerId);
@@ -1277,6 +1278,25 @@ namespace QuickApp.Pro.Controllers
             {
                 results = results.Concat(GetMappedPartNumbers(searchView.partSearchParamters));
             }
+
+            var pageCount = (searchView.first / searchView.rows) + 1;
+
+            var searchData = new GetSearchData<object>();
+
+            searchData.Data = DAL.Common.PaginatedList<object>.Create(results.AsQueryable<object>(), pageCount, searchView.rows);
+
+            return Ok(searchData);
+        }
+
+        [HttpPost("getstocklinebyitemmasterid")]
+        public IActionResult GetStocklineByItemMasterId([FromBody]ItemMasterSearchViewModel searchView)
+        {
+            if (!searchView.partSearchParamters.partId.HasValue)
+            {
+                return BadRequest(new Exception("Invalid item master id"));
+            }
+
+            IEnumerable<object> results = GetPartDetails(searchView.partSearchParamters.partId, null, searchView.partSearchParamters.customerId);
 
             var pageCount = (searchView.first / searchView.rows) + 1;
 
@@ -1362,8 +1382,6 @@ namespace QuickApp.Pro.Controllers
         {
             var result = Enumerable.Empty<object>();
 
-            var condition = _context.Condition.Where(c => c.ConditionId == conditionId).FirstOrDefault();
-
             var itemMasterSale = GetItemMasterPurchaseSale(customerId, partId);
 
             result = from item in _context.ItemMaster
@@ -1378,7 +1396,7 @@ namespace QuickApp.Pro.Controllers
                             && (item.IsDeleted.HasValue && !item.IsDeleted == true || !item.IsDeleted.HasValue)
                             && (item.MasterCompanyId.HasValue && item.MasterCompanyId.Value == 1)
                             && item.ItemMasterId == partId
-                            && sl.ConditionId == conditionId
+                            && (conditionId.HasValue ? sl.ConditionId == conditionId : true)
                      select new
                      {
                          methodType = "S",

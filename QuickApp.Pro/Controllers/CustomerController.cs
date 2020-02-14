@@ -257,23 +257,23 @@ namespace QuickApp.Pro.Controllers
 
         }
 
-        [HttpGet("aircraftManufacturerGet/{id}")]
-        [Produces(typeof(List<CustomerAircraftModelViewModel>))]
-        public IActionResult aircraftManufacturerGet(int id)
-        {
-            try
-            {
-                var aircraft = _unitOfWork.customerAircraftType.GetAll();
-                var result = aircraft.Where(a => a.CustomerId == id).ToList();
+        //[HttpGet("aircraftManufacturerGet/{id}")]
+        //[Produces(typeof(List<CustomerAircraftModelViewModel>))]
+        //public IActionResult aircraftManufacturerGet(int id)
+        //{
+        //    try
+        //    {
+        //        var aircraft = _unitOfWork.customerAircraftType.GetAll();
+        //        var result = aircraft.Where(a => a.CustomerId == id).ToList();
 
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.InnerException.ToString());
-            }
+        //        return Ok(result);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return BadRequest(ex.InnerException.ToString());
+        //    }
 
-        }
+        //}
 
         [HttpGet("AddressGet")]
         [Produces(typeof(List<Address>))]
@@ -412,24 +412,20 @@ namespace QuickApp.Pro.Controllers
                     actionobject.CurrencyId = customerViewModel.CurrencyId;
                     actionobject.CreditTermsId = customerViewModel.CreditTermsId;
                     actionobject.Name = customerViewModel.Name;
-                    actionobject.Parent = customerViewModel.Parent;
+                    actionobject.IsParent = customerViewModel.IsParent;
                     actionobject.Email = customerViewModel.Email;
                     actionobject.CustomerPhone = customerViewModel.CustomerPhone;
                     actionobject.CustomerPhoneExt = customerViewModel.CustomerPhoneExt;
                     actionobject.AnnualQuota = customerViewModel.AnnualQuota;
                     actionobject.AnnualRevenuePotential = customerViewModel.AnnualRevenuePotential;
-                    actionobject.CustomerParentName = customerViewModel.CustomerParentName;
-                    actionobject.ScanDocuments = customerViewModel.ScanDocuments;
+                    // actionobject.CustomerParentName = customerViewModel.CustomerParentName;
+                    actionobject.ParentId = customerViewModel.ParentId;
+                  
                     actionobject.PBHCustomerMemo = customerViewModel.PBHCustomerMemo;
                     actionobject.RestrictPMA = customerViewModel.RestrictPMA;
                     actionobject.IsAddressForBilling = customerViewModel.IsAddressForBilling;
                     actionobject.IsAddressForShipping = customerViewModel.IsAddressForShipping;
-                    actionobject.EDI = customerViewModel.EDI;
-                    actionobject.IsAeroExchange = customerViewModel.IsAeroExchange;
-                    actionobject.AeroExchangeDescription = customerViewModel.AeroExchangeDescription;
-                    actionobject.EDIDescription = customerViewModel.EDIDescription;
-                    // actionobject.IntegrationPortalId = customerViewModel.IntegrationPortalId;
-                    actionobject.RestrictBERMemo = customerViewModel.RestrictBERMemo;
+                  
 
                     if (customerViewModel.CustomerClassificationIds != null)
                     { actionobject.CustomerClassificationId = customerViewModel.CustomerClassificationIds[0] ?? null; }
@@ -447,13 +443,9 @@ namespace QuickApp.Pro.Controllers
                     actionobject.RestrictBER = customerViewModel.RestrictBER;
                     actionobject.RestrictPMA = customerViewModel.RestrictPMA;
                     actionobject.CustomerBillingAddress = customerViewModel.CustomerBillingAddress;
-                    actionobject.RestrictPMAMemo = customerViewModel.RestrictPMAMemo;
                     actionobject.MasterCompanyId = customerViewModel.MasterCompanyId;
                     actionobject.CustomerAffiliationId = customerViewModel.CustomerAffiliationId;
-                    actionobject.ATAChapterId = customerViewModel.ATAChapterId;
-                    actionobject.GeneralCurrencyId = customerViewModel.GeneralCurrencyId;
-                    actionobject.ataSubChapterId = customerViewModel.ataSubChapterId;
-                    actionobject.CreatedDate = DateTime.Now;
+                        actionobject.CreatedDate = DateTime.Now;
                     actionobject.UpdatedDate = DateTime.Now;
                     actionobject.CreatedBy = customerViewModel.CreatedBy;
                     actionobject.UpdatedBy = customerViewModel.UpdatedBy;
@@ -538,8 +530,7 @@ namespace QuickApp.Pro.Controllers
                             objVendor.CurrencyId = actionobject.CurrencyId;
                             objVendor.CreditTermsId = actionobject.CreditTermsId;
                             objVendor.VendorName = actionobject.Name;
-                            objVendor.Parent = Convert.ToInt64(actionobject.Parent);
-                            objVendor.VendorEmail = actionobject.Email;
+                             objVendor.VendorEmail = actionobject.Email;
                             objVendor.VendorPhone = actionobject.CustomerPhone;
                             objVendor.VendorPhoneExt = actionobject.CustomerPhoneExt;
                             objVendor.IsAddressForBilling = actionobject.IsAddressForBilling;
@@ -548,7 +539,7 @@ namespace QuickApp.Pro.Controllers
                             objVendor.VendorURL = actionobject.CustomerURL;
                             objVendor.VendorContractReference = actionobject.ContractReference;
                             objVendor.DoingBusinessAsName = actionobject.DoingBuinessAsName;
-                            objVendor.Parent = Convert.ToInt64(actionobject.Parent);
+                         
 
                             objVendor.MasterCompanyId = Convert.ToInt32(actionobject.MasterCompanyId);
 
@@ -628,17 +619,14 @@ namespace QuickApp.Pro.Controllers
                 }
 
                 customerViewModel.MasterCompanyId = 1;
-                actionobject.RestrictBERMemo = customerViewModel.RestrictBERMemo;
                 actionobject.Name = customerViewModel.Name;
-                actionobject.Parent = customerViewModel.Parent;
+                actionobject.IsParent = customerViewModel.IsParent;
                 actionobject.Email = customerViewModel.Email;
                 actionobject.CustomerPhone = customerViewModel.CustomerPhone;
                 actionobject.CustomerPhoneExt = customerViewModel.CustomerPhoneExt;
                 actionobject.AnnualQuota = customerViewModel.AnnualQuota;
                 actionobject.AnnualRevenuePotential = customerViewModel.AnnualRevenuePotential;
-                actionobject.CustomerParentName = customerViewModel.CustomerParentName;
-                actionobject.ScanDocuments = customerViewModel.ScanDocuments;
-                actionobject.PBHCustomerMemo = customerViewModel.PBHCustomerMemo;
+                 actionobject.PBHCustomerMemo = customerViewModel.PBHCustomerMemo;
                 actionobject.RestrictPMA = customerViewModel.RestrictPMA;
                 // actionobject.IntegrationPortalId = customerViewModel.IntegrationPortalId;
                 actionobject.RestrictBER = customerViewModel.RestrictBER;
@@ -658,15 +646,13 @@ namespace QuickApp.Pro.Controllers
                 actionobject.RestrictBER = customerViewModel.RestrictBER;
                 actionobject.RestrictPMA = customerViewModel.RestrictPMA;
                 actionobject.CustomerBillingAddress = customerViewModel.CustomerBillingAddress;
-                actionobject.RestrictPMAMemo = customerViewModel.RestrictPMAMemo;
-                actionobject.MasterCompanyId = customerViewModel.MasterCompanyId;
+                 actionobject.MasterCompanyId = customerViewModel.MasterCompanyId;
                 actionobject.IsActive = customerViewModel.IsActive;
                 actionobject.CustomerAffiliationId = customerViewModel.CustomerAffiliationId;
-                actionobject.ATAChapterId = customerViewModel.ATAChapterId;
+                actionobject.ParentId = customerViewModel.ParentId;
                 actionobject.CreatedDate = DateTime.Now;
                 actionobject.UpdatedDate = DateTime.Now;
-                actionobject.ataSubChapterId = customerViewModel.ataSubChapterId;
-                actionobject.CreatedBy = customerViewModel.CreatedBy;
+                 actionobject.CreatedBy = customerViewModel.CreatedBy;
                 actionobject.UpdatedBy = customerViewModel.UpdatedBy;
                 address.Line1 = customerViewModel.Address1;
                 address.Line2 = customerViewModel.Address2;
@@ -680,7 +666,7 @@ namespace QuickApp.Pro.Controllers
                 address.UpdatedBy = customerViewModel.UpdatedBy;
                 address.CreatedDate = DateTime.Now;
                 address.UpdatedDate = DateTime.Now;
-                actionobject.GeneralCurrencyId = customerViewModel.GeneralCurrencyId;
+             
                 if (actionobject.IsCustomerAlsoVendor == false)
                 {
 
@@ -705,29 +691,29 @@ namespace QuickApp.Pro.Controllers
                 }
 
                 //actionobject.IsAddressForBillingAndShipping = customerViewModel.IsAddressForBillingAndShipping;
-                if (customerViewModel.AircraftTypeId != null)
-                {
-                    var aircraftTypeList = _unitOfWork.customerAircraftType.GetAllData().ToList();
-                    aircraftTypeList.Where(a => a.CustomerId == id).ToList().ForEach(a => _unitOfWork.customerAircraftType.Remove(a));
-                    _unitOfWork.SaveChanges();
-                    foreach (string s in customerViewModel.AircraftTypeId)
-                    {
-                        if (s != "")
-                        {
-                            var aircraftType = new CustomerAircraftType();
-                            aircraftType.AircraftTypeId = Convert.ToInt32(s);
-                            aircraftType.CustomerId = id;
-                            aircraftType.MasterCompanyId = 1;
-                            aircraftType.CreatedBy = customerViewModel.CreatedBy;
-                            aircraftType.UpdatedBy = customerViewModel.UpdatedBy;
-                            aircraftType.CreatedDate = DateTime.Now;
-                            aircraftType.UpdatedDate = DateTime.Now;
-                            aircraftType.IsActive = true;
-                            _unitOfWork.customerAircraftType.Add(aircraftType);
-                            _unitOfWork.SaveChanges();
-                        }
-                    }
-                }
+                //if (customerViewModel.AircraftTypeId != null)
+                //{
+                //    var aircraftTypeList = _unitOfWork.customerAircraftType.GetAllData().ToList();
+                //    aircraftTypeList.Where(a => a.CustomerId == id).ToList().ForEach(a => _unitOfWork.customerAircraftType.Remove(a));
+                //    _unitOfWork.SaveChanges();
+                //    foreach (string s in customerViewModel.AircraftTypeId)
+                //    {
+                //        if (s != "")
+                //        {
+                //            var aircraftType = new CustomerAircraftType();
+                //            aircraftType.AircraftTypeId = Convert.ToInt32(s);
+                //            aircraftType.CustomerId = id;
+                //            aircraftType.MasterCompanyId = 1;
+                //            aircraftType.CreatedBy = customerViewModel.CreatedBy;
+                //            aircraftType.UpdatedBy = customerViewModel.UpdatedBy;
+                //            aircraftType.CreatedDate = DateTime.Now;
+                //            aircraftType.UpdatedDate = DateTime.Now;
+                //            aircraftType.IsActive = true;
+                //            _unitOfWork.customerAircraftType.Add(aircraftType);
+                //            _unitOfWork.SaveChanges();
+                //        }
+                //    }
+                //}
 
 
 
@@ -805,7 +791,7 @@ namespace QuickApp.Pro.Controllers
                         objVendor.CurrencyId = actionobject.CurrencyId;
                         objVendor.CreditTermsId = actionobject.CreditTermsId;
                         objVendor.VendorName = actionobject.Name;
-                        objVendor.Parent = Convert.ToInt64(actionobject.Parent);
+                       
                         objVendor.VendorEmail = actionobject.Email;
                         objVendor.VendorPhone = actionobject.CustomerPhone;
                         objVendor.VendorPhoneExt = actionobject.CustomerPhoneExt;
@@ -815,7 +801,7 @@ namespace QuickApp.Pro.Controllers
                         objVendor.VendorURL = actionobject.CustomerURL;
                         objVendor.VendorContractReference = actionobject.ContractReference;
                         objVendor.DoingBusinessAsName = actionobject.DoingBuinessAsName;
-                        objVendor.Parent = Convert.ToInt64(actionobject.Parent);
+                    
 
                         objVendor.MasterCompanyId = Convert.ToInt32(actionobject.MasterCompanyId);
 
@@ -844,8 +830,7 @@ namespace QuickApp.Pro.Controllers
                         objcreateVendor.CurrencyId = actionobject.CurrencyId;
                         objcreateVendor.CreditTermsId = actionobject.CreditTermsId;
                         objcreateVendor.VendorName = actionobject.Name;
-                        objcreateVendor.Parent = Convert.ToInt64(actionobject.Parent);
-                        objcreateVendor.VendorEmail = actionobject.Email;
+                          objcreateVendor.VendorEmail = actionobject.Email;
                         objcreateVendor.VendorPhone = actionobject.CustomerPhone;
                         objcreateVendor.VendorPhoneExt = actionobject.CustomerPhoneExt;
                         objcreateVendor.IsAddressForBilling = actionobject.IsAddressForBilling;
@@ -854,8 +839,7 @@ namespace QuickApp.Pro.Controllers
                         objcreateVendor.VendorURL = actionobject.CustomerURL;
                         objcreateVendor.VendorContractReference = actionobject.ContractReference;
                         objcreateVendor.DoingBusinessAsName = actionobject.DoingBuinessAsName;
-                        objcreateVendor.Parent = Convert.ToInt64(actionobject.Parent);
-
+                     
                         objcreateVendor.MasterCompanyId = Convert.ToInt32(actionobject.MasterCompanyId);
 
                         objcreateVendor.CreatedDate = DateTime.Now;
@@ -1470,7 +1454,7 @@ namespace QuickApp.Pro.Controllers
         public IActionResult GetList([FromBody] Filters<CustomerFilters> customerFilters)
         {
             try
-            {
+           {
                 var result = _unitOfWork.Customer.GetList(customerFilters);
                 return Ok(result);
             }
@@ -2122,11 +2106,8 @@ namespace QuickApp.Pro.Controllers
                         CustomerWarningViewModel[i].MasterCompanyId = 1;
                         // CustomerWarningViewModel.IsActive = true;
                         CustomerObject.CustomerId = CustomerWarningViewModel[i].CustomerId;
-                        CustomerObject.Allow = CustomerWarningViewModel[i].Allow;
-                        CustomerObject.SourceModule = CustomerWarningViewModel[i].SourceModule;
-                        CustomerObject.Restrict = CustomerWarningViewModel[i].Restrict;
-                        CustomerObject.Warning = CustomerWarningViewModel[i].Warning;
-                        CustomerObject.WarningMessage = CustomerWarningViewModel[i].WarningMessage;
+                         CustomerObject.SourceModule = CustomerWarningViewModel[i].SourceModule;
+                           CustomerObject.WarningMessage = CustomerWarningViewModel[i].WarningMessage;
                         CustomerObject.RestrictMessage = CustomerWarningViewModel[i].RestrictMessage;
                         CustomerObject.MasterCompanyId = CustomerWarningViewModel[i].MasterCompanyId;
                         CustomerObject.CreatedDate = DateTime.Now;
@@ -2134,6 +2115,12 @@ namespace QuickApp.Pro.Controllers
                         CustomerObject.CreatedBy = CustomerWarningViewModel[i].CreatedBy;
                         CustomerObject.UpdatedBy = CustomerWarningViewModel[i].UpdatedBy;
                         CustomerObject.IsAllow = CustomerWarningViewModel[i].IsAllow;
+                        CustomerObject.IsWarning = CustomerWarningViewModel[i].IsWarning;
+                        CustomerObject.IsRestrict = CustomerWarningViewModel[i].IsRestrict;
+
+                        CustomerObject.Allow = CustomerWarningViewModel[i].Allow;
+                        CustomerObject.Warning = CustomerWarningViewModel[i].Warning;
+                        CustomerObject.Restrict = CustomerWarningViewModel[i].Restrict;
                         CustomerObject.IsActive = true;
                         CustomerObject.IsDeleted = false;
                         _unitOfWork.CustomerWarning.Add(CustomerObject);
@@ -2221,10 +2208,7 @@ namespace QuickApp.Pro.Controllers
                         CustomerWarningViewModel[i].MasterCompanyId = 1;
                         // CustomerWarningViewModel.IsActive = true;
                         CustomerObject.CustomerId = CustomerWarningViewModel[i].CustomerId;
-                        CustomerObject.Allow = CustomerWarningViewModel[i].Allow;
-                        CustomerObject.SourceModule = CustomerWarningViewModel[i].SourceModule;
-                        CustomerObject.Restrict = CustomerWarningViewModel[i].Restrict;
-                        CustomerObject.Warning = CustomerWarningViewModel[i].Warning;
+                         CustomerObject.SourceModule = CustomerWarningViewModel[i].SourceModule;
                         CustomerObject.WarningMessage = CustomerWarningViewModel[i].WarningMessage;
                         CustomerObject.RestrictMessage = CustomerWarningViewModel[i].RestrictMessage;
                         CustomerObject.MasterCompanyId = CustomerWarningViewModel[i].MasterCompanyId;
@@ -2233,6 +2217,12 @@ namespace QuickApp.Pro.Controllers
                         CustomerObject.CreatedBy = CustomerWarningViewModel[i].CreatedBy;
                         CustomerObject.UpdatedBy = CustomerWarningViewModel[i].UpdatedBy;
                         CustomerObject.IsAllow = CustomerWarningViewModel[i].IsAllow;
+                        CustomerObject.IsWarning = CustomerWarningViewModel[i].IsWarning;
+                        CustomerObject.IsRestrict = CustomerWarningViewModel[i].IsRestrict;
+
+                        CustomerObject.Allow = CustomerWarningViewModel[i].Allow;
+                        CustomerObject.Warning = CustomerWarningViewModel[i].Warning;
+                        CustomerObject.Restrict = CustomerWarningViewModel[i].Restrict;
                         CustomerObject.IsActive = true;
                         CustomerObject.IsDeleted = false;
                         _unitOfWork.CustomerWarning.Add(CustomerObject);
@@ -2549,23 +2539,15 @@ namespace QuickApp.Pro.Controllers
                         return BadRequest($"{nameof(customerViewModel)} cannot be null");
                     var customerObj = _unitOfWork.Customer.GetSingleOrDefault(c => c.CustomerId == id);
                     customerViewModel.MasterCompanyId = 1;
-                    customerObj.EDI = customerViewModel.EDI;
-                    customerObj.MarkUpPercent = customerViewModel.MarkUpPercent;
-                    customerObj.CreditLimit = customerViewModel.CreditLimit;
+
+                      customerObj.CreditLimit = customerViewModel.CreditLimit;
                     customerObj.CreditTermsId = customerViewModel.CreditTermsId;
-                    customerObj.TaxRateOther = customerViewModel.TaxRateOther;
-                    customerObj.TaxTypeId = customerViewModel.TaxTypeId;
-                    customerObj.TaxRateStateOrProvince = customerViewModel.TaxRateStateOrProvince;
                     customerObj.AllowPartialBilling = customerViewModel.AllowPartialBilling;
                     customerObj.AllowProformaBilling = customerViewModel.AllowProformaBilling;
                     customerObj.CurrencyId = customerViewModel.GeneralCurrencyId;
-                    customerObj.Discount = customerViewModel.Discount;
                     customerObj.DiscountId = customerViewModel.DiscountId;
-                    customerObj.EDIDescription = customerViewModel.EDIDescription;
-                    customerObj.IsAeroExchange = customerViewModel.IsAeroExchange;
-                    customerObj.IsTaxExempt = customerViewModel.IsTaxExempt;
-                    customerObj.AeroExchangeDescription = customerViewModel.AeroExchangeDescription;
-                    if (customerViewModel.IsCustomerAlsoVendor && customerViewModel.CustomerTypeId == Convert.ToInt32(CustomerTypeEnum.Customer))
+                     customerObj.IsTaxExempt = customerViewModel.IsTaxExempt;
+                     if (customerViewModel.IsCustomerAlsoVendor && customerViewModel.CustomerTypeId == Convert.ToInt32(CustomerTypeEnum.Customer))
                     {
                         customerObj.AllowNettingOfAPAR = customerViewModel.AllowNettingOfAPAR;
                     }
@@ -2664,13 +2646,9 @@ namespace QuickApp.Pro.Controllers
                     DAL.Models.Customer actionobject = new DAL.Models.Customer();
                     customerViewModel.MasterCompanyId = 1;
                     // actionobject.IsActive = true;
-                    actionobject.PrimarySalesPersonFirstName = customerViewModel.PrimarySalesPersonFirstName;
-                    actionobject.PrimarySalesPersonId = customerViewModel.PrimarySalesPersonId;
+                     actionobject.PrimarySalesPersonId = customerViewModel.PrimarySalesPersonId;
                     actionobject.SecondarySalesPersonId = customerViewModel.SecondarySalesPersonId;
-                    actionobject.SecondarySalesPersonName = customerViewModel.SecondarySalesPersonName;
-                    actionobject.CSRName = customerViewModel.CSRName;
-                    actionobject.AgentName = customerViewModel.AgentName;
-                    actionobject.MasterCompanyId = customerViewModel.MasterCompanyId;
+                      actionobject.MasterCompanyId = customerViewModel.MasterCompanyId;
                     actionobject.IsActive = customerViewModel.IsActive;
                     actionobject.CsrId = customerViewModel.CsrId;
                     actionobject.SaId = customerViewModel.SaId;
@@ -2696,59 +2674,59 @@ namespace QuickApp.Pro.Controllers
 
         }
 
-        [HttpPost("Aircraftpost")]
-        public IActionResult CreateAircraftModels([FromBody] CustomerAircraftModel customerAircraftModel)
-        {
-            try
-            {
-                if (ModelState.IsValid)
-                {
-                    if (_context.CustomerAircraftModel.Any(o => o.AircraftModelId == customerAircraftModel.AircraftModelId))
-                    {
-                        // return BadRequest($"{nameof(capesInfoViewModel)} cannot be null");
-                        var existingresule = _context.CustomerAircraftModel.Where(c => c.AircraftModelId == customerAircraftModel.AircraftModelId).FirstOrDefault();
-                        existingresule.AircraftModelId = customerAircraftModel.AircraftModelId;
-                        existingresule.IsActive = true;
-                        existingresule.CustomerId = customerAircraftModel.CustomerId;
-                        existingresule.Priority = customerAircraftModel.Priority;
-                        existingresule.MasterCompanyId = 1;
-                        existingresule.CreatedDate = DateTime.Now;
-                        existingresule.UpdatedDate = DateTime.Now;
-                        existingresule.CreatedBy = customerAircraftModel.CreatedBy;
-                        existingresule.UpdatedBy = customerAircraftModel.UpdatedBy;
-                        _context.CustomerAircraftModel.Update(existingresule);
-                        _context.SaveChanges();
-                    }
-                    else
-                    {
-                        CustomerAircraftModel cp = new CustomerAircraftModel();
-                        cp.AircraftModelId = customerAircraftModel.AircraftModelId;
-                        //cp.AircraftModelId = customerAircraftModel.AircraftModelId;
-                        cp.CustomerId = customerAircraftModel.CustomerId;
-                        cp.Priority = customerAircraftModel.Priority;
-                        cp.MasterCompanyId = 1;
-                        cp.IsActive = true;
-                        cp.CreatedDate = DateTime.Now;
-                        cp.UpdatedDate = DateTime.Now;
-                        cp.CreatedBy = customerAircraftModel.CreatedBy;
-                        cp.UpdatedBy = customerAircraftModel.UpdatedBy;
-                        _context.CustomerAircraftModel.Add(cp);
-                        _context.SaveChanges();
+        //[HttpPost("Aircraftpost")]
+        //public IActionResult CreateAircraftModels([FromBody] CustomerAircraftModel customerAircraftModel)
+        //{
+        //    try
+        //    {
+        //        if (ModelState.IsValid)
+        //        {
+        //            if (_context.CustomerAircraftModel.Any(o => o.AircraftModelId == customerAircraftModel.AircraftModelId))
+        //            {
+        //                // return BadRequest($"{nameof(capesInfoViewModel)} cannot be null");
+        //                var existingresule = _context.CustomerAircraftModel.Where(c => c.AircraftModelId == customerAircraftModel.AircraftModelId).FirstOrDefault();
+        //                existingresule.AircraftModelId = customerAircraftModel.AircraftModelId;
+        //                existingresule.IsActive = true;
+        //                existingresule.CustomerId = customerAircraftModel.CustomerId;
+        //                existingresule.Priority = customerAircraftModel.Priority;
+        //                existingresule.MasterCompanyId = 1;
+        //                existingresule.CreatedDate = DateTime.Now;
+        //                existingresule.UpdatedDate = DateTime.Now;
+        //                existingresule.CreatedBy = customerAircraftModel.CreatedBy;
+        //                existingresule.UpdatedBy = customerAircraftModel.UpdatedBy;
+        //                _context.CustomerAircraftModel.Update(existingresule);
+        //                _context.SaveChanges();
+        //            }
+        //            else
+        //            {
+        //                CustomerAircraftModel cp = new CustomerAircraftModel();
+        //                cp.AircraftModelId = customerAircraftModel.AircraftModelId;
+        //                //cp.AircraftModelId = customerAircraftModel.AircraftModelId;
+        //                cp.CustomerId = customerAircraftModel.CustomerId;
+        //                cp.Priority = customerAircraftModel.Priority;
+        //                cp.MasterCompanyId = 1;
+        //                cp.IsActive = true;
+        //                cp.CreatedDate = DateTime.Now;
+        //                cp.UpdatedDate = DateTime.Now;
+        //                cp.CreatedBy = customerAircraftModel.CreatedBy;
+        //                cp.UpdatedBy = customerAircraftModel.UpdatedBy;
+        //                _context.CustomerAircraftModel.Add(cp);
+        //                _context.SaveChanges();
 
-                    }
-                    return Ok(customerAircraftModel);
-                }
-                else
-                {
-                    return BadRequest(ModelState);
-                }
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.InnerException.ToString());
-            }
+        //            }
+        //            return Ok(customerAircraftModel);
+        //        }
+        //        else
+        //        {
+        //            return BadRequest(ModelState);
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return BadRequest(ex.InnerException.ToString());
+        //    }
 
-        }
+        //}
 
 
         #region AircraftInformation
@@ -2907,7 +2885,7 @@ namespace QuickApp.Pro.Controllers
 
         #region ATA Chapter
         [HttpGet("getCustomerATAMapped/{customerId}")]
-        [Produces(typeof(List<CustomerATAMapping>[]))]
+       
         public IActionResult ataMapped(long customerId)
         {
             try
@@ -2923,7 +2901,7 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpGet("getCustomerATAMappedAudit/{CustomerContactATAMappingId}")]
-        [Produces(typeof(List<CustomerATAMapping>[]))]
+     
         public IActionResult ataMappedAudit(long CustomerContactATAMappingId)
         {
             try
@@ -2938,30 +2916,30 @@ namespace QuickApp.Pro.Controllers
 
         }
 
-        [HttpPost("CustomerATAPost")]
-        public IActionResult InsertCustomerATA([FromBody] CustomerATAMapping[] customerATAMapping)
-        {
-            try
-            {
-                if (ModelState.IsValid)
-                {
-                    foreach (var customerAtaMapping in customerATAMapping)
-                    {
-                        _unitOfWork.Repository<CustomerATAMapping>().Add(customerAtaMapping);
-                        _unitOfWork.SaveChanges();
-                    }
-                    return Ok();
-                }
-                else
-                {
-                    return BadRequest(ModelState);
-                }
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.InnerException.ToString());
-            }
-        }
+        //[HttpPost("CustomerATAPost")]
+        //public IActionResult InsertCustomerATA([FromBody] CustomerATAMapping[] customerATAMapping)
+        //{
+        //    try
+        //    {
+        //        if (ModelState.IsValid)
+        //        {
+        //            foreach (var customerAtaMapping in customerATAMapping)
+        //            {
+        //                _unitOfWork.Repository<CustomerATAMapping>().Add(customerAtaMapping);
+        //                _unitOfWork.SaveChanges();
+        //            }
+        //            return Ok();
+        //        }
+        //        else
+        //        {
+        //            return BadRequest(ModelState);
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return BadRequest(ex.InnerException.ToString());
+        //    }
+        //}
 
         //[HttpDelete("DeleteCustomerATAMapping/{id}")]
         //public IActionResult DeleteCustomerATA(long id)
@@ -3003,7 +2981,8 @@ namespace QuickApp.Pro.Controllers
                 {
                     for (int i = 0; i < customerContactATAMapping.Length; i++)
                     {
-
+                        customerContactATAMapping[i].UpdatedDate = DateTime.Now;
+                        customerContactATAMapping[i].CreatedDate = DateTime.Now;
                         var atachapter = _unitOfWork.Repository<CustomerContactATAMapping>().GetSingleOrDefault(c => c.CustomerContactId == customerContactATAMapping[i].CustomerContactId && (c.ATAChapterId == customerContactATAMapping[i].ATAChapterId) && (c.ATASubChapterId == customerContactATAMapping[i].ATASubChapterId) && (c.MasterCompanyId == customerContactATAMapping[i].MasterCompanyId));// && c.AircraftModelId == customerAircraftMappingVM[i].AircraftModelId && c.MasterCompanyId == customerAircraftMappingVM[i].MasterCompanyId && c.CustomerId = customerAircraftMappingVM[i].CustomerId);
                         if (atachapter == null)
                         {
@@ -3233,14 +3212,10 @@ namespace QuickApp.Pro.Controllers
                         return BadRequest($"{nameof(customerViewModel)} cannot be null");
                     var customerObj = _unitOfWork.Customer.GetSingleOrDefault(c => c.CustomerId == id);
                     customerViewModel.MasterCompanyId = 1;
-                    customerObj.PrimarySalesPersonFirstName = customerViewModel.PrimarySalesPersonFirstName;
-                    customerObj.PrimarySalesPersonId = customerViewModel.PrimarySalesPersonId;
+                   customerObj.PrimarySalesPersonId = customerViewModel.PrimarySalesPersonId;
                     customerObj.SecondarySalesPersonId = customerViewModel.SecondarySalesPersonId;
-                    customerObj.SecondarySalesPersonName = customerViewModel.SecondarySalesPersonName;
-                    customerObj.CSRName = customerViewModel.CSRName;
                     customerObj.CsrId = customerViewModel.CsrId;
                     customerObj.SaId = customerViewModel.SaId;
-                    customerObj.AgentName = customerViewModel.AgentName;
                     customerObj.AnnualQuota = customerViewModel.AnnualQuota;
                     customerObj.AnnualRevenuePotential = customerViewModel.AnnualRevenuePotential;
                     customerObj.MasterCompanyId = customerViewModel.MasterCompanyId;
@@ -3281,42 +3256,42 @@ namespace QuickApp.Pro.Controllers
 
         }
 
-        [HttpPost("saveCustomeraircraftdata")]
-        public IActionResult SaveCustomeraircraft([FromBody]  CustomerAircraftTypeViewModel customerAircraftTypeViewModel)
-        {
-            try
-            {
-                if (ModelState.IsValid)
-                {
-                    if (customerAircraftTypeViewModel == null)
-                        return BadRequest($"{nameof(customerAircraftTypeViewModel)} cannot be null");
-                    CustomerAircraftType CustomerObject = new CustomerAircraftType();
+        //[HttpPost("saveCustomeraircraftdata")]
+        //public IActionResult SaveCustomeraircraft([FromBody]  CustomerAircraftTypeViewModel customerAircraftTypeViewModel)
+        //{
+        //    try
+        //    {
+        //        if (ModelState.IsValid)
+        //        {
+        //            if (customerAircraftTypeViewModel == null)
+        //                return BadRequest($"{nameof(customerAircraftTypeViewModel)} cannot be null");
+        //            CustomerAircraftType CustomerObject = new CustomerAircraftType();
 
-                    customerAircraftTypeViewModel.MasterCompanyId = 1;
-                    CustomerObject.CustomerId = customerAircraftTypeViewModel.CustomerId;
-                    CustomerObject.AircraftTypeId = customerAircraftTypeViewModel.AircraftTypeId;
-                    CustomerObject.MasterCompanyId = customerAircraftTypeViewModel.MasterCompanyId;
-                    //CustomerObject.IsActive = true;
-                    CustomerObject.IsActive = customerAircraftTypeViewModel.IsActive;
-                    CustomerObject.CreatedDate = DateTime.Now;
-                    CustomerObject.UpdatedDate = DateTime.Now;
-                    CustomerObject.CreatedBy = customerAircraftTypeViewModel.CreatedBy;
-                    CustomerObject.UpdatedBy = customerAircraftTypeViewModel.UpdatedBy;
-                    _unitOfWork.customerAircraftType.Add(CustomerObject);
-                    _unitOfWork.SaveChanges();
-                    return Ok(CustomerObject);
-                }
-                else
-                {
-                    return BadRequest(ModelState);
-                }
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.InnerException.ToString());
-            }
+        //            customerAircraftTypeViewModel.MasterCompanyId = 1;
+        //            CustomerObject.CustomerId = customerAircraftTypeViewModel.CustomerId;
+        //            CustomerObject.AircraftTypeId = customerAircraftTypeViewModel.AircraftTypeId;
+        //            CustomerObject.MasterCompanyId = customerAircraftTypeViewModel.MasterCompanyId;
+        //            //CustomerObject.IsActive = true;
+        //            CustomerObject.IsActive = customerAircraftTypeViewModel.IsActive;
+        //            CustomerObject.CreatedDate = DateTime.Now;
+        //            CustomerObject.UpdatedDate = DateTime.Now;
+        //            CustomerObject.CreatedBy = customerAircraftTypeViewModel.CreatedBy;
+        //            CustomerObject.UpdatedBy = customerAircraftTypeViewModel.UpdatedBy;
+        //            _unitOfWork.customerAircraftType.Add(CustomerObject);
+        //            _unitOfWork.SaveChanges();
+        //            return Ok(CustomerObject);
+        //        }
+        //        else
+        //        {
+        //            return BadRequest(ModelState);
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return BadRequest(ex.InnerException.ToString());
+        //    }
 
-        }
+        //}
 
         [HttpPost("postCountryList")]
         public IActionResult CountryList([FromBody] CountriesViewModel countriesViewModel)
@@ -3497,7 +3472,7 @@ namespace QuickApp.Pro.Controllers
                                          ad.AddressId,
                                          ad.Country,
                                          ad.PostalCode,
-                                         t.PrimarySalesPersonFirstName,
+                                        // t.PrimarySalesPersonFirstName,
                                          t.CustomerClassification,
                                          t.IsActive,
                                          t.CsrId,
@@ -3520,7 +3495,7 @@ namespace QuickApp.Pro.Controllers
                         customer.CreatedBy = item.CreatedBy;
                         customer.UpdatedDate = item.UpdatedDate;
                         customer.UpdatedBy = item.UpdatedBy;
-                        customer.PrimarySalesPersonFirstName = item.PrimarySalesPersonFirstName;
+                        //customer.PrimarySalesPersonFirstName = item.PrimarySalesPersonFirstName;
                         customer.IsActive = item.IsActive;
                         customer.CustomerClarifiacationName = item.CustomerClarification;
                         customer.CustomerPhone = item.CustomerPhone;
@@ -3604,7 +3579,7 @@ namespace QuickApp.Pro.Controllers
                                          ad.AddressId,
                                          ad.Country,
                                          ad.PostalCode,
-                                         t.PrimarySalesPersonFirstName,
+                                        // t.PrimarySalesPersonFirstName,
                                          t.IsActive,
                                          CustomerClarification = cc.Description
                                      }).OrderByDescending(a => a.UpdatedDate).ToList();
@@ -3622,7 +3597,7 @@ namespace QuickApp.Pro.Controllers
                         customer.CreatedBy = item.CreatedBy;
                         customer.UpdatedDate = item.UpdatedDate;
                         customer.UpdatedBy = item.UpdatedBy;
-                        customer.PrimarySalesPersonFirstName = item.PrimarySalesPersonFirstName;
+                       // customer.PrimarySalesPersonFirstName = item.PrimarySalesPersonFirstName;
                         customer.IsActive = item.IsActive;
                         customer.CustomerClarifiacationName = item.CustomerClarification;
                         customer.CustomerPhone = item.CustomerPhone;

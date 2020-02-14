@@ -140,6 +140,8 @@ export class VendorContactsComponent implements OnInit {
     @Input() isViewMode: boolean = false;
     isvendorEditMode: any;
     disableSave: boolean = true;
+    loaderForVendorContacts: boolean;
+
     constructor(private router: ActivatedRoute, private route: Router, private customerser: CustomerService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public vendorService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private configurations: ConfigurationService) {
 
 
@@ -241,6 +243,7 @@ export class VendorContactsComponent implements OnInit {
     private loadData() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
+        this.loaderForVendorContacts = true;
         const vendorId = this.vendorId != 0 ? this.vendorId : this.local.vendorId;
         this.vendorService.getContacts(vendorId).subscribe(
             results => this.onDataLoadSuccessful(results[0]),
@@ -299,6 +302,7 @@ export class VendorContactsComponent implements OnInit {
         this.loadingIndicator = false;
         this.dataSource.data = allWorkFlows;
         this.allActions = allWorkFlows;
+        this.loaderForVendorContacts = false;
         //console.log(this.allActions);
         //const responseData = allWorkFlows;
         // this.allActions = allWorkFlows.map(x => {
@@ -364,6 +368,7 @@ export class VendorContactsComponent implements OnInit {
     private onDataLoadFailed(error: any) {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
+        this.loaderForVendorContacts = false;        
     }
 
     open(content) {

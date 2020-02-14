@@ -135,6 +135,7 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 	isvendorEditMode: any;
 	formData = new FormData();
 	disableSave: boolean = true;
+	loaderForPaymentCheck: boolean;
 	constructor(private http: HttpClient, private changeDetectorRef: ChangeDetectorRef, private router: ActivatedRoute, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public vendorService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private configurations: ConfigurationService) {
 
 		if (this.vendorService.listCollection !== undefined) {
@@ -347,6 +348,7 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 	private loadData() {
 		this.alertService.startLoadingMessage();
 		this.loadingIndicator = true;
+		this.loaderForPaymentCheck = true;
 		const vendorId = this.vendorId != 0 ? this.vendorId : this.local.vendorId;
 		this.vendorService.getCheckPaymentobj(vendorId).subscribe(
 			results => this.onDataLoadSuccessful(results[0]),
@@ -404,6 +406,7 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 		this.loadingIndicator = false;
 		this.dataSource.data = allWorkFlows;
 		this.allActions = allWorkFlows;
+		this.loaderForPaymentCheck = false;
 	}
 	private onBencustomerLoad(allWorkFlows: any) {
 		this.alertService.stopLoadingMessage();
@@ -532,6 +535,7 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 	private onDataLoadFailed(error: any) {
 		this.alertService.stopLoadingMessage();
 		this.loadingIndicator = false;
+		this.loaderForPaymentCheck = false;
 	}
 
 	open(content) {

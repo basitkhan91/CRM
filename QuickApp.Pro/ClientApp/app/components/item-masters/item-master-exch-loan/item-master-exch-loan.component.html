@@ -37,7 +37,7 @@
                         <div class="col-md-12">
                                         <div class="form-group">
                                                         <label for="currencyExchange" class="control-label">Currency</label>
-                                                       <select name="currencyExchange" [(ngModel)]="currentItem.exchangeCurrencyId">
+                                                       <select name="currencyExchange" [(ngModel)]="currentItem.exchangeCurrencyId" matTooltip="Exchange - Currency"  tooltipPosition="top" matTooltipPosition="above" >
                                                            <option value="0">Select</option>
                                                            <option *ngFor="let excur of exchangeCurrencies" [ngValue]="excur.currencyId">{{excur.code}}</option>
                                                         </select>   
@@ -49,25 +49,25 @@
                                    <label for="exchListPRice" class="control-label" >Exchange List Price</label>
                               
                                
-                                 <input type="number" class="form-control" name="exchListPRice" [(ngModel)]="currentItem.exchangeListPrice" >
+                                 <input type="number" class="form-control" name="exchListPRice" [(ngModel)]="currentItem.exchangeListPrice" matTooltip="Exchange List Price"  tooltipPosition="top" matTooltipPosition="above">
                                 
                                
                         </div>
                         <div class="form-group">
                                 <label for="exchCorePrice" class="control-label">Core Price</label>
-                                <input type="number" class="form-control" name="exchCorePrice" [(ngModel)]="currentItem.exchangeCorePrice"  >
+                                <input type="number" class="form-control" name="exchCorePrice" [(ngModel)]="currentItem.exchangeCorePrice"  matTooltip="Core Price"  tooltipPosition="top" matTooltipPosition="above">
                         </div>
                         <div class="form-group">
                                 <label for="exchOverhaulPrice" class="control-label">Overhaul Price</label>
-                                <input type="number" class="form-control" name="exchOverhaulPrice" [(ngModel)]="currentItem.exchangeOverhaulPrice" >
+                                <input type="number" class="form-control" name="exchOverhaulPrice" [(ngModel)]="currentItem.exchangeOverhaulPrice" matTooltip="Overhaul Price"  tooltipPosition="top" matTooltipPosition="above">
                         </div>
                         <div class="form-group">
                                 <label for="exchOutrightPrice" class="control-label">Outright Price</label>
-                                <input type="number" class="form-control" name="exchOutrightPrice" [(ngModel)]="currentItem.exchangeOutrightPrice" >
+                                <input type="number" class="form-control" name="exchOutrightPrice" [(ngModel)]="currentItem.exchangeOutrightPrice" matTooltip="Outright Price"  tooltipPosition="top" matTooltipPosition="above">
                         </div>
                         <div class="form-group">
                                 <label for="exchCoreCost" class="control-label">Core Cost</label>
-                                <input type="number" class="form-control" name="exchCoreCost" [(ngModel)]="currentItem.exchangeCoreCost">
+                                <input type="number" class="form-control" name="exchCoreCost" [(ngModel)]="currentItem.exchangeCoreCost" matTooltip="Core Cost"  tooltipPosition="top" matTooltipPosition="above">
                         </div>
                 </div>
         </div>
@@ -78,23 +78,23 @@
                 <div class="card-body" *ngIf="showLoan">
                         <div class="form-group">
                                 <label for="currencyLoan" class="control-label">Currency</label>
-                               <select name="currencyLoan" class="select-value-drop" [(ngModel)]="currentItem.loanCurrencyId">
+                               <select name="currencyLoan" class="select-value-drop" [(ngModel)]="currentItem.loanCurrencyId" matTooltip="Loan - Currency"  tooltipPosition="top" matTooltipPosition="above">
                                    <option value="0">Select</option>
                                    <option *ngFor="let loancur of loanCurrencies" [ngValue]="loancur.currencyId">{{loancur.code}}</option>
                                 </select>   
                         </div>
                         <div class="form-group">
                                 <label for="loanFees"  class="control-label">Loan Fees</label>
-                                <input type="number" class="form-control" name="loanFees" [(ngModel)]="currentItem.loanFees" >
+                                <input type="number" class="form-control" name="loanFees" [(ngModel)]="currentItem.loanFees" matTooltip="Loan Fees"  tooltipPosition="top" matTooltipPosition="above">
                         </div>
                         <div class="form-group">
                                 <label for="loanCorePrice"  class="control-label">Core Price</label>
-                                <input type="number" class="form-control" name="loanCorePrice" [(ngModel)]="currentItem.loanCorePrice">
+                                <input type="number" class="form-control" name="loanCorePrice" [(ngModel)]="currentItem.loanCorePrice" matTooltip="Core Price"  tooltipPosition="top" matTooltipPosition="above">
                         </div>
 
                         <div class="form-group">
                                 <label for="loanOutrightPrice"  class="control-label">Outright Price</label>
-                                <input type="number" class="form-control" name="loanOutrightPrice" [(ngModel)]="currentItem.loanOutrightPrice">
+                                <input type="number" class="form-control" name="loanOutrightPrice" [(ngModel)]="currentItem.loanOutrightPrice" matTooltip="Outright Price"  tooltipPosition="top" matTooltipPosition="above">
                         </div>
                 </div>
         </div>

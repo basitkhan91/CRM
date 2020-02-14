@@ -51,6 +51,7 @@ namespace DAL.Repositories
             string sortColumn = string.Empty;
 
             var sorts = new Sorts<CustomerFilters>();
+            var filters = new EntityFrameworkPaginate.Filters<CustomerFilters>();
 
             if (string.IsNullOrEmpty(customerFilters.SortField))
             {
@@ -75,95 +76,112 @@ namespace DAL.Repositories
             }
 
 
+            filters.Add(!string.IsNullOrEmpty(customerFilters.filters.name), x => x.name.ToLower().Contains(customerFilters.filters.name.ToLower()));
+            filters.Add(!string.IsNullOrEmpty(customerFilters.filters.customerCode), x => x.customerCode.ToLower().Contains(customerFilters.filters.customerCode.ToLower()));
+            filters.Add(!string.IsNullOrEmpty(customerFilters.filters.email), x => x.email.ToLower().Contains(customerFilters.filters.email.ToLower()));
+            filters.Add(!string.IsNullOrEmpty(customerFilters.filters.city), x => x.city.ToLower().Contains(customerFilters.filters.city.ToLower()));
+            filters.Add(!string.IsNullOrEmpty(customerFilters.filters.stateOrProvince), x => x.stateOrProvince.ToLower().Contains(customerFilters.filters.stateOrProvince.ToLower()));
+            filters.Add(!string.IsNullOrEmpty(customerFilters.filters.accountType), x => x.accountType.ToLower().Contains(customerFilters.filters.accountType.ToLower()));
+            filters.Add(!string.IsNullOrEmpty(customerFilters.filters.customerType), x => x.customerType.ToLower().Contains(customerFilters.filters.customerType.ToLower()));
+            filters.Add(!string.IsNullOrEmpty(customerFilters.filters.customerClassification), x => x.customerClassification.Contains(customerFilters.filters.customerClassification));
+            filters.Add(!string.IsNullOrEmpty(customerFilters.filters.contact), x => x.contact.Contains(customerFilters.filters.contact));
+
+            filters.Add(!string.IsNullOrEmpty(customerFilters.filters.salesPersonPrimary), x => x.salesPersonPrimary.ToLower().Contains(customerFilters.filters.salesPersonPrimary.ToLower()));
 
             var totalRecords = (from t in _appContext.Customer
                                 join type in _appContext.CustomerType on t.CustomerTypeId equals type.CustomerTypeId
                                 join AccountTyp in _appContext.CustomerAffiliation on t.CustomerAffiliationId equals AccountTyp.CustomerAffiliationId
 
-                                join ct in _appContext.CustomerClassification on t.CustomerClassificationId equals ct.CustomerClassificationId into ctt
-                                from ct in ctt.DefaultIfEmpty()
+                                join Emp in _appContext.Employee on Convert.ToInt32(t.PrimarySalesPersonId) equals Emp.EmployeeId into Emplyee
+                                from Emp in Emplyee.DefaultIfEmpty()
+
+                                //join ct in _appContext.CustomerClassification on t.CustomerClassificationId equals ct.CustomerClassificationId into ctt
+                                //from ct in ctt.DefaultIfEmpty()
                                 join ad in _appContext.Address on t.AddressId equals ad.AddressId into add
                                 from ad in add.DefaultIfEmpty()
                                 join cc in _appContext.CustomerContact.Where(p => p.IsDefaultContact == true) on t.CustomerId equals cc.CustomerId into custinfo
                                 from custContacts in custinfo.DefaultIfEmpty()
-                                join con in _appContext.Contact on custContacts.ContactId equals con.ContactId into contactInfo
-                                from contacts in contactInfo.DefaultIfEmpty()
+                                   join con in _appContext.Contact on custContacts.ContactId equals con.ContactId into contactInfo
+                                from con in contactInfo.DefaultIfEmpty()
                                 where (t.IsDeleted == false || t.IsDeleted == null)
-                                && t.Name.Contains((!String.IsNullOrEmpty(customerFilters.filters.name) ? customerFilters.filters.name : t.Name))
-                                && t.CustomerCode.Contains((!String.IsNullOrEmpty(customerFilters.filters.customerCode) ? customerFilters.filters.customerCode : t.CustomerCode))
-                                && t.Email.Contains((!String.IsNullOrEmpty(customerFilters.filters.email) ? customerFilters.filters.email : t.Email))
-                                && type.Description.Contains((!String.IsNullOrEmpty(customerFilters.filters.accountType) ? customerFilters.filters.accountType : type.Description))
-                                && AccountTyp.description.Contains((!String.IsNullOrEmpty(customerFilters.filters.customerType) ? customerFilters.filters.customerType : AccountTyp.description))
-
-                                && ct.Description.Contains((!String.IsNullOrEmpty(customerFilters.filters.customerClassification) ? customerFilters.filters.customerClassification : ct.Description))
-                                && ad.City.Contains((!String.IsNullOrEmpty(customerFilters.filters.city) ? customerFilters.filters.city : ad.City))
-                                && ad.StateOrProvince.Contains((!String.IsNullOrEmpty(customerFilters.filters.stateOrProvince) ? customerFilters.filters.stateOrProvince : ad.StateOrProvince))
-                                  && t.CustomerPhone.Contains((!String.IsNullOrEmpty(customerFilters.filters.contact) ? customerFilters.filters.contact : t.CustomerPhone))
-                                // && t.PrimarySalesPersonFirstName.Contains((!String.IsNullOrEmpty(customerFilters.filters.salesPersonPrimary) ? customerFilters.filters.salesPersonPrimary : t.PrimarySalesPersonFirstName))
-
-                                //&& customerFilters.filters.contact == null ? string.IsNullOrEmpty(contacts.WorkPhone) || contacts.WorkPhone != null :
-                                //        contacts.WorkPhone.Contains(customerFilters.filters.contact)
-
-                                && customerFilters.filters.salesPersonPrimary == null ? string.IsNullOrEmpty(t.PrimarySalesPersonFirstName) || t.PrimarySalesPersonFirstName != null :
-                                         t.PrimarySalesPersonFirstName.Contains(customerFilters.filters.salesPersonPrimary)
-                                select new
+                                select new CustomerFilters()
                                 {
-                                    t.CustomerId,
-                                    Contact = t.CustomerPhone == null ? "-" : t.CustomerPhone,
+                                    CustomerId = t.CustomerId,
+                                    name = t.Name,
+                                    customerCode = t.CustomerCode,
+                                    email = t.Email,
+                                    accountType = type.Description,
+                                    //customerClassification = ct.Description,
 
-                                }).Distinct().Count();
-
+                                    customerClassification= string.Join(",", _appContext.Customer
+                                .Join(_appContext.ClassificationMapping,
+                                v => v.CustomerId,
+                                mp => mp.ReferenceId,
+                                (v, mp) => new { v, mp })
+                                 .Join(_appContext.CustomerClassification,
+                                  mp1 => mp1.mp.ClasificationId,
+                                  vc => vc.CustomerClassificationId,
+                                (mp1, vc) => new { mp1, vc })
+                                .Where(p => p.mp1.v.CustomerId == t.CustomerId && p.mp1.mp.ModuleId == Convert.ToInt32(ModuleEnum.Customer))
+                                .Select(p => p.vc.Description)),
+                                    city = ad.City,
+                                    stateOrProvince = ad.StateOrProvince,
+                                    //contact = t.CustomerPhone == null ? "-" : t.CustomerPhone,
+                                    contact = con.FirstName + " " + con.LastName,
+                                    salesPersonPrimary = Emp.FirstName == null ? "-" : Emp.FirstName,
+                                    createdDate = t.CreatedDate,
+                                    isActive = t.IsActive,
+                                    isDeleted = t.IsDeleted,
+                                     customerType = AccountTyp.description,
+                                }).Distinct().Paginate(pageNumber, pageSize, sorts, filters).RecordCount;
             var data = (from t in _appContext.Customer
-                        join type in _appContext.CustomerType on t.CustomerTypeId equals type.CustomerTypeId
-                        join AccountTyp in _appContext.CustomerAffiliation on t.CustomerAffiliationId equals AccountTyp.CustomerAffiliationId
-                        join ct in _appContext.CustomerClassification on t.CustomerClassificationId equals ct.CustomerClassificationId into ctt
-                        from ct in ctt.DefaultIfEmpty()
-                        join ad in _appContext.Address on t.AddressId equals ad.AddressId into add
-                        from ad in add.DefaultIfEmpty()
+                                join type in _appContext.CustomerType on t.CustomerTypeId equals type.CustomerTypeId
+                                join AccountTyp in _appContext.CustomerAffiliation on t.CustomerAffiliationId equals AccountTyp.CustomerAffiliationId
+
+                                join Emp in _appContext.Employee on Convert.ToInt32(t.PrimarySalesPersonId) equals Emp.EmployeeId into Emplyee
+                                from Emp in Emplyee.DefaultIfEmpty()
+
+                                    //join ct in _appContext.CustomerClassification on t.CustomerClassificationId equals ct.CustomerClassificationId into ctt
+                                    //from ct in ctt.DefaultIfEmpty()
+                                join ad in _appContext.Address on t.AddressId equals ad.AddressId into add
+                                from ad in add.DefaultIfEmpty()
                         join cc in _appContext.CustomerContact.Where(p => p.IsDefaultContact == true) on t.CustomerId equals cc.CustomerId into custinfo
                         from custContacts in custinfo.DefaultIfEmpty()
                         join con in _appContext.Contact on custContacts.ContactId equals con.ContactId into contactInfo
-                        from contacts in contactInfo.DefaultIfEmpty()
+                        from con in contactInfo.DefaultIfEmpty()
                         where (t.IsDeleted == false || t.IsDeleted == null)
-                        && t.Name.Contains((!String.IsNullOrEmpty(customerFilters.filters.name) ? customerFilters.filters.name : t.Name))
-                        && t.CustomerCode.Contains((!String.IsNullOrEmpty(customerFilters.filters.customerCode) ? customerFilters.filters.customerCode : t.CustomerCode))
-                        && t.Email.Contains((!String.IsNullOrEmpty(customerFilters.filters.email) ? customerFilters.filters.email : t.Email))
-                        && type.Description.Contains((!String.IsNullOrEmpty(customerFilters.filters.accountType) ? customerFilters.filters.accountType : type.Description))
-                        && AccountTyp.description.Contains((!String.IsNullOrEmpty(customerFilters.filters.customerType) ? customerFilters.filters.customerType : AccountTyp.description))
+                                select new CustomerFilters()
+                                {
+                                    CustomerId = t.CustomerId,
+                                    name = t.Name,
+                                    customerCode = t.CustomerCode,
+                                    email = t.Email,
+                                    accountType = type.Description,
+                                    //customerClassification = ct.Description,
 
-                        && ct.Description.Contains((!String.IsNullOrEmpty(customerFilters.filters.customerClassification) ? customerFilters.filters.customerClassification : ct.Description))
-                        && ad.City.Contains((!String.IsNullOrEmpty(customerFilters.filters.city) ? customerFilters.filters.city : ad.City))
-                        && ad.StateOrProvince.Contains((!String.IsNullOrEmpty(customerFilters.filters.stateOrProvince) ? customerFilters.filters.stateOrProvince : ad.StateOrProvince))
-                          && t.CustomerPhone.Contains((!String.IsNullOrEmpty(customerFilters.filters.contact) ? customerFilters.filters.contact : t.CustomerPhone))
-                        //  && t.PrimarySalesPersonFirstName.Contains((!String.IsNullOrEmpty(customerFilters.filters.salesPersonPrimary) ? customerFilters.filters.salesPersonPrimary : t.PrimarySalesPersonFirstName))
-
-                        // && customerFilters.filters.contact == null ? string.IsNullOrEmpty(contacts.WorkPhone) || contacts.WorkPhone != null :
-                        //         contacts.WorkPhone.Contains(customerFilters.filters.contact)
-
-                        && customerFilters.filters.salesPersonPrimary == null ? string.IsNullOrEmpty(t.PrimarySalesPersonFirstName) || t.PrimarySalesPersonFirstName != null :
-                                 t.PrimarySalesPersonFirstName.Contains(customerFilters.filters.salesPersonPrimary)
-                        select new CustomerFilters()
-                        {
-                            CustomerId = t.CustomerId,
-                            name = t.Name,
-                            customerCode = t.CustomerCode,
-                            email = t.Email,
-                            accountType = type.Description,
-                            customerClassification = ct.Description,
-                            city = ad.City,
-                            stateOrProvince = ad.StateOrProvince,
-                            contact = t.CustomerPhone == null ? "-" : t.CustomerPhone,
-                            salesPersonPrimary = t.PrimarySalesPersonFirstName == null ? "-" : t.PrimarySalesPersonFirstName,
-                            createdDate = t.CreatedDate,
-                            isActive = t.IsActive,
-                            isDeleted = t.IsDeleted,
-                            customerType = AccountTyp.description,
-                            totalRecords = totalRecords
-                        }).Distinct()
-                        .Paginate(pageNumber, pageSize, sorts).Results;
-
-
-
+                                    customerClassification = string.Join(",", _appContext.Customer
+                                .Join(_appContext.ClassificationMapping,
+                                v => v.CustomerId,
+                                mp => mp.ReferenceId,
+                                (v, mp) => new { v, mp })
+                                 .Join(_appContext.CustomerClassification,
+                                  mp1 => mp1.mp.ClasificationId,
+                                  vc => vc.CustomerClassificationId,
+                                (mp1, vc) => new { mp1, vc })
+                                .Where(p => p.mp1.v.CustomerId == t.CustomerId && p.mp1.mp.ModuleId == Convert.ToInt32(ModuleEnum.Customer))
+                                .Select(p => p.vc.Description)),
+                                    city = ad.City,
+                                    stateOrProvince = ad.StateOrProvince,
+                                    //contact = t.CustomerPhone == null ? "-" : t.CustomerPhone,
+                                    contact=con.FirstName+" "+con.LastName,
+                                    salesPersonPrimary = Emp.FirstName == null ? "-" : Emp.FirstName,
+                                    createdDate = t.CreatedDate,
+                                    isActive = t.IsActive,
+                                    isDeleted = t.IsDeleted,
+                                    customerType = AccountTyp.description,
+                                    totalRecords = totalRecords,
+                                }).Distinct()
+                           .Paginate(pageNumber, pageSize, sorts, filters).Results;
 
             return (data);
         }
@@ -184,12 +202,26 @@ namespace DAL.Repositories
                                     join cc in _appContext.CustomerContact.Where(p => p.IsDefaultContact == true) on t.CustomerId equals cc.CustomerId into custinfo
                                     from custContacts in custinfo.DefaultIfEmpty()
                                     join con in _appContext.Contact on custContacts.ContactId equals con.ContactId into contactInfo
-                                    from contacts in contactInfo.DefaultIfEmpty()
+                                    from con in contactInfo.DefaultIfEmpty()
+                                    join Emp in _appContext.Employee on Convert.ToInt32(t.PrimarySalesPersonId) equals Emp.EmployeeId into Emplyee
+                                    from Emp in Emplyee.DefaultIfEmpty()
+
                                     where (t.IsDeleted == false || t.IsDeleted == null)
-                                    && t.Name.Contains(value) || t.CustomerCode.Contains(value) || t.Email.Contains(value)
-                                    || type.Description.Contains(value) || ct.Description.Contains(value)
-                                    || ad.City.Contains(value) || ad.StateOrProvince.Contains(value)
-                                    || contacts.WorkPhone.Contains(value) || t.PrimarySalesPersonFirstName.Contains(value)
+                                    && t.Name.ToLower().Contains(value) || t.CustomerCode.ToLower().Contains(value) || t.Email.ToLower().Contains(value)
+                                    || type.Description.ToLower().Contains(value)// || ct.Description.ToLower().Contains(value)
+                                    || ad.City.ToLower().Contains(value) || ad.StateOrProvince.ToLower().Contains(value)
+                                    || (con.FirstName + " " + con.LastName).ToLower().Contains(value) || Emp.FirstName.ToLower().Contains(value)
+                                       || string.Join(",", _appContext.Customer
+                                .Join(_appContext.ClassificationMapping,
+                                v => v.CustomerId,
+                                mp => mp.ReferenceId,
+                                (v, mp) => new { v, mp })
+                                 .Join(_appContext.CustomerClassification,
+                                  mp1 => mp1.mp.ClasificationId,
+                                  vc => vc.CustomerClassificationId,
+                                (mp1, vc) => new { mp1, vc })
+                                .Where(p => p.mp1.v.CustomerId == t.CustomerId && p.mp1.mp.ModuleId == Convert.ToInt32(ModuleEnum.Customer))
+                                .Select(p => p.vc.Description)).ToLower().Contains(value)
                                     select new
                                     {
                                         t.CustomerId,
@@ -205,12 +237,26 @@ namespace DAL.Repositories
                             join cc in _appContext.CustomerContact.Where(p => p.IsDefaultContact == true) on t.CustomerId equals cc.CustomerId into custinfo
                             from custContacts in custinfo.DefaultIfEmpty()
                             join con in _appContext.Contact on custContacts.ContactId equals con.ContactId into contactInfo
-                            from contacts in contactInfo.DefaultIfEmpty()
+                            from con in contactInfo.DefaultIfEmpty()
+                            join Emp in _appContext.Employee on Convert.ToInt32(t.PrimarySalesPersonId) equals Emp.EmployeeId into Emplyee
+                            from Emp in Emplyee.DefaultIfEmpty()
+
                             where (t.IsDeleted == false || t.IsDeleted == null)
-                                   && t.Name.Contains(value) || t.CustomerCode.Contains(value) || t.Email.Contains(value)
-                                   || type.Description.Contains(value) || ct.Description.Contains(value)
-                                   || ad.City.Contains(value) || ad.StateOrProvince.Contains(value)
-                                   || contacts.WorkPhone.Contains(value) || t.PrimarySalesPersonFirstName.Contains(value)
+                                   && t.Name.ToLower().Contains(value) || t.CustomerCode.ToLower().Contains(value) || t.Email.ToLower().Contains(value)
+                                   || type.Description.ToLower().Contains(value) //|| ct.Description.ToLower().Contains(value)
+                                   || ad.City.ToLower().Contains(value) || ad.StateOrProvince.ToLower().Contains(value)
+                                   || (con.FirstName + " " + con.LastName).ToLower().Contains(value) || Emp.FirstName.ToLower().Contains(value)
+                                    || string.Join(",", _appContext.Customer
+                                .Join(_appContext.ClassificationMapping,
+                                v => v.CustomerId,
+                                mp => mp.ReferenceId,
+                                (v, mp) => new { v, mp })
+                                 .Join(_appContext.CustomerClassification,
+                                  mp1 => mp1.mp.ClasificationId,
+                                  vc => vc.CustomerClassificationId,
+                                (mp1, vc) => new { mp1, vc })
+                                .Where(p => p.mp1.v.CustomerId == t.CustomerId && p.mp1.mp.ModuleId == Convert.ToInt32(ModuleEnum.Customer))
+                                .Select(p => p.vc.Description)).ToLower().Contains(value)
                             select new
                             {
                                 t.CustomerId,
@@ -220,11 +266,23 @@ namespace DAL.Repositories
                                 AccountType = type.Description,
                                 CustomerType = ctype.description,
 
-                                CustomerClassification = ct.Description,
+                               // CustomerClassification = ct.Description,
+                                customerClassification = string.Join(",", _appContext.Customer
+                                .Join(_appContext.ClassificationMapping,
+                                v => v.CustomerId,
+                                mp => mp.ReferenceId,
+                                (v, mp) => new { v, mp })
+                                 .Join(_appContext.CustomerClassification,
+                                  mp1 => mp1.mp.ClasificationId,
+                                  vc => vc.CustomerClassificationId,
+                                (mp1, vc) => new { mp1, vc })
+                                .Where(p => p.mp1.v.CustomerId == t.CustomerId && p.mp1.mp.ModuleId == Convert.ToInt32(ModuleEnum.Customer))
+                                .Select(p => p.vc.Description)),
                                 City = ad.City,
                                 StateOrProvince = ad.StateOrProvince,
-                                Contact = contacts.WorkPhone == null ? "-" : contacts.WorkPhone,
-                                SalesPersonPrimary = t.PrimarySalesPersonFirstName == null ? "-" : t.PrimarySalesPersonFirstName,
+                                // Contact = contacts.WorkPhone == null ? "-" : contacts.WorkPhone,
+                                contact = con.FirstName + " " + con.LastName,
+                                SalesPersonPrimary = Emp.FirstName == null ? "-" :Emp.FirstName,
                                 t.UpdatedDate,
                                 t.IsActive,
                                 t.IsDeleted,
@@ -247,7 +305,10 @@ namespace DAL.Repositories
                                     join cc in _appContext.CustomerContact.Where(p => p.IsDefaultContact == true) on t.CustomerId equals cc.CustomerId into custinfo
                                     from custContacts in custinfo.DefaultIfEmpty()
                                     join con in _appContext.Contact on custContacts.ContactId equals con.ContactId into contactInfo
-                                    from contacts in contactInfo.DefaultIfEmpty()
+                                    from con in contactInfo.DefaultIfEmpty()
+                                    join Emp in _appContext.Employee on Convert.ToInt32(t.PrimarySalesPersonId) equals Emp.EmployeeId into Emplyee
+                                    from Emp in Emplyee.DefaultIfEmpty()
+
                                     where (t.IsDeleted == false || t.IsDeleted == null)
                                     select new
                                     {
@@ -257,14 +318,17 @@ namespace DAL.Repositories
 
                 var data = (from t in _appContext.Customer
                             join type in _appContext.CustomerType on t.CustomerTypeId equals type.CustomerTypeId
-                            join ct in _appContext.CustomerClassification on t.CustomerClassificationId equals ct.CustomerClassificationId
+                           // join ct in _appContext.CustomerClassification on t.CustomerClassificationId equals ct.CustomerClassificationId
                             join ctype in _appContext.CustomerAffiliation on t.CustomerAffiliationId equals ctype.CustomerAffiliationId
 
                             join ad in _appContext.Address on t.AddressId equals ad.AddressId
                             join cc in _appContext.CustomerContact.Where(p => p.IsDefaultContact == true) on t.CustomerId equals cc.CustomerId into custinfo
                             from custContacts in custinfo.DefaultIfEmpty()
                             join con in _appContext.Contact on custContacts.ContactId equals con.ContactId into contactInfo
-                            from contacts in contactInfo.DefaultIfEmpty()
+                            from con in contactInfo.DefaultIfEmpty()
+                            join Emp in _appContext.Employee on Convert.ToInt32(t.PrimarySalesPersonId) equals Emp.EmployeeId into Emplyee
+                            from Emp in Emplyee.DefaultIfEmpty()
+
                             where (t.IsDeleted == false || t.IsDeleted == null)
                             select new
                             {
@@ -274,11 +338,23 @@ namespace DAL.Repositories
                                 t.Email,
                                 AccountType = type.Description,
                                 CustomerType = ctype.description,
-                                CustomerClassification = ct.Description,
+                                //CustomerClassification = ct.Description,
+                                customerClassification = string.Join(",", _appContext.Customer
+                                .Join(_appContext.ClassificationMapping,
+                                v => v.CustomerId,
+                                mp => mp.ReferenceId,
+                                (v, mp) => new { v, mp })
+                                 .Join(_appContext.CustomerClassification,
+                                  mp1 => mp1.mp.ClasificationId,
+                                  vc => vc.CustomerClassificationId,
+                                (mp1, vc) => new { mp1, vc })
+                                .Where(p => p.mp1.v.CustomerId == t.CustomerId && p.mp1.mp.ModuleId == Convert.ToInt32(ModuleEnum.Customer))
+                                .Select(p => p.vc.Description)),
                                 City = ad.City,
                                 StateOrProvince = ad.StateOrProvince,
-                                Contact = contacts.WorkPhone == null ? "-" : contacts.WorkPhone,
-                                SalesPersonPrimary = t.PrimarySalesPersonFirstName == null ? "-" : t.PrimarySalesPersonFirstName,
+                                //Contact = contacts.WorkPhone == null ? "-" : contacts.WorkPhone,
+                                contact = con.FirstName + " " + con.LastName,
+                                SalesPersonPrimary = Emp.FirstName == null ? "-" : Emp.FirstName,
                                 t.UpdatedDate,
                                 t.IsActive,
                                 t.IsDeleted,
@@ -338,6 +414,10 @@ namespace DAL.Repositories
                         join creditTerms in _appContext.CreditTerms on t.CreditTermsId equals creditTerms.CreditTermsId into cre
                         from creditTerms in cre.DefaultIfEmpty()
                         join cc in _appContext.CustomerClassification on t.CustomerClassificationId equals cc.CustomerClassificationId
+
+                        join Emp in _appContext.Employee on Convert.ToInt32(t.PrimarySalesPersonId) equals Emp.EmployeeId into Emplyee
+                        from Emp in Emplyee.DefaultIfEmpty()
+
                         where t.IsDeleted == false || t.IsDeleted == null
                         // select new { t, ad, vt }).ToList();
                         select new
@@ -345,7 +425,7 @@ namespace DAL.Repositories
                             t.CreditTermsId,
                             t.CurrencyId,
                             ad,
-                            t.PrimarySalesPersonFirstName,
+                            PrimarySalesPersonFirstName=Emp.FirstName,
                             t.CustomerId,
                             t,
                             // cc,
@@ -360,8 +440,8 @@ namespace DAL.Repositories
                             Address3 = ad.Line3,
                             t.CustomerCode,
                             t.DoingBuinessAsName,
-                            t.Parent,
-                            t.RestrictPMAMemo,
+                            t.IsParent,
+                            //t.RestrictPMAMemo,
                             t.PBHCustomerMemo,
                             t.ContractReference,
                             t.CustomerURL,
@@ -390,12 +470,20 @@ namespace DAL.Repositories
                         join custType in _appContext.CustomerType on t.CustomerTypeId equals custType.CustomerTypeId into cust
                         from custType in cust.DefaultIfEmpty()
 
+                        join custo in _appContext.Customer on t.ParentId equals custo.CustomerId
+                         into cus
+                        from custo in cus.DefaultIfEmpty()
                         join ad in _appContext.Address on t.AddressId equals ad.AddressId
                         join vt in _appContext.CustomerAffiliation on t.CustomerAffiliationId equals vt.CustomerAffiliationId
                         join currency in _appContext.Currency on t.CurrencyId equals currency.CurrencyId into curr
                         from currency in curr.DefaultIfEmpty()
                         join creditTerms in _appContext.CreditTerms on t.CreditTermsId equals creditTerms.CreditTermsId into cre
                         from creditTerms in cre.DefaultIfEmpty()
+
+                        join Emp in _appContext.Employee on Convert.ToInt32(t.PrimarySalesPersonId) equals Emp.EmployeeId into Emplyee
+                        from Emp in Emplyee.DefaultIfEmpty()
+
+
                         join cc in _appContext.CustomerClassification on t.CustomerClassificationId equals cc.CustomerClassificationId
                         where t.IsDeleted == false || t.IsDeleted == null
                         // select new { t, ad, vt }).ToList();
@@ -404,7 +492,7 @@ namespace DAL.Repositories
                             t.CreditTermsId,
                             t.CurrencyId,
                             ad,
-                            t.PrimarySalesPersonFirstName,
+                            PrimarySalesPersonFirstName= Emp.FirstName,
                             t.CustomerId,
                             t,
                             // cc,
@@ -419,8 +507,8 @@ namespace DAL.Repositories
                             Address3 = ad.Line3,
                             t.CustomerCode,
                             t.DoingBuinessAsName,
-                            t.Parent,
-                            t.RestrictPMAMemo,
+                            t.IsParent,
+                          //  t.RestrictPMAMemo,
                             t.PBHCustomerMemo,
                             t.ContractReference,
                             t.CustomerURL,
@@ -452,12 +540,18 @@ namespace DAL.Repositories
                             join vt in _appContext.CustomerType on t.CustomerTypeId equals vt.CustomerTypeId
                             join v in _appContext.CustomerAffiliation on t.CustomerAffiliationId equals v.CustomerAffiliationId
                             join cc in _appContext.CustomerClassification on t.CustomerClassificationId equals cc.CustomerClassificationId
+                            join Emp in _appContext.Employee on Convert.ToInt32(t.PrimarySalesPersonId) equals Emp.EmployeeId into Emplyee
+                            from Emp in Emplyee.DefaultIfEmpty()
+
+
+
+
                             where t.IsActive == true && t.Name == name
 
                             select new
                             {
                                 ad,
-                                t.PrimarySalesPersonFirstName,
+                               PrimarySalesPersonFirstName=Emp.FirstName,
                                 t.CustomerId,
                                 t,
                                 t.Email,
@@ -616,6 +710,9 @@ namespace DAL.Repositories
 
                             from mup in tmup.DefaultIfEmpty()
 
+                            join cust in _appContext.Customer on t.ParentId equals cust.CustomerId
+                           into cus
+                            from cust in cus.DefaultIfEmpty()
                             join inte in _appContext.CustomerIntegrationPortal on t.CustomerId equals inte.CustomerId into integra
                             from inte in integra.DefaultIfEmpty()
                             join intepo in _appContext.IntegrationPortal on inte.IntegrationPortalId equals intepo.IntegrationPortalId into integrapo
@@ -652,10 +749,10 @@ namespace DAL.Repositories
 
                                 customerCode = t.CustomerCode,
                                 doingBuinessAsName = t.DoingBuinessAsName,
-                                parent = t.Parent,
+                                parentId = t.ParentId,
 
-
-                                customerParentName = t.CustomerParentName,
+                                isParent=t.IsParent,
+                              customerParentName = cust.Name,
                                 customerURL = t.CustomerURL,
                                 generalCurrencyId = t.CurrencyId,
                                 customerClassificationId = t.CustomerClassificationId,
@@ -663,15 +760,9 @@ namespace DAL.Repositories
                                 isPBHCustomer = t.IsPBHCustomer,
                                 pbhCustomerMemo = t.PBHCustomerMemo,
                                 restrictPMA = t.RestrictPMA,
-                                restrictPMAMemo = t.RestrictPMAMemo,
-                                restrictBER = t.RestrictBER,
-                                restrictBERMemo = t.RestrictBERMemo,
-                                scanDocuments = t.ScanDocuments,
+                              
                                 isCustomerAlsoVendor = t.IsCustomerAlsoVendor,
-                                edi = t.EDI,
-                                ediDescription = t.EDIDescription,
-                                isAeroExchange = t.IsAeroExchange,
-                                aeroExchangeDescription = t.AeroExchangeDescription,
+                              
                                 createdBy = t.CreatedBy,
                                 updatedBy = t.UpdatedBy,
                                 UpdatedDate = t.UpdatedDate,
@@ -684,21 +775,16 @@ namespace DAL.Repositories
                                 discountId = t.DiscountId,
                                 allowNettingOfAPAR = t.AllowNettingOfAPAR,
                                 isTaxExempt = t.IsTaxExempt,
-                                taxRateStateOrProvince = t.TaxRateStateOrProvince,
-                                taxRateOther = t.TaxRateOther,
-                                taxTypeId = t.TaxTypeId,
+                             
                                 allowPartialBilling = t.AllowPartialBilling,
                                 allowProformaBilling = t.AllowProformaBilling,
                                 customerId = t.CustomerId,
                                 primarySalesPersonId = t.PrimarySalesPersonId,
                                 primarySalesPersonFirstName = Emp.FirstName,
-
-
                                 csrId = t.CsrId,
                                 saId = t.SaId,
                                 secondarySalesPersonId = t.SecondarySalesPersonId,
                                 secondarySalesPersonName = Empe.FirstName,
-
                                 annualQuota = t.AnnualQuota,
                                 annualRevenuePotential = t.AnnualRevenuePotential,
                                 AgentName = Employeesald.FirstName,
@@ -709,7 +795,7 @@ namespace DAL.Repositories
                                 CreditTermsName = creditTerms.Name,
                                 MarkUpPercentage = mup == null ? 0 : mup.PercentValue,
                                 //MarkUpPercentage = mup.PercentValue,
-                                TaxTypeDescription = t.TaxTypeId,
+                                //TaxTypeDescription = t.TaxTypeId,
                                 CsrName = Employeecsr.FirstName,
 
                                 AccountType = v.description,
@@ -717,45 +803,7 @@ namespace DAL.Repositories
                                 TaxRateName = taxTyp.TaxRate
 
 
-                                //t.CreditTermsId,
-                                //t.CurrencyId,
-                                //ad,
-                                //t.PrimarySalesPersonFirstName,
-                                //t.CustomerId,
-                                //t,
-                                //// cc,
-                                //creditTerms,
-                                //currency,
-                                //currency.Symbol,
-                                ////creditTerms.Name,
-                                //t.Email,
-                                //t.IsActive,
-                                //Address1 = ad.Line1,
-                                //Address2 = ad.Line2,
-                                //Address3 = ad.Line3,
-                                //t.CustomerCode,
-                                //t.DoingBuinessAsName,
-                                //t.Parent,
-                                //t.RestrictPMAMemo,
-                                //t.PBHCustomerMemo,
-                                //t.ContractReference,
-                                //t.CustomerURL,
-                                //t.Name,
-                                //ad.City,
-                                //ad.StateOrProvince,
-                                //vt.description,
-                                //t.CreatedDate,
-                                //t.CreatedBy,
-                                //t.UpdatedBy,
-                                //t.UpdatedDate,
-                                //ad.AddressId,
-                                //ad.Country,
-                                //ad.PostalCode,
-                                //vt.CustomerAffiliationId,
-                                //cc.CustomerClassificationId,
-                                //mup.MarkUpValue,
-                                //CreditTermName = creditTerms.Name,
-                                ////cc.Description
+                               
                             }).OrderByDescending(a => a.UpdatedDate).ToList();
                 return data;
 
@@ -2434,10 +2482,14 @@ namespace DAL.Repositories
                        join vt in _appContext.CustomerType on t.CustomerTypeId equals vt.CustomerTypeId
                        join v in _appContext.CustomerAffiliation on t.CustomerAffiliationId equals v.CustomerAffiliationId
                        join cc in _appContext.CustomerClassification on t.CustomerClassificationId equals cc.CustomerClassificationId
+                       join Emp in _appContext.Employee on Convert.ToInt32(t.PrimarySalesPersonId) equals Emp.EmployeeId into Emplyee
+                       from Emp in Emplyee.DefaultIfEmpty()
+
+
                        select new
                        {
                            ad,
-                           t.PrimarySalesPersonFirstName,
+                          PrimarySalesPersonFirstName=Emp.FirstName,
                            t.CustomerId,
                            t,
                            t.Email,
@@ -2697,8 +2749,8 @@ namespace DAL.Repositories
                                 CountryName = cont.countries_name,
                                 customerCode = t.CustomerCode,
                                 doingBuinessAsName = t.DoingBuinessAsName,
-                                parent = t.Parent,
-                                customerParentName = t.CustomerParentName,
+                                parentId=t.ParentId,
+                                isParent=t.IsParent,
                                 customerURL = t.CustomerURL,
                                 generalCurrencyId = t.CurrencyId,
                                 customerClassificationId = t.CustomerClassificationId,
@@ -2706,11 +2758,9 @@ namespace DAL.Repositories
                                 isPBHCustomer = t.IsPBHCustomer,
                                 pbhCustomerMemo = t.PBHCustomerMemo,
                                 restrictPMA = t.RestrictPMA,
-                                restrictPMAMemo = t.RestrictPMAMemo,
                                 restrictBER = t.RestrictBER,
-                                restrictBERMemo = t.RestrictBERMemo,
                                 isCustomerAlsoVendor = t.IsCustomerAlsoVendor,
-                                ediDescription = t.EDIDescription,
+                               
                                 createdBy = t.CreatedBy,
                                 updatedBy = t.UpdatedBy,
                                 UpdatedDate = t.UpdatedDate,

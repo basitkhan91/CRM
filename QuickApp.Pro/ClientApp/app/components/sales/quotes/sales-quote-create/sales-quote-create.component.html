@@ -25,7 +25,7 @@
               </div>
               <div class="form-group">
                 <label>Open Date<span class="clr-red">*</span></label>
-                <p-calendar name="openDate" [(ngModel)]="salesQuote.openDate" [showIcon]="true"></p-calendar>
+                <p-calendar name="openDate" [(ngModel)]="salesQuote.openDate" [showIcon]="true" (change)="onChangeOpenDate()"></p-calendar>
               </div>
               <div class="form-group">
                 <label>Cust Request Date<span class="clr-red">*</span></label>
@@ -44,11 +44,11 @@
               </div>
               <div class="form-group">
                 <label>Valid For (Days)<span class="clr-red">*</span></label>
-                <input type="text" class="form-control" name="validForDays" [(ngModel)]="salesQuote.validForDays" />
+                <input type="text" class="form-control" name="validForDays" [(ngModel)]="salesQuote.validForDays" (change)="onChangeValidForDays()" />
               </div>
               <div class="form-group">
                 <label>Quote Exp Date<span class="clr-red">*</span></label>
-                <p-calendar name="quoteExpiryDate" [(ngModel)]="salesQuote.quoteExpiryDate" [showIcon]="true">
+                <p-calendar name="quoteExpiryDate" [(ngModel)]="salesQuote.quoteExpiryDate" [showIcon]="true" (change)="onChangeQuoteExpiryDate()">
                 </p-calendar>
               </div>
               <div class="form-group">
@@ -189,7 +189,7 @@
             </p-autoComplete>
               </div>
               <div class="form-group">
-                <label>Probibility</label>
+                <label>Probability</label>
                 <select name="probability" [(ngModel)]="salesQuote.probabilityId">
                   <option value='-1'>--Select</option>
                   <option *ngFor="let p of percents" [ngValue]="p.value">{{ p.label }}</option> 
@@ -241,8 +241,8 @@
                 </p-checkbox>
               </div>
             </div>
-            <div class="col-md-2 column column-seperator">
-              <div class="form-group">
+            <div class="col-md-2 column column-seperator" >
+              <div class="form-group" *ngIf="selectedApprovers>0">
                 <label>Quote Approved By</label>
                 <select name="quoteApprovedById" [(ngModel)]="salesQuote.quoteApprovedById">
                   <option value='-1'>--Select</option>
@@ -251,7 +251,7 @@
                       </option>
                 </select>
               </div>
-              <div class="form-group">
+              <div class="form-group" *ngIf="selectedApprovers>0">
                 <label>Approved Date</label>
                 <p-calendar name="approvedDate" [(ngModel)]="salesQuote.approvedDate" [showIcon]="true"></p-calendar>
               </div>
@@ -285,6 +285,59 @@
 									<i class="fa fa-info-circle fa-lg" data-toggle="modal" data-target="#add-description" pTooltip="{{salesQuote.notes}}" tooltipPosition="top" (click)="onAddDescription('notes')"></i>
                 </div>
              
+            </div>
+
+            <div>
+
+              <div class="col-md-2 column column-seperator" >
+									<div class="card-header" style="padding: 10px 12px;">
+										<h5 style="margin-bottom: 0; font-size: 12px;">Management Structure <span class="clr-red">*</span></h5>
+									</div>
+									<div class="card-body">
+                    <div class="form-group">
+                      <p-dropdown placeholder="Select Legal Entity"
+                                  name="company"
+                                  #wocompanyId="ngModel"
+                                  required
+                                  [options]="legalEntityList"
+                                  class="p-dropdown-custom-md-2"
+                                  (onChange)="selectedLegalEntity($event.value)"
+                                  [(ngModel)]="salesQuote.companyId">
+                      </p-dropdown>
+                  </div>
+                  <div class="form-group">
+                      <p-dropdown placeholder="Select "
+                                  name="bu"
+                                  #wobu="ngModel"
+                                  [options]="businessUnitList"
+                                  class="p-dropdown-custom-md-2"
+                                  (onChange)="selectedBusinessUnit($event.value)"
+                                  [(ngModel)]="salesQuote.buId">
+                      </p-dropdown>
+                  </div>
+                  <div class="form-group">
+                      <p-dropdown placeholder="Select "
+                                  name="division"
+                                  #wodivision="ngModel"
+                                  [options]="divisionList"
+                                  class="p-dropdown-custom-md-2"
+                                  (onChange)="selectedDivision($event.value)"
+                                  [(ngModel)]="salesQuote.divisionId">
+                      </p-dropdown>
+                  </div>
+                  <div class="form-group">
+                      <p-dropdown placeholder="Select "
+                                  name="department"
+                                  #wodepartment="ngModel"
+                                  [options]="departmentList"
+                                  class="p-dropdown-custom-md-2"
+                                  (onChange)="selectedDepartment($event.value)"
+                                  [(ngModel)]="salesQuote.departmentId">
+                      </p-dropdown>
+                  </div>
+									</div>
+								</div>
+
             </div>
           </div>
           <ng-container>

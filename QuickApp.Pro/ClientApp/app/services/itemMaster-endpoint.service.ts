@@ -572,6 +572,8 @@ export class ItemMasterEndpoint extends EndpointFactory {
             'isOtherDateAvailable': roleObject.isOtherDateAvailable,
             'otherDays': roleObject.otherDays,
             'isAcquiredMethodBuy': roleObject.isAcquiredMethodBuy,
+            'assetAcquistionTypeId': roleObject.assetAcquistionTypeId,
+            'hotItem': roleObject.hotItem,
             'isHazardousMaterial': roleObject.isHazardousMaterial,
             'isReceivedDateAvailable': roleObject.isReceivedDateAvailable,
             'itemGroupId': roleObject.itemGroupId,
@@ -603,7 +605,7 @@ export class ItemMasterEndpoint extends EndpointFactory {
             'locationId': roleObject.locationId,
             'shelfId': roleObject.shelfId,
             'binId': roleObject.binId,
-
+            'isHotItem': roleObject.isHotItem,
 
 
         }
@@ -626,6 +628,8 @@ export class ItemMasterEndpoint extends EndpointFactory {
             'purchaseUnitOfMeasureId': roleObject.purchaseUnitOfMeasureId,
             'discountPurchasePercent': roleObject.discountPurchasePercent,
             'isAcquiredMethodBuy': roleObject.isAcquiredMethodBuy,
+            'assetAcquistionTypeId': roleObject.assetAcquistionTypeId,
+            'hotItem': roleObject.hotItem,
             'listPrice': roleObject.listPrice,
             'unitCost': roleObject.unitCost,
             'manufacturerId': roleObject.manufacturerId,
@@ -680,6 +684,8 @@ export class ItemMasterEndpoint extends EndpointFactory {
             'manufacturerId': roleObject.manufacturerId,
             'aircraftTypeId': roleObject.AircraftTypeId,
             'isAcquiredMethodBuy': roleObject.isAcquiredMethodBuy,
+            'assetAcquistionTypeId': roleObject.assetAcquistionTypeId,
+            'hotItem': roleObject.hotItem,
             'itemGroupId': roleObject.itemGroupId,
             'partsCertNum': roleObject.partsCertNum,
             'tagType': roleObject.tagType,

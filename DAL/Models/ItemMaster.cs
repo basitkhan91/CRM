@@ -15,6 +15,8 @@ namespace DAL.Models
         public long? PartAlternatePartId { get; set; }
         public string NHA { get; set; }
         public bool? IsSerialized { get; set; }
+
+        public bool? IsHotItem { get; set; }
         public bool? IsTimeLife { get; set; }
         public Int32? ItemTypeId { get; set; }
         public long? ItemGroupId { get; set; }

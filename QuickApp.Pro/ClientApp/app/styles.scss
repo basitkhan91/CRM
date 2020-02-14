@@ -15163,6 +15163,10 @@ body .ui-autocomplete .ui-autocomplete-dropdown .ui-button-icon-left:before {
   font-size: 16px !important;
 }
 
+.imstock-pmselect .ui-multiselect-filter-container .ui-multiselect-filter-icon {
+  top: 42% !important;
+}
+
 .popup-plusicon-cstm {
   width: 100px !important;
   float: none !important;
@@ -15574,4 +15578,7 @@ span.flag {
 }
 .align_center{
     text-align: center;
+}
+.cdk-overlay-container {
+    z-index: 1051 !important;
 }
