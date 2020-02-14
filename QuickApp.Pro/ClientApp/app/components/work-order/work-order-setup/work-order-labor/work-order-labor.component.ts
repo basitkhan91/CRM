@@ -50,8 +50,6 @@ export class WorkOrderLaborComponent implements OnInit, OnChanges {
 
   ngOnInit() {
 
-    console.log(this.laborForm);
-    console.log(this.workOrderLaborList.laborList);
 
     this.workOrderWorkFlowList = this.workOrderWorkFlowOriginalData;
     this.laborForm['costPlusType'] = 'Mark Up';
@@ -568,7 +566,7 @@ export class WorkOrderLaborComponent implements OnInit, OnChanges {
     let total = 0;
     for (let labor of taskList) {
       if (labor.fixedAmount) {
-        total += labor.fixedAmount;
+        total += Number(labor.fixedAmount);
       }
     }
     return total.toFixed(2);
@@ -578,17 +576,17 @@ export class WorkOrderLaborComponent implements OnInit, OnChanges {
     let total = 0;
     for (let labor of taskList) {
       if (labor.directLaborOHCost) {
-        total += labor.directLaborOHCost;
+        total += Number(labor.directLaborOHCost);
       }
     }
-    return total.toFixed(2);
+    return Number(total).toFixed(2);
   }
 
   getTotalLaborBurdenRate(taskList) {
     let total = 0;
     for (let labor of taskList) {
       if (labor.burdenRateAmount) {
-        total += labor.burdenRateAmount;
+        total += Number(labor.burdenRateAmount);
       }
     }
     return total.toFixed(2);
@@ -598,7 +596,7 @@ export class WorkOrderLaborComponent implements OnInit, OnChanges {
     let total = 0;
     for (let labor of taskList) {
       if (labor.totalCostPerHour) {
-        total += labor.totalCostPerHour;
+        total += Number(labor.totalCostPerHour);
       }
     }
     return total.toFixed(2);
@@ -608,7 +606,7 @@ export class WorkOrderLaborComponent implements OnInit, OnChanges {
     let total = 0;
     for (let labor of taskList) {
       if (labor.totalCost) {
-        total += labor.totalCost;
+        total += Number(labor.totalCost);
       }
     }
     return total.toFixed(2);
@@ -618,7 +616,7 @@ export class WorkOrderLaborComponent implements OnInit, OnChanges {
     let total = 0;
     for (let labor of taskList) {
       if (labor.billingRate) {
-        total += labor.billingRate;
+        total += Number(labor.billingRate);
       }
     }
     return total.toFixed(2);
@@ -628,7 +626,7 @@ export class WorkOrderLaborComponent implements OnInit, OnChanges {
     let total = 0;
     for (let labor of taskList) {
       if (labor.billingAmount) {
-        total += labor.billingAmount;
+        total += Number(labor.billingAmount);
       }
     }
     return total.toFixed(2);
@@ -648,7 +646,7 @@ export class WorkOrderLaborComponent implements OnInit, OnChanges {
     let total = 0;
     for (let labor of taskList) {
       if (labor.labourCostPlus) {
-        total += labor.labourCostPlus;
+        total += Number(labor.labourCostPlus);
       }
     }
     return total.toFixed(2);
@@ -685,25 +683,25 @@ export class WorkOrderLaborComponent implements OnInit, OnChanges {
         data => {
           switch(type){
             case "Hours": {
-              if(data.hours) htotal += data.hours;
+              if(data.hours) htotal += Number(data.hours);
             }
             case "LaborOHCost":{
-              if(data.directLaborOHCost) loTotal += data.directLaborOHCost;
+              if(data.directLaborOHCost) loTotal += Number(data.directLaborOHCost);
             }
             case "LaborBurdenRate":{
-              if(data.burdenRateAmount) burTotal += data.burdenRateAmount;
+              if(data.burdenRateAmount) burTotal += Number(data.burdenRateAmount);
             }
             case "CostPerHour":{
-              if(data.totalCostPerHour) cpTotal += data.totalCostPerHour;
+              if(data.totalCostPerHour) cpTotal += Number(data.totalCostPerHour);
             }
             case "Cost":{
-              if(data.totalCost) costTotal += data.totalCost;
+              if(data.totalCost) costTotal += Number(data.totalCost);
             }
             case "BillingRate":{
-              if(data.billingRate) bRTotal += data.billingRate;
+              if(data.billingRate) bRTotal += Number(data.billingRate);
             }
             default:{
-              if(data.billingAmount) bATotal += data.billingAmount;
+              if(data.billingAmount) bATotal += Number(data.billingAmount);
             }
           }
         }

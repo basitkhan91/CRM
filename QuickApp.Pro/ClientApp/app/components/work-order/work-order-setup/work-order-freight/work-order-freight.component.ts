@@ -23,6 +23,7 @@ export class WorkOrderFreightComponent implements OnInit {
     @Output() saveFreightListForWO = new EventEmitter();
     @Output() updateFreightListForWo = new EventEmitter();
     @Output() refreshData = new EventEmitter();
+    @Input() view: boolean = false;
     
     @Input() isWorkOrder;
     @Input() isQuote = false;
@@ -53,7 +54,9 @@ export class WorkOrderFreightComponent implements OnInit {
         private cdRef: ChangeDetectorRef) {
     }
     ngOnInit() {
-        this.freightForm = [...this.freightForm, new Freight()];
+        if(this.freightForm){
+            this.freightForm = [...this.freightForm, new Freight()];
+        }
         this.customerId = editValueAssignByCondition('customerId', this.savedWorkOrderData.customerId);
         this.getShipViaByCustomerId();
         this.getCarrierList();

@@ -38,6 +38,7 @@ export class WorkOrderQuoteComponent implements OnInit, OnChanges {
   @Input() quoteListViewData: any = {};
   @Input() workorderid: number = 0;
   @Input() isView: boolean = false;
+  @Input() ispop: boolean = false;
   @Input() isQuoteListView: boolean = false;
   customerName: string;
   creditLimit: any;
@@ -121,6 +122,7 @@ woWorkFlowId: number = 0;
 currenttaskId: number = 0;
 workOrderFreightList = [];
 overAllMarkup: any;
+selectedHistoricalWorkOrder: any;
 
 
 
@@ -234,56 +236,58 @@ overAllMarkup: any;
 
   getWorkOrderInfo(getWorkOrderInfo){
     this.workOrderService.getWorkOrderById(getWorkOrderInfo).subscribe(res => {
-      this.savedWorkOrderData = res;
-      this.customerCode = res.customerDetails.customerId;
-      this.customerName = res.customerDetails.customerName;
-      this.customerContact = res.customerDetails.customerContact;
-      this.customerRef = res.customerDetails.customerRef;
-        this.csr = res.customerDetails.csrName;
-        this.customerEmail = res.customerDetails.customerEmail;
-        this.customerPhone = res.customerDetails.customerPhone;
+      if(res){
+        this.savedWorkOrderData = res;
+        this.customerCode = res.customerDetails.customerCode;
+        this.customerName = res.customerDetails.customerName;
+        this.customerContact = res.customerDetails.customerContact;
+        this.customerRef = res.customerDetails.customerRef;
+          this.csr = res.customerDetails.csrName;
+          this.customerEmail = res.customerDetails.customerEmail;
+          this.customerPhone = res.customerDetails.customerPhone;
 
 
-      this.creditLimit = res.creditLimit;
-      this.workOrderNumber = res.workOrderNum;
-      this.quoteForm.WorkOrderId = res.workOrderId;
-      this.quoteForm.WorkFlowWorkOrderId = res["workFlowWorkOrderId"];
-      this.quoteForm.openDate = new Date(res["openDate"])
-      this.quoteForm['customerId'] = res['customerDetails']['customerId'];
-      this.quoteForm['CustomerPhone'] = res['customerDetails']['customerPhone']
-      this.quoteForm['salesPersonId'] = res['salesPersonId'];
-      this.quoteForm['employeeId'] = res['employeeId'];
-      this.quoteForm.masterCompanyId = res['masterCompanyId'];
-      this.quoteForm.creditTermsandLimit = res.customerDetails.creditLimit;
-      this.workOrderService.getWorkOrderQuoteDetail(res.workOrderId, res["workFlowWorkOrderId"])
-      .subscribe(
-        (res : any)=>{
-          if(res){
-            this.isEdit = true;
-            this.setWorkOrderQuoteId(res['workOrderQuote']['workOrderQuoteId']);
-            this.quotationHeader = this.formQuoteInfo(res.workOrderQuote);
-            this.quotationHeader['workOrderQuoteId'] = res.workOrderQuote.workOrderQuoteId;
-            this.dso = res.workOrderQuote.dso;
-            this.validFor = res.workOrderQuote.validForDays;
-            res.workOrderQuote.openDate = new Date(res.workOrderQuote.openDate);
-            this.quoteForm = {...res.workOrderQuote, WorkOrderId: res.workOrderId,
-              WorkFlowWorkOrderId: res["workFlowWorkOrderId"], quoteNumber: res.workOrderQuote.quoteNumber, expirationDateStatus: res.workOrderQuote.quoteStatusId};
-            this.quoteDueDate = new Date(res.workOrderQuote.quoteDueDate);
-            this.expirationDate = new Date(res.workOrderQuote.expirationDate);
-            this.currency = res.workOrderQuote.currencyId;
-            this.accountsReceivableBalance = res.workOrderQuote.accountsReceivableBalance;
-            this.warnings = res.warnings;
-            this.memo = res.memo;
-            this.getQuoteTabData();
-            this.setBuildMethod(res.buildMethodId);
+        this.creditLimit = res.creditLimit;
+        this.workOrderNumber = res.workOrderNum;
+        this.quoteForm.WorkOrderId = res.workOrderId;
+        this.quoteForm.WorkFlowWorkOrderId = res["workFlowWorkOrderId"];
+        this.quoteForm.openDate = new Date(res["openDate"])
+        this.quoteForm['customerId'] = res['customerDetails']['customerId'];
+        this.quoteForm['CustomerPhone'] = res['customerDetails']['customerPhone']
+        this.quoteForm['salesPersonId'] = res['salesPersonId'];
+        this.quoteForm['employeeId'] = res['employeeId'];
+        this.quoteForm.masterCompanyId = res['masterCompanyId'];
+        this.quoteForm.creditTermsandLimit = res.customerDetails.creditLimit;
+        this.workOrderService.getWorkOrderQuoteDetail(res.workOrderId, res["workFlowWorkOrderId"])
+        .subscribe(
+          (res : any)=>{
+            if(res){
+              this.isEdit = true;
+              this.setWorkOrderQuoteId(res['workOrderQuote']['workOrderQuoteId']);
+              this.quotationHeader = this.formQuoteInfo(res.workOrderQuote);
+              this.quotationHeader['workOrderQuoteId'] = res.workOrderQuote.workOrderQuoteId;
+              this.dso = res.workOrderQuote.dso;
+              this.validFor = res.workOrderQuote.validForDays;
+              res.workOrderQuote.openDate = new Date(res.workOrderQuote.openDate);
+              this.quoteForm = {...res.workOrderQuote, WorkOrderId: res.workOrderId,
+                WorkFlowWorkOrderId: res["workFlowWorkOrderId"], quoteNumber: res.workOrderQuote.quoteNumber, expirationDateStatus: res.workOrderQuote.quoteStatusId};
+              this.quoteDueDate = new Date(res.workOrderQuote.quoteDueDate);
+              this.expirationDate = new Date(res.workOrderQuote.expirationDate);
+              this.currency = res.workOrderQuote.currencyId;
+              this.accountsReceivableBalance = res.workOrderQuote.accountsReceivableBalance;
+              this.warnings = res.warnings;
+              this.memo = res.memo;
+              this.getQuoteTabData();
+              this.setBuildMethod(res.buildMethodId);
 
+            }
           }
-        }
-      )
+        )
 
-      this.getCreditTerms(res.creditTermsId);
-      this.setEmpAndSalesPersonName(res.employeeId,res.salesPersonId);
-      this.getMPNList(res.workOrderId);
+        this.getCreditTerms(res.creditTermsId);
+        this.setEmpAndSalesPersonName(res.employeeId,res.salesPersonId);
+        this.getMPNList(res.workOrderId);
+      }
   })
   }
 
@@ -336,12 +340,13 @@ overAllMarkup: any;
             workflowId: x.workflowId,
             workflowNo: x.workflowNo,
             partNumber: x.partNumber,
-            workOrderScopeId: x.workOrderScopeId
+            workOrderScopeId: x.workOrderScopeId,
+            itemMasterId: x.itemMasterId
           },
           label: x.partNumber
         }
       });
-      if(this.savedWorkOrderData.isSinglePN){
+      if(this.savedWorkOrderData && this.savedWorkOrderData.isSinglePN){
         this.selectedPartNumber = this.mpnPartNumbersList[0].label;
         this.partNumberSelected();
       }
@@ -482,16 +487,18 @@ overAllMarkup: any;
         this.labor.hoursorClockorScan = undefined;
         this.labor.workFlowWorkOrderId = this.workFlowWorkOrderId;
         this.taskList.forEach((tl)=>{
-          res.laborList.forEach((rt)=>{
-            if(rt['taskId'] == tl['taskId']){
-              if(this.labor.workOrderLaborList[0][tl['description'].toLowerCase()][0] && this.labor.workOrderLaborList[0][tl['description'].toLowerCase()][0]['expertiseId'] == null && this.labor.workOrderLaborList[0][tl['description'].toLowerCase()][0]['employeeId'] == null){
-                this.labor.workOrderLaborList[0][tl['description'].toLowerCase()] = [];
+          if(res){
+            res.laborList.forEach((rt)=>{
+              if(rt['taskId'] == tl['taskId']){
+                if(this.labor.workOrderLaborList[0][tl['description'].toLowerCase()][0] && this.labor.workOrderLaborList[0][tl['description'].toLowerCase()][0]['expertiseId'] == null && this.labor.workOrderLaborList[0][tl['description'].toLowerCase()][0]['employeeId'] == null){
+                  this.labor.workOrderLaborList[0][tl['description'].toLowerCase()] = [];
+                }
+                let labor = {}
+                labor = {...rt, employeeId: {'label':rt.employeeName, 'value': rt.employeeId}}
+                this.labor.workOrderLaborList[0][tl['description'].toLowerCase()].push(labor);
               }
-              let labor = {}
-              labor = {...rt, employeeId: {'label':rt.employeeName, 'value': rt.employeeId}}
-              this.labor.workOrderLaborList[0][tl['description'].toLowerCase()].push(labor);
-            }
-          })
+            })
+          }
         })
       })
       this.workorderMainService.getWorkOrderChargesList(this.workFlowWorkOrderId, this.workOrderId).subscribe((res: any[]) => {

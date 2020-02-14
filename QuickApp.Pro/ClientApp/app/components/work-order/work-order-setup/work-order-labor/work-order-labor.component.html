@@ -343,48 +343,20 @@
                       [value]="bm.value">{{bm.label}}</option>
                   </select>
                 </td>
-                <ng-container *ngIf="!isQuote">
-                  <td>
-                    <input type="number" (blur)="calculateHoursDifference(rec)" [(ngModel)]="rec.adjustments" [disabled]="laborForm.workFloworSpecificTaskorWorkOrder == 'workOrder' || isView"/>
-                  </td>
-                  <td>
-                    {{ rec.adjustedHours }}
-                  </td>
-                </ng-container>
-                <ng-container *ngIf="isQuote">
-                  <td>
-                    <input type="number" (blur)="calculateTotalCost(rec);markupChanged(rec, 'row')" [(ngModel)]="rec.directLaborOHCost" [disabled]="isView"/>
-                  </td>
-                  <td>
-                    <input type="number" (blur)="calculateTotalCost(rec);markupChanged(rec, 'row')" [(ngModel)]="rec.burdenRateAmount" [disabled]="isView"/>
-                  </td>
-                  <td>
-                    {{ rec.totalCostPerHour }}
-                  </td>
-                  <td>
-                    {{ rec.totalCost }}
-                  </td>
-                  <td>
-                    <select class="form-control" [(ngModel)]="rec.billingMethodId" style="width: 130px;">
-                      <option value="">Select</option>
-                      <option *ngFor="let bm of [{'label': 'T&M', 'value': 1}, {'label': 'Actual', 'value': 2}]" [value]="bm.value">{{bm.label}}</option>
-                    </select>
-                  </td>
-                  <td>
-                      <!-- <input [(ngModel)]="matQuotation.markup" /> -->
-                    <select class="form-control" (change)="markupChanged(rec, 'row')" [(ngModel)]="rec.markupPercentageId" style="width: 130px;" [disabled]="isView || rec.billingMethodId != 1">
-                      <option value="">Select</option>
-                      <option *ngFor="let markUp of markupList" [value]="markUp.value">{{markUp.label}}</option>
-                    </select>
-                  </td>
-                  <td>
-                      <input type="number" [(ngModel)]="rec.billingRate" (change)="rec.billingAmount = (rec.billingRate*rec.hours).toFixed(2)" [disabled]="isView || rec.billingMethodId != 2"/>
-                  </td>
-                  <td>{{ rec.billingAmount }}</td>
-                </ng-container>
-                <td *ngIf="!isQuote">
-                  <input type="text" [(ngModel)]="rec.memo" [disabled]="isView"/>
+                <td>
+                  <!-- <input [(ngModel)]="matQuotation.markup" /> -->
+                  <select class="form-control" (change)="markupChanged(rec, 'row')" [(ngModel)]="rec.markupPercentageId"
+                    style="width: 130px;" [disabled]="isView || rec.billingMethodId != 1">
+                    <option value="">Select</option>
+                    <option *ngFor="let markUp of markupList" [value]="markUp.value">{{markUp.label}}</option>
+                  </select>
                 </td>
+                <td>
+                  <input type="number" [(ngModel)]="rec.billingRate"
+                    (change)="rec.billingAmount = (rec.billingRate*rec.hours).toFixed(2)"
+                    [disabled]="isView || rec.billingMethodId != 2" />
+                </td>
+                <td>{{ rec.billingAmount }}</td>
               </ng-container>
               <td *ngIf="!isQuote">
                 <input type="text" [(ngModel)]="rec.memo" [disabled]="isView" />
@@ -412,9 +384,12 @@
             </td>
             <td *ngIf="laborForm.hoursorClockorScan && laborForm.hoursorClockorScan !== 1">
             </td>
-            <td>
+            <td *ngIf="!isQuote">
               <input type="number" [(ngModel)]="task.totalWorkHours" (change)="calculateTotalHours()"
                 [disabled]="laborForm.workFloworSpecificTaskorWorkOrder == 'specificTasks'" />
+            </td>
+            <td *ngIf="isQuote">
+              {{task.totalWorkHours}}
             </td>
             <td></td>
             <td></td>

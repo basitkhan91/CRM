@@ -24,6 +24,7 @@ export class WorkOrderChargesComponent implements OnChanges, OnInit {
   @Output() createQuote = new EventEmitter();
   @Input() isView: boolean = false;
   @Input() taskList: any = [];
+  @Input() view: boolean = false;
   cols = [
     { field: 'chargeType', header: 'Charge Type' },
     { field: 'description', header: 'Description' },
@@ -128,7 +129,7 @@ export class WorkOrderChargesComponent implements OnChanges, OnInit {
       this.markupList.forEach((markup)=>{
         if(type == 'row' && markup.value == matData.markupPercentageId){
           // matData.tmAmount = Number(matData.extendedCost) + ((Number(matData.extendedCost) / 100) * Number(markup.label))
-          matData['billingRate'] = ((matData['unitCost']) + (((matData['unitCost']) / 100) * Number(markup.label))).toFixed(2);
+          matData['billingRate'] = ((Number(matData['unitCost'])) + ((Number(matData['unitCost']) / 100) * Number(markup.label))).toFixed(2);
           matData['billingAmount'] = (Number(matData['billingRate']) * Number(matData.quantity)).toFixed(2);
         }
         else if(type == 'all' && markup.value == this.overAllMarkup){
@@ -137,7 +138,7 @@ export class WorkOrderChargesComponent implements OnChanges, OnInit {
               // mData.markupPercentageId = this.overAllMarkup;
               // mData.tmAmount = Number(mData.extendedCost) + ((Number(mData.extendedCost) / 100) * Number(markup.label))
               mData.markupPercentageId = this.overAllMarkup;
-              mData['billingRate'] = ((mData['unitCost']) + (((mData['unitCost']) / 100) * Number(markup.label))).toFixed(2);
+              mData['billingRate'] = (Number(mData['unitCost']) + ((Number(mData['unitCost']) / 100) * Number(markup.label))).toFixed(2);
               mData['billingAmount'] = (Number(mData['billingRate']) * Number(mData.quantity)).toFixed(2);
             }
           })

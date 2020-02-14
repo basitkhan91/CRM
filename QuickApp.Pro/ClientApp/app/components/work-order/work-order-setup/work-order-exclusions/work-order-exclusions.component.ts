@@ -23,6 +23,7 @@ export class WorkOrderExclusionsComponent implements OnInit, OnChanges {
   @Input() isQuote = false;
   @Input() isView: boolean = false;
   @Input() taskList: any = [];
+  @Input() view: boolean = false;
   isEdit: boolean = false;
   editData: any;
   editingIndex: number;

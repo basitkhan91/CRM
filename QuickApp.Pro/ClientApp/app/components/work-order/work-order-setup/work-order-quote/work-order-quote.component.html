@@ -1324,12 +1324,16 @@
           </thead>
           <tbody>
             <tr class="mpn-row" *ngFor="let buildl of buildHistoricalList">
-              <td>{{buildl.customerName}}</td>
-              <td>{{buildl.partNumber}}</td>
-              <td>{{buildl.partDescription}}</td>
               <td>{{buildl.workOrderNum}}</td>
-              <td>{{buildl.workScope}}</td>
-              <td><input type="radio" name="historical-wo-list" class="select-mpn-quote" [(ngModel)]="historicalWorkOrderId" [value]="buildl.workOrderId" (click)="getQuoteInfo(buildl)" [disabled]="isView"></td>
+              <td>{{buildl.customerName}}</td>
+              <td>{{buildl.customerCode}}</td>
+              <td>{{buildl.woType}}</td>
+              <td>{{buildl.openDate}}</td>
+              <td>{{buildl.promisedDate}}</td>
+              <td>{{buildl.estimatedCompletionDate}}</td>
+              <td>{{buildl.estimatedShipDate}}</td>
+              <td>{{buildl.statusId}}</td>
+              <td><span data-toggle="modal" data-target="#historicalWorkOrderView"><a class="btn nobg btn-view-cstm" (click)="selectedHistoricalWorkOrder = buildl.workOrderId" matTooltip="View"><i class="fa fa-eye"></i></a> </span></td>
             </tr>
           </tbody>
         </table>
@@ -1337,5 +1341,28 @@
       </div>
     </div>
   </div>
+
+  <div
+  id="historicalWorkOrderView"
+  class="modal fade"
+  role="dialog"
+  data-backdrop="static"
+>
+  <div class="modal-dialog modal-lg">
+      <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">
+            &times;
+          </button>
+      </div>
+      <div class="modal-body table-responsive" *ngIf="!ispop">
+          <grd-quote-view [workorderid]="selectedHistoricalWorkOrder" isView="true"></grd-quote-view>
+      </div>
+      </div>
+    </div>
+  </div>
+
+  
 </div>
 
