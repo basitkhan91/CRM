@@ -161,7 +161,7 @@ export class CustomerDocumentsComponent implements OnInit {
     fileUpload(event) {
         console.log(event, "event+++")
         if (event.files.length === 0)
-            return;
+            return  this.disableSave = true;
 
         for (let file of event.files)
             this.formData.append(file.name, file);

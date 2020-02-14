@@ -97,9 +97,9 @@
     <!--/advanced search card-->
     <div class="clear"></div>
     <p-table
-      #dt
+      #dt 
       class="rpo-table-cstm"
-      [rows]="6"
+      [rows]="pageSize"
       [value]="ataListDataValues"
       [rowsPerPageOptions]="[10, 20, 50, 100]"
       [scrollable]="true"

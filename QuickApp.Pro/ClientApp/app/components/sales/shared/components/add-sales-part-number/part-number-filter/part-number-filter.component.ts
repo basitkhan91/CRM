@@ -180,7 +180,8 @@ private onptnmbersSuccessful(allWorkFlows: any[]) {
 
   searchPartByPartNumber(event) {
     this.searchDisabled = true;
-    if(event.query.length>0){
+    console.log(event.query);
+    if(event.query!=''&&event.query.length>0){
       let partSearchParamters={
         'partNumber':event.query,
         "restrictPMA": this.salesQuote.restrictPMA,
@@ -193,6 +194,8 @@ private onptnmbersSuccessful(allWorkFlows: any[]) {
          // console.log(result);
         }
       );
+    }else{
+      this.partDetails = [];
     }
 
   }

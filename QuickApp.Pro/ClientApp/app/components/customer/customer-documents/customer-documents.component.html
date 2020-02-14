@@ -292,7 +292,7 @@
               <label id="footer" class="footer">No'of records:</label>
               <input
                 style="width: 5%;"
-                [(ngModel)]="documents._totalRecords"
+                [(ngModel)]="documents._totalRecords" name="no'of records"
                 [disabled]="true"
                 pInputText
                 type="text"
@@ -303,7 +303,7 @@
 
               <input
                 style="width: 5%;"
-                [ngModel]="getPageCount(documents._totalRecords, pageSize)"
+                [ngModel]="getPageCount(documents._totalRecords, pageSize)" name="page count"
                 [disabled]="true"
                 pInputText
                 type="text"
@@ -548,7 +548,7 @@
                   (onSelect)="fileUpload($event)"
                   (onRemove)="removeFile($event)"
                 ></p-fileUpload>
-              </div>
+              </div> 
             </div>
             <div
               class="table-responsive table-overflow"

@@ -1109,9 +1109,10 @@ export class VendorShippingInformationComponent {
     }
 
     onClickInterShipvia(rowData) {
-        console.log(rowData);        
+        console.log(rowData);
         // this.selectedShipViaInterColumns = this.shipViaIntercols;
         this.shipViaInterObj = {};
+        this.shipViaInterObj.vendorInternationalShippingId = rowData.vendorInternationalShippingId;
         this.loadShipViaInterCollection(rowData);
     }
 

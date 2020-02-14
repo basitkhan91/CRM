@@ -1150,4 +1150,9 @@ export class ItemMasterEndpoint extends EndpointFactory {
                 return this.handleError(error, () => this.deleteCapabilityById(capabilityId, user));
             });
         }
+
+    //getItemMasterCapabilityAuditHistory
+    getItemMasterCapabilityAuditHistory(capabilityId){
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/ItemMaster/itemmastercapesAudit/${capabilityId}`)
+    }
 }

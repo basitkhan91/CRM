@@ -41,7 +41,9 @@ export class CustomerFinancialInformationComponent implements OnInit {
     pageSize: number = 10;
     discountList: any;
     discountList1: any;
-
+    totalRecords: number = 0;
+    pageIndex: number = 0;
+    totalPages: number = 0;
     markUpList: any;
     taxrateList: any;
     state_taxRateList: any;
@@ -233,7 +235,12 @@ export class CustomerFinancialInformationComponent implements OnInit {
         }
 
     }
+    changePage(event: { first: any; rows: number }) {
+        console.log(event);
 
+        this.pageSize = event.rows;
+        this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+    }
     getCustomerGeneralInformation() {
         this.customerService.getCustomerdataById(this.id).subscribe(response => {
             console.log(response);
@@ -592,6 +599,8 @@ export class CustomerFinancialInformationComponent implements OnInit {
 
         this.customerService.getMappedTaxTypeRateDetails(this.id).subscribe(res => {
             this.taxTypeRateMapping = res;
+            this.totalRecords = this.taxTypeRateMapping.length;
+            this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
 
         })
     }
@@ -617,6 +626,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
             } else {
 
                 this.taxTypeRateMapping.push({
+                    isDisable:true,
                     customerId: this.id,
                     id: this.indexForTaxRate,
                     taxTypeId: this.selectedTaxType,
@@ -624,8 +634,10 @@ export class CustomerFinancialInformationComponent implements OnInit {
                     taxType: getValueFromArrayOfObjectById('label', 'value', this.selectedTaxType, this.taxTypeList),
                     taxRate: getValueFromObjectByKey('label', getObjectById('value', this.selectedTaxRates, this.taxRatesList))
 
-
+     
                 })
+                this.totalRecords = this.taxTypeRateMapping.length;
+                this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
                 console.log("this.sdfsfsf",this.taxTypeRateMapping)
                 // this.taxTypeRateMapping = []
 

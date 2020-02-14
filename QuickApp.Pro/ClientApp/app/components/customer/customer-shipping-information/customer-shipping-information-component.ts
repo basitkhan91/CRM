@@ -72,7 +72,7 @@ export class CustomerShippingInformationComponent implements OnInit {
     ]
     selectedColumnsForDomesticTable = this.domesticShippingHeaders;
     selectedColumnsForInternationTable = this.internationalShippingHeaders;
-    domesticShippingData: any[] = [];
+    domesticShippingData: any[] = []; 
     sourceViewforShipping: any;
     isEditDomestic: boolean = false;
     isEditInternational: boolean = false;
@@ -137,6 +137,10 @@ export class CustomerShippingInformationComponent implements OnInit {
         private commonService: CommonService,
     ) { }
     ngOnInit() {
+        console.log("check shipping customerdata from edit data",this.editGeneralInformationData);
+        console.log("check shipping customerdata from externalcomponents",this.customerDataFromExternalComponents);
+        console.log("check shipping customerdata from savedGeneralInformationData",this.savedGeneralInformationData);
+        console.log("check shipping customerdata from externalcomponents",this.customerDataFromExternalComponents);
         if (this.editMode) {
             this.id = this.editGeneralInformationData.customerId;
             console.log("this.check id on ngonint", this.editGeneralInformationData.customerId, this.editGeneralInformationData);
@@ -175,11 +179,12 @@ export class CustomerShippingInformationComponent implements OnInit {
         }
     }
     ngOnChanges(changes: SimpleChanges) {
+        console.log("chnages from ngonchanges")
         for (let property in changes) {
             if (property == 'selectedCustomerTab') {
                 if (changes[property].currentValue == "Shipping") {
                     this.getDomesticShippingByCustomerId()
-                    //                this.getInternationalShippingByCustomerId()
+                    this.getInternationalShippingByCustomerId()
                     //                this.getShipViaDataByInternationalShippingId()
                 }
             }
@@ -557,6 +562,7 @@ export class CustomerShippingInformationComponent implements OnInit {
         console.log(this.id);
 
         this.customerService.getInternationalShippingByCustomerId(this.id).subscribe(res => {
+            console.log("myresponse international", res);
             this.loaderForInternational = false;
             this.internationalShippingData = res;
             // this.totalRecordsForInternationalShipping = res.totalRecordsCount;

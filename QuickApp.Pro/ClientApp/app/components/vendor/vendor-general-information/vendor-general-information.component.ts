@@ -456,8 +456,8 @@ export class VendorGeneralInformationComponent implements OnInit {
             this.sourceVendor.address2 = this.vendorService.listCollection.address2;
             this.sourceVendor.address3 = this.vendorService.listCollection.address3;
             this.sourceVendor.city = this.vendorService.listCollection.city;
-            if (this.sourceVendor.country !== undefined) {
-                this.sourceVendor.country = { countryId: this.sourceVendor.countryId, nice_name: this.sourceVendor.country }
+            if (this.sourceVendor.countryId !== undefined) {
+                this.sourceVendor.countryId = { countryId: this.sourceVendor.countryId, nice_name: this.sourceVendor.country }
             }
 
             // this.sourceVendor.country = getObjectById('countries_id', this.vendorService.listCollection.countryId, this.allCountryinfo);
@@ -522,7 +522,7 @@ export class VendorGeneralInformationComponent implements OnInit {
         this.loadingIndicator = false;
         this.dataSource.data = allWorkFlows;
         this.allCountryinfo = allWorkFlows;
-        if (this.vendorService.isEditMode && this.sourceVendor.country != null) {
+        if (this.vendorService.isEditMode && this.sourceVendor.countryId != null) {
             // this.sourceVendor.country = getObjectById('countries_id', this.sourceVendor.country, this.allCountryinfo);
         }
     }
@@ -964,13 +964,13 @@ export class VendorGeneralInformationComponent implements OnInit {
         this.isSaving = true;
         this.isEditMode = true;
         if (!(this.sourceVendor.vendorName && this.sourceVendor.vendorCode && this.sourceVendor.vendorEmail && this.sourceVendor.vendorPhone && this.sourceVendor.address1 && this.sourceVendor.city
-            && this.sourceVendor.postalCode && this.sourceVendor.country && this.sourceVendor.vendorClassificationIds
+            && this.sourceVendor.postalCode && this.sourceVendor.countryId && this.sourceVendor.vendorClassificationIds
         )) {
             //this.display = true;
             this.modelValue = true;
         }
         if (this.sourceVendor.vendorName && this.sourceVendor.vendorCode && this.sourceVendor.vendorEmail && this.sourceVendor.vendorPhone && this.sourceVendor.address1 && this.sourceVendor.city
-            && this.sourceVendor.postalCode && this.sourceVendor.country && this.sourceVendor.vendorClassificationIds) {
+            && this.sourceVendor.postalCode && this.sourceVendor.countryId && this.sourceVendor.vendorClassificationIds) {
 
             // this.sourceVendor.country = editValueAssignByCondition('countries_id', this.sourceVendor.country);
             // this.sourceVendor.vendorParentId = editValueAssignByCondition('vendorId', this.sourceVendor.vendorParentId);
@@ -993,14 +993,15 @@ export class VendorGeneralInformationComponent implements OnInit {
                 if (this.sourceVendor.parent == false || this.sourceVendor.parent == null) {
                     this.sourceVendor.vendorParentName = '';
                 }
-
-                const country = editValueAssignByCondition('countries_id', this.sourceVendor.country);
+                console.log(this.sourceVendor.countryId);                
+                const countryId = editValueAssignByCondition('countries_id', this.sourceVendor.countryId);
+                const country = editValueAssignByCondition('nice_name', this.sourceVendor.countryId);
                 let vendorParentId;
                 if (this.sourceVendor.parent) {
                     vendorParentId = editValueAssignByCondition('vendorId', this.sourceVendor.vendorParentId);
                 }
 
-                const data = { ...this.sourceVendor, country: country, vendorParentId: vendorParentId };
+                const data = { ...this.sourceVendor, countryId: countryId, country: country, vendorParentId: vendorParentId };
 
                 this.vendorService.newAction(data).subscribe(data => {
 
@@ -1027,7 +1028,7 @@ export class VendorGeneralInformationComponent implements OnInit {
                     this.sourceVendor.address2 = data.address.line2;
                     this.sourceVendor.address3 = data.address.line3;
                     this.sourceVendor.city = data.address.city;
-                    this.sourceVendor.country = data.address.country;
+                    this.sourceVendor.countryId = data.address.country;
                     this.sourceVendor.stateOrProvince = data.address.stateOrProvince;
                     this.sourceVendor.postalCode = data.address.postalCode;
                     // this.sourceVendor.vendorParentId = getObjectById('vendorId', this.sourceVendor.vendorParentId, this.vendorCollection)
@@ -1052,7 +1053,9 @@ export class VendorGeneralInformationComponent implements OnInit {
 
             else {
                 const vendorName = editValueAssignByCondition('vendorName', this.sourceVendor.vendorName);
-                const country = editValueAssignByCondition('countries_id', this.sourceVendor.country);
+                // const country = editValueAssignByCondition('countries_id', this.sourceVendor.country);
+                const countryId = editValueAssignByCondition('countries_id', this.sourceVendor.countryId);
+                const country = editValueAssignByCondition('nice_name', this.sourceVendor.countryId);
                 let vendorParentId;
                 // this.sourceVendor.vendorName = editValueAssignByCondition('vendorName', this.sourceVendor.vendorName)
                 this.sourceVendor.updatedBy = this.userName;
@@ -1064,7 +1067,7 @@ export class VendorGeneralInformationComponent implements OnInit {
                 if (this.sourceVendor.parent) {
                     vendorParentId = editValueAssignByCondition('vendorId', this.sourceVendor.vendorParentId);
                 }
-                const data = { ...this.sourceVendor, vendorName: vendorName, vendorParentId: vendorParentId, country: country };
+                const data = { ...this.sourceVendor, vendorName: vendorName, vendorParentId: vendorParentId, countryId: countryId, country: country };
                 const { vendorContact, address, ...newSourceVendor } = data;
 
                 this.vendorService.updateVendorDetails(newSourceVendor).subscribe(
@@ -1093,7 +1096,7 @@ export class VendorGeneralInformationComponent implements OnInit {
                         this.sourceVendor.address2 = data.address.line2;
                         this.sourceVendor.address3 = data.address.line3;
                         this.sourceVendor.city = data.address.city;
-                        this.sourceVendor.country = data.address.country;
+                        this.sourceVendor.countryId = data.address.country;
                         this.sourceVendor.stateOrProvince = data.address.stateOrProvince;
                         this.sourceVendor.postalCode = data.address.postalCode;
                         this.vendorService.generalCollection = this.localCollection;

@@ -318,15 +318,13 @@
                       <!--/Form-row for Add Tax Info-->
  
                       <!-- {{taxTypeRateMapping | json}} -->
-                      <p-table
-                        #taxIfTble
-                        class="table-responsive ptable-cus-pma"
-                        [paginator]="true"
-                        [value]="taxTypeRateMapping"
+                      <!-- [rowsPerPageOptions]="[5, 10, 20, 50]" -->
+                      <p-table      #taxIfTble
+                      class="rpo-table-cstm"
+                      [value]="taxTypeRateMapping" [first]="0" [rows]="5" [paginator]="true"
+                      [pageLinks]="3" [rowsPerPageOptions]="[10,20,50,100]" [columns]="taxInfoTableColumns" 
+                      (onPage)="changePage($event)" [resizableColumns]="true" [reorderableColumns]="true" [totalRecords]="totalRecords"
 
-                        [rows]="10"
-                        [pageLinks]="3"
-                        [columns]="taxInfoTableColumns"
                         *ngIf="taxTypeRateMapping.length > 0">
                         <ng-template pTemplate="header" let-columns>
                           <tr>
@@ -367,10 +365,9 @@
                             </td>
 
                             <td>
-                              <span>
-                                
-                                <button
-                                class="btn-edit"
+                              <!-- <span> -->
+                                <button [disabled]="rowData.isDisable"
+                                class="btn-edit set_proper_align"
                                 mat-icon-button
                                 (click)="getAuditHistoryById(contentAuditHist,rowData)"
                                 matTooltip="History"><i class="fa fa-history"></i> 
@@ -381,9 +378,9 @@
                                     getAuditHistoryById(contentAuditHist,rowData)"
                                   matTooltip="History"
                                   ><i class="fa fa-history"></i></a> -->
-                              </span>
+                              <!-- </span> -->
                               <button
-                                class="btn-edit"
+                                class="btn-edit set_proper_align"
                                 mat-icon-button
                                 (click)="editTaxtRate(rowData)"
                                 matTooltip="Edit"
@@ -393,7 +390,7 @@
                                 <mat-icon>edit</mat-icon>
                               </button>
                               <button
-                                class="btn-delete"
+                                class="btn-delete set_proper_align"
                                 mat-icon-button
                                 matTooltip="Delete"
                                 (click)="
@@ -404,6 +401,26 @@
                               </button>
                             </td>
                           </tr>
+                        </ng-template>
+                        <ng-template pTemplate="summary" id="footer">
+                          <label id="footer" class="footer">No'of records:</label>
+                          <input
+                            style="width: 5%;"
+                            [(ngModel)]="taxIfTble._totalRecords" name="no'of records"
+                           disabled
+                            pInputText
+                            type="text"
+                          />
+            
+                          &nbsp;&nbsp;
+                          <label id="footer" class="footer1">Pages Count:</label>
+            
+                          <input style="width: 5%;"
+                            [ngModel]="getPageCount(taxIfTble._totalRecords, pageSize)" name="page count"
+                            disabled
+                            pInputText
+                            type="text"
+                          />
                         </ng-template>
                       </p-table>
                     </div>
@@ -449,13 +466,11 @@
                         </h4>
                         <p-table
                           #table3
-                          class="table-responsive ptable-cus-pma"
-                          [paginator]="
-                            allCustomerFinanceDocumentsList.length > 0
-                          "
+                          class="table-responsive rpo-table-cstm"
+                          [paginator]="allCustomerFinanceDocumentsList.length > 0"
                           [value]="allCustomerFinanceDocumentsList"
                           [rows]="5"
-                          [pageLinks]="3"
+                          [pageLinks]="3" [rowsPerPageOptions]="[10,20,50,100]"
                           [columns]="taxExemptTableColumns"
                           (onPage)="pageIndexChange($event)"
                         >
@@ -556,7 +571,7 @@
                             <label id="footer" class="footer">No'of records:</label>
                             <input
                               style="width: 5%;"
-                              [(ngModel)]="taxExemptFileUploadInput._totalRecords"
+                              [(ngModel)]="table3._totalRecords" name="no'of records"
                              disabled
                               pInputText
                               type="text"
@@ -565,9 +580,8 @@
                             &nbsp;&nbsp;
                             <label id="footer" class="footer1">Pages Count:</label>
               
-                            <input
-                              style="width: 5%;"
-                              [ngModel]="getPageCount(taxExemptFileUploadInput._totalRecords, pageSize)"
+                            <input style="width: 5%;"
+                              [ngModel]="getPageCount(table3._totalRecords, pageSize)" name="page count"
                               disabled
                               pInputText
                               type="text"
