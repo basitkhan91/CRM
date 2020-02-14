@@ -190,10 +190,10 @@ namespace DAL
 
         public DbSet<AircraftModel> AircraftModel { get; set; }
 
-        public DbSet<CustomerAircraftModel> CustomerAircraftModel { get; set; }
+       
         public DbSet<AddressAudit> Address_Audit { get; set; }
 
-        public DbSet<CustomerAircraftType> CustomerAircraftType { get; set; }
+      
 
         public DbSet<ItemMaster> ItemMaster { get; set; }
         public DbSet<ItemType> ItemType { get; set; }
@@ -423,7 +423,7 @@ namespace DAL
         public DbSet<PublicationPNATAMappingModel> PublicationPNATAMappingModel { get; set; }
 
         public DbSet<CustomerAircraftMapping> CustomerAircraftMapping { get; set; }
-        public DbSet<CustomerATAMapping> CustomerATAMapping { get; set; }
+       
         public DbSet<CustomerContactATAMapping> CustomerContactATAMapping { get; set; }
         public DbSet<CustomerContactATAMappingAudit> CustomerContactATAMappingAudit { get; set; }
         public DbSet<CustomerTaxTypeRateMapping> CustomerTaxTypeRateMapping { get; set; }

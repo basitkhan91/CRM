@@ -16,13 +16,13 @@ namespace QuickApp.Pro.ViewModels
         public DateTime? StartDate { get; set; }
         public DateTime? ExpirationDate { get; set; }
         public Decimal? Amount { get; set; }
-        public Int32? MasterCompanyId { get; set; }
+        public Int32 MasterCompanyId { get; set; }
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }
         public System.DateTime CreatedDate { get; set; }
         public System.DateTime UpdatedDate { get; set; }
-        public bool? IsActive { get; set; }
-        public bool? IsDelete { get; set; }
+        public bool IsActive { get; set; } = true;
+        public bool IsDelete { get; set; } = false;
         public bool? IsPrimary { get; set; }
 
         public string Address1 { get; set; }

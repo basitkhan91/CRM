@@ -101,7 +101,6 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<object> GetVendorInternationalShipViaDetailsAudit(long VendorInternationalShipViaDetailsId);
         IEnumerable<object> GetATAContactMapped(long contactId);
         IEnumerable<object> GetATAContactMappedAudit(long VendorContactATAMappingId);
-
-
+        void VendorShippingStatus(long id, bool status, string updatedBy);
     }
 }

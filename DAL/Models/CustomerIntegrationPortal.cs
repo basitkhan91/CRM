@@ -12,7 +12,7 @@ namespace DAL.Models
 
         public long CustomerId { get; set; }
 
-        public int? IntegrationPortalId { get; set; }
+        public int IntegrationPortalId { get; set; }
 
         public int MasterCompanyId { get; set; }
 
@@ -28,7 +28,7 @@ namespace DAL.Models
       
         public DateTime UpdatedDate { get; set; }
 
-        public bool? IsActive { get; set; }
+        public bool IsActive { get; set; } = true;
 
         //public virtual Customer Customer { get; set; }
     }
