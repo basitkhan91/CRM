@@ -70,9 +70,8 @@ namespace DAL.Models.Sales.SalesOrderQuote
         public string UpdatedBy { get; set; }
         public DateTime UpdatedOn { get; set; }
         public bool IsDeleted { get; set; }
-
         public int StatusId { get; set; }
-
-        public DateTime StatusChangeDate { get; set;}
+        public DateTime StatusChangeDate { get; set; }
+        public long? ManagementStructureId { get; set; }
     }
 }

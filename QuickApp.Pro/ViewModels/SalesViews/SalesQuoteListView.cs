@@ -8,7 +8,7 @@ namespace QuickApp.Pro.ViewModels.SalesViews
 
         public DateTime? QuoteDate { get; set; }
 
-        public string VersionNumber { get { return this.SalesQuoteId.HasValue ?  $"V-{this.SalesQuoteId.Value}" :  string.Empty; } }
+        public string VersionNumber { get { return this.SalesQuoteId.HasValue ? $"V-{this.SalesQuoteId.Value}" : string.Empty; } }
 
         public long CustomerId { get; set; }
 
@@ -25,6 +25,8 @@ namespace QuickApp.Pro.ViewModels.SalesViews
         public decimal Cost { get; set; }
 
         public int NumberOfItems { get; set; }
+
+        public string SalesOrderQuoteNumber { get { return SalesQuoteId.HasValue ? $"Q-{SalesQuoteId.Value}" : "-"; } }
 
     }
 }
