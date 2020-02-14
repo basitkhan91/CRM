@@ -154,6 +154,7 @@
                                             <option ng-option value="">--NON Selected--</option>
                                             <option *ngFor="let acquisitionType of assetAcquisitionTypeList" [ngValue]="acquisitionType.value">{{acquisitionType.label}}</option>
                                         </select>
+                                        <span style="margin-left:3px;cursor:pointer;"><a class="fa fa-plus-circle fa-lg" data-toggle="modal" data-backdrop="static" data-target="#addacquisition" (click)="openacquisition(addacquisition)"></a></span>
                                     </div>
                                     <div class="form-group">
                                         <label>Manufacturer</label>
@@ -307,7 +308,7 @@
                                             <option *ngFor="let location of allAssetLocations" [ngValue]="location.assetLocationId">{{location.code+" - "+location.name}}</option>
                                         </select>
                                         <!--<a data-dismiss="modal" [routerLink]="['/singlepages/singlepages/asset-location']"><i class="fa fa-plus-circle fa-lg"></i></a>-->
-                                        <span style="margin-left:3px;cursor:pointer;"><a class="fa fa-plus-circle fa-lg" data-toggle="modal" data-backdrop="static" data-target="#addCustomerClassification"></a></span>
+                                        <span style="margin-left:3px;cursor:pointer;"><a class="fa fa-plus-circle fa-lg" data-toggle="modal" data-backdrop="static" data-target="#addassetlocation" (click)="open(addassetlocation)"></a></span>
                                     </div>
                                     <div class="form-group">
                                         <label>Memo</label>
@@ -500,70 +501,163 @@
 
     </div>
 
-
 </form>
 
-<div id="addCustomerClassification" class="modal fade" role="dialog" data-backdrop="static">
-    <div class="modal-dialog">
-        <!-- Modal content-->
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Add Asset Location</h4>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <div class="col-sm-12">
-                        <div class="col-sm-4">
-                            <label for="name" class="control-label">
-                                Asset Location Code
+<ng-template #addacquisition let-c="close" let-d="dismiss">
+    <div id="addacquisition"
+         class="modal fade"
+         role="dialog"
+         data-backdrop="static">
+        <form #addacquisition="ngForm">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button"
+                                class="close"
+                                data-dismiss="modal"
+                                (click)="dismissModel()">
+                            &times;
+                        </button>
+                        <h4 class="modal-title">
+                            Add Acquisition Type
+                        </h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>Acquisition Type Code<span class="clr-red">*</span></label>
+                            <div class="inner-addon right-addon inline-block">
+                                <p-autoComplete [(ngModel)]="codeName" name="codeName" (onSelect)="acqpartnmId($event)"
+                                                (onKeyUp)="acqeventHandler($event)" [suggestions]="acqlocalCollection"
+                                                (completeMethod)="filterAssetAcquisitionType($event)" [size]="30"
+                                                [minLength]="1" [dropdown]="true" class="p-autoComplete-ctsm" required></p-autoComplete>
+                                    <div *ngIf="recordExists && codeName" class="clr-red">Already Exists</div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                Acquisition Type
                                 <span class="clr-red">*</span>
                             </label>
-                        </div>
-                        <div class="col-sm-5">
-                            <p-autoComplete [(ngModel)]="codeName" name="codeName"
-                                            (onSelect)="partnmId($event)" (onKeyUp)="eventHandler($event)" [suggestions]="localCollection" (completeMethod)="filterAssetLocation($event)" [size]="30"
-                                            [minLength]="1" [dropdown]="true" class="p-autoComplete-ctsm" required>
-                                <ng-template let-codeName pTemplate="item">
-                                    <div class="ui-helper-clearfix">{{codeName}}</div>
-                                </ng-template>
-
-                            </p-autoComplete>
-                            <!--<div *ngIf="recordExists && codeName" class="clr-red">Already Exists</div>-->
-                            <div class="clear"></div>
-                        </div>
-                        <div class="col-sm-12">
-                            <div class="col-sm-4">
-                                <label class="control-label control-item">
-                                    Asset Location
-                                    <span class="clr-red">*</span>
-                                </label>
+                            <input type="text" name="name" class="form-control" required #Name="ngModel"
+                                   [(ngModel)]="acqsourceAction.name" minlength="2">
+                            <div *ngIf="Name.dirty && Name.errors?.required && Name.errors" class="invalid-form-error-message">
+                                Acquisition Type required.
                             </div>
-                            <div class="col-sm-5">
-                                <input type="text" name="name" class="form-control" minlength="2">
-                                <div class="clear"></div>
+                            <div *ngIf="Name.dirty && Name.errors?.minlength && Name.errors" class="invalid-form-error-message">
+                                Acquisition Type must be at least 2 characters long.
                             </div>
                         </div>
 
-                        <div class="col-sm-12">
-                            <div class="col-sm-4">
-                                <label class="control-label">Memo</label>
-                            </div>
-                            <div class="col-sm-5">
-                                <textarea class="text-item" id="memo"  minlength="2"></textarea>
+                        <div class="form-group">
+                            <label>Memo</label>
+                            <input type="text"
+                                   class="form-control"
+                                   [(ngModel)]="acqsourceAction.memo"
+                                   name="memo" minlength="2" />
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <span class="checkbox-cstm">
+                                    <label style="margin-top: 12px;" class="form-check-label">
+                                        <input type="checkbox" name="isActive" #isActive="ngModel" class="form-check-input trigger2" checked id="isActive" [(ngModel)]="acqsourceAction.isActive" [ngModelOptions]="{standalone: true}">
+                                        <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                        Active
+                                    </label>
+                                </span>
                             </div>
                             <div class="clear"></div>
                         </div>
                     </div>
+
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" [disabled]="disableSave" data-dismiss="modal" (click)="SaveandEditAssetAcquisitionType()">Save</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="dismissModel()">Close</button>
+                    </div>
                 </div>
             </div>
-            <div class="modal-footer">
-                <!--<button class="btn btn-primary" [disabled]="!userForm.valid || disableSave" (click)="SaveandEditAssetLocation()">{{isEditMode == true ? 'Update' : 'Save' }}</button>-->
-            </div>
-        </div>
+        </form>
     </div>
-</div>
+</ng-template>
 
+
+<ng-template #addassetlocation let-c="close" let-d="dismiss">
+    <div id="addassetlocation"
+         class="modal fade"
+         role="dialog"
+         data-backdrop="static">
+        <form #addassetlocation="ngForm">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button"
+                                class="close"
+                                data-dismiss="modal"
+                                (click)="dismissModel()">
+                            &times;
+                        </button>
+                        <h4 class="modal-title">Add Asset Location</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>Asset Location Code <span class="clr-red">*</span></label>
+                            <div class="inner-addon right-addon inline-block">
+                                <p-autoComplete [(ngModel)]="codeName" name="codeName"
+                                                (onSelect)="partnmId($event)" (onKeyUp)="eventHandler($event)" [suggestions]="localCollection" (completeMethod)="filterAssetLocation($event)" [size]="30"
+                                                [minLength]="1" [dropdown]="true" class="p-autoComplete-ctsm" required>
+                                    <!--<ng-template let-codeName pTemplate="item">
+                                        <div class="ui-helper-clearfix">{{codeName}}</div>
+                                    </ng-template>-->
+
+                                </p-autoComplete>
+                                <div *ngIf="recordExists && codeName" class="clr-red">Already Exists</div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                Asset Location
+                                <span class="clr-red">*</span>
+                            </label>
+                            <input type="text" name="name" class="form-control" required #Name="ngModel" [(ngModel)]="sourceAction.name" minlength="2">
+                            <div *ngIf="Name.dirty && Name.errors?.required && Name.errors" class="invalid-form-error-message">
+                                Asset Location required.
+                            </div>
+                            <div *ngIf="Name.dirty && Name.errors?.minlength && Name.errors" class="invalid-form-error-message">
+                                Asset Location must be at least 2 characters long.
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Memo</label>
+                            <input type="text"
+                                   class="form-control"
+                                   [(ngModel)]="sourceAction.memo"
+                                   name="memo" minlength="2" />
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <span class="checkbox-cstm">
+                                    <label style="margin-top: 12px;" class="form-check-label">
+                                        <input type="checkbox" name="isActive" #isActive="ngModel" class="form-check-input trigger2" checked id="isActive" [(ngModel)]="sourceAction.isActive" [ngModelOptions]="{standalone: true}">
+                                        <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                        Active
+                                    </label>
+                                </span>
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" [disabled]="disableSave" data-dismiss="modal" (click)="SaveandEditAssetLocation()">Save</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="dismissModel()">Close</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</ng-template>
 <!--<button type="button" class="btn btn-success pull-right submit-btn" (click)="nextClick()">Next</button>-->
 
 <p-dialog header="Alert" [(visible)]="display" [modal]="true" [dismissableMask]="true" maximizedLeft="140px" maximizedTop="140px"
