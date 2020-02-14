@@ -2118,6 +2118,9 @@ namespace QuickApp.Pro.Controllers
                         CustomerObject.IsWarning = CustomerWarningViewModel[i].IsWarning;
                         CustomerObject.IsRestrict = CustomerWarningViewModel[i].IsRestrict;
 
+                        CustomerObject.Allow = CustomerWarningViewModel[i].Allow;
+                        CustomerObject.Warning = CustomerWarningViewModel[i].Warning;
+                        CustomerObject.Restrict = CustomerWarningViewModel[i].Restrict;
                         CustomerObject.IsActive = true;
                         CustomerObject.IsDeleted = false;
                         _unitOfWork.CustomerWarning.Add(CustomerObject);
@@ -2217,6 +2220,9 @@ namespace QuickApp.Pro.Controllers
                         CustomerObject.IsWarning = CustomerWarningViewModel[i].IsWarning;
                         CustomerObject.IsRestrict = CustomerWarningViewModel[i].IsRestrict;
 
+                        CustomerObject.Allow = CustomerWarningViewModel[i].Allow;
+                        CustomerObject.Warning = CustomerWarningViewModel[i].Warning;
+                        CustomerObject.Restrict = CustomerWarningViewModel[i].Restrict;
                         CustomerObject.IsActive = true;
                         CustomerObject.IsDeleted = false;
                         _unitOfWork.CustomerWarning.Add(CustomerObject);

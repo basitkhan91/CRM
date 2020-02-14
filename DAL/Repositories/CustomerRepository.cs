@@ -202,7 +202,7 @@ namespace DAL.Repositories
                                     join cc in _appContext.CustomerContact.Where(p => p.IsDefaultContact == true) on t.CustomerId equals cc.CustomerId into custinfo
                                     from custContacts in custinfo.DefaultIfEmpty()
                                     join con in _appContext.Contact on custContacts.ContactId equals con.ContactId into contactInfo
-                                    from contacts in contactInfo.DefaultIfEmpty()
+                                    from con in contactInfo.DefaultIfEmpty()
                                     join Emp in _appContext.Employee on Convert.ToInt32(t.PrimarySalesPersonId) equals Emp.EmployeeId into Emplyee
                                     from Emp in Emplyee.DefaultIfEmpty()
 
@@ -210,7 +210,7 @@ namespace DAL.Repositories
                                     && t.Name.ToLower().Contains(value) || t.CustomerCode.ToLower().Contains(value) || t.Email.ToLower().Contains(value)
                                     || type.Description.ToLower().Contains(value)// || ct.Description.ToLower().Contains(value)
                                     || ad.City.ToLower().Contains(value) || ad.StateOrProvince.ToLower().Contains(value)
-                                    || contacts.WorkPhone.Contains(value) || Emp.FirstName.ToLower().Contains(value)
+                                    || (con.FirstName + " " + con.LastName).ToLower().Contains(value) || Emp.FirstName.ToLower().Contains(value)
                                        || string.Join(",", _appContext.Customer
                                 .Join(_appContext.ClassificationMapping,
                                 v => v.CustomerId,
@@ -237,7 +237,7 @@ namespace DAL.Repositories
                             join cc in _appContext.CustomerContact.Where(p => p.IsDefaultContact == true) on t.CustomerId equals cc.CustomerId into custinfo
                             from custContacts in custinfo.DefaultIfEmpty()
                             join con in _appContext.Contact on custContacts.ContactId equals con.ContactId into contactInfo
-                            from contacts in contactInfo.DefaultIfEmpty()
+                            from con in contactInfo.DefaultIfEmpty()
                             join Emp in _appContext.Employee on Convert.ToInt32(t.PrimarySalesPersonId) equals Emp.EmployeeId into Emplyee
                             from Emp in Emplyee.DefaultIfEmpty()
 
@@ -245,7 +245,7 @@ namespace DAL.Repositories
                                    && t.Name.ToLower().Contains(value) || t.CustomerCode.ToLower().Contains(value) || t.Email.ToLower().Contains(value)
                                    || type.Description.ToLower().Contains(value) //|| ct.Description.ToLower().Contains(value)
                                    || ad.City.ToLower().Contains(value) || ad.StateOrProvince.ToLower().Contains(value)
-                                   || contacts.WorkPhone.Contains(value) || Emp.FirstName.ToLower().Contains(value)
+                                   || (con.FirstName + " " + con.LastName).ToLower().Contains(value) || Emp.FirstName.ToLower().Contains(value)
                                     || string.Join(",", _appContext.Customer
                                 .Join(_appContext.ClassificationMapping,
                                 v => v.CustomerId,
@@ -280,7 +280,8 @@ namespace DAL.Repositories
                                 .Select(p => p.vc.Description)),
                                 City = ad.City,
                                 StateOrProvince = ad.StateOrProvince,
-                                Contact = contacts.WorkPhone == null ? "-" : contacts.WorkPhone,
+                                // Contact = contacts.WorkPhone == null ? "-" : contacts.WorkPhone,
+                                contact = con.FirstName + " " + con.LastName,
                                 SalesPersonPrimary = Emp.FirstName == null ? "-" :Emp.FirstName,
                                 t.UpdatedDate,
                                 t.IsActive,
@@ -304,7 +305,7 @@ namespace DAL.Repositories
                                     join cc in _appContext.CustomerContact.Where(p => p.IsDefaultContact == true) on t.CustomerId equals cc.CustomerId into custinfo
                                     from custContacts in custinfo.DefaultIfEmpty()
                                     join con in _appContext.Contact on custContacts.ContactId equals con.ContactId into contactInfo
-                                    from contacts in contactInfo.DefaultIfEmpty()
+                                    from con in contactInfo.DefaultIfEmpty()
                                     join Emp in _appContext.Employee on Convert.ToInt32(t.PrimarySalesPersonId) equals Emp.EmployeeId into Emplyee
                                     from Emp in Emplyee.DefaultIfEmpty()
 
@@ -324,7 +325,7 @@ namespace DAL.Repositories
                             join cc in _appContext.CustomerContact.Where(p => p.IsDefaultContact == true) on t.CustomerId equals cc.CustomerId into custinfo
                             from custContacts in custinfo.DefaultIfEmpty()
                             join con in _appContext.Contact on custContacts.ContactId equals con.ContactId into contactInfo
-                            from contacts in contactInfo.DefaultIfEmpty()
+                            from con in contactInfo.DefaultIfEmpty()
                             join Emp in _appContext.Employee on Convert.ToInt32(t.PrimarySalesPersonId) equals Emp.EmployeeId into Emplyee
                             from Emp in Emplyee.DefaultIfEmpty()
 
@@ -351,7 +352,8 @@ namespace DAL.Repositories
                                 .Select(p => p.vc.Description)),
                                 City = ad.City,
                                 StateOrProvince = ad.StateOrProvince,
-                                Contact = contacts.WorkPhone == null ? "-" : contacts.WorkPhone,
+                                //Contact = contacts.WorkPhone == null ? "-" : contacts.WorkPhone,
+                                contact = con.FirstName + " " + con.LastName,
                                 SalesPersonPrimary = Emp.FirstName == null ? "-" : Emp.FirstName,
                                 t.UpdatedDate,
                                 t.IsActive,
