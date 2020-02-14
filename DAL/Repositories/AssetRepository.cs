@@ -227,7 +227,7 @@ in _appContext.ItemMaster on ac.ItemMasterId equals im.ItemMasterId
                                 captypedescription = captype.Description,
                                 manufacturer = act.Description,
                                 modelname = acm.ModelName,
-                                dashnumber = dn.DashNumber,
+                                dashnumber = acm.ModelName + "-" + dn.DashNumber,
                                 ac.IsActive,
                                 ac.AircraftTypeId
 
