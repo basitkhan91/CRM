@@ -22,5 +22,8 @@ namespace DAL.Models
         public bool? IsWarning { get; set; } = false;
         public bool? IsRestrict { get; set; } = false;
         public bool IsDeleted { get; set; }
+        public bool? Allow { get; set; } = false;
+        public bool? Warning { get; set; } = false;
+        public bool? Restrict { get; set; } = false;
     }
 }
