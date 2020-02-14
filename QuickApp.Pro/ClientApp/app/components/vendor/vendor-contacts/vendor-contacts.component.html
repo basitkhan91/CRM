@@ -49,7 +49,7 @@
           <p-table #dt class="ptable-custom" [value]="allActions" [metaKeySelection]="true" [rows]="pageSize"
             [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[10, 20, 50, 100]" [columns]="selectedColumns"
             selectionMode="multiple" [(selection)]="selectedColumn" [resizableColumns]="true"
-            [reorderableColumns]="true" [scrollable]="true" (onPage)="pageIndexChange($event)">
+            [reorderableColumns]="true" [scrollable]="true" (onPage)="pageIndexChange($event)" [loading]="loaderForVendorContacts">
             <ng-template pTemplate="caption" *ngIf="!isViewMode">
               <div style="text-align: right; min-height: 30px;">
                 <p-multiSelect [options]="vendorContactsColumns" [(ngModel)]="selectedColumns"

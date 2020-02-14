@@ -1442,6 +1442,10 @@ export class VendorGeneralInformationComponent implements OnInit {
         })
     }
 
+    onClearParent() {
+        this.sourceVendor.vendorParentId = undefined;
+    }
+
 
 
 

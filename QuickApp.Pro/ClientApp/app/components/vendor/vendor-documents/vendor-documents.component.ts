@@ -86,6 +86,8 @@ export class VendorDocumentsComponent implements OnInit {
 	@Input() vendorId: number = 0;
 	@Input() viewMode: boolean = false;
 	documentsDestructuredData: any = [];
+	loaderForDocuments: boolean;
+	disableSave: boolean = true;
 
 	constructor(public vendorService: VendorService, private router: ActivatedRoute, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService,
 		private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private configurations: ConfigurationService) {
@@ -133,6 +135,7 @@ export class VendorDocumentsComponent implements OnInit {
 		this.sourceViewforDocument = undefined;
 		this.sourceViewforDocumentList = [];
 		this.clearFileUpload();
+		this.isEditButton = false;
 
 	}
 	clearFileUpload() {
@@ -152,6 +155,7 @@ export class VendorDocumentsComponent implements OnInit {
 		for (let file of event.files) {
 			this.formData.append(file.name, file);
 		}
+		this.disableSave = false;
 		// fileUpload.clear();
 
 	}
@@ -161,6 +165,7 @@ export class VendorDocumentsComponent implements OnInit {
 	}
 
 	getList() {
+		this.loaderForDocuments = true;
 		const vendorId = this.vendorId != 0 ? this.vendorId : this.local.vendorId;
 		this.documentsDestructuredData = [];
 		this.vendorService.getDocumentList(vendorId).subscribe(res => {
@@ -189,8 +194,10 @@ export class VendorDocumentsComponent implements OnInit {
 
 
 			})
+			this.loaderForDocuments = false;
 		}, err => {
 			this.documentsDestructuredData = [];
+			this.loaderForDocuments = false;
 		})
 	}
 	getListById(vendorDocId) {
@@ -203,6 +210,9 @@ export class VendorDocumentsComponent implements OnInit {
 	toGetUploadDocumentsList(attachmentId, vendorId, moduleId) {
 		this.vendorService.toGetUploadDocumentsList(attachmentId, vendorId, moduleId).subscribe(res => {
 			this.sourceViewforDocumentList = res;
+			if (res.length > 0) {
+                this.disableSave = false;
+            }
 			console.log(this.sourceViewforDocumentList);
 		})
 	}
@@ -231,14 +241,21 @@ export class VendorDocumentsComponent implements OnInit {
 			this.formData = new FormData();
 			this.clearFileUpload();
 			this.getList();
-			this.alertService.showMessage(
-				'Success',
-				`Saved Documents Successfully `,
-				MessageSeverity.success
-			);
-
-
+			if(!this.isEditButton) {
+				this.alertService.showMessage(
+					'Success',
+					`Saved Documents Successfully `,
+					MessageSeverity.success
+				);
+			} else {
+				this.alertService.showMessage(
+					'Success',
+					`Updated Documents Successfully `,
+					MessageSeverity.success
+				);
+			}
 		})
+		this.disableSave = true;
 
 	}
 
@@ -248,6 +265,7 @@ export class VendorDocumentsComponent implements OnInit {
 
 
 	editVendorDocument(rowdata, e) {
+		this.isEditButton = true;
 		//this.toGetUploadDocumentsList(rowdata.attachmentId, rowdata.vendorId,3);
 		this.documentInformation = { ...rowdata };
 		this.vendorService.toGetUploadDocumentsList(rowdata.attachmentId, rowdata.vendorId, 3).subscribe(res => {
@@ -279,7 +297,7 @@ export class VendorDocumentsComponent implements OnInit {
 			this.sourceViewforDocumentList = res;
 			this.sourceViewforDocument = row;
 		});
-		$('#view').modal('show');
+		$('#docView').modal('show');
 	}
 
 
@@ -288,7 +306,7 @@ export class VendorDocumentsComponent implements OnInit {
 		this.isDeleteMode = true;
 		delete row.updatedBy;
 		this.localCollection = row;
-		this.modal = this.modalService.open(content, { size: 'sm' });
+		this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
 		this.modal.result.then(() => {
 			console.log('When user closes');
 		}, () => { console.log('Backdrop click') })
@@ -362,7 +380,7 @@ export class VendorDocumentsComponent implements OnInit {
 
 		this.documentauditHisory = auditHistory;
 
-		this.modal = this.modalService.open(content, { size: 'lg' });
+		this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
 		this.modal.result.then(() => {
 			console.log('When user closes');
 		}, () => { console.log('Backdrop click') })
@@ -401,6 +419,16 @@ export class VendorDocumentsComponent implements OnInit {
 	}
 	pageIndexChange(event) {
         this.pageSize = event.rows;
+	}
+	
+	enableSave() {
+        if(this.sourceViewforDocumentList && this.sourceViewforDocumentList.length>0){
+            this.disableSave = false;
+        }else if(this.isEditButton == true){
+            this.disableSave = false; 
+        }else{
+            this.disableSave = true; 
+        }       
     }
 
 	// resetVendorDocument()
