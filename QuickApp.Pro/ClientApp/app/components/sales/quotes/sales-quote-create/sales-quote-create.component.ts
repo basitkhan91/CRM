@@ -30,6 +30,8 @@ import { CurrencyService } from "../../../../services/currency.service";
 import { EmployeeService } from "../../../../services/employee.service";
 import { AuthService } from "../../../../services/auth.service";
 import { Router } from "@angular/router";
+import { Subject } from 'rxjs'
+import { takeUntil } from 'rxjs/operators';
 import {
   getValueFromObjectByKey,
   getObjectById,
@@ -89,6 +91,12 @@ export class SalesQuoteCreateComponent implements OnInit {
   selectedApprovers: any[] = [];
   errorMessages: any[] = [];
   isEdit:boolean = false;
+  legalEntityList: any;
+ businessUnitList: any;
+    divisionList: any;
+    departmentList: any;
+
+private onDestroy$: Subject<void> = new Subject<void>();
   @ViewChild("errorMessagePop") public errorMessagePop: ElementRef;
   @ViewChild("newSalesQuoteForm") public newSalesQuoteForm: NgForm;
   constructor(
@@ -593,6 +601,10 @@ export class SalesQuoteCreateComponent implements OnInit {
       .subscribe(data => {
         this.salesQuote = data && data.length ? data[0] : null;
 
+        this.salesQuote.openDate = new Date();
+        this.salesQuote.validForDays = 10;
+        this.salesQuote.quoteExpiryDate = new Date();
+        this.onChangeValidForDays();
         this.getCustomerDetails();
 
         this.getDefaultContact();
@@ -604,6 +616,18 @@ export class SalesQuoteCreateComponent implements OnInit {
         };*/
         this.alertService.stopLoadingMessage();
       });
+  }
+  onChangeValidForDays(){
+    this.salesQuote.quoteExpiryDate.setDate( this.salesQuote.openDate.getDate() + this.salesQuote.validForDays );
+  }
+  onChangeQuoteExpiryDate(){
+      let Difference_In_Time = this.salesQuote.quoteExpiryDate.getTime() - this.salesQuote.openDate.getTime(); 
+      let Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24); 
+      this.salesQuote.validForDays = Difference_In_Days;
+    //this.salesQuote.quoteExpiryDate.setDate( this.salesQuote.openDate.getDate() + this.salesQuote.validForDays );
+  }
+  onChangeOpenDate(){
+    this.salesQuote.quoteExpiryDate.setDate( this.salesQuote.openDate.getDate() + this.salesQuote.validForDays );
   }
 
   searchCustomerByName(event) {
@@ -894,6 +918,50 @@ export class SalesQuoteCreateComponent implements OnInit {
       console.log(this.approvers);
     }
   }
+
+
+  
+	
+  getLegalEntity() {
+    this.commonservice.getLegalEntityList().pipe(takeUntil(this.onDestroy$)).subscribe(res => {
+        this.legalEntityList = res;
+    })
+}
+
+selectedLegalEntity(legalEntityId) {
+    if (legalEntityId) {
+        this.salesQuote.managementStructureId = legalEntityId;
+        this.commonservice.getBusinessUnitListByLegalEntityId(legalEntityId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
+            this.businessUnitList = res;
+        })
+    }
+
+}
+selectedBusinessUnit(businessUnitId) {
+    if (businessUnitId) {
+        this.salesQuote.managementStructureId = businessUnitId;
+        this.commonservice.getDivisionListByBU(businessUnitId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
+            this.divisionList = res;
+        })
+    }
+
+}
+selectedDivision(divisionUnitId) {
+    if (divisionUnitId) {
+        this.salesQuote.managementStructureId = divisionUnitId;
+        this.commonservice.getDepartmentListByDivisionId(divisionUnitId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
+            this.departmentList = res;
+        })
+    }
+
+}
+selectedDepartment(departmentId) {
+    if (departmentId) {
+        this.salesQuote.managementStructureId = departmentId;
+    }
+}
+
+
 
   quote: any = {
     quoteTypeId: null,

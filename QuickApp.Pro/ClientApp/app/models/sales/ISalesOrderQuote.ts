@@ -64,4 +64,5 @@ export interface ISalesOrderQuote {
     isDeleted: boolean;
     statusId: number;
     statusChangeDate: Date;
+    managementStructureId: number;
 }
