@@ -285,7 +285,7 @@
 											 [resizableColumns]="true"
 											 [reorderableColumns]="true"
 											 [scrollable]="true"
-											 [totalRecords]="totalRecords"
+											 [totalRecords]="totalRecords1"
 											 scrollHeight="450px">
 										<ng-template pTemplate="colgroup" let-columns>
 											<colgroup>
@@ -309,11 +309,22 @@
 
 
 										<ng-template pTemplate="body" let-rowData let-columns="columns" let-assetCapes let-rowIndex="rowIndex">
-											<tr [pSelectableRow]="rowData" pReorderableRowHandle>
-												<td style="width:120px" *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
-													{{rowData[col.field]}}
-												</td>
-											</tr>
+                                            <tr [pSelectableRow]="rowData" pReorderableRowHandle>
+                                                <td style="width:120px" *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
+                                                    {{rowData[col.field]}}
+                                                </td>
+                                                <td  class="action-icons-cstm" style="width:150px">       
+                                                    <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on"
+                                                                   offLabel="off" (onChange)="toggleActiveStatus(rowData)"
+                                                                   disabled [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                                                    <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on"
+                                                                   offLabel="off" (onChange)="toggleActiveStatus(rowData)"
+                                                                   disabled [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                                                    <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on"
+                                                                   offLabel="off" (onChange)="toggleActiveStatus(rowData)"
+                                                                   disabled [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                                                </td>
+                                            </tr>
 										</ng-template>
 										<ng-template pTemplate="summary" id="footer">
 											<div style="text-align: right;">

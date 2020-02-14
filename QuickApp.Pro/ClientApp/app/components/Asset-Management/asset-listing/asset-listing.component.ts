@@ -458,7 +458,8 @@ export class AssetListingComponent implements OnInit {
             { field: 'captypedescription', header: 'Capability Type' },
             { field: 'manufacturer', header: 'Aircraft Manufacturer' },
             { field: 'modelname', header: 'Models' },
-            { field: 'dashnumber', header: 'Dash Number' }
+            { field: 'dashnumber', header: 'Dash Number' },
+            { field: '', header: 'Actions' }
         ];
         this.selectedCol = this.cols1;
         this.assetViewList.unitCost = row.unitCost;
@@ -499,7 +500,7 @@ export class AssetListingComponent implements OnInit {
     }
     private onCapesLoaded(allCapes: ItemMasterCapabilitiesModel[]) {
         this.allCapesInfo = allCapes;
-		this.totalRecords1 = this.allAssetInfo.length;
+        this.totalRecords1 = this.allCapesInfo.length;
         this.totalPages1 = Math.ceil(this.totalRecords1 / this.pageSize1);
     }
     

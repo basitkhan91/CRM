@@ -517,7 +517,7 @@ namespace DAL
         public DbSet<VendorContactATAMapping> VendorContactATAMapping { get; set; }
         public DbSet<VendorContactATAMappingAudit> VendorContactATAMappingAudit { get; set; }
 
-
+        public DbSet<AssetWarrantyStatus> AssetWarrantyStatus { get; set; }
 
         public DbSet<WorkOrderQuoteExclusions> WorkOrderQuoteExclusions { get; set; }
         public DbSet<WorkOrderQuoteFreight> WorkOrderQuoteFreight { get; set; }

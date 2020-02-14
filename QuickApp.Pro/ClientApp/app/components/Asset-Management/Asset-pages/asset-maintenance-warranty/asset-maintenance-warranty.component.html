@@ -212,7 +212,7 @@
                                         </select>-->
                                         <select [ngModelOptions]="{standalone: true}" [(ngModel)]="currentMaintenance.warrantyStatus">
                                             <option ng-option value="">--NON Selected--</option>
-                                            <option *ngFor="let m of assetwarrantystatusList" [ngValue]="m.value">{{m.label}}</option>
+                                            <option *ngFor="let m of assetwarrantystatusList" [ngValue]="m.assetWarrantyStatusId">{{m.warrantyStatus}}</option>
                                         </select>
                                     </div>
                                     <div class="form-group">
