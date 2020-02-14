@@ -25,6 +25,8 @@ namespace QuickApp.Pro.ViewModels
 
         public bool? IsSerialized { get; set; }
 
+        public bool? IsHotItem { get; set; } // Hot Item added 
+
         public bool? IsTimeLife { get; set; }
 
         public string SerialNumber { get; set; }
