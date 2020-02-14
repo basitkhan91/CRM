@@ -202,7 +202,6 @@ export class CustomerSalesPersonComponent implements OnInit {
                 this.csrOriginalList = res;
             })
         }
-
     }
     getAgentsList() {
         console.log(this.jobTitles);
@@ -215,7 +214,7 @@ export class CustomerSalesPersonComponent implements OnInit {
     }
     getSalesPersonList() {
         console.log(this.jobTitles);
-        const id = getValueByFieldFromArrayofObject('jobTitle', 'Sales ', this.jobTitles);
+        const id = getValueByFieldFromArrayofObject('jobTitle', 'Sales', this.jobTitles);
         console.log(id);
         if (id !== undefined) {
             this.commonService.getEmployeesByCategory(id[0].jobTitleId).subscribe(res => {

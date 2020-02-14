@@ -124,11 +124,17 @@ export class CommonService {
     }
 
     getJobTitles() {
-        return this.http.get(`${this.baseUrl}/api/common/jobtitletypes?masterCompanyId=1`, this.authService.getRequestHeaders())
+        return this.http.get<any>(`${this.baseUrl}/api/common/jobtitletypes?masterCompanyId=1`, this.authService.getRequestHeaders());
     }
 
     getEmployeesByCategory(value) {
-        return this.http.get(`${this.baseUrl}/api/common/employeesbyjobtitle?jobTitleId=${value}`, this.authService.getRequestHeaders())
+        return this.http.get<any>(`${this.baseUrl}/api/common/employeesbyjobtitle?jobTitleId=${value}`, this.authService.getRequestHeaders());
+    }
+    getExpertise() {
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/common/expertisetypes?masterCompanyId=1 `, this.authService.getRequestHeaders());
+    }
+    getExpertiseEmployeesByCategory(value) {
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/common/employeesbyexpertise?expertiseId=${value}`, this.authService.getRequestHeaders());
     }
 
 }
