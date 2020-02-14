@@ -30,7 +30,7 @@ namespace QuickApp.Pro.Controllers
         #region Work Order
 
         [HttpGet("workorderbyid")]
-        public IActionResult WorkOrderById(long workOrderId=0, long receivingCustomerId=0)
+        public IActionResult WorkOrderById(long workOrderId = 0, long receivingCustomerId = 0)
         {
             var workOrder = unitOfWork.WorkOrderRepository.WorkOrderById(workOrderId, receivingCustomerId);
             return Ok(workOrder);
@@ -122,10 +122,10 @@ namespace QuickApp.Pro.Controllers
             return Ok(result);
         }
 
-        [HttpGet("workordernos")]
-        public IActionResult GetWorkOrderNos(long customerId)
+        [HttpPost("historicalworkorders")]
+        public IActionResult GetHistoricalWorkOrders([FromBody]Filters<HistoricalWOFilter> woFilters)
         {
-            var result = unitOfWork.WorkOrderRepository.GetWorkOrderNos(customerId);
+            var result = unitOfWork.WorkOrderRepository.GetHistoricalWorkOrders(woFilters);
             return Ok(result);
         }
 
@@ -143,7 +143,7 @@ namespace QuickApp.Pro.Controllers
             return Ok(result);
         }
 
-        
+
 
         #endregion
 
@@ -254,7 +254,7 @@ namespace QuickApp.Pro.Controllers
             return Ok(result);
         }
 
-        
+
 
         [HttpGet("workorderworkflownos")]
         public IActionResult GetWorkOrderWorkFlowNos(long workOrderId)
@@ -701,7 +701,7 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("quoteexclusions")]
         public IActionResult GetWorkOrderQuoteExclusions(long workOrderQuoteDetailsId, long buildMethodId)
         {
-            var result = unitOfWork.WorkOrderRepository.GetWorkOrderQuoteExclusions(workOrderQuoteDetailsId,  buildMethodId);
+            var result = unitOfWork.WorkOrderRepository.GetWorkOrderQuoteExclusions(workOrderQuoteDetailsId, buildMethodId);
             return Ok(result);
         }
 
@@ -898,7 +898,7 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("buildmethoddetails")]
         public IActionResult GetQuoteBuildMethodDetails(long workflowWorkorderId)
         {
-           var result= unitOfWork.WorkOrderRepository.GetQuoteBuildMethodDetails(workflowWorkorderId);
+            var result = unitOfWork.WorkOrderRepository.GetQuoteBuildMethodDetails(workflowWorkorderId);
             return Ok(result);
         }
 
@@ -917,9 +917,9 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpGet("historicalworkorderquotes")]
-        public IActionResult HistoricalWorkOrderQuotes(long customerId)
+        public IActionResult HistoricalWorkOrderQuotes(Filters<WOQuoteFilters> woQuoteFilters)
         {
-            var result = unitOfWork.WorkOrderRepository.HistoricalWorkOrderQuotes(customerId);
+            var result = unitOfWork.WorkOrderRepository.HistoricalWorkOrderQuotes(woQuoteFilters);
             return Ok(result);
         }
 
@@ -1219,7 +1219,7 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("getwoteardown")]
         public IActionResult GetWorkOrderTeardown(long wowfId)
         {
-             var result = unitOfWork.WorkOrderRepository.GetWorkOrderTeardown(wowfId);
+            var result = unitOfWork.WorkOrderRepository.GetWorkOrderTeardown(wowfId);
             return Ok(result);
         }
 
@@ -1227,6 +1227,17 @@ namespace QuickApp.Pro.Controllers
         public IActionResult WorkOrderTeardownView(long wowfId)
         {
             var result = unitOfWork.WorkOrderRepository.WorkOrderTeardownView(wowfId);
+            return Ok(result);
+        }
+
+        #endregion
+
+        #region WorkOrder Analysis
+
+        [HttpGet("workorderanalysis")]
+        public IActionResult WorkOrderAnalysis(long workOrderId)
+        {
+            var result = unitOfWork.WorkOrderRepository.WorkOrderAnalysis(workOrderId);
             return Ok(result);
         }
 
