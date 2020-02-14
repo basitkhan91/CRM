@@ -2060,7 +2060,7 @@ namespace QuickApp.Pro.Controllers
                 //address.VendorPhone = vendorViewModel.VendorPhone;
                 address.StateOrProvince = vendorViewModel.StateOrProvince;
                 address.City = vendorViewModel.City;
-                address.Country = vendorViewModel.Country;
+                address.Country = vendorViewModel.CountryId;
                 address.MasterCompanyId = 1;
                 address.CreatedBy = vendorViewModel.CreatedBy ?? "Admin"; //Hotfix
                 address.UpdatedBy = vendorViewModel.UpdatedBy ?? "Admin";//Hotfix
@@ -2468,7 +2468,7 @@ namespace QuickApp.Pro.Controllers
             address.StateOrProvince = vendorViewModel.StateOrProvince;
 
             address.City = vendorViewModel.City;
-            address.Country = vendorViewModel.Country;
+            address.Country = vendorViewModel.CountryId;
             address.MasterCompanyId = 1;
             address.IsActive = true;
             address.CreatedBy = vendorViewModel.CreatedBy ?? "Admin"; //Hotfix
