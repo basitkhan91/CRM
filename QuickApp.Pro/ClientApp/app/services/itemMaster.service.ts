@@ -412,4 +412,8 @@ export class ItemMasterService {
     deleteCapabilityById(capabilityId, user) {
         return this.itemMasterEndpoint.deleteCapabilityById<any>(capabilityId, user);
     }
+    getItemMasterCapabilityAuditHistory(capabilityId){
+        return this.itemMasterEndpoint.getItemMasterCapabilityAuditHistory(capabilityId)
+    }
+    
 }

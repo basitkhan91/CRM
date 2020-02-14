@@ -67,6 +67,7 @@ export class NTAEAlternateComponent implements OnInit {
     listOfErrors: any;
     displayNtae: boolean = false;
     modelValue: boolean = false;
+    ntaeDataTableTablePageSize: Number = 10;
     @ViewChild('closeAddPopup') closeAddPopup : ElementRef 
 
 
@@ -489,6 +490,9 @@ export class NTAEAlternateComponent implements OnInit {
 
     }
 
+    getPageCount(totalNoofRecords, pageSize) {
+        return Math.ceil(totalNoofRecords / pageSize)
+    }
 
 
 
