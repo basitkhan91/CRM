@@ -17,8 +17,8 @@ export class CustomerGeneralInformation {
     country: string;
     customerCode: string;
     doingBuinessAsName: string;
-    parent: boolean;
-    customerParentName: string;
+    isParent: boolean;
+    parentId: string;
     customerURL: string;
     generalCurrencyId: number;
     customerClassificationIds: any;
@@ -65,8 +65,8 @@ export class CustomerGeneralInformation {
         this.country = '';
         this.customerCode = '';
         this.doingBuinessAsName = '';
-        this.parent = false;
-        this.customerParentName = '';
+        this.isParent = false;
+        this.parentId = '';
         this.customerURL = '';
         this.generalCurrencyId = null;
         this.customerClassificationIds = [];
