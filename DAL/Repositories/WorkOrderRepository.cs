@@ -1137,10 +1137,27 @@ namespace DAL.Repositories
                         workOrder.CustomerDetails.CSRId = workOrder.CSRId;
                         workOrder.CustomerDetails.CSRName = workOrder.CSRId == null ? "" : _appContext.Employee.Where(p => p.EmployeeId == workOrder.CSRId).Select(p => p.FirstName).FirstOrDefault();
                         workOrder.CSRName = workOrder.CustomerDetails.CSRName;
+                        workOrder.CustomerCode = workOrder.CustomerDetails.CustomerCode = customer.CustomerCode;
 
                         workOrder.CreditLimit = Convert.ToInt64(customer.CreditLimit);
                         workOrder.CreditTermsId = Convert.ToInt16(customer.CreditTermsId);
+                        var customerContact = (from c in _appContext.Customer
+                                               join cc in _appContext.CustomerContact on c.CustomerId equals cc.CustomerId
+                                               join con in _appContext.Contact on cc.ContactId equals con.ContactId
+                                               where c.CustomerId == workOrder.CustomerId && cc.IsDefaultContact == true
+                                               select new
+                                               {
+                                                   con
+                                               }).FirstOrDefault();
+
+                        if (customerContact != null)
+                        {
+                            workOrder.CustomerContact= workOrder.CustomerDetails.CustomerContact = customerContact.con.FirstName;
+                        }
                     }
+
+                   
+                    
 
                     if (workOrder.IsSinglePN)
                     {
@@ -3642,7 +3659,7 @@ namespace DAL.Repositories
                                       from emp in wqemp.DefaultIfEmpty()
                                       join sp in _appContext.Employee on wq.SalesPersonId equals sp.EmployeeId into wqsp
                                       from sp in wqsp.DefaultIfEmpty()
-                                      join cc in _appContext.CustomerContact on cust.CustomerId equals cc.CustomerId into custcc
+                                      join cc in _appContext.CustomerContact.Where(p=>p.IsDefaultContact==true) on cust.CustomerId equals cc.CustomerId into custcc
                                       from cc in custcc.DefaultIfEmpty()
                                       join con in _appContext.Contact on cc.ContactId equals con.ContactId into cccon
                                       from con in cccon.DefaultIfEmpty()
@@ -3659,7 +3676,7 @@ namespace DAL.Repositories
                                           CurrencyCode = cur.Code,
                                           CustomerName = cust.Name,
                                           CustomerCode = cust.CustomerCode,
-                                          CustomerContact = con == null ? "" : con.WorkPhone,
+                                          CustomerContact = con == null ? "" : con.FirstName,
                                           CustomerEmail = cust.Email,
                                           CustomerPhone = cust.CustomerPhone,
                                           CustomerReference = cust.CSRName,
@@ -3961,7 +3978,6 @@ namespace DAL.Repositories
                                                 wf.CarrierId,
                                                 wf.CreatedBy,
                                                 wf.CreatedDate,
-
                                                 wf.Height,
                                                 wf.IsActive,
                                                 wf.IsDeleted,
@@ -3985,6 +4001,7 @@ namespace DAL.Repositories
                                                 wf.BillingMethodId,
                                                 wf.BillingRate,
                                                 wf.BillingAmount,
+                                                wf.MarkupFixedPrice
                                             }).Distinct().ToList();
 
                 return workOrderFreightList;
