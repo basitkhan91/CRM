@@ -92,6 +92,7 @@ namespace QuickApp.Pro.ViewModels
         public string Phone { get; set; }
         public string CustomerTypeDesc { get; set; }
         public string VendorPhone { get; set; }
+        public string CountryId { get; set; }
         //public VendorCapabiliy VendorCapabiliy { get; set; }
 
         //public VendorContact VendorContact { get; set; }
@@ -109,7 +110,7 @@ namespace QuickApp.Pro.ViewModels
         //public VendorShipping VendorShipping { get; set; }
 
         //public MasterCompany MasterCompany { get; set; }
-        
+
         public IFormFile VendorFileCertified { get; set; }
         public IFormFile VendorFileAudit { get; set; }
         public string VendorPhoneExt { get; set; }
