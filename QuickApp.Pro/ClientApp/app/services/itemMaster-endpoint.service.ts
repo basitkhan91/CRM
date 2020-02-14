@@ -605,7 +605,7 @@ export class ItemMasterEndpoint extends EndpointFactory {
             'locationId': roleObject.locationId,
             'shelfId': roleObject.shelfId,
             'binId': roleObject.binId,
-
+            'isHotItem': roleObject.isHotItem,
 
 
         }

@@ -84,6 +84,14 @@ export class AssetListingComponent implements OnInit {
 
     ngOnInit(): void {
         this.loadData();
+        this.getAssetAcquisitionTypeList();
+        this.getAssetWarrantyStatus();
+        this.getInsecGLAccName();
+        this.getInspecVendorName();
+        this.loadDepricationMethod();
+        this.glList();
+        this.getDepreciationFrequencyList();
+        this.vendorList();
         this.activeIndex = 0;
         this.assetService.ShowPtab = false;
         this.assetService.alertObj.next(this.assetService.ShowPtab); //steps
@@ -399,12 +407,13 @@ export class AssetListingComponent implements OnInit {
         this.assetViewList.inspectionDefaultVendorId = this.getDefaultVendorName(row.inspectionDefaultVendorId);
         this.assetViewList.inspectionDefaultCost = row.inspectionDefaultCost;
         this.assetViewList.inspectionGlaAccountId = this.getGLAccountName(row.inspectionGlaAccountId);
+        this.assetViewList.inspectionMemo = row.inspectionMemo;
 
         this.assetViewList.verificationFrequencyMonths = row.verificationFrequencyMonths;
         this.assetViewList.verificationFrequencyDays = row.verificationFrequencyDays;
         this.assetViewList.verificationDefaultVendorId = this.getDefaultVendorName(row.verificationDefaultVendorId);
         this.assetViewList.verificationDefaultCost = row.verificationDefaultCost;
-        this.assetViewList.verificationGlaAccountId = this.getGLAccountName(row.verificationGlaAccountId);
+        this.assetViewList.verificationGlaAccountId = this.getGLAccountName(row.verificationGlAccountId);
         this.assetViewList.verificationMemo = row.verificationMemo;
 
         this.getInsecGLAccName();

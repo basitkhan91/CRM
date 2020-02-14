@@ -231,6 +231,10 @@ import { RefreshAlert } from './directive/refreshalert.directive';
 import { CustomerPagesModule } from './customerpages/customerpages.module';
 import { ChangeButtonStatus } from './directive/changebutton.directive';
 
+import { AssetAcquisitionTypeService } from './services/asset-acquisition-type/asset-acquisition-type.service';
+import { AssetAcquisitionTypeEndpointService } from './services/asset-acquisition-type/asset-acquisition-type-endpoint.service';
+
+
 @NgModule({
     imports: [
         CardModule,
@@ -304,6 +308,8 @@ import { ChangeButtonStatus } from './directive/changebutton.directive';
         AppTranslationService,
         NotificationService,
         NotificationEndpoint,
+        AssetAcquisitionTypeService,	
+        AssetAcquisitionTypeEndpointService,
         AccountService,
         AccountEndpoint,
         DashNumberService,
