@@ -268,7 +268,7 @@
 											<p-multiSelect [options]="manufacturerData"
 												[ngModelOptions]="{standalone: true}"
 												[(ngModel)]="selectAircraftManfacturer"
-												(onChange)="getAircraftModelByManfacturerType()" class="vcapes-multi">
+												(onChange)="getAircraftModelByManfacturerType()" class="vcapes-multi imstock-pmselect">
 											</p-multiSelect>
 										</div>
 									</div>
@@ -279,7 +279,7 @@
 											</label>
 											<p-multiSelect [maxSelectedLabels]="2" [options]="aircraftModelList"
 												[(ngModel)]="selectedAircraftModel"
-												[ngModelOptions]="{standalone: true}" class="vcapes-multi"
+												[ngModelOptions]="{standalone: true}" class="vcapes-multi imstock-pmselect"
 												(onChange)="getDashNumberByManfacturerandModel()" [selectionLimit]="30">
 											</p-multiSelect>
 										</div>
@@ -289,7 +289,7 @@
 											<label class="fs12">DashNumber </label>
 											<p-multiSelect [maxSelectedLabels]="2" [options]="dashNumberList"
 												[(ngModel)]="selectedDashNumbers" [ngModelOptions]="{standalone: true}"
-												class="vcapes-multi" [selectionLimit]="30"></p-multiSelect>
+												class="vcapes-multi imstock-pmselect" [selectionLimit]="30"></p-multiSelect>
 										</div>
 									</div>
 									<div class="col-md-2">
@@ -485,7 +485,7 @@
 
 
 				<div class="card" *ngIf="viewTable">
-					<p-table class="p-table-cstm" [value]="aircraftData" [rows]="6" [columns]="colaircraft"
+					<p-table class="rpo-table-cstm" [value]="aircraftData" [rows]="6" [columns]="colaircraft"
 						[scrollable]="true" [style]="{width:'100%'}" [paginator]="true">
 						<ng-template pTemplate="header" let-columns>
 							<tr>

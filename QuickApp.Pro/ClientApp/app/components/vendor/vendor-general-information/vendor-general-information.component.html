@@ -145,6 +145,7 @@
                         type="checkbox"
                         id="cparent"
                         name="parent"
+                        (click)="onClearParent()"
                         [(ngModel)]="sourceVendor.parent"
                         [disabled]="!sourceVendor.vendorName"
                       />
@@ -172,6 +173,7 @@
                     [size]="30"
                     [minLength]="1"
                     [dropdown]="true"
+                    (onClear)="onClearParent()"
                     required
                   >
                   </p-autoComplete>

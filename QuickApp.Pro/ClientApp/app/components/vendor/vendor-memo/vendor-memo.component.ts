@@ -57,6 +57,7 @@ export class VendorMemoComponent implements OnInit {
 		// { field: 'RoMemo', header: 'Memo text' },  
 	];
 	selectedColumns = this.memoCols;
+	loaderForMemos: boolean;
 
 
 
@@ -104,16 +105,22 @@ export class VendorMemoComponent implements OnInit {
 
 
 	async  VendorPOMemolist() {
+		this.loaderForMemos = true;
 		await this.vendorService.getVendorPOMemolist(this.local.vendorId).subscribe(
 			res => {
 				this.allVendorPOList = res;
 				this.allVendorPOROList = res;
 				//this.allVendorPOROList.push(this.allVendorPOList);
 				console.log(this.allVendorPOROList);
+				this.loaderForMemos = false;
+			},
+			err => {
+				this.loaderForMemos = false;
 			});
 	}
 
 	async  VendorROMemolist() {
+		this.loaderForMemos = true;
 		await this.vendorService.getVendorROMemolist(this.local.vendorId).subscribe(
 			res => {
 				this.allVendorROList = res;
@@ -121,7 +128,10 @@ export class VendorMemoComponent implements OnInit {
 				for (let value of this.allVendorROList) {
 					this.allVendorPOROList.push(value);
 				}
-
+				this.loaderForMemos = false;
+			},
+			err => {
+				this.loaderForMemos = false;
 			});
 
 	}
