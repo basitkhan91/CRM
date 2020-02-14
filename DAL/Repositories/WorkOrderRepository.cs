@@ -3679,7 +3679,7 @@ namespace DAL.Repositories
                                           CustomerContact = con == null ? "" : con.FirstName,
                                           CustomerEmail = cust.Email,
                                           CustomerPhone = cust.CustomerPhone,
-                                          CustomerReference = cust.CSRName,
+                                          //CustomerReference = cust.CSRName,
                                           CreditLimit = cust.CreditLimit,
                                           CreditTermId = ct == null ? 0 : ct.CreditTermsId,
                                           CreditTerm = ct == null ? "" : ct.Name,
@@ -4117,8 +4117,8 @@ namespace DAL.Repositories
                                 TaskName = ts == null ? "" : ts.Description,
                                 woc.MarkupFixedPrice,
                                 woc.BillingMethodId,
-                                woc.BillingAmount,
-                                woc.BillingRate,
+                                woc.TMAmount,
+                                woc.FlateRate,
                                 woc.HeaderMarkupId,
                             }
                           ).Distinct().ToList();
@@ -4236,8 +4236,8 @@ namespace DAL.Repositories
                                                   TaskName = ts == null ? "" : ts.Description,
                                                   wom.MarkupFixedPrice,
                                                   wom.BillingMethodId,
-                                                  wom.BillingAmount,
-                                                  wom.BillingRate,
+                                                  wom.TMAmount,
+                                                  wom.FlateRate,
                                                   wom.HeaderMarkupId,
 
                                               }).Distinct().ToList();

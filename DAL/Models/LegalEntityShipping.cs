@@ -1,6 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-
+using System.ComponentModel.DataAnnotations.Schema;
 namespace DAL.Models
 {
     public class LegalEntityShipping
@@ -8,6 +8,7 @@ namespace DAL.Models
 
         [Key]
         public long LegalEntityShippingId { get; set; }
+        [ForeignKey("LegalEntityId")]
         public long LegalEntityId { get; set; }
         public long LegalEntityShippingAddressId { get; set; }
         public string ShipVia { get; set; }
@@ -22,6 +23,9 @@ namespace DAL.Models
         public System.DateTime UpdatedDate { get; set; }
         public Nullable<bool> IsActive { get; set; }
         public Nullable<bool> IsDeleted { get; set; }
+
+        public Nullable<bool> IsPrimary { get; set; } = false;
+
 
     }
 }

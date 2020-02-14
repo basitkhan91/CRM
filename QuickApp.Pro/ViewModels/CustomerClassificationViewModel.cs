@@ -16,7 +16,7 @@ namespace QuickApp.Pro.ViewModels
 
         public Int32 MasterCompanyId { get; set; }
 
-        public bool? IsActive { get; set; }
+        public bool IsActive { get; set; }
 
         public string CreatedBy { get; set; }
 
@@ -28,7 +28,7 @@ namespace QuickApp.Pro.ViewModels
 
         public MasterCompany MasterCompany { get; set; }
 
-        public bool? IsDeleted { get; set; }
+        public bool IsDeleted { get; set; }
 
 
     }

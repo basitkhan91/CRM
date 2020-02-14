@@ -121,9 +121,9 @@ namespace DAL
 
         IAircraftModel _aircraftModel;
 
-        ICustomerAircraftModel _customerAircraftModel;
+        //ICustomerAircraftModel _customerAircraftModel;
 
-        ICustomerAircraftType _customerAircraftType;
+        //ICustomerAircraftType _customerAircraftType;
         ICustomerDocumentDetail _customerDocumentDetail;
 
         IItemMaster _itemMaster;
@@ -1172,25 +1172,25 @@ namespace DAL
             }
         }
 
-        public ICustomerAircraftModel customerAircraftModel
-        {
-            get
-            {
-                if (_customerAircraftModel == null)
-                    _customerAircraftModel = new CustomerAircraftModelRepository(_context);
-                return _customerAircraftModel;
-            }
-        }
+        //public ICustomerAircraftModel customerAircraftModel
+        //{
+        //    get
+        //    {
+        //        if (_customerAircraftModel == null)
+        //            _customerAircraftModel = new CustomerAircraftModelRepository(_context);
+        //        return _customerAircraftModel;
+        //    }
+        //}
 
-        public ICustomerAircraftType customerAircraftType
-        {
-            get
-            {
-                if (_customerAircraftType == null)
-                    _customerAircraftType = new CustomerAircraftTypeRepository(_context);
-                return _customerAircraftType;
-            }
-        }
+        //public ICustomerAircraftType customerAircraftType
+        //{
+        //    get
+        //    {
+        //        if (_customerAircraftType == null)
+        //            _customerAircraftType = new CustomerAircraftTypeRepository(_context);
+        //        return _customerAircraftType;
+        //    }
+        //}
 
         public ICustomerDocumentDetail CreateDocumentDetails
         {

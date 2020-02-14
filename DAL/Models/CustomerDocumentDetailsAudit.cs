@@ -14,7 +14,7 @@ namespace DAL.Models
 
 
         public long AttachmentId { get; set; }
-        public int? MasterCompanyId { get; set; }
+        public int MasterCompanyId { get; set; }
         public string DocName { get; set; }
         public string DocMemo { get; set; }
         public string DocDescription { get; set; }
@@ -23,7 +23,7 @@ namespace DAL.Models
         public string UpdatedBy { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime UpdatedDate { get; set; }
-        public bool IsActive { get; set; }
-        public bool IsDeleted { get; set; }
+        public bool IsActive { get; set; } = true;
+        public bool IsDeleted { get; set; } = false;
     }
 }

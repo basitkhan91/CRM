@@ -1857,23 +1857,20 @@ namespace QuickApp.Pro.Controllers
                         customerObject.CurrencyId = vendorViewModel.CurrencyId;
                         customerObject.CreditTermsId = vendorViewModel.CreditTermsId;
                         customerObject.Name = vendorViewModel.VendorName;
-                        customerObject.Parent = 0;
+                        customerObject.IsParent = false;
                         customerObject.Email = vendorViewModel.VendorEmail; ;
                         customerObject.CustomerPhone = vendorViewModel.VendorPhone;
                         customerObject.CustomerPhoneExt = vendorViewModel.VendorPhoneExt;
                         //customerObject.AnnualQuota = vendorViewModel.AnnualQuota;
                         //customerObject.AnnualRevenuePotential = vendorViewModel.AnnualRevenuePotential;
-                        customerObject.CustomerParentName = vendorViewModel.VendorParentName;
-                        //customerObject.ScanDocuments = vendorViewModel.ScanDocuments;
+                         //customerObject.ScanDocuments = vendorViewModel.ScanDocuments;
                         //customerObject.PBHCustomerMemo = vendorViewModel.PBHCustomerMemo;
                         //customerObject.RestrictPMA = vendorViewModel.RestrictPMA;
                         customerObject.IsAddressForBilling = vendorViewModel.IsAddressForBilling;
                         customerObject.IsAddressForShipping = vendorViewModel.IsAddressForShipping;
                         //customerObject.EDI = vendorViewModel.EDI;
                         //customerObject.IsAeroExchange = vendorViewModel.IsAeroExchange;
-                        customerObject.AeroExchangeDescription = vendorViewModel.AeroExchangeDescription;
-                        customerObject.EDIDescription = vendorViewModel.EDIDescription;
-                        if (vendorViewModel.IsAllowNettingAPAR != null)
+                         if (vendorViewModel.IsAllowNettingAPAR != null)
                         {
                             customerObject.AllowNettingOfAPAR = vendorViewModel.IsAllowNettingAPAR;
                         }
@@ -2282,13 +2279,13 @@ namespace QuickApp.Pro.Controllers
                             customerObject.CurrencyId = vendorViewModel.CurrencyId;
                             customerObject.CreditTermsId = vendorViewModel.CreditTermsId;
                             customerObject.Name = vendorViewModel.VendorName;
-                            customerObject.Parent = 0;
+                            customerObject.IsParent = false;
                             customerObject.Email = vendorViewModel.VendorEmail; ;
                             customerObject.CustomerPhone = vendorViewModel.VendorPhone;
                             customerObject.CustomerPhoneExt = vendorViewModel.VendorPhoneExt;
                             //customerObject.AnnualQuota = vendorViewModel.AnnualQuota;
                             //customerObject.AnnualRevenuePotential = vendorViewModel.AnnualRevenuePotential;
-                            customerObject.CustomerParentName = vendorViewModel.VendorParentName;
+                           // customerObject.CustomerParentName = vendorViewModel.VendorParentName;
                             //customerObject.ScanDocuments = vendorViewModel.ScanDocuments;
                             //customerObject.PBHCustomerMemo = vendorViewModel.PBHCustomerMemo;
                             //customerObject.RestrictPMA = vendorViewModel.RestrictPMA;
@@ -2296,8 +2293,8 @@ namespace QuickApp.Pro.Controllers
                             customerObject.IsAddressForShipping = vendorViewModel.IsAddressForShipping;
                             //customerObject.EDI = vendorViewModel.EDI;
                             //customerObject.IsAeroExchange = vendorViewModel.IsAeroExchange;
-                            customerObject.AeroExchangeDescription = vendorViewModel.AeroExchangeDescription;
-                            customerObject.EDIDescription = vendorViewModel.EDIDescription;
+                           // customerObject.AeroExchangeDescription = vendorViewModel.AeroExchangeDescription;
+                           // customerObject.EDIDescription = vendorViewModel.EDIDescription;
                             if (vendorViewModel.IsAllowNettingAPAR != null)
                             {
                                 customerObject.AllowNettingOfAPAR = vendorViewModel.IsAllowNettingAPAR;
@@ -5444,8 +5441,7 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpGet("getVendorATAMappedAudit/{VendorContactATAMappingId}")]
-        [Produces(typeof(List<CustomerATAMapping>[]))]
-        public IActionResult ataMappedAudit(long VendorContactATAMappingId)
+         public IActionResult ataMappedAudit(long VendorContactATAMappingId)
         {
             var result = _unitOfWork.Vendor.GetATAContactMappedAudit(VendorContactATAMappingId);
             if (result == null)

@@ -28,11 +28,11 @@ namespace DAL.Models
 
         public string DoingBuinessAsName { get; set; }
 
-        public long? Parent { get; set; }
+        public long? ParentId { get; set; }
 
         public string Email { get; set; }
 
-        public int? IntegrationPortalId { get; set; }
+    
 
         public string CustomerPhone { get; set; }
 
@@ -48,26 +48,23 @@ namespace DAL.Models
 
         public bool RestrictPMA { get; set; }
 
-        public string RestrictPMAMemo { get; set; }
+      
 
         public bool? RestrictBER { get; set; }
 
-        public string RestrictBERMemo { get; set; }
-
+       
         public string CustomerURL { get; set; }
 
         public long? AddressId { get; set; }
 
         public bool IsCustomerAlsoVendor { get; set; }
 
-        public string Discount { get; set; }
-
+       
         public long? DiscountId { get; set; }
 
         public int? CurrencyId { get; set; }
 
-        public string MarkUpPercent { get; set; }
-
+       
         public decimal? CreditLimit { get; set; }
 
         public short? CreditTermsId { get; set; }
@@ -76,66 +73,44 @@ namespace DAL.Models
 
         public bool? IsTaxExempt { get; set; }
 
-        public string TaxCertificate { get; set; }
-
-        public decimal? TaxRateStateOrProvince { get; set; }
-
-        public bool? TaxRateOther { get; set; }
-
-        public string TaxTypeId { get; set; }
-
-        public byte? TaxOtherType { get; set; }
-
-        public bool? EDI { get; set; }
-
-        public bool? IsAeroExchange { get; set; }
-
-        public string EDIDescription { get; set; }
-
-        public string AeroExchangeDescription { get; set; }
-
+      
         public bool? AllowProformaBilling { get; set; }
 
         public bool? AllowPartialBilling { get; set; }
 
-        public string PrimarySalesPersonFirstName { get; set; }
+      
 
         public string PrimarySalesPersonId { get; set; }
 
         public string AnnualRevenuePotential { get; set; }
 
-        public string CustomerParentName { get; set; }
-
+      
         public string AnnualQuota { get; set; }
 
-        public bool? ScanDocuments { get; set; }
-
-        public string SecondarySalesPersonName { get; set; }
-
+      
+      
         public string SecondarySalesPersonId { get; set; }
 
-        public string CSRName { get; set; }
+      
+       
 
-        public string AgentName { get; set; }
+        public int MasterCompanyId { get; set; }
 
-        public long? ATAChapterId { get; set; }
+        public bool IsActive { get; set; } = true;
 
-        public int? MasterCompanyId { get; set; }
-
-        public bool? IsActive { get; set; }
-
-        public bool? IsDelete { get; set; }
+        public bool IsDeleted { get; set; } = false;
 
         public Int32? MarkUpPercentageId { get; set; }
 
         public int? Currency { get; set; }
 
-        public bool? IsAddressForBillingAndShipping { get; set; }
+       
         public bool? IsAddressForBilling { get; set; }
 
         public bool? IsAddressForShipping { get; set; }
 
-
+        public bool? IsParent { get; set; }
+   
         //public virtual MasterCompany MasterCompany { get; set; }
 
         //public virtual CustomerClassification CustomerClassification { get; set; }
