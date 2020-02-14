@@ -25,6 +25,8 @@ namespace QuickApp.Pro.ViewModels
 
         public bool? IsSerialized { get; set; }
 
+        public bool? IsHotItem { get; set; } // Hot Item added 
+
         public bool? IsTimeLife { get; set; }
 
         public string SerialNumber { get; set; }
@@ -43,8 +45,7 @@ namespace QuickApp.Pro.ViewModels
 
                public string AssetNumber { get; set; }
 
-        public bool? IsAcquiredMethodBuy { get; set; }
-
+        public long? AssetAcquistionTypeId { get; set; }
         public bool? IsHazardousMaterial { get; set; }
 
         public bool? IsExpirationDateAvailable { get; set; }

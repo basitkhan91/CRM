@@ -65,7 +65,7 @@
           [scrollable]="true"
           [loading]="loaderForContacts"
           (onPage)="pageIndexChange($event)"
-          scrollHeight="450px"
+          scrollHeight="450px" 
         >
           <ng-template pTemplate="caption" *ngIf="isViewMode == false">
             <div
@@ -252,6 +252,7 @@
               >
                 <p-inputSwitch
                   matTooltip="Active"
+                  matTooltipPosition="above"
                   onLabel="on"
                   offLabel="off"
                   (onChange)="handleChange(rowData)"
@@ -263,6 +264,7 @@
                     data-toggle="tooltip"
                     (click)="viewSelectedRow(rowData)"
                     matTooltip="View"
+                    matTooltipPosition="above"
                     ><i class="fa fa-eye"></i
                   ></a>
                 </span>
@@ -272,6 +274,7 @@
                     class="btn nobg"
                     (click)="editCustomerContact(rowData)"
                     matTooltip="Edit"
+                    matTooltipPosition="above"
                     ><i class="fa fa-pencil"></i
                   ></a>
                 </span>
@@ -280,6 +283,7 @@
                     class="btn nobg"
                     (click)="openDelete(deleteContent, rowData)"
                     matTooltip="Delete"
+                    matTooltipPosition="above"
                     ><i class="fa fa-trash"></i
                   ></a>
                 </span>
@@ -287,6 +291,7 @@
                   class="btn-history"
                   mat-icon-button
                   matTooltip="ATAChapters"
+                  matTooltipPosition="above"
                   data-target="#ATAADD"
                   data-toggle="modal"
                   (click)="addATAChapter(rowData)"
@@ -301,6 +306,7 @@
                     class="btn nobg"
                     (click)="getAuditHistoryById(rowData)"
                     matTooltip="History"
+                    matTooltipPosition="above"
                     ><i class="fa fa-history"></i></a
                 ></span>
               </td>
@@ -314,6 +320,7 @@
                     data-toggle="tooltip"
                     (click)="viewSelectedRow(rowData)"
                     matTooltip="View"
+                    matTooltipPosition="above"
                     ><i class="fa fa-eye"></i
                   ></a>
                 </span>
@@ -323,6 +330,7 @@
                     class="btn nobg"
                     (click)="getAuditHistoryById(rowData)"
                     matTooltip="History"
+                    matTooltipPosition="above"
                     ><i class="fa fa-history"></i></a
                 ></span>
               </td>
@@ -1357,11 +1365,12 @@
                       {{ rowData[col.field] }}
                     </td>
                     <td class="action-width">
-                      <span data-toggle="modal" data-target="#editATAChapter"
+                      <span data-toggle="modal" data-target="#editATAChapter" 
                         ><a
                           class="btn nobg"
                           (click)="editContactATAChapters(rowData)"
                           matTooltip="Edit"
+                          matTooltipPosition="above"
                           ><i class="fa fa-pencil"></i
                         ></a>
                       </span>
@@ -1379,6 +1388,7 @@
                           class="btn nobg"
                           (click)="getATAAuditHistoryById(rowData)"
                           matTooltip="History"
+                          matTooltipPosition="above"
                           ><i class="fa fa-history"></i></a
                       ></span>
                     </td>

@@ -316,16 +316,18 @@
                         </div>
                       </div>
                       <!--/Form-row for Add Tax Info-->
-
+ 
+                      <!-- {{taxTypeRateMapping | json}} -->
                       <p-table
-                        #taxInfoTable
-                        class="rpo-table-cstm"
+                        #taxIfTble
+                        class="table-responsive ptable-cus-pma"
+                        [paginator]="true"
                         [value]="taxTypeRateMapping"
-                        [paginator]="taxTypeRateMapping.length > 0"
-                        [rows]="3"
+
+                        [rows]="10"
+                        [pageLinks]="3"
                         [columns]="taxInfoTableColumns"
-                        *ngIf="taxTypeRateMapping.length > 0"
-                      >
+                        *ngIf="taxTypeRateMapping.length > 0">
                         <ng-template pTemplate="header" let-columns>
                           <tr>
                             <th
@@ -342,19 +344,12 @@
                           <tr>
                             <th
                               *ngFor="let col of columns"
-                              [ngSwitch]="col.field"
-                            >
+                              [ngSwitch]="col.field" >
                               <input
                                 style="width:100%;"
                                 pInputText
                                 type="text"
-                                (input)="
-                                  taxInfoTable.filter(
-                                    $event.target.value,
-                                    col.field,
-                                    'contains'
-                                  )
-                                "
+                                (input)="taxInfoTable.filter($event.target.value,col.field,'contains') "
                               />
                             </th>
                             <th></th>
@@ -362,11 +357,9 @@
                         </ng-template>
                         <ng-template
                           pTemplate="body"
-                          let-columns="columns"
-                          t-part
                           let-rowData
                           let-columns="columns"
-                          let-i="rowIndex"
+                    
                         >
                           <tr>
                             <td *ngFor="let col of columns">
@@ -374,18 +367,21 @@
                             </td>
 
                             <td>
-                              <span
-                                ><a
+                              <span>
+                                
+                                <button
+                                class="btn-edit"
+                                mat-icon-button
+                                (click)="getAuditHistoryById(contentAuditHist,rowData)"
+                                matTooltip="History"><i class="fa fa-history"></i> 
+                              </button>
+                                <!-- <a
                                   class="btn nobg"
                                   (click)="
-                                    getAuditHistoryById(
-                                      contentAuditHist,
-                                      rowData
-                                    )
-                                  "
+                                    getAuditHistoryById(contentAuditHist,rowData)"
                                   matTooltip="History"
-                                  ><i class="fa fa-history"></i></a
-                              ></span>
+                                  ><i class="fa fa-history"></i></a> -->
+                              </span>
                               <button
                                 class="btn-edit"
                                 mat-icon-button
@@ -413,7 +409,7 @@
                     </div>
                     <!--Card of Tax Types-->
                   </div>
-                  <div class="col-md-5">
+                  <div class="col-md-8">
                     <div class="form-group" style="margin-top: 15px;">
                       <span class="checkbox-cstm">
                         <label>
@@ -421,9 +417,7 @@
                             type="checkbox"
                             name="isTaxExempt"
                             [(ngModel)]="
-                              savedGeneralInformationData.isTaxExempt
-                            "
-                          />
+                              savedGeneralInformationData.isTaxExempt"/>
                           <span class="cr"
                             ><i class="cr-icon pi pi-check"></i
                           ></span>
@@ -460,8 +454,10 @@
                             allCustomerFinanceDocumentsList.length > 0
                           "
                           [value]="allCustomerFinanceDocumentsList"
-                          [rows]="3"
+                          [rows]="5"
+                          [pageLinks]="3"
                           [columns]="taxExemptTableColumns"
+                          (onPage)="pageIndexChange($event)"
                         >
                           <ng-template pTemplate="colgroup" let-columns>
                             <colgroup>
@@ -480,14 +476,9 @@
                                 [pSortableColumn]="col.field"
                               >
                                 {{ col.header }}
-                                <p-sortIcon [field]="col.field"></p-sortIcon>
+                                <p-sortIcon *ngIf="col.field !='download' && col.field !='delete'" [field]="col.field"></p-sortIcon>
                               </th>
-                              <th>
-                                Download
-                              </th>
-                              <th>
-                                Delete
-                              </th>
+                             
                             </tr>
                             <tr>
                               <th
@@ -495,7 +486,7 @@
                                 *ngFor="let col of columns"
                                 [ngSwitch]="col.field"
                               >
-                                <input
+                                <input *ngIf="col.field !='download' && col.field !='delete'"
                                   style="width:100%;"
                                   pInputText
                                   type="text"
@@ -514,27 +505,38 @@
                           </ng-template>
                           <ng-template
                             pTemplate="body"
-                            let-part
                             let-rowData
                             let-columns="columns"
                             let-i="rowIndex"
                           >
-                            <tr>
+                            <tr>    
                               <td *ngFor="let col of columns">
-                                <ng-container *ngIf="col.field == 'fileName'">
-                                  {{ part[col.field] }}
+                                <!-- *ngIf="col.field == 'fileName'   col.field == 'createdDate' || col.field == 'createdBy' || col.field == 'updatedDate' || col.field == 'updatedBy' " -->
+                                <!-- <ng-container > -->
+                                <ng-container *ngIf="col.field !='download' && col.field !='delete'">
+                                 <span >
+                                   {{
+                                    col.field == 'createdDate'
+                                      ? (rowData[col.field] | date: 'MM/dd/yyyy')
+                                      : rowData[col.field] && col.field == 'updatedDate'
+                                      ? (rowData[col.field] | date: 'MM/dd/yyyy')
+                                      : rowData[col.field]
+                                  }}
+                                </span>
+                                <!-- <span *ngIf="col.field != 'createdDate' && col.field != 'updatedDate'">
+                                  rowData[col.field]
+                                  </span> -->
                                 </ng-container>
-                              </td>
-                              <td>
-                                <a
-                                  (click)="downloadFileUpload(part)"
+                                <ng-container *ngIf="col.field =='download'" class="align_center">
+                                  <a
+                                  (click)="downloadFileUpload(rowData)"
                                   matTooltip="Download"
                                   class="btn nobg btn-cstm"
                                   ><span><i class="fa fa-download"></i></span
                                 ></a>
-                              </td>
-                              <td>
-                                <button
+                                </ng-container>
+                                <ng-container *ngIf="col.field =='delete'" class="align_center">
+                                  <button
                                   moduleName="app-customer-edit"
                                   requirePermission="canDelete"
                                   class="btn-delete"
@@ -542,12 +544,34 @@
                                   matTooltip="Delete"
                                   data-target="#delete"
                                   data-toggle="modal"
-                                  (click)="deleteFile(rowData)"
-                                >
+                                  (click)="deleteFile(rowData)">
                                   <mat-icon color="warn">delete</mat-icon>
                                 </button>
+                                </ng-container>
+                                <!-- </ng-container> -->
                               </td>
                             </tr>
+                          </ng-template>
+                          <ng-template pTemplate="summary" id="footer">
+                            <label id="footer" class="footer">No'of records:</label>
+                            <input
+                              style="width: 5%;"
+                              [(ngModel)]="taxExemptFileUploadInput._totalRecords"
+                             disabled
+                              pInputText
+                              type="text"
+                            />
+              
+                            &nbsp;&nbsp;
+                            <label id="footer" class="footer1">Pages Count:</label>
+              
+                            <input
+                              style="width: 5%;"
+                              [ngModel]="getPageCount(taxExemptFileUploadInput._totalRecords, pageSize)"
+                              disabled
+                              pInputText
+                              type="text"
+                            />
                           </ng-template>
                           <ng-template
                             pTemplate="emptymessage"

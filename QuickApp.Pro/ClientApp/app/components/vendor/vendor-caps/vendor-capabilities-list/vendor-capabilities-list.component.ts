@@ -62,6 +62,7 @@ export class VendorCapabilitiesListComponent implements OnInit {
     totalPages: number = 0;
     pageSize: number = 10;
     @Input() isViewMode: boolean = false;
+    loaderForVendorCapesList: boolean;
 
     constructor(private vendorService: VendorService, private modalService: NgbModal, private authService: AuthService, private _route: Router, private alertService: AlertService, private vendorCapesService: VendorCapabilitiesService) {
         this.dataSource = new MatTableDataSource();
@@ -86,11 +87,12 @@ export class VendorCapabilitiesListComponent implements OnInit {
     sort: MatSort;
 
     private onDataLoadFailed(error: any) {
+        this.loaderForVendorCapesList = false;
     }
 
     private loadData(status) {
         //const status = 'active';
-
+        this.loaderForVendorCapesList = true;
         if (this.vendorId != undefined) {
             this.vendorService.getVendorCapabilityList(status, this.vendorId).subscribe(
                 results => this.onDataLoadSuccessful(results[0]),
@@ -125,11 +127,13 @@ export class VendorCapabilitiesListComponent implements OnInit {
             this.totalRecords = this.allvendorCapsList.length;
             this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
         }
+        this.loaderForVendorCapesList = false;
         //console.log(this.allvendorCapsList);
     }
 
     getVenCapesListByStatus(status) {
         this.status = status;
+        this.loaderForVendorCapesList = true;
         this.vendorService.getVendorCapabilityList(status, this.vendorId).subscribe(
             results => this.onDataLoadSuccessful(results[0]),
             error => this.onDataLoadFailed(error)

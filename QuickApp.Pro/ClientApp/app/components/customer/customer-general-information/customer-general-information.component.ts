@@ -856,5 +856,9 @@ export class CustomerGeneralInformationComponent implements OnInit {
 
     }
 
+    onClearParent() {
+        this.generalInformation.customerParentName = undefined;
+    }
+
 
 }

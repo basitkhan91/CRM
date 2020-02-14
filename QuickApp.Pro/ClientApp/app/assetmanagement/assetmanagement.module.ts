@@ -32,6 +32,8 @@ import { AssetGeneralInformationComponent } from "../components/Asset-Management
 import { AssetMaintenanceWarrantyComponent } from "../components/Asset-Management/Asset-pages/asset-maintenance-warranty/asset-maintenance-warranty.component";
 import { CreateAssetComponent } from "../components/Asset-Management/Asset-pages/create-asset/create-asset.component";
 import { AssetmanagementRoutingModule } from "./assetmanagement-routing.module";
+import { NgbModule, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { ModalService } from '../services/model.service';
 import { MenuItem } from 'primeng/api';
 import { AssetStepsComponent } from "../components/Asset-Management/Asset-Steps-primeng/asset-steps/asset-steps.component";
 import { AssetService } from "../services/asset/Assetservice";
@@ -60,7 +62,8 @@ import { AssetAdjustmentComponent } from '../components/Asset-Management/Asset-p
         , RadioButtonModule,
         FileUploadModule,
         CalendarModule, StepsModule, BreadcrumbModule, DialogModule,
-        AuditModule
+        AuditModule,
+        NgbModule.forRoot()
     ],
     declarations: [
         AssetmanagementComponent,
@@ -77,13 +80,15 @@ import { AssetAdjustmentComponent } from '../components/Asset-Management/Asset-p
     ],
     providers: [AssetService,
         AssetEndpoint,
-        CommonService
+        CommonService,
+        NgbActiveModal,
+        ModalService,
 
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     exports: [AssetListingComponent],
     entryComponents: [
-
+        CreateAssetComponent
     ],
 
 

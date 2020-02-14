@@ -97,7 +97,7 @@ export class VendorBillingInformationComponent {
         { field: 'stateOrProvince', header: 'State/Prov' },
         { field: 'postalCode', header: 'Postal Code' },
         { field: 'countryName', header: 'Country' },
-        {field: 'isPrimary', header:'IsPrimary'}
+        { field: 'isPrimary', header: 'IsPrimary' }
     ];
     selectedColumns: any[] = this.cols;
     billingauditHisory: any[];
@@ -126,6 +126,7 @@ export class VendorBillingInformationComponent {
     @Input() vendorId: number = 0;
     @Input() isViewMode: boolean = false;
     isvendorEditMode: any;
+    loaderForBillingInfo: boolean;
     constructor(private http: HttpClient, private router: Router,
         private authService: AuthService, private modalService: NgbModal,
         private activeModal: NgbActiveModal, private _fb: FormBuilder,
@@ -241,6 +242,7 @@ export class VendorBillingInformationComponent {
     private loadData() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
+        this.loaderForBillingInfo = true;
         const vendorId = this.vendorId != 0 ? this.vendorId : this.local.vendorId;
         this.vendorService.getVendorBillAddressGet(vendorId).subscribe(
             results => this.onDataLoadSuccessful(results[0]),
@@ -320,6 +322,7 @@ export class VendorBillingInformationComponent {
         this.loadingIndicator = false;
         this.dataSource.data = allWorkFlows;
         this.allActions = allWorkFlows;
+        this.loaderForBillingInfo = false;
     }
     private onShipViadetails(allWorkFlows: any) {
         this.alertService.stopLoadingMessage();
@@ -357,6 +360,7 @@ export class VendorBillingInformationComponent {
     private onDataLoadFailed(error: any) {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
+        this.loaderForBillingInfo = false;
     }
 
     open(content) {
@@ -597,14 +601,21 @@ export class VendorBillingInformationComponent {
         }
     }
 
-    deleteItemBillingCloseModel(vendorBillingId) {
-        this.isSaving = true;
-        this.shipViaObj.isActive = true;
-        this.shipViaObj.updatedBy = this.userName;
-        this.shipViaObj.vendorBillingId = vendorBillingId;
-        this.vendorService.deleteVendorAcion(this.shipViaObj).subscribe(data => {
-            this.loadShipViaCollection(data);
-        })
+    deleteItemBillingCloseModel(row) {
+
+        if (!row.isPrimary) {
+
+
+            this.isSaving = true;
+            this.shipViaObj.isActive = true;
+            this.shipViaObj.updatedBy = this.userName;
+            this.shipViaObj.vendorBillingId = row.vendorBillingId;
+            this.vendorService.deleteVendorAcion(this.shipViaObj).subscribe(data => {
+                this.loadShipViaCollection(data);
+            })
+        } else {
+            $('#deletebilling').modal('show');
+        }
     }
     dismissShipViaModelModel() {
         this.isDeleteMode = false;
@@ -844,6 +855,9 @@ export class VendorBillingInformationComponent {
 
     getPageCount(totalNoofRecords, pageSize) {
         return Math.ceil(totalNoofRecords / pageSize)
+    }
+    pageIndexChange(event) {
+        this.pageSize = event.rows;
     }
 
 

@@ -896,7 +896,7 @@ namespace DAL.Repositories
                             ca.CreatedBy,
                             ca.CreatedDate,
 
-                        }).ToList();
+                        }).OrderByDescending(p => p.UpdatedDate).ToList();
             return data;
         }
 
@@ -1788,7 +1788,7 @@ namespace DAL.Repositories
             if (ATAChapterId != null && ATASubChapterID != null && contactId != null)
             {
                 var data = (from cATA in _appContext.CustomerContactATAMapping
-                            join cont in _appContext.CustomerContact on cATA.CustomerContactId equals cont.ContactId
+                            join cont in _appContext.CustomerContact on cATA.CustomerContactId equals cont.CustomerContactId
                             join contt in _appContext.Contact on cont.ContactId equals contt.ContactId into conttt
                             from contt in conttt.DefaultIfEmpty()
 
@@ -1800,7 +1800,7 @@ namespace DAL.Repositories
             else if (ATAChapterId != null && ATASubChapterID == null && contactId == null)
             {
                 var data = (from cATA in _appContext.CustomerContactATAMapping
-                            join cont in _appContext.CustomerContact on cATA.CustomerContactId equals cont.ContactId
+                            join cont in _appContext.CustomerContact on cATA.CustomerContactId equals cont.CustomerContactId
                             join contt in _appContext.Contact on cont.ContactId equals contt.ContactId into conttt
                             from contt in conttt.DefaultIfEmpty()
 
@@ -1813,7 +1813,7 @@ namespace DAL.Repositories
             else if (ATAChapterId != null && ATASubChapterID == null && contactId != null)
             {
                 var data = (from cATA in _appContext.CustomerContactATAMapping
-                            join cont in _appContext.CustomerContact on cATA.CustomerContactId equals cont.ContactId
+                            join cont in _appContext.CustomerContact on cATA.CustomerContactId equals cont.CustomerContactId
                             join contt in _appContext.Contact on cont.ContactId equals contt.ContactId into conttt
                             from contt in conttt.DefaultIfEmpty()
 
@@ -1826,7 +1826,7 @@ namespace DAL.Repositories
             else if (ATAChapterId == null && ATASubChapterID != null && contactId != null)
             {
                 var data = (from cATA in _appContext.CustomerContactATAMapping
-                            join cont in _appContext.CustomerContact on cATA.CustomerContactId equals cont.ContactId
+                            join cont in _appContext.CustomerContact on cATA.CustomerContactId equals cont.CustomerContactId
                             join contt in _appContext.Contact on cont.ContactId equals contt.ContactId into conttt
                             from contt in conttt.DefaultIfEmpty()
 
@@ -1839,7 +1839,7 @@ namespace DAL.Repositories
             else if (ATAChapterId == null && ATASubChapterID != null && contactId == null)
             {
                 var data = (from cATA in _appContext.CustomerContactATAMapping
-                            join cont in _appContext.CustomerContact on cATA.CustomerContactId equals cont.ContactId
+                            join cont in _appContext.CustomerContact on cATA.CustomerContactId equals cont.CustomerContactId
                             join contt in _appContext.Contact on cont.ContactId equals contt.ContactId into conttt
                             from contt in conttt.DefaultIfEmpty()
 
@@ -1852,7 +1852,7 @@ namespace DAL.Repositories
             else if (ATAChapterId != null && ATASubChapterID != null && contactId == null)
             {
                 var data = (from cATA in _appContext.CustomerContactATAMapping
-                            join cont in _appContext.CustomerContact on cATA.CustomerContactId equals cont.ContactId
+                            join cont in _appContext.CustomerContact on cATA.CustomerContactId equals cont.CustomerContactId
                             join contt in _appContext.Contact on cont.ContactId equals contt.ContactId into conttt
                             from contt in conttt.DefaultIfEmpty()
 
@@ -1865,7 +1865,7 @@ namespace DAL.Repositories
             else if (ATAChapterId == null && ATASubChapterID == null && contactId != null)
             {
                 var data = (from cATA in _appContext.CustomerContactATAMapping
-                            join cont in _appContext.CustomerContact on cATA.CustomerContactId equals cont.ContactId
+                            join cont in _appContext.CustomerContact on cATA.CustomerContactId equals cont.CustomerContactId
                             join contt in _appContext.Contact on cont.ContactId equals contt.ContactId into conttt
                             from contt in conttt.DefaultIfEmpty()
 
@@ -1878,7 +1878,7 @@ namespace DAL.Repositories
             else
             {
                 var data = (from cATA in _appContext.CustomerContactATAMapping
-                            join cont in _appContext.CustomerContact on cATA.CustomerContactId equals cont.ContactId
+                            join cont in _appContext.CustomerContact on cATA.CustomerContactId equals cont.CustomerContactId
                             join contt in _appContext.Contact on cont.ContactId equals contt.ContactId into conttt
                             from contt in conttt.DefaultIfEmpty()
 

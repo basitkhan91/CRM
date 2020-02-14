@@ -179,6 +179,7 @@
                               type="checkbox"
                               name="cparent"
                               id="cparent"
+                              (click)="onClearParent()"
                               [(ngModel)]="generalInformation.parent"
                             />
                             <span class="cr"
@@ -207,6 +208,7 @@
                               [suggestions]="parentCustomer"
                               [forceSelection]="true"
                               emptyMessage="No Match Found"
+                              (onClear)="onClearParent()"
                               (completeMethod)="
                                 filterCustomerParentNames($event)
                               "

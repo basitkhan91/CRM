@@ -465,7 +465,8 @@ export class VendorGeneralInformationComponent implements OnInit {
             this.sourceVendor.postalCode = this.vendorService.listCollection.postalCode;
             this.sourceVendor.vendorClassificationIds = this.sourceVendor.vendorClassifications;
             if (this.sourceVendor.parent) {
-                this.sourceVendor.vendorParentId = getObjectById('vendorId', this.sourceVendor.vendorParentId, this.allActions);
+                this.sourceVendor.vendorParentId = { parentId: this.sourceVendor.vendorParentId, parentName: this.sourceVendor.parentName }
+                // this.sourceVendor.vendorParentId = getObjectById('vendorId', this.sourceVendor.vendorParentId, this.allActions);
             }
 
         }
@@ -1439,6 +1440,10 @@ export class VendorGeneralInformationComponent implements OnInit {
             //console.log(this.allVendorGeneralDocumentsList);
             this.toGetVendorGeneralDocumentsList(this.sourceVendor.vendorId)
         })
+    }
+
+    onClearParent() {
+        this.sourceVendor.vendorParentId = undefined;
     }
 
 

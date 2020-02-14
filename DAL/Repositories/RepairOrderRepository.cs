@@ -251,8 +251,7 @@ namespace DAL.Repositories
             {
                 sorts.Add(true, x => propertyInfo.GetValue(x, null));
             }
-
-
+            
 
             var open = "open";
             var pending = "pending";
@@ -276,6 +275,10 @@ namespace DAL.Repositories
                 {
                     statusId = 4;
                 }
+                else
+                {
+                    statusId = 5;
+                }
 
             }
 
@@ -285,9 +288,10 @@ namespace DAL.Repositories
             }
 
             filters.Add(vendorId > 0, x => x.VendorId == vendorId);
-            filters.Add(!string.IsNullOrEmpty(roFilters.filters.RepairOrderNumber), x => x.RepairOrderNumber.Contains(roFilters.filters.RepairOrderNumber));
-            filters.Add(!string.IsNullOrEmpty(roFilters.filters.VendorName), x => x.VendorName.Contains(roFilters.filters.VendorName));
-            filters.Add(!string.IsNullOrEmpty(roFilters.filters.VendorCode), x => x.VendorCode.Contains(roFilters.filters.VendorCode));
+            filters.Add(!string.IsNullOrEmpty(roFilters.filters.RepairOrderNo), x => x.RepairOrderNumber.Contains(roFilters.filters.RepairOrderNo));
+            //filters.Add(!string.IsNullOrEmpty(roFilters.filters.RepairOrderNumber), x => x.RepairOrderNumber.Contains(roFilters.filters.RepairOrderNumber));
+            filters.Add(!string.IsNullOrEmpty(roFilters.filters.VendorName), x => x.VendorName.ToLower().Contains(roFilters.filters.VendorName.ToLower()));
+            filters.Add(!string.IsNullOrEmpty(roFilters.filters.VendorCode), x => x.VendorCode.ToLower().Contains(roFilters.filters.VendorCode.ToLower()));
 
             var totalRecords = (from ro in _appContext.RepairOrder
                                 join emp in _appContext.Employee on ro.RequisitionerId equals emp.EmployeeId
@@ -296,8 +300,8 @@ namespace DAL.Repositories
                                 from appr in approver.DefaultIfEmpty()
                                 where ro.IsDeleted == false
                                       && ro.StatusId == (statusId > 0 ? statusId : ro.StatusId)
-                                      && emp.FirstName.Contains(!string.IsNullOrEmpty(roFilters.filters.ApprovedBy) ? roFilters.filters.ApprovedBy : emp.FirstName)
-                                      && emp.FirstName.Contains(!string.IsNullOrEmpty(roFilters.filters.RequestedBy) ? roFilters.filters.RequestedBy : emp.FirstName)
+                                      && appr.FirstName.Contains(!string.IsNullOrEmpty(roFilters.filters.ApprovedBy) ? roFilters.filters.ApprovedBy : appr.FirstName)
+                                      &&  emp.FirstName.Contains(!string.IsNullOrEmpty(roFilters.filters.RequestedBy) ? roFilters.filters.RequestedBy : emp.FirstName)
                                       && ro.OpenDate == (roFilters.filters.OpenDate != null ? roFilters.filters.OpenDate : ro.OpenDate)
                                      && ro.ClosedDate == (roFilters.filters.ClosedDate != null ? roFilters.filters.ClosedDate : ro.ClosedDate)
                                 select new RepairOrderFilters()
@@ -325,7 +329,7 @@ namespace DAL.Repositories
                                    from appr in approver.DefaultIfEmpty()
                                    where ro.IsDeleted == false
                                    && ro.StatusId == (statusId > 0 ? statusId : ro.StatusId)
-                                   && emp.FirstName.Contains(!string.IsNullOrEmpty(roFilters.filters.ApprovedBy) ? roFilters.filters.ApprovedBy : emp.FirstName)
+                                   && appr.FirstName.Contains(!string.IsNullOrEmpty(roFilters.filters.ApprovedBy) ? roFilters.filters.ApprovedBy : appr.FirstName)
                                    && emp.FirstName.Contains(!string.IsNullOrEmpty(roFilters.filters.RequestedBy) ? roFilters.filters.RequestedBy : emp.FirstName)
                                    && ro.OpenDate == (roFilters.filters.OpenDate != null ? roFilters.filters.OpenDate : ro.OpenDate)
                                    && ro.ClosedDate == (roFilters.filters.ClosedDate != null ? roFilters.filters.ClosedDate : ro.ClosedDate)

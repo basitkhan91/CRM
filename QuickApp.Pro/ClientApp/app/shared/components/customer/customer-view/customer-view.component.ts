@@ -114,9 +114,18 @@ export class CustomerViewComponent implements OnInit {
         { field: 'taxType', header: 'Tax Type' },
         { field: 'taxRate', header: 'Tax Rate' }
     ]
-    allCustomerFinanceDocumentsListColumns = [
-        { field: 'fileName', header: 'File Name' },
-    ]
+    // allCustomerFinanceDocumentsListColumns = [
+    //     { field: 'fileName', header: 'File Name' }, 
+    // ]
+    allCustomerFinanceDocumentsListColumns: any[] = [
+        { field: "fileName", header: "File Name" },
+        { field: 'createdDate', header: 'Created Date' },
+        { field: 'createdBy', header: 'CreatedBy' },
+        { field: 'updatedDate', header: 'Updated Date' },
+        { field: 'updatedBy', header: 'UpdatedBy' },
+        { field: 'download', header: 'Download' },
+        // { field: 'delete', header: 'Delete' },
+    ];
     aircraftListDataValues: any = [];
     ataListDataValues: any = [];
     billingInfoList: any = [];
@@ -216,6 +225,9 @@ export class CustomerViewComponent implements OnInit {
         this.pageSize = event.rows;
     }
     pageIndexChange2(event) {
+        this.pageSize = event.rows;
+    }
+    pageIndexChange5(event) {
         this.pageSize = event.rows;
     }
     getPageCount(totalNoofRecords, pageSize) {
@@ -364,6 +376,7 @@ export class CustomerViewComponent implements OnInit {
         var moduleId = 1;
         this.customerService.GetCustomerFinanceDocumentsList(customerId, moduleId).subscribe(res => {
             this.allCustomerFinanceDocumentsList = res;
+            console.log("respi",res)
 
         })
     }

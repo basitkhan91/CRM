@@ -30,7 +30,7 @@ namespace DAL.Models
 
         public string Contract { get; set; }
 
-       // public long CustomerContactId { get; set; }
+        // public long CustomerContactId { get; set; }
 
         [Required(ErrorMessage = "Status is required")]
         [ForeignKey("WorkOrderStatusId")]
@@ -50,12 +50,12 @@ namespace DAL.Models
 
         public virtual List<WorkOrderPartNumber> PartNumbers { get; set; }
 
-		[NotMapped]
-		public long WorkFlowWorkOrderId { get; set; }
+        [NotMapped]
+        public long WorkFlowWorkOrderId { get; set; }
         [NotMapped]
         public string CustomerName { get; set; }
         [NotMapped]
-        public CustomerDetails CustomerDetails { get;set;}
+        public CustomerDetails CustomerDetails { get; set; }
         [NotMapped]
         public bool IsSubWorkOrder { get; set; }
         [NotMapped]
@@ -72,8 +72,10 @@ namespace DAL.Models
         public string CSRName { get; set; }
         [NotMapped]
         public bool isRecCustomer { get; set; }
-       
-
+        [NotMapped]
+        public string CustomerContact { get; set; }
+        [NotMapped]
+        public string CustomerCode { get; set; }
 
     }
 
@@ -87,7 +89,8 @@ namespace DAL.Models
         public string CustomerRef { get; set; }
         public string CSRName { get; set; }
         public long? CSRId { get; set; }
-        public string CustomerEmail { get;set;}
-        public string CustomerPhone {get; set; }
+        public string CustomerEmail { get; set; }
+        public string CustomerPhone { get; set; }
+        public string CustomerCode { get; set; }
     }
 }

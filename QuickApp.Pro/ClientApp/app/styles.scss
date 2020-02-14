@@ -13117,7 +13117,7 @@ body .ui-table .ui-table-thead > tr > th {
 
 body .ui-table .ui-table-tbody > tr > td {
   padding: 2px !important;
-  white-space: nowrap;
+  // white-space: nowrap;
   font-size: 11px;
   color: #222;
 }
@@ -15163,6 +15163,10 @@ body .ui-autocomplete .ui-autocomplete-dropdown .ui-button-icon-left:before {
   font-size: 16px !important;
 }
 
+.imstock-pmselect .ui-multiselect-filter-container .ui-multiselect-filter-icon {
+  top: 42% !important;
+}
+
 .popup-plusicon-cstm {
   width: 100px !important;
   float: none !important;
@@ -15571,4 +15575,10 @@ span.flag {
 .filelink {
   color: blue !important;
   text-decoration: underline !important;
+}
+.align_center{
+    text-align: center;
+}
+.cdk-overlay-container {
+    z-index: 1051 !important;
 }

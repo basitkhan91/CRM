@@ -79,6 +79,7 @@ import { VendorCapesComponent } from "../components/vendor/vendor-capes/vendor-c
 import { MatTooltipModule } from '@angular/material/tooltip';
 
 
+
 @NgModule({
 	imports: [
 		//SharedModule,
@@ -108,7 +109,9 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 		TabViewModule,
 		TooltipModule,
 		DropdownModule,
-		MatTooltipModule
+		MatTooltipModule,
+
+
 
 	],
 	declarations: [
@@ -134,7 +137,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 		CreateRoComponent,
 		RoListComponent,
 		RoSetupComponent,
-
 		VendorCapabilitiesListComponent,
 		AddVendorCapabilitiesComponent,
 		EditVendorCapabilitiesComponent,

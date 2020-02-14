@@ -136,7 +136,15 @@ export class CustomerDocumentsComponent implements OnInit {
         }
     }
     enableSave() {
-        this.disableSave = false;
+        if(this.sourceViewforDocumentList && this.sourceViewforDocumentList.length>0){
+            this.disableSave = false;
+        }else if(this.isEditButton == true){
+            this.disableSave = false; 
+        }else{
+            this.disableSave = true; 
+        }
+       
+        console.log("changes sidfsf")
 
     }
     closeMyModel(type) {
@@ -198,31 +206,31 @@ export class CustomerDocumentsComponent implements OnInit {
     }
     getList() {
         this.customerdocumentsDestructuredData = [];
-        this.customerService.getDocumentList(this.id).subscribe(res => {
-            this.customerDocumentsData = res.map(x => {
-                for (var i = 0; i < x.attachmentDetails.length; i++) {
-                    const y = x.attachmentDetails;
-                    this.customerdocumentsDestructuredData.push({
-                        ...x,
-                        // documents: y[i].fileName,
-                        fileName: y[i].fileName,
-                        fileCreatedDate: y[i].createdDate,
-                        fileCreatedBy: y[i].createdBy,
-                        fileUpdatedBy: y[i].updatedBy,
-                        fileUpdatedDate: y[i].updatedDate,
-                        // fileSize: `${y[i].fileSize} MB`
-                        fileSize: y[i].fileSize,
-                        attachmentDetailId: y[i].attachmentDetailId
+          this.customerService.getDocumentList(this.id).subscribe(res => {
+			let arr = [];
 
-                    })
-                }
-                //    documents: x.attachmentDetails.reduce((acc , y) => acc + y.fileName, ''),
-            });
+			const data = res.map(x => {
+				for (var i = 0; i < x.attachmentDetails.length; i++) {
+					const y = x.attachmentDetails;
+					arr.push({
+						...x,
+						// documents: y[i].fileName,
+						fileName: y[i].fileName,
+						fileCreatedDate: y[i].createdDate,
+						fileCreatedBy: y[i].createdBy,
+						fileUpdatedBy: y[i].updatedBy,
+						fileUpdatedDate: y[i].updatedDate,
+						// fileSize: ${y[i].fileSize} MB
+						fileSize: y[i].fileSize,
+						attachmentDetailId: y[i].attachmentDetailId
+
+					})
+            }
+        })
+            
+				this.customerdocumentsDestructuredData = arr;
+
             this.loader = false;
-            // if (this.customerDocumentsData.length > 0) {
-            //     this.totalRecords = this.customerDocumentsData.length;
-            //     this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
-            // }
         }, err => {
             this.customerdocumentsDestructuredData = [];
             this.loader = false;
@@ -317,7 +325,8 @@ export class CustomerDocumentsComponent implements OnInit {
     }
     deleteItemAndCloseModel() {
         // let customerDocumentDetailId = this.localCollection.customerDocumentDetailId;
-        let attachmentDetailId = this.localCollection.AttachmentDetailId;
+        let attachmentDetailId = this.localCollection.attachmentDetailId;
+        console.log("vendfoer",this.localCollection.AttachmentDetailId ,this.localCollection.attachmentDetailId)
         if (attachmentDetailId > 0) {
             //this.isSaving = true;
             this.customerService.deleteDocumentByCustomerAttachementId(attachmentDetailId).subscribe(res => {

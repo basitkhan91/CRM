@@ -229,6 +229,11 @@ import { StageCodeService } from './services/work-order-stagecode.service';
 import { RefreshAlert } from './directive/refreshalert.directive';
 
 import { CustomerPagesModule } from './customerpages/customerpages.module';
+import { ChangeButtonStatus } from './directive/changebutton.directive';
+
+import { AssetAcquisitionTypeService } from './services/asset-acquisition-type/asset-acquisition-type.service';
+import { AssetAcquisitionTypeEndpointService } from './services/asset-acquisition-type/asset-acquisition-type-endpoint.service';
+
 
 @NgModule({
     imports: [
@@ -284,7 +289,9 @@ import { CustomerPagesModule } from './customerpages/customerpages.module';
         CustomerViewComponent,
         StocklineViewComponent,
         StocklineHistoryComponent,
-        RefreshAlert
+        RefreshAlert,
+
+
     ],
     providers: [
         { provide: 'BASE_URL', useFactory: getBaseUrl },
@@ -301,6 +308,8 @@ import { CustomerPagesModule } from './customerpages/customerpages.module';
         AppTranslationService,
         NotificationService,
         NotificationEndpoint,
+        AssetAcquisitionTypeService,	
+        AssetAcquisitionTypeEndpointService,
         AccountService,
         AccountEndpoint,
         DashNumberService,

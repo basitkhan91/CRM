@@ -117,6 +117,8 @@ export class WorkOrderQuoteService {
     getSavedQuoteDetails(wfwoid){
         return this.quoteEndPointService.getSavedQuoteDetails(wfwoid);
     }
-
+    getPartDetails(itemMasterId, conditionId){
+        return this.quoteEndPointService.getPartDetails(itemMasterId, conditionId);
+    }
 
 }
