@@ -93,6 +93,16 @@ export class SalesQuote implements ISalesQuote {
 
   statusChangeDate: Date;
 
+  companyId: number;
+
+  buId: number;
+
+  divisionId: number;
+
+  departmentId: number;
+
+  managementStructureId: number;
+
   priorities: IPriority[];
 
   salesQuoteTypes: ISalesQuoteType[];
