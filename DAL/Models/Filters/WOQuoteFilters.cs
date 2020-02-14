@@ -21,5 +21,9 @@ namespace DAL.Models
         public DateTime createdDate { get; set; }
         public int totalRecords { get; set; }
         public bool isActive { get; set; }
+        public long? ItemMasterId { get; set; }
+        public long? WorkScopeId { get; set; }
+        public int? StatusId { get; set; }
+        public long? CusomerId { get; set; }
     }
 }
