@@ -45,9 +45,7 @@ namespace DAL.Repositories
                     t.CustomerId,
                     t.CustomerWarningId,
                     t.SourceModule,
-                    t.Allow,
-                    t.Warning,
-                    t.Restrict,
+                   
                     t.WarningMessage,
                     t.RestrictMessage,
                     t.MasterCompanyId,

@@ -118,7 +118,7 @@ namespace DAL.Repositories
                          Reference = string.Empty,
                          CreditLimt = z.cc1.cust.CreditLimit,
                          CreditTermId = z.cc1.cust.CreditTermsId,
-                         CSR = z.cc1.cust.CSRName,
+                         //CSR = z.cc1.cust.CSRName,
                          IsDefaultContact = z.cc1.cc.IsDefaultContact,
                          Email = z.cc1.cust.Email,
                          ContactName = z.con.FirstName + " " + z.con.LastName
@@ -134,7 +134,7 @@ namespace DAL.Repositories
                         objContact.ContractReference = item.ContractReference;
                         objContact.CreditLimt = item.CreditLimt;
                         objContact.CreditTermId = item.CreditTermId;
-                        objContact.CSR = item.CSR;
+                        //objContact.CSR = item.CSR;
                         objContact.CustomerCode = item.CustomerCode;
                         objContact.CustomerReference = item.Reference;
                         objContact.WorkPhone = item.WorkPhone;

@@ -363,7 +363,7 @@ namespace QuickApp.Pro.Controllers
                     actionobject.IntegrationPortalId = item.IntegrationPortalId;
                     actionobject.IsListed = item.IsListed;
                     actionobject.CreatedDate = item.CreatedDate.HasValue ? item.CreatedDate.Value : DateTime.Now;
-                    actionobject.UpdatedDate = item.UpdatedDate;
+                    actionobject.UpdatedDate =Convert.ToDateTime(item.UpdatedDate);
                     actionobject.CreatedBy = item.CreatedBy;
                     actionobject.UpdatedBy = item.UpdatedBy;
                     actionobject.IsActive = true;

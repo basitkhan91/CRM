@@ -33,7 +33,9 @@ namespace QuickApp.Pro.ViewModels
 
         public short? CoreDueIn { get; set; }
 
-        public long? Parent { get; set; }
+      
+        public bool? IsParent { get; set; }
+        public long? ParentId { get; set; }
 
         public long? CustomerClassificationId{ get; set; }
 
@@ -129,7 +131,7 @@ namespace QuickApp.Pro.ViewModels
 
         public string AnnualRevenuePotential { get; set; }
 
-        public string CustomerParentName { get; set; }
+       // public string CustomerParentName { get; set; }
 
         public string AnnualQuota { get; set; }
 

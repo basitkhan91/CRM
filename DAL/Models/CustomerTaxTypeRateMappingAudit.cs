@@ -15,9 +15,9 @@ namespace DAL.Models
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }
         public DateTime CreatedDate { get; set; }
-        public DateTime? UpdatedDate { get; set; }
-        public bool? IsDeleted { get; set; }
-        public bool IsActive { get; set; }
+        public DateTime UpdatedDate { get; set; }
+        public bool IsDeleted { get; set; } = false;
+        public bool IsActive { get; set; } = true;
         public long? TaxRateId { get; set; }
         public byte? TaxTypeId { get; set; }
     }
