@@ -1155,4 +1155,13 @@ export class ItemMasterEndpoint extends EndpointFactory {
     getItemMasterCapabilityAuditHistory(capabilityId){
         return this.http.get<any>(`${this.configurations.baseUrl}/api/ItemMaster/itemmastercapesAudit/${capabilityId}`)
     }
+
+    getItemMasterAircraftAuditHistory(id){
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/ItemMaster/getItemMasterAircraftMappedAudit?itemMasterAircraftMappingId=${id}`)
+    }
+
+    updateItemMasterAircraftById(data){
+        const url = `${this.configurations.baseUrl}/api/ItemMaster/itemMasterAircraftUpdate/${data.itemMasterAircraftMappingId}`;
+        return this.http.put<any>(url, JSON.stringify(data), this.getRequestHeaders() );
+    }
 }

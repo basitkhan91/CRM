@@ -430,6 +430,9 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     totalAtaChapterRecords: any;
     totalAtaChapterPages: number;
     selectedItemClassificationName: any = "";
+    viewAircraftData: any = {};
+    editAirCraftData: any = {};
+    aircraftauditHistory: any = [];
     legalEntityId: number;
 
     // errorLogForPS: string = '';
@@ -502,7 +505,8 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     colsaircraftLD = [
         { field: "aircraft", header: "Aircraft" },
         { field: "model", header: "Model" },
-        { field: "dashNumber", header: "Dash Numbers" }
+        { field: "dashNumber", header: "Dash Numbers" },
+        { field: "memo", header: "Memo" }
     ];
     selectedAircraftLDColumns = this.colsaircraftLD;
     colaircraft: any[] = [
@@ -4454,10 +4458,9 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
 
 
-    deleteAircraftMapped(data) {
-
-
+    onDeleteAircraft(data) {
         this.itemser.deleteItemMasterAir(data.itemMasterAircraftMappingId).subscribe(res => {
+            console.log(res);            
             this.getAircraftMappedDataByItemMasterId();
             this.alertService.showMessage(
                 'Success',
@@ -6319,6 +6322,43 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             this.toGetAllDocumentsList(this.itemMasterId);
             this.documentDeleted = true;
         })
+    }
+    
+    onViewAircraft(rowData) {
+        this.viewAircraftData = rowData;
+    }
+
+    onEditAircraft(rowData) {
+        this.editAirCraftData = {...rowData};
+    }
+
+    updateAircraft() {
+        const data = {...this.editAirCraftData, updatedBy: this.userName, isActive: true};
+        this.itemser.updateItemMasterAircraftById(data).subscribe(res => {
+            console.log(res);
+            this.getAircraftMappedDataByItemMasterId();
+        });
+    }
+
+    getAircraftAuditHistory(rowData) {
+        console.log(rowData);
+        this.itemser.getItemMasterAircraftAuditHistory(rowData.itemMasterAircraftMappingId).subscribe(res => {
+            console.log(res);
+            this.aircraftauditHistory = res;
+        });
+        
+    }
+
+    getColorCodeForHistory(i, field, value) {
+        const data = this.aircraftauditHistory;
+        const dataLength = data.length;
+        if (i >= 0 && i <= dataLength) {
+            if ((i + 1) === dataLength) {
+                return true;
+            } else {
+                return data[i + 1][field] === value
+            }
+        }
     }
     getDefaultCurrency() {
         this.legalEntityId = 19;
