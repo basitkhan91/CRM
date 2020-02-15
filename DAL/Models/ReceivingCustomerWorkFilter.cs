@@ -18,6 +18,8 @@ namespace DAL.Models
         public string status { get; set; }
         public long? ManagementStructureId { get; set; }
         public int? woFilter { get; set; }
+        public string serialNumber { get; set; }
+        public string receivedBy { get; set; }
 
         public long LevelId1 { get; set; }
         public long LevelId2 { get; set; }
