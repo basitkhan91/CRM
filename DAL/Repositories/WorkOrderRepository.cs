@@ -1833,7 +1833,8 @@ namespace DAL.Repositories
                             join ws in _appContext.WorkScope on wop.WorkOrderScopeId equals ws.WorkScopeId
                             join stage in _appContext.WorkOrderStage on wop.WorkOrderStageId equals stage.WorkOrderStageId
                             join pri in _appContext.Priority on wop.WorkOrderPriorityId equals pri.PriorityId
-
+                            join sl in _appContext.StockLine on wop.MasterPartId equals sl.ItemMasterId into wopsl
+                            from sl in wopsl.DefaultIfEmpty()
                             where w.IsDeleted == false && w.IsActive == true && w.WorkOrderId == workOrderId && wop.WorkOrderId == workOrderId
                             select new
                             {
@@ -1850,7 +1851,8 @@ namespace DAL.Repositories
                                 priority = pri.Description,
                                 Stage = wop.Description,
                                 WorkOrderPartNumberId = wop.ID,
-                                wop.WorkOrderScopeId
+                                wop.WorkOrderScopeId,
+                                StockLineNo= sl==null?"":sl.StockLineNumber
                             }
                           ).Distinct()
                           .ToList();
@@ -4411,7 +4413,7 @@ namespace DAL.Repositories
 
                                                   join task in _appContext.Task.Where(p => p.IsActive == true && p.IsDelete == false) on wol.TaskId equals task.TaskId into woltask
                                                   from task in woltask.DefaultIfEmpty()
-                                                  where wol.WorkOrderQuoteLaborHeaderId == lh.WorkOrderQuoteLaborHeaderId && wol.IsDeleted == true
+                                                  where wol.WorkOrderQuoteLaborHeaderId == lh.WorkOrderQuoteLaborHeaderId && wol.IsDeleted == false
                                                   select new
                                                   {
                                                       wol.BillableId,
