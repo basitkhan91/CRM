@@ -48,7 +48,7 @@ namespace QuickApp.Pro.Controllers
             var assets = _unitOfWork.Asset.GetAssetWarrantyStatus();
             return Ok(assets);
         }
-        
+
 
         [HttpGet("GetAsset/{id}")]
         public IActionResult GetAsset(string id)
@@ -207,11 +207,11 @@ namespace QuickApp.Pro.Controllers
                 }
                 else
                 {
-                        assetcapes.MasterCompanyId = 1;
-                        assetcapes.IsDelete = true;
-                        assetcapes.UpdatedDate = DateTime.Now;
-                        _unitOfWork.Repository<AssetCapes>().Update(assetcapes);
-                        _unitOfWork.SaveChanges();
+                    assetcapes.MasterCompanyId = 1;
+                    assetcapes.IsDelete = true;
+                    assetcapes.UpdatedDate = DateTime.Now;
+                    _unitOfWork.Repository<AssetCapes>().Update(assetcapes);
+                    _unitOfWork.SaveChanges();
                 }
                 return Ok(id);
             }
@@ -229,8 +229,16 @@ namespace QuickApp.Pro.Controllers
             {
                 for (var i = 0; i < capabilities.Count(); i++)
                 {
-                    _unitOfWork.Repository<AssetCapes>().Add(capabilities[i]);
-                    _unitOfWork.SaveChanges();
+                    if (capabilities[i].AssetCapesId > 0)
+                    {
+                        _unitOfWork.Repository<AssetCapes>().Update(capabilities[i]);
+                        _unitOfWork.SaveChanges();
+                    }
+                    else
+                    {
+                        _unitOfWork.Repository<AssetCapes>().Add(capabilities[i]);
+                        _unitOfWork.SaveChanges();
+                    }
                     //AssetCapes assetcapes = new AssetCapes();
                     ////capabilities[i].IsActive = true;
                     //if (capabilities[i].ItemMasterId == null)

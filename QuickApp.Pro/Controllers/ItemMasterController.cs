@@ -1512,6 +1512,8 @@ namespace QuickApp.Pro.Controllers
 
                             existingresule.UpdatedDate = DateTime.Now;
                             existingresule.UpdatedBy = itemMasterPurchaseSale[i].UpdatedBy;
+                            existingresule.IsActive = itemMasterPurchaseSale[i].IsActive;
+                            existingresule.IsDeleted = itemMasterPurchaseSale[i].IsDeleted;
 
                             _unitOfWork.Repository<ItemMasterPurchaseSale>().Update(existingresule);
                             _unitOfWork.SaveChanges();
@@ -1669,7 +1671,21 @@ namespace QuickApp.Pro.Controllers
                 return Ok(result);
             }
         }
+        [HttpGet("getAuditHistoryItemMasterPurchSaleByID/{itemMasterPurchaseSaleId}")]
+        [Produces(typeof(List<ItemMasterPurchaseSale>))]
+        public IActionResult getAuditHistoryItemMasterPurchaseSaleByItemMasterID(long itemMasterPurchaseSaleId)
+        {
+            var result = _unitOfWork.itemMaster.geAuditHistoryPurcSaleByItemMasterID(itemMasterPurchaseSaleId);
 
+            if (result == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                return Ok(result);
+            }
+        }
         [HttpGet("itemMasterSerialized/{itemMasterId}/{active}")]
         public IActionResult updateIsSerialized(long itemMasterId, bool active)
         {
