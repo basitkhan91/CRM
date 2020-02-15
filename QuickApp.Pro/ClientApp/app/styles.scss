@@ -3372,10 +3372,11 @@ a.btn-warning {
 }
 
 textarea {
-  padding: 5px;
-  vertical-align: top;
-  width: 100%;
-  border: 1px solid #adadad !important;
+    padding: 5px;
+    vertical-align: top;
+    width: 100%;
+    height: 50px !important;
+    border: 1px solid #adadad !important;
 }
 
 textarea:focus {
@@ -12004,6 +12005,9 @@ body.modal-open {
   float: left;
   display: inline-block;
 }
+.card-body label.radio-inline{
+    padding-right:10px;
+}
 
 .modal-footer button {
   margin-bottom: 0px !important;
@@ -15557,6 +15561,7 @@ body .ui-fileupload .ui-fileupload-buttonbar .ui-button {
 .add-glaccount .form-group input[type='radio'] {
   height: auto !important;
 }
+
 
 .add-glaccount .form-group {
   margin-bottom: 10px !important;
