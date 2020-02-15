@@ -416,6 +416,18 @@
                                             </div>
 
                                         </div>
+                                        <div class="col-md-8">
+                                            <div class="col-md-4">
+                                                <label for="notes">Warnings
+                                                </label>
+                                                <textarea class="form-control" [(ngModel)]="workOrderGeneralInformation.notes" name="notes" [disabled]="isView"></textarea>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label for="memo">Memo
+                                                </label>
+                                                <textarea class="form-control" [(ngModel)]="workOrderGeneralInformation.memo" name="memo" [disabled]="isView"></textarea>
+                                            </div>
+                                        </div>
                                         <div class="clear"></div>
                                         <hr>
                                     </div>
