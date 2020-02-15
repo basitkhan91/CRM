@@ -45,6 +45,9 @@ namespace DAL
 
         public DbSet<ItemMasterATAMapping> ItemMasterATAMapping { get; set; }
         public DbSet<ItemMasterPurchaseSale> ItemMasterPurchaseSale { get; set; }
+        public DbSet<ItemMasterPurchaseSaleAudit> ItemMasterPurchaseSaleAudit { get; set; }
+
+        
         public DbSet<WorkflowPublicationDashNumber> WorkflowPublicationDashNumber { get; set; }
         public DbSet<UserRoleMapper> UserRoleMapper { get; set; }
         public DbSet<UserRole> UserRole { get; set; }
