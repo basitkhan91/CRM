@@ -175,6 +175,7 @@ export class ItemMasterListComponent implements OnInit, AfterViewInit {
 	totalRecords: number = 0;
 	totalPages: number = 0;
 	itemMasterData: any = {};
+	ataChapterId: any;
 
 	//selectedColumns: any;
 	/** item-master-list ctor */
