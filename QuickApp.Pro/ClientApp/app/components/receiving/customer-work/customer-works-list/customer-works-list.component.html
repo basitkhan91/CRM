@@ -16,24 +16,26 @@
 
         <div class="form-row status-radio">
             <div class="col-md-8">
-                <div class="form-group">
-                    <label class="radiobtn-label">Status:</label>
-                    <div class="pull-left" style="margin-top: 4px; margin-right: 15px;">
-                        <label class="radio-cstm wauto">
-                            <input type="radio" name="custworkstatus" class="form-control" value="1" (click)="getCustWorkStatus(1)" [(ngModel)]="currentStatusCW">
-                            <span class="checkmark"></span>Pending WO Creation</label>
+                <form>
+                    <div class="form-group">
+                        <label class="radiobtn-label">Status:</label>
+                        <div class="pull-left" style="margin-top: 4px; margin-right: 15px;">
+                            <label class="radio-cstm wauto">
+                                <input type="radio" name="custworkstatus" class="form-control" value="1" (click)="getCustWorkStatus('1')" [ngModel]="currentStatusCW" checked>
+                                <span class="checkmark"></span>Pending WO Creation</label>
+                        </div>
+                        <div class="pull-left" style="margin-top: 4px; margin-right: 15px;">
+                            <label class="radio-cstm wauto">
+                                <input type="radio" name="custworkstatus" class="form-control" value="2" (click)="getCustWorkStatus('2')" [ngModel]="currentStatusCW">
+                                <span class="checkmark"></span>Returned to Customers</label>
+                        </div>
+                        <div class="pull-left" style="margin-top: 4px; margin-right: 15px;">
+                            <label class="radio-cstm wauto">
+                                <input type="radio" name="custworkstatus" class="form-control" value="3" (click)="getCustWorkStatus('3')" [ngModel]="currentStatusCW">
+                                <span class="checkmark"></span>All</label>
+                        </div>
                     </div>
-                    <div class="pull-left" style="margin-top: 4px; margin-right: 15px;">
-                        <label class="radio-cstm wauto">
-                            <input type="radio" name="custworkstatus" class="form-control" value="2" (click)="getCustWorkStatus(2)" [(ngModel)]="currentStatusCW">
-                            <span class="checkmark"></span>Returned to Customers</label>
-                    </div>
-                    <div class="pull-left" style="margin-top: 4px; margin-right: 15px;">
-                        <label class="radio-cstm wauto">
-                            <input type="radio" name="custworkstatus" class="form-control" value="3" (click)="getCustWorkStatus(3)" [(ngModel)]="currentStatusCW">
-                            <span class="checkmark"></span>All</label>
-                    </div>
-                </div>
+                </form>
             </div>
         </div>
 

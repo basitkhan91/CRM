@@ -364,6 +364,7 @@ export class CustomerSalesPersonComponent implements OnInit {
             secondarySalesPersonId: editValueAssignByCondition('employeeId', this.salesInfo.secondarySalesPersonId),
             csrId: editValueAssignByCondition('employeeId', this.salesInfo.csrId),
             saId: editValueAssignByCondition('employeeId', this.salesInfo.saId),
+            createdBy: this.userName,
             updatedBy: this.userName,
             masterCompanyId: 1
         }, this.id).subscribe(
