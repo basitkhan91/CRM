@@ -1095,11 +1095,11 @@ namespace DAL.Repositories
                             join emp in _appContext.Employee on cust.CsrId equals emp.EmployeeId into custemp
                             from emp in custemp.DefaultIfEmpty()
                             where rc.IsDeleted == false && rc.IsActive == true
-                            && (cust.Name.ToLower().Contains(value.ToLower()) || cust.CustomerCode.ToLower().Contains(value.ToLower()))
+                            && (cust.Name.ToLower().Contains(value.ToLower()))
                             select new
                             {
                                 rc.CustomerId,
-                                CustomerName = cust.Name + " - " + cust.CustomerCode,
+                                CustomerName = cust.Name,
                                 cust.CsrId,
                                 CSRName = emp == null ? "" : emp.FirstName,
                                 cust.CreditLimit,
