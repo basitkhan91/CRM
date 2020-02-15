@@ -1308,8 +1308,8 @@ export class ItemMasterCapabilitiesListComponent implements OnInit {
     }
     onViewCapes(rowData){
         this.showCapes = true;
-        this.isCapViewMode = true;
-        this.itemMasterId = rowData.itemMasterId;
+        // this.isCapViewMode = true;
+        // this.itemMasterId = rowData.itemMasterId;
         this.selectedItemMasterCapData = rowData;
     }
     closeCapes() {
