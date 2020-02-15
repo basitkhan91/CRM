@@ -167,5 +167,7 @@ namespace DAL.Repositories.Interfaces
 
 
         object WorkOrderAnalysis(long workOrderId);
+        WorkOrderSettings CreateWorkOrderSettings(WorkOrderSettings workOrderSettings);
+        WorkOrderSettings GetWorkOrderSettings(int masterCompanyId, int? workOrderTypeId);
     }
 }
