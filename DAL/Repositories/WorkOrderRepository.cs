@@ -2648,11 +2648,14 @@ namespace DAL.Repositories
 
         #region Work Order Documents
 
-        public List<WorkOrderDocuments> CreateWorkOrderDocuments(List<WorkOrderDocuments> workOrderDocuments)
+        public WorkOrderDocuments CreateWorkOrderDocuments(WorkOrderDocuments workOrderDocuments)
         {
             try
             {
-                _appContext.WorkOrderDocuments.AddRange(workOrderDocuments);
+                workOrderDocuments.CreatedDate = workOrderDocuments.UpdatedDate = DateTime.Now;
+                workOrderDocuments.IsActive = true;
+                workOrderDocuments.IsDeleted = false;
+                _appContext.WorkOrderDocuments.Add(workOrderDocuments);
                 _appContext.SaveChanges();
                 return workOrderDocuments;
             }
@@ -2663,16 +2666,18 @@ namespace DAL.Repositories
             }
         }
 
-        public void UpdateWorkOrderDocuments(WorkOrderDocuments workOrderDocuments)
+        public WorkOrderDocuments UpdateWorkOrderDocuments(WorkOrderDocuments workOrderDocument)
         {
             try
             {
-                workOrderDocuments.UpdatedDate = DateTime.Now;
-                workOrderDocuments.IsActive = true;
-                workOrderDocuments.IsDeleted = false;
+                workOrderDocument.UpdatedDate = DateTime.Now;
+                workOrderDocument.IsActive = true;
+                workOrderDocument.IsDeleted = false;
 
-                _appContext.WorkOrderDocuments.Update(workOrderDocuments);
+                _appContext.WorkOrderDocuments.Update(workOrderDocument);
                 _appContext.SaveChanges();
+
+                return workOrderDocument;
             }
             catch (Exception)
             {
@@ -2681,32 +2686,39 @@ namespace DAL.Repositories
             }
         }
 
-        public IEnumerable<object> GetWorkFlowWorkOrderDocumentsList(long wfwoId = 0, long workOrderId = 0)
+        public IEnumerable<object> GetWorkOrderDocumentsList(long wfwoId = 0, long workOrderId = 0)
         {
             try
             {
                 var workOrderDocuments = (from wd in _appContext.WorkOrderDocuments
-
-                                          join doc in _appContext.Document on wd.DocumentId equals doc.DocumentId
                                           where wd.IsDeleted == false && wd.WorkFlowWorkOrderId == wfwoId
                                           select new
                                           {
-                                              wd.CompanyId,
-                                              wd.CreatedBy,
-                                              wd.CreatedDate,
+                                              wd.WorkOrderDocumentId,
+                                              wd.AttachmentId,
+                                              wd.Code,
+                                              wd.Name,
                                               wd.Description,
-                                              wd.DocumentId,
-                                              wd.DocumentLink,
-                                              wd.IsActive,
-                                              wd.IsDeleted,
-                                              wd.ManagementStructureId,
-                                              wd.MasterCompanyId,
-                                              wd.UpdatedBy,
-                                              wd.UpdatedDate,
-                                              wd.WorkFlowWorkOrderId,
-                                              wd.WorkOrderDocumentsId,
-                                              wd.WorkOrderId,
-                                              DocumentCode = doc.DocumentCode
+                                              AttachmentDetails = _appContext.WorkOrderDocuments
+                     .Join(_appContext.AttachmentDetails,
+                           woDoc => woDoc.AttachmentId,
+                           atd => atd.AttachmentId,
+                           (woDoc, atd) => new
+                           {
+                               atd.AttachmentDetailId,
+                               atd.AttachmentId,
+                               atd.FileName,
+                               atd.Link,
+                               atd.FileSize,
+                               atd.CreatedBy,
+                               atd.CreatedDate,
+                               atd.UpdatedBy,
+                               atd.UpdatedDate,
+                               atd.Description,
+                               atd.IsActive,
+                               atd.IsDeleted
+                           }
+                           ).Where(p => p.AttachmentId == wd.AttachmentId && p.IsActive == true && p.IsDeleted == false)
                                           }).Distinct()
                              .ToList();
 
@@ -2721,12 +2733,29 @@ namespace DAL.Repositories
             }
         }
 
+        public WorkOrderDocuments GetWorkOrderDocumentsDetailById(long id)
+        {
+            try
+            {
+                WorkOrderDocuments workOrderDocument = new WorkOrderDocuments();
+                workOrderDocument = _appContext.WorkOrderDocuments
+                    .Where(p => p.IsDeleted == false && p.WorkOrderDocumentId == id)
+                    .OrderByDescending(p => p.UpdatedDate)
+                    .FirstOrDefault();
+                return workOrderDocument;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         public void DeleteWorkOrderDocuments(long workOrderDocumentsId, string updatedBy)
         {
             try
             {
                 WorkOrderDocuments workOrderDocument = new WorkOrderDocuments();
-                workOrderDocument.WorkOrderDocumentsId = workOrderDocumentsId;
+                workOrderDocument.WorkOrderDocumentId = workOrderDocumentsId;
                 workOrderDocument.UpdatedDate = DateTime.Now;
                 workOrderDocument.IsDeleted = true;
                 workOrderDocument.UpdatedBy = updatedBy;
@@ -2744,7 +2773,28 @@ namespace DAL.Repositories
             }
         }
 
+        public void WorkOrderDocumentStatus(long workOrderDocumentsId,bool status, string updatedBy)
+        {
+            try
+            {
+                WorkOrderDocuments workOrderDocument = new WorkOrderDocuments();
+                workOrderDocument.WorkOrderDocumentId = workOrderDocumentsId;
+                workOrderDocument.UpdatedDate = DateTime.Now;
+                workOrderDocument.IsActive = status;
+                workOrderDocument.UpdatedBy = updatedBy;
 
+                _appContext.WorkOrderDocuments.Attach(workOrderDocument);
+                _appContext.Entry(workOrderDocument).Property(x => x.IsActive).IsModified = true;
+                _appContext.Entry(workOrderDocument).Property(x => x.UpdatedDate).IsModified = true;
+                _appContext.Entry(workOrderDocument).Property(x => x.UpdatedBy).IsModified = true;
+                _appContext.SaveChanges();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
 
         #endregion
 
@@ -4120,8 +4170,6 @@ namespace DAL.Repositories
                                 TaskName = ts == null ? "" : ts.Description,
                                 woc.MarkupFixedPrice,
                                 woc.BillingMethodId,
-                                woc.TMAmount,
-                                woc.FlateRate,
                                 woc.HeaderMarkupId,
                             }
                           ).Distinct().ToList();
@@ -4239,8 +4287,6 @@ namespace DAL.Repositories
                                                   TaskName = ts == null ? "" : ts.Description,
                                                   wom.MarkupFixedPrice,
                                                   wom.BillingMethodId,
-                                                  wom.TMAmount,
-                                                  wom.FlateRate,
                                                   wom.HeaderMarkupId,
                                                   wom.ExtendedCost
                                               }).Distinct().ToList();
@@ -4781,9 +4827,9 @@ namespace DAL.Repositories
                                         quoteStatusId = woq.QuoteStatusId,
                                         isActive = woq.IsActive,
                                         createdDate = woq.CreatedDate,
-                                        CusomerId=woq.CustomerId,
-                                        ItemMasterId=wop.MasterPartId,
-                                        WorkScopeId=wop.WorkOrderScopeId,
+                                        CusomerId = woq.CustomerId,
+                                        ItemMasterId = wop.MasterPartId,
+                                        WorkScopeId = wop.WorkOrderScopeId,
                                     }).Distinct()
                             .Paginate(pageNumber, pageSize, sorts, filters).RecordCount;
 
