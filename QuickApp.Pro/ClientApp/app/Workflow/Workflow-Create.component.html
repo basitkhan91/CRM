@@ -447,7 +447,7 @@
                                     </div>
                                     <div id="tab_Charges" *ngIf="workFlow != undefined && workFlow.charges != undefined"
                                          class="tab-pane fade in active pan">
-                                        <grd-charges [UpdateMode]="UpdateMode" [workFlow]='workFlow'></grd-charges>
+                                        <grd-charges [UpdateMode]="UpdateMode" [workFlow]='workFlow' isWorkFlow="true"></grd-charges>
                                     </div>
                                     <div id="tab_Directions" *ngIf="workFlow != undefined && workFlow.directions != undefined"
                                          class="tab-pane pan">
@@ -459,7 +459,7 @@
                                     </div>
                                     <div id="tab_Exclusions" *ngIf="workFlow != undefined && workFlow.exclusions != undefined"
                                          class="tab-pane fade pan">
-                                        <grd-exclusions [UpdateMode]="UpdateMode" [workFlow]='workFlow'></grd-exclusions>
+                                        <grd-exclusions [UpdateMode]="UpdateMode" [workFlow]='workFlow' isWorkFlow="true"></grd-exclusions>
                                     </div>
                                     <div id="tab_Expertise" *ngIf="workFlow != undefined && workFlow.expertise != undefined "
                                          class="tab-pane fade pan">
@@ -467,7 +467,7 @@
                                     </div>
                                     <div id="tab_Material_List" *ngIf="workFlow != undefined && workFlow.materialList != undefined"
                                          class="tab-pane fade pan">
-                                        <grd-material [UpdateMode]="UpdateMode" [workFlow]='workFlow'></grd-material>
+                                        <grd-material [UpdateMode]="UpdateMode" [workFlow]='workFlow' isWorkFlow="true"></grd-material>
                                     </div>
                                     <div id="tab_Measurements" *ngIf="workFlow != undefined && workFlow.measurements != undefined"
                                          class="tab-pane fade pan">

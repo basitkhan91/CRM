@@ -23,6 +23,7 @@ export class WorkOrderFreightComponent implements OnInit {
     @Output() saveFreightListForWO = new EventEmitter();
     @Output() updateFreightListForWo = new EventEmitter();
     @Output() refreshData = new EventEmitter();
+    @Input() view: boolean = false;
     
     @Input() isWorkOrder;
     @Input() isQuote = false;
@@ -53,7 +54,9 @@ export class WorkOrderFreightComponent implements OnInit {
         private cdRef: ChangeDetectorRef) {
     }
     ngOnInit() {
-        this.freightForm = [...this.freightForm, new Freight()];
+        if(this.freightForm){
+            this.freightForm = [...this.freightForm, new Freight()];
+        }
         this.customerId = editValueAssignByCondition('customerId', this.savedWorkOrderData.customerId);
         this.getShipViaByCustomerId();
         this.getCarrierList();
@@ -173,16 +176,16 @@ export class WorkOrderFreightComponent implements OnInit {
             this.markupList.forEach((markup)=>{
             if(type == 'row' && markup.value == matData.markupPercentageId){
                 // matData.freightCostPlus = Number(matData.amount) + ((Number(matData.amount) / 100) * Number(markup.label))
-                matData.billingRate = Number(matData.amount) + ((Number(matData.amount) / 100) * Number(markup.label))
-                matData['billingAmount'] = Number(matData['billingRate']) * Number(matData.weight);
+                matData.billingAmount = (Number(matData.amount) + ((Number(matData.amount) / 100) * Number(markup.label))).toFixed(2)
+                // matData['billingAmount'] = Number(matData['billingRate']) * Number(matData.weight);
             }
             else if(type == 'all' && markup.value == this.overAllMarkup){
                 this.workOrderFreightList.forEach((mData)=>{
                 if(mData.billingMethodId && Number(mData.billingMethodId) == 1){
                     mData.markupPercentageId = Number(this.overAllMarkup);
                     // mData.freightCostPlus = Number(mData.amount) + ((Number(mData.amount) / 100) * Number(markup.label))
-                    mData.billingRate = Number(mData.amount) + ((Number(mData.amount) / 100) * Number(markup.label))
-                    mData['billingAmount'] = Number(mData['billingRate']) * Number(mData.weight);  
+                    mData.billingAmount = (Number(mData.amount) + ((Number(mData.amount) / 100) * Number(markup.label))).toFixed(2)
+                    // mData['billingAmount'] = Number(mData['billingRate']) * Number(mData.weight);  
                 }  
             })
             }
@@ -210,22 +213,22 @@ export class WorkOrderFreightComponent implements OnInit {
             }
           )
         }
-        return total;
+        return total.toFixed(2);
       }
     
-      getTotalBillingRate() {
-        let total = 0;
-        if(this.workOrderFreightList){
-          this.workOrderFreightList.forEach(
-            (material) => {
-              if (material.billingRate) {
-                total += Number(material.billingRate);
-              }
-            }
-          )
-        }
-        return total;
-      }
+    //   getTotalBillingRate() {
+    //     let total = 0;
+    //     if(this.workOrderFreightList){
+    //       this.workOrderFreightList.forEach(
+    //         (material) => {
+    //           if (material.billingRate) {
+    //             total += Number(material.billingRate);
+    //           }
+    //         }
+    //       )
+    //     }
+    //     return total;
+    //   }
     
       getTotalBillingAmount() {
         let total = 0;
@@ -238,7 +241,7 @@ export class WorkOrderFreightComponent implements OnInit {
             }
           )
         }
-        return total;
+        return total.toFixed(2);
       }
 
 }

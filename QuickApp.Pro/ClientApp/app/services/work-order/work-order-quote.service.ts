@@ -18,7 +18,7 @@ export class WorkOrderQuoteService {
     creditTerms: any;
     employeesOriginalData: any[];
     constructor(private workOrderEndpointService: WorkOrderEndpointService,
-        private quoteEndPointService: QuoteEndpointService) {
+        public quoteEndPointService: QuoteEndpointService) {
     }
 
     createOrUpdateQuotation(data) {

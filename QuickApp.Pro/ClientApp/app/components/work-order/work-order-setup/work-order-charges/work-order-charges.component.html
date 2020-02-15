@@ -10,7 +10,7 @@
   </button>
 </div>
 
-<div id="addNewCharges" class="modal fade" role="dialog" data-backdrop="static">
+<div id="addNewCharges" class="modal fade" role="dialog" data-backdrop="static" *ngIf="!view">
   <div class="modal-dialog modal-lg">
     <!-- Modal content-->
     <div class="modal-content">
@@ -172,7 +172,7 @@
             <input type="number" [(ngModel)]="rowData.flateRate" [disabled]="rowData.billingMethodId != 2"/>
           </td> -->
           <td>
-              <input type="number" [(ngModel)]="rowData.billingRate" (change)="rowData.billingAmount = rowData.billingRate*rowData.quantity" [disabled]="isView || rowData.billingMethodId != '2'"/>
+              <input type="number" [(ngModel)]="rowData.billingRate" (change)="rowData.billingAmount = (rowData.billingRate*rowData.quantity).toFixed(2)" [disabled]="isView || rowData.billingMethodId != '2'"/>
           </td>
           <td>{{ rowData.billingAmount }}</td>
         </ng-container>
@@ -207,11 +207,11 @@
         <td>&nbsp;</td>
         <td>&nbsp;</td>
         <td>{{ getTotalQuantity() }}</td>
+        <td>&nbsp;</td>
         <td>{{ getTotalUnitCost() }}</td>
         <td>&nbsp;</td>
         <td>&nbsp;</td>
-        <td>&nbsp;</td>
-        <td>{{ getTotalBillingRate() }}</td>
+        <td></td>
         <td>{{ getTotalBillingAmount() }}</td>
         <td>&nbsp;</td>
         <td *ngIf="!isView">&nbsp;</td>
