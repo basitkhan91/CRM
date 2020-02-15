@@ -430,6 +430,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     totalAtaChapterRecords: any;
     totalAtaChapterPages: number;
     selectedItemClassificationName: any = "";
+    legalEntityId: number;
 
     // errorLogForPS: string = '';
 
@@ -588,6 +589,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         // ];
         this.loadManagementdata();
         this.manufacturerdata();
+        this.getDefaultCurrency();
         // get all aircraft Manfacturer
         this.aircraftManfacturerData();
         this.itemclass();
@@ -626,7 +628,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.getAllDashNumbers();
         this.getAllATAChapter();
         // this.getAllATASubChapter();
-        // this.getAllSubChapters();
+        this.getAllSubChapters();
         this.getCapabilityType();
         this.getConditionsList();
         this.loadSiteData();
@@ -708,7 +710,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
                 this.fieldArray = res.map(x => {
                     return {
-                        Condition: x.condition,
+                        Condition: parseInt(x.condition),
                         PP_UOMId: x.pP_UOMId,
                         PP_CurrencyId: x.pP_CurrencyId,
                         PP_FXRatePerc: x.pP_FXRatePerc,
@@ -4825,7 +4827,8 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
 
 
-        this.itemser.newItemMasterPurcSaleClass(data).subscribe(datas => {
+        // this.itemser.newItemMasterPurcSaleClass(data).subscribe(datas => {
+            this.itemser.updateItemMasterPurchaseSale(ItemMasterID, data).subscribe(datas => {
             this.alertService.showMessage(
                 'Success',
                 `Saved Purchase and Sale Successfully `,
@@ -6317,5 +6320,13 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             this.documentDeleted = true;
         })
     }
+    getDefaultCurrency() {
+        this.legalEntityId = 19;
+        this.commonService.getDefaultCurrency(this.legalEntityId).subscribe(res => {
+            console.log(res);
+            this.exportInfo.ExportCurrencyId = res.currencyId;
+        })
+    }
+
 }
 

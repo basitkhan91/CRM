@@ -943,7 +943,7 @@
                         <div class="card">
                             <div class="col-md-12">
                                 <h4 class="po-head-sm">
-                                Inventory
+                                Add Aircraft Info
                                 <!-- <a
                                     class="plusicon-cstm"
                                     href="#"
@@ -1258,7 +1258,7 @@
                                     </div>
                                 </div>
                             </div>  <!--/advance-search-card-->                                
-                            <p-table #ataDataTable class="rpo-table-cstm" [value]="ataMappedList" [rows]="6" [columns]="atasub" [scrollable]="true" [style]="{width:'100%'}" [paginator]="true">
+                            <p-table #ataDataTable class="rpo-table-cstm" [value]="ataMappedList" [rows]="ataChapterTablePageSize" [columns]="atasub" [scrollable]="true" [style]="{width:'100%'}" [paginator]="true" [rowsPerPageOptions]="[10, 20, 50, 100]">
                                 <ng-template pTemplate="caption"  let-columns>
                                     <div style="text-align: right; min-height: 30px; margin-left: -6px;">
                                     <p-multiSelect
@@ -1266,6 +1266,7 @@
                                         [(ngModel)]="selectedAircraftLDColumns"
                                         [ngModelOptions]="{ standalone: true }"
                                         optionLabel="header"
+
                                         selectedItemsLabel="{0} columns selected"
                                         [style]="{ minWidth: '200px' }"
                                         defaultLabel="Choose Columns"
@@ -1577,11 +1578,12 @@
                                 <tbody>
 
                                     <tr *ngFor="let field of fieldArray; let i = index">
-                                        <td>
+                                        <!-- {{field.Condition}} -->
 
-                                            <select class="form-control w80 select-value-drop1" id="condition" name="condition" [(ngModel)]="field.Condition" [ngModelOptions]="{standalone: true}" required>
+                                        <td>
+                                            <select class="form-con trol w80 select-value-drop1" id="condition" name="condition" [(ngModel)]="field.Condition" [ngModelOptions]="{standalone: true}" required>
                                                 <option value="null">Select Condition </option>
-                                                <option *ngFor="let x of conditionList" [ngValue]="x.value">{{x.label}} </option>
+                                                <option *ngFor="let x of conditionList" [ngValue]="x.value">{{x.label}}</option>
                                                 <!-- <option value="NEW" selected="1">NEW</option>
                                                 <option value="AS-IS">AS-IS </option>
                                                 <option value="REPAIR">REPAIR</option>

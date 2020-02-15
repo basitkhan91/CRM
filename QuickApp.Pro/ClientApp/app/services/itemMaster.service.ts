@@ -309,8 +309,8 @@ export class ItemMasterService {
     updateItemMasterATA(ItemMasterATAMappingId: number) {
         return this.itemMasterEndpoint.updateItemMasterATAEndpoint<any>(ItemMasterATAMappingId);
     }
-    updateItemMasterPurchaseSale(ItemMasterPurchaseSaleId: number) {
-        return this.itemMasterEndpoint.updateItemMasterPurchaseSaleEndpoint<any>(ItemMasterPurchaseSaleId);
+    updateItemMasterPurchaseSale(ItemMasterPurchaseSaleId: number, data) {
+        return this.itemMasterEndpoint.updateItemMasterPurchaseSaleEndpoint<any>(ItemMasterPurchaseSaleId, data);
     }
     postATAMapping(action: any) {
         return this.itemMasterEndpoint.saveATAMapping<any>(action);
