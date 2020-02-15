@@ -89,7 +89,7 @@ export class WorkOrderSmartComponent implements OnInit {
         } else {
             // get the workOrderId on Edit Mode
             this.workOrderId = this.acRouter.snapshot.params['id'];
-            // this.recCustmoerId = this.acRouter.snapshot.params['rcustid'];
+            this.recCustmoerId = this.acRouter.snapshot.params['rcustid'];
 
         }
 
