@@ -1239,8 +1239,61 @@ namespace QuickApp.Pro.Controllers
 
             return Ok(ModelState);
         }
+        [HttpPut("itemMasterAircraftUpdate/{id}")]
+         public IActionResult UpdateCustomerAircraftInfo(long id, [FromBody] ItemMasterAircraftMapping itemAircraftMappingVM)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var aircraft = _unitOfWork.Repository<ItemMasterAircraftMapping>().GetSingleOrDefault(c => c.ItemMasterAircraftMappingId == id);// && c.AircraftModelId == customerAircraftMappingVM[i].AircraftModelId && c.MasterCompanyId == customerAircraftMappingVM[i].MasterCompanyId && c.CustomerId = customerAircraftMappingVM[i].CustomerId);
+                    aircraft.AircraftType = itemAircraftMappingVM.AircraftType;
+                    aircraft.AircraftModel = itemAircraftMappingVM.AircraftModel;
+                    aircraft.DashNumber = itemAircraftMappingVM.DashNumber;
+                    //ModelNumber = customerAircraftMappingVM[i].ModelNumber,
+                    aircraft.AircraftModelId = itemAircraftMappingVM.AircraftModelId;
+                    aircraft.DashNumberId = itemAircraftMappingVM.DashNumberId;
+                    aircraft.Memo = itemAircraftMappingVM.Memo;
+                    aircraft.MasterCompanyId = itemAircraftMappingVM.MasterCompanyId;
+                    aircraft.CreatedBy = itemAircraftMappingVM.CreatedBy;
+                    aircraft.UpdatedBy = itemAircraftMappingVM.UpdatedBy;
+                    aircraft.ItemMasterId = itemAircraftMappingVM.ItemMasterId;
+                    aircraft.CreatedDate = System.DateTime.Now;
+                    aircraft.UpdatedDate = System.DateTime.Now;
+                    aircraft.IsDeleted = itemAircraftMappingVM.IsDeleted;
+                    aircraft.PartNumber = itemAircraftMappingVM.PartNumber;
+                    aircraft.AircraftTypeId = itemAircraftMappingVM.AircraftTypeId;
 
+                    _unitOfWork.Repository<ItemMasterAircraftMapping>().Update(aircraft);
+                    _unitOfWork.SaveChanges();
+                    return Ok();
+                }
+                else
+                {
+                    return BadRequest(ModelState);
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.InnerException.ToString());
+            }
 
+        }
+        [HttpGet("getItemMasterAircraftMappedAudit")]
+       
+        public IActionResult AircraftMappedAudit(long itemMasterAircraftMappingId)
+        {
+            try
+            {
+                var result = _unitOfWork.itemMaster.GetAircraftMappedAudit(itemMasterAircraftMappingId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.InnerException.ToString());
+            }
+
+        }
         //To post data in ATA Chapter Tab in Item Master
         [HttpPost("ItemMasterATAPost")]
         public IActionResult InsertItemmasterATA([FromBody] ItemMasterATAMapping[] itemMasterATAMapping)
@@ -1307,6 +1360,20 @@ namespace QuickApp.Pro.Controllers
                 return Ok(result);
             }
         }
+
+        [HttpGet("getAircraftMappedById")]
+        public IActionResult ItemMasterAircraftMappedById(long itemMasterId,long itemMasterAircraftMappingId)
+        {
+            var result = _unitOfWork.itemMaster.ItemMasterAircraftMappedById(itemMasterId, itemMasterAircraftMappingId);
+            if (result == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                return Ok(result);
+            }
+        }
         [HttpGet("getATAMapped/{ItemmasterId}")]
         [Produces(typeof(List<ItemMasterATAMapping>))]
         public IActionResult ataMapped(long ItemmasterId)
@@ -1322,6 +1389,7 @@ namespace QuickApp.Pro.Controllers
             }
 
         }
+        
         [HttpPost("ExportInfoPostBy_IMastID/{id}")]
         public IActionResult ExportInfoupdate(long id, [FromBody] ItemMasterViewModel itemMasterViewModel)
         {

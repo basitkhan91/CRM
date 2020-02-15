@@ -1956,6 +1956,61 @@ namespace DAL.Repositories
                 throw ex;
             }
         }
+        public IEnumerable<object> GetAircraftMappedAudit(long itemMasterAircraftMappingId)
+        {
+            
 
+                var data = (from c in _appContext.ItemMasterAircraftMappingAudit
+                            where c.ItemMasterAircraftMappingId == itemMasterAircraftMappingId
+                            select new
+                            {
+                                c.ItemMasterAircraftMappingId,
+                                c.AuditItemMasterAircraftMappingId,
+                                c.ItemMasterId,
+                                c.AircraftTypeId,
+                                c.AircraftType,
+                                c.AircraftModelId,
+                                c.DashNumberId,
+                                c.CreatedBy,
+                                c.UpdatedBy,
+                                c.UpdatedDate,
+                                c.CreatedDate,
+                                c.DashNumber,
+                                c.AircraftModel,
+                                c.Memo,
+                                c.PartNumber,
+                                c.MasterCompanyId,
+                                c.IsActive
+                            }).OrderByDescending(c => c.UpdatedDate).ToList();
+                return data;
+            }
+        
+        public object ItemMasterAircraftMappedById(long itemMasterId, long itemMasterAircraftMappingId)
+        {
+            var data = (from c in _appContext.ItemMasterAircraftMapping
+                        where c.ItemMasterAircraftMappingId == itemMasterAircraftMappingId && c.ItemMasterId== itemMasterId
+                        select new
+                        {
+                            c.ItemMasterAircraftMappingId,
+
+                            c.ItemMasterId,
+                            c.AircraftTypeId,
+                            c.AircraftType,
+                            c.AircraftModelId,
+                            c.DashNumberId,
+                            c.CreatedBy,
+                            c.UpdatedBy,
+                            c.UpdatedDate,
+                            c.CreatedDate,
+                            c.DashNumber,
+                            c.AircraftModel,
+                            c.Memo,
+                            c.PartNumber,
+                            c.MasterCompanyId,
+                            c.IsActive
+                        }).FirstOrDefault();
+            return data;
+
+        }
     }
 }
