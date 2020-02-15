@@ -201,6 +201,48 @@ namespace DAL.Repositories
                 return data;
             }
         }
+
+
+        public IEnumerable<object> GetAssetCapesAudit(long id)  
+        {
+            {
+                var data = (from asset in _appContext.AssetCapesAudit
+                            join ass
+                            in _appContext.AssetCapes on asset.AssetCapesId equals ass.AssetCapesId
+                            join im
+                            in _appContext.ItemMaster on ass.ItemMasterId equals im.ItemMasterId
+                            join
+                            captype in _appContext.capabilityType on ass.CapabilityId equals captype.CapabilityTypeId
+                            join act in _appContext.AircraftType on asset.AircraftTypeId equals act.AircraftTypeId
+                            join acm in _appContext.AircraftModel on asset.AircraftModelId equals acm.AircraftModelId into airmodel
+                            from acm in airmodel.DefaultIfEmpty()
+                            join dn in _appContext.AircraftDashNumber on asset.AircraftDashNumberId equals dn.DashNumberId into dashnum
+                            from dn in dashnum.DefaultIfEmpty()
+                            where asset.AssetCapesId == id
+
+                            select new
+                            {
+                                asset.AssetCapesId,
+                                asset.CreatedBy,
+                                asset.CreatedDate,
+                                asset.IsActive,
+                                asset.IsDeleted,
+                                asset.UpdatedBy,
+                                asset.UpdatedDate,
+                                itemMasterId = asset.ItemMasterId,
+                                aircraftModelId = asset.AircraftModelId,
+                                partNumber = im.PartNumber,
+                                im.PartDescription,
+                                captypedescription = captype.Description,
+                                manufacturer = act.Description,
+                                modelname = acm.ModelName,
+                                dashNumber = dn.DashNumber,
+                                aircraftTypeId = asset.AircraftTypeId,
+
+                            }).ToList();
+                return data;
+            }
+        }
         public IEnumerable<object> getCapesList(long id)
         {
             {
