@@ -59,6 +59,8 @@ export class QuoteViewComponent implements OnInit, OnChanges{
     selectedWorkFlowWorkOrderId: any;
     workFlowWorkOrderId: any;
     gridActiveTab: any;
+    isView: any;
+    isQuoteListView: any;
     constructor(private commonService: CommonService, private workorderMainService: WorkOrderService,private workOrderService: WorkOrderQuoteService){
 
     }
@@ -351,6 +353,10 @@ export class QuoteViewComponent implements OnInit, OnChanges{
     }
     gridTabChange(value) {
         this.gridActiveTab = value;
+    }
+
+    calculateExpiryDate() {
+
     }
 
 }

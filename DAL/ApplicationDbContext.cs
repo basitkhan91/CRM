@@ -40,6 +40,9 @@ namespace DAL
         public DbSet<ShippingVia> ShippingVia { get; set; }
         public DbSet<ShippingAccount> ShippingAccount { get; set; }
         public DbSet<ItemMasterAircraftMapping> ItemMasterAircraftMapping { get; set; }
+        public DbSet<ItemMasterAircraftMappingAudit> ItemMasterAircraftMappingAudit { get; set; }
+
+
         public DbSet<ItemMasterATAMapping> ItemMasterATAMapping { get; set; }
         public DbSet<ItemMasterPurchaseSale> ItemMasterPurchaseSale { get; set; }
         public DbSet<WorkflowPublicationDashNumber> WorkflowPublicationDashNumber { get; set; }
