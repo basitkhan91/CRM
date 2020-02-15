@@ -124,7 +124,7 @@
                         </ng-template>
 
                         <ng-template pTemplate="body" let-rowData let-car>
-                            <tr [pSelectableRow]="rowData" pReorderableRowHandle (dblclick)="openEdit(rowData)">
+                            <tr [pSelectableRow]="rowData" pReorderableRowHandle (dblclick)="openViewOnDbl(rowData)">
                                 <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
                                     {{rowData[col.field]}}
                                 </td>
@@ -142,7 +142,7 @@
                                         <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChangeforstock(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
                                         <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="handleChangeforstock(rowData,$event)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
 
-                                        <span data-toggle="modal" data-target="#view"><a class="btn nobg btn-view-cstm" (click)="openView(view,rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
+                                        <span data-toggle="modal" data-target="#itemMasterView"><a class="btn nobg btn-view-cstm" (click)="openView(rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
                                         <span><a class="btn nobg btn-edit-cstm" (click)="openEdit(car)" matTooltip="Edit"><i class="fa fa-pencil"></i></a> </span>
                                         <span><a class="btn nobg btn-delete-cstm" (click)="openDelete(content,rowData)" matTooltip="Delete"><i class="fa fa-trash"></i></a> </span>
                                         <span><a class="btn nobg btn-hist-cstm" (click)="openHist()" matTooltip="History"><i class="fa fa-history"></i></a></span>
@@ -464,7 +464,7 @@
 
 
 
-<ng-template #view class="modal fade " id="view" role="dialog">
+<!-- <ng-template #view class="modal fade " id="view" role="dialog">
     <div role="dialog" style="overflow-y:scroll" class="modal-body viewform">
         <div id="adminsearchlocationajax" class="table-responsive default-bg clear">
             <div class="modal-header">
@@ -499,9 +499,6 @@
                                             <p><span class="label"><b>Hazardous Material: </b></span><span class="value">{{isHazardousMaterial}}</span></p>
                                             <p><span class="label"><b>Expiration Date: </b></span><span class="value">{{expirationDate}}</span></p>
                                             <p><span class="label"><b>Expiration by Mfg date: </b></span><span class="value">{{manufacturingDays}}</span></p>
-                                            <!--<p><span class="label"><b>Shelf Life: </b></span><span class="value">Yes</span></p>
-                                            <p><span class="label"><b>Shelf Life by Mfg date: </b></span><span class="value">03/01/2018</span></p>-->
-                                            <!--<p><span class="label"><b>Active: </b></span><span class="value">Yes</span></p>-->
                                             <p><span class="label"><b>Provision: </b></span><span class="value">{{provisionId}}</span></p>
                                             <p><span class="label"><b>Capes: </b></span><span class="value">{{isEnabeCapes}}</span></p>
                                             <p><span class="label"><b>PMA: </b></span><span class="value">{{pma}}</span></p>
@@ -509,17 +506,13 @@
                                         </div>
                                         <div class="col-sm-4">
                                             <p><span class="label"><b>Aircraft Manufacturer: </b></span><span class="value">{{selectedAircraftTypes}}</span></p>
-                                            <!--<p><span class="label"><b>Model: </b></span><span class="value">707</span></p>-->
-                                            <!--<p><span class="label"><b>Dash Number: </b></span><span class="value">456789</span></p>-->
                                             <p><span class="label"><b>Chapter: </b></span><span class="value">{{ataChapterId}}</span></p>
                                             <p><span class="label"><b>National Stock Number (NSN): </b></span><span class="value">{{nationalStockNumber}}</span></p>
 
-                                            <!--<p><span class="label"><b>Not To Exceed: </b></span><span class="value">20 hours</span></p>-->
                                             <p><span class="label"><b>Ovh: </b></span><span class="value">{{overhaulHours}}</span></p>
                                             <p><span class="label"><b>RP: </b></span><span class="value">{{rpHours}}</span></p>
                                             <p><span class="label"><b>Test: </b></span><span class="value">{{testHours}}</span></p>
                                             <p><span class="label"><b>List Price: </b></span><span class="value">{{listPrice}}</span></p>
-                                            <!--<p><span class="label"><b>Price Date: </b></span><span class="value">02/21/2018</span></p>-->
                                             <p><span class="label"><b>Mark Up (%) of List: </b></span><span class="value">{{salesMarkUpOnListPrice}}</span></p>
                                             <p><span class="label"><b>CUR: </b></span><span class="value">{{currencyId}}</span></p>
                                             <p><span class="label"><b>Schematic: </b></span><span class="value">{{isSchematic}}</span></p>
@@ -552,8 +545,7 @@
                                                     </table>
                                                 </div>
                                             </div>
-                                            <!--<p><span class="label"><b>Discount (%) on Purchases: </b></span><span class="value">10%</span></p>
-                                            <p><span class="label"><b>Discount (%) on Sales: </b></span><span class="value">5%</span></p>-->
+                                          
                                         </div>
                                         <div class="col-sm-4">
 
@@ -561,7 +553,6 @@
                                             <p><span class="label"><b>Reorder Qty: </b></span><span class="value">{{reorderQuantiy}}</span></p>
                                             <p><span class="label"><b>Min Order Qty: </b></span><span class="value">{{minimumOrderQuantity}}</span></p>
                                             <p><span class="label"><b>Priority: </b></span><span class="value">{{priorityId}}</span></p>
-                                            <!--<p><span class="label"><b>Integrate With: </b></span><span class="value">145.com</span></p>-->
                                             <p><span class="label"><b>Memo: </b></span><span class="value">{{memo}}</span></p>
                                             <p><span class="label"><b>Export Info</b></span></p>
                                             <p><span class="label"><b>Country: </b></span><span class="value">{{exportCountryId}}</span></p>
@@ -881,7 +872,456 @@
 
     </div>
 
-</ng-template>
+</ng-template> -->
+
+<div id="itemMasterView" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" style="padding: 0 !important" (click)="dismissItemMasterModel()">
+                    &times;
+                </button>
+                <div class="col-sm-3">
+                    <h4 class="modal-title">Details of Item Master</h4>
+                </div>
+                <div class="col-sm-3">
+                    <p class="view-header">PN: <span class="text-danger">{{viewItemMaster.partNumber}}</span></p>
+                </div>
+                <div class="col-sm-3">
+                    <p class="view-header">PN Description: <span class="text-danger">{{viewItemMaster.partDescription}}</span></p>
+                </div> 
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive default-bg clear">
+                    <div>
+                        <button type="button" class="btn btn-primary" (click)="expandAllItemMasterDetails()">Open All</button>
+                        <button type="button" class="btn btn-secondary" (click)="closeAllItemMasterDetails()">Close All</button>
+                    </div>
+                    
+                    <div class="panel-group" id="accordion">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" href="#step1"
+                                       aria-expanded="false" aria-controls="receive" class="collapsed">
+                                        General Info
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="step1" class="panel-collapse collapse" aria-expanded="false"
+                                 style="height: 0px;">
+                                 <div class="panel-body">
+                                    <div class="modal-content p-1">
+                                        <div class="table-responsive default-bg clear">
+                                            <div class="col-sm-4">
+                                                <p><span class="label"><b>PN: </b></span><span class="value">{{partNumber}}</span></p>
+                                                <p><span class="label"><b>PN Description: </b></span><span class="value">{{description}}</span></p>
+                                                <p><span class="label"><b>Alternate: </b></span><span class="value">{{isAlternatePartChecked}}</span></p>
+                                                <p><span class="label"><b>Is Serialized: </b></span><span class="value">{{isSerialized}}</span></p>
+                                                <p><span class="label"><b>Item Classification: </b></span><span class="value">{{itemClassificationId}}</span></p>
+                                                <p><span class="label"><b>Acquired: </b></span><span class="value">{{isAcquiredMethodBuy}}</span></p>
+                                                <p><span class="label"><b>DER: </b></span><span class="value">{{der}}</span></p>
+                                                <p><span class="label"><b>Hazardous Material: </b></span><span class="value">{{isHazardousMaterial}}</span></p>
+                                                <p><span class="label"><b>Expiration Date: </b></span><span class="value">{{expirationDate}}</span></p>
+                                                <p><span class="label"><b>Expiration by Mfg date: </b></span><span class="value">{{manufacturingDays}}</span></p>                                               
+                                                <p><span class="label"><b>Provision: </b></span><span class="value">{{provisionId}}</span></p>
+                                                <p><span class="label"><b>Capes: </b></span><span class="value">{{isEnabeCapes}}</span></p>
+                                                <p><span class="label"><b>PMA: </b></span><span class="value">{{pma}}</span></p>
+                                                <p><span class="label"><b>Manufacturer: </b></span><span class="value">{{manufacturerId}}</span></p>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <p><span class="label"><b>Aircraft Manufacturer: </b></span><span class="value">{{selectedAircraftTypes}}</span></p>                                               
+                                                <p><span class="label"><b>Chapter: </b></span><span class="value">{{ataChapterId}}</span></p>
+                                                <p><span class="label"><b>National Stock Number (NSN): </b></span><span class="value">{{nationalStockNumber}}</span></p>    
+                                                <p><span class="label"><b>Ovh: </b></span><span class="value">{{overhaulHours}}</span></p>
+                                                <p><span class="label"><b>RP: </b></span><span class="value">{{rpHours}}</span></p>
+                                                <p><span class="label"><b>Test: </b></span><span class="value">{{testHours}}</span></p>
+                                                <p><span class="label"><b>List Price: </b></span><span class="value">{{listPrice}}</span></p>
+                                                <p><span class="label"><b>Mark Up (%) of List: </b></span><span class="value">{{salesMarkUpOnListPrice}}</span></p>
+                                                <p><span class="label"><b>CUR: </b></span><span class="value">{{currencyId}}</span></p>
+                                                <p><span class="label"><b>Schematic: </b></span><span class="value">{{isSchematic}}</span></p>
+                                                <p><span class="label"><b>Purchase UOM: </b></span><span class="value">{{purchaseUnitOfMeasureId}}</span></p>
+                                                <p><span class="label"><b>Stock UOM: </b></span><span class="value">{{stockUnitOfMeasureId}}</span></p>
+                                                <p><span class="label"><b>Stock Level: </b></span><span class="value">{{stockLevel}}</span></p>
+                                                <p><span class="label"><b>Lead Time Days: </b></span><span class="value">{{leadTimeDays}}</span></p>
+                                                <p><span class="label"><b>Lead Time: </b></span><span class="value">{{leadTimeHours}} </span></p>
+                                                <div class="col-sm-12">
+                                                    <div class="table-responsive table-overflow" *ngIf="allUploadedDocumentsList.length> 0">
+                                                        <h4 class="panel-title">Attachment Details:</h4>
+                                                        <table class="table table-bordered ">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>File Name</th>
+                                                                    <th>Download</th>
+    
+                                                                </tr>
+                                                            </thead>
+    
+                                                            <tbody *ngFor="let f of allUploadedDocumentsList">
+                                                                <tr>
+                                                                    <td>{{f.fileName}}</td>
+                                                                    <td><a (click)="downloadFileUpload(f)" matTooltip="Download" class="btn nobg btn-cstm"><span><i class="fa fa-download" style="color:black"></i></span></a> </td>
+    
+                                                                </tr>
+    
+                                                            </tbody>
+    
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                                <!--<p><span class="label"><b>Discount (%) on Purchases: </b></span><span class="value">10%</span></p>
+                                                <p><span class="label"><b>Discount (%) on Sales: </b></span><span class="value">5%</span></p>-->
+                                            </div>
+                                            <div class="col-sm-4">
+    
+                                                <p><span class="label"><b>Reorder Point: </b></span><span class="value">{{reorderPoint}}</span></p>
+                                                <p><span class="label"><b>Reorder Qty: </b></span><span class="value">{{reorderQuantiy}}</span></p>
+                                                <p><span class="label"><b>Min Order Qty: </b></span><span class="value">{{minimumOrderQuantity}}</span></p>
+                                                <p><span class="label"><b>Priority: </b></span><span class="value">{{priorityId}}</span></p>
+                                                <!--<p><span class="label"><b>Integrate With: </b></span><span class="value">145.com</span></p>-->
+                                                <p><span class="label"><b>Memo: </b></span><span class="value">{{memo}}</span></p>
+                                                <p><span class="label"><b>Export Info</b></span></p>
+                                                <p><span class="label"><b>Country: </b></span><span class="value">{{exportCountryId}}</span></p>
+                                                <p><span class="label"><b>Value: </b></span><span class="value">{{exportValue}}</span></p>
+                                                <p><span class="label"><b>Currency: </b></span><span class="value">{{exportCurrencyId}}</span></p>
+                                                <p><span class="label"><b>Weight: </b></span><span class="value">{{exportWeight}}</span></p>
+                                                <p><span class="label"><b>Size (L, W, H): </b></span><span class="value">{{exportSizeLength}},{{exportSizeWidth}},{{exportSizeHeight}}</span></p>
+                                                <p><span class="label"><b>Classification: </b></span><span class="value">{{exportClassificationId}}</span></p>
+                                                <p><span class="label"><b>Site: </b></span><span class="value">{{viewItemMaster.siteName}}</span></p>
+                                                <p><span class="label"><b>Warehouse: </b></span><span class="value">{{viewItemMaster.warehouseName}}</span></p>
+                                                <p><span class="label"><b>Location: </b></span><span class="value">{{viewItemMaster.locationName}}</span></p>
+                                                <p><span class="label"><b>Shelf: </b></span><span class="value">{{viewItemMaster.shelfName}}</span></p>
+                                                <p><span class="label"><b>Bin: </b></span><span class="value">{{viewItemMaster.binName}}</span></p>
+    
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a class="collapsed" data-toggle="collapse" href="#step2"
+                                       aria-expanded="false">Aircraft Info</a>
+                                </h4>
+                            </div>
+                            <div id="step2" class="panel-collapse collapse" aria-expanded="false"
+                                 style="height: 0px;">
+                                 <div class="panel-body">
+                                     <div class="modal-content p-1">
+                                        <div>
+                                            Dash Numbers
+                                            <p-table [value]="aircraftListDataValues" [rows]="6" [columns]="colsaircraftLD" [scrollable]="true" [paginator]="true">
+                                                <ng-template pTemplate="header" let-columns style="background-color: white">
+                                                    <tr>
+                                                        <th>Id</th>
+                                                        <th *ngFor="let col of columns">
+                                                            {{col.header}}
+                                                        </th>
+    
+                                                    </tr>
+                                                </ng-template>
+                                                <ng-template pTemplate="body" let-i="rowIndex" let-rowData let-columns="columns" style="background-color: white">
+                                                    <tr>
+                                                        <td>{{i+1}}</td>
+                                                        <td *ngFor="let col of columns">
+                                                            {{rowData[col.field]}}
+                                                        </td>
+                                                    </tr>
+                                                </ng-template>
+                                            </p-table>
+                                        </div>
+                                     </div>
+                                    
+                                </div>
+                            </div>
+                        </div>     
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step3">ATA Chapters</a> </h4>
+                            </div>
+                            <div id="step3" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    <div class="modal-content p-1">
+                                        <div>
+                                            ATA Chapters
+                                            <p-table [value]="ataMappedList" [rows]="6" [columns]="atasub" [scrollable]="true" [style]="{width:'100%'}" [paginator]="true">
+                                                <ng-template pTemplate="header" let-columns>
+                                                    <tr>
+                                                        <th>Id</th>
+                                                        <th *ngFor="let col of atasub">
+                                                            {{col.header}}
+                                                        </th>
+    
+                                                    </tr>
+                                                </ng-template>
+                                                <ng-template pTemplate="body" let-i="rowIndex" let-rowData let-columns="columns">
+                                                    <tr>
+                                                        <td>{{i+1}}</td>
+                                                        <td *ngFor="let col of atasub">
+                                                            {{rowData[col.field]}}
+                                                        </td>
+    
+                                                    </tr>
+                                                </ng-template>
+                                            </p-table>
+                                        </div>
+                                    </div>                                    
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step4">Capes</a> </h4>
+                            </div>
+                            <div id="step4" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    <div class="modal-content p-1">
+                                        <div>
+                                            <p-table [value]="allItemMasterCapsList" [rows]="6" [columns]="pnCols1" [scrollable]="true" [style]="{width:'100%'}" [paginator]="true">
+                                                <ng-template pTemplate="header" let-columns>
+                                                    <tr>
+                                                        <th class="text-center" *ngFor="let col of pnCols1">
+                                                            {{col.header}}
+                                                        </th>
+                                                    </tr>
+                                                </ng-template>
+                                                <ng-template pTemplate="body" let-i="rowIndex" let-rowData let-columns="columns">
+                                                    <tr>
+    
+                                                        <td *ngFor="let col of pnCols1">
+                                                            <ng-container *ngIf="col.field!='isVerified'">
+                                                                {{
+                                                col.field == 'entryDate'
+                                                ? (rowData[col.field] | date: 'MM/dd/yyyy')
+                                                : rowData[col.field] && col.field == 'verifiedDate'
+                                                ? (rowData[col.field] | date: 'MM/dd/yyyy')
+                                                : rowData[col.field]
+                                                                }}
+    
+                                                            </ng-container>
+                                                            <ng-container *ngIf="col.field =='isVerified'">
+                                                                <input type="checkbox" disabled [checked]="rowData[col.field] == true" style="margin: 0px auto; display: block;" />
+                                                            </ng-container>
+                                                        </td>
+                                                    </tr>
+                                                </ng-template>
+                                            </p-table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>  
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step5">Purchase and Sales</a> </h4>
+                            </div>
+                            <div id="step5" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    <div class="modal-content p-1">
+                                        <div class="form-row">
+                                            <div class="col-sm-6">
+                                                <h4>Purchase Price</h4>
+                                                <p><span class="label"><b>CurrencyId: </b></span><span class="value">{{viewItemMaster.purchaseCurrencyId}}</span></p>
+                                                <p><span class="label"><b>List Price: </b></span><span class="value">{{viewItemMaster.listPrice}}</span></p>
+                                                <p><span class="label"><b>Discount off list Price %: </b></span><span class="value">{{viewItemMaster.purchaseDiscountOffListPrice}}</span></p>
+                                                <p><span class="label"><b>List Price After Discount: </b></span><span class="value">{{viewItemMaster.purchaseListPriceAfterDiscount}}</span></p>
+                                                <p><span class="label"><b>FX Rate: </b></span><span class="value">{{viewItemMaster.exportClassificationId}}</span></p>
+                                                <p><span class="label"><b>Last List Price Date: </b></span><span class="value">{{viewItemMaster.purchaseLastListPriceDate}}</span></p>
+                                                <p><span class="label"><b>Last disc(%) Date: </b></span><span class="value">{{viewItemMaster.purchaseLastDiscountPercentDate}}</span></p>
+                                                <p><span class="label"><b>Last list price after discount date: </b></span><span class="value">{{viewItemMaster.purchaseLastListPriceAfterDiscountDate}}</span></p>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <h4>Sales Price</h4>
+                                                <p><span class="label"><b>CurrencyId: </b></span><span class="value">{{viewItemMaster.salesCurrencyId}}</span></p>
+                                                <p><span class="label"><b>Markup (%) on List Price: </b></span><span class="value">{{viewItemMaster.exportValue}}</span></p>
+                                                <p><span class="label"><b>Baseline sale Price: </b></span><span class="value">{{viewItemMaster.salesLastBaselineSalesPriceDate}}</span></p>
+                                                <p><span class="label"><b>Sale Disc: </b></span><span class="value">{{viewItemMaster.salesMarkUpOnListPriceAfterDisc}}</span></p>
+                                                <p><span class="label"><b>sale Price: </b></span><span class="value">{{viewItemMaster.salesBaselineSalesPrice}}</span></p>
+                                                <p><span class="label"><b>FX Rate: </b></span><span class="value">{{viewItemMaster.salesIsFixedPrice}}</span></p>
+                                                <p><span class="label"><b>Last Markup(%) on List Price Date: </b></span><span class="value">{{viewItemMaster.salesLastMarkUpPercentOnListPriceDate}}</span></p>
+                                                <p><span class="label"><b>Last List Price after disc Date: </b></span><span class="value">{{viewItemMaster.salesLastMakUpPercentOnListPriceAfterDiscDate}}</span></p>
+                                                <p><span class="label"><b>Last Baseline sale price date: </b></span><span class="value">{{viewItemMaster.salesLastMarkUpPercentOnListPriceDate}}</span></p>
+                                                <p><span class="label"><b>Last sale disc(%) Date: </b></span><span class="value">{{viewItemMaster.salesLastMakUpPercentOnListPriceAfterDiscDate}}</span></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step6">NHA,TLA, Alternate, Equivalency</a> </h4>
+                            </div>
+                            <div id="step6" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    <div class="modal-content p-1">
+                                        <div class="form-row">
+                                            <div class="col-sm-12">
+                                                <div class="col-sm-4">
+                                                    NHA
+                                                    <p-table [value]="ntaeData" [rows]="10" [columns]="alterTableColumns" [scrollable]="true" [style]="{width:'100%'}" [paginator]="true">
+        
+                                                        <ng-template pTemplate="header" let-columns>
+                                                            <tr>
+                                                                <th *ngFor="let col of alterTableColumns">
+                                                                    {{col.header}}
+                                                                </th>
+                                                            </tr>
+                                                        </ng-template>
+                                                        <ng-template pTemplate="body" let-i="rowIndex" let-rowData let-columns="columns">
+                                                            <tr>
+                                                                <td *ngFor="let col of alterTableColumns">
+                                                                    {{rowData[col.field]}}
+                                                                </td>
+                                                            </tr>
+                                                        </ng-template>
+                                                    </p-table>
+                                                </div>
+                                                <div class="col-sm-8">
+                                                    TLA
+                                                    <p-table [value]="ntaeData2" [rows]="10" [columns]="alterTableColumns" [scrollable]="true" [style]="{width:'100%'}" [paginator]="true">
+        
+                                                        <ng-template pTemplate="header" let-columns>
+                                                            <tr>
+                                                                <th *ngFor="let col of alterTableColumns">
+                                                                    {{col.header}}
+                                                                </th>
+                                                            </tr>
+                                                        </ng-template>
+                                                        <ng-template pTemplate="body" let-i="rowIndex" let-rowData let-columns="columns">
+                                                            <tr>
+                                                                <td *ngFor="let col of alterTableColumns">
+                                                                    {{rowData[col.field]}}
+                                                                </td>
+                                                            </tr>
+                                                        </ng-template>
+                                                    </p-table>
+                                                </div>
+                                            </div>
+        
+                                            <div class="col-sm-12">
+                                                <div class="col-sm-4">
+                                                    Alternate
+                                                    <p-table [value]="ntaeData3" [rows]="10" [columns]="alterTableColumns" [scrollable]="true" [style]="{width:'100%'}" [paginator]="true">
+        
+                                                        <ng-template pTemplate="header" let-columns>
+                                                            <tr>
+                                                                <th *ngFor="let col of alterTableColumns">
+                                                                    {{col.header}}
+                                                                </th>
+                                                            </tr>
+                                                        </ng-template>
+                                                        <ng-template pTemplate="body" let-i="rowIndex" let-rowData let-columns="columns">
+                                                            <tr>
+                                                                <td *ngFor="let col of alterTableColumns">
+                                                                    {{rowData[col.field]}}
+                                                                </td>
+                                                            </tr>
+                                                        </ng-template>
+                                                    </p-table>
+                                                </div>
+                                                <div class="col-sm-8">
+                                                    Equivalency
+                                                    <p-table [value]="ntaeData4" [rows]="10" [columns]="equivalencyTableColumns" [scrollable]="true" [style]="{width:'100%'}" [paginator]="true">
+        
+                                                        <ng-template pTemplate="header" let-columns>
+                                                            <tr>
+                                                                <th *ngFor="let col of equivalencyTableColumns">
+                                                                    {{col.header}}
+                                                                </th>
+                                                            </tr>
+                                                        </ng-template>
+                                                        <ng-template pTemplate="body" let-i="rowIndex" let-rowData let-columns="columns">
+                                                            <tr>
+                                                                <td *ngFor="let col of equivalencyTableColumns">
+                                                                    {{rowData[col.field]}}
+                                                                </td>
+                                                                <td>
+                                                                    <a class="btn btn-primary" (click)="downloadFileUpload(rowData)" target="_blank" download>{{rowData["fileName"]}}</a>
+                                                                </td>
+                                                            </tr>
+                                                        </ng-template>
+                                                    </p-table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step7">Exchange and Loans</a> </h4>
+                            </div>
+                            <div id="step7" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    <div class="modal-content p-1">
+                                        <div class="form-row">
+                                            <div class="col-sm-6">
+                                                <div class="card-header"> Exchange <input type="checkbox" name="chkExchange" [(ngModel)]="showExchange" /></div>
+                                                <p><span class="label"><b>Currency: </b></span><span class="value">{{displayName}}</span></p>
+                                                <p><span class="label"><b>Exchange List Price: </b></span><span class="value">{{exchangeListPrice}}</span></p>
+        
+                                                <p><span class="label"><b>Core Price: </b></span><span class="value">{{exchangeCorePrice}}</span></p>
+        
+                                                <p><span class="label"><b>Overhaul Price: </b></span><span class="value">{{exchangeOverhaulPrice}}</span></p>
+        
+        
+                                                <p><span class="label"><b>Outright Price: </b></span><span class="value">{{exchangeOutrightPrice}}</span></p>
+        
+        
+                                                <p><span class="label"><b>Core Cost: </b></span><span class="value">{{exchangeCoreCost}}</span></p>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <div class="card-header"> Loan <input type="checkbox" name="chkLoan" [(ngModel)]="showLoan" /></div>
+                                                <p><span class="label"><b>Currency: </b></span><span class="value">{{displayNameLoan}}</span></p>
+        
+                                                <p><span class="label"><b>Loan Fees: </b></span><span class="value">{{loanFees}}</span></p>
+        
+                                                <p><span class="label"><b>Core Price: </b></span><span class="value">{{loanCorePrice}}</span></p>
+        
+                                                <p><span class="label"><b>Outright Price: </b></span><span class="value">{{loanOutrightPrice}}</span></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title"> <a class="collapsed" data-toggle="collapse" href="#step8">Export Information</a> </h4>
+                            </div>
+                            <div id="step8" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    <div class="modal-content p-1">
+                                        <div class="form-row">
+                                            <div class="col-sm-4">
+                                                <p><span class="label"><b>CountryId: </b></span><span class="value">{{viewItemMaster.exportCountryId}}</span></p>
+                                                <p><span class="label"><b>Value: </b></span><span class="value">{{viewItemMaster.exportValue}}</span></p>
+                                                <p><span class="label"><b>Weight: </b></span><span class="value">{{viewItemMaster.exportWeight}}</span></p>
+                                                <p><span class="label"><b>Size(L,W,H): </b></span><span class="value">{{viewItemMaster.exportSizeLength}} , {{viewItemMaster.exportSizeWidth}} , {{viewItemMaster.exportSizeHeight}}</span></p>
+                                                <p><span class="label"><b>Classification: </b></span><span class="value">{{viewItemMaster.exportClassificationId}}</span></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>            
+                </div>
+            </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="dismissItemMasterModel()">Close</button>
+        </div>
+      </div>  
+    </div>
+  </div>
 
 
 

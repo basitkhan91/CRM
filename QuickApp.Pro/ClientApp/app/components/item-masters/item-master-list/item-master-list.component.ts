@@ -173,8 +173,8 @@ export class ItemMasterListComponent implements OnInit, AfterViewInit {
 	exchangeCoreCost :any;
 	pageSize: number = 10;
 	totalRecords: number = 0;
-    totalPages: number = 0;
-
+	totalPages: number = 0;
+	itemMasterData: any = {};
 
 	//selectedColumns: any;
 	/** item-master-list ctor */
@@ -787,8 +787,8 @@ export class ItemMasterListComponent implements OnInit, AfterViewInit {
 		this.alertService.showStickyMessage("Save Error", "The below errors occured whilst saving your changes:", MessageSeverity.error, error);
 		this.alertService.showStickyMessage(error, null, MessageSeverity.error);
 	}
-	openView(content, row) {
-		
+	openView(row) {
+		$('#step1').collapse('show');
 		this.toGetAllDocumentsList(row.itemMasterId);
 		this.getItemMasterById(row.itemMasterId);
         // this.viewItemMaster = row;
@@ -927,12 +927,17 @@ export class ItemMasterListComponent implements OnInit, AfterViewInit {
         this.getExchange(row.itemMasterId);
 
 		this.loadMasterCompanies();
-		this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
-        this.modal.result.then(() => {
-                console.log('When user closes');
-            },
-            () => { console.log('Backdrop click') });
-    }
+		// this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
+        // this.modal.result.then(() => {
+        //         console.log('When user closes');
+        //     },
+        //     () => { console.log('Backdrop click') });
+	}
+	
+	openViewOnDbl(rowData) {		
+		this.openView(rowData);
+		$('#itemMasterView').modal('show');
+	}
 
 
 	getExchange(itemMasterId) {
@@ -1222,6 +1227,29 @@ export class ItemMasterListComponent implements OnInit, AfterViewInit {
 		this.commonService.toDownLoadFile(rowData.link);		
 	}
 
+	dismissItemMasterModel() {
+		$('#itemMasterView').modal('hide');
+	}
 
+	expandAllItemMasterDetails() {
+        $('#step1').collapse('show');
+        $('#step2').collapse('show');
+        $('#step3').collapse('show');
+        $('#step4').collapse('show');
+        $('#step5').collapse('show');
+        $('#step6').collapse('show');
+        $('#step7').collapse('show');
+        $('#step8').collapse('show');
+    }
+    closeAllItemMasterDetails() {
+        $('#step1').collapse('hide');
+        $('#step2').collapse('hide');
+        $('#step3').collapse('hide');
+        $('#step4').collapse('hide');
+        $('#step5').collapse('hide');
+        $('#step6').collapse('hide');
+        $('#step7').collapse('hide');
+        $('#step8').collapse('hide');
+    }
 
 }

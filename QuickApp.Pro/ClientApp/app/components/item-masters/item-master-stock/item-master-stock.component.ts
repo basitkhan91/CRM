@@ -4456,10 +4456,9 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
 
 
 
-    deleteAircraftMapped(data) {
-
-
+    onDeleteAircraft(data) {
         this.itemser.deleteItemMasterAir(data.itemMasterAircraftMappingId).subscribe(res => {
+            console.log(res);            
             this.getAircraftMappedDataByItemMasterId();
             this.alertService.showMessage(
                 'Success',
@@ -6331,12 +6330,19 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     }
 
     updateAircraft() {
-
+        const data = {...this.editAirCraftData, updatedBy: this.userName, isActive: true};
+        this.itemser.updateItemMasterAircraftById(data).subscribe(res => {
+            console.log(res);
+            this.getAircraftMappedDataByItemMasterId();
+        });
     }
 
     getAircraftAuditHistory(rowData) {
         console.log(rowData);
-        //aircraftauditHistory
+        this.itemser.getItemMasterAircraftAuditHistory(rowData.itemMasterAircraftMappingId).subscribe(res => {
+            console.log(res);
+            this.aircraftauditHistory = res;
+        });
         
     }
 

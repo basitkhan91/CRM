@@ -457,7 +457,7 @@ export class VendorGeneralInformationComponent implements OnInit {
             this.sourceVendor.address3 = this.vendorService.listCollection.address3;
             this.sourceVendor.city = this.vendorService.listCollection.city;
             if (this.sourceVendor.countryId !== undefined) {
-                this.sourceVendor.countryId = { countryId: this.sourceVendor.countryId, nice_name: this.sourceVendor.country }
+                this.sourceVendor.countryId = { countries_id: this.sourceVendor.countryId, nice_name: this.sourceVendor.country }
             }
 
             // this.sourceVendor.country = getObjectById('countries_id', this.vendorService.listCollection.countryId, this.allCountryinfo);

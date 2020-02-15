@@ -115,7 +115,7 @@
                                                         (onKeyUp)=eventHandler($event) (onSelect)="partnmId($event)"
                                                         [suggestions]="partCollection" name="partNumber" required
                                                         (completeMethod)="filterpartItems($event)" [size]="30" [minLength]="1"
-                                                        [dropdown]="true" class="autocomplete-customer">
+                                                        [dropdown]="true" class="p-autoComplete-ctsm">
                                             <ng-template let-partName pTemplate="part">
                                                 <div class="ui-helper-clearfix">{{partName}}</div>
                                             </ng-template>
@@ -128,16 +128,22 @@
                                                [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceItemMaster.isPma">
                                     </div>
                                     <div *ngIf="sourceItemMaster.isPma">
-                                        <label class="control-label col-sm-3">OEM PN</label>
-                                        <p-autoComplete [(ngModel)]="sourceItemMaster.oemPNId"
-                                                        name="oemPNId"
-                                                        (onSelect)="selectedOEM($event)"
-                                                        field="partNumber"
-                                                        [suggestions]="oempnCollection"
-                                                        (completeMethod)="filterpn($event)" [size]="30" [minLength]="1"
-                                                        [dropdown]="true" class="p-autoComplete-ctsm col-sm-9">
-
-                                        </p-autoComplete>
+                                        <div>
+                                            <label class="control-label">
+                                                OEM PN
+                                            </label>
+                                        </div>
+                                        <!-- <label class="control-label col-sm-3">OEM PN</label> -->
+                                        <div>
+                                            <p-autoComplete [(ngModel)]="sourceItemMaster.oemPNId"
+                                            name="oemPNId"
+                                            (onSelect)="selectedOEM($event)"
+                                            field="partNumber"
+                                            [suggestions]="oempnCollection"
+                                            (completeMethod)="filterpn($event)" [size]="30" [minLength]="1"
+                                            [dropdown]="true" class="p-autoComplete-ctsm">
+                                            </p-autoComplete>
+                                        </div>                                        
 
                                     </div>
                                     <label class="control-label">
@@ -149,7 +155,7 @@
                                                         [suggestions]="descriptionCollection" name="partDescription" required
                                                         (completeMethod)="filterdescription($event)"
                                                         [(ngModel)]="sourceItemMaster.partDescription" [size]="30"
-                                                        [minLength]="1" [dropdown]="true" class="autocomplete-customer">
+                                                        [minLength]="1" [dropdown]="true" class="p-autoComplete-ctsm">
                                             <ng-template let-partDescription pTemplate="item">
                                                 <div class="ui-helper-clearfix">{{partDescription}}</div>
                                             </ng-template>
@@ -1140,10 +1146,10 @@
                                         <td style="width:70px"
                                         *ngIf="colsaircraftLD.length > 0">
                                         <span> <a class="btn btn-info boxed-float-btn nobg" data-toggle="modal" data-target="#viewAircraft" (click)="onViewAircraft(rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
-                                        <button type="button" class="btn-edit" mat-icon-button  data-toggle="modal" data-target="#editAirCraftDetails" (click)="onEditAircraft(rowData)" matTooltip="edit">
+                                        <button type="button" class="btn-edit" mat-icon-button  data-toggle="modal" data-target="#editAirCraftDetails" (click)="onEditAircraft(rowData)" matTooltip="Edit">
                                             <mat-icon>edit</mat-icon>
                                         </button>
-                                        <button class="btn btn-danger nobg" matTooltip="Delete" (click)="deleteAircraftMapped(rowData)">
+                                        <button type="button" class="btn btn-danger nobg" matTooltip="Delete" (click)="onDeleteAircraft(rowData)">
                                             <i class="fa fa-trash"></i>
                                         </button>
                                         <span><a class="btn nobg" data-toggle="modal"  data-target="#aircraftHistory" matTooltip="History" (click)="getAircraftAuditHistory(rowData)"><i class="fa fa-history" ></i></a></span>
@@ -2067,14 +2073,14 @@
 
 
                     <div class="card" *ngIf="viewTable">
-                        <p-table class="p-table-cstm" [value]="aircraftData" [rows]="6" [columns]="colaircraft" [scrollable]="true" [style]="{width:'100%'}" [paginator]="true">
+                        <p-table class="rpo-table-cstm" [value]="aircraftData" [rows]="6" [columns]="colaircraft" [scrollable]="true" [style]="{width:'100%'}" [paginator]="true">
                             <ng-template pTemplate="header" let-columns>
                                 <tr>
-                                    <th></th>
+                                    <!-- <th></th> -->
                                     <th *ngFor="let col of columns">
                                         {{col.header}}
                                     </th>
-                                    <!-- <th>Memo</th> -->
+                                    <th>Memo</th>
 
                                 </tr>
                             </ng-template>
@@ -2095,9 +2101,9 @@
                                     <td *ngFor="let col of columns">
                                         {{rowData[col.field]}}
                                     </td>
-                                    <!-- <td>
+                                    <td>
                                         <input type="text" class="form-control input-value" [(ngModel)]="rowData.Memo" name="Memo"  />
-                                    </td> -->
+                                    </td>
                                 </tr>
                             </ng-template>
                         </p-table>
@@ -3517,9 +3523,7 @@
                 <textarea
                   name="notes"
                   [(ngModel)]="editAirCraftData.memo"
-                  (ngModelChange)="enableSave()"
-                  placeholder="Tool Bar"
-                ></textarea>
+                ></textarea> <!--(ngModelChange)="enableSave()"-->
               </div>
             </div>
           </div>
@@ -3528,10 +3532,10 @@
           <button
             type="button"
             class="btn btn-primary pull-right submit-btn"
-            style="text-align:center"
+            data-dismiss="modal"
             (click)="updateAircraft()"
             [disabled]="
-              disableSave || !ccForm.valid
+              !ccForm.valid
             "
           >
             Update

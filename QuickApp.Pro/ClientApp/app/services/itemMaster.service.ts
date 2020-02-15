@@ -415,5 +415,12 @@ export class ItemMasterService {
     getItemMasterCapabilityAuditHistory(capabilityId){
         return this.itemMasterEndpoint.getItemMasterCapabilityAuditHistory(capabilityId)
     }
+
+    getItemMasterAircraftAuditHistory(id){
+        return this.itemMasterEndpoint.getItemMasterCapabilityAuditHistory(id)
+    }
+    updateItemMasterAircraftById(data) {
+        return this.itemMasterEndpoint.updateItemMasterAircraftById(data);
+    }
     
 }
