@@ -1305,6 +1305,23 @@ namespace QuickApp.Pro.Controllers
 
         #endregion
 
+        #region Work Order Settings
+
+        [HttpPost("createworkordersettings")]
+        public IActionResult CreateWorkOrderSettings([FromBody]WorkOrderSettings workOrderSettings)
+        {
+            var result = unitOfWork.WorkOrderRepository.CreateWorkOrderSettings(workOrderSettings);
+            return Ok(result);
+        }
+
+        [HttpGet("workordersettings")]
+        public IActionResult GetWorkOrderSettings(int masterCompanyId, int? workOrderTypeId)
+        {
+            var result = unitOfWork.WorkOrderRepository.GetWorkOrderSettings(masterCompanyId, workOrderTypeId);
+            return Ok(result);
+        }
+        #endregion
+
         [HttpGet("getAll")]
         public IActionResult Index()
         {

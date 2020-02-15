@@ -4215,9 +4215,12 @@ namespace DAL.Repositories
                 if (quoteMaterials.WorkOrderQuoteDetailsId > 0)
                 {
                     var exeMaterials = _appContext.WorkOrderQuoteMaterial.Where(p => p.WorkOrderQuoteDetailsId == quoteMaterials.WorkOrderQuoteDetailsId).AsNoTracking().ToList();
+                    //exeMaterials.AddRange(quoteMaterials.WorkOrderQuoteMaterial.Where(p => p.IsDeleted == true));
                     _appContext.WorkOrderQuoteMaterial.RemoveRange(exeMaterials);
 
-                    quoteMaterials.WorkOrderQuoteMaterial.ForEach(p => p.WorkOrderQuoteMaterialId = 0);
+                    
+                    //quoteMaterials.WorkOrderQuoteMaterial = quoteMaterials.WorkOrderQuoteMaterial.Where(p => p.IsDeleted == false).ToList();
+                    quoteMaterials.WorkOrderQuoteMaterial.ForEach(p => { p.WorkOrderQuoteMaterialId = 0; p.IsActive = true;p.IsDeleted = false;p.CreatedDate = DateTime.Now;p.UpdatedDate = DateTime.Now; });
                     _appContext.WorkOrderQuoteDetails.Update(quoteMaterials);
                 }
                 else
@@ -4290,7 +4293,7 @@ namespace DAL.Repositories
                                                   wom.MarkupFixedPrice,
                                                   wom.BillingMethodId,
                                                   wom.HeaderMarkupId,
-                                                  wom.ExtendedCost
+                                                  wom.ExtendedCost,
                                               }).Distinct().ToList();
 
                 return workOrderMaterialsList;
@@ -5588,6 +5591,56 @@ namespace DAL.Repositories
                             MaterialCost = list.Sum(s => s.ExtendedCost)
                         }).FirstOrDefault();
             return data;
+        }
+
+        #endregion
+
+        #region Work Order Settings
+
+        public WorkOrderSettings CreateWorkOrderSettings(WorkOrderSettings workOrderSettings)
+        {
+            try
+            {
+                workOrderSettings.UpdatedDate = DateTime.Now;
+                workOrderSettings.IsActive = true;
+                workOrderSettings.IsDeleted = false;
+                if(workOrderSettings.WorkOrderSettingId>0)
+                {
+                    _appContext.WorkOrderSettings.Update(workOrderSettings);
+                }
+                else
+                {
+                    workOrderSettings.CreatedDate = DateTime.Now;
+                    _appContext.WorkOrderSettings.Add(workOrderSettings);
+                }
+                _appContext.SaveChanges();
+                return workOrderSettings;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public WorkOrderSettings GetWorkOrderSettings(int masterCompanyId,int? workOrderTypeId)
+        {
+            try
+            {
+                if (workOrderTypeId != null && workOrderTypeId > 0)
+                {
+                    return _appContext.WorkOrderSettings.Where(p => p.MasterCompanyId == masterCompanyId
+                    && p.WorkOrderTypeId == workOrderTypeId).FirstOrDefault();
+                }
+                else
+                {
+                    return _appContext.WorkOrderSettings.Where(p => p.MasterCompanyId == masterCompanyId).FirstOrDefault();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         #endregion
