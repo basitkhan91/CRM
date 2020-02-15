@@ -941,67 +941,42 @@ export class AssetCapesComponent implements OnInit {
         //console.log(this.selectedDashnumber)
         this.viewTable = true;
         // Selected All 
-        if (capdata.selectedAircraftTypes !== undefined && capdata.selectedAircraftModelTypes !== undefined && capdata.selectedDashNumbers !== undefined) {
-            this.dashnumberservices.getAllDashModels(capdata.selectedAircraftModelTypes, capdata.selectedAircraftTypes, capdata.selectedDashNumbers).subscribe(aircraftdata => {
-                const responseValue = aircraftdata;
-                this.aircraftData = responseValue.map(x => {
-                    return {
-                        AircraftType: x.aircraft,
-                        AircraftModel: x.model,
-                        DashNumber: x.model + "-" + x.dashNumber,
-                        AircraftModelId: x.modelid,
-                        DashNumberId: x.dashNumberId,
-                        CapibilityType: capdata.selectedCap,
-                        PartNumber: capdata.selectedPartId,
-                        CapabilityId: capdata.CapabilityTypeId,
-                        ItemMasterId: this.itemMasterId,
-                        AircraftTypeId: capdata.selectedAircraftTypes,
-                        AircraftDashNumberId: x.dashNumberId,
-                        AssetRecordId: this.currentAsset.assetRecordId,
-                        MasterCompanyId: 1,
-                        CreatedBy: this.userName,
-                        UpdatedBy: this.userName,
-                        CreatedDate: new Date(),
-                        UpdatedDate: new Date(),
-                        isActive: true,
-                        isDelete: false
-                    }
-                });
-                console.log(899, this.aircraftData);
-            })
-        }
-        if (this.selectedAircraftId !== undefined && this.modelUnknown) {
-            this.aircraftData = [{
-                AircraftType: this.newValue,
-                AircraftModel: 'Unknown',
-                DashNumber: 'Unknown',
-                AircraftModelId: '',
-                DashNumberId: '',
-                CapibilityType: capdata.selectedCap,
-                PartNumber: capdata.selectedPartId,
-                CapabilityId: capdata.CapabilityTypeId,
-                ItemMasterId: this.itemMasterId,
-                AircraftTypeId: capdata.selectedAircraftTypes,
-                AircraftDashNumberId: null,
-                AssetRecordId: this.currentAsset.assetRecordId,
-                MasterCompanyId: 1,
-                CreatedBy: this.userName,
-                UpdatedBy: this.userName,
-                CreatedDate: new Date(),
-                UpdatedDate: new Date(),
-                isActive: true,
-                isDelete: false
-            }]
-        }
-
-        if (this.selectedAircraftId !== undefined && capdata.selectedModel !== undefined && this.dashNumberUnknown) {
-            console.log(915);
-            this.aircraftData = capdata.selectedModel.map(x => {
-                return {
+        if (this.assetServices.isCapsEditMode == false) {
+            if (capdata.selectedAircraftTypes !== undefined && capdata.selectedAircraftModelTypes !== undefined && capdata.selectedDashNumbers !== undefined) {
+                this.dashnumberservices.getAllDashModels(capdata.selectedAircraftModelTypes, capdata.selectedAircraftTypes, capdata.selectedDashNumbers).subscribe(aircraftdata => {
+                    const responseValue = aircraftdata;
+                    this.aircraftData = responseValue.map(x => {
+                        return {
+                            AircraftType: x.aircraft,
+                            AircraftModel: x.model,
+                            DashNumber: x.model + "-" + x.dashNumber,
+                            AircraftModelId: x.modelid,
+                            DashNumberId: x.dashNumberId,
+                            CapibilityType: capdata.selectedCap,
+                            PartNumber: capdata.selectedPartId,
+                            CapabilityId: capdata.CapabilityTypeId,
+                            ItemMasterId: this.itemMasterId,
+                            AircraftTypeId: capdata.selectedAircraftTypes,
+                            AircraftDashNumberId: x.dashNumberId,
+                            AssetRecordId: this.currentAsset.assetRecordId,
+                            MasterCompanyId: 1,
+                            CreatedBy: this.userName,
+                            UpdatedBy: this.userName,
+                            CreatedDate: new Date(),
+                            UpdatedDate: new Date(),
+                            isActive: true,
+                            isDelete: false
+                        }
+                    });
+                    console.log(899, this.aircraftData);
+                })
+            }
+            if (this.selectedAircraftId !== undefined && this.modelUnknown) {
+                this.aircraftData = [{
                     AircraftType: this.newValue,
-                    AircraftModel: x.label,
+                    AircraftModel: 'Unknown',
                     DashNumber: 'Unknown',
-                    AircraftModelId: x.value,
+                    AircraftModelId: '',
                     DashNumberId: '',
                     CapibilityType: capdata.selectedCap,
                     PartNumber: capdata.selectedPartId,
@@ -1017,14 +992,135 @@ export class AssetCapesComponent implements OnInit {
                     UpdatedDate: new Date(),
                     isActive: true,
                     isDelete: false
-                }
-            })
+                }]
+            }
+
+            if (this.selectedAircraftId !== undefined && capdata.selectedModel !== undefined && this.dashNumberUnknown) {
+                console.log(915);
+                this.aircraftData = capdata.selectedModel.map(x => {
+                    return {
+                        AircraftType: this.newValue,
+                        AircraftModel: x.label,
+                        DashNumber: 'Unknown',
+                        AircraftModelId: x.value,
+                        DashNumberId: '',
+                        CapibilityType: capdata.selectedCap,
+                        PartNumber: capdata.selectedPartId,
+                        CapabilityId: capdata.CapabilityTypeId,
+                        ItemMasterId: this.itemMasterId,
+                        AircraftTypeId: capdata.selectedAircraftTypes,
+                        AircraftDashNumberId: null,
+                        AssetRecordId: this.currentAsset.assetRecordId,
+                        MasterCompanyId: 1,
+                        CreatedBy: this.userName,
+                        UpdatedBy: this.userName,
+                        CreatedDate: new Date(),
+                        UpdatedDate: new Date(),
+                        isActive: true,
+                        isDelete: false
+                    }
+                })
+            }
+            //this.addModels(capdata);
+
+
+            console.log(930, this.aircraftData);
         }
-        //this.addModels(capdata);
+        else {
+            if (capdata.selectedAircraftModelTypes.length > 1 || capdata.selectedDashNumbers.length > 1) {
+                this.alertService.stopLoadingMessage();
+                this.alertService.showMessage("", `Multiple Records cannot be added in edit`, MessageSeverity.error);
+                return;
+            }
+            else {
+                if (capdata.selectedAircraftTypes !== undefined && capdata.selectedAircraftModelTypes !== undefined && capdata.selectedDashNumbers !== undefined) {
+                    this.dashnumberservices.getAllDashModels(capdata.selectedAircraftModelTypes, capdata.selectedAircraftTypes, capdata.selectedDashNumbers).subscribe(aircraftdata => {
+                        const responseValue = aircraftdata;
+                        this.aircraftData = responseValue.map(x => {
+                            return {
+                                AssetCapesId: this.AssetCapesId,
+                                AircraftType: x.aircraft,
+                                AircraftModel: x.model,
+                                DashNumber: x.model + "-" + x.dashNumber,
+                                AircraftModelId: x.modelid,
+                                DashNumberId: x.dashNumberId,
+                                CapibilityType: capdata.selectedCap,
+                                PartNumber: capdata.selectedPartId,
+                                CapabilityId: capdata.CapabilityTypeId,
+                                ItemMasterId: this.itemMasterId,
+                                AircraftTypeId: capdata.selectedAircraftTypes,
+                                AircraftDashNumberId: x.dashNumberId,
+                                AssetRecordId: this.currentAsset.assetRecordId,
+                                MasterCompanyId: 1,
+                                CreatedBy: this.userName,
+                                UpdatedBy: this.userName,
+                                CreatedDate: new Date(),
+                                UpdatedDate: new Date(),
+                                isActive: true,
+                                isDelete: false
+                            }
+                        });
+                        console.log(899, this.aircraftData);
+                    })
+                }
+                if (this.selectedAircraftId !== undefined && this.modelUnknown) {
+                    this.aircraftData = [{
+                        AssetCapesId: this.AssetCapesId,
+                        AircraftType: this.newValue,
+                        AircraftModel: 'Unknown',
+                        DashNumber: 'Unknown',
+                        AircraftModelId: '',
+                        DashNumberId: '',
+                        CapibilityType: capdata.selectedCap,
+                        PartNumber: capdata.selectedPartId,
+                        CapabilityId: capdata.CapabilityTypeId,
+                        ItemMasterId: this.itemMasterId,
+                        AircraftTypeId: capdata.selectedAircraftTypes,
+                        AircraftDashNumberId: null,
+                        AssetRecordId: this.currentAsset.assetRecordId,
+                        MasterCompanyId: 1,
+                        CreatedBy: this.userName,
+                        UpdatedBy: this.userName,
+                        CreatedDate: new Date(),
+                        UpdatedDate: new Date(),
+                        isActive: true,
+                        isDelete: false
+                    }]
+                }
+
+                if (this.selectedAircraftId !== undefined && capdata.selectedModel !== undefined && this.dashNumberUnknown) {
+                    console.log(915);
+                    this.aircraftData = capdata.selectedModel.map(x => {
+                        return {
+                            AssetCapesId: this.AssetCapesId,
+                            AircraftType: this.newValue,
+                            AircraftModel: x.label,
+                            DashNumber: 'Unknown',
+                            AircraftModelId: x.value,
+                            DashNumberId: '',
+                            CapibilityType: capdata.selectedCap,
+                            PartNumber: capdata.selectedPartId,
+                            CapabilityId: capdata.CapabilityTypeId,
+                            ItemMasterId: this.itemMasterId,
+                            AircraftTypeId: capdata.selectedAircraftTypes,
+                            AircraftDashNumberId: null,
+                            AssetRecordId: this.currentAsset.assetRecordId,
+                            MasterCompanyId: 1,
+                            CreatedBy: this.userName,
+                            UpdatedBy: this.userName,
+                            CreatedDate: new Date(),
+                            UpdatedDate: new Date(),
+                            isActive: true,
+                            isDelete: false
+                        }
+                    })
+                }
+                //this.addModels(capdata);
 
 
-        console.log(930, this.aircraftData);
-
+                console.log(930, this.aircraftData);
+            }
+        }
     }
 
 
@@ -1295,17 +1391,32 @@ export class AssetCapesComponent implements OnInit {
     saveCapabilities() {
         const responseValue = this.aircraftData;
 
-        this.assetServices.saveManfacturerinforcapes(responseValue).subscribe(data11 => {
-            this.alertService.showMessage("Success", `Asset capes saved successfully.`, MessageSeverity.success);
-            let data: any = {
-                selectedCap: "", CapabilityTypeId: 0, selectedPartId: [], selectedAircraftDataModels: [],
-                selectedAircraftModelTypes: [], selectedAircraftTypes: [], selectedManufacturer: [], selectedModel: [], selectedDashNumbers: [], selectedDashNumbers2: []
-            };
-            this.capabilityForm = data;
-            this.loadCapesData();
-        })
-        this.mfgFormArray.controls = [];
-        this.modal.close();
+        if (this.assetServices.isCapsEditMode == false) {
+            this.assetServices.saveManfacturerinforcapes(responseValue).subscribe(data11 => {
+                this.alertService.showMessage("Success", `Asset capes saved successfully.`, MessageSeverity.success);
+                let data: any = {
+                    selectedCap: "", CapabilityTypeId: 0, selectedPartId: [], selectedAircraftDataModels: [],
+                    selectedAircraftModelTypes: [], selectedAircraftTypes: [], selectedManufacturer: [], selectedModel: [], selectedDashNumbers: [], selectedDashNumbers2: []
+                };
+                this.capabilityForm = data;
+                this.loadCapesData();
+            })
+            this.mfgFormArray.controls = [];
+            this.modal.close();
+        }
+        else {
+            this.assetServices.saveManfacturerinforcapes(responseValue).subscribe(data11 => {
+                this.alertService.showMessage("Success", `Asset capes updated successfully.`, MessageSeverity.success);
+                let data: any = {
+                    selectedCap: "", CapabilityTypeId: 0, selectedPartId: [], selectedAircraftDataModels: [],
+                    selectedAircraftModelTypes: [], selectedAircraftTypes: [], selectedManufacturer: [], selectedModel: [], selectedDashNumbers: [], selectedDashNumbers2: []
+                };
+                this.capabilityForm = data;
+                this.loadCapesData();
+            })
+            this.mfgFormArray.controls = [];
+            this.modal.close();
+        }
     }
 
 
@@ -1397,6 +1508,7 @@ export class AssetCapesComponent implements OnInit {
         let getSelectedCollection = [];
         this.assetServices.isCapsEditMode = true;
         this.isSaving = true;
+        this.AssetCapesId = row.assetCapesId;
         this.assetServices.getAssetCapabilityData(row.assetCapesId).subscribe(data => {
             getSelectedCollection = data;
             if (getSelectedCollection) {
@@ -1404,6 +1516,7 @@ export class AssetCapesComponent implements OnInit {
                 //this.cunstructFormForEdit()
 
                 this.aircraftData = [{
+                    capesid: row.assetCapesId,
                     AircraftType: data[0].manufacturer,
                     AircraftModel: data[0].modelname,
                     DashNumber: data[0].dashNumber,

@@ -334,10 +334,10 @@
                                            offLabel="off" (onChange)="toggleActiveStatus(rowData)"
                                            [(ngModel)]="rowData['isActive']"></p-inputSwitch>
                             <!--<span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openView(view,rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>-->
-                            <!--<button class="btn-edit" mat-icon-button (click)="opencapesToEdit(content,rowData)" matTooltip="Edit">
-                    <mat-icon>edit</mat-icon>
-                </button>
-                -->
+                            <button class="btn-edit" mat-icon-button (click)="opencapesToEdit(content,rowData)" matTooltip="Edit">
+                                     <mat-icon>edit</mat-icon>
+                             </button>
+                
 
                             <button class="btn-delete" mat-icon-button matTooltip="Delete" (click)="openDelete(content2,rowData)">
                                 <mat-icon color="warn">delete</mat-icon>
