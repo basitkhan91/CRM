@@ -1139,9 +1139,14 @@
                                         </td>
                                         <td style="width:70px"
                                         *ngIf="colsaircraftLD.length > 0">
-                                            <button class="btn btn-danger nobg" (click)="deleteAircraftMapped(rowData)">
-                                                <i class="fa fa-trash"></i>
-                                            </button>
+                                        <span> <a class="btn btn-info boxed-float-btn nobg" data-toggle="modal" data-target="#viewAircraft" (click)="onViewAircraft(rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
+                                        <button type="button" class="btn-edit" mat-icon-button  data-toggle="modal" data-target="#editAirCraftDetails" (click)="onEditAircraft(rowData)" matTooltip="edit">
+                                            <mat-icon>edit</mat-icon>
+                                        </button>
+                                        <button class="btn btn-danger nobg" matTooltip="Delete" (click)="deleteAircraftMapped(rowData)">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                        <span><a class="btn nobg" data-toggle="modal"  data-target="#aircraftHistory" matTooltip="History" (click)="getAircraftAuditHistory(rowData)"><i class="fa fa-history" ></i></a></span>
                                         </td>
                                     </tr>
                                 </ng-template>
@@ -2138,7 +2143,7 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label class="popup-plusicon-cstm" style="width: 170px !important;">ATA SubChapters <a data-dismiss="modal" [routerLink]="['/singlepages/singlepages/app-ata-sub-chapter1']"><i class="fa fa-plus-circle fa-lg"></i></a></label>
-                                    <p-multiSelect class="imstock-pmselect" [options]="atasubchapter"
+                                    <p-multiSelect class="imstock-pmselect p-multi-aircraft-dash" [options]="atasubchapter"
                                                    [(ngModel)]="selectedModels"
                                                    [panelStyle]="{minWidth:'12em'}" formControlName="atasubchaptername"></p-multiSelect>
                                 </div>
@@ -3430,4 +3435,221 @@
             </div>
         </div>
     </div>
+</div>
+
+<div id="viewAircraft" class="modal" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Details of Aircraft Information</h4>
+          <button type="button" class="close" data-dismiss="modal">
+            &times;
+          </button>
+        </div>
+  
+        <div class="modal-body" *ngIf="viewAircraftData">
+          <div class="col-sm-12">
+            <p>
+              <span class="label"><b>Aircraft: </b></span
+              ><span class="value">{{ viewAircraftData.aircraftType }}</span>
+            </p>
+  
+            <p>
+              <span class="label"><b>Model: </b></span
+              ><span class="value">{{ viewAircraftData.aircraftModel }}</span>
+            </p>
+            <p>
+              <span class="label"><b>Dash Numbers: </b></span
+              ><span class="value">{{ viewAircraftData.dashNumber }}</span>
+            </p>
+            <p>
+              <span class="label"><b>Memo: </b></span
+              ><span class="value">{{ viewAircraftData.memo }}</span>
+            </p>
+  
+            <div class="clear"></div>
+          </div>
+        </div>
+  
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div
+  class="modal fade"
+  id="editAirCraftDetails"
+  role="dialog"
+  data-backdrop="static" data-keyboard="false"
+>
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">
+          &times;
+        </button>
+        <h4 class="modal-title">Edit Inventory Details</h4>
+        <div class="col-sm-12 font-padding">
+          <div class="col-sm-3">
+            Aircraft:
+            <span style="color:red">{{ editAirCraftData.aircraftType }}</span>
+          </div>
+          <div class="col-sm-3">
+            Model:
+            <span style="color:red">{{ editAirCraftData.aircraftModel }}</span>
+          </div>
+          <div class="col-sm-3">
+            Dash Number:
+            <span style="color:red">{{ editAirCraftData.dashNumber }}</span>
+          </div>
+        </div>
+      </div>
+      <form #ccForm="ngForm" #editAirCraftForm="ngForm" class="form-horizontal">
+        <div class="modal-body">
+          <div class="form-row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Memo</label>
+                <textarea
+                  name="notes"
+                  [(ngModel)]="editAirCraftData.memo"
+                  (ngModelChange)="enableSave()"
+                  placeholder="Tool Bar"
+                ></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-primary pull-right submit-btn"
+            style="text-align:center"
+            (click)="updateAircraft()"
+            [disabled]="
+              disableSave || !ccForm.valid
+            "
+          >
+            Update
+          </button>
+          <button type="button" class="btn btn-danger" data-dismiss="modal">
+            Close
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div
+  id="aircraftHistory"
+  class="modal"
+  data-backdrop="static"
+  data-keyboard="false"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">History of Aircraft Info</h4>
+        <button type="button" class="close" data-dismiss="modal">
+          &times;
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <div class="table-responsive">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>Aircraft Type</th>
+                <th>Aircraft Model</th>
+                <th>Dash Number</th>
+                <th>Inventory</th>
+                <th>Memo</th>
+                <th>Updated By</th>
+                <th>Last Updated Time</th>
+                <th>Created By</th>
+                <th>Created Time</th>
+              </tr>
+            </thead>
+
+            <tr *ngFor="let audit of aircraftauditHistory; let i = index">
+              <td
+                [ngStyle]="{
+                  color: getColorCodeForHistory(
+                    i,
+                    'aircraftType',
+                    audit.aircraftType
+                  )
+                    ? 'black'
+                    : 'red'
+                }"
+              >
+                {{ audit.aircraftType }}
+              </td>
+              <td
+                [ngStyle]="{
+                  color: getColorCodeForHistory(
+                    i,
+                    'aircraftModel',
+                    audit.aircraftModel
+                  )
+                    ? 'black'
+                    : 'red'
+                }"
+              >
+                {{ audit.aircraftModel }}
+              </td>
+              <td
+                [ngStyle]="{
+                  color: getColorCodeForHistory(
+                    i,
+                    'dashNumber',
+                    audit.dashNumber
+                  )
+                    ? 'black'
+                    : 'red'
+                }"
+              >
+                {{ audit.dashNumber }}
+              </td>
+              <td
+                [ngStyle]="{
+                  color: getColorCodeForHistory(i, 'inventory', audit.inventory)
+                    ? 'black'
+                    : 'red'
+                }"
+              >
+                {{ audit.inventory }}
+              </td>
+
+              <td
+                [ngStyle]="{
+                  color: getColorCodeForHistory(i, 'memo', audit.memo)
+                    ? 'black'
+                    : 'red'
+                }"
+              >
+                {{ audit.memo }}
+              </td>
+              <td>{{ audit.updatedBy }}</td>
+              <td>{{ audit.updatedDate | date: 'dd-MM-yyyy h:mm a ' }}</td>
+              <td>{{ audit.createdBy }}</td>
+              <td>{{ audit.createdDate | date: 'dd-MM-yyyy h:mm a ' }}</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
 </div>

@@ -430,6 +430,9 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     totalAtaChapterRecords: any;
     totalAtaChapterPages: number;
     selectedItemClassificationName: any = "";
+    viewAircraftData: any = {};
+    editAirCraftData: any = {};
+    aircraftauditHistory: any = [];
 
     // errorLogForPS: string = '';
 
@@ -501,7 +504,8 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     colsaircraftLD = [
         { field: "aircraft", header: "Aircraft" },
         { field: "model", header: "Model" },
-        { field: "dashNumber", header: "Dash Numbers" }
+        { field: "dashNumber", header: "Dash Numbers" },
+        { field: "memo", header: "Memo" }
     ];
     selectedAircraftLDColumns = this.colsaircraftLD;
     colaircraft: any[] = [
@@ -6316,6 +6320,36 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             this.toGetAllDocumentsList(this.itemMasterId);
             this.documentDeleted = true;
         })
+    }
+    
+    onViewAircraft(rowData) {
+        this.viewAircraftData = rowData;
+    }
+
+    onEditAircraft(rowData) {
+        this.editAirCraftData = {...rowData};
+    }
+
+    updateAircraft() {
+
+    }
+
+    getAircraftAuditHistory(rowData) {
+        console.log(rowData);
+        //aircraftauditHistory
+        
+    }
+
+    getColorCodeForHistory(i, field, value) {
+        const data = this.aircraftauditHistory;
+        const dataLength = data.length;
+        if (i >= 0 && i <= dataLength) {
+            if ((i + 1) === dataLength) {
+                return true;
+            } else {
+                return data[i + 1][field] === value
+            }
+        }
     }
 }
 
