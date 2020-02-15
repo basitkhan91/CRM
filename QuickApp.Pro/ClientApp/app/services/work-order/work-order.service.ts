@@ -313,4 +313,17 @@ export class WorkOrderService {
     getReceivingCustomerreference(customerId) {
         return this.workOrderEndpointService.getReceivingCustomerreference(customerId);
     }
+
+    getDocumentsList(wfWoId, workOrderId){
+        return this.workOrderEndpointService.getDocumentsList(wfWoId, workOrderId);
+    }
+    createDocuments(data){
+        return this.workOrderEndpointService.createDocuments(data);
+    }
+    updateWorkOrderDocumentStatus(workOrderDocumentsId,status, updatedBy){
+        return this.workOrderEndpointService.updateWorkOrderDocumentStatus(workOrderDocumentsId,status, updatedBy);
+    }
+    deleteWorkOrderDocuments(workOrderDocumentId, updatedBy){
+        return this.workOrderEndpointService.deleteWorkOrderDocuments(workOrderDocumentId, updatedBy);
+    }
 }

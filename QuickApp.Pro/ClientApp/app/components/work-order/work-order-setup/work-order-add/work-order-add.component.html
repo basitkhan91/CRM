@@ -983,7 +983,10 @@
                         <app-work-order-analysis></app-work-order-analysis>
                     </div>
                     <div *ngIf="documents" [ngClass]="{hidedata: gridActiveTab !== 'documents'}">
-                        <app-work-order-documents [documentForm]="documents"></app-work-order-documents>
+                        <app-work-order-documents [documentForm]="documents"
+                        [workFlowWorkOrderId]="workFlowWorkOrderId"
+                        [savedWorkOrderData]="savedWorkOrderData"
+                        ></app-work-order-documents>
                     </div>
                     <div *ngIf="gridActiveTab == 'quote'">
                         <div *ngIf="workOrderQuoteId == undefined" class="no-quote">

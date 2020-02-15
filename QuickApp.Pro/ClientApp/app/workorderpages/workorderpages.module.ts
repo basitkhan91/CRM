@@ -67,6 +67,7 @@ import { WorkOrderROListComponent } from '../components/work-order/work-order-se
 import { WorkOrderROCreateComponent } from '../components/work-order/work-order-setup/work-order-ro-create/work-order-ro-create.component';
 import { WorkOrderFreightComponent } from '../components/work-order/work-order-setup/work-order-freight/work-order-freight.component';
 import { QuoteViewComponent } from '../shared/quote-view.component';
+import { FileUploadModule } from 'primeng/fileupload';
 
 // import { MaterialListCreateComponent } from '../shared/Material-List-Create.component';
 // import { SharedModule } from '../shared/shared.module';
@@ -95,7 +96,8 @@ import { QuoteViewComponent } from '../shared/quote-view.component';
     AccordionModule,
     AssetmanagementModule,
     WorkFlowPagesModule,
-    MatTooltipModule
+    MatTooltipModule,
+    FileUploadModule
   ],
   declarations: [
     WorkOrderPagesComponent,

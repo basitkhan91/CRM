@@ -1,134 +1,4 @@
-﻿<!-- <div class="card">
-  <div class="card-body">
-    <button class="btn btn-success pull-right" (click)="addNewDoc()">
-      Add Document
-    </button>
-    <div class="table-responsive pas-table-cstm ng-star-inserted">
-      <table class="table table-bordered documents-table">
-        <thead>
-          <tr>
-            <th>Comp</th>
-            <th>BU</th>
-            <th>Div</th>
-            <th>Dep</th>
-            <th>Document Code</th>
-            <th>Description</th>
-            <th>Link to Doc</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr class="mpn-row" *ngFor="let d of documentForm; let i = index">
-            <td>
-              <select [(ngModel)]="d.company" name="comp">
-                <option value="">Select</option>
-                <option value="Condax">Condax</option>
-                <option value="Golddex">Golddex</option>
-                <option value="Goodsilron">Goodsilron</option>
-                <option value="Openlane">Openlane</option>
-                <option value="Opentech">Opentech</option>
-                <option value="Yearin">Yearin</option>
-                <option value="year-job">year-job"</option>
-              </select>
-            </td>
-            <td>
-              <select [(ngModel)]="d.businessUnit" name="bu">
-                <option value="">Select</option>
-                <option value="Condax">Condax</option>
-                <option value="Golddex">Golddex</option>
-                <option value="Goodsilron">Goodsilron</option>
-                <option value="Openlane">Openlane</option>
-                <option value="Opentech">Opentech</option>
-                <option value="Yearin">Yearin</option>
-                <option value="year-job">year-job"</option>
-              </select>
-            </td>
-            <td>
-              <select [(ngModel)]="d.divison" name="div">
-                <option value="">Select </option>
-                <option value="Accountant">Accountant</option>
-                <option value="Controller">Controller</option>
-                <option value="CSR">CSR</option>
-                <option value="Engineer">Engineer</option>
-                <option value="General Manager">General Manager</option>
-                <option value="Janitor">Janitor</option>
-                <option value="Mech">Mech</option>
-                <option value="Purchasing Manager">Purchasing Manager</option>
-                <option value="Purchasing">Purchasing</option>
-                <option value="QC Manager">QC Manager</option>
-                <option value="Receptionist">Receptionist</option>
-                <option value="Sales">Sales</option>
-                <option value="Sales manager">Sales manager</option>
-                <option value="Shop Manager">Shop Manager</option>
-                <option value="Supply Room Clerk">Supply Room Clerk</option>
-                <option value="Tech">Tech</option>
-                <option value="Warehouse man">Warehouse man</option>
-              </select>
-            </td>
-            <td>
-              <select [(ngModel)]="d.department" name="Dep">
-                <option value="">Select </option>
-                <option value="Accountant">Accountant</option>
-                <option value="Controller">Controller</option>
-                <option value="CSR">CSR</option>
-                <option value="Engineer">Engineer</option>
-                <option value="General Manager">General Manager</option>
-                <option value="Janitor">Janitor</option>
-                <option value="Mech">Mech</option>
-                <option value="Purchasing Manager">Purchasing Manager</option>
-                <option value="Purchasing">Purchasing</option>
-                <option value="QC Manager">QC Manager</option>
-                <option value="Receptionist">Receptionist</option>
-                <option value="Sales">Sales</option>
-                <option value="Sales manager">Sales manager</option>
-                <option value="Shop Manager">Shop Manager</option>
-                <option value="Supply Room Clerk">Supply Room Clerk</option>
-                <option value="Tech">Tech</option>
-                <option value="Warehouse man">Warehouse man</option>
-              </select>
-            </td>
-            <td>
-              <select [(ngModel)]="d.documentCode" name="documentCode">
-                <option value="8130">8130</option>
-                <option value="APO">APO</option>
-                <option value="ASO">ASO</option>
-                <option value="CERT">CERT</option>
-                <option value="CON">CON</option>
-                <option value="Figure">FIGURE</option>
-                <option value="PL">PL</option>
-                <option value="VA">VA</option>
-              </select>
-            </td>
-            <td>{{ d.description }}</td>
-            <td>
-              <input
-                type="text"
-                class="form-control w200"
-                [(ngModel)]="d.docLink"
-              />
-            </td>
-            <td>
-              <p-inputSwitch
-                [(ngModel)]="d.isActive"
-                title="Active/Inactive"
-              ></p-inputSwitch>
-              <a title="Edit" class="btn btn-primary boxed-float-btn nobg"
-                ><i class="fa fa-edit"></i
-              ></a>
-
-              <a
-                title="Delete"
-                class="btn btn-success boxed-float-btn nobg delete-row-btn"
-                ><i class="fa fa-trash"></i
-              ></a>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</div> -->
-
+﻿
 
 
 <div class="right_col" role="main" style="padding: 2px 6px;">
@@ -137,14 +7,12 @@
         <div class="card" style="padding: 10px;">
           <div class="col-md-12">
             <h4 class="po-head-sm">
-              <!--class="float-right"-->
               Documents List
               <a
-                *ngIf="isViewMode == false"
                 class="plusicon-cstm"
                 href="#"
                 data-toggle="modal"
-                data-target="#addDocumentDetails"
+                data-target="#documentDetails"
                 (click)="addDocumentDetails()"
                 ><i
                   class="fa fa-plus-circle fa-lg"
@@ -156,11 +24,11 @@
           <div class="clear"></div>
           <hr />
   
-          <!-- <div>
+           <div>
             <p-table
               #documents
               class="rpo-table-cstm"
-              [value]="customerdocumentsDestructuredData"
+              [value]="documentsDestructuredData"
               [loading]="loader"
               [rows]="pageSize"
               [paginator]="true"
@@ -181,10 +49,10 @@
                 </colgroup>
               </ng-template>
   
-              <ng-template pTemplate="caption" *ngIf="isViewMode == false">
+              <ng-template pTemplate="caption" >
                 <div style="text-align: right;min-height: 30px;">
                   <p-multiSelect
-                    [options]="customerDocumentsColumns"
+                    [options]="documentsColumns"
                     [(ngModel)]="selectedColumns"
                     [ngModelOptions]="{ standalone: true }"
                     optionLabel="header"
@@ -240,7 +108,7 @@
                 <tr>
                   <ng-container *ngFor="let col of columns">
                     <th
-                      *ngIf="col.field !== 'fileName' && col.field !== 'fileName'"
+                      *ngIf="col.field !== 'fileName'"
                       pResizableColumn
                       pReorderableColumn
                       [pSortableColumn]="col.field"
@@ -304,7 +172,7 @@
                     </td>
                   </ng-container>
   
-                  <td class="text-center" *ngIf="isViewMode == false">
+                  <td class="text-center" >
                     <span>
                       <a
                         class="btn btn-info boxed-float-btn nobg"
@@ -323,7 +191,7 @@
                       (click)="editCustomerDocument(rowData)"
                       matTooltip="Edit"
                       data-toggle="modal"
-                      data-target="#addDocumentDetails"
+                      data-target="#documentDetails"
                     >
                       <mat-icon>edit</mat-icon>
                     </button>
@@ -341,12 +209,12 @@
                       class="btn-history"
                       mat-icon-button
                       matTooltip="History"
-                      (click)="openHistory(contentAuditHist, rowData)"
+                
                     >
                       <mat-icon color="green">history</mat-icon>
                     </button>
                   </td>
-                  <td class="text-center" *ngIf="isViewMode == true">
+                  <td class="text-center" >
                     <span>
                       <a
                         class="btn btn-info boxed-float-btn nobg"
@@ -373,19 +241,13 @@
               <ng-template
                 pTemplate="emptymessage"
                 let-columns
-                *ngIf="customerdocumentsDestructuredData.length == 0"
+                *ngIf="documentsDestructuredData.length == 0"
               >
                 <tr>
+
                   <td
                     [attr.colspan]="10"
-                    *ngIf="isViewMode == false"
-                    style="color: red; font-weight: bold; text-align: center"
-                  >
-                    No records found
-                  </td>
-                  <td
-                    [attr.colspan]="10"
-                    *ngIf="isViewMode == true"
+              
                     style="color: red; font-weight: bold; text-align: center"
                   >
                     No records found
@@ -414,18 +276,202 @@
                 />
               </ng-template>
             </p-table>
-          </div> -->
-          <div style="margin-top:10px">
+          </div> 
+          <!-- <div style="margin-top:10px">
             <button
               type="button"
               class="btn btn-primary pull-right submit-btn"
               (click)="backClick()"
-              *ngIf="isViewMode == false"
+         
             >
               Previous
             </button>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>
   </div>
+
+
+
+  <div
+  class="modal fade"
+  id="documentDetails"
+  role="dialog"
+  data-backdrop="static"
+>
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button
+          type="button"
+          class="close"
+          (click)="closeMyModel('#documentDetails')"
+        >
+          &times;
+        </button>
+        <h4 class="modal-title">Add Document Details</h4>
+      </div>
+      <form #documentDetails="ngForm" class="form-horizontal">
+        <div class="modal-body">
+          <div class="form-row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Name <span class="clr-red">*</span></label>
+                <input
+                  class="form-control"
+                  type="text"
+                  name="name"
+                  [(ngModel)]="documentForm.name"
+                  (ngModelChange)="enableSave()"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label>Description <span class="clr-red">*</span></label>
+                <textarea
+                  class="form-control"
+                  name="description"
+                  [(ngModel)]="documentForm.description"
+                  (ngModelChange)="enableSave()"
+                  required
+                ></textarea>
+              </div>
+              <div class="form-group">
+                  <label>Code <span class="clr-red">*</span></label>
+                  <textarea
+                    class="form-control"
+                    name="code"
+                    [(ngModel)]="documentForm.code"
+                    (ngModelChange)="enableSave()"
+                    required
+                  ></textarea>
+                </div>
+              <div class="form-group">
+                <label>Memo </label>
+                <textarea
+                  class="form-control"
+                  name="memo"
+                  [(ngModel)]="documentForm.memo"
+                  (ngModelChange)="enableSave()"
+                ></textarea>
+              </div>
+            </div>
+
+            <div class="col-md-12">
+              <div class="form-group">
+                <label style="float: none;"
+                  >Attachments <span class="clr-red">*</span></label
+                >
+                <p-fileUpload
+                  #fileUploadInput
+                  name="fileupload[]"
+                  multiple="multiple"
+                  [showCancelButton]="false"
+                  [showUploadButton]="false"
+                  customUpload="true"
+                  (ngModelChange)="enableSave()"
+                  (onSelect)="fileUpload($event)"
+                  (onRemove)="removeFile($event)"
+                ></p-fileUpload>
+              </div> 
+            </div>
+            <div
+              class="table-responsive table-overflow"
+              *ngIf="sourceViewforDocumentList.length > 0"
+            >
+              <h4 class="panel-title" style="padding-left: 10px;">
+                Attachment Details:
+              </h4>
+              <p-table
+                class="table-responsive ptable-cus-pma"
+                [paginator]="sourceViewforDocumentList.length > 0"
+                [value]="sourceViewforDocumentList"
+                [rows]="3"
+                [columns]="sourceViewforDocumentListColumns"
+              >
+                <ng-template pTemplate="header" let-columns>
+                  <tr>
+                    <th *ngFor="let col of columns">
+                      {{ col.header }}
+                    </th>
+                    <th>
+                      Download
+                    </th>
+                  </tr>
+                </ng-template>
+                <ng-template
+                  pTemplate="body"
+                  let-rowData
+                  let-columns="columns"
+                  let-i="rowIndex"
+                >
+                  <tr>
+                    <td *ngFor="let col of columns">
+                      <ng-container *ngIf="col.field == 'fileName'">
+                        {{ rowData[col.field] }}
+                      </ng-container>
+                    </td>
+                    <td>
+                      <a
+                        (click)="downloadFileUpload(rowData)"
+                        matTooltip="Download"
+                        class="btn nobg btn-cstm"
+                        ><span><i class="fa fa-download"></i></span
+                      ></a>
+                    </td>
+                  </tr>
+                </ng-template>
+                <ng-template
+                  pTemplate="emptymessage"
+                  let-columns
+                  *ngIf="sourceViewforDocumentList.length == 0"
+                >
+                  <tr>
+                    <td
+                      [attr.colspan]="2"
+                      style="color: red; font-weight: bold; text-align: center"
+                    >
+                      No records found
+                    </td>
+                  </tr>
+                </ng-template>
+              </p-table>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            *ngIf="!isEditButton"
+            class="btn btn-primary pull-right submit-btn"
+            style="text-align:center"
+            (click)="saveDocumentInformation()"
+            [disabled]="!documentDetails.valid || disableSave"
+          >
+            Save
+          </button>
+          <button
+            type="button"
+            *ngIf="isEditButton"
+            class="btn btn-primary pull-right submit-btn"
+            style="text-align:center"
+            (click)="saveDocumentInformation()"
+            [disabled]="!documentDetails.valid || disableSave"
+          >
+            Update
+          </button>
+          <button
+            type="button"
+            class="btn btn-danger"
+            (click)="
+            closeMyModel('#documentDetails')
+            "
+          >
+            Close
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
