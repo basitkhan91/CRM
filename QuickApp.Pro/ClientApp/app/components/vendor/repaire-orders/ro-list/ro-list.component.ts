@@ -133,7 +133,11 @@ export class RoListComponent implements OnInit {
             if (this.data.length > 0) {
                 this.totalRecords = res[0][0].totalRecords;
                 this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
-            }
+            }else {
+                this.data=[];
+                this.totalRecords=0;
+                this.totalPages=0;
+            } 
         })
 	}
 

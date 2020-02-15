@@ -12,24 +12,17 @@
     partNumberOriginalData &&
     legalEntityList &&
     conditionList &&
-    workOrderOriginalStageList
+    workOrderOriginalStageList && jobTitles   && salesPersonOriginalList && csrOriginalList
   ">
-    <app-work-order-add [isSubWorkOrder]="isSubWorkOrder"
-                        [subWorkOrderDetails]="paramsData"
-                        [isEdit]="isEdit"
-                        [workOrderTypes]="workOrderTypes"
-                        [workOrderStatusList]="workOrderStatusList"
-                        [creditTerms]="creditTerms"
-                        [employeesOriginalData]="employeesOriginalData"
-                        [workScopesList]="workScopesList"
-                        [workOrderStagesList]="workOrderStagesList"
-                        [workOrderOriginalStageList]="workOrderOriginalStageList"
-                        [priorityList]="priorityList"
-                        [currencyList]="currencyList"
-                        [partNumberOriginalData]="partNumberOriginalData"
-                        [legalEntityList]="legalEntityList"
-                        [conditionList]="conditionList"
-                        [workOrderGeneralInformation]="editWorkOrderGeneralInformation"></app-work-order-add>
+  <app-work-order-add [isSubWorkOrder]="isSubWorkOrder" [subWorkOrderDetails]="paramsData" [isEdit]="isEdit"
+    [workOrderTypes]="workOrderTypes" [workOrderStatusList]="workOrderStatusList" [creditTerms]="creditTerms"
+    [jobTitles]="jobTitles" [employeesOriginalData]="employeesOriginalData"
+    [salesPersonOriginalList]="salesPersonOriginalList" [csrOriginalList]="csrOriginalList"
+    [workScopesList]="workScopesList" [workOrderStagesList]="workOrderStagesList"
+    [workOrderOriginalStageList]="workOrderOriginalStageList" [priorityList]="priorityList"
+    [currencyList]="currencyList" [partNumberOriginalData]="partNumberOriginalData" [legalEntityList]="legalEntityList"
+    [conditionList]="conditionList" [workOrderGeneralInformation]="editWorkOrderGeneralInformation">
+  </app-work-order-add>
 </div>
 <div *ngIf="
     !(
@@ -44,27 +37,18 @@
       priorityList &&
       partNumberOriginalData &&
       legalEntityList &&
-      conditionList
+      conditionList && jobTitles && salesPersonOriginalList && csrOriginalList
     )
   ">
-    <!-- using add form as subworkOrder also -->
-    <app-work-order-add [isSubWorkOrder]="isSubWorkOrder"
-                        [subWorkOrderDetails]="paramsData"
-                        [workOrderId]="subWorkOrderId"
-                        [workFlowWorkOrderId]="workFlowWorkOrderId"
-                        [showTabsGrid]="showTabsGrid"
-                        [showGridMenu]="showGridMenu"
-                        [workOrderTypes]="workOrderTypes"
-                        [workOrderStatusList]="workOrderStatusList"
-                        [creditTerms]="creditTerms"
-                        [currencyList]="currencyList"
-                        [employeesOriginalData]="employeesOriginalData"
-                        [workScopesList]="workScopesList"
-                        [workOrderStagesList]="workOrderStagesList"
-                        [workOrderOriginalStageList]="workOrderOriginalStageList"
-                        [priorityList]="priorityList"
-                        [partNumberOriginalData]="partNumberOriginalData"
-                        [legalEntityList]="legalEntityList"
-                        [conditionList]="conditionList"
-                        [workOrderGeneralInformation]="workOrderGeneralInformation"></app-work-order-add>
+  <!-- using add form as subworkOrder also -->
+  <app-work-order-add [isSubWorkOrder]="isSubWorkOrder" [subWorkOrderDetails]="paramsData"
+    [workOrderId]="subWorkOrderId" [workFlowWorkOrderId]="workFlowWorkOrderId" [showTabsGrid]="showTabsGrid"
+    [showGridMenu]="showGridMenu" [workOrderTypes]="workOrderTypes" [workOrderStatusList]="workOrderStatusList"
+    [creditTerms]="creditTerms" [jobTitles]="jobTitles" [currencyList]="currencyList"
+    [employeesOriginalData]="employeesOriginalData" [salesPersonOriginalList]="salesPersonOriginalList"
+    [csrOriginalList]="csrOriginalList" [workScopesList]="workScopesList" [workOrderStagesList]="workOrderStagesList"
+    [workOrderOriginalStageList]="workOrderOriginalStageList" [priorityList]="priorityList"
+    [partNumberOriginalData]="partNumberOriginalData" [legalEntityList]="legalEntityList"
+    [conditionList]="conditionList" [workOrderGeneralInformation]="workOrderGeneralInformation">
+  </app-work-order-add>
 </div>

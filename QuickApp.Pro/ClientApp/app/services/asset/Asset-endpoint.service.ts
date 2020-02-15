@@ -22,6 +22,7 @@ export class AssetEndpoint extends EndpointFactory {
     private readonly addassetcapes: string = "/api/AssetModule/addAssetCapes";
     private readonly _updatecapesUrl: string = "/api/AssetModule/updatecapes";
     private readonly _getAssetUrl: string = "/api/AssetModule/GetAsset";
+    private readonly _assetwarrantystatusListurl: string = "/api/AssetModule/GetWarrantyStatus";
 
     get allAssetListURL() { return this.configurations.baseUrl + this._allAssetlistUrl; }
     get assetListurl() { return this.configurations.baseUrl + this._assetlistUrl; }
@@ -31,6 +32,7 @@ export class AssetEndpoint extends EndpointFactory {
     get getCapabilityUrl() { return this.configurations.baseUrl + this._getCapabilityUrl; }
     get getAsetCapabilityUrl() { return this.configurations.baseUrl + this._getAssetCapabilityUrl; }
     get getAssetUrl() { return this.configurations.baseUrl + this._getAssetUrl; }
+
 
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
         super(http, configurations, injector);
@@ -146,6 +148,14 @@ export class AssetEndpoint extends EndpointFactory {
         return this.http.put<T>(this._updatecapesUrl, JSON.stringify(roleObject), this.getRequestHeaders())
             .catch(error => {
                 return this.handleError(error, () => this.updateCapes(roleObject, assetCapesId));
+            });
+    }
+
+    getAssetWarrantyStatus<T>(): Observable<T> {
+
+        return this.http.get<T>(this._assetwarrantystatusListurl, this.getRequestHeaders())
+            .catch(error => {
+                return this.handleError(error, () => this.getAssetWarrantyStatus());
             });
     }
 

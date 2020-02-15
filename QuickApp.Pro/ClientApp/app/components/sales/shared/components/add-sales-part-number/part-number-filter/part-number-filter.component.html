@@ -3,17 +3,22 @@
       <div class="form-group">
         <label>PN<span class="clr-red">*</span></label>
   
-        <p-autoComplete class="autocomp-customer-cstm" [suggestions]="this.partDetails" (completeMethod)="searchPartByPartNumber($event)"
-          name="partNumber" [(ngModel)]="query.partSearchParamters.partNumber" (onSelect)="onPartNumberSelect($event)">
-          <ng-template let-value pTemplate="selectedItem">
-            <span>{{ value.partNumber }}</span>
-          </ng-template>
-          <ng-template let-brand pTemplate="item">
-            <div class="ui-helper-clearfix">
-              <div>{{ brand.partNumber }}</div>
-            </div>
-          </ng-template>
-        </p-autoComplete>
+
+        <p-autoComplete
+              class="autocomp-customer-cstm"
+              name="partNumber"
+              [(ngModel)]="query.partSearchParamters.partNumberObj"
+              [suggestions]="this.partDetails"
+              [forceSelection]="true"
+              emptyMessage="No Match Found"
+              field="partNumber"
+              (completeMethod)="searchPartByPartNumber($event)"
+              (onSelect)="onPartNumberSelect($event)"
+              [size]="30"
+              [minLength]="1"
+              [dropdown]="true"
+            >
+            </p-autoComplete>
      
        
         
@@ -31,7 +36,7 @@
     <div class="col-2 column">
       <div class="form-group">
         <label>PN Description</label>
-        <input type="text" pInputText name="partDescription" [(ngModel)]="query.partSearchParamters.partDescription"
+        <input type="text" class="form-control" name="partDescription" [(ngModel)]="query.partSearchParamters.partDescription"
           [disabled]="true" />
       </div>
     </div>
@@ -46,7 +51,7 @@
     </div>
     <div class="col-2 column">
       <div class="form-group">
-        <label>Qty Requested</label>
+        <label>Qty Requested<span class="clr-red">*</span></label>
         <input type="text" pInputText name="qtyRequested" [(ngModel)]="query.partSearchParamters.quantityRequested" (change)="calculate()" />
       </div>
     </div>
@@ -59,47 +64,24 @@
     <div class="col-2 column">
         <div class="form-group">
           <label>Qty AlreadyQuoted</label>
-          <input type="number" pInputText name="qtyAlreadyQuoted" [(ngModel)]="query.partSearchParamters.quantityAlreadyQuoted" disabled="true" />
+          <input type="number" class="form-control" name="qtyAlreadyQuoted" [(ngModel)]="query.partSearchParamters.quantityAlreadyQuoted" disabled="true" />
         </div>
       </div>
     <div class="col-1 column">
       <div class="form-group">
         <label>Qty On Hand</label>
-        <input type="text" pInputText name="qtyOnHand" [(ngModel)]="query.partSearchParamters.qtyOnHand" disabled="true" />
+        <input type="text" class="form-control" name="qtyOnHand" [(ngModel)]="query.partSearchParamters.qtyOnHand" disabled="true" />
       </div>
     </div>
     <div class="col-1 column">
       <div class="form-group">
         <label>Qty Available</label>
-        <input type="text" pInputText name="qtyAvailable" [(ngModel)]="query.partSearchParamters.qtyAvailable" disabled="true" />
+        <input type="text" class="form-control" name="qtyAvailable" [(ngModel)]="query.partSearchParamters.qtyAvailable" disabled="true" />
       </div>
     </div>
 </div>
-<div class="row justify-content-end">
-    <div class="col-1 column" style="margin-right: 8px;">
-        <div class="form-group">
-          <label>&nbsp;</label>
-          <button class="btn btn-primary" (click)="search($event)" [disabled]="searchDisabled">
-            Search PN
-          </button>
-        </div>
-      </div>
-      <div class="col-2 column" style="margin-right: 8px;" *ngIf="enableMultiSearch">
-        <div class="form-group">
-          <label>&nbsp;</label>
-          <button class="btn btn-primary" (click)="openMultiPartSearch($event)" >
-            Search Multiple PN's
-          </button>
-        </div>
-      </div>
-      <div class="col-1 column" style="margin-right: 8px;">
-        <div class="form-group">
-          <label>&nbsp;</label>
-          <button class="btn btn-primary" [disabled]="historicalDisabled">Historical</button>
-        </div>
-      </div>
-</div>
-<div class="row filter-method">
+
+<div class="row">
   <div>
     <label>Method</label>
   </div>
@@ -113,7 +95,7 @@
   </div>
  
 </div>
-<div class="row filter-method">
+<div class="row">
 
   <div>
     <label><input type="checkbox" name="includeAlternalePN" [(ngModel)]="query.partSearchParamters.includeAlternatePartNumber" />&nbsp;Include
@@ -127,6 +109,30 @@
     <label><input type="checkbox" name="method" (change)="includeMultiplePN($event)"  name="includeMultiplePN" [(ngModel)]="query.partSearchParamters.includeMultiplePartNumber"
          />&nbsp;Multiple PN's</label>
   </div>
+</div>
+<div class="row justify-content-start">
+  <div class="col-1 column" style="margin-right: 8px;">
+      <div class="form-group">
+        <label>&nbsp;</label>
+        <button class="btn btn-primary" (click)="search($event)" [disabled]="searchDisabled">
+          Search PN
+        </button>
+      </div>
+    </div>
+    <div class="col-2 column" style="margin-right: 8px;" *ngIf="enableMultiSearch">
+      <div class="form-group">
+        <label>&nbsp;</label>
+        <button class="btn btn-primary" (click)="openMultiPartSearch($event)" style="background-color: #f0ad4e !important;">
+          Search Multiple PN's
+        </button>
+      </div>
+    </div>
+    <div class="col-1 column" style="margin-right: 8px;">
+      <div class="form-group">
+        <label>&nbsp;</label>
+        <button class="btn btn-primary" [disabled]="historicalDisabled">Historical</button>
+      </div>
+    </div>
 </div>
 <ng-template #searchMultiPart let-c="close" let-d="dismiss">
     <div class="modal-header">
@@ -199,7 +205,7 @@
                    
                     <td> 
                       <span>
-                      <a class="add-part-number" *ngIf="!part.exist"  (click)="viewSelectedRow(part)">
+                      <a class="add-part-number clr-red" *ngIf="!part.exist" target="_blank" routerLink="/itemmastersmodule/itemmasterpages/app-item-master-stock">
                          Add Part Number
                       </a>
                       

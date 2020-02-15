@@ -78,6 +78,10 @@ namespace DAL.Repositories
                 {
                     statusId = 4;
                 }
+                else
+                {
+                    statusId = 5;
+                }
 
             }
 
@@ -88,18 +92,20 @@ namespace DAL.Repositories
 
 
             filters.Add(vendorId > 0, x => x.VendorId == vendorId);
-            filters.Add(!string.IsNullOrEmpty(poFilters.filters.PurchaseOrderNumber), x => x.PurchaseOrderNumber.Contains(poFilters.filters.PurchaseOrderNumber));
-            filters.Add(!string.IsNullOrEmpty(poFilters.filters.VendorName), x => x.VendorName.Contains(poFilters.filters.VendorName));
-            filters.Add(!string.IsNullOrEmpty(poFilters.filters.VendorCode), x => x.VendorCode.Contains(poFilters.filters.VendorCode));
+            filters.Add(!string.IsNullOrEmpty(poFilters.filters.PurchaseOrderNo), x => x.PurchaseOrderNumber.ToLower().Contains(poFilters.filters.PurchaseOrderNo.ToLower()));
+            filters.Add(!string.IsNullOrEmpty(poFilters.filters.VendorName), x => x.VendorName.ToLower().Contains(poFilters.filters.VendorName.ToLower()));
+            filters.Add(!string.IsNullOrEmpty(poFilters.filters.VendorCode), x => x.VendorCode.ToLower().Contains(poFilters.filters.VendorCode.ToLower()));
 
             var totalRecords = (from po in _appContext.PurchaseOrder
-                                join emp in _appContext.Employee on po.RequestedBy equals emp.EmployeeId
+                                join emp in _appContext.Employee on po.RequestedBy equals emp.EmployeeId into empg
+                                from emp in empg.DefaultIfEmpty() 
                                 join v in _appContext.Vendor on po.VendorId equals v.VendorId
                                 join appr in _appContext.Employee on po.ApproverId equals appr.EmployeeId into approver
                                 from appr in approver.DefaultIfEmpty()
                                 where po.IsDeleted == false
                                 && po.StatusId == (statusId > 0 ? statusId : po.StatusId)
-                                && emp.FirstName.Contains(!String.IsNullOrEmpty(poFilters.filters.ApprovedBy) ? poFilters.filters.ApprovedBy : emp.FirstName)
+                                && appr.FirstName.ToLower().Contains(!String.IsNullOrEmpty(poFilters.filters.ApprovedBy) ? poFilters.filters.ApprovedBy : emp.FirstName)
+                                && emp.FirstName.ToLower().Contains(!String.IsNullOrEmpty(poFilters.filters.RequestedBy) ? poFilters.filters.RequestedBy : emp.FirstName)
                                 && po.OpenDate == (poFilters.filters.OpenDate != null ? poFilters.filters.OpenDate : po.OpenDate)
                                 && po.ClosedDate == (poFilters.filters.ClosedDate != null ? poFilters.filters.ClosedDate : po.ClosedDate)
                                 select new PurchaseOrderFilters()
@@ -122,13 +128,15 @@ namespace DAL.Repositories
                                     .Paginate(pageNumber, pageSize, sorts, filters).RecordCount;
 
             var purchaseOrderList = (from po in _appContext.PurchaseOrder
-                                     join emp in _appContext.Employee on po.RequestedBy equals emp.EmployeeId
+                                     join emp in _appContext.Employee on po.RequestedBy equals emp.EmployeeId into empg
+                                     from emp in empg.DefaultIfEmpty()
                                      join v in _appContext.Vendor on po.VendorId equals v.VendorId
                                      join appr in _appContext.Employee on po.ApproverId equals appr.EmployeeId into approver
                                      from appr in approver.DefaultIfEmpty()
                                      where po.IsDeleted == false
                                      && po.StatusId == (statusId > 0 ? statusId : po.StatusId)
-                                     && emp.FirstName.Contains(!String.IsNullOrEmpty(poFilters.filters.ApprovedBy) ? poFilters.filters.ApprovedBy : emp.FirstName)
+                                     && appr.FirstName.ToLower().Contains(!String.IsNullOrEmpty(poFilters.filters.ApprovedBy) ? poFilters.filters.ApprovedBy : emp.FirstName)
+                                     && emp.FirstName.ToLower().Contains(!String.IsNullOrEmpty(poFilters.filters.RequestedBy) ? poFilters.filters.RequestedBy : emp.FirstName)
                                      && po.OpenDate == (poFilters.filters.OpenDate != null ? poFilters.filters.OpenDate : po.OpenDate)
                                      && po.ClosedDate == (poFilters.filters.ClosedDate != null ? poFilters.filters.ClosedDate : po.ClosedDate)
                                      select new PurchaseOrderFilters()
@@ -165,6 +173,7 @@ namespace DAL.Repositories
             if (!string.IsNullOrEmpty(filterText))
 
             {
+                filterText = filterText.ToLower();
                 if (open.Contains(filterText.ToLower()))
                 {
                     statusId = 1;
@@ -189,12 +198,12 @@ namespace DAL.Repositories
                                     from appr in approver.DefaultIfEmpty()
                                     where po.IsDeleted == false && po.VendorId == (vendorId > 0 ? vendorId : po.VendorId)
 
-                                    && (po.PurchaseOrderNumber.Contains(filterText)
-                                    || v.VendorName.Contains(filterText)
-                                    || v.VendorCode.Contains(filterText)
+                                    && (po.PurchaseOrderNumber.ToLower().Contains(filterText)
+                                    || v.VendorName.ToLower().Contains(filterText)
+                                    || v.VendorCode.ToLower().Contains(filterText)
                                     || po.StatusId == statusId
-                                    || emp.FirstName.Contains(filterText)
-                                    || appr.FirstName.Contains(filterText))
+                                    || emp.FirstName.ToLower().Contains(filterText)
+                                    || appr.FirstName.ToLower().Contains(filterText))
                                     select new
                                     {
                                         po.PurchaseOrderId
@@ -207,12 +216,12 @@ namespace DAL.Repositories
                                          join appr in _appContext.Employee on po.ApproverId equals appr.EmployeeId into approver
                                          from appr in approver.DefaultIfEmpty()
                                          where po.IsDeleted == false && po.VendorId == (vendorId > 0 ? vendorId : po.VendorId)
-                                         && (po.PurchaseOrderNumber.Contains(filterText)
-                                         || v.VendorName.Contains(filterText)
-                                         || v.VendorCode.Contains(filterText)
+                                         && (po.PurchaseOrderNumber.ToLower().Contains(filterText)
+                                         || v.VendorName.ToLower().Contains(filterText)
+                                         || v.VendorCode.ToLower().Contains(filterText)
                                          || po.StatusId == statusId
-                                         || emp.FirstName.Contains(filterText)
-                                         || appr.FirstName.Contains(filterText))
+                                         || emp.FirstName.ToLower().Contains(filterText)
+                                         || appr.FirstName.ToLower().Contains(filterText))
                                          select new
                                          {
                                              po.PurchaseOrderId,

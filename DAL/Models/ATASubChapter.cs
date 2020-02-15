@@ -13,11 +13,17 @@ namespace DAL.Models
         public long ATASubChapterId { get; set; }
         //FK
         public long ATAChapterId { get; set; }
-
-        public string Memo { get; set; }
+        public Int32? ATASubChapterCode { get; set; }
         public string Description { get; set; }
 
-        public Int32? ATASubChapterCode { get; set; }
+        [NotMapped]
+        public string ATAChapterName { get; set; }
+        [NotMapped]
+        public string ATAChapterCategory { get; set; }
+
+        public string Memo { get; set; }
+
+        
 
 
         [ForeignKey("MasterCompanyId")]

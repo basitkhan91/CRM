@@ -129,4 +129,8 @@ export class AssetService {
         return this.assetEndpoint.updateCapes(assetcapes, assetcapes.AssetCapesId);
     }
 
+    getAssetWarrantyStatus() {
+        return Observable.forkJoin(this.assetEndpoint.getAssetWarrantyStatus<any[]>());
+    }
+
 }

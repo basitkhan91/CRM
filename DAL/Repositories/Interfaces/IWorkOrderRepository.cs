@@ -54,9 +54,12 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<object> GetWorkFlowWorkOrderExclusionsList(long wfwoId = 0, long workOrderId = 0);
         void DeleteWorkOrderExclusions(long workOrderExclusionsId, string updatedBy);
 
-        List<WorkOrderDocuments> CreateWorkOrderDocuments(List<WorkOrderDocuments> workOrderDocuments);
-        void UpdateWorkOrderDocuments(WorkOrderDocuments workOrderDocuments);
-        IEnumerable<object> GetWorkFlowWorkOrderDocumentsList(long wfwoId = 0, long workOrderId = 0);
+        WorkOrderDocuments CreateWorkOrderDocuments(WorkOrderDocuments workOrderDocuments);
+        WorkOrderDocuments UpdateWorkOrderDocuments(WorkOrderDocuments workOrderDocuments);
+        IEnumerable<object> GetWorkOrderDocumentsList(long wfwoId = 0, long workOrderId = 0);
+        WorkOrderDocuments GetWorkOrderDocumentsDetailById(long id);
+        void WorkOrderDocumentStatus(long workOrderDocumentsId, bool status, string updatedBy);
+        void DeleteWorkOrderDocuments(long workOrderDocumentsId, string updatedBy);
 
         long CreateWorkOrderAddress(WorkOrderAddress workOrderAddress);
         void UpdateWorkOrderAddress(WorkOrderAddress workOrderAddress);
@@ -107,7 +110,7 @@ namespace DAL.Repositories.Interfaces
         void DeleteWorkOrderFreight(long workOrderFreightId, string updatedBy);
 
         IEnumerable<object> GetWorkFlowNos(long partId, long workScopeId);
-        IEnumerable<object> GetWorkOrderNos(long partId, long workScopeId);
+        IEnumerable<object> GetHistoricalWorkOrders(Common.Filters<HistoricalWOFilter> woFilters);
         IEnumerable<object> GetWorkOrderPartDetails(long customerId);
         IEnumerable<object> GetStockLineDetailsByPartNo(long itemMasterId, long conditionId);
         object GetPartSerialNo(long stockLineId);
@@ -155,6 +158,14 @@ namespace DAL.Repositories.Interfaces
         object GetNTESTDValues(long itemMasterId, string workScope);
 
         object GetQuoteBuildMethodDetails(long workflowWorkorderId);
+        IEnumerable<object> HistoricalWorkOrderQuotes(Filters<WOQuoteFilters> woQuoteFilters);
 
+
+        WorkOrderTeardown CreateTeardown(WorkOrderTeardown tearDown);
+        WorkOrderTeardown GetWorkOrderTeardown(long wowfId);
+        object WorkOrderTeardownView(long wowfId);
+
+
+        object WorkOrderAnalysis(long workOrderId);
     }
 }

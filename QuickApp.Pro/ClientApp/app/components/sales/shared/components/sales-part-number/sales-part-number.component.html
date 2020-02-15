@@ -136,7 +136,7 @@
 </ng-template>
 
 <ng-template #salesMargin let-c="close" let-d="dismiss" tabindex="-1">
-    <app-sales-margin tabindex="-1" [part]="part" (save)="openSalesMarginSave($event)" (close)="onCloseMargin($event)"></app-sales-margin>
+    <app-sales-margin tabindex="-1" [part]="part" [isEdit]="isEdit" (save)="openSalesMarginSave($event)" (close)="onCloseMargin($event)"></app-sales-margin>
 </ng-template>
 
 <ng-template #deleteContent let-c="close" let-d="dismiss">

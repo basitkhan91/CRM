@@ -17,9 +17,9 @@ namespace QuickApp.Pro.ViewModels
 
         public decimal  Percentage { get; set; }
 
-        public byte? Days { get; set; }
+        public byte Days { get; set; }
 
-        public byte? NetDays { get; set; }
+        public byte NetDays { get; set; }
 
         public Int32 MasterCompanyId { get; set; }
 

@@ -34,7 +34,7 @@ namespace QuickApp.Pro.Controllers
             public IActionResult Get(int id)
             {
                 var allIntegrationinfo = _unitOfWork.Integration.getIntegrationData(id); //.GetAllCustomersData();
-               return Ok(Mapper.Map<IEnumerable<IntegrationViewModel>>(allIntegrationinfo));
+               return Ok(allIntegrationinfo);
 
             }
         [HttpGet("GetAll")]
@@ -42,7 +42,7 @@ namespace QuickApp.Pro.Controllers
         public IActionResult GetAll()
         {
             var allIntegrationinfo = _unitOfWork.Integration.getIntegrationAllData(); //.GetAllCustomersData();
-            return Ok(Mapper.Map<IEnumerable<IntegrationViewModel>>(allIntegrationinfo));
+            return Ok(allIntegrationinfo);
 
         }
         /// <summary>

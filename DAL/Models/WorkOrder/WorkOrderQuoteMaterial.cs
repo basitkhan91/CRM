@@ -18,15 +18,13 @@ namespace DAL.Models
         public long? UnitOfMeasureId { get; set; }
         public decimal? UnitCost { get; set; }
         public decimal? ExtendedCost { get; set; }
-        public decimal? Price { get; set; }
-        public decimal? ExtendedPrice { get; set; }
         public string Memo { get; set; }
         public bool? IsDefered { get; set; }
-        public decimal? MaterialCostPlus { get; set; }
         public long? MarkupPercentageId { get; set; }
-        public decimal? FixedAmount { get; set; }
         public long? TaskId { get; set; }
         public string MarkupFixedPrice { get; set; }
+        public int? BillingMethodId { get; set; }
+        public long? HeaderMarkupId { get; set; }
         public int MasterCompanyId { get; set; }
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }

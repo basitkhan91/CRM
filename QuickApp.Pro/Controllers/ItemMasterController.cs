@@ -390,7 +390,7 @@ namespace QuickApp.Pro.Controllers
         [Produces(typeof(List<AircraftTypeViewModel>))]
         public IActionResult aircraftGet(AircraftTypeViewModel aircraftTypeViewModel)
         {
-            var aircraftManufacturer = _unitOfWork.aircraftType.getAircraftTypeData().Where(x => x.IsDeleted != true && x.IsActive == true);
+            var aircraftManufacturer = _unitOfWork.aircraftType.getAircraftTypeData().Where(x => x.IsDeleted != true && x.IsActive == true).OrderBy(p=>p.Description);
             return Ok(aircraftManufacturer);
 
         }
@@ -566,10 +566,11 @@ namespace QuickApp.Pro.Controllers
                     {
                         itemmaserObj.IsSerialized = itemMasterViewModel.IsSerialized;
                     }
-
+                    itemmaserObj.IsHotItem = itemMasterViewModel.IsHotItem;
                     itemmaserObj.ItemGroupId = itemMasterViewModel.ItemGroupId;
                     itemmaserObj.ItemClassificationId = itemMasterViewModel.ItemClassificationId;
-                    itemmaserObj.IsAcquiredMethodBuy = itemMasterViewModel.IsAcquiredMethodBuy;
+                    //itemmaserObj.IsAcquiredMethodBuy = itemMasterViewModel.IsAcquiredMethodBuy;
+                    itemmaserObj.AssetAcquistionTypeId = itemMasterViewModel.AssetAcquistionTypeId;
                     itemmaserObj.IsHazardousMaterial = itemMasterViewModel.IsHazardousMaterial;
                     itemmaserObj.IsExpirationDateAvailable = itemMasterViewModel.IsExpirationDateAvailable;
                     itemmaserObj.ExpirationDate = itemMasterViewModel.ExpirationDate;
@@ -1238,8 +1239,61 @@ namespace QuickApp.Pro.Controllers
 
             return Ok(ModelState);
         }
+        [HttpPut("itemMasterAircraftUpdate/{id}")]
+         public IActionResult UpdateCustomerAircraftInfo(long id, [FromBody] ItemMasterAircraftMapping itemAircraftMappingVM)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var aircraft = _unitOfWork.Repository<ItemMasterAircraftMapping>().GetSingleOrDefault(c => c.ItemMasterAircraftMappingId == id);// && c.AircraftModelId == customerAircraftMappingVM[i].AircraftModelId && c.MasterCompanyId == customerAircraftMappingVM[i].MasterCompanyId && c.CustomerId = customerAircraftMappingVM[i].CustomerId);
+                    aircraft.AircraftType = itemAircraftMappingVM.AircraftType;
+                    aircraft.AircraftModel = itemAircraftMappingVM.AircraftModel;
+                    aircraft.DashNumber = itemAircraftMappingVM.DashNumber;
+                    //ModelNumber = customerAircraftMappingVM[i].ModelNumber,
+                    aircraft.AircraftModelId = itemAircraftMappingVM.AircraftModelId;
+                    aircraft.DashNumberId = itemAircraftMappingVM.DashNumberId;
+                    aircraft.Memo = itemAircraftMappingVM.Memo;
+                    aircraft.MasterCompanyId = itemAircraftMappingVM.MasterCompanyId;
+                    aircraft.CreatedBy = itemAircraftMappingVM.CreatedBy;
+                    aircraft.UpdatedBy = itemAircraftMappingVM.UpdatedBy;
+                    aircraft.ItemMasterId = itemAircraftMappingVM.ItemMasterId;
+                    aircraft.CreatedDate = System.DateTime.Now;
+                    aircraft.UpdatedDate = System.DateTime.Now;
+                    aircraft.IsDeleted = itemAircraftMappingVM.IsDeleted;
+                    aircraft.PartNumber = itemAircraftMappingVM.PartNumber;
+                    aircraft.AircraftTypeId = itemAircraftMappingVM.AircraftTypeId;
 
+                    _unitOfWork.Repository<ItemMasterAircraftMapping>().Update(aircraft);
+                    _unitOfWork.SaveChanges();
+                    return Ok();
+                }
+                else
+                {
+                    return BadRequest(ModelState);
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.InnerException.ToString());
+            }
 
+        }
+        [HttpGet("getItemMasterAircraftMappedAudit")]
+       
+        public IActionResult AircraftMappedAudit(long itemMasterAircraftMappingId)
+        {
+            try
+            {
+                var result = _unitOfWork.itemMaster.GetAircraftMappedAudit(itemMasterAircraftMappingId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.InnerException.ToString());
+            }
+
+        }
         //To post data in ATA Chapter Tab in Item Master
         [HttpPost("ItemMasterATAPost")]
         public IActionResult InsertItemmasterATA([FromBody] ItemMasterATAMapping[] itemMasterATAMapping)
@@ -1306,6 +1360,20 @@ namespace QuickApp.Pro.Controllers
                 return Ok(result);
             }
         }
+
+        [HttpGet("getAircraftMappedById")]
+        public IActionResult ItemMasterAircraftMappedById(long itemMasterId,long itemMasterAircraftMappingId)
+        {
+            var result = _unitOfWork.itemMaster.ItemMasterAircraftMappedById(itemMasterId, itemMasterAircraftMappingId);
+            if (result == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                return Ok(result);
+            }
+        }
         [HttpGet("getATAMapped/{ItemmasterId}")]
         [Produces(typeof(List<ItemMasterATAMapping>))]
         public IActionResult ataMapped(long ItemmasterId)
@@ -1321,6 +1389,7 @@ namespace QuickApp.Pro.Controllers
             }
 
         }
+        
         [HttpPost("ExportInfoPostBy_IMastID/{id}")]
         public IActionResult ExportInfoupdate(long id, [FromBody] ItemMasterViewModel itemMasterViewModel)
         {
@@ -1977,7 +2046,7 @@ namespace QuickApp.Pro.Controllers
 
             IEnumerable<object> results = GetPartDetails(searchView.partSearchParamters.partId, searchView.partSearchParamters.conditionId, searchView.partSearchParamters.customerId);
 
-            if (results.Any() && searchView.partSearchParamters.includeAlternatePartNumber)
+            if (results.Any() && ( searchView.partSearchParamters.includeAlternatePartNumber || searchView.partSearchParamters.includeEquivalentPartNumber ))
             {
                 results = results.Concat(GetMappedPartNumbers(searchView.partSearchParamters));
             }
@@ -2068,8 +2137,9 @@ namespace QuickApp.Pro.Controllers
             var condition = _context.Condition.Where(c => c.ConditionId == conditionId).FirstOrDefault();
             
             var itemQuantityDetails = from item in _context.ItemMaster
-                                      join stock in _context.StockLine on item.ItemMasterId equals stock.ItemMasterId
-                                      join po in _context.PurchaseOrder on stock.PurchaseOrderId equals po.PurchaseOrderId into stockpo
+                                      join stock in _context.StockLine on item.ItemMasterId equals stock.ItemMasterId into itemMasterStocks
+                                      from itemStock in itemMasterStocks.DefaultIfEmpty()
+                                      join po in _context.PurchaseOrder on itemStock.PurchaseOrderId equals po.PurchaseOrderId into stockpo
                                       from spo in stockpo.DefaultIfEmpty()
                                       join pop in _context.PurchaseOrderPart
                                        on new { poid = spo.PurchaseOrderId ?? 0, imid = item.ItemMasterId ?? 0 }
@@ -2080,14 +2150,14 @@ namespace QuickApp.Pro.Controllers
                                          && (item.IsDeleted.HasValue && !item.IsDeleted == true || !item.IsDeleted.HasValue)
                                          && (item.MasterCompanyId.HasValue && item.MasterCompanyId.Value == 1)
                                          && item.ItemMasterId == partId
-                                         && stock.ConditionId == conditionId
+                                         && ( itemStock.ConditionId.HasValue ? itemStock.ConditionId == conditionId : true  )
                                       select new
                                       {
                                           partNumber = item.PartNumber,
-                                          qtyOnHand = stock.QuantityOnHand,
-                                          qtyAvailable = stock.QuantityAvailable,
-                                          qtyOnOrder = spop.QuantityOrdered,
-                                          unitCost = stock.CoreUnitCost
+                                          qtyOnHand = itemStock.QuantityOnHand ?? 0,
+                                          qtyAvailable = itemStock.QuantityAvailable ?? 0,
+                                          qtyOnOrder = spop.QuantityOrdered ?? 0,
+                                          unitCost = itemStock.CoreUnitCost ?? 0
                                       };
 
 
@@ -2131,10 +2201,10 @@ namespace QuickApp.Pro.Controllers
                          uomDescription = iu.Description,
                          unitCost = itemQuantity.unitCost,
                          unitListPrice = item.ListPrice,
-                         qtyAvailable = itemQuantity.qtyAvailable ?? 0,
-                         qtyOnHand = itemQuantity.qtyOnHand ?? 0,
+                         qtyAvailable =  itemQuantity.qtyAvailable,
+                         qtyOnHand = itemQuantity.qtyOnHand,
                          qtyToOrder = 0,
-                         qtyOnOrder = itemQuantity.qtyOnOrder ?? 0,
+                         qtyOnOrder = itemQuantity.qtyOnOrder,
                          itemClassification = item.ItemClassification,
                          itemGroup = string.Empty,
                          pma = item.PMA,
@@ -2181,11 +2251,29 @@ namespace QuickApp.Pro.Controllers
             return Ok(ModelState);
         }
 
+        [HttpGet("ItemMasterCapsById/{itemMasterCapesId}")]
+        public IActionResult ItemMasterCapesById(long itemMasterCapesId)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = _unitOfWork.itemMaster.ItemMasterCapesById(itemMasterCapesId);
+                return Ok(result);
+            }
+            return Ok(ModelState);
+        }
+
         [HttpGet("deleteitemmastercapes")]
         public IActionResult DeleteItemMasterCapes(long itemMasterCapesId, string updatedBy)
         {
             _unitOfWork.itemMaster.DeleteItemMasterCapes(itemMasterCapesId, updatedBy);
             return Ok();
+        }
+
+        [HttpGet("itemmastercapesAudit/{itemMasterCapesId}")]
+        public IActionResult ItemMasterCapsAudit(long itemMasterCapesId)
+        {
+            var result = _unitOfWork.itemMaster.ItemMasterCapsAudit(itemMasterCapesId);
+            return Ok(result);
         }
 
         [HttpPost("getitemmastercapes")]

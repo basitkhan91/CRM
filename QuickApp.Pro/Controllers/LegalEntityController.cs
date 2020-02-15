@@ -71,6 +71,15 @@ namespace QuickApp.Pro.Controllers
 
         }
 
+
+        [HttpGet("getEntitydatabyid/{entityId}")]
+        public IActionResult GetEntityDataById(long entityId)
+        {
+            var allEntitylistDetails = _unitOfWork.LegalEntity.GetEntityDataById(entityId);
+            return Ok(allEntitylistDetails);
+
+        }
+
         [HttpGet("GetforEdigt")]
         [Produces(typeof(List<LegalEntityViewModel>))]
         public IActionResult GetforEdigt()
@@ -82,7 +91,7 @@ namespace QuickApp.Pro.Controllers
         }
 
         [HttpPost("legalEntitypost")]
-        public IActionResult CreateAction([FromBody] LegalEntityViewModel legalEntityViewModel, Address address)
+        public IActionResult CreateAction([FromBody] LegalEntityViewModel legalEntityViewModel)
         {
             if (ModelState.IsValid)
             {
@@ -112,24 +121,11 @@ namespace QuickApp.Pro.Controllers
                 entityobject.IsDeleted = false;
                 entityobject.IsActive = true;
                 entityobject.LedgerName = legalEntityViewModel.LedgerName;
-                entityobject.EntityLogo = legalEntityViewModel.EntityLogo;
+                //entityobject.EntityLogo = legalEntityViewModel.EntityLogo;
 
-                address.Line1 = legalEntityViewModel.Address1;
-                address.Line2 = legalEntityViewModel.Address2;
-                address.City = legalEntityViewModel.City;
-                address.PostalCode = legalEntityViewModel.PostalCode;
-                address.Country = legalEntityViewModel.Country;
-                address.MasterCompanyId = 1;
-                address.IsActive = legalEntityViewModel.IsActive;
-                address.CreatedBy = legalEntityViewModel.CreatedBy;
-                address.UpdatedBy = legalEntityViewModel.UpdatedBy;
-                address.CreatedDate = DateTime.Now;
-                address.UpdatedDate = DateTime.Now;
-                address.PoBox = legalEntityViewModel.PoBox;
-                _unitOfWork.Address.Add(address);
-                _unitOfWork.SaveChanges();
+                AddAddress(legalEntityViewModel);
 
-                entityobject.AddressId = address.AddressId.Value;
+                entityobject.AddressId = entityobject.AddressId.Value;
 
                 _unitOfWork.LegalEntity.Add(entityobject);
                 _unitOfWork.SaveChanges();
@@ -197,7 +193,7 @@ namespace QuickApp.Pro.Controllers
                     entityobject.UpdatedDate = DateTime.Now;
                     entityobject.CreatedBy = legalEntityViewModel.CreatedBy;
                     entityobject.UpdatedBy = legalEntityViewModel.UpdatedBy;
-                    entityobject.EntityLogo = legalEntityViewModel.EntityLogo;
+                   // entityobject.EntityLogo = legalEntityViewModel.EntityLogo;
 
                     if (address != null) {
                         address.Line1 = legalEntityViewModel.Address1;
@@ -216,24 +212,24 @@ namespace QuickApp.Pro.Controllers
                         _unitOfWork.SaveChanges();
                     }
                    
-                    if (ach != null)
-                   {
-                        ach.IsActive = true;
-                        ach.MasterCompanyId = 1;
-                        ach.ABA = legalEntityViewModel.AchABANumber;
-                        ach.AccountNumber = legalEntityViewModel.AchBankAccountNumber;
-                        ach.BankName = legalEntityViewModel.AchBankName;
-                        ach.BeneficiaryBankName = legalEntityViewModel.AchBenficiaryBankName;
-                        ach.IntermediateBankName = legalEntityViewModel.AchIntermediateBank;
-                        ach.SwiftCode = legalEntityViewModel.AchSWIFTID;
-                        ach.CreatedDate = DateTime.Now;
-                        ach.UpdatedDate = DateTime.Now;
-                        ach.CreatedBy = legalEntityViewModel.CreatedBy;
-                        ach.UpdatedBy = legalEntityViewModel.UpdatedBy;
-                        _context.ACH.Update(ach);
-                        _unitOfWork.SaveChanges();
+                   // if (ach != null)
+                   //{
+                   //     ach.IsActive = true;
+                   //     ach.MasterCompanyId = 1;
+                   //     ach.ABA = legalEntityViewModel.AchABANumber;
+                   //     ach.AccountNumber = legalEntityViewModel.AchBankAccountNumber;
+                   //     ach.BankName = legalEntityViewModel.AchBankName;
+                   //     ach.BeneficiaryBankName = legalEntityViewModel.AchBenficiaryBankName;
+                   //     ach.IntermediateBankName = legalEntityViewModel.AchIntermediateBank;
+                   //     ach.SwiftCode = legalEntityViewModel.AchSWIFTID;
+                   //     ach.CreatedDate = DateTime.Now;
+                   //     ach.UpdatedDate = DateTime.Now;
+                   //     ach.CreatedBy = legalEntityViewModel.CreatedBy;
+                   //     ach.UpdatedBy = legalEntityViewModel.UpdatedBy;
+                   //     _context.ACH.Update(ach);
+                   //     _unitOfWork.SaveChanges();
                         
-                    }
+                   // }
 
                     _context.LegalEntity.Update(entityobject);
                     _context.SaveChanges();
@@ -564,6 +560,13 @@ namespace QuickApp.Pro.Controllers
         {
             return Ok(contactViewModel);
 
+        }
+
+        [HttpGet("generalEmptyObj")]
+        [Produces(typeof(List<LegalEntityViewModel>))]
+        public IActionResult getGeneralEmptyObj(LegalEntityViewModel entityViewModel)
+        {
+            return Ok(entityViewModel);
         }
 
         [HttpGet("getLegalEntityShipViaDetails/{Selectedrow}")]

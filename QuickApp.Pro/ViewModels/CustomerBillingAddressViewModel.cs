@@ -19,7 +19,7 @@ namespace QuickApp.Pro.ViewModels
         public string UpdatedBy { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime UpdatedDate { get; set; }
-        public bool? IsActive { get; set; }
+        public bool IsActive { get; set; }
 
         public Boolean Primary { get; set; }
         public string Site { get; set;}

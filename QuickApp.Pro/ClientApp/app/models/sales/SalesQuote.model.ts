@@ -5,6 +5,7 @@ import { ICreditTerm } from "./ICreditTerm";
 import { ISalesProbablity } from "./ISalesProbablity";
 import { ILeadSource } from "./ILeadSource";
 import { ISalesQuote } from "./ISalesQuote.model";
+import { IStatus } from "./IStatus";
 
 export class SalesQuote implements ISalesQuote {
   salesOrderQuoteId: number;
@@ -88,6 +89,20 @@ export class SalesQuote implements ISalesQuote {
 
   notes: string;
 
+  statusId: number;
+
+  statusChangeDate: Date;
+
+  companyId: number;
+
+  buId: number;
+
+  divisionId: number;
+
+  departmentId: number;
+
+  managementStructureId: number;
+
   priorities: IPriority[];
 
   salesQuoteTypes: ISalesQuoteType[];
@@ -99,6 +114,8 @@ export class SalesQuote implements ISalesQuote {
   salesProbablity: ISalesProbablity[];
 
   leadSources: ILeadSource[];
+
+  status: IStatus[];
 
   constructor() {}
 }

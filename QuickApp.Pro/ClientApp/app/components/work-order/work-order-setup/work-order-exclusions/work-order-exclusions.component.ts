@@ -23,11 +23,12 @@ export class WorkOrderExclusionsComponent implements OnInit, OnChanges {
   @Input() isQuote = false;
   @Input() isView: boolean = false;
   @Input() taskList: any = [];
+  @Input() view: boolean = false;
   isEdit: boolean = false;
   editData: any;
   editingIndex: number;
   overAllMarkup: any;
-  costPlusType: string = "Mark Up";
+  costPlusType: number = 0;
   cols = [
     { field: 'epn', header: 'EPN' },
     { field: 'epnDescription', header: 'EPN Description' },
@@ -43,14 +44,16 @@ export class WorkOrderExclusionsComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
-    if(this.workOrderExclusionsList && this.workOrderExclusionsList.length > 0 && this.workOrderExclusionsList[0].markupFixedPrice){
-      this.costPlusType = this.workOrderExclusionsList[0].markupFixedPrice
+    if(this.workOrderExclusionsList && this.workOrderExclusionsList.length > 0 && this.workOrderExclusionsList[0].headerMarkupId){
+      this.costPlusType = this.workOrderExclusionsList[0].markupFixedPrice;
+      this.overAllMarkup = Number(this.workOrderExclusionsList[0].headerMarkupId);
     }
   }
 
   ngOnChanges() {
-    if(this.workOrderExclusionsList && this.workOrderExclusionsList.length > 0 && this.workOrderExclusionsList[0].markupFixedPrice){
-      this.costPlusType = this.workOrderExclusionsList[0].markupFixedPrice
+    if(this.workOrderExclusionsList && this.workOrderExclusionsList.length > 0 && this.workOrderExclusionsList[0].headerMarkupId){
+      this.costPlusType = this.workOrderExclusionsList[0].markupFixedPrice;
+      this.overAllMarkup = Number(this.workOrderExclusionsList[0].headerMarkupId);
     }
   }
 
@@ -64,13 +67,17 @@ export class WorkOrderExclusionsComponent implements OnInit, OnChanges {
   markupChanged(matData, type) {
     try {
       this.markupList.forEach((markup)=>{
-        if(type == 'row' && markup.value == matData.markUpPercentageId){
-          matData.costPlusAmount = Number(matData.extendedCost) + ((Number(matData.extendedCost) / 100) * Number(markup.label))
+        if(type == 'row' && markup.value == matData.markupPercentageId){
+          matData.billingRate = (Number(matData.unitCost) + ((Number(matData.unitCost) / 100) * Number(markup.label))).toFixed(2);
+          matData['billingAmount'] = (Number(matData['billingRate']) * Number(matData.quantity)).toFixed(2);
         }
         else if(type == 'all' && markup.value == this.overAllMarkup){
           this.workOrderExclusionsList.forEach((mData)=>{
-            mData.markUpPercentageId = this.overAllMarkup;
-            mData.costPlusAmount = Number(mData.extendedCost) + ((Number(mData.extendedCost) / 100) * Number(markup.label))
+            if(mData.billingMethodId && Number(mData.billingMethodId) == 1){
+              mData.markupPercentageId = Number(this.overAllMarkup);
+              mData.billingRate = (Number(mData.unitCost) + ((Number(mData.unitCost) / 100) * Number(markup.label))).toFixed(2)
+              mData['billingAmount'] = (Number(mData['billingRate']) * Number(mData.quantity)).toFixed(2);
+            }
           })
         }
       })
@@ -83,6 +90,12 @@ export class WorkOrderExclusionsComponent implements OnInit, OnChanges {
     }
     catch (e) {
       console.log(e);
+    }
+  }
+
+  tmchange(){
+    for(let mData of this.workOrderExclusionsList){
+      mData.billingMethodId = this.costPlusType;
     }
   }
 
@@ -124,7 +137,7 @@ export class WorkOrderExclusionsComponent implements OnInit, OnChanges {
       this.workOrderExclusionsList = [];
     }
     if (this.isQuote) {
-      this.workOrderExclusionsList = [...this.workOrderExclusionsList, ...event['exclusions'].map(x => { return { ...x, epn: x.partNumber, epnDescription: x.partDescription } })];
+      this.workOrderExclusionsList = [...this.workOrderExclusionsList, ...event['exclusions'].map(x => { return { ...x, epn: x.partNumber, epnDescription: x.partDescription, markupFixedPrice: this.costPlusType, headerMarkupId: Number(this.overAllMarkup) } })];
       $('#addNewExclusions').modal('hide');
     }
     else {
@@ -150,7 +163,7 @@ export class WorkOrderExclusionsComponent implements OnInit, OnChanges {
 
   saveQuotation() {
     this.workOrderExclusionsList = this.workOrderExclusionsList.map(exc=>{
-      return {...exc, markupFixedPrice: this.costPlusType}
+      return {...exc, headerMarkupId: Number(this.overAllMarkup), markupFixedPrice: this.costPlusType,}
     })
     this.saveExclusionsListForWO.emit(this.workOrderExclusionsList);
   }
@@ -173,41 +186,41 @@ export class WorkOrderExclusionsComponent implements OnInit, OnChanges {
     if(this.workOrderExclusionsList){
       this.workOrderExclusionsList.forEach(
         (material) => {
-          if (material.unitCost) {
-            total += Number(material.unitCost);
+          if (material.extendedCost) {
+            total += Number(material.extendedCost);
           }
         }
       )
     }
-    return total;
+    return total.toFixed(2);
   }
 
-  getCostPlus() {
+  getTotalBillingRate() {
     let total = 0;
     if(this.workOrderExclusionsList){
       this.workOrderExclusionsList.forEach(
         (material) => {
-          if (material.costPlusAmount) {
-            total += material.costPlusAmount;
+          if (material.billingRate) {
+            total += Number(material.billingRate);
           }
         }
       )
     }
-    return total;
+    return total.toFixed(2);
   }
 
-  getTotalFixedAmount() {
+  getTotalBillingAmount() {
     let total = 0;
     if(this.workOrderExclusionsList){
       this.workOrderExclusionsList.forEach(
         (material) => {
-          if (material.fixedAmount) {
-            total += Number(material.fixedAmount);
+          if (material.billingAmount) {
+            total += Number(material.billingAmount);
           }
         }
       )
     }
-    return total;
+    return total.toFixed(2);
   }
 
   //   saveChargesList(event){

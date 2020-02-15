@@ -20,12 +20,40 @@
     [paginator]="true"
   >
     <ng-template pTemplate="header" let-columns>
-      <tr>
+      <tr *ngIf="isQuote">
         <th colspan="9">
             &nbsp;
         </th>
-        <th colspan="2">
-            <div class="form-group" style="text-align: center;">
+        <th colspan="4">
+            <div class="form-group" style="text-align: center; display: flex;">
+              <p-radioButton
+                class="p-radiobutton-label-horizontal p-radio-custom"
+                name="costPlusType"
+                label="T&M - Mark Up"
+                value="1"
+                [(ngModel)]="costPlusType"
+                [disabled]="isView"
+                (click)="tmchange()"
+              ></p-radioButton>
+              <div>
+                <select class="form-group" (change)="markupChanged({}, 'all')" [(ngModel)]="overAllMarkup" [disabled]="isView || costPlusType != '1'" style="margin-top: 10px;">
+                  <option value="">Select</option>
+                  <option *ngFor="let markUp of markupList" [value]="markUp.value">{{markUp.label}}</option>
+                </select>
+              </div>
+            </div>
+            <div style="float: left;">
+              <p-radioButton
+                class="p-radiobutton-label-horizontal col-width p-radio-custom"
+                name="costPlusType"
+                value="2"
+                label="Actual"
+                [(ngModel)]="costPlusType"
+                [disabled]="isView"
+                (click)="tmchange()"
+              ></p-radioButton>
+            </div>
+            <!-- <div class="form-group" style="text-align: center;">
               <p-radioButton
                 class="p-radiobutton-label-horizontal p-radio-custom"
                 name="costPlusType"
@@ -43,9 +71,9 @@
                   <option *ngFor="let markUp of markupList" [value]="markUp.value">{{markUp.label}}</option>
                 </select>
               </div>
-            </div>
+            </div> -->
         </th>
-        <th colspan="2">
+        <!-- <th colspan="2">
           <div>
             <p-radioButton
               class="p-radiobutton-label-horizontal col-width p-radio-custom"
@@ -56,33 +84,32 @@
               [disabled]="isView"
             ></p-radioButton>
           </div>
-        </th>
+        </th> -->
       </tr>
       <tr>
-        <ng-container *ngIf="isQuote">
-          <th>Task</th>
-        </ng-container>
+        <th>Task</th>
         <th *ngFor="let col of columns">
           {{ col.header }}
         </th>
         <ng-container *ngIf="isQuote">
+          <th>Billing Method</th>
           <th>Mark Up</th>
-          <th tooltip="Time & Materials">T&M Amount</th>
-          <th>Fixed Amount</th>
+          <!-- <th tooltip="Time & Materials">Billing Rate</th> -->
+          <th>Billing Amount</th>
+          <!-- <th tooltip="Time & Materials">T&M Amount</th>
+          <th>Fixed Amount</th> -->
         </ng-container>
         <th>Action</th>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
       <tr *ngIf="!rowData['isDeleted']">
-        <ng-container *ngIf="isQuote">
-          <td>
-            <select class="form-control select-read-only" [(ngModel)]="rowData.taskId" disabled>
-              <option value="">Select</option>
-              <option *ngFor="let task of taskList" [value]="task.taskId">{{task.description}}</option>
-            </select>
-          </td>
-        </ng-container>
+        <td>
+          <select class="form-control select-read-only" [(ngModel)]="rowData.taskId" disabled>
+            <option value="">Select</option>
+            <option *ngFor="let task of taskList" [value]="task.taskId">{{task.description}}</option>
+          </select>
+        </td>
         <ng-container *ngFor="let col of columns">
           <td *ngIf="col.field != 'shipVia' && col.field != 'carrierName'">
             {{rowData[col.field]}}
@@ -105,11 +132,17 @@
         </td> -->
         <ng-container *ngIf="isQuote">
             <td>
+              <select class="form-control" [(ngModel)]="rowData.billingMethodId">
+                <option value="">Select</option>
+                <option *ngFor="let bm of [{'label': 'T&M', 'value': '1'}, {'label': 'Actual', 'value': '2'}]" [value]="bm.value">{{bm.label}}</option>
+              </select>
+            </td>
+            <td>
               <select
                 class="form-control"
                 (change)="markupChanged(rowData, 'row')"
                 [(ngModel)]="rowData.markupPercentageId"
-                [disabled]="isView || costPlusType != 'Mark Up'"
+                [disabled]="isView || rowData.billingMethodId != '1'"
               >
                 <option value="">Select</option>
                 <option
@@ -119,12 +152,16 @@
                 >
               </select>
             </td>
-            <td>
+            <!-- <td>
               {{ rowData.freightCostPlus }}
             </td>
             <td>
               <input type="number" [(ngModel)]="rowData.fixedAmount" [disabled]="costPlusType != 'Fixed Mat Price'"/>
+            </td> -->
+            <td>
+                <input type="number" [(ngModel)]="rowData.billingAmount" [disabled]="isView || rowData.billingMethodId != '2'"/>
             </td>
+            <!-- <td>{{ rowData.billingAmount }}</td> -->
         </ng-container>
         <td class="btn-spaces">
           <button
@@ -148,7 +185,7 @@
         </td>
       </tr>
     </ng-template>
-    <ng-template pTemplate="footer">
+    <ng-template pTemplate="footer" *ngIf="isQuote">
       <tr>
         <td>Total</td>
         <td>&nbsp;</td>
@@ -160,8 +197,9 @@
         <td>&nbsp;</td>
         <td>{{getTotalAmount()}}</td>
         <td>&nbsp;</td>
-        <td>{{getCostPlus()}}</td>
-        <td>{{getTotalFixedAmount()}}</td>
+        <td>&nbsp;</td>
+        <!-- <td>{{getTotalBillingRate()}}</td> -->
+        <td>{{getTotalBillingAmount()}}</td>
         <td>&nbsp;</td>
       </tr>
     </ng-template>
@@ -175,7 +213,7 @@
   </button>
 </div>
 
-<div id="addNewFreight" class="modal fade" role="dialog">
+<div id="addNewFreight" class="modal fade" role="dialog" *ngIf="!view">
   <div class="modal-dialog modal-lg">
     <!-- Modal content-->
     <div class="modal-content">
@@ -194,121 +232,129 @@
         </div>
         <div class="tab-content">
           <div class="table-responsive table-overflow" style="height: 300px;">
-            <table class="table table-bordered ">
-              <thead>
-                <tr>
-                  <th *ngIf="isQuote">Task</th>
-                  <th>Carrier</th>
-                  <th>Ship Via</th>
-                  <th>Dimensions</th>
-                  <th>Weight</th>
-                  <th>Memo</th>
-                  <th>Amount</th>
-                  <th>Fixed Freight</th>
-                  <th *ngIf="!isQuote">Fixed Amount</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let f of freightForm; let i = index">
-                  <td *ngIf="isQuote">
-                    <select class="form-control" [(ngModel)]="f.taskId" [disabled]="isView">
-                      <option value="">Select</option>
-                      <option *ngFor="let task of taskList" [value]="task.taskId">{{task.description}}</option>
-                    </select>
-                  </td>
-                  <td>
-                    <p-dropdown
-                      placeholder="Select Carrier"
-                      name="carrier{{ i }}"
-                      #carrier="ngModel"
-                      [options]="carrierList"
-                      class="p-dropdown-custom-md"
-                      [(ngModel)]="f.carrierId"
-                    >
-                    </p-dropdown>
-                  </td>
-                  <td>
-                    <p-dropdown
-                      placeholder="Select Site Name"
-                      name="shipVia{{ i }}"
-                      #shipVia="ngModel"
-                      [options]="shipViaList"
-                      class="p-dropdown-custom-md"
-                      [(ngModel)]="f.shipViaId"
-                    >
-                    </p-dropdown>
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      name="length{{ i }}"
-                      [(ngModel)]="f.length"
-                      #length="ngModel"
-                      class="form-control w50"
-                    />
-                    L -
-                    <input
-                      type="text"
-                      name="width{{ i }}"
-                      #width="ngModel"
-                      [(ngModel)]="f.width"
-                      class="form-control w50"
-                    />
-                    W -
-                    <input
-                      type="text"
-                      name="height{{ i }}"
-                      #height="ngModel"
-                      [(ngModel)]="f.height"
-                      class="form-control w50"
-                    />H
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      name="weight{{ i }}"
-                      #weight="ngModel"
-                      [(ngModel)]="f.weight"
-                      class="form-control w50"
-                    />
-                  </td>
-                  <td>
-                    <textarea
-                      name="memo{{ i }}"
-                      cols="30"
-                      rows="4"
-                      [(ngModel)]="f.memo"
-                    ></textarea>
-                  </td>
-                  <td>
-                    <input
-                      type="number"
-                      name="amount{{ i }}"
-                      #amount="ngModel"
-                      [(ngModel)]="f.amount"
-                      class="form-control w50"
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="checkbox"
-                      name="fixed{{ i }}"
-                      #fixed="ngModel"
-                      [(ngModel)]="f.isFixedFreight"
-                    />
-                  </td>
-                  <td *ngIf="!isQuote">
-                    <input
-                      type="number"
-                      name="fixedAmount{{ i }}"
-                      #fixedAmount="ngModel"
-                      [(ngModel)]="f.fixedAmount"
-                      class="form-control w50"
-                    />
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+              <form #frieghtsCreateForm="ngForm">
+                <table class="table table-bordered ">
+                  <thead>
+                    <tr>
+                      <th>Task</th>
+                      <th>Carrier *</th>
+                      <th>Ship Via *</th>
+                      <th>Dimensions *</th>
+                      <th>Weight</th>
+                      <th>Memo</th>
+                      <th>Amount*</th>
+                      <th>Fixed Freight</th>
+                      <th *ngIf="!isQuote">Fixed Amount</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let f of freightForm; let i = index">
+                      <td>
+                        <select class="form-control" [(ngModel)]="f.taskId" [disabled]="isView" name="task_{{i}}">
+                          <option value="">Select</option>
+                          <option *ngFor="let task of taskList" [value]="task.taskId">{{task.description}}</option>
+                        </select>
+                      </td>
+                      <td>
+                        <p-dropdown
+                          placeholder="Select Carrier"
+                          name="carrier{{ i }}"
+                          #carrier="ngModel"
+                          [options]="carrierList"
+                          class="p-dropdown-custom-md"
+                          [(ngModel)]="f.carrierId"
+                          required
+                        >
+                        </p-dropdown>
+                      </td>
+                      <td>
+                        <p-dropdown
+                          placeholder="Select Site Name"
+                          name="shipVia{{ i }}"
+                          #shipVia="ngModel"
+                          [options]="shipViaList"
+                          class="p-dropdown-custom-md"
+                          [(ngModel)]="f.shipViaId"
+                          required
+                        >
+                        </p-dropdown>
+                      </td>
+                      <td>
+                        <input
+                          type="text"
+                          name="length{{ i }}"
+                          [(ngModel)]="f.length"
+                          #length="ngModel"
+                          class="form-control w50"
+                          required
+                        />
+                        L -
+                        <input
+                          type="text"
+                          name="width{{ i }}"
+                          #width="ngModel"
+                          [(ngModel)]="f.width"
+                          class="form-control w50"
+                          required
+                        />
+                        W -
+                        <input
+                          type="text"
+                          name="height{{ i }}"
+                          #height="ngModel"
+                          [(ngModel)]="f.height"
+                          class="form-control w50"
+                          required
+                        />H
+                      </td>
+                      <td>
+                        <input
+                          type="text"
+                          name="weight{{ i }}"
+                          #weight="ngModel"
+                          [(ngModel)]="f.weight"
+                          class="form-control w50"
+                        />
+                      </td>
+                      <td>
+                        <textarea
+                          name="memo{{ i }}"
+                          cols="30"
+                          rows="4"
+                          [(ngModel)]="f.memo"
+                        ></textarea>
+                      </td>
+                      <td>
+                        <input
+                          type="number"
+                          name="amount{{ i }}"
+                          #amount="ngModel"
+                          [(ngModel)]="f.amount"
+                          class="form-control w50"
+                          required
+                        />
+                      </td>
+                      <td>
+                        <input
+                          type="checkbox"
+                          name="fixed{{ i }}"
+                          #fixed="ngModel"
+                          [(ngModel)]="f.isFixedFreight"
+                        />
+                      </td>
+                      <td *ngIf="!isQuote">
+                        <input
+                          type="number"
+                          name="fixedAmount{{ i }}"
+                          #fixedAmount="ngModel"
+                          [(ngModel)]="f.fixedAmount"
+                          class="form-control w50"
+                        />
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </form>
           </div>
         </div>
       </div>
@@ -316,6 +362,7 @@
         <button
           class="btn btn-primary pull-right"
           (click)="saveFreightList()"
+          [disabled]="!frieghtsCreateForm.valid"
         >
           {{ isEdit ? 'Update' : (isQuote)?'Save Freights':'Save' }}
         </button>

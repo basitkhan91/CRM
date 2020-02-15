@@ -51,6 +51,9 @@ import { TooltipModule } from "primeng/tooltip";
 import {CommonService} from '../services/common.service';
 import { NTAEAlternateComponent } from "../components/item-masters/item-master-stock/ntae-alternate/ntae-alternate.component";
 import{ FileUploadModule } from 'primeng/fileupload';
+import { AssetAcquisitionTypeService } from "../services/asset-acquisition-type/asset-acquisition-type.service";
+import { AssetAcquisitionTypeEndpointService } from "../services/asset-acquisition-type/asset-acquisition-type-endpoint.service";
+
 
 
 @NgModule({
@@ -112,7 +115,9 @@ import{ FileUploadModule } from 'primeng/fileupload';
         PublicationEndpointService,
         DashNumberService,
         DashNumberEndpointService,
-        CommonService
+        CommonService,
+        AssetAcquisitionTypeService,
+        AssetAcquisitionTypeEndpointService
       
     ],
     entryComponents: [

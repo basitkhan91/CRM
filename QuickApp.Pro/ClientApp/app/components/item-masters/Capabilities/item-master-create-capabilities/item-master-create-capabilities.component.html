@@ -30,7 +30,7 @@
 					</div>
 				</div>
 
-		<form #addCapesForm="ngForm">        
+		<form #addCapesForm="ngForm" *ngIf="isCapViewMode== false">        
 			<div class="form-row">
 			  <div class="col-md-2" *ngIf="itemMasterId == undefined">
 				<div class="form-group">

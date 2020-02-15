@@ -1,4 +1,5 @@
 ﻿import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from '@angular/core';
+import { SimpleChanges } from '@angular/core/src/metadata/lifecycle_hooks';
 import { fadeInOut } from '../../../services/animations';
 import { CustomerService } from '../../../services/customer.service';
 import { CurrencyService } from '../../../services/currency.service';
@@ -20,25 +21,29 @@ import { getValueFromObjectByKey, getObjectByValue, getObjectById, selectedValue
 import { Pipe, PipeTransform } from '@angular/core';
 import { DBkeys } from '../../../services/db-Keys';
 import { LocalStoreManager } from '../../../services/local-store-manager.service';
+// import { DatePipe } from '@angular/common';
 @Component({
     selector: 'app-customer-financial-information',
     templateUrl: './customer-financial-information.component.html',
     styleUrls: ['./customers-financial-information.component.scss'],
-    animations: [fadeInOut]
+    animations: [fadeInOut],
+    // providers: [DatePipe]
 })
 /** anys component*/
 export class CustomerFinancialInformationComponent implements OnInit {
     @Input() savedGeneralInformationData: any;
     @Input() editGeneralInformationData;
     @Input() creditTermsListOriginal
-    @Input() editMode; 
+    @Input() editMode;
     @Output() tab = new EventEmitter();
     @ViewChild('taxExemptFileUploadInput') taxExemptFileUploadInput: any;
     taxRatesList: any = [];
-
+    pageSize: number = 10;
     discountList: any;
     discountList1: any;
-
+    totalRecords: number = 0;
+    pageIndex: number = 0;
+    totalPages: number = 0;
     markUpList: any;
     taxrateList: any;
     state_taxRateList: any;
@@ -121,15 +126,28 @@ export class CustomerFinancialInformationComponent implements OnInit {
         { field: "taxType", header: "Tax Type" },
         { field: "taxRate", header: "Tax Rate" },
     ];
+
+
     taxExemptTableColumns: any[] = [
-        { field: "fileName", header: "File Name" }
+        { field: "fileName", header: "File Name" },
+        { field: 'createdDate', header: 'Created Date' },
+        { field: 'createdBy', header: 'CreatedBy' },
+        { field: 'updatedDate', header: 'Updated Date' },
+        { field: 'updatedBy', header: 'UpdatedBy' },
+        { field: 'download', header: 'Download' },
+        { field: 'delete', header: 'Delete' },
     ];
     globalSettings: any = {};
     _discountListForDropdown: any = [];
     selectedRowFileForDelete: any;
     taxRateEditData: any;
     indexForTaxRate: any = 1;
-    auditDataForTaxData: any= [];
+    auditDataForTaxData: any = [];
+    global_lang: string;
+    showAllowNettingOfAPAR: boolean = false;
+    customerGeneralInformation: any = {};
+    @Input() selectedCustomerTab: string = "";
+
 
     constructor(public taxtypeser: TaxTypeService, public creditTermsService: CreditTermsService,
         public currencyService: CurrencyService,
@@ -145,10 +163,9 @@ export class CustomerFinancialInformationComponent implements OnInit {
         private configurations: ConfigurationService,
         public creditTermService: CreditTermsService,
         private localStorage: LocalStoreManager,
-
+        // private datePipe: DatePipe
 
     ) {
-
 
 
     }
@@ -157,11 +174,16 @@ export class CustomerFinancialInformationComponent implements OnInit {
 
 
     ngOnInit(): void {
+        this.getGlobalSettings();
+        this.savedGeneralInformationData = this.savedGeneralInformationData || {}
+
         console.log(this.creditTermsListOriginal);
 
         // this.getCreditTermList();
 
         // this.getAllcreditTermList();
+
+
         if (this.editMode) {
 
             this.id = this.editGeneralInformationData.customerId
@@ -174,6 +196,9 @@ export class CustomerFinancialInformationComponent implements OnInit {
                 ...this.editGeneralInformationData,
                 creditTermsId: getObjectById('value', this.editGeneralInformationData.creditTermsId, this.creditTermsListOriginal)
             }
+            this.savedGeneralInformationData.creditLimit = this.formatCreditLimit(this.editGeneralInformationData.creditLimit);
+
+
 
 
             if (this.editGeneralInformationData.currency == null || this.editGeneralInformationData.currency == 0) {
@@ -197,17 +222,45 @@ export class CustomerFinancialInformationComponent implements OnInit {
         this.getTaxRates();
         this.getAllDiscountList1();
         this.getAllTaxRates();
-        this.getGlobalSettings();
+
 
     }
+    ngOnChanges(changes: SimpleChanges) {
+        for (let property in changes) {
+            if (property == 'selectedCustomerTab') {
+                if (changes[property].currentValue == "Financial") {
+                    this.getCustomerGeneralInformation()
+                }
+            }
+        }
 
+    }
+    changePage(event: { first: any; rows: number }) {
+        console.log(event);
 
+        this.pageSize = event.rows;
+        this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+    }
+    getCustomerGeneralInformation() {
+        this.customerService.getCustomerdataById(this.id).subscribe(response => {
+            console.log(response);
+
+            const res = response[0];
+            this.customerGeneralInformation = res;
+            if (this.customerGeneralInformation.isCustomerAlsoVendor == true && this.customerGeneralInformation.type == 'Customer') {
+                this.showAllowNettingOfAPAR = true;
+            } else {
+                this.showAllowNettingOfAPAR = false;
+            }
+        })
+    }
     get userName(): string {
         return this.authService.currentUser ? this.authService.currentUser.userName : "";
     }
 
     getGlobalSettings() {
         this.globalSettings = this.localStorage.getDataObject<any>(DBkeys.GLOBAL_SETTINGS) || {};
+        this.global_lang = this.globalSettings.cultureName;
     }
 
 
@@ -230,6 +283,17 @@ export class CustomerFinancialInformationComponent implements OnInit {
 
             this.allCurrencyInfo = res[0];
         })
+    }
+
+    formatCreditLimit(val) {
+        if (val) {
+            if (isNaN(val) == true) {
+                val = Number(val.replace(/[^0-9.-]+/g, ""));
+            }
+            this.savedGeneralInformationData.creditLimit = new Intl.NumberFormat(this.global_lang, { style: 'decimal', minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(val)
+            return this.savedGeneralInformationData.creditLimit;
+        }
+
     }
     getDefaultCurrency() {
         this.legalEntityId = 19;
@@ -396,11 +460,13 @@ export class CustomerFinancialInformationComponent implements OnInit {
     getAllDiscountList() {
         this.customerService.getDiscountList().subscribe(res => {
             this.discountList = res[0];
-            console.log(this.discountList, "this.discuontList++++")
+            // console.log(this.discountList, "this.discuontList++++")
             for (let i = 0; i < this.discountList.length; i++) {
-                this._discountListForDropdown.push({ label: this.discountList[i].discontValue.toString(), value: this.discountList[i].discontValue })
+                if (this.discountList[i].discontValue >= 0 && this.discountList[i].discontValue <= 100) {
+                    this._discountListForDropdown.push({ label: this.discountList[i].discontValue.toString(), value: this.discountList[i].discontValue })
+                }
             }
-            console.log(this._discountListForDropdown, "this._discountListForDropdown++++")
+            // console.log(this._discountListForDropdown, "this._discountListForDropdown++++")
 
 
         })
@@ -415,61 +481,82 @@ export class CustomerFinancialInformationComponent implements OnInit {
 
 
     filterDiscount(event) {
-
-        console.log();
-        // this._discountList = this.discountList1;
-
-
-        // this._discountList = [...this.discountList1.filter(x => {
-        //     console.log(x);
-        //     return x.label.includes(event.query.toLowerCase())
-
-
-        // })]
-        this._discountListForDropdown = this._discountListForDropdown;
-
-
+        // this._discountListForDropdown = this._discountListForDropdown;
         this._discountListForDropdown = [...this._discountListForDropdown.filter(x => {
-            console.log(x);
+            // console.log(x);
             return x.label.includes(event.query.toLowerCase())
 
 
         })]
+        // console.log("this._discountListForDropdown",this._discountListForDropdown);
+        setTimeout(() => {
+            this._discountListForDropdown = this._discountListForDropdown;
+        }, 1000)
     }
 
+    // checkShortNameExists(field, value) {
+    //     // console.log(this.selectedRecordForEdit);
+    //     const exists = validateRecordExistsOrNot(field, value, this.uomData, this.selectedRecordForEdit);
+    //     if (exists.length > 0) {
+    //         this.isDiscountExists = true;
+    //     }
+    //     else {
+    //         this.disableSaveForShortName = false;
+    //     }
 
+    // }
 
-    checkDiscountExists(field, value) {
-        const exists = validateRecordExistsOrNot(field, value, this.creditTermsListOriginal)
-        console.log(exists);
-        if (exists.length > 0) {
+    checkDiscountExists(value) {
+        this.getAllDiscountList();
+        console.log("value", value);
+        this.isCountdisable = false;
+        this._discountListForDropdown = this._discountListForDropdown;
+        const exists = validateRecordExistsOrNot('field', value, this._discountListForDropdown);
+        // console.log(exists);
+        if (this.discontValue == undefined && this.discontValue == undefined && this.discontValue == null && this.discontValue == '') {
+            // this._discountListForDropdown = this._discountListForDropdown;
+            this.isCountdisable = false;
+            this.discontValue == null
+        }
+        else if (this.discontValue < 0 || this.discontValue > 100) {
+            this.isCountdisable = true;
+            this.discontValue == null
+            // this._discountListForDropdown = this._discountListForDropdown;
+        }
+        if (exists && exists.length > 0) {
             this.isDiscountExists = true;
+        }
+        else if (this.discontValue < 0 || this.discontValue > 100) {
+            return this.isDiscountExists = false;
         } else {
             this.isDiscountExists = false;
         }
     }
+    isCountdisable: boolean = false;
     checkDiscountExistss(value) {
-
-        // this.isDiscountExists = false;
-
-        // for (let i = 0; i < this.discountList1.length; i++) {
-        //     if (this.discontValue == this.discountList1[i].label || value == this.discountList[i].label) {
-        //         this.isDiscountExists = true;
-
-        //         return;
-        //     }
-
-        // }
+        // console.log("value" ,value)
         this.isDiscountExists = false;
 
-        for (let i = 0; i < this._discountListForDropdown.length; i++) {
-            if (this.discontValue == this._discountListForDropdown[i].label || value == this._discountListForDropdown[i].label) {
-                this.isDiscountExists = true;
-
-                return;
-            }
-
+        if (this.discontValue == undefined && this.discontValue == undefined && this.discontValue == null && this.discontValue == '') {
+            // this._discountListForDropdown = this._discountListForDropdown;
+            this.isCountdisable = false;
         }
+        else if (this.discontValue < 0 || this.discontValue > 100) {
+            this.isCountdisable = true;
+            // this._discountListForDropdown = this._discountListForDropdown;
+        } else {
+            this._discountListForDropdown = this._discountListForDropdown;
+            for (let i = 0; i < this._discountListForDropdown.length; i++) {
+                if (this.discontValue == this._discountListForDropdown[i].label || value == this._discountListForDropdown[i].label) {
+                    this.isDiscountExists = true;
+
+                    return;
+                } else {
+                    this.isDiscountExists = false;
+                }
+            }
+        }
+
     }
 
     selectedDiscount() {
@@ -502,18 +589,25 @@ export class CustomerFinancialInformationComponent implements OnInit {
         })
     }
 
-
-
+    getPageCount(totalNoofRecords, pageSize) {
+        return Math.ceil(totalNoofRecords / pageSize)
+    }
+    pageIndexChange(event) {
+        this.pageSize = event.rows;
+    }
     getMappedTaxTypeRateDetails() {
 
         this.customerService.getMappedTaxTypeRateDetails(this.id).subscribe(res => {
             this.taxTypeRateMapping = res;
+            this.totalRecords = this.taxTypeRateMapping.length;
+            this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
 
         })
     }
     mapTaxTypeandRate() {
         console.log(this.selectedTaxRates, this.selectedTaxType);
 
+        // let arr = [];
         if (this.selectedTaxRates && this.selectedTaxType) {
             const index = this.taxTypeRateMapping.findIndex(item => item.taxType === getValueFromArrayOfObjectById('label', 'value', this.selectedTaxType, this.taxTypeList));
             if (index > -1) {
@@ -524,17 +618,27 @@ export class CustomerFinancialInformationComponent implements OnInit {
                 );
                 this.selectedTaxRates = null;
                 this.selectedTaxType = null;
+                // this.alertService.showMessage(
+                //     'Success',
+                //     `Successfully Added Tax Type and  Tax Rate`,
+                //     MessageSeverity.success
+                // );
             } else {
 
                 this.taxTypeRateMapping.push({
+                    isDisable:true,
                     customerId: this.id,
                     id: this.indexForTaxRate,
                     taxTypeId: this.selectedTaxType,
                     taxRateId: this.selectedTaxRates,
                     taxType: getValueFromArrayOfObjectById('label', 'value', this.selectedTaxType, this.taxTypeList),
                     taxRate: getValueFromObjectByKey('label', getObjectById('value', this.selectedTaxRates, this.taxRatesList))
-                })
 
+     
+                })
+                this.totalRecords = this.taxTypeRateMapping.length;
+                this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+                console.log("this.sdfsfsf",this.taxTypeRateMapping)
                 // this.taxTypeRateMapping = []
 
                 // [...this.taxTypeRateMapping.map((x, index) => {
@@ -550,7 +654,13 @@ export class CustomerFinancialInformationComponent implements OnInit {
 
                 this.selectedTaxRates = null;
                 this.selectedTaxType = null;
+                // this.alertService.showMessage(
+                //     'Success',
+                //     `Successfully Added Tax Type and  Tax Rate`,
+                //     MessageSeverity.success
+                // );
             }
+            // this.taxTypeRateMapping = arr;
 
 
         }
@@ -569,7 +679,7 @@ export class CustomerFinancialInformationComponent implements OnInit {
                 this.getMappedTaxTypeRateDetails();
                 this.alertService.showMessage(
                     'Success',
-                    `Successfully Update Tax Type and Rate`,
+                    `Successfully Update Tax Type and Tax Rate`,
                     MessageSeverity.success
                 );
             })
@@ -586,16 +696,25 @@ export class CustomerFinancialInformationComponent implements OnInit {
                 }
             })];
             this.taxTypeRateMapping = data;
+            this.alertService.showMessage(
+                'Success',
+                `Successfully Update Tax Type and  Tax Rate`,
+                MessageSeverity.success
+            );
         }
 
 
     }
-    getAuditHistoryById(data) {
+    getAuditHistoryById(content, data) {
         const { customerTaxTypeRateMappingId } = data;
         this.customerService.getAuditHistoryForTaxType(customerTaxTypeRateMappingId).subscribe(res => {
             this.auditDataForTaxData = res;
 
         })
+        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
     }
     fileUpload(event, fileType) {
         if (event.files.length === 0)
@@ -637,13 +756,13 @@ export class CustomerFinancialInformationComponent implements OnInit {
                 this.formData = new FormData();
                 this.toGetCustomerFinanceDocumentsList(this.savedGeneralInformationData.customerId);
             });
-console.log("is edit mode",this.editMode )
             this.alertService.showMessage(
                 'Success',
-                ` ${this.editMode ? 'Updated' : 'Saved'  }  Customer Financal Infromation Sucessfully`,
+                ` ${this.editMode ? 'Updated' : 'Saved'}  Customer Financal Infromation Sucessfully`,
                 MessageSeverity.success
             );
-            this.nextClick(); 
+            this.getMappedTaxTypeRateDetails();
+            this.nextClick();
         })
     }
     downloadFileUpload(rowData) {
@@ -651,14 +770,14 @@ console.log("is edit mode",this.editMode )
         const url = `${this.configurations.baseUrl}/api/FileUpload/downloadattachedfile?filePath=${rowData.link}`;
         window.location.assign(url);
     }
-
+    CREDITTERMDATA:any=[];
     toGetCustomerFinanceDocumentsList(customerId) {
         var moduleId = 1;
         this.customerService.GetCustomerFinanceDocumentsList(customerId, moduleId).subscribe(res => {
             this.allCustomerFinanceDocumentsList = res;
             console.log(this.allCustomerFinanceDocumentsList);
         })
-    }
+    } 
 
     deleteFile(rowData) {
         this.selectedRowFileForDelete = rowData;
@@ -758,6 +877,8 @@ console.log("is edit mode",this.editMode )
 
     restDiscount() {
         this.discontValue = null;
+        this.isDiscountExists = false;
+        this.isCountdisable = false;
     }
 
 

@@ -51,8 +51,19 @@ namespace DAL.Repositories
                      .Join(_appContext.AttachmentDetails,
                            custDoc => custDoc.AttachmentId,
                            atd => atd.AttachmentId,
-                           (custDoc, atd) => new {atd.AttachmentDetailId, atd.AttachmentId, atd.FileName, atd.Link, atd.IsActive, atd.Description,atd
-                           .IsDeleted}
+                           (custDoc, atd) => new {
+                               atd.AttachmentDetailId, 
+                               atd.AttachmentId, 
+                               atd.FileName, 
+                               atd.Link,
+                               atd.FileSize,
+                               atd.CreatedBy,
+                               atd.CreatedDate,
+                               atd.UpdatedBy,
+                               atd.UpdatedDate,
+                               atd.Description,
+                               atd.IsActive,
+                               atd.IsDeleted}
                            ).Where(p=>p.AttachmentId== v.AttachmentId && p.IsActive==true && p.IsDeleted == false)
 
 
@@ -86,20 +97,20 @@ namespace DAL.Repositories
                         where v.AttachmentId == Id && v.ReferenceId == customerId && v.ModuleId==moduleId
                         select new
                         {
+                            v.AuditDocumentId,
                              v.AttachmentId,
-                            v.MasterCompanyId,
+                            v.MasterCompanyId,                           
+                            v.DocDescription,
+                            v.DocMemo,
+                            v.DocName,                           
+                            v.IsActive,                          
+                            v.FileName,
+                            v.Link,
+                            v.Description,
                             v.CreatedBy,
                             v.UpdatedBy,
                             v.CreatedDate,
-                            v.DocDescription,
-                            v.DocMemo,
-                            v.DocName,
                             v.UpdatedDate,
-                            v.IsActive,
-                          
-                            v.FileName,
-                            v.Link,
-                            v.Description
                             //                    AttachmentDetails = _appContext.CustomerDocumentDetails
                             //.Join(_appContext.AttachmentDetails,
                             //      custDoc => custDoc.AttachmentId,
@@ -119,7 +130,7 @@ namespace DAL.Repositories
 
 
 
-                        }).OrderByDescending(p => p.UpdatedDate).ToList();
+                        }).OrderByDescending(p => p.AuditDocumentId).ToList();
             return data;
         }
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;

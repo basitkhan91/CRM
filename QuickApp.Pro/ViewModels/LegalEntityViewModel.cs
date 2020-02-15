@@ -10,12 +10,9 @@ namespace QuickApp.Pro.ViewModels
         public long LegalEntityId { get; set; }
         public  string Name { get; set; }
         public string LedgerName { get; set; }
-        public byte[] EntityLogo { get; set; }
+        //public byte[] EntityLogo { get; set; }
         public string Description { get; set; }
-        public string LegalEntityCode { get; set; }
-
         public string DoingLegalAs { get; set; }
-
         public long? AddressId { get; set; }
         public string FaxNumber { get; set; }
         public string PhoneNumber1 { get; set; }
@@ -38,14 +35,10 @@ namespace QuickApp.Pro.ViewModels
         public string PoBox { get; set; }
         public string Country { get; set; }
         public string PostalCode { get; set; }
-        public string AchBankName { get; set; }
-        public string AchIntermediateBank { get; set; }
-        public string AchBenficiaryBankName { get; set; }
-        public string AchBankAccountNumber { get; set; }
-        public string AchABANumber { get; set; }
-        public string AchSWIFTID { get; set; }
+        public long? AchId { get; set; }
         public DateTime RecordModifiedDate { get; set; }
         public string City { get; set; }
         public string StateOrProvince { get; set; }
+        public string nice_name { get; set; }
     }
 }

@@ -1,6 +1,6 @@
-﻿import { Component, ViewChild, OnInit, AfterViewInit, Input } from '@angular/core';
+﻿import { Component, ViewChild, OnInit, AfterViewInit, Input, QueryList, Directive, HostListener } from '@angular/core';
 import { MatPaginator, MatSort, MatTableDataSource, MatSnackBar, MatDialog } from '@angular/material';
-import { NgForm, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
+import { NgForm, FormBuilder, FormGroup, Validators, FormControl, Form } from '@angular/forms';
 import { NgbModal, ModalDismissReasons, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap/modal/modal-ref';
 import { TableModule } from 'primeng/table';
@@ -23,6 +23,18 @@ import { CustomerService } from '../../../services/customer.service';
 import { VendorStepsPrimeNgComponent } from '../vendor-steps-prime-ng/vendor-steps-prime-ng.component';
 import { ConfigurationService } from '../../../services/configuration.service';
 import { getValueFromArrayOfObjectById, editValueAssignByCondition } from '../../../generic/autocomplete';
+
+import * as $ from 'jquery'
+
+
+// @Directive({ selector: 'changeDetect' })
+// export class ChangeInForm {
+//     @HostListener('mouseover') ChangeDetect() {
+//         console.log('Sampless');
+//     }
+
+// }
+
 @Component({
     selector: 'app-vendor-contacts',
     templateUrl: './vendor-contacts.component.html',
@@ -31,6 +43,8 @@ import { getValueFromArrayOfObjectById, editValueAssignByCondition } from '../..
 })
 /** anys component*/
 export class VendorContactsComponent implements OnInit {
+    // @ViewChild('addContactForm') addContactForm: FormControl;
+
     modelValue: boolean;
     display: boolean;
     matSpinner: boolean;
@@ -114,7 +128,7 @@ export class VendorContactsComponent implements OnInit {
         { field: 'fullContactNo', header: 'Work Phone' },
         // { field: 'mobilePhone', header: 'Mobile Phone' },
         { field: 'fax', header: 'FAX' },
-        // { field: 'isDefaultContact', header: 'Flag' }
+        { field: 'isDefaultContact', header: 'IsPrimary' }
         // { field: 'isDefaultContact', header: 'Primary Contact' },
         // { field: 'notes', header: 'Memo' }
         //{ field: 'updatedDate', header: 'Updated Date' },
@@ -125,7 +139,12 @@ export class VendorContactsComponent implements OnInit {
     @Input() vendorId: number = 0;
     @Input() isViewMode: boolean = false;
     isvendorEditMode: any;
+    disableSave: boolean = true;
+    loaderForVendorContacts: boolean;
+
     constructor(private router: ActivatedRoute, private route: Router, private customerser: CustomerService, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public vendorService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private configurations: ConfigurationService) {
+
+
 
         if (this.vendorService.listCollection !== undefined) {
             this.vendorService.isEditMode = true;
@@ -147,6 +166,9 @@ export class VendorContactsComponent implements OnInit {
         this.alertService.stopLoadingMessage();
     }
 
+
+
+
     ngOnInit(): void {
         this.vendorService.currentEditModeStatus.subscribe(message => {
             this.isvendorEditMode = message;
@@ -167,6 +189,7 @@ export class VendorContactsComponent implements OnInit {
             this.vendorService.bredcrumbObj.next(this.vendorService.currentUrl);
         }
     }
+
 
     filterFirstNames(event) {
         this.firstNames = [];
@@ -220,6 +243,7 @@ export class VendorContactsComponent implements OnInit {
     private loadData() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
+        this.loaderForVendorContacts = true;
         const vendorId = this.vendorId != 0 ? this.vendorId : this.local.vendorId;
         this.vendorService.getContacts(vendorId).subscribe(
             results => this.onDataLoadSuccessful(results[0]),
@@ -278,6 +302,7 @@ export class VendorContactsComponent implements OnInit {
         this.loadingIndicator = false;
         this.dataSource.data = allWorkFlows;
         this.allActions = allWorkFlows;
+        this.loaderForVendorContacts = false;
         //console.log(this.allActions);
         //const responseData = allWorkFlows;
         // this.allActions = allWorkFlows.map(x => {
@@ -343,6 +368,7 @@ export class VendorContactsComponent implements OnInit {
     private onDataLoadFailed(error: any) {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
+        this.loaderForVendorContacts = false;        
     }
 
     open(content) {
@@ -359,15 +385,21 @@ export class VendorContactsComponent implements OnInit {
 
 
     openDelete(content, row) {
-        this.isEditMode = false;
-        this.isDeleteMode = true;
-        delete row.updatedBy;
-        this.localCollection = row;
-        this.selectedRowforDelete = row;
-        this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
-        this.modal.result.then(() => {
-            console.log('When user closes');
-        }, () => { console.log('Backdrop click') })
+        if (!row.isPrimary) {
+
+
+            this.isEditMode = false;
+            this.isDeleteMode = true;
+            delete row.updatedBy;
+            this.localCollection = row;
+            this.selectedRowforDelete = row;
+            this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
+            this.modal.result.then(() => {
+                console.log('When user closes');
+            }, () => { console.log('Backdrop click') })
+        } else {
+            $('#deleteoops').modal('show');
+        }
     }
 
     openEdit(content, row) {
@@ -614,6 +646,10 @@ export class VendorContactsComponent implements OnInit {
             console.log('When user closes');
         }, () => { console.log('Backdrop click') })
     }
+    enableSave() {
+        this.disableSave = false;
+
+    }
 
     // onFirstNameSelected(event) {
     //     if (this.alldata) {
@@ -746,4 +782,7 @@ export class VendorContactsComponent implements OnInit {
         return Math.ceil(totalNoofRecords / pageSize)
     }
 
+    pageIndexChange(event) {
+        this.pageSize = event.rows;
+    }
 }

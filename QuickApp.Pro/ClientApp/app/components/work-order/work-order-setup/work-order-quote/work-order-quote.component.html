@@ -153,7 +153,7 @@
   </div>
 </div>
 
-<div class="table-responsive" style="height: 300px;" *ngIf="!isQuoteListView">
+<div class="table-responsive" style="margin-top: 10px;" *ngIf="!isQuoteListView">
   <table class="table table-bordered table-striped table-fixed table-sorting mpn-list-table"
   id="mpn-list-table">
   <thead>
@@ -191,7 +191,7 @@
       <tr class="mpn-row" style="display: table-row;"
       *ngFor="let workOrderPart of workOrderPartsDetail; let i=index;">
         <td>
-          <label></label>
+          <label>{{workOrderPart.partNumber}}</label>
           <!-- <input [value]="workOrderPart['partNumber']" readonly/> -->
         </td>
         <td>
@@ -303,77 +303,25 @@
             </select>
           </div>
         </div>
+
+        <div class="form-group ">
+          <button type="button" data-target="#showHistoricalWorkOrder" data-toggle="modal" class="btn-primary" (click)="getDisplayData('use historical wos')">Display Historical WOs</button>
+        </div>
       </div>
     </div>
 
-    <div class="col-md-12" *ngIf="selectedPartNumber != ''">
+    <!-- <div class="col-md-12" *ngIf="selectedPartNumber != ''">
       <div class="form-group ">
         <label class="fs12">Build Method:
         </label>
+        <button type="button" [ngClass]="selectedBuildMethod === 'use work order'?'btn-primary':'btn-light-cstm'" (click)="buildMethodSelected('use work order')">Use Work Order</button>
         <button type="button" [ngClass]="selectedBuildMethod === 'use work flow'?'btn-primary':'btn-light-cstm'" (click)="buildMethodSelected('use work flow')">Use Work Flow</button>
         <button type="button" [ngClass]="selectedBuildMethod === 'use historical wos'?'btn-primary':'btn-light-cstm'" (click)="buildMethodSelected('use historical wos')">Use Historical WOs</button>
         <button type="button" [ngClass]="selectedBuildMethod === 'build from scratch'?'btn-primary':'btn-light-cstm'" (click)="buildMethodSelected('build from scratch')">Build From Scratch</button>
-        <!-- <button type="button" [ngClass]="selectedBuildMethod === 'display 3rd party'?'btn-primary':'btn-light-cstm'" data-toggle="modal" data-target="#quote-details" (click)="buildMethodSelected('display 3rd party')">Display 3rd
-          Party Pricing</button> -->
       </div>
 
-      <!-- <div class="table-responsive" *ngIf="selectedBuildMethod == 'build from scratch'">
-        <wf-create [isQuote]="isQuote" (saveData)="saveBuildFromScratch($event)"></wf-create>
-      </div> -->
-
-    </div>
-    <div class="table-responsive" *ngIf="selectedBuildMethod == 'use work flow'">
-      <table class="table table-bordered table-striped table-sorting mpn-list-table table-disabled">
-        <thead>
-          <tr>
-            <th class="events1"></th>
-            <th>Cust Name</th>
-            <th>MC PN</th>
-            <th>MC Description</th>
-            <th>Work Flow No</th>
-            <th>Work Scope</th>
-            <th>Currency</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr class="mpn-row" *ngFor="let buildl of buildWorkOrderList">
-            <td><input type="radio" name="historical-wo-list" class="select-mpn-quote" [(ngModel)]="woWorkFlowId" [value]="buildl.workFlowId" (click)="getQuoteInfo(buildl)" [disabled]="isView"></td>
-            <td>{{buildl.customerName}}</td>
-            <td>{{buildl.partNumber}}</td>
-            <td>{{buildl.partDescription}}</td>
-            <td>{{buildl.workFlowNo}}</td>
-            <td>{{buildl.workScope}}</td>
-            <td>{{buildl.currency}}</td>
-          </tr>
-        </tbody>
-      </table>
-
-    </div>
-    <div class="table-responsive" *ngIf="selectedBuildMethod == 'use historical wos'">
-      <table class="table table-bordered table-striped table-sorting mpn-list-table table-disabled">
-        <thead>
-          <tr>
-            <th class="events1"></th>
-            <th>Cust Name</th>
-            <th>MC PN</th>
-            <th>MC Description</th>
-            <th>WO No</th>
-            <th>Work Scope</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr class="mpn-row" *ngFor="let buildl of buildHistoricalList">
-            <td><input type="radio" name="historical-wo-list" class="select-mpn-quote" [(ngModel)]="historicalWorkOrderId" [value]="buildl.workOrderId" (click)="getQuoteInfo(buildl)" [disabled]="isView"></td>
-            <td>{{buildl.customerName}}</td>
-            <td>{{buildl.partNumber}}</td>
-            <td>{{buildl.partDescription}}</td>
-            <td>{{buildl.workOrderNum}}</td>
-            <td>{{buildl.workScope}}</td>
-          </tr>
-        </tbody>
-      </table>
-
-    </div>
+    </div> -->
+   
   </div>
   <!-- <div *ngIf="selectedBuildMethod == 'build from scratch'">
     <div class="col-sm-1">
@@ -392,7 +340,7 @@
           </div>
     </div>
   </div> -->
-  <div class="card col-md-12" style="background: #f1f1f1; margin-top: 10px;" *ngIf="selectedWorkFlowOrWorkOrder || selectedBuildMethod === 'build from scratch'">
+  <div class="card col-md-12" style="background: #f1f1f1; margin-top: 10px;" *ngIf="(selectedBuildMethod === 'use work order') && selectedPartNumber != ''">
       <div class="form-group ">
         <button type="button" class="btn" [ngClass]="gridActiveTab === 'materialList'?'btn-primary':'btn-light-cstm'" (click)="gridTabChange('materialList');">Material List</button>
         <button type="button" class="btn" [ngClass]="gridActiveTab === 'labor'?'btn-primary':'btn-light-cstm'" (click)="gridTabChange('labor');">Labor</button>
@@ -402,17 +350,17 @@
       </div>
   </div>
 
-  <div class="table-responsive" *ngIf="gridActiveTab === 'materialList' && (selectedWorkFlowOrWorkOrder || selectedBuildMethod === 'build from scratch')">
+  <div class="table-responsive" *ngIf="gridActiveTab === 'materialList' && (selectedWorkFlowOrWorkOrder || selectedBuildMethod === 'build from scratch' || selectedBuildMethod === 'use work order')">
     <div *ngIf="!isView">
-        <button  data-target="#addNewMaterials" data-toggle="modal" class="btn btn-primary btn-primary"  style="padding: 6px 12px !important;">Add New Material</button>
+        <button  data-target="#addNewMaterials" data-toggle="modal" class="btn btn-primary btn-primary"  style="padding: 6px 12px !important;">Add Part No</button>
     </div>
-    <div *ngIf="selectedBuildMethod == 'use work flow' || selectedBuildMethod == 'build from scratch'">
+    <div *ngIf="selectedBuildMethod == 'use work flow' || selectedBuildMethod == 'build from scratch' || selectedBuildMethod === 'use work order'">
       <table class="table table-bordered table-striped table-sorting mpn-list-table table-disabled" >
         <thead>
           <tr style="color: #f1f1f1;">
               <td colspan="11">&nbsp;</td>
-              <td colspan="2">
-                  <div class="form-group" style="text-align: center;">
+              <td colspan="6">
+                  <!-- <div class="form-group" style="text-align: center;">
                     <p-radioButton
                       class="p-radiobutton-label-horizontal p-radio-custom"
                       name="costPlusType"
@@ -428,9 +376,39 @@
                         <option *ngFor="let markUp of markupList" [value]="markUp.value">{{markUp.label}}</option>
                       </select>
                     </div>
+                  </div> -->
+
+
+                  <div class="form-group" style="text-align: center; display: flex;">
+                    <p-radioButton
+                      class="p-radiobutton-label-horizontal p-radio-custom"
+                      name="costPlusType"
+                      label="T&M - Mark Up"
+                      value="1"
+                      [(ngModel)]="costPlusType"
+                      [disabled]="isView"
+                      (click)="tmchange()"
+                    ></p-radioButton>
+                    <div>
+                      <select class="form-control" (change)="markupChanged({}, 'all')" [(ngModel)]="overAllMarkup" [disabled]="isView || costPlusType != '1'" style="margin-top: 10px;">
+                        <option value="">Select</option>
+                        <option *ngFor="let markUp of markupList" [value]="markUp.value">{{markUp.label}}</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div>
+                    <p-radioButton
+                      class="p-radiobutton-label-horizontal col-width p-radio-custom"
+                      name="costPlusType"
+                      value="2"
+                      label="Actual"
+                      [(ngModel)]="costPlusType"
+                      [disabled]="isView"
+                      (click)="tmchange()"
+                    ></p-radioButton>
                   </div>
               </td>
-              <td colspan="3">
+              <!-- <td colspan="3">
                 <div>
                   <p-radioButton
                     class="p-radiobutton-label-horizontal col-width p-radio-custom"
@@ -441,7 +419,7 @@
                     [disabled]="isView"
                   ></p-radioButton>
                 </div>
-              </td>
+              </td> -->
           </tr>
           <tr>
             <th>Task</th>
@@ -455,9 +433,14 @@
             <th>OEM/PMA/DER</th>
             <th>Unit Cost</th>
             <th>Total Part Cost</th>
+            <th>Billing Method</th>
             <th>Mark Up</th>
-            <th tooltip="Time & Materials">T&M Amount</th>
-            <th>Fixed Amount</th>
+            <th>
+              Billing Rate
+            </th>
+            <th>
+              Billing Amount
+            </th>
             <th *ngIf="!isView"></th>
             <th *ngIf="!isView"></th>
           </tr>
@@ -482,15 +465,21 @@
               <td>{{matQuotation.unitCost}}</td>
               <td>{{matQuotation.quantity * matQuotation.unitCost}}</td>
               <td>
-                  <select class="form-control wf-pub-id" (change)="markupChanged(matQuotation, 'row')" [(ngModel)]="matQuotation.markupPercentageId" [disabled]="isView || costPlusType != 'Mark Up'">
+                <select class="form-control" [(ngModel)]="matQuotation.billingMethodId" style="width: 130px;">
+                  <option value="">Select</option>
+                  <option *ngFor="let bm of [{'label': 'T&M', 'value': '1'}, {'label': 'Actual', 'value': '2'}]" [value]="bm.value">{{bm.label}}</option>
+                </select>
+              </td>
+              <td>
+                  <select class="form-control wf-pub-id" (change)="markupChanged(matQuotation, 'row')" [(ngModel)]="matQuotation.markupPercentageId" [disabled]="isView || matQuotation.billingMethodId != '1'">
                     <option value="">Select</option>
                     <option *ngFor="let markUp of markupList" [value]="markUp.value">{{markUp.label}}</option>
                   </select>
               </td>
-              <td>{{ matQuotation.materialCostPlus }}</td>
               <td>
-                <input type="number" [(ngModel)]="matQuotation.fixedAmount" [disabled]="costPlusType != 'Fixed Mat Price'"/>
+                  <input type="number" [(ngModel)]="matQuotation.billingRate" (change)="matQuotation.billingAmount = (matQuotation.billingRate*matQuotation.quantity).toFixed(2)" [disabled]="isView || matQuotation.billingMethodId != 2"/>
               </td>
+              <td>{{ matQuotation.billingAmount }}</td>
               <td *ngIf="!isView">
                   <button
                     class="btn-edit ptable-wo-btns"
@@ -529,11 +518,12 @@
             <td>&nbsp;</td>
             <td>&nbsp;</td>
             <td>&nbsp;</td>
+            <td>&nbsp;</td>
             <td>{{ getTotalUnitCost() }}</td>
             <td>&nbsp;</td>
             <td>&nbsp;</td>
-            <td>{{getMaterialCostPlus()}}</td>
-            <td>{{getTotalFixedAmount()}}</td>
+            <td>&nbsp;</td>
+            <td>{{totalMaterialBillingAmount()}}</td>
             <td *ngIf="!isView"></td>
             <td *ngIf="!isView"></td>
           </tr>
@@ -547,8 +537,8 @@
         <thead>
           <tr style="color: #f1f1f1;">
               <td colspan="11">&nbsp;</td>
-              <td colspan="2">
-                  <div class="form-group" style="text-align: center;">
+              <td colspan="6">
+                  <!-- <div class="form-group" style="text-align: center;">
                     <p-radioButton
                       class="p-radiobutton-label-horizontal p-radio-custom"
                       name="costPlusType"
@@ -564,9 +554,39 @@
                         <option *ngFor="let markUp of markupList" [value]="markUp.value">{{markUp.label}}</option>
                       </select>
                     </div>
+                  </div> -->
+
+
+                  <div class="form-group" style="text-align: center; display: flex;">
+                    <p-radioButton
+                      class="p-radiobutton-label-horizontal p-radio-custom"
+                      name="costPlusType"
+                      label="T&M - Mark Up"
+                      value=1
+                      [(ngModel)]="costPlusType"
+                      [disabled]="isView"
+                      (click)="tmchange()"
+                    ></p-radioButton>
+                    <div>
+                      <select class="form-control" (change)="markupChanged({}, 'all')" [(ngModel)]="overAllMarkup" [disabled]="isView || costPlusType != 1" style="margin-top: 10px;">
+                        <option value="">Select</option>
+                        <option *ngFor="let markUp of markupList" [value]="markUp.value">{{markUp.label}}</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div>
+                    <p-radioButton
+                      class="p-radiobutton-label-horizontal col-width p-radio-custom"
+                      name="costPlusType"
+                      value=2
+                      label="Actual"
+                      [(ngModel)]="costPlusType"
+                      [disabled]="isView"
+                      (click)="tmchange()"
+                    ></p-radioButton>
                   </div>
               </td>
-              <td colspan="3">
+              <!-- <td colspan="3">
                 <div>
                   <p-radioButton
                     class="p-radiobutton-label-horizontal col-width p-radio-custom"
@@ -575,9 +595,10 @@
                     label="Fixed Mat Price"
                     [(ngModel)]="costPlusType"
                     [disabled]="isView"
+                    (click)="tmchange()"
                   ></p-radioButton>
                 </div>
-              </td>
+              </td> -->
           </tr>
           <tr>
             <th>Task</th>
@@ -591,9 +612,14 @@
             <th>OEM/PMA/DER</th>
             <th>Unit Cost</th>
             <th>Total Part Cost</th>
+            <th>Billing Method</th>
             <th>Mark Up</th>
-            <th tooltip="Time & Materials">T&M Amount</th>
-            <th>Fixed Amount</th>
+            <th>
+              Billing Rate
+            </th>
+            <th>
+              Billing Amount
+            </th>
             <th *ngIf="!isView"></th>
             <th *ngIf="!isView"></th>
           </tr>
@@ -617,15 +643,21 @@
             <td>{{matQuotation.unitCost}}</td>
             <td>{{matQuotation.quantity * matQuotation.unitCost}}</td>
             <td>
-                <select class="form-control wf-pub-id" (change)="markupChanged(matQuotation, 'row')" [(ngModel)]="matQuotation.markupPercentageId" [disabled]="isView || costPlusType != 'Mark Up'">
+              <select class="form-control" [(ngModel)]="matQuotation.billingMethodId" style="width: 130px;">
+                <option value="">Select</option>
+                <option *ngFor="let bm of [{'label': 'T&M', 'value': 1}, {'label': 'Actual', 'value': 2}]" [value]="bm.value">{{bm.label}}</option>
+              </select>
+            </td>
+            <td>
+                <select class="form-control wf-pub-id" (change)="markupChanged(matQuotation, 'row')" [(ngModel)]="matQuotation.markupPercentageId" [disabled]="isView || matQuotation.billingMethodId != 1">
                   <option value="">Select</option>
                   <option *ngFor="let markUp of markupList" [value]="markUp.value">{{markUp.label}}</option>
                 </select>
             </td>
-            <td>{{ matQuotation.materialCostPlus }}</td>
             <td>
-              <input type="number" [(ngModel)]="matQuotation.fixedAmount" [disabled]="costPlusType != 'Fixed Mat Price'"/>
+                <input type="number" [(ngModel)]="matQuotation.billingRate" (change)="matQuotation.billingAmount = (matQuotation.billingRate*matQuotation.quantity).toFixed(2)" [disabled]="isView || matQuotation.billingMethodId != 2"/>
             </td>
+            <td>{{ matQuotation.billingAmount }}</td>
             <td *ngIf="!isView">
                 <button
                   class="btn-edit ptable-wo-btns"
@@ -663,11 +695,12 @@
             <td>&nbsp;</td>
             <td>&nbsp;</td>
             <td>&nbsp;</td>
+            <td>&nbsp;</td>
             <td>{{ getTotalUnitCost() }}</td>
             <td>&nbsp;</td>
             <td>&nbsp;</td>
-            <td>{{getMaterialCostPlus()}}</td>
-            <td>{{getTotalFixedAmount()}}</td>
+            <td>&nbsp;</td>
+            <td>{{totalMaterialBillingAmount()}}</td>
             <td *ngIf="!isView"></td>
             <td *ngIf="!isView"></td>
           </tr>
@@ -1258,5 +1291,78 @@
       </div>
     </div>
   </div>
+
+  <div
+  id="showHistoricalWorkOrder"
+  class="modal fade"
+  role="dialog"
+  data-backdrop="static"
+>
+<div class="modal-dialog modal-lg">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">
+            &times;
+          </button>
+      </div>
+      <div class="modal-body table-responsive">
+        <table class="table table-bordered table-striped table-sorting mpn-list-table table-disabled">
+          <thead>
+            <tr>
+              <th>WO Num</th>
+              <th>Cust Name</th>
+              <th>Cust Code</th>
+              <th>WO Type</th>
+              <th>Open Date</th>
+              <th>Promise Date</th>
+              <th>Est. Comp Date</th>
+              <th>Est. Ship Date</th>
+              <th>WO Status</th>
+              <th class="events1"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="mpn-row" *ngFor="let buildl of buildHistoricalList">
+              <td>{{buildl.workOrderNum}}</td>
+              <td>{{buildl.customerName}}</td>
+              <td>{{buildl.customerCode}}</td>
+              <td>{{buildl.woType}}</td>
+              <td>{{buildl.openDate}}</td>
+              <td>{{buildl.promisedDate}}</td>
+              <td>{{buildl.estimatedCompletionDate}}</td>
+              <td>{{buildl.estimatedShipDate}}</td>
+              <td>{{buildl.statusId}}</td>
+              <td><span data-toggle="modal" data-target="#historicalWorkOrderView"><a class="btn nobg btn-view-cstm" (click)="selectedHistoricalWorkOrder = buildl.workOrderId" matTooltip="View"><i class="fa fa-eye"></i></a> </span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      </div>
+    </div>
+  </div>
+
+  <div
+  id="historicalWorkOrderView"
+  class="modal fade"
+  role="dialog"
+  data-backdrop="static"
+>
+  <div class="modal-dialog modal-lg">
+      <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">
+            &times;
+          </button>
+      </div>
+      <div class="modal-body table-responsive" *ngIf="!ispop">
+          <grd-quote-view [workorderid]="selectedHistoricalWorkOrder" isView="true"></grd-quote-view>
+      </div>
+      </div>
+    </div>
+  </div>
+
+  
 </div>
 

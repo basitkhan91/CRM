@@ -30,7 +30,7 @@ namespace QuickApp.Pro.Controllers
         #region Work Order
 
         [HttpGet("workorderbyid")]
-        public IActionResult WorkOrderById(long workOrderId=0, long receivingCustomerId=0)
+        public IActionResult WorkOrderById(long workOrderId = 0, long receivingCustomerId = 0)
         {
             var workOrder = unitOfWork.WorkOrderRepository.WorkOrderById(workOrderId, receivingCustomerId);
             return Ok(workOrder);
@@ -122,10 +122,10 @@ namespace QuickApp.Pro.Controllers
             return Ok(result);
         }
 
-        [HttpGet("workordernos")]
-        public IActionResult GetWorkOrderNos(long partId, long workScopeId)
+        [HttpPost("historicalworkorders")]
+        public IActionResult GetHistoricalWorkOrders([FromBody]Filters<HistoricalWOFilter> woFilters)
         {
-            var result = unitOfWork.WorkOrderRepository.GetWorkOrderNos(partId, workScopeId);
+            var result = unitOfWork.WorkOrderRepository.GetHistoricalWorkOrders(woFilters);
             return Ok(result);
         }
 
@@ -143,7 +143,7 @@ namespace QuickApp.Pro.Controllers
             return Ok(result);
         }
 
-        
+
 
         #endregion
 
@@ -254,7 +254,7 @@ namespace QuickApp.Pro.Controllers
             return Ok(result);
         }
 
-        
+
 
         [HttpGet("workorderworkflownos")]
         public IActionResult GetWorkOrderWorkFlowNos(long workOrderId)
@@ -513,40 +513,102 @@ namespace QuickApp.Pro.Controllers
         #region Work Order Documents
 
         [HttpPost("createworkorderdocuments")]
-        public IActionResult CreateWorkOrderDocuments([FromBody]List<WorkOrderDocuments> workOrderDocuments)
+        [Produces("application/json")]
+        public IActionResult CreateWorkOrderDocuments()
         {
-            if (ModelState.IsValid)
+            try
             {
-                var result = unitOfWork.WorkOrderRepository.CreateWorkOrderDocuments(workOrderDocuments);
-                return Ok(result);
-            }
-            else
-            {
-                return BadRequest(ModelState.Values.FirstOrDefault().Errors);
-            }
+                WorkOrderDocuments workOrderDocument = new WorkOrderDocuments();
+                if (ModelState.IsValid)
+                {
+                    long attachmentId = 0;
+                    long documentDeatailId = 0;
+                    if (Request.Form == null)
+                        return BadRequest($"{nameof(workOrderDocument)} cannot be null");
 
+                    long WorkOrderDocumentId = Convert.ToInt64(Request.Form["WorkOrderDocumentId"]);
+                    if (WorkOrderDocumentId > 0)
+                    {
+                        var woDoc = unitOfWork.WorkOrderRepository.GetWorkOrderDocumentsDetailById(WorkOrderDocumentId);
+                        woDoc.UpdatedDate = DateTime.Now;
+                        woDoc.UpdatedBy = Request.Form["UpdatedBy"];
+                        woDoc.Code = Request.Form["Code"];
+                        woDoc.Name = Request.Form["Name"];
+                        woDoc.Memo = Request.Form["Memo"];
+                        woDoc.Description = Request.Form["Description"];
+                        if (woDoc.AttachmentId > 0)
+                        {
+                            woDoc.AttachmentId = unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, woDoc.WorkOrderId,
+                              Convert.ToInt32(ModuleEnum.WorkOrder), Convert.ToString(ModuleEnum.WorkOrder), woDoc.UpdatedBy, woDoc.MasterCompanyId, woDoc.AttachmentId);
+                        }
+                        else
+                        {
+                            woDoc.AttachmentId = unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, woDoc.WorkOrderId,
+                                Convert.ToInt32(ModuleEnum.WorkOrder), Convert.ToString(ModuleEnum.WorkOrder), woDoc.UpdatedBy, woDoc.MasterCompanyId);
+
+                        }
+
+                       var workOrderDoc= unitOfWork.WorkOrderRepository.UpdateWorkOrderDocuments(woDoc);
+                        attachmentId = workOrderDoc.AttachmentId;
+                        documentDeatailId = workOrderDoc.WorkOrderDocumentId;
+
+                    }
+                    else
+                    {
+                        workOrderDocument.WorkOrderId = Convert.ToInt64(Request.Form["WorkOrderId"]);
+                        workOrderDocument.WorkFlowWorkOrderId = Convert.ToInt64(Request.Form["WorkFlowWorkOrderId"]);
+                        workOrderDocument.ManagementStructureId = Convert.ToInt64(Request.Form["ManagementStructureId"]);
+                        workOrderDocument.MasterCompanyId = Convert.ToInt32(Request.Form["MasterCompanyId"]);
+                        workOrderDocument.CreatedBy = Request.Form["CreatedBy"];
+                        workOrderDocument.UpdatedBy = Request.Form["UpdatedBy"];
+                        workOrderDocument.CreatedDate = DateTime.Now;
+                        workOrderDocument.UpdatedDate = DateTime.Now;
+                        workOrderDocument.Code = Request.Form["Code"];
+                        workOrderDocument.Name = Request.Form["Name"];
+                        workOrderDocument.Memo = Request.Form["Memo"];
+                        workOrderDocument.Description = Request.Form["Description"];
+                        workOrderDocument.IsActive = true;
+                        workOrderDocument.IsDeleted = false;
+                        // workOrderDocument.AttachmentId = unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, workOrderDocument.WorkOrderId, Convert.ToInt32(ModuleEnum.WorkOrder), Convert.ToString(ModuleEnum.WorkOrder), workOrderDocument.UpdatedBy, workOrderDocument.MasterCompanyId, workOrderDocument.AttachmentId);
+                        workOrderDocument.AttachmentId = unitOfWork.FileUploadRepository.UploadFiles(Request.Form.Files, workOrderDocument.WorkOrderId,
+                                                                                 Convert.ToInt32(ModuleEnum.WorkOrder), Convert.ToString(ModuleEnum.WorkOrder), workOrderDocument.UpdatedBy, workOrderDocument.MasterCompanyId);
+
+                        workOrderDocument =  unitOfWork.WorkOrderRepository.CreateWorkOrderDocuments(workOrderDocument);
+                    }
+
+                     
+                    return Ok(workOrderDocument);
+                }
+                else
+                {
+                    return BadRequest(ModelState);
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.InnerException.ToString());
+            }
         }
 
-        [HttpPost("updateworkorderdocuments")]
-        public IActionResult UpdateWorkOrderDocuments([FromBody]WorkOrderDocuments workOrderDocuments)
+        [HttpGet("workorderdocumentslist")]
+        public IActionResult GetWorkOrderDocumentsList(long wfwoId = 0, long workOrderId = 0)
         {
-            if (ModelState.IsValid)
-            {
-                unitOfWork.WorkOrderRepository.UpdateWorkOrderDocuments(workOrderDocuments);
-                return Ok(workOrderDocuments);
-            }
-            else
-            {
-                return BadRequest(ModelState.Values.FirstOrDefault().Errors);
-            }
-
-        }
-
-        [HttpGet("getworkflowworkorderdocumentslist")]
-        public IActionResult GetWorkFlowWorkOrderDocumentsList(long wfwoId = 0, long workOrderId = 0)
-        {
-            var result = unitOfWork.WorkOrderRepository.GetWorkFlowWorkOrderDocumentsList(wfwoId, workOrderId);
+            var result = unitOfWork.WorkOrderRepository.GetWorkOrderDocumentsList(wfwoId, workOrderId);
             return Ok(result);
+        }
+
+        [HttpGet("deleteworkorderdocuments")]
+        public IActionResult DeleteWorkOrderDocuments(long workOrderDocumentsId, string updatedBy)
+        {
+            unitOfWork.WorkOrderRepository.DeleteWorkOrderDocuments(workOrderDocumentsId, updatedBy);
+            return Ok();
+        }
+
+        [HttpGet("workorderdocumentstatus")]
+        public IActionResult WorkOrderDocumentStatus(long workOrderDocumentsId, bool status, string updatedBy)
+        {
+            unitOfWork.WorkOrderRepository.WorkOrderDocumentStatus(workOrderDocumentsId, status, updatedBy);
+            return Ok();
         }
 
         #endregion
@@ -701,7 +763,7 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("quoteexclusions")]
         public IActionResult GetWorkOrderQuoteExclusions(long workOrderQuoteDetailsId, long buildMethodId)
         {
-            var result = unitOfWork.WorkOrderRepository.GetWorkOrderQuoteExclusions(workOrderQuoteDetailsId,  buildMethodId);
+            var result = unitOfWork.WorkOrderRepository.GetWorkOrderQuoteExclusions(workOrderQuoteDetailsId, buildMethodId);
             return Ok(result);
         }
 
@@ -898,7 +960,7 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("buildmethoddetails")]
         public IActionResult GetQuoteBuildMethodDetails(long workflowWorkorderId)
         {
-           var result= unitOfWork.WorkOrderRepository.GetQuoteBuildMethodDetails(workflowWorkorderId);
+            var result = unitOfWork.WorkOrderRepository.GetQuoteBuildMethodDetails(workflowWorkorderId);
             return Ok(result);
         }
 
@@ -913,6 +975,13 @@ namespace QuickApp.Pro.Controllers
         public IActionResult WorkOrderQuoteView(long workOrderQuoteId)
         {
             var result = unitOfWork.WorkOrderRepository.WorkOrderQuoteView(workOrderQuoteId);
+            return Ok(result);
+        }
+
+        [HttpPost("historicalworkorderquotes")]
+        public IActionResult HistoricalWorkOrderQuotes([FromBody]Filters<WOQuoteFilters> woQuoteFilters)
+        {
+            var result = unitOfWork.WorkOrderRepository.HistoricalWorkOrderQuotes(woQuoteFilters);
             return Ok(result);
         }
 
@@ -1187,6 +1256,50 @@ namespace QuickApp.Pro.Controllers
         public IActionResult WorkOrderROlist()
         {
             var result = unitOfWork.WorkOrderRepository.WorkOrderROlist();
+            return Ok(result);
+        }
+
+        #endregion
+
+        #region Teardown
+
+        [HttpPost("createteardown")]
+        public IActionResult CreateTeardown([FromBody]WorkOrderTeardown tearDown)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = unitOfWork.WorkOrderRepository.CreateTeardown(tearDown);
+                return Ok(result);
+            }
+            else
+            {
+                return BadRequest(ModelState.Values.FirstOrDefault().Errors);
+            }
+
+        }
+
+        [HttpGet("getwoteardown")]
+        public IActionResult GetWorkOrderTeardown(long wowfId)
+        {
+            var result = unitOfWork.WorkOrderRepository.GetWorkOrderTeardown(wowfId);
+            return Ok(result);
+        }
+
+        [HttpGet("woteardownview")]
+        public IActionResult WorkOrderTeardownView(long wowfId)
+        {
+            var result = unitOfWork.WorkOrderRepository.WorkOrderTeardownView(wowfId);
+            return Ok(result);
+        }
+
+        #endregion
+
+        #region WorkOrder Analysis
+
+        [HttpGet("workorderanalysis")]
+        public IActionResult WorkOrderAnalysis(long workOrderId)
+        {
+            var result = unitOfWork.WorkOrderRepository.WorkOrderAnalysis(workOrderId);
             return Ok(result);
         }
 

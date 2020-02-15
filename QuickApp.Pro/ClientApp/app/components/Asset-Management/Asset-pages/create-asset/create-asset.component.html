@@ -88,11 +88,11 @@
                                     <label>Alternate Asset ID</label>
                                     <!-- <input type="text" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentAsset.alternateAssetId"> -->
                                     <!--<select [ngModelOptions]="{standalone: true}" [(ngModel)]="currentAsset.alternateAssetId">
-                                            <option>--Select--</option>
-                                            <option class="form-control" *ngFor="let asset of allAssetInfo" [ngValue]="asset.assetId">
-                                                {{asset.assetId}}
-                                            </option>
-                                        </select>-->
+                                        <option>--Select--</option>
+                                        <option class="form-control" *ngFor="let asset of allAssetInfo" [ngValue]="asset.assetId">
+                                            {{asset.assetId}}
+                                        </option>
+                                    </select>-->
                                     <p-autoComplete class="pautocomp-cstm" sstyle="font-size: 1px"
                                                     (onKeyUp)=assetIdHandler($event)
                                                     [(ngModel)]="currentAsset.alternateAssetId"
@@ -114,7 +114,7 @@
                                             <div class="form-group">
                                                 <select [ngClass]="managementValidCheck ? 'select-validate-cstm' : ''" class="form-control" name="primaryCompany" [(ngModel)]="currentAsset.companyId"
                                                         (change)="getBUList(currentAsset.companyId); checkValidOnChange(currentAsset.companyId, 'companyId');" #mCompanyName required>
-                                                    <option value="">Select Legal Entity</option>
+                                                    <option value="">--NON Selected--</option>
                                                     <option *ngFor="let managementStructure of maincompanylist" [ngValue]="managementStructure.managementStructureId">{{managementStructure.code}}</option>
                                                 </select>
                                                 <div *ngIf="mCompanyName.invalid && (mCompanyName.dirty || mCompanyName.touched)" class="alert alert-danger alert-danger-cstm">
@@ -126,19 +126,19 @@
                                             </div>
                                             <div class="form-group">
                                                 <select [(ngModel)]="currentAsset.buisinessUnitId" name="primaryBU" (change)="getDepartmentlist(currentAsset.buisinessUnitId)" class="form-control">
-                                                    <option value="">--Select--</option>
+                                                    <option value="">--NON Selected--</option>
                                                     <option *ngFor="let managementStructure of bulist" [ngValue]="managementStructure.managementStructureId">{{managementStructure.code}}</option>
                                                 </select>
                                             </div>
                                             <div class="form-group">
                                                 <select class="form-control" [(ngModel)]="currentAsset.departmentId" name="primaryDivision" (change)="getDivisionlist(currentAsset.departmentId)">
-                                                    <option value="">--Select--</option>
+                                                    <option value="">--NON Selected--</option>
                                                     <option *ngFor="let managementStructure of departmentList " [ngValue]="managementStructure.managementStructureId">{{managementStructure.code}}</option>
                                                 </select>
                                             </div>
                                             <div class="form-group">
                                                 <select class="form-control" [(ngModel)]="currentAsset.divisionId" name="primaryDept" (change)="divisionChange(currentAsset.divisionId)">
-                                                    <option value="">--Select--</option>
+                                                    <option value="">--NON Selected--</option>
                                                     <option *ngFor="let managementStructure of divisionlist " [ngValue]="managementStructure.managementStructureId">{{managementStructure.code}}</option>
                                                 </select>
                                             </div>
@@ -151,14 +151,15 @@
                                     <div class="form-group">
                                         <label>Acquisition Type <span class="clr-red">*</span></label>
                                         <select [ngModelOptions]="{standalone: true}" [(ngModel)]="currentAsset.assetAcquisitionTypeId">
-                                            <option ng-option value="">--Select--</option>
+                                            <option ng-option value="">--NON Selected--</option>
                                             <option *ngFor="let acquisitionType of assetAcquisitionTypeList" [ngValue]="acquisitionType.value">{{acquisitionType.label}}</option>
                                         </select>
+                                        <span style="margin-left:3px;cursor:pointer;"><a class="fa fa-plus-circle fa-lg" data-toggle="modal" data-backdrop="static" data-target="#addacquisition" (click)="openacquisition(addacquisition)"></a></span>
                                     </div>
                                     <div class="form-group">
                                         <label>Manufacturer</label>
                                         <select [ngModelOptions]="{standalone: true}" [(ngModel)]="currentAsset.manufacturerId">
-                                            <option ng-option value="">--Select--</option>
+                                            <option ng-option value="">--NON Selected--</option>
                                             <option *ngFor="let name of allManufacturerInfo" [ngValue]="name.manufacturerId">{{name.name}}</option>
                                         </select>
                                     </div>
@@ -223,11 +224,11 @@
                                         <div class="form-group">
                                             <label>Amort Frequency</label>
                                             <!--<select disabled="" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentSelectedIntangibleAssetType.amortizationFrequency">
-                                                   <option>--Select--</option>
-                                                   <option *ngFor="let amortizationFrequency of amortizationFrequencyList" [ngValue]="amortizationFrequency.value">
-                                                       {{amortizationFrequency.label}}
-                                                   </option>
-                                               </select>-->
+                                                <option>--Select--</option>
+                                                <option *ngFor="let amortizationFrequency of amortizationFrequencyList" [ngValue]="amortizationFrequency.value">
+                                                    {{amortizationFrequency.label}}
+                                                </option>
+                                            </select>-->
 
                                             <input disabled class="form-control" type="text" [(ngModel)]="currentSelectedIntangibleAssetType.amortizationFrequencyObj"
                                                    [ngModelOptions]="{standalone: true}">
@@ -235,50 +236,50 @@
                                         <div class="form-group">
                                             <label>Amort Expense GL</label>
                                             <!--<select disabled="" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentSelectedIntangibleAssetType.amortExpenseGLAccountId">
-                                                   <option class="form-control" *ngFor="let glinfo of allGlInfo" [ngValue]="glinfo.glAccountId">
-                                                       {{glinfo.accountName}}
-                                                   </option>
-                                               </select>-->
+                                                <option class="form-control" *ngFor="let glinfo of allGlInfo" [ngValue]="glinfo.glAccountId">
+                                                    {{glinfo.accountName}}
+                                                </option>
+                                            </select>-->
                                             <input disabled class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentSelectedIntangibleAssetType.amortExpenseGLAccountObj">
                                         </div>
                                         <div class="form-group">
                                             <label>Acc Amort Depr GL</label>
                                             <!--<select disabled="" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentSelectedIntangibleAssetType.accAmortDeprGLAccountId">
-                                                    <option>--Select--</option>
-                                                    <option class="form-control" *ngFor="let glinfo of allGlInfo" [ngValue]="glinfo.glAccountId">
-                                                        {{glinfo.accountName}}
-                                                    </option>
-                                                </select>-->
+                                                <option>--Select--</option>
+                                                <option class="form-control" *ngFor="let glinfo of allGlInfo" [ngValue]="glinfo.glAccountId">
+                                                    {{glinfo.accountName}}
+                                                </option>
+                                            </select>-->
                                             <input disabled class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentSelectedIntangibleAssetType.accAmortDeprGLAccountObj">
                                         </div>
                                         <div class="form-group">
                                             <label>Intangible GL</label>
                                             <!--<select disabled="" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentSelectedIntangibleAssetType.intangibleGLAccountId">
-                                                    <option class="form-control" *ngFor="let glinfo of allGlInfo" [ngValue]="glinfo.glAccountId">
-                                                        {{glinfo.accountName}}
-                                                    </option>
-                                                </select>-->
+                                                <option class="form-control" *ngFor="let glinfo of allGlInfo" [ngValue]="glinfo.glAccountId">
+                                                    {{glinfo.accountName}}
+                                                </option>
+                                            </select>-->
 
                                             <input disabled class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentSelectedIntangibleAssetType.intangibleGLAccountObj">
                                         </div>
                                         <div class="form-group">
                                             <label>Intangible Write Down GL</label>
                                             <!--<select disabled="" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentSelectedIntangibleAssetType.intangibleWriteDownGLAccountId">
-                                                    <option>--Select--</option>
-                                                    <option class="form-control" *ngFor="let glinfo of allGlInfo" [ngValue]="glinfo.glAccountId">
-                                                        {{glinfo.accountName}}
-                                                    </option>
-                                                </select>-->
+                                                <option>--Select--</option>
+                                                <option class="form-control" *ngFor="let glinfo of allGlInfo" [ngValue]="glinfo.glAccountId">
+                                                    {{glinfo.accountName}}
+                                                </option>
+                                            </select>-->
                                             <input disabled class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentSelectedIntangibleAssetType.intangibleWriteDownGLAccountObj">
                                         </div>
                                         <div class="form-group">
                                             <label>Intangible Write Off GL</label>
                                             <!--<select disabled="" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentSelectedIntangibleAssetType.intangibleWriteDownGLAccountId">
-                                                    <option>--Select--</option>
-                                                    <option class="form-control" *ngFor="let glinfo of allGlInfo" [ngValue]="glinfo.glAccountId">
-                                                        {{glinfo.accountName}}
-                                                    </option>
-                                                </select>-->
+                                                <option>--Select--</option>
+                                                <option class="form-control" *ngFor="let glinfo of allGlInfo" [ngValue]="glinfo.glAccountId">
+                                                    {{glinfo.accountName}}
+                                                </option>
+                                            </select>-->
                                             <input disabled class="form-control" type="text" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentSelectedIntangibleAssetType.intangibleWriteOffGLAccountObj">
                                         </div>
                                         </div>
@@ -291,16 +292,16 @@
                                     <div class="form-group">
                                         <label>UOM <span class="clr-red">*</span></label>
                                         <select [ngModelOptions]="{standalone: true}" [(ngModel)]="currentAsset.unitOfMeasureId">
-                                            <option>--Select--</option>
+                                            <option>--NON Selected--</option>
                                             <option *ngFor="let unitName of allUnitOfMeasureinfo" [ngValue]="unitName.unitOfMeasureId">{{unitName.shortName}}</option>
                                         </select>
                                     </div>
                                     <div class="form-group ">
                                         <label>Currency<span class="clr-red">*</span></label>
                                         <select [ngModelOptions]="{standalone: true}" [(ngModel)]="currentAsset.currencyId">
-                                            <option>--Select--</option>
+                                            <option>--NON Selected--</option>
                                             <option class="form-control" *ngFor="let currencyName of allCurrencyInfo" [ngValue]="currencyName.currencyId">
-                                                {{currencyName.symbol}}
+                                                {{currencyName.code}}
                                             </option>
                                         </select>
                                     </div>
@@ -314,9 +315,11 @@
                                     </div>
                                     <div class="form-group">
                                         <label>Asset Location</label>
-                                        <select [ngModelOptions]="{standalone: true}" [(ngModel)]="currentAsset.asset_Location">
+                                        <select [ngModelOptions]="{standalone: true}" style="width:280px;" [(ngModel)]="currentAsset.asset_Location">
                                             <option *ngFor="let location of allAssetLocations" [ngValue]="location.assetLocationId">{{location.code+" - "+location.name}}</option>
                                         </select>
+                                        <!--<a data-dismiss="modal" [routerLink]="['/singlepages/singlepages/asset-location']"><i class="fa fa-plus-circle fa-lg"></i></a>-->
+                                        <span style="margin-left:3px;cursor:pointer;"><a class="fa fa-plus-circle fa-lg" data-toggle="modal" data-backdrop="static" data-target="#addassetlocation" (click)="open(addassetlocation)"></a></span>
                                     </div>
                                     <div class="form-group">
                                         <label>Memo</label>
@@ -332,11 +335,11 @@
                                 <div class="form-group">
                                     <label>Asset Parent</label>
                                     <!--<select [ngModelOptions]="{standalone: true}" [(ngModel)]="currentAsset.assetParentId">
-                                            <option>--Select--</option>
-                                            <option class="form-control" *ngFor="let asset of allAssetInfo"  [ngValue]="asset.assetId">
-                                                {{asset.assetId}}
-                                            </option>
-                                        </select>-->
+                                        <option>--Select--</option>
+                                        <option class="form-control" *ngFor="let asset of allAssetInfo"  [ngValue]="asset.assetId">
+                                            {{asset.assetId}}
+                                        </option>
+                                    </select>-->
 
                                     <p-autoComplete class="pautocomp-cstm" sstyle="font-size: 1px" (onKeyUp)=assetIdHandler($event)
                                                     [(ngModel)]="currentAsset.assetParentId" [ngModelOptions]="{standalone: true}"
@@ -353,7 +356,7 @@
                                     <div class="form-group">
                                         <label>Asset Class <span class="clr-red">*</span></label>
                                         <select [ngModelOptions]="{standalone: true}" [(ngModel)]="currentAsset.assetTypeId" (change)="showItemEdit(currentAsset.assetTypeId)">
-                                            <option>--Select--</option>
+                                            <option>--NON Selected--</option>
                                             <option class="form-control" *ngFor="let assetType of allAssetTypeInfo" [ngValue]="assetType.assetTypeId">
                                                 {{assetType.assetTypeName}}
                                             </option>
@@ -366,18 +369,18 @@
                                         <div class="form-group">
                                             <label>Depreciation Method</label>
                                             <!--<select disabled="" class="form-control" [(ngModel)]="currentSelectedAssetAttributeType.depreciationMethod" [ngModelOptions]="{standalone: true}">
-                                                    <option>--Select--</option>
-                                                    <option *ngFor="let depriciationMethod of depriciationMethodList" [ngValue]="depriciationMethod.assetDepreciationMethodId">  {{depriciationMethod.name}}</option>
-                                                </select>-->
+                                                <option>--Select--</option>
+                                                <option *ngFor="let depriciationMethod of depriciationMethodList" [ngValue]="depriciationMethod.assetDepreciationMethodId">  {{depriciationMethod.name}}</option>
+                                            </select>-->
 
                                             <input class="form-control" type="text" disabled="" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentSelectedAssetAttributeType.depreciationMethodObj">
                                         </div>
                                         <div class="form-group">
                                             <label>Residual %</label>
                                             <!--<select class="form-control" disabled="" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentSelectedAssetAttributeType.residualPercentage">
-                                                    <option>--Select--</option>
-                                                    <option [ngValue]="currentSelectedAssetAttributeType.residualPercentage">{{currentSelectedAssetAttributeType.residualPercentage}}</option>
-                                                </select>-->
+                                                <option>--Select--</option>
+                                                <option [ngValue]="currentSelectedAssetAttributeType.residualPercentage">{{currentSelectedAssetAttributeType.residualPercentage}}</option>
+                                            </select>-->
 
                                             <input class="form-control" type="text" disabled="" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentSelectedAssetAttributeType.residualPercentage">
                                         </div>
@@ -393,76 +396,76 @@
                                         <div class="form-group">
                                             <label>Depr Frequency</label>
                                             <!--<select disabled="" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentSelectedAssetAttributeType.depreciationFrequencyId">
-                                                    <option>--Select--</option>
-                                                    <option *ngFor="let depreciationFrequency of depreciationFrequencyList" [ngValue]="depreciationFrequency.value">
-                                                        {{depreciationFrequency.label}}
-                                                    </option>
-                                                </select>-->
+                                                <option>--Select--</option>
+                                                <option *ngFor="let depreciationFrequency of depreciationFrequencyList" [ngValue]="depreciationFrequency.value">
+                                                    {{depreciationFrequency.label}}
+                                                </option>
+                                            </select>-->
 
                                             <input class="form-control" type="text" disabled="" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentSelectedAssetAttributeType.depreciationFrequencyObj">
                                         </div>
                                         <div class="form-group">
                                             <label>Acquired GL</label>
                                             <!--<select disabled="" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentSelectedAssetAttributeType.acquiredGLAccountId">
-                                                   <option>--Select--</option>
-                                                   <option class="form-control" *ngFor="let glinfo of allGlInfo" [ngValue]="glinfo.glAccountId">
-                                                       {{glinfo.accountName}}
-                                                   </option>
-                                               </select>-->
+                                                <option>--Select--</option>
+                                                <option class="form-control" *ngFor="let glinfo of allGlInfo" [ngValue]="glinfo.glAccountId">
+                                                    {{glinfo.accountName}}
+                                                </option>
+                                            </select>-->
 
                                             <input class="form-control" type="text" disabled="" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentSelectedAssetAttributeType.acquiredGLAccountObj">
                                         </div>
                                         <div class="form-group">
                                             <label>Depr Expense GL</label>
                                             <!--<select disabled="" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentSelectedAssetAttributeType.deprExpenseGLAccountId">
-                                                    <option>--Select--</option>
-                                                    <option class="form-control" *ngFor="let glinfo of allGlInfo" [ngValue]="glinfo.glAccountId">
-                                                        {{glinfo.accountName}}
-                                                    </option>
-                                                </select>-->
+                                                <option>--Select--</option>
+                                                <option class="form-control" *ngFor="let glinfo of allGlInfo" [ngValue]="glinfo.glAccountId">
+                                                    {{glinfo.accountName}}
+                                                </option>
+                                            </select>-->
                                             <input class="form-control" type="text" disabled="" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentSelectedAssetAttributeType.deprExpenseGLAccountObj">
                                         </div>
                                         <div class="form-group">
                                             <label>AD Depr GL</label>
                                             <!--<select disabled="" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentSelectedAssetAttributeType.adDepsGLAccountId">
-                                                    <option>--Select--</option>
-                                                    <option class="form-control" *ngFor="let glinfo of allGlInfo" [ngValue]="glinfo.glAccountId">
-                                                        {{glinfo.accountName}}
-                                                    </option>
-                                                </select>-->
+                                                <option>--Select--</option>
+                                                <option class="form-control" *ngFor="let glinfo of allGlInfo" [ngValue]="glinfo.glAccountId">
+                                                    {{glinfo.accountName}}
+                                                </option>
+                                            </select>-->
 
                                             <input class="form-control" type="text" disabled="" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentSelectedAssetAttributeType.adDepsGLAccountObj">
                                         </div>
                                         <div class="form-group">
                                             <label>Sale GL</label>
                                             <!--<select disabled="" class="form-control" [(ngModel)]="currentSelectedAssetAttributeType.assetSale" [ngModelOptions]="{standalone: true}">
-                                                    <option>--Select--</option>
-                                                    <option class="form-control" *ngFor="let glinfo of allGlInfo" [ngValue]="glinfo.glAccountId">
-                                                        {{glinfo.accountName}}
-                                                    </option>
-                                                </select>-->
+                                                <option>--Select--</option>
+                                                <option class="form-control" *ngFor="let glinfo of allGlInfo" [ngValue]="glinfo.glAccountId">
+                                                    {{glinfo.accountName}}
+                                                </option>
+                                            </select>-->
 
                                             <input class="form-control" type="text" disabled="" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentSelectedAssetAttributeType.assetSaleObj">
                                         </div>
                                         <div class="form-group">
                                             <label>Write Off GL</label>
                                             <!--<select disabled="" class="form-control" [(ngModel)]="currentSelectedAssetAttributeType.assetWriteOff" [ngModelOptions]="{standalone: true}">
-                                                    <option>--Select--</option>
-                                                    <option class="form-control" *ngFor="let glinfo of allGlInfo" [ngValue]="glinfo.glAccountId">
-                                                        {{glinfo.accountName}}
-                                                    </option>
-                                                </select>-->
+                                                <option>--Select--</option>
+                                                <option class="form-control" *ngFor="let glinfo of allGlInfo" [ngValue]="glinfo.glAccountId">
+                                                    {{glinfo.accountName}}
+                                                </option>
+                                            </select>-->
 
                                             <input class="form-control" type="text" disabled="" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentSelectedAssetAttributeType.assetWriteOffObj">
                                         </div>
                                         <div class="form-group">
                                             <label>Write Down GL</label>
                                             <!--<select disabled="" class="form-control" [(ngModel)]="currentSelectedAssetAttributeType.assetWriteDown" [ngModelOptions]="{standalone: true}">
-                                                    <option>--Select--</option>
-                                                    <option class="form-control" *ngFor="let glinfo of allGlInfo" [ngValue]="glinfo.glAccountId">
-                                                        {{glinfo.accountName}}
-                                                    </option>
-                                                </select>-->
+                                                <option>--Select--</option>
+                                                <option class="form-control" *ngFor="let glinfo of allGlInfo" [ngValue]="glinfo.glAccountId">
+                                                    {{glinfo.accountName}}
+                                                </option>
+                                            </select>-->
 
                                             <input class="form-control" type="text" disabled="" [ngModelOptions]="{standalone: true}" [(ngModel)]="currentSelectedAssetAttributeType.assetWriteDownObj">
                                         </div>
@@ -517,13 +520,164 @@
         </div>
 
     </div>
+
 </form>
 
+<ng-template #addacquisition let-c="close" let-d="dismiss">
+    <div id="addacquisition"
+         class="modal fade"
+         role="dialog"
+         data-backdrop="static">
+        <form #addacquisition="ngForm">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button"
+                                class="close"
+                                data-dismiss="modal"
+                                (click)="dismissModel()">
+                            &times;
+                        </button>
+                        <h4 class="modal-title">
+                            Add Acquisition Type
+                        </h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>Acquisition Type Code<span class="clr-red">*</span></label>
+                            <div class="inner-addon right-addon inline-block">
+                                <p-autoComplete [(ngModel)]="codeName" name="codeName" (onSelect)="acqpartnmId($event)"
+                                                (onKeyUp)="acqeventHandler($event)" [suggestions]="acqlocalCollection"
+                                                (completeMethod)="filterAssetAcquisitionType($event)" [size]="30"
+                                                [minLength]="1" [dropdown]="true" class="p-autoComplete-ctsm" required></p-autoComplete>
+                                    <div *ngIf="recordExists && codeName" class="clr-red">Already Exists</div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                Acquisition Type
+                                <span class="clr-red">*</span>
+                            </label>
+                            <input type="text" name="name" class="form-control" required #Name="ngModel"
+                                   [(ngModel)]="acqsourceAction.name" minlength="2">
+                            <div *ngIf="Name.dirty && Name.errors?.required && Name.errors" class="invalid-form-error-message">
+                                Acquisition Type required.
+                            </div>
+                            <div *ngIf="Name.dirty && Name.errors?.minlength && Name.errors" class="invalid-form-error-message">
+                                Acquisition Type must be at least 2 characters long.
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Memo</label>
+                            <input type="text"
+                                   class="form-control"
+                                   [(ngModel)]="acqsourceAction.memo"
+                                   name="memo" minlength="2" />
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <span class="checkbox-cstm">
+                                    <label style="margin-top: 12px;" class="form-check-label">
+                                        <input type="checkbox" name="isActive" #isActive="ngModel" class="form-check-input trigger2" checked id="isActive" [(ngModel)]="acqsourceAction.isActive" [ngModelOptions]="{standalone: true}">
+                                        <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                        Active
+                                    </label>
+                                </span>
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" [disabled]="disableSave" data-dismiss="modal" (click)="SaveandEditAssetAcquisitionType()">Save</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="dismissModel()">Close</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</ng-template>
 
 
+<ng-template #addassetlocation let-c="close" let-d="dismiss">
+    <div id="addassetlocation"
+         class="modal fade"
+         role="dialog"
+         data-backdrop="static">
+        <form #addassetlocation="ngForm">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button"
+                                class="close"
+                                data-dismiss="modal"
+                                (click)="dismissModel()">
+                            &times;
+                        </button>
+                        <h4 class="modal-title">Add Asset Location</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>Asset Location Code <span class="clr-red">*</span></label>
+                            <div class="inner-addon right-addon inline-block">
+                                <p-autoComplete [(ngModel)]="codeName" name="codeName"
+                                                (onSelect)="partnmId($event)" (onKeyUp)="eventHandler($event)" [suggestions]="localCollection" (completeMethod)="filterAssetLocation($event)" [size]="30"
+                                                [minLength]="1" [dropdown]="true" class="p-autoComplete-ctsm" required>
+                                    <!--<ng-template let-codeName pTemplate="item">
+                                        <div class="ui-helper-clearfix">{{codeName}}</div>
+                                    </ng-template>-->
 
+                                </p-autoComplete>
+                                <div *ngIf="recordExists && codeName" class="clr-red">Already Exists</div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                Asset Location
+                                <span class="clr-red">*</span>
+                            </label>
+                            <input type="text" name="name" class="form-control" required #Name="ngModel" [(ngModel)]="sourceAction.name" minlength="2">
+                            <div *ngIf="Name.dirty && Name.errors?.required && Name.errors" class="invalid-form-error-message">
+                                Asset Location required.
+                            </div>
+                            <div *ngIf="Name.dirty && Name.errors?.minlength && Name.errors" class="invalid-form-error-message">
+                                Asset Location must be at least 2 characters long.
+                            </div>
+                        </div>
 
+                        <div class="form-group">
+                            <label>Memo</label>
+                            <input type="text"
+                                   class="form-control"
+                                   [(ngModel)]="sourceAction.memo"
+                                   name="memo" minlength="2" />
+                        </div>
 
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <span class="checkbox-cstm">
+                                    <label style="margin-top: 12px;" class="form-check-label">
+                                        <input type="checkbox" name="isActive" #isActive="ngModel" class="form-check-input trigger2" checked id="isActive" [(ngModel)]="sourceAction.isActive" [ngModelOptions]="{standalone: true}">
+                                        <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                        Active
+                                    </label>
+                                </span>
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" [disabled]="disableSave" data-dismiss="modal" (click)="SaveandEditAssetLocation()">Save</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="dismissModel()">Close</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</ng-template>
 <!--<button type="button" class="btn btn-success pull-right submit-btn" (click)="nextClick()">Next</button>-->
 
 <p-dialog header="Alert" [(visible)]="display" [modal]="true" [dismissableMask]="true" maximizedLeft="140px" maximizedTop="140px"

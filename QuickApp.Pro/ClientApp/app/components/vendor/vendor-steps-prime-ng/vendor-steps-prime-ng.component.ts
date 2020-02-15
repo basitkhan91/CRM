@@ -146,7 +146,12 @@ export class VendorStepsPrimeNgComponent implements OnInit {
 		if (value == 1) {
 			//	this.showComponentPTab = this.vendorService.ShowPtab;
 			this.activeMenuItem = 1;
-			this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-general-information');
+			if (this.vendorService.isEditMode) {
+				const vendorId = this.vendorService.listCollection.vendorId;
+				this.route.navigateByUrl(`/vendorsmodule/vendorpages/app-vendor-general-information/edit/${vendorId}`);
+			} else {
+				this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-general-information');
+			}
 		}
 
 		else if (value == 2) {
@@ -176,7 +181,7 @@ export class VendorStepsPrimeNgComponent implements OnInit {
 		else if (value == 7) {
 
 			this.activeMenuItem = 7;
-			this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-shipping-information');			
+			this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-shipping-information');
 		}
 		else if (value == 8) {
 

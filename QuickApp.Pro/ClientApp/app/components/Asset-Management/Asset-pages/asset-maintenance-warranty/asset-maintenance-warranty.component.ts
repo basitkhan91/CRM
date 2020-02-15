@@ -9,6 +9,7 @@ import { Vendor } from '../../../../models/vendor.model';
 import { AlertService, DialogType, MessageSeverity } from '../../../../services/alert.service';
 //import { Router } from '@angular/router';
 import { ActivatedRoute, Router } from '@angular/router';
+import { CommonService } from '../../../../services/common.service';
 
 @Component({
     selector: 'app-asset-maintenance-warranty',
@@ -17,7 +18,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 /** asset-maintenance-warranty component*/
 export class AssetMaintenanceWarrantyComponent implements OnInit {
-   
+
 
     currentMaintenance: any = {};
     localCollection: any;
@@ -30,9 +31,10 @@ export class AssetMaintenanceWarrantyComponent implements OnInit {
     AssetId: any;
     static assetService;
     isSaving: boolean;
+    assetwarrantystatusList: any[] = [];
     /** asset-maintenance-warranty ctor */
-    constructor(private router: ActivatedRoute,private assetService: AssetService, private vendorService: VendorService, private route: Router,
-        private authService: AuthService, private alertService: AlertService, private glAccountService: GlAccountService) {
+    constructor(private router: ActivatedRoute, private assetService: AssetService, private vendorService: VendorService, private route: Router,
+        private authService: AuthService, private alertService: AlertService, private glAccountService: GlAccountService, private commonservice: CommonService, ) {
         this.AssetId = this.router.snapshot.params['id'];
         this.activeIndex = 3;
         if (this.assetService.listCollection == undefined) {
@@ -46,8 +48,8 @@ export class AssetMaintenanceWarrantyComponent implements OnInit {
             }
             else if (this.assetService.generalCollection != null) {
                 this.showLable = true;
-                this.currentMaintenance = this.assetService.generalCollection;}
-
+                this.currentMaintenance = this.assetService.generalCollection;
+            }
             if (this.currentMaintenance.warrantyEndDate) {
                 this.currentMaintenance.warrantyEndDate = new Date(this.currentMaintenance.warrantyEndDate);
             }
@@ -68,6 +70,7 @@ export class AssetMaintenanceWarrantyComponent implements OnInit {
                 this.local = this.assetService.generalCollection;
                 this.currentMaintenance = this.local;
             }
+            this.currentMaintenance.warrantyStatus = this.getwarrantystatus(this.currentMaintenance.warrantyStatus);
         }
     }
     private GetAssetData(assetid) {
@@ -112,6 +115,7 @@ export class AssetMaintenanceWarrantyComponent implements OnInit {
         }
         this.glList();
         this.vendorList();
+        this.GetAssetWarrantyStatus();
     }
     ngOnInit(): void {
         this.AssetId = this.router.snapshot.params['id'];
@@ -121,11 +125,39 @@ export class AssetMaintenanceWarrantyComponent implements OnInit {
         this.activeIndex = 3;
         this.glList();
         this.vendorList();
+        this.GetAssetWarrantyStatus();
+        this.currentMaintenance.warrantyStatus = this.getwarrantystatus(this.currentMaintenance.warrantyStatus);
     }
     get userName(): string {
         return this.authService.currentUser ? this.authService.currentUser.userName : "";
     }
+    getwarrantystatus(id) {
+        for (let i = 0; i < this.assetwarrantystatusList.length; i++) {
+            if (id == this.assetwarrantystatusList[i].assetWarrantyStatusId)
+                return this.assetwarrantystatusList[i].warrantyStatus;
+        }
+    }
+    //getAssetWarrantyStatus() {
+    //    this.commonservice.smartDropDownList('AssetWarrantyStatus', 'AssetWarrantyStatusId', 'warrantyStatus').subscribe(res => {
+    //        this.assetwarrantystatusList = res;
 
+    //    })
+    //}
+
+    private GetAssetWarrantyStatus() {
+        this.alertService.startLoadingMessage();
+        this.loadingIndicator = true;
+        this.assetService.getAssetWarrantyStatus().subscribe(
+            results => this.onwarrantystatusSuccessful(results[0]),
+            error => this.onDataLoadFailed(error)
+        );
+    }
+
+    private onwarrantystatusSuccessful(assetwarrantystatus: any[]) {
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        this.assetwarrantystatusList = assetwarrantystatus;
+    }
     saveWarrenty() {
         delete this.currentMaintenance.assetType;
         delete this.currentMaintenance.currency;
@@ -184,20 +216,20 @@ export class AssetMaintenanceWarrantyComponent implements OnInit {
                 }
             }
             if (this.isSaving)
-            this.assetService.updateAsset(this.currentMaintenance).subscribe(data => {
-                this.currentMaintenance.updatedBy = this.userName;
-                this.localCollection = data;                
-                //this.alertService.showMessage('Asset Maintance updated successfully.');
-                this.alertService.showMessage("Success", `Asset Maintenance updated successfully.`, MessageSeverity.success);
-                this.route.navigateByUrl('assetmodule/assetpages/app-asset-listing');
-                //this.activeIndex = 3;
-                //this.assetService.indexObj.next(this.activeIndex);
-            })
+                this.assetService.updateAsset(this.currentMaintenance).subscribe(data => {
+                    this.currentMaintenance.updatedBy = this.userName;
+                    this.localCollection = data;
+                    //this.alertService.showMessage('Asset Maintance updated successfully.');
+                    this.alertService.showMessage("Success", `Asset Maintenance updated successfully.`, MessageSeverity.success);
+                    this.route.navigateByUrl('assetmodule/assetpages/app-asset-listing');
+                    //this.activeIndex = 3;
+                    //this.assetService.indexObj.next(this.activeIndex);
+                })
         }
     }
 
     customExcelUpload(event) {
-        
+
 
     }
     sampleExcelDownload() {

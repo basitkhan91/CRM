@@ -6,6 +6,8 @@ import { NgbModal, NgbActiveModal, NgbModalRef, ModalDismissReasons } from '@ng-
 import * as $ from 'jquery';
 import { ConfigurationService } from '../../../../services/configuration.service';
 import { EmployeeService } from '../../../../services/employee.service';
+import { LocalStoreManager } from '../../../../services/local-store-manager.service';
+import { DBkeys } from '../../../../services/db-Keys';
 
 
 
@@ -23,7 +25,7 @@ export class CustomerViewComponent implements OnInit {
     viewDataclassification: any[];
     customerContacts: any = [];
     customerContactsColumns: any[];
-    pageSize: number = 5;
+    pageSize: number = 10;
     restrictHeaders = [
         { field: 'partNumber', header: 'PN' },
         { field: 'partDescription', header: 'Description' },
@@ -76,7 +78,8 @@ export class CustomerViewComponent implements OnInit {
     warningHeaders = [
         { field: 'sourceModule', header: 'Module' },
         { field: 'warningMessage', header: 'Warning Message' },
-        { field: 'restrictMessage', header: 'Restrict Message' }
+        { field: 'restrictMessage', header: 'Restrict Message' },
+        { field: 'isActive', header: 'Is Active' }
 
     ]
     customerDocumentsColumns = [
@@ -111,9 +114,18 @@ export class CustomerViewComponent implements OnInit {
         { field: 'taxType', header: 'Tax Type' },
         { field: 'taxRate', header: 'Tax Rate' }
     ]
-    allCustomerFinanceDocumentsListColumns = [
-        { field: 'fileName', header: 'File Name' },
-    ]
+    // allCustomerFinanceDocumentsListColumns = [
+    //     { field: 'fileName', header: 'File Name' }, 
+    // ]
+    allCustomerFinanceDocumentsListColumns: any[] = [
+        { field: "fileName", header: "File Name" },
+        { field: 'createdDate', header: 'Created Date' },
+        { field: 'createdBy', header: 'CreatedBy' },
+        { field: 'updatedDate', header: 'Updated Date' },
+        { field: 'updatedBy', header: 'UpdatedBy' },
+        { field: 'download', header: 'Download' },
+        // { field: 'delete', header: 'Delete' },
+    ];
     aircraftListDataValues: any = [];
     ataListDataValues: any = [];
     billingInfoList: any = [];
@@ -121,7 +133,10 @@ export class CustomerViewComponent implements OnInit {
     DocumentsList: any = [];
     domesticShippingData: any;
     internationalShippingData: any = [];
-
+    // loader:boolean=true;
+    ataloader: boolean = true;
+    salesloader: boolean = true;
+    warningsloader: boolean = true;
     filterKeysByValue: object = {};
     taxTypeRateMapping: any = [];
     restrictedPMAParts: any = [];
@@ -133,7 +148,14 @@ export class CustomerViewComponent implements OnInit {
     countOfRestrictDerParts: any = 0;
     countOfRestrictPMAParts: any = 0;
     employeeListOriginal: any = [];
-    constructor(public customerService: CustomerService, private commonService: CommonService, private activeModal: NgbActiveModal, private configurations: ConfigurationService, public employeeService: EmployeeService
+    globalSettings: any = {};
+    global_lang: string;
+    constructor(public customerService: CustomerService, private commonService: CommonService,
+         private activeModal: NgbActiveModal,
+          private configurations: ConfigurationService,
+           public employeeService: EmployeeService,
+           private localStorage: LocalStoreManager,
+
     ) {
 
 
@@ -153,14 +175,14 @@ export class CustomerViewComponent implements OnInit {
         ];
         let customerId = this.customerId;
         this.customerService.getCustomerdataById(customerId).subscribe(res => {
-
+            this.salesloader = false;
             this.getAllEmployees();
-            this.getAllCustomerContact(customerId);
+            // this.getAllCustomerContact(customerId);
             this.getAircraftMappedDataByCustomerId(customerId);
             this.getMappedATAByCustomerId(customerId);
-            this.getBillingDataById(customerId);
-            this.getDomesticShippingByCustomerId(customerId);
-            this.getInternationalShippingByCustomerId(customerId);
+            // this.getBillingDataById(customerId);
+            // this.getDomesticShippingByCustomerId(customerId);
+            // this.getInternationalShippingByCustomerId(customerId);
             this.getCustomerWaringByCustomerId(customerId);
             this.getCustomerDocumentsByCustomerId(customerId);
             this.getMappedTaxTypeRateDetails(customerId);
@@ -168,16 +190,46 @@ export class CustomerViewComponent implements OnInit {
             this.getCustomerRestrictedDERByCustomerId(customerId);
             this.getCustomerClassificationByCustomerId(customerId);
             this.getCustomerIntegrationTypesByCustomerId(customerId);
-            this.toGetCustomerFinanceDocumentsList(customerId)
+            this.toGetCustomerFinanceDocumentsList(customerId);
             this.viewDataGeneralInformation = res[0];
+            this.viewDataGeneralInformation.creditLimit= this.formatCreditLimit(this.viewDataGeneralInformation.creditLimit)
+            this.getGlobalSettings();
             //debugger
             console.log(this.viewDataGeneralInformation);
+
+        }, err => {
+            this.salesloader = false;
         })
         // this.openStep1();
 
 
     }
-
+    getGlobalSettings() {
+        this.globalSettings = this.localStorage.getDataObject<any>(DBkeys.GLOBAL_SETTINGS) || {};
+        this.global_lang = this.globalSettings.cultureName;
+    }
+    formatCreditLimit(val){
+        if(val){
+            if(isNaN(val) ==  true){
+                val = Number(val.replace(/[^0-9.-]+/g,""));
+              }
+            this.viewDataGeneralInformation.creditLimit = new Intl.NumberFormat(this.global_lang, { style: 'decimal', minimumFractionDigits: 2,    maximumFractionDigits: 2}).format(val)
+            return this.viewDataGeneralInformation.creditLimit;
+        }
+        
+    }
+    pageIndexChange(event) {
+        this.pageSize = event.rows;
+    }
+    pageIndexChange1(event) {
+        this.pageSize = event.rows;
+    }
+    pageIndexChange2(event) {
+        this.pageSize = event.rows;
+    }
+    pageIndexChange5(event) {
+        this.pageSize = event.rows;
+    }
     getPageCount(totalNoofRecords, pageSize) {
         return Math.ceil(totalNoofRecords / pageSize)
     }
@@ -218,6 +270,9 @@ export class CustomerViewComponent implements OnInit {
         // const id = this.savedGeneralInformationData.customerId;
         await this.customerService.getATAMappedByCustomerId(customerId).subscribe(res => {
             this.ataListDataValues = res || [];
+            this.ataloader = false;
+        }, err => {
+            this.ataloader = false;
         })
     }
     async getBillingDataById(customerId) {
@@ -239,9 +294,12 @@ export class CustomerViewComponent implements OnInit {
 
         // const id = this.savedGeneralInformationData.customerId;
 
-        await this.customerService.getInternationalShippingByCustomerId(customerId, 0, 20).subscribe(res => {
+        await this.customerService.getInternationalShippingByCustomerId(customerId).subscribe(res => {
             this.internationalShippingData = res.paginationList || [];
             // this.totalRecordsForInternationalShipping = res.totalRecordsCount;
+            // this.loader = true;
+        }, err => {
+            // this.loader = false;
         })
 
 
@@ -250,16 +308,20 @@ export class CustomerViewComponent implements OnInit {
 
     async getCustomerWaringByCustomerId(customerId) {
         await this.customerService.getCustomerWarnings(customerId).subscribe(res => {
+            this.warningsloader = false;
             this.waringInfoList = res[0].map(x => {
                 return {
                     ...x,
                     sourceModule: `${x.t.sourceModule == null ? '' : x.t.sourceModule}`,
                     warningMessage: `${x.t.warningMessage == null ? '' : x.t.warningMessage}`,
-                    restrictMessage: `${x.t.restrictMessage == null ? '' : x.t.restrictMessage}`
+                    restrictMessage: `${x.t.restrictMessage == null ? '' : x.t.restrictMessage}`,
+                    isActive: `${x.t.isActive == null ? '' : x.t.isActive}`
                 };
             }) || [];
 
 
+        }, err => {
+            this.warningsloader = false;
         })
     }
 
@@ -314,6 +376,7 @@ export class CustomerViewComponent implements OnInit {
         var moduleId = 1;
         this.customerService.GetCustomerFinanceDocumentsList(customerId, moduleId).subscribe(res => {
             this.allCustomerFinanceDocumentsList = res;
+            console.log("respi",res)
 
         })
     }

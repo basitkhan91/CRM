@@ -1,263 +1,241 @@
-<div class="row">
-    <div class="col-md-5">
-            <div class="row">
-                    <div class=" col-md-12 sub-header-title text-center">
-                        Ship To
-                    </div>
-                  </div>
-                  
-                  <div class="row">
-                    <div class="col-md-4">
-                      <label class="sales-quote-shipping-label">SITE NAME<span class="clr-red">*</span></label>
-                    </div>
-              
-                    <div class="col-md-8">
-                        <select [(ngModel)]="salesOrderQuote.shipToSiteName" name="shipToSiteName" (change)="onShipSiteSelect(salesOrderQuote.shipToSiteName)" required>
-                            <option>--Select</option>
-                            <option *ngFor="let site of siteList" [ngValue]="site.siteName">
-                              {{site.siteName}}
-                              </option>
-                          </select>
-                     
-                    </div>
-                   
-                  </div>
-                  <div class="row">
-                    <div class="col-md-4">
-                      <label class="sales-quote-shipping-label">ADDRESS</label>
-                    </div>
-                    <div class="col-md-8">
-                        <input type="text" pInputText [(ngModel)]="salesOrderQuote.shipToAddress1" name="shipToAddress1"
-                        [disabled]="true" />
-                       
-                    </div>
-                   
-                  </div>
-                  <div class="row">
-                    <div class="col-md-4">
-                      <label class="sales-quote-shipping-label">CITY</label>
-                    </div>
-                    <div class="col-md-8">
-                        <input type="text" pInputText [(ngModel)]="salesOrderQuote.shipToCity" name="shipToCity"
-                        [disabled]="true" />
-                    </div>
-                   
-                  </div>
-                  <div class="row">
-                    <div class="col-md-4">
-                      <label class="sales-quote-shipping-label">PRIMARY STATE/PROVINC</label>
-                    </div>
-                    <div class="col-md-8">
-                        <input type="text" pInputText [(ngModel)]="salesOrderQuote.shipToState" name="shipToState"
-                        [disabled]="true" />
-                    </div>
-                   
-                  </div>
-                  <div class="row">
-                    <div class="col-md-4">
-                      <label class="sales-quote-shipping-label">POSTAL</label>
-                    </div>
-                    <div class="col-md-8">
-                        <input type="text" pInputText [(ngModel)]="salesOrderQuote.shipToPostalCode" name="shipToPostalCode"
-                        [disabled]="true" />
-                    </div>
-                   
-                  </div>
-                  <div class="row">
-                    <div class="col-md-4">
-                      <label class="sales-quote-shipping-label">COUNTRY</label>
-                    </div>
-                    <div class="col-md-8">
-                        <input type="text" pInputText [(ngModel)]="salesOrderQuote.shipToCountry" name="shipToCountry"
-                        [disabled]="true" />
-                    </div>
-                   
-                  </div>
-                  <div class="row">
-                    <div class="col-md-4">
-                      <label class="sales-quote-shipping-label">CONTACT NAME<span class="clr-red">*</span></label>
-                    </div>
-                    <div class="col-md-8">
-                        
-                      <p-autoComplete
-                      class="autocomp-customer-cstm"
-                      [(ngModel)]="salesOrderQuote.shipToContactId"
-                      [suggestions]="customerNames"
-                      [forceSelection]="true"
-                      emptyMessage="No Match Found"
-                      field="name"
-                      (completeMethod)="filterNames($event)"
-                      [size]="30"
-                      [minLength]="1"
-                      [dropdown]="true"
-                    >
-                    </p-autoComplete>
-                    </div>
-                   
-                  </div>
-                  <div class="row">
-                    <div class="col-md-4">
-                      <label class="sales-quote-shipping-label">SHIP VIA</label>
-                    </div>
-                    <div class="col-md-8">
-                        <select [(ngModel)]="salesOrderQuote.shipViaName" name="shipViaName" (change)="onShipViaSelect(salesOrderQuote.shipViaName)" required>
-                            <option>--Select</option>
-                            <option *ngFor="let shipVia of demosticShippingViaData" [ngValue]="shipVia.shipVia">
-                              {{shipVia.shipVia}}
-                              </option>
-                          </select>
-                    </div>
-                   
-                  </div>
-                  <div class="row">
-                    <div class="col-md-4">
-                      <label class="sales-quote-shipping-label">SHIPPING ACCT INFO</label>
-                    </div>
-                    <div class="col-md-8">
-                        <input type="text" pInputText [(ngModel)]="salesOrderQuote.shipViaShippingAccountInfo" name="shipViaShippingAccountInfo"
-                        [disabled]="true" />
-                    </div>
-                   
-                  </div>
-                  <div class="row">
-                    <div class="col-md-4">
-                      <label class="sales-quote-shipping-label">SHIPPING URL</label>
-                    </div>
-                    <div class="col-md-8">
-                        <input type="text" pInputText [(ngModel)]="salesOrderQuote.shipViaShippingURL" name="shipViaShippingURL"
-                        [disabled]="true" />
-                    </div>
-                   
-                  </div>
-                  <div class="row">
-                    <div class="col-md-4">
-                      <label class="sales-quote-shipping-label">SHIPPING ID</label>
-                    </div>
-                    <div class="col-md-8">
-                        <input type="text" pInputText [(ngModel)]="salesOrderQuote.shippingId" name="shippingId"
-                        [disabled]="true" />
-                    </div>
-                   
-                  </div>
-                  <div class="row">
-                    <div class="col-md-4">
-                      <label class="sales-quote-shipping-label">MEMO</label>
-                    </div>
-                    <div class="col-md-8">
-                        <textarea type="text" [(ngModel)]="salesOrderQuote.shipViaMemo" name="shipViaMemo"
-                        >
-                        </textarea>
-                    </div>
-                   
-                  </div>
+<div class="form-row ro-view-address">
+  <div class="col-md-3">
+    <h5 class="po-head">Ship To</h5>
+    <div class="form-group">
+      <label class="sales-quote-shipping-label">
+        Site Name <span class="clr-red">*</span>
+        <span style="margin-left:3px;cursor:pointer;"><a class="fa fa-plus-circle fa-lg" matTooltip="Add Site Name" matTooltipPosition="above" data-toggle="modal" data-target="#createPOSiteName" ></a></span>
+        <span style="margin-left:5px;cursor:pointer;"><a class="fa fa-edit fa-lg" matTooltip="Edit Site Name" matTooltipPosition="above" data-toggle="modal" data-target="#createPOSiteName"></a></span>
+      </label>
+      <select [(ngModel)]="salesOrderQuote.shipToSiteName" name="shipToSiteName" (change)="onShipSiteSelect(salesOrderQuote.shipToSiteName)" required>
+        <option>--Select</option>
+        <option *ngFor="let site of siteList" [ngValue]="site.siteName">
+          {{site.siteName}}
+          </option>
+      </select>
+      
     </div>
-    <div class="col-md-2">
+    <div class="form-group">
+      <label class="sales-quote-shipping-label">ADDRESS</label>
+      <input type="text" class="form-control" [(ngModel)]="salesOrderQuote.shipToAddress1" name="shipToAddress1"
+          [disabled]="true" />
+     
     </div>
-    <div class="col-md-5">
-            <div class="row">
-                    <div class=" col-md-12 sub-header-title text-center">
-                        Bill To
-                    </div>
-                  </div>
-                  
-                  <div class="row">
-                    <div class="col-md-4">
-                      <label class="sales-quote-shipping-label">SITE NAME<span class="clr-red">*</span></label>
-                    </div>
-                    <div class="col-md-8">
-                        <select [(ngModel)]="salesOrderQuote.billToSiteName" name="billToSiteName" (change)="onBillSiteSelect(salesOrderQuote.billToSiteName)" required>
-                            <option>--Select</option>
-                            <option *ngFor="let site of billingInfoList" [ngValue]="site.siteName">
-                                {{site.siteName}}
-                                </option>
-                          </select>
-                     
-                    </div>
-                   
-                  </div>
-                  <div class="row">
-                    <div class="col-md-4">
-                      <label class="sales-quote-shipping-label">ADDRESS</label>
-                    </div>
-                    <div class="col-md-8">
-                        <input type="text" pInputText [(ngModel)]="salesOrderQuote.billToAddress1" name="billToAddress1"
-                        [disabled]="true" />
-                    </div>
-                   
-                  </div>
-                  <div class="row">
-                    <div class="col-md-4">
-                      <label class="sales-quote-shipping-label">CITY</label>
-                    </div>
-                    <div class="col-md-8">
-                        <input type="text" pInputText [(ngModel)]="salesOrderQuote.billToCity" name="billToCity"
-                        [disabled]="true" />
-                    </div>
-                   
-                  </div>
-                  <div class="row">
-                    <div class="col-md-4">
-                      <label class="sales-quote-shipping-label">PRIMARY STATE/PROVINC</label>
-                    </div>
-                    <div class="col-md-8">
-                        <input type="text" pInputText [(ngModel)]="salesOrderQuote.billToState" name="billToState"
-                        [disabled]="true" />
-                    </div>
-                   
-                  </div>
-                  <div class="row">
-                    <div class="col-md-4">
-                      <label class="sales-quote-shipping-label">POSTAL</label>
-                    </div>
-                    <div class="col-md-8">
-                        <input type="text" pInputText [(ngModel)]="salesOrderQuote.billToPostalCode" name="billToPostalCode"
-                        [disabled]="true" />
-                    </div>
-                   
-                  </div>
-                  <div class="row">
-                    <div class="col-md-4">
-                      <label class="sales-quote-shipping-label">COUNTRY</label>
-                    </div>
-                    <div class="col-md-8">
-                        <input type="text" pInputText [(ngModel)]="salesOrderQuote.billToCountry" name="billToCountry"
-                        [disabled]="true" />
-                    </div>
-                   
-                  </div>
-                  <div class="row">
-                    <div class="col-md-4">
-                      <label class="sales-quote-shipping-label">CONTACT NAME</label>
-                    </div>
-                    <div class="col-md-8">
-                      <p-autoComplete
-                      class="autocomp-customer-cstm"
-                      [(ngModel)]="salesOrderQuote.billToContactId"
-                      [suggestions]="customerNames"
-                      [forceSelection]="true"
-                      emptyMessage="No Match Found"
-                      field="name"
-                      (completeMethod)="filterNames($event)"
-                      [size]="30"
-                      [minLength]="1"
-                      [dropdown]="true"
-                    >
-                    </p-autoComplete>
-                    </div>
-                   
-                  </div>
+    <div class="form-group">
+     
+        <label class="sales-quote-shipping-label">CITY</label>
+      
+          <input type="text" class="form-control" [(ngModel)]="salesOrderQuote.shipToCity" name="shipToCity"
+          [disabled]="true" />
+     
+     
+    </div>
+    <div class="form-group">
+     
+        <label class="sales-quote-shipping-label">PRIMARY STATE/PROVINC</label>
+      
+          <input type="text" class="form-control" [(ngModel)]="salesOrderQuote.shipToState" name="shipToState"
+          [disabled]="true" />
+     
+     
+    </div>
+    <div class="form-group">
+     
+        <label class="sales-quote-shipping-label">POSTAL</label>
+      
+          <input type="text" class="form-control" [(ngModel)]="salesOrderQuote.shipToPostalCode" name="shipToPostalCode"
+          [disabled]="true" />
+      
+     
+    </div>
+    <div class="form-group">
+     
+        <label class="sales-quote-shipping-label">COUNTRY</label>
+      
+          <input type="text" class="form-control" [(ngModel)]="salesOrderQuote.shipToCountry" name="shipToCountry"
+          [disabled]="true" />
+      
+    </div>
+    <div class="form-group">
+      
+        <label class="sales-quote-shipping-label">CONTACT NAME<span class="clr-red">*</span></label>
+      
+          
+        <p-autoComplete
+        class="autocomp-customer-cstm"
+        [(ngModel)]="salesOrderQuote.shipToContactId"
+        [suggestions]="customerNames"
+        [forceSelection]="true"
+        emptyMessage="No Match Found"
+        field="name"
+        (completeMethod)="filterNames($event)"
+        [size]="30"
+        [minLength]="1"
+        [dropdown]="true"
+      >
+      </p-autoComplete>
+      
+     
+    </div>
+    <div class="form-group memo-popup-cstm" style="margin-top: 12px;">
+      <label class="sales-quote-shipping-label">Memo</label>
+      <span pTooltip="{{salesOrderQuote.shipViaMemo}}" tooltipPosition="top"><input type="text" name="shipViaMemo" class="form-control" class="form-control" value="{{salesOrderQuote.shipViaMemo}}" disabled /></span>
+      <i class="fa fa-info-circle fa-lg" data-toggle="modal" data-target="#add-memo-description" pTooltip="{{salesOrderQuote.shipViaMemo}}" tooltipPosition="top" (click)="onAddDescription('shipViaMemo')"></i>
+    </div>
+    <div class="form-group">
+     
+        <label class="sales-quote-shipping-label">SHIP VIA
+          <span style="margin-left:3px;cursor:pointer;"><a class="fa fa-plus-circle fa-lg" matTooltip="Add Ship Via" matTooltipPosition="above" data-toggle="modal" data-target="#shipToShipVia"></a></span>
+									<span style="margin-left:5px;cursor:pointer;"><a class="fa fa-edit fa-lg" matTooltip="Edit Ship Via" matTooltipPosition="above" data-toggle="modal" data-target="#shipToShipVia"></a></span>
+        </label>
+     
+          <select [(ngModel)]="salesOrderQuote.shipViaName" name="shipViaName" (change)="onShipViaSelect(salesOrderQuote.shipViaName)" required>
+              <option>--Select</option>
+              <option *ngFor="let shipVia of demosticShippingViaData" [ngValue]="shipVia.shipVia">
+                {{shipVia.shipVia}}
+                </option>
+            </select>
+     
+     
+    </div>
+    <div class="form-group">
+      
+        <label class="sales-quote-shipping-label">SHIPPING ACCT INFO</label>
+     
+          <input type="text" class="form-control" [(ngModel)]="salesOrderQuote.shipViaShippingAccountInfo" name="shipViaShippingAccountInfo"
+          [disabled]="true" />
+      
+     
+    </div>
+    <div class="form-group">
+     
+        <label class="sales-quote-shipping-label">SHIPPING URL</label>
+     
+          <input type="text" class="form-control" [(ngModel)]="salesOrderQuote.shipViaShippingURL" name="shipViaShippingURL"
+          [disabled]="true" />
+     
+     
+    </div>
+    <div class="form-group">
+     
+        <label class="sales-quote-shipping-label">SHIPPING ID</label>
+     
+          <input type="text" class="form-control" [(ngModel)]="salesOrderQuote.shippingId" name="shippingId"
+          [disabled]="true" />
+     
+     
+    </div>
 
-                  <div class="row">
-                    <div class="col-md-4">
-                      <label class="sales-quote-shipping-label">MEMO</label>
-                    </div>
-                    <div class="col-md-8">
-                        <textarea type="text" [(ngModel)]="salesOrderQuote.billToMemo" name="billToMemo"
-                        >
-                        </textarea>
-                    </div>
+   
+
+
+
+
+    </div>
+    <div class="col-md-3">
+      <h5 class="po-head">Bill To</h5>
+      <div class="form-group">
                    
-                  </div>
+        <label class="sales-quote-shipping-label">SITE NAME<span class="clr-red">*</span>
+          <span style="margin-left:3px;cursor:pointer;"><a class="fa fa-plus-circle fa-lg" matTooltip="Add Site Name" matTooltipPosition="above" data-toggle="modal" data-target="#createPOSiteName"></a></span>
+          <span style="margin-left:5px;cursor:pointer;"><a class="fa fa-edit fa-lg" matTooltip="Edit Site Name" matTooltipPosition="above" data-toggle="modal" data-target="#createPOSiteName"></a></span>
+        </label>
+     
+          <select [(ngModel)]="salesOrderQuote.billToSiteName" name="billToSiteName" (change)="onBillSiteSelect(salesOrderQuote.billToSiteName)" required>
+              <option>--Select</option>
+              <option *ngFor="let site of billingInfoList" [ngValue]="site.siteName">
+                  {{site.siteName}}
+                  </option>
+            </select>
+       
+     
+     
+    </div>
+   <div class="form-group">
+    <label class="sales-quote-shipping-label">ADDRESS</label>
+     
+    <input type="text" class="form-control" [(ngModel)]="salesOrderQuote.billToAddress1" name="billToAddress1"
+    [disabled]="true" />
+     
+    </div>
+   <div class="form-group">
+    <label class="sales-quote-shipping-label">CITY</label>
+      
+    <input type="text" class="form-control" [(ngModel)]="salesOrderQuote.billToCity" name="billToCity"
+    [disabled]="true" />
+     
+    </div>
+   <div class="form-group">
+    <label class="sales-quote-shipping-label">PRIMARY STATE/PROVINC</label>
+      
+    <input type="text" class="form-control" [(ngModel)]="salesOrderQuote.billToState" name="billToState"
+    [disabled]="true" />
+     
+    </div>
+   <div class="form-group">
+    <label class="sales-quote-shipping-label">POSTAL</label>
+     
+    <input type="text" class="form-control" [(ngModel)]="salesOrderQuote.billToPostalCode" name="billToPostalCode"
+    [disabled]="true" />
+     
+    </div>
+   <div class="form-group">
+    <label class="sales-quote-shipping-label">COUNTRY</label>
+      
+    <input type="text" class="form-control" [(ngModel)]="salesOrderQuote.billToCountry" name="billToCountry"
+    [disabled]="true" />
+     
+    </div>
+   <div class="form-group">
+     
+        <label class="sales-quote-shipping-label">CONTACT NAME</label>
+     
+        <p-autoComplete
+        class="autocomp-customer-cstm"
+        [(ngModel)]="salesOrderQuote.billToContactId"
+        [suggestions]="customerNames"
+        [forceSelection]="true"
+        emptyMessage="No Match Found"
+        field="name"
+        (completeMethod)="filterNames($event)"
+        [size]="30"
+        [minLength]="1"
+        [dropdown]="true"
+      >
+      </p-autoComplete>
+     
+     
+    </div>
+    <div class="form-group memo-popup-cstm" style="margin-top: 12px;">
+      <label class="sales-quote-shipping-label">Memo</label>
+      <span pTooltip="{{salesOrderQuote.billToMemo}}" tooltipPosition="top"><input type="text" name="billToMemo" class="form-control" class="form-control" value="{{salesOrderQuote.billToMemo}}" disabled /></span>
+      <i class="fa fa-info-circle fa-lg" data-toggle="modal" data-target="#add-memo-description" pTooltip="{{salesOrderQuote.billToMemo}}" tooltipPosition="top" (click)="onAddDescription('billToMemo')"></i>
+    </div>
 
     </div>
 </div>
+
+<div class="modal fade" id="add-memo-description" role="dialog" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog modal-sm" style="max-width: 400px !important;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Edit {{tempMemoLabel}}</h4>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="sales-quote-shipping-label">{{tempMemoLabel}}</label>
+          <textarea class="form-control" name="tempMemo" [(ngModel)]="tempMemo" value={{tempMemo}}></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="onSaveDescription()">Save</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+

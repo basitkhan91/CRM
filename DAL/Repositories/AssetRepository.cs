@@ -227,9 +227,28 @@ in _appContext.ItemMaster on ac.ItemMasterId equals im.ItemMasterId
                                 captypedescription = captype.Description,
                                 manufacturer = act.Description,
                                 modelname = acm.ModelName,
-                                dashnumber = dn.DashNumber,
+                                dashnumber = acm.ModelName + "-" + dn.DashNumber,
                                 ac.IsActive,
                                 ac.AircraftTypeId
+
+                            }).ToList();
+                return data;
+            }
+        }
+
+
+        public IEnumerable<object> GetAssetWarrantyStatus()
+        {
+            {
+                var data = (from asset in _appContext.AssetWarrantyStatus
+                            where (asset.IsDeleted == false) && (asset.IsActive == true)
+
+                            select new
+                            {
+                                asset.AssetWarrantyStatusId,
+                                asset.warrantyStatus,
+                                asset.IsActive,
+                                asset.IsDeleted
 
                             }).ToList();
                 return data;

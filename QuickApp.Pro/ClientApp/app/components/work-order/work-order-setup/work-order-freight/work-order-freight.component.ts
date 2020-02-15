@@ -23,6 +23,7 @@ export class WorkOrderFreightComponent implements OnInit {
     @Output() saveFreightListForWO = new EventEmitter();
     @Output() updateFreightListForWo = new EventEmitter();
     @Output() refreshData = new EventEmitter();
+    @Input() view: boolean = false;
     
     @Input() isWorkOrder;
     @Input() isQuote = false;
@@ -34,7 +35,7 @@ export class WorkOrderFreightComponent implements OnInit {
     carrierList: any;
     editingIndex: any;
     overAllMarkup: any;
-    costPlusType: string = "Mark Up";
+    costPlusType: number = 0;
     cols = [
         { field: 'carrierName', header: 'Carrier' },
         { field: 'shipViaName', header: 'Ship Via' },
@@ -53,12 +54,15 @@ export class WorkOrderFreightComponent implements OnInit {
         private cdRef: ChangeDetectorRef) {
     }
     ngOnInit() {
-        this.freightForm = [...this.freightForm, new Freight()];
+        if(this.freightForm){
+            this.freightForm = [...this.freightForm, new Freight()];
+        }
         this.customerId = editValueAssignByCondition('customerId', this.savedWorkOrderData.customerId);
         this.getShipViaByCustomerId();
         this.getCarrierList();
-        if(this.workOrderFreightList && this.workOrderFreightList.length>0 && this.workOrderFreightList[0].markupFixedPrice){
+        if(this.workOrderFreightList && this.workOrderFreightList.length>0 && this.workOrderFreightList[0].headerMarkupId){
             this.costPlusType = this.workOrderFreightList[0].markupFixedPrice;
+            this.overAllMarkup = Number(this.workOrderFreightList[0].headerMarkupId);
         }
     }
 
@@ -92,7 +96,15 @@ export class WorkOrderFreightComponent implements OnInit {
         this.freightForm = [new Freight()];
     }
     addNewRow() {
-        this.freightForm = [...this.freightForm, new Freight()];
+        let newFreight = new Freight();
+        this.taskList.forEach(
+            task=>{
+                if(task.description == "Assemble"){
+                    newFreight['taskId'] = task.taskId;
+                }
+            }
+        )
+        this.freightForm = [...this.freightForm, newFreight];
     }
     edit(rowData, index) {
         this.editingIndex = index;
@@ -132,7 +144,7 @@ export class WorkOrderFreightComponent implements OnInit {
 
     createFreightsQuote() {
         this.workOrderFreightList = this.workOrderFreightList.map((f)=>{
-            return {...f, markupFixedPrice: this.costPlusType}
+            return {...f, headerMarkupId: Number(this.overAllMarkup), markupFixedPrice: this.costPlusType}
         })
         this.saveFreightListForWO.emit(this.workOrderFreightList);
     }
@@ -163,18 +175,30 @@ export class WorkOrderFreightComponent implements OnInit {
         try{
             this.markupList.forEach((markup)=>{
             if(type == 'row' && markup.value == matData.markupPercentageId){
-                matData.freightCostPlus = Number(matData.amount) + ((Number(matData.amount) / 100) * Number(markup.label))
+                // matData.freightCostPlus = Number(matData.amount) + ((Number(matData.amount) / 100) * Number(markup.label))
+                matData.billingAmount = (Number(matData.amount) + ((Number(matData.amount) / 100) * Number(markup.label))).toFixed(2)
+                // matData['billingAmount'] = Number(matData['billingRate']) * Number(matData.weight);
             }
             else if(type == 'all' && markup.value == this.overAllMarkup){
                 this.workOrderFreightList.forEach((mData)=>{
-                mData.markupPercentageId = this.overAllMarkup;
-                mData.freightCostPlus = Number(mData.amount) + ((Number(mData.amount) / 100) * Number(markup.label))
-                })
+                if(mData.billingMethodId && Number(mData.billingMethodId) == 1){
+                    mData.markupPercentageId = Number(this.overAllMarkup);
+                    // mData.freightCostPlus = Number(mData.amount) + ((Number(mData.amount) / 100) * Number(markup.label))
+                    mData.billingAmount = (Number(mData.amount) + ((Number(mData.amount) / 100) * Number(markup.label))).toFixed(2)
+                    // mData['billingAmount'] = Number(mData['billingRate']) * Number(mData.weight);  
+                }  
+            })
             }
             })
         }
         catch(e){
             console.log(e);
+        }
+    }
+
+    tmchange(){
+        for(let mData of this.workOrderFreightList){
+            mData.billingMethodId = this.costPlusType;
         }
     }
     
@@ -189,35 +213,35 @@ export class WorkOrderFreightComponent implements OnInit {
             }
           )
         }
-        return total;
+        return total.toFixed(2);
       }
     
-      getCostPlus() {
+    //   getTotalBillingRate() {
+    //     let total = 0;
+    //     if(this.workOrderFreightList){
+    //       this.workOrderFreightList.forEach(
+    //         (material) => {
+    //           if (material.billingRate) {
+    //             total += Number(material.billingRate);
+    //           }
+    //         }
+    //       )
+    //     }
+    //     return total;
+    //   }
+    
+      getTotalBillingAmount() {
         let total = 0;
         if(this.workOrderFreightList){
           this.workOrderFreightList.forEach(
             (material) => {
-              if (material.freightCostPlus) {
-                total += material.freightCostPlus;
+              if (material.billingAmount) {
+                total += Number(material.billingAmount);
               }
             }
           )
         }
-        return total;
-      }
-    
-      getTotalFixedAmount() {
-        let total = 0;
-        if(this.workOrderFreightList){
-          this.workOrderFreightList.forEach(
-            (material) => {
-              if (material.fixedAmount) {
-                total += Number(material.fixedAmount);
-              }
-            }
-          )
-        }
-        return total;
+        return total.toFixed(2);
       }
 
 }

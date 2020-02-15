@@ -93,10 +93,10 @@ export class SalesPartNumberComponent {
 
   onCloseMargin(event) {
     this.show = false;
-    this.selectedPart.selected = false;
     this.salesMarginModal.close();
     console.log("close event");
     if(!this.isEdit){
+      this.selectedPart.selected = false;
       this.openPartNumber();
     }
   }
@@ -115,24 +115,10 @@ export class SalesPartNumberComponent {
   openPartNumber() {
     console.log(this.salesQuote);
     let contentPart = this.addPart;
-    this.addPartModal = this.modalService.open(contentPart, { size: "lg" });
-    // this.addPartModal.componentInstance.salesQuote = this.salesQuote;
-    // this.addPartModal.componentInstance.display = this.show;
-    /* this.addPartModal.componentInstance.close.subscribe(($e) => {
-      console.log($e);
-      this.onClose($e);
-    })
-    this.addPartModal.componentInstance.select.subscribe(($e) => {
-      console.log($e);
-      this.onClose($e);
-    })*/
+    this.addPartModal = this.modalService.open(contentPart, { size: "lg", backdrop: 'static', keyboard: false });
     this.addPartModal.result.then(
-      () => {
-        console.log("When user closes");
-      },
-      () => {
-        console.log("Backdrop click");
-      }
+      () => { },
+      () => { }
     );
   }
   openSalesMargin(event) {
@@ -180,13 +166,10 @@ export class SalesPartNumberComponent {
           this.part.quantityAlreadyQuoted = this.query.partSearchParamters.quantityAlreadyQuoted;
         });
         this.addPartModal.close();
-        this.salesMarginModal = this.modalService.open(contentMargin, { size: "lg" });
+        this.salesMarginModal = this.modalService.open(contentMargin, { size: "lg", backdrop: 'static', keyboard: false });
         this.salesMarginModal.result.then(
-          () => {
-            console.log("When user closes");
-          },
-          () => {
-            console.log("Backdrop click");
+          () => { },
+          () => { 
             this.selectedPart.selected = false;
           }
         );
@@ -237,28 +220,19 @@ export class SalesPartNumberComponent {
         this.part.quantityAlreadyQuoted = this.query.partSearchParamters.quantityAlreadyQuoted;
       });
      // this.addPartModal.close();
-      this.salesMarginModal = this.modalService.open(contentPartEdit, { size: "lg" });
+      this.salesMarginModal = this.modalService.open(contentPartEdit, { size: "lg", backdrop: 'static', keyboard: false });
       this.salesMarginModal.result.then(
-        () => {
-          console.log("When user closes");
-        },
-        () => {
-          console.log("Backdrop click");
-         // this.selectedPart.selected = false;
-        }
+        () => {},
+        () => { }
       );
     }
   }
   openPartDelete(contentPartDelete, part) {
     this.part = part;
-    this.deletePartModal = this.modalService.open(contentPartDelete, { size: "sm" });
+    this.deletePartModal = this.modalService.open(contentPartDelete, { size: "sm", backdrop: 'static', keyboard: false });
     this.deletePartModal.result.then(
-      () => {
-        console.log("When user closes");
-      },
-      () => {
-        console.log("Backdrop click");
-      }
+      () => { },
+      () => { }
     );
   }
   deletePart(): void {

@@ -472,7 +472,7 @@ export class WorkOrderListComponent implements OnInit {
 
     edit(rowData) {
         const { workOrderId } = rowData;
-        this.workOrderService.getWorkOrderById(workOrderId).subscribe(res => {
+        this.workOrderService.getWorkOrderById(workOrderId,0).subscribe(res => {
             this.route.navigate([`workordersmodule/workorderspages/app-work-order-edit/${workOrderId}`]);
         })
     }

@@ -116,14 +116,14 @@ export class CustomerGeneralInformationComponent implements OnInit {
     modal: NgbModalRef;
     parentCustomer = [];
     parentCustomerOriginal = []
-
+    stopmulticlicks:boolean;
 
 
 
     constructor(public integrationService: IntegrationService, private modalService: NgbModal, public customerClassificationService: CustomerClassificationService, public ataservice: AtaMainService, private authService: AuthService, private alertService: AlertService,
         public customerService: CustomerService, public itemService: ItemMasterService, public vendorser: VendorService, private currencyService: CurrencyService, private commonService: CommonService) {
 
-
+            this.stopmulticlicks=false;
 
 
 
@@ -163,7 +163,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
                     ...this.editData,
                     name: getObjectByValue('name', res.name, this.customerallListOriginal),
                     country: getObjectById('countries_id', res.country, this.countryListOriginal),
-                    customerParentName: getObjectByValue('name', res.customerParentName, this.customerallListOriginal),
+                    parentId: getObjectById('customerId', res.parentId, this.customerallListOriginal),
                     customerCode: getObjectByValue('customerCode', res.customerCode, this.customerallListOriginal),
                     customerAffiliationId: String(res.customerAffiliationId)
 
@@ -172,7 +172,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
                     ...this.editData,
 
                     country: getObjectById('countries_id', res.country, this.countryListOriginal),
-                    customerParentName: getObjectByValue('name', res.customerParentName, this.customerallListOriginal),
+                    parentId: getObjectByValue('customerId', res.parentId, this.customerallListOriginal),
                     customerCode: getObjectByValue('customerCode', res.customerCode, this.customerallListOriginal),
 
 
@@ -664,17 +664,18 @@ export class CustomerGeneralInformationComponent implements OnInit {
         }
 
     }
+    
     saveGeneralInformation() {
-
-
+        this.stopmulticlicks=true;
         if (!this.isEdit) {
+          
             this.customerService.newAction({
                 ...this.generalInformation,
                 country: getValueFromObjectByKey('countries_id', this.generalInformation.country),
 
                 restrictedDERParts: (typeof this.generalInformation.restrictedDERParts === 'undefined') ? null : this.generalInformation.restrictedDERParts.map(x => { return { ...x, partType: 'DER' } }),
                 restrictedPMAParts: typeof this.generalInformation.restrictedPMAParts === 'undefined' ? null : this.generalInformation.restrictedPMAParts.map(x => { return { ...x, partType: 'PMA' } }),
-                customerParentName: getValueFromObjectByKey('name', this.generalInformation.customerParentName),
+                parentId: getValueFromObjectByKey('customerId', this.generalInformation.parentId),
                 createdBy: this.userName, updatedBy: this.userName, masterCompanyId: 1
             }).subscribe(res => {
                 this.alertService.showMessage(
@@ -688,6 +689,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
                 this.editData = res;
                 this.isEdit = true;
             })
+       
         } else { 
 
 
@@ -702,7 +704,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
                 customerCode: editValueAssignByCondition('customerCode', this.generalInformation.customerCode),
                 //country: getValueFromObjectByKey('nice_name', this.generalInformation.country),
                 country: getValueFromObjectByKey('countries_id', this.generalInformation.country),
-                customerParentName: getValueFromObjectByKey('name', this.generalInformation.customerParentName),
+                parentId: getValueFromObjectByKey('customerId', this.generalInformation.parentId),
                 createdBy: this.userName, updatedBy: this.userName, masterCompanyId: 1
             }).subscribe(res => {
                 this.alertService.showMessage(
@@ -722,23 +724,31 @@ export class CustomerGeneralInformationComponent implements OnInit {
                 this.isEdit = true;
             })
         }
-
-
-
+        setTimeout(()=>{
+            this.stopmulticlicks=false;
+        },500)
     }
-    checkClassificationExists(value) {
+    checkClassificationExists(field, value) {
 
-        this.isClassificationAlreadyExists = false;
-
-        for (let i = 0; i < this.allcustomerclassificationInfo.length; i++) {
-            if (this.addNewclassification.description == this.allcustomerclassificationInfo[i].label || value == this.allcustomerclassificationInfo[i].label) {
-                this.isClassificationAlreadyExists = true;
-                // this.disableSave = true;
-
-                return;
-            }
-
+        const exists = validateRecordExistsOrNot(field, value, this.allcustomerclassificationInfo, this.selectedClassificationRecordForEdit);
+        if (exists.length > 0) {
+            this.isClassificationAlreadyExists = true;
         }
+        else {
+            this.isClassificationAlreadyExists = false;
+        }
+
+        // this.isClassificationAlreadyExists = false;
+
+        // for (let i = 0; i < this.allcustomerclassificationInfo.length; i++) {
+        //     if (this.addNewclassification.description == this.allcustomerclassificationInfo[i].label || value == this.allcustomerclassificationInfo[i].label) {
+        //         this.isClassificationAlreadyExists = true;
+        //         // this.disableSave = true;
+
+        //         return;
+        //     }
+
+        // }
 
 
     }
@@ -749,11 +759,6 @@ export class CustomerGeneralInformationComponent implements OnInit {
 
         this.isClassificationAlreadyExists = !exists;
     }
-
-
-
-
-
 
     addClassification() {
         const data = {
@@ -849,6 +854,10 @@ export class CustomerGeneralInformationComponent implements OnInit {
         }
 
 
+    }
+
+    onClearParent() {
+        this.generalInformation.parentId = undefined;
     }
 
 

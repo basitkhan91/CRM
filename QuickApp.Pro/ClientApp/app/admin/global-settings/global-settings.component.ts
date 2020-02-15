@@ -3,6 +3,7 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { AccountService } from "../../services/account.service";
 import {MessageSeverity,  AlertService } from "../../services/alert.service";
 import { MenuItem } from 'primeng/api';
+import { AuthService } from "../../services/auth.service";
 
 @Component({
     selector: "global-settings",
@@ -18,7 +19,7 @@ export class GlobalSettingsComponent implements OnInit
     breadcrumbs: MenuItem[];
     globalSettingsId: number = 0;
     
-    constructor(private accountService: AccountService, private alertService: AlertService){        
+    constructor(private accountService: AccountService, private alertService: AlertService, private authService: AuthService){        
     }
     
     ngOnInit(){
@@ -76,8 +77,9 @@ export class GlobalSettingsComponent implements OnInit
         let countryObject = this.countriesList.find(x => x.cultureName === this.countryItem);
         let params = {
             GlobalSettingId:this.globalSettingsId,
-            MasterCompanyId:1,
-            CultureId:countryObject.cultureId,
+            CompanyId:1,
+            CultureId: countryObject.cultureId,
+            CultureName: countryObject.cultureName,
             CurrencyFormat:this.countryData.currencyFormat,
             NumberFormat:this.countryData.numberFormat,
             DateFormat:this.countryData.dateFormat,
@@ -93,6 +95,7 @@ export class GlobalSettingsComponent implements OnInit
         }
         this.accountService.saveCountryLevelGlobalSettings(params).subscribe(result => {
             this.alertService.showMessage("Success", `Action was updated successfully`, MessageSeverity.success);
+            this.authService.loadGlobalSettings();
         })
     }
 

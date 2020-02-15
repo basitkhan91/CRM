@@ -231,7 +231,7 @@ export class CustomerEndpoint extends EndpointFactory {
     get InternatioanlShipViaByInternationalShippingId() { return this.configurations.baseUrl + this._internationalShipViaByShippingIdList }
     get customerContacATAHistory() { return this.configurations.baseUrl + this._customerContacATAHistory }
 
-    
+
 
     constructor(http: HttpClient, configurations: ConfigurationService, injector: Injector) {
 
@@ -252,7 +252,7 @@ export class CustomerEndpoint extends EndpointFactory {
     }
 
     getDocumentList(customerId) {
-        return this.http.get(`${this.configurations.baseUrl}/api/Customer/getCustomerDocumentDetail/${customerId}`, this.getRequestHeaders())
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/Customer/getCustomerDocumentDetail/${customerId}`, this.getRequestHeaders())
     }
 
     postDomesticShipVia<T>(postData) {
@@ -404,10 +404,12 @@ export class CustomerEndpoint extends EndpointFactory {
 
     }
 
-    getInternationalShippingByCustomerId<T>(customerId, pageIndex, pageSize) {
-        return this.http.get<T>(`${this.InternationalShippingList}?customerId=${customerId}&pageNumber=${pageIndex}&pageSize=${pageSize}`)
+    getInternationalShippingByCustomerId<T>(customerId) {
+        console.log(customerId);
+
+        return this.http.get<T>(`${this.InternationalShippingList}?customerId=${customerId}`)
             .catch(error => {
-                return this.handleError(error, () => this.getInternationalShippingByCustomerId(customerId, pageIndex, pageSize));
+                return this.handleError(error, () => this.getInternationalShippingByCustomerId(customerId));
             });
     }
 
@@ -440,7 +442,7 @@ export class CustomerEndpoint extends EndpointFactory {
         const url = `${this.configurations.baseUrl}/api/Customer/CustomerTaxTypeRateUpdate/${data.customerTaxTypeRateMappingId}`
         return this.http.put(url, JSON.stringify(data), this.getRequestHeaders());
     }
-    getAuditHistoryForTaxType(customerTaxTypeRateMappingId){
+    getAuditHistoryForTaxType(customerTaxTypeRateMappingId) {
         return this.http.get<any>(`${this.configurations.baseUrl}/api/Customer/CustomerTaxTypeRateAudit/${customerTaxTypeRateMappingId}`)
     }
 
@@ -1348,6 +1350,9 @@ export class CustomerEndpoint extends EndpointFactory {
         const headers = new Headers({ 'Content-Type': 'multipart/form-data' });
         return this.http.put<T>(`${this._updateCustomerDocument}`, file);
     }
+    deleteDocumentByCustomerAttachementId(customerAttachementId) {
+        return this.http.delete(`${this.configurations.baseUrl}/api/common/attachmentDelete/${customerAttachementId}`, this.getRequestHeaders())
+    }
 
     customerFinanceFileUploadEndpoint<T>(file: any): Observable<T> {
         const headers = new Headers({ 'Content-Type': 'multipart/form-data' });
@@ -1431,7 +1436,7 @@ export class CustomerEndpoint extends EndpointFactory {
                 return this.handleError(error, () => this.getInternationalShipViaByInternationalShippingId(id));
             });
     }
-   
+
     getCustomerContactATAAuditDetails<T>(customerContactATAMappingId: any): Observable<T> {
         let url = `${this.customerContacATAHistory}/${customerContactATAMappingId}`;
         return this.http.get<T>(url, this.getRequestHeaders())

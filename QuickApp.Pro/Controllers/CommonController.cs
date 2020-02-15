@@ -99,9 +99,9 @@ namespace QuickApp.Pro.Controllers
 
         [HttpGet]
         [Route("shippingviadetails")]
-        public IActionResult GetShippingViaDetails(long shippingViaId)
+        public IActionResult GetShippingViaDetails(long shippingViaId, int userType)
         {
-            var result = _unitOfWork.CommonRepository.GetShippingViaDetails(shippingViaId);
+            var result = _unitOfWork.CommonRepository.GetShippingViaDetails(shippingViaId, userType);
             return Ok(result);
 
         }
@@ -217,5 +217,52 @@ namespace QuickApp.Pro.Controllers
             return Ok(result);
         }
 
+        [HttpGet("partpurchasesaledetails")]
+        public IActionResult GetPartPurchaseSaleDetails(long itemMasterId, string condition)
+        {
+            var result = _unitOfWork.CommonRepository.GetPartPurchaseSaleDetails(itemMasterId, condition);
+            return Ok(result);
+        }
+
+        [HttpGet("employeesbyjobtitle")]
+        public IActionResult GetEmployeesByJobTitle(long jobTitleId)
+        {
+            var result = _unitOfWork.CommonRepository.GetEmployeesByJobTitle(jobTitleId);
+            return Ok(result);
+        }
+
+        [HttpGet("employeesbyexpertise")]
+        public IActionResult GetEmployeesByExpertise(long expertiseId)
+        {
+            var result = _unitOfWork.CommonRepository.GetEmployeesByExpertise(expertiseId);
+            return Ok(result);
+        }
+
+        [HttpGet("getemployeestation")]
+        public IActionResult GetEmployeeStation(long employeeId)
+        {
+            var result = _unitOfWork.CommonRepository.GetEmployeeStation(employeeId);
+            return Ok(result);
+        }
+
+        [HttpGet("jobtitletypes")]
+        public IActionResult GetJobTitleTypes(long masterCompanyId)
+        {
+            var result = _unitOfWork.CommonRepository.GetJobTitleTypes(masterCompanyId);
+            return Ok(result);
+        }
+
+        [HttpGet("expertisetypes")]
+        public IActionResult GetExpertiseTypes(long masterCompanyId)
+        {
+            var result = _unitOfWork.CommonRepository.GetExpertiseTypes(masterCompanyId);
+            return Ok(result);
+        }
+        [HttpDelete("attachmentDelete/{id}")]
+        public IActionResult GetDelete(long id, string updatedBy)
+        {
+            var deleteStatus = _unitOfWork.CommonRepository.GetDelete(id, updatedBy);
+            return Ok(deleteStatus);
+        }
     }
 }

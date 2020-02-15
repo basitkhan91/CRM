@@ -1,43 +1,20 @@
-<div class="card">
-        <div class="col-sm-12 font-padding">
-            <div class="col-sm-2">
-                PN: <span style="color:red">{{partNumber}}</span>
-            </div>
-            <div class="col-sm-3">
-                PN Description: <span style="color:red">{{partDescription}}</span>
-            </div>
-            <!-- <div class="col-sm-3">
-                Alternate PN: <span style="color:red">{{alternatePn}}</span>
-            </div> -->
-            <div class="col-sm-3">
-                Manufacturer: <span style="color:red">{{manufacturer}}</span>
-            </div>
-        </div>
-        <div class="col-md-12">
-            <div class="col-md-12 ">
-                <div class="shadow-Box">
-                    <div class="col-sm-12">
-                        <h5 class="float-left">Exchange and Loans</h5>
-                        <h4 class="float-right">
-                          
-                        </h4>
-                    </div>
-                    
-                    <div class="clear"></div>
-                </div>
-            </div>
-        </div>
+<div class="card" style="padding: 10px;">
+<div class="col-md-12 ">
+    <h4 class="po-head-sm">Exchange and Loans
+    </h4>
+    <hr />
 </div>
+
 <div class="col-sm-12">
     <form #exchloan>
-    <div class="col-sm-3">
+<div class="col-sm-3">
         <div class="card">
                 <div class="card-header"  > Exchange <input type="checkbox" name="chkExchange" [(ngModel)]="showExchange"  (change)="handleExchangeCheck()"/></div> 
                 <div class="card-body" *ngIf="showExchange">
                         <div class="col-md-12">
                                         <div class="form-group">
                                                         <label for="currencyExchange" class="control-label">Currency</label>
-                                                       <select name="currencyExchange" [(ngModel)]="currentItem.exchangeCurrencyId">
+                                                       <select name="currencyExchange" [(ngModel)]="currentItem.exchangeCurrencyId" matTooltip="Exchange - Currency"  tooltipPosition="top" matTooltipPosition="above" >
                                                            <option value="0">Select</option>
                                                            <option *ngFor="let excur of exchangeCurrencies" [ngValue]="excur.currencyId">{{excur.code}}</option>
                                                         </select>   
@@ -49,25 +26,25 @@
                                    <label for="exchListPRice" class="control-label" >Exchange List Price</label>
                               
                                
-                                 <input type="number" class="form-control" name="exchListPRice" [(ngModel)]="currentItem.exchangeListPrice" >
+                                 <input type="number" class="form-control" name="exchListPRice" [(ngModel)]="currentItem.exchangeListPrice" matTooltip="Exchange List Price"  tooltipPosition="top" matTooltipPosition="above">
                                 
                                
                         </div>
                         <div class="form-group">
                                 <label for="exchCorePrice" class="control-label">Core Price</label>
-                                <input type="number" class="form-control" name="exchCorePrice" [(ngModel)]="currentItem.exchangeCorePrice"  >
+                                <input type="number" class="form-control" name="exchCorePrice" [(ngModel)]="currentItem.exchangeCorePrice"  matTooltip="Core Price"  tooltipPosition="top" matTooltipPosition="above">
                         </div>
                         <div class="form-group">
                                 <label for="exchOverhaulPrice" class="control-label">Overhaul Price</label>
-                                <input type="number" class="form-control" name="exchOverhaulPrice" [(ngModel)]="currentItem.exchangeOverhaulPrice" >
+                                <input type="number" class="form-control" name="exchOverhaulPrice" [(ngModel)]="currentItem.exchangeOverhaulPrice" matTooltip="Overhaul Price"  tooltipPosition="top" matTooltipPosition="above">
                         </div>
                         <div class="form-group">
                                 <label for="exchOutrightPrice" class="control-label">Outright Price</label>
-                                <input type="number" class="form-control" name="exchOutrightPrice" [(ngModel)]="currentItem.exchangeOutrightPrice" >
+                                <input type="number" class="form-control" name="exchOutrightPrice" [(ngModel)]="currentItem.exchangeOutrightPrice" matTooltip="Outright Price"  tooltipPosition="top" matTooltipPosition="above">
                         </div>
                         <div class="form-group">
                                 <label for="exchCoreCost" class="control-label">Core Cost</label>
-                                <input type="number" class="form-control" name="exchCoreCost" [(ngModel)]="currentItem.exchangeCoreCost">
+                                <input type="number" class="form-control" name="exchCoreCost" [(ngModel)]="currentItem.exchangeCoreCost" matTooltip="Core Cost"  tooltipPosition="top" matTooltipPosition="above">
                         </div>
                 </div>
         </div>
@@ -78,31 +55,32 @@
                 <div class="card-body" *ngIf="showLoan">
                         <div class="form-group">
                                 <label for="currencyLoan" class="control-label">Currency</label>
-                               <select name="currencyLoan" class="select-value-drop" [(ngModel)]="currentItem.loanCurrencyId">
+                               <select name="currencyLoan" class="select-value-drop" [(ngModel)]="currentItem.loanCurrencyId" matTooltip="Loan - Currency"  tooltipPosition="top" matTooltipPosition="above">
                                    <option value="0">Select</option>
                                    <option *ngFor="let loancur of loanCurrencies" [ngValue]="loancur.currencyId">{{loancur.code}}</option>
                                 </select>   
                         </div>
                         <div class="form-group">
                                 <label for="loanFees"  class="control-label">Loan Fees</label>
-                                <input type="number" class="form-control" name="loanFees" [(ngModel)]="currentItem.loanFees" >
+                                <input type="number" class="form-control" name="loanFees" [(ngModel)]="currentItem.loanFees" matTooltip="Loan Fees"  tooltipPosition="top" matTooltipPosition="above">
                         </div>
                         <div class="form-group">
                                 <label for="loanCorePrice"  class="control-label">Core Price</label>
-                                <input type="number" class="form-control" name="loanCorePrice" [(ngModel)]="currentItem.loanCorePrice">
+                                <input type="number" class="form-control" name="loanCorePrice" [(ngModel)]="currentItem.loanCorePrice" matTooltip="Core Price"  tooltipPosition="top" matTooltipPosition="above">
                         </div>
 
                         <div class="form-group">
                                 <label for="loanOutrightPrice"  class="control-label">Outright Price</label>
-                                <input type="number" class="form-control" name="loanOutrightPrice" [(ngModel)]="currentItem.loanOutrightPrice">
+                                <input type="number" class="form-control" name="loanOutrightPrice" [(ngModel)]="currentItem.loanOutrightPrice" matTooltip="Outright Price"  tooltipPosition="top" matTooltipPosition="above">
                         </div>
                 </div>
         </div>
     </div>
 </form>
 </div>
-<div>
-    <button class="btn btn-primary pull-right submit-btn" (click)="saveAndMove()" type="button" style="height: 30px; width: 100px">Save & Next</button> &nbsp;
+<div style="margin-top: 10px;">
+    <button class="btn btn-primary pull-right " (click)="saveAndMove()" type="button" >Save & Next</button> &nbsp;
 
-    <button class="btn btn-primary pull-right submit-btn" type="button" (click)=" moveTab('PurchaseSales');" style="height: 30px; width: 100px">Previous</button> 
+    <button class="btn btn-primary pull-right" type="button" (click)=" moveTab('NhaTlaAlternateTab');" >Previous</button> 
+</div>
 </div>

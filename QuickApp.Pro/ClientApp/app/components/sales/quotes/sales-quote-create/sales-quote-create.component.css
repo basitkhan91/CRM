@@ -22,3 +22,6 @@ label {
 button {
   border-radius: 5px;
 }
+.form-control:disabled {
+  background-color: #e9ecef !important;
+}

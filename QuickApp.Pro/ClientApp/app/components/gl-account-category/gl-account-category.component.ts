@@ -8,6 +8,7 @@ import { SingleScreenBreadcrumbService } from "../../services/single-screens-bre
 import { GLAccountCategory } from "../../models/gl-account-category.model";
 import { GLAccountCategoryService } from "../../services/gl-account-category/gl-account-category.service";
 import { ModeOfOperation } from "../../models/ModeOfOperation.enum";
+import { validateRecordExistsOrNot, selectedValueValidate, getObjectById, editValueAssignByCondition } from '../../generic/autocomplete';
 
 @Component({
     selector: 'app-gl-account-category',
@@ -31,6 +32,22 @@ export class GLAccountCategoryComponent implements OnInit {
     modal: NgbModalRef;
     selectedColumns: any[];
     auditHistory: any[];
+    disableSaveGLCategoryName: boolean = false;
+    disableSaveCategorytype: boolean = false;
+    glAccountCategoryList: any;
+    new = {
+        glAccountCategoryName: "",
+        glcid: null,
+        masterCompanyId: 1,
+        isActive: true,
+        isDeleted: false
+    }
+    addNew = { ...this.new };
+    selectedRecordForEdit: any;
+    viewRowData: any;
+    disableSaveCatagotytypeMsg:boolean=false;
+    originalData: any;
+    isEdit: boolean = false;
     constructor(private breadCrumb: SingleScreenBreadcrumbService, private alertService: AlertService, private coreDataService: GLAccountCategoryService, private modalService: NgbModal, private authService: AuthService) {
     }
     ngOnInit(): void {
@@ -46,8 +63,12 @@ export class GLAccountCategoryComponent implements OnInit {
 
     //Step E1: Open row up for editing
     addNewItem(): void {
-        this.currentRow = new GLAccountCategory();
+        //  this.currentRow = new GLAccountCategory();
+        this.disableSaveGLCategoryName = false;
         this.currentModeOfOperation = ModeOfOperation.Add;
+       // this.isEditMode = false;
+       // this.selectedRecordForEdit = undefined;
+        this.addNew = { ...this.new };
     }
 
     //Functionality for pagination.
@@ -89,6 +110,13 @@ export class GLAccountCategoryComponent implements OnInit {
         this.dismissModal();
     }
 
+
+    getChange() {
+        if (this.disableSaveCatagotytypeMsg == false) {
+            this.disableSaveGLCategoryName = false;
+        }
+    }
+
     //Close open modal
     dismissModal() {
         this.currentRow = new GLAccountCategory();
@@ -106,6 +134,7 @@ export class GLAccountCategoryComponent implements OnInit {
                 itemList.push(nItem);
             });
             this.itemList = itemList;
+            this.originalData = responseData;
             this.totalRecords = responseData.length;
             this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
         })
@@ -130,28 +159,47 @@ export class GLAccountCategoryComponent implements OnInit {
     //    this.columnHeaders.sort(function (a: any, b: any) { return (a.index > b.index) ? 1 : ((b.index > a.index) ? -1 : 0); });
     //}
 
+
+    dismissModel() {
+       
+        this.viewRowData = undefined;
+    }
+
     saveNewItem(): void {
-        this.currentModeOfOperation = ModeOfOperation.Add;
-        this.coreDataService.add(this.currentRow).subscribe(response => {
+        const data = {
+            ...this.addNew, createdBy: this.userName, updatedBy: this.userName,
+            name: editValueAssignByCondition('name', this.addNew.glAccountCategoryName)
+
+        };
+       // this.currentModeOfOperation = ModeOfOperation.Add;
+      //  this.currentRow.glcid = this.addNew.glcid;
+       // this.currentRow.glAccountCategoryName = this.addNew.glAccountCategoryName;
+        this.coreDataService.add(data).subscribe(response => {
             this.alertService.showMessage('Success', this.rowName + " added successfully.", MessageSeverity.success);
             this.getItemList();
         });
         this.currentModeOfOperation = ModeOfOperation.None;
     }
 
+
     saveExistingItem(rowData): void {
-        let item = rowData as GLAccountCategory;
-        var itemExists = this.checkItemExists(item);
-        if (itemExists) {
-            this.currentModeOfOperation = ModeOfOperation.Update;
-            item.updatedBy = this.userName;
-            this.coreDataService.update(item).subscribe(response => {
-                this.alertService.showMessage('Success', this.rowName + " updated successfully.", MessageSeverity.success);
+
+        alert(
+            JSON.stringify(rowData));
+
+        const data = {
+            ...this.addNew, createdBy: this.userName, updatedBy: this.userName,
+            name: editValueAssignByCondition('glAccountCategoryName', this.addNew.glAccountCategoryName)
+
+        };
+
+        alert(JSON.stringify(data));
+        this.coreDataService.update(data).subscribe(response => {
                 this.getItemList();
+                this.alertService.showMessage('Success', " updated successfully.", MessageSeverity.success);
+               
             });
-        } else {
-            this.saveNewItem();
-        }
+  
         this.dismissModal();
     }
 
@@ -167,14 +215,42 @@ export class GLAccountCategoryComponent implements OnInit {
     }
 
     showItemEdit(rowData): void {
+        this.disableSaveCatagotytypeMsg = false;
+        this.disableSaveGLCategoryName = true;
         this.currentRow = rowData as GLAccountCategory;
         this.currentModeOfOperation = ModeOfOperation.Update;
+        this.addNew = {
+            ...rowData,
+            glAccountCategoryName: getObjectById('glcid', rowData.glcid, this.originalData),
+        };
     }
 
     //turn the item active/inActive
     toggleActiveStatus(rowData) {
-        this.currentRow = rowData as GLAccountCategory;
-        this.saveExistingItem(this.currentRow);
+       // this.currentRow = rowData as GLAccountCategory;
+        const data = { ...rowData }
+       // this.saveExistingItem(this.currentRow);
+        this.coreDataService.update(data).subscribe(response => {
+            //this.alertService.showMessage('Success', this.rowName + " updated successfully.", MessageSeverity.success);
+           // this.getItemList();
+            this.alertService.showMessage(
+                'Success',
+                `Updated Status Successfully  `,
+                MessageSeverity.success
+            );
+        });
+    }
+
+    getColorCodeForHistory(i, field, value) {
+        const data = this.auditHistory;
+        const dataLength = data.length;
+        if (i >= 0 && i <= dataLength) {
+            if ((i + 1) === dataLength) {
+                return true;
+            } else {
+                return data[i + 1][field] === value
+            }
+        }
     }
 
     updateItem(): void {
@@ -201,5 +277,67 @@ export class GLAccountCategoryComponent implements OnInit {
         this.selectedColumns = this.columnHeaders;
         this.currentRow = new GLAccountCategory();
     }
+    
+
+    checkGLACategoryTypeExists(field, value) {
+        console.log('this.selectedRecordForEdit', this.selectedRecordForEdit);
+        const exists = validateRecordExistsOrNot(field, value, this.originalData, this.selectedRecordForEdit);
+        console.log(exists);
+        if (exists.length > 0) {
+            this.disableSaveGLCategoryName = true;
+            this.disableSaveCatagotytypeMsg = true;
+        }
+        else {
+            this.disableSaveGLCategoryName = false;
+            this.disableSaveCatagotytypeMsg = false;
+        }
+
+    }
+    filterGLACategoryType(event) {
+        const certificationData = [...this.originalData.filter(x => {
+            return event.query ? x.glAccountCategoryName.toLowerCase().includes(event.query.toLowerCase()) : this.originalData;
+        })]
+        this.glAccountCategoryList = certificationData;
+    }
+    selectedGLACategoryType(object) {
+        const exists = selectedValueValidate('glAccountCategoryName ', object, this.selectedRecordForEdit)
+        if (!this.isEdit || this.isEdit && object.glcid != this.selectedRecordForEdit.glcid) {
+            this.disableSaveGLCategoryName = !exists;
+        }
+        else {
+            this.disableSaveGLCategoryName = false;
+        }
+    }
+
+    onBlur(event) {
+        const value = event.target.value;
+        this.disableSaveCatagotytypeMsg = false;
+        for (let i = 0; i < this.originalData.length; i++) {
+            let description = this.originalData[i].glAccountCategoryName;
+            let glACategoryTypeId = this.originalData[i].glcid;
+            if (description.toLowerCase() == value.toLowerCase()) {
+                if (!this.isEdit || this.isEdit) {
+                    this.disableSaveGLCategoryName = true;
+                    this.disableSaveCatagotytypeMsg = true;
+                }
+                else if (glACategoryTypeId != this.selectedRecordForEdit.glcid) {
+                    this.disableSaveGLCategoryName = false;
+                    this.disableSaveCatagotytypeMsg = true;
+                }
+                else {
+                    this.disableSaveGLCategoryName = false;
+                    this.disableSaveCatagotytypeMsg = false;
+                }
+                break;
+            }
+        }
+
+    }
+
+    //get validateAutocompleteText() {
+
+    //    return this.addNew.glAccountCategoryName !== '' ? false : true;
+    //}
+
 
 }

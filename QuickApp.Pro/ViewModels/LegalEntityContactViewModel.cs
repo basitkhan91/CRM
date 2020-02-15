@@ -29,6 +29,6 @@ namespace QuickApp.Pro.ViewModels
 
         public DateTime UpdatedDate { get; set; }
 
-        public bool? IsActive { get; set; }
+        public bool IsActive { get; set; }
     }
 }

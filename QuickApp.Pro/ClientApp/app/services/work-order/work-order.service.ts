@@ -29,8 +29,8 @@ export class WorkOrderService {
     //     return this.workOrderEndpointService.getWorkOrderById<WorkOrder>(workOrderId);
     // }
 
-    getWorkOrderById(workOrderId) {
-        return this.workOrderEndpointService.getWorkOrderById(workOrderId);
+    getWorkOrderById(workOrderId, receivingCustomerId) {
+        return this.workOrderEndpointService.getWorkOrderById(workOrderId, receivingCustomerId);
     }
 
     createNewWorkOrder(workOrder) {

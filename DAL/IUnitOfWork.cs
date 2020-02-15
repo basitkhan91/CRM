@@ -168,10 +168,7 @@ namespace DAL
 
         IAircraftModel aircraftModel { get; }
 
-        ICustomerAircraftModel customerAircraftModel { get; }
-
-
-        ICustomerAircraftType customerAircraftType { get; }
+    
         ICustomerDocumentDetail CreateDocumentDetails { get; }
        
 

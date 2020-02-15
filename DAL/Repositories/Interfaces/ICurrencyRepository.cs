@@ -13,5 +13,6 @@ namespace DAL.Repositories.Interfaces
         new IQueryable<Currency> GetPaginationData();
 
         IEnumerable<DAL.Models.Currency> UploadCurrencyCustomData(IFormFile file);
+        Object GetCurrencyAuditDetails(long id);
     }
 }

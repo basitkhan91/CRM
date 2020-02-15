@@ -28,6 +28,7 @@ export class WorkOrderCompleteMaterialListComponent {
     @Input() isWorkOrder;
     @Input() workFlowObject;
     @Input() savedWorkOrderData;
+    @Input() taskList: any[] = [];
     @Input() materialStatus;
     @Input() mpnId;
     @Output() saveMaterialListForWO = new EventEmitter();
@@ -152,6 +153,7 @@ export class WorkOrderCompleteMaterialListComponent {
         this.isEdit = false;
         this.editData = undefined;
         this.addNewMaterial = true;
+        this.taskList = this.taskList;
     }
     edit(rowData) {
         // this.createNew();

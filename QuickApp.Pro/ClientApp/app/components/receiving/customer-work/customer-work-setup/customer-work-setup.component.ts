@@ -93,11 +93,13 @@ export class CustomerWorkSetupComponent implements OnInit {
     textAreaInfo: string;
 	textAreaLabel: string;
 	receivingCustomerWorkId: number;
+	workOrderId: number;
     sourceTimeLife: any = {};
     customerId: number;    
     timeLifeCyclesId: number;    
     disableCondition: boolean = true;
     disableSite: boolean = true;
+    loadingIndicator: boolean;
 
     // firstCollection: any[];
 	// allEmployeeinfo: any[] = [];
@@ -515,7 +517,7 @@ export class CustomerWorkSetupComponent implements OnInit {
 
 		if (event.query !== undefined && event.query !== null) {
 			const customers = [...this.customerContactList.filter(x => {
-				return x.csr.toLowerCase().includes(event.query.toLowerCase())
+                return x.contactName.toLowerCase().includes(event.query.toLowerCase())
 			})]
 			this.customerContactInfo = customers;
 		}
@@ -659,6 +661,25 @@ export class CustomerWorkSetupComponent implements OnInit {
         });
     }
 
+    resetSerialNoTimeLife() {
+        this.receivingForm.isSkipSerialNo = false;
+        this.receivingForm.serialNumber = '';
+        this.receivingForm.isSkipTimeLife = false;
+        this.receivingForm.timeLifeDate = null;
+        this.receivingForm.timeLifeOrigin = '';
+        this.sourceTimeLife = {};
+    }
+
+    resetSerialNo() {
+        this.receivingForm.serialNumber = '';
+    }
+
+    resetTimelife() {
+        this.receivingForm.timeLifeDate = null;
+        this.receivingForm.timeLifeOrigin = '';
+        this.sourceTimeLife = {};
+    }
+
     onSelectObrainFrom() {
 		this.receivingForm.obtainFrom = undefined;
 	}
@@ -677,10 +698,23 @@ export class CustomerWorkSetupComponent implements OnInit {
 		} else {
 			this.disableCondition = true;
 		}
+    }
+    
+    fileUploadForDocuments(event) {
+		// console.log(event);
+		// if (event.files.length === 0)
+		// 	return;
+
+		// for (let file of event.files) {
+		// 	this.formData.append(file.name, file);
+		// }
+	}
+	removeFile(event) {
+		//this.formData.delete(event.file.name)
 	}
     
     onSaveCustomerReceiving() {
-        this.receivingForm = {
+        const receivingForm = {
             ...this.receivingForm,
             customerId: getValueFromObjectByKey('customerId', this.receivingForm.customerId),
             customerContactId: getValueFromObjectByKey('customerContactId', this.receivingForm.customerContactId),
@@ -698,41 +732,41 @@ export class CustomerWorkSetupComponent implements OnInit {
             updatedBy: this.userName,
             timeLife: {...this.sourceTimeLife, timeLifeCyclesId: this.timeLifeCyclesId, updatedDate: new Date()}            
         }
-        console.log(this.receivingForm);
-        const {customerCode, customerPhone, partDescription, manufacturer, revisePartId, ...receivingInfo} = this.receivingForm;
+        console.log(receivingForm);
+        const {customerCode, customerPhone, partDescription, manufacturer, revisePartId, ...receivingInfo} = receivingForm;
         if(!this.isEditMode) {
             this.receivingCustomerWorkService.newReason(receivingInfo).subscribe(res => {
                 $('#workorderpopup').modal('show');
                 console.log(res);
                 this.receivingCustomerWorkId = res.receivingCustomerWorkId;
+                // this.workOrderId = res.workOrderId;
                 this.alertService.showMessage(
                     'Success',
                     `Saved Customer Work Successfully`,
                     MessageSeverity.success
                 );
-                //this.router.navigateByUrl('/receivingmodule/receivingpages/app-customer-works-list');
             });
         } 
         else {
             this.receivingCustomerWorkService.updateCustomerWorkReceiving(receivingInfo).subscribe(res => {
                 $('#workorderpopup').modal('show');
+                // this.workOrderId = res.workOrderId;
                 console.log(res);
                 this.alertService.showMessage(
                     'Success',
                     `Updated Customer Work Successfully`,
                     MessageSeverity.success
                 );
-                //this.router.navigateByUrl('/receivingmodule/receivingpages/app-customer-works-list');
             });
         }
     }
 
     goToWorkOrder() {
-        this.router.navigateByUrl(`/workordersmodule/workorderspages/app-work-order-edit/${this.receivingCustomerWorkId}`);
+        this.router.navigateByUrl(`/workordersmodule/workorderspages/app-work-order-receivingcustworkid/${this.receivingCustomerWorkId}`);
     }
 
     goToCustomerWorkList() {
-        this.router.navigateByUrl('/receivingmodule/receivingpages/app-customer-works-list');
+        this.router.navigateByUrl('/receivingmodule/receivingpages/app-customer-works-list');        
     }
 
 }

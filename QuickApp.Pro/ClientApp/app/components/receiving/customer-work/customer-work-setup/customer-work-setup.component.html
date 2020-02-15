@@ -9,433 +9,448 @@
     </div>
     <div class="card-body">
         <form #customerWorkForm="ngForm">
-            <!-- <div class="form-row">                            
-                <div class="col-md-3">
-                    
-                </div>
-            </div>
-            <div class="clear"></div>
-            <hr/> -->
-
             <div class="form-row">
-                <div class="col-md-3">                    
-                    <div class="form-group">
-                        <label>Receiving Num</label>
-                        <input class="form-control" type="text" name="receivingCusNum" [(ngModel)]="receivingForm.receivingNumber" disabled>
-                    </div>
-                    <div class="form-group">
-                        <label>Customer Name <span class="text-danger">*</span></label>
-                        <p-autoComplete field="name" class="pautocomp-cstm" [(ngModel)]="receivingForm.customerId" name="customerId" [suggestions]="customerNamesInfo" (completeMethod)="filterCustNames($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" (onSelect)="onSelectCustomer(receivingForm.customerId)" #custName="ngModel" required></p-autoComplete>  
-                        <div *ngIf="custName.invalid && (custName.dirty || custName.touched)" class="alert alert-danger alert-danger-cstm">
-                            <div *ngIf="custName.errors.required">
-                                <small> Customer Name is required </small>
+                <div class="col-md-6">
+                    <div class="form-row">
+                        <div class="col-md-6">                    
+                            <div class="form-group">
+                                <label>Receiving Num</label>
+                                <input class="form-control" type="text" name="receivingCusNum" [(ngModel)]="receivingForm.receivingNumber" disabled>
                             </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Customer Code <span class="text-danger">*</span></label>
-                        <p-autoComplete field="customerCode" class="pautocomp-cstm" [(ngModel)]="receivingForm.customerCode" name="customerCode" [suggestions]="customerCodesInfo" (completeMethod)="filterCustCodes($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" (onSelect)="onSelectCustomer(receivingForm.customerCode)" #custCode="ngModel" required></p-autoComplete>  
-                        <div *ngIf="custCode.invalid && (custCode.dirty || custCode.touched)" class="alert alert-danger alert-danger-cstm">
-                                <div *ngIf="custCode.errors.required">
-                                    <small> Customer Code is required </small>
+                            <div class="form-group">
+                                <label>Customer Name <span class="text-danger">*</span></label>
+                                <p-autoComplete field="name" class="pautocomp-cstm" [(ngModel)]="receivingForm.customerId" name="customerId" [suggestions]="customerNamesInfo" (completeMethod)="filterCustNames($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" (onSelect)="onSelectCustomer(receivingForm.customerId)" #custName="ngModel" required></p-autoComplete>  
+                                <div *ngIf="custName.invalid && (custName.dirty || custName.touched)" class="alert alert-danger alert-danger-cstm">
+                                    <div *ngIf="custName.errors.required">
+                                        <small> Customer Name is required </small>
+                                    </div>
                                 </div>
-                        </div>
-                    </div>                    
-                    <div class="form-group">
-                        <label>Ref <span class="text-danger">*</span></label>
-                        <input class="form-control" type="text" name="referenceId" [(ngModel)]="receivingForm.reference" #custRef="ngModel" required>
-                        <!-- <p-autoComplete field="label" class="pautocomp-cstm" [(ngModel)]="receivingForm.referenceId" name="referenceId" [suggestions]="customersList" (completeMethod)="filterCustomerNames($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" #custRef="ngModel" required></p-autoComplete> -->
-                        <div *ngIf="custRef.invalid && (custRef.dirty || custRef.touched)" class="alert alert-danger alert-danger-cstm">
-                            <div *ngIf="custRef.errors.required">
-                                <small> Receiving Num is required </small>
                             </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Contact <span class="text-danger">*</span></label>
-                        <p-autoComplete field="csr" class="pautocomp-cstm" [(ngModel)]="receivingForm.customerContactId" name="customerContactId" [suggestions]="customerContactInfo" (completeMethod)="filterCustContacts($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" [disabled]="custName.invalid" #cusContact="ngModel" required></p-autoComplete>
-                        <div *ngIf="cusContact.invalid && (cusContact.dirty || cusContact.touched)" class="alert alert-danger alert-danger-cstm">
-                            <div *ngIf="cusContact.errors.required">
-                                <small> Contact is required </small>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Contact Phone <span class="text-danger">*</span></label>
-                        <p-autoComplete field="workPhone" class="pautocomp-cstm" [(ngModel)]="receivingForm.customerPhone" name="customerPhone" [suggestions]="customerPhoneInfo" (completeMethod)="filterCustContactPhone($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" [disabled]="custName.invalid" #cusPhone="ngModel" required></p-autoComplete>
-                        <div *ngIf="cusPhone.invalid && (cusPhone.dirty || cusPhone.touched)" class="alert alert-danger alert-danger-cstm">
-                            <div *ngIf="cusPhone.errors.required">
-                                <small> Contact Phone is required </small>
-                            </div>
-                        </div>
-                        <!-- <input class="form-control" type="text" name="workPhone" [(ngModel)]="receivingForm.workPhone" required> -->
-                    </div>
-                    <div class="form-group">
-                        <label>PN <span class="text-danger">*</span></label>
-                        <p-autoComplete field="label" class="pautocomp-cstm" [(ngModel)]="receivingForm.itemMasterId" name="partNumber" [suggestions]="partNumbersInfo" (completeMethod)="filterPartNumbers($event)" [size]="30" [minLength]="1" [dropdown]="true" (onSelect)="onPartNumberSelected($event.value);" #partNum="ngModel" errorMessage="Records not found" [forceSelection]="true" required></p-autoComplete>
-                        <div *ngIf="partNum.invalid && (partNum.dirty || partNum.touched)" class="alert alert-danger alert-danger-cstm">
-                                <div *ngIf="partNum.errors.required">
-                                    <small> Part Number is required </small>
+                            <div class="form-group">
+                                <label>Customer Code <span class="text-danger">*</span></label>
+                                <p-autoComplete field="customerCode" class="pautocomp-cstm" [(ngModel)]="receivingForm.customerCode" name="customerCode" [suggestions]="customerCodesInfo" (completeMethod)="filterCustCodes($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" (onSelect)="onSelectCustomer(receivingForm.customerCode)" #custCode="ngModel" required></p-autoComplete>  
+                                <div *ngIf="custCode.invalid && (custCode.dirty || custCode.touched)" class="alert alert-danger alert-danger-cstm">
+                                        <div *ngIf="custCode.errors.required">
+                                            <small> Customer Code is required </small>
+                                        </div>
                                 </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>PN Description</label>
-                        <input class="form-control" type="text" name="partDescription" [(ngModel)]="receivingForm.partDescription" disabled>
-                    </div>
-                    <div class="form-group">
-                        <label>Manufacturer</label>
-                        <input class="form-control" type="text" name="manufacturer" [(ngModel)]="receivingForm.manufacturer" disabled>
-                    </div>
-                    <div class="form-group">
-                        <label>Revised PN</label>
-                        <input class="form-control" type="text" name="revisePartId" [(ngModel)]="receivingForm.revisePartId" disabled>
-                    </div>
-                    <div class="form-group">
-                        <label>Employee Name <span class="text-danger">*</span></label>
-                        <p-autoComplete field="label" class="pautocomp-cstm" [(ngModel)]="receivingForm.employeeId" name="employeeId" [suggestions]="employeeNames" (completeMethod)="filterEmployees($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" #empName="ngModel" required></p-autoComplete>
-                        <div *ngIf="empName.invalid && (empName.dirty || empName.touched)" class="alert alert-danger alert-danger-cstm">
-                            <div *ngIf="empName.errors.required">
-                                <small> Employee Name is required </small>
+                            </div>                    
+                            <div class="form-group">
+                                <label>Ref <span class="text-danger">*</span></label>
+                                <input class="form-control" type="text" name="referenceId" [(ngModel)]="receivingForm.reference" #custRef="ngModel" required>
+                                <!-- <p-autoComplete field="label" class="pautocomp-cstm" [(ngModel)]="receivingForm.referenceId" name="referenceId" [suggestions]="customersList" (completeMethod)="filterCustomerNames($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" #custRef="ngModel" required></p-autoComplete> -->
+                                <div *ngIf="custRef.invalid && (custRef.dirty || custRef.touched)" class="alert alert-danger alert-danger-cstm">
+                                    <div *ngIf="custRef.errors.required">
+                                        <small> Receiving Num is required </small>
+                                    </div>
+                                </div>
                             </div>
+                            <div class="form-group">
+                                <label>Contact <span class="text-danger">*</span></label>
+                                <p-autoComplete field="contactName" class="pautocomp-cstm" [(ngModel)]="receivingForm.customerContactId" name="customerContactId" [suggestions]="customerContactInfo" (completeMethod)="filterCustContacts($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" [disabled]="custName.invalid" #cusContact="ngModel" required></p-autoComplete>
+                                <div *ngIf="cusContact.invalid && (cusContact.dirty || cusContact.touched)" class="alert alert-danger alert-danger-cstm">
+                                    <div *ngIf="cusContact.errors.required">
+                                        <small> Contact is required </small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Contact Phone <span class="text-danger">*</span></label>
+                                <p-autoComplete field="workPhone" class="pautocomp-cstm" [(ngModel)]="receivingForm.customerPhone" name="customerPhone" [suggestions]="customerPhoneInfo" (completeMethod)="filterCustContactPhone($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" [disabled]="custName.invalid" #cusPhone="ngModel" required></p-autoComplete>
+                                <div *ngIf="cusPhone.invalid && (cusPhone.dirty || cusPhone.touched)" class="alert alert-danger alert-danger-cstm">
+                                    <div *ngIf="cusPhone.errors.required">
+                                        <small> Contact Phone is required </small>
+                                    </div>
+                                </div>
+                                <!-- <input class="form-control" type="text" name="workPhone" [(ngModel)]="receivingForm.workPhone" required> -->
+                            </div>
+                            <div class="form-group">
+                                <label>PN <span class="text-danger">*</span></label>
+                                <p-autoComplete field="label" class="pautocomp-cstm" [(ngModel)]="receivingForm.itemMasterId" name="partNumber" [suggestions]="partNumbersInfo" (completeMethod)="filterPartNumbers($event)" [size]="30" [minLength]="1" [dropdown]="true" (onSelect)="onPartNumberSelected($event.value); resetSerialNoTimeLife();" #partNum="ngModel" errorMessage="Records not found" [forceSelection]="true" required></p-autoComplete>
+                                <div *ngIf="partNum.invalid && (partNum.dirty || partNum.touched)" class="alert alert-danger alert-danger-cstm">
+                                        <div *ngIf="partNum.errors.required">
+                                            <small> Part Number is required </small>
+                                        </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>PN Description</label>
+                                <input class="form-control" type="text" name="partDescription" [(ngModel)]="receivingForm.partDescription" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label>Manufacturer</label>
+                                <input class="form-control" type="text" name="manufacturer" [(ngModel)]="receivingForm.manufacturer" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label>Revised PN</label>
+                                <input class="form-control" type="text" name="revisePartId" [(ngModel)]="receivingForm.revisePartId" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label>Employee Name <span class="text-danger">*</span></label>
+                                <p-autoComplete field="label" class="pautocomp-cstm" [(ngModel)]="receivingForm.employeeId" name="employeeId" [suggestions]="employeeNames" (completeMethod)="filterEmployees($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true" #empName="ngModel" required></p-autoComplete>
+                                <div *ngIf="empName.invalid && (empName.dirty || empName.touched)" class="alert alert-danger alert-danger-cstm">
+                                    <div *ngIf="empName.errors.required">
+                                        <small> Employee Name is required </small>
+                                    </div>
+                                </div>
+                            </div>                     
                         </div>
-                    </div> 
-                    <div class="form-group">
-                        <div class="checkbox-cstm m-t-10">
-                            <label>
-                                <input type="checkbox" class="serialized-checkbox" name="isSerialized" [(ngModel)]="receivingForm.isSerialized" disabled>
-                                <span class="cr"><i class="cr-icon pi pi-check"></i></span>
-                                Is Serialized
-                            </label>
-                        </div>
-                    </div>
-                    <div *ngIf="receivingForm.isSerialized">
-                        <div class="form-group">
-                            <div class="checkbox-cstm m-t-10">
-                                <label>
-                                    <input type="checkbox" name="isSkipSerialNo" [(ngModel)]="receivingForm.isSkipSerialNo">
-                                    <span class="cr"><i class="cr-icon pi pi-check"></i></span>
-                                    Skip Serial Number
+                        <div class="col-md-6">                    
+                            <div class="form-group">
+                                <label>Certify By
+                                    <span style="margin-left:3px;cursor:pointer;"><a class="fa fa-plus-circle fa-lg" matTooltip="Add Employee" matTooltipPosition="above" target="_blank" [routerLink]="['/employeesmodule/employeepages/app-employee-general-information']"></a></span>
                                 </label>
+                                <p-autoComplete field="label" class="pautocomp-cstm" [(ngModel)]="receivingForm.certifiedById" name="certifiedBy" [suggestions]="employeeNames" (completeMethod)="filterEmployees($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true"></p-autoComplete>
                             </div>
+                            <div class="form-group">
+                                <label>Tag Date</label>
+                                <p-calendar class="workflow-clder" [showIcon]="true" name="tagDate" [(ngModel)]="receivingForm.tagDate"></p-calendar>
+                            </div>
+                            <div class="form-group">
+                                <label>Tag Type</label>
+                                <select [(ngModel)]="receivingForm.tagTypeId" name="tagType">
+                                    <option value="0">-- Select --</option>
+                                    <option *ngFor="let tag of allTagTypes" [ngValue]="tag.tagTypeId">{{tag.name}}</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Parts Cert Num</label>
+                                <input class="form-control" type="text" name="partCertificationNumber" [(ngModel)]="receivingForm.partCertificationNumber">
+                            </div>
+                            <div class="form-group">
+                                <label>QTY</label>
+                                <input class="form-control" type="number" name="quantity" [(ngModel)]="receivingForm.quantity">
+                            </div>
+                            <div class="form-group">
+                                <label>Condition <span class="text-danger">*</span></label>
+                                <select class="form-control" name="conditionId" [(ngModel)]="receivingForm.conditionId" (change)="onSelectCondition()" required>
+                                    <option value="0">-- Select --</option>
+                                    <option *ngFor="let condition of allConditionInfo" [ngValue]="condition.conditionId">{{condition.description}}</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Site <span class="text-danger">*</span>
+                                    <span style="margin-left:3px;cursor:pointer;"><a class="fa fa-plus-circle fa-lg" matTooltip="Create Site" matTooltipPosition="above" target="_blank" [routerLink]="['/singlepages/singlepages/app-site']"></a></span>
+                                </label>
+                                <select [(ngModel)]="receivingForm.siteId" name="siteId" (change)="siteValueChange(receivingForm.siteId)" required>
+                                    <option value="0">-- Select --</option>
+                                    <option *ngFor="let site of allSites" [ngValue]="site.siteId">{{site.name}}</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Warehouse</label>
+                                <select [(ngModel)]="receivingForm.warehouseId" name="warehouseId" (change)="wareHouseValueChange(receivingForm.warehouseId)">
+                                    <option value="0">-- Select --</option>
+                                    <option *ngFor="let site of allWareHouses" [ngValue]="site.warehouseId">{{site.warehouseName}}</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Location</label>
+                                <select [(ngModel)]="receivingForm.locationId" name="locationId" (change)="locationValueChange(receivingForm.locationId)">
+                                    <option value="0">-- Select --</option>
+                                    <option *ngFor="let site of allLocations" [ngValue]="site.locationId">{{site.name}}</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Shelf</label>
+                                <select [(ngModel)]="receivingForm.shelfId" name="shelfId" (change)="shelfValueChange(receivingForm.shelfId)">
+                                    <option value="0">-- Select --</option>
+                                    <option *ngFor="let site of allShelfs" [ngValue]="site.shelfId">{{site.name}}</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Bin</label>
+                                <select [(ngModel)]="receivingForm.binId" name="binId">
+                                    <option value="0">-- Select --</option>
+                                    <option *ngFor="let site of allBins" [ngValue]="site.binId">{{site.name}}</option>
+                                </select>
+                            </div>                                        
                         </div>
-                        <div class="form-group" *ngIf="!receivingForm.isSkipSerialNo">
-                            <label>Serial Number</label>
-                            <input class="form-control" type="text" name="serialNumber" [(ngModel)]="receivingForm.serialNumber">
-                        </div>                        
                     </div>
                 </div>
-                <div class="col-md-3">                    
-                    <div class="form-group">
-                        <label>Certify By
-                            <span style="margin-left:3px;cursor:pointer;"><a class="fa fa-plus-circle fa-lg" matTooltip="Add Employee" matTooltipPosition="above" target="_blank" [routerLink]="['/employeesmodule/employeepages/app-employee-general-information']"></a></span>
-                        </label>
-                        <p-autoComplete field="label" class="pautocomp-cstm" [(ngModel)]="receivingForm.certifiedById" name="certifiedBy" [suggestions]="employeeNames" (completeMethod)="filterEmployees($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true"></p-autoComplete>
-                    </div>
-                    <div class="form-group">
-                        <label>Tag Date</label>
-                        <p-calendar class="workflow-clder" [showIcon]="true" name="tagDate" [(ngModel)]="receivingForm.tagDate"></p-calendar>
-                    </div>
-                    <div class="form-group">
-                        <label>Tag Type</label>
-                        <select [(ngModel)]="receivingForm.tagTypeId" name="tagType">
-                            <option value="0">-- Select --</option>
-                            <option *ngFor="let tag of allTagTypes" [ngValue]="tag.tagTypeId">{{tag.name}}</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Parts Cert Num</label>
-                        <input class="form-control" type="text" name="partCertificationNumber" [(ngModel)]="receivingForm.partCertificationNumber">
-                    </div>
-                    <div class="form-group">
-                        <label>QTY</label>
-                        <input class="form-control" type="number" name="quantity" [(ngModel)]="receivingForm.quantity">
-                    </div>
-                    <div class="form-group">
-                        <label>Condition <span class="text-danger">*</span></label>
-                        <select class="form-control" name="conditionId" [(ngModel)]="receivingForm.conditionId" (change)="onSelectCondition()" required>
-                            <option value="0">-- Select --</option>
-                            <option *ngFor="let condition of allConditionInfo" [ngValue]="condition.conditionId">{{condition.description}}</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Site <span class="text-danger">*</span>
-                            <span style="margin-left:3px;cursor:pointer;"><a class="fa fa-plus-circle fa-lg" matTooltip="Create Site" matTooltipPosition="above" target="_blank" [routerLink]="['/singlepages/singlepages/app-site']"></a></span>
-                        </label>
-                        <select [(ngModel)]="receivingForm.siteId" name="siteId" (change)="siteValueChange(receivingForm.siteId)" required>
-                            <option value="0">-- Select --</option>
-                            <option *ngFor="let site of allSites" [ngValue]="site.siteId">{{site.name}}</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Warehouse</label>
-                        <select [(ngModel)]="receivingForm.warehouseId" name="warehouseId" (change)="wareHouseValueChange(receivingForm.warehouseId)">
-                            <option value="0">-- Select --</option>
-                            <option *ngFor="let site of allWareHouses" [ngValue]="site.warehouseId">{{site.warehouseName}}</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Location</label>
-                        <select [(ngModel)]="receivingForm.locationId" name="locationId" (change)="locationValueChange(receivingForm.locationId)">
-                            <option value="0">-- Select --</option>
-                            <option *ngFor="let site of allLocations" [ngValue]="site.locationId">{{site.name}}</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Shelf</label>
-                        <select [(ngModel)]="receivingForm.shelfId" name="shelfId" (change)="shelfValueChange(receivingForm.shelfId)">
-                            <option value="0">-- Select --</option>
-                            <option *ngFor="let site of allShelfs" [ngValue]="site.shelfId">{{site.name}}</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Bin</label>
-                        <select [(ngModel)]="receivingForm.binId" name="binId">
-                            <option value="0">-- Select --</option>
-                            <option *ngFor="let site of allBins" [ngValue]="site.binId">{{site.name}}</option>
-                        </select>
-                    </div>                                        
-                </div>
-                <div class="col-md-3">
-                    <div class="form-group">
-                        <div class="checkbox-cstm m-t-10">
-                            <label>
-                                <input type="checkbox" name="isCustomerStock" [(ngModel)]="receivingForm.isCustomerStock" checked disabled>
-                                <span class="cr"><i class="cr-icon pi pi-check"></i></span>
-                                Customer Stock
-                            </label>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Obtain From</label>
-                        <select [(ngModel)]="receivingForm.obtainFromTypeId" name="obtainFromTypeId" (change)="onSelectObrainFrom()">
-                            <option value="0">-- Select --</option>
-                            <option value="1">Customer</option>
-                            <option value="2">Vendor</option>
-                            <option value="3">Company</option>
-                            <option value="4">Other</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <div class="form-row" *ngIf="receivingForm.obtainFromTypeId == 1">
-                            <div class="col-sm-11">
-                                <p-autoComplete field="label" class="pautocomp-cstm" [(ngModel)]="receivingForm.obtainFrom" name="obtainFromCustomer" [suggestions]="customersList" (completeMethod)="filterCustomerNames($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true"></p-autoComplete>                                    
-                            </div>
-                            <div class="col-sm-1">
-                                <div style="cursor:pointer; font-size:14px; margin:2px -7px;"><a class="fa fa-plus-circle fa-lg" target="_blank" matTooltip="Add Customer" matTooltipPosition="above" [routerLink]="['/customersmodule/customerpages/app-customer-create']"></a></div>
-                            </div>
-                        </div>
-                        <div class="form-row" *ngIf="receivingForm.obtainFromTypeId == 2">
-                            <div class="col-sm-11">
-                                <p-autoComplete field="label" class="pautocomp-cstm" [(ngModel)]="receivingForm.obtainFrom" name="obtainFromVendor" [suggestions]="vendorsList" (completeMethod)="filterVendorNames($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true">
-                                </p-autoComplete>
-                            </div>
-                            <div class="col-sm-1">
-                                <div style="cursor:pointer; font-size:14px; margin:2px -7px;"><a class="fa fa-plus-circle fa-lg" target="_blank" matTooltip="Add Vendor" matTooltipPosition="above" [routerLink]="['/vendorsmodule/vendorpages/app-vendor-general-information']"></a></div>
-                            </div>
-                        </div>
-                        <div class="form-row" *ngIf="receivingForm.obtainFromTypeId == 3">
-                            <div class="col-sm-12">
-                                <p-autoComplete field="label" class="pautocomp-cstm"
-                                    [(ngModel)]="receivingForm.obtainFrom" name="obtainFromCompany" 
-                                    [suggestions]="companyList" 
-                                    (completeMethod)="filterCompanyNames($event)" 
-                                    [size]="30" 
-                                    [minLength]="1"
-                                    [dropdown]="true"
-                                    errorMessage="Records not found" 
-                                    [forceSelection]="true">
-                                </p-autoComplete>
-                            </div>
-                        </div>
-                        <div class="form-row" *ngIf="receivingForm.obtainFromTypeId == 4">
-                            <div class="col-sm-12">
-                                <input class="form-control" type="text" name="obtainFromOther" [(ngModel)]="receivingForm.obtainFrom">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Owner</label>
-                        <select [(ngModel)]="receivingForm.ownerTypeId" name="ownerType" (change)="onSelectOwner()">
-                            <option value="0">-- Select --</option>
-                            <option value="1">Customer</option>
-                            <option value="2">Vendor</option>
-                            <option value="3">Company</option>
-                            <option value="4">Other</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <div class="form-row" *ngIf="receivingForm.ownerTypeId == 1">
-                            <div class="col-sm-11">
-                                <p-autoComplete field="label" class="pautocomp-cstm" [(ngModel)]="receivingForm.owner" name="ownerCustomer" [suggestions]="customersList" (completeMethod)="filterCustomerNames($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true"></p-autoComplete>                                    
-                            </div>
-                            <div class="col-sm-1">
-                                <div style="cursor:pointer; font-size:14px; margin:2px -7px;"><a class="fa fa-plus-circle fa-lg" target="_blank" matTooltip="Add Customer" matTooltipPosition="above" [routerLink]="['/customersmodule/customerpages/app-customer-create']"></a></div>
-                            </div>
-                        </div>
-                        <div class="form-row" *ngIf="receivingForm.ownerTypeId == 2">
-                            <div class="col-sm-11">
-                                <p-autoComplete field="label" class="pautocomp-cstm" [(ngModel)]="receivingForm.owner" name="ownerVendor" [suggestions]="vendorsList" (completeMethod)="filterVendorNames($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true">
-                                </p-autoComplete>
-                            </div>
-                            <div class="col-sm-1">
-                                <div style="cursor:pointer; font-size:14px; margin:2px -7px;"><a class="fa fa-plus-circle fa-lg" target="_blank" matTooltip="Add Vendor" matTooltipPosition="above" [routerLink]="['/vendorsmodule/vendorpages/app-vendor-general-information']"></a></div>
-                            </div>
-                        </div>
-                        <div class="form-row" *ngIf="receivingForm.ownerTypeId == 3">
-                            <div class="col-sm-12">
-                                <p-autoComplete field="label" class="pautocomp-cstm"
-                                    [(ngModel)]="receivingForm.owner" name="ownerCompany" 
-                                    [suggestions]="companyList" 
-                                    (completeMethod)="filterCompanyNames($event)" 
-                                    [size]="30" 
-                                    [minLength]="1"
-                                    [dropdown]="true"
-                                    errorMessage="Records not found" 
-                                    [forceSelection]="true">
-                                </p-autoComplete>
-                            </div>
-                        </div>
-                        <div class="form-row" *ngIf="receivingForm.ownerTypeId == 4">
-                            <div class="col-sm-12">
-                                <input class="form-control" type="text" name="ownerOther" [(ngModel)]="receivingForm.owner">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Traceble To</label>
-                        <select [(ngModel)]="receivingForm.traceableToTypeId" name="traceableToType" (change)="onSelectTraceableTo()">
-                            <option value="0">-- Select --</option>
-                            <option value="1">Customer</option>
-                            <option value="2">Vendor</option>
-                            <option value="3">Company</option>
-                            <option value="4">Other</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <div class="form-row" *ngIf="receivingForm.traceableToTypeId == 1">
-                            <div class="col-sm-11">
-                                <p-autoComplete field="label" class="pautocomp-cstm" [(ngModel)]="receivingForm.traceableTo" name="traceableToCustomer" [suggestions]="customersList" (completeMethod)="filterCustomerNames($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true"></p-autoComplete>
-                            </div>
-                            <div class="col-sm-1">
-                                <div style="cursor:pointer; font-size:14px; margin:2px -7px;"><a class="fa fa-plus-circle fa-lg" target="_blank" matTooltip="Add Customer" matTooltipPosition="above" [routerLink]="['/customersmodule/customerpages/app-customer-create']"></a></div>
-                            </div>
-                        </div>
-                        <div class="form-row" *ngIf="receivingForm.traceableToTypeId == 2">
-                            <div class="col-sm-11">
-                                <p-autoComplete field="label" class="pautocomp-cstm" [(ngModel)]="receivingForm.traceableTo" name="traceableToVendor" [suggestions]="vendorsList" (completeMethod)="filterVendorNames($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true">
-                                </p-autoComplete>
-                            </div>
-                            <div class="col-sm-1">
-                                <div style="cursor:pointer; font-size:14px; margin:2px -7px;"><a class="fa fa-plus-circle fa-lg" target="_blank" matTooltip="Add Vendor" matTooltipPosition="above" [routerLink]="['/vendorsmodule/vendorpages/app-vendor-general-information']"></a></div>
-                            </div>
-                        </div>
-                        <div class="form-row" *ngIf="receivingForm.traceableToTypeId == 3">
-                            <div class="col-sm-12">
-                                <p-autoComplete field="label" class="pautocomp-cstm"
-                                    [(ngModel)]="receivingForm.traceableTo" name="traceableToCompany" 
-                                    [suggestions]="companyList" 
-                                    (completeMethod)="filterCompanyNames($event)" 
-                                    [size]="30" 
-                                    [minLength]="1"
-                                    [dropdown]="true"
-                                    errorMessage="Records not found" 
-                                    [forceSelection]="true">
-                                </p-autoComplete>
-                            </div>
-                        </div>
-                        <div class="form-row" *ngIf="receivingForm.traceableToTypeId == 4">
-                            <div class="col-sm-12">
-                                <input class="form-control" type="text" name="traceableToOther" [(ngModel)]="receivingForm.traceableTo">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="checkbox-cstm m-t-10">
-                            <label>
-                                <input type="checkbox" name="isMFGDate" [(ngModel)]="receivingForm.isMFGDate">
-                                <span class="cr"><i class="cr-icon pi pi-check"></i></span>
-                                MFG Date
-                            </label>
-                        </div>
-                    </div>
-                    <div class="form-group" *ngIf="receivingForm.isMFGDate">
-                        <p-calendar class="workflow-clder" [showIcon]="true" [maxDate]="currentDate" name="manufacturingDate" [(ngModel)]="receivingForm.mfgDate"></p-calendar>
-                    </div>
-                    <div class="form-group">
-                        <label>MFG Trace</label>
-                        <input class="form-control" type="text" name="MFGTrace" [(ngModel)]="receivingForm.mfgTrace">
-                    </div>
-                    <div class="form-group">
-                        <label>MFG Lot</label>
-                        <input class="form-control" type="text" name="MFGLotNo" [(ngModel)]="receivingForm.mfgLotNo">
-                    </div>
-                    <div class="form-group">
-                        <div class="checkbox-cstm m-t-10">
-                            <label>
-                                <input type="checkbox" name="isExpDate" [(ngModel)]="receivingForm.isExpDate">
-                                <span class="cr"><i class="cr-icon pi pi-check"></i></span>
-                                Exp Date
-                            </label>
-                        </div>
-                    </div>
-                    <div class="form-group" *ngIf="receivingForm.isExpDate">
-                        <p-calendar class="workflow-clder" [showIcon]="true" [minDate]="currentDate" name="expDate" [(ngModel)]="receivingForm.expDate"></p-calendar>
-                    </div>                                       
-                    <div class="form-group memo-popup-cstm">
-                        <label>Memo</label>
-                        <span matTooltip="{{receivingForm.memo}}" matTooltipPosition="above"><input type="text" name="memo" pInputText class="form-control" value="{{receivingForm.memo}}" disabled /></span>
-                        <i class="fa fa-info-circle fa-lg" data-toggle="modal" data-target="#textarea-popup" matTooltip="{{receivingForm.memo}}" matTooltipPosition="above" (click)="onAddTextAreaInfo('memo')"></i>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card" style="margin-top: 20px;margin-bottom: 10px;">
-                        <div class="card-header" style="padding: 10px 12px;">
-                            <h5 style="margin-bottom: 0; font-size: 12px;">Management Structure <span class="text-danger">*</span></h5>
-                        </div>
-                        <div class="card-body" style="padding: 12px 12px 4px;">
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <select class="form-control" name="company" [(ngModel)]="managementStructure.companyId" 
-                                    (change)="selectedLegalEntity(managementStructure.companyId);" #companyName="ngModel" required>
-                                        <option value="0">Select Legal Entity</option>
-                                        <option *ngFor="let name of legalEntityList" [ngValue]="name.value">{{name.label}}</option>
-                                    </select>
-                                    <div *ngIf="companyName.invalid && (companyName.dirty || companyName.touched)" class="alert alert-danger alert-danger-cstm">
-                                            <div *ngIf="companyName.errors.required">
-                                                <small> Legal Entity Name is required </small>
-                                            </div>
-                                    </div>        
-                                </div>
-                                <div class="form-group">
-                                    <select class="form-control" [(ngModel)]="managementStructure.buId" name="buId" (change)="selectedBusinessUnit(managementStructure.buId)">
-                                        <option value="0">-- Select --</option>
-                                        <option *ngFor="let name of businessUnitList" [ngValue]="name.value">{{name.label}}</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <select class="form-control" [(ngModel)]="managementStructure.divisionId" name="divisionId" (change)="selectedDivision(managementStructure.divisionId)">
-                                        <option value="0">-- Select --</option>
-                                        <option *ngFor="let name of divisionList" [ngValue]="name.value">{{name.label}}</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <select class="form-control" [(ngModel)]="managementStructure.departmentId" name="departmentId" (change)="selectedDepartment(managementStructure.departmentId)">
-                                        <option value="0">-- Select --</option>
-                                        <option *ngFor="let name of departmentList" [ngValue]="name.value">{{name.label}}</option>
-                                    </select>
+                <div class="col-md-6">
+                    <div class="form-row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="checkbox-cstm m-t-10">
+                                    <label>
+                                        <input type="checkbox" name="isCustomerStock" [(ngModel)]="receivingForm.isCustomerStock" checked disabled>
+                                        <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                        Customer Stock
+                                    </label>
                                 </div>
                             </div>
+                            <div class="form-group">
+                                <label>Obtain From</label>
+                                <select [(ngModel)]="receivingForm.obtainFromTypeId" name="obtainFromTypeId" (change)="onSelectObrainFrom()">
+                                    <option value="0">-- Select --</option>
+                                    <option value="1">Customer</option>
+                                    <option value="2">Vendor</option>
+                                    <option value="3">Company</option>
+                                    <option value="4">Other</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <div class="form-row" *ngIf="receivingForm.obtainFromTypeId == 1">
+                                    <div class="col-sm-11">
+                                        <p-autoComplete field="label" class="pautocomp-cstm" [(ngModel)]="receivingForm.obtainFrom" name="obtainFromCustomer" [suggestions]="customersList" (completeMethod)="filterCustomerNames($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true"></p-autoComplete>                                    
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <div style="cursor:pointer; font-size:14px; margin:2px -7px;"><a class="fa fa-plus-circle fa-lg" target="_blank" matTooltip="Add Customer" matTooltipPosition="above" [routerLink]="['/customersmodule/customerpages/app-customer-create']"></a></div>
+                                    </div>
+                                </div>
+                                <div class="form-row" *ngIf="receivingForm.obtainFromTypeId == 2">
+                                    <div class="col-sm-11">
+                                        <p-autoComplete field="label" class="pautocomp-cstm" [(ngModel)]="receivingForm.obtainFrom" name="obtainFromVendor" [suggestions]="vendorsList" (completeMethod)="filterVendorNames($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true">
+                                        </p-autoComplete>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <div style="cursor:pointer; font-size:14px; margin:2px -7px;"><a class="fa fa-plus-circle fa-lg" target="_blank" matTooltip="Add Vendor" matTooltipPosition="above" [routerLink]="['/vendorsmodule/vendorpages/app-vendor-general-information']"></a></div>
+                                    </div>
+                                </div>
+                                <div class="form-row" *ngIf="receivingForm.obtainFromTypeId == 3">
+                                    <div class="col-sm-12">
+                                        <p-autoComplete field="label" class="pautocomp-cstm"
+                                            [(ngModel)]="receivingForm.obtainFrom" name="obtainFromCompany" 
+                                            [suggestions]="companyList" 
+                                            (completeMethod)="filterCompanyNames($event)" 
+                                            [size]="30" 
+                                            [minLength]="1"
+                                            [dropdown]="true"
+                                            errorMessage="Records not found" 
+                                            [forceSelection]="true">
+                                        </p-autoComplete>
+                                    </div>
+                                </div>
+                                <div class="form-row" *ngIf="receivingForm.obtainFromTypeId == 4">
+                                    <div class="col-sm-12">
+                                        <input class="form-control" type="text" name="obtainFromOther" [(ngModel)]="receivingForm.obtainFrom">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Owner</label>
+                                <select [(ngModel)]="receivingForm.ownerTypeId" name="ownerType" (change)="onSelectOwner()">
+                                    <option value="0">-- Select --</option>
+                                    <option value="1">Customer</option>
+                                    <option value="2">Vendor</option>
+                                    <option value="3">Company</option>
+                                    <option value="4">Other</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <div class="form-row" *ngIf="receivingForm.ownerTypeId == 1">
+                                    <div class="col-sm-11">
+                                        <p-autoComplete field="label" class="pautocomp-cstm" [(ngModel)]="receivingForm.owner" name="ownerCustomer" [suggestions]="customersList" (completeMethod)="filterCustomerNames($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true"></p-autoComplete>                                    
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <div style="cursor:pointer; font-size:14px; margin:2px -7px;"><a class="fa fa-plus-circle fa-lg" target="_blank" matTooltip="Add Customer" matTooltipPosition="above" [routerLink]="['/customersmodule/customerpages/app-customer-create']"></a></div>
+                                    </div>
+                                </div>
+                                <div class="form-row" *ngIf="receivingForm.ownerTypeId == 2">
+                                    <div class="col-sm-11">
+                                        <p-autoComplete field="label" class="pautocomp-cstm" [(ngModel)]="receivingForm.owner" name="ownerVendor" [suggestions]="vendorsList" (completeMethod)="filterVendorNames($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true">
+                                        </p-autoComplete>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <div style="cursor:pointer; font-size:14px; margin:2px -7px;"><a class="fa fa-plus-circle fa-lg" target="_blank" matTooltip="Add Vendor" matTooltipPosition="above" [routerLink]="['/vendorsmodule/vendorpages/app-vendor-general-information']"></a></div>
+                                    </div>
+                                </div>
+                                <div class="form-row" *ngIf="receivingForm.ownerTypeId == 3">
+                                    <div class="col-sm-12">
+                                        <p-autoComplete field="label" class="pautocomp-cstm"
+                                            [(ngModel)]="receivingForm.owner" name="ownerCompany" 
+                                            [suggestions]="companyList" 
+                                            (completeMethod)="filterCompanyNames($event)" 
+                                            [size]="30" 
+                                            [minLength]="1"
+                                            [dropdown]="true"
+                                            errorMessage="Records not found" 
+                                            [forceSelection]="true">
+                                        </p-autoComplete>
+                                    </div>
+                                </div>
+                                <div class="form-row" *ngIf="receivingForm.ownerTypeId == 4">
+                                    <div class="col-sm-12">
+                                        <input class="form-control" type="text" name="ownerOther" [(ngModel)]="receivingForm.owner">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Traceble To</label>
+                                <select [(ngModel)]="receivingForm.traceableToTypeId" name="traceableToType" (change)="onSelectTraceableTo()">
+                                    <option value="0">-- Select --</option>
+                                    <option value="1">Customer</option>
+                                    <option value="2">Vendor</option>
+                                    <option value="3">Company</option>
+                                    <option value="4">Other</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <div class="form-row" *ngIf="receivingForm.traceableToTypeId == 1">
+                                    <div class="col-sm-11">
+                                        <p-autoComplete field="label" class="pautocomp-cstm" [(ngModel)]="receivingForm.traceableTo" name="traceableToCustomer" [suggestions]="customersList" (completeMethod)="filterCustomerNames($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true"></p-autoComplete>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <div style="cursor:pointer; font-size:14px; margin:2px -7px;"><a class="fa fa-plus-circle fa-lg" target="_blank" matTooltip="Add Customer" matTooltipPosition="above" [routerLink]="['/customersmodule/customerpages/app-customer-create']"></a></div>
+                                    </div>
+                                </div>
+                                <div class="form-row" *ngIf="receivingForm.traceableToTypeId == 2">
+                                    <div class="col-sm-11">
+                                        <p-autoComplete field="label" class="pautocomp-cstm" [(ngModel)]="receivingForm.traceableTo" name="traceableToVendor" [suggestions]="vendorsList" (completeMethod)="filterVendorNames($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true">
+                                        </p-autoComplete>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <div style="cursor:pointer; font-size:14px; margin:2px -7px;"><a class="fa fa-plus-circle fa-lg" target="_blank" matTooltip="Add Vendor" matTooltipPosition="above" [routerLink]="['/vendorsmodule/vendorpages/app-vendor-general-information']"></a></div>
+                                    </div>
+                                </div>
+                                <div class="form-row" *ngIf="receivingForm.traceableToTypeId == 3">
+                                    <div class="col-sm-12">
+                                        <p-autoComplete field="label" class="pautocomp-cstm"
+                                            [(ngModel)]="receivingForm.traceableTo" name="traceableToCompany" 
+                                            [suggestions]="companyList" 
+                                            (completeMethod)="filterCompanyNames($event)" 
+                                            [size]="30" 
+                                            [minLength]="1"
+                                            [dropdown]="true"
+                                            errorMessage="Records not found" 
+                                            [forceSelection]="true">
+                                        </p-autoComplete>
+                                    </div>
+                                </div>
+                                <div class="form-row" *ngIf="receivingForm.traceableToTypeId == 4">
+                                    <div class="col-sm-12">
+                                        <input class="form-control" type="text" name="traceableToOther" [(ngModel)]="receivingForm.traceableTo">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="checkbox-cstm m-t-10">
+                                    <label>
+                                        <input type="checkbox" name="isMFGDate" [(ngModel)]="receivingForm.isMFGDate">
+                                        <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                        MFG Date
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group" *ngIf="receivingForm.isMFGDate">
+                                <p-calendar class="workflow-clder" [showIcon]="true" [maxDate]="currentDate" name="manufacturingDate" [(ngModel)]="receivingForm.mfgDate"></p-calendar>
+                            </div>
+                            <div class="form-group">
+                                <label>MFG Trace</label>
+                                <input class="form-control" type="text" name="MFGTrace" [(ngModel)]="receivingForm.mfgTrace">
+                            </div>
+                            <div class="form-group">
+                                <label>MFG Lot</label>
+                                <input class="form-control" type="text" name="MFGLotNo" [(ngModel)]="receivingForm.mfgLotNo">
+                            </div>
+                            <div class="form-group">
+                                <div class="checkbox-cstm m-t-10">
+                                    <label>
+                                        <input type="checkbox" name="isExpDate" [(ngModel)]="receivingForm.isExpDate">
+                                        <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                        Exp Date
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group" *ngIf="receivingForm.isExpDate">
+                                <p-calendar class="workflow-clder" [showIcon]="true" [minDate]="currentDate" name="expDate" [(ngModel)]="receivingForm.expDate"></p-calendar>
+                            </div>                    
                         </div>
+                        <div class="col-md-6">
+                            <div class="card" style="margin-top: 20px;margin-bottom: 10px;">
+                                <div class="card-header" style="padding: 10px 12px;">
+                                    <h5 style="margin-bottom: 0; font-size: 12px;">Management Structure <span class="text-danger">*</span></h5>
+                                </div>
+                                <div class="card-body" style="padding: 12px 12px 4px;">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <select class="form-control" name="company" [(ngModel)]="managementStructure.companyId" 
+                                            (change)="selectedLegalEntity(managementStructure.companyId);" #companyName="ngModel" required>
+                                                <option value="0">Select Legal Entity</option>
+                                                <option *ngFor="let name of legalEntityList" [ngValue]="name.value">{{name.label}}</option>
+                                            </select>
+                                            <div *ngIf="companyName.invalid && (companyName.dirty || companyName.touched)" class="alert alert-danger alert-danger-cstm">
+                                                    <div *ngIf="companyName.errors.required">
+                                                        <small> Legal Entity Name is required </small>
+                                                    </div>
+                                            </div>        
+                                        </div>
+                                        <div class="form-group">
+                                            <select class="form-control" [(ngModel)]="managementStructure.buId" name="buId" (change)="selectedBusinessUnit(managementStructure.buId)">
+                                                <option value="0">-- Select --</option>
+                                                <option *ngFor="let name of businessUnitList" [ngValue]="name.value">{{name.label}}</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <select class="form-control" [(ngModel)]="managementStructure.divisionId" name="divisionId" (change)="selectedDivision(managementStructure.divisionId)">
+                                                <option value="0">-- Select --</option>
+                                                <option *ngFor="let name of divisionList" [ngValue]="name.value">{{name.label}}</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <select class="form-control" [(ngModel)]="managementStructure.departmentId" name="departmentId" (change)="selectedDepartment(managementStructure.departmentId)">
+                                                <option value="0">-- Select --</option>
+                                                <option *ngFor="let name of departmentList" [ngValue]="name.value">{{name.label}}</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group memo-popup-cstm">
+                                <label>Memo</label>
+                                <span matTooltip="{{receivingForm.memo}}" matTooltipPosition="above"><input type="text" name="memo" pInputText class="form-control" value="{{receivingForm.memo}}" disabled /></span>
+                                <i class="fa fa-info-circle fa-lg" data-toggle="modal" data-target="#textarea-popup" matTooltip="{{receivingForm.memo}}" matTooltipPosition="above" (click)="onAddTextAreaInfo('memo')"></i>
+                            </div>                            
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label style="float: none;">Attachments</label>
+                        <p-fileUpload #fileUpload   name="fileupload[]" multiple="multiple" [showCancelButton]="false" [showUploadButton]="false" customUpload="true" (onSelect)="fileUploadForDocuments($event)"  (onRemove)="removeFile($event)"></p-fileUpload>
                     </div>
                 </div>
             </div>
-            <div [ngClass]="receivingForm.isTimeLife ? 'card ' : ''">
-                <div [ngClass]="receivingForm.isTimeLife ? 'card-body card-timelife' : ''">
+
+            <div [ngClass]="receivingForm.isTimeLife ? 'card card-timelife' : ''">
+                <div [ngClass]="receivingForm.isTimeLife ? 'card-body' : ''">
                     <div class="form-row">
                         <div class="col-md-3">
                             <div class="form-group">
-                                <div class="checkbox-cstm m-t-10">
+                                <div class="checkbox-cstm m-t-15">
+                                    <label>
+                                        <input type="checkbox" class="serialized-checkbox" name="isSerialized" [(ngModel)]="receivingForm.isSerialized" disabled>
+                                        <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                        Is Serialized
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3" *ngIf="receivingForm.isSerialized">
+                            <div class="form-group">
+                                <div class="checkbox-cstm m-t-15">
+                                    <label>
+                                        <input type="checkbox" name="isSkipSerialNo" [(ngModel)]="receivingForm.isSkipSerialNo" (change)="resetSerialNo()">
+                                        <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                        Serial Number info not provided
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3" *ngIf="receivingForm.isSerialized">
+                            <div class="form-group" *ngIf="!receivingForm.isSkipSerialNo">
+                                <label>Serial Number</label>
+                                <input class="form-control" type="text" name="serialNumber" [(ngModel)]="receivingForm.serialNumber">
+                            </div>  
+                        </div>                
+                    </div>
+                </div>
+            </div>
+            <div [ngClass]="receivingForm.isTimeLife ? 'card card-timelife' : ''">
+                <div [ngClass]="receivingForm.isTimeLife ? 'card-body' : ''">
+                    <div class="form-row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <div class="checkbox-cstm m-t-15">
                                     <label>
                                         <input type="checkbox" name="isTimeLife" [(ngModel)]="receivingForm.isTimeLife" disabled>
                                         <span class="cr"><i class="cr-icon pi pi-check"></i></span>
@@ -444,32 +459,36 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="form-row" *ngIf="receivingForm.isTimeLife">                
-                        <div class="col-md-3">
+                        <div class="col-md-3" *ngIf="receivingForm.isTimeLife">
                             <div class="form-group">
-                                <div class="checkbox-cstm m-t-10">
+                                <div class="checkbox-cstm m-t-15">
                                     <label>
-                                        <input type="checkbox" name="isSkipTimeLife" [(ngModel)]="receivingForm.isSkipTimeLife">
+                                        <input type="checkbox" name="isSkipTimeLife" [(ngModel)]="receivingForm.isSkipTimeLife" (change)="resetTimelife()">
                                         <span class="cr"><i class="cr-icon pi pi-check"></i></span>
-                                        Skip Time Life
+                                        Time Life info not provided
                                     </label>
                                 </div>
                             </div>
+                        </div>
+                        <div class="col-md-3" *ngIf="receivingForm.isTimeLife">
                             <div class="form-group" *ngIf="!receivingForm.isSkipTimeLife">
                                 <label>Date</label>
                                 <p-calendar class="workflow-clder" [showIcon]="true" name="timeLifeDate" [(ngModel)]="receivingForm.timeLifeDate"></p-calendar>
                             </div>
+                        </div>
+                        <div class="col-md-3" *ngIf="receivingForm.isTimeLife">
                             <div class="form-group" *ngIf="!receivingForm.isSkipTimeLife">
                                 <label>Origin</label>
                                 <input class="form-control" type="text" name="timeLifeOrigin" [(ngModel)]="receivingForm.timeLifeOrigin">
                             </div>
                         </div>
+                    </div>
+                    <div class="form-row" *ngIf="receivingForm.isTimeLife">  
                         <div class="table-responsive form-group" style="padding: 0 5px;" *ngIf="!receivingForm.isSkipTimeLife">
                             <table class="table table-bordered">
                                 <thead>
                                     <tr>
-                                        <th colspan="15" class="text-center"><strong>Time Life Adjustments</strong></th>
+                                        <th colspan="15" class="text-center"><strong>Time Life Info</strong></th>
                                     </tr>
                                 </thead>
                                 <tbody>

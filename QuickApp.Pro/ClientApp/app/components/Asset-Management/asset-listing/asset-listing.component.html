@@ -62,11 +62,15 @@
                             </ng-template>
                             <ng-template pTemplate="header" let-columns style="padding-top: 1% !important">
                                 <tr>
-                                    <th style="width:auto" *ngFor="let col of columns" pResizableColumn pReorderableColumn 
-                                        [pSortableColumn]="col.field" [attr.colspan]="1">
-                                        {{col.header}}
-                                        <p-sortIcon [field]="col.field"></p-sortIcon>
-                                    </th>
+                                    <ng-container *ngFor="let col of columns">
+                                        <th class="text-center" *ngIf="col.field!='companyName' && col.field!='buName' && col.field!='deptName' && col.field!='divName'" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
+                                            {{col.header}}
+                                            <p-sortIcon [field]="col.field"></p-sortIcon>
+                                        </th>
+                                        <th class="text-center" *ngIf="col.field=='companyName'" colspan="4" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
+                                            Management Structure
+                                        </th>
+                                    </ng-container>
                                     <th style="width:150px;position: sticky;" *ngIf="selectedColumns.length> 0">Actions</th>
                                 </tr>
                                 <tr>
@@ -150,8 +154,8 @@
                     <div class="panel-group" id="accordion">
                         <div class="panel panel-default">
                             <div>
-                                <button type="button" class="btn btn-success" data-toggle="collapse" (click)="openAllCollapse()">Open All</button>
-                                <button type="button" class="btn btn-info" data-toggle="collapse" (click)="closeAllCollapse()">Close All</button>
+                                <button type="button" class="btn btn-primary" data-toggle="collapse" (click)="openAllCollapse()">Open All</button>
+                                <button type="button" class="btn btn-secondary" data-toggle="collapse" (click)="closeAllCollapse()">Close All</button>
                                 <hr />
                             </div>
                             <div class="panel-heading">
@@ -287,7 +291,7 @@
 											 [resizableColumns]="true"
 											 [reorderableColumns]="true"
 											 [scrollable]="true"
-											 [totalRecords]="totalRecords"
+											 [totalRecords]="totalRecords1"
 											 scrollHeight="450px">
 										<ng-template pTemplate="colgroup" let-columns>
 											<colgroup>
@@ -311,11 +315,22 @@
 
 
 										<ng-template pTemplate="body" let-rowData let-columns="columns" let-assetCapes let-rowIndex="rowIndex">
-											<tr [pSelectableRow]="rowData" pReorderableRowHandle>
-												<td style="width:120px" *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
-													{{rowData[col.field]}}
-												</td>
-											</tr>
+                                            <tr [pSelectableRow]="rowData" pReorderableRowHandle>
+                                                <td style="width:120px" *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
+                                                    {{rowData[col.field]}}
+                                                </td>
+                                                <td  class="action-icons-cstm" style="width:150px">       
+                                                    <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on"
+                                                                   offLabel="off" (onChange)="toggleActiveStatus(rowData)"
+                                                                   disabled [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                                                    <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on"
+                                                                   offLabel="off" (onChange)="toggleActiveStatus(rowData)"
+                                                                   disabled [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                                                    <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on"
+                                                                   offLabel="off" (onChange)="toggleActiveStatus(rowData)"
+                                                                   disabled [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                                                </td>
+                                            </tr>
 										</ng-template>
 										<ng-template pTemplate="summary" id="footer">
 											<div style="text-align: right;">
@@ -342,11 +357,11 @@
                                 <div class="panel-body">
                                     <div class="col-sm-3" *ngIf="assetViewList.calibrationRequired">
                                         <p>
-                                            <span class="label"><b>Calibration Frequency: </b></span><span class="value">{{assetViewList.calibrationFrequencyMonths}}Months{{assetViewList.calibrationFrequencyDays}}Days</span>
+                                            <span class="label"><b>Calibration Frequency: </b></span><span class="value">{{assetViewList.calibrationFrequencyMonths}} Months, {{assetViewList.calibrationFrequencyDays}}Days</span>
                                         </p>
                                         <p><span class="label"><b>Default Vendor: </b></span><span class="value">{{assetViewList.calibrationDefaultVendorId}} </span></p>
                                         <p>
-                                            <span class="label"><b>Dafault Cost: </b></span><span class="value">{{assetViewList.calibrationDefaultCost}}</span>
+                                            <span class="label"><b>Dafault Cost: </b></span><span class="value">&nbsp;{{assetViewList.calibrationDefaultCost}}</span>
                                         </p>
                                         <p><span class="label"><b>GL Account: </b></span><span class="value">{{assetViewList.calibrationGlAccountId}}</span></p>
                                         <p>
@@ -359,7 +374,7 @@
                                         </p>
                                         <p><span class="label"><b>Default Vendor: </b></span><span class="value">{{assetViewList.certificationDefaultVendorId}} </span></p>
                                         <p>
-                                            <span class="label"><b>Dafault Cost: </b></span><span class="value">{{assetViewList.certificationDefaultCost}}</span>
+                                            <span class="label"><b>Dafault Cost: </b></span><span class="value">&nbsp;{{assetViewList.certificationDefaultCost}}</span>
                                         </p>
                                         <p><span class="label"><b>GL Account: </b></span><span class="value">{{assetViewList.certificationGlAccountId}}</span></p>
                                         <p>
@@ -368,26 +383,26 @@
                                     </div>
                                     <div class="col-sm-3" *ngIf="assetViewList.inspectionRequired">
                                         <p>
-                                            <span class="label"><b>Inspection Frequency: </b></span><span class="value">{{assetViewList.inspectionFrequencyMonths}}Months{{assetViewList.inspectionFrequencyDays}}Days</span>
+                                            <span class="label"><b>Inspection Frequency: </b></span><span class="value">{{assetViewList.inspectionFrequencyMonths}} Months, {{assetViewList.inspectionFrequencyDays}}Days</span>
                                         </p>
                                         <p><span class="label"><b>Default Vendor: </b></span><span class="value">{{assetViewList.inspectionDefaultVendorId}} </span></p>
                                         <p>
-                                            <span class="label"><b>Dafault Cost: </b></span><span class="value">{{assetViewList.inspectionDefaultCost}}</span>
+                                            <span class="label"><b>Dafault Cost: </b></span><span class="value">&nbsp;{{assetViewList.inspectionDefaultCost}}</span>
                                         </p>
-                                        <p><span class="label"><b>GL Account: </b></span><span class="value">{{assetViewList.inspectionGlAccountId}}</span></p>
+                                        <p><span class="label"><b>GL Account: </b></span><span class="value">{{assetViewList.inspectionGlaAccountId}}</span></p>
                                         <p>
                                             <span class="label"><b>Inspection Memo: </b></span><span class="value">{{assetViewList.inspectionMemo}}</span>
                                         </p>
                                     </div>
                                     <div class="col-sm-3" *ngIf="assetViewList.verificationRequired">
                                         <p>
-                                            <span class="label"><b>Verification Frequency: </b></span><span class="value">{{assetViewList.verificationFrequencyMonths}}Months{{assetViewList.verificationFrequencyDays}}Days</span>
+                                            <span class="label"><b>Verification Frequency: </b></span><span class="value">{{assetViewList.verificationFrequencyMonths}} Months, {{assetViewList.verificationFrequencyDays}}Days</span>
                                         </p>
                                         <p><span class="label"><b>Default Vendor: </b></span><span class="value">{{assetViewList.verificationDefaultVendorId}} </span></p>
                                         <p>
-                                            <span class="label"><b>Dafault Cost: </b></span><span class="value">{{assetViewList.verificationDefaultCost}}</span>
+                                            <span class="label"><b>Dafault Cost: </b></span><span class="value">&nbsp;{{assetViewList.verificationDefaultCost}}</span>
                                         </p>
-                                        <p><span class="label"><b>GL Account: </b></span><span class="value">{{assetViewList.verificationGlAccountId}}</span></p>
+                                        <p><span class="label"><b>GL Account: </b></span><span class="value">{{assetViewList.verificationGlaAccountId}}</span></p>
                                         <p>
                                             <span class="label"><b>Verification Memo: </b></span><span class="value">{{assetViewList.verificationMemo}}</span>
                                         </p>
@@ -472,7 +487,7 @@
                                         </p>
 
                                         <p>
-                                            <span class="label"><b>Maintenance Frequency: </b></span><span class="value">{{assetViewList.maintenanceFrequencyMonths}}Months</span>
+                                            <span class="label"><b>Maintenance Frequency: </b></span><span class="value">{{assetViewList.maintenanceFrequencyMonths}} Months</span>
                                         </p>
                                         <p>
                                             <span class="label"><b>Default Vendor: </b></span><span class="value">{{assetViewList.defaultVendorId}}</span>
@@ -515,7 +530,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-info" data-dismiss="modal" (click)="dismissModel()">Close</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="dismissModel()">Close</button>
             </div>
         </div>
     </ng-template>

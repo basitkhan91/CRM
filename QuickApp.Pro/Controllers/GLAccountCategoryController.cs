@@ -120,25 +120,64 @@ namespace QuickApp.Pro.Controllers
         [HttpPost("update")]
         public IActionResult update([FromBody]GLAccountCategory item)
         {
-            bool isValid = _unitOfWork.GLAccountCategoryRepository.IsValid(item);
-            if (isValid)
+            //  bool isValid = _unitOfWork.GLAccountCategoryRepository.IsValid(item);
+            if (item != null)
             {
-                item.UpdatedDate = DateTime.Now;
-                GLAccountCategory existingItem = _unitOfWork.Repository<GLAccountCategory>().Find(x => x.GLAccountCategoryId == item.GLAccountCategoryId).FirstOrDefault(x => !(x?.IsDelete ?? false));
-                existingItem.UpdatedDate = DateTime.Now;
-                existingItem.UpdatedBy = item.UpdatedBy;
-                existingItem.IsActive = item.IsActive;
-                existingItem.GLCID = item.GLCID;
-                existingItem.GLAccountCategoryName = item.GLAccountCategoryName;
-                //_unitOfWork.Repository<GLAccountCategory>().Update(item);
-                _unitOfWork.SaveChanges();
-                return Ok(item);
+                if (ModelState.IsValid)
+                {
+                    item.UpdatedDate = DateTime.Now;
+                    GLAccountCategory existingItem = _unitOfWork.Repository<GLAccountCategory>().Find(x => x.GLAccountCategoryId == item.GLAccountCategoryId).FirstOrDefault(x => !(x?.IsDelete ?? false));
+                    existingItem.UpdatedDate = DateTime.Now;
+                    existingItem.UpdatedBy = item.UpdatedBy;
+                    existingItem.IsActive = item.IsActive;
+                    existingItem.GLCID = item.GLCID;
+                    existingItem.GLAccountCategoryName = item.GLAccountCategoryName;
+                    //_unitOfWork.Repository<GLAccountCategory>().Update(item);
+                    _unitOfWork.SaveChanges();
+                    return Ok(item);
+                }
+                else
+                {
+                    return BadRequest();
+                }
             }
             else
             {
                 return BadRequest();
             }
 
+        }
+
+        [HttpPut("update/{id}")]
+
+        public IActionResult updateGLAccountCategory([FromBody]GLAccountCategory item)
+        {
+            if (item != null)
+            {
+                if (ModelState.IsValid)
+                {
+                    item.UpdatedDate = DateTime.Now;
+                    item.UpdatedBy = item.UpdatedBy;
+                    item.GLCID = item.GLCID;
+                    item.GLAccountCategoryId = item.GLAccountCategoryId;
+                    item.GLAccountCategoryName = item.GLAccountCategoryName;
+                    
+                    item.MasterCompanyId = item.MasterCompanyId;
+                    item.IsActive = item.IsActive;
+                   _unitOfWork.Repository<GLAccountCategory>().Update(item);
+                    _unitOfWork.SaveChanges();
+                    return Ok(item);
+                }
+                else
+                {
+                    return BadRequest(ModelState);
+                }
+
+            }
+            else
+            {
+                return BadRequest();
+            }
         }
 
         #endregion Public Methods

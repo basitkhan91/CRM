@@ -10,7 +10,7 @@ import { StocklineService } from '../../../../services/stockline.service';
 import { CommonService } from '../../../../services/common.service';
 import { AuthService } from '../../../../services/auth.service';
 import { ActivatedRoute } from '@angular/router';
-import { getObjectById } from '../../../../generic/autocomplete';
+import { getObjectById, getValueByFieldFromArrayofObject } from '../../../../generic/autocomplete';
 import { workOrderGeneralInfo } from '../../../../models/work-order-generalInformation.model';
 import { Subject } from 'rxjs'
 import { takeUntil } from 'rxjs/operators';
@@ -38,6 +38,7 @@ export class WorkOrderSmartComponent implements OnInit {
     workOrderStatusList: any;
     partNumberOriginalData: Object;
     workOrderId: any;
+    recCustmoerId: any;
     editWorkOrderGeneralInformation: any;
     workOrderGeneralInformation: workOrderGeneralInfo = new workOrderGeneralInfo();
     isEdit: boolean = false;
@@ -47,6 +48,9 @@ export class WorkOrderSmartComponent implements OnInit {
     conditionList: any;
     workOrderOriginalStageList: any;
     conditionId: any;
+    jobTitles: any;
+    salesPersonOriginalList: Object;
+    csrOriginalList: Object;
     /** WorkOrderShipping ctor */
     constructor(private alertService: AlertService,
         private workOrderService: WorkOrderService,
@@ -70,6 +74,7 @@ export class WorkOrderSmartComponent implements OnInit {
         this.getAllCreditTerms();
         // this.getAllCustomers();
         this.getAllEmployees();
+        this.getJobTitles();
         this.getAllWorkScpoes();
         this.getAllWorkOrderStages();
         //this.getMultiplePartsNumbers();
@@ -84,14 +89,27 @@ export class WorkOrderSmartComponent implements OnInit {
         } else {
             // get the workOrderId on Edit Mode
             this.workOrderId = this.acRouter.snapshot.params['id'];
+            // this.recCustmoerId = this.acRouter.snapshot.params['rcustid'];
+
         }
 
         if (this.workOrderId) {
-            this.workOrderService.getWorkOrderById(this.workOrderId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
+            // || this.recCustmoerId
+            // if (this.recCustmoerId) {
+            //     this.showTabsGrid = false;
+            //     this.workOrderId = 0;
+            // }
+            // else {
+
+            //     this.recCustmoerId = 0;
+            // }
+            this.workOrderService.getWorkOrderById(this.workOrderId, this.recCustmoerId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
 
                 this.getPartNosByCustomer(res.customerId);
 
                 this.isEdit = true;
+
+
                 const workOrderData = res;
                 const data = {
                     ...res,
@@ -157,6 +175,36 @@ export class WorkOrderSmartComponent implements OnInit {
         })
     }
 
+    getJobTitles() {
+        this.commonService.getJobTitles().subscribe(res => {
+            this.jobTitles = res;
+            // console.log(this.jobTitles);
+            this.getSalesPersonList();
+            this.getCSRList();
+        })
+    }
+    getSalesPersonList() {
+        console.log(this.jobTitles);
+        const id = getValueByFieldFromArrayofObject('jobTitle', 'Sales', this.jobTitles);
+        console.log(id);
+        if (id !== undefined) {
+            this.commonService.getEmployeesByCategory(id[0].jobTitleId).subscribe(res => {
+                console.log(res);
+                this.salesPersonOriginalList = res;
+            })
+        }
+    }
+
+    getCSRList() {
+        console.log(this.jobTitles);
+        const id = getValueByFieldFromArrayofObject('jobTitle', 'CSR', this.jobTitles);
+        if (id !== undefined) {
+            this.commonService.getEmployeesByCategory(id[0].jobTitleId).subscribe(res => {
+                this.csrOriginalList = res;
+            })
+        }
+    }
+
 
     async getAllEmployees() {
         await this.commonService.smartDropDownList('Employee', 'EmployeeId', 'FirstName').pipe(takeUntil(this.onDestroy$)).subscribe(res => {
@@ -207,9 +255,11 @@ export class WorkOrderSmartComponent implements OnInit {
         })
     }
 
-    getPartNosByCustomer(customerId) {
+    async getPartNosByCustomer(customerId) {
         this.partNumberOriginalData = null;
-        this.workOrderService.getPartNosByCustomer(customerId).subscribe(res => {
+        //this.workOrderService.getPartNosByCustomer(customerId).subscribe(res => {
+        await this.workOrderService.getPartNosByCustomer(customerId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
+
             this.partNumberOriginalData = res;
         });
     }

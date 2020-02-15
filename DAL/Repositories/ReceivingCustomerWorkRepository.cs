@@ -175,12 +175,20 @@ namespace DAL.Repositories
 
         public IEnumerable<object> GetList(Common.Filters<ReceivingCustomerWorkFilter> customerFilters)
         {
+
+            int? woFilter = 0;
+
             if (customerFilters.filters == null)
                 customerFilters.filters = new ReceivingCustomerWorkFilter();
             var pageNumber = customerFilters.first + 1;
             var pageSize = customerFilters.rows;
 
             string sortColumn = string.Empty;
+
+            if(customerFilters.filters.woFilter!=null)
+            {
+                woFilter = customerFilters.filters.woFilter;
+            }
 
             var sorts = new Sorts<ReceivingCustomerWorkFilter>();
             var filters = new EntityFrameworkPaginate.Filters<ReceivingCustomerWorkFilter>();
@@ -207,13 +215,15 @@ namespace DAL.Repositories
                 sorts.Add(true, x => propertyInfo.GetValue(x, null));
             }
 
+            filters.Add(customerFilters.filters.receivedDate != null, x => x.receivedDate == customerFilters.filters.receivedDate);
             filters.Add(!string.IsNullOrEmpty(customerFilters.filters.receivingNumber), x => x.receivingNumber.ToLower().Contains(customerFilters.filters.receivingNumber.ToLower()));
+            filters.Add(!string.IsNullOrEmpty(customerFilters.filters.woNumber), x => x.woNumber.Contains(customerFilters.filters.woNumber));
+            filters.Add(!string.IsNullOrEmpty(customerFilters.filters.woOpenDate), x => x.woOpenDate == customerFilters.filters.woNumber);
             filters.Add(!string.IsNullOrEmpty(customerFilters.filters.partNumber), x => x.partNumber.ToLower().Contains(customerFilters.filters.partNumber.ToLower()));
             filters.Add(!string.IsNullOrEmpty(customerFilters.filters.partDescription), x => x.partDescription.ToLower().Contains(customerFilters.filters.partDescription.ToLower()));
-            filters.Add(!string.IsNullOrEmpty(customerFilters.filters.changePartNumber), x => x.changePartNumber.Contains(customerFilters.filters.changePartNumber));
-            filters.Add(!string.IsNullOrEmpty(customerFilters.filters.employeeName), x => x.employeeName.ToLower().Contains(customerFilters.filters.employeeName.ToLower()));
             filters.Add(!string.IsNullOrEmpty(customerFilters.filters.customerName), x => x.customerName.ToLower().Contains(customerFilters.filters.customerName.ToLower()));
-            filters.Add(!string.IsNullOrEmpty(customerFilters.filters.customerReference), x => x.customerReference.ToLower().Contains(customerFilters.filters.customerReference.ToLower()));
+            filters.Add(!string.IsNullOrEmpty(customerFilters.filters.stageCode), x => x.stageCode.ToLower().Contains(customerFilters.filters.stageCode.ToLower()));
+            filters.Add(!string.IsNullOrEmpty(customerFilters.filters.status), x => x.status.ToLower().Contains(customerFilters.filters.status.ToLower()));
 
             var totalRecords = (from cr in _appContext.ReceivingCustomerWork
                                 join im in _appContext.ItemMaster on cr.ItemMasterId equals im.ItemMasterId
@@ -221,17 +231,31 @@ namespace DAL.Repositories
                                 from rp in crrp.DefaultIfEmpty()
                                 join emp in _appContext.Employee on cr.EmployeeId equals emp.EmployeeId
                                 join cust in _appContext.Customer on cr.CustomerId equals cust.CustomerId
+                                join wo in _appContext.WorkOrder on cr.WorkOrderId equals wo.WorkOrderId into crwo
+                                from wo in crwo.DefaultIfEmpty()
+                                join wop in _appContext.WorkOrderPartNumber on cr.StockLineId equals wop.StockLineId into crwop
+                                from wop in crwop.DefaultIfEmpty()
+                                join stage in _appContext.WorkOrderStage on wop.WorkOrderStageId equals stage.WorkOrderStageId into wops
+                                from stage in wops.DefaultIfEmpty()
+                                join st in _appContext.WorkOrderStatus on wop.WorkOrderStatusId equals st.Id into wopst
+                                from st in wopst.DefaultIfEmpty()
                                 where cr.IsDeleted == false
+                               
                                 select new ReceivingCustomerWorkFilter()
                                 {
+
                                     ReceivingCustomerWorkId = cr.ReceivingCustomerWorkId,
+                                    receivedDate = cr.CreatedDate,
                                     receivingNumber = cr.ReceivingNumber,
+                                    woNumber = wo == null ? "" : wo.WorkOrderNum,
+                                    woOpenDate = wo == null && wo.OpenDate!=null ? "" : wo.OpenDate.ToString(),
                                     partNumber = im.PartNumber,
                                     partDescription = im.PartDescription,
-                                    changePartNumber = rp == null ? "" : rp.PartNumber,
-                                    employeeName = emp.FirstName,
                                     customerName = cust.Name,
-                                    customerReference = cr.Reference
+                                    stageCode = stage == null ? "" : stage.Stage,
+                                    status = st == null ? "" : st.Description,
+                                    ManagementStructureId = cr.ManagementStructureId,
+                                    createdDate = cr.CreatedDate,
                                 }).Distinct()
                                 .Paginate(pageNumber, pageSize, sorts, filters).RecordCount;
 
@@ -241,22 +265,106 @@ namespace DAL.Repositories
                         from rp in crrp.DefaultIfEmpty()
                         join emp in _appContext.Employee on cr.EmployeeId equals emp.EmployeeId
                         join cust in _appContext.Customer on cr.CustomerId equals cust.CustomerId
+                        join wo in _appContext.WorkOrder on cr.WorkOrderId equals wo.WorkOrderId into crwo
+                        from wo in crwo.DefaultIfEmpty()
+                        join wop in _appContext.WorkOrderPartNumber on cr.StockLineId equals wop.StockLineId into crwop
+                        from wop in crwop.DefaultIfEmpty()
+                        join stage in _appContext.WorkOrderStage on wop.WorkOrderStageId equals stage.WorkOrderStageId into wops
+                        from stage in wops.DefaultIfEmpty()
+                        join st in _appContext.WorkOrderStatus on wop.WorkOrderStatusId equals st.Id into wopst
+                        from st in wopst.DefaultIfEmpty()
                         where cr.IsDeleted == false
                         select new ReceivingCustomerWorkFilter()
                         {
+
                             ReceivingCustomerWorkId = cr.ReceivingCustomerWorkId,
+                            receivedDate = cr.CreatedDate,
                             receivingNumber = cr.ReceivingNumber,
+                            woNumber = wo == null ? "" : wo.WorkOrderNum,
+                            woOpenDate = wo == null && wo.OpenDate != null ? "" : wo.OpenDate.ToString(),
                             partNumber = im.PartNumber,
                             partDescription = im.PartDescription,
-                            changePartNumber = rp == null ? "" : rp.PartNumber,
-                            employeeName = emp.FirstName,
                             customerName = cust.Name,
-                            customerReference = cr.Reference,
-                            isActive = cr.IsActive,
+                            stageCode = stage == null ? "" : stage.Stage,
+                            status = st == null ? "" : st.Description,
+                            ManagementStructureId = cr.ManagementStructureId,
                             createdDate = cr.CreatedDate,
                             totalRecords = totalRecords,
                         }).Distinct()
                           .Paginate(pageNumber, pageSize, sorts, filters).Results;
+
+            if (list != null && list.Count() > 0)
+            {
+                string level1 = string.Empty;
+                string level2 = string.Empty;
+                string level3 = string.Empty;
+                string level4 = string.Empty;
+
+                foreach (var item in list)
+                {
+                    level1 = string.Empty;
+                    level2 = string.Empty;
+                    level3 = string.Empty;
+                    level4 = string.Empty;
+
+                    var mngInfoList = GetManagementStructureCodes(item.ManagementStructureId);
+                    if (mngInfoList != null && mngInfoList.Count > 0)
+                    {
+                        if (mngInfoList.Any(p => p.Level1 == "Level1"))
+                        {
+                            item.LevelId1 = mngInfoList.Where(p => p.Level1 == "Level1").FirstOrDefault().LevelId1;
+                            item.LevelCode1 = mngInfoList.Where(p => p.Level1 == "Level1").FirstOrDefault().LevelCode1;
+                            item.Level1 = "Level1";
+                        }
+                        else
+                        {
+                            item.LevelId1 = 0;
+                            item.LevelCode1 = "";
+                            item.Level1 = "";
+                        }
+
+                        if (mngInfoList.Any(p => p.Level2 == "Level2"))
+                        {
+                            item.LevelId2 = mngInfoList.Where(p => p.Level2 == "Level2").FirstOrDefault().LevelId2;
+                            item.LevelCode2 = mngInfoList.Where(p => p.Level2 == "Level2").FirstOrDefault().LevelCode2;
+                            item.Level2 = "Level2";
+                        }
+                        else
+                        {
+                            item.LevelId2 = 0;
+                            item.LevelCode2 = "";
+                            item.Level2 = "";
+                        }
+
+                        if (mngInfoList.Any(p => p.Level3 == "Level3"))
+                        {
+                            item.LevelId3 = mngInfoList.Where(p => p.Level3 == "Level3").FirstOrDefault().LevelId3;
+                            item.LevelCode3 = mngInfoList.Where(p => p.Level3 == "Level3").FirstOrDefault().LevelCode3;
+                            item.Level3 = "Level3";
+                        }
+                        else
+                        {
+                            item.LevelId3 = 0;
+                            item.LevelCode3 = "";
+                            item.Level3 = "";
+                        }
+
+                        if (mngInfoList.Any(p => p.Level4 == "Level4"))
+                        {
+                            item.LevelId4 = mngInfoList.Where(p => p.Level4 == "Level4").FirstOrDefault().LevelId4;
+                            item.LevelCode4 = mngInfoList.Where(p => p.Level4 == "Level4").FirstOrDefault().LevelCode4;
+                            item.Level4 = "Level4";
+                        }
+                        else
+                        {
+                            item.LevelId4 = 0;
+                            item.LevelCode4 = "";
+                            item.Level4 = "";
+                        }
+                    }
+
+                }
+            }
 
             return list;
         }
@@ -283,7 +391,7 @@ namespace DAL.Repositories
                             join cc in _appContext.CustomerContact on cr.CustomerContactId equals cc.CustomerContactId
                             join con in _appContext.Contact on cc.ContactId equals con.ContactId
                             join man in _appContext.Manufacturer on im.ManufacturerId equals man.ManufacturerId
-                            join rp in _appContext.ItemMaster on cr.RevisePartId equals rp.ItemMasterId into crrp
+                            join rp in _appContext.ItemMaster on im.ItemMasterId equals rp.RevisedPartId into crrp
                             from rp in crrp.DefaultIfEmpty()
                             join cb in _appContext.Employee on cr.CertifiedById equals cb.EmployeeId into crcb
                             from cb in crcb.DefaultIfEmpty()
@@ -315,8 +423,8 @@ namespace DAL.Repositories
                                 TracableToType = cr.TraceableToTypeId == 1 ? "Customer" : (cr.TraceableToTypeId == 2 ? "Vendor" : (cr.TraceableToTypeId == 3 ? "Company" : "Other")),
                                 ObtainFromType = cr.ObtainFromTypeId == 1 ? "Customer" : (cr.ObtainFromTypeId == 2 ? "Vendor" : (cr.ObtainFromTypeId == 3 ? "Company" : "Other")),
 
-                                OwnerName = cr.OwnerTypeId == 1 ? 
-                                _appContext.Customer.Where(p=>p.CustomerId==Convert.ToInt64(cr.Owner)).Select(p=>p.Name).FirstOrDefault()
+                                OwnerName = cr.OwnerTypeId == 1 ?
+                                _appContext.Customer.Where(p => p.CustomerId == Convert.ToInt64(cr.Owner)).Select(p => p.Name).FirstOrDefault()
                                 : (cr.OwnerTypeId == 2 ?
                                 _appContext.Vendor.Where(p => p.VendorId == Convert.ToInt64(cr.Owner)).Select(p => p.VendorName).FirstOrDefault()
                                 : (cr.OwnerTypeId == 3 ?
@@ -373,7 +481,7 @@ namespace DAL.Repositories
                                 cr.ReceivingCustomerWorkId,
                                 cr.ReceivingNumber,
                                 cr.Reference,
-                                cr.RevisePartId,
+                                RevisePartId=im.RevisedPartId,
                                 cr.SerialNumber,
                                 cr.ShelfId,
                                 cr.SiteId,
@@ -419,6 +527,14 @@ namespace DAL.Repositories
                                     from rp in crrp.DefaultIfEmpty()
                                     join emp in _appContext.Employee on cr.EmployeeId equals emp.EmployeeId
                                     join cust in _appContext.Customer on cr.CustomerId equals cust.CustomerId
+                                    join wo in _appContext.WorkOrder on cr.WorkOrderId equals wo.WorkOrderId into crwo
+                                    from wo in crwo.DefaultIfEmpty()
+                                    join wop in _appContext.WorkOrderPartNumber on cr.StockLineId equals wop.StockLineId into crwop
+                                    from wop in crwop.DefaultIfEmpty()
+                                    join stage in _appContext.WorkOrderStage on wop.WorkOrderStageId equals stage.WorkOrderStageId into wops
+                                    from stage in wops.DefaultIfEmpty()
+                                    join st in _appContext.WorkOrderStatus on wop.WorkOrderStatusId equals st.Id into wopst
+                                    from st in wopst.DefaultIfEmpty()
                                     where cr.IsDeleted == false
                                      && (cr.ReceivingNumber.Contains(value) || im.PartNumber.Contains(value) || im.PartDescription.Contains(value)
                                     || rp.PartNumber.Contains(value) || emp.FirstName.Contains(value) || cust.Name.Contains(value) || cr.Reference.Contains(value)
@@ -426,13 +542,18 @@ namespace DAL.Repositories
                                     select new ReceivingCustomerWorkFilter()
                                     {
                                         ReceivingCustomerWorkId = cr.ReceivingCustomerWorkId,
+                                        receivedDate = cr.CreatedDate,
                                         receivingNumber = cr.ReceivingNumber,
+                                        woNumber = wo == null ? "" : wo.WorkOrderNum,
+                                        woOpenDate = wo == null && wo.OpenDate != null ? "" : wo.OpenDate.ToString(),
                                         partNumber = im.PartNumber,
                                         partDescription = im.PartDescription,
-                                        changePartNumber = rp == null ? "" : rp.PartNumber,
-                                        employeeName = emp.FirstName,
                                         customerName = cust.Name,
-                                        customerReference =cr.Reference,
+                                        stageCode = stage == null ? "" : stage.Stage,
+                                        status = st == null ? "" : st.Description,
+                                        ManagementStructureId = cr.ManagementStructureId,
+                                        createdDate = cr.CreatedDate,
+
                                     }).Distinct()
                                     .Count();
 
@@ -443,6 +564,14 @@ namespace DAL.Repositories
                             from rp in crrp.DefaultIfEmpty()
                             join emp in _appContext.Employee on cr.EmployeeId equals emp.EmployeeId
                             join cust in _appContext.Customer on cr.CustomerId equals cust.CustomerId
+                            join wo in _appContext.WorkOrder on cr.WorkOrderId equals wo.WorkOrderId into crwo
+                            from wo in crwo.DefaultIfEmpty()
+                            join wop in _appContext.WorkOrderPartNumber on cr.StockLineId equals wop.StockLineId into crwop
+                            from wop in crwop.DefaultIfEmpty()
+                            join stage in _appContext.WorkOrderStage on wop.WorkOrderStageId equals stage.WorkOrderStageId into wops
+                            from stage in wops.DefaultIfEmpty()
+                            join st in _appContext.WorkOrderStatus on wop.WorkOrderStatusId equals st.Id into wopst
+                            from st in wopst.DefaultIfEmpty()
                             where cr.IsDeleted == false
                              && (cr.ReceivingNumber.Contains(value) || im.PartNumber.Contains(value) || im.PartDescription.Contains(value)
                                     || rp.PartNumber.Contains(value) || emp.FirstName.Contains(value) || cust.Name.Contains(value) || cr.Reference.Contains(value)
@@ -450,21 +579,94 @@ namespace DAL.Repositories
                             select new ReceivingCustomerWorkFilter()
                             {
                                 ReceivingCustomerWorkId = cr.ReceivingCustomerWorkId,
+                                receivedDate = cr.CreatedDate,
                                 receivingNumber = cr.ReceivingNumber,
+                                woNumber = wo == null ? "" : wo.WorkOrderNum,
+                                woOpenDate = wo == null && wo.OpenDate != null ? "" : wo.OpenDate.ToString(),
                                 partNumber = im.PartNumber,
                                 partDescription = im.PartDescription,
-                                changePartNumber = rp == null ? "" : rp.PartNumber,
-                                employeeName = emp.FirstName,
                                 customerName = cust.Name,
-                                customerReference = cr.Reference,
-                                isActive = cr.IsActive,
+                                stageCode = stage == null ? "" : stage.Stage,
+                                status = st == null ? "" : st.Description,
+                                ManagementStructureId = cr.ManagementStructureId,
                                 createdDate = cr.CreatedDate,
                                 totalRecords = totalRecords,
                             }).Distinct().OrderBy(p => p.createdDate)
                                    .Skip(skip)
                                    .Take(take)
                                    .ToList();
+                if (list != null && list.Count() > 0)
+                {
+                    string level1 = string.Empty;
+                    string level2 = string.Empty;
+                    string level3 = string.Empty;
+                    string level4 = string.Empty;
 
+                    foreach (var item in list)
+                    {
+                        level1 = string.Empty;
+                        level2 = string.Empty;
+                        level3 = string.Empty;
+                        level4 = string.Empty;
+
+                        var mngInfoList = GetManagementStructureCodes(item.ManagementStructureId);
+                        if (mngInfoList != null && mngInfoList.Count > 0)
+                        {
+                            if (mngInfoList.Any(p => p.Level1 == "Level1"))
+                            {
+                                item.LevelId1 = mngInfoList.Where(p => p.Level1 == "Level1").FirstOrDefault().LevelId1;
+                                item.LevelCode1 = mngInfoList.Where(p => p.Level1 == "Level1").FirstOrDefault().LevelCode1;
+                                item.Level1 = "Level1";
+                            }
+                            else
+                            {
+                                item.LevelId1 = 0;
+                                item.LevelCode1 = "";
+                                item.Level1 = "";
+                            }
+
+                            if (mngInfoList.Any(p => p.Level2 == "Level2"))
+                            {
+                                item.LevelId2 = mngInfoList.Where(p => p.Level2 == "Level2").FirstOrDefault().LevelId2;
+                                item.LevelCode2 = mngInfoList.Where(p => p.Level2 == "Level2").FirstOrDefault().LevelCode2;
+                                item.Level2 = "Level2";
+                            }
+                            else
+                            {
+                                item.LevelId2 = 0;
+                                item.LevelCode2 = "";
+                                item.Level2 = "";
+                            }
+
+                            if (mngInfoList.Any(p => p.Level3 == "Level3"))
+                            {
+                                item.LevelId3 = mngInfoList.Where(p => p.Level3 == "Level3").FirstOrDefault().LevelId3;
+                                item.LevelCode3 = mngInfoList.Where(p => p.Level3 == "Level3").FirstOrDefault().LevelCode3;
+                                item.Level3 = "Level3";
+                            }
+                            else
+                            {
+                                item.LevelId3 = 0;
+                                item.LevelCode3 = "";
+                                item.Level3 = "";
+                            }
+
+                            if (mngInfoList.Any(p => p.Level4 == "Level4"))
+                            {
+                                item.LevelId4 = mngInfoList.Where(p => p.Level4 == "Level4").FirstOrDefault().LevelId4;
+                                item.LevelCode4 = mngInfoList.Where(p => p.Level4 == "Level4").FirstOrDefault().LevelCode4;
+                                item.Level4 = "Level4";
+                            }
+                            else
+                            {
+                                item.LevelId4 = 0;
+                                item.LevelCode4 = "";
+                                item.Level4 = "";
+                            }
+                        }
+
+                    }
+                }
 
                 return list;
 
@@ -478,17 +680,30 @@ namespace DAL.Repositories
                                     from rp in crrp.DefaultIfEmpty()
                                     join emp in _appContext.Employee on cr.EmployeeId equals emp.EmployeeId
                                     join cust in _appContext.Customer on cr.CustomerId equals cust.CustomerId
+                                    join wo in _appContext.WorkOrder on cr.WorkOrderId equals wo.WorkOrderId into crwo
+                                    from wo in crwo.DefaultIfEmpty()
+                                    join wop in _appContext.WorkOrderPartNumber on cr.StockLineId equals wop.StockLineId into crwop
+                                    from wop in crwop.DefaultIfEmpty()
+                                    join stage in _appContext.WorkOrderStage on wop.WorkOrderStageId equals stage.WorkOrderStageId into wops
+                                    from stage in wops.DefaultIfEmpty()
+                                    join st in _appContext.WorkOrderStatus on wop.WorkOrderStatusId equals st.Id into wopst
+                                    from st in wopst.DefaultIfEmpty()
                                     where cr.IsDeleted == false
                                     select new ReceivingCustomerWorkFilter()
                                     {
                                         ReceivingCustomerWorkId = cr.ReceivingCustomerWorkId,
+                                        receivedDate = cr.CreatedDate,
                                         receivingNumber = cr.ReceivingNumber,
+                                        woNumber = wo == null ? "" : wo.WorkOrderNum,
+                                        woOpenDate = wo == null && wo.OpenDate != null ? "" : wo.OpenDate.ToString(),
                                         partNumber = im.PartNumber,
                                         partDescription = im.PartDescription,
-                                        changePartNumber = rp == null ? "" : rp.PartNumber,
-                                        employeeName = emp.FirstName,
                                         customerName = cust.Name,
-                                        customerReference = cr.Reference
+                                        stageCode = stage == null ? "" : stage.Stage,
+                                        status = st == null ? "" : st.Description,
+                                        ManagementStructureId = cr.ManagementStructureId,
+                                        createdDate = cr.CreatedDate,
+                                        
                                     }).Distinct()
                                     .Count();
 
@@ -499,18 +714,28 @@ namespace DAL.Repositories
                             from rp in crrp.DefaultIfEmpty()
                             join emp in _appContext.Employee on cr.EmployeeId equals emp.EmployeeId
                             join cust in _appContext.Customer on cr.CustomerId equals cust.CustomerId
+                            join wo in _appContext.WorkOrder on cr.WorkOrderId equals wo.WorkOrderId into crwo
+                            from wo in crwo.DefaultIfEmpty()
+                            join wop in _appContext.WorkOrderPartNumber on cr.StockLineId equals wop.StockLineId into crwop
+                            from wop in crwop.DefaultIfEmpty()
+                            join stage in _appContext.WorkOrderStage on wop.WorkOrderStageId equals stage.WorkOrderStageId into wops
+                            from stage in wops.DefaultIfEmpty()
+                            join st in _appContext.WorkOrderStatus on wop.WorkOrderStatusId equals st.Id into wopst
+                            from st in wopst.DefaultIfEmpty()
                             where cr.IsDeleted == false
                             select new ReceivingCustomerWorkFilter()
                             {
                                 ReceivingCustomerWorkId = cr.ReceivingCustomerWorkId,
+                                receivedDate = cr.CreatedDate,
                                 receivingNumber = cr.ReceivingNumber,
+                                woNumber = wo == null ? "" : wo.WorkOrderNum,
+                                woOpenDate = wo == null && wo.OpenDate != null ? "" : wo.OpenDate.ToString(),
                                 partNumber = im.PartNumber,
                                 partDescription = im.PartDescription,
-                                changePartNumber = rp == null ? "" : rp.PartNumber,
-                                employeeName = emp.FirstName,
                                 customerName = cust.Name,
-                                customerReference = cr.Reference,
-                                isActive = cr.IsActive,
+                                stageCode = stage == null ? "" : stage.Stage,
+                                status = st == null ? "" : st.Description,
+                                ManagementStructureId = cr.ManagementStructureId,
                                 createdDate = cr.CreatedDate,
                                 totalRecords = totalRecords,
                             }).Distinct().OrderBy(p => p.createdDate)
@@ -751,9 +976,9 @@ namespace DAL.Repositories
         {
             try
             {
-                
-                if (receivingCustomer.RevisePartId == null)
-                    receivingCustomer.RevisePartId = _appContext.ItemMaster.Where(p => p.ItemMasterId == receivingCustomer.ItemMasterId).Select(p => p.RevisedPartId).FirstOrDefault();
+
+                //if (receivingCustomer.RevisePartId == null)
+                //    receivingCustomer.RevisePartId = _appContext.ItemMaster.Where(p => p.ItemMasterId == receivingCustomer.ItemMasterId).Select(p => p.RevisedPartId).FirstOrDefault();
 
                 receivingCustomer.CreatedDate = receivingCustomer.UpdatedDate = DateTime.Now;
                 receivingCustomer.IsActive = true;
@@ -763,8 +988,8 @@ namespace DAL.Repositories
                 _appContext.StockLine.Add(stockLine);
                 _appContext.SaveChanges();
 
-                
-                
+
+
 
                 stockLine.StockLineNumber = "STL-" + stockLine.StockLineId;
                 stockLine.ControlNumber = "CNT-" + stockLine.StockLineId;
@@ -801,8 +1026,8 @@ namespace DAL.Repositories
         {
             try
             {
-                if (receivingCustomer.RevisePartId == null)
-                    receivingCustomer.RevisePartId = _appContext.ItemMaster.Where(p => p.ItemMasterId == receivingCustomer.ItemMasterId).Select(p => p.RevisedPartId).FirstOrDefault();
+                //if (receivingCustomer.RevisePartId == null)
+                //    receivingCustomer.RevisePartId = _appContext.ItemMaster.Where(p => p.ItemMasterId == receivingCustomer.ItemMasterId).Select(p => p.RevisedPartId).FirstOrDefault();
 
                 receivingCustomer.UpdatedDate = DateTime.Now;
 
@@ -846,7 +1071,7 @@ namespace DAL.Repositories
                                 im.IsTimeLife,
                                 im.RevisedPartId
                             }).FirstOrDefault();
-                          return data;
+                return data;
             }
             catch (Exception)
             {
@@ -870,13 +1095,13 @@ namespace DAL.Repositories
                             join emp in _appContext.Employee on cust.CsrId equals emp.EmployeeId into custemp
                             from emp in custemp.DefaultIfEmpty()
                             where rc.IsDeleted == false && rc.IsActive == true
-                            && (cust.Name.ToLower().Contains(value.ToLower()) || cust.CustomerCode.ToLower().Contains(value.ToLower()))
+                            && (cust.Name.ToLower().Contains(value.ToLower()))
                             select new
                             {
                                 rc.CustomerId,
-                                CustomerName = cust.Name + " - " + cust.CustomerCode,
+                                CustomerName = cust.Name,
                                 cust.CsrId,
-                                CSRName=emp==null?"":emp.FirstName,
+                                CSRName = emp == null ? "" : emp.FirstName,
                                 cust.CreditLimit,
                                 cust.CreditTermsId,
                                 CustomerEmail = cust.Email,
@@ -959,6 +1184,102 @@ namespace DAL.Repositories
             stockLine.MasterCompanyId = receivingCustomer.MasterCompanyId;
 
             return stockLine;
+        }
+
+        private List<MangStructureInfo> GetManagementStructureCodes(long? manmgStrucId)
+        {
+            List<MangStructureInfo> mngInfoList = new List<MangStructureInfo>();
+            MangStructureInfo mangStructureInfo = new MangStructureInfo();
+            ManagementStructure level4 = null;
+            ManagementStructure level3 = null;
+            ManagementStructure level2 = null;
+            ManagementStructure level1 = null;
+            string level1Code = string.Empty;
+            try
+            {
+                level4 = _appContext.ManagementStructure.Where(p => p.IsDelete != true && p.ManagementStructureId == manmgStrucId).AsNoTracking().FirstOrDefault();
+                if (level4 != null && level4.ParentId > 0)
+                {
+                    level3 = _appContext.ManagementStructure.Where(p => p.IsDelete != true && p.ManagementStructureId == level4.ParentId).AsNoTracking().FirstOrDefault();
+                }
+                if (level3 != null && level3.ParentId > 0)
+                {
+                    level2 = _appContext.ManagementStructure.Where(p => p.IsDelete != true && p.ManagementStructureId == level3.ParentId).AsNoTracking().FirstOrDefault();
+                }
+                if (level2 != null && level2.ParentId > 0)
+                {
+                    level1 = _appContext.ManagementStructure.Where(p => p.IsDelete != true && p.ManagementStructureId == level2.ParentId).AsNoTracking().FirstOrDefault();
+                }
+
+
+                if (level4 != null && level3 != null && level2 != null && level1 != null)
+                {
+
+
+                    mangStructureInfo.Level1 = "Level1";
+                    mangStructureInfo.LevelCode1 = level1.Code;
+                    mangStructureInfo.LevelId1 = level1.ManagementStructureId;
+
+                    mangStructureInfo.Level2 = "Level2";
+                    mangStructureInfo.LevelCode2 = level2.Code;
+                    mangStructureInfo.LevelId2 = level2.ManagementStructureId;
+
+                    mangStructureInfo.Level3 = "Level3";
+                    mangStructureInfo.LevelCode3 = level3.Code;
+                    mangStructureInfo.LevelId3 = level3.ManagementStructureId;
+
+                    mangStructureInfo.Level4 = "Level4";
+                    mangStructureInfo.LevelCode4 = level4.Code;
+                    mangStructureInfo.LevelId4 = level4.ManagementStructureId;
+
+                    mngInfoList.Add(mangStructureInfo);
+
+                }
+                else if (level4 != null && level2 != null && level3 != null)
+                {
+                    mangStructureInfo.Level3 = "Level3";
+                    mangStructureInfo.LevelCode3 = level4.Code;
+                    mangStructureInfo.LevelId3 = level4.ManagementStructureId;
+
+                    mangStructureInfo.Level2 = "Level2";
+                    mangStructureInfo.LevelCode2 = level3.Code;
+                    mangStructureInfo.LevelId2 = level3.ManagementStructureId;
+
+                    mangStructureInfo.Level1 = "Level1";
+                    mangStructureInfo.LevelCode1 = level2.Code;
+                    mangStructureInfo.LevelId1 = level2.ManagementStructureId;
+
+                    mngInfoList.Add(mangStructureInfo);
+                }
+                else if (level4 != null && level3 != null)
+                {
+                    mangStructureInfo.Level2 = "Level2";
+                    mangStructureInfo.LevelCode2 = level4.Code;
+                    mangStructureInfo.LevelId2 = level4.ManagementStructureId;
+
+                    mangStructureInfo.Level1 = "Level1";
+                    mangStructureInfo.LevelCode1 = level3.Code;
+                    mangStructureInfo.LevelId1 = level3.ManagementStructureId;
+
+                    mngInfoList.Add(mangStructureInfo);
+                }
+                else if (level4 != null)
+                {
+                    mangStructureInfo.Level1 = "Level1";
+                    mangStructureInfo.LevelCode1 = level4.Code;
+                    mangStructureInfo.LevelId1 = level4.ManagementStructureId;
+
+                    mngInfoList.Add(mangStructureInfo);
+                }
+
+
+
+                return mngInfoList;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;

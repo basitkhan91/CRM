@@ -11,6 +11,7 @@ import { PartSearchParamters } from "../../../../quotes/models/part-search-param
 import { IPartJson } from "../../../models/ipart-json";
 import { ISalesItemMaster } from "../../../models/isales-item-master";
 import { IMultiPartJson } from "../../../models/imulti-part-json";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "app-part-number-filter",
@@ -42,6 +43,7 @@ export class PartNumberFilterComponent {
     private itemMasterService: ItemMasterService,
     private stockLineService: StocklineService,
     private salesQuoteService: SalesQuoteService,
+    private router: Router,
     public conditionService: ConditionService) {
     this.partDetails = [];
     this.query = new ItemMasterSearchQuery();
@@ -123,6 +125,9 @@ this.salesQuoteService.getSearchPartObject()
     console.log(this.query);
   }
   calculate() {
+    if (this.query.partSearchParamters.conditionId>0 && this.query.partSearchParamters.partNumber  && this.query.partSearchParamters.quantityRequested>0){
+      this.searchDisabled = false;
+      }
     let qr = + this.query.partSearchParamters.quantityRequested;
     if(qr){
       this.query.partSearchParamters.quantityToQuote = qr - this.query.partSearchParamters.quantityAlreadyQuoted;
@@ -150,12 +155,12 @@ private onptnmbersSuccessful(allWorkFlows: any[]) {
     this.query.partSearchParamters.partNumber = part.partNumber;
     this.query.partSearchParamters.partId = part.partId;
     this.query.partSearchParamters.partDescription = part.partDescription;
-    if (this.query.partSearchParamters.conditionId>0)
+    if (this.query.partSearchParamters.conditionId>0 && this.query.partSearchParamters.quantityRequested>0)
           this.searchDisabled = false;
   }
   onConditionSelect() {
     console.log(this.query);
-    if (this.query.partSearchParamters.conditionId>0 && this.query.partSearchParamters.partNumber)
+    if (this.query.partSearchParamters.conditionId>0 && this.query.partSearchParamters.partNumber  && this.query.partSearchParamters.quantityRequested>0)
           this.searchDisabled = false;
    // else if (this.query.partSearchParamters.conditionId>0 && this.query.partSearchParamters.includeMultiplePartNumber)
     //      this.searchDisabled = false;
@@ -175,18 +180,24 @@ private onptnmbersSuccessful(allWorkFlows: any[]) {
 
   searchPartByPartNumber(event) {
     this.searchDisabled = true;
-    let partSearchParamters={
-      'partNumber':event.query,
-      "restrictPMA": this.salesQuote.restrictPMA,
-      "restrictDER": this.salesQuote.restrictDER,  
-      "customerId": this.salesQuote.customerId
-    }
-    this.itemMasterService.searchPartNumberAdvanced(partSearchParamters).subscribe(
-      (result: any[]) => {
-        this.partDetails = result.length > 0 ? result : [];
-       // console.log(result);
+    console.log(event.query);
+    if(event.query!=''&&event.query.length>0){
+      let partSearchParamters={
+        'partNumber':event.query,
+        "restrictPMA": this.salesQuote.restrictPMA,
+        "restrictDER": this.salesQuote.restrictDER,  
+        "customerId": this.salesQuote.customerId
       }
-    );
+      this.itemMasterService.searchPartNumberAdvanced(partSearchParamters).subscribe(
+        (result: any[]) => {
+          this.partDetails = result.length > 0 ? result : [];
+         // console.log(result);
+        }
+      );
+    }else{
+      this.partDetails = [];
+    }
+
   }
 
 
@@ -288,6 +299,9 @@ private onptnmbersSuccessful(allWorkFlows: any[]) {
       this.searchDisabled = false;
     }else{
       this.enableMultiSearch = false;
+      if (this.query.partSearchParamters.conditionId>0 && this.query.partSearchParamters.partNumber  && this.query.partSearchParamters.quantityRequested>0)
+          this.searchDisabled = false;
+      else
       this.searchDisabled = true;
     }
     
@@ -297,4 +311,9 @@ private onptnmbersSuccessful(allWorkFlows: any[]) {
     this.multiPartModal.close();
    
   }
+  public navigateToAddItemMaster() {
+
+		this.router.navigateByUrl('/itemmastersmodule/itemmasterpages/app-item-master-stock')
+
+	}
 }

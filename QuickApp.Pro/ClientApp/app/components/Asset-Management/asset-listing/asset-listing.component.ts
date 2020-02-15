@@ -77,12 +77,21 @@ export class AssetListingComponent implements OnInit {
     selectedAsset: any;
     allAssetLocationInfo: any[] = [];
     allAssetLocations: any[] = [];
+    assetwarrantystatusList: any[] = [];
     // comented for asset audit
     //AuditDetails: SingleScreenAuditDetails[];
 
 
     ngOnInit(): void {
         this.loadData();
+        this.getAssetAcquisitionTypeList();
+        this.getAssetWarrantyStatus();
+        this.getInsecGLAccName();
+        this.getInspecVendorName();
+        this.loadDepricationMethod();
+        this.glList();
+        this.getDepreciationFrequencyList();
+        this.vendorList();
         this.activeIndex = 0;
         this.assetService.ShowPtab = false;
         this.assetService.alertObj.next(this.assetService.ShowPtab); //steps
@@ -150,10 +159,14 @@ export class AssetListingComponent implements OnInit {
             { field: 'manufacturerName', header: 'Manufacturer', colspan: '1' },
             { field: 'isSerializedNew', header: 'Serial Num', colspan: '1' },
             { field: 'calibrationRequiredNew', header: 'Calibrated', colspan: '1' },
-            { field: 'managementStrName', header: 'Management Structure', colspan: '4' },
+            //{ field: 'managementStrName', header: 'Management Structure', colspan: '4' },
             /*{ field: 'buName', header: 'BU' },
             { field: 'deptName', header: 'Div' },
             { field: 'divName', header: 'Dept' },*/
+            { field: 'companyName', header: 'Level 01', colspan: '1' },
+            { field: 'buName', header: 'Level 02', colspan: '1' },
+            { field: 'deptName', header: 'Level 03', colspan: '1' },
+            { field: 'divName', header: 'Level 04', colspan: '1' },
             { field: 'assetClass', header: 'Asset Category', colspan: '1' },
             { field: 'assetType', header: 'Asset Class', colspan: '1' },
             { field: 'assetStatus', header: 'Status', colspan: '1' },
@@ -328,11 +341,17 @@ export class AssetListingComponent implements OnInit {
             error => this.onDataLoadFailed(error)
         );
     }
-
+ 
     getDefaultVendorName(id) {
         for (let i = 0; i < this.allVendorInfo.length; i++) {
             if (id == this.allVendorInfo[i].vendorId)
                 return this.allVendorInfo[i].vendorName;
+        }
+    }
+    getwarrantystatus(id) {
+        for (let i = 0; i < this.assetwarrantystatusList.length; i++) {
+            if (id == this.assetwarrantystatusList[i].value)
+                return this.assetwarrantystatusList[i].label;
         }
     }
     openView(content, row) {
@@ -346,13 +365,14 @@ export class AssetListingComponent implements OnInit {
         this.assetViewList.buName = row.buName;
         this.assetViewList.deptName = row.deptName;
         this.assetViewList.divName = row.divName;
-        this.assetViewList.depreOrIntang = row.isDepreciable == true ? 'Depreciable' : 'Intangible';
+        this.assetViewList.depreOrIntang = row.isDepreciable == true ? 'Intangible' : 'Intangible';
         this.assetViewList.calibrationRequired = row.calibrationRequired;
         this.assetViewList.certificationRequired = row.certificationRequired;
         this.assetViewList.inspectionRequired = row.inspectionRequired;
         this.assetViewList.verificationRequired = row.verificationRequired;
         this.assetViewList.model = row.model;
         this.getAssetAcquisitionTypeList();
+        this.getAssetWarrantyStatus();
         this.vendorList();
         this.assetViewList.assetAcquisitionTypeId = this.getAssetAcqName(row.assetAcquisitionTypeId);
         this.assetViewList.manufacturerName = row.manufacturerName;
@@ -360,7 +380,7 @@ export class AssetListingComponent implements OnInit {
         this.assetViewList.model = row.model;
         this.assetViewList.isSerialized = row.isSerialized == true ? 'Yes' : 'No';
         if (row.currency) {
-            this.assetViewList.currencyId = row.currency.symbol;
+            this.assetViewList.currencyId = row.currency.code;
         }
         else {
             this.assetViewList.currencyId = ""
@@ -387,12 +407,13 @@ export class AssetListingComponent implements OnInit {
         this.assetViewList.inspectionDefaultVendorId = this.getDefaultVendorName(row.inspectionDefaultVendorId);
         this.assetViewList.inspectionDefaultCost = row.inspectionDefaultCost;
         this.assetViewList.inspectionGlaAccountId = this.getGLAccountName(row.inspectionGlaAccountId);
+        this.assetViewList.inspectionMemo = row.inspectionMemo;
 
         this.assetViewList.verificationFrequencyMonths = row.verificationFrequencyMonths;
         this.assetViewList.verificationFrequencyDays = row.verificationFrequencyDays;
         this.assetViewList.verificationDefaultVendorId = this.getDefaultVendorName(row.verificationDefaultVendorId);
         this.assetViewList.verificationDefaultCost = row.verificationDefaultCost;
-        this.assetViewList.verificationGlaAccountId = this.getGLAccountName(row.verificationGlaAccountId);
+        this.assetViewList.verificationGlaAccountId = this.getGLAccountName(row.verificationGlAccountId);
         this.assetViewList.verificationMemo = row.verificationMemo;
 
         this.getInsecGLAccName();
@@ -437,7 +458,8 @@ export class AssetListingComponent implements OnInit {
             { field: 'captypedescription', header: 'Capability Type' },
             { field: 'manufacturer', header: 'Aircraft Manufacturer' },
             { field: 'modelname', header: 'Models' },
-            { field: 'dashnumber', header: 'Dash Number' }
+            { field: 'dashnumber', header: 'Dash Number' },
+            { field: '', header: 'Actions' }
         ];
         this.selectedCol = this.cols1;
         this.assetViewList.unitCost = row.unitCost;
@@ -465,7 +487,7 @@ export class AssetListingComponent implements OnInit {
         this.assetViewList.warrantyCompany = row.warrantyCompany;
         this.assetViewList.warrantyStartDate = row.warrantyStartDate;
         this.assetViewList.warrantyEndDate = row.warrantyEndDate;
-        this.assetViewList.warrantyStatus = row.warrantyStatus;
+        this.assetViewList.warrantyStatus = this.getwarrantystatus(row.warrantyStatus);
         this.assetViewList.unexpiredTime = row.unexpiredTime;
 
         if (!this.isWorkOrder) {
@@ -478,7 +500,7 @@ export class AssetListingComponent implements OnInit {
     }
     private onCapesLoaded(allCapes: ItemMasterCapabilitiesModel[]) {
         this.allCapesInfo = allCapes;
-		this.totalRecords1 = this.allAssetInfo.length;
+        this.totalRecords1 = this.allCapesInfo.length;
         this.totalPages1 = Math.ceil(this.totalRecords1 / this.pageSize1);
     }
     
@@ -566,6 +588,13 @@ export class AssetListingComponent implements OnInit {
     getAssetAcquisitionTypeList() {
         this.commonservice.smartDropDownList('AssetAcquisitionType', 'AssetAcquisitionTypeId', 'Name').subscribe(res => {
             this.assetAcquisitionTypeList = res;
+
+        })
+    }
+
+    getAssetWarrantyStatus() {
+        this.commonservice.smartDropDownList('AssetWarrantyStatus', 'AssetWarrantyStatusId', 'warrantyStatus').subscribe(res => {
+            this.assetwarrantystatusList = res;
 
         })
     }

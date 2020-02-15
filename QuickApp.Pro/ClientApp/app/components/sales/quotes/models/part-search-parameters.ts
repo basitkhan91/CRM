@@ -9,6 +9,8 @@ export class PartSearchParamters {
 
     public partDescription: string;
 
+    public partNumberObj:{};
+
     public conditionId: number;
 
     public quantityRequired: number;

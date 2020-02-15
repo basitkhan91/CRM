@@ -66,9 +66,15 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<object> GetPartnumberList();
 
         List<ItemMasterCapes> CreateItemMasterCapes(List<ItemMasterCapes> itemMasterCapes);
+        object ItemMasterCapesById(long itemMasterCapesId);
         void DeleteItemMasterCapes(long itemMasterCapesId, string updatedBy);
+        IEnumerable<object> ItemMasterCapsAudit(long itemMasterCapesId);
         IEnumerable<object> GetItemMasterCapes(Common.Filters<ItemMasterCapesFilters> capesFilters);
         IEnumerable<object> ItemMasterCapesGlobalSearch(long itemMasterId, string filterText, int pageNumber, int pageSize);
         IEnumerable<object> ItemMasterData(Common.Filters<ItemMasterDataFilters> capesFilters);
+        IEnumerable<object> GetAircraftMappedAudit(long itemMasterAircraftMappingId);
+       object ItemMasterAircraftMappedById(long itemMasterId,long itemMasterAircraftMappingId);
+
+        
     }
 }

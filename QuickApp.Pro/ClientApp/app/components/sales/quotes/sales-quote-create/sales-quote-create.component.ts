@@ -30,6 +30,8 @@ import { CurrencyService } from "../../../../services/currency.service";
 import { EmployeeService } from "../../../../services/employee.service";
 import { AuthService } from "../../../../services/auth.service";
 import { Router } from "@angular/router";
+import { Subject } from 'rxjs'
+import { takeUntil } from 'rxjs/operators';
 import {
   getValueFromObjectByKey,
   getObjectById,
@@ -89,6 +91,12 @@ export class SalesQuoteCreateComponent implements OnInit {
   selectedApprovers: any[] = [];
   errorMessages: any[] = [];
   isEdit:boolean = false;
+  legalEntityList: any;
+ businessUnitList: any;
+    divisionList: any;
+    departmentList: any;
+
+private onDestroy$: Subject<void> = new Subject<void>();
   @ViewChild("errorMessagePop") public errorMessagePop: ElementRef;
   @ViewChild("newSalesQuoteForm") public newSalesQuoteForm: NgForm;
   constructor(
@@ -132,6 +140,7 @@ export class SalesQuoteCreateComponent implements OnInit {
     this.getAllCustomerContact();
     this.getCustomerWarningsData();
     this.getAccountTypes();
+    this.getLegalEntity();
 
     if (this.id) {
       this.getSalesQuoteInstance(this.id);
@@ -206,7 +215,10 @@ export class SalesQuoteCreateComponent implements OnInit {
 
     const employeeListData = [
       ...this.allEmployeeinfo.filter(x => {
-        return x.firstName.toLowerCase().includes(event.query.toLowerCase());
+        if(x.firstName.toLowerCase().includes(event.query.toLowerCase())){
+          return x.firstName+''+x.lastName;
+        }
+        
       })
     ];
     this.firstCollection = employeeListData;
@@ -470,8 +482,11 @@ export class SalesQuoteCreateComponent implements OnInit {
       this.salesQuote.priorities = this.salesQuoteView.priorities;
       this.salesQuote.leadSources = this.salesQuoteView.leadSources;
       this.salesQuote.salesQuoteTypes = this.salesQuoteView.salesQuoteTypes;
+      this.salesQuote.status = this.salesQuoteView.status;
       this.salesQuote.salesOrderQuoteId = this.salesOrderQuoteObj.salesOrderQuoteId;
       this.salesQuote.quoteTypeId = this.salesOrderQuoteObj.quoteTypeId;
+      this.salesQuote.statusId = this.salesOrderQuoteObj.statusId;
+      this.salesQuote.statusChangeDate = new Date(this.salesOrderQuoteObj.statusChangeDate);
       this.salesQuote.openDate = new Date(this.salesOrderQuoteObj.openDate);
       this.salesQuote.customerRequestDate = new Date(
         this.salesOrderQuoteObj.customerRequestDate
@@ -587,6 +602,10 @@ export class SalesQuoteCreateComponent implements OnInit {
       .subscribe(data => {
         this.salesQuote = data && data.length ? data[0] : null;
 
+        this.salesQuote.openDate = new Date();
+        this.salesQuote.validForDays = 10;
+        this.salesQuote.quoteExpiryDate = new Date();
+        this.onChangeValidForDays();
         this.getCustomerDetails();
 
         this.getDefaultContact();
@@ -598,6 +617,29 @@ export class SalesQuoteCreateComponent implements OnInit {
         };*/
         this.alertService.stopLoadingMessage();
       });
+  }
+  onChangeValidForDays(){
+    let od = new Date(this.salesQuote.openDate);
+    let validForDays =+ this.salesQuote.validForDays
+    let ed = new Date(this.salesQuote.openDate);
+    ed.setDate( od.getDate() + validForDays );
+    this.salesQuote.quoteExpiryDate = ed;
+  }
+  onChangeQuoteExpiryDate(){
+    let od = new Date(this.salesQuote.openDate);
+    let ed = new Date(this.salesQuote.quoteExpiryDate);
+      let Difference_In_Time = ed.getTime() - od.getTime(); 
+      let Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24); 
+      this.salesQuote.validForDays = Difference_In_Days;
+      console.log(this.salesQuote);
+    //this.salesQuote.quoteExpiryDate.setDate( this.salesQuote.openDate.getDate() + this.salesQuote.validForDays );
+  }
+  onChangeOpenDate(){
+    let od = new Date(this.salesQuote.openDate);
+    let validForDays =+ this.salesQuote.validForDays
+    let ed = new Date(this.salesQuote.openDate);
+    ed.setDate( od.getDate() + validForDays );
+    this.salesQuote.quoteExpiryDate = ed;
   }
 
   searchCustomerByName(event) {
@@ -790,11 +832,15 @@ export class SalesQuoteCreateComponent implements OnInit {
         this.salesOrderQuote.shipToContactId
       );
       this.salesOrderQuote.leadSourceId = this.salesQuote.leadSourceId;
+      if (this.id) {
+      this.salesOrderQuote.statusId = this.salesQuote.statusId;
+      this.salesOrderQuote.statusChangeDate = this.salesQuote.statusChangeDate;
+      }
       this.salesOrderQuote.creditLimit = this.salesQuote.creditLimit;
       this.salesOrderQuote.creditTermId = this.salesQuote.creditLimitTermsId;
       this.salesOrderQuote.restrictPMA = this.salesQuote.restrictPMA;
       this.salesOrderQuote.restrictDER = this.salesQuote.restrictDER;
-     // this.salesOrderQuote.quoteApprovedById = this.salesQuote.quoteApprovedById;
+      this.salesOrderQuote.quoteApprovedById = this.salesQuote.quoteApprovedById;
       if (this.salesQuote.approvedDate)
         this.salesOrderQuote.approvedDate = this.salesQuote.approvedDate.toDateString();
       this.salesOrderQuote.currencyId = this.salesQuote.currencyId;
@@ -884,6 +930,50 @@ export class SalesQuoteCreateComponent implements OnInit {
       console.log(this.approvers);
     }
   }
+
+
+  
+	
+  getLegalEntity() {
+    this.commonservice.getLegalEntityList().pipe(takeUntil(this.onDestroy$)).subscribe(res => {
+        this.legalEntityList = res;
+    })
+}
+
+selectedLegalEntity(legalEntityId) {
+    if (legalEntityId) {
+        this.salesQuote.managementStructureId = legalEntityId;
+        this.commonservice.getBusinessUnitListByLegalEntityId(legalEntityId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
+            this.businessUnitList = res;
+        })
+    }
+
+}
+selectedBusinessUnit(businessUnitId) {
+    if (businessUnitId) {
+        this.salesQuote.managementStructureId = businessUnitId;
+        this.commonservice.getDivisionListByBU(businessUnitId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
+            this.divisionList = res;
+        })
+    }
+
+}
+selectedDivision(divisionUnitId) {
+    if (divisionUnitId) {
+        this.salesQuote.managementStructureId = divisionUnitId;
+        this.commonservice.getDepartmentListByDivisionId(divisionUnitId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
+            this.departmentList = res;
+        })
+    }
+
+}
+selectedDepartment(departmentId) {
+    if (departmentId) {
+        this.salesQuote.managementStructureId = departmentId;
+    }
+}
+
+
 
   quote: any = {
     quoteTypeId: null,

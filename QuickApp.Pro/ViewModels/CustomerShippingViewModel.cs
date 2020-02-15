@@ -7,21 +7,21 @@ namespace QuickApp.Pro.ViewModels
 {
     public class CustomerShippingViewModel
     {
-        public long? CustomerShippingId { get; set; }
-        public long? CustomerId { get; set; }
-        public long? CustomerShippingAddressId { get; set; }
+        public long CustomerShippingId { get; set; }
+        public long CustomerId { get; set; }
+        public long CustomerShippingAddressId { get; set; }
         public string SiteName { get; set; }
         public string ShipVia { get; set; }
         public string ShippingAccountinfo { get; set; }
         public string ShippingId { get; set; }
         public string ShippingURL { get; set; }
-        public Int32? MasterCompanyId { get; set; }
+        public Int32 MasterCompanyId { get; set; }
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }
         public string Memo { get; set; }
         public System.DateTime CreatedDate { get; set; }
         public System.DateTime UpdatedDate { get; set; }
-        public bool? IsActive { get; set; }
+        public bool IsActive { get; set; }
         public bool? IsPrimary { get; set; }
 
         public string Address1 { get; set; }

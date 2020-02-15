@@ -8,6 +8,7 @@ import { ICustomerType } from './ICustomerType';
 import { ICreditTerm } from './ICreditTerm';
 import { ISalesProbablity } from './ISalesProbablity';
 import { ILeadSource } from './ILeadSource';
+import { IStatus } from "./IStatus";
 
 
 export class SalesQuoteView implements ISalesQuoteView {
@@ -20,4 +21,5 @@ export class SalesQuoteView implements ISalesQuoteView {
     creditTerms: ICreditTerm[];
     salesProbablity: ISalesProbablity[];
     leadSources: ILeadSource[];
+    status: IStatus[];
 }

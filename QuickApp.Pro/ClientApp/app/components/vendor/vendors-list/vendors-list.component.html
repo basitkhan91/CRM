@@ -99,7 +99,7 @@
 
                     <!-- <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
                         {{col.field == 'createdDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field] && col.field == 'updatedDate'?  (rowData[col.field] | date: 'MM/dd/yyyy'):rowData[col.field]}}
-                    </td> -->
+                    </td> [validate] moduleName="app-vendors-list"-->
                     <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
                         {{col.field == 'vendorPhone'?rowData['t']['vendorPhone']:rowData[col.field]}}
                     </td>
@@ -107,15 +107,15 @@
                     <td class="action-icons-cstm" style="width:200px;">
                         <div>
                             <ng-container *ngIf="!isCreatePO && !isCreateRO">
-                                <p-inputSwitch [validate] moduleName="app-vendors-list" requirePermission="canUpdate"
+                                <p-inputSwitch  requirePermission="canUpdate"
                                 *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off"
                                 (onChange)="handleChanges(rowData,$event)" [(ngModel)]="rowData['isActive']">
                                 </p-inputSwitch>
-                                <p-inputSwitch [validate] moduleName="app-vendors-list" requirePermission="canUpdate"
+                                <p-inputSwitch  requirePermission="canUpdate"
                                                 *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on"
                                                 offLabel="off" (onChange)="handleChanges(rowData,$event)"
                                                 [(ngModel)]="rowData['isActive']"></p-inputSwitch>
-                                <p-inputSwitch [validate] moduleName="app-vendors-list" requirePermission="canUpdate"
+                                <p-inputSwitch  requirePermission="canUpdate"
                                                 *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off"
                                                 (onChange)="handleChanges(rowData,$event)" [(ngModel)]="rowData['isActive']">
                                 </p-inputSwitch>
@@ -133,7 +133,7 @@
                                     <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip"
                                        (click)="openView(view,rowData)" matTooltip="View"><i class="fa fa-eye"></i></a>
                                 </span> -->
-                                <!-- <button *ngIf="!isCreatePO && !isCreateRO" [validate] moduleName="app-vendors-list" requirePermission="canUpdate"
+                                <!-- <button *ngIf="!isCreatePO && !isCreateRO"  requirePermission="canUpdate"
                                         class="btn-edit" mat-icon-button (click)="openEdit(rowData)" matTooltip="Edit">
                                     <mat-icon>edit</mat-icon>
                                 </button> -->
@@ -143,7 +143,7 @@
         
                                 </i> -->
         
-                                <!-- <button *ngIf="!isCreatePO && !isCreateRO" [validate] moduleName="app-vendors-list" requirePermission="canDelete"
+                                <!-- <button *ngIf="!isCreatePO && !isCreateRO"  requirePermission="canDelete"
                                         class="btn-delete" mat-icon-button matTooltip="Delete"
                                         (click)=" openDelete(content1, rowData)">
                                     <mat-icon color="warn">delete</mat-icon>
@@ -1079,7 +1079,7 @@
                          style="height: 0px;">
                          <div>
                              <app-vendor-shipping-information *ngIf="vendorId" [vendorId]="vendorId" [isViewMode]="isViewMode"></app-vendor-shipping-information>
-                         </div>
+                         </div> 
                         <!-- <div class="panel-body">
                             <div class="col-sm-12">
                                 <div class="shadow-Box">
@@ -1474,11 +1474,11 @@
 
 </ng-template>
 
-<div class="modal fade popup-blur" id="vendorCapesView" role="dialog" data-backdrop="static" data-keyboard="false" style="z-index: 10000;">
+<!-- <div class="modal fade popup-blur" id="vendorCapesView" role="dialog" data-backdrop="static" data-keyboard="false" style="z-index: 10000;">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header" *ngIf="vendorCapesGeneralInfo">
-          <button type="button" class="close" data-dismiss="modal">&times;</button> <!--data-dismiss="modal"-->
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
           <h4 class="modal-title">Capability Details of Vendor: <span>"{{vendorCapesGeneralInfo.vendorName}}"</span></h4>
         </div>
         <div class="modal-body">
@@ -1513,7 +1513,6 @@
                     <p-table class="ptable-custom" [value]="aircraftListDataValues" [rows]="6" [columns]="colsaircraftLD" [scrollable]="true" [style]="{width:'100%'}" [paginator]="true">
                         <ng-template pTemplate="header" let-columns>
                             <tr>
-                                <!-- <th>Id</th> -->
                                 <th *ngFor="let col of columns">
                                     {{col.header}}
                                 </th>
@@ -1521,7 +1520,6 @@
                         </ng-template>
                         <ng-template pTemplate="body" let-i="rowIndex" let-rowData let-columns="columns">
                             <tr>
-                                <!-- <td>{{i+1}}</td> -->
                                 <td *ngFor="let col of columns">
                                     {{rowData[col.field]}}
                                 </td>
@@ -1537,7 +1535,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
 
 <div class="modal fade" id="purchaseOrderList" role="dialog" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-lg">
@@ -1546,7 +1544,7 @@
             <button type="button" class="close" data-dismiss="modal" (click)="resetVendorId()">&times;</button>
             <h4 class="modal-title">Purchase Orders
                 <a matTooltip="Create PO" (click)="navigateToCreatePO()" class="plusicon-cstm ">
-                    <i class="fa fa-plus-circle fa-lg"></i>
+                    <i class="fa fa-plus-circle fa-lg" matTooltip="Create Purchase Orders"></i>
                 </a>
             </h4>
         </div>
@@ -1567,7 +1565,7 @@
             <button type="button" class="close" data-dismiss="modal" (click)="resetVendorId()">&times;</button>
             <h4 class="modal-title">Repair Orders
                 <a matTooltip="Create RO" (click)="navigateToCreateRO()" class="plusicon-cstm ">
-                    <i class="fa fa-plus-circle fa-lg"></i>
+                    <i class="fa fa-plus-circle fa-lg" matTooltip="Create Repair Orders"></i>
                 </a>
             </h4>
         </div>

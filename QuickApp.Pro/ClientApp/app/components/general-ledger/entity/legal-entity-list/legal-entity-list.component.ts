@@ -14,7 +14,7 @@ import { CurrencyService } from '../../../../services/currency.service';
 import { Currency } from '../../../../models/currency.model';
 import { TreeNode } from 'primeng/api';
 import { CustomerService } from '../../../../services/customer.service';
-
+import { MenuItem } from 'primeng/api';
 @Component({
 	selector: 'app-legal-entity-list',
 	templateUrl: './legal-entity-list.component.html',
@@ -69,15 +69,16 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
     disablesave: boolean;
 	selectedCountries: any;
 	displayWarningModal: boolean = false;
+	breadcrumbs: MenuItem[];
 
-	constructor(private _route: Router,
-        private authService: AuthService, private _fb: FormBuilder, private alertService: AlertService, public currency: CurrencyService, public workFlowtService: LegalEntityService,
+	constructor(private route: Router,
+        private authService: AuthService, private _fb: FormBuilder, private alertService: AlertService, public currency: CurrencyService, public entityService: LegalEntityService,
         private modalService: NgbModal, private activeModal: NgbActiveModal, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private customerService: CustomerService) {
 
        
 		this.dataSource = new MatTableDataSource();
-		if (this.workFlowtService.listCollection != null && this.workFlowtService.isEditMode == true) {
-			this.sourceLegalEntity = this.workFlowtService.listCollection;
+		if (this.entityService.listCollection != null && this.entityService.isEditMode == true) {
+			this.sourceLegalEntity = this.entityService.listCollection;
 			this.sourceLegalEntity.createdDate = new Date();
 			this.sourceLegalEntity.modifiedDate = new Date();
 		}
@@ -91,6 +92,11 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
 		this.countrylist();
 		this.loadMasterCompanies();
 		this.loadParentEntities();
+
+		this.breadcrumbs = [
+			{ label: 'Organization' },
+			{ label: 'Legal Entity List' },
+		];
 	}
 
 	modal: NgbModalRef;
@@ -106,7 +112,7 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
 		this.alertService.startLoadingMessage();
 		this.loadingIndicator = true;
 
-		this.workFlowtService.loadParentEntities().subscribe(
+		this.entityService.loadParentEntities().subscribe(
 			results => this.onloadParentEntitiesLoadSuccessful(results[0]),
 			error => this.onDataLoadFailed(error)
 		);
@@ -134,7 +140,7 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
 		this.alertService.startLoadingMessage();
 		this.loadingIndicator = true;
 
-		this.workFlowtService.getEntityList().subscribe(
+		this.entityService.getEntityList().subscribe(
 			results => this.onDataLoadSuccessful(results[0]),
 			error => this.onDataLoadFailed(error)
 		);
@@ -246,18 +252,18 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
 	}
 
     open(content) {
-        console.log('content :', content)
-  //       this.GeneralInformation();
-  //       this.sourceLegalEntity = {};
-  //       this.sourceLegalEntity.isBalancingEntity = true;
-		// this.sourceLegalEntity.isActive = true;
-		// this.entityName = "";
-		// this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
-		// this.modal.result.then(() => {
-		// 	console.log('When user closes');
-		// }, () => { console.log('Backdrop click') })
+		console.log('content :', content)
+		this.route.navigateByUrl(`generalledgermodule/generalledgerpage/app-legal-entity-add`);
+	}
 
-		this._route.navigateByUrl(`generalledgermodule/generalledgerpage/app-legal-entity-add`);
+	navigateTogeneralInfo() {
+		this.entityService.isEditMode = false;
+		this.entityService.ShowPtab = true;
+		this.entityService.currentUrl = '/generalledgermodule/generalledgerpage/app-legal-entity-add';
+		this.entityService.bredcrumbObj.next(this.entityService.currentUrl);
+		this.entityService.alertObj.next(this.entityService.ShowPtab);
+		this.route.navigateByUrl('/generalledgermodule/generalledgerpage/app-legal-entity-add');
+		this.entityService.listCollection = undefined;
 	}
 
 	private onDataMasterCompaniesLoadSuccessful(allComapnies: MasterCompany[]) {
@@ -324,7 +330,7 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
 				this.sourceLegalEntity.updatedBy = this.userName;
 
 				this.sourceLegalEntity.masterCompanyId = 1;
-				this.workFlowtService.newAddEntity(this.sourceLegalEntity).subscribe(data => {
+				this.entityService.newAddEntity(this.sourceLegalEntity).subscribe(data => {
 					this.alertService.showMessage(
 						'Success',
 						'Legal Entity added successfully.',
@@ -339,7 +345,7 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
 				this.sourceLegalEntity.createdBy = this.userName;
 				this.sourceLegalEntity.updatedBy = this.userName;
 				this.sourceLegalEntity.masterCompanyId = 1;
-				this.workFlowtService.updateEntity(this.sourceLegalEntity).subscribe(data => {
+				this.entityService.updateEntity(this.sourceLegalEntity).subscribe(data => {
 					this.alertService.showMessage(
 						'Success',
 						'Legal Entity updated successfully.',
@@ -398,17 +404,7 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
 	}
     openContentEdit(content, row) {
         console.log('edit row :', row)
-		//this.isEditMode = true;
-		//this.GeneralInformation();
-		//this.sourceLegalEntity.isBankingInfo = false;
-		//this.sourceLegalEntity = row;
-		//this.sourceLegalEntity.createdDate = new Date(row.createdDate);
-		//this.sourceLegalEntity.modifiedDate = new Date(row.updatedDate);
-		//this.modal1 = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
-		//this.modal1.result.then(() => {
-		//	console.log('When user closes');
-		//}, () => { console.log('Backdrop click') })
-        this._route.navigateByUrl(`generalledgermodule/generalledgerpage/app-legal-entity-edit/${row.legalEntityId}`);
+		this.route.navigateByUrl(`generalledgermodule/generalledgerpage/app-legal-entity-edit/${row.legalEntityId}`);
 	}
 	openEdit(content, row) {
 		this.GeneralInformation();
@@ -435,7 +431,7 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
 	deleteItemAndCloseModel() {
 		this.isSaving = true;
 		this.sourceLegalEntity.updatedBy = this.userName;
-		this.workFlowtService.updateEntitydelete(this.sourceLegalEntity.legalEntityId).subscribe(
+		this.entityService.updateEntitydelete(this.sourceLegalEntity.legalEntityId).subscribe(
 			data => {
 				this.loadData();
 			})
@@ -452,7 +448,7 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
             this.sourceLegalEntity.updatedBy = this.userName;
             this.Active = "In Active";
             this.sourceLegalEntity.isActive == false;
-            this.workFlowtService.updateLegalEntityForActive(this.sourceLegalEntity).subscribe(
+            this.entityService.updateLegalEntityForActive(this.sourceLegalEntity).subscribe(
                 response => this.saveCompleted(this.sourceLegalEntity),
                 error => this.saveFailedHelper(error));
             //alert(e);
@@ -462,7 +458,7 @@ export class EntityEditComponent implements OnInit, AfterViewInit {
             this.sourceLegalEntity.updatedBy = this.userName;
             this.Active = "Active";
             this.sourceLegalEntity.isActive == true;
-            this.workFlowtService.updateLegalEntityForActive(this.sourceLegalEntity).subscribe(
+            this.entityService.updateLegalEntityForActive(this.sourceLegalEntity).subscribe(
                 response => this.saveCompleted(this.sourceLegalEntity),
                 error => this.saveFailedHelper(error));
             //alert(e);

@@ -14,6 +14,7 @@ export class SalesMarginComponent implements OnInit {
   @Output() save: EventEmitter<PartDetail> = new EventEmitter<PartDetail>();
   @Input() part: PartDetail;
   @Input() display: boolean;
+  @Input() isEdit: boolean;
 
   query: ItemMasterSearchQuery;
   percentage: any[] = [];
@@ -23,6 +24,7 @@ export class SalesMarginComponent implements OnInit {
 
   ngOnInit() {
     this.getPercents();
+    this.calculate();
    /* for (let i = 1; i <= 10; i++) {
       this.percentage.push({ value: i.toString(), text: i.toString() });
     }*/

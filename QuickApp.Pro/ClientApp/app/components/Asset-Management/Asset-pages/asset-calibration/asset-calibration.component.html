@@ -93,7 +93,7 @@
                                                     <label class="control-label">Default Vendor</label>
                                                     <select [ngModelOptions]="{standalone: true}"
                                                                 [(ngModel)]="currentCalibration.calibrationDefaultVendorId">
-                                                            <option>--Select--</option>
+                                                        <option>--NON Selected--</option>
                                                             <option class="form-control" *ngFor="let vendors of allVendorInfo"
                                                                     [ngValue]="vendors.vendorId">
                                                                 {{vendors.vendorName}}
@@ -111,10 +111,10 @@
                                                             <div class="col-sm-6">
                                                                     <select class="form-control" [ngModelOptions]="{standalone: true}"
                                                                     [(ngModel)]="currentCalibration.calibrationCurrencyId">
-                                                                <option>--Select--</option>
+                                                                        <option>--NON Selected--</option>
                                                                 <option class="form-control" *ngFor="let currencyName of allCurrencyInfo"
                                                                         [ngValue]="currencyName.currencyId">
-                                                                    {{currencyName.symbol}}
+                                                                    {{currencyName.code}}
                                                                 </option>
                                                             </select>
                                                             </div>
@@ -127,7 +127,7 @@
                                                     <label class="control-label">GL Account</label>
                                                     <select class="autosuggest" [ngModelOptions]="{standalone: true}"
                                                                 [(ngModel)]="currentCalibration.calibrationGlAccountId">
-                                                            <option>--Select--</option>
+                                                        <option>--NON Selected--</option>
                                                             <option class="form-control" *ngFor="let glAccounts of allGlInfo"
                                                                     [ngValue]="glAccounts.glAccountId">
                                                                 {{glAccounts.accountName}}
@@ -177,7 +177,7 @@
                                                         <label class="control-label">Default Vendor</label>
                                                         <select [ngModelOptions]="{standalone: true}"
                                                                     [(ngModel)]="currentCalibration.certificationDefaultVendorId">
-                                                                <option>--Select--</option>
+                                                            <option>--NON Selected--</option>
                                                                 <option class="form-control" *ngFor="let vendors of allVendorInfo"
                                                                         [ngValue]="vendors.vendorId">
                                                                     {{vendors.vendorName}}
@@ -194,10 +194,10 @@
                                                                 <div class="col-sm-6">
                                                                         <select class="form-control" [ngModelOptions]="{standalone: true}"
                                                                         [(ngModel)]="currentCalibration.certificationCurrencyId">
-                                                                    <option>--Select--</option>
+                                                                            <option>--NON Selected--</option>
                                                                     <option class="form-control" *ngFor="let currencyName of allCurrencyInfo"
                                                                             [ngValue]="currencyName.currencyId">
-                                                                        {{currencyName.symbol}}
+                                                                        {{currencyName.code}}
                                                                     </option>
                                                                 </select>
                                                                 </div>
@@ -209,7 +209,7 @@
                                                         <label class="control-label">GL Account</label>
                                                         <select class="autosuggest" [ngModelOptions]="{standalone: true}"
                                                                     [(ngModel)]="currentCalibration.certificationGlAccountId">
-                                                                <option>--Select--</option>
+                                                            <option>--NON Selected--</option>
                                                                 <option class="form-control" *ngFor="let glAccounts of allGlInfo"
                                                                         [ngValue]="glAccounts.glAccountId">
                                                                     {{glAccounts.accountName}}
@@ -258,7 +258,7 @@
                                                         <label class="control-label">Default Vendor</label>
                                                         <select [ngModelOptions]="{standalone: true}"
                                                                     [(ngModel)]="currentCalibration.inspectionDefaultVendorId">
-                                                                <option>--Select--</option>
+                                                            <option>--NON Selected--</option>
                                                                 <option class="form-control" *ngFor="let vendors of allVendorInfo"
                                                                         [ngValue]="vendors.vendorId">
                                                                     {{vendors.vendorName}}
@@ -275,10 +275,10 @@
                                                                 <div class="col-sm-6">
                                                             <select class="form-control" [ngModelOptions]="{standalone: true}"
                                                                     [(ngModel)]="currentCalibration.inspectionCurrencyId">
-                                                                <option>--Select--</option>
+                                                                <option>--NON Selected--</option>
                                                                 <option class="form-control" *ngFor="let currencyName of allCurrencyInfo"
                                                                         [ngValue]="currencyName.currencyId">
-                                                                    {{currencyName.symbol}}
+                                                                    {{currencyName.code}}
                                                                 </option>
                                                             </select>
                                                             </div>
@@ -288,7 +288,7 @@
                                                         <label class="control-label">GL Account</label>
                                                         <select class="autosuggest" [ngModelOptions]="{standalone: true}"
                                                                     [(ngModel)]="currentCalibration.inspectionGlaAccountId">
-                                                                <option>--Select--</option>
+                                                            <option>--NON Selected--</option>
                                                                 <option class="form-control" *ngFor="let glAccounts of allGlInfo"
                                                                         [ngValue]="glAccounts.glAccountId">
                                                                     {{glAccounts.accountName}}
@@ -337,7 +337,7 @@
                                                         <label class="control-label">Default Vendor</label>
                                                         <select [ngModelOptions]="{standalone: true}"
                                                                     [(ngModel)]="currentCalibration.verificationDefaultVendorId">
-                                                                <option>--Select--</option>
+                                                            <option>--NON Selected--</option>
                                                                 <option class="form-control" *ngFor="let vendors of allVendorInfo"
                                                                         [ngValue]="vendors.vendorId">
                                                                     {{vendors.vendorName}}
@@ -354,10 +354,10 @@
                                                                 <div class="col-sm-6">
                                                                         <select class="form-control" [ngModelOptions]="{standalone: true}"
                                                                         [(ngModel)]="currentCalibration.verificationCurrencyId">
-                                                                    <option>--Select--</option>
+                                                                            <option>--NON Selected--</option>
                                                                     <option class="form-control" *ngFor="let currencyName of allCurrencyInfo"
                                                                             [ngValue]="currencyName.currencyId">
-                                                                        {{currencyName.symbol}}
+                                                                        {{currencyName.code}}
                                                                     </option>
                                                                 </select>
                                                                 </div>
@@ -369,7 +369,7 @@
                                                         <label class="control-label">GL Account</label>
                                                         <select class="autosuggest" [ngModelOptions]="{standalone: true}"
                                                                     [(ngModel)]="currentCalibration.verificationGlAccountId">
-                                                                <option>--Select--</option>
+                                                            <option>--NON Selected--</option>
                                                                 <option class="form-control" *ngFor="let glAccounts of allGlInfo"
                                                                         [ngValue]="glAccounts.glAccountId">
                                                                     {{glAccounts.accountName}}

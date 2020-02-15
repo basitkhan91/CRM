@@ -27,6 +27,7 @@ export class ChargesCreateComponent implements OnInit, OnChanges {
     @Input() isQuote = false;
     @Input() editData;
     @Input() taskList: any = [];
+    @Input() isWorkFlow: boolean = false;
     @Output() saveChargesListForWO = new EventEmitter();
     @Output() updateChargesListForWO = new EventEmitter();
 
@@ -103,7 +104,9 @@ export class ChargesCreateComponent implements OnInit, OnChanges {
     }
 
     ngOnChanges(): void {
-
+        if(!this.isWorkFlow){
+            this.addRow();
+        }
     }
 
     reCalculate() {
@@ -171,7 +174,15 @@ export class ChargesCreateComponent implements OnInit, OnChanges {
         var newRow = Object.assign({}, this.row);
         newRow.workflowChargesListId = "0";
         newRow.vendor = {};
-        newRow.taskId = this.workFlow.taskId;
+        if(this.taskList){
+            this.taskList.forEach(
+                task=>{
+                    if(task.description == "Assemble"){
+                        newRow.taskId = task.taskId;
+                    }
+                }
+            )
+        }
         newRow.currencyId = "0";
         newRow.description = "";
         newRow.extendedCost = "";

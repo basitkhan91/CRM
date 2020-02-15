@@ -7,8 +7,10 @@ using System.Threading.Tasks;
 
 namespace QuickApp.Pro.ViewModels
 {
-    public class ItemMasterViewModel
+    public class ItemMasterViewModel     
     {
+
+
         public long ItemMasterId { get; set; }
 
         public int? ItemCategoryId { get; set; }
@@ -22,6 +24,8 @@ namespace QuickApp.Pro.ViewModels
         public long? PartAlternatePartId { get; set; }
 
         public bool? IsSerialized { get; set; }
+
+        public bool? IsHotItem { get; set; } // Hot Item added 
 
         public bool? IsTimeLife { get; set; }
 
@@ -39,11 +43,9 @@ namespace QuickApp.Pro.ViewModels
 
         public long? ItemClassificationId { get; set; }
 
+               public string AssetNumber { get; set; }
 
-        public string AssetNumber { get; set; }
-
-        public bool? IsAcquiredMethodBuy { get; set; }
-
+        public long? AssetAcquistionTypeId { get; set; }
         public bool? IsHazardousMaterial { get; set; }
 
         public bool? IsExpirationDateAvailable { get; set; }

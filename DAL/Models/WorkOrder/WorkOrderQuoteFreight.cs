@@ -21,11 +21,13 @@ namespace DAL.Models
         public string Memo { get; set; }
         public decimal? Amount { get; set; }
         public bool? IsFixedFreight { get; set; }
-        public decimal? FixedAmount { get; set; }
         public long? MarkupPercentageId { get; set; }
-        public decimal? FreightCostPlus { get; set; }
         public string MarkupFixedPrice { get; set; }
         public long? TaskId { get; set; }
+        public long? HeaderMarkupId { get; set; }
+        public int? BillingMethodId { get; set; }
+        public decimal? BillingRate { get; set; }
+        public decimal? BillingAmount { get; set; }
         public int MasterCompanyId { get; set; }
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }
@@ -33,5 +35,7 @@ namespace DAL.Models
         public DateTime UpdatedDate { get; set; }
         public bool IsActive { get; set; }
         public bool IsDeleted { get; set; }
+
+
     }
 }

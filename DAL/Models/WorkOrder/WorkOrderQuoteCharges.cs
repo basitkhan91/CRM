@@ -13,20 +13,14 @@ namespace DAL.Models
         public long? ChargesTypeId { get; set; }
         public long? VendorId { get; set; }
         public int? Quantity { get; set; }
-        public int? RoNumberId { get; set; }
-        public string InvoiceNo { get; set; }
-        public decimal? Amount { get; set; }
         public long? MarkupPercentageId { get; set; }
-        public decimal? CostPlusAmount { get; set; }
-        public decimal? FixedAmount { get; set; }
         public string Description { get; set; }
         public decimal? UnitCost { get; set; }
         public decimal? ExtendedCost { get; set; }
-        public decimal? UnitPrice { get; set; }
-        public decimal? ExtendedPrice { get; set; }
-        public decimal? ChargesCostPlus { get; set; }
         public long? TaskId { get; set; }
         public string MarkupFixedPrice { get; set; }
+        public int? BillingMethodId { get; set; }
+        public long? HeaderMarkupId { get; set; }
         public int MasterCompanyId { get; set; }
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }

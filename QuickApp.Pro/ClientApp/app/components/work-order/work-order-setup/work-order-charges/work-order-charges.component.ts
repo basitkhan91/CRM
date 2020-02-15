@@ -24,21 +24,22 @@ export class WorkOrderChargesComponent implements OnChanges, OnInit {
   @Output() createQuote = new EventEmitter();
   @Input() isView: boolean = false;
   @Input() taskList: any = [];
+  @Input() view: boolean = false;
   cols = [
     { field: 'chargeType', header: 'Charge Type' },
     { field: 'description', header: 'Description' },
-    { field: 'quantity', header: 'Quantity' },
+    { field: 'vendorName', header: 'Vendor Name' },
+    { field: 'quantity', header: 'QTY' },
     { field: 'unitCost', header: 'Unit Cost' },
     { field: 'extendedCost', header: 'Extented Cost' },
     // { field: 'unitPrice', header: 'Unit Price' },
     // { field: 'extendedPrice', header: 'Extended Price' },
-    { field: 'vendorName', header: 'vendorName' },
   ]
 
   isEdit: boolean = false;
   editData: any;
   editingIndex: number;
-  costPlusType: string = "Mark Up";
+  costPlusType: number = 0;
   overAllMarkup: any;
 
   constructor(private workOrderService: WorkOrderService, private authService: AuthService,
@@ -49,13 +50,15 @@ export class WorkOrderChargesComponent implements OnChanges, OnInit {
 
   ngOnChanges() {
     console.log(this.markupList);
-    if(this.workOrderChargesList && this.workOrderChargesList.length > 0 && this.workOrderChargesList[0].markupFixedPrice){
-      this.costPlusType = this.workOrderChargesList[0].markupFixedPrice
+    if(this.workOrderChargesList && this.workOrderChargesList.length > 0 && this.workOrderChargesList[0].headerMarkupId){
+      this.costPlusType = Number(this.workOrderChargesList[0].markupFixedPrice);
+      this.overAllMarkup = this.workOrderChargesList[0].headerMarkupId;
     }
   }
   ngOnInit() {
     if(this.workOrderChargesList && this.workOrderChargesList.length > 0 && this.workOrderChargesList[0].markupFixedPrice){
-      this.costPlusType = this.workOrderChargesList[0].markupFixedPrice
+      this.costPlusType = Number(this.workOrderChargesList[0].markupFixedPrice);
+      this.overAllMarkup = this.workOrderChargesList[0].headerMarkupId;
     }
     if(!this.isQuote){
       this.cols = [...this.cols, { field: 'extendedPrice', header: 'Extended Price' }, { field: 'unitPrice', header: 'Unit Price' },]
@@ -116,7 +119,7 @@ export class WorkOrderChargesComponent implements OnChanges, OnInit {
 
   createChargeQuote() {
     this.workOrderChargesList = this.workOrderChargesList.map(charge=>{
-      return {...charge, markupFixedPrice: this.costPlusType}
+      return {...charge, markupFixedPrice: this.costPlusType, headerMarkupId: Number(this.overAllMarkup) }
     })
     this.createQuote.emit(this.workOrderChargesList);
   }
@@ -125,13 +128,18 @@ export class WorkOrderChargesComponent implements OnChanges, OnInit {
     try {
       this.markupList.forEach((markup)=>{
         if(type == 'row' && markup.value == matData.markupPercentageId){
-          matData.chargesCostPlus = Number(matData.extendedCost) + ((Number(matData.extendedCost) / 100) * Number(markup.label))
+          // matData.tmAmount = Number(matData.extendedCost) + ((Number(matData.extendedCost) / 100) * Number(markup.label))
+          matData['billingRate'] = ((Number(matData['unitCost'])) + ((Number(matData['unitCost']) / 100) * Number(markup.label))).toFixed(2);
+          matData['billingAmount'] = (Number(matData['billingRate']) * Number(matData.quantity)).toFixed(2);
         }
         else if(type == 'all' && markup.value == this.overAllMarkup){
           this.workOrderChargesList.forEach((mData)=>{
-            if(mData.billingMethod && mData.billingMethod == 'T&M'){
+            if(mData.billingMethodId && Number(mData.billingMethodId) == 1){
+              // mData.markupPercentageId = this.overAllMarkup;
+              // mData.tmAmount = Number(mData.extendedCost) + ((Number(mData.extendedCost) / 100) * Number(markup.label))
               mData.markupPercentageId = this.overAllMarkup;
-              mData.chargesCostPlus = Number(mData.extendedCost) + ((Number(mData.extendedCost) / 100) * Number(markup.label))
+              mData['billingRate'] = (Number(mData['unitCost']) + ((Number(mData['unitCost']) / 100) * Number(markup.label))).toFixed(2);
+              mData['billingAmount'] = (Number(mData['billingRate']) * Number(mData.quantity)).toFixed(2);
             }
           })
         }
@@ -145,6 +153,12 @@ export class WorkOrderChargesComponent implements OnChanges, OnInit {
     }
     catch (e) {
       console.log(e);
+    }
+  }
+
+  tmchange(){
+    for(let mData of this.workOrderChargesList){
+      mData.billingMethodId = this.costPlusType;
     }
   }
 
@@ -167,41 +181,41 @@ export class WorkOrderChargesComponent implements OnChanges, OnInit {
     if(this.workOrderChargesList){
       this.workOrderChargesList.forEach(
         (material) => {
-          if (material.unitCost) {
-            total += Number(material.unitCost);
+          if (material.extendedCost) {
+            total += Number(material.extendedCost);
           }
         }
       )
     }
-    return total;
+    return total.toFixed(2);
   }
 
-  getChargesCostPlus() {
+  getTotalBillingRate() {
     let total = 0;
     if(this.workOrderChargesList){
       this.workOrderChargesList.forEach(
         (material) => {
-          if (material.chargesCostPlus) {
-            total += material.chargesCostPlus;
+          if (material.billingRate) {
+            total += Number(material.billingRate);
           }
         }
       )
     }
-    return total;
+    return total.toFixed(2);
   }
 
-  getTotalFixedAmount() {
+  getTotalBillingAmount() {
     let total = 0;
     if(this.workOrderChargesList){
       this.workOrderChargesList.forEach(
         (material) => {
-          if (material.fixedAmount) {
-            total += Number(material.fixedAmount);
+          if (material.billingAmount) {
+            total += Number(material.billingAmount);
           }
         }
       )
     }
-    return total;
+    return total.toFixed(2);
   }
 
 }

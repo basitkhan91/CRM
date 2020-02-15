@@ -21,6 +21,7 @@ import { AuditHistory } from '../models/audithistory.model';
 import { Role } from '../models/role.model';
 import { LegalEntityEndpontService } from './legalentity-endpoint.service';
 import { TreeNode } from 'primeng/api';
+import { BehaviorSubject } from 'rxjs';
 
 export type RolesChangedOperation = "add" | "delete" | "modify";
 export type RolesChangedEventArg = { roles: Role[] | string[], operation: RolesChangedOperation };
@@ -33,8 +34,18 @@ export class LegalEntityService {
 	public static readonly roleModifiedOperation: RolesChangedOperation = "modify";
 
 	private _rolesChanged = new Subject<RolesChangedEventArg>();
-    isEditMode: boolean;
-    listCollection: any;
+	isEditMode: boolean;
+	ShowPtab: boolean = true;
+	public currentUrl = this.router.url;
+	public bredcrumbObj = new Subject<any>();
+	public alertObj = new Subject<any>();
+	public indexObj = new Subject<any>();
+	enableExternal: boolean = false;
+	listCollection: any;
+	private isEntityEditMode = new BehaviorSubject(false);
+	currentEditModeStatus = this.isEntityEditMode.asObservable();
+	isReset: boolean = false;
+	activeStep = new Subject();
 
 	constructor(
 		private router: Router,
@@ -42,10 +53,167 @@ export class LegalEntityService {
 		private authService: AuthService,
 		private legalEntityEndpont: LegalEntityEndpontService) { }
 
+	changeofTab(activeIndex) {
+		this.activeStep.next(activeIndex);
+	}
+
+	newShippingAdd(action: any) {
+		return this.legalEntityEndpont.getNewShipppinginfo<any>(action);
+	}
+
+	updateshippinginfo(legalEntityshipping: any) {
+		return this.legalEntityEndpont.updateShippinginfo(legalEntityshipping, legalEntityshipping.legalEntityShippingAddressId);
+	}
+	updateStatusHipping(legalEntityshipping: any) {
+		return this.legalEntityEndpont.updateStatusShippinginfo(legalEntityshipping, legalEntityshipping.legalEntityShippingAddressId);
+	}
+
+	getlegalEntityShipAddressGet(legalEntityId: any) {
+		return Observable.forkJoin(
+			this.legalEntityEndpont.getCusHippingaddresdetails<any[]>(legalEntityId));
+	}
+	getlegalEntityShipAddressGetWIthAddressId(legalEntityId: any) {
+		return Observable.forkJoin(
+			this.legalEntityEndpont.getCusHippingaddresdetailswithid<any>(legalEntityId));
+	}
+	ShippingFileUpload(file, legalEntityId) {
+		return this.legalEntityEndpont.legalEntityShippingFileUpload(file, legalEntityId);
+	}
+	InternationalShippingUpload(file, legalEntityId) {
+		return this.legalEntityEndpont.legalEntityInternationalShippingFileUpload(file, legalEntityId);
+	}
+	getlegalEntityShippingHistory(legalEntityId, legalEntityShippingAddressId) {
+		return this.legalEntityEndpont.getlegalEntityShippingHistory(legalEntityId, legalEntityShippingAddressId)
+	}
+	getlegalEntityInterShippingHistory(legalEntityId, legalEntityInterShippingId) {
+		return this.legalEntityEndpont.getlegalEntityInterShippingHistory(legalEntityId, legalEntityInterShippingId)
+	}
+
+	getlegalEntityShipViaHistory(legalEntityId, legalEntityShippingAddressId, legalEntityShippingId) {
+		return this.legalEntityEndpont.getlegalEntityShipViaHistory(legalEntityId, legalEntityShippingAddressId, legalEntityShippingId)
+	}
+	getlegalEntityInterShipViaHistory(legalEntityId, internationalShippingId, shippingViaDetailsId) {
+		return this.legalEntityEndpont.getlegalEntityInterShipViaHistory(legalEntityId, internationalShippingId, shippingViaDetailsId)
+	}
+	updateStatusForShippingDetails(id, status, updatedBy) {
+		return this.legalEntityEndpont.updateStatusForShippingDetails(id, status, updatedBy)
+	}
+	Shippingdetailsviastatus(id, status, updatedBy) {
+		return this.legalEntityEndpont.Shippingdetailsviastatus(id, status, updatedBy)
+	}
+
+	getInternationalShipViaByInternationalShippingId(id) {
+		return this.legalEntityEndpont.getInternationalShipViaByInternationalShippingId(id);
+	}
+	getShipViaByDomesticShippingId(legalEntityShippingId) {
+		return this.legalEntityEndpont.getShipViaByDomesticShippingId(legalEntityShippingId);
+	}
+	updateshippingViainfo(legalEntityshipping: any) {
+		return this.legalEntityEndpont.updateShippingViainfo(legalEntityshipping, legalEntityshipping.legalEntityShippingId);
+	}
+	newShippingViaAdd(action: any) {
+		return this.legalEntityEndpont.postDomesticShipVia<any>(action);
+	}
+	updateShipViaInternational(data) {
+		return this.legalEntityEndpont.updateShipViaInternational(data);
+	}
+	getInternationalShippingById(id) {
+		return this.legalEntityEndpont.getInternationalShippingById(id);
+	}
+	updateInternationalShipping(data) {
+		return this.legalEntityEndpont.updateInternationalShipping(data);
+	}
+	postInternationalShipVia(data) {
+		return this.legalEntityEndpont.postInternationalShipVia(data);
+	}
+
+	getShipViaByInternationalShippingId(id, pageIndex, pageSize) {
+		return this.legalEntityEndpont.getShipViaByInternationalShippingId(id, pageIndex, pageSize);
+	}
+
+	postInternationalShippingPost(data) {
+		return this.legalEntityEndpont.postInternationalShippingPost(data);
+	}
+	getInternationalShippingBylegalEntityId(legalEntityId, pageIndex, pageSize) {
+		return this.legalEntityEndpont.getInternationalShippingBylegalEntityId(legalEntityId, pageIndex, pageSize);
+	}
+	updateStatusForInternationalShippings(id, status, updatedBy) {
+		return this.legalEntityEndpont.updateStatusForInternationalShipping(id, status, updatedBy)
+	}
+	updateStatusForInternationalShippingsVia(id, status, updatedBy) {
+		return this.legalEntityEndpont.updateStatusForInternationalShippingVia(id, status, updatedBy)
+	}
+
+	deleteInternationalShipViaId(id, updatedBy) {
+		return this.legalEntityEndpont.deleteInternationalShipViaId(id, updatedBy)
+	}
+	deleteShipViaDetails(id, updatedBy) {
+		return this.legalEntityEndpont.deleteShipViaDetails(id, updatedBy)
+	}
+	deleteInternationalShipping(id, updatedBy) {
+		return this.legalEntityEndpont.deleteInternationalShipping(id, updatedBy)
+	}
+	toGetUploadDocumentsList(attachmentId, legalEntityId, moduleId) {
+		return this.legalEntityEndpont.GetUploadDocumentsList(attachmentId, legalEntityId, moduleId);
+	}
+
+	getDocumentList(legalEntityId) {
+		return this.legalEntityEndpont.getDocumentList(legalEntityId)
+	}
+
+	documentUploadAction(action: any) {
+		return this.legalEntityEndpont.getDocumentUploadEndpoint<any>(action);
+	}
+
+	getDeleteDocumentListbyId(legalEntityDocumentId) {
+		return this.legalEntityEndpont.getdeleteDocumentListbyId(legalEntityDocumentId)
+	}
+	getlegalEntityDocumentHistory(id, legalEntityId) {
+		return this.legalEntityEndpont.getLegalEntityDocumentAuditHistory(id, legalEntityId)
+	}
+	newBillingAdd(action: any) {
+		return this.legalEntityEndpont.getNewBillinginfo<any>(action);
+	}
+
+	updateBillinginfo(legalEntityBilling: any) {
+		return this.legalEntityEndpont.updateBillingViainfo(legalEntityBilling, legalEntityBilling.legalEntityBillingAddressId);
+	}
+
+	getlegalEntityBillingHistory(entityId, legalEntityBillingAddressId) {
+		return this.legalEntityEndpont.getlegalEntityBillingHistory(entityId, legalEntityBillingAddressId)
+	}
+	legalEntitysBillingUpdateforActive(id, status, updatedBy) {
+		return this.legalEntityEndpont.LegalEntityBillingUpdateforActive(id, status, updatedBy)
+	}
+	updateDeleteBillinginfo(entityBilling: any) {
+		return this.legalEntityEndpont.deleteBillingAddress(entityBilling, entityBilling.legalEntityBillingAddressId);
+	}
+	BillingFileUpload(file, legalEntityId) {
+		return this.legalEntityEndpont.LegalEntityBillingFileUpload(file, legalEntityId);
+	}
+
+	getGeneralObj() {
+		return Observable.forkJoin(
+			this.legalEntityEndpont.getGeneralrobj<any>());
+	}
+
 	getEntityList() {
 		return Observable.forkJoin(
 			this.legalEntityEndpont.getLegalEntityEndpontService<any[]>());
 	}
+	getEntityDataById(entityId) {
+		return this.legalEntityEndpont.getEntityDataById(entityId);
+	}
+
+	updateEntityDetails(action: any) {
+		return this.legalEntityEndpont.updateEntityListDetails<any>(action);
+	}
+
+	getCountrylist() {
+		return Observable.forkJoin(
+			this.legalEntityEndpont.getcountryListEndpoint<any[]>());
+	}
+
 	getManagemententity() {
 		return Observable.forkJoin(
 			this.legalEntityEndpont.getManagemtentEntityData<any[]>());
@@ -72,6 +240,10 @@ export class LegalEntityService {
 	}
 	getmanagementPost(action: any) {
 		return this.legalEntityEndpont.getmanagementPost<any>(action);
+	}
+
+	checkEntityEditmode(val) {
+		this.isEntityEditMode.next(val);
 	}
 
 	updateEntity(action: any) {

@@ -95,7 +95,7 @@
                         {{ col.header }}
                         <p-sortIcon [field]="col.field"></p-sortIcon>
                     </th>
-                    <th style="width:180px;position:sticky"
+                    <th style="width:200px;position:sticky"
                         *ngIf="selectedColumns.length > 0">
                         Actions
                     </th>
@@ -121,7 +121,7 @@
                 : rowData[col.field]
                         }}
                     </td>
-                    <td class="action-icons-cstm" style="width:180px" *ngIf="selectedColumns.length > 0">
+                    <td class="action-icons-cstm" style="width:200px" *ngIf="selectedColumns.length > 0">
                         <div>
                             <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="changeStatus(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
                             <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="changeStatus(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>

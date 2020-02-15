@@ -31,7 +31,7 @@ namespace QuickApp.Pro.Controllers
         [HttpGet("getAll")]
         public IActionResult getAllDashNumbers()
         {
-            var dashNumber = unitOfWork.DashNumberRepository.GetDashNumbers();
+            var dashNumber = unitOfWork.DashNumberRepository.GetDashNumbers().OrderBy(p=>p.DashNumber);
             //var dashNumber = unitOfWork.Repository<AircraftDashNumber>().GetAll().Where(x => x.IsDeleted != true).OrderByDescending(x => x.DashNumberId);
             return Ok(dashNumber);
         }

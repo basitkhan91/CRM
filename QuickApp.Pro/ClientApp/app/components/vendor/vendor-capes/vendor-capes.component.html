@@ -6,30 +6,18 @@
           <div class="col-md-12 shadow-box-cstm">
             <div class="col-md-4">
               <p class="fs12">
-                <label
-                  class="control-label labels-font-header"
-                  style="width: auto;"
-                  >Vendor Name:
+                <label class="control-label labels-font-header" style="width: auto;">Vendor Name:
                 </label>
-                <span
-                  class="span-header-red"
-                  style="text-transform: capitalize"
-                >
-                  {{ local?.vendorName }}
+                <span class="span-header-red" style="text-transform: capitalize">
+                  {{ getVendorName() }}
                 </span>
               </p>
             </div>
             <div class="col-md-4">
               <p class="fs12">
-                <label
-                  class="control-label labels-font-header"
-                  style="width: auto;"
-                  >Vendor Code:
+                <label class="control-label labels-font-header" style="width: auto;">Vendor Code:
                 </label>
-                <span
-                  class="span-header-red"
-                  style="text-transform: capitalize"
-                >
+                <span class="span-header-red" style="text-transform: capitalize">
                   {{ local?.vendorCode }}
                 </span>
               </p>
@@ -50,13 +38,9 @@
             <div class="col-md-12">
               <h4 class="po-head-sm">
                 Add Capability
-                <a
-                  class="plusicon-cstm"
-                  data-target="#addCapabilityInfo"
-                  data-toggle="modal"
-                  (click)="onAddCapsInfo()"
-                  ><i class="fa fa-plus-circle fa-lg"></i
-                ></a>
+                <a class="plusicon-cstm" data-target="#addCapabilityInfo" data-toggle="modal"
+                  (click)="onAddCapsInfo()"><i class="fa fa-plus-circle fa-lg"
+                    matTooltip="Create Capability Information"></i></a>
               </h4>
             </div>
             <div class="clear"></div>
@@ -75,33 +59,19 @@
                                         <hr />
             
                                     </div> -->
-              <app-vendor-capabilities-list
-                *ngIf="vendorId && loadList"
-                [isEnableVendor]="isEnableVendor"
-                [vendorId]="vendorId"
-                (vendorCapabilityId)="getVendorCapabilityId($event)"
-              ></app-vendor-capabilities-list>
-              <app-vendor-capabilities-list
-                *ngIf="vendorId && !loadList"
-                [isEnableVendor]="isEnableVendor"
-                [vendorId]="vendorId"
-                (vendorCapabilityId)="getVendorCapabilityId($event)"
-              ></app-vendor-capabilities-list>
+              <app-vendor-capabilities-list *ngIf="vendorId && loadList" [isEnableVendor]="isEnableVendor"
+                [vendorId]="vendorId" (vendorCapabilityId)="getVendorCapabilityId($event)">
+              </app-vendor-capabilities-list>
+              <app-vendor-capabilities-list *ngIf="vendorId && !loadList" [isEnableVendor]="isEnableVendor"
+                [vendorId]="vendorId" (vendorCapabilityId)="getVendorCapabilityId($event)">
+              </app-vendor-capabilities-list>
             </div>
 
             <div>
-              <button
-                type="button"
-                class="btn btn-primary pull-right submit-btn"
-                (click)="nextClick()"
-              >
+              <button type="button" class="btn btn-primary pull-right submit-btn" (click)="nextClick()">
                 Next
               </button>
-              <button
-                type="button"
-                class="btn btn-primary pull-right submit-btn"
-                (click)="previousClick()"
-              >
+              <button type="button" class="btn btn-primary pull-right submit-btn" (click)="previousClick()">
                 Previous
               </button>
             </div>
@@ -112,47 +82,23 @@
   </div>
 </div>
 
-<div
-  class="modal fade"
-  id="addCapabilityInfo"
-  role="dialog"
-  data-backdrop="static"
-  data-keyboard="false"
->
+<div class="modal fade" id="addCapabilityInfo" role="dialog" data-backdrop="static" data-keyboard="false">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <button
-          type="button"
-          class="close"
-          data-dismiss="modal"
-          (click)="loadListData()"
-        >
+        <button type="button" class="close" data-dismiss="modal" (click)="loadListData()">
           &times;
         </button>
         <h4 class="modal-title">
-          Capability Details of Vendor: <span>"{{ local?.vendorName }}"</span>
+          Capability Details of Vendor: <span> {{ getVendorName() }}</span>
         </h4>
       </div>
-      <app-add-vendor-capabilities
-        *ngIf="vendorId && vendorCapabilityId == 0"
-        [isEnableVendor]="isEnableVendor"
-        [vendorId]="vendorId"
-        [vendorCapsId]="vendorCapabilityId"
-      ></app-add-vendor-capabilities>
-      <app-add-vendor-capabilities
-        *ngIf="vendorId && vendorCapabilityId != 0"
-        [isEnableVendor]="isEnableVendor"
-        [vendorId]="vendorId"
-        [vendorCapsId]="vendorCapabilityId"
-      ></app-add-vendor-capabilities>
+      <app-add-vendor-capabilities *ngIf="vendorId && vendorCapabilityId == 0" [isEnableVendor]="isEnableVendor"
+        [vendorId]="vendorId" [vendorCapsId]="vendorCapabilityId"></app-add-vendor-capabilities>
+      <app-add-vendor-capabilities *ngIf="vendorId && vendorCapabilityId != 0" [isEnableVendor]="isEnableVendor"
+        [vendorId]="vendorId" [vendorCapsId]="vendorCapabilityId"></app-add-vendor-capabilities>
       <div class="modal-footer" style="border-top: none; padding-top: 5px;">
-        <button
-          type="button"
-          class="btn btn-danger"
-          data-dismiss="modal"
-          (click)="loadListData()"
-        >
+        <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="loadListData()">
           Close
         </button>
       </div>

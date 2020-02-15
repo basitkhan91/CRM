@@ -420,6 +420,7 @@
                                     <ng-template pTemplate="colgroup" let-columns>
                                         <colgroup>
                                           <col *ngFor="let col of partColumns" [ngStyle]="{'width': col.width}" />
+                                          <col style="width:50px;" />
                                         </colgroup>
                                       </ng-template>  
                                     <ng-template pTemplate="header">
@@ -447,6 +448,7 @@
                                           <th>EXTENDED COST</th>
                                           <th>MARGIN ($)</th>
                                           <th>MARGIN (%)</th>
+                                          <th></th>
                                         </tr>
                                       </ng-template>
                                     
@@ -523,6 +525,18 @@
                                           <td>
                                               {{ part.marginPercentageExtended }}
                                           </td>
+                                          <td> 
+                                            <span>
+                                            <a *ngIf="part.methodType=='S'" class="btn btn-info boxed-float-btn nobg"
+                                               data-toggle="tooltip"
+                                               (click)="viewSelectedStockLine(part)"
+                                               
+                                               matTooltip="View">
+                                                <i class="fa fa-eye"></i>
+                                            </a>
+                                           
+                                        </span>
+                                      </td>
                                         </tr>
                                       </ng-template>
                                      

@@ -131,16 +131,21 @@ export class PolistComponent implements OnInit {
     }
 
     getList(data) {
+        console.log("purchase order data list", data)
         this.vendorService.getPOList(data).subscribe(res => {
 			console.log(res);			
              this.data = res[0];
             if (this.data.length > 0) {
                 this.totalRecords = res[0][0].totalRecords;
                 this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
-            }
+            }else {
+                this.data=[];
+                this.totalRecords=0;
+                this.totalPages=0;
+            } 
 
         })
-    }
+    } 
 
     getManagementStructureCodes(id) {
         this.commonService.getManagementStructureCodes(id).subscribe(res => {

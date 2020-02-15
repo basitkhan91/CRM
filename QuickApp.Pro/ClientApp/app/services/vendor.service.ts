@@ -197,6 +197,10 @@ export class VendorService {
         return Observable.forkJoin(
             this.actionEndpoint.getVendorShipViaDetails(rowData));
     }
+    getVendorShipViaInterDetails(id) {
+        return Observable.forkJoin(
+            this.actionEndpoint.getVendorShipViaInterDetails(id));
+    }
     getVendorBillViaDetails(rowData) {
         return Observable.forkJoin(
             this.actionEndpoint.getVendorBillViaDetails(rowData));
@@ -274,6 +278,9 @@ export class VendorService {
     }
     shipviaHistory(actionId: number) {
         return Observable.forkJoin(this.actionEndpoint.getShipviaHistory<AuditHistory[]>(actionId));
+    }
+    getShipviaHistoryInter(actionId: number) {
+        return Observable.forkJoin(this.actionEndpoint.getShipviaHistoryInter<AuditHistory[]>(actionId));
     }
     billviaHistory(actionId: number) {
         return Observable.forkJoin(this.actionEndpoint.getBillviaHistory<AuditHistory[]>(actionId));
@@ -359,6 +366,10 @@ export class VendorService {
 
         return this.actionEndpoint.getDeletevendorshippingViaEndpoint(actionId);
 
+    }
+
+    getDeletevendorshipViaInter(actionId: any) {
+        return this.actionEndpoint.getDeletevendorshipViaInterEndpoint(actionId);
     }
 
     deleteVendorShippingAddress(actionId: any) {
@@ -460,6 +471,9 @@ export class VendorService {
     newShippingViaAdd(action: any) {
 
         return this.actionEndpoint.saveShipViaDetails<any>(action);
+    }
+    saveInterShipViaDetails(action: any) {
+        return this.actionEndpoint.saveInterShipViaDetails<any>(action);
     }
     newBillingViaAdd(action: any) {
 
@@ -856,7 +870,31 @@ export class VendorService {
     PaymentCheckUpload(file, vendorId) {
         return this.actionEndpoint.VendorCheckPaymentFileUpload(file, vendorId);
     }
+    getInternationalShippingByVendorId(vendorId){
+        return this.actionEndpoint.getInternationalShippingByVendorId(vendorId)
+    }
+    postInternationalShipping(data){
+        return this.actionEndpoint.postInternationalShipping(data);
+    }
 
+    updateInternationalShipping(data){
+        return this.actionEndpoint.updateInternationalShipping(data);
+    }
+    getInternationalShippingById(vendorInternationalShippingId){
+        return this.actionEndpoint.getInternationalShippingById(vendorInternationalShippingId)
+    }
+    getVendorInternationalAuditHistory(vendorInternationalShippingId){
+        return this.actionEndpoint.getVendorInternationalAuditHistory(vendorInternationalShippingId);
+    }
+    deleteVendorInternationalShipping(vendorId, updatedBy){
+        return this.actionEndpoint.deleteVendorInternationalShipping(vendorId, updatedBy);
+    }
+    updateStatusForInternationalShipping(vendorInternationalShippingId , status, updatedBy){
+        return this.actionEndpoint.updateStatusForInternationalShipping(vendorInternationalShippingId , status, updatedBy);
+    }
+    updateStatusForInternationalShippingVia(id, status, updatedBy) {
+        return this.actionEndpoint.updateStatusForInternationalShippingVia(id, status, updatedBy)
+    }
 
 }
 

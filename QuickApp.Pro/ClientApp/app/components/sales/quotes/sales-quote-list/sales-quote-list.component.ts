@@ -25,6 +25,7 @@ import { CommonService } from "../../../../services/common.service";
 import { AuthService } from "../../../../services/auth.service";
 import { PartDetail } from "../../shared/models/part-detail";
 import { listSearchFilterObjectCreation } from "../../../../generic/autocomplete";
+import { StocklineViewComponent } from '../../../../shared/components/stockline/stockline-view/stockline-view.component';
 import {
   getValueFromObjectByKey,
   getObjectById,
@@ -43,6 +44,7 @@ export class SalesQuoteListComponent implements OnInit {
   sales: any[];
   selected: any;
   modal: NgbModalRef;
+  partModal: NgbModalRef;
   headers:any[];
   columns: any[];
   selectedColumns:any[];
@@ -184,6 +186,12 @@ export class SalesQuoteListComponent implements OnInit {
   dismissModel() {
     this.modal.close();
   }
+  dismissViewModel() {
+    this.modal.close();
+  }
+  dismissPartViewModel() {
+    this.partModal.close();
+  }
 
   openDelete(content, rowData) {
     this.selected = rowData.salesQuoteId;
@@ -224,6 +232,7 @@ export class SalesQuoteListComponent implements OnInit {
     let customerId = row.customerId;
     this.salesQuote = new SalesQuote();
     this.salesOrderQuote = new SalesOrderQuote();
+    this.selectedParts = [];
     this.getCustomerWarningsData(customerId);
     this.getSalesQuoteInstance(salesQuoteId, customerId);
     this.modal = this.modalService.open(content, { size: "lg" });
@@ -297,6 +306,7 @@ export class SalesQuoteListComponent implements OnInit {
 
   getSalesQuoteInstance(salesQuoteId: number, customerId: number) {
     this.alertService.startLoadingMessage();
+    
     this.salesQuoteService.getSalesQuote(salesQuoteId).subscribe(data => {
       this.salesQuoteView = data && data.length ? data[0] : null;
       this.salesOrderQuote = this.salesQuoteView.salesOrderQuote;
@@ -342,7 +352,7 @@ export class SalesQuoteListComponent implements OnInit {
         partNumberObj.unitCostExtended = selectedPart.unitCostExtended;
         this.selectedParts.push(partNumberObj);
       }
-      console.log(this.salesQuoteView);
+     // console.log(this.salesQuoteView);
 
       this.salesQuote.priorities = this.salesQuoteView.priorities;
       this.salesQuote.leadSources = this.salesQuoteView.leadSources;
@@ -442,6 +452,16 @@ export class SalesQuoteListComponent implements OnInit {
       this.alertService.stopLoadingMessage();
     });
   }
+  viewSelectedStockLine(rowData) {
+   
+    console.log(rowData);
+    this.partModal = this.modalService.open(StocklineViewComponent, { size: 'lg', backdrop: 'static', keyboard: false });
+    this.partModal.componentInstance.stockLineId = rowData.stockLineId;
+    this.partModal.result.then(() => {
+        console.log('When user closes');
+    }, () => { console.log('Backdrop click') })
+
+}
 
 
 }

@@ -10,17 +10,6 @@
                             <div class="" id="menu3">
                                 <div class="clear"></div>
                                 <div class="payment-info">
-                                    <!--  <div class="margin0">
-          <div class="tab-content mar-0 padd-0">
-              <ul class="nav nav-pills">
-                  <li><button class="btn my-btn" (click)="GeneralInformation()" [class.extraclass]="GeneralInformationStyle"><strong>General Information</strong></button></li>
-                  <li><button class="btn my-btn" (click)="Lockbox()" [class.extraclass]="LockboxStyle" *ngIf="sourceLegalEntity.isBankingInfo"><strong>Lockbox</strong></button></li>
-                  <li><button class="btn my-btn" (click)="DomesticWire()" [class.extraclass]="domesticWireStyle" *ngIf="sourceLegalEntity.isBankingInfo"><strong>Domestic Wire</strong></button></li>
-                  <li><button class="btn my-btn" (click)="InternationalWire()" [class.extraclass]="internationalStyle" *ngIf="sourceLegalEntity.isBankingInfo"><strong>International Wire</strong></button></li>
-                  <li><button class="btn my-btn" (click)="ACH()" [class.extraclass]="ACHStyle" *ngIf="sourceLegalEntity.isBankingInfo"><strong>ACH</strong></button></li>
-              </ul>
-          </div>
-      </div>-->
                                     <div class="clear"></div>
                                     <hr class="hr-light-grey">
                                     <div class="tab-content padding0" id="new-data-form">
@@ -83,10 +72,10 @@
                                                 </div>
                                                 <div class="col-sm-4">
 
-                                                    <div class="form-group col-sm-12">
+                                                    <!--<div class="form-group col-sm-12">
                                                         <label class="col-sm-4">Logo</label>
                                                         <div class="col-sm-7"> <input type="file" class="form-control w175 mbottom0" id="" name="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceLegalEntity.logo"> </div>
-                                                    </div>
+                                                    </div>-->
                                                     <div class="form-group col-sm-12">
                                                         <label class="col-sm-4">Phone</label>
                                                         <div class="col-sm-7"> <input type="text" class="form-control" id="" name="" [ngModelOptions]="{standalone: true}" [(ngModel)]="sourceLegalEntity.phoneNumber1"> </div>
@@ -156,8 +145,8 @@
                                             </div>
                                             <div class="clear"></div>
                                             <hr class="hr-light-grey">
-                                            <div class="form-group col-sm-12"><button type="submit" class="btn btn-success pull-right submit-btn" *ngIf="!sourceLegalEntity.isBankingInfo" (click)="saveGeneralInformation()">Save &amp; Next</button> </div>
-                                            <div class="form-group col-sm-12"><button type="submit" class="btn btn-success pull-right submit-btn" *ngIf="sourceLegalEntity.isBankingInfo" (click)="Lockbox()">Next</button> </div>
+                                            <!--<div class="form-group col-sm-12"><button type="submit" class="btn btn-success pull-right submit-btn" *ngIf="!sourceLegalEntity.isBankingInfo" (click)="saveGeneralInformation()">Save &amp; Next</button> </div>
+                                            <div class="form-group col-sm-12"><button type="submit" class="btn btn-success pull-right submit-btn" *ngIf="sourceLegalEntity.isBankingInfo" (click)="Lockbox()">Next</button> </div>-->
                                         </div>
 
                                         <div *ngIf="LockboxValue" class="tab-pane active">

@@ -23,15 +23,15 @@ export class GLAccountCategoryService {
         );
     }
 
-    add(item: GLAccountCategory) {
+    add(action: any) {
         return Observable.forkJoin(
-            this.endpointService.addItem<GLAccountCategory>(item)
+            this.endpointService.addItem<any>(action)
         );
     }
 
-    update(item: GLAccountCategory) {
+    update(action: any) {
         return Observable.forkJoin(
-            this.endpointService.updateItem<GLAccountCategory>(item)
+            this.endpointService.updateItem(action, action.glAccountCategoryId)
         );
     }
 

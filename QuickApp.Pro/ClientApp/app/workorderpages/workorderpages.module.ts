@@ -66,7 +66,7 @@ import { QuoteEndpointService } from '../services/work-order/work-order-quote.en
 import { WorkOrderROListComponent } from '../components/work-order/work-order-setup/work-order-ro-list/work-order-ro-list.component';
 import { WorkOrderROCreateComponent } from '../components/work-order/work-order-setup/work-order-ro-create/work-order-ro-create.component';
 import { WorkOrderFreightComponent } from '../components/work-order/work-order-setup/work-order-freight/work-order-freight.component';
-
+import { QuoteViewComponent } from '../shared/quote-view.component';
 
 // import { MaterialListCreateComponent } from '../shared/Material-List-Create.component';
 // import { SharedModule } from '../shared/shared.module';
@@ -127,8 +127,8 @@ import { WorkOrderFreightComponent } from '../components/work-order/work-order-s
     SubWorkOrderComponent,
     WorkOrderROListComponent,
     WorkOrderROCreateComponent,
-    WorkOrderFreightComponent
-
+    WorkOrderFreightComponent,
+    QuoteViewComponent
 
 
   ],

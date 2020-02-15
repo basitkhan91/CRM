@@ -45,9 +45,7 @@ namespace DAL.Repositories
                     t.CustomerId,
                     t.CustomerWarningId,
                     t.SourceModule,
-                    t.Allow,
-                    t.Warning,
-                    t.Restrict,
+                   
                     t.WarningMessage,
                     t.RestrictMessage,
                     t.MasterCompanyId,
@@ -58,7 +56,10 @@ namespace DAL.Repositories
                     t.IsActive,
                     t.IsRestrict,
                     t.IsAllow,
-                    t.IsWarning
+                    t.IsWarning,
+                    t.Allow,
+                    t.Restrict,
+                    t.Warning
                 }).ToList();
             return data;
         }

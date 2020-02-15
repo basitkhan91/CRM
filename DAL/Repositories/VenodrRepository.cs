@@ -580,8 +580,8 @@ namespace DAL.Repositories
                               t.AeroExchangeDescription,
                               t.CreditLimit,
                               t.CurrencyId,
-                              t.DiscountLevel,
-							  d.DiscontValue,
+                              t.DiscountLevel,                            
+                              DiscontValue =  d == null?0: d.DiscontValue,
 							  t.Is1099Required,
                               t.CreditTermsId,
                               t.MasterCompanyId,
@@ -1826,6 +1826,21 @@ namespace DAL.Repositories
             _appContext.SaveChanges();
         }
 
+        public void VendorShippingStatus(long id, bool status, string updatedBy)
+        {
+            VendorShipping vendorShipping = new VendorShipping();
+            vendorShipping.VendorShippingId = id;
+            vendorShipping.UpdatedDate = DateTime.Now;
+            vendorShipping.UpdatedBy = updatedBy;
+            vendorShipping.IsActive = status;
+
+            _appContext.VendorShipping.Attach(vendorShipping);
+            _appContext.Entry(vendorShipping).Property(x => x.IsActive).IsModified = true;
+            _appContext.Entry(vendorShipping).Property(x => x.UpdatedDate).IsModified = true;
+            _appContext.Entry(vendorShipping).Property(x => x.UpdatedBy).IsModified = true;
+            _appContext.SaveChanges();
+        }
+
         public void VendorProcess1099Delete(long id, string updatedBy)
         {
             Master1099 vMaster1099 = new Master1099();
@@ -2834,6 +2849,144 @@ namespace DAL.Repositories
             return obj;
         }
 
+        public IEnumerable<object> UploadVendorInternationalCustomData(IFormFile file, long vendorId)
+        {
+            string countryName = string.Empty;
+            List<object> obj = new List<object>();
+
+            int count = 0;
+            try
+            {
+
+               VendorInternationalShipping ship;
+
+                string fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+                string filePath = Path.Combine(AppSettings.CustomUploadFilePath, Convert.ToString(ModuleEnum.VendorInternationalShippingAddress), DateTime.Now.ToString("yyyy-MM-dd hh-mm-ss"));
+
+                if (!Directory.Exists(filePath))
+                {
+                    Directory.CreateDirectory(filePath);
+                }
+
+                string fullPath = Path.Combine(filePath, fileName);
+
+
+                using (var stream = File.Open(fullPath, FileMode.Create))
+                {
+                    file.CopyTo(stream);
+                    {
+                        using (var reader = ExcelReaderFactory.CreateReader(stream))
+                        {
+                            do
+                            {
+                                while (reader.Read())
+                                {
+                                    if (count > 0 && reader.GetValue(4) != null)
+                                    {
+
+                                        ship = new VendorInternationalShipping();
+                                        if (reader.GetValue(0) != null)
+                                            ship.ExportLicense = Convert.ToString(reader.GetValue(0));
+                                        if (reader.GetValue(1) != null && reader.GetValue(1).GetType().Name == "DateTime")
+                                            ship.StartDate = Convert.ToDateTime(reader.GetValue(1));
+                                        if (reader.GetValue(2) != null)
+                                            ship.Description = Convert.ToString(reader.GetValue(2));
+                                        if (reader.GetValue(3) != null && reader.GetValue(3).GetType().Name == "DateTime")
+                                            ship.ExpirationDate = Convert.ToDateTime(reader.GetValue(3));
+                                        if (reader.GetValue(5) != null && reader.GetValue(5).GetType().Name == "Double")
+                                            ship.Amount = Convert.ToDecimal(reader.GetValue(5));
+
+                                        if (reader.GetValue(4) != null)
+                                            countryName = Convert.ToString(reader.GetValue(4));
+                                        var country = _appContext.Countries.Where(p => p.countries_name == countryName).FirstOrDefault();
+                                        if (country != null)
+                                        {
+                                            ship.ShipToCountryId = country.countries_id;
+
+                                            var custShipping = _appContext.VendorInternationalShipping.AsNoTracking().Where(p => p.IsPrimary == true && p.VendorId == vendorId).FirstOrDefault();
+
+
+                                            if (custShipping != null)
+                                            {
+                                                if (reader.GetValue(6) != null)
+                                                {
+                                                    if (reader.GetValue(6).ToString().ToLower() == "yes")
+                                                    {
+                                                        ship.IsPrimary = true;
+
+                                                        custShipping.IsPrimary = false;
+
+                                                        VendorInternationalShipping ba = new VendorInternationalShipping();
+
+                                                        ba.VendorInternationalShippingId = custShipping.VendorInternationalShippingId;
+                                                        ba.UpdatedDate = DateTime.Now;
+                                                        ba.UpdatedBy = "System";
+                                                        ba.IsPrimary = false;
+
+
+                                                        _appContext.Entry(ba).State = EntityState.Detached;
+                                                        _appContext.VendorInternationalShipping.Attach(ba);
+                                                        _appContext.Entry(ba).Property(x => x.IsPrimary).IsModified = true;
+                                                        _appContext.Entry(ba).Property(x => x.UpdatedDate).IsModified = true;
+                                                        _appContext.Entry(ba).Property(x => x.UpdatedBy).IsModified = true;                                                       
+                                                        _appContext.SaveChanges();
+                                                        _appContext.Entry(ba).State = EntityState.Detached;
+
+                                                    }
+                                                    else
+                                                    {
+                                                        ship.IsPrimary = false;
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    ship.IsPrimary = false;
+                                                }
+
+                                            }
+                                            else
+                                            {
+                                                ship.IsPrimary = true;
+                                            }
+
+                                            ship.MasterCompanyId = 1;
+                                            ship.IsActive = true;
+                                            ship.IsDeleted = false;                                            
+                                            ship.VendorId = vendorId;
+                                            ship.CreatedBy = ship.UpdatedBy = "System";
+                                            ship.UpdatedDate = ship.CreatedDate = DateTime.Now;
+                                            _appContext.Entry(ship).State = EntityState.Detached;
+                                            _appContext.VendorInternationalShipping.Add(ship);
+                                            _appContext.SaveChanges();
+                                            _appContext.Entry(ship).State = EntityState.Detached;
+
+                                        }
+
+
+
+                                    }
+
+
+                                    count++;
+                                }
+                            } while (reader.NextResult());
+
+                        }
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            return obj;
+
+        }
+
+   
+
         public IEnumerable<object> getVendorShipVia(long id)
         {
             var data = (from c in _appContext.VendorShippingAudit
@@ -3012,6 +3165,7 @@ namespace DAL.Repositories
                               vsi.IsActive,
                               vsi.IsDeleted,
                               vsi.UpdatedDate,
+                              vsi.UpdatedBy,
                               vsi.CreatedBy,
                               vsi.CreatedDate,
                           }).OrderByDescending(p => p.CreatedDate).ToList();
@@ -3042,6 +3196,7 @@ namespace DAL.Repositories
                               vsi.IsDeleted,
                               vsi.UpdatedDate,
                               vsi.CreatedBy,
+                              vsi.UpdatedBy,
                               vsi.CreatedDate,
                           }).OrderByDescending(p => p.AuditVendorInternationalShippingId).ToList();
 
@@ -3228,11 +3383,70 @@ namespace DAL.Repositories
                               vsi.UpdatedDate,
                               vsi.IsActive,
                               vsi.IsDeleted,
-                          }).OrderByDescending(p => p.CreatedDate).ToList();
+                          }).OrderByDescending(p => p.AuditVendorInternationalShipViaDetailsId).ToList();
 
             return result;
         }
 
+
+        #endregion
+
+        #region Vendor Contact ATA Mapping
+        public IEnumerable<object> GetATAContactMapped(long contactId)
+        {            
+                var data = (from ca in _appContext.VendorContactATAMapping
+                            join ataca in _appContext.ATAChapter on ca.ATASubChapterId equals ataca.ATAChapterId into atacag
+                            from ataca in atacag.DefaultIfEmpty()
+                            join atasub in _appContext.ATASubChapter on ca.ATASubChapterId equals atasub.ATASubChapterId into atasubg
+                            from atasub in atasubg.DefaultIfEmpty()
+                            where ca.VendorContactId == contactId && ca.IsDeleted == false
+                            select new
+                            {
+                                ca.VendorContactATAMappingId,
+                                ca.VendorId,
+                                ca.ATAChapterId,
+                                ataca.ATAChapterCode,
+                                ataca.ATAChapterName,
+                                ca.ATASubChapterId,
+                                atasub.ATASubChapterCode,
+                                ATASubChapterDescription = atasub.Description,
+                                ca.CreatedBy,
+                                ca.UpdatedBy,
+                                ca.IsActive,
+                                ca.IsDeleted
+
+                            }).ToList();
+                return data;
+            
+        }
+
+        public IEnumerable<object> GetATAContactMappedAudit(long VendorContactATAMappingId)
+        {
+            var data = (from ca in _appContext.VendorContactATAMappingAudit
+                        join ataca in _appContext.ATAChapter on ca.ATASubChapterId equals ataca.ATAChapterId into atacag
+                        from ataca in atacag.DefaultIfEmpty()
+                        join atasub in _appContext.ATASubChapter on ca.ATASubChapterId equals atasub.ATASubChapterId into atasubg
+                        from atasub in atasubg.DefaultIfEmpty()
+                        where ca.VendorContactATAMappingId == VendorContactATAMappingId && ca.IsDeleted == false
+                        select new
+                        {
+                            ca.AuditVendorContactATAMappingId,
+                            ca.VendorContactATAMappingId,
+                            ca.VendorId,
+                            ca.ATAChapterId,
+                            ataca.ATAChapterCode,
+                            ataca.ATAChapterName,
+                            ca.ATASubChapterId,
+                            atasub.ATASubChapterCode,
+                            ATASubChapterDescription = atasub.Description,
+                            ca.CreatedBy,
+                            ca.UpdatedBy,
+                            ca.IsActive,
+                            ca.IsDeleted
+
+                        }).ToList();
+            return data;
+        }
 
         #endregion
 

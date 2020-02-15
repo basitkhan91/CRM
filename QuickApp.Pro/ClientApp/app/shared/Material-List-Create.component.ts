@@ -11,6 +11,7 @@ import { ItemClassificationService } from "../services/item-classfication.servic
 import { UnitOfMeasureService } from "../services/unitofmeasure.service";
 import { ItemMasterService } from "../services/itemMaster.service";
 import { AlertService, MessageSeverity } from "../services/alert.service";
+import { WorkOrderQuoteService } from "../services/work-order/work-order-quote.service";
 
 @Component({
     selector: 'grd-material',
@@ -34,6 +35,7 @@ export class MaterialListCreateComponent implements OnInit, OnChanges {
     @Input() workFlow: IWorkFlow;
     @Input() markupList;
     @Input() UpdateMode: boolean;
+    @Input() isWorkFlow: boolean = false;
     @Output() workFlowChange = new EventEmitter();
     @Output() saveMaterialListForWO = new EventEmitter();
     @Output() updateMaterialListForWO = new EventEmitter();
@@ -57,7 +59,7 @@ export class MaterialListCreateComponent implements OnInit, OnChanges {
     defaultUOMId: number;
     defaultConditionId: any;
 
-    constructor(private actionService: ActionService, private itemser: ItemMasterService, private vendorService: VendorService, private conditionService: ConditionService, public itemClassService: ItemClassificationService, public unitofmeasureService: UnitOfMeasureService, private alertService: AlertService) {
+    constructor(private actionService: ActionService, private itemser: ItemMasterService, private vendorService: VendorService, private conditionService: ConditionService, public itemClassService: ItemClassificationService, public unitofmeasureService: UnitOfMeasureService, private alertService: AlertService, private workOrderQuoteService: WorkOrderQuoteService) {
 
     }
 
@@ -149,6 +151,8 @@ export class MaterialListCreateComponent implements OnInit, OnChanges {
         }
         else if (this.isQuote) {
             this.workFlow.materialList = [];
+        }
+        if(!this.isWorkFlow){
             this.addRow();
         }
     }
@@ -216,7 +220,7 @@ export class MaterialListCreateComponent implements OnInit, OnChanges {
                     material.unitOfMeasureId = this.allPartDetails.find(x => x.itemMasterId == material.itemMasterId).purchaseUnitOfMeasureId;
                 }
             };
-
+            this.getPNDetails(material);
         }
     }
 
@@ -283,7 +287,15 @@ export class MaterialListCreateComponent implements OnInit, OnChanges {
         var newRow = Object.assign({}, this.row);
 
         newRow.workflowMaterialListId = "0";
-        newRow.taskId = this.workFlow.taskId;
+        if(this.taskList){
+            this.taskList.forEach(
+                task=>{
+                    if(task.description == "Assemble"){
+                        newRow.taskId = task.taskId;
+                    }
+                }
+            )
+        }
         newRow.conditionCodeId = this.defaultConditionId;
         newRow.extendedCost = "";
         newRow.extraCost = "";
@@ -461,6 +473,27 @@ export class MaterialListCreateComponent implements OnInit, OnChanges {
             }
         )
         return total;
+    }
+
+    getPNDetails(part){
+        if(part.partNumber && part.conditionCodeId){
+            this.allPartDetails.forEach(
+                pn=>{
+                    if(pn.partNumber == part.partNumber){
+                        this.workOrderQuoteService.getPartDetails(pn.itemMasterId, part.conditionCodeId)
+                        .subscribe(
+                            partDetail =>{
+                                if(partDetail){
+                                    part.unitCost = partDetail["pP_UnitPurchasePrice"];
+                                    part.billingRate = partDetail["sP_FSP_FlatPriceAmount"];
+                                    part.markupPercentageId = partDetail["sP_CalSPByPP_MarkUpPercOnListPrice"];
+                                }
+                            }
+                        )
+                    }
+                }
+            )
+        }
     }
 
 

@@ -8,5 +8,7 @@ label {
 
 div.row {
   padding: 10px;
-  background-color: #e5e5e5;
+}
+.form-control:disabled {
+  background-color: #e9ecef !important;
 }

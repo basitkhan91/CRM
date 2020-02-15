@@ -73,7 +73,7 @@
                                             <div class="form-group">
                                                 <label class="popup-plusicon-cstm-caps">Capability Types </label>
                                                 <select [(ngModel)]="capabilityForm.CapabilityTypeId" (change)="onCapabilityTypeSelection(capabilityForm.CapabilityTypeId)" [ngModelOptions]="{standalone: true}">
-                                                    <option>--Select--</option>
+                                                    <option>--NON Selected--</option>
                                                     <option *ngFor="let cap of capabilityTypeData" [ngValue]="cap.value">{{cap.label}}</option>
                                                 </select>
                                             </div>
@@ -104,7 +104,7 @@
                                                         [ngModelOptions]="{standalone: true}"
                                                         id="aircraftModelId"
                                                         style="width: 150px !important;">
-                                                    <option>--Select--</option>
+                                                    <option>--NON Selected--</option>
                                                     <option *ngFor="let m of manufacturerData" [ngValue]="m.value">{{m.label}}</option>
                                                 </select>
                                             </div>
@@ -297,12 +297,12 @@
                 </ng-template>
                 <ng-template pTemplate="header" let-columns style="padding-top: 1% !important">
                     <tr>
-                        <th style="width:auto" *ngFor="let col of columns" pResizableColumn pReorderableColumn
+                        <th style="width:auto" *ngFor="let col of selectedColumns" pResizableColumn pReorderableColumn
                             [pSortableColumn]="col.field">
                             {{col.header}}
                             <p-sortIcon [field]="col.field"></p-sortIcon>
                         </th>
-                        <th style="width:150px;position: sticky;" *ngIf="selectedColumns.length> 0">Actions</th>
+                        <th style="width:150px;position: sticky;">Actions</th>
                     </tr>
                     <tr>
                         <th style="width:auto" *ngFor="let col of columns" [ngSwitch]="col.field">

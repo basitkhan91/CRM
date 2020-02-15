@@ -131,9 +131,11 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 	isEditPaymentInfo: boolean = false;
 	pageSize: number = 10;
 	@Input() vendorId: number = 0;
-    @Input() isViewMode: boolean = false;
-	isvendorEditMode:any;
+	@Input() isViewMode: boolean = false;
+	isvendorEditMode: any;
 	formData = new FormData();
+	disableSave: boolean = true;
+	loaderForPaymentCheck: boolean;
 	constructor(private http: HttpClient, private changeDetectorRef: ChangeDetectorRef, private router: ActivatedRoute, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public vendorService: VendorService, private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private configurations: ConfigurationService) {
 
 		if (this.vendorService.listCollection !== undefined) {
@@ -157,7 +159,8 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 			{ field: 'city', header: 'City' },
 			{ field: 'stateOrProvince', header: 'State/Prov' },
 			{ field: 'postalCode', header: 'Postal Code' },
-			{ field: 'countryName', header: 'Country' }
+			{ field: 'countryName', header: 'Country' },
+			{ field: 'isPrimayPayment', header: 'IsPrimary' }
 		];
 		this.selectedColumns = this.cols;
 
@@ -345,6 +348,7 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 	private loadData() {
 		this.alertService.startLoadingMessage();
 		this.loadingIndicator = true;
+		this.loaderForPaymentCheck = true;
 		const vendorId = this.vendorId != 0 ? this.vendorId : this.local.vendorId;
 		this.vendorService.getCheckPaymentobj(vendorId).subscribe(
 			results => this.onDataLoadSuccessful(results[0]),
@@ -402,6 +406,7 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 		this.loadingIndicator = false;
 		this.dataSource.data = allWorkFlows;
 		this.allActions = allWorkFlows;
+		this.loaderForPaymentCheck = false;
 	}
 	private onBencustomerLoad(allWorkFlows: any) {
 		this.alertService.stopLoadingMessage();
@@ -530,6 +535,7 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 	private onDataLoadFailed(error: any) {
 		this.alertService.stopLoadingMessage();
 		this.loadingIndicator = false;
+		this.loaderForPaymentCheck = false;
 	}
 
 	open(content) {
@@ -546,13 +552,20 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 
 
 	openDelete(content, row) {
-		this.isEditMode = false;
-		this.isDeleteMode = true;
-		this.sourceVendor = row;
-		this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
-		this.modal.result.then(() => {
-			console.log('When user closes');
-		}, () => { console.log('Backdrop click') })
+
+		if (!row.isPrimary) {
+
+
+			this.isEditMode = false;
+			this.isDeleteMode = true;
+			this.sourceVendor = row;
+			this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
+			this.modal.result.then(() => {
+				console.log('When user closes');
+			}, () => { console.log('Backdrop click') })
+		} else {
+			$('#deletePayment').modal('show');
+		}
 	}
 
 	openEdit(row) {
@@ -1107,6 +1120,9 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 	getPageCount(totalNoofRecords, pageSize) {
 		return Math.ceil(totalNoofRecords / pageSize)
 	}
+	pageIndexChange(event) {
+		this.pageSize = event.rows;
+	}
 
 	getVendorName() {
 
@@ -1119,41 +1135,45 @@ export class VendorPaymentInformationComponent implements OnInit, AfterViewInit 
 	}
 
 
-    getColorCodeForHistory(i, field, value) {
-        const data = this.auditHisory;
-        const dataLength = data.length;
-        if (i >= 0 && i <= dataLength) {
-            if ((i + 1) === dataLength) {
-                return true;
-            } else {
-                return data[i + 1][field] === value
-            }
-        }
+	getColorCodeForHistory(i, field, value) {
+		const data = this.auditHisory;
+		const dataLength = data.length;
+		if (i >= 0 && i <= dataLength) {
+			if ((i + 1) === dataLength) {
+				return true;
+			} else {
+				return data[i + 1][field] === value
+			}
+		}
 	}
-	
+
 
 	sampleExcelDownload() {
-        const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=VendorPaymentInfo&fileName=VendorPaymentInfo.xlsx`;
-        window.location.assign(url);
-    }
+		const url = `${this.configurations.baseUrl}/api/FileUpload/downloadsamplefile?moduleName=VendorPaymentInfo&fileName=VendorPaymentInfo.xlsx`;
+		window.location.assign(url);
+	}
 
-    customExcelUpload(event) {
-        const file = event.target.files;
+	customExcelUpload(event) {
+		const file = event.target.files;
 
-        // if (file.length > 0) {
-        //     this.formData.append('file', file[0])
-        //     this.vendorService.PaymentCheckUpload(this.formData, this.local.vendorId).subscribe(res => {
-        //         event.target.value = '';
+		if (file.length > 0) {
+			this.formData.append('file', file[0])
+			this.vendorService.PaymentCheckUpload(this.formData, this.local.vendorId).subscribe(res => {
+				event.target.value = '';
 
-        //         this.formData = new FormData();
-        //         this.loadData();
+				this.formData = new FormData();
+				this.loadData();
 
-        //         this.alertService.showMessage(
-        //             'Success',
-        //             `Successfully Uploaded  `,
-        //             MessageSeverity.success
-        //         );
-        //     })
-        // }
-    }
+				this.alertService.showMessage(
+					'Success',
+					`Successfully Uploaded  `,
+					MessageSeverity.success
+				);
+			})
+		}
+	}
+	enableSave() {
+		this.disableSave = false;
+
+	}
 }

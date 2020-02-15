@@ -22,6 +22,7 @@ import { Row } from 'primeng/components/common/shared';
 import { CustomerService } from '../../../services/customer.service';
 import * as $ from 'jquery';
 import { VendorStepsPrimeNgComponent } from '../vendor-steps-prime-ng/vendor-steps-prime-ng.component';
+import { editValueAssignByCondition } from '../../../generic/autocomplete';
 @Component({
     selector: 'app-vendor-capes',
     templateUrl: './vendor-capes.component.html',
@@ -37,7 +38,7 @@ export class VendorCapesComponent implements OnInit {
     vendorId: number;
     loadList: boolean = false;
     @Input() vendorCapabilityId: number = 0;
-    isvendorEditMode:any;
+    isvendorEditMode: any;
     constructor(public vendorService: VendorService, private router: ActivatedRoute, private route: Router, private authService: AuthService, private alertService: AlertService) {
         if (this.local) {
             this.vendorService.capesCollection = this.local;
@@ -69,8 +70,8 @@ export class VendorCapesComponent implements OnInit {
 
     ngOnInit() {
         this.vendorService.currentEditModeStatus.subscribe(message => {
-            this.isvendorEditMode = message; 
-        }); 
+            this.isvendorEditMode = message;
+        });
 
         //this.sourceVendor.isdefaultContact = true;
         this.matSpinner = true;
@@ -116,14 +117,24 @@ export class VendorCapesComponent implements OnInit {
         this.activeIndex = 3;
         this.vendorService.changeofTab(this.activeIndex);
         this.alertService.showMessage(
-			'Success',
-			`${this.isvendorEditMode ? 'Updated' : 'Saved'}  Capabilities Sucessfully `,
-			MessageSeverity.success
-		);
+            'Success',
+            `${this.isvendorEditMode ? 'Updated' : 'Saved'}  Capabilities Sucessfully `,
+            MessageSeverity.success
+        );
         // this.vendorService.indexObj.next(this.activeIndex);
         // this.vendorService.changeStep('Contacts');
         // this.route.navigateByUrl('/vendorsmodule/vendorpages/app-vendor-contacts');
     }
+    getVendorName() {
+
+
+        if (this.local !== undefined) {
+            return editValueAssignByCondition('vendorName', this.local.vendorName) === undefined ? '' : editValueAssignByCondition('vendorName', this.local.vendorName);
+        } else {
+            return '';
+        }
+    }
+
 }
 
 

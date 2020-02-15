@@ -45,7 +45,7 @@ import { InterCompanySetupComponent } from "../components/general-ledger/interco
 import { AutoCompleteModule } from "primeng/autocomplete";
 import { TooltipModule } from "../../../node_modules/primeng/tooltip";
 import { BreadcrumbModule } from 'primeng/breadcrumb';
-
+import { RadioButtonModule } from 'primeng/radiobutton';
 import { AccountListingComponent } from "../components/general-ledger/account-listing/account-listing.component";
 import { AccountListingCreateComponent } from "../components/general-ledger/account-listing-create/account-listing-create.component";
 import {DropdownModule} from 'primeng/dropdown';
@@ -56,11 +56,13 @@ import { OpenCloseLedgerComponent } from '../components/general-ledger/open-clos
 
 import { EntityAddComponent } from '../components/general-ledger/entity/legal-entity-add/legal-entity-add.component';
 import { LegalEntityStepsComponent } from '../components/general-ledger/entity/legal-entity-steps/legal-entity-steps.component';
+import { LegalEntityStepsPrimeNgComponent } from '../components/general-ledger/entity/legal-entity-steps-prime-ng/legal-entity-steps-prime-ng.component';
 import { EntityContactComponent } from "../components/general-ledger/entity/legal-entity-contact/legal-entity-contact.component";
 import { EntityBankingComponent } from "../components/general-ledger/entity/legal-entity-banking/legal-entity-banking.component";
 import { EntityBillingComponent } from "../components/general-ledger/entity/legal-entity-billing/legal-entity-billing.component";
 import { EntityShippingComponent } from "../components/general-ledger/entity/legal-entity-shipping/legal-entity-shipping.component";
 import { EntityDocumentsComponent } from "../components/general-ledger/entity/legal-entity-documents/legal-entity-documents.component";
+import { LegalEntityGeneralInformationComponent } from "../components/general-ledger/entity/legal-entity-general-information/legal-entity-general-information.component";
 
 @NgModule({
     imports: [
@@ -81,7 +83,8 @@ import { EntityDocumentsComponent } from "../components/general-ledger/entity/le
         AutoCompleteModule,
         TooltipModule,
         DropdownModule,BreadcrumbModule,
-        FileUploadModule
+        FileUploadModule,
+        RadioButtonModule
     ],
     declarations: [
         GeneralledgerPageComponent,
@@ -109,7 +112,9 @@ import { EntityDocumentsComponent } from "../components/general-ledger/entity/le
         EntityBankingComponent,
         EntityBillingComponent,
         EntityShippingComponent,
-        EntityDocumentsComponent
+        EntityDocumentsComponent,
+        LegalEntityGeneralInformationComponent,
+        LegalEntityStepsPrimeNgComponent
     ],
     providers: [
         NodeSetupService,

@@ -1,15 +1,25 @@
 <div style="padding: 2px 6px;">
-  <div class="col-md-12 shadow-box-cstm"  *ngIf="isViewMode == false">        
+  <div class="col-md-12 shadow-box-cstm" *ngIf="isViewMode == false">
     <div class="col-md-4">
-        <p class="fs12">
-        <label class="control-label labels-font-header" style="width: auto;">Customer Name: </label>
-    <span class="span-header-red" style="text-transform: capitalize"> {{customerName }} </span> </p>
+      <p class="fs12">
+        <label class="control-label labels-font-header" style="width: auto;"
+          >Customer Name:
+        </label>
+        <span class="span-header-red" style="text-transform: capitalize">
+          {{ customerName }}
+        </span>
+      </p>
     </div>
     <div class="col-md-4">
-        <p class="fs12">
-        <label class="control-label labels-font-header" style="width: auto;">Customer Code: </label>
-        <span class="span-header-red" style="text-transform: capitalize"> {{customerCode }} </span> </p>
-    </div>                            
+      <p class="fs12">
+        <label class="control-label labels-font-header" style="width: auto;"
+          >Customer Code:
+        </label>
+        <span class="span-header-red" style="text-transform: capitalize">
+          {{ customerCode }}
+        </span>
+      </p>
+    </div>
   </div>
   <!-- <div class="col-sm-12 font-padding">
     <div class="col-sm-2">Customer Name: <span style="color:red">{{customerName}}</span></div>
@@ -19,10 +29,10 @@
 
 <br />
 <div class="card" style="width: calc(100% - 12px); margin: 6px; padding: 10px;">
-    <div class="col-md-12">
+  <div class="col-md-12">
     <h4 class="po-head-sm">
-         Inventory
-        <!-- <a
+      Inventory
+      <!-- <a
           class="plusicon-cstm"
           href="#"
           matTooltip="Add Inventory" matTooltipPosition="above"
@@ -30,24 +40,26 @@
           data-target="#addInventory"
           ><i class="fa fa-plus-circle fa-lg"></i
         ></a> -->
-        <a  *ngIf="isViewMode == false"
-          class="plusicon-cstm"
-          href="javascript:void(0)"
-          matTooltip="Add Inventory" matTooltipPosition="above"
-          (click)="openAddInventoryPopup(addInventory)"
-          ><i class="fa fa-plus-circle fa-lg"></i
-        ></a>
-        
-      </h4>
-      <hr />
-      </div>
-      
-  <div  class="advance-search-card" *ngIf="showAdvancedSearchCard == true &&  isViewMode == false">    
+      <a
+        *ngIf="isViewMode == false"
+        class="plusicon-cstm"
+        href="javascript:void(0)"
+        matTooltip="Add Inventory"
+        matTooltipPosition="above"
+        (click)="openAddInventoryPopup(addInventory)"
+        ><i class="fa fa-plus-circle fa-lg"></i
+      ></a>
+    </h4>
+    <hr />
+  </div>
 
-
+  <div
+    class="advance-search-card"
+    *ngIf="showAdvancedSearchCard == true && isViewMode == false"
+  >
     <div class="form-row" style="padding: 0 5px;">
       <div class="col-md-1">
-        <h4 class="f-s-14" style="margin-top: 26px;">Search :</h4> 
+        <h4 class="f-s-14" style="margin-top: 26px;">Search :</h4>
       </div>
       <div class="col-md-2">
         <div class="form-group">
@@ -94,7 +106,12 @@
       <div class="col-md-2">
         <div class="form-group">
           <label class="fs12">Memo </label>
-          <input type="text" style="height: 27px !important" pInputText [(ngModel)]="selectedmemo" />
+          <input
+            type="text"
+            style="height: 27px !important"
+            pInputText
+            [(ngModel)]="selectedmemo"
+          />
         </div>
       </div>
       <div class="col-md-1">
@@ -102,7 +119,7 @@
           <button
             class="btn btn-primary mtop20"
             (click)="searchAircraftInformation()"
-                   matTooltip="Search"
+            matTooltip="Search"
           >
             <i class="pi pi-search pi-search"></i>
           </button>
@@ -115,55 +132,125 @@
     #dt
     class="rpo-table-cstm"
     [value]="aircraftListDataValues"
-    [rows]="6"
+    [rows]="pageSize"
     [columns]="selectedColumns"
     [scrollable]="true"
-    [pageLinks]="3" 
-    [rowsPerPageOptions]="[10,20,50,100]"
-    [metaKeySelection]="true"
-    [paginator]="true" 
-    [resizableColumns]="true" 
+    [pageLinks]="3"
+    [rowsPerPageOptions]="[10, 20, 50, 100]"
+    [paginator]="true"
+    [resizableColumns]="true"
     [reorderableColumns]="true"
     selectionMode="multiple"
-
+    [loading]="loader"
+    (onPage)="pageIndexChange($event)"
   >
-  <ng-template pTemplate="caption"  *ngIf="isViewMode == false">
-    <div style="text-align: right; min-height: 30px; margin-left: -6px;">
-        <p-multiSelect [options]="colsaircraftLD" [(ngModel)]="selectedColumns" [ngModelOptions]="{standalone: true}" optionLabel="header"
-                       selectedItemsLabel="{0} columns selected" [style]="{minWidth: '200px'}" defaultLabel="Choose Columns" style="float:left"></p-multiSelect>
-        <div class="inner-addon right-addon w200 inline-block g-filter-search-cstm">
-            <i class="fa fa-search"></i>
-            <input type="text" pInputText size="50" class="form-control ui-autocomplete-input" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Filter" style="height: 28px !important;">
+    <!-- (onPage)="paginateAircraftTable($event, dt._totalRecords)" -->
+    <ng-template pTemplate="caption" *ngIf="isViewMode == false">
+      <div style="text-align: right; min-height: 30px; margin-left: -6px;">
+        <p-multiSelect
+          [options]="colsaircraftLD"
+          [(ngModel)]="selectedColumns"
+          [ngModelOptions]="{ standalone: true }"
+          optionLabel="header"
+          selectedItemsLabel="{0} columns selected"
+          [style]="{ minWidth: '200px' }"
+          defaultLabel="Choose Columns"
+          style="float:left"
+        ></p-multiSelect>
+        <div
+          class="inner-addon right-addon w200 inline-block g-filter-search-cstm"
+        >
+          <i class="fa fa-search"></i>
+          <input
+            type="text"
+            pInputText
+            size="50"
+            class="form-control ui-autocomplete-input"
+            (input)="dt.filterGlobal($event.target.value, 'contains')"
+            placeholder="Filter"
+            style="height: 28px !important;"
+          />
         </div>
-        <button type="button" class="btn btn-primary" pButton icon="fa-download" iconPos="left" label="Export All Data" matTooltip="Download  Data" matTooltipPosition="above" (click)="dt.exportCSV()" style="padding: 5px 10px !important;"></button>
-        <button type="button" class="btn btn-primary" pButton icon="fa-download" iconPos="left" label="Export Selected Data" matTooltip="Download Selected Data" matTooltipPosition="above" (click)="dt.exportCSV({selectionOnly:true})" style="padding: 5px 10px !important;"></button>
-        <button class="btn btn-primary btn-sm " style="padding: 5px 10px !important;" *ngIf="showAdvancedSearchCard == false"  type="button"  (click)="enableDisableAdvancedSearch(true)">
-            Advanced Search <i class="fa fa-caret-down"></i>
+        <button
+          type="button"
+          class="btn btn-primary"
+          pButton
+          icon="fa-download"
+          iconPos="left"
+          label="Export All Data"
+          matTooltip="Download  Data"
+          matTooltipPosition="above"
+          (click)="dt.exportCSV()"
+          style="padding: 5px 10px !important;"
+        ></button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          pButton
+          icon="fa-download"
+          iconPos="left"
+          label="Export Selected Data"
+          matTooltip="Download Selected Data"
+          matTooltipPosition="above"
+          (click)="dt.exportCSV({ selectionOnly: true })"
+          style="padding: 5px 10px !important;"
+        ></button>
+        <button
+          class="btn btn-primary btn-sm "
+          style="padding: 5px 10px !important;"
+          *ngIf="showAdvancedSearchCard == false"
+          type="button"
+          (click)="enableDisableAdvancedSearch(true)"
+        >
+          Advanced Search <i class="fa fa-caret-down"></i>
         </button>
-        <button class="btn btn-primary btn-sm" style="padding: 5px 10px !important;" *ngIf="showAdvancedSearchCard == true"  type="button"  (click)="enableDisableAdvancedSearch(false)">
-            Advanced Search <i class="fa fa-caret-up"></i>
+        <button
+          class="btn btn-primary btn-sm"
+          style="padding: 5px 10px !important;"
+          *ngIf="showAdvancedSearchCard == true"
+          type="button"
+          (click)="enableDisableAdvancedSearch(false)"
+        >
+          Advanced Search <i class="fa fa-caret-up"></i>
         </button>
-    </div>
-  </ng-template>
+      </div>
+    </ng-template>
 
-  <ng-template pTemplate="colgroup" let-columns>
-    <colgroup>
-        <col *ngFor="let col of columns" style="width:130px">
-    </colgroup>
-</ng-template>
+    <ng-template pTemplate="colgroup" let-columns>
+      <colgroup>
+        <col *ngFor="let col of columns" style="width:130px" />
+      </colgroup>
+    </ng-template>
 
     <ng-template pTemplate="header" let-columns>
       <tr>
-        <th *ngFor="let col of columns" pResizableColumn pReorderableColumn [pSortableColumn]="col.field">
+        <th
+          *ngFor="let col of columns"
+          pResizableColumn
+          pReorderableColumn
+          [pSortableColumn]="col.field"
+        >
           {{ col.header }} <p-sortIcon [field]="col.field"></p-sortIcon>
         </th>
-        <th style="width:70px;position:sticky" *ngIf="colsaircraftLD.length > 0">            
+        <th
+          style="width:70px;position:sticky"
+          *ngIf="colsaircraftLD.length > 0"
+        >
           Actions
-      </th> 
+        </th>
       </tr>
       <tr>
-        <th style="width:auto" *ngFor="let col of columns" [ngSwitch]="col.field">
-            <input style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field, 'contains')">
+        <th
+          style="width:auto"
+          *ngFor="let col of columns"
+          [ngSwitch]="col.field"
+        >
+          <input
+            style="width:100%;"
+            pInputText
+            type="text"
+            (input)="dt.filter($event.target.value, col.field, 'contains')"
+          />
         </th>
         <th style="width:70px;position:sticky"></th>
       </tr>
@@ -174,54 +261,117 @@
       let-rowData
       let-columns="columns"
     >
-      <tr  [pSelectableRow]="rowData"  [pSelectableRowDblClick]="rowData" (dblclick)="viewAircraftdbldisplay(rowData)" >
+      <tr
+        [pSelectableRow]="rowData"
+        [pSelectableRowDblClick]="rowData"
+        (dblclick)="viewAircraftdbldisplay(rowData)"
+      >
         <td *ngFor="let col of columns" pResizableColumn pReorderableColumn>
           {{ rowData[col.field] }}
         </td>
-        <td style="width:70px" *ngIf="selectedColumns.length > 0 && isViewMode == false">
-            <span data-toggle="modal" data-target="#viewAircraft"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openAircraftView(rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
+        <td
+          style="width:70px"
+          *ngIf="selectedColumns.length > 0 && isViewMode == false"
+        >
+          <span data-toggle="modal" data-target="#viewAircraft">
+            <a
+              class="btn btn-info boxed-float-btn nobg"
+              data-toggle="tooltip"
+              (click)="openAircraftView(rowData)"
+              matTooltip="View"
+              ><i class="fa fa-eye"></i
+            ></a>
+          </span>
 
-           
-            <span data-toggle="modal" data-target="#editAirCraftDetails"><a class="btn nobg" (click)="editAirCraft(rowData)" matTooltip="Edit"><i class="fa fa-pencil"></i></a> </span>
-            <span data-toggle="modal" data-target="#delete"><a class="btn nobg" (click)="deleteAircraftMappedInventory(deleteContent,rowData)" matTooltip="Delete"><i class="fa fa-trash"></i></a> </span>
-            <span data-toggle="modal" data-target="#contentAuditHist"><a class="btn nobg" (click)="getCustomerAircraftHistory(contentAuditHist,rowData)" matTooltip="History"><i class="fa fa-history"></i></a></span>
-
-
+          <span data-toggle="modal" data-target="#editAirCraftDetails"
+            ><a
+              class="btn nobg"
+              (click)="editAirCraft(rowData)"
+              matTooltip="Edit"
+              ><i class="fa fa-pencil"></i
+            ></a>
+          </span>
+          <span data-toggle="modal" data-target="#delete"
+            ><a
+              class="btn nobg"
+              (click)="deleteAircraftMappedInventory(deleteContent, rowData)"
+              matTooltip="Delete"
+              ><i class="fa fa-trash"></i
+            ></a>
+          </span>
+          <span data-toggle="modal" data-target="#contentAuditHist"
+            ><a
+              class="btn nobg"
+              (click)="getCustomerAircraftHistory(rowData)"
+              matTooltip="History"
+              ><i class="fa fa-history"></i></a
+          ></span>
         </td>
-        <td style="width:70px" *ngIf="selectedColumns.length > 0 && isViewMode == true">
-          <span data-toggle="modal" data-target="#viewAircraft"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openAircraftView(rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
-          <span data-toggle="modal" data-target="#contentAuditHist"><a class="btn nobg" (click)="getCustomerAircraftHistory(contentAuditHist,rowData)" matTooltip="History"><i class="fa fa-history"></i></a></span>
-
-
-      </td>
-
+        <td
+          style="width:70px"
+          *ngIf="selectedColumns.length > 0 && isViewMode == true"
+        >
+          <span data-toggle="modal" data-target="#viewAircraft">
+            <a
+              class="btn btn-info boxed-float-btn nobg"
+              data-toggle="tooltip"
+              (click)="openAircraftView(rowData)"
+              matTooltip="View"
+              ><i class="fa fa-eye"></i
+            ></a>
+          </span>
+          <span data-toggle="modal" data-target="#contentAuditHist"
+            ><a
+              class="btn nobg"
+              (click)="getCustomerAircraftHistory(rowData)"
+              matTooltip="History"
+              ><i class="fa fa-history"></i></a
+          ></span>
+        </td>
       </tr>
     </ng-template>
 
-    <ng-template pTemplate="emptymessage" let-columns *ngIf="aircraftListDataValues?.length == 0">
-      <tr>               
-          <td [attr.colspan]="6"  class="no-records-cstm">
-              No records found
-          </td>
+    <ng-template
+      pTemplate="emptymessage"
+      let-columns
+      *ngIf="aircraftListDataValues?.length == 0"
+    >
+      <tr>
+        <td [attr.colspan]="6" class="no-records-cstm">
+          No records found
+        </td>
       </tr>
-  </ng-template>
-  <ng-template pTemplate="summary" id="footer">
-    <label id="footer" class="footer">No'of records:</label>
-    <input style="width: 5%;" [(ngModel)]="dt._totalRecords" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp;
-    <label id="footer" class="footer1">Pages Count:</label>
-   
-    <input style="width: 5%;" [ngModel]="getPageCount(dt._totalRecords,pageSize)" [disabled]="true" pInputText type="text" />
-</ng-template>
-
+    </ng-template>
+    <ng-template pTemplate="summary" id="footer">
+      <label id="footer" class="footer">No'of records:</label>
+      <input
+        style="width: 5%;"
+        [(ngModel)]="dt._totalRecords"
+        [disabled]="true"
+        pInputText
+        type="text"
+      />
+      &nbsp;&nbsp;
+      <label id="footer" class="footer1">Pages Count:</label>
+      <input
+        style="width: 5%;"
+        [ngModel]="getPageCount(dt._totalRecords, pageSize)"
+        [disabled]="true"
+        pInputText
+        type="text"
+      />
+      <!-- <input style="width: 5%;" value="{{totalPages}}" [disabled]="true" pInputText type="text" /> -->
+    </ng-template>
   </p-table>
 
-  <div style="margin-top: 10px;"  *ngIf="isViewMode == false">
+  <div style="margin-top: 10px;" *ngIf="isViewMode == false">
     <button
       type="button"
       class="btn btn-primary pull-right submit-btn"
       (click)="nextClick()"
+      [disabled]="stopmulticlicks"
     >
-     Save & Next
+      Save & Next
     </button>
     <button
       type="button"
@@ -232,515 +382,461 @@
     </button>
   </div>
 </div>
-<ng-template #addInventory id="addInventory" let-c="close" let-d="dismiss" data-backdrop="static">
-            <div class="modal-header">
-              <button type="button" class="close" (click)="dismissModel()">×</button>
-              <h4 class="modal-title">Add Inventory</h4>
-            </div>
-            <div class="modal-body">
-              <div class="form-row">
-                <div class="col-md-3">
-                  <div class="form-group">
-                    <label class="popup-plusicon-cstm"
-                      >Aircraft Type
-                      <a
-                        data-dismiss="modal"
-                        [routerLink]="[
-                          '/singlepages/singlepages/app-aircraft-manufacturer'
-                        ]"
-                        ><i class="fa fa-plus-circle fa-lg"></i></a
-                    ></label>
-                    <p-dropdown
-                      class="p-dropdown-cus-fullwidth"
-                      [options]="manufacturerData"
-                      filter="true"
-                      [ngModelOptions]="{ standalone: true }"
-                      [(ngModel)]="add_SelectedAircraftId"
-                      (onChange)="getAircraftModelByManfacturer($event)"
-                      placeholder="Select Aircraft"
-                      [showClear]="true"
-                    ></p-dropdown>
-                  </div>
-                </div>
-      
-                <div class="col-md-4">
-                  <div class="form-group">
-                    <label
-                      class="popup-plusicon-cstm"
-                      style="width: 150px !important"
-                    >
-                      Model
-                      <a
-                        data-dismiss="modal"
-                        [routerLink]="['/singlepages/singlepages/app-aircraft-model']"
-                        ><i class="fa fa-plus-circle fa-lg"></i
-                      ></a>
-                      <input
-                        type="checkbox"
-                        name="unknownmodel"
-                        [(ngModel)]="modelUnknown"
-                        style="width: 20px !important;
+<ng-template
+  #addInventory
+  id="addInventory"
+  let-c="close"
+  let-d="dismiss"
+  data-backdrop="static"
+>
+  <div class="modal-header">
+    <button type="button" class="close" (click)="dismissModel()">×</button>
+    <h4 class="modal-title">Add Inventory</h4>
+  </div>
+  <div class="modal-body">
+    <div class="form-row">
+      <div class="col-md-3">
+        <div class="form-group">
+          <label class="popup-plusicon-cstm"
+            >Aircraft Type
+            <a
+              data-dismiss="modal"
+              [routerLink]="[
+                '/singlepages/singlepages/app-aircraft-manufacturer'
+              ]"
+              ><i class="fa fa-plus-circle fa-lg"></i></a
+          ></label>
+          <p-dropdown
+            class="p-dropdown-cus-fullwidth"
+            [options]="manufacturerData"
+            filter="true"
+            [ngModelOptions]="{ standalone: true }"
+            [(ngModel)]="add_SelectedAircraftId"
+            (onChange)="getAircraftModelByManfacturer($event)"
+            placeholder="Select Aircraft"
+            [showClear]="true"
+          ></p-dropdown>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="form-group">
+          <label class="popup-plusicon-cstm" style="width: 150px !important">
+            Model
+            <a
+              data-dismiss="modal"
+              [routerLink]="['/singlepages/singlepages/app-aircraft-model']"
+              ><i class="fa fa-plus-circle fa-lg"></i
+            ></a>
+            <input
+              type="checkbox"
+              name="unknownmodel"
+              [(ngModel)]="modelUnknown"
+              style="width: 20px !important;
                               margin-left: 7px; "
-                        (change)="resetAircraftModelsorDashNumbers()"
-                      />
-                      Unknown
-                    </label>
-      
-                    <p-multiSelect
-                      *ngIf="!modelUnknown"
-                      [maxSelectedLabels]="2"
-                      [disabled]="!add_SelectedAircraftId"
-                      class="imstock-pmselect"
-                      [options]="add_AircraftModelList"
-                      [(ngModel)]="add_SelectedModel"
-                      name="ModelsPopup"
-                      (onChange)="getDashNumberByTypeandModel($event)"
-                    ></p-multiSelect>
-                  </div>
-                </div>
-                <div class="col-md-3" *ngIf="!modelUnknown">
-                  <div class="form-group">
-                    <label
-                      class="popup-plusicon-cstm"
-                      style="width: 190px !important"
-                    >
-                      DashNumber
-                      <a
-                        data-dismiss="modal"
-                        [routerLink]="['/singlepages/singlepages/app-dashnumber']"
-                        ><i class="fa fa-plus-circle fa-lg"></i
-                      ></a>
-                      <input
-                        type="checkbox"
-                        name="unknownDashNumber"
-                        [(ngModel)]="dashNumberUnknown"
-                        style="width: 20px !important;
+              (change)="resetAircraftModelsorDashNumbers()"
+            />
+            Unknown
+          </label>
+
+          <p-multiSelect
+            *ngIf="!modelUnknown"
+            [maxSelectedLabels]="2"
+            [disabled]="!add_SelectedAircraftId"
+            class="imstock-pmselect"
+            [options]="add_AircraftModelList"
+            [(ngModel)]="add_SelectedModel"
+            name="ModelsPopup"
+            (onChange)="getDashNumberByTypeandModel($event)"
+          ></p-multiSelect>
+        </div>
+      </div>
+      <div class="col-md-3" *ngIf="!modelUnknown">
+        <div class="form-group">
+          <label class="popup-plusicon-cstm" style="width: 190px !important">
+            DashNumber
+            <a
+              data-dismiss="modal"
+              [routerLink]="['/singlepages/singlepages/app-dashnumber']"
+              ><i class="fa fa-plus-circle fa-lg"></i
+            ></a>
+            <input
+              type="checkbox"
+              name="unknownDashNumber"
+              [(ngModel)]="dashNumberUnknown"
+              style="width: 20px !important;
                         margin-left: 7px; "
-                        (change)="resetAircraftModelsorDashNumbers()"
-                      />
-                      Unknown
-                    </label>
-      
-                    <p-multiSelect
-                      *ngIf="!modelUnknown && !dashNumberUnknown"
-                      [maxSelectedLabels]="2"
-                      [disabled]="!add_SelectedAircraftId"
-                      class="imstock-pmselect"
-                      [options]="add_AircraftDashNumberList"
-                      [(ngModel)]="add_SelectedDashNumber"
-                      name="dashNumbersPopup"
-                      (onChange)="selectedDashnumbervalue($event)"
-                    ></p-multiSelect>
-                  </div>
-                </div>
-                <div class="col-md-2">
-                  <button
-                    style="margin-top: 20px;"
-                    type="button"
-                    class="btn btn-primary"
-                    (click)="mapAircraftInventory()"
-                  >
-                    Add
-                  </button>
-                </div>
-              </div>
-      
-              <div class="card">
-                <form #aircraftForm="ngForm">
-                  <p-table
-                    class="p-table-padding"
-                    [value]="inventoryData"
-                    [rows]="6"
-                    [columns]="colaircraft"
-                    [scrollable]="true"
-                    [style]="{ width: '100%' }"
-                    [paginator]="false"
-                  >
-                    <ng-template pTemplate="header" let-columns>
-                      <tr>
-                        <!-- <th>Selected</th> -->
-                        <th *ngFor="let col of columns">
-                          {{ col.header }}
-                        </th>
-                        <th>Inventory <span style="color:red">*</span></th>
-                        <th>Memo</th>
-                      </tr>
-                    </ng-template>
-                    <ng-template
-                      pTemplate="body"                      
-                      let-row_no="rowIndex"
-                      let-rowData
-                      let-columns="columns"
-                    >
-                      <tr>
-      
-                        <td *ngFor="let col of columns">
-                          {{ rowData[col.field] }}
-                        </td>
-                        <td>
-                          <input
-                            type="number"
-                            class="form-control input-value"
-                            [(ngModel)]="rowData.Inventory" (blur)="inventoryValidation($event)"
-                            name="Inventory{{row_no}}"
-                            [required]="true" [minlength]="1"
-                          />
-                        </td>
-                        <td>
-                          <input
-                            type="text"
-                            class="form-control input-value"
-                            [(ngModel)]="rowData.Memo"
-                            name="Memo{{row_no}}"
-                          />
-                        </td>
-                      </tr>
-                    </ng-template>
-                  </p-table>
-                </form>
-              </div> <!--/card-->
-            </div>
-            <div class="modal-footer">
-              <button
-                type="button"
-                [disabled]="!aircraftForm.valid"
-                class="btn btn-primary"
-                (click)="saveAircraft()"
-              >
-                Save
-              </button>
-              <button type="button" class="btn btn-danger" (click)="dismissModel()">
-                Close
-              </button>
-            </div>
+              (change)="resetAircraftModelsorDashNumbers()"
+            />
+            Unknown
+          </label>
+
+          <p-multiSelect
+            *ngIf="!modelUnknown && !dashNumberUnknown"
+            [maxSelectedLabels]="2"
+            [disabled]="!add_SelectedAircraftId"
+            class="imstock-pmselect p-multi-aircraft-dash"
+            [options]="add_AircraftDashNumberList"
+            [(ngModel)]="add_SelectedDashNumber"
+            name="dashNumbersPopup"
+            (onChange)="selectedDashnumbervalue($event)"
+          ></p-multiSelect>
+        </div>
+      </div>
+      <div class="col-md-2">
+        <button
+          style="margin-top: 20px;"
+          type="button"
+          class="btn btn-primary"
+          (click)="mapAircraftInventory()"
+        >
+          Add
+        </button>
+      </div>
+    </div>
+
+    <div class="card">
+      <form #aircraftForm="ngForm">
+        <p-table
+          class="p-table-padding"
+          [value]="inventoryData"
+          [rows]="pageSize"
+          [columns]="colaircraft"
+          [scrollable]="true"
+          [style]="{ width: '100%' }"
+          [paginator]="false"
+        >
+          <ng-template pTemplate="header" let-columns>
+            <tr>
+              <!-- <th>Selected</th> -->
+              <th *ngFor="let col of columns">
+                {{ col.header }}
+              </th>
+              <th>Inventory <span style="color:red">*</span></th>
+              <th>Memo</th>
+            </tr>
+          </ng-template>
+          <ng-template
+            pTemplate="body"
+            let-row_no="rowIndex"
+            let-rowData
+            let-columns="columns"
+          >
+            <tr>
+              <td *ngFor="let col of columns; let i = index">
+                {{ rowData[col.field] }}
+              </td>
+              <td>
+                <input
+                  type="number"
+                  class="form-control input-value"
+                  [(ngModel)]="rowData.Inventory"
+                  (keyup)="inventoryValidation($event, 'fromadd')"
+                  name="Inventory{{ row_no }}"
+                  [required]="true"
+                  [minlength]="1"
+                />
+              </td>
+              <td>
+                <input
+                  type="text"
+                  class="form-control input-value"
+                  [(ngModel)]="rowData.Memo"
+                  name="Memo{{ row_no }}"
+                />
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </form>
+    </div>
+    <!--/card-->
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      [disabled]="!aircraftForm.valid"
+      class="btn btn-primary"
+      (click)="saveAircraft()"
+    >
+      Save
+    </button>
+    <button type="button" class="btn btn-danger" (click)="dismissModel()">
+      Close
+    </button>
+  </div>
 </ng-template>
 
-<!-- <div id="addInventory" class="modal fade custom-popup" role="dialog" data-backdrop="static">
-  <div class="modal-dialog modal-full">
+<div
+  class="modal fade"
+  id="editAirCraftDetails"
+  role="dialog"
+  data-backdrop="static"
+>
+  <div class="modal-dialog modal-sm">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">×</button>
-        <h4 class="modal-title">Add Inventory</h4>
-      </div>
-      <div class="modal-body">
-        <div class="form-row">
-          <div class="col-md-3">
-            <div class="form-group">
-              <label class="popup-plusicon-cstm"
-                >Aircraft Type
-                <a
-                  data-dismiss="modal"
-                  [routerLink]="[
-                    '/singlepages/singlepages/app-aircraft-manufacturer'
-                  ]"
-                  ><i class="fa fa-plus-circle fa-lg"></i></a
-              ></label>
-              <p-dropdown
-                class="imstock-pddowm"
-                [options]="manufacturerData"
-                filter="true"
-                [ngModelOptions]="{ standalone: true }"
-                [(ngModel)]="add_SelectedAircraftId"
-                (onChange)="getAircraftModelByManfacturer($event)"
-                placeholder="Select Aircraft"
-                [showClear]="true"
-              ></p-dropdown>
-            </div>
+        <button type="button" class="close" (click)="closeMyModel()">
+          &times;
+        </button>
+        <h4 class="modal-title">Edit Inventory Details</h4>
+        <div class="col-sm-12 font-padding">
+          <div class="col-sm-3">
+            Aircraft:
+            <span style="color:red">{{ editAirCraftData.aircraftType }}</span>
           </div>
-
-          <div class="col-md-4">
-            <div class="form-group">
-              <label
-                class="popup-plusicon-cstm"
-                style="width: 150px !important"
-              >
-                Model
-                <a
-                  data-dismiss="modal"
-                  [routerLink]="['/singlepages/singlepages/app-aircraft-model']"
-                  ><i class="fa fa-plus-circle fa-lg"></i
-                ></a>
-                <input
-                  type="checkbox"
-                  name="unknownmodel"
-                  [(ngModel)]="modelUnknown"
-                  style="width: 20px !important;
-                        margin-left: 7px; "
-                  (change)="resetAircraftModelsorDashNumbers()"
-                />
-                Unknown
-              </label>
-
-              <p-multiSelect
-                *ngIf="!modelUnknown"
-                [maxSelectedLabels]="2"
-                [disabled]="!add_SelectedAircraftId"
-                class="imstock-pmselect"
-                [options]="add_AircraftModelList"
-                [(ngModel)]="add_SelectedModel"
-                name="ModelsPopup"
-                (onChange)="getDashNumberByTypeandModel($event)"
-              ></p-multiSelect>
-            </div>
+          <div class="col-sm-3">
+            Model:
+            <span style="color:red">{{ editAirCraftData.aircraftModel }}</span>
           </div>
-          <div class="col-md-3" *ngIf="!modelUnknown">
-            <div class="form-group">
-              <label
-                class="popup-plusicon-cstm"
-                style="width: 190px !important"
-              >
-                DashNumber
-                <a
-                  data-dismiss="modal"
-                  [routerLink]="['/singlepages/singlepages/app-dashnumber']"
-                  ><i class="fa fa-plus-circle fa-lg"></i
-                ></a>
-                <input
-                  type="checkbox"
-                  name="unknownDashNumber"
-                  [(ngModel)]="dashNumberUnknown"
-                  style="width: 20px !important;
-                  margin-left: 7px; "
-                  (change)="resetAircraftModelsorDashNumbers()"
-                />
-                Unknown
-              </label>
-
-              <p-multiSelect
-                *ngIf="!modelUnknown && !dashNumberUnknown"
-                [maxSelectedLabels]="2"
-                [disabled]="!add_SelectedAircraftId"
-                class="imstock-pmselect"
-                [options]="add_AircraftDashNumberList"
-                [(ngModel)]="add_SelectedDashNumber"
-                name="dashNumbersPopup"
-                (onChange)="selectedDashnumbervalue($event)"
-              ></p-multiSelect>
-            </div>
-          </div>
-          <div class="col-md-2">
-            <button
-              style="margin-top: 20px;"
-              type="button"
-              class="btn btn-primary"
-              (click)="mapAircraftInventory()"
-            >
-              Add
-            </button>
+          <div class="col-sm-3">
+            Dash Number:
+            <span style="color:red">{{ editAirCraftData.dashNumber }}</span>
           </div>
         </div>
-
-        <div class="card">
-          <form #aircraftForm="ngForm">
-            <p-table
-              class="p-table-padding"
-              [value]="inventoryData"
-              [rows]="6"
-              [columns]="colaircraft"
-              [scrollable]="true"
-              [style]="{ width: '100%' }"
-              [paginator]="true"
-            >
-              <ng-template pTemplate="header" let-columns>
-                <tr>
-                  <th>Selected</th> 
-                  <th *ngFor="let col of columns">
-                    {{ col.header }}
-                  </th>
-                  <th>Inventory</th>
-                  <th>Memo</th>
-                </tr>
-              </ng-template>
-              <ng-template
-                pTemplate="body"
-                let-i="rowIndex"
-                let-rowData
-                let-columns="columns"
-              >
-                <tr>
-
-                  <td *ngFor="let col of columns">
-                    {{ rowData[col.field] }}
-                  </td>
-                  <td>
-                    <input
-                      type="number"
-                      class="form-control input-value"
-                      [(ngModel)]="rowData.Inventory"
-                      name="Inventory"
-                      [required]="true"
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      class="form-control input-value"
-                      [(ngModel)]="rowData.Memo"
-                      name="Memo"
-                    />
-                  </td>
-                </tr>
-              </ng-template>
-            </p-table>
-          </form>
-        </div> 
       </div>
-      <div class="modal-footer">
-        <button
-          type="button"
-          [disabled]="!aircraftForm.valid"
-          class="btn btn-primary"
-          (click)="saveAircraft()"
-        >
-          Save
+      <form #ccForm="ngForm" #editAirCraftForm="ngForm" class="form-horizontal">
+        <div class="modal-body">
+          <div class="form-row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="tag"
+                  >Inventory <span class="clr-red">*</span></label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  [(ngModel)]="editAirCraftData.inventory"
+                  (keyup)="inventoryValidation($event, 'fromedit')"
+                  (ngModelChange)="enableSave()"
+                  name="tag"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label>Memo</label>
+                <textarea
+                  name="notes"
+                  [(ngModel)]="editAirCraftData.memo"
+                  (ngModelChange)="enableSave()"
+                  placeholder="Tool Bar"
+                ></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-primary pull-right submit-btn"
+            style="text-align:center"
+            (click)="updateCustomerAircraft()"
+            [disabled]="
+              disableSave || !editAirCraftData.inventory || !ccForm.valid
+            "
+          >
+            Update
+          </button>
+          <button type="button" class="btn btn-danger" (click)="closeMyModel()">
+            Close
+          </button>
+          <!--data-dismiss="modal" -->
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div id="viewAircraft" class="modal" data-backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Details of CustomerAircraft Information</h4>
+        <button type="button" class="close" data-dismiss="modal">
+          &times;
         </button>
+      </div>
+
+      <div class="modal-body" *ngIf="viewAircraftData">
+        <div class="col-sm-12">
+          <p>
+            <span class="label"><b>Aircraft: </b></span
+            ><span class="value">{{ viewAircraftData.aircraftType }}</span>
+          </p>
+
+          <p>
+            <span class="label"><b>Model: </b></span
+            ><span class="value">{{ viewAircraftData.aircraftModel }}</span>
+          </p>
+          <p>
+            <span class="label"><b>Dash Numbers: </b></span
+            ><span class="value">{{ viewAircraftData.dashNumber }}</span>
+          </p>
+          <p>
+            <span class="label"
+              ><b>Inventory <span style="color:red">*</span>: </b></span
+            ><span class="value">{{ viewAircraftData.inventory }}</span>
+          </p>
+
+          <p>
+            <span class="label"><b>Memo: </b></span
+            ><span class="value">{{ viewAircraftData.memo }}</span>
+          </p>
+
+          <div class="clear"></div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
         <button type="button" class="btn btn-danger" data-dismiss="modal">
           Close
         </button>
       </div>
     </div>
   </div>
-</div> -->
-<div class="modal fade" id="editAirCraftDetails" role="dialog" data-backdrop="static">
-    <div class="modal-dialog modal-sm">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" (click)="closeMyModel()">&times;</button>
-                <h4 class="modal-title">Edit Inventory Details</h4>
-                <div class="col-sm-12 font-padding">
-                    <div class="col-sm-3">Aircraft: <span style="color:red">{{editAirCraftData.aircraftType}}</span></div>
-                    <div class="col-sm-3">Model: <span style="color:red">{{editAirCraftData.aircraftModel}}</span></div>
-                    <div class="col-sm-3">Dash Number: <span style="color:red">{{editAirCraftData.dashNumber}}</span></div>
-                </div>
-
-            </div>
-            <form #ccForm="ngForm" #editAirCraftForm="ngForm" class="form-horizontal">
-                <div class="modal-body">
-                    <div class="form-row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="tag">Inventory <span class="clr-red">*</span></label>
-                                <input type="text" class="form-control" [(ngModel)]="editAirCraftData.inventory" (ngModelChange)="enableSave()" name="tag" required>
-
-                            </div>
-                            <div class="form-group">
-                                <label>Memo</label>
-                                    <textarea name="notes" [(ngModel)]="editAirCraftData.memo" (ngModelChange)="enableSave()"  placeholder="Tool Bar"></textarea>
-                            </div>
-
-                        </div>
-                      
-                    </div>
-                </div>
-                <div class="modal-footer">
-                     <button type="button"  class="btn btn-primary pull-right submit-btn" style="text-align:center" (click)="updateCustomerAircraft()" [disabled]="disableSave" >Update</button>
-                     <button type="button" class="btn btn-danger" (click)="closeMyModel()" >Close</button>  <!--data-dismiss="modal" -->
-                </div>
-            </form>
-        </div>
-
-    </div>
 </div>
-
-
-
-
-
-<div id="viewAircraft" class="modal" data-backdrop="static">
-    <div class="modal-dialog">
-        <div class="modal-content">
-
-              <div class="modal-header">
-                <h4 class="modal-title">Details of CustomerAircraft Information</h4>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-            </div>
-
-           <div class="modal-body" *ngIf="viewAircraftData">
-                <div class="col-sm-12">
-                    <p><span class="label"><b>Aircraft: </b></span><span class="value">{{viewAircraftData.aircraftType}}</span></p>
-
-                    <p><span class="label"><b>Model: </b></span><span class="value">{{viewAircraftData.aircraftModel}}</span></p>
-                    <p><span class="label"><b>Dash Numbers: </b></span><span class="value">{{viewAircraftData.dashNumber}}</span></p>
-                    <p><span class="label"><b>Inventory <span style="color:red">*</span>:  </b></span><span class="value">{{viewAircraftData.inventory}}</span></p>
-
-                    <p><span class="label"><b>Memo: </b></span><span class="value">{{viewAircraftData.memo}}</span></p>
-
-                  
-                    <div class="clear"></div>
-                </div>
-            </div>
-
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-            </div>
-
-        </div>
-    </div>
-</div>
-<ng-template #deleteContent let-c="close" let-d="dismiss" data-backdrop="static">
-    <div class="modal-header">
-        <h4 class="modal-title">Are You Sure Want to Delete?</h4>
-        <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-    <div class="modal-body">
-        <strong>
-             Aircraft Name:
-            <span class="new-label">{{selectedRowForDelete.aircraftType}}</span>
-        </strong>
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-success" (click)="deleteItemAndCloseModel()">Yes</button>
-        <button type="button" class="btn btn-danger" (click)="dismissModel()">No</button>
-    </div>
+<ng-template
+  #deleteContent
+  let-c="close"
+  let-d="dismiss"
+  data-backdrop="static"
+>
+  <div class="modal-header">
+    <h4 class="modal-title">Are You Sure Want to Delete?</h4>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="dismissModel()"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <strong>
+      Aircraft Name:
+      <span class="new-label">{{ selectedRowForDelete.aircraftType }}</span>
+    </strong>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-success"
+      (click)="deleteItemAndCloseModel()"
+    >
+      Yes
+    </button>
+    <button type="button" class="btn btn-danger" (click)="dismissModel()">
+      No
+    </button>
+  </div>
 </ng-template>
-<ng-template #contentAuditHist let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static">
-     <div class="modal-header">
 
+<div
+  id="contentAuditHist"
+  class="modal"
+  data-backdrop="static"
+  data-keyboard="false"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
         <h4 class="modal-title">History of Aircraft Info</h4>
-        <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
-            <span aria-hidden="true">&times;</span>
+        <button type="button" class="close" data-dismiss="modal">
+          &times;
         </button>
+      </div>
 
-
-    </div>
-    <div class="modal-body">
-
+      <div class="modal-body">
         <div class="table-responsive">
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>Aircraft Type</th>
-                        <th>Aircraft Model</th>
-                        <th>Dash Number</th>
-                        <th>Inventory</th>
-                        <th>Memo</th>
-                        <th>Updated By</th>
-                        <th>Last Updated Time</th>
-                        <th>Created By</th>
-                        <th>Created Time</th>
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>Aircraft Type</th>
+                <th>Aircraft Model</th>
+                <th>Dash Number</th>
+                <th>Inventory</th>
+                <th>Memo</th>
+                <th>Updated By</th>
+                <th>Last Updated Time</th>
+                <th>Created By</th>
+                <th>Created Time</th>
+              </tr>
+            </thead>
 
-                    </tr>
-                </thead>
-              
+            <tr *ngFor="let audit of aircraftauditHisory; let i = index">
+              <td
+                [ngStyle]="{
+                  color: getColorCodeForHistory(
+                    i,
+                    'aircraftType',
+                    audit.aircraftType
+                  )
+                    ? 'black'
+                    : 'red'
+                }"
+              >
+                {{ audit.aircraftType }}
+              </td>
+              <td
+                [ngStyle]="{
+                  color: getColorCodeForHistory(
+                    i,
+                    'aircraftModel',
+                    audit.aircraftModel
+                  )
+                    ? 'black'
+                    : 'red'
+                }"
+              >
+                {{ audit.aircraftModel }}
+              </td>
+              <td
+                [ngStyle]="{
+                  color: getColorCodeForHistory(
+                    i,
+                    'dashNumber',
+                    audit.dashNumber
+                  )
+                    ? 'black'
+                    : 'red'
+                }"
+              >
+                {{ audit.dashNumber }}
+              </td>
+              <td
+                [ngStyle]="{
+                  color: getColorCodeForHistory(i, 'inventory', audit.inventory)
+                    ? 'black'
+                    : 'red'
+                }"
+              >
+                {{ audit.inventory }}
+              </td>
 
-                <tr *ngFor="let audit of aircraftauditHisory; let i = index;">
-                    <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'aircraftType', audit.aircraftType)  ? 'black' : 'red'  }">{{audit.aircraftType}}</td>
-                    <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'aircraftModel', audit.aircraftModel)  ? 'black' : 'red'  }">{{audit.aircraftModel}}</td>
-                    <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'dashNumber', audit.dashNumber)  ? 'black' : 'red'  }">{{audit.dashNumber}}</td>
-                    <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'inventory', audit.inventory)  ? 'black' : 'red'  }">{{audit.inventory}}</td>
-
-                    <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'memo', audit.memo)  ? 'black' : 'red'  }">{{audit.memo}}</td>
-                    <td>{{audit.updatedBy}}</td>
-                    <td>{{audit.updatedDate | date: 'dd-MM-yyyy h:mm a '}}</td>
-                    <td>{{audit.createdBy}}</td>
-                    <td>{{audit.createdDate | date: 'dd-MM-yyyy h:mm a '}}</td>
-                </tr>
-            </table>
+              <td
+                [ngStyle]="{
+                  color: getColorCodeForHistory(i, 'memo', audit.memo)
+                    ? 'black'
+                    : 'red'
+                }"
+              >
+                {{ audit.memo }}
+              </td>
+              <td>{{ audit.updatedBy }}</td>
+              <td>{{ audit.updatedDate | date: 'dd-MM-yyyy h:mm a ' }}</td>
+              <td>{{ audit.createdBy }}</td>
+              <td>{{ audit.createdDate | date: 'dd-MM-yyyy h:mm a ' }}</td>
+            </tr>
+          </table>
         </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">
+          Close
+        </button>
+      </div>
     </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
-    </div>
-</ng-template>
+  </div>
+</div>

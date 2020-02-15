@@ -439,7 +439,11 @@ export class StocklineEndpoint extends EndpointFactory {
 
         const url = `${this.configurations.baseUrl}/api/stockLine/stocklinereoprt`;
         window.location.assign(url);
-    }
+	}
+	
+	getStockLineDetailsById(stockLineId) {
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/StockLine/StocklineDataById/${stockLineId}`, this.getRequestHeaders())
+	}
 
     //downloadStockLineReport(payload) {
 

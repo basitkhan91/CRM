@@ -85,7 +85,7 @@ export class EntityAddComponent implements OnInit, AfterViewInit {
     isEdit: any = false;
     id: number;
     editData: any;
-
+	disableSaveEntityName: boolean;
     
 
 	constructor(
@@ -339,7 +339,7 @@ export class EntityAddComponent implements OnInit, AfterViewInit {
             if (!this.sourceLegalEntity.legalEntityId) {               
                 this.sourceLegalEntity.createdBy = this.userName;
 				this.sourceLegalEntity.updatedBy = this.userName;
-
+				this.sourceLegalEntity.legalEntityId = 0;
 				this.sourceLegalEntity.masterCompanyId = 1;
                 this.workFlowtService.newAddEntity({
                     ...this.sourceLegalEntity

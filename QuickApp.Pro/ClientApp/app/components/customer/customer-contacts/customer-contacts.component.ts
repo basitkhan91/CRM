@@ -33,18 +33,18 @@ export class CustomerContactsComponent implements OnInit {
 	@Input() editMode;
 	@Input() editGeneralInformationData;
 
-    @Input() add_ataChapterList;
-    @Input() search_ataChapterList;
-    @Input() search_ataChapterList1;
+	@Input() add_ataChapterList;
+	@Input() search_ataChapterList;
+	@Input() search_ataChapterList1;
 	// @Input() ataListDataValues;
 	@Output() tab = new EventEmitter<any>();
 	@Output() saveCustomerContactATAMapped = new EventEmitter();
 	@Output() refreshCustomerATAMapped = new EventEmitter();
 	@Output() refreshCustomerATAByCustomerId = new EventEmitter();
 	@Output() refreshCustomerContactMapped = new EventEmitter();
-    @Input() customerDataFromExternalComponents: any;
+	@Input() customerDataFromExternalComponents: any;
 
-	disableSave:boolean = true;
+	disableSave: boolean = true;
 	formData = new FormData();
 	totalRecords: any;
 	pageIndex: number = 0;
@@ -66,7 +66,8 @@ export class CustomerContactsComponent implements OnInit {
 	disableSaveMiddleName: boolean;
 	disableSaveLastName: boolean;
 	disablesaveForlastname: boolean;
-    //ataChapterEditData: any;
+	loaderForContacts = true;
+	//ataChapterEditData: any;
 	customerContactsColumns = [
 		{ field: 'isDefaultContact', header: 'Primary Contact' },
 		{ field: 'tag', header: 'Tag' },
@@ -102,38 +103,41 @@ export class CustomerContactsComponent implements OnInit {
 	sourceViewforContact: any;
 	add_SelectedId: any;
 	add_SelectedModels: any;
-    add_ataSubChapterList: any;
-    search_ataSubChapterList: any;
-    search_ataSubChapterList1: any;
+	add_ataSubChapterList: any;
+	search_ataSubChapterList: any;
+	search_ataSubChapterList1: any;
 	selectedContact: any;
+	selectedstockColumn: any[];
 	ataHeaders = [
 		{ field: 'ataChapterName', header: 'ATA Chapter' },
 		{ field: 'ataSubChapterDescription', header: 'ATA Sub-Chapter' }
 	]
 	ataListDataValues = []
-    auditHistory: any[] = [];
-    auditHistory1: any[] = [];
+	auditHistory: any[] = [];
+	auditHistory1: any[] = [];
 	@ViewChild('ATAADD') myModal;
 	originalATASubchapterData: any = [];
 	isViewMode: boolean = false;
-    ataChapterEditDat =
-        {
-            ataChapterId: null,
-            ataSubChapterId:null,
-            isActive: true,
-            isDeleted: false,
-            customerContactATAMappingId:0,
-            masterCompanyId: 1,
-            createdBy: "",
-            updatedBy: "",
-            createdDate: new Date(),
-            customerContactId:0,
-            ataChapterName: "",
-            ataSubChapterDescription:"",
+	ataChapterEditDat =
+		{
+			ataChapterId: null,
+			ataSubChapterId: null,
+			isActive: true,
+			isDeleted: false,
+			customerContactATAMappingId: 0,
+			masterCompanyId: 1,
+			createdBy: "",
+			updatedBy: "",
+			createdDate: new Date(),
+			customerContactId: 0,
+			ataChapterName: "",
+			ataChapterCode: "",
+			ataSubChapterDescription: "",
 
-        }
-	
-    ataChapterEditData = { ...this.ataChapterEditDat };
+		}
+
+	ataChapterEditData = { ...this.ataChapterEditDat };
+	stopmulticlicks: boolean;
 	constructor(private router: ActivatedRoute,
 
 		private route: Router,
@@ -150,11 +154,11 @@ export class CustomerContactsComponent implements OnInit {
 		private commonService: CommonService,
 
 	) {
-
+		this.stopmulticlicks = false;
 	}
 
-    ngOnInit() {
-      
+	ngOnInit() {
+
 		console.log(this.add_ataChapterList, "add_ataChapterList+++")
 		if (this.editMode) {
 			this.id = this.editGeneralInformationData.customerId;
@@ -165,60 +169,63 @@ export class CustomerContactsComponent implements OnInit {
 
 
 			this.getAllCustomerContact()
-        } else {
+		} else {
 
-            if (this.customerDataFromExternalComponents) {
-                this.id = this.customerDataFromExternalComponents.customerId;
-                this.customerCode = this.customerDataFromExternalComponents.customerCode;
-                this.customerName = this.customerDataFromExternalComponents.name;
+			if (this.customerDataFromExternalComponents) {
+				this.id = this.customerDataFromExternalComponents.customerId;
+				this.customerCode = this.customerDataFromExternalComponents.customerCode;
+				this.customerName = this.customerDataFromExternalComponents.name;
 
 				this.getAllCustomerContact();
-                this.isViewMode = true;
-            } else {
-               
-			this.id = this.savedGeneralInformationData.customerId;
-			this.customerCode = this.savedGeneralInformationData.customerCode;
-			this.customerName = this.savedGeneralInformationData.name;
-			this.getAllCustomerContact();
-			this.isViewMode = false;
+				this.isViewMode = true;
+			} else {
+
+				this.id = this.savedGeneralInformationData.customerId;
+				this.customerCode = this.savedGeneralInformationData.customerCode;
+				this.customerName = this.savedGeneralInformationData.name;
+				this.getAllCustomerContact();
+				this.isViewMode = false;
 			}
 		}
 
-        this.getAllContacts();
-       
+		this.getAllContacts();
+
 		// this.getATACustomerContactMapped();
 
 	}
-	
+
 	ngOnChanges(changes: SimpleChanges) {
-        for (let property in changes) {
-            if (property == 'selectedCustomerTab') {
-                if (changes[property].currentValue == "Contacts") {
-                    this.getAllCustomerContact();
-                }
-            }
-             if (property == 'customerDataFromExternalComponents') {
-
-                if(changes[property].currentValue != {}){
-                    this.id = this.customerDataFromExternalComponents.customerId;
-                    this.customerCode = this.customerDataFromExternalComponents.customerCode;
-                    this.customerName = this.customerDataFromExternalComponents.name;
+		for (let property in changes) {
+			if (property == 'selectedCustomerTab') {
+				if (changes[property].currentValue == "Contacts") {
 					this.getAllCustomerContact();
-                    this.isViewMode = true;
-    
-                  } 
-                }
-		} 
+				}
+			}
+			if (property == 'customerDataFromExternalComponents') {
 
-      }
-	  enableSave() {
-     console.log('hello ,directive');
-            this.disableSave = false;
-    
-    } 
-	closeMyModel(){
+				if (changes[property].currentValue != {}) {
+					this.id = this.customerDataFromExternalComponents.customerId;
+					this.customerCode = this.customerDataFromExternalComponents.customerCode;
+					this.customerName = this.customerDataFromExternalComponents.name;
+					this.getAllCustomerContact();
+					this.isViewMode = true;
+
+				}
+			}
+		}
+
+	}
+
+	onRowSelect(event){
+console.log("event",event);
+	}
+	enableSave() {
+		this.disableSave = false;
+
+	}
+	closeMyModel() {
 		$("#addContactDetails").modal("hide");
-		this.disableSave=true;
+		this.disableSave = true;
 	}
 
 	get userName(): string {
@@ -227,6 +234,12 @@ export class CustomerContactsComponent implements OnInit {
 	getPageCount(totalNoofRecords, pageSize) {
 		return Math.ceil(totalNoofRecords / pageSize)
 	}
+
+	pageIndexChange(event) {
+		this.pageSize = event.rows;
+		console.log("event",event);
+	}
+
 	getAllContacts() {
 		this.customerService.getContactsFirstName().subscribe(res => {
 			this.contactsListOriginal = res[0];
@@ -289,6 +302,7 @@ export class CustomerContactsComponent implements OnInit {
 					// get all contacts
 					this.getAllContacts();
 					// get Customer Contatcs 
+					this.customerContacts=[];
 					this.getAllCustomerContact();
 					this.refreshCustomerContactMapped.emit(this.id);
 
@@ -300,7 +314,8 @@ export class CustomerContactsComponent implements OnInit {
 				})
 		})
 		$("#addContactDetails").modal("hide");
-		this.disableSave=true;
+		this.disableSave = true;
+	
 	}
 
 
@@ -345,11 +360,20 @@ export class CustomerContactsComponent implements OnInit {
 			masterCompanyId: 1,
 			firstName: editValueAssignByCondition('firstName', this.contactInformation.firstName),
 			middleName: editValueAssignByCondition('middleName', this.contactInformation.middleName),
-			lastName: editValueAssignByCondition('lastName', this.contactInformation.lastName)
+			lastName: editValueAssignByCondition('lastName', this.contactInformation.lastName),
 
+
+		}
+		if (String(data.isDefaultContact) == "Yes") {
+			data.isDefaultContact = true
+
+		}
+		else if (String(data.isDefaultContact) == "") {
+			data.isDefaultContact = false;
 		}
 		this.customerService.updateContactinfo(data).subscribe(res => {
 			this.getAllContacts();
+			this.customerContacts=[];
 			this.getAllCustomerContact();
 
 			this.alertService.showMessage(
@@ -359,20 +383,30 @@ export class CustomerContactsComponent implements OnInit {
 			);
 		});
 		$("#addContactDetails").modal("hide");
-		this.disableSave=true
+		this.disableSave = true
 	}
 
 
-    getAllCustomerContact() {
-       
+	getAllCustomerContact() {
+
 		// get Customer Contatcs 
 		this.customerService.getContacts(this.id).subscribe(res => {
 			this.customerContacts = res[0]
-			const re = res[0]
+			this.loaderForContacts = false;
+			// const re = res[0]
+			// for (let i=0; i<re.length; i++){
+			// 	if(re[i]['isDefaultContact'] == true){
+			// 		re[i]['isDefaultContact'] =  "Yes"
+			// 	} else {
+			// 		re[i]['isDefaultContact'] =  ""
+			// 	}
+			// }
 			// if (re.length > 0) {
 			//     this.totalRecords = re.length;
 			//     this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
 			// }
+		}, err => {
+			this.loaderForContacts = false;
 		})
 	}
 
@@ -397,17 +431,23 @@ export class CustomerContactsComponent implements OnInit {
 
 	openDelete(content, rowData) {
 
-		this.selectedRowforDelete = rowData;
+		if (!rowData.isDefaultContact) {
+			this.selectedRowforDelete = rowData;
 
-		this.sourceViewforContact = '';
-		this.isDeleteMode = true;
+			this.sourceViewforContact = '';
+			this.isDeleteMode = true;
 
-		this.contactId = rowData.contactId;
-		this.customerContactId = rowData.customerContactId
-		this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
-		this.modal.result.then(() => {
-			console.log('When user closes');
-		}, () => { console.log('Backdrop click') })
+			this.contactId = rowData.contactId;
+			this.customerContactId = rowData.customerContactId
+			this.modal = this.modalService.open(content, { size: 'sm', backdrop: 'static', keyboard: false });
+			this.modal.result.then(() => {
+				console.log('When user closes');
+			}, () => { console.log('Backdrop click') })
+		} else {
+			$('#deleteoops').modal('show');
+		}
+		this.customerContacts=[];
+this.getAllCustomerContact();
 	}
 	deleteItemAndCloseModel() {
 		let contactId = this.contactId;
@@ -433,50 +473,52 @@ export class CustomerContactsComponent implements OnInit {
 	addATAChapter(rowData) {
 		this.sourceViewforContact = '';
 		this.add_SelectedModels = undefined;
+		this.add_SelectedModels = ''
 		this.add_SelectedId = undefined;
 		this.selectedContact = rowData;
 		this.ataListDataValues = [];
 		this.add_ataSubChapterList = '';
 		this.getOriginalATASubchapterList()
 		this.getATACustomerContactMapped();
-        this.getATASubChapter();
+		this.getATASubChapter();
 
 	}
 	dismissModel() {
 		this.modal.close();
 	}
 
-    getATASubChapter() {
+	getATASubChapter() {
 
-       
-        this.atasubchapter1service.getAtaSubChaptersList().subscribe(atasubchapter => {
-            const responseData = atasubchapter[0];
-            console.log(this.add_ataSubChapterList, "this.add_ataSubChapterList++++=")
-            this.add_ataSubChapterList = responseData.map(x => {
-                return {
-                    label: x.ataSubChapterCode + ' - ' + x.description,
-                    value: x
-                }
-            })
-            this.search_ataSubChapterList = responseData.map(x => {
-                return {
-                    value: x.ataSubChapterId,
-                    label: x.ataSubChapterCode + ' - ' + x.description
-                }
-            })
-            this.search_ataSubChapterList1 = responseData.map(x => {
-                return {
-                    value: x.ataSubChapterId,
-                    label: x.description
-                }
-            })
 
-        })
-    }
+		this.atasubchapter1service.getAtaSubChaptersList().subscribe(atasubchapter => {
+			const responseData = atasubchapter[0];
+			console.log(this.add_ataSubChapterList, "this.add_ataSubChapterList++++=")
+			this.add_ataSubChapterList = responseData.map(x => {
+				return {
+					label: x.ataSubChapterCode + ' - ' + x.description,
+					value: x
+				}
+			})
+			this.search_ataSubChapterList = responseData.map(x => {
+				return {
+					value: x.ataSubChapterId,
+					label: x.ataSubChapterCode + ' - ' + x.description
+				}
+			})
+			this.search_ataSubChapterList1 = responseData.map(x => {
+				return {
+					value: x.ataSubChapterId,
+					label: x.description
+				}
+			})
+
+		})
+	}
 
 	// get subchapter by Id in the add ATA Mapping
 	getATASubChapterByATAChapter() {
-
+		this.add_SelectedModels = [];
+		// this.add_SelectedId = undefined;
 		const selectedATAId = getValueFromObjectByKey('ataChapterId', this.add_SelectedId)
 		this.atasubchapter1service.getATASubChapterListByATAChapterId(selectedATAId).subscribe(atasubchapter => {
 			const responseData = atasubchapter[0];
@@ -492,11 +534,12 @@ export class CustomerContactsComponent implements OnInit {
 	}
 	// post the ata Mapping 
 	async addATAMapping() {
+		console.log(this.selectedContact);
 		// const id = this.savedGeneralInformationData.customerId;
 		const ataMappingData = this.add_SelectedModels.map(x => {
 			return {
 				CustomerId: this.id,
-				CustomerContactId: this.selectedContact.contactId,
+				CustomerContactId: this.selectedContact.customerContactId,
 				ATAChapterId: getValueFromObjectByKey('ataChapterId', this.add_SelectedId),
 				ATASubChapterId: x.ataSubChapterId,
 				ATAChapterCode: getValueFromObjectByKey('ataChapterCode', this.add_SelectedId),
@@ -513,7 +556,6 @@ export class CustomerContactsComponent implements OnInit {
 
 		this.add_SelectedModels = undefined;
 		this.add_SelectedId = undefined;
-		this.add_ataSubChapterList = '';
 		await this.saveCustomerContactATAMapped.emit(ataMappingData);
 
 		setTimeout(() => {
@@ -537,21 +579,21 @@ export class CustomerContactsComponent implements OnInit {
 	async getOriginalATASubchapterList() {
 		this.atasubchapter1service.getAtaSubChapter1List().subscribe(res => {
 			const responseData = res[0];
-			this.originalATASubchapterData = responseData;			
+			this.originalATASubchapterData = responseData;
 		})
 
 	}
 
 	async getATACustomerContactMapped() {
-		
-		this.customerService.getATAMappedByContactId(this.selectedContact.contactId).subscribe(res => {
+
+		this.customerService.getATAMappedByContactId(this.selectedContact.customerContactId).subscribe(res => {
 			//console.log(res);
 			this.ataListDataValues = res;
-			
-			for(let i=0; i<this.ataListDataValues.length; i++){
-				this.ataListDataValues[i]['ataChapterName'] = this.ataListDataValues[i]['ataChapterCode'] + ' - ' +this.ataListDataValues[i]['ataChapterName']
+
+			for (let i = 0; i < this.ataListDataValues.length; i++) {
+				this.ataListDataValues[i]['ataChapterName'] = this.ataListDataValues[i]['ataChapterCode'] + ' - ' + this.ataListDataValues[i]['ataChapterName']
 				//this.ataListDataValues[i]['ataSubChapterDescription'] = getValueFromArrayOfObjectById('ataSubChapterCode', 'ataSubChapterId', this.ataListDataValues[i]['ataSubChapterId'], this.originalATASubchapterData) + ' - ' +this.ataListDataValues[i]['ataSubChapterDescription']
-				this.ataListDataValues[i]['ataSubChapterDescription'] = this.ataListDataValues[i]['ataSubChapterCode'] + ' - ' +this.ataListDataValues[i]['ataSubChapterDescription']
+				this.ataListDataValues[i]['ataSubChapterDescription'] = this.ataListDataValues[i]['ataSubChapterCode'] + ' - ' + this.ataListDataValues[i]['ataSubChapterDescription']
 			}
 		})
 	}
@@ -611,13 +653,16 @@ export class CustomerContactsComponent implements OnInit {
 	}
 
 	nextClick() {
+		this.stopmulticlicks = true;
 		this.tab.emit('AircraftInfo');
 		this.alertService.showMessage(
 			'Success',
-			` ${this.editMode ? 'Updated' : 'Saved'  } Customer Contacts Sucessfully `,
+			` ${this.editMode ? 'Updated' : 'Saved'} Customer Contacts Sucessfully `,
 			MessageSeverity.success
 		);
-
+		setTimeout(() => {
+			this.stopmulticlicks = false;
+		}, 500)
 	}
 	backClick() {
 		this.tab.emit('General');
@@ -736,83 +781,84 @@ export class CustomerContactsComponent implements OnInit {
 		}
 
 	}
-    editContactATAChapters(rowData)
-    {
+	editContactATAChapters(rowData) {
 		// console.log(rowData, 'ataedit');
-        //console.log(this.search_ataChapterList);
-        //console.log(this.search_ataSubChapterList);
-        this.getATASubChapterByATAChapterID(rowData.ataChapterId)
-        this.ataChapterEditData = {
-            ...rowData,
-            //ataSubChapterId: getObjectById('label', rowData.ataSubChapterId, this.search_ataSubChapterList)
-        }
-       
-       
-
-      
-        
-    }
+		//console.log(this.search_ataChapterList);
+		//console.log(this.search_ataSubChapterList);
+		this.getATASubChapterByATAChapterID(rowData.ataChapterId)
+		this.ataChapterEditData = {
+			...rowData,
+			//ataSubChapterId: getObjectById('label', rowData.ataSubChapterId, this.search_ataSubChapterList)
+		}
 
 
 
-    getATAAuditHistoryById(rowData) {
-        this.customerService.getCustomerContactATAAuditDetails(rowData.customerContactATAMappingId).subscribe(res => {
-            this.auditHistory1 = res;
-            
-        })
-    }
-    getColorCodeForHistoryATA(i, field, value) {
-        const data = this.auditHistory1;
-        const dataLength = data.length;
-        if (i >= 0 && i <= dataLength) {
-            if ((i + 1) === dataLength) {
-                return true;
-            } else {
-                return data[i + 1][field] === value
-            }
-        }
-    }
-    updateATAChapters() {
-        
-        this.ataChapterEditData = {
-            ...this.ataChapterEditData,
-            masterCompanyId: 1,
-            isActive: true,
-            createdBy: this.userName,
-            updatedBy: this.userName,
-            createdDate: new Date(),
-            customerContactId: this.selectedContact.contactId,
-         
-            ataChapterName: getValueFromArrayOfObjectById('label', 'value', this.ataChapterEditData.ataChapterId, this.search_ataChapterList1),
 
-            ataSubChapterDescription: getValueFromArrayOfObjectById('label', 'value', this.ataChapterEditData.ataSubChapterId, this.search_ataSubChapterList1),
 
-            
-        }
-        this.customerService.updateCustomerContactATAMApped(this.ataChapterEditData).subscribe(res => {
-            this.getATACustomerContactMapped();
-            this.alertService.showMessage(
-                'Success',
-                `Successfully Updated`,
-                MessageSeverity.success
-            );
-        })
-    }
-    getATASubChapterByATAChapterID(id) {
+	}
 
-       
-        this.atasubchapter1service.getATASubChapterListByATAChapterId(id).subscribe(atasubchapter => {
-        const responseData = atasubchapter[0];
-           // console.log(this.add_ataSubChapterList, "this.add_ataSubChapterList++++=")
-            this.search_ataSubChapterList = responseData.map(x => {
-                return {
-                    label: x.ataSubChapterCode + ' - ' + x.description,
-                    value: x.ataSubChapterId
-                }
-            })
 
-        })
-    }
+
+	getATAAuditHistoryById(rowData) {
+		this.customerService.getCustomerContactATAAuditDetails(rowData.customerContactATAMappingId).subscribe(res => {
+			this.auditHistory1 = res;
+
+		})
+	}
+	getColorCodeForHistoryATA(i, field, value) {
+		const data = this.auditHistory1;
+		const dataLength = data.length;
+		if (i >= 0 && i <= dataLength) {
+			if ((i + 1) === dataLength) {
+				return true;
+			} else {
+				return data[i + 1][field] === value
+			}
+		}
+	}
+	updateATAChapters() {
+
+		this.ataChapterEditData = {
+			...this.ataChapterEditData,
+			masterCompanyId: 1,
+			isActive: true,
+			createdBy: this.userName,
+			updatedBy: this.userName,
+			createdDate: new Date(),
+			customerContactId: this.selectedContact.customerContactId,
+
+			ataChapterName: getValueFromArrayOfObjectById('label', 'value', this.ataChapterEditData.ataChapterId, this.search_ataChapterList1),
+			ataChapterCode: getValueFromArrayOfObjectById('code', 'value', this.ataChapterEditData.ataChapterId, this.search_ataChapterList1),
+
+			ataSubChapterDescription: getValueFromArrayOfObjectById('label', 'value', this.ataChapterEditData.ataSubChapterId, this.search_ataSubChapterList1),
+
+
+		}
+		this.customerService.updateCustomerContactATAMApped(this.ataChapterEditData).subscribe(res => {
+			this.getATACustomerContactMapped();
+			this.alertService.showMessage(
+				'Success',
+				`Successfully Updated`,
+				MessageSeverity.success
+			);
+		})
+	}
+	getATASubChapterByATAChapterID(id) {
+
+
+		this.atasubchapter1service.getATASubChapterListByATAChapterId(id).subscribe(atasubchapter => {
+			const responseData = atasubchapter[0];
+			// console.log(this.add_ataSubChapterList, "this.add_ataSubChapterList++++=")
+			this.search_ataSubChapterList = responseData.map(x => {
+				return {
+					label: x.ataSubChapterCode + ' - ' + x.description,
+					value: x.ataSubChapterId
+				}
+			})
+
+		})
+		this.add_SelectedModels = undefined;
+	}
 
 }
 

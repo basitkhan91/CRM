@@ -71,13 +71,16 @@ namespace DAL.Repositories
         public SalesOrderQuote UpdateSalesQuote(SalesOrderQuote quote)
         {
             this.Context.Update(quote);
+            
             this.Context.SaveChanges();
+            
             return quote;
         }
 
-        public SalesOrderQuote Get(long id)
+        public SalesOrderQuote Get(long id, bool enableTracking = true)
         {
-            return this.Context.SalesOrderQuote.Where(q => q.SalesOrderQuoteId == id).FirstOrDefault();
+            return  enableTracking  ? this.Context.SalesOrderQuote.Where(q => q.SalesOrderQuoteId == id).FirstOrDefault() 
+                    : this.Context.SalesOrderQuote.AsNoTracking().Where(q => q.SalesOrderQuoteId == id).FirstOrDefault() ;
         }
     }
 }

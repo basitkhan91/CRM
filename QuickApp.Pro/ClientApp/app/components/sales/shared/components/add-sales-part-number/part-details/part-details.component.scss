@@ -8,7 +8,6 @@ button {
 
 div.row {
   padding: 10px;
-  background-color: #e5e5e5;
 }
 
 #footer {
@@ -51,6 +50,18 @@ div.row {
 }
 .sales-quote-part-search-data tr td:last-child {
   background: #FFF;
+  position: -webkit-sticky;
+  position: sticky;
+  right: 0;
+}
+.sales-quote-part-search-data tr th:first-child {
+  background: #4298ff;
+  color: #fff;
+  position: -webkit-sticky;
+  position: sticky;
+  left: 0;
+}
+.sales-quote-part-search-data tr th:last-child {
   position: -webkit-sticky;
   position: sticky;
   right: 0;

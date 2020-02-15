@@ -18,7 +18,7 @@ export class WorkOrderQuoteService {
     creditTerms: any;
     employeesOriginalData: any[];
     constructor(private workOrderEndpointService: WorkOrderEndpointService,
-        private quoteEndPointService: QuoteEndpointService) {
+        public quoteEndPointService: QuoteEndpointService) {
     }
 
     createOrUpdateQuotation(data) {
@@ -26,7 +26,7 @@ export class WorkOrderQuoteService {
     }
 
     getWorkOrderById(workOrderId) {
-        return this.workOrderEndpointService.getWorkOrderById(workOrderId);
+        return this.workOrderEndpointService.getWorkOrderById(workOrderId,0);
     }
 
     getPartsDetail(workOrderId) {
@@ -117,6 +117,8 @@ export class WorkOrderQuoteService {
     getSavedQuoteDetails(wfwoid){
         return this.quoteEndPointService.getSavedQuoteDetails(wfwoid);
     }
-
+    getPartDetails(itemMasterId, conditionId){
+        return this.quoteEndPointService.getPartDetails(itemMasterId, conditionId);
+    }
 
 }

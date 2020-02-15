@@ -20,6 +20,7 @@ export class ExclusionsCreateComponent implements OnInit, OnChanges {
     @Input() markupList;
     @Input() editData;
     @Input() taskList: any = [];
+    @Input() isWorkFlow: boolean = false;
     @Output() saveExclusionsListForWO = new EventEmitter();
     @Output() updateExclusionsListForWO = new EventEmitter();
 
@@ -85,9 +86,9 @@ export class ExclusionsCreateComponent implements OnInit, OnChanges {
 
 
     ngOnChanges(): void {
-        console.log(this.taskList);
-        console.log(this.isEdit);
-        console.log(this.isQuote);
+        if(!this.isWorkFlow){
+            this.addRow();
+        }
     }
     reCalculate() {
         this.calculateQtySummation();
@@ -98,6 +99,15 @@ export class ExclusionsCreateComponent implements OnInit, OnChanges {
         var newRow = Object.assign({}, this.row);
         newRow.workflowExclusionId = "0";
         // newRow.taskId = this.workFlow.taskId;
+        if(this.taskList){
+            this.taskList.forEach(
+                task=>{
+                    if(task.description == "Assemble"){
+                        newRow.taskId = task.taskId;
+                    }
+                }
+            )
+        }
         newRow.partDescription = "";
         newRow.estimtPercentOccurrance = "";
         newRow.extendedCost = "";

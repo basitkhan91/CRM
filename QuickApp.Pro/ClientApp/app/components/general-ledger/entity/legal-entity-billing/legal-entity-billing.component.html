@@ -2,31 +2,6 @@
     <div class="right_col" role="main" style="padding: 2px 6px">
         <div >
             <div class="x_content">
-              <!--  <div class="col-md-12 shadow-box-cstm">        
-                    <div class="col-md-4">
-                        <p class="fs12">
-                        <label class="control-label labels-font-header" style="width: auto;">Customer Name: </label>
-                    <span class="span-header-red" style="text-transform: capitalize"> {{customerName }} </span> </p>
-                    </div>
-                    <div class="col-md-4">
-                        <p class="fs12">
-                        <label class="control-label labels-font-header" style="width: auto;">Customer Code: </label>
-                        <span class="span-header-red" style="text-transform: capitalize"> {{customerCode }} </span> </p>
-                    </div>                            
-                </div> -->
-                <!-- <div class="form-group col-sm-4 Customer-details-heading" style="display: inline-block;margin: 10px 5px 0 5px;">
-                    <p class="fs10">
-                        <label class="control-label w100">Customer Name:</label>
-                        {{customerName}}
-                    </p>
-                </div>
-                <div class="form-group col-sm-4 Customer-details-heading" style="display: inline-block;margin: 10px 5px 0 5px;">
-                    <p class="fs10">
-                        <label class="control-label w100">Customer Code:</label>
-                        {{customerCode}}
-                    </p>
-                </div> -->
-
                 <div class="card" style="padding: 10px;">
                     <div>
                         <div class="col-md-12" style="margin-bottom: -10px;">
@@ -40,25 +15,11 @@
                                     ><i class="fa fa-plus-circle fa-lg" (click)="addBillingIfo()"></i
                                     ></a>
                                     </h4>
-                            <!-- <h3 class="po-head pull-left" style="padding: 0 6px;">Billing Information List</h3> -->
-                            <!-- <h4 class="float-left">
-                                    Add Billing Information
-                                    <a
-                                    class="plusicon-cstm"
-                                    href="#"
-                                    data-toggle="modal"
-                                    data-target="#addBillingInfo" 
-                                    ><i class="fa fa-plus-circle fa-lg" (click)="addBillingIfo()"></i
-                                    ></a>
-                                </h4> -->
-                            <!-- <button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#addBillingInfo" >Add Billing Information</button> -->
                         </div>
                         <div class="clear"></div>
                         <hr />
                     </div>
 
-
-                    <!--<p class="lead"></p>-->
                     <p-table #dt class="rpo-table-cstm rro-table-cstm tab-table-cstm"
                      [value]="billingInfoList"
                       [metaKeySelection]="true" 
@@ -81,9 +42,7 @@
                                 </div>
                                 <button type="button" class="btn btn-primary" matTooltip="Download  Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export All Data" (click)="dt.exportCSV()" style="padding: 5px 10px !important;"></button>
                                 <button type="button" class="btn btn-primary" matTooltip="Download Selected Data" matTooltipPosition="above" pButton icon="fa-download" iconPos="left" label="Export Selection Only" (click)="dt.exportCSV({selectionOnly:true})" style="padding: 5px 10px !important;"></button>
-
                                 <div class="excel-upload  excel-upload-cstm">
-
                                     <input type="file" name="upload[]" id="upload" (change)="customExcelUpload($event)" class="uploaddoc upload-file"
                                            accept=".xlsx, .xls, .csv">
                                     <label for="upload">
@@ -92,13 +51,9 @@
                                         </span>
                                     </label>
                                     &nbsp; &nbsp;
-
                                     <button type="button" class="btn btn-primary" matTooltip="Download Sample File" matTooltipPosition="above" (click)="sampleExcelDownload()">Sample File Download</button>
                                 </div>
-
                             </div>
-
-
                         </ng-template>
 
                         <ng-template pTemplate="header" let-columns>
@@ -116,13 +71,11 @@
                                         <input style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field, 'contains')">
                                     </th>
                                     <th></th>
-
                             </tr>
                         </ng-template>
 
                         <ng-template pTemplate="body" let-rowData let-columns="columns">
                             <tr [pSelectableRow]="rowData" [pSelectableRowDblClick]="rowData" (dblclick)="toggledbldisplay(rowData)" >
-                                    <!-- [ngClass]="{'row-primary': rowData.isPrimary === true}" -->
                                     <td > <span class="flag">
                                             <i  *ngIf="rowData.isPrimary == true"   [ngStyle]="{'color': rowData.isPrimary == true ? 'green' : 'none'}"  
                                              class="fa fa-flag" aria-hidden="true"></i>
@@ -137,21 +90,16 @@
                                     <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on" offLabel="off" (onChange)="updateActiveorInActiveForBilling(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
                                     <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="updateActiveorInActiveForBilling(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
                                     <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on" offLabel="off" (onChange)="updateActiveorInActiveForBilling(rowData)" [(ngModel)]="rowData['isActive']"></p-inputSwitch>
-                                    <!--<span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openView(view,rowData)" title="View"><i class="fa fa-eye"></i></a> </span>-->
                                     <span data-toggle="modal" data-target="#view"> <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip" (click)="openBillingView(rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
                                     <button class="btn-edit" mat-icon-button (click)="openEdit(rowData)" matTooltip="edit" data-toggle="modal" data-target="#addBillingInfo">
                                         <mat-icon>edit</mat-icon>
                                     </button>
-
                                     <button class="btn-delete" mat-icon-button matTooltip="delete" (click)="deleteBillingInfo(deleteContent,rowData)">
                                         <mat-icon color="warn">delete</mat-icon>
                                     </button>
-
-                                    <!--<button (click)="openShipVia(contentShipVia,rowData)" data-target="#VShipVia" class="btn btn-danger nobg" data-toggle="tooltip" title="" data-original-title="View Shipping Via Information"><i class="fa fa-truck"></i></button>-->
-                                    <button class="btn-history" mat-icon-button matTooltip="history" (click)="getCustomerBillingHistory(contentAuditHist,rowData)">
+                                    <button class="btn-history" mat-icon-button matTooltip="history" (click)="getlegalEntityBillingHistory(contentAuditHist,rowData)">
                                         <mat-icon color="green">history</mat-icon>
                                     </button>
-
                                 </td>
 
                             </tr>
@@ -163,17 +111,11 @@
                             <input style="width: 5%;" [(ngModel)]="totalPages" [disabled]="true" pInputText type="text" />
                         </ng-template>
                     </p-table>
-                    <!-- <div *ngIf="allActions.length<=0" style="text-align:center;border:1px solid">
-                        No Records
-                    </div> -->
                     <div style="margin-top: 10px;">
                         <button type="button" class="btn btn-primary pull-right" (click)="nextClick()">Save & Next</button>
                         <button type="button" class="btn btn-primary pull-right submit-btn" (click)="backClick()">Previous</button>
                     </div>
                 </div>
-
-                
-
                 <div class="clear"></div>
                 <div class="modal fade success-msg" id="success-popup" role="dialog" data-backdrop="static" data-keyboard="false">
                     <div class="modal-dialog modal-sm popup-timeout">
@@ -185,79 +127,13 @@
                         </div>
                     </div>
                 </div>
-                <!-- <p-dialog class="p-dialog-cstm" [(visible)]="display" [modal]="true" [dismissableMask]="true" maximizedLeft="140px" maximizedTop="140px"
-                          [width]="350" [minWidth]="200" [responsive]="true"
-                          [minY]="1050" [baseZIndex]="1100000">
-
-
-                    <h5 [ngStyle]="{'color':'red'}">
-                        Please Enter (*) Mandatory Fields
-                    </h5>
-                    <p-footer>
-                        <button type="button" pButton icon="pi pi-check" (click)="display=false" label="Close"></button>
-                    </p-footer>
-
-                </p-dialog> -->
-
-                <!-- <ng-template #modelEdits let-c="close" let-d="dismiss" style="width:auto">
-                    <div class="modal-header">
-                        <h4 class="modal-title" *ngIf="isEditMode">Edit Country</h4>
-                        <h4 class="modal-title" *ngIf="!isEditMode">Add Country</h4>
-                        <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <form #userForm="ngForm" class="form-horizontal" (ngSubmit)="saveCountryList()">
-
-                            <div class="form-group">
-                                <label for="name" class="control-label">Country Name<strong class="clr-red">*</strong></label>
-                                <p-autoComplete [(ngModel)]="sourceAction.nice_name" name="country" [suggestions]="countrycollection" (completeMethod)="filtercountry($event)" [size]="30"
-                                                [minLength]="1" [dropdown]="true">
-                                    <ng-template let-countryName pTemplate="item">
-                                        <div class="ui-helper-clearfix">{{countryName}}</div>
-                                    </ng-template>
-                                </p-autoComplete>
-                            </div>
-                            <div class="form-group">
-                                <label for="description" class="control-label">countries_iso_code</label>
-                                <div class="control-data">
-                                    <input placeholder="Memo" #countries_iso_code="ngModel" id="countries_iso_code" minlength="2" name="country" [(ngModel)]="sourceAction.countries_iso_code">
-
-                                </div>
-                                <div class="clear"></div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-sm-6">
-                                    <label class="form-check-label" for="isActive">
-                                        <input type="checkbox" name="isActive" #isActive="ngModel" class="form-check-input" checked id="isActive" [(ngModel)]="sourceAction.isActive"> Active
-                                    </label>
-                                </div>
-                                <div class="clear"></div>
-                            </div>
-
-
-                            <div class="modal-footer">
-
-                                <button class="btn btn-success">Submit</button>
-                                <button type="button" class="btn btn-danger" (click)="dismissModel()">Close</button>
-                            </div>
-                        </form>
-                    </div>
-
-                </ng-template> -->
-
-
 
                 <ng-template #contentHist let-c="close" let-d="dismiss" style="width:auto">
                     <div class="modal-header">
-
                         <h4 class="modal-title">History of Action</h4>
                         <button type="button" class="close" aria-label="Close" (click)="dismissModel()">
                             <span aria-hidden="true">&times;</span>
                         </button>
-
-
                     </div>
                     <div class="modal-body">
 
@@ -307,14 +183,14 @@
                 <div class="col-md-12 shadow-box-cstm">
                     <div class="col-md-4">
                         <p class="fs12">
-                            <label class="control-label labels-font-header" style="width: auto;">Customer Name: </label>
-                            <span class="span-header-red" style="text-transform: capitalize"> {{customerName }} </span>
+                            <label class="control-label labels-font-header" style="width: auto;">legalEntity Name: </label>
+                            <span class="span-header-red" style="text-transform: capitalize"> {{legalEntityName }} </span>
                         </p>
                     </div>
                     <div class="col-md-4">
                         <p class="fs12">
-                            <label class="control-label labels-font-header" style="width: auto;">Customer Code: </label>
-                            <span class="span-header-red" style="text-transform: capitalize"> {{customerCode }} </span>
+                            <label class="control-label labels-font-header" style="width: auto;">legalEntity Code: </label>
+                            <span class="span-header-red" style="text-transform: capitalize"> {{legalEntityCode }} </span>
                         </p>
                     </div>
                 </div>
@@ -368,23 +244,11 @@
                             <div class="form-group">
                                 <label>Bill To Country <span class="clr-red">*</span></label>
                                 <div class="inner-addon right-addon inline-block">
-
-
-                                    
                                         <p-autoComplete class="autocomp-customer-cstm" name="country"  
                                         [(ngModel)]="billingInfo.country" 
                                           [suggestions]="countryList" field="countries_name"  [forceSelection]="true" (completeMethod)="filtercountry($event)" [size]="30"
                                                           [minLength]="1" [dropdown]="true" required>
-                                            
-
                                           </p-autoComplete>
-
-                                    <!-- <p-autoComplete class="autocomp-customer-cstm"  field="nice_name" [forceSelection]="true" [(ngModel)]="billingInfo.country" name="country" [suggestions]="customerList" (completeMethod)="filtercountry($event)" [size]="30" [minLength]="1" [dropdown]="true" required>
-                                         <ng-template let-countryName pTemplate="item">
-                                            <div class="ui-helper-clearfix">{{countryName}}</div>
-                                        </ng-template> 
-                                    </p-autoComplete> -->
-                                   
                                 </div>
                             </div>
                         </div>
@@ -404,20 +268,16 @@
         <div class="modal-dialog">
           <div class="modal-content">
       
-            <!-- Modal Header -->
             <div class="modal-header">
-              <h4 class="modal-title">Details of Customer Billing Information</h4>
+              <h4 class="modal-title">Details of legalEntity Billing Information</h4>
               <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
       
-            <!-- Modal body -->
             <div class="modal-body" *ngIf="viewData">
                 <div class="col-sm-12">
                     <p><span class="label"><b>Site Name: </b></span><span class="value">{{viewData.siteName}}</span></p>
                     <p><span class="label"><b> Primary: </b></span><span class="value">{{viewData.isPrimary === true ? 'Yes' : 'No'}}</span></p>
-
                     <p><span class="label"><b>In Active: </b></span><span class="value">{{viewData.isActive === true ? 'Yes' : 'No'}}</span></p>
-
                     <p><span class="label"><b>Bill To Address 1: </b></span><span class="value">{{viewData.address1}}</span></p>
                     <p><span class="label"><b>Bill To Address 2: </b></span><span class="value">{{viewData.address2}}</span></p>
                     <p style="display:none"><span class="label"><b>Bill To Address 3: </b></span><span class="value">{{viewData.address3}}</span></p>
@@ -425,16 +285,12 @@
                     <p><span class="label"><b>Bill To State / Prov: </b></span><span class="value">{{viewData.stateOrProvince}}</span></p>
                     <p><span class="label"><b>Bill To Postal Code :</b></span><span class="value">{{viewData.postalCode}}</span></p>
                     <p><span class="label"><b>Bill To Country: </b></span><span class="value">{{viewData.countryName}}</span></p>
-
                     <div class="clear"></div>
                 </div>
             </div>
-      
-            <!-- Modal footer -->
             <div class="modal-footer">
               <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
             </div>
-      
           </div>
         </div>
       </div>
@@ -457,7 +313,6 @@
     </div>
 </ng-template>
 <ng-template #contentAuditHist let-c="close" let-d="dismiss" style="width:auto" data-backdrop="static">
-    <!--<div #contentAuditHist id="contentAuditHist" class="modal fade">-->
     <div class="modal-header">
 
         <h4 class="modal-title">History of Billing Information</h4>
@@ -468,21 +323,20 @@
         <div class="col-md-12 shadow-box-cstm">
             <div class="col-md-4">
                 <p class="fs12">
-                    <label class="control-label labels-font-header" style="width: auto;">Customer Name: </label>
-                    <span class="span-header-red" style="text-transform: capitalize"> {{customerName }} </span>
+                    <label class="control-label labels-font-header" style="width: auto;">legalEntity Name: </label>
+                    <span class="span-header-red" style="text-transform: capitalize"> {{legalEntityName }} </span>
                 </p>
             </div>
             <div class="col-md-4">
                 <p class="fs12">
-                    <label class="control-label labels-font-header" style="width: auto;">Customer Code: </label>
-                    <span class="span-header-red" style="text-transform: capitalize"> {{customerCode }} </span>
+                    <label class="control-label labels-font-header" style="width: auto;">legalEntity Code: </label>
+                    <span class="span-header-red" style="text-transform: capitalize"> {{legalEntityCode }} </span>
                 </p>
             </div>
         </div>
 
     </div>
     <div class="modal-body">
-
         <div class="table-responsive">
             <table class="table table-bordered">
                 <thead>
@@ -498,12 +352,8 @@
                         <th>Is Active</th>
                         <th>Created By</th>
                         <th>Created Time</th>
-
                         <th>Updated By</th>
                         <th>Last Updated Time</th>
-
-
-
                     </tr>
                 </thead>
                
@@ -515,17 +365,13 @@
                     <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'city', audit.city)  ? 'black' : 'red'  }">{{audit.city}}</td>
                     <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'stateOrProvince', audit.stateOrProvince)  ? 'black' : 'red'  }">{{audit.stateOrProvince}}</td>
                     <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'postalCode', audit.postalCode)  ? 'black' : 'red'  }">{{audit.postalCode}}</td>
-
                     <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'country', audit.country)  ? 'black' : 'red'  }">{{audit.country}}</td>
                     <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'isPrimary', audit.isPrimary)  ? 'black' : 'red'  }">{{audit.isPrimary}}</td>
-
                     <td [ngStyle]="{'color':  getColorCodeForHistory(i, 'isActive', audit.isActive)  ? 'black' : 'red'  }">{{audit.isActive}}</td>
                     <td>{{audit.createdBy}}</td>
                     <td>{{audit.createdDate | date: 'dd-MM-yyyy h:mm a '}}</td>
-
                     <td>{{audit.updatedBy}}</td>
                     <td>{{audit.updatedDate | date: 'dd-MM-yyyy h:mm a '}}</td>
-
                 </tr>
             </table>
         </div>

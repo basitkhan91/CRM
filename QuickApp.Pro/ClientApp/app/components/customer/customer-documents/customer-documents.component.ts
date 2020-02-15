@@ -13,49 +13,65 @@ import { MatDialog } from '@angular/material';
 import { getObjectByValue, getObjectById, getValueFromObjectByKey } from '../../../generic/autocomplete';
 import { ConfigurationService } from '../../../services/configuration.service';
 import * as $ from 'jquery';
+import { Table } from 'primeng/table';
 @Component({
-	selector: 'app-customer-documents',
-	templateUrl: './customer-documents.component.html',
-	styleUrls: ['./customer-documents.component.scss'],
+    selector: 'app-customer-documents',
+    templateUrl: './customer-documents.component.html',
+    styleUrls: ['./customer-documents.component.scss'],
 })
 /** Customer component*/
 export class CustomerDocumentsComponent implements OnInit {
-    disableSave:boolean=true;
-	@Input() savedGeneralInformationData;
-	@Input() editMode;
-	@Input() editGeneralInformationData;
+    disableSave: boolean = true;
+    @Input() savedGeneralInformationData;
+    @Input() editMode;
+    @Input() editGeneralInformationData;
     @Output() tab = new EventEmitter<any>();
     @ViewChild('fileUploadInput') fileUploadInput: any;
-    @Input() customerDataFromExternalComponents : any;
-	documentInformation = {
-
-		docName: '',
-		docMemo: '',
-		docDescription: ''
-	}
-	customerDocumentsData: any = [];
+    @Input() customerDataFromExternalComponents: any;
+    documentInformation = {
+        docName: '',
+        docMemo: '',
+        docDescription: ''
+    }
+    @ViewChild('documents') Table;
+    customerDocumentsData: any = [];
+    customerdocumentsDestructuredData = [];
     customerDocumentsColumns = [
-        
-		{ field: 'docName', header: 'Name' },
-		{ field: 'docDescription', header: 'Description' },
-		{ field: 'documents', header: 'Documents' },
-		{ field: 'docMemo', header: 'Memo' }
+
+        { field: 'docName', header: 'Name' },
+        { field: 'docDescription', header: 'Description' },
+        { field: 'fileName', header: 'FileName' },
+        // { field: 'documents', header: 'documents' },
+        { field: 'fileCreatedDate', header: 'CreatedDate' },
+        { field: 'fileCreatedBy', header: 'Created By' },
+        { field: 'fileUpdatedBy', header: 'UpdatedBy' },
+        { field: 'fileUpdatedDate', header: 'UpdatedDate' },
+        { field: 'fileSize', header: 'FileSize' },
+        { field: 'docMemo', header: 'Memo' }
     ];
+
+
+    // fileName:x[i].fileName,
+    // fileCreatedDate:x[i].createdDate, 
+    // fileCreatedBy : x[i].createdBy,
+    // fileUpdatedBy:x[i].updatedBy,
+    // fileUpdatedDate:x[i].updatedDate,
+    // fileSize : x[i].fileSize
     sourceViewforDocumentListColumns = [
         { field: 'fileName', header: 'File Name' },
     ]
-	selectedColumns = this.customerDocumentsColumns;
-	formData = new FormData()
-	// ediData: any;
+    selectedColumns = this.customerDocumentsColumns;
+    formData = new FormData()
+    // ediData: any;
     isEditButton: boolean = false;
     isDeleteMode: boolean = false;
-	id: number;
-	customerCode: any;
-	customerName: any;
+    id: number;
+    customerCode: any;
+    customerName: any;
     sourceViewforDocument: any;
     localCollection: any;
     selectedRowForDelete: any;
-	 modal: NgbModalRef;
+    modal: NgbModalRef;
     sourceViewforDocumentList: any = [];
     documentauditHisory: any[];
     headersforAttachment = [
@@ -67,13 +83,15 @@ export class CustomerDocumentsComponent implements OnInit {
     pageIndex: number = 0;
     pageSize: number = 10;
     totalPages: number = 0;
+    loader: boolean = true;
+    lastValueItegrated: any;
 
-	constructor(private router: ActivatedRoute, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public customerService: CustomerService,
+    constructor(private router: ActivatedRoute, private route: Router, private authService: AuthService, private modalService: NgbModal, private activeModal: NgbActiveModal, private _fb: FormBuilder, private alertService: AlertService, public customerService: CustomerService,
         private dialog: MatDialog, private masterComapnyService: MasterComapnyService, private configurations: ConfigurationService) {
-	}
+    }
 
-	ngOnInit() {
-		if (this.editMode) {
+    ngOnInit() {
+        if (this.editMode) {
             this.id = this.editGeneralInformationData.customerId;
 
             this.customerCode = this.editGeneralInformationData.customerCode;
@@ -94,106 +112,141 @@ export class CustomerDocumentsComponent implements OnInit {
                 this.customerName = this.savedGeneralInformationData.name;
                 this.isViewMode = false;
                 this.getList();
-            }			
+            }
 
         }
-       
-	}
+
+    }
 
     ngOnChanges(changes: SimpleChanges) {
-       
+
         for (let property in changes) {
-          
+
             if (property == 'customerDataFromExternalComponents') {
 
-            if(changes[property].currentValue != {}){
-                this.id = this.customerDataFromExternalComponents.customerId;
-                this.customerCode = this.customerDataFromExternalComponents.customerCode;
-                this.customerName = this.customerDataFromExternalComponents.name;
-                this.getList();
-                this.isViewMode = true;
-                
-              } 
+                if (changes[property].currentValue != {}) {
+                    this.id = this.customerDataFromExternalComponents.customerId;
+                    this.customerCode = this.customerDataFromExternalComponents.customerCode;
+                    this.customerName = this.customerDataFromExternalComponents.name;
+                    this.getList();
+                    this.isViewMode = true;
+
+                }
             }
         }
     }
     enableSave() {
-               this.disableSave = false;
+        if(this.sourceViewforDocumentList && this.sourceViewforDocumentList.length>0){
+            this.disableSave = false;
+        }else if(this.isEditButton == true){
+            this.disableSave = false; 
+        }else{
+            this.disableSave = true; 
+        }
        
-       } 
-       closeMyModel(type){
-           console.log("check issues")
-           $(type).modal("hide");
-           this.disableSave=true;
-       }
-	get userName(): string {
-		return this.authService.currentUser ? this.authService.currentUser.userName : "";
-	}
+        console.log("changes sidfsf")
 
-	// opencontactView(content, row) {
+    }
+    closeMyModel(type) {
+        console.log("check issues")
+        $(type).modal("hide");
+        this.disableSave = true;
+    }
+    get userName(): string {
+        return this.authService.currentUser ? this.authService.currentUser.userName : "";
+    }
 
-	fileUpload(event) {
+    // opencontactView(content, row) {
+
+    fileUpload(event) {
         console.log(event, "event+++")
-		if (event.files.length === 0)
-			return;
+        if (event.files.length === 0)
+            return  this.disableSave = true;
 
-		for (let file of event.files)
+        for (let file of event.files)
             this.formData.append(file.name, file);
-            this.disableSave=false;
+        this.disableSave = false;
     }
     removeFile(event) {
-		this.formData.delete(event.file.name)
+        this.formData.delete(event.file.name)
 
-	}
-	
-    openDocument(content, row) {
-       
+    }
+
+    openDocument(row) {
+        this.sourceViewforDocumentList = [];
         this.customerService.toGetUploadDocumentsList(row.attachmentId, row.customerId, 1).subscribe(res => {
             this.sourceViewforDocumentList = res;
             this.sourceViewforDocument = row;
+        });
 
-        })
-        
-       
+
         //this.modal = this.modalService.open(content, { size: 'sm' });
         //this.modal.result.then(() => {
         //    console.log('When user closes');
         //}, () => { console.log('Backdrop click') })
-    
+
 
     }
     docviewdblclick(data) {
         this.sourceViewforDocument = data;
+        this.openDocument(data);
         $('#docView').modal('show');
 
     }
     toGetUploadDocumentsList(attachmentId, customerId, moduleId) {
-       
+
         this.customerService.toGetUploadDocumentsList(attachmentId, customerId, moduleId).subscribe(res => {
             this.sourceViewforDocumentList = res;
+            if (res.length > 0) {
+                this.disableSave = false;
+                // this.enableSave();
+            }
             console.log(this.sourceViewforDocumentList);
         })
     }
-	getList() {
-		this.customerService.getDocumentList(this.id).subscribe(res => {
-            this.customerDocumentsData = res;
-            if (this.customerDocumentsData.length > 0) {
-                this.totalRecords = this.customerDocumentsData.length;
-                this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
+    getList() {
+        this.customerdocumentsDestructuredData = [];
+          this.customerService.getDocumentList(this.id).subscribe(res => {
+			let arr = [];
+
+			const data = res.map(x => {
+				for (var i = 0; i < x.attachmentDetails.length; i++) {
+					const y = x.attachmentDetails;
+					arr.push({
+						...x,
+						// documents: y[i].fileName,
+						fileName: y[i].fileName,
+						fileCreatedDate: y[i].createdDate,
+						fileCreatedBy: y[i].createdBy,
+						fileUpdatedBy: y[i].updatedBy,
+						fileUpdatedDate: y[i].updatedDate,
+						// fileSize: ${y[i].fileSize} MB
+						fileSize: y[i].fileSize,
+						attachmentDetailId: y[i].attachmentDetailId
+
+					})
             }
-		})
-	}
-	saveDocumentInformation() {
-		const data = {
-			...this.documentInformation,
-			customerId: this.id,
-			masterCompanyId: 1,
+        })
+            
+				this.customerdocumentsDestructuredData = arr;
+
+            this.loader = false;
+        }, err => {
+            this.customerdocumentsDestructuredData = [];
+            this.loader = false;
+        })
+    }
+    saveDocumentInformation() {
+        const data = {
+            ...this.documentInformation,
+            customerId: this.id,
+            masterCompanyId: 1,
             updatedBy: this.userName,
             createdBy: this.userName
-		}
+        }
 
-		for (var key in data) {
-			this.formData.append(key, data[key]);
+        for (var key in data) {
+            this.formData.append(key, data[key]);
         }
         if (!this.isEditButton) {
             this.customerService.documentUploadAction(this.formData).subscribe(res => {
@@ -233,32 +286,32 @@ export class CustomerDocumentsComponent implements OnInit {
             })
         }
         $("#addDocumentDetails").modal("hide");
-        this.disableSave=true;
+        this.disableSave = true;
     }
-   
-	updateCustomerDocument() { }
+
+    updateCustomerDocument() { }
 
     editCustomerDocument(rowdata) {
         this.isEditButton = true;
         this.documentInformation = rowdata;
-       
+
         this.customerService.toGetUploadDocumentsList(rowdata.attachmentId, rowdata.customerId, 1).subscribe(res => {
             this.sourceViewforDocumentList = res;
             //this.sourceViewforDocument = rowdata;
         });
-	}
+    }
     addDocumentDetails() {
         this.sourceViewforDocumentList = [];
         this.isEditButton = false;
         this.documentInformation = {
 
-		docName: '',
-		docMemo: '',
-		docDescription: ''
-	}
+            docName: '',
+            docMemo: '',
+            docDescription: ''
+        }
     }
-	backClick() {
-		this.tab.emit('Warnings');
+    backClick() {
+        this.tab.emit('Warnings');
     }
     openDelete(content, row) {
         this.selectedRowForDelete = row;
@@ -271,28 +324,32 @@ export class CustomerDocumentsComponent implements OnInit {
         }, () => { console.log('Backdrop click') })
     }
     deleteItemAndCloseModel() {
-        let customerDocumentDetailId = this.localCollection.customerDocumentDetailId;
-        if (customerDocumentDetailId > 0) {
+        // let customerDocumentDetailId = this.localCollection.customerDocumentDetailId;
+        let attachmentDetailId = this.localCollection.attachmentDetailId;
+        console.log("vendfoer",this.localCollection.AttachmentDetailId ,this.localCollection.attachmentDetailId)
+        if (attachmentDetailId > 0) {
             //this.isSaving = true;
-            this.customerService.getDeleteDocumentListbyId(customerDocumentDetailId).subscribe(
-               
+            this.customerService.deleteDocumentByCustomerAttachementId(attachmentDetailId).subscribe(res => {
+                this.getList()
                 this.alertService.showMessage(
                     'Success',
-                    `Action was deleted successfully `,
+                    `Deleted  Documents Successfully `,
                     MessageSeverity.success
-                ));
-        
-            this.getList();
-           
+                );
+
+            })
+
+
+
         }
         this.modal.close();
     }
-      dismissModel() {        
-         this.isDeleteMode = false;       
-         this.modal.close();
+    dismissModel() {
+        this.isDeleteMode = false;
+        this.modal.close();
     }
 
-    dismissDocumentPopupModel(){
+    dismissDocumentPopupModel() {
         this.fileUploadInput.clear();
         // this.closeMyModel(type);
         console.log("hiasdsadsad")
@@ -302,11 +359,13 @@ export class CustomerDocumentsComponent implements OnInit {
         const url = `${this.configurations.baseUrl}/api/FileUpload/downloadattachedfile?filePath=${rowData.link}`;
         window.location.assign(url);
     }
-    
-	getPageCount(totalNoofRecords, pageSize) {
-		return Math.ceil(totalNoofRecords / pageSize)
-	}
 
+    getPageCount(totalNoofRecords, pageSize) {
+        return Math.ceil(totalNoofRecords / pageSize)
+    }
+    pageIndexChange(event) {
+        this.pageSize = event.rows;
+    }
     openHistory(content, rowData) {
         //const { customerShippingAddressId } = rowData.customerShippingAddressId;
         //const { customerShippingId } = rowData.customerShippingId;
@@ -345,6 +404,9 @@ export class CustomerDocumentsComponent implements OnInit {
         this.alertService.showStickyMessage("Save Error", "The below errors occured whilst saving your changes:", MessageSeverity.error, error);
         this.alertService.showStickyMessage(error, null, MessageSeverity.error);
     }
+
+
+
 
 }
 

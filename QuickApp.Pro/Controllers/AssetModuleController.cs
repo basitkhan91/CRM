@@ -42,6 +42,13 @@ namespace QuickApp.Pro.Controllers
             var assets = _unitOfWork.Asset.getAllAsset();
             return Ok(assets);
         }
+        [HttpGet("GetWarrantyStatus")]
+        public IActionResult GetWarrantyStatus()
+        {
+            var assets = _unitOfWork.Asset.GetAssetWarrantyStatus();
+            return Ok(assets);
+        }
+        
 
         [HttpGet("GetAsset/{id}")]
         public IActionResult GetAsset(string id)

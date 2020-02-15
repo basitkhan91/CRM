@@ -2,34 +2,94 @@
   <div style="overflow-y: auto;">
     <p-table #dt class="rpo-table-cstm rro-table-cstm sales-quote-part-search-data" [value]="parts" [rows]="10" [lazy]="true"
       [paginator]="showPaginator" [rowsPerPageOptions]="[10, 20, 30]" [totalRecords]="totalRecords"
-      [pageLinks]="pageLinks" [columns]="columns" [scrollable]="true" [style]="{ width: '100%' }"
+      [pageLinks]="pageLinks" [columns]="columns" [scrollable]="true" 
+      [resizableColumns]="true"
+      [reorderableColumns]="true"
+      [style]="{ width: '100%' }"
       (onLazyLoad)="onPaging($event)">
       <ng-template pTemplate="colgroup" let-columns>
         <colgroup>
           <col *ngFor="let col of columns" [ngStyle]="{'width': col.width}" />
+          <col  style="width:80px"/>
         </colgroup>
       </ng-template>
-      <ng-template pTemplate="header">
-        <tr>
-          <th></th>
-          <th>Method</th>
-          <th>PN</th>
-          <th>Alternater PN</th>
-          <th>PN Description</th>
-          <th>Cond Type</th>
-          <th>UOM</th>
-          <th>Qty Available</th>
-          <th>Qty On Hand</th>
-          <th>Qty To Order</th>
-          <th>Qty On Order</th>
-          <th>Item Classification</th>
-          <th>Item Group</th>
-          <th>Control Num</th>
-          <th>Id Num</th>
-          <th>Serial Num</th>
-          <th>Actions</th>
-        </tr>
-      </ng-template>
+     
+      <ng-template pTemplate="header" let-columns>
+          <tr>
+            <th
+                *ngFor="let col of columns"
+                pResizableColumn
+                pReorderableColumn
+                >
+                {{ col.header }}
+               
+            </th>
+            <th>Actions</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-part let-columns="columns">
+          <tr [pSelectableRow]="part" [ngClass]="{'row-bg1':part.alternateFor.length==0}" pReorderableRowHandle>
+  
+              <td  *ngFor="let col of columns" pReorderableRowHandle>
+                <span *ngIf="col.field == 'selected'"><input type="checkbox" (change)="onChange($event, part)" /></span>
+                <span *ngIf="col.field == 'partNumber'">{{ part.partNumber }} <span class="alternate-part-label" *ngIf="part.mappingType==1">(Alt)</span> <span class="alternate-part-label" *ngIf="part.mappingType==2">(Eq)</span></span>
+               
+                <span *ngIf="col.field == 'itemClassification'">
+                    {{
+                      part.itemClassification !== null
+                        ? part.itemClassification.itemType
+                        : ""
+                    }}
+                  </span>
+                 
+                <span *ngIf="col.field != 'partNumber'&& col.field != 'selected'&&col.field != 'itemClassification'">{{part[col.field] }}</span>
+                
+  
+              </td>
+              <td> 
+                  <span>
+                  <a class="btn btn-info boxed-float-btn nobg"
+                     data-toggle="tooltip"
+                     (click)="viewSelectedRow(part)"
+                     
+                     matTooltip="View">
+                      <i class="fa fa-eye"></i>
+                  </a>
+                  <a class="btn btn-info boxed-float-btn nobg"
+                  data-toggle="tooltip"
+                  (click)="viewStockLineHistory(part)"
+                  
+                  matTooltip="History">
+                   <i class="fa fa-history"></i>
+               </a>
+              </span>
+            </td>
+              </tr>
+        </ng-template>
+        <!--
+
+       
+        <ng-template pTemplate="header">
+            <tr>
+              <th></th>
+              <th>Method</th>
+              <th>PN</th>
+              <th>Alternater PN</th>
+              <th>PN Description</th>
+              <th>Cond Type</th>
+              <th>UOM</th>
+              <th>Qty Available</th>
+              <th>Qty On Hand</th>
+              <th>Qty To Order</th>
+              <th>Qty On Order</th>
+              <th>Item Classification</th>
+              <th>Item Group</th>
+              <th>Control Num</th>
+              <th>Id Num</th>
+              <th>Serial Num</th>
+              <th>Actions</th>
+            </tr>
+          </ng-template>
       <ng-template pTemplate="body" let-part>
         <tr [ngClass]="{'row-bg1':part.alternateFor?.length==0}">
           <td><input type="checkbox" [(ngModel)]="part.selected" (change)="onChange($event, part,salesMargin)" /></td>
@@ -75,6 +135,7 @@
 
         </tr>
       </ng-template>
+    -->
       
     </p-table>
   </div>

@@ -33,6 +33,7 @@ import { AtaSubChapter1Service } from '../../../../services/atasubchapter1.servi
 /** item-master-create-capabilities component*/
 export class ItemMasterCreateCapabilitiesComponent implements OnInit {
     @Input() itemMasterId;
+    @Input() isCapViewMode : any = false;
     manufacturerData: any = [];
     LoadValues: any;
     selectedAircraftId: any;
@@ -122,6 +123,7 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
      }
     ngOnInit() {
         console.log(this.itemMasterId, "itemMasterId")
+        console.log(this.isCapViewMode, "isCapViewMode++s")
         this.getCapabilityTypesList();
         this.getAircraftTypesList();
         // this.getAtAChapters();

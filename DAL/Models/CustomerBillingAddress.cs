@@ -16,10 +16,10 @@ namespace DAL.Models
         
         public string SiteName { get; set; }
 
-        public int? MasterCompanyId { get; set; }
+        public int MasterCompanyId { get; set; }
 
-        public bool? IsActive { get; set; }
-        public bool? IsDeleted { get; set; }
+        public bool IsActive { get; set; } = true;
+        public bool IsDeleted { get; set; } = false;
 
         public  bool? IsPrimary { get; set; }
     }

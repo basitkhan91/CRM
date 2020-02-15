@@ -56,7 +56,7 @@ export class ItemMasterCapabilitiesListComponent implements OnInit {
     allItemMasterCapsList: any[] = [];
     selectedColumn: any;
     getSelectedCollection: any;
-
+    colaircraft: any[] = [];
     matSpinner: boolean;
     local: any;
     partCollection: any[];
@@ -121,6 +121,11 @@ export class ItemMasterCapabilitiesListComponent implements OnInit {
     @Input() isEnableItemMaster: boolean = false;
     @ViewChild("addCapabilityButton") addCapabilityButton: ElementRef;
     selectedCapabilityType: any;
+    isCapViewMode: boolean = false;
+    itemMasterCapesPageSize: Number = 10;
+    selectedItemMasterCapData: any = {};
+    legalEntityList: any = [];
+    capabilityauditHisory: AuditHistory[] = [];
 
 
     /** item-master-capabilities-list ctor */
@@ -197,7 +202,7 @@ export class ItemMasterCapabilitiesListComponent implements OnInit {
         this.getAllATASubChapter();
         this.loadManagementdataForTree();
         this.getCapabilityTypeData();
-
+        this.getLegalEntity();
 
 
     }
@@ -373,6 +378,11 @@ export class ItemMasterCapabilitiesListComponent implements OnInit {
         }
 
     }
+    getLegalEntity() {
+        this.commonservice.getLegalEntityList().subscribe(res => {
+            this.legalEntityList = res;
+        })
+    }
     openView(content, row) //this is for Edit Data get
     {
         this.itemMasterService.isCapsEditMode = false;
@@ -381,14 +391,21 @@ export class ItemMasterCapabilitiesListComponent implements OnInit {
         this.openPopUpWithData(content, row);
     }
 
-    openEdits(content, row) //this is for Edit Data get
+    openEdits(row) //this is for Edit Data get
     {
-        this.itemMasterService.isCapsEditMode = true;
-        this.isEditMode = true;
-        this.isSaving = true;
-        this.itemMasterService.listCollection = row; //Storing Row Data  and saving Data in Service that will used in StockLine Setup
-        console.log(this.isEditMode);
-        this.openPopUpWithData(content, row);
+        
+
+        this.selectedItemMasterCapData = row;
+        this.selectedItemMasterCapData.verifiedDate = new Date(this.selectedItemMasterCapData.verifiedDate);
+        // this.itemMasterService.isCapsEditMode = true;
+        // this.isEditMode = true;
+        // this.isSaving = true;
+        // this.itemMasterService.listCollection = row; //Storing Row Data  and saving Data in Service that will used in StockLine Setup
+        // console.log(this.isEditMode);
+        // this.openPopUpWithData(content, row);
+    }
+    getDynamicVariableData(variable, index) {
+        return this[variable + index]
     }
     openPopUpWithData(content, row) //this is for Edit Data get
     {
@@ -464,7 +481,7 @@ export class ItemMasterCapabilitiesListComponent implements OnInit {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
 
-        this.auditHisory = auditHistory;
+        this.capabilityauditHisory = auditHistory;
 
 
         this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
@@ -1289,8 +1306,16 @@ export class ItemMasterCapabilitiesListComponent implements OnInit {
         this.showCapes = true;
         // this.cdRef.detectChanges();
     }
+    onViewCapes(rowData){
+        this.showCapes = true;
+        this.isCapViewMode = true;
+        this.itemMasterId = rowData.itemMasterId;
+        this.selectedItemMasterCapData = rowData;
+    }
     closeCapes() {
         this.showCapes = false;
+        this.isCapViewMode = false;
+        
         $('#capes1').modal('hide');
     }
     closeCapesPopup(data) {
@@ -1330,6 +1355,22 @@ export class ItemMasterCapabilitiesListComponent implements OnInit {
     }
     searchCaps(){
 
+    }
+    getPageCount(totalNoofRecords, pageSize) {
+        return Math.ceil(totalNoofRecords / pageSize)
+    }
+
+    getAuditHistory(content, row){
+    
+            this.isSaving = true;
+            this.itemMasterService.getItemMasterCapabilityAuditHistory(row.itemMasterCapesId).subscribe(
+                results => {
+                    this.capabilityauditHisory = results
+                },
+                error => this.saveFailedHelper(error));
+    
+    
+    
     }
 
 }

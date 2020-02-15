@@ -32,7 +32,7 @@ import {
     AllTasks
 } from '../../../../models/work-order-labor.modal';
 import { CommonService } from '../../../../services/common.service';
-import { validateRecordExistsOrNot, selectedValueValidate, getValueFromObjectByKey, getObjectById, getObjectByValue, editValueAssignByCondition, getValueFromArrayOfObjectById } from '../../../../generic/autocomplete';
+import { validateRecordExistsOrNot, selectedValueValidate, getValueFromObjectByKey, getObjectById, getObjectByValue, editValueAssignByCondition, getValueFromArrayOfObjectById, getValueByFieldFromArrayofObject } from '../../../../generic/autocomplete';
 import { AuthService } from '../../../../services/auth.service';
 import { ActivatedRoute } from '@angular/router';
 import { WorkFlowtService } from '../../../../services/workflow.service';
@@ -58,10 +58,14 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     // workOrderPartNumbers: WorkOrderPartNumber[];
 
     @Input() isEdit;
+
     @Input() workOrderTypes;
     @Input() workOrderStatusList;
     @Input() creditTerms;
+    @Input() jobTitles;
     @Input() employeesOriginalData;
+    @Input() salesPersonOriginalList;
+    @Input() csrOriginalList;
     @Input() workScopesList;
     @Input() workOrderStagesList;
     @Input() workOrderOriginalStageList;
@@ -75,6 +79,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     @Input() currencyList;
     @Input() legalEntityList;
     @Input() conditionList;
+
     @Input() workFlowWorkOrderId = 0;
     @Input() showGridMenu = false;
 
@@ -88,6 +93,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     // creditTerms: any;
     // customers: Customer[];
     //partNumberOriginalData: any;
+    isRecCustomer: boolean;
     selectedCustomer: Customer;
     selectedEmployee: any;
     selectedsalesPerson: any;
@@ -212,6 +218,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     workOrderFreightList: Object;
 
 
+
     constructor(
         private alertService: AlertService,
         private workOrderService: WorkOrderService,
@@ -241,9 +248,14 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
         this.getTaskList();
     }
     async ngOnInit() {
+
         this.createModeData();
 
+
+
+
         //  this.showTabsGrid = true;
+
         this.workOrderService.creditTerms = this.creditTerms;
         // this.workOrderService.employeesOriginalData = this.employeesOriginalData;
         this.mpnFlag = true;
@@ -267,16 +279,17 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
                 this.isEditLabor = true;
                 this.addMPN();
                 this.getAllGridModals();
-
+                this.isRecCustomer = false;
 
 
             } else { // edit WorkOrder
 
-                
+
 
                 console.log(this.workOrderGeneralInformation);
                 this.getWorkOrderQuoteDetail(this.workOrderGeneralInformation.workOrderId, this.workOrderGeneralInformation.workFlowWorkOrderId);
                 const data = this.workOrderGeneralInformation;
+                this.isRecCustomer = data.isRecCustomer;
                 this.commonService.getManagementStructureDetails(data.managementStructureId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
                     this.selectedLegalEntity(res.Level1);
                     this.selectedBusinessUnit(res.Level2);
@@ -298,10 +311,10 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
                     ...data,
                     workOrderTypeId: String(data.workOrderTypeId),
                     customerReference: data.receivingCustomerWorkId,
-                    csr: getObjectById('value', parseInt(data.csrId), this.employeesOriginalData),
+                    csr: getObjectById('employeeId', data.csrId, this.csrOriginalList),
                     customerId: data.customerDetails,
                     employeeId: getObjectById('value', data.employeeId, this.employeesOriginalData),
-                    salesPersonId: getObjectById('value', data.salesPersonId, this.employeesOriginalData),
+                    salesPersonId: getObjectById('employeeId', data.salesPersonId, this.salesPersonOriginalList),
 
                     partNumbers: data.partNumbers.map((x, index) => {
 
@@ -340,8 +353,9 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
                 this.savedWorkOrderData = this.workOrderGeneralInformation;
                 this.getWorkOrderWorkFlowNos();
                 // this.billingCreateOrEdit();
-               
-                 
+                if (this.isRecCustomer)
+                    this.showTabsGrid = false;
+
             }
         } else {
             console.log(this.subWorkOrderDetails);
@@ -416,11 +430,11 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
 
         this.partNumberOriginalData = null;
         this.partNumberList = null;
-        
+
         currentRecord.csr = object.csrId;
         currentRecord.creditLimit = object.creditLimit;
         currentRecord.creditTermsId = object.creditTermsId;
-        
+
         this.getPartNosByCustomer(object.customerId);
         this.getReceivingCustomerreference(object.customerId);
 
@@ -442,14 +456,15 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
 
 
 
+
     filterCsr(event) {
-        this.csrList = this.employeesOriginalData;
+        this.csrList = this.csrOriginalList;
 
         if (event.query !== undefined && event.query !== null) {
-            const employee = [...this.employeesOriginalData.filter(x => {
-                return x.label.toLowerCase().includes(event.query.toLowerCase())
+            const csr = [...this.csrOriginalList.filter(x => {
+                return x.name.toLowerCase().includes(event.query.toLowerCase())
             })]
-            this.csrList = employee;
+            this.csrList = csr;
         }
     }
 
@@ -465,18 +480,22 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
         }
     }
 
+
     filterSalesPerson(event): void {
 
-        this.salesPersonList = this.employeesOriginalData;
+        console.log(this.salesPersonOriginalList);
+
+        this.salesPersonList = this.salesPersonOriginalList;
 
         if (event.query !== undefined && event.query !== null) {
-            const salesPerson = [...this.employeesOriginalData.filter(x => {
-                return x.label.toLowerCase().includes(event.query.toLowerCase())
+            const salesPerson = [...this.salesPersonOriginalList.filter(x => {
+                return x.name.toLowerCase().includes(event.query.toLowerCase())
             })]
             this.salesPersonList = salesPerson;
         }
 
     }
+
 
     filterTechnician(event): void {
 
@@ -601,9 +620,9 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
             ...generalInfo,
             customerId: editValueAssignByCondition('customerId', generalInfo.customerId),
             employeeId: editValueAssignByCondition('value', generalInfo.employeeId),
-            salesPersonId: editValueAssignByCondition('value', generalInfo.salesPersonId),
-            csrId: editValueAssignByCondition('value', generalInfo.csr),
-             receivingCustomerWorkId: editValueAssignByCondition('value', generalInfo.customerReference),
+            salesPersonId: editValueAssignByCondition('employeeId', generalInfo.salesPersonId),
+            csrId: editValueAssignByCondition('employeeId', generalInfo.csr),
+            receivingCustomerWorkId: editValueAssignByCondition('value', generalInfo.customerReference),
             //receivingCustomerWorkId: 1,
             masterCompanyId: 1,
             customerContactId: 68,
@@ -625,7 +644,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
             })
         };
 
-        if (this.isEdit) {
+        if (this.isEdit && this.isRecCustomer === false) {
             this.workOrderService.updateNewWorkOrder(data).pipe(takeUntil(this.onDestroy$)).subscribe(
                 result => {
                     this.saveWorkOrderGridLogic(result, generalInfo)
@@ -869,7 +888,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
 
     getNTEandSTDByItemMasterId(itemMasterId, currentRecord) {
 
-        if (currentRecord.workOrderScopeId !== null && currentRecord.workOrderScopeId !== '' && currentRecord.workOrderScopeId>0) {
+        if (currentRecord.workOrderScopeId !== null && currentRecord.workOrderScopeId !== '' && currentRecord.workOrderScopeId > 0) {
             const label = getValueFromArrayOfObjectById('label', 'value', currentRecord.workOrderScopeId, this.workScopesList);
             this.workOrderService.getNTEandSTDByItemMasterId(itemMasterId, label).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
                 if (res !== null) {
@@ -1053,6 +1072,8 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
                     this.taskList.forEach(task => {
                         this.labor.workOrderLaborList[0][task.description.toLowerCase()] = [];
                     });
+                    this.gridTabChange('materialList');
+                    this.getMaterialListByWorkOrderId();
                 },
                 (error) => {
                     console.log(error);
@@ -1585,11 +1606,11 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
                 this.workOrderQuoteId = res.workOrderQuote.workOrderQuoteId;
                 console.log(this.workOrderQuoteId, res.workOrderQuoteId, res);
                 this.quoteService.getSavedQuoteDetails(this.workFlowWorkOrderId)
-                .subscribe(
-                    res=>{
-                        this.getQuoteCostingData(res['buildMethodId']);
-                    }
-                )
+                    .subscribe(
+                        res => {
+                            this.getQuoteCostingData(res['buildMethodId']);
+                        }
+                    )
             }
 
         })

@@ -158,12 +158,12 @@
   </div>
   <div class="card">
     <div [ngClass]="{ hideTab: currentTab !== 'General' }">
-      <div *ngIf="countryListOriginal && customerListOriginal&&customerallListOriginal">
+      <div *ngIf="countryListOriginal && customerallListOriginal">
         <app-customer-general-information
           [editMode]="editMode"
           [editCustomerId]="customerId"
           [customerListOriginal]="customerListOriginal"
-         [customerallListOriginal]="customerallListOriginal"
+          [customerallListOriginal]="customerallListOriginal"
           [countryListOriginal]="countryListOriginal"
           (saveGeneralInformationData)="generalInformationData($event)"
           (editGeneralInformation)="updateInformationData($event)"
@@ -177,13 +177,13 @@
           [savedGeneralInformationData]="savedGeneralInformationData"
           [editMode]="editMode"
           [add_ataChapterList]="add_ataChapterList"
-           [search_ataChapterList]="search_ataChapterList"
-                               [search_ataChapterList1]="search_ataChapterList1"
+          [search_ataChapterList]="search_ataChapterList"
+          [search_ataChapterList1]="search_ataChapterList1"
           [editGeneralInformationData]="editGeneralInformationData"
           (saveCustomerContactATAMapped)="saveCustomerContactATAMapped($event)"
           (refreshCustomerATAByCustomerId)="getMappedATAByCustomerId($event)"
           (refreshCustomerATAMapped)="getMappedATAByCustomerId($event)"
-       (refreshCustomerContactMapped)="getMappedContactByCustomerId($event)"
+          (refreshCustomerContactMapped)="getMappedContactByCustomerId($event)"
           (tab)="changeOfTab($event)"
         ></app-customer-contacts>
       </div>
@@ -207,7 +207,7 @@
           [savedGeneralInformationData]="savedGeneralInformationData"
           [ataListDataValues]="ataListDataValues"
           (refreshCustomerATAMapped)="getMappedATAByCustomerId($event)"
-[contactList]="contactList"
+          [contactList]="contactList"
           (tab)="changeOfTab($event)"
         ></app-customer-ata>
       </div>
@@ -219,7 +219,8 @@
           [editGeneralInformationData]="editGeneralInformationData"
           [savedGeneralInformationData]="savedGeneralInformationData"
           (tab)="changeOfTab($event)"
- [creditTermsListOriginal]="creditTermsListOriginal"
+          [selectedCustomerTab]="currentTab"
+          [creditTermsListOriginal]="creditTermsListOriginal"
         ></app-customer-financial-information>
       </div>
     </div>
@@ -255,6 +256,7 @@
           [editGeneralInformationData]="editGeneralInformationData"
           [savedGeneralInformationData]="savedGeneralInformationData"
           [employeeListOriginal]="employeeListOriginal"
+          [jobTitles]="jobTitles"
           (tab)="changeOfTab($event)"
         ></app-customer-sales-person>
       </div>
@@ -281,3 +283,4 @@
     </div>
   </div>
 </div>
+<!-- <img src="../../../assets/images/loader.gif" /> -->

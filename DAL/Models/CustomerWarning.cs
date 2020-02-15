@@ -10,9 +10,6 @@ namespace DAL.Models
         public long CustomerWarningId { get; set; }
         public long CustomerId { get; set; }
         public string SourceModule { get; set; }
-        public bool? Allow { get; set; }
-        public bool? Warning { get; set; }
-        public bool? Restrict { get; set; }
         public string WarningMessage { get; set; }
         public string RestrictMessage { get; set; }
         public int MasterCompanyId { get; set; }
@@ -25,5 +22,8 @@ namespace DAL.Models
         public bool? IsWarning { get; set; } = false;
         public bool? IsRestrict { get; set; } = false;
         public bool IsDeleted { get; set; }
+        public bool? Allow { get; set; } = false;
+        public bool? Warning { get; set; } = false;
+        public bool? Restrict { get; set; } = false;
     }
 }

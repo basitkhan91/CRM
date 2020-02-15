@@ -16,6 +16,21 @@ namespace DAL
         // Test Changes....
         public string CurrentUserId { get; set; }
 
+
+        public DbSet<WorkOrderAdditionalComments> WorkOrderAdditionalComments { get; set; }
+        public DbSet<WorkOrderBulletinsModification> WorkOrderBulletinsModification { get; set; }
+        public DbSet<WorkOrderDiscovery> WorkOrderDiscovery { get; set; }
+        public DbSet<WorkOrderFinalInspection> WorkOrderFinalInspection { get; set; }
+        public DbSet<WorkOrderFinalTest> WorkOrderFinalTest { get; set; }
+        public DbSet<WorkOrderPmaDerBulletins> WorkOrderPmaDerBulletins { get; set; }
+        public DbSet<WorkOrderPreAssemblyInspection> WorkOrderPreAssemblyInspection { get; set; }
+        public DbSet<WorkOrderPreAssmentResults> WorkOrderPreAssmentResults { get; set; }
+        public DbSet<WorkOrderPreliinaryReview> WorkOrderPreliinaryReview { get; set; }
+        public DbSet<WorkOrderRemovalReasons> WorkOrderRemovalReasons { get; set; }
+        public DbSet<WorkOrderTeardown> WorkOrderTeardown { get; set; }
+        public DbSet<WorkOrderTestDataUsed> WorkOrderTestDataUsed { get; set; }
+        public DbSet<WorkOrderWorkPerformed> WorkOrderWorkPerformed { get; set; }
+
         public DbSet<CodeTypes> CodeTypes { get; set; }
         public DbSet<CodePrefixes> CodePrefixes { get; set; }
         public DbSet<GlobalSettings> GlobalSettings { get; set; }
@@ -25,6 +40,9 @@ namespace DAL
         public DbSet<ShippingVia> ShippingVia { get; set; }
         public DbSet<ShippingAccount> ShippingAccount { get; set; }
         public DbSet<ItemMasterAircraftMapping> ItemMasterAircraftMapping { get; set; }
+        public DbSet<ItemMasterAircraftMappingAudit> ItemMasterAircraftMappingAudit { get; set; }
+
+
         public DbSet<ItemMasterATAMapping> ItemMasterATAMapping { get; set; }
         public DbSet<ItemMasterPurchaseSale> ItemMasterPurchaseSale { get; set; }
         public DbSet<WorkflowPublicationDashNumber> WorkflowPublicationDashNumber { get; set; }
@@ -175,10 +193,10 @@ namespace DAL
 
         public DbSet<AircraftModel> AircraftModel { get; set; }
 
-        public DbSet<CustomerAircraftModel> CustomerAircraftModel { get; set; }
+       
         public DbSet<AddressAudit> Address_Audit { get; set; }
 
-        public DbSet<CustomerAircraftType> CustomerAircraftType { get; set; }
+      
 
         public DbSet<ItemMaster> ItemMaster { get; set; }
         public DbSet<ItemType> ItemType { get; set; }
@@ -186,6 +204,7 @@ namespace DAL
         public DbSet<ACH> ACH { get; set; }
 
         public DbSet<ItemMasterCapes> ItemMasterCapes { get; set; }
+        public DbSet<ItemMasterCapesAudit> ItemMasterCapesAudit { get; set; }
         public DbSet<VendorCapes> VendorCapes { get; set; }
 
         public DbSet<Warning> Warning { get; set; }
@@ -407,7 +426,7 @@ namespace DAL
         public DbSet<PublicationPNATAMappingModel> PublicationPNATAMappingModel { get; set; }
 
         public DbSet<CustomerAircraftMapping> CustomerAircraftMapping { get; set; }
-        public DbSet<CustomerATAMapping> CustomerATAMapping { get; set; }
+       
         public DbSet<CustomerContactATAMapping> CustomerContactATAMapping { get; set; }
         public DbSet<CustomerContactATAMappingAudit> CustomerContactATAMappingAudit { get; set; }
         public DbSet<CustomerTaxTypeRateMapping> CustomerTaxTypeRateMapping { get; set; }
@@ -498,8 +517,10 @@ namespace DAL
         public DbSet<VendorInternationalShippingAudit> VendorInternationalShippingAudit { get; set; }
         public DbSet<VendorInternationalShipViaDetails> VendorInternationalShipViaDetails { get; set; }
         public DbSet<VendorInternationalShipViaDetailsAudit> VendorInternationalShipViaDetailsAudit { get; set; }
+        public DbSet<VendorContactATAMapping> VendorContactATAMapping { get; set; }
+        public DbSet<VendorContactATAMappingAudit> VendorContactATAMappingAudit { get; set; }
 
-
+        public DbSet<AssetWarrantyStatus> AssetWarrantyStatus { get; set; }
 
         public DbSet<WorkOrderQuoteExclusions> WorkOrderQuoteExclusions { get; set; }
         public DbSet<WorkOrderQuoteFreight> WorkOrderQuoteFreight { get; set; }

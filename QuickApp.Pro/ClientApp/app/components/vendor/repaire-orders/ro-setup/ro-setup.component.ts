@@ -1602,8 +1602,8 @@ export class RoSetupComponent implements OnInit {
 		this.sourceRoApproval.shippingAcctNum = null;
 		this.sourceRoApproval.shippingId = null;
 		this.sourceRoApproval.shippingURL = '';
-
-		this.commonService.getShipViaDetailsById(id).subscribe(res => {
+        var userType = this.sourceRoApproval.shipToUserTypeId ? parseInt(this.sourceRoApproval.shipToUserTypeId) : 0;
+        this.commonService.getShipViaDetailsById(id, userType).subscribe(res => {
 			const responseData = res;
 			this.sourceRoApproval.shippingAcctNum = responseData.shippingAccountInfo;
 			this.sourceRoApproval.shippingURL = responseData.shippingURL;
@@ -3215,7 +3215,7 @@ export class RoSetupComponent implements OnInit {
 		}
 
 		if (this.sourceRoApproval.shipToUserTypeId == 1) {
-			const customerData = { ...data, ReferenceId: getValueFromObjectByKey('value', this.sourceRoApproval.shipToUserId) }
+            const customerData = { ...data, ReferenceId: getValueFromObjectByKey('value', this.sourceRoApproval.shipToUserId), AddressId: this.sourceRoApproval.shipToAddressId ? this.sourceRoApproval.shipToAddressId : 0 }
 			if (!this.isEditModeShipVia) {
 				await this.commonService.createShipVia(customerData).subscribe(response => {
 					this.getShipViaDetailsForShipTo(response.shippingViaId);
@@ -3238,7 +3238,7 @@ export class RoSetupComponent implements OnInit {
 			}
 		}
 		if (this.sourceRoApproval.shipToUserTypeId == 2) {
-			const vendorData = { ...data, ReferenceId: getValueFromObjectByKey('vendorId', this.sourceRoApproval.shipToUserId) }
+            const vendorData = { ...data, ReferenceId: getValueFromObjectByKey('vendorId', this.sourceRoApproval.shipToUserId), AddressId: this.sourceRoApproval.shipToAddressId ? this.sourceRoApproval.shipToAddressId : 0 }
 			if (!this.isEditModeShipVia) {
 				await this.commonService.createShipVia(vendorData).subscribe(response => {
 					this.getShipViaDetailsForShipTo(response.shippingViaId);
@@ -3263,7 +3263,7 @@ export class RoSetupComponent implements OnInit {
 
 		}
 		if (this.sourceRoApproval.shipToUserTypeId == 3) {
-			const companyData = { ...data, ReferenceId: getValueFromObjectByKey('value', this.sourceRoApproval.shipToUserId) }
+            const companyData = { ...data, ReferenceId: getValueFromObjectByKey('value', this.sourceRoApproval.shipToUserId), AddressId: this.sourceRoApproval.shipToAddressId ? this.sourceRoApproval.shipToAddressId : 0}
 			if (!this.isEditModeShipVia) {
 				await this.commonService.createShipVia(companyData).subscribe(response => {
 					this.getShipViaDetailsForShipTo(response.shippingViaId);
