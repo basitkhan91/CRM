@@ -1285,7 +1285,9 @@ namespace DAL.Repositories
                                            CustomerReference = c.ContractReference,
                                            workFlowWorkOrderId = wo.IsSinglePN == true ? wf.WorkFlowWorkOrderId : 0,
                                            workFlowId = wo.IsSinglePN == true ? wf.WorkflowId : 0,
-                                           wo.ManagementStructureId
+                                           wo.ManagementStructureId,
+                                           wo.Notes,
+                                           wo.Memo,
                                        }).FirstOrDefault();
                 return workOrderHeader;
             }

@@ -916,8 +916,8 @@ namespace QuickApp.Pro.Controllers
             return Ok(result);
         }
 
-        [HttpGet("historicalworkorderquotes")]
-        public IActionResult HistoricalWorkOrderQuotes(Filters<WOQuoteFilters> woQuoteFilters)
+        [HttpPost("historicalworkorderquotes")]
+        public IActionResult HistoricalWorkOrderQuotes([FromBody]Filters<WOQuoteFilters> woQuoteFilters)
         {
             var result = unitOfWork.WorkOrderRepository.HistoricalWorkOrderQuotes(woQuoteFilters);
             return Ok(result);
