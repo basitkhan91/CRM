@@ -343,10 +343,9 @@
                                 <mat-icon color="warn">delete</mat-icon>
                             </button>
 
-
-                            <!--<button class="btn-history" mat-icon-button matTooltip="History">
-                    <mat-icon color="green">history</mat-icon>
-                </button>-->
+                            <button class="btn-history" mat-icon-button matTooltip="History" data-target="#contentHist" data-toggle="modal" (click)="getAuditHistoryById(rowData)">
+                                <mat-icon color="green">history</mat-icon>
+                            </button>
                         </td>
                     </tr>
                 </ng-template>
@@ -387,4 +386,58 @@
     </div>
 
 
+    <div *ngIf="auditHistory" id="contentHist" #contentHist class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-lg">
 
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">History of Asset Capes</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="table-responsive rro-table-cstm">
+                        <table class="table table-bordered" *ngIf="auditHistory.length> 0 else noDatavailable">
+                            <thead>
+                                <tr>
+                                    <th>Capability Type</th>
+                                    <th>PN</th>
+                                    <th>Aircraft Manufacturer</th>
+                                    <th>Models</th>
+                                    <th>Dash Number</th>
+                                    <th>IsActive</th>
+                                    <th>Updated By</th>
+                                    <th>Updated Time</th>
+                                </tr>
+                            </thead>
+                            <tbody *ngIf="auditHistory.length> 0">
+                                <tr *ngFor="let audit of auditHistory; let i = index;">
+                                    <td [ngStyle]="{'color': getColorCodeForHistory(i, 'captypedescription', audit.captypedescription)  ? 'black' : 'red'  }">{{audit.captypedescription}}</td>
+                                    <td [ngStyle]="{'color': getColorCodeForHistory(i, 'partNumber', audit.partNumber)  ? 'black' : 'red'  }">{{audit.partNumber}}</td>
+                                    <td [ngStyle]="{'color': getColorCodeForHistory(i, 'manufacturer', audit.manufacturer)  ? 'black' : 'red'  }">{{audit.manufacturer}}</td>
+                                    <td [ngStyle]="{'color': getColorCodeForHistory(i, 'modelname', audit.modelname)  ? 'black' : 'red'  }">{{audit.modelname}}</td>
+                                    <td [ngStyle]="{'color': getColorCodeForHistory(i, 'dashNumber', audit.dashNumber)  ? 'black' : 'red'  }">{{audit.dashNumber}}</td>
+                                    <td [ngStyle]="{'color': getColorCodeForHistory(i, 'isActive', audit.isActive)  ? 'black' : 'red'  }">{{audit.isActive}}</td>
+                                    <td>{{audit.updatedBy}}</td>
+                                    <td>{{audit.updatedDate | date: 'dd-MM-yyyy h:mm a '}}</td>
+                                </tr>
+                            </tbody>
+
+
+                        </table>
+                        <ng-template #noDatavailable>
+                            <div class="text-center">
+                                <!--<img src="../../assets/images/binoculars.png" style="height: 100px; width: 100px;">-->
+                                <h4 style="color: #ff5663;">No History Found </h4>
+                            </div>
+
+                        </ng-template>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>

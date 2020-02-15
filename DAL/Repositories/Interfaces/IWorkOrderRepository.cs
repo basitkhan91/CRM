@@ -54,9 +54,12 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<object> GetWorkFlowWorkOrderExclusionsList(long wfwoId = 0, long workOrderId = 0);
         void DeleteWorkOrderExclusions(long workOrderExclusionsId, string updatedBy);
 
-        List<WorkOrderDocuments> CreateWorkOrderDocuments(List<WorkOrderDocuments> workOrderDocuments);
-        void UpdateWorkOrderDocuments(WorkOrderDocuments workOrderDocuments);
-        IEnumerable<object> GetWorkFlowWorkOrderDocumentsList(long wfwoId = 0, long workOrderId = 0);
+        WorkOrderDocuments CreateWorkOrderDocuments(WorkOrderDocuments workOrderDocuments);
+        WorkOrderDocuments UpdateWorkOrderDocuments(WorkOrderDocuments workOrderDocuments);
+        IEnumerable<object> GetWorkOrderDocumentsList(long wfwoId = 0, long workOrderId = 0);
+        WorkOrderDocuments GetWorkOrderDocumentsDetailById(long id);
+        void WorkOrderDocumentStatus(long workOrderDocumentsId, bool status, string updatedBy);
+        void DeleteWorkOrderDocuments(long workOrderDocumentsId, string updatedBy);
 
         long CreateWorkOrderAddress(WorkOrderAddress workOrderAddress);
         void UpdateWorkOrderAddress(WorkOrderAddress workOrderAddress);
@@ -164,6 +167,5 @@ namespace DAL.Repositories.Interfaces
 
 
         object WorkOrderAnalysis(long workOrderId);
-
     }
 }
