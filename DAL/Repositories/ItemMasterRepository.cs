@@ -1544,15 +1544,24 @@ namespace DAL.Repositories
                     string level2 = string.Empty;
                     string level3 = string.Empty;
                     string level4 = string.Empty;
-
+                    long levelId1 = 0;
+                    long levelId2 = 0;
+                    long levelId3 = 0;
+                    long levelId4 = 0;
                     foreach (var item in list)
                     {
                         level1 = string.Empty;
                         level2 = string.Empty;
                         level3 = string.Empty;
                         level4 = string.Empty;
+                        levelId1 = 0;
+                        levelId2 = 0;
+                        levelId3 = 0;
+                        levelId4 = 0;
 
                         Dictionary<string, string> keyValuePairs = GetManagementStructureCodes(item.ManagementStrId);
+                        Dictionary<string, long> keyIdValuePairs = GetManagementStructureIds(item.ManagementStrId);
+
                         if (keyValuePairs != null && keyValuePairs.Count > 0)
                         {
                             if (keyValuePairs.TryGetValue("Level1", out level1))
@@ -1574,6 +1583,29 @@ namespace DAL.Repositories
                                 item.level4 = level4;
                             else
                                 item.level4 = string.Empty;
+                        }
+
+                        if (keyIdValuePairs != null && keyIdValuePairs.Count > 0)
+                        {
+                            if (keyIdValuePairs.TryGetValue("LevelId1", out levelId1))
+                                item.levelId1 = levelId1;
+                            else
+                                item.levelId1 = 0;
+
+                            if (keyIdValuePairs.TryGetValue("LevelId2", out levelId2))
+                                item.levelId2 = levelId2;
+                            else
+                                item.levelId2 = 0;
+
+                            if (keyIdValuePairs.TryGetValue("LevelId3", out levelId3))
+                                item.levelId3 = levelId3;
+                            else
+                                item.levelId3 = 0;
+
+                            if (keyIdValuePairs.TryGetValue("LevelId4", out levelId4))
+                                item.levelId4 = levelId4;
+                            else
+                                item.levelId4 = 0;
                         }
 
                     }
@@ -1855,16 +1887,18 @@ namespace DAL.Repositories
                     string level2 = string.Empty;
                     string level3 = string.Empty;
                     string level4 = string.Empty;
-
+                   
                     foreach (var item in list)
                     {
                         level1 = string.Empty;
                         level2 = string.Empty;
                         level3 = string.Empty;
                         level4 = string.Empty;
+                        
 
                         Dictionary<string, string> keyValuePairs = GetManagementStructureCodes(item.ManagementStrId);
-                        if (keyValuePairs != null && keyValuePairs.Count > 0)
+
+                           if (keyValuePairs != null && keyValuePairs.Count > 0)
                         {
                             if (keyValuePairs.TryGetValue("Level1", out level1))
                                 item.level1 = level1;
@@ -1886,6 +1920,7 @@ namespace DAL.Repositories
                             else
                                 item.level4 = string.Empty;
                         }
+
 
                     }
                 }
@@ -1956,6 +1991,66 @@ namespace DAL.Repositories
                 throw ex;
             }
         }
+
+        private Dictionary<string, long> GetManagementStructureIds(long manmgStrucId)
+        {
+            Dictionary<string, long> keyValuePairs = new Dictionary<string, long>();
+            ManagementStructure levelId4 = null;
+            ManagementStructure levelId3 = null;
+            ManagementStructure levelId2 = null;
+            ManagementStructure levelId1 = null;
+            string level1Code = string.Empty;
+            try
+            {
+                levelId4 = _appContext.ManagementStructure.Where(p => p.IsDelete != true && p.ManagementStructureId == manmgStrucId).AsNoTracking().FirstOrDefault();
+                if (levelId4 != null && levelId4.ParentId > 0)
+                {
+                    levelId3 = _appContext.ManagementStructure.Where(p => p.IsDelete != true && p.ManagementStructureId == levelId4.ParentId).AsNoTracking().FirstOrDefault();
+                }
+                if (levelId3 != null && levelId3.ParentId > 0)
+                {
+                    levelId2 = _appContext.ManagementStructure.Where(p => p.IsDelete != true && p.ManagementStructureId == levelId3.ParentId).AsNoTracking().FirstOrDefault();
+                }
+                if (levelId2 != null && levelId2.ParentId > 0)
+                {
+                    levelId1 = _appContext.ManagementStructure.Where(p => p.IsDelete != true && p.ManagementStructureId == levelId2.ParentId).AsNoTracking().FirstOrDefault();
+                }
+
+
+                if (levelId4 != null && levelId3 != null && levelId2 != null && levelId1 != null)
+                {
+                    keyValuePairs.Add("LevelId4", levelId4.ManagementStructureId);
+                    keyValuePairs.Add("LevelId3", levelId3.ManagementStructureId);
+                    keyValuePairs.Add("LevelId2", levelId2.ManagementStructureId);
+                    keyValuePairs.Add("LevelId1", levelId1.ManagementStructureId);
+                }
+                else if (levelId4 != null && levelId2 != null && levelId3 != null)
+                {
+                    keyValuePairs.Add("LevelId3", levelId4.ManagementStructureId);
+                    keyValuePairs.Add("LevelId2", levelId3.ManagementStructureId);
+                    keyValuePairs.Add("LevelId1", levelId2.ManagementStructureId);
+                }
+                else if (levelId4 != null && levelId3 != null)
+                {
+                    keyValuePairs.Add("LevelId2", levelId4.ManagementStructureId);
+                    keyValuePairs.Add("LevelId1", levelId3.ManagementStructureId);
+                }
+                else if (levelId4 != null)
+                {
+                    keyValuePairs.Add("LevelId1", levelId4.ManagementStructureId);
+                }
+
+
+
+                return keyValuePairs;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
         public IEnumerable<object> GetAircraftMappedAudit(long itemMasterAircraftMappingId)
         {
             

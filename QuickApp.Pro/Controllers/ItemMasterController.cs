@@ -1239,46 +1239,7 @@ namespace QuickApp.Pro.Controllers
 
             return Ok(ModelState);
         }
-        [HttpPut("itemMasterAircraftUpdate/{id}")]
-         public IActionResult UpdateCustomerAircraftInfo(long id, [FromBody] ItemMasterAircraftMapping itemAircraftMappingVM)
-        {
-            try
-            {
-                if (ModelState.IsValid)
-                {
-                    var aircraft = _unitOfWork.Repository<ItemMasterAircraftMapping>().GetSingleOrDefault(c => c.ItemMasterAircraftMappingId == id);// && c.AircraftModelId == customerAircraftMappingVM[i].AircraftModelId && c.MasterCompanyId == customerAircraftMappingVM[i].MasterCompanyId && c.CustomerId = customerAircraftMappingVM[i].CustomerId);
-                    aircraft.AircraftType = itemAircraftMappingVM.AircraftType;
-                    aircraft.AircraftModel = itemAircraftMappingVM.AircraftModel;
-                    aircraft.DashNumber = itemAircraftMappingVM.DashNumber;
-                    //ModelNumber = customerAircraftMappingVM[i].ModelNumber,
-                    aircraft.AircraftModelId = itemAircraftMappingVM.AircraftModelId;
-                    aircraft.DashNumberId = itemAircraftMappingVM.DashNumberId;
-                    aircraft.Memo = itemAircraftMappingVM.Memo;
-                    aircraft.MasterCompanyId = itemAircraftMappingVM.MasterCompanyId;
-                    aircraft.CreatedBy = itemAircraftMappingVM.CreatedBy;
-                    aircraft.UpdatedBy = itemAircraftMappingVM.UpdatedBy;
-                    aircraft.ItemMasterId = itemAircraftMappingVM.ItemMasterId;
-                    aircraft.CreatedDate = System.DateTime.Now;
-                    aircraft.UpdatedDate = System.DateTime.Now;
-                    aircraft.IsDeleted = itemAircraftMappingVM.IsDeleted;
-                    aircraft.PartNumber = itemAircraftMappingVM.PartNumber;
-                    aircraft.AircraftTypeId = itemAircraftMappingVM.AircraftTypeId;
-
-                    _unitOfWork.Repository<ItemMasterAircraftMapping>().Update(aircraft);
-                    _unitOfWork.SaveChanges();
-                    return Ok();
-                }
-                else
-                {
-                    return BadRequest(ModelState);
-                }
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.InnerException.ToString());
-            }
-
-        }
+       
         [HttpGet("getItemMasterAircraftMappedAudit")]
        
         public IActionResult AircraftMappedAudit(long itemMasterAircraftMappingId)
@@ -1509,17 +1470,19 @@ namespace QuickApp.Pro.Controllers
             return Ok(ModelState);
         }
         [HttpPut("ItemMasterPurcSaleUpdate/{id}")]
-        public IActionResult UpdateItemmasterPurcSale([FromBody] ItemMasterPurchaseSale[] itemMasterPurchaseSale, long id, long itemMasterPurchaseSaleId)
+        public IActionResult UpdateItemmasterPurcSale([FromBody] ItemMasterPurchaseSale[] itemMasterPurchaseSale, long id)
         {
             if (ModelState.IsValid)
             {
-                if (_context.ItemMasterPurchaseSale.Any(o => o.ItemMasterId == id))
+                if (itemMasterPurchaseSale.Length > 0)
                 {
                     for (int i = 0; i < itemMasterPurchaseSale.Length; i++)
                     {
-                        if (_context.ItemMasterPurchaseSale.Any(o => o.ItemMasterPurchaseSaleId == itemMasterPurchaseSaleId))
+                        //if (_context.ItemMasterPurchaseSale.Any(o => o.ItemMasterPurchaseSaleId == itemMasterPurchaseSale[i].ItemMasterPurchaseSaleId))
+                        //{
+                        var existingresule = _context.ItemMasterPurchaseSale.Where(c => c.ItemMasterPurchaseSaleId == itemMasterPurchaseSale[i].ItemMasterPurchaseSaleId).FirstOrDefault();
+                        if (existingresule != null)
                         {
-                            var existingresule = _context.ItemMasterPurchaseSale.Where(c => c.ItemMasterPurchaseSaleId == itemMasterPurchaseSaleId).FirstOrDefault();
                             existingresule.ItemMasterId = itemMasterPurchaseSale[i].ItemMasterId;
                             existingresule.PartNumber = itemMasterPurchaseSale[i].PartNumber;
                             existingresule.PP_CurrencyId = itemMasterPurchaseSale[i].PP_CurrencyId;
@@ -1549,8 +1512,11 @@ namespace QuickApp.Pro.Controllers
 
                             existingresule.UpdatedDate = DateTime.Now;
                             existingresule.UpdatedBy = itemMasterPurchaseSale[i].UpdatedBy;
+
                             _unitOfWork.Repository<ItemMasterPurchaseSale>().Update(existingresule);
                             _unitOfWork.SaveChanges();
+
+
                         }
                         else
                         {
@@ -1558,17 +1524,25 @@ namespace QuickApp.Pro.Controllers
                             _unitOfWork.Repository<ItemMasterPurchaseSale>().Add(itemMasterPurchaseSale[i]);
                             _unitOfWork.SaveChanges();
 
+
+
                         }
+
+
+
                     }
                     return Ok(itemMasterPurchaseSale);
                 }
+                return Ok(ModelState);
             }
+
+
             else
             {
                 return BadRequest($"{nameof(itemMasterPurchaseSale)} cannot be null");
             }
 
-            return Ok(ModelState);
+           
         }
 
         [HttpGet("getItemAirMappedByItemMasterIDMultiTypeIDModelIDDashID/{ItemMasterID}/{AircraftTypeID}/{AircraftModelID}/{DashNumberId}")]
