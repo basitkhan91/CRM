@@ -12,6 +12,7 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<object> getCapesList(long id);
         IEnumerable<Asset> getAllAsset();
         IEnumerable<object> GetAsset(string id);
+        IEnumerable<object> GetAssetWarrantyStatus();
     }
     
 }

@@ -235,6 +235,25 @@ in _appContext.ItemMaster on ac.ItemMasterId equals im.ItemMasterId
                 return data;
             }
         }
+
+
+        public IEnumerable<object> GetAssetWarrantyStatus()
+        {
+            {
+                var data = (from asset in _appContext.AssetWarrantyStatus
+                            where (asset.IsDeleted == false) && (asset.IsActive == true)
+
+                            select new
+                            {
+                                asset.AssetWarrantyStatusId,
+                                asset.warrantyStatus,
+                                asset.IsActive,
+                                asset.IsDeleted
+
+                            }).ToList();
+                return data;
+            }
+        }
         private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
 
     }
