@@ -297,11 +297,13 @@
                 </ng-template>
                 <ng-template pTemplate="header" let-columns style="padding-top: 1% !important">
                     <tr>
-                        <th style="width:auto" *ngFor="let col of selectedColumns" pResizableColumn pReorderableColumn
+                        <ng-container *ngFor="let col of columns">
+                        <th *ngFor="let col of selectedColumns" pResizableColumn pReorderableColumn
                             [pSortableColumn]="col.field">
                             {{col.header}}
                             <p-sortIcon [field]="col.field"></p-sortIcon>
                         </th>
+                    </ng-container>
                         <th style="width:150px;position: sticky;">Actions</th>
                     </tr>
                     <tr>
