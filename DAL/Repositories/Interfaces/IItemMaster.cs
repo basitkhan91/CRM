@@ -45,8 +45,9 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<object> searchItemAircraftMappingDataByMultiTypeIdModelIDDashID(long ItemMasterID, string AircraftTypeID, string AircraftModelID, string DashNumberId);
         IEnumerable<object> searchgetItemATAMappingDataByMultiTypeIdATAIDATASUBID(long ItemMasterid, string ATAChapterId, string ATASubChapterID);
         IEnumerable<ItemMasterPurchaseSale> gePurcSaleByItemMasterID(long ItemMasterid);
+        IEnumerable<object> geAuditHistoryPurcSaleByItemMasterID(long itemMasterPurchaseSaleId);
 
-
+        
 
 
         Nha_Tla_Alt_Equ_ItemMapping CreateNhaTlaAltEquPart(Nha_Tla_Alt_Equ_ItemMapping part);

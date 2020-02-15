@@ -760,7 +760,7 @@ namespace DAL.Repositories
                                 isPBHCustomer = t.IsPBHCustomer,
                                 pbhCustomerMemo = t.PBHCustomerMemo,
                                 restrictPMA = t.RestrictPMA,
-                              
+                                restrictBER = t.RestrictBER,
                                 isCustomerAlsoVendor = t.IsCustomerAlsoVendor,
                               
                                 createdBy = t.CreatedBy,

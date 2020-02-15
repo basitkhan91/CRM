@@ -2107,5 +2107,50 @@ namespace DAL.Repositories
             return data;
 
         }
+
+        public IEnumerable<object> geAuditHistoryPurcSaleByItemMasterID(long itemMasterPurchaseSaleId)
+        {
+
+            var data = (from iM in _appContext.ItemMasterPurchaseSaleAudit
+                        where iM.ItemMasterPurchaseSaleId == itemMasterPurchaseSaleId 
+                        select new ItemMasterPurchaseSale
+                        {
+                            Condition = iM.Condition,
+                            ItemMasterId = iM.ItemMasterId,
+
+                            ItemMasterPurchaseSaleId = iM.ItemMasterPurchaseSaleId,
+                            PartNumber = iM.PartNumber,
+                            PP_CurrencyId = iM.PP_CurrencyId,
+                            PP_FXRatePerc = iM.PP_FXRatePerc,
+                            PP_LastListPriceDate = iM.PP_LastListPriceDate,
+                            PP_LastPurchaseDiscDate = iM.PP_LastPurchaseDiscDate,
+                            PP_PurchaseDiscAmount = iM.PP_PurchaseDiscAmount,
+                            PP_PurchaseDiscPerc = iM.PP_PurchaseDiscPerc,
+                            PP_UnitPurchasePrice = iM.PP_UnitPurchasePrice,
+                            PP_UOMId = iM.PP_UOMId,
+                            PP_VendorListPrice = iM.PP_VendorListPrice,
+                            SP_CalSPByPP_BaseSalePrice = iM.SP_CalSPByPP_BaseSalePrice,
+                            SP_CalSPByPP_LastMarkUpDate = iM.SP_CalSPByPP_LastMarkUpDate,
+                            SP_CalSPByPP_LastSalesDiscDate = iM.SP_CalSPByPP_LastSalesDiscDate,
+                            SP_CalSPByPP_MarkUpAmount = iM.SP_CalSPByPP_MarkUpAmount,
+                            SP_CalSPByPP_MarkUpPercOnListPrice = iM.SP_CalSPByPP_MarkUpPercOnListPrice,
+                            SP_CalSPByPP_SaleDiscAmount = iM.SP_CalSPByPP_SaleDiscAmount,
+                            SP_CalSPByPP_SaleDiscPerc = iM.SP_CalSPByPP_SaleDiscPerc,
+                            SP_CalSPByPP_UnitSalePrice = iM.SP_CalSPByPP_UnitSalePrice,
+                            SP_FSP_CurrencyId = iM.SP_FSP_CurrencyId,
+                            SP_FSP_FlatPriceAmount = iM.SP_FSP_FlatPriceAmount,
+                            SP_FSP_FXRatePerc = iM.SP_FSP_FXRatePerc,
+                            SP_FSP_LastFlatPriceDate = iM.SP_FSP_LastFlatPriceDate,
+                            SP_FSP_UOMId = iM.SP_FSP_UOMId,
+                            UpdatedBy = iM.UpdatedBy,
+                            UpdatedDate = iM.UpdatedDate,
+                            IsActive = iM.IsActive,
+                            IsDeleted = iM.IsDeleted,
+                            CreatedBy = iM.CreatedBy,
+                            CreatedDate = iM.CreatedDate
+                        }).OrderByDescending(p=>p.UpdatedDate).ToList();
+            return data;
+        }
+
     }
 }
