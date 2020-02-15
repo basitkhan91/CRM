@@ -66,26 +66,29 @@ export class CustomerWorksListComponent implements OnInit {
     public divsioname: any;
     public biuName: any;
     public compnayname: any;
-    currentStatusCW: number = 1;
+    currentStatusCW: any = "1";
     breadcrumbs: MenuItem[] = [
         { label: 'Receiving' },
         { label: 'Customer Work' },
         { label: 'Customer Work List' }
     ];
     cols = [             
-    { field: 'receivingNumber', header: 'Receiver Num' },
-    { field: 'receivedDate', header: 'Received Date' },
-    { field: 'woNumber', header: 'WO Num' },
-    { field: 'woOpenDate', header: 'WO Open Date' },
-    { field: 'partNumber', header: 'PN' },
-    { field: 'partDescription', header: 'PN Description' },
     { field: 'customerName', header: 'Customer Name' },
-    { field: 'stageCode', header: 'Stage Code' },
-    { field: 'status', header: 'Status' },
+    { field: 'partNumber', header: 'MPN' },
+    { field: 'partDescription', header: 'MPN Description' },
+    { field: 'serialNumber', header: 'Serial Num' },
+    { field: 'woNumber', header: 'WO Num' },
+    { field: 'receivingNumber', header: 'Cust Ref Num' },
+    { field: 'receivedDate', header: 'Received Date' },
+    { field: 'receivedBy', header: 'Received By' },
     { field: 'levelCode1', header: 'Level 01' },
     { field: 'levelCode2', header: 'Level 02' },
     { field: 'levelCode3', header: 'Level 03' },
-    { field: 'levelCode4', header: 'Level 04' }
+    { field: 'levelCode4', header: 'Level 04' },
+    { field: 'stageCode', header: 'Stage Code' },
+    { field: 'status', header: 'Status' },
+
+    // { field: 'woOpenDate', header: 'WO Open Date' },
 
     // { field: 'receivingNumber', header: 'Recev.No.' },
     // //{ field: 'workOrderNum', header: 'WorkOrderNum' },
@@ -131,6 +134,7 @@ export class CustomerWorksListComponent implements OnInit {
         this.pageIndex = pageIndex;
         this.pageSize = event.rows;
         event.first = pageIndex;
+        event.filters = {...event.filters, woFilter: this.currentStatusCW}
         this.getList(event)
 
         console.log(event);
@@ -138,8 +142,6 @@ export class CustomerWorksListComponent implements OnInit {
     }
 
     getList(data) {
-
-        console.log(data.sortField);
          const PagingData = { ...data, filters: listSearchFilterObjectCreation(data.filters) }
         this.receivingCustomerWorkService.getCustomerWorkAll(PagingData).subscribe(res => {
             this.allRecevinginfo = res;
@@ -154,9 +156,10 @@ export class CustomerWorksListComponent implements OnInit {
     }
    
     getCustWorkStatus(value) {
-        // this.lazyLoadEventData.filters = {...this.lazyLoadEventData.filters, status: value}
-        // //const data = {...this.lazyLoadEventData.filters, status: value}
-        // this.getList(this.lazyLoadEventData);
+        this.currentStatusCW = value;
+        this.lazyLoadEventData.filters = {...this.lazyLoadEventData.filters, woFilter: value}
+        //const data = {...this.lazyLoadEventData.filters, status: value}
+        this.getList(this.lazyLoadEventData);
     }
         
     private onDataLoadSuccessful(allWorkFlows: any[]) {
