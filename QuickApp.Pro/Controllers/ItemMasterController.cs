@@ -1239,8 +1239,22 @@ namespace QuickApp.Pro.Controllers
 
             return Ok(ModelState);
         }
+       
+        [HttpGet("getItemMasterAircraftMappedAudit")]
+       
+        public IActionResult AircraftMappedAudit(long itemMasterAircraftMappingId)
+        {
+            try
+            {
+                var result = _unitOfWork.itemMaster.GetAircraftMappedAudit(itemMasterAircraftMappingId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.InnerException.ToString());
+            }
 
-
+        }
         //To post data in ATA Chapter Tab in Item Master
         [HttpPost("ItemMasterATAPost")]
         public IActionResult InsertItemmasterATA([FromBody] ItemMasterATAMapping[] itemMasterATAMapping)
@@ -1307,6 +1321,20 @@ namespace QuickApp.Pro.Controllers
                 return Ok(result);
             }
         }
+
+        [HttpGet("getAircraftMappedById")]
+        public IActionResult ItemMasterAircraftMappedById(long itemMasterId,long itemMasterAircraftMappingId)
+        {
+            var result = _unitOfWork.itemMaster.ItemMasterAircraftMappedById(itemMasterId, itemMasterAircraftMappingId);
+            if (result == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                return Ok(result);
+            }
+        }
         [HttpGet("getATAMapped/{ItemmasterId}")]
         [Produces(typeof(List<ItemMasterATAMapping>))]
         public IActionResult ataMapped(long ItemmasterId)
@@ -1322,6 +1350,7 @@ namespace QuickApp.Pro.Controllers
             }
 
         }
+        
         [HttpPost("ExportInfoPostBy_IMastID/{id}")]
         public IActionResult ExportInfoupdate(long id, [FromBody] ItemMasterViewModel itemMasterViewModel)
         {
@@ -1441,17 +1470,19 @@ namespace QuickApp.Pro.Controllers
             return Ok(ModelState);
         }
         [HttpPut("ItemMasterPurcSaleUpdate/{id}")]
-        public IActionResult UpdateItemmasterPurcSale([FromBody] ItemMasterPurchaseSale[] itemMasterPurchaseSale, long id, long itemMasterPurchaseSaleId)
+        public IActionResult UpdateItemmasterPurcSale([FromBody] ItemMasterPurchaseSale[] itemMasterPurchaseSale, long id)
         {
             if (ModelState.IsValid)
             {
-                if (_context.ItemMasterPurchaseSale.Any(o => o.ItemMasterId == id))
+                if (itemMasterPurchaseSale.Length > 0)
                 {
                     for (int i = 0; i < itemMasterPurchaseSale.Length; i++)
                     {
-                        if (_context.ItemMasterPurchaseSale.Any(o => o.ItemMasterPurchaseSaleId == itemMasterPurchaseSaleId))
+                        //if (_context.ItemMasterPurchaseSale.Any(o => o.ItemMasterPurchaseSaleId == itemMasterPurchaseSale[i].ItemMasterPurchaseSaleId))
+                        //{
+                        var existingresule = _context.ItemMasterPurchaseSale.Where(c => c.ItemMasterPurchaseSaleId == itemMasterPurchaseSale[i].ItemMasterPurchaseSaleId).FirstOrDefault();
+                        if (existingresule != null)
                         {
-                            var existingresule = _context.ItemMasterPurchaseSale.Where(c => c.ItemMasterPurchaseSaleId == itemMasterPurchaseSaleId).FirstOrDefault();
                             existingresule.ItemMasterId = itemMasterPurchaseSale[i].ItemMasterId;
                             existingresule.PartNumber = itemMasterPurchaseSale[i].PartNumber;
                             existingresule.PP_CurrencyId = itemMasterPurchaseSale[i].PP_CurrencyId;
@@ -1481,8 +1512,11 @@ namespace QuickApp.Pro.Controllers
 
                             existingresule.UpdatedDate = DateTime.Now;
                             existingresule.UpdatedBy = itemMasterPurchaseSale[i].UpdatedBy;
+
                             _unitOfWork.Repository<ItemMasterPurchaseSale>().Update(existingresule);
                             _unitOfWork.SaveChanges();
+
+
                         }
                         else
                         {
@@ -1490,17 +1524,25 @@ namespace QuickApp.Pro.Controllers
                             _unitOfWork.Repository<ItemMasterPurchaseSale>().Add(itemMasterPurchaseSale[i]);
                             _unitOfWork.SaveChanges();
 
+
+
                         }
+
+
+
                     }
                     return Ok(itemMasterPurchaseSale);
                 }
+                return Ok(ModelState);
             }
+
+
             else
             {
                 return BadRequest($"{nameof(itemMasterPurchaseSale)} cannot be null");
             }
 
-            return Ok(ModelState);
+           
         }
 
         [HttpGet("getItemAirMappedByItemMasterIDMultiTypeIDModelIDDashID/{ItemMasterID}/{AircraftTypeID}/{AircraftModelID}/{DashNumberId}")]

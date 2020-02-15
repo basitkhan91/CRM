@@ -37,6 +37,6 @@
         VendorShippingAddress,
         VendorCheckAddress,
         VendorInternationalShippingAddress,
-
+        WorkOrder,
     }
 }

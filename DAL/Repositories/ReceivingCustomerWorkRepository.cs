@@ -139,7 +139,6 @@ namespace DAL.Repositories
                                   stl.ManufacturerId,
                                   //   stl.ManufacturingDate,
                                   stl.PartCertificationNumber,
-                                  stl.CertifiedBy,
                                   stl.TagType,
                                   //   stl.TraceableToType,
                                   stl.TimeLifeCyclesId,
@@ -157,7 +156,7 @@ namespace DAL.Repositories
                                   biumanagmentLegalEntity,
                                   compmanagmentLegalEntity,
                                   managementStructeInfo,
-
+                                  stl.CertifiedBy
                                   //work.WorkOrderId
 
 
@@ -240,7 +239,9 @@ namespace DAL.Repositories
                                 join st in _appContext.WorkOrderStatus on wop.WorkOrderStatusId equals st.Id into wopst
                                 from st in wopst.DefaultIfEmpty()
                                 where cr.IsDeleted == false
-                               
+                                && customerFilters.filters.woFilter==1? wo==null:
+                                (customerFilters.filters.woFilter == 2 ? (wo != null && wo.WorkOrderStatusId==2): (wo == null || wo!=null) )
+
                                 select new ReceivingCustomerWorkFilter()
                                 {
 
@@ -256,6 +257,9 @@ namespace DAL.Repositories
                                     status = st == null ? "" : st.Description,
                                     ManagementStructureId = cr.ManagementStructureId,
                                     createdDate = cr.CreatedDate,
+                                    serialNumber=cr.SerialNumber,
+                                    receivedBy=emp.FirstName+" "+emp.LastName
+
                                 }).Distinct()
                                 .Paginate(pageNumber, pageSize, sorts, filters).RecordCount;
 
@@ -274,6 +278,8 @@ namespace DAL.Repositories
                         join st in _appContext.WorkOrderStatus on wop.WorkOrderStatusId equals st.Id into wopst
                         from st in wopst.DefaultIfEmpty()
                         where cr.IsDeleted == false
+                        && customerFilters.filters.woFilter == 1 ? wo == null :
+                                (customerFilters.filters.woFilter == 2 ? (wo != null && wo.WorkOrderStatusId == 2) : (wo == null || wo != null))
                         select new ReceivingCustomerWorkFilter()
                         {
 
@@ -289,6 +295,8 @@ namespace DAL.Repositories
                             status = st == null ? "" : st.Description,
                             ManagementStructureId = cr.ManagementStructureId,
                             createdDate = cr.CreatedDate,
+                            serialNumber = cr.SerialNumber,
+                            receivedBy = emp.FirstName + " " + emp.LastName,
                             totalRecords = totalRecords,
                         }).Distinct()
                           .Paginate(pageNumber, pageSize, sorts, filters).Results;
@@ -393,8 +401,6 @@ namespace DAL.Repositories
                             join man in _appContext.Manufacturer on im.ManufacturerId equals man.ManufacturerId
                             join rp in _appContext.ItemMaster on im.ItemMasterId equals rp.RevisedPartId into crrp
                             from rp in crrp.DefaultIfEmpty()
-                            join cb in _appContext.Employee on cr.CertifiedById equals cb.EmployeeId into crcb
-                            from cb in crcb.DefaultIfEmpty()
                             join ty in _appContext.TagType on cr.TagTypeId equals ty.TagTypeId into crty
                             from ty in crty.DefaultIfEmpty()
 
@@ -406,12 +412,11 @@ namespace DAL.Repositories
                                 CustomerName = cust.Name,
                                 cust.CustomerCode,
                                 CustomerContact = con.FirstName,
-                                ContactPhone = con.WorkPhone,
+                                ContactPhone = con.WorkPhone+" "+ con.WorkPhoneExtn,
                                 im.PartNumber,
                                 im.PartDescription,
                                 Manufacturer = man.Name,
                                 RevisedPart = rp == null ? "" : rp.PartNumber,
-                                CertifiedBy = cb == null ? "" : cb.FirstName,
                                 TagType = ty == null ? "" : ty.Name,
                                 Condition = cd.Description,
                                 Site = si.Name,
@@ -448,7 +453,7 @@ namespace DAL.Repositories
                                 : cr.ObtainFrom)),
 
                                 cr.BinId,
-                                cr.CertifiedById,
+                                cr.CertifiedBy,
                                 cr.ConditionId,
                                 cr.CreatedBy,
                                 cr.CreatedDate,
@@ -1095,17 +1100,17 @@ namespace DAL.Repositories
                             join emp in _appContext.Employee on cust.CsrId equals emp.EmployeeId into custemp
                             from emp in custemp.DefaultIfEmpty()
                             where rc.IsDeleted == false && rc.IsActive == true
-                            && (cust.Name.ToLower().Contains(value.ToLower()) || cust.CustomerCode.ToLower().Contains(value.ToLower()))
+                            && (cust.Name.ToLower().Contains(value.ToLower()))
                             select new
                             {
                                 rc.CustomerId,
-                                CustomerName = cust.Name + " - " + cust.CustomerCode,
+                                CustomerName = cust.Name,
                                 cust.CsrId,
                                 CSRName = emp == null ? "" : emp.FirstName,
                                 cust.CreditLimit,
                                 cust.CreditTermsId,
                                 CustomerEmail = cust.Email,
-                                CustomerPhoneNo = con == null ? "" : con.WorkPhone,
+                                CustomerPhoneNo = con == null ? "" : con.WorkPhone+ " "+con.WorkPhoneExtn,
                                 CustomerContact = con == null ? " " : con.FirstName,
 
                             }).Distinct().ToList();

@@ -22,6 +22,7 @@ import { VendorService } from '../../../services/vendor.service';
 import { AssetLocation } from '../../../models/asset-location.model';
 import { AssetLocationService } from '../../../services/asset-location/asset-location.service';
 import * as $ from 'jquery'
+import { AuditHistory } from '../../../models/audithistory.model';
 
 @Component({
     selector: 'app-asset-listing',
@@ -81,6 +82,8 @@ export class AssetListingComponent implements OnInit {
     // comented for asset audit
     //AuditDetails: SingleScreenAuditDetails[];
 
+    public auditHisory: AuditHistory[] = [];
+    auditHistory: any[] = [];
 
     ngOnInit(): void {
         this.loadData();
@@ -211,6 +214,34 @@ export class AssetListingComponent implements OnInit {
             this.alertService.stopLoadingMessage();
             this.loadingIndicator = false;
             this.assetViewList.inspectionGlaAccountName = getGl[0].accountName;
+        }
+    }
+
+    private onHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        this.auditHisory = auditHistory;
+        this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+    }
+
+    getAuditHistoryById(rowData) {
+        this.assetService.getAssetCapesAudit(rowData.assetCapesId).subscribe(res => {
+            this.auditHistory = res;
+        })
+    }
+
+    getColorCodeForHistory(i, field, value) {
+        const data = this.auditHistory;
+        const dataLength = data.length;
+        if (i >= 0 && i <= dataLength) {
+            if ((i + 1) === dataLength) {
+                return true;
+            } else {
+                return data[i + 1][field] === value
+            }
         }
     }
 
