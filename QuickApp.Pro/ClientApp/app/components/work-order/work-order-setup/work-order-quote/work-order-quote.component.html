@@ -303,9 +303,20 @@
             </select>
           </div>
         </div>
-
         <div class="form-group ">
+          <label class="fs12">Part Description:
+          </label>
+          <label>{{selectedPartDescription}}</label>
+        </div>
+        <div class="form-group ">
+          <label class="fs12">Stock Line Number:
+          </label>
+          <label>{{selectedStockLineNumber}}</label>
+        </div>
+
+        <div class="form-group " *ngIf="selectedPartNumber != ''">
           <button type="button" data-target="#showHistoricalWorkOrder" data-toggle="modal" class="btn-primary" (click)="getDisplayData('use historical wos')">Display Historical WOs</button>
+          <button type="button" data-target="#showHistoricalWorkOrder" data-toggle="modal" class="btn-primary" (click)="getDisplayData('historical WO quotes')">Display Historical WO Quotes</button>
         </div>
       </div>
     </div>
@@ -465,7 +476,7 @@
               <td>{{matQuotation.unitCost}}</td>
               <td>{{matQuotation.quantity * matQuotation.unitCost}}</td>
               <td>
-                <select class="form-control" [(ngModel)]="matQuotation.billingMethodId" style="width: 130px;">
+                <select class="form-control" [(ngModel)]="matQuotation.billingMethodId" style="width: 130px;" [disabled]="isView">
                   <option value="">Select</option>
                   <option *ngFor="let bm of [{'label': 'T&M', 'value': '1'}, {'label': 'Actual', 'value': '2'}]" [value]="bm.value">{{bm.label}}</option>
                 </select>
@@ -643,7 +654,7 @@
             <td>{{matQuotation.unitCost}}</td>
             <td>{{matQuotation.quantity * matQuotation.unitCost}}</td>
             <td>
-              <select class="form-control" [(ngModel)]="matQuotation.billingMethodId" style="width: 130px;">
+              <select class="form-control" [(ngModel)]="matQuotation.billingMethodId" style="width: 130px;" [disabled]="isView">
                 <option value="">Select</option>
                 <option *ngFor="let bm of [{'label': 'T&M', 'value': 1}, {'label': 'Actual', 'value': 2}]" [value]="bm.value">{{bm.label}}</option>
               </select>
@@ -1307,7 +1318,28 @@
           </button>
       </div>
       <div class="modal-body table-responsive">
-        <table class="table table-bordered table-striped table-sorting mpn-list-table table-disabled">
+          <div class="form-group" style="color: red; font-size: 20px;">
+              {{(displayType == 'use historical wos')?'List of Historical Workorders for MPN '+this.selectedPartNumber:'List of Historical Workorder Quotes for MPN '+this.selectedPartNumber}}
+          </div>
+          <div class="form-group" style="text-align: center; display: flex;" *ngIf="savedWorkOrderData && savedWorkOrderData.workOrderTypeId == 1">
+              <p-radioButton
+                class="p-radiobutton-label-horizontal"
+                name="type"
+                value=1
+                [label]="quotationHeader.customerName"
+                [(ngModel)]="type"
+                (click)="typeChange()"
+              ></p-radioButton>
+              <p-radioButton
+                class="p-radiobutton-label-horizontal"
+                name="type"
+                label="All"
+                value=0
+                [(ngModel)]="type"
+                (click)="typeChange()"
+              ></p-radioButton>
+          </div>
+        <!-- <table class="table table-bordered table-striped table-sorting mpn-list-table table-disabled" *ngIf="displayType == 'use historical wos'">
           <thead>
             <tr>
               <th>WO Num</th>
@@ -1332,11 +1364,123 @@
               <td>{{buildl.promisedDate}}</td>
               <td>{{buildl.estimatedCompletionDate}}</td>
               <td>{{buildl.estimatedShipDate}}</td>
-              <td>{{buildl.statusId}}</td>
+              <td>Closed</td>
               <td><span data-toggle="modal" data-target="#historicalWorkOrderView"><a class="btn nobg btn-view-cstm" (click)="selectedHistoricalWorkOrder = buildl.workOrderId" matTooltip="View"><i class="fa fa-eye"></i></a> </span></td>
             </tr>
           </tbody>
-        </table>
+        </table> -->
+
+        <!-- <table class="table table-bordered table-striped table-sorting mpn-list-table table-disabled" *ngIf="displayType == 'historical WO quotes'">
+          <thead>
+            <tr>
+              <th>Quote Num</th>
+              <th>WO Num</th>
+              <th>Cust Name</th>
+              <th>Cust Code</th>
+              <th>WO Type</th>
+              <th>Open Date</th>
+              <th>Promise Date</th>
+              <th>Est. Comp Date</th>
+              <th>Est. Ship Date</th>
+              <th>Quote Status</th>
+              <th class="events1"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="mpn-row" *ngFor="let buildl of buildHistoricalList">
+              <td>{{buildl.quoteNumber}}</td>
+              <td>{{buildl.workOrderNum}}</td>
+              <td>{{buildl.customerName}}</td>
+              <td>{{buildl.customerCode}}</td>
+              <td>{{buildl.woType}}</td>
+              <td>{{buildl.openDate}}</td>
+              <td>{{buildl.promisedDate}}</td>
+              <td>{{buildl.estimatedCompletionDate}}</td>
+              <td>{{buildl.estimatedShipDate}}</td>
+              <td>{{buildl.quoteStatus}}</td>
+              <td><span data-toggle="modal" data-target="#historicalWorkOrderView"><a class="btn nobg btn-view-cstm" (click)="selectedHistoricalWorkOrder = buildl.workOrderId" matTooltip="View"><i class="fa fa-eye"></i></a> </span></td>
+            </tr>
+          </tbody>
+        </table> -->
+
+        <p-table
+          class="rpo-table-cstm rro-table-cstm pub-ptable-cstm"
+          [columns]="cols"
+          [value]="buildHistoricalList"
+          [paginator]="true"
+          [rows]="10"
+          *ngIf="displayType == 'use historical wos'"
+        >
+          <ng-template pTemplate="header" let-columns>
+              <tr>
+                <th>WO Num</th>
+                <th>Cust Name</th>
+                <th>Cust Code</th>
+                <th>WO Type</th>
+                <th>Open Date</th>
+                <th>Promise Date</th>
+                <th>Est. Comp Date</th>
+                <th>Est. Ship Date</th>
+                <th>WO Status</th>
+                <th class="events1"></th>
+              </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-rowData let-columns="columns">
+              <tr class="mpn-row">
+                <td>{{rowData.workOrderNum}}</td>
+                <td>{{rowData.customerName}}</td>
+                <td>{{rowData.customerCode}}</td>
+                <td>{{rowData.woType}}</td>
+                <td>{{rowData.openDate}}</td>
+                <td>{{rowData.promisedDate}}</td>
+                <td>{{rowData.estimatedCompletionDate}}</td>
+                <td>{{rowData.estimatedShipDate}}</td>
+                <td>Closed</td>
+                <td><span data-toggle="modal" data-target="#historicalWorkOrderView"><a class="btn nobg btn-view-cstm" (click)="selectedHistoricalWorkOrder = rowData.workOrderId" matTooltip="View"><i class="fa fa-eye"></i></a> </span></td>
+              </tr>
+          </ng-template>
+        </p-table>
+
+        <p-table
+          class="rpo-table-cstm rro-table-cstm pub-ptable-cstm"
+          [columns]="cols"
+          [value]="buildHistoricalList"
+          [paginator]="true"
+          [rows]="10"
+          *ngIf="displayType == 'historical WO quotes'"
+        >
+          <ng-template pTemplate="header" let-columns>
+              <tr>
+                <th>Quote Num</th>
+                <th>WO Num</th>
+                <th>Cust Name</th>
+                <th>Cust Code</th>
+                <th>WO Type</th>
+                <th>Open Date</th>
+                <th>Promise Date</th>
+                <th>Est. Comp Date</th>
+                <th>Est. Ship Date</th>
+                <th>Quote Status</th>
+                <th class="events1"></th>
+              </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-rowData let-columns="columns">
+              <tr class="mpn-row">
+                <td>{{rowData.quoteNumber}}</td>
+                <td>{{rowData.workOrderNum}}</td>
+                <td>{{rowData.customerName}}</td>
+                <td>{{rowData.customerCode}}</td>
+                <td>{{rowData.woType}}</td>
+                <td>{{rowData.openDate}}</td>
+                <td>{{rowData.promisedDate}}</td>
+                <td>{{rowData.estimatedCompletionDate}}</td>
+                <td>{{rowData.estimatedShipDate}}</td>
+                <td>{{rowData.quoteStatus}}</td>
+                <td><span data-toggle="modal" data-target="#historicalWorkOrderView"><a class="btn nobg btn-view-cstm" (click)="selectedHistoricalWorkOrder = rowData.workOrderId" matTooltip="View"><i class="fa fa-eye"></i></a> </span></td>
+              </tr>
+          </ng-template>
+        </p-table>
+
       </div>
       </div>
     </div>

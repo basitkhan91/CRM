@@ -337,7 +337,7 @@
                   {{ rec.totalCost }}
                 </td>
                 <td>
-                  <select class="form-control" [(ngModel)]="rec.billingMethodId" style="width: 130px;">
+                  <select class="form-control" [(ngModel)]="rec.billingMethodId" style="width: 130px;" [disabled]="isView">
                     <option value="">Select</option>
                     <option *ngFor="let bm of [{'label': 'T&M', 'value': 1}, {'label': 'Actual', 'value': 2}]"
                       [value]="bm.value">{{bm.label}}</option>

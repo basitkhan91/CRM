@@ -12001,9 +12001,14 @@ body.modal-open {
   clear: both;
 }
 
-.modal-body div.form-group label {
-  float: left;
-  display: inline-block;
+.modal-body div.form-group {
+  label {
+    float: left;
+    display: inline-block;
+  }
+  p-radiobutton label{
+    float: none;
+  }
 }
 .card-body label.radio-inline{
     padding-right:10px;

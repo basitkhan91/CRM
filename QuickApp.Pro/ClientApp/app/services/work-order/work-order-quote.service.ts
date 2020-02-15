@@ -40,8 +40,11 @@ export class WorkOrderQuoteService {
     getBuildDetailsFromWorkFlow(partId, workScopeId) {
         return this.workOrderEndpointService.getBuildDetailsFromWorkFlow(partId, workScopeId);
     }
-    getBuildDetailsFromHistoricalWorkOrder(partId, workScopeId) {
-        return this.workOrderEndpointService.getBuildDetailsFromHistoricalWorkOrder(partId, workScopeId);
+    getBuildDetailsFromHistoricalWorkOrder(partId, workScopeId, payLoad) {
+        return this.workOrderEndpointService.getBuildDetailsFromHistoricalWorkOrder(partId, workScopeId, payLoad);
+    }
+    getBuildDetailsFromHistoricalWorkOrderQuote(partId, workScopeId, payLoad) {
+        return this.workOrderEndpointService.getBuildDetailsFromHistoricalWorkOrderQuote(partId, workScopeId, payLoad);
     }
 
     getWorkFlowDetails(workFlowId) {

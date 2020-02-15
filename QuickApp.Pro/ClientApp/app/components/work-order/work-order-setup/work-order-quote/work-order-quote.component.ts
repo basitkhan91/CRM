@@ -123,7 +123,10 @@ currenttaskId: number = 0;
 workOrderFreightList = [];
 overAllMarkup: any;
 selectedHistoricalWorkOrder: any;
-
+displayType: string = '';
+type: number = 0;
+selectedPartDescription: string = "";
+selectedStockLineNumber: string = "";
 
 
 
@@ -341,7 +344,9 @@ selectedHistoricalWorkOrder: any;
             workflowNo: x.workflowNo,
             partNumber: x.partNumber,
             workOrderScopeId: x.workOrderScopeId,
-            itemMasterId: x.itemMasterId
+            itemMasterId: x.itemMasterId,
+            partDescription: x.description,
+            stockLineNumber: x.stockLineNo
           },
           label: x.partNumber
         }
@@ -359,6 +364,8 @@ selectedHistoricalWorkOrder: any;
     let msId = 0;
     this.mpnPartNumbersList.forEach((mpn)=>{
       if(mpn.label == this.selectedPartNumber){
+        this.selectedPartDescription = mpn.value.partDescription;
+        this.selectedStockLineNumber = mpn.value.stockLineNumber;
         msId = mpn.value.masterPartId;
         this.labor.workFlowWorkOrderId = mpn;
         this.workFlowWorkOrderId = mpn.value.workOrderWorkFlowId;
@@ -446,31 +453,45 @@ selectedHistoricalWorkOrder: any;
   }
 
   getDisplayData(buildType){
+    this.displayType = buildType;
     var partId;
     var workScopeId;
     this.mpnPartNumbersList.forEach(element => {
       if(element['label'] == this.selectedPartNumber){
         partId = element['value']['masterPartId'];
         workScopeId = element['value']['workOrderScopeId'];
-      }
-      
+        let payLoad = { 
+          "first":0,
+          "rows":10,
+          "sortOrder":1,
+          "filters":{ 
+              "ItemMasterId":partId,
+              "WorkScopeId":workScopeId,
+              "statusId":Number(this.type)
+                },
+          "globalFilter":null
+        }
+        if(this.type == 1){
+          payLoad.filters['customerId'] = this.quotationHeader.CustomerId;
+        }
+        if(buildType == 'historical WO quotes'){
+          this.workOrderService.getBuildDetailsFromHistoricalWorkOrderQuote(partId, workScopeId, payLoad)
+          .subscribe(
+            (res: any[]) => {
+              this.buildHistoricalList = res;
+            }
+          )
+        }
+        else if(buildType == 'use historical wos'){
+          this.workOrderService.getBuildDetailsFromHistoricalWorkOrder(partId, workScopeId, payLoad)
+          .subscribe(
+            (res: any[]) => {
+              this.buildHistoricalList = res;
+            }
+          )
+        }
+      } 
     });
-    if(buildType == 'use work flow'){
-      this.workOrderService.getBuildDetailsFromWorkFlow(partId, workScopeId)
-      .subscribe(
-        (res: any[]) => {
-          this.buildWorkOrderList = res;
-        }
-      )
-    }
-    else if(buildType == 'use historical wos'){
-      this.workOrderService.getBuildDetailsFromHistoricalWorkOrder(partId, workScopeId)
-      .subscribe(
-        (res: any[]) => {
-          this.buildHistoricalList = res;
-        }
-      )
-    }
   }
 
   getTabDataFromWorkOrder(){
@@ -1274,7 +1295,7 @@ getQuoteMaterialListByWorkOrderQuoteId() {
     this.workOrderService.getQuoteMaterialList(this.workOrderQuoteDetailsId, (this.selectedBuildMethod === 'use work order')?1:(this.selectedBuildMethod == "use work flow")?2:(this.selectedBuildMethod == "use historical wos")?3:4).subscribe(res => {
         this.materialListQuotation = res;
         if(this.materialListQuotation && this.materialListQuotation.length > 0 && this.materialListQuotation[0].headerMarkupId){
-          this.costPlusType = Number(this.materialListQuotation[0].markupFixedPrice);
+          this.costPlusType = this.materialListQuotation[0].markupFixedPrice;
           this.overAllMarkup = Number(this.materialListQuotation[0].headerMarkupId);
         }
         if(res.length > 0){
@@ -1453,5 +1474,9 @@ formDataFromViewListData(){
     this.warnings = this.quoteListViewData.warnings;
     this.memo = this.quoteListViewData.memo;
   }
+}
+
+typeChange(){
+  this.getDisplayData(this.displayType);
 }
 }

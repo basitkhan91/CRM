@@ -168,7 +168,7 @@
         </td>
         <ng-container *ngIf="isQuote">
           <td>
-            <select class="form-control" [(ngModel)]="rowData.billingMethodId">
+            <select class="form-control" [(ngModel)]="rowData.billingMethodId" [disabled]="isView">
               <option value="">Select</option>
               <option *ngFor="let bm of [{'label': 'T&M', 'value': '1'}, {'label': 'Actual', 'value': '2'}]" [value]="bm.value">{{bm.label}}</option>
             </select>
