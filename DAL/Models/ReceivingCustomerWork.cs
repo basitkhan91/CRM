@@ -41,7 +41,7 @@ namespace DAL.Models
         public string TimeLifeOrigin { get; set; }
         public long? TimeLifeCyclesId { get; set; }
         public string Memo { get; set; }
-        public long? CertifiedById { get; set; }
+        public string CertifiedBy { get; set; }
         public DateTime? TagDate { get; set; }
         public long? TagTypeId { get; set; }
         public string SerialNumber { get; set; }
@@ -62,8 +62,7 @@ namespace DAL.Models
         public long ManufacturerId { get; set; }
         [NotMapped]
         public string PartNumber { get; set; }
-        [NotMapped]
-        public string CertifiedBy { get; set; }
+        
         [NotMapped]
         public string TagType { get; set; }
         [NotMapped]

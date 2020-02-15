@@ -25,6 +25,7 @@ import { AircraftModelService } from '../../../../services/aircraft-model/aircra
 import { AircraftManufacturerService } from '../../../../services/aircraft-manufacturer/aircraftManufacturer.service';
 import { DropdownModule } from 'primeng/dropdown';
 import { AuthService } from '../../../../services/auth.service';
+import { AuditHistory } from '../../../../models/audithistory.model';
 
 @Component({
     selector: 'app-asset-capes',
@@ -48,6 +49,8 @@ export class AssetCapesComponent implements OnInit {
     alldashnumberinfo: any[];
     allManagemtninfo: any[] = [];
     maincompanylist: any[] = [];
+    public auditHisory: AuditHistory[] = [];
+    auditHistory: any[] = [];
     bulist: any[];
     departmentList: any[];
     divisionlist: any[];
@@ -255,6 +258,35 @@ export class AssetCapesComponent implements OnInit {
         }
         this.getAssetsList(); //calling for getting Asset List Data
     }
+
+    private onHistoryLoadSuccessful(auditHistory: AuditHistory[], content) {
+        this.alertService.stopLoadingMessage();
+        this.loadingIndicator = false;
+        this.auditHisory = auditHistory;
+        this.modal = this.modalService.open(content, { size: 'lg', backdrop: 'static', keyboard: false });
+        this.modal.result.then(() => {
+            console.log('When user closes');
+        }, () => { console.log('Backdrop click') })
+    }
+
+    getAuditHistoryById(rowData) {
+        this.assetServices.getAssetCapesAudit(rowData.assetCapesId).subscribe(res => {
+            this.auditHistory = res;
+        })
+    }
+
+    getColorCodeForHistory(i, field, value) {
+        const data = this.auditHistory;
+        const dataLength = data.length;
+        if (i >= 0 && i <= dataLength) {
+            if ((i + 1) === dataLength) {
+                return true;
+            } else {
+                return data[i + 1][field] === value
+            }
+        }
+    }
+
     private ptnumberlistdata() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;

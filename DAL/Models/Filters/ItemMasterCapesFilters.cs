@@ -24,5 +24,10 @@ namespace DAL.Models
         public string level3 { get; set; }
         public string level4 { get; set; }
         public int TotalRecords { get; set; }
+
+        public long levelId1 { get; set; }
+        public long levelId2 { get; set; }
+        public long levelId3 { get; set; }
+        public long levelId4 { get; set; }
     }
 }

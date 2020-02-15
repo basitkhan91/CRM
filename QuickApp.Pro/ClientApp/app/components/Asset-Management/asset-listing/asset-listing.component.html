@@ -248,9 +248,14 @@
                                         <p>
                                             <span class="label"><b>Asset Parent: </b></span><span class="value">{{assetViewList.assetParentId}}</span>
                                         </p>
-                                        <p><span class="label"><b>Asset Class: </b></span><span class="value">{{assetViewList.assetTypeId}}</span></p>
-                                        <p><span class="label"><b>Depreciation Method: </b></span><span class="value">{{assetViewList.depreciationMethodObj}}</span></p>
-                                        <p><span class="label"><b>Residual %: </b></span><span class="value">{{assetViewList.residualPercentage}}</span></p>
+                                        <p>
+                                            <span class="label"><b>Asset Class: </b></span><span class="value">{{assetViewList.assetTypeId}}</span>
+                                        </p>
+                                       <div style=padding-left:0%>
+                                        <p>
+                                            <span class="label"><b>Depreciation Method: </b></span><span class="value">{{assetViewList.depreciationMethodObj}}</span>
+                                        </p>
+                                        <p><span class="label col-sm-6"><b>Residual %: </b></span><span class="value">{{assetViewList.residualPercentage}}</span></p>
                                         <p><span class="label"><b>Asset Life: </b></span><span class="value">{{assetViewList.assetLife}}</span></p>
                                         <p><span class="label"><b>Depr Frequency: </b></span><span class="value">{{assetViewList.depreciationFrequencyObj}}</span></p>
                                         <p><span class="label"><b>Acquired GL: </b></span><span class="value">{{assetViewList.acquiredGLAccountObj}}</span></p>
@@ -259,6 +264,7 @@
                                         <p><span class="label"><b>Sale GL: </b></span><span class="value">{{assetViewList.assetSaleObj}}</span></p>
                                         <p><span class="label"><b>Write Off GL: </b></span><span class="value">{{assetViewList.assetWriteOffObj}}</span></p>
                                         <p><span class="label"><b>Write Down GL: </b></span><span class="value">{{assetViewList.assetWriteDownObj}}</span></p>
+                                  </div>
                                     </div>
                                 </div>
                             </div>
@@ -274,71 +280,131 @@
                                     <div class="col-sm-12">
                                         <div class="table-responsive">
                                             <p-table #dt class="rpo-table-cstm rro-table-cstm" [value]="allCapesInfo"
-											 [metaKeySelection]="true"
-											 [first]="pageIndex"
-											 [rows]="pageSize"
-											 [paginator]="true"
-											 [pageLinks]="3"
-											 [rowsPerPageOptions]="[10,20,50,100]"
-											 [columns]="selectedCol"
-											 selectionMode="multiple"
-											 [resizableColumns]="true"
-											 [reorderableColumns]="true"
-											 [scrollable]="true"
-											 [totalRecords]="totalRecords1"
-											 scrollHeight="450px">
-										<ng-template pTemplate="colgroup" let-columns>
-											<colgroup>
-												<col *ngFor="let col of columns" style="width:140px">
-											</colgroup>
-										</ng-template>
-										<ng-template pTemplate="header" let-columns style="padding-top: 1% !important">
-											<tr>
-												<th style="width:auto" *ngFor="let col of columns" pResizableColumn pReorderableColumn
-													[pSortableColumn]="col.field">
-													{{col.header}}
-													<p-sortIcon [field]="col.field"></p-sortIcon>
-												</th>
-											</tr>
-											<tr>
-												<th style="width:auto" *ngFor="let col of columns" [ngSwitch]="col.field">
-													<input style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field,'contains')">
-												</th>
-											</tr>
-										</ng-template>
+                                                     [metaKeySelection]="true"
+                                                     [first]="pageIndex"
+                                                     [rows]="pageSize"
+                                                     [paginator]="true"
+                                                     [pageLinks]="3"
+                                                     [rowsPerPageOptions]="[10,20,50,100]"
+                                                     [columns]="selectedCol"
+                                                     selectionMode="multiple"
+                                                     [resizableColumns]="true"
+                                                     [reorderableColumns]="true"
+                                                     [scrollable]="true"
+                                                     [totalRecords]="totalRecords1"
+                                                     scrollHeight="450px">
+                                                <ng-template pTemplate="colgroup" let-columns>
+                                                    <colgroup>
+                                                        <col *ngFor="let col of columns" style="width:140px">
+                                                    </colgroup>
+                                                </ng-template>
+                                                <ng-template pTemplate="header" let-columns style="padding-top: 1% !important">
+                                                    <tr>
+                                                        <th style="width:auto" *ngFor="let col of columns" pResizableColumn pReorderableColumn
+                                                            [pSortableColumn]="col.field">
+                                                            {{col.header}}
+                                                            <p-sortIcon [field]="col.field"></p-sortIcon>
+                                                        </th>
+                                                    </tr>
+                                                    <tr>
+                                                        <th style="width:auto" *ngFor="let col of columns" [ngSwitch]="col.field">
+                                                            <input style="width:100%;" pInputText type="text" (input)="dt.filter($event.target.value, col.field,'contains')">
+                                                        </th>
+                                                    </tr>
+                                                </ng-template>
 
 
-										<ng-template pTemplate="body" let-rowData let-columns="columns" let-assetCapes let-rowIndex="rowIndex">
-                                            <tr [pSelectableRow]="rowData" pReorderableRowHandle>
-                                                <td style="width:120px" *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
-                                                    {{rowData[col.field]}}
-                                                </td>
-                                                <td  class="action-icons-cstm" style="width:150px">       
-                                                    <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on"
-                                                                   offLabel="off" (onChange)="toggleActiveStatus(rowData)"
-                                                                   disabled [(ngModel)]="rowData['isActive']"></p-inputSwitch>
-                                                    <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on"
-                                                                   offLabel="off" (onChange)="toggleActiveStatus(rowData)"
-                                                                   disabled [(ngModel)]="rowData['isActive']"></p-inputSwitch>
-                                                    <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on"
-                                                                   offLabel="off" (onChange)="toggleActiveStatus(rowData)"
-                                                                   disabled [(ngModel)]="rowData['isActive']"></p-inputSwitch>
-                                                </td>
-                                            </tr>
-										</ng-template>
-										<ng-template pTemplate="summary" id="footer">
-											<div style="text-align: right;">
-												<label id="footer" class="footer">No. of records:</label>
-												<input style="width: 5% !important;" [(ngModel)]="totalRecords1" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp;
-												<label id="footer" class="footer1">Pages Count:</label>
-												<input style="width: 5% !important;" [(ngModel)]="totalPages1" [disabled]="true" pInputText type="text" />
-											</div>
-										</ng-template>
-									</p-table>
+                                                <ng-template pTemplate="body" let-rowData let-columns="columns" let-assetCapes let-rowIndex="rowIndex">
+                                                    <tr [pSelectableRow]="rowData" pReorderableRowHandle>
+                                                        <td style="width:120px" *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
+                                                            {{rowData[col.field]}}
+                                                        </td>
+                                                        <td class="action-icons-cstm" style="width:150px">
+                                                            <p-inputSwitch *ngIf="rowData['isActive']==true" matTooltip="Active" onLabel="on"
+                                                                           offLabel="off" (onChange)="toggleActiveStatus(rowData)"
+                                                                           disabled [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                                                            <p-inputSwitch *ngIf="rowData['isActive']==false" matTooltip="In Active" onLabel="on"
+                                                                           offLabel="off" (onChange)="toggleActiveStatus(rowData)"
+                                                                           disabled [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+                                                            <p-inputSwitch *ngIf="rowData['isActive']==null" matTooltip="In Active" onLabel="on"
+                                                                           offLabel="off" (onChange)="toggleActiveStatus(rowData)"
+                                                                           disabled [(ngModel)]="rowData['isActive']"></p-inputSwitch>
+
+                                                            <button class="btn-history" mat-icon-button matTooltip="History" data-target="#contentHist" data-toggle="modal" (click)="getAuditHistoryById(rowData)">
+                                                                <mat-icon color="green">history</mat-icon>
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                </ng-template>
+                                                <ng-template pTemplate="summary" id="footer">
+                                                    <div style="text-align: right;">
+                                                        <label id="footer" class="footer">No. of records:</label>
+                                                        <input style="width: 5% !important;" [(ngModel)]="totalRecords1" [disabled]="true" pInputText type="text" /> &nbsp;&nbsp;
+                                                        <label id="footer" class="footer1">Pages Count:</label>
+                                                        <input style="width: 5% !important;" [(ngModel)]="totalPages1" [disabled]="true" pInputText type="text" />
+                                                    </div>
+                                                </ng-template>
+                                            </p-table>
                                             <p class="clr-red">Number of rows in the table are all the possible combinations of the PN, Capability Type, Aircraft Manufacturer and Model selected.</p>
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+
+                        <div *ngIf="auditHistory" id="contentHist" #contentHist class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+                            <div class="modal-dialog modal-lg">
+
+                                <!-- Modal content-->
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                        <h4 class="modal-title">History of Asset Capes</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="table-responsive rro-table-cstm">
+                                            <table class="table table-bordered" *ngIf="auditHistory.length> 0 else noDatavailable">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Capability Type</th>
+                                                        <th>PN</th>
+                                                        <th>Aircraft Manufacturer</th>
+                                                        <th>Models</th>
+                                                        <th>Dash Number</th>
+                                                        <th>IsActive</th>
+                                                        <th>Updated By</th>
+                                                        <th>Updated Time</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody *ngIf="auditHistory.length> 0">
+                                                    <tr *ngFor="let audit of auditHistory; let i = index;">
+                                                        <td [ngStyle]="{'color': getColorCodeForHistory(i, 'captypedescription', audit.captypedescription)  ? 'black' : 'red'  }">{{audit.captypedescription}}</td>
+                                                        <td [ngStyle]="{'color': getColorCodeForHistory(i, 'partNumber', audit.partNumber)  ? 'black' : 'red'  }">{{audit.partNumber}}</td>
+                                                        <td [ngStyle]="{'color': getColorCodeForHistory(i, 'manufacturer', audit.manufacturer)  ? 'black' : 'red'  }">{{audit.manufacturer}}</td>
+                                                        <td [ngStyle]="{'color': getColorCodeForHistory(i, 'modelname', audit.modelname)  ? 'black' : 'red'  }">{{audit.modelname}}</td>
+                                                        <td [ngStyle]="{'color': getColorCodeForHistory(i, 'dashNumber', audit.dashNumber)  ? 'black' : 'red'  }">{{audit.dashNumber}}</td>
+                                                        <td [ngStyle]="{'color': getColorCodeForHistory(i, 'isActive', audit.isActive)  ? 'black' : 'red'  }">{{audit.isActive}}</td>
+                                                        <td>{{audit.updatedBy}}</td>
+                                                        <td>{{audit.updatedDate | date: 'dd-MM-yyyy h:mm a '}}</td>
+                                                    </tr>
+                                                </tbody>
+
+
+                                            </table>
+                                            <ng-template #noDatavailable>
+                                                <div class="text-center">
+                                                    <!--<img src="../../assets/images/binoculars.png" style="height: 100px; width: 100px;">-->
+                                                    <h4 style="color: #ff5663;">No History Found </h4>
+                                                </div>
+
+                                            </ng-template>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+
                             </div>
                         </div>
                         <div class="panel panel-default">
@@ -471,13 +537,13 @@
                                             <span class="label"><b>Maintenance Required: </b></span>
                                             <span class="value">{{assetViewList.assetIsMaintenanceReqd}}</span>
                                             <!--<input type="checkbox"
-                                    [disabled]="true" [checked]="assetViewList.assetIsMaintenanceReqd" />-->
+                        [disabled]="true" [checked]="assetViewList.assetIsMaintenanceReqd" />-->
                                         </p>
                                         <p>
                                             <span class="label"><b>Maintenance Contract: </b></span>
                                             <span class="value">{{assetViewList.assetMaintenanceIsContract}}</span>
                                             <!--<input type="checkbox"
-                                    [disabled]="true" [checked]="assetViewList.assetMaintenanceIsContract" />-->
+                        [disabled]="true" [checked]="assetViewList.assetMaintenanceIsContract" />-->
                                         </p>
 
                                         <p>
@@ -496,7 +562,7 @@
                                             <span class="label"><b>Warranty Required: </b></span>
                                             <span class="value">{{assetViewList.isWarrantyRequired}}</span>
                                             <!--<input type="checkbox" [disabled]="true"
-        [checked]="assetViewList.isWarrantyRequired" />-->
+                        [checked]="assetViewList.isWarrantyRequired" />-->
                                         </p>
                                         <p>
                                             <span class="label"><b>Warranty</b></span>

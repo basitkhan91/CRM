@@ -440,18 +440,12 @@ export class WorkOrderEndpointService extends EndpointFactory {
         return this.http.get(`${this.configurations.baseUrl}/api/workorder/workflownos?partId=${partId}&workScopeId=${workScopeId}`)
     }
 
-    getBuildDetailsFromHistoricalWorkOrder(partId, workScopeId) {
-        return this.http.post(`${this.configurations.baseUrl}/api/workorder/historicalworkorders`, { 
-            "first":0,
-            "rows":10,
-            "sortOrder":1,
-            "filters":{ 
-               "ItemMasterId":partId,
-               "WorkScopeId":workScopeId,
-               "statusId":0
-                 },
-            "globalFilter":null
-         })
+    getBuildDetailsFromHistoricalWorkOrder(partId, workScopeId, payLoad) {
+        return this.http.post(`${this.configurations.baseUrl}/api/workorder/historicalworkorders`, payLoad)
+    }
+
+    getBuildDetailsFromHistoricalWorkOrderQuote(partId, workScopeId, payLoad) {
+        return this.http.post(`${this.configurations.baseUrl}/api/workorder/historicalworkorderquotes`, payLoad)
     }
 
     getWorkFlowDetails(workFlowId) {

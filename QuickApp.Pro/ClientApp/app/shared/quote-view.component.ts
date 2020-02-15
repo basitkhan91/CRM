@@ -19,6 +19,7 @@ import {
 })
 export class QuoteViewComponent implements OnInit, OnChanges{
     @Input() workorderid: any;
+    @Input() isView: boolean = false;
     employeeList: any;
     labor = new WorkOrderLabor();
     workOrderPartsDetail: partsDetail[];
@@ -59,8 +60,11 @@ export class QuoteViewComponent implements OnInit, OnChanges{
     selectedWorkFlowWorkOrderId: any;
     workFlowWorkOrderId: any;
     gridActiveTab: any;
-    isView: any;
     isQuoteListView: any;
+    overAllMarkup: any;
+    costPlusType: any;
+    selectedPartDescription: string = "";
+    selectedStockLineNumber: string = "";
     constructor(private commonService: CommonService, private workorderMainService: WorkOrderService,private workOrderService: WorkOrderQuoteService){
 
     }
@@ -155,7 +159,7 @@ export class QuoteViewComponent implements OnInit, OnChanges{
             .subscribe(
               (res : any)=>{
                 if(res){
-                    this.workOrderQuoteDetailsId = res['workOrderQuote']['workOrderQuoteId'];
+                    // this.workOrderQuoteDetailsId = res['workOrderQuote']['workOrderQuoteId'];
                   this.isEdit = true;
                   this.dso = res.workOrderQuote.dso;
                   this.validFor = res.workOrderQuote.validForDays;
@@ -220,6 +224,10 @@ export class QuoteViewComponent implements OnInit, OnChanges{
         if(this.workOrderQuoteDetailsId){
         this.workOrderService.getQuoteMaterialList(this.workOrderQuoteDetailsId, 1).subscribe(res => {
             this.materialListQuotation = res;
+            if(this.materialListQuotation && this.materialListQuotation.length > 0 && this.materialListQuotation[0].headerMarkupId){
+              this.costPlusType = this.materialListQuotation[0].markupFixedPrice;
+              this.overAllMarkup = Number(this.materialListQuotation[0].headerMarkupId);
+            }
         })
         }
     }
@@ -309,14 +317,16 @@ export class QuoteViewComponent implements OnInit, OnChanges{
                 workflowNo: x.workflowNo,
                 partNumber: x.partNumber,
                 workOrderScopeId: x.workOrderScopeId,
-                itemMasterId: x.itemMasterId
+                itemMasterId: x.itemMasterId,
+                partDescription: x.description,
+                stockLineNumber: x.stockLineNo
                 },
                 label: x.partNumber
             }
             });
             if(this.savedWorkOrderData && this.savedWorkOrderData.isSinglePN){
-            this.selectedPartNumber = this.mpnPartNumbersList[0].label;
-            this.partNumberSelected();
+              this.selectedPartNumber = this.mpnPartNumbersList[0].label;
+              this.partNumberSelected();
             }
         })
     }
@@ -327,6 +337,8 @@ export class QuoteViewComponent implements OnInit, OnChanges{
         let msId = 0;
         this.mpnPartNumbersList.forEach((mpn)=>{
           if(mpn.label == this.selectedPartNumber){
+            this.selectedPartDescription = mpn.value.partDescription;
+            this.selectedStockLineNumber = mpn.value.stockLineNumber;
             msId = mpn.value.masterPartId;
             this.labor.workFlowWorkOrderId = mpn;
             this.workFlowWorkOrderId = mpn.value.workOrderWorkFlowId;
@@ -357,6 +369,42 @@ export class QuoteViewComponent implements OnInit, OnChanges{
 
     calculateExpiryDate() {
 
+    }
+
+    getTotalQuantity(){
+      let totalQuantity = 0;
+      this.materialListQuotation.forEach(
+        (material)=>{
+          if(material.quantity){
+            totalQuantity += material.quantity;
+          }
+        }
+      )
+      return totalQuantity;
+    }
+    
+    getTotalUnitCost(){
+      let total = 0;
+      this.materialListQuotation.forEach(
+        (material)=>{
+          if(material.unitCost && material.quantity){
+            total += Number(material.quantity * material.unitCost);
+          }
+        }
+      )
+      return total.toFixed(2);
+    }
+
+    totalMaterialBillingAmount(){
+      let total = 0;
+      this.materialListQuotation.forEach(
+        (material)=>{
+          if(material.billingAmount){
+            total += Number(material.billingAmount);
+          }
+        }
+      )
+      return total.toFixed(2);
     }
 
 }

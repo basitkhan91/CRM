@@ -158,6 +158,16 @@
             <option *ngFor="let mpn of mpnPartNumbersList" [value]="mpn.label">{{mpn.label}}</option>
             </select>
         </div>
+        <div class="form-group ">
+            <label class="fs12">Part Description:
+            </label>
+            <label>{{selectedPartDescription}}</label>
+        </div>
+        <div class="form-group ">
+            <label class="fs12">Stock Line Number:
+            </label>
+            <label>{{selectedStockLineNumber}}</label>
+        </div>
     </div>
 
     <div class="card col-md-12" style="background: #f1f1f1; margin-top: 10px;" *ngIf="selectedPartNumber != ''">
@@ -220,4 +230,151 @@
         view="true"
         ></app-work-order-charges>
     </div>
+
+    <div *ngIf="gridActiveTab === 'materialList'">
+            <table class="table table-bordered table-striped table-sorting mpn-list-table table-disabled" >
+              <thead>
+                <tr style="color: #f1f1f1;">
+                    <td colspan="11">&nbsp;</td>
+                    <td colspan="6">
+      
+                        <div class="form-group" style="text-align: center; display: flex;">
+                          <p-radioButton
+                            class="p-radiobutton-label-horizontal p-radio-custom"
+                            name="costPlusType"
+                            label="T&M - Mark Up"
+                            value="1"
+                            [(ngModel)]="costPlusType"
+                            [disabled]="isView"
+                            (click)="tmchange()"
+                          ></p-radioButton>
+                          <div>
+                            <select class="form-control" (change)="markupChanged({}, 'all')" [(ngModel)]="overAllMarkup" [disabled]="isView || costPlusType != '1'" style="margin-top: 10px;">
+                              <option value="">Select</option>
+                              <option *ngFor="let markUp of markupList" [value]="markUp.value">{{markUp.label}}</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div>
+                          <p-radioButton
+                            class="p-radiobutton-label-horizontal col-width p-radio-custom"
+                            name="costPlusType"
+                            value="2"
+                            label="Actual"
+                            [(ngModel)]="costPlusType"
+                            [disabled]="isView"
+                            (click)="tmchange()"
+                          ></p-radioButton>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                  <th>Task</th>
+                  <th>MC PN</th>
+                  <th>MC Description</th>
+                  <th>QTE/WO/WF/SL/M</th>
+                  <th>REF</th>
+                  <th>QTY</th>
+                  <th>UOM</th>
+                  <th>Cond Type</th>
+                  <th>OEM/PMA/DER</th>
+                  <th>Unit Cost</th>
+                  <th>Total Part Cost</th>
+                  <th>Billing Method</th>
+                  <th>Mark Up</th>
+                  <th>
+                    Billing Rate
+                  </th>
+                  <th>
+                    Billing Amount
+                  </th>
+                  <th *ngIf="!isView"></th>
+                  <th *ngIf="!isView"></th>
+                </tr>
+              </thead>
+              <tbody>
+                <ng-container *ngFor="let matQuotation of materialListQuotation; let in=index;">
+                  <tr class="mpn-row" *ngIf="!matQuotation['isDeleted']">
+                    <td>
+                      <select class="form-control wf-pub-id select-read-only" [(ngModel)]="matQuotation.taskId" [disabled]="isView" disabled>
+                        <option value="">Select</option>
+                        <option *ngFor="let task of taskList" [value]="task.taskId">{{task.description}}</option>
+                      </select>
+                    </td>
+                    <td>{{matQuotation.partNumber}}</td>
+                    <td>{{matQuotation.partDescription}}</td>
+                    <td>{{matQuotation.partDescription}}</td>
+                    <td>{{matQuotation.partDescription}}</td>
+                    <td>{{matQuotation.quantity}}</td>
+                    <td>{{matQuotation.unitOfMeasureId}}</td>
+                    <td>{{matQuotation.conditionCodeId}}</td>
+                    <td>{{matQuotation.isDeferred}}</td>
+                    <td>{{matQuotation.unitCost}}</td>
+                    <td>{{matQuotation.quantity * matQuotation.unitCost}}</td>
+                    <td>
+                      <select class="form-control" [(ngModel)]="matQuotation.billingMethodId" style="width: 130px;">
+                        <option value="">Select</option>
+                        <option *ngFor="let bm of [{'label': 'T&M', 'value': '1'}, {'label': 'Actual', 'value': '2'}]" [value]="bm.value">{{bm.label}}</option>
+                      </select>
+                    </td>
+                    <td>
+                        <select class="form-control wf-pub-id" (change)="markupChanged(matQuotation, 'row')" [(ngModel)]="matQuotation.markupPercentageId" [disabled]="isView || matQuotation.billingMethodId != '1'">
+                          <option value="">Select</option>
+                          <option *ngFor="let markUp of markupList" [value]="markUp.value">{{markUp.label}}</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input type="number" [(ngModel)]="matQuotation.billingRate" (change)="matQuotation.billingAmount = (matQuotation.billingRate*matQuotation.quantity).toFixed(2)" [disabled]="isView || matQuotation.billingMethodId != 2"/>
+                    </td>
+                    <td>{{ matQuotation.billingAmount }}</td>
+                    <td *ngIf="!isView">
+                        <button
+                          class="btn-edit ptable-wo-btns"
+                          mat-icon-button
+                          data-target="#addNewMaterials"
+                          data-toggle="modal"
+                          (click)="editMaterialList(matQuotation)"
+                          matTooltip="Edit"
+                        >
+                          <mat-icon>edit</mat-icon>
+                        </button>
+                    </td>
+                    <td *ngIf="!isView">
+                        <button
+                          class="btn-delete ptable-wo-btns"
+                          mat-icon-button
+                          matTooltip="Delete"
+                          (click)="deleteMaterialList(in)"
+                        >
+                          <mat-icon color="warn">delete</mat-icon>
+                        </button>
+                    </td>
+                  </tr>
+                </ng-container>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td>
+                    Total
+                  </td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>{{getTotalQuantity()}}</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>{{ getTotalUnitCost() }}</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>{{totalMaterialBillingAmount()}}</td>
+                  <td *ngIf="!isView"></td>
+                  <td *ngIf="!isView"></td>
+                </tr>
+              </tfoot>
+            </table>
+        </div>
 </div>

@@ -3016,28 +3016,36 @@ namespace QuickApp.Pro.Controllers
             {
                 if (ModelState.IsValid)
                 {
-
-                    var custATAData = _context.CustomerContactATAMapping.Where(c => c.CustomerContactATAMappingId == id).FirstOrDefault();
-                    if (custATAData != null)
+                    var atachapter = _unitOfWork.Repository<CustomerContactATAMapping>().GetSingleOrDefault(c => c.CustomerContactId == customerContactAtaMapping.CustomerContactId && (c.ATAChapterId == customerContactAtaMapping.ATAChapterId) && (c.ATASubChapterId == customerContactAtaMapping.ATASubChapterId) && (c.MasterCompanyId == customerContactAtaMapping.MasterCompanyId));// && c.AircraftModelId == customerAircraftMappingVM[i].AircraftModelId && c.MasterCompanyId == customerAircraftMappingVM[i].MasterCompanyId && c.CustomerId = customerAircraftMappingVM[i].CustomerId);
+                    if (atachapter == null)
                     {
-                        custATAData.CustomerContactId = customerContactAtaMapping.CustomerContactId;
-                        custATAData.CustomerId = customerContactAtaMapping.CustomerId;
-                        custATAData.ATAChapterId = customerContactAtaMapping.ATAChapterId;
-                        custATAData.ATASubChapterId = customerContactAtaMapping.ATASubChapterId;
-                        custATAData.ATAChapterCode = customerContactAtaMapping.ATAChapterCode;
-                        custATAData.ATAChapterName = customerContactAtaMapping.ATAChapterName;
-                        custATAData.ATASubChapterDescription = customerContactAtaMapping.ATASubChapterDescription;
-                        custATAData.UpdatedBy = customerContactAtaMapping.UpdatedBy;
-                        custATAData.UpdatedDate = DateTime.Now;
-                        custATAData.IsActive = customerContactAtaMapping.IsActive;
-                        _unitOfWork.Repository<CustomerContactATAMapping>().Update(custATAData);
-                        _unitOfWork.SaveChanges();
+                        var custATAData = _context.CustomerContactATAMapping.Where(c => c.CustomerContactATAMappingId == id).FirstOrDefault();
+                        if (custATAData != null)
+                        {
+                            custATAData.CustomerContactId = customerContactAtaMapping.CustomerContactId;
+                            custATAData.CustomerId = customerContactAtaMapping.CustomerId;
+                            custATAData.ATAChapterId = customerContactAtaMapping.ATAChapterId;
+                            custATAData.ATASubChapterId = customerContactAtaMapping.ATASubChapterId;
+                            custATAData.ATAChapterCode = customerContactAtaMapping.ATAChapterCode;
+                            custATAData.ATAChapterName = customerContactAtaMapping.ATAChapterName;
+                            custATAData.ATASubChapterDescription = customerContactAtaMapping.ATASubChapterDescription;
+                            custATAData.UpdatedBy = customerContactAtaMapping.UpdatedBy;
+                            custATAData.UpdatedDate = DateTime.Now;
+                            custATAData.IsActive = customerContactAtaMapping.IsActive;
+                            _unitOfWork.Repository<CustomerContactATAMapping>().Update(custATAData);
+                            _unitOfWork.SaveChanges();
+                        }
+                        else
+                        {
+                            return BadRequest("Record already exist with these details");
+                        }
+
+                        return Ok(id);
                     }
                     else
                     {
                         return BadRequest("Record already exist with these details");
                     }
-                    return Ok(id);
                 }
                 else
                 {
