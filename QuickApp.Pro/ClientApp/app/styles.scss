@@ -12000,9 +12000,14 @@ body.modal-open {
   clear: both;
 }
 
-.modal-body div.form-group label {
-  float: left;
-  display: inline-block;
+.modal-body div.form-group {
+  label {
+    float: left;
+    display: inline-block;
+  }
+  p-radiobutton label{
+    float: none;
+  }
 }
 
 .modal-footer button {
