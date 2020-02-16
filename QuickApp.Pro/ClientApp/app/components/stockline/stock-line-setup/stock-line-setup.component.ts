@@ -17,6 +17,7 @@ import { takeUntil } from 'rxjs/operators';
 import { GlAccountService } from '../../../services/glAccount/glAccount.service';
 import { getValueFromArrayOfObjectById, getValueFromObjectByKey, editValueAssignByCondition, getObjectById } from '../../../generic/autocomplete';
 import { DatePipe } from '@angular/common';
+import { MessageSeverity, AlertService } from '../../../services/alert.service';
 
 @Component({
 	selector: 'app-stock-line-setup',
@@ -76,7 +77,7 @@ export class StockLineSetupComponent implements OnInit {
 	timeLifeCyclesId: number;
 
 	
-	constructor(private stocklineser: StocklineService, private commonService: CommonService, private conditionService: ConditionService, private binService: BinService, private siteService: SiteService, private vendorService: VendorService, private manufacturerService: ManufacturerService, private integrationService: IntegrationService, private itemMasterService: ItemMasterService, private glAccountService: GlAccountService, private router: Router, private _actRoute: ActivatedRoute, private datePipe: DatePipe) {
+	constructor(private alertService: AlertService,private stocklineser: StocklineService, private commonService: CommonService, private conditionService: ConditionService, private binService: BinService, private siteService: SiteService, private vendorService: VendorService, private manufacturerService: ManufacturerService, private integrationService: IntegrationService, private itemMasterService: ItemMasterService, private glAccountService: GlAccountService, private router: Router, private _actRoute: ActivatedRoute, private datePipe: DatePipe) {
 		this.stockLineForm.siteId = 0;
 		this.stockLineForm.warehouseId = 0;
 		this.stockLineForm.locationId = 0;
@@ -375,7 +376,7 @@ export class StockLineSetupComponent implements OnInit {
 			const partDetails = res[0][0];
 			this.stockLineForm.partDescription = partDetails.partDescription;
 			this.stockLineForm.shelfLife = partDetails.shelfLife;
-			this.stockLineForm.isSerialized = partDetails.isSerialized;
+			this.stockLineForm.isSerialized = partDetails.isSerialized;  
 			this.stockLineForm.ITARNumber = partDetails.itarNumber;
 			this.stockLineForm.nationalStockNumber = partDetails.nationalStockNumber;
 			this.stockLineForm.ExportECCN = partDetails.exportECCN;
@@ -383,6 +384,8 @@ export class StockLineSetupComponent implements OnInit {
 			this.stockLineForm.manufacturingDays = partDetails.manufacturingDays;
 			this.stockLineForm.daysReceived = partDetails.daysReceived;
 			this.stockLineForm.openDays = partDetails.openDays;
+			this.stockLineForm.openDate = partDetails.openDate;
+			this.stockLineForm.nha = partDetails.nha;
 			this.stockLineForm.IsManufacturingDateAvailable = partDetails.IsManufacturingDateAvailable;
 			if (this.stockLineForm.isSerialized == true) {
 				this.hideSerialNumber = false;
@@ -626,18 +629,22 @@ export class StockLineSetupComponent implements OnInit {
 		this.stocklineser.newStockLine(this.stockLineForm).subscribe(res => {
 			console.log(res);
 			this.allIntegrationInfo.map(x => {
-				if(x.listedCheckbox == true || x.integratedCheckbox == true) {
+				if (x.listedCheckbox == true || x.integratedCheckbox == true) {
 					const integrationInfo = {
 						...x,
 						stockLineId: res.stockLineId
 					}
 					this.integrationInfoList.push(integrationInfo);
-				}				
+
+				}
 			});
 			this.saveStocklineIntegrationPortalData(this.integrationInfoList);
 			this.router.navigateByUrl('/stocklinemodule/stocklinepages/app-stock-line-list');
+			this.alertService.showMessage(
+				'Success',
+				`Saved Customer General Information Sucessfully `,
+				MessageSeverity.success)
 		})
-
 	}
 
 	saveStocklineIntegrationPortalData(data) {
