@@ -385,7 +385,9 @@ export class StockLineSetupComponent implements OnInit {
 			this.stockLineForm.daysReceived = partDetails.daysReceived;
 			this.stockLineForm.openDays = partDetails.openDays;
 			this.stockLineForm.openDate = partDetails.openDate;
-			this.stockLineForm.nha = partDetails.nha;
+			this.stockLineForm.NHA = partDetails.nha;
+			this.stockLineForm.isDER = partDetails.der;
+			this.stockLineForm.isPMA = partDetails.pma;
 			this.stockLineForm.IsManufacturingDateAvailable = partDetails.IsManufacturingDateAvailable;
 			if (this.stockLineForm.isSerialized == true) {
 				this.hideSerialNumber = false;
@@ -642,7 +644,7 @@ export class StockLineSetupComponent implements OnInit {
 			this.router.navigateByUrl('/stocklinemodule/stocklinepages/app-stock-line-list');
 			this.alertService.showMessage(
 				'Success',
-				`Saved Customer General Information Sucessfully `,
+				`Saved Stockline data Sucessfully `,
 				MessageSeverity.success)
 		})
 	}
