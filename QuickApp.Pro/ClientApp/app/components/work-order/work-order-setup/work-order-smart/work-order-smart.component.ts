@@ -89,20 +89,19 @@ export class WorkOrderSmartComponent implements OnInit {
         } else {
             // get the workOrderId on Edit Mode
             this.workOrderId = this.acRouter.snapshot.params['id'];
-            // this.recCustmoerId = this.acRouter.snapshot.params['rcustid'];
+            this.recCustmoerId = this.acRouter.snapshot.params['rcustid'];
 
         }
 
-        if (this.workOrderId) {
-            // || this.recCustmoerId
-            // if (this.recCustmoerId) {
-            //     this.showTabsGrid = false;
-            //     this.workOrderId = 0;
-            // }
-            // else {
+        if (this.workOrderId || this.recCustmoerId) { 
+            if (this.recCustmoerId) {
+                this.showTabsGrid = false;
+                this.workOrderId = 0;
+            }
+            else {
 
-            //     this.recCustmoerId = 0;
-            // }
+                this.recCustmoerId = 0;
+            }
             this.workOrderService.getWorkOrderById(this.workOrderId, this.recCustmoerId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
 
                 this.getPartNosByCustomer(res.customerId);
