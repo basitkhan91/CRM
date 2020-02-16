@@ -16,7 +16,7 @@ namespace DAL.Common
         public short? CreditTermId { get; set; }
         public string CSRName { get; set; }
         public bool IsDefaultContact { get; set; }
-         
+        public string PhoneExt { get; set; }
         public string Email { get; set; }
         public string ContactName { get; set; }
     }
