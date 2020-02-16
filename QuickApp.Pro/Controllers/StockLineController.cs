@@ -495,7 +495,7 @@ namespace QuickApp.Pro.Controllers
                     _context.StockLine.Update(actionobject1);
                     _context.SaveChanges();
 
-                    if (stockLineViewModel.TimeLifes != null)
+                    if (stockLineViewModel.TimeLife != null)
                     {
                         if (stockLineViewModel.TimeLifes.TimeLifeCyclesId > 0)
                         {
@@ -629,7 +629,7 @@ namespace QuickApp.Pro.Controllers
 
                     if (actionobject1.StockLineId != 0)
                     {
-                        if (stockLineViewModel.TimeLifes != null)
+                        if (stockLineViewModel.TimeLife != null)
                         {
                             stockLineViewModel.TimeLifes.StockLineId = actionobject1.StockLineId;
                             _context.TimeLife.Add(stockLineViewModel.TimeLifes);

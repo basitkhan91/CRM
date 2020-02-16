@@ -7,6 +7,7 @@
         this.estimatedShipDate = '';
         this.customerRequestDate = '';
         this.estimatedCompletionDate = '';
+        this.customerReference = null;
         this.nte = '';
         this.quantity = 1;
         this.stockLineId = null;
@@ -44,6 +45,7 @@
     estimatedShipDate: string;
     customerRequestDate: string;
     estimatedCompletionDate: string;
+    customerReference : number;
     nte: string;
     quantity: number;
     stockLineId: number;

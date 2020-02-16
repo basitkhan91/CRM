@@ -21,6 +21,8 @@ namespace DAL.Models
         public string MarkupFixedPrice { get; set; }
         public int? BillingMethodId { get; set; }
         public long? HeaderMarkupId { get; set; }
+        public decimal? BillingRate { get; set; }
+        public decimal? BillingAmount { get; set; }
         public int MasterCompanyId { get; set; }
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }

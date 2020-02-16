@@ -12,8 +12,8 @@
         public short? CreditTermId { get; set; }
         public string CSR { get; set; }
         public bool? IsDefaultContact { get; set; }
-
         public string Email { get; set; }
         public string ContactName { get; set; }
+        public string PhoneExt { get; set; }
     }
 }

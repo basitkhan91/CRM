@@ -3853,17 +3853,23 @@ namespace DAL.Repositories
         {
             try
             {
+                quoteExclusions.UpdatedDate = DateTime.Now;
                 if (quoteExclusions.WorkOrderQuoteDetailsId > 0)
                 {
                     var exeExclusions = _appContext.WorkOrderQuoteExclusions.Where(p => p.WorkOrderQuoteDetailsId == quoteExclusions.WorkOrderQuoteDetailsId).AsNoTracking().ToList();
                     _appContext.WorkOrderQuoteExclusions.RemoveRange(exeExclusions);
 
-                    quoteExclusions.WorkOrderQuoteExclusions.ForEach(p => p.WorkOrderQuoteExclusionsId = 0);
+                    quoteExclusions.WorkOrderQuoteExclusions = quoteExclusions.WorkOrderQuoteExclusions.Where(p => p.IsDeleted == false).ToList();
+                    quoteExclusions.WorkOrderQuoteExclusions.ForEach(p => { p.WorkOrderQuoteExclusionsId = 0; p.IsActive = true; p.IsDeleted = false; p.CreatedDate = DateTime.Now; p.UpdatedDate = DateTime.Now; });
 
                     _appContext.WorkOrderQuoteDetails.Update(quoteExclusions);
                 }
                 else
                 {
+                    quoteExclusions.CreatedDate = DateTime.Now;
+                    quoteExclusions.IsDeleted = false;
+                    quoteExclusions.IsActive = true;
+                    quoteExclusions.WorkOrderQuoteExclusions.ForEach(p => { p.IsActive = true; p.IsDeleted = false; p.CreatedDate = DateTime.Now; p.UpdatedDate = DateTime.Now; });
                     _appContext.WorkOrderQuoteDetails.Add(quoteExclusions);
                 }
 
@@ -3975,16 +3981,24 @@ namespace DAL.Repositories
         {
             try
             {
+                quoteFreight.UpdatedDate = DateTime.Now;
+
                 if (quoteFreight.WorkOrderQuoteDetailsId > 0)
                 {
                     var exeCharges = _appContext.WorkOrderQuoteFreight.Where(p => p.WorkOrderQuoteDetailsId == quoteFreight.WorkOrderQuoteDetailsId).AsNoTracking().ToList();
                     _appContext.WorkOrderQuoteFreight.RemoveRange(exeCharges);
 
-                    quoteFreight.WorkOrderQuoteFreight.ForEach(p => p.WorkOrderQuoteFreightId = 0);
+                    quoteFreight.WorkOrderQuoteFreight = quoteFreight.WorkOrderQuoteFreight.Where(p => p.IsDeleted == false).ToList();
+                    quoteFreight.WorkOrderQuoteFreight.ForEach(p => { p.WorkOrderQuoteFreightId = 0; p.IsActive = true; p.IsDeleted = false; p.CreatedDate = DateTime.Now; p.UpdatedDate = DateTime.Now; });
+
                     _appContext.WorkOrderQuoteDetails.Update(quoteFreight);
                 }
                 else
                 {
+                    quoteFreight.CreatedDate = DateTime.Now;
+                    quoteFreight.IsDeleted = false;
+                    quoteFreight.IsActive = true;
+                    quoteFreight.WorkOrderQuoteExclusions.ForEach(p => { p.IsActive = true; p.IsDeleted = false; p.CreatedDate = DateTime.Now; p.UpdatedDate = DateTime.Now; });
                     _appContext.WorkOrderQuoteDetails.Add(quoteFreight);
                 }
 
@@ -4097,16 +4111,24 @@ namespace DAL.Repositories
         {
             try
             {
+                quoteCharges.UpdatedDate = DateTime.Now;
                 if (quoteCharges.WorkOrderQuoteDetailsId > 0)
                 {
                     var exeCharges = _appContext.WorkOrderQuoteCharges.Where(p => p.WorkOrderQuoteDetailsId == quoteCharges.WorkOrderQuoteDetailsId).AsNoTracking().ToList();
                     _appContext.WorkOrderQuoteCharges.RemoveRange(exeCharges);
+
+                    quoteCharges.WorkOrderQuoteCharges = quoteCharges.WorkOrderQuoteCharges.Where(p => p.IsDeleted == false).ToList();
+                    quoteCharges.WorkOrderQuoteCharges.ForEach(p => { p.WorkOrderQuoteChargesId = 0; p.IsActive = true; p.IsDeleted = false; p.CreatedDate = DateTime.Now; p.UpdatedDate = DateTime.Now; });
 
                     quoteCharges.WorkOrderQuoteCharges.ForEach(p => p.WorkOrderQuoteChargesId = 0);
                     _appContext.WorkOrderQuoteDetails.Update(quoteCharges);
                 }
                 else
                 {
+                    quoteCharges.CreatedDate = DateTime.Now;
+                    quoteCharges.IsDeleted = false;
+                    quoteCharges.IsActive = true;
+                    quoteCharges.WorkOrderQuoteCharges.ForEach(p => { p.IsActive = true; p.IsDeleted = false; p.CreatedDate = DateTime.Now; p.UpdatedDate = DateTime.Now; });
                     _appContext.WorkOrderQuoteDetails.Add(quoteCharges);
                 }
                 _appContext.SaveChanges();
@@ -4173,6 +4195,8 @@ namespace DAL.Repositories
                                 woc.MarkupFixedPrice,
                                 woc.BillingMethodId,
                                 woc.HeaderMarkupId,
+                                woc.BillingRate,
+                                woc.BillingAmount,
                             }
                           ).Distinct().ToList();
                 return list;
@@ -4212,19 +4236,21 @@ namespace DAL.Repositories
         {
             try
             {
+                quoteMaterials.UpdatedDate = DateTime.Now;
                 if (quoteMaterials.WorkOrderQuoteDetailsId > 0)
                 {
                     var exeMaterials = _appContext.WorkOrderQuoteMaterial.Where(p => p.WorkOrderQuoteDetailsId == quoteMaterials.WorkOrderQuoteDetailsId).AsNoTracking().ToList();
-                    //exeMaterials.AddRange(quoteMaterials.WorkOrderQuoteMaterial.Where(p => p.IsDeleted == true));
                     _appContext.WorkOrderQuoteMaterial.RemoveRange(exeMaterials);
-
-                    
-                    //quoteMaterials.WorkOrderQuoteMaterial = quoteMaterials.WorkOrderQuoteMaterial.Where(p => p.IsDeleted == false).ToList();
+                    quoteMaterials.WorkOrderQuoteMaterial = quoteMaterials.WorkOrderQuoteMaterial.Where(p => p.IsDeleted == false).ToList();
                     quoteMaterials.WorkOrderQuoteMaterial.ForEach(p => { p.WorkOrderQuoteMaterialId = 0; p.IsActive = true;p.IsDeleted = false;p.CreatedDate = DateTime.Now;p.UpdatedDate = DateTime.Now; });
                     _appContext.WorkOrderQuoteDetails.Update(quoteMaterials);
                 }
                 else
                 {
+                    quoteMaterials.CreatedDate = DateTime.Now;
+                    quoteMaterials.IsDeleted = false;
+                    quoteMaterials.IsActive = true;
+                    quoteMaterials.WorkOrderQuoteMaterial.ForEach(p => { p.IsActive = true; p.IsDeleted = false; p.CreatedDate = DateTime.Now; p.UpdatedDate = DateTime.Now; });
                     _appContext.WorkOrderQuoteDetails.Add(quoteMaterials);
                 }
 
@@ -4255,7 +4281,6 @@ namespace DAL.Repositories
 
         public IEnumerable<object> GetWorkOrderQuoteMaterial(long workOrderQuoteDetailsId, long buildMethodId)
         {
-
             try
             {
                 var workOrderMaterialsList = (from wom in _appContext.WorkOrderQuoteMaterial
@@ -4294,6 +4319,8 @@ namespace DAL.Repositories
                                                   wom.BillingMethodId,
                                                   wom.HeaderMarkupId,
                                                   wom.ExtendedCost,
+                                                  wom.BillingRate,
+                                                  wom.BillingAmount,
                                               }).Distinct().ToList();
 
                 return workOrderMaterialsList;
@@ -4334,29 +4361,43 @@ namespace DAL.Repositories
         {
             try
             {
+                quoteLabor.UpdatedDate = DateTime.Now;
                 if (quoteLabor.WorkOrderQuoteDetailsId > 0)
                 {
-                    if (quoteLabor.WorkOrderQuoteLaborHeader != null && quoteLabor.WorkOrderQuoteLaborHeader.WorkOrderQuoteLaborHeaderId > 0)
+                    var exelabourHeader = _appContext.WorkOrderQuoteLaborHeader.Where(p => p.WorkOrderQuoteDetailsId == quoteLabor.WorkOrderQuoteDetailsId).AsNoTracking().FirstOrDefault();
+                    if (exelabourHeader != null)
                     {
-                        var exelabour = _appContext.WorkOrderQuoteLabor.Where(p => p.WorkOrderQuoteLaborHeaderId == quoteLabor.WorkOrderQuoteLaborHeader.WorkOrderQuoteLaborHeaderId).AsNoTracking().ToList();
+                        var exelabour = _appContext.WorkOrderQuoteLabor.Where(p => p.WorkOrderQuoteLaborHeaderId == exelabourHeader.WorkOrderQuoteLaborHeaderId).AsNoTracking().ToList();
                         _appContext.WorkOrderQuoteLabor.RemoveRange(exelabour);
-
-                        var exelabourHeader = _appContext.WorkOrderQuoteLaborHeader.Where(p => p.WorkOrderQuoteDetailsId == quoteLabor.WorkOrderQuoteDetailsId).AsNoTracking().FirstOrDefault();
-                        if (exelabourHeader != null)
-                            _appContext.WorkOrderQuoteLaborHeader.Remove(exelabourHeader);
-
-                        if (quoteLabor.WorkOrderQuoteLaborHeader.WorkOrderQuoteLabor != null)
-                        {
-                            quoteLabor.WorkOrderQuoteLaborHeader.WorkOrderQuoteLabor.ForEach(p => p.WorkOrderQuoteLaborId = 0);
-                        }
-
-                        quoteLabor.WorkOrderQuoteLaborHeader.WorkOrderQuoteLaborHeaderId = 0;
+                        _appContext.WorkOrderQuoteLaborHeader.Remove(exelabourHeader);
                     }
 
-                    _appContext.WorkOrderQuoteDetails.Update(quoteLabor);
+                    if (quoteLabor.WorkOrderQuoteLaborHeader.WorkOrderQuoteLabor != null)
+                    {
+                        quoteLabor.WorkOrderQuoteLaborHeader.WorkOrderQuoteLabor.ForEach(p => { p.WorkOrderQuoteLaborId = 0; p.WorkOrderQuoteLaborHeaderId = 0; p.IsActive = true; p.IsDeleted = false; p.CreatedDate = DateTime.Now; p.UpdatedDate = DateTime.Now; });
+                        quoteLabor.WorkOrderQuoteLaborHeader.WorkOrderQuoteLabor = quoteLabor.WorkOrderQuoteLaborHeader.WorkOrderQuoteLabor.Where(p => p.IsDeleted == false).ToList();
+                    }
+
+                    quoteLabor.WorkOrderQuoteLaborHeader.WorkOrderQuoteDetailsId = quoteLabor.WorkOrderQuoteDetailsId;
+                    quoteLabor.WorkOrderQuoteLaborHeader.WorkOrderQuoteLaborHeaderId = 0;
+                    quoteLabor.WorkOrderQuoteLaborHeader.IsActive = true;
+                    quoteLabor.WorkOrderQuoteLaborHeader.IsDeleted = false;
+                    quoteLabor.WorkOrderQuoteLaborHeader.CreatedDate = quoteLabor.WorkOrderQuoteLaborHeader.UpdatedDate = DateTime.Now;
+
+                    _appContext.WorkOrderQuoteLaborHeader.Add(quoteLabor.WorkOrderQuoteLaborHeader);
                 }
                 else
                 {
+                    quoteLabor.CreatedDate = DateTime.Now;
+                    quoteLabor.IsDeleted = false;
+                    quoteLabor.IsActive = true;
+                    quoteLabor.WorkOrderQuoteLaborHeader.IsActive = true;
+                    quoteLabor.WorkOrderQuoteLaborHeader.IsDeleted = false;
+                    if (quoteLabor.WorkOrderQuoteLaborHeader.WorkOrderQuoteLabor != null)
+                    {
+                        quoteLabor.WorkOrderQuoteLaborHeader.WorkOrderQuoteLabor.ForEach(p => { p.WorkOrderQuoteLaborId = 0; p.IsActive = true; p.IsDeleted = false; p.CreatedDate = DateTime.Now; p.UpdatedDate = DateTime.Now; });
+                        quoteLabor.WorkOrderQuoteLaborHeader.WorkOrderQuoteLabor = quoteLabor.WorkOrderQuoteLaborHeader.WorkOrderQuoteLabor.Where(p => p.IsDeleted == false).ToList();
+                    }
                     _appContext.WorkOrderQuoteDetails.Add(quoteLabor);
                 }
                 _appContext.SaveChanges();
@@ -4705,57 +4746,6 @@ namespace DAL.Repositories
                 throw;
             }
         }
-
-        //public IEnumerable<object> HistoricalWorkOrderQuotes(long customerId)
-        //{
-
-        //    try
-        //    {
-        //        var list = (from woq in _appContext.WorkOrderQuote
-        //                    join wo in _appContext.WorkOrder on woq.WorkOrderId equals wo.WorkOrderId
-        //                    join wop in _appContext.WorkOrderPartNumber on woq.WorkOrderId equals wop.WorkOrderId
-        //                    join wqs in _appContext.WorkOrderStatus on woq.QuoteStatusId equals wqs.Id
-        //                    join cust in _appContext.Customer on woq.CustomerId equals cust.CustomerId
-        //                    where woq.IsDeleted == false && woq.CustomerId == customerId
-        //                    select new WOQuoteFilters()
-        //                    {
-        //                        WorkOrderQuoteId = woq.WorkOrderQuoteId,
-        //                        WorkOrderId = wo.WorkOrderId,
-        //                        quoteNumber = woq.QuoteNumber,
-        //                        workOrderNum = wo.WorkOrderNum,
-        //                        customerName = cust.Name,
-        //                        customerCode = cust.CustomerCode,
-        //                        openDate = woq.OpenDate,
-
-        //                        promisedDate = string.Join(",", _appContext.WorkOrderPartNumber
-        //                                                      .Where(p => p.WorkOrderId == wo.WorkOrderId)
-        //                                                      .Select(p => p.PromisedDate.Date)),
-
-
-        //                        estShipDate = string.Join(",", _appContext.WorkOrderPartNumber
-        //                                                      .Where(p => p.WorkOrderId == wo.WorkOrderId)
-        //                                                      .Select(p => p.EstimatedShipDate.Date)),
-
-
-        //                        estCompletionDate = string.Join(",", _appContext.WorkOrderPartNumber
-        //                                                      .Where(p => p.WorkOrderId == wo.WorkOrderId)
-        //                                                      .Select(p => p.EstimatedCompletionDate.Date)),
-
-        //                        quoteStatus = wqs.Description,
-        //                        quoteStatusId = woq.QuoteStatusId,
-        //                        isActive = woq.IsActive,
-        //                        createdDate = woq.CreatedDate,
-        //                    }).Distinct()
-        //                    .ToList();
-
-        //        return list;
-        //    }
-        //    catch (Exception)
-        //    {
-
-        //        throw;
-        //    }
-        //}
 
         public IEnumerable<object> HistoricalWorkOrderQuotes(Common.Filters<WOQuoteFilters> woQuoteFilters)
         {
