@@ -260,8 +260,9 @@ export class WorkOrderSmartComponent implements OnInit {
         })
     }
 
+
     async getPartNosByCustomer(customerId) {
-        this.partNumberOriginalData = null;
+        // this.partNumberOriginalData = null;
         //this.workOrderService.getPartNosByCustomer(customerId).subscribe(res => {
         await this.workOrderService.getPartNosByCustomer(customerId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
 

@@ -22,6 +22,7 @@ export class EquipmentCreateComponent implements OnInit {
     @Input() isEdit = false;
     @Input() editData;
     @Input() UpdateMode: boolean;
+    @Input() moduleName = 'Asset'
     @Output() saveEquipmentListForWO = new EventEmitter();
     @Output() updateEquipmentListForWO = new EventEmitter();
 
