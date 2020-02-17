@@ -88,7 +88,7 @@ namespace DAL.Repositories
             filters.Add(!string.IsNullOrEmpty(vendorFilters.filters.stateOrProvince), x => x.stateOrProvince.ToLower().Contains(vendorFilters.filters.stateOrProvince.ToLower()));
             filters.Add(!string.IsNullOrEmpty(vendorFilters.filters.classificationName), x => x.classificationName.ToLower().Contains(vendorFilters.filters.classificationName.ToLower()));
             filters.Add(!string.IsNullOrEmpty(vendorFilters.filters.vendorCapabilityName), x => x.vendorCapabilityName.ToLower().Contains(vendorFilters.filters.vendorCapabilityName.ToLower()));
-            filters.Add(!string.IsNullOrEmpty(vendorFilters.filters.vendorPhoneContact), x => x.vendorPhoneContact.Contains(vendorFilters.filters.vendorPhoneContact));
+            filters.Add(!string.IsNullOrEmpty(vendorFilters.filters.vendorPhoneContact), x => x.vendorPhoneContact.ToLower().Contains(vendorFilters.filters.vendorPhoneContact.ToLower()));
             filters.Add(!string.IsNullOrEmpty(vendorFilters.filters.description), x => x.description.ToLower().Contains(vendorFilters.filters.description.ToLower()));
             filters.Add(statusId == 2, x => x.isActive == x.isActive);
             filters.Add(statusId == 1, x => x.isActive == true);
@@ -100,6 +100,10 @@ namespace DAL.Repositories
                                 from vt in vtt.DefaultIfEmpty()
                                     //join vc in _appContext.VendorClassification on t.VendorClassificationId equals vc.VendorClassificationId into vcd
                                     //from vc in vcd.DefaultIfEmpty()
+                                join cc in _appContext.VendorContact.Where(p => p.IsDefaultContact == true) on t.VendorId equals cc.VendorId into vendorinfo
+                                from venContacts in vendorinfo.DefaultIfEmpty()
+                                join con in _appContext.Contact on venContacts.ContactId equals con.ContactId into contactInfo
+                                from con in contactInfo.DefaultIfEmpty()
                                 join vca in _appContext.VendorCapabiliy on t.capabilityId equals vca.VendorCapabilityId into vcad
                                 from vca in vcad.DefaultIfEmpty()
                                 where (t.IsDeleted == false || t.IsDeleted == null)
@@ -128,7 +132,9 @@ namespace DAL.Repositories
                                 .Where(p => p.mp1.v.VendorId == t.VendorId && p.mp1.mp.ModuleId == Convert.ToInt32(ModuleEnum.Vendor))
                                 .Select(p => p.vc.ClassificationName)),
                                     vendorCapabilityName = vca.capabilityDescription,
-                                    vendorPhoneContact = t.VendorPhone + " - " + t.VendorPhoneExt,
+                                   // vendorPhoneContact = t.VendorPhone + " - " + t.VendorPhoneExt,
+                                    vendorPhoneContact = con.FirstName + " " + con.LastName,
+
                                     createdDate = t.CreatedDate
                                 }
                          ).Distinct().Paginate(pageNumber, pageSize, sorts, filters).RecordCount;
@@ -139,6 +145,10 @@ namespace DAL.Repositories
                         from vt in vtt.DefaultIfEmpty()
                             //join vc in _appContext.VendorClassification on t.VendorClassificationId equals vc.VendorClassificationId into vcd
                             //from vc in vcd.DefaultIfEmpty()
+                        join cc in _appContext.VendorContact.Where(p => p.IsDefaultContact == true) on t.VendorId equals cc.VendorId into vendorinfo
+                        from venContacts in vendorinfo.DefaultIfEmpty()
+                        join con in _appContext.Contact on venContacts.ContactId equals con.ContactId into contactInfo
+                        from con in contactInfo.DefaultIfEmpty()
                         join vca in _appContext.VendorCapabiliy on t.capabilityId equals vca.VendorCapabilityId into vcad
                         from vca in vcad.DefaultIfEmpty()
                         where (t.IsDeleted == false || t.IsDeleted == null)
@@ -156,7 +166,8 @@ namespace DAL.Repositories
                             stateOrProvince = ad.StateOrProvince,
                             //classificationName = vc.ClassificationName,
                             vendorCapabilityName = vca.capabilityDescription,
-                            vendorPhoneContact = t.VendorPhone + " - " + t.VendorPhoneExt,
+                           // vendorPhoneContact = t.VendorPhone + " - " + t.VendorPhoneExt,
+                            vendorPhoneContact = con.FirstName + " " + con.LastName,
                             createdDate = t.CreatedDate,
                             classificationName = string.Join(",", _appContext.Vendor
                                 .Join(_appContext.ClassificationMapping,
@@ -196,6 +207,10 @@ namespace DAL.Repositories
                                         from vt in vtt.DefaultIfEmpty()
                                             //join vc in _appContext.VendorClassification on t.VendorClassificationId equals vc.VendorClassificationId into vcd
                                             //from vc in vcd.DefaultIfEmpty()
+                                        join cc in _appContext.VendorContact.Where(p => p.IsDefaultContact == true) on t.VendorId equals cc.VendorId into vendorinfo
+                                        from venContacts in vendorinfo.DefaultIfEmpty()
+                                        join con in _appContext.Contact on venContacts.ContactId equals con.ContactId into contactInfo
+                                        from con in contactInfo.DefaultIfEmpty()
                                         join vca in _appContext.VendorCapabiliy on t.capabilityId equals vca.VendorCapabilityId into vcad
                                         from vca in vcad.DefaultIfEmpty()
                                         where (t.IsDeleted == false || t.IsDeleted == null) && t.IsActive == true
@@ -218,7 +233,7 @@ namespace DAL.Repositories
                                 .Where(p => p.mp1.v.VendorId == t.VendorId && p.mp1.mp.ModuleId == Convert.ToInt32(ModuleEnum.Vendor))
                                 .Select(p => p.vc.ClassificationName)).ToLower().Contains(filterText)
                                           || vca.capabilityDescription.ToLower().Contains(filterText)
-                                          || t.VendorPhone.ToLower().Contains(filterText)
+                                          || (con.FirstName + " " + con.LastName).ToLower().Contains(filterText)
                                           || vt.Description.ToLower().Contains(filterText))
                                         select new
                                         {
@@ -233,6 +248,10 @@ namespace DAL.Repositories
                                 from vt in vtt.DefaultIfEmpty()
                                     //join vc in _appContext.VendorClassification on t.VendorClassificationId equals vc.VendorClassificationId into vcd
                                     //from vc in vcd.DefaultIfEmpty()
+                                join cc in _appContext.VendorContact.Where(p => p.IsDefaultContact == true) on t.VendorId equals cc.VendorId into vendorinfo
+                                from venContacts in vendorinfo.DefaultIfEmpty()
+                                join con in _appContext.Contact on venContacts.ContactId equals con.ContactId into contactInfo
+                                from con in contactInfo.DefaultIfEmpty()
                                 join vca in _appContext.VendorCapabiliy on t.capabilityId equals vca.VendorCapabilityId into vcad
                                 from vca in vcad.DefaultIfEmpty()
                                 where (t.IsDeleted == false || t.IsDeleted == null) && t.IsActive == true
@@ -255,7 +274,7 @@ namespace DAL.Repositories
                                 .Where(p => p.mp1.v.VendorId == t.VendorId && p.mp1.mp.ModuleId == Convert.ToInt32(ModuleEnum.Vendor))
                                 .Select(p => p.vc.ClassificationName)).ToLower().Contains(filterText)
                                         || vca.capabilityDescription.ToLower().Contains(filterText)
-                                        || t.VendorPhone.ToLower().Contains(filterText)
+                                        || (con.FirstName + " " + con.LastName).ToLower().Contains(filterText)
                                         || vt.Description.ToLower().Contains(filterText))
                                 select new
                                 {
@@ -280,7 +299,8 @@ namespace DAL.Repositories
                                 .Where(p => p.mp1.v.VendorId == t.VendorId && p.mp1.mp.ModuleId == Convert.ToInt32(ModuleEnum.Vendor))
                                 .Select(p => p.vc.ClassificationName)),
                                     VendorCapabilityName = vca.capabilityDescription,
-                                    VendorPhoneContact = t.VendorPhone + " - " + t.VendorPhoneExt,
+                                    //VendorPhoneContact = t.VendorPhone + " - " + t.VendorPhoneExt,
+                                    vendorPhoneContact = con.FirstName + " " + con.LastName,
                                     t.CreatedDate,
                                     TotalRecords = totalRecords,
                                 }).Distinct()
@@ -298,6 +318,11 @@ namespace DAL.Repositories
                                         join ad in _appContext.Address on t.AddressId equals ad.AddressId
                                         join vt in _appContext.VendorType on t.VendorTypeId equals vt.VendorTypeId into vtt
                                         from vt in vtt.DefaultIfEmpty()
+                                        join cc in _appContext.VendorContact.Where(p => p.IsDefaultContact == true) on t.VendorId equals cc.VendorId into vendorinfo
+                                        from venContacts in vendorinfo.DefaultIfEmpty()
+                                        join con in _appContext.Contact on venContacts.ContactId equals con.ContactId into contactInfo
+                                        from con in contactInfo.DefaultIfEmpty()
+
                                             //join vc in _appContext.VendorClassification on t.VendorClassificationId equals vc.VendorClassificationId into vcd
                                             //from vc in vcd.DefaultIfEmpty()
                                         join vca in _appContext.VendorCapabiliy on t.capabilityId equals vca.VendorCapabilityId into vcad
@@ -316,6 +341,11 @@ namespace DAL.Repositories
                                 from vt in vtt.DefaultIfEmpty()
                                     //join vc in _appContext.VendorClassification on t.VendorClassificationId equals vc.VendorClassificationId into vcd
                                     //from vc in vcd.DefaultIfEmpty()
+                                join cc in _appContext.VendorContact.Where(p => p.IsDefaultContact == true) on t.VendorId equals cc.VendorId into vendorinfo
+                                from venContacts in vendorinfo.DefaultIfEmpty()
+                                join con in _appContext.Contact on venContacts.ContactId equals con.ContactId into contactInfo
+                                from con in contactInfo.DefaultIfEmpty()
+
                                 join vca in _appContext.VendorCapabiliy on t.capabilityId equals vca.VendorCapabilityId into vcad
                                 from vca in vcad.DefaultIfEmpty()
                                 where (t.IsDeleted == false || t.IsDeleted == null)
@@ -342,7 +372,9 @@ namespace DAL.Repositories
                                 .Where(p => p.mp1.v.VendorId == t.VendorId && p.mp1.mp.ModuleId == Convert.ToInt32(ModuleEnum.Vendor))
                                 .Select(p => p.vc.ClassificationName)),
                                     VendorCapabilityName = vca.capabilityDescription,
-                                    VendorPhoneContact = t.VendorPhone + " - " + t.VendorPhoneExt,
+                                    //VendorPhoneContact = t.VendorPhone + " - " + t.VendorPhoneExt,
+                                    VendorPhoneContact = con.FirstName + " " + con.LastName,
+
                                     t.CreatedDate,
                                     TotalRecords = totalRecords,
                                 }).Distinct()
@@ -364,6 +396,11 @@ namespace DAL.Repositories
                                         from vt in vtt.DefaultIfEmpty()
                                             //join vc in _appContext.VendorClassification on t.VendorClassificationId equals vc.VendorClassificationId into vcd
                                             //from vc in vcd.DefaultIfEmpty()
+                                        join cc in _appContext.VendorContact.Where(p => p.IsDefaultContact == true) on t.VendorId equals cc.VendorId into vendorinfo
+                                        from venContacts in vendorinfo.DefaultIfEmpty()
+                                        join con in _appContext.Contact on venContacts.ContactId equals con.ContactId into contactInfo
+                                        from con in contactInfo.DefaultIfEmpty()
+
                                         join vca in _appContext.VendorCapabiliy on t.capabilityId equals vca.VendorCapabilityId into vcad
                                         from vca in vcad.DefaultIfEmpty()
                                         where (t.IsDeleted == false || t.IsDeleted == null)
@@ -386,7 +423,7 @@ namespace DAL.Repositories
                                 .Where(p => p.mp1.v.VendorId == t.VendorId && p.mp1.mp.ModuleId == Convert.ToInt32(ModuleEnum.Vendor))
                                 .Select(p => p.vc.ClassificationName)).ToLower().Contains(filterText)
                                           || vca.capabilityDescription.ToLower().Contains(filterText)
-                                          || t.VendorPhone.ToLower().Contains(filterText)
+                                          || (con.FirstName + " " + con.LastName).ToLower().Contains(filterText)
                                           || vt.Description.ToLower().Contains(filterText))
                                         select new
                                         {
@@ -401,6 +438,11 @@ namespace DAL.Repositories
                                 from vt in vtt.DefaultIfEmpty()
                                     //join vc in _appContext.VendorClassification on t.VendorClassificationId equals vc.VendorClassificationId into vcd
                                     //from vc in vcd.DefaultIfEmpty()
+                                join cc in _appContext.VendorContact.Where(p => p.IsDefaultContact == true) on t.VendorId equals cc.VendorId into vendorinfo
+                                from venContacts in vendorinfo.DefaultIfEmpty()
+                                join con in _appContext.Contact on venContacts.ContactId equals con.ContactId into contactInfo
+                                from con in contactInfo.DefaultIfEmpty()
+
                                 join vca in _appContext.VendorCapabiliy on t.capabilityId equals vca.VendorCapabilityId into vcad
                                 from vca in vcad.DefaultIfEmpty()
                                 where (t.IsDeleted == false || t.IsDeleted == null)
@@ -423,7 +465,7 @@ namespace DAL.Repositories
                                 .Where(p => p.mp1.v.VendorId == t.VendorId && p.mp1.mp.ModuleId == Convert.ToInt32(ModuleEnum.Vendor))
                                 .Select(p => p.vc.ClassificationName)).ToLower().Contains(filterText)
                                         || vca.capabilityDescription.ToLower().Contains(filterText)
-                                        || t.VendorPhone.ToLower().Contains(filterText)
+                                        || (con.FirstName + " " + con.LastName).ToLower().Contains(filterText)
                                         || vt.Description.ToLower().Contains(filterText))
                                 select new
                                 {
@@ -448,7 +490,9 @@ namespace DAL.Repositories
                                 .Where(p => p.mp1.v.VendorId == t.VendorId && p.mp1.mp.ModuleId == Convert.ToInt32(ModuleEnum.Vendor))
                                 .Select(p => p.vc.ClassificationName)),
                                     VendorCapabilityName = vca.capabilityDescription,
-                                    VendorPhoneContact = t.VendorPhone + " - " + t.VendorPhoneExt,
+                                    // VendorPhoneContact = t.VendorPhone + " - " + t.VendorPhoneExt,
+                                    VendorPhoneContact = con.FirstName + " " + con.LastName,
+
                                     t.CreatedDate,
                                     TotalRecords = totalRecords,
                                 }).Distinct()
@@ -468,6 +512,11 @@ namespace DAL.Repositories
                                         from vt in vtt.DefaultIfEmpty()
                                             //join vc in _appContext.VendorClassification on t.VendorClassificationId equals vc.VendorClassificationId into vcd
                                             //from vc in vcd.DefaultIfEmpty()
+                                        join cc in _appContext.VendorContact.Where(p => p.IsDefaultContact == true) on t.VendorId equals cc.VendorId into vendorinfo
+                                        from venContacts in vendorinfo.DefaultIfEmpty()
+                                        join con in _appContext.Contact on venContacts.ContactId equals con.ContactId into contactInfo
+                                        from con in contactInfo.DefaultIfEmpty()
+
                                         join vca in _appContext.VendorCapabiliy on t.capabilityId equals vca.VendorCapabilityId into vcad
                                         from vca in vcad.DefaultIfEmpty()
                                         where (t.IsDeleted == false || t.IsDeleted == null)
@@ -484,6 +533,11 @@ namespace DAL.Repositories
                                 from vt in vtt.DefaultIfEmpty()
                                     //join vc in _appContext.VendorClassification on t.VendorClassificationId equals vc.VendorClassificationId into vcd
                                     //from vc in vcd.DefaultIfEmpty()
+                                join cc in _appContext.VendorContact.Where(p => p.IsDefaultContact == true) on t.VendorId equals cc.VendorId into vendorinfo
+                                from venContacts in vendorinfo.DefaultIfEmpty()
+                                join con in _appContext.Contact on venContacts.ContactId equals con.ContactId into contactInfo
+                                from con in contactInfo.DefaultIfEmpty()
+
                                 join vca in _appContext.VendorCapabiliy on t.capabilityId equals vca.VendorCapabilityId into vcad
                                 from vca in vcad.DefaultIfEmpty()
                                 where (t.IsDeleted == false || t.IsDeleted == null)
@@ -510,7 +564,9 @@ namespace DAL.Repositories
                                 .Where(p => p.mp1.v.VendorId == t.VendorId && p.mp1.mp.ModuleId == Convert.ToInt32(ModuleEnum.Vendor))
                                 .Select(p => p.vc.ClassificationName)),
                                     VendorCapabilityName = vca.capabilityDescription,
-                                    VendorPhoneContact = t.VendorPhone + " - " + t.VendorPhoneExt,
+                                    // VendorPhoneContact = t.VendorPhone + " - " + t.VendorPhoneExt,
+                                    VendorPhoneContact = con.FirstName + " " + con.LastName,
+
                                     t.CreatedDate,
                                     TotalRecords = totalRecords,
                                 }).Distinct()
@@ -3004,7 +3060,8 @@ namespace DAL.Repositories
                             c.ShippingAccountinfo,
                             c.ShippingURL,
                             c.MasterCompanyId,
-                            c.IsActive
+                            c.IsActive,
+                            c.IsPrimary
                         }).OrderByDescending(c => c.UpdatedDate).ToList();
             return data;
         }
@@ -3215,17 +3272,17 @@ namespace DAL.Repositories
                 {
                     if (model.IsPrimary == true)
                     {
-                        var vendorShipVia = _appContext.VendorInternationalShipViaDetails.Where(p => p.VendorInternationalShippingId == model.VendorInternationalShippingId && p.IsPrimary == true).ToList();
+                        var vendorShipVia = _appContext.VendorInternationalShipViaDetails.AsNoTracking().Where(p => p.VendorInternationalShippingId == model.VendorInternationalShippingId && p.IsPrimary == true).FirstOrDefault();
 
-                        if (vendorShipVia != null)
+                        if (vendorShipVia != null && vendorShipVia.VendorInternationalShipViaDetailsId != model.VendorInternationalShipViaDetailsId)
                         {
-                            foreach (var item in vendorShipVia)
-                            {
-                                item.IsPrimary = false;
-                                item.UpdatedDate = DateTime.Now;
-                                _appContext.VendorInternationalShipViaDetails.Update(item);
+
+                            vendorShipVia.IsPrimary = false;
+                            vendorShipVia.UpdatedDate = DateTime.Now;
+                            vendorShipVia.UpdatedBy = model.UpdatedBy;
+                                _appContext.VendorInternationalShipViaDetails.Update(vendorShipVia);
                                 _appContext.SaveChanges();
-                            }
+                            
                         }
                     }
                     model.UpdatedDate = DateTime.Now;

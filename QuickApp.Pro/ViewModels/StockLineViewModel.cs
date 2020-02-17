@@ -129,6 +129,8 @@ namespace QuickApp.Pro.ViewModels
         public string tla { get; set; }
         public string NationalStockNumber { get; set; }
 
+        public bool? IsCustomerStock { get; set; }
+
         [NotMapped]
         public TimeLife TimeLifes { get; set; }
 

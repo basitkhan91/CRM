@@ -76,5 +76,6 @@ namespace DAL.Models
         [NotMapped]
         public TimeLife TimeLife { get;set;}
         
+
     }
 }

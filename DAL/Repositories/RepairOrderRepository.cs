@@ -150,7 +150,7 @@ namespace DAL.Repositories
                 return repairOrderList;
             }
 
-            
+
         }
 
         public IEnumerable<object> RecevingRolist()
@@ -251,7 +251,7 @@ namespace DAL.Repositories
             {
                 sorts.Add(true, x => propertyInfo.GetValue(x, null));
             }
-            
+
 
             var open = "open";
             var pending = "pending";
@@ -294,59 +294,61 @@ namespace DAL.Repositories
             filters.Add(!string.IsNullOrEmpty(roFilters.filters.VendorCode), x => x.VendorCode.ToLower().Contains(roFilters.filters.VendorCode.ToLower()));
 
             var totalRecords = (from ro in _appContext.RepairOrder
-                                join emp in _appContext.Employee on ro.RequisitionerId equals emp.EmployeeId
+                                join emp in _appContext.Employee on ro.RequisitionerId equals emp.EmployeeId into empg
+                                from emp in empg.DefaultIfEmpty()
                                 join v in _appContext.Vendor on ro.VendorId equals v.VendorId
                                 join appr in _appContext.Employee on ro.ApproverId equals appr.EmployeeId into approver
                                 from appr in approver.DefaultIfEmpty()
                                 where ro.IsDeleted == false
                                       && ro.StatusId == (statusId > 0 ? statusId : ro.StatusId)
-                                      && appr.FirstName.Contains(!string.IsNullOrEmpty(roFilters.filters.ApprovedBy) ? roFilters.filters.ApprovedBy : appr.FirstName)
-                                      &&  emp.FirstName.Contains(!string.IsNullOrEmpty(roFilters.filters.RequestedBy) ? roFilters.filters.RequestedBy : emp.FirstName)
-                                      && ro.OpenDate == (roFilters.filters.OpenDate != null ? roFilters.filters.OpenDate : ro.OpenDate)
-                                     && ro.ClosedDate == (roFilters.filters.ClosedDate != null ? roFilters.filters.ClosedDate : ro.ClosedDate)
+                                      && (appr.FirstName == null || appr.FirstName.Contains(!string.IsNullOrEmpty(roFilters.filters.ApprovedBy) ? roFilters.filters.ApprovedBy : appr.FirstName))
+                                      && (emp.FirstName == null || emp.FirstName.Contains(!string.IsNullOrEmpty(roFilters.filters.RequestedBy) ? roFilters.filters.RequestedBy : emp.FirstName))
+                                      && (ro.OpenDate == null || ro.OpenDate == (roFilters.filters.OpenDate != null ? roFilters.filters.OpenDate : ro.OpenDate))
+                                     && (ro.ClosedDate == null || ro.ClosedDate == (roFilters.filters.ClosedDate != null ? roFilters.filters.ClosedDate : ro.ClosedDate))
                                 select new RepairOrderFilters()
                                 {
                                     RepairOrderId = ro.RepairOrderId,
                                     RepairOrderNumber = ro.RepairOrderNumber,
-                                    OpenDate = ro.OpenDate,
-                                    ClosedDate = ro.ClosedDate,
+                                    OpenDate = ro.OpenDate == null ? null : ro.OpenDate,
+                                    ClosedDate = ro.ClosedDate == null ? null : ro.ClosedDate,
                                     VendorName = v.VendorName,
                                     VendorCode = v.VendorCode,
                                     Status = ro.StatusId == 1 ? "Open" : (ro.StatusId == 2 ? "Pending" : (ro.StatusId == 3 ? "Fulfilling" : "Closed")),
-                                    RequestedBy = emp.FirstName,
+                                    RequestedBy = emp == null ? "" : emp.FirstName,
                                     ApprovedBy = appr == null ? "" : appr.FirstName,
                                     CreatedDate = ro.CreatedDate,
                                     IsActive = ro.IsActive,
-                                    VendorId=ro.VendorId
+                                    VendorId = ro.VendorId
 
                                 }).Distinct().Paginate(pageNumber, pageSize, sorts, filters).RecordCount;
-                
+
 
             var repairOrderList = (from ro in _appContext.RepairOrder
-                                   join emp in _appContext.Employee on ro.RequisitionerId equals emp.EmployeeId
+                                   join emp in _appContext.Employee on ro.RequisitionerId equals emp.EmployeeId into empg
+                                   from emp in empg.DefaultIfEmpty()
                                    join v in _appContext.Vendor on ro.VendorId equals v.VendorId
                                    join appr in _appContext.Employee on ro.ApproverId equals appr.EmployeeId into approver
                                    from appr in approver.DefaultIfEmpty()
                                    where ro.IsDeleted == false
                                    && ro.StatusId == (statusId > 0 ? statusId : ro.StatusId)
-                                   && appr.FirstName.Contains(!string.IsNullOrEmpty(roFilters.filters.ApprovedBy) ? roFilters.filters.ApprovedBy : appr.FirstName)
-                                   && emp.FirstName.Contains(!string.IsNullOrEmpty(roFilters.filters.RequestedBy) ? roFilters.filters.RequestedBy : emp.FirstName)
-                                   && ro.OpenDate == (roFilters.filters.OpenDate != null ? roFilters.filters.OpenDate : ro.OpenDate)
-                                   && ro.ClosedDate == (roFilters.filters.ClosedDate != null ? roFilters.filters.ClosedDate : ro.ClosedDate)
+                                   && (appr.FirstName == null || appr.FirstName.Contains(!string.IsNullOrEmpty(roFilters.filters.ApprovedBy) ? roFilters.filters.ApprovedBy : appr.FirstName))
+                                   && (emp.FirstName == null || emp.FirstName.Contains(!string.IsNullOrEmpty(roFilters.filters.RequestedBy) ? roFilters.filters.RequestedBy : emp.FirstName))
+                                   && (ro.OpenDate == null || ro.OpenDate == (roFilters.filters.OpenDate != null ? roFilters.filters.OpenDate : ro.OpenDate))
+                                   && (ro.ClosedDate == null || ro.ClosedDate == (roFilters.filters.ClosedDate != null ? roFilters.filters.ClosedDate : ro.ClosedDate))
                                    select new RepairOrderFilters()
                                    {
                                        RepairOrderId = ro.RepairOrderId,
                                        RepairOrderNumber = ro.RepairOrderNumber,
-                                       OpenDate=ro.OpenDate,
-                                       ClosedDate=ro.ClosedDate,
-                                       VendorName=v.VendorName,
+                                       OpenDate = ro.OpenDate == null ? null : ro.OpenDate,
+                                       ClosedDate = ro.ClosedDate == null ? null : ro.ClosedDate,
+                                       VendorName = v.VendorName,
                                        VendorCode = v.VendorCode,
                                        Status = ro.StatusId == 1 ? "Open" : (ro.StatusId == 2 ? "Pending" : (ro.StatusId == 3 ? "Fulfilling" : "Closed")),
-                                       RequestedBy = emp.FirstName,
+                                       RequestedBy = emp == null ? "" : emp.FirstName,
                                        ApprovedBy = appr == null ? "" : appr.FirstName,
-                                       CreatedDate=ro.CreatedDate,
-                                       IsActive=ro.IsActive,
-                                       VendorId=ro.VendorId,
+                                       CreatedDate = ro.CreatedDate,
+                                       IsActive = ro.IsActive,
+                                       VendorId = ro.VendorId,
                                        TotalRecords = totalRecords
                                    }).Distinct().Paginate(pageNumber, pageSize, sorts, filters).Results;
 
@@ -502,9 +504,9 @@ namespace DAL.Repositories
         public object RepairOrderById(long repairOrderId)
         {
             var repairOrder = (from ro in _appContext.RepairOrder
-                               join v in _appContext.Vendor on ro.VendorId equals v.VendorId
-                               join vc in _appContext.VendorContact on v.VendorId equals vc.VendorId
-                               join con in _appContext.Contact on vc.ContactId equals con.ContactId
+                                   //join v in _appContext.Vendor on ro.VendorId equals v.VendorId
+                                   //join vc in _appContext.VendorContact on v.VendorId equals vc.VendorId
+                                   //join con in _appContext.Contact on vc.ContactId equals con.ContactId
                                where ro.RepairOrderId == repairOrderId
                                select new
                                {

@@ -85,7 +85,7 @@
 
                                     <td style="width:auto" *ngFor="let col of columns" class="ui-resizable-column"
                                         pReorderableRowHandle>
-                                        {{col.field == 'companyName' ? rowData['companyName'] + ', ' +rowData['buName']+ ', ' +rowData['deptName']+ ', ' +rowData['divName'] :rowData[col.field]}}
+                                        {{rowData[col.field]}}
                                     </td>
                                     <td class="action-icons-cstm" style="width:150px" *ngIf="selectedColumns.length> 0">
                                         <div>
@@ -300,11 +300,13 @@
                                                 </ng-template>
                                                 <ng-template pTemplate="header" let-columns style="padding-top: 1% !important">
                                                     <tr>
+                                                        <ng-container *ngFor="let col of columns">
                                                         <th style="width:auto" *ngFor="let col of columns" pResizableColumn pReorderableColumn
                                                             [pSortableColumn]="col.field">
                                                             {{col.header}}
                                                             <p-sortIcon [field]="col.field"></p-sortIcon>
                                                         </th>
+                                                    </ng-container>
                                                     </tr>
                                                     <tr>
                                                         <th style="width:auto" *ngFor="let col of columns" [ngSwitch]="col.field">
