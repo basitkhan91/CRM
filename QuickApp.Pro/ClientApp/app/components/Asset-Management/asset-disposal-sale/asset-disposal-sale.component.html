@@ -72,7 +72,7 @@
 
                                     <td style="width:auto" *ngFor="let col of columns" class="ui-resizable-column"
                                         pReorderableRowHandle>
-                                        {{col.field == 'companyName' ? rowData['companyName'] + ', ' +rowData['buName']+ ', ' +rowData['deptName']+ ', ' +rowData['divName'] :rowData[col.field]}}
+                                        {{rowData[col.field]}}
                                     </td>
                                     <td class="action-icons-cstm" style="width:150px" *ngIf="selectedColumns.length> 0">
                                         <div>
