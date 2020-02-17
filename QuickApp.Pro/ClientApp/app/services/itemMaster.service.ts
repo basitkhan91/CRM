@@ -417,7 +417,7 @@ export class ItemMasterService {
     }
 
     getItemMasterAircraftAuditHistory(id){
-        return this.itemMasterEndpoint.getItemMasterCapabilityAuditHistory(id)
+        return this.itemMasterEndpoint.getItemMasterAircraftAuditHistory(id);
     }
     updateItemMasterAircraftById(data) {
         return this.itemMasterEndpoint.updateItemMasterAircraftById(data);

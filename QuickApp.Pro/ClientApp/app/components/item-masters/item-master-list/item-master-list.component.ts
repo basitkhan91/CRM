@@ -144,8 +144,8 @@ export class ItemMasterListComponent implements OnInit, AfterViewInit {
 	isSaving: boolean;
 	itemName: string;
 	allUploadedDocumentsList: any = [];
-	aircraftListDataValues: any;
-	ataMappedList: any;
+	aircraftListDataValues: any = [];
+	ataMappedList: any = [];
 	allItemMasterCapsList: any[] = [];
 	pnCols: any[];
 	ntaeTableColumns: any[];
@@ -176,6 +176,8 @@ export class ItemMasterListComponent implements OnInit, AfterViewInit {
 	totalPages: number = 0;
 	itemMasterData: any = {};
 	ataChapterId: any;
+	viewAircraftData: any = {};
+	aircraftauditHistory: any = [];
 
 	//selectedColumns: any;
 	/** item-master-list ctor */
@@ -544,7 +546,7 @@ export class ItemMasterListComponent implements OnInit, AfterViewInit {
         { field: "aircraft", header: "Aircraft" },
         { field: "model", header: "Model" },
         { field: "dashNumber", header: "Dash Numbers" },
-        // { field: "memo", header: "Memo" }
+        { field: "memo", header: "Memo" }
 	];
 
     atasub : any[] = [
@@ -1108,7 +1110,6 @@ export class ItemMasterListComponent implements OnInit, AfterViewInit {
     }
 
 	getAircraftMappedDataByItemMasterId(itemMasterId) {
-        // check whether edit or create and send and passes ItemMasterId
         this.itemMasterService.getMappedAirCraftDetails(itemMasterId).subscribe(data => {
             const responseData = data;
             this.aircraftListDataValues = responseData.map(x => { //aircraftListData
@@ -1250,6 +1251,38 @@ export class ItemMasterListComponent implements OnInit, AfterViewInit {
         $('#step6').collapse('hide');
         $('#step7').collapse('hide');
         $('#step8').collapse('hide');
+	}
+	
+	getPageCount(totalNoofRecords, pageSize) {
+        return Math.ceil(totalNoofRecords / pageSize)
+	}
+	
+	onViewAircraft(rowData) {
+        this.viewAircraftData = rowData;
+    }
+    onViewAircraftonDbl(rowData) {
+        this.onViewAircraft(rowData);
+        $('#viewAircraft').modal('show');
+	}
+	
+	getAircraftAuditHistory(rowData) {
+        console.log(rowData);
+        this.itemMasterService.getItemMasterAircraftAuditHistory(rowData.itemMasterAircraftMappingId).subscribe(res => {
+            console.log(res);
+            this.aircraftauditHistory = res;
+        });        
+    }
+
+    getColorCodeForHistory(i, field, value) {
+        const data = this.aircraftauditHistory;
+        const dataLength = data.length;
+        if (i >= 0 && i <= dataLength) {
+            if ((i + 1) === dataLength) {
+                return true;
+            } else {
+                return data[i + 1][field] === value
+            }
+        }
     }
 
 }
