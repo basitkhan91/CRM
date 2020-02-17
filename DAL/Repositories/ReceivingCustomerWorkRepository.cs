@@ -1043,6 +1043,13 @@ namespace DAL.Repositories
                 }
 
                 var stockLine = BindStockLineData(receivingCustomer);
+
+                var exstockLine = _appContext.StockLine.Where(p => p.StockLineId == receivingCustomer.StockLineId).AsNoTracking().FirstOrDefault();
+
+                stockLine.StockLineNumber = "STL-" + exstockLine.StockLineId;
+                stockLine.ControlNumber = "CNT-" + exstockLine.StockLineId;
+                stockLine.IdNumber = "Id-" + exstockLine.StockLineId;
+
                 _appContext.StockLine.Update(stockLine);
                 _appContext.SaveChanges();
 
