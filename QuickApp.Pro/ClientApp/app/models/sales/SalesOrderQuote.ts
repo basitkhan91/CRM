@@ -41,6 +41,7 @@ export class SalesOrderQuote implements ISalesOrderQuote {
     shipToCountry: string;
     shipToContactId: number;
     shipToContactName: string;
+    shipViaId:number;
     shipViaName: string;
     shipViaShippingAccountInfo: string;
     shippingId: string;
@@ -58,6 +59,12 @@ export class SalesOrderQuote implements ISalesOrderQuote {
     billToContactId: number;
     billToContactName: string;
     billToMemo: string;
+    shipToUserTypeId: number;
+    shipToUserId: number;
+    shipToAddressId: number;
+    billToUserTypeId: number;
+    billToUserId: number;
+    billToAddressId: number;
     masterCompanyId: number;
     createdBy: string;
     createdOn: string;

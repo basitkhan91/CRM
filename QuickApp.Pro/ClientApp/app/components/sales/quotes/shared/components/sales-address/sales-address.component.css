@@ -14,3 +14,10 @@ a.fa.fa-plus-circle {
       margin-right: 15px;
   }
 }
+
+.modal .add-site-name label{
+  font-size: 12px !important;
+  width: 150px;
+  margin-right: 0;
+  font-weight: 400;
+}

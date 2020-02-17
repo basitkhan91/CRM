@@ -80,6 +80,14 @@ export class AddSalesPartNumberComponent implements OnInit {
     this.parts = parts.data;
     //this.parts[0].isSelected = true;
     this.salesQuoteService.updateSearchPartResult(this.parts);
+    this.salesQuoteService.getSearchPartObject()
+    .subscribe(data => {
+  this.query = data;
+  this.searchType = this.getSearchType(this.query.partSearchParamters.itemSearchType);
+  console.log(this.query);
+  console.log(this.searchType);
+
+});
   }
   updateQuantiy(){
     let qtyOnHand = 0;
@@ -95,7 +103,7 @@ export class AddSalesPartNumberComponent implements OnInit {
   }
 
   onSearchTypeChange(type: ItemSearchType) {
-    this.searchType = type;
+    //this.searchType = type;
   }
 
   /*onShowModalMargin(event: any) {
