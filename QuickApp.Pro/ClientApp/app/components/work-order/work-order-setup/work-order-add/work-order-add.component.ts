@@ -212,7 +212,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     }
     revisedPartId: any;
     csrList: any;
-    customerReferencelist: { label: string; value: number; }[];
+    // customerReferencelist: { label: string; value: number; }[];
 
     private onDestroy$: Subject<void> = new Subject<void>();
     workOrderFreightList: Object;
@@ -304,8 +304,8 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
 
                 })
 
-                this.getReceivingCustomerreference(data.customerId);
-                this.getPartNosByCustomer(data.customerId);
+                // this.getReceivingCustomerreference(data.customerId);
+                // this.getPartNosByCustomer(data.customerId);
 
                 this.workOrderGeneralInformation = {
                     ...data,
@@ -428,15 +428,16 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
 
     selectCustomer(object, currentRecord) {
 
-        this.partNumberOriginalData = null;
-        this.partNumberList = null;
+        // this.partNumberOriginalData = null;
+        // this.partNumberList = null;
 
         currentRecord.csr = object.csrId;
         currentRecord.creditLimit = object.creditLimit;
         currentRecord.creditTermsId = object.creditTermsId;
 
+
         this.getPartNosByCustomer(object.customerId);
-        this.getReceivingCustomerreference(object.customerId);
+        // this.getReceivingCustomerreference(object.customerId);
 
     }
     viewCustomerDetails(customerId) {
@@ -716,6 +717,8 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     onSelectedPartNumber(object, currentRecord, index) {
         // currentRecord = new WorkOrderPartNumber();
 
+        console.log(object);
+
         const { itemMasterId } = object;
         // this.mpnPartNumbers.push(object.partNumber)
 
@@ -739,6 +742,8 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
         currentRecord.condition = object.condition;
         currentRecord.stockLineNumber = object.stockLineNumber;
         currentRecord.receivingCustomerWorkId = object.receivingCustomerWorkId;
+        currentRecord.customerReference = object.reference;
+        currentRecord.receivingDate = new Date(object.receivingDate);
 
         this.revisedPartId = object.revisedPartId;
 
@@ -1712,16 +1717,16 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
         });
     }
 
-    async getReceivingCustomerreference(customerId) {
+    // async getReceivingCustomerreference(customerId) {
 
-        await this.workOrderService.getReceivingCustomerreference(customerId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
-            this.customerReferencelist = res.map(x => {
-                return {
-                    label: x.reference,
-                    value: x.receivingCustomerWorkId
-                }
-            })
-        });
-    }
+    //     await this.workOrderService.getReceivingCustomerreference(customerId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
+    //         this.customerReferencelist = res.map(x => {
+    //             return {
+    //                 label: x.reference,
+    //                 value: x.receivingCustomerWorkId
+    //             }
+    //         })
+    //     });
+    // }
 
 }

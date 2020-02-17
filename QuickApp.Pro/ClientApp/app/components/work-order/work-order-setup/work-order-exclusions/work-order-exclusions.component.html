@@ -1,22 +1,11 @@
 <div *ngIf="!isView && !isQuote">
-  <button
-    data-target="#addNewExclusions"
-    data-toggle="modal"
-    (click)="createNew()"
-    class="btn btn-primary btn-primary"
-    style="padding: 6px 12px !important;"
-  >
+  <button data-target="#addNewExclusions" data-toggle="modal" (click)="createNew()" class="btn btn-primary btn-primary"
+    style="padding: 6px 12px !important;">
     Add Exclusions
   </button>
 </div>
 
-<div
-  id="addNewExclusions"
-  class="modal fade"
-  role="dialog"
-  data-backdrop="static"
-  *ngIf="!view"
->
+<div id="addNewExclusions" class="modal fade" role="dialog" data-backdrop="static" *ngIf="!view">
   <div class="modal-dialog modal-lg">
     <!-- Modal content-->
     <div class="modal-content">
@@ -24,31 +13,16 @@
         <button type="button" class="close" data-dismiss="modal">
           &times;
         </button>
-        <h4 class="modal-title">Exclusions</h4>
+        <h4 class="modal-title">Add Exclusions</h4>
       </div>
       <div class="modal-body">
-        <grd-exclusions
-          *ngIf="!isEdit"
-          [isQuote]="isQuote"
-          [workFlow]="workFlowObject"
-          [isWorkOrder]="isWorkOrder"
-          [markupList]="markupList"
-          [taskList]="taskList"
-          (saveExclusionsListForWO)="saveExclusionsList($event)"
-        >
+        <grd-exclusions *ngIf="!isEdit" [isQuote]="isQuote" [workFlow]="workFlowObject" [isWorkOrder]="isWorkOrder"
+          [markupList]="markupList" [taskList]="taskList" (saveExclusionsListForWO)="saveExclusionsList($event)">
         </grd-exclusions>
 
-        <grd-exclusions
-          *ngIf="isEdit && editData"
-          [isQuote]="isQuote"
-          [isEdit]="isEdit"
-          [editData]="editData"
-          [workFlow]="workFlowObject"
-          [isWorkOrder]="isWorkOrder"
-          [markupList]="markupList"
-          [taskList]="taskList"
-          (updateExclusionsListForWO)="updateExclusionsList($event)"
-        >
+        <grd-exclusions *ngIf="isEdit && editData" [isQuote]="isQuote" [isEdit]="isEdit" [editData]="editData"
+          [workFlow]="workFlowObject" [isWorkOrder]="isWorkOrder" [markupList]="markupList" [taskList]="taskList"
+          (updateExclusionsListForWO)="updateExclusionsList($event)">
         </grd-exclusions>
       </div>
       <div class="modal-footer" *ngIf="!isQuote">
@@ -61,7 +35,7 @@
 </div>
 
 <div>
-    <!-- <table class="table table-bordered table-striped table-sorting mpn-list-table table-disabled">
+  <!-- <table class="table table-bordered table-striped table-sorting mpn-list-table table-disabled">
       <thead>
           <tr style="color: #f1f1f1;">
               <td colspan="10" style="width: 500px;">&nbsp;</td>
@@ -99,48 +73,30 @@
           </tr>
       </thead>
     </table> -->
-  <p-table
-    class="rpo-table-cstm rro-table-cstm pub-ptable-cstm"
-    [columns]="cols"
-    [lazy]="false"
-    [value]="workOrderExclusionsList"
-    [paginator]="true"
-    [rows]="10"
-  >
+  <p-table class="rpo-table-cstm rro-table-cstm pub-ptable-cstm" [columns]="cols" [lazy]="false"
+    [value]="workOrderExclusionsList" [paginator]="true" [rows]="10">
     <ng-template pTemplate="header" let-columns>
-        <tr *ngIf="isQuote">
-          <th colspan="7">&nbsp;</th>
-          <th colspan="6">
-              <div class="form-group" style="text-align: center; display: flex;">
-                <p-radioButton
-                  class="p-radiobutton-label-horizontal p-radio-custom"
-                  name="costPlusType"
-                  label="T&M - Mark Up"
-                  value="1"
-                  [(ngModel)]="costPlusType"
-                  [disabled]="isView"
-                  (click)="tmchange()"
-                ></p-radioButton>
-                <div>
-                  <select class="form-group" (change)="markupChanged({}, 'all')" [(ngModel)]="overAllMarkup" [disabled]="isView || costPlusType != '1'" style="margin-top: 10px;">
-                    <option value="">Select</option>
-                    <option *ngFor="let markUp of markupList" [value]="markUp.value">{{markUp.label}}</option>
-                  </select>
-                </div>
-              </div>
-              <div style="float: left;">
-                <p-radioButton
-                  class="p-radiobutton-label-horizontal col-width p-radio-custom"
-                  name="costPlusType"
-                  value="2"
-                  label="Actual"
-                  [(ngModel)]="costPlusType"
-                  [disabled]="isView"
-                  (click)="tmchange()"
-                ></p-radioButton>
-              </div>
-          </th>
-        </tr>
+      <tr *ngIf="isQuote">
+        <th colspan="7">&nbsp;</th>
+        <th colspan="6">
+          <div class="form-group" style="text-align: center; display: flex;">
+            <p-radioButton class="p-radiobutton-label-horizontal p-radio-custom" name="costPlusType"
+              label="T&M - Mark Up" value="1" [(ngModel)]="costPlusType" [disabled]="isView" (click)="tmchange()">
+            </p-radioButton>
+            <div>
+              <select class="form-group" (change)="markupChanged({}, 'all')" [(ngModel)]="overAllMarkup"
+                [disabled]="isView || costPlusType != '1'" style="margin-top: 10px;">
+                <option value="">Select</option>
+                <option *ngFor="let markUp of markupList" [value]="markUp.value">{{markUp.label}}</option>
+              </select>
+            </div>
+          </div>
+          <div style="float: left;">
+            <p-radioButton class="p-radiobutton-label-horizontal col-width p-radio-custom" name="costPlusType" value="2"
+              label="Actual" [(ngModel)]="costPlusType" [disabled]="isView" (click)="tmchange()"></p-radioButton>
+          </div>
+        </th>
+      </tr>
       <tr>
         <th>Task</th>
         <th *ngFor="let col of columns">
@@ -170,48 +126,33 @@
           <td>
             <select class="form-control" [(ngModel)]="rowData.billingMethodId" [disabled]="isView">
               <option value="">Select</option>
-              <option *ngFor="let bm of [{'label': 'T&M', 'value': '1'}, {'label': 'Actual', 'value': '2'}]" [value]="bm.value">{{bm.label}}</option>
+              <option *ngFor="let bm of [{'label': 'T&M', 'value': '1'}, {'label': 'Actual', 'value': '2'}]"
+                [value]="bm.value">{{bm.label}}</option>
             </select>
           </td>
           <td>
-            <select
-              class="form-control"
-              (change)="markupChanged(rowData, 'row')"
-              [(ngModel)]="rowData.markupPercentageId"
-              [disabled]="isView || rowData.billingMethodId != '1'"
-            >
+            <select class="form-control" (change)="markupChanged(rowData, 'row')"
+              [(ngModel)]="rowData.markupPercentageId" [disabled]="isView || rowData.billingMethodId != '1'">
               <option value="">Select</option>
-              <option
-                *ngFor="let markUp of markupList"
-                [value]="markUp.value"
-                >{{ markUp.label }}</option
-              >
+              <option *ngFor="let markUp of markupList" [value]="markUp.value">{{ markUp.label }}</option>
             </select>
           </td>
           <td>
-              <input type="number" [(ngModel)]="rowData.billingRate" (change)="rowData.billingAmount = (rowData.billingRate*rowData.quantity).toFixed(2)" [disabled]="isView || rowData.billingMethodId != '2'"/>
+            <input type="number" [(ngModel)]="rowData.billingRate"
+              (change)="rowData.billingAmount = (rowData.billingRate*rowData.quantity).toFixed(2)"
+              [disabled]="isView || rowData.billingMethodId != '2'" />
           </td>
           <td>{{ rowData.billingAmount }}</td>
         </ng-container>
         <td *ngIf="!isView">
-          <button
-            class="btn-edit ptable-wo-btns"
-            mat-icon-button
-            data-target="#addNewExclusions"
-            data-toggle="modal"
-            (click)="edit(rowData, rowIndex)"
-            matTooltip="Edit"
-          >
+          <button class="btn-edit ptable-wo-btns" mat-icon-button data-target="#addNewExclusions" data-toggle="modal"
+            (click)="edit(rowData, rowIndex)" matTooltip="Edit">
             <mat-icon>edit</mat-icon>
           </button>
         </td>
         <td *ngIf="!isView">
-          <button
-            class="btn-delete ptable-wo-btns"
-            mat-icon-button
-            matTooltip="Delete"
-            (click)="delete(rowData, rowIndex)"
-          >
+          <button class="btn-delete ptable-wo-btns" mat-icon-button matTooltip="Delete"
+            (click)="delete(rowData, rowIndex)">
             <mat-icon color="warn">delete</mat-icon>
           </button>
         </td>
@@ -235,11 +176,7 @@
       </tr>
     </ng-template>
   </p-table>
-  <button
-    class="btn btn-primary pull-right"
-    (click)="saveQuotation()"
-    *ngIf="isQuote && !isView"
-  >
+  <button class="btn btn-primary pull-right" (click)="saveQuotation()" *ngIf="isQuote && !isView">
     Save Exclusions
   </button>
 </div>

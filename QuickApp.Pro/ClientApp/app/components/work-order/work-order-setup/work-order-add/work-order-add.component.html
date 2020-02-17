@@ -289,7 +289,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="col-md-6">
-                                                        <p-dropdown class="p-dropdown-custom-md "
+                                                        <p-dropdown class="p-dropdown-custom-md p-dropdown-wo-gen"
                                                             placeholder="Select CreditTerms" name="creditTermsId"
                                                             #creditTermsId="ngModel" [options]="creditTerms"
                                                             [(ngModel)]="workOrderGeneralInformation.creditTermsId"
@@ -401,12 +401,16 @@
                                             <div class="col-md-4">
                                                 <label for="notes">Notes
                                                 </label>
-                                                <textarea class="form-control text-area-cstm" rows="4" cols="50" [(ngModel)]="workOrderGeneralInformation.notes" name="notes" [disabled]="isView"></textarea>
+                                                <textarea class="form-control text-area-cstm" rows="4" cols="50"
+                                                    [(ngModel)]="workOrderGeneralInformation.notes" name="notes"
+                                                    [disabled]="isView"></textarea>
                                             </div>
                                             <div class="col-md-4">
                                                 <label for="memo">Memo
                                                 </label>
-                                                <textarea class="form-control text-area-cstm" rows="4" cols="50" [(ngModel)]="workOrderGeneralInformation.memo" name="memo" [disabled]="isView"></textarea>
+                                                <textarea class="form-control text-area-cstm" rows="4" cols="50"
+                                                    [(ngModel)]="workOrderGeneralInformation.memo" name="memo"
+                                                    [disabled]="isView"></textarea>
                                             </div>
                                         </div>
                                         <div class="clear"></div>
@@ -444,6 +448,7 @@
                                     <th rowspan="2">Stage *</th>
                                     <th rowspan="2">Status *</th>
                                     <th rowspan="2">Priority *</th>
+                                    <th rowspan="2">Customer Receiving Date</th>
                                     <th rowspan="2">Customer Request Date *</th>
                                     <th rowspan="2">Promised Date *</th>
                                     <th rowspan="2">Est. Comp Date *</th>
@@ -485,7 +490,7 @@
                                         </p-autoComplete>
                                     </td>
                                     <td>
-                                        <input type="text" class="form-control" name="description{{i}}"
+                                        <input type="text" class="form-control  w150" name="description{{i}}"
                                             #description="ngModel" [(ngModel)]="workOrderPartNumber.description"
                                             required disabled>
                                     </td>
@@ -501,7 +506,7 @@
                                           [dropdown]="true" class="p-autoComplete-ctsm"  >
                                         </p-autoComplete>-->
 
-                                        <input type="text" class="form-control" name="revisedPartNo{{i}}"
+                                        <input type="text" class="form-control w100" name="revisedPartNo{{i}}"
                                             #description="ngModel" [(ngModel)]="workOrderPartNumber.revisedPartNo"
                                             disabled>
                                     </td>
@@ -513,14 +518,16 @@
                                         </p-dropdown>
                                     </td>
                                     <td>
-                                            <p-dropdown placeholder="Select" name="contactRef{{i}}" #contactRef="ngModel"
+                                        <input type="text" class="form-control w100" name="customerReference{{i}}"
+                                            #customerReference="ngModel"
+                                            [(ngModel)]="workOrderPartNumber.customerReference" disabled>
+                                        <!-- <p-dropdown placeholder="Select" name="contactRef{{i}}" #contactRef="ngModel"
                                             [options]="customerReferencelist" class="p-dropdown-custom-md"
-                                            [(ngModel)]="workOrderPartNumber.customerReference"
-                                             required>
-                                        </p-dropdown>
+                                            [(ngModel)]="workOrderPartNumber.customerReference" required>
+                                        </p-dropdown> -->
 
 
-                                            <!-- <p-dropdown placeholder="Select Reference" name="contactRef"
+                                        <!-- <p-dropdown placeholder="Select Reference" name="contactRef"
                                             #contactRef="ngModel" [options]="customerReferencelist"
                                             class="p-dropdown-custom-2"
                                             [(ngModel)]="workOrderGeneralInformation.customerReference"
@@ -603,11 +610,17 @@
                                             [(ngModel)]="workOrderPartNumber.workOrderStatusId" required>
                                         </p-dropdown>
                                     </td>
+
                                     <td>
                                         <p-dropdown [options]="priorityList" placeholder="Select" name="priority{{i}}"
                                             #priority="ngModel" class="p-dropdown-custom-md"
-                                            [(ngModel)]="workOrderPartNumber.workOrderPriorityId" required>
+                                            [(ngModel)]="workOrderPartNumber.workOrderPriorityId" disabled required>
                                         </p-dropdown>
+                                    </td>
+                                    <td>
+                                        <p-calendar [showIcon]="true" name="receivingDate{{i}}" class="calender-cstm"
+                                            #receivingDate="ngModel" [(ngModel)]="workOrderPartNumber.receivingDate"
+                                            disabled></p-calendar>
                                     </td>
                                     <td>
                                         <p-calendar [showIcon]="true" name="customerRequestDate{{i}}"
@@ -927,7 +940,7 @@
 
                     <div *ngIf="labor" [ngClass]="{hidedata : gridActiveTab !== 'labor'}">
                         <app-work-order-labor [taskList]="taskList" [laborForm]="labor"
-                            [workOrderLaborList]="workOrderLaborList"
+                            [employeesOriginalData]="employeesOriginalData" [workOrderLaborList]="workOrderLaborList"
                             [workOrderWorkFlowOriginalData]="workOrderWorkFlowOriginalData"
                             [savedWorkOrderData]="savedWorkOrderData" (saveworkOrderLabor)="saveworkOrderLabor($event)">
                         </app-work-order-labor>
@@ -998,10 +1011,8 @@
                         <app-work-order-analysis></app-work-order-analysis>
                     </div>
                     <div *ngIf="documents" [ngClass]="{hidedata: gridActiveTab !== 'documents'}">
-                        <app-work-order-documents [documentForm]="documents"
-                        [workFlowWorkOrderId]="workFlowWorkOrderId"
-                        [savedWorkOrderData]="savedWorkOrderData"
-                        ></app-work-order-documents>
+                        <app-work-order-documents [documentForm]="documents" [workFlowWorkOrderId]="workFlowWorkOrderId"
+                            [savedWorkOrderData]="savedWorkOrderData"></app-work-order-documents>
                     </div>
                     <div *ngIf="gridActiveTab == 'quote'">
                         <div *ngIf="workOrderQuoteId == undefined" class="no-quote">
