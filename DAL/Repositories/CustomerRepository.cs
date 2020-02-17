@@ -2575,7 +2575,7 @@ namespace DAL.Repositories
                 model.CustomerBillingAddressId = id;
                 model.UpdatedDate = DateTime.Now;
                 model.IsActive = status;
-
+                model.UpdatedBy = updatedBy;
                 _appContext.CustomerBillingAddress.Attach(model);
 
                 _appContext.Entry(model).Property(x => x.IsActive).IsModified = true;
