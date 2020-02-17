@@ -401,12 +401,16 @@
                                             <div class="col-md-4">
                                                 <label for="notes">Notes
                                                 </label>
-                                                <textarea class="form-control text-area-cstm" rows="4" cols="50" [(ngModel)]="workOrderGeneralInformation.notes" name="notes" [disabled]="isView"></textarea>
+                                                <textarea class="form-control text-area-cstm" rows="4" cols="50"
+                                                    [(ngModel)]="workOrderGeneralInformation.notes" name="notes"
+                                                    [disabled]="isView"></textarea>
                                             </div>
                                             <div class="col-md-4">
                                                 <label for="memo">Memo
                                                 </label>
-                                                <textarea class="form-control text-area-cstm" rows="4" cols="50" [(ngModel)]="workOrderGeneralInformation.memo" name="memo" [disabled]="isView"></textarea>
+                                                <textarea class="form-control text-area-cstm" rows="4" cols="50"
+                                                    [(ngModel)]="workOrderGeneralInformation.memo" name="memo"
+                                                    [disabled]="isView"></textarea>
                                             </div>
                                         </div>
                                         <div class="clear"></div>
@@ -513,14 +517,13 @@
                                         </p-dropdown>
                                     </td>
                                     <td>
-                                            <p-dropdown placeholder="Select" name="contactRef{{i}}" #contactRef="ngModel"
+                                        <p-dropdown placeholder="Select" name="contactRef{{i}}" #contactRef="ngModel"
                                             [options]="customerReferencelist" class="p-dropdown-custom-md"
-                                            [(ngModel)]="workOrderPartNumber.customerReference"
-                                             required>
+                                            [(ngModel)]="workOrderPartNumber.customerReference" required>
                                         </p-dropdown>
 
 
-                                            <!-- <p-dropdown placeholder="Select Reference" name="contactRef"
+                                        <!-- <p-dropdown placeholder="Select Reference" name="contactRef"
                                             #contactRef="ngModel" [options]="customerReferencelist"
                                             class="p-dropdown-custom-2"
                                             [(ngModel)]="workOrderGeneralInformation.customerReference"
@@ -927,7 +930,7 @@
 
                     <div *ngIf="labor" [ngClass]="{hidedata : gridActiveTab !== 'labor'}">
                         <app-work-order-labor [taskList]="taskList" [laborForm]="labor"
-                            [workOrderLaborList]="workOrderLaborList"
+                            [employeesOriginalData]="employeesOriginalData" [workOrderLaborList]="workOrderLaborList"
                             [workOrderWorkFlowOriginalData]="workOrderWorkFlowOriginalData"
                             [savedWorkOrderData]="savedWorkOrderData" (saveworkOrderLabor)="saveworkOrderLabor($event)">
                         </app-work-order-labor>
@@ -998,10 +1001,8 @@
                         <app-work-order-analysis></app-work-order-analysis>
                     </div>
                     <div *ngIf="documents" [ngClass]="{hidedata: gridActiveTab !== 'documents'}">
-                        <app-work-order-documents [documentForm]="documents"
-                        [workFlowWorkOrderId]="workFlowWorkOrderId"
-                        [savedWorkOrderData]="savedWorkOrderData"
-                        ></app-work-order-documents>
+                        <app-work-order-documents [documentForm]="documents" [workFlowWorkOrderId]="workFlowWorkOrderId"
+                            [savedWorkOrderData]="savedWorkOrderData"></app-work-order-documents>
                     </div>
                     <div *ngIf="gridActiveTab == 'quote'">
                         <div *ngIf="workOrderQuoteId == undefined" class="no-quote">

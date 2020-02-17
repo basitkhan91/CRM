@@ -93,7 +93,7 @@ export class WorkOrderSmartComponent implements OnInit {
 
         }
 
-        if (this.workOrderId || this.recCustmoerId) { 
+        if (this.workOrderId || this.recCustmoerId) {
             if (this.recCustmoerId) {
                 this.showTabsGrid = false;
                 this.workOrderId = 0;
@@ -207,7 +207,13 @@ export class WorkOrderSmartComponent implements OnInit {
 
     async getAllEmployees() {
         await this.commonService.smartDropDownList('Employee', 'EmployeeId', 'FirstName').pipe(takeUntil(this.onDestroy$)).subscribe(res => {
-            this.employeesOriginalData = res;
+            this.employeesOriginalData = res.map(x => {
+                return {
+                    ...x,
+                    employeeId: x.value,
+                    name: x.label
+                }
+            });
         })
     }
 
