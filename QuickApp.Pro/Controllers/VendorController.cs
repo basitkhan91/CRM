@@ -3564,6 +3564,24 @@ namespace QuickApp.Pro.Controllers
                 actionobject.CreatedBy = vendorShippingDetailsViewModel.CreatedBy;
                 actionobject.UpdatedBy = vendorShippingDetailsViewModel.UpdatedBy;
                 actionobject.IsPrimary = vendorShippingDetailsViewModel.IsPrimary;
+
+
+                if (vendorShippingDetailsViewModel.IsPrimary == true)
+                {
+                    var vendorShipVia = _context.VendorShipping.AsNoTracking().Where(p => p.VendorShippingAddressId == vendorShippingDetailsViewModel.VendorShippingAddressId && p.IsPrimary == true).FirstOrDefault();
+
+                    if (vendorShipVia != null)
+                    {
+
+                        vendorShipVia.IsPrimary = false;
+                        vendorShipVia.UpdatedDate = DateTime.Now;
+                        vendorShipVia.UpdatedBy = vendorShippingDetailsViewModel.UpdatedBy;
+                        _context.VendorShipping.Update(vendorShipVia);
+                        _context.SaveChanges();
+
+                    }
+
+                }
                 _unitOfWork.Shipping.Add(actionobject);
                 _unitOfWork.SaveChanges();
                 return Ok(actionobject);
@@ -3593,7 +3611,28 @@ namespace QuickApp.Pro.Controllers
                 checkPaymentObj.CreatedBy = vendorShippingViewModel.CreatedBy;
                 checkPaymentObj.UpdatedBy = vendorShippingViewModel.UpdatedBy;
                 checkPaymentObj.IsPrimary = vendorShippingViewModel.IsPrimary;
+                if (vendorShippingViewModel.IsPrimary == true)
+                {
+                    var vendorShipVia = _context.VendorShipping.AsNoTracking().Where(p => p.VendorShippingAddressId == vendorShippingViewModel.VendorShippingAddressId && p.IsPrimary == true).FirstOrDefault();
 
+                    if (vendorShipVia != null && vendorShipVia.VendorShippingId != vendorShippingViewModel.VendorShippingId)
+                    {
+
+                        VendorShipping model = new VendorShipping();
+                        model.VendorShippingId = vendorShipVia.VendorShippingId;
+                        model.UpdatedDate = DateTime.Now;
+                        model.IsPrimary = false;
+                        model.UpdatedBy = vendorShippingViewModel.UpdatedBy;
+
+                        _context.VendorShipping.Attach(model);
+
+                        _context.Entry(model).Property(x => x.IsPrimary).IsModified = true;
+                        _context.Entry(model).Property(x => x.UpdatedDate).IsModified = true;
+                        _context.Entry(model).Property(x => x.UpdatedBy).IsModified = true;
+
+                    }
+
+                }
                 _unitOfWork.Shipping.Update(checkPaymentObj);
                 _unitOfWork.SaveChanges();
                 return Ok(checkPaymentObj);

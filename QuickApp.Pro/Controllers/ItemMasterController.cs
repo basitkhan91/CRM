@@ -1513,15 +1513,39 @@ namespace QuickApp.Pro.Controllers
                             existingresule.UpdatedDate = DateTime.Now;
                             existingresule.UpdatedBy = itemMasterPurchaseSale[i].UpdatedBy;
                             existingresule.IsActive = itemMasterPurchaseSale[i].IsActive;
-                            existingresule.IsDeleted = itemMasterPurchaseSale[i].IsDeleted;
+                            if (itemMasterPurchaseSale[i].IsDeleted == true)
+                            {
+                                var history = _context.ItemMasterPurchaseSaleAudit.Where(c => c.ItemMasterPurchaseSaleId == itemMasterPurchaseSale[i].ItemMasterPurchaseSaleId);
+                                if (history != null)
+                                {
+                                    existingresule.IsDeleted = itemMasterPurchaseSale[i].IsDeleted;
 
-                            _unitOfWork.Repository<ItemMasterPurchaseSale>().Update(existingresule);
-                            _unitOfWork.SaveChanges();
+                                }
+                                else
+                                {
+
+                                }
+                                var existingResult = _unitOfWork.Repository<ItemMasterPurchaseSale>().GetSingleOrDefault(c => c.ItemMasterPurchaseSaleId == itemMasterPurchaseSale[i].ItemMasterPurchaseSaleId);
+
+                                _unitOfWork.Repository<ItemMasterPurchaseSale>().Remove(existingResult);
+                                _unitOfWork.SaveChanges();
+                            }
+                            else
+                            {
+                                _unitOfWork.Repository<ItemMasterPurchaseSale>().Update(existingresule);
+                                _unitOfWork.SaveChanges();
+                            }
+
+                            //_unitOfWork.Repository<ItemMasterPurchaseSale>().Update(existingresule);
+                            //_unitOfWork.SaveChanges();
 
 
                         }
                         else
                         {
+                            itemMasterPurchaseSale[i].CreatedDate = DateTime.Now;
+                            itemMasterPurchaseSale[i].UpdatedDate = DateTime.Now;
+
 
                             _unitOfWork.Repository<ItemMasterPurchaseSale>().Add(itemMasterPurchaseSale[i]);
                             _unitOfWork.SaveChanges();
