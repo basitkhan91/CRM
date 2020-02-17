@@ -142,6 +142,15 @@
                         </div>                                                                        
                     </div>
                     <div class="col-md-3">
+                        <div class="form-group" *ngIf="isEditMode">
+                            <div class="checkbox-cstm" style="margin-top: 10px;">
+                                <label>
+                                    <input type="checkbox" name="isCustomerStock" [(ngModel)]="stockLineForm.isCustomerStock" disabled>
+                                    <span class="cr"><i class="cr-icon pi pi-check"></i></span>
+                                    Is Customer Stock
+                                </label>
+                            </div>
+                        </div>
                         <div class="form-group">
                             <label>Site <span class="clr-red">*</span></label>
                             <select [(ngModel)]="stockLineForm.siteId" name="siteId" (change)="getWareHouseList(stockLineForm.siteId)">

@@ -1126,7 +1126,6 @@ export class ItemMasterListComponent implements OnInit, AfterViewInit {
 	getItemMasterById(itemMasterId) {
         this.itemMasterService.getItemMasterDetailById(itemMasterId).subscribe(res => {
 			this.viewItemMaster = res[0];
-
             console.log(this.viewItemMaster);
         });
     }

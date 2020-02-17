@@ -92,6 +92,7 @@ export class StockLineSetupComponent implements OnInit {
 		this.stockLineForm.repairOrderId = 0;
 		this.stockLineForm.conditionId = 0;
 		this.stockLineForm.oem = true;
+		this.stockLineForm.isCustomerStock = false;
 		this.stockLineForm.stockLineNumber = 'Generating';
 		this.stockLineForm.controlNumber = 'Generating';
 		this.stockLineForm.idNumber = 'Generating';
