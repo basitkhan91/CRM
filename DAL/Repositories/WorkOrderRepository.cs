@@ -1229,10 +1229,11 @@ namespace DAL.Repositories
                         workOrderPart.MasterPartId = recevingCustomer.ItemMasterId;
                         workOrderPart.ConditionId = recevingCustomer.ConditionId;
                         workOrderPart.StockLineId = Convert.ToInt64(recevingCustomer.StockLineId);
-                        workOrderPart.EstimatedCompletionDate = DateTime.Now;
-                        workOrderPart.EstimatedShipDate = DateTime.Now; ;
-                        workOrderPart.CustomerRequestDate = DateTime.Now;
-                        workOrderPart.PromisedDate = DateTime.Now;
+                        //workOrderPart.EstimatedCompletionDate = DateTime.Now;
+                        //workOrderPart.EstimatedShipDate = DateTime.Now; ;
+                        //workOrderPart.CustomerRequestDate = DateTime.Now;
+                        //workOrderPart.PromisedDate = DateTime.Now;
+
                         workOrderPart.ReceivedDate = recevingCustomer.CreatedDate;
                     }
 
@@ -5846,7 +5847,7 @@ namespace DAL.Repositories
                                 rc.StockLineId,
                                 rc.ConditionId,
                                 rc.Reference,
-                                rc.CreatedDate,
+                                ReceivingDate= rc.CreatedDate,
                             })
                             .Distinct()
                             .ToList();
