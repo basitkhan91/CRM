@@ -1193,6 +1193,7 @@ namespace DAL.Repositories
 
                     workOrder.isRecCustomer = true;
                     workOrder.WorkOrderNum = "";
+                    workOrder.ManagementStructureId =Convert.ToInt64(recevingCustomer.ManagementStructureId);
                     workOrder.WorkOrderTypeId = 1;
                     workOrder.IsSinglePN = true;
                     workOrder.WorkOrderStatusId = 1;
@@ -1232,9 +1233,7 @@ namespace DAL.Repositories
                         workOrderPart.EstimatedShipDate = DateTime.Now; ;
                         workOrderPart.CustomerRequestDate = DateTime.Now;
                         workOrderPart.PromisedDate = DateTime.Now;
-
-
-
+                        workOrderPart.ReceivedDate = recevingCustomer.CreatedDate;
                     }
 
                     workOrder.PartNumbers.Add(workOrderPart);
@@ -5846,6 +5845,7 @@ namespace DAL.Repositories
                                 rc.SerialNumber,
                                 rc.StockLineId,
                                 rc.ConditionId,
+                                rc.Reference,
                             })
                             .Distinct()
                             .ToList();
