@@ -895,6 +895,9 @@ export class VendorService {
     updateStatusForInternationalShippingVia(id, status, updatedBy) {
         return this.actionEndpoint.updateStatusForInternationalShippingVia(id, status, updatedBy)
     }
+    updateStatusForDomesticShippingVia(id, status, updatedBy) {
+        return this.actionEndpoint.updateStatusForDomesticShippingVia(id, status, updatedBy)
+    }
 
 }
 

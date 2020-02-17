@@ -1787,7 +1787,10 @@ export class VendorEndpointService extends EndpointFactory {
 
 	}
 	updateStatusForInternationalShippingVia(id, status, updatedBy) {
-        return this.http.get(`${this.configurations.baseUrl}/api/Vendor/internationalshipviastatusupdate?id=${id}&status=${status}&updatedBy=${updatedBy}`)
-
+        return this.http.put(`${this.configurations.baseUrl}/api/Vendor/internationalshipviastatusupdate?id=${id}&status=${status}&updatedBy=${updatedBy}`, {}, this.getRequestHeaders());
+	}
+	
+	updateStatusForDomesticShippingVia(id, status, updatedBy) {
+        return this.http.put(`${this.configurations.baseUrl}/api/Vendor/vendorshippingstatus?id=${id}&status=${status}&updatedBy=${updatedBy}`, {}, this.getRequestHeaders());
     }
 }
