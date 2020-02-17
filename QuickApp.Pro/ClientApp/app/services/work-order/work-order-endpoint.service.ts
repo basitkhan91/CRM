@@ -495,5 +495,19 @@ export class WorkOrderEndpointService extends EndpointFactory {
     getReceivingCustomerreference(customerId) {
         return this.http.get<any>(`${this.configurations.baseUrl}/api/receivingcustomerWork/receivingcustomerreference?customerId=${customerId}`, this.getRequestHeaders())
     }
+    getDocumentsList(wfWoId, workOrderId){
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/workorder/workorderdocumentslist?wfwoId=${wfWoId}&workOrderId=${workOrderId}`, this.getRequestHeaders());
+    }
+
+    createDocuments(data){
+        const headers = new Headers({ 'Content-Type': 'multipart/form-data' });
+        return this.http.post(`${this.configurations.baseUrl}/api/workorder/createworkorderdocuments`, data , this.getRequestHeaders());
+    }
+    deleteWorkOrderDocuments(workOrderDocumentId, updatedBy){
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/workorder/deleteworkorderdocuments?workOrderDocumentsId=${workOrderDocumentId}&updatedBy=${updatedBy}` , this.getRequestHeaders())
+    }
+    updateWorkOrderDocumentStatus(workOrderDocumentsId,status, updatedBy){
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/workorder/workorderdocumentstatus?workOrderDocumentsId=${workOrderDocumentsId}&status=${status}&updatedBy=${updatedBy} `)
+    }
 
 }

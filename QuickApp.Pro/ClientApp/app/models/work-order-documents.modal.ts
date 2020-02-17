@@ -1,22 +1,22 @@
 export class Documents {
   workOrderId: number;
-  company: string;
-  businessUnit: string;
-  divison: string;
-  department: string;
-  documentCode: string;
+  name: string;
+  memo: string;
   description: string;
-  docLink: string;
-  isActive: boolean;
+  code: string;
   constructor() {
     this.workOrderId = null;
-    this.company = '';
-    this.businessUnit = '';
-    this.divison = '';
-    this.department = '';
-    this.documentCode = '';
-    this.description = 'Contract';
-    this.docLink = '';
-    this.isActive = false;
+    this.name = '';
+    this.memo = '';
+    this.description = '';
+    this.code = '';
+    // this.company = '';
+    // this.businessUnit = '';
+    // this.divison = '';
+    // this.department = '';
+    // this.documentCode = '';
+    // this.description = 'Contract';
+    // this.docLink = '';
+    // this.isActive = false;
   }
 }

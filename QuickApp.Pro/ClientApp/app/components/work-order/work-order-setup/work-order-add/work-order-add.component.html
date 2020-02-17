@@ -208,30 +208,11 @@
 
                                             </div>
 
-                                            <div class="form-group ">
+                                            <!-- <div class="form-group ">
                                                 <label for="customerref">
                                                     Customer Ref
                                                     <span class="clr-red">*</span>
                                                 </label>
-
-                                                <!--<input type="text" class="form-control wo-input" name="contactRef" #contactRef="ngModel" [(ngModel)]="workOrderGeneralInformation.customerReference" required disabled>
-
-
-    <div *ngIf="contactRef.invalid && (contactRef.dirty || contactRef.touched)" class="alert alert-danger alert-danger-cstm">
-        <div *ngIf="contactRef.errors.required">
-            <small> Contact Ref is required </small>
-        </div>
-    </div>-->
-                                                <!--<p-dropdown class="p-dropdown-custom-md " placeholder="Select Reference"
-                name="contactRef" #contactRef="ngModel"
-                [options]="customerReferencelist" [(ngModel)]="workOrderGeneralInformation.receivingCustomerWorkId" required>
-        <div *ngIf="contactRef.invalid && (contactRef.dirty || contactRef.touched)" class="alert alert-danger alert-danger-cstm">
-            <div *ngIf="contactRef.errors.required">
-                <small> Contact Ref is required </small>
-            </div>
-        </div>
-    </p-dropdown>-->
-
                                                 <p-dropdown placeholder="Select Reference" name="contactRef"
                                                     #contactRef="ngModel" [options]="customerReferencelist"
                                                     class="p-dropdown-custom-2"
@@ -245,7 +226,7 @@
                                                     </div>
                                                 </p-dropdown>
 
-                                            </div>
+                                            </div> -->
 
                                         </div>
                                         <div class="col-md-2">
@@ -420,12 +401,12 @@
                                             <div class="col-md-4">
                                                 <label for="notes">Notes
                                                 </label>
-                                                <textarea class="form-control" [(ngModel)]="workOrderGeneralInformation.notes" name="notes" [disabled]="isView"></textarea>
+                                                <textarea class="form-control text-area-cstm" rows="4" cols="50" [(ngModel)]="workOrderGeneralInformation.notes" name="notes" [disabled]="isView"></textarea>
                                             </div>
                                             <div class="col-md-4">
                                                 <label for="memo">Memo
                                                 </label>
-                                                <textarea class="form-control" [(ngModel)]="workOrderGeneralInformation.memo" name="memo" [disabled]="isView"></textarea>
+                                                <textarea class="form-control text-area-cstm" rows="4" cols="50" [(ngModel)]="workOrderGeneralInformation.memo" name="memo" [disabled]="isView"></textarea>
                                             </div>
                                         </div>
                                         <div class="clear"></div>
@@ -452,6 +433,7 @@
                                     <th rowspan="2">MPN Description *</th>
                                     <th rowspan="2">Revised MPN</th>
                                     <th rowspan="2">Work Scope *</th>
+                                    <th rowspan="2">Customer Ref *</th>
                                     <th rowspan="2">NTE</th>
                                     <!-- <th rowspan="2">Qty *</th> -->
                                     <th rowspan="2">Condition*</th>
@@ -529,6 +511,27 @@
                                             [(ngModel)]="workOrderPartNumber.workOrderScopeId"
                                             (onChange)="getWorkFlowByPNandScope(workOrderPartNumber)" required>
                                         </p-dropdown>
+                                    </td>
+                                    <td>
+                                            <p-dropdown placeholder="Select" name="contactRef{{i}}" #contactRef="ngModel"
+                                            [options]="customerReferencelist" class="p-dropdown-custom-md"
+                                            [(ngModel)]="workOrderPartNumber.customerReference"
+                                             required>
+                                        </p-dropdown>
+
+
+                                            <!-- <p-dropdown placeholder="Select Reference" name="contactRef"
+                                            #contactRef="ngModel" [options]="customerReferencelist"
+                                            class="p-dropdown-custom-2"
+                                            [(ngModel)]="workOrderGeneralInformation.customerReference"
+                                            required>
+                                            <div *ngIf="contactRef.invalid && (contactRef.dirty || contactRef.touched)"
+                                                class="alert alert-danger alert-danger-cstm">
+                                                <div *ngIf="contactRef.errors.required">
+                                                    <small> Contact Ref is required </small>
+                                                </div>
+                                            </div>
+                                        </p-dropdown> -->
                                     </td>
                                     <td>
                                         <input type="text" class="form-control w50"
@@ -995,7 +998,10 @@
                         <app-work-order-analysis></app-work-order-analysis>
                     </div>
                     <div *ngIf="documents" [ngClass]="{hidedata: gridActiveTab !== 'documents'}">
-                        <app-work-order-documents [documentForm]="documents"></app-work-order-documents>
+                        <app-work-order-documents [documentForm]="documents"
+                        [workFlowWorkOrderId]="workFlowWorkOrderId"
+                        [savedWorkOrderData]="savedWorkOrderData"
+                        ></app-work-order-documents>
                     </div>
                     <div *ngIf="gridActiveTab == 'quote'">
                         <div *ngIf="workOrderQuoteId == undefined" class="no-quote">
