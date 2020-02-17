@@ -89,7 +89,7 @@
                 <input
                   type="text"
                   pInputText
-                  size="50"
+                  size="50" [(ngModel)]="resetinputmodel" (onClear)="clearValue()"
                   class="form-control ui-autocomplete-input"
                   (input)="dt.filterGlobal($event.target.value, 'contains')"
                   placeholder="Filter"
@@ -252,7 +252,7 @@
                 *ngIf="selectedColumns.length > 0 && isViewMode == false"
               >
                 <p-inputSwitch
-                  matTooltip="Active"
+                  matTooltip="{{rowData['isActive'] ? 'Active': 'In Active'}}"
                   matTooltipPosition="above"
                   onLabel="on"
                   offLabel="off"
@@ -1276,7 +1276,7 @@
                       <div class="col-md-12">
                         <label class="popup-plusicon-cstm">
                           ATA Chapter
-                          <a matTooltip="Add ATA Chapter" matTooltipPosition="above"
+                          <a matTooltip="Add ATA Chapter" matTooltipPosition="above" data-dismiss="modal"
                             data-dismiss="modal"
                             [routerLink]="[
                               '/singlepages/singlepages/app-ata-main'
@@ -1306,7 +1306,7 @@
                         style="width: 170px !important;"
                       >
                         ATA SubChapters
-                        <a matTooltip="Add ATA SubChapters" matTooltipPosition="above"
+                        <a matTooltip="Add ATA SubChapters" matTooltipPosition="above" data-dismiss="modal"
                           data-dismiss="modal"
                           [routerLink]="[
                             '/singlepages/singlepages/app-ata-sub-chapter1'
@@ -1337,12 +1337,19 @@
                 </div>
               </form>
               <p-table
-                [rows]="10"
+              
                 #ata
                 [value]="ataListDataValues"
                 [scrollable]="true"
                 [style]="{ width: '100%' }"
                 [paginator]="true"
+                [pageLinks]="3"
+                [columns]="ataHeaders"
+                [rowsPerPageOptions]="[10, 20, 50, 100]"
+                [rows]="pageSizeForATA"
+                [resizableColumns]="true"
+                [reorderableColumns]="true"
+                (onPage)="pageIndexChangeForInt($event)"
               >
                 <ng-template pTemplate="header" let-columns>
                   <tr>
@@ -1350,6 +1357,24 @@
                       {{ col.header }}
                     </th>
                     <th class="action-width">Action</th>
+                  </tr>
+                  <tr>
+                    <th
+                    style="width:auto"
+                    *ngFor="let col of columns"
+                    [ngSwitch]="col.field">
+                    <input
+                      style="width:100%;"
+                      pInputText
+                      type="text"
+                      (input)="
+                        ata.filter(
+                          $event.target.value,
+                          col.field,
+                          'contains'
+                        )"/>
+                  </th>
+                    <th></th>
                   </tr>
                 </ng-template>
                 <ng-template
@@ -1378,7 +1403,7 @@
 
                       <button
                         class="btn btn-danger nobg"
-                        (click)="deleteATAMapped(deleteContent1, rowData)" matTooltip="Delete" atTooltipPosition="above">
+                        (click)="deleteATAMapped(deleteContent1, rowData)" matTooltip="Delete" matTooltipPosition="above">
                         <i class="fa fa-trash"></i>
                       </button>
                       <span
@@ -1393,7 +1418,22 @@
                       ></span>
                     </td>
                   </tr>
+             
                 </ng-template>
+                <ng-template
+                pTemplate="emptymessage"
+                let-columns
+                *ngIf="ataListDataValues?.length == 0"
+              >
+                <tr>
+                  <td
+                    [attr.colspan]="8"
+                    style="color: red; font-weight: bold; text-align: center"
+                  >
+                    No records found
+                  </td>
+                </tr>
+              </ng-template>
                 <ng-template pTemplate="summary" id="footer">
                   <label id="footer" class="footer">No'of records:</label>
                   <input
@@ -1410,7 +1450,7 @@
                   <input
                     style="width: 5%;"
                     name="pagecountata"
-                    [ngModel]="getPageCount(ata._totalRecords, pageSize)"
+                    [ngModel]="getPageCount(ata._totalRecords, pageSizeForATA)"
                     pInputText
                     type="text"
                     disabled

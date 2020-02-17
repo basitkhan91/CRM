@@ -33,6 +33,19 @@
     padding-top: 2px!important;
     margin: 0;
 }
+.snumber-block2 {
+  margin: 10px 0px;
+  border: 1px solid lightgray;
+  border-radius: 5px;
+  padding: 5px;
+}
+.table-custom tr td{
+  text-align: center;
+}
+.snumber-block2 label input {
+    margin-top: 6px;
+    margin-right: 10px;
+}
   
   @media (min-width: 768px) {
       .col-md-3 {

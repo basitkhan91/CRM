@@ -149,8 +149,6 @@ export class CustomerShippingInformationComponent implements OnInit {
             // this.getDomesticShippingByCustomerId();
             // this.getInternationalShippingByCustomerId();
             this.isViewMode = false;
-            this.getDomesticShippingByCustomerId();
-            this.getInternationalShippingByCustomerId();
         } else {
             // this.getDomesticShippingByCustomerId();
             // this.getInternationalShippingByCustomerId();
@@ -160,16 +158,13 @@ export class CustomerShippingInformationComponent implements OnInit {
                 this.customerCode = this.customerDataFromExternalComponents.customerCode;
                 this.customerName = this.customerDataFromExternalComponents.name;
                 this.isViewMode = true;
-                this.getDomesticShippingByCustomerId();
-                this.getInternationalShippingByCustomerId();
             } else {
                 console.log("this.check id view else", this.savedGeneralInformationData.customerId, this.savedGeneralInformationData);
                 this.id = this.savedGeneralInformationData.customerId;
                 this.customerCode = this.savedGeneralInformationData.customerCode;
                 this.customerName = this.savedGeneralInformationData.name;
                 this.isViewMode = false;
-                this.getDomesticShippingByCustomerId();
-                this.getInternationalShippingByCustomerId();
+             
             }
 
 
@@ -177,14 +172,16 @@ export class CustomerShippingInformationComponent implements OnInit {
             // this.getDomesticShippingByCustomerId();
             // this.getInternationalShippingByCustomerId();
         }
+        if(this.id){
+            this.getDomesticShippingByCustomerId();
+            this.getInternationalShippingByCustomerId();
+            }
     }
     ngOnChanges(changes: SimpleChanges) {
         console.log("chnages from ngonchanges")
         for (let property in changes) {
             if (property == 'selectedCustomerTab') {
                 if (changes[property].currentValue == "Shipping") {
-                    this.getDomesticShippingByCustomerId()
-                    this.getInternationalShippingByCustomerId()
                     //                this.getShipViaDataByInternationalShippingId()
                 }
             }
@@ -196,11 +193,13 @@ export class CustomerShippingInformationComponent implements OnInit {
                     this.customerName = this.customerDataFromExternalComponents.name;
                     this.isViewMode = true;
                     // this.getList();
-                    this.getDomesticShippingByCustomerId();
-                    this.getInternationalShippingByCustomerId();
                 }
             }
         }
+        if(this.id){
+            this.getDomesticShippingByCustomerId();
+            this.getInternationalShippingByCustomerId();
+            }
     }
     enableSave() {
         this.disableSave = false;

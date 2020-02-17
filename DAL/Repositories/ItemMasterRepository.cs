@@ -1,17 +1,12 @@
-﻿using DAL.Repositories.Interfaces;
+﻿using DAL.Common;
+using DAL.Models;
+using DAL.Repositories.Interfaces;
+using EntityFrameworkPaginate;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-
-using Microsoft.EntityFrameworkCore;
-
-using System.Threading.Tasks;
-using DAL.Core;
-using DAL.Models;
-using DAL.Common;
 using System.Linq.Expressions;
-using EntityFrameworkPaginate;
 
 namespace DAL.Repositories
 {
@@ -25,7 +20,8 @@ namespace DAL.Repositories
             {
 
                 var data = (from iM in _appContext.ItemMaster
-                            join iPortal in _appContext.ItemMasterIntegrationPortal on iM.ItemMasterId equals iPortal.ItemMasterId into iPortalIds
+                            join iPortal in _appContext.ItemMasterIntegrationPortal on iM.ItemMasterId equals iPortal.ItemMasterId into iPortalIds 
+                           
                             join country in _appContext.Countries on iM.ExportCountryId equals country.countries_id into countryID
                             from ct in countryID.DefaultIfEmpty()
                             join mfg in _appContext.Manufacturer on iM.ManufacturerId equals mfg.ManufacturerId into mfgID
@@ -41,7 +37,30 @@ namespace DAL.Repositories
                             join bin in _appContext.Bin on iM.BinId equals bin.BinId into binID
                             from bins in binID.DefaultIfEmpty()
                             join imst in _appContext.ItemMaster on iM.oemPNId equals imst.ItemMasterId into Imast
-                            from oemid in Imast.DefaultIfEmpty()
+                            from imst in Imast.DefaultIfEmpty()
+                            join rPart in _appContext.ItemMaster on iM.RevisedPartId equals rPart.ItemMasterId into rPartg
+                            from rPart in rPartg.DefaultIfEmpty()
+
+                            join imCls in _appContext.ItemClassification on iM.ItemClassificationId equals imCls.ItemClassificationId into imClag
+                            from imCls in imClag.DefaultIfEmpty()
+                            join itg in _appContext.Itemgroup on iM.ItemGroupId equals itg.ItemGroupId into itgg 
+                            from itg in itgg.DefaultIfEmpty()
+
+                            join iaty in _appContext.AssetAcquisitionType on iM.AssetAcquistionTypeId equals iaty.AssetAcquisitionTypeId into iatyg
+                            from iaty in iatyg.DefaultIfEmpty()
+
+                            join ipuom in _appContext.UnitOfMeasure on iM.PurchaseUnitOfMeasureId equals ipuom.UnitOfMeasureId into ipuomg
+                            from ipuom in ipuomg.DefaultIfEmpty()
+
+                            join icuom in _appContext.UnitOfMeasure on iM.ConsumeUnitOfMeasureId equals icuom.UnitOfMeasureId into icuomg
+                            from icuom in icuomg.DefaultIfEmpty()
+
+                            join isuom in _appContext.UnitOfMeasure on iM.StockUnitOfMeasureId equals isuom.UnitOfMeasureId into isuomg
+                            from isuom in isuomg.DefaultIfEmpty()
+
+                            join gl in _appContext.GLAccount on iM.GLAccountId equals gl.GLAccountId into glg
+                            from gl in glg.DefaultIfEmpty()
+
                             where iM.ItemMasterId == itemMasterId
 
                             select new
@@ -173,9 +192,30 @@ namespace DAL.Repositories
                                 //CountryName = ct == null ? "" : ct.countries_name,
                                 //IPortalIDS = iPortalIds.Select(e => e.IntegrationPortalId).ToList(),
                                 IntegrationPortalIds = iPortalIds.Select(e => e.IntegrationPortalId).ToList(),
+                                //integrationPortal = inteIds.Select(e => e.Description).ToList(),
                                 //IntegrationPortalIds = iPortalIds.ToList(),
                                 iM.IsHotItem, // Hot Item added
-                                oemPNData = Imast.ToList(),
+                                //oemPNData = Imast.ToList(),
+                                oemPN = imst.PartNumber,
+                                RevisedPart = rPart.PartNumber,
+                                ItemClassification=imCls.Description,
+                                itemGroup=itg.Description,
+                                assetAcquistionType= iaty.Name,
+                                purchaseUnitOfMeasure= ipuom.ShortName,
+                                consumeUnitOfMeasure = icuom.ShortName,
+                                stockUnitOfMeasure = isuom.ShortName,                                
+                                glAccount = gl.AccountName,                                
+                                integrationPortal = string.Join(",", _appContext.ItemMaster
+                                .Join(_appContext.ItemMasterIntegrationPortal,
+                                v => v.ItemMasterId,
+                                mp => mp.ItemMasterId,
+                                (v, mp) => new { v, mp })
+                               .Join(_appContext.IntegrationPortal,
+                                mp1 => mp1.mp.IntegrationPortalId,
+                                inte => Convert.ToInt64(inte.IntegrationPortalId),
+                              (mp1, inte) => new { mp1, inte })
+                              .Where(p => p.mp1.v.ItemMasterId == iM.ItemMasterId )
+                               .Select(p => p.inte.Description)),
 
 
                             }).ToList();

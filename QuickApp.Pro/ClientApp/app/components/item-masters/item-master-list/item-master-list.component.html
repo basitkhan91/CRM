@@ -913,9 +913,133 @@
                                  <div class="panel-body">
                                     <div class="modal-content p-1">
                                         <div class="table-responsive default-bg clear">
-                                            <div class="col-sm-4">
-                                                <p><span class="label"><b>PN: </b></span><span class="value">{{partNumber}}</span></p>
-                                                <p><span class="label"><b>PN Description: </b></span><span class="value">{{description}}</span></p>
+                                            <div class="col-sm-6">
+                                                <p><span class="label"><b>PN: <span class="text-danger">*</span> </b></span><span class="value">{{viewItemMaster.partNumber}}</span></p>
+                                                <p><span class="label"><b>PMA: </b></span><span class="value">{{viewItemMaster.isPma ? viewItemMaster.isPma : '-'}}</span></p>
+                                                <p><span class="label"><b>OEM PN: </b></span><span class="value">{{viewItemMaster.oemPN ? viewItemMaster.oemPN : '-'}}</span></p>
+                                                <p><span class="label"><b>PN Description: <span class="text-danger">*</span> </b></span><span class="value">{{viewItemMaster.partDescription}}</span></p>
+                                                <p><span class="label"><b>Revised Part: </b></span><span class="value">{{viewItemMaster.revisedPart ? viewItemMaster.revisedPart : '-'}}</span></p>
+                                                <p><span class="label"><b>Serialized: </b></span><span class="value">{{viewItemMaster.isSerialized ? viewItemMaster.isSerialized : '-'}}</span></p>
+                                                <p><span class="label"><b>Time Life: </b></span><span class="value">{{viewItemMaster.isTimeLife ? viewItemMaster.isTimeLife : '-'}}</span></p>
+                                                <p><span class="label"><b>NSN: </b></span><span class="value">{{viewItemMaster.nationalStockNumber ? viewItemMaster.nationalStockNumber : '-'}}</span></p>
+                                                <p><span class="label"><b>Item Classification: <span class="text-danger">*</span> </b></span><span class="value">{{viewItemMaster.itemClassification}}</span></p>
+                                                <p><span class="label"><b>Item Group: </b></span><span class="value">{{viewItemMaster.itemGroup ? viewItemMaster.itemGroup : '-'}}</span></p>
+                                                <p><span class="label"><b>Acquisition Type: </b></span><span class="value">{{viewItemMaster.assetAcquistionType ? viewItemMaster.assetAcquistionType : '-'}}</span></p>
+                                                <p><span class="label"><b>Expiration Date: </b></span><span class="value">{{viewItemMaster.expirationDate | date: 'MM-dd-yyyy'}}</span></p>
+                                                <div class="form-row" *ngIf="viewItemMaster.isExpirationDateAvailable">
+                                                    <div class="col-md-6">
+                                                        <div class="snumber-block2">
+                                                            <div class="form-group col-sm-12">
+                                                                <label class="control-label control-alter1 col-sm-5">Rec'd date</label>
+                                                                <div class="col-sm-7">
+                                                                    <label class="wauto">
+                                                                        <input type="checkbox" style="margin-left:11px;" name="isReceivedDateAvailable" [(ngModel)]="viewItemMaster.isReceivedDateAvailable" disabled>
+                                                                    </label>
+                                                                    <input *ngIf="viewItemMaster.isReceivedDateAvailable"
+                                                                           class="form-control number exp-date-inputs w48" type="number" name="daysReceived" [(ngModel)]="viewItemMaster.daysReceived" disabled>
+                                                                    <span *ngIf="viewItemMaster.isReceivedDateAvailable" style="margin-left: 8px;">Days</span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group col-sm-12">
+                                                                <label class="control-label control-alter col-sm-5">Mfg date</label>
+                                                                <div class="col-sm-7">
+                                                                    <label class="wauto">
+                                                                        <input type="checkbox" style="margin-left:11px !important" name="isManufacturingDateAvailable" [(ngModel)]="viewItemMaster.isManufacturingDateAvailable" disabled>
+                                                                    </label>
+                                                                    <input *ngIf="viewItemMaster.isManufacturingDateAvailable"
+                                                                           class="form-control number exp-date-inputs w48" type="number" name="manufacturingDays"
+                                                                           [(ngModel)]="viewItemMaster.manufacturingDays" disabled>
+                                                                    <span *ngIf="viewItemMaster.isManufacturingDateAvailable" style="margin-left: 8px;">Days</span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group col-sm-12">
+                                                                <label class="control-label control-alter col-sm-5">Tag date</label>
+                                                                <div class="col-sm-7">
+                                                                    <label class="wauto">
+                                                                        <input type="checkbox" name="exp-date-radio" style="margin-left:11px !important" name="isTagDateAvailable" [(ngModel)]="viewItemMaster.isTagDateAvailable" disabled>
+                                                                    </label>
+                                                                    <input *ngIf="viewItemMaster.isTagDateAvailable"
+                                                                           class="form-control number exp-date-inputs w48" type="text" name="tagDays"
+                                                                           [(ngModel)]="viewItemMaster.tagDays" disabled>
+                                                                    <span *ngIf="viewItemMaster.isTagDateAvailable" style="margin-left: 8px;">Days</span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group col-sm-12">
+                                                                <label class="control-label control-alter col-sm-5">Open date</label>
+                                                                <div class="col-sm-7">
+                                                                    <label class="wauto">
+                                                                        <input type="checkbox" name="isOpenDateAvailable" style="margin-left:11px !important" [(ngModel)]="viewItemMaster.isOpenDateAvailable" disabled>
+                                                                    </label>
+                                                                    <input *ngIf="viewItemMaster.isOpenDateAvailable"
+                                                                           class="form-control number exp-date-inputs w48" type="number" name="openDays" [(ngModel)]="viewItemMaster.openDays" disabled>
+                                                                    <span *ngIf="viewItemMaster.isOpenDateAvailable" style="margin-left: 8px;">Days</span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group col-sm-12">
+                                                                <label class="control-label control-alter col-sm-5">Shipped date</label>
+                                                                <div class="col-sm-7">
+                                                                    <label class="wauto">
+                                                                        <input type="checkbox" name="isShippedDateAvailable" style="margin-left:11px !important" [(ngModel)]="viewItemMaster.isShippedDateAvailable" disabled>
+                                                                    </label>
+                                                                    <input *ngIf="viewItemMaster.isShippedDateAvailable"
+                                                                           class="form-control number exp-date-inputs w48" type="number" name="shippedDays" [(ngModel)]="viewItemMaster.shippedDays" disabled>
+                                                                    <span *ngIf="viewItemMaster.isShippedDateAvailable" style="margin-left: 8px;">Days</span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group col-sm-12">
+                                                                <label class="control-label control-alter col-sm-5">Other date</label>
+                                                                <div class="col-sm-7">
+                                                                    <label class="wauto">
+                                                                        <input type="checkbox" name="isOtherDateAvailable" style="margin-left:11px !important" [(ngModel)]="viewItemMaster.isOtherDateAvailable" disabled>
+                                                                    </label>
+                                                                    <input *ngIf="viewItemMaster.isOtherDateAvailable"
+                                                                           class="form-control number exp-date-inputs w48" type="number" name="otherDays" [(ngModel)]="viewItemMaster.otherDays" disabled>
+                                                                    <span *ngIf="viewItemMaster.isOtherDateAvailable" style="margin-left: 8px;">Days</span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="clear"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="inline-block display-flex">
+                                                    <label class="control-label">Shelf Life</label>
+                                                    <input class="form-control new-checkbox" type="checkbox" name="shelfLife" [(ngModel)]="viewItemMaster.shelfLife" style="margin: 4px 10px 0 20px;" disabled>
+                                                    &nbsp;
+                                                    <input *ngIf="viewItemMaster.shelfLife" class="form-control shelf1 number exp-date-inputs w50" type="number"  name="shelfLifeAvailable" [(ngModel)]="viewItemMaster.shelfLifeAvailable" disabled>
+                                                    <strong class="shelf" style="margin-left: 5px;"><span *ngIf="viewItemMaster.shelfLife">Days</span></strong>
+                                                </div>
+                                                <p><span class="label"><b>DER: </b></span><span class="value">{{viewItemMaster.der ? viewItemMaster.der : '-'}}</span></p>
+                                                <p><span class="label"><b>Hazardous Material: </b></span><span class="value">{{viewItemMaster.isHazardousMaterial ? viewItemMaster.isHazardousMaterial : '-'}}</span></p>
+                                                <p><span class="label"><b>Manufacturer: <span class="text-danger">*</span> </b></span><span class="value">{{viewItemMaster.manufacturerName}}</span></p>
+                                                <p><span class="label"><b>RFQ Tracking: </b></span><span class="value">{{viewItemMaster.rfqTracking ? viewItemMaster.rfqTracking : '-'}}</span></p>
+                                                <p><span class="label"><b>Purchase UOM: <span class="text-danger">*</span> </b></span><span class="value">{{viewItemMaster.purchaseUnitOfMeasure}}</span></p>
+                                                <p><span class="label"><b>Stock UOM: </b></span><span class="value">{{viewItemMaster.stockUnitOfMeasure ? viewItemMaster.stockUnitOfMeasure : '-'}}</span></p>
+                                                <p><span class="label"><b>Consume UOM: </b></span><span class="value">{{viewItemMaster.consumeUnitOfMeasure ? viewItemMaster.consumeUnitOfMeasure : '-'}}</span></p>
+                                                <p><span class="label"><b>Schematic: </b></span><span class="value">{{viewItemMaster.isSchematic ? viewItemMaster.isSchematic : '-'}}</span></p>
+                                                <div class="col-sm-8">
+                                                    <div class="table-responsive table-overflow" *ngIf="allUploadedDocumentsList.length> 0">
+                                                        <h4 class="panel-title">Attachment Details:</h4>
+                                                        <table class="table table-bordered ">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>File Name</th>
+                                                                    <th>Download</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody *ngFor="let f of allUploadedDocumentsList">
+                                                                <tr>
+                                                                    <td>{{f.fileName}}</td>
+                                                                    <td><a (click)="downloadFileUpload(f)" matTooltip="Download" class="btn nobg btn-cstm"><span><i class="fa fa-download" style="color:black"></i></span></a> </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+
+
+
+
+                                                <!-- <p><span class="label"><b>PN Description: </b></span><span class="value">{{description}}</span></p>
                                                 <p><span class="label"><b>Alternate: </b></span><span class="value">{{isAlternatePartChecked}}</span></p>
                                                 <p><span class="label"><b>Is Serialized: </b></span><span class="value">{{isSerialized}}</span></p>
                                                 <p><span class="label"><b>Item Classification: </b></span><span class="value">{{itemClassificationId}}</span></p>
@@ -927,9 +1051,130 @@
                                                 <p><span class="label"><b>Provision: </b></span><span class="value">{{provisionId}}</span></p>
                                                 <p><span class="label"><b>Capes: </b></span><span class="value">{{isEnabeCapes}}</span></p>
                                                 <p><span class="label"><b>PMA: </b></span><span class="value">{{pma}}</span></p>
-                                                <p><span class="label"><b>Manufacturer: </b></span><span class="value">{{manufacturerId}}</span></p>
+                                                <p><span class="label"><b>Manufacturer: </b></span><span class="value">{{manufacturerId}}</span></p> -->
                                             </div>
-                                            <div class="col-sm-4">
+                                            <div class="col-sm-6">
+                                                <p><span class="label"><b>GL Acct.: <span class="text-danger">*</span> </b></span><span class="value">{{viewItemMaster.glAccount}}</span></p>
+                                                <p><span class="label"><b>Lead Time Days: </b></span><span class="value">{{viewItemMaster.leadTimeDays ? viewItemMaster.leadTimeDays : '-'}}</span></p>
+                                                <p><span class="label"><b>Stock Level: </b></span><span class="value">{{viewItemMaster.stockLevel ? viewItemMaster.stockLevel : '-'}}</span></p>
+                                                <p><span class="label"><b>Reorder Point: </b></span><span class="value">{{viewItemMaster.reorderPoint ? viewItemMaster.reorderPoint : '-'}}</span></p>
+                                                <p><span class="label"><b>Reorder Qty: </b></span><span class="value">{{viewItemMaster.reorderQuantiy ? viewItemMaster.reorderQuantiy : '-'}}</span></p>
+                                                <p><span class="label"><b>Min Order Qty: </b></span><span class="value">{{viewItemMaster.minimumOrderQuantity ? viewItemMaster.minimumOrderQuantity : '-'}}</span></p>
+                                                <p><span class="label"><b>Priority: </b></span><span class="value">{{viewItemMaster.priority ? viewItemMaster.priority : '-'}}</span></p>
+                                                <p><span class="label"><b>Integration With: </b></span><span class="value">{{viewItemMaster.integrationPortal ? viewItemMaster.integrationPortal : '-'}}</span></p>
+                                                <p><span class="label"><b>Memo: </b></span><span class="value">{{viewItemMaster.memo ? viewItemMaster.memo : '-'}}</span></p>
+                                                <p><span class="label"><b>Site: <span class="text-danger">*</span> </b></span><span class="value">{{viewItemMaster.siteName ? viewItemMaster.siteName : '-'}}</span></p>
+                                                <p><span class="label"><b>Warehouse: <span class="text-danger">*</span> </b></span><span class="value">{{viewItemMaster.warehouseName ? viewItemMaster.warehouseName : '-'}}</span></p>
+                                                <p><span class="label"><b>Location: <span class="text-danger">*</span> </b></span><span class="value">{{viewItemMaster.locationName ? viewItemMaster.locationName : '-'}}</span></p>
+                                                <p><span class="label"><b>Shelf: </b></span><span class="value">{{viewItemMaster.shelfName ? viewItemMaster.shelfName : '-'}}</span></p>
+                                                <p><span class="label"><b>Bin: </b></span><span class="value">{{viewItemMaster.binName ? viewItemMaster.binName : '-'}}</span></p>
+                                                <p><span class="label"><b>Hot Item: </b></span><span class="value">{{viewItemMaster.isHotItem ? viewItemMaster.isHotItem : '-'}}</span></p>
+
+
+                                            </div>
+                                            <div class="form-row">
+                                                <div class="col-md-8">
+                                                    <div class="form-group">
+                                                        <label class="control-label">NTE</label>
+                                                        <div>
+                                                            <div class="table-responsive">
+                                                                <table class="table table-bordered table-custom">
+                                                                    <thead style="text-align:center;">
+                                                                        <tr>
+                                                                            <th>Overhaul</th>
+                                                                            <th>Repair</th>
+                                                                            <th>Bench Test</th>
+                                                                            <th>Mfg</th>
+                                                                            
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        <tr>
+                                                                            <td>
+                                                                                <strong>Hours</strong>
+                                                                                <br />
+                                                                                <input type="number" class="form-control w50 time control-bottom" name="overhaulHours" [(ngModel)]="viewItemMaster.overhaulHours" disabled>
+                                                                            </td>
+                                                                            <td>
+                                                                                <strong>Hours</strong>
+                                                                                <br />
+                                                                                <input type="number" pKeyFilter="int" class="form-control w50 time control-bottom" name="" [(ngModel)]="viewItemMaster.rpHours" disabled>
+                                                                            </td>
+                                                                            <td>
+                                                                                <strong>Hours</strong>
+                                                                                <br />
+                                                                                <input type="number" pKeyFilter="int" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==5) return false;" class="form-control w50 time control-bottom"
+                                                                                       [ngModelOptions]="{standalone: true}"
+                                                                                       [(ngModel)]="viewItemMaster.testHours" disabled>
+                                                                            </td>
+                                                                            <td>
+                                                                                <strong>Hours</strong>
+                                                                                <br />
+                                                                                <input type="number" pKeyFilter="int" class="form-control w50 time control-bottom"
+                                                                                       [ngModelOptions]="{standalone: true}" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==5) return false;"
+                                                                                       [(ngModel)]="viewItemMaster.mfgHours" disabled>
+                                                                            </td>
+                                                                            
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <div class="form-group">
+                                                        <label class="control-label">Turn Time</label>
+                                                        <div>
+                                                            <div class="table-responsive">
+                                                                <table class="table table-bordered table-custom">
+                                                                    <thead style="text-align:center;">
+                                                                        <tr>
+                                                                            <th>Overhaul</th>
+                                                                            <th>Repair</th>
+                                                                            <th>Bench Test</th>
+                                                                            <th>Mfg</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        <tr>
+                                                                            <td>
+                                                                                <strong>Days</strong>
+                                                                                <br />
+                                                                                <input type="number" pKeyFilter="int" class="form-control w50 time control-bottom"
+                                                                                       [ngModelOptions]="{standalone: true}" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==5) return false;"
+                                                                                       [(ngModel)]="viewItemMaster.turnTimeOverhaulHours" disabled>
+                                                                            </td>
+                                                                            <td>
+                                                                                <strong>Days</strong>
+                                                                                <br />
+                                                                                <input type="number" pKeyFilter="int" class="form-control w50 time control-bottom"
+                                                                                       [ngModelOptions]="{standalone: true}" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==5) return false;"
+                                                                                       [(ngModel)]="viewItemMaster.turnTimeRepairHours" disabled>
+                                                                            </td>
+                                                                            <td>
+                                                                                <strong>Days</strong>
+                                                                                <br />
+                                                                                <input type="number" pKeyFilter="int" class="form-control w50 time control-bottom"
+                                                                                       [ngModelOptions]="{standalone: true}" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==5) return false;"
+                                                                                       [(ngModel)]="viewItemMaster.turnTimeBenchTest" disabled>
+                                                                            </td>
+                                                                            <td>
+                                                                                <strong>Days</strong>
+                                                                                <br />
+                                                                                <input type="number" pKeyFilter="int" class="form-control w50 time control-bottom"
+                                                                                       [ngModelOptions]="{standalone: true}" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==5) return false;"
+                                                                                       [(ngModel)]="viewItemMaster.turnTimeMfg" disabled>
+                                                                            </td>                                                        
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- <div class="col-sm-4">
                                                 <p><span class="label"><b>Aircraft Manufacturer: </b></span><span class="value">{{selectedAircraftTypes}}</span></p>                                               
                                                 <p><span class="label"><b>Chapter: </b></span><span class="value">{{ataChapterId}}</span></p>
                                                 <p><span class="label"><b>National Stock Number (NSN): </b></span><span class="value">{{nationalStockNumber}}</span></p>    
@@ -945,32 +1190,7 @@
                                                 <p><span class="label"><b>Stock Level: </b></span><span class="value">{{stockLevel}}</span></p>
                                                 <p><span class="label"><b>Lead Time Days: </b></span><span class="value">{{leadTimeDays}}</span></p>
                                                 <p><span class="label"><b>Lead Time: </b></span><span class="value">{{leadTimeHours}} </span></p>
-                                                <div class="col-sm-12">
-                                                    <div class="table-responsive table-overflow" *ngIf="allUploadedDocumentsList.length> 0">
-                                                        <h4 class="panel-title">Attachment Details:</h4>
-                                                        <table class="table table-bordered ">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th>File Name</th>
-                                                                    <th>Download</th>
-    
-                                                                </tr>
-                                                            </thead>
-    
-                                                            <tbody *ngFor="let f of allUploadedDocumentsList">
-                                                                <tr>
-                                                                    <td>{{f.fileName}}</td>
-                                                                    <td><a (click)="downloadFileUpload(f)" matTooltip="Download" class="btn nobg btn-cstm"><span><i class="fa fa-download" style="color:black"></i></span></a> </td>
-    
-                                                                </tr>
-    
-                                                            </tbody>
-    
-                                                        </table>
-                                                    </div>
-                                                </div>
-                                                <!--<p><span class="label"><b>Discount (%) on Purchases: </b></span><span class="value">10%</span></p>
-                                                <p><span class="label"><b>Discount (%) on Sales: </b></span><span class="value">5%</span></p>-->
+                                                
                                             </div>
                                             <div class="col-sm-4">
     
@@ -978,7 +1198,6 @@
                                                 <p><span class="label"><b>Reorder Qty: </b></span><span class="value">{{reorderQuantiy}}</span></p>
                                                 <p><span class="label"><b>Min Order Qty: </b></span><span class="value">{{minimumOrderQuantity}}</span></p>
                                                 <p><span class="label"><b>Priority: </b></span><span class="value">{{priorityId}}</span></p>
-                                                <!--<p><span class="label"><b>Integrate With: </b></span><span class="value">145.com</span></p>-->
                                                 <p><span class="label"><b>Memo: </b></span><span class="value">{{memo}}</span></p>
                                                 <p><span class="label"><b>Export Info</b></span></p>
                                                 <p><span class="label"><b>Country: </b></span><span class="value">{{exportCountryId}}</span></p>
@@ -993,7 +1212,7 @@
                                                 <p><span class="label"><b>Shelf: </b></span><span class="value">{{viewItemMaster.shelfName}}</span></p>
                                                 <p><span class="label"><b>Bin: </b></span><span class="value">{{viewItemMaster.binName}}</span></p>
     
-                                            </div>
+                                            </div> -->
                                         </div>
                                     </div>
                                 </div>

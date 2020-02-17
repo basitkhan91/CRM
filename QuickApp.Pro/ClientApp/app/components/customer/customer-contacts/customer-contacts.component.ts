@@ -43,7 +43,7 @@ export class CustomerContactsComponent implements OnInit {
 	@Output() refreshCustomerATAByCustomerId = new EventEmitter();
 	@Output() refreshCustomerContactMapped = new EventEmitter();
 	@Input() customerDataFromExternalComponents: any;
-
+	pageSizeForATA: number = 10;
 	disableSave: boolean = true;
 	formData = new FormData();
 	totalRecords: any;
@@ -116,6 +116,8 @@ export class CustomerContactsComponent implements OnInit {
 	auditHistory: any[] = [];
 	auditHistory1: any[] = [];
 	@ViewChild('ATAADD') myModal;
+	@ViewChild('dt') contactsData;
+	
 	originalATASubchapterData: any = [];
 	isViewMode: boolean = false;
 	ataChapterEditDat =
@@ -155,6 +157,7 @@ export class CustomerContactsComponent implements OnInit {
 
 	) {
 		this.stopmulticlicks = false;
+	
 	}
 
 	ngOnInit() {
@@ -191,7 +194,7 @@ export class CustomerContactsComponent implements OnInit {
 		this.getAllContacts();
 
 		// this.getATACustomerContactMapped();
-
+		this.contactsData.reset();
 	}
 
 	ngOnChanges(changes: SimpleChanges) {
@@ -234,10 +237,11 @@ console.log("event",event);
 	getPageCount(totalNoofRecords, pageSize) {
 		return Math.ceil(totalNoofRecords / pageSize)
 	}
-
+    pageIndexChangeForInt(event) {
+		this.pageSizeForATA = event.rows;
+    }
 	pageIndexChange(event) {
 		this.pageSize = event.rows;
-		console.log("event",event);
 	}
 
 	getAllContacts() {
@@ -663,9 +667,11 @@ this.getAllCustomerContact();
 		setTimeout(() => {
 			this.stopmulticlicks = false;
 		}, 500)
+	
 	}
 	backClick() {
 		this.tab.emit('General');
+	
 	}
 
 

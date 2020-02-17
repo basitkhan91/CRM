@@ -36,6 +36,7 @@ import { Subject } from 'rxjs'
 import { takeUntil } from 'rxjs/operators';
 import { DatePipe } from '@angular/common';
 import { StocklineService } from '../../../../services/stockline.service';
+import { ConfigurationService } from '../../../../services/configuration.service';
 
 @Component({
     selector: 'app-customer-work-setup',
@@ -100,6 +101,8 @@ export class CustomerWorkSetupComponent implements OnInit {
     disableCondition: boolean = true;
     disableSite: boolean = true;
     loadingIndicator: boolean;
+    formData = new FormData();
+    customerWorkDocumentsList: any = [];
 
     // firstCollection: any[];
 	// allEmployeeinfo: any[] = [];
@@ -187,7 +190,7 @@ export class CustomerWorkSetupComponent implements OnInit {
     // receivingForm: any = {};
     // public allWorkFlows: any[] = [];
 
-    constructor(private commonService: CommonService, private customerService: CustomerService, private binService: BinService, private siteService: SiteService, private conditionService: ConditionService, private datePipe: DatePipe, private _actRoute: ActivatedRoute, private receivingCustomerWorkService: ReceivingCustomerWorkService, private authService: AuthService, private router: Router, private alertService: AlertService, private stocklineService: StocklineService) {
+    constructor(private commonService: CommonService, private customerService: CustomerService, private binService: BinService, private siteService: SiteService, private conditionService: ConditionService, private datePipe: DatePipe, private _actRoute: ActivatedRoute, private receivingCustomerWorkService: ReceivingCustomerWorkService, private authService: AuthService, private router: Router, private alertService: AlertService, private stocklineService: StocklineService, private configurations: ConfigurationService) {
         this.receivingForm.receivingNumber = 'Creating';
         this.receivingForm.conditionId = 0;
         this.receivingForm.siteId = 0;
@@ -218,6 +221,7 @@ export class CustomerWorkSetupComponent implements OnInit {
         if(this.receivingCustomerWorkId) {
             this.isEditMode = true;
             this.getReceivingCustomerDataonEdit(this.receivingCustomerWorkId);
+            this.toGetDocumentsList(this.receivingCustomerWorkId);
             this.breadcrumbs = [
                 { label: 'Receiving' },
                 { label: 'Customer Work' },
@@ -243,7 +247,7 @@ export class CustomerWorkSetupComponent implements OnInit {
             this.allEmployeeList = res;
             if(this.isEditMode) {
                 this.receivingForm.employeeId = getObjectById('value', this.receivingForm.employeeId, this.allEmployeeList);
-                this.receivingForm.certifiedById = getObjectById('value', this.receivingForm.certifiedById, this.allEmployeeList);
+                // this.receivingForm.certifiedById = getObjectById('value', this.receivingForm.certifiedById, this.allEmployeeList);
             }
 		})
 	}
@@ -530,7 +534,7 @@ export class CustomerWorkSetupComponent implements OnInit {
 			const customers = [...this.customerContactList.filter(x => {
 				return x.workPhone.toLowerCase().includes(event.query.toLowerCase())
 			})]
-			this.customerPhoneInfo = customers;
+            this.customerPhoneInfo = customers;
 		}
     }
 
@@ -639,7 +643,12 @@ export class CustomerWorkSetupComponent implements OnInit {
     getAllCustomerContact(id) {
         this.commonService.getCustomerContactsById(id).subscribe(res => {
             console.log(res);            
-            this.customerContactList = res;
+            this.customerContactList = res.map(x => {
+                return {
+                    ...x,
+                    workPhone: `${x.workPhone} ${x.phoneExt}`
+                }
+            });;
             const isDefaultContact = this.customerContactList.filter(x => {
                 if (x.isDefaultContact === true) {
                     return x;
@@ -700,15 +709,15 @@ export class CustomerWorkSetupComponent implements OnInit {
 		}
     }
     
-    fileUploadForDocuments(event) {
-		// console.log(event);
-		// if (event.files.length === 0)
-		// 	return;
+    fileUpload(event,fileType) {                
+		if (event.files.length === 0)
+			return;
 
-		// for (let file of event.files) {
-		// 	this.formData.append(file.name, file);
-		// }
-	}
+        for (let file of event.files)
+        {       
+            this.formData.append(fileType, file);            
+        }			
+    }
 	removeFile(event) {
 		//this.formData.delete(event.file.name)
 	}
@@ -723,7 +732,7 @@ export class CustomerWorkSetupComponent implements OnInit {
             itemMasterId: this.receivingForm.itemMasterId ? editValueAssignByCondition('value', this.receivingForm.itemMasterId) : '',
             partNumber: this.receivingForm.itemMasterId ? editValueAssignByCondition('label', this.receivingForm.itemMasterId) : '',
             employeeId: this.receivingForm.employeeId ? editValueAssignByCondition('value', this.receivingForm.employeeId) : '',
-            certifiedById: this.receivingForm.certifiedById ? editValueAssignByCondition('value', this.receivingForm.certifiedById) : '',
+            // certifiedById: this.receivingForm.certifiedById ? editValueAssignByCondition('value', this.receivingForm.certifiedById) : '',
             obtainFrom: this.receivingForm.obtainFrom ? editValueAssignByCondition('value', this.receivingForm.obtainFrom) : '',
 			owner: this.receivingForm.owner ? editValueAssignByCondition('value', this.receivingForm.owner) : '',
 			traceableTo: this.receivingForm.traceableTo ? editValueAssignByCondition('value', this.receivingForm.traceableTo) : '',
@@ -740,6 +749,7 @@ export class CustomerWorkSetupComponent implements OnInit {
                 console.log(res);
                 this.receivingCustomerWorkId = res.receivingCustomerWorkId;
                 // this.workOrderId = res.workOrderId;
+                this.onUploadDocumentList();
                 this.alertService.showMessage(
                     'Success',
                     `Saved Customer Work Successfully`,
@@ -752,6 +762,7 @@ export class CustomerWorkSetupComponent implements OnInit {
                 $('#workorderpopup').modal('show');
                 // this.workOrderId = res.workOrderId;
                 console.log(res);
+                this.onUploadDocumentList();
                 this.alertService.showMessage(
                     'Success',
                     `Updated Customer Work Successfully`,
@@ -759,6 +770,45 @@ export class CustomerWorkSetupComponent implements OnInit {
                 );
             });
         }
+    }
+
+    onUploadDocumentList() {
+        // file upload
+        const vdata = {                           
+            referenceId:this.receivingCustomerWorkId,
+            masterCompanyId: 1,
+            createdBy: this.userName,
+            updatedBy: this.userName,
+            moduleId:37
+        }
+        for (var key in vdata) {
+            this.formData.append(key, vdata[key]);
+        }
+        this.commonService.uploadDocumentsEndpoint(this.formData).subscribe(res => {
+            this.formData = new FormData();
+            this.toGetDocumentsList(this.receivingCustomerWorkId);
+        });
+        //./ file upload
+    }
+    
+    toGetDocumentsList(id) {       
+        var moduleId=37;
+        this.commonService.GetDocumentsList(id,moduleId).subscribe(res => {
+			this.customerWorkDocumentsList = res;
+		})
+    }
+    downloadFileUpload(rowData) {	
+        const url = `${this.configurations.baseUrl}/api/FileUpload/downloadattachedfile?filePath=${rowData.link}`;
+		window.location.assign(url);       
+    }
+    getEmployeeAttachmentDelete(rowData)
+    {
+       let  attachmentDetailId=rowData.attachmentDetailId;
+       let updatedBy=this.userName;
+
+        this.commonService.GetAttachmentDeleteById(attachmentDetailId,updatedBy).subscribe(res => {		
+            this.toGetDocumentsList(this.receivingCustomerWorkId)
+		})
     }
 
     goToWorkOrder() {

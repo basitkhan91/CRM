@@ -166,9 +166,10 @@
             pInputText
             size="50"
             class="form-control ui-autocomplete-input"
-            (input)="dt.filterGlobal($event.target.value, 'contains')"
-            placeholder="Filter"
+            (input)="dt.filterGlobal($event.target.value,'contains')"
+            placeholder="Filter" 
             style="height: 28px !important;"
+            [value]="dt.filters['contains'] ? dt.filters['contains'].value : ''" 
           />
         </div>
         <button
@@ -400,7 +401,8 @@
           <label class="popup-plusicon-cstm"
             >Aircraft Type
             <a
-              data-dismiss="modal"
+              data-dismiss="modal"    matTooltip="Add Aircraft Type"
+              matTooltipPosition="above" (click)="dismissModel()"
               [routerLink]="[
                 '/singlepages/singlepages/app-aircraft-manufacturer'
               ]"
@@ -423,8 +425,9 @@
         <div class="form-group">
           <label class="popup-plusicon-cstm" style="width: 150px !important">
             Model
-            <a
-              data-dismiss="modal"
+            <a  matTooltip="Add Model"
+            matTooltipPosition="above"
+            (click)="dismissModel()"
               [routerLink]="['/singlepages/singlepages/app-aircraft-model']"
               ><i class="fa fa-plus-circle fa-lg"></i
             ></a>
@@ -456,7 +459,8 @@
           <label class="popup-plusicon-cstm" style="width: 190px !important">
             DashNumber
             <a
-              data-dismiss="modal"
+               matTooltip="Add DashNumber"
+              matTooltipPosition="above" (click)="dismissModel()"
               [routerLink]="['/singlepages/singlepages/app-dashnumber']"
               ><i class="fa fa-plus-circle fa-lg"></i
             ></a>
