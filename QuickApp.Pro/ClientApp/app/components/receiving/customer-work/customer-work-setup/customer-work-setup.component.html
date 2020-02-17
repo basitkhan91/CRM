@@ -98,9 +98,10 @@
                         <div class="col-md-6">                    
                             <div class="form-group">
                                 <label>Certify By
-                                    <span style="margin-left:3px;cursor:pointer;"><a class="fa fa-plus-circle fa-lg" matTooltip="Add Employee" matTooltipPosition="above" target="_blank" [routerLink]="['/employeesmodule/employeepages/app-employee-general-information']"></a></span>
+                                    <!-- <span style="margin-left:3px;cursor:pointer;"><a class="fa fa-plus-circle fa-lg" matTooltip="Add Employee" matTooltipPosition="above" target="_blank" [routerLink]="['/employeesmodule/employeepages/app-employee-general-information']"></a></span> -->
                                 </label>
-                                <p-autoComplete field="label" class="pautocomp-cstm" [(ngModel)]="receivingForm.certifiedById" name="certifiedBy" [suggestions]="employeeNames" (completeMethod)="filterEmployees($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true"></p-autoComplete>
+                                <input class="form-control" type="text" name="certifiedBy" [(ngModel)]="receivingForm.certifiedBy">
+                                <!-- <p-autoComplete field="label" class="pautocomp-cstm" [(ngModel)]="receivingForm.certifiedById" name="certifiedBy" [suggestions]="employeeNames" (completeMethod)="filterEmployees($event)" [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true"></p-autoComplete> -->
                             </div>
                             <div class="form-group">
                                 <label>Tag Date</label>
@@ -406,7 +407,32 @@
                     </div>
                     <div class="form-group">
                         <label style="float: none;">Attachments</label>
-                        <p-fileUpload #fileUpload   name="fileupload[]" multiple="multiple" [showCancelButton]="false" [showUploadButton]="false" customUpload="true" (onSelect)="fileUploadForDocuments($event)"  (onRemove)="removeFile($event)"></p-fileUpload>
+                        <p-fileUpload class="" name="CertificationFile[]" multiple="multiple" [showCancelButton]="false" [showUploadButton]="false" customUpload="true" (onSelect)="fileUpload($event,'CustomerReceiving')">
+                        </p-fileUpload>
+                        <!-- <p-fileUpload #fileUpload   name="fileupload[]" multiple="multiple" [showCancelButton]="false" [showUploadButton]="false" customUpload="true" (onSelect)="fileUploadForDocuments($event)"  (onRemove)="removeFile($event)"></p-fileUpload> -->
+                    </div>
+                    <div class="form-group">
+                        <div class="table-responsive table-overflow" *ngIf="customerWorkDocumentsList.length> 0">
+                            <h4 class="panel-title" >Attachment Details:</h4>
+                            <table class="table table-bordered ">
+                                <thead>                                                         
+                                    <tr>
+                                        <th>File Name</th>
+                                        <th>Download</th>
+                                        <th>Delete</th>
+                                    </tr>
+                                </thead>
+                                <tbody *ngFor="let f of customerWorkDocumentsList">
+                                    <tr>
+                                        <td>{{f.fileName}}</td>
+                                        <td><a (click)="downloadFileUpload(f)" matTooltip="Download" class="btn nobg btn-cstm"><span><i class="fa fa-download"></i></span></a> </td>
+                                        <td>  <button class="btn-delete" mat-icon-button matTooltip="Delete" (click)="getEmployeeAttachmentDelete(f)">
+                                        <mat-icon color="warn">delete</mat-icon> </button>
+                                    </td>
+                                    </tr>                                                
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
