@@ -38,7 +38,7 @@ export class WorkOrderSmartComponent implements OnInit {
     workOrderStatusList: any;
     partNumberOriginalData: Object;
     workOrderId: any;
-    recCustmoerId: any;
+    recCustomerId: any = 0;
     editWorkOrderGeneralInformation: any;
     workOrderGeneralInformation: workOrderGeneralInfo = new workOrderGeneralInfo();
     isEdit: boolean = false;
@@ -89,20 +89,20 @@ export class WorkOrderSmartComponent implements OnInit {
         } else {
             // get the workOrderId on Edit Mode
             this.workOrderId = this.acRouter.snapshot.params['id'];
-            this.recCustmoerId = this.acRouter.snapshot.params['rcustid'];
+            this.recCustomerId = this.acRouter.snapshot.params['rcustid'];
 
         }
 
-        if (this.workOrderId || this.recCustmoerId) {
-            if (this.recCustmoerId) {
+        if (this.workOrderId || this.recCustomerId) {
+            if (this.recCustomerId) {
                 this.showTabsGrid = false;
                 this.workOrderId = 0;
             }
             else {
 
-                this.recCustmoerId = 0;
+                this.recCustomerId = 0;
             }
-            this.workOrderService.getWorkOrderById(this.workOrderId, this.recCustmoerId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
+            this.workOrderService.getWorkOrderById(this.workOrderId, this.recCustomerId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
 
                 this.getPartNosByCustomer(res.customerId);
 
@@ -118,13 +118,11 @@ export class WorkOrderSmartComponent implements OnInit {
                     partNumbers: res.partNumbers.map(x => {
                         return {
                             ...x,
-
-
-                            customerRequestDate: new Date(x.customerRequestDate),
-                            promisedDate: new Date(x.promisedDate),
-                            estimatedCompletionDate: new Date(x.estimatedCompletionDate),
-                            estimatedShipDate: new Date(x.estimatedShipDate),
-
+                            customerRequestDate: this.recCustomerId == 0 ? new Date(x.customerRequestDate) : null,
+                            promisedDate: this.recCustomerId == 0 ? new Date(x.promisedDate) : null,
+                            estimatedCompletionDate: this.recCustomerId == 0 ? new Date(x.estimatedCompletionDate) : null,
+                            estimatedShipDate: this.recCustomerId == 0 ? new Date(x.estimatedShipDate) : null,
+                            receivingDate: this.recCustomerId == 0 ? new Date(x.receivingDate) : null
                         }
 
                     })
