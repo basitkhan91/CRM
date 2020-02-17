@@ -93,7 +93,7 @@ export class CustomerATAInformationComponent implements OnInit {
         }
 
         this.getAllATASubChapter();
-
+        this.getContactsByCustomerId();
 
 
     }
@@ -114,7 +114,7 @@ export class CustomerATAInformationComponent implements OnInit {
         this.atasubchapter1service.getAtaSubChapter1List().subscribe(res => {
             const ataSubChapter = res[0].map(x => {
                 return {
-                    label: x.description,
+                    label:`${x.ataSubChapterCode}-${x.description}`,
                     value: x
                 }
             })
@@ -146,10 +146,10 @@ export class CustomerATAInformationComponent implements OnInit {
                 this.totalRecords = res.length;
                 this.totalPages = Math.ceil(this.totalRecords / this.pageSize);
             }
-            for (let i = 0; i < this.ataListDataValues.length; i++) {
-                this.ataListDataValues[i]['ataChapterName'] = this.ataListDataValues[i]['ataChapterCode'] + ' - ' + this.ataListDataValues[i]['ataChapterName']
-                this.ataListDataValues[i]['ataSubChapterDescription'] = getValueFromArrayOfObjectById('ataSubChapterCode', 'ataSubChapterId', this.ataListDataValues[i]['ataSubChapterId'], this.originalATASubchapterData) + ' - ' + this.ataListDataValues[i]['ataSubChapterDescription']
-            }
+            // for (let i = 0; i < this.ataListDataValues.length; i++) {
+            //     this.ataListDataValues[i]['ataChapterName'] = this.ataListDataValues[i]['ataChapterCode'] + ' - ' + this.ataListDataValues[i]['ataChapterName']
+            //     this.ataListDataValues[i]['ataSubChapterDescription'] = getValueFromArrayOfObjectById('ataSubChapterCode', 'ataSubChapterId', this.ataListDataValues[i]['ataSubChapterId'], this.originalATASubchapterData) + ' - ' + this.ataListDataValues[i]['ataSubChapterDescription']
+            // }
 
         }, err => {
             this.loaderForATA = false;
@@ -199,7 +199,7 @@ export class CustomerATAInformationComponent implements OnInit {
 
                     this.search_ataSubChapterList = responseData.map(x => {
                         return {
-                            label: x.description,
+                            label:`${x.ataSubChapterCode}-${x.description}`,
                             value: x.ataSubChapterId
                         };
                     });

@@ -14272,6 +14272,10 @@ p-multiselect .ui-multiselect {
 p-multiselect .ui-multiselect .ui-multiselect-label {
   padding: 6px 0 5px 6px !important;
   margin: 0 !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: calc(100% - 27px) !important;
 }
 
 .ui-multiselect-close span.pi-times {
