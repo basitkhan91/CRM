@@ -3399,11 +3399,20 @@ namespace QuickApp.Pro.Controllers
         [Produces(typeof(VendorContactViewModel))]
         public IActionResult DeleteAction(long id)
         {
+            //var existingResult = _unitOfWork.ContactRepository.GetSingleOrDefault(c => c.ContactId == id);
+            //var existingResultofVendorContact = _unitOfWork.vendorContactRepository.GetSingleOrDefault(c => c.ContactId == id);
+            //_unitOfWork.vendorContactRepository.Remove(existingResultofVendorContact);
+            //_unitOfWork.SaveChanges();
+            //_unitOfWork.ContactRepository.Remove(existingResult);
+            //_unitOfWork.SaveChanges();
+
             var existingResult = _unitOfWork.ContactRepository.GetSingleOrDefault(c => c.ContactId == id);
             var existingResultofVendorContact = _unitOfWork.vendorContactRepository.GetSingleOrDefault(c => c.ContactId == id);
-            _unitOfWork.vendorContactRepository.Remove(existingResultofVendorContact);
-            _unitOfWork.SaveChanges();
-            _unitOfWork.ContactRepository.Remove(existingResult);
+
+            existingResultofVendorContact.UpdatedDate = DateTime.Now;
+            existingResultofVendorContact.IsDeleted = true;
+            existingResultofVendorContact.UpdatedBy = "admin";
+            _unitOfWork.vendorContactRepository.Update(existingResultofVendorContact);
             _unitOfWork.SaveChanges();
 
             return Ok(id);

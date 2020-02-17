@@ -31,6 +31,7 @@
         this.isDelete = false;
         this.updatedDate = new Date();
         this.createdDate = new Date();
+        this.receivingDate = '';
 
     }
 
@@ -45,7 +46,7 @@
     estimatedShipDate: string;
     customerRequestDate: string;
     estimatedCompletionDate: string;
-    customerReference : number;
+    customerReference: number;
     nte: string;
     quantity: number;
     stockLineId: number;
@@ -58,9 +59,10 @@
     isDER: boolean;
     techStationId: number;
     tearDownReport: number;
-    tatDaysCurrent : number;
+    tatDaysCurrent: number;
     tatDaysStandard: number;
     technicianId: number;
     mappingItemMasterId: number;
     conditionId: number;
+    receivingDate: string;
 }

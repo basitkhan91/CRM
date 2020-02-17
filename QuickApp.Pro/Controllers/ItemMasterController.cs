@@ -1228,6 +1228,8 @@ namespace QuickApp.Pro.Controllers
             {
                 for (int i = 0; i < itemMasterAircraftMapping.Length; i++)
                 {
+                    itemMasterAircraftMapping[i].CreatedDate = DateTime.Now;
+                    itemMasterAircraftMapping[i].UpdatedDate = DateTime.Now;
                     _unitOfWork.Repository<ItemMasterAircraftMapping>().Add(itemMasterAircraftMapping[i]);
                     _unitOfWork.SaveChanges();
                 }
@@ -1415,8 +1417,8 @@ namespace QuickApp.Pro.Controllers
                     existingresule.AircraftModelId = itemMasterAircraftMapping.AircraftModelId;
                     existingresule.AircraftType = itemMasterAircraftMapping.AircraftType;
                     existingresule.AircraftTypeId = itemMasterAircraftMapping.AircraftTypeId;
-                    existingresule.UpdatedDate = itemMasterAircraftMapping.UpdatedDate;
-                    existingresule.CreatedDate = itemMasterAircraftMapping.CreatedDate;
+                    existingresule.UpdatedDate = DateTime.Now;
+                    //existingresule.CreatedDate = itemMasterAircraftMapping.CreatedDate;
                     existingresule.DashNumber = itemMasterAircraftMapping.DashNumber;
                     existingresule.DashNumberId = itemMasterAircraftMapping.DashNumberId;
                     existingresule.IsActive = itemMasterAircraftMapping.IsActive;

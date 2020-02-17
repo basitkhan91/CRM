@@ -152,7 +152,7 @@ export class MaterialListCreateComponent implements OnInit, OnChanges {
         else if (this.isQuote) {
             this.workFlow.materialList = [];
         }
-        if(!this.isWorkFlow){
+        if (!this.isWorkFlow) {
             this.addRow();
         }
     }
@@ -208,7 +208,7 @@ export class MaterialListCreateComponent implements OnInit, OnChanges {
                         this.alertService.showMessage("Workflow", "Part Number already exist in Exclusion List.", MessageSeverity.error);
                         return;
                     }
-                }                
+                }
             }
 
             for (let i = 0; i < this.itemclaColl.length; i++) {
@@ -287,10 +287,10 @@ export class MaterialListCreateComponent implements OnInit, OnChanges {
         var newRow = Object.assign({}, this.row);
 
         newRow.workflowMaterialListId = "0";
-        if(this.taskList){
+        if (this.taskList) {
             this.taskList.forEach(
-                task=>{
-                    if(task.description == "Assemble"){
+                task => {
+                    if (task.description == "Assemble") {
                         newRow.taskId = task.taskId;
                     }
                 }
@@ -314,6 +314,7 @@ export class MaterialListCreateComponent implements OnInit, OnChanges {
         newRow.isDelete = false;
         newRow.extendedPrice = '';
         this.workFlow.materialList.push(newRow);
+
     }
 
     deleteRow(index): void {
@@ -475,21 +476,21 @@ export class MaterialListCreateComponent implements OnInit, OnChanges {
         return total;
     }
 
-    getPNDetails(part){
-        if(part.partNumber && part.conditionCodeId){
+    getPNDetails(part) {
+        if (part.partNumber && part.conditionCodeId) {
             this.allPartDetails.forEach(
-                pn=>{
-                    if(pn.partNumber == part.partNumber){
+                pn => {
+                    if (pn.partNumber == part.partNumber) {
                         this.workOrderQuoteService.getPartDetails(pn.itemMasterId, part.conditionCodeId)
-                        .subscribe(
-                            partDetail =>{
-                                if(partDetail){
-                                    part.unitCost = partDetail["pP_UnitPurchasePrice"];
-                                    part.billingRate = partDetail["sP_FSP_FlatPriceAmount"];
-                                    part.markupPercentageId = partDetail["sP_CalSPByPP_MarkUpPercOnListPrice"];
+                            .subscribe(
+                                partDetail => {
+                                    if (partDetail) {
+                                        part.unitCost = partDetail["pP_UnitPurchasePrice"];
+                                        part.billingRate = partDetail["sP_FSP_FlatPriceAmount"];
+                                        part.markupPercentageId = partDetail["sP_CalSPByPP_MarkUpPercOnListPrice"];
+                                    }
                                 }
-                            }
-                        )
+                            )
                     }
                 }
             )

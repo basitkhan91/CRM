@@ -3075,18 +3075,20 @@ namespace DAL.Repositories
                 {
                     if (model.IsPrimary == true)
                     {
-                        var vendorShipping = _appContext.VendorInternationalShipping.Where(p => p.VendorId == model.VendorId && p.IsPrimary == true).ToList();
+                        var vendorShipping = _appContext.VendorInternationalShipping.AsNoTracking().Where(p => p.VendorId == model.VendorId && p.IsPrimary == true).FirstOrDefault();
 
-                        if (vendorShipping != null)
+
+                        if (vendorShipping != null && vendorShipping.VendorInternationalShippingId != model.VendorInternationalShippingId)
                         {
-                            foreach (var item in vendorShipping)
-                            {
-                                item.IsPrimary = false;
-                                item.UpdatedDate = DateTime.Now;
-                                _appContext.VendorInternationalShipping.Update(item);
-                                _appContext.SaveChanges();
-                            }
+
+                            vendorShipping.IsPrimary = false;
+                            vendorShipping.UpdatedDate = DateTime.Now;
+                            vendorShipping.UpdatedBy = model.UpdatedBy;
+                            _appContext.VendorInternationalShipping.Update(vendorShipping);
+                            _appContext.SaveChanges();
+
                         }
+
                     }
                     model.UpdatedDate = DateTime.Now;
                     model.UpdatedBy = model.UpdatedBy;
@@ -3102,17 +3104,17 @@ namespace DAL.Repositories
                     model.IsDeleted = false;
                     if (model.IsPrimary == true)
                     {
-                        var vendorShipping = _appContext.VendorInternationalShipping.Where(p => p.VendorId == model.VendorId && p.IsPrimary == true).ToList();
+                        var vendorShipping = _appContext.VendorInternationalShipping.Where(p => p.VendorId == model.VendorId && p.IsPrimary == true).FirstOrDefault();
 
                         if (vendorShipping != null)
                         {
-                            foreach (var item in vendorShipping)
-                            {
-                                item.IsPrimary = false;
-                                item.UpdatedDate = DateTime.Now;
-                                _appContext.VendorInternationalShipping.Update(item);
-                                _appContext.SaveChanges();
-                            }
+
+                            vendorShipping.IsPrimary = false;
+                            vendorShipping.UpdatedDate = DateTime.Now;
+                            vendorShipping.UpdatedBy = model.UpdatedBy;
+                            _appContext.VendorInternationalShipping.Update(vendorShipping);
+                            _appContext.SaveChanges();
+
                         }
                     }
                     model.IsPrimary = model.IsPrimary;

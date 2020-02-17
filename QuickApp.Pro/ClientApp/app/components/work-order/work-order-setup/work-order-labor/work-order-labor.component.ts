@@ -23,12 +23,13 @@ export class WorkOrderLaborComponent implements OnInit, OnChanges {
   @Input() taskList: any;
   @Input() isQuote = false;
   @Input() markupList;
+  @Input() employeesOriginalData;
   @Input() isView: boolean = false;
   @Input() isEdit: boolean = false;
 
   totalHours: number;
   workOrderWorkFlowList: any;
-  employeesOriginalData: any;
+  // employeesOriginalData: any;
   employeeList: any;
   dataEnteredByList: any;
   expertiseTypeList: Object;
@@ -49,19 +50,25 @@ export class WorkOrderLaborComponent implements OnInit, OnChanges {
 
 
   ngOnInit() {
-
+    console.log(this.laborForm.workOrderLaborList);
+    // this.employeesOriginalData = { employeeId: this.employeesOriginalData.value, ...this.employeesOriginalData }
 
     this.workOrderWorkFlowList = this.workOrderWorkFlowOriginalData;
     this.laborForm['costPlusType'] = 'Mark Up';
-    console.log(this.workOrderLaborList);
+
     if (this.workOrderLaborList) {
       this.laborForm.workFlowWorkOrderId = this.workOrderLaborList['workFlowWorkOrderId'];
       this.laborForm.dataEnteredBy = this.workOrderLaborList['dataEnteredBy'];
       this.laborForm.employeeId = this.workOrderLaborList['employeeId'];
       this.laborForm.isTaskCompletedByOne = this.workOrderLaborList['isTaskCompletedByOne'];
       this.laborForm.expertiseId = this.workOrderLaborList['expertiseId'];
+      // console.log(this.laborForm.workOrderLaborList);
 
+      // this.laborForm.workOrderLaborList.map((x, index) => {
+      //   console.log('Sample');
 
+      //   this.getExpertiseEmployeeByExpertiseId(x.expertiseId, index);
+      // })
       // const laborList = this.workOrderLaborList.laborList.map((x, index) => {
       //   this.getExpertiseEmployeeByExpertiseId(x.expertiseId, index);
       // })
@@ -168,22 +175,22 @@ export class WorkOrderLaborComponent implements OnInit, OnChanges {
     }
   }
 
-  getAllEmployees(): void {
-    this.commonService.smartDropDownList('Employee', 'EmployeeId', 'FirstName').subscribe(res => {
-      this.employeesOriginalData = res;
-      this.employeeList = res;
-      if (this.laborForm.dataEnteredBy != null) {
-        this.employeeList.forEach(emp => {
-          if (this.laborForm.dataEnteredBy == emp.value) {
-            this.laborForm.dataEnteredBy = emp;
-          }
-          if (this.laborForm.employeeId == emp.value) {
-            this.laborForm.employeeId = emp;
-          }
-        })
-      }
-    })
-  }
+  // getAllEmployees(): void {
+  //   this.commonService.smartDropDownList('Employee', 'EmployeeId', 'FirstName').subscribe(res => {
+  //     this.employeesOriginalData = res;
+  //     this.employeeList = res;
+  //     if (this.laborForm.dataEnteredBy != null) {
+  //       this.employeeList.forEach(emp => {
+  //         if (this.laborForm.dataEnteredBy == emp.value) {
+  //           this.laborForm.dataEnteredBy = emp;
+  //         }
+  //         if (this.laborForm.employeeId == emp.value) {
+  //           this.laborForm.employeeId = emp;
+  //         }
+  //       })
+  //     }
+  //   })
+  // }
 
   filterDataEnteredBy(event): void {
 
@@ -223,19 +230,22 @@ export class WorkOrderLaborComponent implements OnInit, OnChanges {
     // })
   }
 
-  getExpertiseEmployeeByExpertiseId(value, index) {
+  getExpertiseEmployeeByExpertiseId(value, index, object) {
     console.log(value, index);
 
+    object.employeeId = null;
     this.commonService.getExpertiseEmployeesByCategory(value).subscribe(res => {
       this['expertiseEmployeeOriginalData' + index] = res;
     })
   }
   getDynamicVariableData(variable, index) {
+    // console.log(this[variable + index]);
+
     return this[variable + index]
   }
 
   filterExpertiseEmployee(event, index) {
-    this['expertiseEmployee' + index] = this['expertiseEmployeeOriginalData' + index]
+    this['expertiseEmployee' + index] = this['expertiseEmployeeOriginalData' + index] == undefined ? this.employeesOriginalData : this['expertiseEmployeeOriginalData' + index];
 
 
     if (event.query !== undefined && event.query !== null) {
@@ -248,6 +258,8 @@ export class WorkOrderLaborComponent implements OnInit, OnChanges {
   }
 
   addNewTask(taskName) {
+    console.log(this.taskList);
+
     let taskData = new AllTasks();
     taskData.expertiseId = Number(this.laborForm.expertiseId);
     taskData.employeeId = this.laborForm.employeeId;
@@ -255,6 +267,7 @@ export class WorkOrderLaborComponent implements OnInit, OnChanges {
       task => {
         if (task.description == "Assemble") {
           taskData.taskId = task.taskId;
+
         }
       }
     )
@@ -329,7 +342,7 @@ export class WorkOrderLaborComponent implements OnInit, OnChanges {
             ...x,
             ...excessParams,
             taskId: this.getTaksId(tdata),
-            employeeId: getValueFromObjectByKey('value', x.employeeId)
+            employeeId: getValueFromObjectByKey('employeeId', x.employeeId)
           }
         })
       }
@@ -475,13 +488,23 @@ export class WorkOrderLaborComponent implements OnInit, OnChanges {
   }
 
   deleteLabor(taskName, index) {
+    console.log(this.laborForm.workOrderLaborList, index);
+
     this.laborForm.workOrderLaborList[0][taskName.toLowerCase()][index].isDeleted = true;
+
+    // console.log(this.laborForm.workOrderLaborList[0][taskName.toLowerCase()]);
+
+    // if (this.laborForm.workOrderLaborList[0][taskName.toLowerCase()] == undefined) {
+    //   this.laborForm.workOrderLaborList[0] = [...this.laborForm.workOrderLaborList[0], this.laborForm.workOrderLaborList[0][taskName.toLowerCase()]];
+    // }
+    // console.log(this.laborForm.workOrderLaborList);
+
   }
 
-  calculateTotalCost(rec){
-    if(rec['directLaborOHCost'] && rec['burdenRateAmount']){
-      rec.totalCostPerHour = Number(rec['directLaborOHCost'])+Number(rec['burdenRateAmount']);
-      if(rec.hours){
+  calculateTotalCost(rec) {
+    if (rec['directLaborOHCost'] && rec['burdenRateAmount']) {
+      rec.totalCostPerHour = Number(rec['directLaborOHCost']) + Number(rec['burdenRateAmount']);
+      if (rec.hours) {
         rec['totalCost'] = (Number(rec.totalCostPerHour) * Number(rec.hours)).toFixed(2);
       }
     }
@@ -496,21 +519,21 @@ export class WorkOrderLaborComponent implements OnInit, OnChanges {
   }
 
   markupChanged(matData, type) {
-      try {
-        if(this.markupList){
-          this.markupList.forEach((markup)=>{
-            if(type == 'row' && markup.value == matData.markupPercentageId){
-              matData['billingRate'] = ((matData['totalCostPerHour']) + (((matData['totalCostPerHour']) / 100) * Number(markup.label))).toFixed(2)
-              matData['billingAmount'] = (Number(matData['billingRate']) * Number(matData.hours)).toFixed(2);
-            }
-            else if(type == 'all' && markup.value == this.overAllMarkup){
-              for(let t in this.laborForm.workOrderLaborList[0]){
-                for(let mData of this.laborForm.workOrderLaborList[0][t]){
-                  if(mData['billingMethodId'] == 1){
-                    mData.markupPercentageId = this.overAllMarkup;
-                    mData['billingRate'] = ((mData['totalCostPerHour']) + (((mData['totalCostPerHour']) / 100) * Number(markup.label))).toFixed(2)
-                    mData['billingAmount'] = (Number(mData['billingRate']) * Number(mData.hours)).toFixed(2);
-                  
+    try {
+      if (this.markupList) {
+        this.markupList.forEach((markup) => {
+          if (type == 'row' && markup.value == matData.markupPercentageId) {
+            matData['billingRate'] = ((matData['totalCostPerHour']) + (((matData['totalCostPerHour']) / 100) * Number(markup.label))).toFixed(2)
+            matData['billingAmount'] = (Number(matData['billingRate']) * Number(matData.hours)).toFixed(2);
+          }
+          else if (type == 'all' && markup.value == this.overAllMarkup) {
+            for (let t in this.laborForm.workOrderLaborList[0]) {
+              for (let mData of this.laborForm.workOrderLaborList[0][t]) {
+                if (mData['billingMethodId'] == 1) {
+                  mData.markupPercentageId = this.overAllMarkup;
+                  mData['billingRate'] = ((mData['totalCostPerHour']) + (((mData['totalCostPerHour']) / 100) * Number(markup.label))).toFixed(2)
+                  mData['billingAmount'] = (Number(mData['billingRate']) * Number(mData.hours)).toFixed(2);
+
                 }
               }
             }
@@ -670,7 +693,7 @@ export class WorkOrderLaborComponent implements OnInit, OnChanges {
     }
   }
 
-  getOverAlltotal(type){
+  getOverAlltotal(type) {
     let htotal = 0;
     let loTotal = 0;
     let burTotal = 0;
@@ -678,36 +701,36 @@ export class WorkOrderLaborComponent implements OnInit, OnChanges {
     let costTotal = 0;
     let bRTotal = 0;
     let bATotal = 0;
-    for (let task in this.laborForm.workOrderLaborList[0]){
+    for (let task in this.laborForm.workOrderLaborList[0]) {
       this.laborForm.workOrderLaborList[0][task].forEach(
         data => {
-          switch(type){
+          switch (type) {
             case "Hours": {
-              if(data.hours) htotal += Number(data.hours);
+              if (data.hours) htotal += Number(data.hours);
             }
-            case "LaborOHCost":{
-              if(data.directLaborOHCost) loTotal += Number(data.directLaborOHCost);
+            case "LaborOHCost": {
+              if (data.directLaborOHCost) loTotal += Number(data.directLaborOHCost);
             }
-            case "LaborBurdenRate":{
-              if(data.burdenRateAmount) burTotal += Number(data.burdenRateAmount);
+            case "LaborBurdenRate": {
+              if (data.burdenRateAmount) burTotal += Number(data.burdenRateAmount);
             }
-            case "CostPerHour":{
-              if(data.totalCostPerHour) cpTotal += Number(data.totalCostPerHour);
+            case "CostPerHour": {
+              if (data.totalCostPerHour) cpTotal += Number(data.totalCostPerHour);
             }
-            case "Cost":{
-              if(data.totalCost) costTotal += Number(data.totalCost);
+            case "Cost": {
+              if (data.totalCost) costTotal += Number(data.totalCost);
             }
-            case "BillingRate":{
-              if(data.billingRate) bRTotal += Number(data.billingRate);
+            case "BillingRate": {
+              if (data.billingRate) bRTotal += Number(data.billingRate);
             }
-            default:{
-              if(data.billingAmount) bATotal += Number(data.billingAmount);
+            default: {
+              if (data.billingAmount) bATotal += Number(data.billingAmount);
             }
           }
         }
       )
     }
-    return (type == 'Hours')?htotal.toFixed(2):(type == 'LaborOHCost')?loTotal.toFixed(2):(type == 'LaborBurdenRate')?burTotal.toFixed(2):(type == 'CostPerHour')?cpTotal.toFixed(2):(type == 'Cost')?costTotal.toFixed(2):(type == 'BillingRate')?bRTotal.toFixed(2):bATotal.toFixed(2);
+    return (type == 'Hours') ? htotal.toFixed(2) : (type == 'LaborOHCost') ? loTotal.toFixed(2) : (type == 'LaborBurdenRate') ? burTotal.toFixed(2) : (type == 'CostPerHour') ? cpTotal.toFixed(2) : (type == 'Cost') ? costTotal.toFixed(2) : (type == 'BillingRate') ? bRTotal.toFixed(2) : bATotal.toFixed(2);
   }
 
   // tasks : this.laborForm.tasks[0][keysArray[i]].map(x => {

@@ -124,8 +124,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
         public customerService: CustomerService, public itemService: ItemMasterService, public vendorser: VendorService, private currencyService: CurrencyService, private commonService: CommonService) {
 
             this.stopmulticlicks=false;
-
-
+this.generalInformation.restrictBER=false;
 
 
     }
@@ -219,7 +218,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
 
         await this.customerService.getCustomerClassificationMapping(this.id).subscribe(res => {
             this.generalInformation.customerClassificationIds = res.map(x => x.customerClassificationId);
-            // console.log(this.generalInformation.customerClassificationIds);
+            console.log("clicksdfsdfsdf",this.generalInformation.customerClassificationIds);
         });
     }
 
@@ -229,7 +228,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
         if (this.id > 0) {
             await this.commonService.getIntegrationMapping(this.id, 1).subscribe(res => {
                 this.generalInformation.integrationPortalId = res.map(x => x.integrationPortalId);
-
+console.log("hjdsfsdfsdfsf",this.generalInformation.integrationPortalId);
             });
         }
     }
@@ -248,7 +247,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
                 this.generalInformation.restrictedPMAParts[i]['itemMasterId'] = this.generalInformation.restrictedPMAParts[i]['masterPartId']
             }
 
-            this.restictPMAtempList = res.map(x => x.rescrictedPartId);
+            // this.restictPMAtempList = res.map(x => x.rescrictedPartId);
             this.partListForPMA = this.generalInformation.restrictedPMAParts.reduce((acc, obj) => {
                 return acc.filter(x => x.value.itemMasterId !== obj.masterPartId)
             }, this.partListOriginal)
@@ -343,6 +342,7 @@ export class CustomerGeneralInformationComponent implements OnInit {
 
         if (!this.generalInformation.restrictBER) {
             this.generalInformation.restrictedDERParts = [];
+            console.log("sdfsdf", this.generalInformation.restrictedDERParts)
         }
     }
 

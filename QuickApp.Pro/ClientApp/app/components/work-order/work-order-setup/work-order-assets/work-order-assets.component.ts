@@ -20,6 +20,7 @@ export class WorkOrderAssetsComponent implements OnInit {
     @Output() refreshData = new EventEmitter();
     @Output() saveEquipmentListForWO = new EventEmitter();
     @Output() updateEquipmentListForWO = new EventEmitter();
+    moduleName = "Tool";
     assetRecordId: any;
     addNewMaterial: any;
     assets = {

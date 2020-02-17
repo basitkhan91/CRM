@@ -195,6 +195,7 @@ namespace DAL.Repositories
 
             if (!string.IsNullOrEmpty(value))
             {
+                value = value.ToLower();
                 var totalRecords = (from t in _appContext.Customer
                                     join type in _appContext.CustomerType on t.CustomerTypeId equals type.CustomerTypeId
                                     join ct in _appContext.CustomerClassification on t.CustomerClassificationId equals ct.CustomerClassificationId
@@ -848,11 +849,14 @@ namespace DAL.Repositories
 
         public IEnumerable<object> GetATAMapped(long customerId)
         {
-            
+
             var data = (from ca in _appContext.CustomerContactATAMapping
                         join cont in _appContext.CustomerContact on ca.CustomerContactId equals cont.CustomerContactId
                         join contt in _appContext.Contact on cont.ContactId equals contt.ContactId into conttt
                         from contt in conttt.DefaultIfEmpty()
+
+                        join atasub in _appContext.ATASubChapter on ca.ATASubChapterId equals atasub.ATASubChapterId into atasubchapter
+                        from atasub in atasubchapter.DefaultIfEmpty()
 
                         where ca.CustomerId == customerId && ca.IsDeleted == false && cont.IsDeleted != true
                         select new
@@ -861,10 +865,12 @@ namespace DAL.Repositories
                             ca.CustomerId,
                             ca.ATAChapterId,
                             ca.ATAChapterCode,
-                            ca.ATAChapterName,
+                            // ca.ATAChapterName,
+                            ATAChapterName = ca.ATAChapterCode + " - " + ca.ATAChapterName,
+                            ATASubChapterDescription = atasub.ATASubChapterCode + " - " + ca.ATASubChapterDescription,
 
                             ca.ATASubChapterId,
-                            ca.ATASubChapterDescription,
+                            //ca.ATASubChapterDescription,
                             contt.FirstName,
                             contt.ContactId
 
@@ -879,6 +885,9 @@ namespace DAL.Repositories
                         join cont in _appContext.CustomerContact on ca.CustomerContactId equals cont.CustomerContactId
                         join contt in _appContext.Contact on cont.ContactId equals contt.ContactId into conttt
                         from contt in conttt.DefaultIfEmpty()
+
+                        join atasub in _appContext.ATASubChapter on ca.ATASubChapterId equals atasub.ATASubChapterId into atasubchapter
+                        from atasub in atasubchapter.DefaultIfEmpty()
 
                         where ca.CustomerContactATAMappingId == CustomerContactATAMappingId
                         select new
@@ -897,6 +906,7 @@ namespace DAL.Repositories
                             ca.UpdatedDate,
                             ca.CreatedBy,
                             ca.CreatedDate,
+                            atasub.ATASubChapterCode
 
                         }).OrderByDescending(p => p.UpdatedDate).ToList();
             return data;
@@ -1793,9 +1803,23 @@ namespace DAL.Repositories
                             join cont in _appContext.CustomerContact on cATA.CustomerContactId equals cont.CustomerContactId
                             join contt in _appContext.Contact on cont.ContactId equals contt.ContactId into conttt
                             from contt in conttt.DefaultIfEmpty()
+                            join atasub in _appContext.ATASubChapter on cATA.ATASubChapterId equals atasub.ATASubChapterId into atasubchapter
+                            from atasub in atasubchapter.DefaultIfEmpty()
 
                             where cATA.CustomerId == customerId && myATAChapterId.Contains(cATA.ATAChapterId) && myATASubChapterID.Contains(cATA.ATASubChapterId) && mycontactID.Contains(cATA.CustomerContactId) && cATA.IsDeleted != true
-                            select new { cATA.CustomerContactATAMappingId, cATA.CustomerId, cATA.ATAChapterId, cATA.ATAChapterCode, cATA.ATAChapterName, cATA.ATASubChapterId, cATA.ATASubChapterDescription, contt.FirstName, contt.ContactId }).ToList();
+                            select new
+                            {
+                                cATA.CustomerContactATAMappingId,
+                                cATA.CustomerId,
+                                cATA.ATAChapterId,
+                                cATA.ATAChapterCode,
+                                ATAChapterName = cATA.ATAChapterCode + " - " + cATA.ATAChapterName,
+
+                                cATA.ATASubChapterId,
+                                ATASubChapterDescription = atasub.ATASubChapterCode + " - " + cATA.ATASubChapterDescription,
+                                contt.FirstName,
+                                contt.ContactId
+                            }).ToList();
                 //var uniquedata = data.GroupBy(item => new { item.ATAChapterId, item.ATASubChapterId }).Select(group => group.First()).ToList();
                 return data;
             }
@@ -1805,9 +1829,24 @@ namespace DAL.Repositories
                             join cont in _appContext.CustomerContact on cATA.CustomerContactId equals cont.CustomerContactId
                             join contt in _appContext.Contact on cont.ContactId equals contt.ContactId into conttt
                             from contt in conttt.DefaultIfEmpty()
+                            join atasub in _appContext.ATASubChapter on cATA.ATASubChapterId equals atasub.ATASubChapterId into atasubchapter
+                            from atasub in atasubchapter.DefaultIfEmpty()
 
                             where cATA.CustomerId == customerId && myATAChapterId.Contains(cATA.ATAChapterId) && cATA.IsDeleted != true
-                            select new { cATA.CustomerContactATAMappingId, cATA.CustomerId, cATA.ATAChapterId, cATA.ATAChapterCode, cATA.ATAChapterName, cATA.ATASubChapterId, cATA.ATASubChapterDescription, contt.FirstName, contt.ContactId }).ToList();
+                            select new
+                            {
+                                cATA.CustomerContactATAMappingId,
+                                cATA.CustomerId,
+                                cATA.ATAChapterId,
+                                cATA.ATAChapterCode,
+                                ATAChapterName = cATA.ATAChapterCode + " - " + cATA.ATAChapterName,
+                                ATASubChapterDescription = atasub.ATASubChapterCode + " - " + cATA.ATASubChapterDescription,
+
+                                cATA.ATASubChapterId,
+
+                                contt.FirstName,
+                                contt.ContactId
+                            }).ToList();
                 //var uniquedata = data.GroupBy(item => new { item.ATAChapterId, item.ATASubChapterId }).Select(group => group.First()).ToList();
                 return data;
 
@@ -1818,9 +1857,25 @@ namespace DAL.Repositories
                             join cont in _appContext.CustomerContact on cATA.CustomerContactId equals cont.CustomerContactId
                             join contt in _appContext.Contact on cont.ContactId equals contt.ContactId into conttt
                             from contt in conttt.DefaultIfEmpty()
+                            join atasub in _appContext.ATASubChapter on cATA.ATASubChapterId equals atasub.ATASubChapterId into atasubchapter
+                            from atasub in atasubchapter.DefaultIfEmpty()
 
                             where cATA.CustomerId == customerId && myATAChapterId.Contains(cATA.ATAChapterId) && mycontactID.Contains(cATA.CustomerContactId) && cATA.IsDeleted != true
-                            select new { cATA.CustomerContactATAMappingId, cATA.CustomerId, cATA.ATAChapterId, cATA.ATAChapterCode, cATA.ATAChapterName, cATA.ATASubChapterId, cATA.ATASubChapterDescription, contt.FirstName, contt.ContactId }).ToList();
+                            select new
+                            {
+                                cATA.CustomerContactATAMappingId,
+                                cATA.CustomerId,
+                                cATA.ATAChapterId,
+                                cATA.ATAChapterCode,
+                                //cATA.ATAChapterName,
+                                ATAChapterName = cATA.ATAChapterCode + " - " + cATA.ATAChapterName,
+                                cATA.ATASubChapterId,
+                                // cATA.ATASubChapterDescription,
+                                ATASubChapterDescription = atasub.ATASubChapterCode + " - " + cATA.ATASubChapterDescription,
+
+                                contt.FirstName,
+                                contt.ContactId
+                            }).ToList();
                 //var uniquedata = data.GroupBy(item => new { item.ATAChapterId, item.ATASubChapterId }).Select(group => group.First()).ToList();
                 return data;
 
@@ -1831,9 +1886,25 @@ namespace DAL.Repositories
                             join cont in _appContext.CustomerContact on cATA.CustomerContactId equals cont.CustomerContactId
                             join contt in _appContext.Contact on cont.ContactId equals contt.ContactId into conttt
                             from contt in conttt.DefaultIfEmpty()
+                            join atasub in _appContext.ATASubChapter on cATA.ATASubChapterId equals atasub.ATASubChapterId into atasubchapter
+                            from atasub in atasubchapter.DefaultIfEmpty()
 
                             where cATA.CustomerId == customerId && myATASubChapterID.Contains(cATA.ATASubChapterId) && mycontactID.Contains(cATA.CustomerContactId) && cATA.IsDeleted != true
-                            select new { cATA.CustomerContactATAMappingId, cATA.CustomerId, cATA.ATAChapterId, cATA.ATAChapterCode, cATA.ATAChapterName, cATA.ATASubChapterId, cATA.ATASubChapterDescription, contt.FirstName, contt.ContactId }).ToList();
+                            select new
+                            {
+                                cATA.CustomerContactATAMappingId,
+                                cATA.CustomerId,
+                                cATA.ATAChapterId,
+                                cATA.ATAChapterCode,
+
+                                cATA.ATASubChapterId,
+
+                                ATAChapterName = cATA.ATAChapterCode + " - " + cATA.ATAChapterName,
+                                ATASubChapterDescription = atasub.ATASubChapterCode + " - " + cATA.ATASubChapterDescription,
+
+                                contt.FirstName,
+                                contt.ContactId
+                            }).ToList();
                 //var uniquedata = data.GroupBy(item => new { item.ATAChapterId, item.ATASubChapterId }).Select(group => group.First()).ToList();
                 return data;
 
@@ -1844,9 +1915,25 @@ namespace DAL.Repositories
                             join cont in _appContext.CustomerContact on cATA.CustomerContactId equals cont.CustomerContactId
                             join contt in _appContext.Contact on cont.ContactId equals contt.ContactId into conttt
                             from contt in conttt.DefaultIfEmpty()
+                            join atasub in _appContext.ATASubChapter on cATA.ATASubChapterId equals atasub.ATASubChapterId into atasubchapter
+                            from atasub in atasubchapter.DefaultIfEmpty()
 
                             where cATA.CustomerId == customerId && myATASubChapterID.Contains(cATA.ATASubChapterId) && cATA.IsDeleted != true
-                            select new { cATA.CustomerContactATAMappingId, cATA.CustomerId, cATA.ATAChapterId, cATA.ATAChapterCode, cATA.ATAChapterName, cATA.ATASubChapterId, cATA.ATASubChapterDescription, contt.FirstName, contt.ContactId }).ToList();
+                            select new
+                            {
+                                cATA.CustomerContactATAMappingId,
+                                cATA.CustomerId,
+                                cATA.ATAChapterId,
+                                cATA.ATAChapterCode,
+
+                                cATA.ATASubChapterId,
+
+                                ATAChapterName = cATA.ATAChapterCode + " - " + cATA.ATAChapterName,
+                                ATASubChapterDescription = atasub.ATASubChapterCode + " - " + cATA.ATASubChapterDescription,
+
+                                contt.FirstName,
+                                contt.ContactId
+                            }).ToList();
                 //var uniquedata = data.GroupBy(item => new { item.ATAChapterId, item.ATASubChapterId }).Select(group => group.First()).ToList();
                 return data;
 
@@ -1857,9 +1944,26 @@ namespace DAL.Repositories
                             join cont in _appContext.CustomerContact on cATA.CustomerContactId equals cont.CustomerContactId
                             join contt in _appContext.Contact on cont.ContactId equals contt.ContactId into conttt
                             from contt in conttt.DefaultIfEmpty()
+                            join atasub in _appContext.ATASubChapter on cATA.ATASubChapterId equals atasub.ATASubChapterId into atasubchapter
+                            from atasub in atasubchapter.DefaultIfEmpty()
 
                             where cATA.CustomerId == customerId && myATAChapterId.Contains(cATA.ATAChapterId) && myATASubChapterID.Contains(cATA.ATASubChapterId) && cATA.IsDeleted != true
-                            select new { cATA.CustomerContactATAMappingId, cATA.CustomerId, cATA.ATAChapterId, cATA.ATAChapterCode, cATA.ATAChapterName, cATA.ATASubChapterId, cATA.ATASubChapterDescription, contt.FirstName, contt.ContactId }).ToList();
+                            select new
+                            {
+                                cATA.CustomerContactATAMappingId,
+                                cATA.CustomerId,
+                                cATA.ATAChapterId,
+                                cATA.ATAChapterCode,
+
+                                cATA.ATASubChapterId,
+
+
+                                ATAChapterName = cATA.ATAChapterCode + " - " + cATA.ATAChapterName,
+                                ATASubChapterDescription = atasub.ATASubChapterCode + " - " + cATA.ATASubChapterDescription,
+
+                                contt.FirstName,
+                                contt.ContactId
+                            }).ToList();
                 //var uniquedata = data.GroupBy(item => new { item.ATAChapterId, item.ATASubChapterId }).Select(group => group.First()).ToList();
                 return data;
 
@@ -1870,9 +1974,25 @@ namespace DAL.Repositories
                             join cont in _appContext.CustomerContact on cATA.CustomerContactId equals cont.CustomerContactId
                             join contt in _appContext.Contact on cont.ContactId equals contt.ContactId into conttt
                             from contt in conttt.DefaultIfEmpty()
+                            join atasub in _appContext.ATASubChapter on cATA.ATASubChapterId equals atasub.ATASubChapterId into atasubchapter
+                            from atasub in atasubchapter.DefaultIfEmpty()
 
                             where cATA.CustomerId == customerId && mycontactID.Contains(cATA.CustomerContactId) && cATA.IsDeleted != true
-                            select new { cATA.CustomerContactATAMappingId, cATA.CustomerId, cATA.ATAChapterId, cATA.ATAChapterCode, cATA.ATAChapterName, cATA.ATASubChapterId, cATA.ATASubChapterDescription, contt.FirstName, contt.ContactId }).ToList();
+                            select new
+                            {
+                                cATA.CustomerContactATAMappingId,
+                                cATA.CustomerId,
+                                cATA.ATAChapterId,
+                                cATA.ATAChapterCode,
+
+                                cATA.ATASubChapterId,
+
+                                ATAChapterName = cATA.ATAChapterCode + " - " + cATA.ATAChapterName,
+                                ATASubChapterDescription = atasub.ATASubChapterCode + " - " + cATA.ATASubChapterDescription,
+
+                                contt.FirstName,
+                                contt.ContactId
+                            }).ToList();
                 //var uniquedata = data.GroupBy(item => new { item.ATAChapterId, item.ATASubChapterId }).Select(group => group.First()).ToList();
                 return data;
 
@@ -1883,9 +2003,25 @@ namespace DAL.Repositories
                             join cont in _appContext.CustomerContact on cATA.CustomerContactId equals cont.CustomerContactId
                             join contt in _appContext.Contact on cont.ContactId equals contt.ContactId into conttt
                             from contt in conttt.DefaultIfEmpty()
+                            join atasub in _appContext.ATASubChapter on cATA.ATASubChapterId equals atasub.ATASubChapterId into atasubchapter
+                            from atasub in atasubchapter.DefaultIfEmpty()
 
                             where cATA.CustomerId == customerId && cATA.IsDeleted != true
-                            select new { cATA.CustomerContactATAMappingId, cATA.CustomerId, cATA.ATAChapterId, cATA.ATAChapterCode, cATA.ATAChapterName, cATA.ATASubChapterId, cATA.ATASubChapterDescription, contt.FirstName, contt.ContactId }).ToList();
+                            select new
+                            {
+                                cATA.CustomerContactATAMappingId,
+                                cATA.CustomerId,
+                                cATA.ATAChapterId,
+                                cATA.ATAChapterCode,
+
+                                cATA.ATASubChapterId,
+
+                                ATAChapterName = cATA.ATAChapterCode + " - " + cATA.ATAChapterName,
+                                ATASubChapterDescription = atasub.ATASubChapterCode + " - " + cATA.ATASubChapterDescription,
+
+                                contt.FirstName,
+                                contt.ContactId
+                            }).ToList();
                 //var uniquedata = data.GroupBy(item => new { item.ATAChapterId, item.ATASubChapterId }).Select(group => group.First()).ToList();
                 return data;
 

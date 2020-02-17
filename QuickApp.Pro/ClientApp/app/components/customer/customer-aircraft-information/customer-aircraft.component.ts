@@ -47,7 +47,7 @@ export class CustomerAircraftComponent implements OnInit {
     add_SelectedAircraftId: any;
     add_SelectedModel: any = [];
     add_SelectedDashNumber: any;
-
+    resetinputmodel:any;
     isDeleteMode: boolean = false;
     add_AircraftModelList: any = [];
     add_AircraftDashNumberList: any = [];
@@ -94,7 +94,6 @@ export class CustomerAircraftComponent implements OnInit {
     pageSize: number = 10;
     showAdvancedSearchCard: boolean = false;
     isViewMode: boolean = false;
-
     stopmulticlicks: boolean;
     loader: boolean = true;
     constructor(private route: ActivatedRoute, private itemser: ItemMasterService,
@@ -140,7 +139,6 @@ export class CustomerAircraftComponent implements OnInit {
         this.getAllAircraftModels();
         this.getAllDashNumbers();
 
-
     }
     ngOnChanges(changes: SimpleChanges) {
 
@@ -158,6 +156,9 @@ export class CustomerAircraftComponent implements OnInit {
             }
         }
 
+    }
+    clearValue(){
+        this.resetinputmodel=null;
     }
     enableSave() {
         console.log('hello ,directive');
@@ -709,6 +710,10 @@ export class CustomerAircraftComponent implements OnInit {
 
     dismissModel() {
         this.modal.close();
+        this.add_SelectedDashNumber='';
+        this.add_SelectedModel='';
+        this.add_SelectedAircraftId='';
+        
     }
     // dismissModelHist() {
     //     $('#contentAuditHist').modal('hide');
