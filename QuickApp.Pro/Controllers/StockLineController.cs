@@ -363,7 +363,7 @@ namespace QuickApp.Pro.Controllers
                     actionobject.IntegrationPortalId = item.IntegrationPortalId;
                     actionobject.IsListed = item.IsListed;
                     actionobject.CreatedDate = item.CreatedDate.HasValue ? item.CreatedDate.Value : DateTime.Now;
-                    actionobject.UpdatedDate =Convert.ToDateTime(item.UpdatedDate);
+                    actionobject.UpdatedDate = DateTime.Now;
                     actionobject.CreatedBy = item.CreatedBy;
                     actionobject.UpdatedBy = item.UpdatedBy;
                     actionobject.IsActive = true;
@@ -492,6 +492,15 @@ namespace QuickApp.Pro.Controllers
                     actionobject1.UnitSalePriceAdjustmentReasonTypeId = stockLineViewModel.UnitSalePriceAdjustmentReasonTypeId;
                     actionobject1.CreatedDate = DateTime.Now;
                     actionobject1.UpdatedDate = DateTime.Now;
+                    if (stockLineViewModel.IsCustomerStock != null)
+                    {
+                        actionobject1.IsCustomerStock = Convert.ToBoolean(stockLineViewModel.IsCustomerStock);
+                    }
+                    else
+                    {
+                        actionobject1.IsCustomerStock = false;
+                    }
+
                     _context.StockLine.Update(actionobject1);
                     _context.SaveChanges();
 
