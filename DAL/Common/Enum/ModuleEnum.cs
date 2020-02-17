@@ -38,5 +38,6 @@
         VendorCheckAddress,
         VendorInternationalShippingAddress,
         WorkOrder,
+        ReceivingCustomerWork
     }
 }
