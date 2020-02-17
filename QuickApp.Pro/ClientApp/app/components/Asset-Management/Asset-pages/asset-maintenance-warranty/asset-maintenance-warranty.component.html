@@ -85,7 +85,7 @@
                                         </div>
                                         <div>
 
-                                            <div class="excel-upload  excel-upload-cstm">
+                                            <!--<div class="excel-upload  excel-upload-cstm">
                                                 <input type="file" name="upload[]" id="upload" *ngIf="currentMaintenance.assetMaintenanceIsContract"
                                                        [ngModelOptions]="{standalone: true}" [(ngModel)]="currentMaintenance.assetMaintenanceContractFile" (change)="customExcelUpload($event)" class="uploaddoc upload-file"
                                                        accept=".xlsx, .xls, .csv">
@@ -95,6 +95,20 @@
                                                     </span>
                                                 </label>
 
+                                            </div>-->
+                                            <div class="col-md-12" *ngIf="currentMaintenance.assetMaintenanceIsContract">
+                                                <div class="form-group">
+                                                    <label style="float: none;">Attachments<span class="clr-red">*</span></label>
+                                                    <p-fileUpload #fileUploadInput
+                                                                  name="fileupload[]"
+                                                                  multiple="multiple"
+                                                                  [showCancelButton]="false"
+                                                                  [showUploadButton]="false"
+                                                                  customUpload="true"
+                                                                  (onSelect)="fileUpload($event)"
+                                                                  [(ngModel)]="currentMaintenance.assetMaintenanceContractFile"
+                                                                  (onRemove)="removeFile($event)"></p-fileUpload>
+                                                </div>
                                             </div>
                                         </div>
 
@@ -171,7 +185,7 @@
                                         </div>
                                         <div>
 
-                                            <div class="excel-upload  excel-upload-cstm">
+                                            <!--<div class="excel-upload  excel-upload-cstm">
                                                 <input type="file" name="upload[]" id="upload" *ngIf="currentMaintenance.warranty"
                                                        (change)="customExcelUpload($event)" class="uploaddoc upload-file"
                                                        accept=".xlsx, .xls, .csv">
@@ -181,6 +195,21 @@
                                                     </span>
                                                 </label>
 
+                                            </div>-->
+
+                                            <div class="col-md-12" *ngIf="currentMaintenance.warranty">
+                                                <div class="form-group">
+                                                    <label style="float: none;">Attachments<span class="clr-red">*</span></label>
+                                                    <p-fileUpload #fileUploadInput
+                                                                  name="fileupload[]"
+                                                                  multiple="multiple"
+                                                                  [showCancelButton]="false"
+                                                                  [showUploadButton]="false"
+                                                                  customUpload="true"
+                                                                  (onSelect)="fileUploadwarranty($event)"
+                                                                  [(ngModel)]="currentMaintenance.warrantyFile"
+                                                                  (onRemove)="removeFile($event)"></p-fileUpload>
+                                                </div>
                                             </div>
 
                                             <!--<div class="w130">

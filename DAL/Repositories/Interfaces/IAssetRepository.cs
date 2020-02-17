@@ -11,7 +11,7 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<object> getAssetCapabilityData(long id);
         IEnumerable<object> getCapesList(long id);
         IEnumerable<Asset> getAllAsset();
-        IEnumerable<object> GetAsset(string id);
+        IEnumerable<object> GetAsset(long id);
         IEnumerable<object> GetAssetWarrantyStatus();
         IEnumerable<object> GetAssetCapesAudit(long id);
     }

@@ -136,7 +136,7 @@ export class CreateAssetComponent implements OnInit {
             this.assetService.listCollection = null;
             this.assetService.currentUrl = '/assetmodule/assetpages/app-create-asset';
         }
-        if (this.assetService.listCollection == undefined && this.AssetId != null) {
+        if (this.assetService.listCollection == undefined) {
             this.GetAssetData(this.AssetId);
         }
 
@@ -186,7 +186,7 @@ export class CreateAssetComponent implements OnInit {
     ngOnInit() {
 
         this.AssetId = this.router.snapshot.params['id'];
-        if (this.assetService.listCollection == undefined && this.AssetId != null) {
+        if (this.assetService.listCollection == undefined) {
             this.GetAssetData(this.AssetId);
         }
         if (this.AssetId) {
@@ -221,7 +221,7 @@ export class CreateAssetComponent implements OnInit {
         this.getAssetAcquisitionTypeList();
     }
 
-    private GetAssetData(assetid) {
+    async GetAssetData(assetid) {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
         this.assetService.getByAssetId(assetid).subscribe(
@@ -230,7 +230,7 @@ export class CreateAssetComponent implements OnInit {
         );
     }
 
-    private onassetdataSuccessful(getAssetData: any[]) {
+    async onassetdataSuccessful(getAssetData: any[]) {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.assetService.isEditMode = true;

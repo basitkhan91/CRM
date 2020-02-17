@@ -1,4 +1,4 @@
-﻿import { Component, OnInit } from '@angular/core';
+﻿import { Component, ViewChild, OnInit } from '@angular/core';
 import { AssetService } from '../../../../services/asset/Assetservice';
 import { AuthService } from '../../../../services/auth.service';
 //import { AlertService } from '../../../../services/alert.service';
@@ -32,6 +32,8 @@ export class AssetMaintenanceWarrantyComponent implements OnInit {
     static assetService;
     isSaving: boolean;
     assetwarrantystatusList: any[] = [];
+    @ViewChild('fileUploadInput') fileUploadInput: any;
+    formData = new FormData()
     /** asset-maintenance-warranty ctor */
     constructor(private router: ActivatedRoute, private assetService: AssetService, private vendorService: VendorService, private route: Router,
         private authService: AuthService, private alertService: AlertService, private glAccountService: GlAccountService, private commonservice: CommonService, ) {
@@ -137,6 +139,25 @@ export class AssetMaintenanceWarrantyComponent implements OnInit {
                 return this.assetwarrantystatusList[i].warrantyStatus;
         }
     }
+
+    fileUpload(event) {
+        console.log(event, "event+++")
+        for (let file of event.files) {
+            this.formData.append(file.name, file);
+            this.currentMaintenance.assetMaintenanceContractFile = file.name;
+        }
+    }
+    fileUploadwarranty(event) {
+        console.log(event, "event+++")
+        for (let file of event.files) {
+            this.formData.append(file.name, file);
+            this.currentMaintenance.warrantyFile = file.name;
+        }
+    }
+    removeFile(event) {
+        this.formData.delete(event.file.name)
+
+    }
     //getAssetWarrantyStatus() {
     //    this.commonservice.smartDropDownList('AssetWarrantyStatus', 'AssetWarrantyStatusId', 'warrantyStatus').subscribe(res => {
     //        this.assetwarrantystatusList = res;
@@ -163,6 +184,7 @@ export class AssetMaintenanceWarrantyComponent implements OnInit {
         delete this.currentMaintenance.currency;
         delete this.currentMaintenance.manufacturer;
         delete this.currentMaintenance.unitOfMeasure;
+
         if (!this.currentMaintenance.assetRecordId) {
             this.currentMaintenance.createdBy = this.userName;
             this.currentMaintenance.updatedBy = this.userName;

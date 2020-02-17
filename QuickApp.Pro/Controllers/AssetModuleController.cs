@@ -51,7 +51,7 @@ namespace QuickApp.Pro.Controllers
 
 
         [HttpGet("GetAsset/{id}")]
-        public IActionResult GetAsset(string id)
+        public IActionResult GetAsset(long id)
         {
             var result = _unitOfWork.Asset.GetAsset(id); //GetAllAssetCapes Information
             return Ok(result);
