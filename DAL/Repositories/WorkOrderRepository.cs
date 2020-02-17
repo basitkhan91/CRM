@@ -5846,6 +5846,7 @@ namespace DAL.Repositories
                                 rc.StockLineId,
                                 rc.ConditionId,
                                 rc.Reference,
+                                rc.CreatedDate,
                             })
                             .Distinct()
                             .ToList();
