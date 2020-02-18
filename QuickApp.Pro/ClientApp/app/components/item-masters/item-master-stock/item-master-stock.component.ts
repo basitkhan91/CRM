@@ -461,15 +461,7 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.sourceItemMaster.salesLastSalePriceDate = new Date();
         this.sourceItemMaster.salesLastSalesDiscountPercentDate = new Date();
         // checks the params id with the url 
-        this.itemMasterId = this._actRoute.snapshot.params['id'];
-        if (this.itemMasterId !== undefined) {
-            // get the itemmaster data by id
-            this.isEdit = true;
-            this.isItemMasterCreated = true;
-            this.getItemMasterDetailsById()
-           
-
-        }
+        
         this.Integration();
 
 
@@ -637,7 +629,15 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
         this.getConditionsList();
         this.loadSiteData();
         this.getAcquisitionTypeList();
+        this.itemMasterId = this._actRoute.snapshot.params['id'];
+        if (this.itemMasterId !== undefined) {
+            // get the itemmaster data by id
+            this.isEdit = true;
+            this.isItemMasterCreated = true;
+            this.getItemMasterDetailsById()
+           
 
+        }
 
 
         // //cutom
@@ -701,7 +701,8 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             }
             this.sourceItemMaster.expirationDate = new Date(this.sourceItemMaster.expirationDate);
             this.Integration();
-            this.sourceItemMaster.oemPNId = this.sourceItemMaster.oemPNData[0]
+            // this.sourceItemMaster.oemPNId = this.sourceItemMaster.oemPNData[0] ? this.sourceItemMaster.oemPNData[0] : undefined;
+            this.sourceItemMaster.oemPNId = getObjectById('itemMasterId', this.sourceItemMaster.oemPNId, this.allpnNumbers);
             this.ItemMasterId = this.itemMasterId;
             // assign the header values
             this.pnvalue = this.sourceItemMaster.partNumber;
