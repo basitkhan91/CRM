@@ -203,6 +203,7 @@ export class CustomerWorkSetupComponent implements OnInit {
         this.receivingForm.traceableToTypeId = 0;
         this.receivingForm.tagTypeId = 0;
         this.receivingForm.isCustomerStock = true;
+        this.receivingForm.receivedDate = new Date();
     }
 
     ngOnInit() {
@@ -739,6 +740,7 @@ export class CustomerWorkSetupComponent implements OnInit {
             //referenceId: this.receivingForm.referenceId ? editValueAssignByCondition('value', this.receivingForm.referenceId) : '',
             createdBy: this.userName,
             updatedBy: this.userName,
+            masterCompanyId: 1, 
             timeLife: {...this.sourceTimeLife, timeLifeCyclesId: this.timeLifeCyclesId, updatedDate: new Date()}            
         }
         console.log(receivingForm);
