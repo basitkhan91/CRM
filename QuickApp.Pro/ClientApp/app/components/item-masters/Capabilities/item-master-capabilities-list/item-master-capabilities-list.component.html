@@ -1,5 +1,5 @@
 ﻿<div class="card" style="padding: 10px;">
-    <div class="col-md-12">
+    <div class="col-md-12" *ngIf="!isEnableItemMasterView">
         <h4 class="po-head-sm">
             Capability
             <a #addCapabilityButton class="plusicon-cstm" href="#" data-toggle="modal" data-target="#capes1" (click)="onAddCapes()"><i class="fa fa-plus-circle fa-lg"></i></a>
@@ -34,7 +34,7 @@
         [reorderableColumns]="true" 
         [scrollable]="true" 
         scrollHeight="450px">
-        <ng-template pTemplate="caption">
+        <ng-template pTemplate="caption" *ngIf="!isEnableItemMasterView">
 
             <div style="text-align: right">
                 <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header"
@@ -170,13 +170,13 @@
 
                 <td style="width:120px">
 
-                    <button class="btn-delete" type="button" mat-icon-button matTooltip="Delete" (click)="deleteCapability(deleteCapabilityContent, rowData.itemMasterCapesId, rowData.capabilityType)">
+                    <button *ngIf="!isEnableItemMasterView" class="btn-delete" type="button" mat-icon-button matTooltip="Delete" (click)="deleteCapability(deleteCapabilityContent, rowData.itemMasterCapesId, rowData.capabilityType)">
                         <mat-icon color="warn">delete</mat-icon>
                     </button>
                     <span> <a class="btn btn-info boxed-float-btn nobg" data-toggle="modal" data-target="#viewCap" (click)="onViewCapes(rowData)"  title="View"><i class="fa fa-eye"></i></a> </span>
                     <span><a class="btn nobg" data-toggle="modal"  data-target="#viewHistory" matTooltip="History" (click)="getAuditHistory(viewHistory,rowData)"><i class="fa fa-history" ></i></a></span>
 
-                    <button type="button" class="btn-edit" mat-icon-button  data-toggle="modal" data-target="#editCap" (click)="openEdits(rowData)" matTooltip="edit">
+                    <button *ngIf="!isEnableItemMasterView" type="button" class="btn-edit" mat-icon-button  data-toggle="modal" data-target="#editCap" (click)="openEdits(rowData)" matTooltip="edit">
                         <mat-icon>edit</mat-icon>
                     </button>
 

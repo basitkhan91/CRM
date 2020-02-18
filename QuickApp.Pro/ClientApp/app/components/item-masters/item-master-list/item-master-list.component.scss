@@ -46,6 +46,20 @@
     margin-top: 6px;
     margin-right: 10px;
 }
+.purchaseTable thead tr th {
+  font-size: 12px;
+  padding: 4px;
+  text-align: center;
+}
+.bg1 {
+  background: #ff8080 !important;
+}
+.bg2 {
+  background: #83b028 !important;
+}
+.bg3 {
+  background: #1a7171 !important;
+}
   
   @media (min-width: 768px) {
       .col-md-3 {

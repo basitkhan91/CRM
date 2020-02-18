@@ -1463,8 +1463,9 @@
                             </div>
                             <div id="step4" class="panel-collapse collapse">
                                 <div class="panel-body">
-                                    <div class="modal-content p-1">
-                                        <div>
+                                    <div>
+                                        <app-item-master-capabilities-list [isEnableItemMasterView]="isEnableItemMasterView" [itemMasterId]="itemMasterId"></app-item-master-capabilities-list>
+                                        <!-- <div>
                                             <p-table [value]="allItemMasterCapsList" [rows]="6" [columns]="pnCols1" [scrollable]="true" [style]="{width:'100%'}" [paginator]="true">
                                                 <ng-template pTemplate="header" let-columns>
                                                     <tr>
@@ -1494,7 +1495,7 @@
                                                     </tr>
                                                 </ng-template>
                                             </p-table>
-                                        </div>
+                                        </div> -->
                                     </div>
                                 </div>
                             </div>
@@ -1505,10 +1506,80 @@
                             </div>
                             <div id="step5" class="panel-collapse collapse">
                                 <div class="panel-body">
-                                    <div class="modal-content p-1">
-                                        <div class="form-row">
+                                    <div class="modal-content" style="padding: 8px;">
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered purchaseTable table-sorting mpn-list-table fixed-column-table column-r1-fixed" id="mpn-list-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th colspan="10">Unit Purchase Price</th>
+                                                        <th colspan="19" class="bg1">Unit Sale Price</th>
+                                                    </tr>
+                                                    <tr>
+                                                        <th colspan="10"></th>
+                                                        <th colspan="5" class="bg2">Use Flat Sale Price</th>
+                                                        <th colspan="13" class="bg3">Calculate Unit Sale Price Using Puchase Price</th>
+                
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Cond *</th>
+                                                        <th>UOM *</th>
+                                                        <th>Currency *</th>
+                                                        <th>FX Rate *</th>
+                                                        <th>Vendor List Price</th>
+                                                        <th>Last List Price Date</th>
+                                                        <th>Purchase Disc %</th>
+                                                        <th>Purchase Disc Amount</th>
+                                                        <th>Last Purchase Disc Date</th>
+                                                        <th>Unit Purchase Price</th>
+                                                        <th class="bg2">UOM *</th>
+                                                        <th class="bg2">Currency *</th>
+                                                        <th class="bg2">FX Rate *</th>
+                                                        <th class="bg2">Flat Price Amount</th>
+                                                        <th class="bg2">Last Flat Price Date</th>
+                                                        <th class="bg3">Mark % on List Price</th>
+                                                        <th class="bg3">Mark Up Amount</th>
+                                                        <th class="bg3">Last Mark Up Date</th>
+                                                        <th class="bg3">Base Sale Price</th>
+                                                        <th class="bg3">Sale Disc %</th>
+                                                        <th class="bg3">Sale Disc Amount</th>
+                                                        <th class="bg3">Last Sales Disc Date</th>
+                                                        <th class="bg3">Unit Sale Price</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                
+                                                    <tr *ngFor="let field of purchaseSalesInfo">                
+                                                        <td>{{field.conditionName ? field.conditionName : '-'}}</td>
+                                                        <td>{{field.pP_UOMName ? field.pP_UOMName : '-'}}</td>
+                                                        <td>{{field.pP_CurrencyName ? field.pP_CurrencyName : '-'}}</td>
+                                                        <td>{{field.pP_FXRatePerc ? field.pP_FXRatePerc : '-'}}</td>
+                                                        <td>{{field.pP_VendorListPrice ? field.pP_VendorListPrice : '-'}}</td>
+                                                        <td>{{field.pP_LastListPriceDate | date:'MM-dd-yyyy'}}</td>
+                                                        <td>{{field.pP_PurchaseDiscPercValue ? field.pP_PurchaseDiscPercValue : '-'}}</td>
+                                                        <td>{{field.pP_PurchaseDiscAmount ? field.pP_PurchaseDiscAmount : '-'}}</td>
+                                                        <td>{{field.pP_LastPurchaseDiscDate | date:'MM-dd-yyyy'}}</td>
+                                                        <td>{{field.pP_UnitPurchasePrice ? field.pP_UnitPurchasePrice : '-'}}</td>
+                                                        <td>{{field.sP_FSP_UOMName ? field.sP_FSP_UOMName : '-'}}</td>
+                                                        <td>{{field.sP_FSP_CurrencyName ? field.sP_FSP_CurrencyName : '-'}}</td>
+                                                        <td>{{field.sP_FSP_FXRatePerc ? field.sP_FSP_FXRatePerc : '-'}}</td>
+                                                        <td>{{field.sP_FSP_FlatPriceAmount ? field.sP_FSP_FlatPriceAmount : '-'}}</td>
+                                                        <td>{{field.sP_FSP_LastFlatPriceDate | date:'MM-dd-yyyy'}}</td>
+                                                        <td>{{field.sP_CalSPByPP_MarkUpPercOnListPriceValue ? field.sP_CalSPByPP_MarkUpPercOnListPriceValue : '-'}}</td>
+                                                        <td>{{field.sP_CalSPByPP_MarkUpAmount ? field.sP_CalSPByPP_MarkUpAmount : '-'}}</td>
+                                                        <td>{{field.sP_CalSPByPP_LastMarkUpDate | date:'MM-dd-yyyy'}}</td>
+                                                        <td>{{field.sP_CalSPByPP_BaseSalePrice ? field.sP_CalSPByPP_BaseSalePrice : '-'}}</td>
+                                                        <td>{{field.sP_CalSPByPP_SaleDiscPercValue ? field.sP_CalSPByPP_SaleDiscPercValue : '-'}}</td>
+                                                        <td>{{field.sP_CalSPByPP_SaleDiscAmount ? field.sP_CalSPByPP_SaleDiscAmount : '-'}}</td>
+                                                        <td>{{field.sP_CalSPByPP_LastSalesDiscDate | date:'MM-dd-yyyy'}}</td>
+                                                        <td>{{field.sP_CalSPByPP_UnitSalePrice ? field.sP_CalSPByPP_UnitSalePrice : '-'}}</td>
+                                                    </tr>                                
+                                                </tbody>
+                                            </table>
+                
+                                        </div>
+                                        <!-- <div class="form-row">
                                             <div class="col-sm-6">
-                                                <h4>Purchase Price</h4>
+                                                <h4 class="po-head">Purchase Price</h4>
                                                 <p><span class="label"><b>CurrencyId: </b></span><span class="value">{{viewItemMaster.purchaseCurrencyId}}</span></p>
                                                 <p><span class="label"><b>List Price: </b></span><span class="value">{{viewItemMaster.listPrice}}</span></p>
                                                 <p><span class="label"><b>Discount off list Price %: </b></span><span class="value">{{viewItemMaster.purchaseDiscountOffListPrice}}</span></p>
@@ -1519,7 +1590,7 @@
                                                 <p><span class="label"><b>Last list price after discount date: </b></span><span class="value">{{viewItemMaster.purchaseLastListPriceAfterDiscountDate}}</span></p>
                                             </div>
                                             <div class="col-sm-6">
-                                                <h4>Sales Price</h4>
+                                                <h4 class="po-head">Sales Price</h4>
                                                 <p><span class="label"><b>CurrencyId: </b></span><span class="value">{{viewItemMaster.salesCurrencyId}}</span></p>
                                                 <p><span class="label"><b>Markup (%) on List Price: </b></span><span class="value">{{viewItemMaster.exportValue}}</span></p>
                                                 <p><span class="label"><b>Baseline sale Price: </b></span><span class="value">{{viewItemMaster.salesLastBaselineSalesPriceDate}}</span></p>
@@ -1531,7 +1602,7 @@
                                                 <p><span class="label"><b>Last Baseline sale price date: </b></span><span class="value">{{viewItemMaster.salesLastMarkUpPercentOnListPriceDate}}</span></p>
                                                 <p><span class="label"><b>Last sale disc(%) Date: </b></span><span class="value">{{viewItemMaster.salesLastMakUpPercentOnListPriceAfterDiscDate}}</span></p>
                                             </div>
-                                        </div>
+                                        </div> -->
                                     </div>
                                 </div>
                             </div>
