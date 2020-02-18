@@ -134,7 +134,7 @@ export class VendorShippingInformationComponent {
     selectedCountries: any;
     private isEditMode: boolean = false;
     private isDeleteMode: boolean = false;
-    isEditShippingInfo: boolean = false;
+    isEditShippingInfo: boolean = false; 
     selectedRowforDelete: any;
     selectedInterRowforDelete: any = {};
     selectedInterShipViaRowforDelete: any = {};
@@ -292,8 +292,14 @@ export class VendorShippingInformationComponent {
         this.loaderForDomesticShipping = true;
         const vendorId = this.vendorId != 0 ? this.vendorId : this.local.vendorId;
         this.vendorService.getVendorShipAddressGet(vendorId).subscribe(
-            results => this.onDataLoadSuccessful(results[0]),
-            error => this.onDataLoadFailed(error)
+            results =>{
+                this.onDataLoadSuccessful(results[0]);
+                this.loaderForDomesticShipping = false;
+            } ,
+            error =>{
+                this.loaderForDomesticShipping = false;
+                this.onDataLoadFailed(error)
+            } 
         );
     }
 
@@ -318,8 +324,14 @@ export class VendorShippingInformationComponent {
         this.loadingIndicator = true;
         this.loaderForDomesticShipVia = true;
         this.vendorService.getVendorShipViaDetails(rowData).subscribe(
-            results => this.onShipViadetails(results[0]),
-            error => this.onDataLoadFailed(error)
+            results =>{
+                this.loaderForDomesticShipVia = false;
+                this.onShipViadetails(results[0])
+            } ,
+            error =>{
+                this.onDataLoadFailed(error)
+                this.loaderForDomesticShipVia = false;
+            } 
         );
         this.shipViacols = [
             { field: 'shipVia', header: 'Ship Via' },
@@ -384,14 +396,15 @@ export class VendorShippingInformationComponent {
         this.loadingIndicator = false;
         this.dataSource.data = allWorkFlows;
         this.allActions = allWorkFlows;
-        this.loaderForDomesticShipping = false;
+        // this.loaderForDomesticShipping = false;
     }
     private onShipViadetails(allWorkFlows: any) {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
         this.dataSource.data = allWorkFlows;
         this.allShipViaDetails = allWorkFlows;
-        this.loaderForDomesticShipVia = false;
+        // this.loaderForDomesticShipVia = false;
+
     }
 
     filterActions(event) {
@@ -433,8 +446,8 @@ export class VendorShippingInformationComponent {
     private onDataLoadFailed(error: any) {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
-        this.loaderForDomesticShipping = false;
-        this.loaderForDomesticShipVia = false;
+        // this.loaderForDomesticShipping = false;
+        // this.loaderForDomesticShipVia = false;
     }
 
     open(content) {
@@ -1019,14 +1032,14 @@ export class VendorShippingInformationComponent {
 
 
     getInternationalShippingByVendorId(){
-        this.loaderForInterShipping = true;
+        // this.loaderForInterShipping = true;
         const vendorId = this.local.vendorId;
         this.vendorService.getInternationalShippingByVendorId(vendorId).subscribe(res => {
             this.internationalShippingData = res;
-            this.loaderForInterShipping = false;
+            // this.loaderForInterShipping = false;
         },
         err => {
-            this.loaderForInterShipping = false;
+            // this.loaderForInterShipping = false;
         })
     }
     closeInternationalModal(){

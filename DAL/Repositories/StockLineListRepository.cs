@@ -616,51 +616,51 @@ namespace DAL.Repositories
                 var skip = take * (pageNumber - 1);
 
                 var totalRecords = (from stl in _appContext.StockLine
-                                     join im in _appContext.ItemMaster on stl.ItemMasterId equals im.ItemMasterId
-                                     join co in _appContext.Condition on stl.ConditionId equals co.ConditionId into cog
-                                     from co in cog.DefaultIfEmpty()
-                                     join ig in _appContext.Itemgroup on im.ItemGroupId equals ig.ItemGroupId into itemgroup
-                                     from ig in itemgroup.DefaultIfEmpty()
-                                     join si in _appContext.Site on stl.SiteId equals si.SiteId into sit
-                                     from si in sit.DefaultIfEmpty()
-                                     join w in _appContext.Warehouse on stl.WarehouseId equals w.WarehouseId into ware
-                                     from w in ware.DefaultIfEmpty()
-                                     join l in _appContext.Location on stl.LocationId equals l.LocationId into loc
-                                     from l in loc.DefaultIfEmpty()
-                                     join sh in _appContext.Shelf on stl.ShelfId equals sh.ShelfId into she
-                                     from sh in she.DefaultIfEmpty()
-                                     join bi in _appContext.Bin on stl.BinId equals bi.BinId into bin
-                                     from bi in bin.DefaultIfEmpty()
-                                     join po in _appContext.PurchaseOrder on stl.PurchaseOrderId equals po.PurchaseOrderId into purchase
-                                     from po in purchase.DefaultIfEmpty()
-                                     join ro in _appContext.RepairOrder on stl.RepairOrderId equals ro.RepairOrderId into repair
-                                     from ro in repair.DefaultIfEmpty()
-                                     join mana in _appContext.ManagementStructure on stl.ManagementStructureEntityId equals mana.ManagementStructureId into manage
-                                     from mana in manage.DefaultIfEmpty()
-                                     join managmentLegalEntity in _appContext.ManagementStructure on mana.ManagementStructureId equals managmentLegalEntity.ManagementStructureId into mainCompanyTree
-                                     from managmentLegalEntity in mainCompanyTree.DefaultIfEmpty()
-                                     join divmanagmentLegalEntity in _appContext.ManagementStructure on managmentLegalEntity.ParentId equals divmanagmentLegalEntity.ManagementStructureId into mainDivCompany
-                                     from divmanagmentLegalEntity in mainDivCompany.DefaultIfEmpty()
-                                     join biumanagmentLegalEntity in _appContext.ManagementStructure on divmanagmentLegalEntity.ParentId equals biumanagmentLegalEntity.ManagementStructureId into BIUDivCompany
-                                     from biumanagmentLegalEntity in BIUDivCompany.DefaultIfEmpty()
-                                     join compmanagmentLegalEntity in _appContext.ManagementStructure on biumanagmentLegalEntity.ParentId equals compmanagmentLegalEntity.ManagementStructureId into comivCompany
-                                     from compmanagmentLegalEntity in comivCompany.DefaultIfEmpty()
-                                     join ti in _appContext.TimeLife on stl.TimeLifeCyclesId equals ti.TimeLifeCyclesId into time
-                                     from ti in time.DefaultIfEmpty()
-                                     join man in _appContext.Manufacturer on stl.ManufacturerId equals man.ManufacturerId into manufa
-                                     from man in manufa.DefaultIfEmpty()
-                                     where (stl.IsDeleted == false)
-                                     && stl.PartNumber.Contains(!string.IsNullOrEmpty(stockListFilters.filters.PartNumber) ? stockListFilters.filters.PartNumber : stl.PartNumber)
-                                     && im.PartDescription.Contains(!string.IsNullOrEmpty(stockListFilters.filters.PartDescription) ? stockListFilters.filters.PartDescription : im.PartDescription)
-                                     && ig.Description.Contains(!string.IsNullOrEmpty(stockListFilters.filters.ItemGroup) ? stockListFilters.filters.ItemGroup : ig.Description)
-                                     && stl.StockLineNumber.Contains(!string.IsNullOrEmpty(stockListFilters.filters.StocklineNumber) ? stockListFilters.filters.StocklineNumber : stl.StockLineNumber)
-                                     //&& stl.SerialNumber.Contains(!string.IsNullOrEmpty(stockListFilters.filters.SerialNumber) ? stockListFilters.filters.SerialNumber : stl.SerialNumber)
-                                     && (stl.SerialNumber == null || stl.SerialNumber.Contains(!string.IsNullOrEmpty(stockListFilters.filters.SerialNumber) ? stockListFilters.filters.SerialNumber : stl.SerialNumber))
-                                     && co.Description.Contains(!string.IsNullOrEmpty(stockListFilters.filters.Condition) ? stockListFilters.filters.Condition : co.Description)
-                                     && im.GLAccount.AccountName.Contains(!string.IsNullOrEmpty(stockListFilters.filters.GlAccountName) ? stockListFilters.filters.GlAccountName : im.GLAccount.AccountName)
-                                     && stl.QuantityAvailable.ToString().Contains(!string.IsNullOrEmpty(stockListFilters.filters.QuantityAvailable) ? stockListFilters.filters.QuantityAvailable : stl.QuantityAvailable.ToString())
-                                     && stl.QuantityOnHand.ToString().Contains(!string.IsNullOrEmpty(stockListFilters.filters.QuantityOnHand) ? stockListFilters.filters.QuantityOnHand : stl.QuantityOnHand.ToString())
-                                     select new
+                                    join im in _appContext.ItemMaster on stl.ItemMasterId equals im.ItemMasterId
+                                    join co in _appContext.Condition on stl.ConditionId equals co.ConditionId into cog
+                                    from co in cog.DefaultIfEmpty()
+                                    join ig in _appContext.Itemgroup on im.ItemGroupId equals ig.ItemGroupId into itemgroup
+                                    from ig in itemgroup.DefaultIfEmpty()
+                                    join si in _appContext.Site on stl.SiteId equals si.SiteId into sit
+                                    from si in sit.DefaultIfEmpty()
+                                    join w in _appContext.Warehouse on stl.WarehouseId equals w.WarehouseId into ware
+                                    from w in ware.DefaultIfEmpty()
+                                    join l in _appContext.Location on stl.LocationId equals l.LocationId into loc
+                                    from l in loc.DefaultIfEmpty()
+                                    join sh in _appContext.Shelf on stl.ShelfId equals sh.ShelfId into she
+                                    from sh in she.DefaultIfEmpty()
+                                    join bi in _appContext.Bin on stl.BinId equals bi.BinId into bin
+                                    from bi in bin.DefaultIfEmpty()
+                                    join po in _appContext.PurchaseOrder on stl.PurchaseOrderId equals po.PurchaseOrderId into purchase
+                                    from po in purchase.DefaultIfEmpty()
+                                    join ro in _appContext.RepairOrder on stl.RepairOrderId equals ro.RepairOrderId into repair
+                                    from ro in repair.DefaultIfEmpty()
+                                    join mana in _appContext.ManagementStructure on stl.ManagementStructureEntityId equals mana.ManagementStructureId into manage
+                                    from mana in manage.DefaultIfEmpty()
+                                    join managmentLegalEntity in _appContext.ManagementStructure on mana.ManagementStructureId equals managmentLegalEntity.ManagementStructureId into mainCompanyTree
+                                    from managmentLegalEntity in mainCompanyTree.DefaultIfEmpty()
+                                    join divmanagmentLegalEntity in _appContext.ManagementStructure on managmentLegalEntity.ParentId equals divmanagmentLegalEntity.ManagementStructureId into mainDivCompany
+                                    from divmanagmentLegalEntity in mainDivCompany.DefaultIfEmpty()
+                                    join biumanagmentLegalEntity in _appContext.ManagementStructure on divmanagmentLegalEntity.ParentId equals biumanagmentLegalEntity.ManagementStructureId into BIUDivCompany
+                                    from biumanagmentLegalEntity in BIUDivCompany.DefaultIfEmpty()
+                                    join compmanagmentLegalEntity in _appContext.ManagementStructure on biumanagmentLegalEntity.ParentId equals compmanagmentLegalEntity.ManagementStructureId into comivCompany
+                                    from compmanagmentLegalEntity in comivCompany.DefaultIfEmpty()
+                                    join ti in _appContext.TimeLife on stl.TimeLifeCyclesId equals ti.TimeLifeCyclesId into time
+                                    from ti in time.DefaultIfEmpty()
+                                    join man in _appContext.Manufacturer on stl.ManufacturerId equals man.ManufacturerId into manufa
+                                    from man in manufa.DefaultIfEmpty()
+                                    where (stl.IsDeleted == false)
+                                    && stl.PartNumber.Contains(!string.IsNullOrEmpty(stockListFilters.filters.PartNumber) ? stockListFilters.filters.PartNumber : stl.PartNumber)
+                                    && im.PartDescription.Contains(!string.IsNullOrEmpty(stockListFilters.filters.PartDescription) ? stockListFilters.filters.PartDescription : im.PartDescription)
+                                    && (ig.Description== null || ig.Description.Contains(!string.IsNullOrEmpty(stockListFilters.filters.ItemGroup) ? stockListFilters.filters.ItemGroup : ig.Description))
+                                    && (stl.StockLineNumber == null || stl.StockLineNumber.Contains(!string.IsNullOrEmpty(stockListFilters.filters.StocklineNumber) ? stockListFilters.filters.StocklineNumber : stl.StockLineNumber))
+                                    //&& stl.SerialNumber.Contains(!string.IsNullOrEmpty(stockListFilters.filters.SerialNumber) ? stockListFilters.filters.SerialNumber : stl.SerialNumber)
+                                    && (stl.SerialNumber == null || stl.SerialNumber == "" || stl.SerialNumber.Contains(!string.IsNullOrEmpty(stockListFilters.filters.SerialNumber) ? stockListFilters.filters.SerialNumber : stl.SerialNumber))
+                            && (co.Description == null || co.Description.Contains(!string.IsNullOrEmpty(stockListFilters.filters.Condition) ? stockListFilters.filters.Condition : co.Description))
+                            && (im.GLAccount.AccountName == null || im.GLAccount.AccountName == "" || im.GLAccount.AccountName.Contains(!string.IsNullOrEmpty(stockListFilters.filters.GlAccountName) ? stockListFilters.filters.GlAccountName : im.GLAccount.AccountName))
+                            && (stl.QuantityAvailable == null || stl.QuantityAvailable.ToString().Contains(!string.IsNullOrEmpty(stockListFilters.filters.QuantityAvailable) ? stockListFilters.filters.QuantityAvailable : stl.QuantityAvailable.ToString()))
+                            && (stl.QuantityOnHand == null || stl.QuantityOnHand.ToString().Contains(!string.IsNullOrEmpty(stockListFilters.filters.QuantityOnHand) ? stockListFilters.filters.QuantityOnHand : stl.QuantityOnHand.ToString()))
+                                    select new
                                     {
                                         stl.StockLineNumber,
                                     }).Count();
@@ -702,35 +702,35 @@ namespace DAL.Repositories
                             where (stl.IsDeleted == false)
                             && stl.PartNumber.Contains(!string.IsNullOrEmpty(stockListFilters.filters.PartNumber) ? stockListFilters.filters.PartNumber : stl.PartNumber)
                             && im.PartDescription.Contains(!string.IsNullOrEmpty(stockListFilters.filters.PartDescription) ? stockListFilters.filters.PartDescription : im.PartDescription)
-                            && ig.Description.Contains(!string.IsNullOrEmpty(stockListFilters.filters.ItemGroup) ? stockListFilters.filters.ItemGroup : ig.Description)
-                            && stl.StockLineNumber.Contains(!string.IsNullOrEmpty(stockListFilters.filters.StocklineNumber) ? stockListFilters.filters.StocklineNumber : stl.StockLineNumber)
+                            && (ig.Description == null || ig.Description.Contains(!string.IsNullOrEmpty(stockListFilters.filters.ItemGroup) ? stockListFilters.filters.ItemGroup : ig.Description))
+                            && (stl.StockLineNumber== null || stl.StockLineNumber.Contains(!string.IsNullOrEmpty(stockListFilters.filters.StocklineNumber) ? stockListFilters.filters.StocklineNumber : stl.StockLineNumber))
                             //&& stl.SerialNumber.Contains(!string.IsNullOrEmpty(stockListFilters.filters.SerialNumber) ? stockListFilters.filters.SerialNumber : stl.SerialNumber)
-                            && (stl.SerialNumber == null || stl.SerialNumber.Contains(!string.IsNullOrEmpty(stockListFilters.filters.SerialNumber) ? stockListFilters.filters.SerialNumber : stl.SerialNumber))
-                            && co.Description.Contains(!string.IsNullOrEmpty(stockListFilters.filters.Condition) ? stockListFilters.filters.Condition : co.Description)
-                            && im.GLAccount.AccountName.Contains(!string.IsNullOrEmpty(stockListFilters.filters.GlAccountName) ? stockListFilters.filters.GlAccountName : im.GLAccount.AccountName)
-                            && stl.QuantityAvailable.ToString().Contains(!string.IsNullOrEmpty(stockListFilters.filters.QuantityAvailable) ? stockListFilters.filters.QuantityAvailable : stl.QuantityAvailable.ToString())
-                            && stl.QuantityOnHand.ToString().Contains(!string.IsNullOrEmpty(stockListFilters.filters.QuantityOnHand) ? stockListFilters.filters.QuantityOnHand : stl.QuantityOnHand.ToString())
+                            && (stl.SerialNumber == null || stl.SerialNumber == "" || stl.SerialNumber.Contains(!string.IsNullOrEmpty(stockListFilters.filters.SerialNumber) ? stockListFilters.filters.SerialNumber : stl.SerialNumber))
+                            && (co.Description == null || co.Description.Contains(!string.IsNullOrEmpty(stockListFilters.filters.Condition) ? stockListFilters.filters.Condition : co.Description))
+                            && (im.GLAccount.AccountName== null || im.GLAccount.AccountName== "" || im.GLAccount.AccountName.Contains(!string.IsNullOrEmpty(stockListFilters.filters.GlAccountName) ? stockListFilters.filters.GlAccountName : im.GLAccount.AccountName))
+                            && (stl.QuantityAvailable == null  ||stl.QuantityAvailable.ToString().Contains(!string.IsNullOrEmpty(stockListFilters.filters.QuantityAvailable) ? stockListFilters.filters.QuantityAvailable : stl.QuantityAvailable.ToString()))
+                            && (stl.QuantityOnHand== null || stl.QuantityOnHand.ToString().Contains(!string.IsNullOrEmpty(stockListFilters.filters.QuantityOnHand) ? stockListFilters.filters.QuantityOnHand : stl.QuantityOnHand.ToString()))
                             select new
                             {
                                 stl,
                                 stl.StockLineId,
-                                ItemTypeId = im== null ?0: im.ItemTypeId,
+                                ItemTypeId = im == null ? 0 : im.ItemTypeId,
                                 ExpirationDate = im == null ? null : im.ExpirationDate,
-                                glAccountName = im == null ?"": im.GLAccount.AccountName,
-                                partDescription = im == null ?"": im.PartDescription,
+                                glAccountName = im == null ? "" : im.GLAccount.AccountName,
+                                partDescription = im == null ? "" : im.PartDescription,
                                 partNumber = stl.PartNumber,
                                 stockLineNumber = stl.StockLineNumber,
                                 stl.ControlNumber,
                                 stl.TagDate,
-                                glGLAccountId = stl.GLAccountId,                                
-                                location = l==null?"": l.Name,
-                                warehouse = w== null ?"": w.Name,                               
+                                glGLAccountId = stl.GLAccountId,
+                                location = l == null ? "" : l.Name,
+                                warehouse = w == null ? "" : w.Name,
                                 stl.SerialNumber,
-                                conditionId = co== null ?0: co.ConditionId,
+                                conditionId = co == null ? 0 : co.ConditionId,
                                 condition = co == null ? "" : co.Description,
-                                itemGroup = ig== null?"": ig.Description,
+                                itemGroup = ig == null ? "" : ig.Description,
                                 conditionType = co == null ? "" : co.Description,
-                                stl.IdNumber,                               
+                                stl.IdNumber,
                                 stl.ManagementStructureEntityId,
                                 stl.QuantityOnOrder,
                                 stl.QuantityAvailable,
@@ -745,9 +745,9 @@ namespace DAL.Repositories
                                 stl.BlackListed,
                                 stl.BlackListedReason,
                                 stl.EngineSerialNumber,
-                                stl.AircraftTailNumber,                              
+                                stl.AircraftTailNumber,
                                 stl.ShelfLifeExpirationDate,
-                                siteName = si== null?"": si.Name,
+                                siteName = si == null ? "" : si.Name,
                                 shelfName = sh == null ? "" : sh.Name,
                                 binName = bi == null ? "" : bi.Name,
                                 siteId = stl.SiteId,
@@ -770,11 +770,11 @@ namespace DAL.Repositories
                                 stl.CalibrationMemo,
                                 stl.OrderDate,
                                 stl.PurchaseOrderUnitCost,
-                                PurchaseOrderNumber= po==null?"": po.PurchaseOrderNumber,                               
+                                PurchaseOrderNumber = po == null ? "" : po.PurchaseOrderNumber,
                                 RepairOrderNumber = ro == null ? "" : ro.RepairOrderNumber,
                                 stl.RepairOrderUnitCost,
                                 stl.InventoryUnitCost,
-                                stl.ReceivedDate,                               
+                                stl.ReceivedDate,
                                 stl.ReconciliationNumber,
                                 stl.UnitSalesPrice,
                                 stl.CoreUnitCost,
@@ -793,7 +793,7 @@ namespace DAL.Repositories
                                 stl.UnitSalePriceAdjustmentReasonTypeId,
                                 stl.TimeLifeCyclesId,
                                 stl.isActive,
-                                CyclesRemaining= ti == null ? 0:ti.CyclesRemaining,
+                                CyclesRemaining = ti == null ? 0 : ti.CyclesRemaining,
                                 CyclesSinceNew = ti == null ? 0 : ti.CyclesSinceNew,
                                 CyclesSinceOVH = ti == null ? 0 : ti.CyclesSinceOVH,
                                 CyclesSinceRepair = ti == null ? 0 : ti.CyclesSinceRepair,
@@ -806,20 +806,20 @@ namespace DAL.Repositories
                                 LastSinceInspection = ti == null ? 0 : ti.LastSinceInspection,
                                 LastSinceNew = ti == null ? 0 : ti.LastSinceNew,
                                 LastSinceOVH = ti == null ? 0 : ti.LastSinceOVH,
-                                Name = man== null?"": man.Name,
-                                Code= mana == null ? "" : mana.Code,
-                                im,
-                                man,
-                                co,
-                                w,
-                                l,
-                                po,
-                                ro, 
-                                managmentLegalEntity,
-                                divmanagmentLegalEntity,
-                                biumanagmentLegalEntity,
-                                compmanagmentLegalEntity,
-                                mana,
+                                Name = man == null ? "" : man.Name,
+                                Code = mana == null ? "" : mana.Code,
+                                //im,
+                                //man,
+                                //co,
+                                //w,
+                                //l,
+                                //po,
+                                //ro, 
+                                //managmentLegalEntity,
+                                //divmanagmentLegalEntity,
+                                //biumanagmentLegalEntity,
+                                //compmanagmentLegalEntity,
+                                //mana,
                                 stl.CreatedDate,
                                 totalRecords
                             }).OrderByDescending(p => p.CreatedDate)
@@ -1287,7 +1287,7 @@ namespace DAL.Repositories
                                 ro.RepairOrderNumber,
                                 stl.RepairOrderUnitCost,
                                 stl.InventoryUnitCost,
-                                stl.ReceivedDate,                             
+                                stl.ReceivedDate,
                                 stl.ReconciliationNumber,
                                 stl.UnitSalesPrice,
                                 stl.CoreUnitCost,
@@ -1350,7 +1350,7 @@ namespace DAL.Repositories
                                 stl.ShippingAccount,
                                 stl.ShippingReference,
                                 im.ITARNumber,
-                                im.NationalStockNumber,                               
+                                im.NationalStockNumber,
                             }).FirstOrDefault();
                 return data;
             }
@@ -1359,7 +1359,7 @@ namespace DAL.Repositories
                 throw ex;
             }
         }
-        
+
 
         public IEnumerable<object> GetAllStockLineAdjustmentlistData(long id)
         {
@@ -1404,12 +1404,12 @@ namespace DAL.Repositories
                                   ip.IsActive,
                                   i.CreatedBy,
                                   i.CreatedDate,
-                                  i.Description,                                                           
+                                  i.Description,
                                   i.MasterCompanyId,
                                   i.Memo,
                                   i.PortalUrl,
                                   i.UpdatedBy,
-                                  i.UpdatedDate,                                                                   
+                                  i.UpdatedDate,
 
                               }).ToList();
                 return result;
@@ -1424,8 +1424,8 @@ namespace DAL.Repositories
         {
             try
             {
-                var result = (from integrate in _appContext.IntegrationPortal 
-                              where integrate.IsActive == true && (integrate.IsDeleted==false || integrate.IsDeleted == null)
+                var result = (from integrate in _appContext.IntegrationPortal
+                              where integrate.IsActive == true && (integrate.IsDeleted == false || integrate.IsDeleted == null)
                               select new
                               {
                                   integrate,
@@ -1529,8 +1529,8 @@ namespace DAL.Repositories
                             from im in stlim.DefaultIfEmpty()
                             join cnd in _appContext.Condition on stl.ConditionId equals cnd.ConditionId into stlcnd
                             from cnd in stlcnd.DefaultIfEmpty()
-                            //join mnf in _appContext.Manufacturer on stl.ManufacturerId equals mnf.ManufacturerId into stlmnf
-                           // from mnf in stlmnf.DefaultIfEmpty()
+                                //join mnf in _appContext.Manufacturer on stl.ManufacturerId equals mnf.ManufacturerId into stlmnf
+                                // from mnf in stlmnf.DefaultIfEmpty()
                             join whs in _appContext.Warehouse on stl.WarehouseId equals whs.WarehouseId into stlwhs
                             from whs in stlwhs.DefaultIfEmpty()
                             join shf in _appContext.Shelf on stl.ShelfId equals shf.ShelfId into stlshf
@@ -1677,8 +1677,8 @@ namespace DAL.Repositories
                                     from im in stlim.DefaultIfEmpty()
                                     join cnd in _appContext.Condition on stl.ConditionId equals cnd.ConditionId into stlcnd
                                     from cnd in stlcnd.DefaultIfEmpty()
-                                    //join mnf in _appContext.Manufacturer on stl.ManufacturerId equals mnf.ManufacturerId into stlmnf
-                                    //from mnf in stlmnf.DefaultIfEmpty()
+                                        //join mnf in _appContext.Manufacturer on stl.ManufacturerId equals mnf.ManufacturerId into stlmnf
+                                        //from mnf in stlmnf.DefaultIfEmpty()
                                     join whs in _appContext.Warehouse on stl.WarehouseId equals whs.WarehouseId into stlwhs
                                     from whs in stlwhs.DefaultIfEmpty()
                                     join shf in _appContext.Shelf on stl.ShelfId equals shf.ShelfId into stlshf
@@ -1689,13 +1689,13 @@ namespace DAL.Repositories
                                     from glc in stlglc.DefaultIfEmpty()
                                     join pox in _appContext.PurchaseOrder on stl.PurchaseOrderId equals pox.PurchaseOrderId into stlpox
                                     from pox in stlpox.DefaultIfEmpty()
-                                    join v in _appContext.Vendor on pox.VendorId equals v.VendorId  into poxv
+                                    join v in _appContext.Vendor on pox.VendorId equals v.VendorId into poxv
                                     from v in poxv.DefaultIfEmpty()
                                     join rox in _appContext.RepairOrder on stl.RepairOrderId equals rox.RepairOrderId into stlrox
                                     from rox in stlrox.DefaultIfEmpty()
                                     join mpx in _appContext.MasterParts on im.MasterPartId equals mpx.MasterPartId into stlmpx
                                     from mpx in stlmpx.DefaultIfEmpty()
-                                    where stl.IsDeleted == false 
+                                    where stl.IsDeleted == false
                                     select new StockLineReportFilter()
                                     {
                                         StockLineId = stl.StockLineId,
@@ -1730,8 +1730,8 @@ namespace DAL.Repositories
                             from im in stlim.DefaultIfEmpty()
                             join cnd in _appContext.Condition on stl.ConditionId equals cnd.ConditionId into stlcnd
                             from cnd in stlcnd.DefaultIfEmpty()
-                            //join mnf in _appContext.Manufacturer on stl.ManufacturerId equals mnf.ManufacturerId into stlmnf
-                           // from mnf in stlmnf.DefaultIfEmpty()
+                                //join mnf in _appContext.Manufacturer on stl.ManufacturerId equals mnf.ManufacturerId into stlmnf
+                                // from mnf in stlmnf.DefaultIfEmpty()
                             join whs in _appContext.Warehouse on stl.WarehouseId equals whs.WarehouseId into stlwhs
                             from whs in stlwhs.DefaultIfEmpty()
                             join shf in _appContext.Shelf on stl.ShelfId equals shf.ShelfId into stlshf
@@ -1748,10 +1748,10 @@ namespace DAL.Repositories
                             from rox in stlrox.DefaultIfEmpty()
                             join mpx in _appContext.MasterParts on im.MasterPartId equals mpx.MasterPartId into stlmpx
                             from mpx in stlmpx.DefaultIfEmpty()
-                            where stl.IsDeleted == false 
+                            where stl.IsDeleted == false
                             select new StockLineReportFilter()
                             {
-                                StockLineId=stl.StockLineId,
+                                StockLineId = stl.StockLineId,
                                 partNumber = mpx.PartNumber == null ? "" : mpx.PartNumber,
                                 partDescription = mpx.Description == null ? "" : mpx.Description,
                                 serialNumber = stl.SerialNumber == null ? "" : stl.SerialNumber,

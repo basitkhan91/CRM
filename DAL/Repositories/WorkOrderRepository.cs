@@ -1127,6 +1127,7 @@ namespace DAL.Repositories
                         if (recCustomer != null)
                         {
                             customerRef = recCustomer.Reference;
+                            workOrder.ManagementStructureId =Convert.ToInt64(recCustomer.ManagementStructureId);
                         }
                         workOrder.CustomerReference = workOrder.CustomerDetails.CustomerRef = customerRef;
                         workOrder.CustomerDetails.CustomerName = customer.Name;
@@ -1255,8 +1256,10 @@ namespace DAL.Repositories
                 var workOrderHeader = (from wo in _appContext.WorkOrder
                                        join c in _appContext.Customer on wo.CustomerId equals c.CustomerId
                                        join ct in _appContext.CreditTerms on c.CreditTermsId equals ct.CreditTermsId
-                                       join e in _appContext.Employee on wo.EmployeeId equals e.EmployeeId
-                                       join sp in _appContext.Employee on wo.SalesPersonId equals sp.EmployeeId
+                                       join e in _appContext.Employee on wo.EmployeeId equals e.EmployeeId into woe
+                                       from e in woe.DefaultIfEmpty()
+                                       join sp in _appContext.Employee on wo.SalesPersonId equals sp.EmployeeId into wosp
+                                       from sp in wosp.DefaultIfEmpty()
                                        join ws in _appContext.WorkOrderStatus on wo.WorkOrderStatusId equals ws.Id
                                        join wf in _appContext.WorkOrderWorkFlow on wo.WorkOrderId equals wf.WorkOrderId
                                        join ps in _appContext.Employee on c.PrimarySalesPersonId equals ps.EmployeeId into cps
@@ -1274,13 +1277,13 @@ namespace DAL.Repositories
                                            c.CreditLimit,
                                            wo.OpenDate,
                                            c.ContractReference,
-                                           Employee = e.FirstName,
-                                           Salesperson = sp.FirstName,
+                                           Employee = e==null?"":e.FirstName+" "+e.LastName,
+                                           Salesperson = sp==null?"": sp.FirstName+" "+sp.LastName,
                                            WOStatus = ws.Description,
                                            c.CustomerCode,
                                            c.CustomerContact,
-                                           CSR = ps == null ? "" : ps.FirstName,
-                                           CustomerReference = c.ContractReference,
+                                           CSR = ps == null ? "" : ps.FirstName+" "+ps.LastName,
+                                           //CustomerReference = c.ContractReference,
                                            workFlowWorkOrderId = wo.IsSinglePN == true ? wf.WorkFlowWorkOrderId : 0,
                                            workFlowId = wo.IsSinglePN == true ? wf.WorkflowId : 0,
                                            wo.ManagementStructureId,
@@ -1305,9 +1308,9 @@ namespace DAL.Repositories
                             join pr in _appContext.Priority on wop.WorkOrderPriorityId equals pr.PriorityId
                             join ws in _appContext.WorkScope on wop.WorkOrderScopeId equals ws.WorkScopeId
                             join im in _appContext.ItemMaster on wop.MasterPartId equals im.ItemMasterId
-                            join rp in _appContext.Nha_Tla_Alt_Equ_ItemMapping on wop.MappingItemMasterId equals rp.MappingItemMasterId into woprp
-                            from rp in woprp.DefaultIfEmpty()
-                            join im1 in _appContext.ItemMaster on rp.MappingItemMasterId equals im1.ItemMasterId into rpim1
+                            //join rp in _appContext.Nha_Tla_Alt_Equ_ItemMapping on wop.MappingItemMasterId equals rp.MappingItemMasterId into woprp
+                            //from rp in woprp.DefaultIfEmpty()
+                            join im1 in _appContext.ItemMaster on wop.RevisedPartId equals im1.ItemMasterId into rpim1
                             from im1 in rpim1.DefaultIfEmpty()
                             join wos in _appContext.WorkOrderStage on wop.WorkOrderStageId equals wos.WorkOrderStageId
                             join wost in _appContext.WorkOrderStatus on wop.WorkOrderStatusId equals wost.Id
@@ -1319,6 +1322,8 @@ namespace DAL.Repositories
                             from pub in woppub.DefaultIfEmpty()
                             join tech in _appContext.Employee on wop.TechnicianId equals tech.EmployeeId into woptech
                             from tech in woptech.DefaultIfEmpty()
+                            join rc in _appContext.ReceivingCustomerWork on sl.StockLineId equals rc.StockLineId into slrc
+                            from rc in slrc.DefaultIfEmpty()
                             where wop.WorkOrderId == workOrderId
                             select new
                             {
@@ -1345,7 +1350,9 @@ namespace DAL.Repositories
                                 TATDaysCurrent = 0,
                                 TATDaysStandard = wop.TATDaysStandard,
                                 WorkScope = ws.Description,
-                                wop.WorkOrderId
+                                wop.WorkOrderId,
+                                ReceivedDate=rc==null?" ": rc.ReceivedDate.ToString(),
+                                ReceivingNumber =rc==null?" ":rc.ReceivingNumber,
                             }
                           ).Distinct()
                           .ToList();
@@ -2893,7 +2900,8 @@ namespace DAL.Repositories
                                                   SerialNumber = sl == null ? "" : sl.SerialNumber,
                                                   Provision = p == null ? "" : p.Description,
                                                   Oem = im.PMA == true && im.DER == true ? "PMA&DER" : (im.PMA == true && im.DER == false ? "PMA" : (im.PMA == false && im.DER == true ? "DER" : "")),
-                                                  Control = sl == null ? "" : sl.IdNumber,
+                                                  ControlId = sl == null ? "" : sl.IdNumber,
+                                                  ControlNo = sl == null ? "" : sl.ControlNumber,
                                                   Condition = c.Description,
                                                   ItemType = string.Empty,
                                                   QunatityRequried = wom.Quantity,
@@ -5827,7 +5835,7 @@ namespace DAL.Repositories
                             join sl in _appContext.StockLine on rc.StockLineId equals sl.StockLineId
                             join im in _appContext.ItemMaster on rc.ItemMasterId equals im.ItemMasterId
                             join con in _appContext.Condition on rc.ConditionId equals con.ConditionId
-                            where rc.IsActive == true && rc.IsDeleted == false// && sl.WorkOrderId==null
+                            where rc.IsActive == true && rc.IsDeleted == false && sl.WorkOrderId==null
                             && rc.CustomerId == customerId
                             select new
                             {
@@ -7933,6 +7941,7 @@ namespace DAL.Repositories
                 woStockLine.UpdatedBy = part.UpdatedBy;
                 woStockLine.WorkOrderMaterialsId = part.WorkOrderMaterialsId;
                 _appContext.StockLine.Update(woStockLine);
+                _appContext.SaveChanges();
             }
             else
             {
@@ -7997,9 +8006,18 @@ namespace DAL.Repositories
                     stockLine.QuantityAvailable = 0;
 
                 _appContext.StockLine.Add(stockLine);
+
+                _appContext.SaveChanges();
+
+                stockLine.StockLineNumber = "STL-" + stockLine.StockLineId;
+                stockLine.ControlNumber = "CNT-" + stockLine.StockLineId;
+                stockLine.IdNumber = "Id-" + stockLine.StockLineId;
+
+                _appContext.StockLine.Update(stockLine);
+                _appContext.SaveChanges();
             }
 
-            _appContext.SaveChanges();
+           
         }
 
         private void SaveWorkOrderMaterialAltPart(WOReservedIssuedAltParts part)
@@ -8147,6 +8165,7 @@ namespace DAL.Repositories
                     woStockLine.QuantityAvailable = 0;
 
                 _appContext.StockLine.Update(woStockLine);
+                _appContext.SaveChanges();
             }
             else
             {
@@ -8186,9 +8205,16 @@ namespace DAL.Repositories
                 if (stockLine.QuantityAvailable == null)
                     stockLine.QuantityAvailable = 0;
                 _appContext.StockLine.Add(stockLine);
+
+                stockLine.StockLineNumber = "STL-" + stockLine.StockLineId;
+                stockLine.ControlNumber = "CNT-" + stockLine.StockLineId;
+                stockLine.IdNumber = "Id-" + stockLine.StockLineId;
+
+                _appContext.StockLine.Update(stockLine);
+                _appContext.SaveChanges();
             }
 
-            _appContext.SaveChanges();
+            
         }
 
         private long UpdateWorkFlowWorkOrder(Workflow workFlow)
