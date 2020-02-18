@@ -1381,8 +1381,8 @@ namespace DAL.Repositories
                             CreatedBy = vba.CreatedBy,
                             UpdatedBy = vba.UpdatedBy,
                             IsActive = vba.IsActive,
-                            FullContact = vba.WorkPhone + " - " + vba.WorkPhoneExtn,
-
+                            FullContact = vba.WorkPhone + " - " +(vba.WorkPhoneExtn==null? "":vba.WorkPhoneExtn),
+                            
                             IsDefaultContact = vba.IsDefaultContact
                         }).OrderByDescending(p => p.UpdatedDate).ToList();
             return list;
