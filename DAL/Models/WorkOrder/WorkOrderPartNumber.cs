@@ -59,6 +59,8 @@ namespace DAL.Models
         public long ReceivingCustomerWorkId { get; set; }
         [NotMapped]
         public DateTime ReceivedDate { get; set; }
+        [NotMapped]
+        public string ReceivingNumber { get; set; }
     }
 
     public class RevisedPart

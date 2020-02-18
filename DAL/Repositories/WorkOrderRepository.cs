@@ -1110,6 +1110,8 @@ namespace DAL.Repositories
                                 part.PartNumber = partDetails.PartNumber;
                                 part.RevisedPartNo = partDetails.RevisedPartNo;
                                 part.ReceivingCustomerWorkId = partDetails.ReceivingCustomerWorkId;
+                                part.ReceivedDate = partDetails.ReceivedDate;
+                                part.ReceivingNumber = partDetails.ReceivingNumber;
                             }
                         }
                     }
@@ -1193,7 +1195,7 @@ namespace DAL.Repositories
 
                     workOrder.isRecCustomer = true;
                     workOrder.WorkOrderNum = "";
-                    workOrder.ManagementStructureId =Convert.ToInt64(recevingCustomer.ManagementStructureId);
+                    workOrder.ManagementStructureId = Convert.ToInt64(recevingCustomer.ManagementStructureId);
                     workOrder.WorkOrderTypeId = 1;
                     workOrder.IsSinglePN = true;
                     workOrder.WorkOrderStatusId = 1;
@@ -1229,12 +1231,8 @@ namespace DAL.Repositories
                         workOrderPart.MasterPartId = recevingCustomer.ItemMasterId;
                         workOrderPart.ConditionId = recevingCustomer.ConditionId;
                         workOrderPart.StockLineId = Convert.ToInt64(recevingCustomer.StockLineId);
-                        //workOrderPart.EstimatedCompletionDate = DateTime.Now;
-                        //workOrderPart.EstimatedShipDate = DateTime.Now; ;
-                        //workOrderPart.CustomerRequestDate = DateTime.Now;
-                        //workOrderPart.PromisedDate = DateTime.Now;
-
-                        workOrderPart.ReceivedDate = recevingCustomer.CreatedDate;
+                        workOrderPart.ReceivedDate = recevingCustomer.ReceivedDate;
+                        workOrderPart.ReceivingNumber = recevingCustomer.ReceivingNumber;
                     }
 
                     workOrder.PartNumbers.Add(workOrderPart);
@@ -1852,7 +1850,7 @@ namespace DAL.Repositories
                                 Stage = wop.Description,
                                 WorkOrderPartNumberId = wop.ID,
                                 wop.WorkOrderScopeId,
-                                StockLineNo= sl==null?"":sl.StockLineNumber
+                                StockLineNo = sl == null ? "" : sl.StockLineNumber
                             }
                           ).Distinct()
                           .ToList();
@@ -2775,7 +2773,7 @@ namespace DAL.Repositories
             }
         }
 
-        public void WorkOrderDocumentStatus(long workOrderDocumentsId,bool status, string updatedBy)
+        public void WorkOrderDocumentStatus(long workOrderDocumentsId, bool status, string updatedBy)
         {
             try
             {
@@ -4242,7 +4240,7 @@ namespace DAL.Repositories
                     var exeMaterials = _appContext.WorkOrderQuoteMaterial.Where(p => p.WorkOrderQuoteDetailsId == quoteMaterials.WorkOrderQuoteDetailsId).AsNoTracking().ToList();
                     _appContext.WorkOrderQuoteMaterial.RemoveRange(exeMaterials);
                     quoteMaterials.WorkOrderQuoteMaterial = quoteMaterials.WorkOrderQuoteMaterial.Where(p => p.IsDeleted == false).ToList();
-                    quoteMaterials.WorkOrderQuoteMaterial.ForEach(p => { p.WorkOrderQuoteMaterialId = 0; p.IsActive = true;p.IsDeleted = false;p.CreatedDate = DateTime.Now;p.UpdatedDate = DateTime.Now; });
+                    quoteMaterials.WorkOrderQuoteMaterial.ForEach(p => { p.WorkOrderQuoteMaterialId = 0; p.IsActive = true; p.IsDeleted = false; p.CreatedDate = DateTime.Now; p.UpdatedDate = DateTime.Now; });
                     _appContext.WorkOrderQuoteDetails.Update(quoteMaterials);
                 }
                 else
@@ -5594,7 +5592,7 @@ namespace DAL.Repositories
                 workOrderSettings.UpdatedDate = DateTime.Now;
                 workOrderSettings.IsActive = true;
                 workOrderSettings.IsDeleted = false;
-                if(workOrderSettings.WorkOrderSettingId>0)
+                if (workOrderSettings.WorkOrderSettingId > 0)
                 {
                     _appContext.WorkOrderSettings.Update(workOrderSettings);
                 }
@@ -5613,7 +5611,7 @@ namespace DAL.Repositories
             }
         }
 
-        public WorkOrderSettings GetWorkOrderSettings(int masterCompanyId,int? workOrderTypeId)
+        public WorkOrderSettings GetWorkOrderSettings(int masterCompanyId, int? workOrderTypeId)
         {
             try
             {
@@ -5847,7 +5845,9 @@ namespace DAL.Repositories
                                 rc.StockLineId,
                                 rc.ConditionId,
                                 rc.Reference,
-                                ReceivingDate= rc.CreatedDate,
+                                rc.ReceivedDate,
+                                rc.ReceivingNumber
+
                             })
                             .Distinct()
                             .ToList();
@@ -8415,6 +8415,8 @@ namespace DAL.Repositories
                                 Condition = con.Description,
                                 StockLineNumber = sl.StockLineNumber,
                                 SerialNumber = rc.SerialNumber,
+                                ReceivedDate = rc.ReceivedDate,
+                                ReceivingNumber = rc.ReceivingNumber,
                             }).FirstOrDefault();
 
 
