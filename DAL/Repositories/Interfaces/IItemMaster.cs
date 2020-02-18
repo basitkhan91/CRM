@@ -67,6 +67,7 @@ namespace DAL.Repositories.Interfaces
         IEnumerable<object> GetPartnumberList();
 
         List<ItemMasterCapes> CreateItemMasterCapes(List<ItemMasterCapes> itemMasterCapes);
+       ItemMasterCapes UpdateItemMasterCapes(ItemMasterCapes itemMasterCapes);
         object ItemMasterCapesById(long itemMasterCapesId);
         void DeleteItemMasterCapes(long itemMasterCapesId, string updatedBy);
         IEnumerable<object> ItemMasterCapsAudit(long itemMasterCapesId);

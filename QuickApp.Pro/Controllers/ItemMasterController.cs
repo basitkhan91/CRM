@@ -2267,6 +2267,20 @@ namespace QuickApp.Pro.Controllers
             return Ok(ModelState);
         }
 
+        [HttpPut("updateitemmastercapes/{ItemMasterCapesId}")]
+        public IActionResult UpdateItemMasterCapes(long ItemMasterCapesId,[FromBody]ItemMasterCapes itemMasterCapes)
+        {
+            if (ModelState.IsValid)
+            {
+                if(itemMasterCapes.ItemMasterCapesId > 0)
+                {                    
+                    var result = _unitOfWork.itemMaster.UpdateItemMasterCapes(itemMasterCapes);
+                    return Ok(result);
+                }               
+            }
+            return Ok(ModelState);
+        }
+
         [HttpGet("ItemMasterCapsById/{itemMasterCapesId}")]
         public IActionResult ItemMasterCapesById(long itemMasterCapesId)
         {

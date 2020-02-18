@@ -1140,6 +1140,12 @@ export class ItemMasterEndpoint extends EndpointFactory {
         return this.http.post(url, JSON.stringify(data), this.getRequestHeaders() );
     }
 
+    updateItemMasterCapes(capId, data){
+        const url = `${this.configurations.baseUrl}/api/ItemMaster/updateitemmastercapes/${capId}`;
+        return this.http.put<any>(url, JSON.stringify(data), this.getRequestHeaders() );
+
+    }
+
     //deleteCapabilityById
     deleteCapabilityById<T>(capabilityId: number, user): Observable<T> {
         let endpointUrl = `${this.deleteCapabilityUrl}?itemMasterCapesId=${capabilityId}&updatedBy=${user}`

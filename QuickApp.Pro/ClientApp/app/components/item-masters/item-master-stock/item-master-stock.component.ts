@@ -4415,10 +4415,13 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
             // get aircraft Mapped Data 
             this.getAircraftMappedDataByItemMasterId();
 
-        }, err => {
-            const errorLog = err;
-            this.errorMessageHandler(errorLog);
-            // reset poupup aircraft information
+        }, error => {
+            this.alertService.showMessage(
+                'Failed',
+                error.error,
+                MessageSeverity.error
+            );
+            const errorLog = error;            // reset poupup aircraft information
             this.aircraftData = undefined;
             this.selectedAircraftId = undefined;
             this.selectedModelId = undefined;

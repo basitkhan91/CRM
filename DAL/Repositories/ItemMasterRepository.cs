@@ -1331,6 +1331,7 @@ namespace DAL.Repositories
             try
             {
                 itemMasterCapes.ForEach(p => { p.IsActive = true; p.IsDeleted = false; p.CreatedDate = DateTime.Now; p.UpdatedDate = DateTime.Now; });
+
                 _appContext.ItemMasterCapes.AddRange(itemMasterCapes);
                 _appContext.SaveChanges();
                 return itemMasterCapes;
@@ -1340,6 +1341,26 @@ namespace DAL.Repositories
 
                 throw;
             }
+        }
+        public ItemMasterCapes UpdateItemMasterCapes(ItemMasterCapes itemMasterCapes)
+        {
+            var data = _appContext.ItemMasterCapes.AsNoTracking().Where(p => p.ItemMasterCapesId == itemMasterCapes.ItemMasterCapesId).FirstOrDefault();
+
+            data.ItemMasterId = itemMasterCapes.ItemMasterId;
+            data.CapabilityTypeId = itemMasterCapes.CapabilityTypeId;
+            data.ManagementStructureId = itemMasterCapes.ManagementStructureId;
+            data.IsVerified = itemMasterCapes.IsVerified;
+            data.MasterCompanyId = itemMasterCapes.MasterCompanyId;
+            data.VerifiedById = itemMasterCapes.VerifiedById;
+            data.Memo = itemMasterCapes.Memo;
+            data.UpdatedBy = itemMasterCapes.UpdatedBy;
+            data.UpdatedDate = DateTime.Now;
+            data.IsActive = itemMasterCapes.IsActive;
+           
+            //data.IsDeleted = itemMasterCapes.IsDeleted;
+            _appContext.ItemMasterCapes.Update(data);
+            _appContext.SaveChanges();
+            return itemMasterCapes;
         }
 
         public object ItemMasterCapesById(long itemMasterCapesId)
@@ -1377,8 +1398,10 @@ namespace DAL.Repositories
                               im.PartDescription,
                               Manufacturer = ma.Name,
                               VerifiedBy = ver != null ? string.Concat(ver.FirstName + " " + ver.LastName) : "",
+                              verifiedById = ver == null ? 0 : ver.EmployeeId,
+                              capabilityTypeId = imc.CapabilityTypeId,
                           }).FirstOrDefault();
-
+                       
             return result;
         }
 
@@ -1545,11 +1568,14 @@ namespace DAL.Repositories
                                         capabilityType = ct.Description,
                                         isVerified = imc.IsVerified,
                                         verifiedBy = ver == null ? "" : ver.FirstName,
+                                        verifiedById= ver == null ? 0 : ver.EmployeeId,
+                                        capabilityTypeId = ct.CapabilityTypeId,
                                         verifiedDate = imc.VerifiedDate,
                                         memo = imc.Memo,
                                         createdDate = imc.CreatedDate,
                                         isActive = imc.IsActive,
                                         ManagementStrId = imc.ManagementStructureId,
+                                        ItemMasterId = Convert.ToInt64(im == null ? 0 : im.ItemMasterId),
                                     }).Distinct()
                                     .Paginate(pageNumber, pageSize, sorts, filters).RecordCount;
 
@@ -1566,13 +1592,16 @@ namespace DAL.Repositories
                                 partNo = im.PartNumber,
                                 pnDiscription = im.PartDescription,
                                 capabilityType = ct.Description,
+                                capabilityTypeId = ct.CapabilityTypeId,
                                 isVerified = imc.IsVerified,
                                 verifiedBy = ver == null ? "" : ver.FirstName,
+                                verifiedById = ver == null ? 0 : ver.EmployeeId,
                                 verifiedDate = imc.VerifiedDate,
                                 memo = imc.Memo,
                                 createdDate = imc.CreatedDate,
                                 isActive = imc.IsActive,
                                 ManagementStrId = imc.ManagementStructureId,
+                                ItemMasterId=Convert.ToInt64(im == null ? 0 : im.ItemMasterId),
                                 TotalRecords = totalRecords
                             }
                           ).Distinct()

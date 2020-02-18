@@ -545,7 +545,7 @@ export class ItemMasterCreateCapabilitiesComponent implements OnInit {
                 return {
                     ...x,
                     aircraftDashNumberId: x.DashNumberId,
-                    itemMasterId: iMid,
+                    itemMasterId: parseInt(iMid),
                     masterCompanyId: 1,
                     createdBy: this.userName,
                     updatedBy: this.userName,
