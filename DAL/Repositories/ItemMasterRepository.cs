@@ -195,7 +195,7 @@ namespace DAL.Repositories
                                 //integrationPortal = inteIds.Select(e => e.Description).ToList(),
                                 //IntegrationPortalIds = iPortalIds.ToList(),
                                 iM.IsHotItem, // Hot Item added
-                                //oemPNData = Imast.ToList(),
+                                oemPNData = Imast.ToList(),
                                 oemPN = imst.PartNumber,
                                 RevisedPart = rPart.PartNumber,
                                 ItemClassification=imCls.Description,

@@ -52,6 +52,7 @@ namespace DAL.Models
         public bool? IsTimeLife { get; set; }
         public bool? IsMFGDate { get; set; }
         public long? ManufacturerId { get; set; }
+        public DateTime ReceivedDate { get; set; }
         [ForeignKey("MasterCompanyId")]
         public int MasterCompanyId { get; set; }
         public bool? IsActive { get; set; }
