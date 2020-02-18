@@ -513,7 +513,7 @@ namespace QuickApp.Pro.Controllers
         #region Work Order Documents
 
         [HttpPost("createworkorderdocuments")]
-        [Produces("application/json")]
+        //[Produces("application/json")]
         public IActionResult CreateWorkOrderDocuments()
         {
             try

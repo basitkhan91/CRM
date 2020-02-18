@@ -1108,7 +1108,9 @@ namespace DAL.Repositories
                             from emp in custemp.DefaultIfEmpty()
                             join ct in _appContext.CreditTerms on cust.CreditTermsId equals ct.CreditTermsId into custct
                             from ct in custct.DefaultIfEmpty()
-                            where rc.IsDeleted == false && rc.IsActive == true
+                            join wo in _appContext.WorkOrder on rc.WorkOrderId equals wo.WorkOrderId into rcwo
+                            from wo in rcwo.DefaultIfEmpty()
+                            where rc.IsDeleted == false && rc.IsActive == true && rc.WorkOrderId==null
                             && (cust.Name.ToLower().Contains(value.ToLower()))
                             select new
                             {
@@ -1122,6 +1124,8 @@ namespace DAL.Repositories
                                 CustomerPhoneNo = con == null ? "" : con.WorkPhone+ " "+con.WorkPhoneExtn,
                                 CustomerContact = con == null ? " " : con.FirstName,
                                 CreditTerm=ct==null?"":ct.Name,
+                                rc.ManagementStructureId,
+                                rc.ReceivingCustomerWorkId
                             }).Distinct().ToList();
                 return list;
             }
