@@ -84,7 +84,7 @@ namespace DAL.Repositories
                         join am in _appContext.AircraftModel on iM.AircraftModelId equals am.AircraftModelId
                         join ac in _appContext.AssetCapes on iM.DashNumberId equals ac.AircraftDashNumberId into airmodel
                         from ac in airmodel.DefaultIfEmpty()
-                        where myMids.Contains(iM.AircraftModelId) && myTids.Contains(iM.AircraftTypeId) && ac.AircraftDashNumberId != iM.DashNumberId && iM.IsActive == true
+                        where myMids.Contains(iM.AircraftModelId) && myTids.Contains(iM.AircraftTypeId) && iM.IsActive == true
                         select new
                         {
                             iM.DashNumber,

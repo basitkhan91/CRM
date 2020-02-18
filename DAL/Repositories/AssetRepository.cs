@@ -99,11 +99,11 @@ namespace DAL.Repositories
             }
         }
 
-        public IEnumerable<object> GetAsset(string id)
+        public IEnumerable<object> GetAsset(long id)
         {
             {
                 var data = (from asset in _appContext.Asset
-                            where asset.AssetId == id
+                            where asset.AssetRecordId == id
 
                             select new
                             {
