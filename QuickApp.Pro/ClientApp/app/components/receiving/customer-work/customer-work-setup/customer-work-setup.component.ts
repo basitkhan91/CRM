@@ -203,6 +203,7 @@ export class CustomerWorkSetupComponent implements OnInit {
         this.receivingForm.traceableToTypeId = 0;
         this.receivingForm.tagTypeId = 0;
         this.receivingForm.isCustomerStock = true;
+        this.receivingForm.receivedDate = new Date();
     }
 
     ngOnInit() {
@@ -319,6 +320,7 @@ export class CustomerWorkSetupComponent implements OnInit {
                 tagDate: res.tagDate ? new Date(res.tagDate) : '',
                 mfgDate: res.mfgDate ? new Date(res.mfgDate) : '',
                 expDate: res.expDate ? new Date(res.expDate) : '',
+                receivedDate: res.receivedDate ? new Date(res.receivedDate) : '',
                 timeLifeDate: res.timeLifeDate ? new Date(res.timeLifeDate) : '',
             };
             //this.onSelectCustomeronEdit(res.customerId);            
@@ -728,6 +730,7 @@ export class CustomerWorkSetupComponent implements OnInit {
             customerId: getValueFromObjectByKey('customerId', this.receivingForm.customerId),
             customerContactId: getValueFromObjectByKey('customerContactId', this.receivingForm.customerContactId),
             mfgDate: this.receivingForm.mfgDate ? this.datePipe.transform(this.receivingForm.mfgDate, "MM/dd/yyyy") : '',
+            receivedDate: this.receivingForm.receivedDate ? this.datePipe.transform(this.receivingForm.receivedDate, "MM/dd/yyyy") : '',
             expDate: this.receivingForm.expDate ? this.datePipe.transform(this.receivingForm.expDate, "MM/dd/yyyy") : '',
             itemMasterId: this.receivingForm.itemMasterId ? editValueAssignByCondition('value', this.receivingForm.itemMasterId) : '',
             partNumber: this.receivingForm.itemMasterId ? editValueAssignByCondition('label', this.receivingForm.itemMasterId) : '',
@@ -739,6 +742,7 @@ export class CustomerWorkSetupComponent implements OnInit {
             //referenceId: this.receivingForm.referenceId ? editValueAssignByCondition('value', this.receivingForm.referenceId) : '',
             createdBy: this.userName,
             updatedBy: this.userName,
+            masterCompanyId: 1, 
             timeLife: {...this.sourceTimeLife, timeLifeCyclesId: this.timeLifeCyclesId, updatedDate: new Date()}            
         }
         console.log(receivingForm);

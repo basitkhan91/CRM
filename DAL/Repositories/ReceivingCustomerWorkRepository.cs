@@ -184,7 +184,7 @@ namespace DAL.Repositories
 
             string sortColumn = string.Empty;
 
-            if(customerFilters.filters.woFilter!=null)
+            if (customerFilters.filters.woFilter != null)
             {
                 woFilter = customerFilters.filters.woFilter;
             }
@@ -239,8 +239,8 @@ namespace DAL.Repositories
                                 join st in _appContext.WorkOrderStatus on wop.WorkOrderStatusId equals st.Id into wopst
                                 from st in wopst.DefaultIfEmpty()
                                 where cr.IsDeleted == false
-                                && customerFilters.filters.woFilter==1? wo==null:
-                                (customerFilters.filters.woFilter == 2 ? (wo != null && wo.WorkOrderStatusId==2): (wo == null || wo!=null) )
+                                && customerFilters.filters.woFilter == 1 ? wo == null :
+                                (customerFilters.filters.woFilter == 2 ? (wo != null && wo.WorkOrderStatusId == 2) : (wo == null || wo != null))
 
                                 select new ReceivingCustomerWorkFilter()
                                 {
@@ -249,7 +249,7 @@ namespace DAL.Repositories
                                     receivedDate = cr.ReceivedDate,
                                     receivingNumber = cr.ReceivingNumber,
                                     woNumber = wo == null ? "" : wo.WorkOrderNum,
-                                    woOpenDate = wo == null && wo.OpenDate!=null ? "" : wo.OpenDate.ToString(),
+                                    woOpenDate = wo == null && wo.OpenDate != null ? "" : wo.OpenDate.ToString(),
                                     partNumber = im.PartNumber,
                                     partDescription = im.PartDescription,
                                     customerName = cust.Name,
@@ -257,8 +257,8 @@ namespace DAL.Repositories
                                     status = st == null ? "" : st.Description,
                                     ManagementStructureId = cr.ManagementStructureId,
                                     createdDate = cr.CreatedDate,
-                                    serialNumber=cr.SerialNumber,
-                                    receivedBy=emp.FirstName+" "+emp.LastName
+                                    serialNumber = cr.SerialNumber,
+                                    receivedBy = emp.FirstName + " " + emp.LastName
 
                                 }).Distinct()
                                 .Paginate(pageNumber, pageSize, sorts, filters).RecordCount;
@@ -412,7 +412,7 @@ namespace DAL.Repositories
                                 CustomerName = cust.Name,
                                 cust.CustomerCode,
                                 CustomerContact = con.FirstName,
-                                ContactPhone = con.WorkPhone+" "+ con.WorkPhoneExtn,
+                                ContactPhone = con.WorkPhone + " " + con.WorkPhoneExtn,
                                 im.PartNumber,
                                 im.PartDescription,
                                 Manufacturer = man.Name,
@@ -486,7 +486,7 @@ namespace DAL.Repositories
                                 cr.ReceivingCustomerWorkId,
                                 cr.ReceivingNumber,
                                 cr.Reference,
-                                RevisePartId=im.RevisedPartId,
+                                RevisePartId = im.RevisedPartId,
                                 cr.SerialNumber,
                                 cr.ShelfId,
                                 cr.SiteId,
@@ -708,7 +708,7 @@ namespace DAL.Repositories
                                         status = st == null ? "" : st.Description,
                                         ManagementStructureId = cr.ManagementStructureId,
                                         createdDate = cr.CreatedDate,
-                                        
+
                                     }).Distinct()
                                     .Count();
 
@@ -981,10 +981,6 @@ namespace DAL.Repositories
         {
             try
             {
-
-                //if (receivingCustomer.RevisePartId == null)
-                //    receivingCustomer.RevisePartId = _appContext.ItemMaster.Where(p => p.ItemMasterId == receivingCustomer.ItemMasterId).Select(p => p.RevisedPartId).FirstOrDefault();
-
                 receivingCustomer.CreatedDate = receivingCustomer.UpdatedDate = DateTime.Now;
                 receivingCustomer.IsActive = true;
                 receivingCustomer.IsDeleted = false;
@@ -993,29 +989,30 @@ namespace DAL.Repositories
                 _appContext.StockLine.Add(stockLine);
                 _appContext.SaveChanges();
 
-
-
-
-                stockLine.StockLineNumber = "STL-" + stockLine.StockLineId;
-                stockLine.ControlNumber = "CNT-" + stockLine.StockLineId;
-                stockLine.IdNumber = "Id-" + stockLine.StockLineId;
-                _appContext.StockLine.Update(stockLine);
-                _appContext.SaveChanges();
-
                 if (receivingCustomer.TimeLife != null)
                 {
                     receivingCustomer.TimeLife.StockLineId = stockLine.StockLineId;
                     _appContext.TimeLife.Add(receivingCustomer.TimeLife);
                     _appContext.SaveChanges();
+                    receivingCustomer.TimeLifeCyclesId = receivingCustomer.TimeLife.TimeLifeCyclesId;
+                    stockLine.TimeLifeCyclesId = receivingCustomer.TimeLife.TimeLifeCyclesId;
                 }
 
-                receivingCustomer.TimeLifeCyclesId = receivingCustomer.TimeLife.TimeLifeCyclesId;
+
                 receivingCustomer.StockLineId = stockLine.StockLineId;
                 _appContext.ReceivingCustomerWork.Add(receivingCustomer);
                 _appContext.SaveChanges();
 
                 receivingCustomer.ReceivingNumber = "REC" + receivingCustomer.ReceivingCustomerWorkId;
                 _appContext.ReceivingCustomerWork.Update(receivingCustomer);
+                _appContext.SaveChanges();
+
+                stockLine.StockLineNumber = "STL-" + stockLine.StockLineId;
+                stockLine.ControlNumber = "CNT-" + stockLine.StockLineId;
+                stockLine.IdNumber = "Id-" + stockLine.StockLineId;
+                stockLine.ReceiverNumber = "REC" + receivingCustomer.ReceivingCustomerWorkId;
+
+                _appContext.StockLine.Update(stockLine);
                 _appContext.SaveChanges();
 
                 return receivingCustomer;
@@ -1031,9 +1028,6 @@ namespace DAL.Repositories
         {
             try
             {
-                //if (receivingCustomer.RevisePartId == null)
-                //    receivingCustomer.RevisePartId = _appContext.ItemMaster.Where(p => p.ItemMasterId == receivingCustomer.ItemMasterId).Select(p => p.RevisedPartId).FirstOrDefault();
-
                 receivingCustomer.UpdatedDate = DateTime.Now;
 
                 if (receivingCustomer.TimeLife != null)
@@ -1046,9 +1040,11 @@ namespace DAL.Repositories
 
                 var exstockLine = _appContext.StockLine.Where(p => p.StockLineId == receivingCustomer.StockLineId).AsNoTracking().FirstOrDefault();
 
-                stockLine.StockLineNumber = "STL-" + exstockLine.StockLineId;
-                stockLine.ControlNumber = "CNT-" + exstockLine.StockLineId;
-                stockLine.IdNumber = "Id-" + exstockLine.StockLineId;
+                stockLine.StockLineNumber = exstockLine.StockLineNumber;
+                stockLine.ControlNumber = exstockLine.ControlNumber;
+                stockLine.IdNumber = exstockLine.IdNumber;
+                stockLine.TimeLifeCyclesId = exstockLine.TimeLifeCyclesId;
+                stockLine.ItemMasterId = receivingCustomer.ItemMasterId;
 
                 _appContext.StockLine.Update(stockLine);
                 _appContext.SaveChanges();
@@ -1108,7 +1104,9 @@ namespace DAL.Repositories
                             from emp in custemp.DefaultIfEmpty()
                             join ct in _appContext.CreditTerms on cust.CreditTermsId equals ct.CreditTermsId into custct
                             from ct in custct.DefaultIfEmpty()
-                            where rc.IsDeleted == false && rc.IsActive == true
+                            join wo in _appContext.WorkOrder on rc.WorkOrderId equals wo.WorkOrderId into rcwo
+                            from wo in rcwo.DefaultIfEmpty()
+                            where rc.IsDeleted == false && rc.IsActive == true && rc.WorkOrderId == null
                             && (cust.Name.ToLower().Contains(value.ToLower()))
                             select new
                             {
@@ -1119,9 +1117,11 @@ namespace DAL.Repositories
                                 cust.CreditLimit,
                                 cust.CreditTermsId,
                                 CustomerEmail = cust.Email,
-                                CustomerPhoneNo = con == null ? "" : con.WorkPhone+ " "+con.WorkPhoneExtn,
+                                CustomerPhoneNo = con == null ? "" : con.WorkPhone + " " + con.WorkPhoneExtn,
                                 CustomerContact = con == null ? " " : con.FirstName,
-                                CreditTerm=ct==null?"":ct.Name,
+                                CreditTerm = ct == null ? "" : ct.Name,
+                                rc.ManagementStructureId,
+                                rc.ReceivingCustomerWorkId
                             }).Distinct().ToList();
                 return list;
             }
@@ -1196,6 +1196,9 @@ namespace DAL.Repositories
             stockLine.UpdatedDate = receivingCustomer.UpdatedDate;
             stockLine.CreatedDate = receivingCustomer.CreatedDate;
             stockLine.MasterCompanyId = receivingCustomer.MasterCompanyId;
+            stockLine.Quantity = stockLine.QuantityOnHand = receivingCustomer.Quantity;
+            stockLine.ReceivedDate = receivingCustomer.ReceivedDate;
+            stockLine.ReceiverNumber = receivingCustomer.ReceivingNumber;
 
             return stockLine;
         }

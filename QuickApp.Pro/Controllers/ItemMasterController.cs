@@ -1224,22 +1224,38 @@ namespace QuickApp.Pro.Controllers
         [HttpPost("ItemMasterAircraftPost")]
         public IActionResult InsertItemmasterAircraft([FromBody] ItemMasterAircraftMapping[] itemMasterAircraftMapping)
         {
-            if (ModelState.IsValid)
+            try
             {
-                for (int i = 0; i < itemMasterAircraftMapping.Length; i++)
+                if (ModelState.IsValid)
+                {                   
+                    for (int i = 0; i < itemMasterAircraftMapping.Length; i++)
+                    {
+                        var aircraftData = _unitOfWork.Repository<ItemMasterAircraftMapping>().GetSingleOrDefault(c => c.AircraftTypeId == Convert.ToInt32(itemMasterAircraftMapping[i].AircraftTypeId) && (c.AircraftModelId == itemMasterAircraftMapping[i].AircraftModelId) && (c.DashNumberId == itemMasterAircraftMapping[i].DashNumberId) && (c.MasterCompanyId == itemMasterAircraftMapping[i].MasterCompanyId) && (c.ItemMasterId == itemMasterAircraftMapping[i].ItemMasterId));
+
+                        if (aircraftData== null)
+                        {
+                            itemMasterAircraftMapping[i].CreatedDate = DateTime.Now;
+                            itemMasterAircraftMapping[i].UpdatedDate = DateTime.Now;
+                            _unitOfWork.Repository<ItemMasterAircraftMapping>().Add(itemMasterAircraftMapping[i]);
+                            _unitOfWork.SaveChanges();
+                        }
+                        else
+                        {
+                            return BadRequest("Record already exist with these details");
+                        }
+                       
+                    }
+                    return Ok();
+                }
+                else
                 {
-                    itemMasterAircraftMapping[i].CreatedDate = DateTime.Now;
-                    itemMasterAircraftMapping[i].UpdatedDate = DateTime.Now;
-                    _unitOfWork.Repository<ItemMasterAircraftMapping>().Add(itemMasterAircraftMapping[i]);
-                    _unitOfWork.SaveChanges();
+                    return BadRequest(ModelState);
                 }
             }
-            else
+            catch (Exception ex)
             {
-                return BadRequest($"{nameof(itemMasterAircraftMapping)} cannot be null");
-            }
-
-            return Ok(ModelState);
+                return BadRequest(ex.InnerException.ToString());
+            }           
         }
        
         [HttpGet("getItemMasterAircraftMappedAudit")]

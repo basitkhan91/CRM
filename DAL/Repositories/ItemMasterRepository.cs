@@ -38,6 +38,7 @@ namespace DAL.Repositories
                             from bins in binID.DefaultIfEmpty()
                             join imst in _appContext.ItemMaster on iM.oemPNId equals imst.ItemMasterId into Imast
                             from imst in Imast.DefaultIfEmpty()
+
                             join rPart in _appContext.ItemMaster on iM.RevisedPartId equals rPart.ItemMasterId into rPartg
                             from rPart in rPartg.DefaultIfEmpty()
 
@@ -216,6 +217,7 @@ namespace DAL.Repositories
                               (mp1, inte) => new { mp1, inte })
                               .Where(p => p.mp1.v.ItemMasterId == iM.ItemMasterId )
                                .Select(p => p.inte.Description)),
+                               iM.oemPNId,
 
 
                             }).ToList();

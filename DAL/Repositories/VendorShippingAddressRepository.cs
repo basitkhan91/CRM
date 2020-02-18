@@ -54,7 +54,7 @@ namespace DAL.Repositories
         {
             var data = (from vs in _appContext.VendorShipping
                         join vsa in  _appContext.VendorShippingAddress on Selectedrow equals vsa.VendorShippingAddressId  
-                        where ((vs.VendorShippingAddressId == Selectedrow) && (vs.IsActive==true && vs.IsDeleted!=true))
+                        where ((vs.VendorShippingAddressId == Selectedrow) && vs.IsDeleted!=true)
 
                         // select new { t, ad, vt }).ToList();
             select new

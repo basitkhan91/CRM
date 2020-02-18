@@ -519,7 +519,7 @@ namespace QuickApp.Pro.Controllers
                     {
                         if (Convert.ToBoolean(actionobject.IsCustomerAlsoVendor))
                         {
-                            //_unitOfWork.Customer.AddVendor(actionobject);
+                            
                             Vendor objVendor = new Vendor();
 
                             objVendor.RelatedCustomerId = actionobject.CustomerId;
@@ -587,10 +587,7 @@ namespace QuickApp.Pro.Controllers
                 }
                 else
                 {
-                    //var message = string.Join(" | ", ModelState.Values
-                    //            .SelectMany(v => v.Errors)
-                    //            .Select(e => e.ErrorMessage));                   
-                    //return BadRequest(message.ToString());
+                   
                     return BadRequest(ModelState);
                 }
 
@@ -690,30 +687,7 @@ namespace QuickApp.Pro.Controllers
 
                 }
 
-                //actionobject.IsAddressForBillingAndShipping = customerViewModel.IsAddressForBillingAndShipping;
-                //if (customerViewModel.AircraftTypeId != null)
-                //{
-                //    var aircraftTypeList = _unitOfWork.customerAircraftType.GetAllData().ToList();
-                //    aircraftTypeList.Where(a => a.CustomerId == id).ToList().ForEach(a => _unitOfWork.customerAircraftType.Remove(a));
-                //    _unitOfWork.SaveChanges();
-                //    foreach (string s in customerViewModel.AircraftTypeId)
-                //    {
-                //        if (s != "")
-                //        {
-                //            var aircraftType = new CustomerAircraftType();
-                //            aircraftType.AircraftTypeId = Convert.ToInt32(s);
-                //            aircraftType.CustomerId = id;
-                //            aircraftType.MasterCompanyId = 1;
-                //            aircraftType.CreatedBy = customerViewModel.CreatedBy;
-                //            aircraftType.UpdatedBy = customerViewModel.UpdatedBy;
-                //            aircraftType.CreatedDate = DateTime.Now;
-                //            aircraftType.UpdatedDate = DateTime.Now;
-                //            aircraftType.IsActive = true;
-                //            _unitOfWork.customerAircraftType.Add(aircraftType);
-                //            _unitOfWork.SaveChanges();
-                //        }
-                //    }
-                //}
+               
 
 
 
@@ -2070,7 +2044,7 @@ namespace QuickApp.Pro.Controllers
                     checkPaymentObj.MasterCompanyId = 1;
                     checkPaymentObj.IsDelete = true;
                     checkPaymentObj.UpdatedDate = DateTime.Now;
-                    checkPaymentObj.CreatedBy = CustomerShippingViewModel.CreatedBy;
+                   // checkPaymentObj.CreatedBy = CustomerShippingViewModel.CreatedBy;
                     checkPaymentObj.UpdatedBy = CustomerShippingViewModel.UpdatedBy;
                     _unitOfWork.CustomerShippingAddress.Update(checkPaymentObj);
                     _unitOfWork.SaveChanges();
@@ -2151,40 +2125,7 @@ namespace QuickApp.Pro.Controllers
                     if (CustomerWarningViewModel == null)
                         return BadRequest($"{nameof(CustomerWarningViewModel)} cannot be null");
 
-                    //var CustomerObject = _unitOfWork.CustomerWarning.GetSingleOrDefault(c => c.CustomerId == id);
-
-                    //for (int i = 0; i < CustomerWarningViewModel.Length; i++)
-                    //{
-                    //    if (CustomerWarningViewModel[i].CustomerWarningId > 0)
-                    //    {
-                    //        var CustomerObject = _unitOfWork.CustomerWarning.Get(CustomerWarningViewModel[i].CustomerWarningId);
-
-                    //        if (CustomerObject != null)
-                    //        {
-                    //            CustomerWarningViewModel[i].MasterCompanyId = 1;
-                    //            CustomerObject.CustomerId = CustomerWarningViewModel[i].CustomerId;
-                    //            CustomerObject.Allow = CustomerWarningViewModel[i].Allow;
-                    //            CustomerObject.SourceModule = CustomerWarningViewModel[i].SourceModule;
-                    //            CustomerObject.Restrict = CustomerWarningViewModel[i].Restrict;
-                    //            CustomerObject.Warning = CustomerWarningViewModel[i].Warning;
-                    //            CustomerObject.WarningMessage = CustomerWarningViewModel[i].WarningMessage;
-                    //            CustomerObject.RestrictMessage = CustomerWarningViewModel[i].RestrictMessage;
-                    //            CustomerObject.MasterCompanyId = CustomerWarningViewModel[i].MasterCompanyId;
-                    //            CustomerObject.IsActive = CustomerWarningViewModel[i].IsActive;
-                    //            CustomerObject.CreatedDate = DateTime.Now;
-                    //            //CustomerObject.IsActive = true;
-                    //            CustomerObject.UpdatedDate = DateTime.Now;
-                    //            CustomerObject.CreatedBy = CustomerWarningViewModel[i].CreatedBy;
-                    //            CustomerObject.UpdatedBy = CustomerWarningViewModel[i].UpdatedBy;
-                    //            CustomerObject.IsAllow = CustomerWarningViewModel[i].IsAllow;
-                    //            CustomerObject.IsWarning = CustomerWarningViewModel[i].IsWarning;
-                    //            CustomerObject.IsRestrict = CustomerWarningViewModel[i].IsRestrict;
-                    //            _unitOfWork.CustomerWarning.Update(CustomerObject);
-                    //            _unitOfWork.SaveChanges();
-                    //        }
-
-                    //    }
-                    //}
+                   
 
 
                     var custWarnData = _context.CustomerWarning.Where(p => p.CustomerId == id).ToList();
@@ -2406,16 +2347,7 @@ namespace QuickApp.Pro.Controllers
 
                     if (customerBillingAddressViewModel.IsPrimary == true)
                     {
-                        //var shippingAddress = _context.CustomerShippingAddress.Where(p => p.CustomerId == customerBillingAddressViewModel.CustomerId).ToList();
-                        //if (shippingAddress != null && shippingAddress.Count > 0)
-                        //{
-                        //    foreach (var item in shippingAddress)
-                        //    {
-                        //        item.IsPrimary = false;
-                        //        _context.CustomerShippingAddress.Update(item);
-                        //        _context.SaveChanges();
-                        //    }
-                        //}
+                       
 
                         CustomerShippingAddress shippingAddress = new CustomerShippingAddress();
                         shippingAddress = _context.CustomerShippingAddress.Where(p => p.CustomerId == customerBillingAddressViewModel.CustomerId && p.IsPrimary == true).FirstOrDefault();
@@ -2428,7 +2360,7 @@ namespace QuickApp.Pro.Controllers
                             _unitOfWork.CommonRepository.ShippingBillingAddressHistory(Convert.ToInt64(customerBillingAddressViewModel.CustomerId), Convert.ToInt32(ModuleEnum.Customer), Convert.ToInt64(shippingAddress.CustomerShippingAddressId), Convert.ToInt32(AddressTypeEnum.ShippingAddress), customerBillingAddressViewModel.UpdatedBy);
                         }
                     }
-                    // addressObj.RecordCreateDate = DateTime.Now;
+                   
 
                     //created by is not needed as the record is already created and the viewmodel returns null
                     //addressObj.CreatedBy = customerBillingAddressViewModel.CreatedBy;
@@ -2674,60 +2606,7 @@ namespace QuickApp.Pro.Controllers
 
         }
 
-        //[HttpPost("Aircraftpost")]
-        //public IActionResult CreateAircraftModels([FromBody] CustomerAircraftModel customerAircraftModel)
-        //{
-        //    try
-        //    {
-        //        if (ModelState.IsValid)
-        //        {
-        //            if (_context.CustomerAircraftModel.Any(o => o.AircraftModelId == customerAircraftModel.AircraftModelId))
-        //            {
-        //                // return BadRequest($"{nameof(capesInfoViewModel)} cannot be null");
-        //                var existingresule = _context.CustomerAircraftModel.Where(c => c.AircraftModelId == customerAircraftModel.AircraftModelId).FirstOrDefault();
-        //                existingresule.AircraftModelId = customerAircraftModel.AircraftModelId;
-        //                existingresule.IsActive = true;
-        //                existingresule.CustomerId = customerAircraftModel.CustomerId;
-        //                existingresule.Priority = customerAircraftModel.Priority;
-        //                existingresule.MasterCompanyId = 1;
-        //                existingresule.CreatedDate = DateTime.Now;
-        //                existingresule.UpdatedDate = DateTime.Now;
-        //                existingresule.CreatedBy = customerAircraftModel.CreatedBy;
-        //                existingresule.UpdatedBy = customerAircraftModel.UpdatedBy;
-        //                _context.CustomerAircraftModel.Update(existingresule);
-        //                _context.SaveChanges();
-        //            }
-        //            else
-        //            {
-        //                CustomerAircraftModel cp = new CustomerAircraftModel();
-        //                cp.AircraftModelId = customerAircraftModel.AircraftModelId;
-        //                //cp.AircraftModelId = customerAircraftModel.AircraftModelId;
-        //                cp.CustomerId = customerAircraftModel.CustomerId;
-        //                cp.Priority = customerAircraftModel.Priority;
-        //                cp.MasterCompanyId = 1;
-        //                cp.IsActive = true;
-        //                cp.CreatedDate = DateTime.Now;
-        //                cp.UpdatedDate = DateTime.Now;
-        //                cp.CreatedBy = customerAircraftModel.CreatedBy;
-        //                cp.UpdatedBy = customerAircraftModel.UpdatedBy;
-        //                _context.CustomerAircraftModel.Add(cp);
-        //                _context.SaveChanges();
-
-        //            }
-        //            return Ok(customerAircraftModel);
-        //        }
-        //        else
-        //        {
-        //            return BadRequest(ModelState);
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return BadRequest(ex.InnerException.ToString());
-        //    }
-
-        //}
-
+       
 
         #region AircraftInformation
 
@@ -2916,41 +2795,7 @@ namespace QuickApp.Pro.Controllers
 
         }
 
-        //[HttpPost("CustomerATAPost")]
-        //public IActionResult InsertCustomerATA([FromBody] CustomerATAMapping[] customerATAMapping)
-        //{
-        //    try
-        //    {
-        //        if (ModelState.IsValid)
-        //        {
-        //            foreach (var customerAtaMapping in customerATAMapping)
-        //            {
-        //                _unitOfWork.Repository<CustomerATAMapping>().Add(customerAtaMapping);
-        //                _unitOfWork.SaveChanges();
-        //            }
-        //            return Ok();
-        //        }
-        //        else
-        //        {
-        //            return BadRequest(ModelState);
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return BadRequest(ex.InnerException.ToString());
-        //    }
-        //}
-
-        //[HttpDelete("DeleteCustomerATAMapping/{id}")]
-        //public IActionResult DeleteCustomerATA(long id)
-        //{
-        //    var existingResult = _unitOfWork.Repository<CustomerATAMapping>().GetSingleOrDefault(c => c.CustomerATAMappingId == id);
-        //    existingResult.IsDeleted = true;
-        //    _unitOfWork.Repository<CustomerATAMapping>().Update(existingResult);
-        //    _unitOfWork.SaveChanges();
-        //    return Ok(id);
-        //}
-
+      
         #endregion
 
         #region Customer Contact ATA Mapping
@@ -3264,43 +3109,7 @@ namespace QuickApp.Pro.Controllers
 
         }
 
-        //[HttpPost("saveCustomeraircraftdata")]
-        //public IActionResult SaveCustomeraircraft([FromBody]  CustomerAircraftTypeViewModel customerAircraftTypeViewModel)
-        //{
-        //    try
-        //    {
-        //        if (ModelState.IsValid)
-        //        {
-        //            if (customerAircraftTypeViewModel == null)
-        //                return BadRequest($"{nameof(customerAircraftTypeViewModel)} cannot be null");
-        //            CustomerAircraftType CustomerObject = new CustomerAircraftType();
-
-        //            customerAircraftTypeViewModel.MasterCompanyId = 1;
-        //            CustomerObject.CustomerId = customerAircraftTypeViewModel.CustomerId;
-        //            CustomerObject.AircraftTypeId = customerAircraftTypeViewModel.AircraftTypeId;
-        //            CustomerObject.MasterCompanyId = customerAircraftTypeViewModel.MasterCompanyId;
-        //            //CustomerObject.IsActive = true;
-        //            CustomerObject.IsActive = customerAircraftTypeViewModel.IsActive;
-        //            CustomerObject.CreatedDate = DateTime.Now;
-        //            CustomerObject.UpdatedDate = DateTime.Now;
-        //            CustomerObject.CreatedBy = customerAircraftTypeViewModel.CreatedBy;
-        //            CustomerObject.UpdatedBy = customerAircraftTypeViewModel.UpdatedBy;
-        //            _unitOfWork.customerAircraftType.Add(CustomerObject);
-        //            _unitOfWork.SaveChanges();
-        //            return Ok(CustomerObject);
-        //        }
-        //        else
-        //        {
-        //            return BadRequest(ModelState);
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return BadRequest(ex.InnerException.ToString());
-        //    }
-
-        //}
-
+      
         [HttpPost("postCountryList")]
         public IActionResult CountryList([FromBody] CountriesViewModel countriesViewModel)
         {
