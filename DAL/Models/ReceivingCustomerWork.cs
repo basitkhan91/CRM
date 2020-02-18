@@ -51,6 +51,7 @@ namespace DAL.Models
         public long? WorkOrderId { get; set; }
         public bool? IsSkipSerialNo { get; set; }
         public bool? IsSkipTimeLife { get; set; }
+        public DateTime ReceivedDate { get; set; }
         public int MasterCompanyId { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime UpdatedDate { get; set; }
