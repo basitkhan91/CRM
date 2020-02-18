@@ -1228,8 +1228,102 @@
                             <div id="step2" class="panel-collapse collapse" aria-expanded="false"
                                  style="height: 0px;">
                                  <div class="panel-body">
-                                     <div class="modal-content p-1">
-                                        <div>
+                                     <div class="modal-content p-1" style="overflow: hidden;">
+                                        <p-table 
+                                        #aircraft 
+                                        [value]="aircraftListDataValues" 
+                                        class="rpo-table-cstm"
+                                        [rows]="pageSize"
+                                        [columns]="colsaircraftLD"
+                                        [scrollable]="true" 
+                                        [style]="{width:'100%'}" 
+                                        [paginator]="true"
+                                        [rowsPerPageOptions]="[10, 20, 50, 100]"
+                                        [resizableColumns]="true"
+                                        [reorderableColumns]="true"
+                                        selectionMode="multiple"                        
+                                        >
+                                        
+                                            <ng-template pTemplate="colgroup" let-columns>
+                                                <colgroup>
+                                                <col *ngFor="let col of columns" style="width:130px" />
+                                                </colgroup>
+                                            </ng-template>
+                                            <ng-template pTemplate="header" let-columns>
+                                                <tr>
+                                                    <th *ngFor="let col of columns"   pResizableColumn
+                                                    pReorderableColumn
+                                                    [pSortableColumn]="col.field">
+                                                        {{col.header}}
+                                                        <p-sortIcon [field]="col.field"></p-sortIcon>
+                                                    </th>
+                                                    <th style="width:70px;position:sticky">Action</th>
+                                                </tr>
+                                                <tr>
+                                                    <th
+                                                      style="width:auto"
+                                                      *ngFor="let col of columns"
+                                                      [ngSwitch]="col.field"
+                                                    >
+                                                      <input
+                                                        style="width:100%;"
+                                                        pInputText
+                                                        type="text"
+                                                        (input)="aircraft.filter($event.target.value, col.field, 'contains')"
+                                                      />
+                                                    </th>
+                                                    <th style="width:70px;position:sticky"></th>
+                                                  </tr>
+                                            </ng-template>
+                                            <ng-template pTemplate="body" let-i="rowIndex" let-rowData let-columns="columns">
+                                                <tr [pSelectableRow]="rowData"
+                                                [pSelectableRowDblClick]="rowData" pReorderableRowHandle (dblclick)="onViewAircraftonDbl(rowData)">
+                                                    <td *ngFor="let col of columns" ResizableColumn
+                                                    pReorderableColumn>
+                                                        {{rowData[col.field]}}
+                                                    </td>
+                                                    <td style="width:70px; text-align: center;"
+                                                    *ngIf="colsaircraftLD.length > 0">
+                                                    <span> <a class="btn btn-info boxed-float-btn nobg" data-toggle="modal" data-target="#viewAircraft" (click)="onViewAircraft(rowData)" matTooltip="View"><i class="fa fa-eye"></i></a> </span>
+                                                    <span><a class="btn nobg" data-toggle="modal"  data-target="#aircraftHistory" matTooltip="History" (click)="getAircraftAuditHistory(rowData)"><i class="fa fa-history" ></i></a></span>
+                                                    </td>
+                                                </tr>
+                                            </ng-template>
+                                            <ng-template
+                                                pTemplate="emptymessage"
+                                                let-columns
+                                                *ngIf="aircraftListDataValues?.length == 0"
+                                                >
+                                                <tr>
+                                                    <td [attr.colspan]="6" class="no-records-cstm">
+                                                    No records found
+                                                    </td>
+                                                </tr>
+                                            </ng-template>
+                                                <ng-template pTemplate="summary" id="footer">
+                                                <label id="footer" class="footer">No'of records:</label>
+                                                <input
+                                                    style="width: 5%;"
+                                                    [ngModelOptions]="{standalone: true}"
+                                                    [(ngModel)]="aircraft._totalRecords"
+                                                    [disabled]="true"
+                                                    pInputText
+                                                    type="text"
+                                                />
+                                                &nbsp;&nbsp;
+                                                <label id="footer" class="footer1">Pages Count:</label>
+                                                <input
+                                                    style="width: 5%;"
+                                                    [ngModelOptions]="{standalone: true}"
+                                                    [ngModel]="getPageCount(aircraft._totalRecords, pageSize)"
+                                                    [disabled]="true"
+                                                    pInputText
+                                                    type="text"
+                                                />
+                                                <!-- <input style="width: 5%;" value="{{totalPages}}" [disabled]="true" pInputText type="text" /> -->
+                                                </ng-template>
+                                        </p-table>
+                                        <!-- <div>
                                             Dash Numbers
                                             <p-table [value]="aircraftListDataValues" [rows]="6" [columns]="colsaircraftLD" [scrollable]="true" [paginator]="true">
                                                 <ng-template pTemplate="header" let-columns style="background-color: white">
@@ -1250,7 +1344,7 @@
                                                     </tr>
                                                 </ng-template>
                                             </p-table>
-                                        </div>
+                                        </div> -->
                                      </div>
                                     
                                 </div>
@@ -1262,8 +1356,80 @@
                             </div>
                             <div id="step3" class="panel-collapse collapse">
                                 <div class="panel-body">
-                                    <div class="modal-content p-1">
-                                        <div>
+                                    <div class="modal-content p-1" style="overflow: hidden;">
+                                        <p-table #ataDataTable class="rpo-table-cstm" [value]="ataMappedList" [rows]="pageSize" [columns]="atasub" [scrollable]="true" [style]="{width:'100%'}" [paginator]="true" [rowsPerPageOptions]="[10, 20, 50, 100]">
+                                            <ng-template pTemplate="colgroup" let-columns>
+                                                <colgroup>
+                                                <col *ngFor="let col of columns" style="width:130px" />
+                                                </colgroup>
+                                            </ng-template>
+                                            <ng-template pTemplate="header" let-columns>
+                                                <tr>
+                                                    <th *ngFor="let col of atasub" pResizableColumn
+                                                    pReorderableColumn
+                                                    [pSortableColumn]="col.field">
+                                                        {{col.header}}
+                                                        <p-sortIcon [field]="col.field"></p-sortIcon>
+                                                    </th>
+                                                </tr>
+                                                <tr>
+                                                    <th
+                                                      style="width:auto"
+                                                      *ngFor="let col of columns"
+                                                      [ngSwitch]="col.field"
+                                                    >
+                                                      <input
+                                                        style="width:100%;"
+                                                        pInputText
+                                                        type="text"
+                                                        (input)="ataDataTable.filter($event.target.value, col.field, 'contains')"
+                                                      />
+                                                    </th>
+                                                  </tr>
+                                            </ng-template>
+                                            <ng-template pTemplate="body" let-i="rowIndex" let-rowData let-columns="columns">
+                                                <tr [pSelectableRow]="rowData"
+                                                [pSelectableRowDblClick]="rowData">
+                                                    <td *ngFor="let col of atasub" ResizableColumn
+                                                    pReorderableColumn>
+                                                        {{rowData[col.field]}}
+                                                    </td>
+                                                </tr>
+                                            </ng-template>
+                                            <ng-template
+                                            pTemplate="emptymessage"
+                                            let-columns
+                                            *ngIf="ataMappedList?.length == 0"
+                                          >
+                                            <tr>
+                                                <td [attr.colspan]="6" class="no-records-cstm">
+                                                No records found
+                                                </td>
+                                            </tr>
+                                            </ng-template>
+                                            <ng-template pTemplate="summary" id="footer">
+                                            <label id="footer" class="footer">No'of records:</label>
+                                            <input
+                                                style="width: 5%;"
+                                                [ngModelOptions]="{standalone: true}"
+                                                [(ngModel)]="ataDataTable._totalRecords"
+                                                [disabled]="true"
+                                                pInputText
+                                                type="text"
+                                            />
+                                            &nbsp;&nbsp;
+                                            <label id="footer" class="footer1">Pages Count:</label>
+                                            <input
+                                                style="width: 5%;"
+                                                [ngModelOptions]="{standalone: true}"
+                                                [ngModel]="getPageCount(ataDataTable._totalRecords, pageSize)"
+                                                [disabled]="true"
+                                                pInputText
+                                                type="text"
+                                            />
+                                            </ng-template>
+                                        </p-table>
+                                        <!-- <div>
                                             ATA Chapters
                                             <p-table [value]="ataMappedList" [rows]="6" [columns]="atasub" [scrollable]="true" [style]="{width:'100%'}" [paginator]="true">
                                                 <ng-template pTemplate="header" let-columns>
@@ -1285,7 +1451,7 @@
                                                     </tr>
                                                 </ng-template>
                                             </p-table>
-                                        </div>
+                                        </div> -->
                                     </div>                                    
                                 </div>
                             </div>
@@ -1542,6 +1708,145 @@
     </div>
   </div>
 
+  <div id="viewAircraft" class="modal" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Details of Aircraft Information</h4>
+          <button type="button" class="close" data-dismiss="modal">
+            &times;
+          </button>
+        </div>
+  
+        <div class="modal-body" *ngIf="viewAircraftData">
+          <div class="col-sm-12">
+            <p>
+              <span class="label"><b>Aircraft: </b></span
+              ><span class="value">{{ viewAircraftData.aircraftType }}</span>
+            </p>
+  
+            <p>
+              <span class="label"><b>Model: </b></span
+              ><span class="value">{{ viewAircraftData.aircraftModel }}</span>
+            </p>
+            <p>
+              <span class="label"><b>Dash Numbers: </b></span
+              ><span class="value">{{ viewAircraftData.dashNumber }}</span>
+            </p>
+            <p>
+              <span class="label"><b>Memo: </b></span
+              ><span class="value">{{ viewAircraftData.memo }}</span>
+            </p>
+  
+            <div class="clear"></div>
+          </div>
+        </div>
+  
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 
+  <div
+  id="aircraftHistory"
+  class="modal"
+  data-backdrop="static"
+  data-keyboard="false"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">History of Aircraft Info</h4>
+        <button type="button" class="close" data-dismiss="modal">
+          &times;
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <div class="table-responsive">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>Aircraft</th>
+                <th>Aircraft Model</th>
+                <th>Dash Numbers</th>
+                <th>Memo</th>
+                <th>Created By</th>
+                <th>Created Date</th>
+                <th>Updated By</th>
+                <th>Updated Date</th>
+              </tr>
+            </thead>
+
+            <tr *ngFor="let audit of aircraftauditHistory; let i = index">
+              <td
+                [ngStyle]="{
+                  color: getColorCodeForHistory(
+                    i,
+                    'aircraftType',
+                    audit.aircraftType
+                  )
+                    ? 'black'
+                    : 'red'
+                }"
+              >
+                {{ audit.aircraftType }}
+              </td>
+              <td
+                [ngStyle]="{
+                  color: getColorCodeForHistory(
+                    i,
+                    'aircraftModel',
+                    audit.aircraftModel
+                  )
+                    ? 'black'
+                    : 'red'
+                }"
+              >
+                {{ audit.aircraftModel }}
+              </td>
+              <td
+                [ngStyle]="{
+                  color: getColorCodeForHistory(
+                    i,
+                    'dashNumber',
+                    audit.dashNumber
+                  )
+                    ? 'black'
+                    : 'red'
+                }"
+              >
+                {{ audit.dashNumber }}
+              </td>
+              <td
+                [ngStyle]="{
+                  color: getColorCodeForHistory(i, 'memo', audit.memo)
+                    ? 'black'
+                    : 'red'
+                }"
+              >
+                {{ audit.memo }}
+              </td>
+              <td>{{ audit.updatedBy }}</td>
+              <td>{{ audit.updatedDate | date: 'dd-MM-yyyy h:mm a ' }}</td>
+              <td>{{ audit.createdBy }}</td>
+              <td>{{ audit.createdDate | date: 'dd-MM-yyyy h:mm a ' }}</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
 
 

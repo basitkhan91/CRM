@@ -451,6 +451,8 @@
                                 </td>
 
                                 <td style="text-align: center;">
+                                    <p-inputSwitch [(ngModel)]="rowData['isActive']" name="isActive{{ rowIndex }}"
+                                        (onChange)="updateActiveorInActiveShipViaForDS(rowData)"></p-inputSwitch>
                                     <span data-toggle="modal" data-target="#viewDomesticVia">
                                         <a class="btn btn-info boxed-float-btn nobg" data-toggle="tooltip"
                                             (click)="openDomesticShippingViewVia(rowData)" matTooltip="View"><i
@@ -864,8 +866,10 @@
                                 <th>Country</th>
                                 <th>Is Primary</th>
                                 <th>Is Active</th>
+                                <th>Created By</th>
+                                <th>Created Date</th>
                                 <th>Updated By</th>
-                                <th>Updated Time</th>
+                                <th>Updated Date</th>
                             </tr>
                         </thead>
                         <tbody class="audithistory-cstm">
@@ -899,6 +903,8 @@
                                 <td
                                     [ngStyle]="{'color': getColorCodeForHistory(i, 'isActive', audit.isActive)  ? 'black' : 'red'  }">
                                     {{audit.isActive}}</td>
+                                <td>{{audit.createdBy}}</td>
+                                <td>{{audit.createdDate | date: 'dd-MM-yyyy h:mm a '}}</td>
                                 <td>{{audit.updatedBy}}</td>
                                 <td>{{audit.updatedDate | date: 'dd-MM-yyyy h:mm a '}}</td>
                             </tr>
@@ -938,15 +944,12 @@
                     <tr>
                         <th>Ship Via</th>
                         <th>Shipping Account Info</th>
-                        <th>Shipping Url</th>
-                        <th>Shipping Id</th>
                         <th>Memo</th>
-
                         <th>Is Active</th>
-                        <th>Updated By</th>
-                        <th>Last Updated Time</th>
                         <th>Created By</th>
-                        <th>Created Time</th>
+                        <th>Created Date</th>
+                        <th>Updated By</th>
+                        <th>Updated Date</th>
 
                     </tr>
                 </thead>
@@ -960,18 +963,11 @@
                         [ngStyle]="{'color':  getColorCodeForInterShipViaHistory(i, 'shippingAccountinfo', audit.shippingAccountinfo)  ? 'black' : 'red'  }">
                         {{audit.shippingAccountinfo}}</td>
                     <td
-                        [ngStyle]="{'color':  getColorCodeForInterShipViaHistory(i, 'shippingURL', audit.shippingURL)  ? 'black' : 'red'  }">
-                        {{audit.shippingURL}}</td>
-                    <td
-                        [ngStyle]="{'color':  getColorCodeForInterShipViaHistory(i, 'shippingId', audit.shippingId)  ? 'black' : 'red'  }">
-                        {{audit.shippingId}}</td>
-                    <td
                         [ngStyle]="{'color':  getColorCodeForInterShipViaHistory(i, 'memo', audit.memo)  ? 'black' : 'red'  }">
                         {{audit.memo}}</td>
                     <td
                         [ngStyle]="{'color':  getColorCodeForInterShipViaHistory(i, 'isActive', audit.isActive)  ? 'black' : 'red'  }">
                         {{audit.isActive}}</td>
-
                     <td>{{audit.updatedBy}}</td>
                     <td>{{audit.updatedDate | date: 'dd-MM-yyyy h:mm a '}}</td>
                     <td>{{audit.createdBy}}</td>
@@ -1309,7 +1305,7 @@
 </div>
 
 
-<div id="contentAuditHistInterShip" class="modal fade" role="dialog">
+<div id="contentAuditHistInterShip" class="modal fade" role="dialog" data-backdrop="static">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -1331,6 +1327,8 @@
                                 <th>Country</th>
                                 <th>IsPrimary</th>
                                 <th>Is Active</th>
+                                <th>Created By</th>
+                                <th>Created Time</th>
                                 <th>Updated By</th>
                                 <th>Updated Time</th>
                             </tr>
@@ -1361,8 +1359,8 @@
                                 [ngStyle]="{'color':  getColorCodeForInternationalHistory(i, 'isActive', audit.isActive)  ? 'black' : 'red'  }">
                                 {{audit.isActive}}</td>
 
-
-
+                            <td>{{audit.createdBy}}</td>
+                            <td>{{audit.createdDate | date: 'dd-MM-yyyy h:mm a '}}</td>
                             <td>{{audit.updatedBy}}</td>
                             <td>{{audit.updatedDate | date: 'dd-MM-yyyy h:mm a '}}</td>
 

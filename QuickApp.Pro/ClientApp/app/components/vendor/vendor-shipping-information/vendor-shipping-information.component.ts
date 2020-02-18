@@ -337,6 +337,19 @@ export class VendorShippingInformationComponent {
         this.isEditDomesticShipVia = true;
         this.loadMasterCompanies();
     }
+
+    updateActiveorInActiveShipViaForDS(rowData) {
+        this.vendorService.updateStatusForDomesticShippingVia(rowData.vendorShippingId, rowData.isActive, this.userName).subscribe(res => {
+            this.loadShipViaCollection(rowData);
+
+            this.alertService.showMessage(
+                'Success',
+                `Sucessfully Updated Domestic Ship Via Status`,
+                MessageSeverity.success
+            );
+        })
+    }
+
     private loadMasterCompanies() {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
@@ -1074,13 +1087,14 @@ export class VendorShippingInformationComponent {
     }
 
     confirmDeleteVendorInterShipping(){
-        this.vendorService.deleteVendorInternationalShipping(this.selectedInterRowforDelete.vendorId , this.userName).subscribe(res => {
+        this.vendorService.deleteVendorInternationalShipping(this.selectedInterRowforDelete.vendorInternationalShippingId , this.userName).subscribe(res => {
             this.getInternationalShippingByVendorId();
              this.alertService.showMessage(
                     'Success',
                     `Sucessfully Deleted Record`,
                     MessageSeverity.success
                 );
+            $('#deleteInterShipInfo').modal('hide');
         })
     }
 
@@ -1162,6 +1176,7 @@ export class VendorShippingInformationComponent {
                     // this.shipViaInterObj.shippingId = "";
                     this.shipViaInterObj.memo = "";
                     this.shipViaInterObj.vendorShippingId = 0;
+                    this.shipViaInterObj.vendorInternationalShipViaDetailsId = undefined;
                 }
                 if(this.isEditInterShipVia) {
                     this.alertService.showMessage(

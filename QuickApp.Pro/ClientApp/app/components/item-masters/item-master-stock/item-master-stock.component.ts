@@ -55,7 +55,7 @@ import { DBkeys } from '../../../services/db-Keys';
 import { getObjectByValue, getPageCount, getObjectById, getValueFromObjectByKey, editValueAssignByCondition, getValueFromArrayOfObjectById } from '../../../generic/autocomplete';
 import { AssetAcquisitionType } from '../../../models/asset-acquisition-type.model';
 import { AssetAcquisitionTypeService } from "../../../services/asset-acquisition-type/asset-acquisition-type.service";
-
+import * as $ from 'jquery';
 
 @Component({
     selector: 'app-item-master-stock',
@@ -6326,6 +6326,10 @@ export class ItemMasterStockComponent implements OnInit, AfterViewInit {
     
     onViewAircraft(rowData) {
         this.viewAircraftData = rowData;
+    }
+    onViewAircraftonDbl(rowData) {
+        this.onViewAircraft(rowData);
+        $('#viewAircraft').modal('show');
     }
 
     onEditAircraft(rowData) {
