@@ -2,16 +2,49 @@
   <div class="col-md-3">
     <h5 class="po-head">Ship To</h5>
     <div class="form-group">
+      <label class="sales-quote-shipping-label">User Type <span class="clr-red">*</span></label>
+      <select [ngClass]="inputValidCheck ? 'select-validate-cstm' : ''" name="shipToUserTypeId" [(ngModel)]="salesOrderQuote.shipToUserTypeId" (change)="clearInputShipTo();onChangeShipToUserType();" #shipUserType="ngModel" required>
+        <option value="null">-- Select --</option>
+        <option value="1">Customer</option>
+        <option value="2">Vendor</option>
+        <option value="3">Company</option>
+      </select>
+      <div *ngIf="shipUserType.invalid && (shipUserType.dirty || shipUserType.touched)" class="alert alert-danger alert-danger-cstm">
+          <div *ngIf="shipUserType.errors.required">
+            <small> User Type is required </small>
+          </div>
+      </div> 
+    </div>
+    <div class="form-group">
+      <div class="form-row">
+        <div class="col-sm-11">
+            <p-autoComplete field="label" [ngClass]="inputValidCheck ? 'p-acomp-validate' : ''" class="pautocomp-cstm" (onClear)="clearInputShipTo()"
+            [(ngModel)]="salesOrderQuote.shipToUserId" name="shipCustomerName" [suggestions]="userNames" 
+            (completeMethod)="filterUserNames($event)"  [size]="30" [minLength]="1" [dropdown]="true" (onSelect)="onShipToUserSelected($event.value, salesOrderQuote);" #shipCustomerName="ngModel" errorMessage="Records not found" [forceSelection]="true" required></p-autoComplete>
+          <div *ngIf="shipCustomerName.invalid && (shipCustomerName.dirty || shipCustomerName.touched)" class="alert alert-danger alert-danger-cstm">
+              <div *ngIf="shipCustomerName.errors.required">
+                <small> User Name is required </small>
+              </div>
+          </div> 
+        </div>
+        <div class="col-sm-1">
+          <div *ngIf="salesOrderQuote.shipToUserTypeId==1" style="cursor:pointer; font-size:14px; margin:6px -8px;"><a class="fa fa-plus-circle fa-lg" target="_blank" matTooltip="Add Customer" matTooltipPosition="above" [routerLink]="['/customersmodule/customerpages/app-customer-create']"></a></div>
+          <div *ngIf="salesOrderQuote.shipToUserTypeId==2" style="cursor:pointer; font-size:14px; margin:6px -8px;"><a class="fa fa-plus-circle fa-lg" target="_blank" matTooltip="Add Customer" matTooltipPosition="above" [routerLink]="['/vendorsmodule/vendorpages/app-vendor-general-information']"></a></div>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
       <label class="sales-quote-shipping-label">
         Site Name <span class="clr-red">*</span>
-        <span style="margin-left:3px;cursor:pointer;"><a class="fa fa-plus-circle fa-lg" matTooltip="Add Site Name" matTooltipPosition="above" data-toggle="modal" data-target="#createPOSiteName" ></a></span>
-        <span style="margin-left:5px;cursor:pointer;"><a class="fa fa-edit fa-lg" matTooltip="Edit Site Name" matTooltipPosition="above" data-toggle="modal" data-target="#createPOSiteName"></a></span>
+        <span style="margin-left:3px;cursor:pointer;"><a *ngIf="salesOrderQuote.shipToUserId" class="fa fa-plus-circle fa-lg" matTooltip="Add Site Name" matTooltipPosition="above" data-toggle="modal" data-target="#createPOSiteName" (click)="onClickShipSiteName('AddSiteName')" ></a></span>
+        <span style="margin-left:5px;cursor:pointer;"><a *ngIf="salesOrderQuote.shipToUserId" class="fa fa-edit fa-lg" matTooltip="Edit Site Name" matTooltipPosition="above" data-toggle="modal" data-target="#createPOSiteName" (click)="onClickShipSiteName('EditSiteName', salesOrderQuote)"></a></span>
       </label>
       <select [(ngModel)]="salesOrderQuote.shipToSiteName" name="shipToSiteName" (change)="onShipSiteSelect(salesOrderQuote.shipToSiteName)" required>
         <option>--Select</option>
         <option *ngFor="let site of siteList" [ngValue]="site.siteName">
           {{site.siteName}}
           </option>
+         
       </select>
       
     </div>
@@ -64,11 +97,11 @@
         <p-autoComplete
         class="autocomp-customer-cstm"
         [(ngModel)]="salesOrderQuote.shipToContactId"
-        [suggestions]="customerNames"
+        [suggestions]="firstNamesShipTo"
         [forceSelection]="true"
         emptyMessage="No Match Found"
-        field="name"
-        (completeMethod)="filterNames($event)"
+        field="firstName"
+        (completeMethod)="filterCustomerContactsForShipTo($event)"
         [size]="30"
         [minLength]="1"
         [dropdown]="true"
@@ -85,14 +118,14 @@
     <div class="form-group">
      
         <label class="sales-quote-shipping-label">SHIP VIA
-          <span style="margin-left:3px;cursor:pointer;"><a class="fa fa-plus-circle fa-lg" matTooltip="Add Ship Via" matTooltipPosition="above" data-toggle="modal" data-target="#shipToShipVia"></a></span>
-									<span style="margin-left:5px;cursor:pointer;"><a class="fa fa-edit fa-lg" matTooltip="Edit Ship Via" matTooltipPosition="above" data-toggle="modal" data-target="#shipToShipVia"></a></span>
+          <span style="margin-left:3px;cursor:pointer;"><a *ngIf="salesOrderQuote.shipToUserId" class="fa fa-plus-circle fa-lg" matTooltip="Add Ship Via" matTooltipPosition="above" data-toggle="modal" data-target="#shipToShipVia" (click)="resetAddressShipViaForm();"></a></span>
+          <span style="margin-left:5px;cursor:pointer;"><a *ngIf="salesOrderQuote.shipToUserId" class="fa fa-edit fa-lg" matTooltip="Edit Ship Via" matTooltipPosition="above" data-toggle="modal" data-target="#shipToShipVia" (click)="onEditShipVia(salesOrderQuote)"></a></span>
         </label>
      
           <select [(ngModel)]="salesOrderQuote.shipViaName" name="shipViaName" (change)="onShipViaSelect(salesOrderQuote.shipViaName)" required>
               <option>--Select</option>
-              <option *ngFor="let shipVia of demosticShippingViaData" [ngValue]="shipVia.shipVia">
-                {{shipVia.shipVia}}
+              <option *ngFor="let shipVia of shipViaList" [ngValue]="shipVia.name">
+                {{shipVia.name}}
                 </option>
             </select>
      
@@ -135,10 +168,42 @@
     <div class="col-md-3">
       <h5 class="po-head">Bill To</h5>
       <div class="form-group">
+        <label class="sales-quote-shipping-label">User Type <span class="clr-red">*</span></label>
+        <select [ngClass]="inputValidCheck ? 'select-validate-cstm' : ''" name="billToUserTypeId" [(ngModel)]="salesOrderQuote.billToUserTypeId" (change)="clearInputBillTo();onChangeBillToUserType();" #billUserType="ngModel" required>
+          <option value="null">-- Select --</option>
+          <option value="1">Customer</option>
+          <option value="2">Vendor</option>
+          <option value="3">Company</option>
+        </select>
+        <div *ngIf="billUserType.invalid && (billUserType.dirty || billUserType.touched)" class="alert alert-danger alert-danger-cstm">
+            <div *ngIf="billUserType.errors.required">
+              <small> User Type is required </small>
+            </div>
+        </div> 
+      </div>
+      <div class="form-group">
+        <div class="form-row">
+          <div class="col-sm-11">
+              <p-autoComplete field="label" [ngClass]="inputValidCheck ? 'p-acomp-validate' : ''" class="pautocomp-cstm" (onClear)="clearInputBillTo()"
+              [(ngModel)]="salesOrderQuote.billToUserId" name="billToUserName" [suggestions]="billToUserNames" 
+              (completeMethod)="filterBillToUserNames($event)"  [size]="30" [minLength]="1" [dropdown]="true" (onSelect)="onBillToUserSelected($event.value, salesOrderQuote);" #billToUserName="ngModel" errorMessage="Records not found" [forceSelection]="true" required></p-autoComplete>
+            <div *ngIf="billToUserName.invalid && (billToUserName.dirty || billToUserName.touched)" class="alert alert-danger alert-danger-cstm">
+                <div *ngIf="billToUserName.errors.required">
+                  <small> User Name is required </small>
+                </div>
+            </div> 
+          </div>
+          <div class="col-sm-1">
+            <div *ngIf="salesOrderQuote.billToUserTypeId==1" style="cursor:pointer; font-size:14px; margin:6px -8px;"><a class="fa fa-plus-circle fa-lg" target="_blank" matTooltip="Add Customer" matTooltipPosition="above" [routerLink]="['/customersmodule/customerpages/app-customer-create']"></a></div>
+            <div *ngIf="salesOrderQuote.billToUserTypeId==2" style="cursor:pointer; font-size:14px; margin:6px -8px;"><a class="fa fa-plus-circle fa-lg" target="_blank" matTooltip="Add Customer" matTooltipPosition="above" [routerLink]="['/vendorsmodule/vendorpages/app-vendor-general-information']"></a></div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
                    
         <label class="sales-quote-shipping-label">SITE NAME<span class="clr-red">*</span>
-          <span style="margin-left:3px;cursor:pointer;"><a class="fa fa-plus-circle fa-lg" matTooltip="Add Site Name" matTooltipPosition="above" data-toggle="modal" data-target="#createPOSiteName"></a></span>
-          <span style="margin-left:5px;cursor:pointer;"><a class="fa fa-edit fa-lg" matTooltip="Edit Site Name" matTooltipPosition="above" data-toggle="modal" data-target="#createPOSiteName"></a></span>
+          <span style="margin-left:3px;cursor:pointer;"><a *ngIf="salesOrderQuote.billToUserId"  class="fa fa-plus-circle fa-lg" matTooltip="Add Site Name" matTooltipPosition="above" data-toggle="modal" data-target="#createBillingSiteName" (click)="onClickBillSiteName('AddSiteName')"></a></span>
+          <span style="margin-left:5px;cursor:pointer;"><a *ngIf="salesOrderQuote.billToUserId" class="fa fa-edit fa-lg" matTooltip="Edit Site Name" matTooltipPosition="above" data-toggle="modal" data-target="#createBillingSiteName" (click)="onClickBillSiteName('EditSiteName', salesOrderQuote)"></a></span>
         </label>
      
           <select [(ngModel)]="salesOrderQuote.billToSiteName" name="billToSiteName" (change)="onBillSiteSelect(salesOrderQuote.billToSiteName)" required>
@@ -193,11 +258,11 @@
         <p-autoComplete
         class="autocomp-customer-cstm"
         [(ngModel)]="salesOrderQuote.billToContactId"
-        [suggestions]="customerNames"
+        [suggestions]="firstNamesBillTo"
         [forceSelection]="true"
         emptyMessage="No Match Found"
         field="name"
-        (completeMethod)="filterNames($event)"
+        (completeMethod)="filterCustomerContactsForBillTo($event)"
         [size]="30"
         [minLength]="1"
         [dropdown]="true"
@@ -235,6 +300,184 @@
     </div>
   </div>
 </div>
+
+<div class="modal fade" id="createPOSiteName" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-sm partsList-modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" (click)="resetAddressShippingForm();">&times;</button>
+          <h4 class="modal-title">{{addressSiteNameHeader}}</h4>
+        </div>
+        <div class="modal-body">
+          <div class="form-row">
+            <form #addSiteNameForm="ngForm" class="form-horizontal add-site-name">
+              <div class="form-group col-md-12">
+                <label class="col-md-6">Site Name:</label>
+                <input type="text" class="form-control col-md-6" name="siteName" [(ngModel)]="addressFormForShipping.siteName">
+              </div>
+              <div class="form-group col-md-12">
+                <label class="col-md-6">Address 1:</label>
+                <input type="text" class="form-control col-md-6" name="address1" [(ngModel)]="addressFormForShipping.address1">
+              </div>
+              <div class="form-group col-md-12">
+                <label class="col-md-6">Address 2:</label>
+                <input type="text" class="form-control col-md-6" name="address2" [(ngModel)]="addressFormForShipping.address2">
+              </div>
+              <!-- <div class="form-group col-md-12">
+                <label class="col-md-6">Address 3:</label>
+                <input type="text" class="form-control col-md-6" name="address3" [(ngModel)]="addressFormForShipping.address3">
+              </div> -->
+              <div class="form-group col-md-12">
+                <label class="col-md-6">City:</label>
+                <input type="text" class="form-control col-md-6" name="city" [(ngModel)]="addressFormForShipping.city">
+              </div>
+              <div class="form-group col-md-12">
+                <label class="col-md-6">State:</label>
+                <input type="text" class="form-control col-md-6" name="stateOrProvince" [(ngModel)]="addressFormForShipping.stateOrProvince">
+              </div>
+              <div class="form-group col-md-12">
+                <label class="col-md-6">Postal:</label>
+                <input type="text" class="form-control col-md-6" name="postalCode" [(ngModel)]="addressFormForShipping.postalCode">
+              </div>
+              <div class="form-group col-md-12">
+                <label class="col-md-6">Country:</label>
+                <!-- <input type="text" class="form-control col-md-6" name="country" [(ngModel)]="addressFormForShipping.country"> -->
+                <p-autoComplete field="label" class="pautocomp-cstm" [(ngModel)]="addressFormForShipping.country" name="country" [suggestions]="countriesList" (completeMethod)="filterCountries($event)"  [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true"></p-autoComplete>
+              </div>
+              <div class="form-group col-md-12" style="margin-top: 8px;">
+                <button type="button" class="btn btn-primary" [disabled]="!addSiteNameForm.valid" (click)="saveShippingAddress(); " data-dismiss="modal">Save</button> <!--resetAddressShippingForm();-->
+                <button type="button" class="btn btn-primary" [disabled]="!addSiteNameForm.valid" (click)="saveShippingAddressToPO();" data-dismiss="modal">Save to this PO</button>
+              </div>
+  
+            </form>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="resetAddressShippingForm();">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="modal fade" id="createBillingSiteName" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-sm partsList-modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" (click)="resetAddressBillingForm();">&times;</button>
+          <h4 class="modal-title">{{addressSiteNameHeader}}</h4>
+        </div>
+        <div class="modal-body">
+          <div class="form-row">
+            <form #addSiteNameForm="ngForm" class="form-horizontal add-site-name">
+                <div class="form-group col-md-12">
+                    <label class="col-md-6">Site Name:</label>
+                    <input type="text" class="form-control col-md-6" name="siteName" [(ngModel)]="addressFormForBilling.siteName">
+                  </div>
+              <!-- <div class="form-group col-md-12">
+                <label class="col-md-6">Site Name:</label>
+                <select class="form-control col-md-6" name="siteName" [(ngModel)]="addressFormForBilling.siteName">
+                  <option value="0">Select</option>
+                </select>
+              </div> -->
+              <div class="form-group col-md-12">
+                <label class="col-md-6">Address 1:</label>
+                <input type="text" class="form-control col-md-6" name="address1" [(ngModel)]="addressFormForBilling.address1">
+              </div>
+              <div class="form-group col-md-12">
+                <label class="col-md-6">Address 2:</label>
+                <input type="text" class="form-control col-md-6" name="address2" [(ngModel)]="addressFormForBilling.address2">
+              </div>
+              <!-- <div class="form-group col-md-12">
+                <label class="col-md-6">Address 3:</label>
+                <input type="text" class="form-control col-md-6" name="address3" [(ngModel)]="addressFormForBilling.address3">
+              </div> -->
+              <div class="form-group col-md-12">
+                <label class="col-md-6">City:</label>
+                <input type="text" class="form-control col-md-6" name="city" [(ngModel)]="addressFormForBilling.city">
+              </div>
+              <div class="form-group col-md-12">
+                <label class="col-md-6">State:</label>
+                <input type="text" class="form-control col-md-6" name="stateOrProvince" [(ngModel)]="addressFormForBilling.stateOrProvince">
+              </div>
+              <div class="form-group col-md-12">
+                <label class="col-md-6">Postal:</label>
+                <input type="text" class="form-control col-md-6" name="postalCode" [(ngModel)]="addressFormForBilling.postalCode">
+              </div>
+              <div class="form-group col-md-12">
+                <label class="col-md-6">Country:</label>
+                <p-autoComplete field="label" class="pautocomp-cstm" [(ngModel)]="addressFormForBilling.country" name="country" [suggestions]="countriesList" (completeMethod)="filterCountries($event)"  [size]="30" [minLength]="1" [dropdown]="true" errorMessage="Records not found" [forceSelection]="true"></p-autoComplete>
+                <!-- <input type="text" class="form-control col-md-6" name="country" [(ngModel)]="addressFormForBilling.country"> -->
+              </div>
+              <div class="form-group col-md-12" style="margin-top: 8px;">
+                <button type="button" class="btn btn-primary" [disabled]="!addSiteNameForm.valid" (click)="saveBillingAddress();"  data-dismiss="modal">Save</button>
+                <button type="button" class="btn btn-primary" [disabled]="!addSiteNameForm.valid" (click)="saveBillingAddressToPO();" data-dismiss="modal">Save to this PO</button>
+              </div>
+  
+            </form>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="resetAddressBillingForm();">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="modal fade" id="shipToShipVia" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-sm partsList-modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" (click)="resetAddressShipViaForm()">&times;</button>
+          <h4 class="modal-title"> Add Ship Via </h4>
+        </div>
+        <div class="modal-body">
+          <div class="form-row">
+            <form #addShipViaForm="ngForm" class="form-horizontal add-site-name">
+              <div class="form-group col-md-12">
+                <label class="col-md-6">Ship Via:</label>
+                <input type="text" class="form-control col-md-6" name="shippingAcctInfo" [(ngModel)]="addShipViaFormForShipping.shipVia">
+                <!-- <select class="form-control col-md-6" name="shipviaId" [(ngModel)]="shipToShipViaDetails.shipviaId">
+                  <option value="0">Select</option>
+                </select> -->
+              </div>
+              <!-- <div class="form-group col-md-12">
+                <label class="col-md-6">Shipping Cost:</label>
+                <input type="text" class="form-control col-md-6" name="shippingCost" [(ngModel)]="shipToShipViaDetails.shippingCost">
+              </div>
+              <div class="form-group col-md-12">
+                <label class="col-md-6">Handling Cost:</label>
+                <input type="text" class="form-control col-md-6" name="handlingCost" [(ngModel)]="shipToShipViaDetails.handlingCost">
+              </div> -->
+              <div class="form-group col-md-12">
+                <label class="col-md-6">Shipping Acct Info:</label>
+                <input type="text" class="form-control col-md-6" name="shippingAcctInfo" [(ngModel)]="addShipViaFormForShipping.shippingAccountInfo">
+              </div>
+              <div class="form-group col-md-12">
+                <label class="col-md-6">Shipping URL:</label>
+                <input type="text" class="form-control col-md-6" name="shippingURL" [(ngModel)]="addShipViaFormForShipping.shippingURL">
+              </div>
+              <div class="form-group col-md-12">
+                <label class="col-md-6">Shipping Id:</label>
+                <input type="text" class="form-control col-md-6" name="shippingId" [(ngModel)]="addShipViaFormForShipping.shippingId">
+              </div>
+              <div class="form-group col-md-12">
+                <label class="col-md-6">Memo:</label>
+                <input type="text" class="form-control col-md-6" name="shipviamemo" [(ngModel)]="addShipViaFormForShipping.memo">
+              </div>
+              <div class="form-group col-md-12" style="margin-top: 8px;">
+                <button type="button" class="btn btn-primary"  data-dismiss="modal" [disabled]="!addShipViaForm.valid" (click)="saveShipViaForShipTo(); resetAddressShipViaForm();">Save</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal"  [disabled]="!addShipViaForm.valid" (click)="saveShipToShipViaDetailsToPO()">Save to this PO</button>
+              </div>
+  
+            </form>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
 
 

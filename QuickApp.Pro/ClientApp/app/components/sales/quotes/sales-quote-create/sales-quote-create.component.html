@@ -290,12 +290,15 @@
 
             <div>
 
-              <div class="col-md-2 column column-seperator" >
-									<div class="card-header" style="padding: 10px 12px;">
-										<h5 style="margin-bottom: 0; font-size: 12px;">Management Structure <span class="clr-red">*</span></h5>
-									</div>
-									<div class="card-body">
+              <div class="col-md-3 column column-seperator" >
+                
+                  <div class="card">
+                      <div class="card-body">
+                          <h5 class="po-head-15f">Management Structure <span
+                                  class="clr-red">*</span> </h5>
+                                  <div class="col-md-12">
                     <div class="form-group">
+                      
                       <p-dropdown placeholder="Select Legal Entity"
                                   name="company"
                                   #wocompanyId="ngModel"
@@ -336,7 +339,9 @@
                                   [(ngModel)]="salesQuote.departmentId">
                       </p-dropdown>
                   </div>
-									</div>
+                  </div>
+                  </div>
+                  </div>
 								</div>
 
             </div>

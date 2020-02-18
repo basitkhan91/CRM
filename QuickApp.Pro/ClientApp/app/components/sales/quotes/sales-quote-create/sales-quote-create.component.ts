@@ -479,6 +479,9 @@ private onDestroy$: Subject<void> = new Subject<void>();
       }
       console.log(this.selectedParts);
 
+
+      this.loadManagementStructure(this.salesOrderQuoteObj.managementStructureId);
+      this.salesQuote.managementStructureId = this.salesOrderQuoteObj.managementStructureId;
       this.salesQuote.priorities = this.salesQuoteView.priorities;
       this.salesQuote.leadSources = this.salesQuoteView.leadSources;
       this.salesQuote.salesQuoteTypes = this.salesQuoteView.salesQuoteTypes;
@@ -602,6 +605,9 @@ private onDestroy$: Subject<void> = new Subject<void>();
       .subscribe(data => {
         this.salesQuote = data && data.length ? data[0] : null;
 
+        if(this.salesQuote.salesQuoteTypes.length>0){
+        this.salesQuote.quoteTypeId = this.salesQuote.salesQuoteTypes[0].id;
+        }
         this.salesQuote.openDate = new Date();
         this.salesQuote.validForDays = 10;
         this.salesQuote.quoteExpiryDate = new Date();
@@ -629,7 +635,7 @@ private onDestroy$: Subject<void> = new Subject<void>();
     let od = new Date(this.salesQuote.openDate);
     let ed = new Date(this.salesQuote.quoteExpiryDate);
       let Difference_In_Time = ed.getTime() - od.getTime(); 
-      let Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24); 
+      let Difference_In_Days = Math.floor(Difference_In_Time / (1000 * 3600 * 24)); 
       this.salesQuote.validForDays = Difference_In_Days;
       console.log(this.salesQuote);
     //this.salesQuote.quoteExpiryDate.setDate( this.salesQuote.openDate.getDate() + this.salesQuote.validForDays );
@@ -797,6 +803,7 @@ private onDestroy$: Subject<void> = new Subject<void>();
       this.salesOrderQuote.customerContactId = this.salesQuote.customerContactId;
       this.salesOrderQuote.customerReference = this.salesQuote.customerReferenceName;
       this.salesOrderQuote.contractReference = this.salesQuote.contractReferenceName;
+      this.salesOrderQuote.managementStructureId = this.salesQuote.managementStructureId;
       this.salesOrderQuote.salesPersonId = editValueAssignByCondition(
         "employeeId",
         this.salesQuote.salesPersonName
@@ -932,7 +939,20 @@ private onDestroy$: Subject<void> = new Subject<void>();
   }
 
 
-  
+  loadManagementStructure(managementStructureId){
+    this.commonservice.getManagementStructureDetails(managementStructureId).pipe(takeUntil(this.onDestroy$)).subscribe(res => {
+      this.selectedLegalEntity(res.Level1);
+      this.selectedBusinessUnit(res.Level2);
+      this.selectedDivision(res.Level3);
+      this.selectedDepartment(res.Level4);
+      this.salesQuote.companyId = res.Level1 !== undefined ? res.Level1 : null;
+      this.salesQuote.buId = res.Level2 !== undefined ? res.Level1 : null;
+      this.salesQuote.divisionId = res.Level3 !== undefined ? res.Level1 : null;
+      this.salesQuote.departmentId = res.Level4 !== undefined ? res.Level1 : null;
+     
+
+  })
+  }
 	
   getLegalEntity() {
     this.commonservice.getLegalEntityList().pipe(takeUntil(this.onDestroy$)).subscribe(res => {
