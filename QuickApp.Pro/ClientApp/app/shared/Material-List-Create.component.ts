@@ -27,7 +27,7 @@ export class MaterialListCreateComponent implements OnInit, OnChanges {
     itemClassInfo: any[] = [];
     allconditioninfo: any[] = [];
     partListData: any[] = [];
-    @Input() isWorkOrder;
+    @Input() isWorkOrder = false;
     @Input() isEdit = false;
     @Input() editData;
     @Input() isQuote = false;
@@ -190,6 +190,8 @@ export class MaterialListCreateComponent implements OnInit, OnChanges {
     }
 
     onPartSelect(event, material) {
+        console.log(event);
+
         if (this.itemclaColl) {
             var materialObj = this.workFlow.materialList.find(x => x.partNumber == event && x.taskId == this.workFlow.taskId);
 

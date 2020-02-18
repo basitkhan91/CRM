@@ -289,7 +289,12 @@
                                                         </div>
                                                     </div>
                                                     <div class="col-md-6">
-                                                        <p-dropdown class="p-dropdown-custom-md p-dropdown-wo-gen"
+                                                        <input type="number" class="form-control wo-input"
+                                                            name="creditTerm" #creditTerm="ngModel"
+                                                            [(ngModel)]="workOrderGeneralInformation.creditTerm"
+                                                            required disabled>
+
+                                                        <!-- <p-dropdown class="p-dropdown-custom-md p-dropdown-wo-gen"
                                                             placeholder="Select CreditTerms" name="creditTermsId"
                                                             #creditTermsId="ngModel" [options]="creditTerms"
                                                             [(ngModel)]="workOrderGeneralInformation.creditTermsId"
@@ -300,7 +305,7 @@
                                                                     <small> CreditTerms Type </small>
                                                                 </div>
                                                             </div>
-                                                        </p-dropdown>
+                                                        </p-dropdown> -->
                                                     </div>
                                                 </div>
                                             </div>
@@ -607,19 +612,19 @@
                                     <td>
                                         <p-dropdown [options]="workOrderStatusList" placeholder="Select"
                                             name="status{{i}}" #status="ngModel" class="p-dropdown-custom-md"
-                                            [(ngModel)]="workOrderPartNumber.workOrderStatusId" required>
+                                            [(ngModel)]="workOrderPartNumber.workOrderStatusId" disabled required>
                                         </p-dropdown>
                                     </td>
 
                                     <td>
                                         <p-dropdown [options]="priorityList" placeholder="Select" name="priority{{i}}"
                                             #priority="ngModel" class="p-dropdown-custom-md"
-                                            [(ngModel)]="workOrderPartNumber.workOrderPriorityId" disabled required>
+                                            [(ngModel)]="workOrderPartNumber.workOrderPriorityId" required>
                                         </p-dropdown>
                                     </td>
                                     <td>
-                                        <p-calendar [showIcon]="true" name="receivingDate{{i}}" class="calender-cstm"
-                                            #receivingDate="ngModel" [(ngModel)]="workOrderPartNumber.receivingDate"
+                                        <p-calendar [showIcon]="true" name="receivedDate{{i}}" class="calender-cstm"
+                                            #receivedDate="ngModel" [(ngModel)]="workOrderPartNumber.receivedDate"
                                             disabled></p-calendar>
                                     </td>
                                     <td>

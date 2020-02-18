@@ -37,7 +37,7 @@ export class WorkOrderFreightComponent implements OnInit {
     overAllMarkup: any;
     costPlusType: number = 0;
     cols = [
-        { field: 'carrierName', header: 'Carrier' },
+        // { field: 'carrierName', header: 'Carrier' },
         { field: 'shipViaName', header: 'Ship Via' },
         { field: 'length', header: 'Length' },
         { field: 'width', header: 'Width' },
@@ -93,18 +93,28 @@ export class WorkOrderFreightComponent implements OnInit {
 
     createNew() {
         this.isEdit = false;
-        this.freightForm = [new Freight()];
+        let newFreight = new Freight();
+        const taskId = this.taskList.filter(x => x.description === 'Shipping');
+        console.log(taskId);
+
+        newFreight = { ...newFreight, taskId: taskId[0].taskId, carrierId: 1 }
+        this.freightForm = [newFreight];
+        console.log(newFreight);
+
     }
     addNewRow() {
         let newFreight = new Freight();
-        this.taskList.forEach(
-            task => {
-                if (task.description == "Assemble") {
-                    newFreight['taskId'] = task.taskId;
-                }
-            }
-        )
+        const taskId = this.taskList.filter(x => x.description === 'Shipping');
+        newFreight = { ...newFreight, taskId: taskId[0].taskId, carrierId: 1 }
         this.freightForm = [...this.freightForm, newFreight];
+        // this.taskList.forEach(
+        //     task => {
+        //         if (task.description == "Shipping") {
+        //             newFreight['taskId'] = task.taskId;
+        //         }
+        //     }
+        // )
+
     }
     edit(rowData, index) {
         this.editingIndex = index;
@@ -121,12 +131,13 @@ export class WorkOrderFreightComponent implements OnInit {
                 //     this.isEdit = false;
                 // }
                 // else{
-                this.updateFreightListForWo.emit({ ...this.freightForm, carrierId: 1 });
+
+                this.updateFreightListForWo.emit(this.freightForm);
                 $('#addNewFreight').modal('hide');
                 this.isEdit = false;
                 // }
             } else {
-                this.saveFreightListForWO.emit({ ...this.freightForm, carrierId: 1 });
+                this.saveFreightListForWO.emit(this.freightForm);
                 $('#addNewFreight').modal('hide');
             }
         }

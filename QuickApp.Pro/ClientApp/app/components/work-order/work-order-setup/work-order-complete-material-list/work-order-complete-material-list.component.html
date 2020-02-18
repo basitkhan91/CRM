@@ -39,7 +39,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Add Material</h4>
+                <h4 class="modal-title">{{ isEdit ? 'Edit' : 'Add'  }} Material</h4>
             </div>
             <div class="modal-body">
                 <grd-material *ngIf="!isEdit" [isWorkOrder]="isWorkOrder" [workFlow]="workFlowObject"
@@ -60,17 +60,18 @@
 
 <div>
     <p-table class="rpo-table-cstm rro-table-cstm pub-ptable-cstm" [columns]="cols" [value]="workOrderMaterialList"
-        [paginator]="true" [rows]="10">
+        [paginator]="true" [rows]="pageSize" (onPage)="pageIndexChange($event)">
         <ng-template pTemplate="header" let-columns>
             <tr>
                 <th>Task</th>
+                <th> Line Num</th>
                 <th *ngFor="let col of columns">
                     {{col.header}}
                 </th>
                 <th>Actions </th>
             </tr>
         </ng-template>
-        <ng-template pTemplate="body" let-rowData let-columns="columns">
+        <ng-template pTemplate="body" let-rowData let-i="rowIndex" let-columns="columns">
             <tr>
                 <td>
                     <select class="form-control select-read-only" [(ngModel)]="rowData.taskId" [disabled]="isView"
@@ -79,6 +80,11 @@
                         <option *ngFor="let task of taskList" [value]="task.taskId">{{task.description}}</option>
                     </select>
                 </td>
+
+                <td>
+                    {{ (pageIndex - 1) * pageSize + i + 1 }}
+                </td>
+
                 <td *ngFor="let col of columns">
                     {{rowData[col.field]}}
                 </td>
@@ -175,10 +181,19 @@
                                 <th class="text-center"> Qty Avb </th>
                                 <th class="text-center"> Qty on Order </th>
 
-                                <th class="text-center">Reserved Date</th>
-                                <th class="text-center">Reserved By</th>
-                                <th class="text-center">Issued By</th>
-                                <th class="text-center">Issed Date</th>
+                                <th class="text-center" *ngIf="statusId === 1 || statusId === 5 ">
+                                    {{statusId == 1 ? 'Reserved' : 'UnReserved'  }} Date</th>
+                                <th class="text-center" *ngIf="statusId === 1 || statusId === 5">
+                                    {{statusId === 1 ? 'Reserved' : 'UnReserved'}} By</th>
+                                <th class="text-center" *ngIf="statusId === 2 || statusId === 3 || statusId === 4">
+                                    {{statusId === 2  ? 'Issued' : statusId === 3 ? 'Reserved & Issued'  :'UnIssued'  }}
+                                    By</th>
+                                <th class="text-center" *ngIf="statusId === 2 || statusId === 3 || statusId === 4">
+                                    {{statusId === 2  ? 'Issued'  : 
+                                    statusId === 3 ? 'Reserved & Issued'  
+                                    : 'UnIssued' 
+                                     }}
+                                    Date</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -240,26 +255,26 @@
                                 <td>{{x.quantityOnOrder}}</td>
 
 
-                                <td>
+                                <td *ngIf="statusId != 2 && statusId != 3 && statusId != 4">
                                     <p-calendar [showIcon]="true" class="calender-cstm" name="reservedDate"
                                         #reservedDate="ngModel" required [(ngModel)]="x.reservedDate"></p-calendar>
 
                                 </td>
-                                <td>
+                                <td *ngIf="statusId != 2 && statusId  != 3 && statusId != 4">
                                     <p-dropdown [options]="employeesOriginalData" name="reservedBy"
                                         #reservedBy="ngModel" placeholder="Select "
                                         class="p-dropdown-custom-md-Header-table" [(ngModel)]="x.reservedById" required>
                                     </p-dropdown>
 
                                 </td>
-                                <td>
+                                <td *ngIf="statusId != 1 && statusId != 5 ">
                                     <p-dropdown [options]="employeesOriginalData" name="issuedBy" #issuedBy="ngModel"
                                         placeholder="Select " class="p-dropdown-custom-md-Header-table"
                                         [(ngModel)]="x.issuedById" required>
                                     </p-dropdown>
 
                                 </td>
-                                <td>
+                                <td *ngIf="statusId != 1 &&  statusId != 5 ">
                                     <p-calendar [showIcon]="true" class="calender-cstm" name="issuedDate"
                                         #issuedDate="ngModel" required [(ngModel)]="x.issuedDate"></p-calendar>
 

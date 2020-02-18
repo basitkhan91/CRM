@@ -131,7 +131,7 @@ export class WorkOrderEndpointService extends EndpointFactory {
             });
     }
 
-    getWorkOrderStageAndStatus(){
+    getWorkOrderStageAndStatus() {
         return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/workorderstageandstatus`, this.getRequestHeaders())
     }
 
@@ -244,15 +244,15 @@ export class WorkOrderEndpointService extends EndpointFactory {
         return this.http.post<any>(`${this.configurations.baseUrl}/api/workOrder/updateworkorderexclusions`, JSON.stringify(data), this.getRequestHeaders());
     }
 
-    createWorkOrderFreightList(data){
+    createWorkOrderFreightList(data) {
         return this.http.post(`${this.configurations.baseUrl}/api/workOrder/createworkorderfreight`, JSON.stringify(data), this.getRequestHeaders())
-    } 
+    }
 
-    updateWorkOrderFreightList(data){
+    updateWorkOrderFreightList(data) {
         return this.http.post(`${this.configurations.baseUrl}/api/workOrder/updateworkorderfreight`, JSON.stringify(data), this.getRequestHeaders())
 
     }
-    deleteWorkOrderFreightList(workOrderFreightId , updatedBy){
+    deleteWorkOrderFreightList(workOrderFreightId, updatedBy) {
         return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/deleteworkorderfreight?workOrderFreightId=${workOrderFreightId}&updatedBy=${updatedBy}`, this.getRequestHeaders());
 
     }
@@ -295,7 +295,7 @@ export class WorkOrderEndpointService extends EndpointFactory {
 
     }
 
-    getWorkOrderFrieghtsList(workFlowWorkOrderId, workOrderId){
+    getWorkOrderFrieghtsList(workFlowWorkOrderId, workOrderId) {
         return this.http.get(`${this.configurations.baseUrl}/api/workorder/workorderfreightlist?wfwoId=${workFlowWorkOrderId}&workOrderId=${workOrderId}`, this.getRequestHeaders())
     }
 
@@ -375,7 +375,7 @@ export class WorkOrderEndpointService extends EndpointFactory {
         return this.http.post<any>(`${this.configurations.baseUrl}/api/workOrder/saveassetcheckedout`, JSON.stringify(assetcheckout), this.getRequestHeaders());
     }
 
-    assetsHistoryByWorkOrderAssetId(workOrderAssetId){
+    assetsHistoryByWorkOrderAssetId(workOrderAssetId) {
         return this.http.get<any>(`${this.configurations.baseUrl}/api/workOrder/woassethistory?workOrderAssetId=${workOrderAssetId}`, this.getRequestHeaders())
     }
     woassethistory
@@ -495,18 +495,18 @@ export class WorkOrderEndpointService extends EndpointFactory {
     getReceivingCustomerreference(customerId) {
         return this.http.get<any>(`${this.configurations.baseUrl}/api/receivingcustomerWork/receivingcustomerreference?customerId=${customerId}`, this.getRequestHeaders())
     }
-    getDocumentsList(wfWoId, workOrderId){
+    getDocumentsList(wfWoId, workOrderId) {
         return this.http.get<any>(`${this.configurations.baseUrl}/api/workorder/workorderdocumentslist?wfwoId=${wfWoId}&workOrderId=${workOrderId}`, this.getRequestHeaders());
     }
 
-    createDocuments(data){
+    createDocuments(data) {
         const headers = new Headers({ 'Content-Type': 'multipart/form-data' });
-        return this.http.post(`${this.configurations.baseUrl}/api/workorder/createworkorderdocuments`, data , this.getRequestHeaders());
+        return this.http.post(`${this.configurations.baseUrl}/api/workorder/createworkorderdocuments`, data);
     }
-    deleteWorkOrderDocuments(workOrderDocumentId, updatedBy){
-        return this.http.get<any>(`${this.configurations.baseUrl}/api/workorder/deleteworkorderdocuments?workOrderDocumentsId=${workOrderDocumentId}&updatedBy=${updatedBy}` , this.getRequestHeaders())
+    deleteWorkOrderDocuments(workOrderDocumentId, updatedBy) {
+        return this.http.get<any>(`${this.configurations.baseUrl}/api/workorder/deleteworkorderdocuments?workOrderDocumentsId=${workOrderDocumentId}&updatedBy=${updatedBy}`, this.getRequestHeaders())
     }
-    updateWorkOrderDocumentStatus(workOrderDocumentsId,status, updatedBy){
+    updateWorkOrderDocumentStatus(workOrderDocumentsId, status, updatedBy) {
         return this.http.get<any>(`${this.configurations.baseUrl}/api/workorder/workorderdocumentstatus?workOrderDocumentsId=${workOrderDocumentsId}&status=${status}&updatedBy=${updatedBy} `)
     }
 

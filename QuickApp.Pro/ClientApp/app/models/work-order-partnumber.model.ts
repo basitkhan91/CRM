@@ -31,7 +31,7 @@
         this.isDelete = false;
         this.updatedDate = new Date();
         this.createdDate = new Date();
-        this.receivingDate = '';
+        this.receivedDate = '';
 
     }
 
@@ -64,5 +64,5 @@
     technicianId: number;
     mappingItemMasterId: number;
     conditionId: number;
-    receivingDate: string;
+    receivedDate: string;
 }
