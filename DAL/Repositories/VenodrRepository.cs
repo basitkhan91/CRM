@@ -1807,7 +1807,7 @@ namespace DAL.Repositories
                                 itm.PartNumber,
                                 itm.PartDescription
 
-                            }).OrderByDescending(p => p.AuditVendorCapabilityId).ToList();
+                            }).OrderByDescending(p => p.UpdatedDate).ToList();
                 return list;
             }
             catch (Exception)
@@ -3100,7 +3100,7 @@ namespace DAL.Repositories
                 else
                 {
                     model.CreatedDate = model.UpdatedDate = DateTime.Now;
-                    model.IsActive = true;
+                   
                     model.IsDeleted = false;
                     if (model.IsPrimary == true)
                     {
@@ -3504,6 +3504,41 @@ namespace DAL.Repositories
                             ca.IsDeleted
 
                         }).ToList();
+            return data;
+        }
+
+
+        public IEnumerable<object> VendorAircraftAuditDataByCapsId(long vendorCapabilityAircraftId)
+        {
+            var data = (from vc in _appContext.VendorCapabilityAircraftAudit
+                            //join cy in _appContext.capabilityType on vc.CapabilityId equals cy.CapabilityTypeId into cyt
+                            //from cy in cyt.DefaultIfEmpty()
+                        join art in _appContext.AircraftType on vc.AircraftTypeId equals art.AircraftTypeId into artt
+                        from art in artt.DefaultIfEmpty()
+                        join arm in _appContext.AircraftModel on vc.AircraftModelId equals arm.AircraftModelId into armd
+                        from arm in armd.DefaultIfEmpty()
+                        join ard in _appContext.AircraftDashNumber on vc.DashNumberId equals ard.DashNumberId into ardd
+                        from ard in ardd.DefaultIfEmpty()
+                        where vc.VendorCapabilityAirCraftId == vendorCapabilityAircraftId  
+                        select new
+                        {
+                            vc.VendorCapabilityAirCraftId,
+                            vc.VendorCapabilityId,
+                            vc.AircraftTypeId,
+                            AircraftType = art.Description,
+                            vc.AircraftModelId,
+                            vc.DashNumberId,
+                            AircraftModel = (arm.ModelName == null || arm.ModelName == "") ? "Unknown" : arm.ModelName,
+                            DashNumber = (ard.DashNumber == null || ard.DashNumber == "") ? "Unknown" : ard.DashNumber,
+                            //vc.PartNumber,                           
+                            //vc.AircraftModel,
+                            vc.IsActive,
+                            vc.CreatedBy,
+                            vc.CreatedDate,
+                            vc.UpdatedBy,
+                            vc.UpdatedDate,
+                            vc.Memo
+                        }).OrderByDescending(p=>p.UpdatedDate).ToList();
             return data;
         }
 

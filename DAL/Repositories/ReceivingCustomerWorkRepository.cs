@@ -246,7 +246,7 @@ namespace DAL.Repositories
                                 {
 
                                     ReceivingCustomerWorkId = cr.ReceivingCustomerWorkId,
-                                    receivedDate = cr.CreatedDate,
+                                    receivedDate = cr.ReceivedDate,
                                     receivingNumber = cr.ReceivingNumber,
                                     woNumber = wo == null ? "" : wo.WorkOrderNum,
                                     woOpenDate = wo == null && wo.OpenDate!=null ? "" : wo.OpenDate.ToString(),
@@ -284,7 +284,7 @@ namespace DAL.Repositories
                         {
 
                             ReceivingCustomerWorkId = cr.ReceivingCustomerWorkId,
-                            receivedDate = cr.CreatedDate,
+                            receivedDate = cr.ReceivedDate,
                             receivingNumber = cr.ReceivingNumber,
                             woNumber = wo == null ? "" : wo.WorkOrderNum,
                             woOpenDate = wo == null && wo.OpenDate != null ? "" : wo.OpenDate.ToString(),
@@ -503,8 +503,8 @@ namespace DAL.Repositories
                                 cr.WarehouseId,
                                 cr.WorkOrderId,
                                 cr.IsSkipSerialNo,
-                                cr.IsSkipTimeLife
-
+                                cr.IsSkipTimeLife,
+                                cr.ReceivedDate,
 
                             }).FirstOrDefault();
                 return data;
@@ -547,7 +547,7 @@ namespace DAL.Repositories
                                     select new ReceivingCustomerWorkFilter()
                                     {
                                         ReceivingCustomerWorkId = cr.ReceivingCustomerWorkId,
-                                        receivedDate = cr.CreatedDate,
+                                        receivedDate = cr.ReceivedDate,
                                         receivingNumber = cr.ReceivingNumber,
                                         woNumber = wo == null ? "" : wo.WorkOrderNum,
                                         woOpenDate = wo == null && wo.OpenDate != null ? "" : wo.OpenDate.ToString(),
@@ -584,7 +584,7 @@ namespace DAL.Repositories
                             select new ReceivingCustomerWorkFilter()
                             {
                                 ReceivingCustomerWorkId = cr.ReceivingCustomerWorkId,
-                                receivedDate = cr.CreatedDate,
+                                receivedDate = cr.ReceivedDate,
                                 receivingNumber = cr.ReceivingNumber,
                                 woNumber = wo == null ? "" : wo.WorkOrderNum,
                                 woOpenDate = wo == null && wo.OpenDate != null ? "" : wo.OpenDate.ToString(),
@@ -697,7 +697,7 @@ namespace DAL.Repositories
                                     select new ReceivingCustomerWorkFilter()
                                     {
                                         ReceivingCustomerWorkId = cr.ReceivingCustomerWorkId,
-                                        receivedDate = cr.CreatedDate,
+                                        receivedDate = cr.ReceivedDate,
                                         receivingNumber = cr.ReceivingNumber,
                                         woNumber = wo == null ? "" : wo.WorkOrderNum,
                                         woOpenDate = wo == null && wo.OpenDate != null ? "" : wo.OpenDate.ToString(),
@@ -731,7 +731,7 @@ namespace DAL.Repositories
                             select new ReceivingCustomerWorkFilter()
                             {
                                 ReceivingCustomerWorkId = cr.ReceivingCustomerWorkId,
-                                receivedDate = cr.CreatedDate,
+                                receivedDate = cr.ReceivedDate,
                                 receivingNumber = cr.ReceivingNumber,
                                 woNumber = wo == null ? "" : wo.WorkOrderNum,
                                 woOpenDate = wo == null && wo.OpenDate != null ? "" : wo.OpenDate.ToString(),
@@ -1106,7 +1106,11 @@ namespace DAL.Repositories
                             from con in custcon.DefaultIfEmpty()
                             join emp in _appContext.Employee on cust.CsrId equals emp.EmployeeId into custemp
                             from emp in custemp.DefaultIfEmpty()
-                            where rc.IsDeleted == false && rc.IsActive == true
+                            join ct in _appContext.CreditTerms on cust.CreditTermsId equals ct.CreditTermsId into custct
+                            from ct in custct.DefaultIfEmpty()
+                            join wo in _appContext.WorkOrder on rc.WorkOrderId equals wo.WorkOrderId into rcwo
+                            from wo in rcwo.DefaultIfEmpty()
+                            where rc.IsDeleted == false && rc.IsActive == true && rc.WorkOrderId==null
                             && (cust.Name.ToLower().Contains(value.ToLower()))
                             select new
                             {
@@ -1119,7 +1123,9 @@ namespace DAL.Repositories
                                 CustomerEmail = cust.Email,
                                 CustomerPhoneNo = con == null ? "" : con.WorkPhone+ " "+con.WorkPhoneExtn,
                                 CustomerContact = con == null ? " " : con.FirstName,
-
+                                CreditTerm=ct==null?"":ct.Name,
+                                rc.ManagementStructureId,
+                                rc.ReceivingCustomerWorkId
                             }).Distinct().ToList();
                 return list;
             }

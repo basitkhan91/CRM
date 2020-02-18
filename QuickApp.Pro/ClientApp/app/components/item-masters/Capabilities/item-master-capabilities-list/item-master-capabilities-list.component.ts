@@ -119,6 +119,7 @@ export class ItemMasterCapabilitiesListComponent implements OnInit {
     divisionData: any;
     departmentData: any;
     @Input() isEnableItemMaster: boolean = false;
+    @Input() isEnableItemMasterView: boolean = false;
     @ViewChild("addCapabilityButton") addCapabilityButton: ElementRef;
     selectedCapabilityType: any;
     isCapViewMode: boolean = false;
@@ -178,10 +179,10 @@ export class ItemMasterCapabilitiesListComponent implements OnInit {
             el.click();
         }
 
-        if(!this.isEnableItemMaster) {
+        if(!this.isEnableItemMaster && !this.isEnableItemMasterView) {
             this.itemMasterService.currentUrl = '/itemmastersmodule/itemmasterpages/app-item-master-capabilities-list';
             this.itemMasterService.bredcrumbObj.next(this.itemMasterService.currentUrl);//Bread Crumb
-        } 
+        }
 
         this.capabilitiesForm = this.formBuilder.group({
             mfgForm: this.formBuilder.array([])

@@ -178,6 +178,9 @@ export class ItemMasterListComponent implements OnInit, AfterViewInit {
 	ataChapterId: any;
 	viewAircraftData: any = {};
 	aircraftauditHistory: any = [];
+	itemMasterId: number;
+	isEnableItemMasterView: boolean = true;
+	purchaseSalesInfo: any = [];
 
 	//selectedColumns: any;
 	/** item-master-list ctor */
@@ -792,8 +795,10 @@ export class ItemMasterListComponent implements OnInit, AfterViewInit {
 	}
 	openView(row) {
 		$('#step1').collapse('show');
+		this.itemMasterId = row.itemMasterId;
 		this.toGetAllDocumentsList(row.itemMasterId);
 		this.getItemMasterById(row.itemMasterId);
+		this.getPurchaseSalesInfo(this.itemMasterId);
         // this.viewItemMaster = row;
 		this.partNumber = row.partNumber;
 		this.description = row.partDescription;
@@ -925,7 +930,7 @@ export class ItemMasterListComponent implements OnInit, AfterViewInit {
 
 		this.getAircraftMappedDataByItemMasterId(row.itemMasterId);
 		this.getATAMappedDataByItemMasterId(row.itemMasterId);
-		this.getCapabilityList(row.itemMasterId);
+		// this.getCapabilityList(row.itemMasterId);
 		this.getNtaeData(row.itemMasterId);
         this.getExchange(row.itemMasterId);
 
@@ -940,6 +945,12 @@ export class ItemMasterListComponent implements OnInit, AfterViewInit {
 	openViewOnDbl(rowData) {		
 		this.openView(rowData);
 		$('#itemMasterView').modal('show');
+	}
+
+	getPurchaseSalesInfo(id) {
+		this.itemMasterService.getPurcSaleDetailById(id).subscribe(res => {
+			this.purchaseSalesInfo = res;
+		});
 	}
 
 
@@ -1073,27 +1084,27 @@ export class ItemMasterListComponent implements OnInit, AfterViewInit {
     }
 
 
-	getCapabilityList(itemMasterId) {
-        let reqData = {
-            first: 0,
-            rows: 10,
-            sortOrder: -1,
-            filters: {
-                partNo: "",
-                itemMasterId: itemMasterId
-    },
-            globalFilter: null
-        }
-        this.itemMasterService.getItemMasterCapsList(reqData).subscribe(
-            results => this.onDataLoadSuccessfuls(results[0]),
-            error => this.onDataLoadFailed(error)
-        );
-    }
+	// getCapabilityList(itemMasterId) {
+    //     let reqData = {
+    //         first: 0,
+    //         rows: 10,
+    //         sortOrder: -1,
+    //         filters: {
+    //             partNo: "",
+    //             itemMasterId: itemMasterId
+    // },
+    //         globalFilter: null
+    //     }
+    //     this.itemMasterService.getItemMasterCapsList(reqData).subscribe(
+    //         results => this.onDataLoadSuccessfuls(results[0]),
+    //         error => this.onDataLoadFailed(error)
+    //     );
+    // }
 
-    private onDataLoadSuccessfuls(allWorkFlows: any[]) {
-       // this.dataSource.data = allWorkFlows;
-        this.allItemMasterCapsList = allWorkFlows;
-    }
+    // private onDataLoadSuccessfuls(allWorkFlows: any[]) {
+    //    // this.dataSource.data = allWorkFlows;
+    //     this.allItemMasterCapsList = allWorkFlows;
+    // }
 
 
 	getATAMappedDataByItemMasterId(itemMasterId) {

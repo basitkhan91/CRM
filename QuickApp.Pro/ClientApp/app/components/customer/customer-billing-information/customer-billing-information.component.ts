@@ -78,7 +78,7 @@ export class CustomerBillingInformationComponent {
             this.id = this.editGeneralInformationData.customerId;
             this.customerCode = this.editGeneralInformationData.customerCode;
             this.customerName = this.editGeneralInformationData.name;
-            this.getBillingDataById()
+       
             this.isViewMode = false;
 
         } else {
@@ -86,19 +86,21 @@ export class CustomerBillingInformationComponent {
                 this.id = this.customerDataFromExternalComponents.customerId;
                 this.customerCode = this.customerDataFromExternalComponents.customerCode;
                 this.customerName = this.customerDataFromExternalComponents.name;
-                this.getBillingDataById();
+                // this.getBillingDataById();
                 this.isViewMode = true;
             } else {
                 this.id = this.savedGeneralInformationData.customerId;
                 this.customerCode = this.savedGeneralInformationData.customerCode;
                 this.customerName = this.savedGeneralInformationData.name;
                 //Added By Vijay For Customer Create time IsBillingAddess is selected checkbox Then list page we are displaying list
-                this.getBillingDataById()
+                // this.getBillingDataById()
                 this.isViewMode = false;
             }
 
         }
-
+if(this.id){
+    this.getBillingDataById()
+}
 
 
 
@@ -108,7 +110,10 @@ export class CustomerBillingInformationComponent {
         for (let property in changes) {
             if (property == 'selectedCustomerTab') {
                 if (changes[property].currentValue == "Billing") {
-                    this.getBillingDataById()
+                    // this.getBillingDataById()
+                    if(this.id){
+                        this.getBillingDataById()
+                    }
                 }
             }
             if (property == 'customerDataFromExternalComponents') {
@@ -117,7 +122,10 @@ export class CustomerBillingInformationComponent {
                     this.id = this.customerDataFromExternalComponents.customerId;
                     this.customerCode = this.customerDataFromExternalComponents.customerCode;
                     this.customerName = this.customerDataFromExternalComponents.name;
-                    this.getBillingDataById()
+                    // this.getBillingDataById()
+                    if(this.id){
+                        this.getBillingDataById()
+                    }
                     this.isViewMode = true;
 
                 }

@@ -39,7 +39,7 @@ namespace DAL.Models
         public long? SalesPersonId { get; set; }
         public long ManagementStructureId { get; set; }
         public long? CSRId { get; set; }
-        public long ReceivingCustomerWorkId { get; set; }
+        public long? ReceivingCustomerWorkId { get; set; }
         public string Memo { get; set; }
         public string Notes { get; set; }
 

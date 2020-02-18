@@ -6,11 +6,11 @@ using Microsoft.Extensions.Logging;
 using OfficeOpenXml;
 using QuickApp.Pro.Helpers;
 using QuickApp.Pro.ViewModels;
+using QuickApp.Pro.ViewModels.SalesViews;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using QuickApp.Pro.ViewModels.SalesViews;
 
 namespace QuickApp.Pro.Controllers
 {
@@ -49,7 +49,7 @@ namespace QuickApp.Pro.Controllers
 
         [HttpPost("Get")]
         public IActionResult Get([FromBody] Filters<StockListFilters> stocklistFilters)
-        {
+       {
 
             try
             {

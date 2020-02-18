@@ -19,7 +19,7 @@ namespace DAL.Models
         public long? MarkUpPercentageId { get; set; }
         public long? TaskId { get; set; }
         public string MarkupFixedPrice { get; set; }
-        public long HeaderMarkupId { get; set; }
+        public long? HeaderMarkupId { get; set; }
         public int? BillingMethodId { get; set; }
         public decimal? BillingRate { get; set; }
         public decimal? BillingAmount { get; set; }
