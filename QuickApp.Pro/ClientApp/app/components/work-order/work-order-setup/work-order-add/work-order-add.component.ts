@@ -212,7 +212,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     }
     revisedPartId: any;
     csrList: any;
-    // customerReferencelist: { label: string; value: number; }[];
+    customerReferencelist: { label: string; value: number; }[];
 
     private onDestroy$: Subject<void> = new Subject<void>();
     workOrderFreightList: Object;
@@ -310,7 +310,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
                 this.workOrderGeneralInformation = {
                     ...data,
                     workOrderTypeId: String(data.workOrderTypeId),
-                    customerReference: data.receivingCustomerWorkId,
+                    // customerReference: data.receivingCustomerWorkId,
                     csr: getObjectById('employeeId', data.csrId, this.csrOriginalList),
                     customerId: data.customerDetails,
                     employeeId: getObjectById('value', data.employeeId, this.employeesOriginalData),
@@ -330,6 +330,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
                             technicianId: getObjectById('value', x.technicianId, this.employeesOriginalData),
                             masterPartId: getObjectById('itemMasterId', x.masterPartId, this.partNumberOriginalData),
                             mappingItemMasterId: getObjectById('mappingItemMasterId', x.mappingItemMasterId, x.revisedParts),
+
                         }
 
 
@@ -434,7 +435,8 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
         currentRecord.csr = object.csrId;
         currentRecord.creditLimit = object.creditLimit;
         currentRecord.creditTermsId = object.creditTermsId;
-
+        currentRecord.creditTerm = object.creditTerm;
+        currentRecord.receivingCustomerWorkId = object.receivingCustomerWorkId;
 
         this.getPartNosByCustomer(object.customerId);
         // this.getReceivingCustomerreference(object.customerId);
@@ -623,7 +625,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
             employeeId: editValueAssignByCondition('value', generalInfo.employeeId),
             salesPersonId: editValueAssignByCondition('employeeId', generalInfo.salesPersonId),
             csrId: editValueAssignByCondition('employeeId', generalInfo.csr),
-            receivingCustomerWorkId: editValueAssignByCondition('value', generalInfo.customerReference),
+            // receivingCustomerWorkId: editValueAssignByCondition('value', generalInfo.customerReference),
             //receivingCustomerWorkId: 1,
             masterCompanyId: 1,
             customerContactId: 68,
@@ -743,7 +745,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
         currentRecord.stockLineNumber = object.stockLineNumber;
         currentRecord.receivingCustomerWorkId = object.receivingCustomerWorkId;
         currentRecord.customerReference = object.reference;
-        currentRecord.receivingDate = new Date(object.receivingDate);
+        currentRecord.receivedDate = new Date(object.receivedDate);
 
         this.revisedPartId = object.revisedPartId;
 
@@ -1444,6 +1446,7 @@ export class WorkOrderAddComponent implements OnInit, AfterViewInit {
     }
 
     saveWorkOrderFreightsList(data) {
+        console.log(data);
         const freightsArr = data.map(x => {
             return {
                 ...x,

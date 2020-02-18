@@ -28,7 +28,8 @@
         <td>
           <p-autoComplete (onSelect)="onPartSelect($event, exclusion)" [suggestions]="partCollection"
             (completeMethod)="filterpartItems($event)" [size]="30" [(ngModel)]="exclusion.partNumber" [minLength]="1"
-            [dropdown]="true" class="workflow-measurement-select" name="pn_{{index}}" required>
+            (onClear)="clearValue(exclusion, index)" [dropdown]="true" class="workflow-measurement-select"
+            name="pn_{{index}}" required>
             <ng-template let-partName pTemplate="part">
               <div class="ui-helper-clearfix">{{ partName }}</div>
             </ng-template>
@@ -36,7 +37,7 @@
         </td>
         <td>
           <input type="text" class="form-control" [(ngModel)]="exclusion.partDescription"
-            value="{{ exclusion.partDescription }}" [disabled]="true" name="pdesc_{{index}}" />
+            value="{{ exclusion.partDescription }}" name=" pdesc_{{index}}" required />
         </td>
         <td>
           <input type="text" class="form-control" pInputText pKeyFilter="pnum" maxlength="10" (input)="
@@ -89,19 +90,21 @@
         <td>&nbsp;</td>
       </tr>
     </table>
+
+
+    <div *ngIf="(isWorkOrder && !isEdit) || (isQuote && !isEdit)" style="float:right">
+      <button class="btn btn-primary btn-primary" (click)="saveExclusionsWorkOrder()"
+        style="padding: 6px 12px !important;margin-top: 10px;" [disabled]="!exclusionsCreateForm.valid">
+        {{isQuote?'Add':'Save'}}
+      </button>
+    </div>
+
+    <div *ngIf="(isWorkOrder && isEdit) || (isQuote && isEdit)" style="float:right">
+      <button *ngIf="isWorkOrder || isQuote" class="btn btn-primary btn-primary" (click)="updateExclusionsWorkOrder()"
+        style="padding: 6px 12px !important;margin-top: 10px;" [disabled]="!exclusionsCreateForm.valid">
+        Update
+      </button>
+    </div>
+
   </form>
-
-</div>
-<div *ngIf="(isWorkOrder && !isEdit) || (isQuote && !isEdit)" style="float:right">
-  <button class="btn btn-primary btn-primary" (click)="saveExclusionsWorkOrder()"
-    style="padding: 6px 12px !important;margin-top: 10px;" [disabled]="!exclusionsCreateForm.valid">
-    {{isQuote?'Add':'Save'}}
-  </button>
-</div>
-
-<div *ngIf="(isWorkOrder && isEdit) || (isQuote && isEdit)" style="float:right">
-  <button *ngIf="isWorkOrder || isQuote" class="btn btn-primary btn-primary" (click)="updateExclusionsWorkOrder()"
-    style="padding: 6px 12px !important;margin-top: 10px;" [disabled]="!exclusionsCreateForm.valid">
-    Update
-  </button>
 </div>

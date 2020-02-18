@@ -61,19 +61,19 @@ export class ExclusionsCreateComponent implements OnInit, OnChanges {
                 this.addRow();
             }
         }
-        
+
         if (this.isWorkOrder) {
             this.row = this.workFlow.exclusions[0];
 
             // this.row = this.workFlow.exclusions[0];
             // this.addRow();
-            
+
         } else {
             this.row = this.workFlow.exclusions[0];
             if (this.row == undefined) {
                 this.row = {};
             }
-            if(!this.isQuote){
+            if (!this.isQuote) {
                 this.row.taskId = this.workFlow.taskId;
             }
         }
@@ -86,7 +86,7 @@ export class ExclusionsCreateComponent implements OnInit, OnChanges {
 
 
     ngOnChanges(): void {
-        if(!this.isWorkFlow){
+        if (!this.isWorkFlow) {
             this.addRow();
         }
     }
@@ -99,10 +99,10 @@ export class ExclusionsCreateComponent implements OnInit, OnChanges {
         var newRow = Object.assign({}, this.row);
         newRow.workflowExclusionId = "0";
         // newRow.taskId = this.workFlow.taskId;
-        if(this.taskList){
+        if (this.taskList) {
             this.taskList.forEach(
-                task=>{
-                    if(task.description == "Assemble"){
+                task => {
+                    if (task.description == "Assemble") {
                         newRow.taskId = task.taskId;
                     }
                 }
@@ -112,7 +112,7 @@ export class ExclusionsCreateComponent implements OnInit, OnChanges {
         newRow.estimtPercentOccurrance = "";
         newRow.extendedCost = "";
         newRow.partName = "";
-        newRow.partNumber = " ";
+        newRow.partNumber = null;
         newRow.itemMasterId = "";
         newRow.quantity = "";
         newRow.unitCost = "";
@@ -122,6 +122,9 @@ export class ExclusionsCreateComponent implements OnInit, OnChanges {
         this.workFlow.exclusions.push(newRow);
     }
 
+    clearValue(object, index) {
+        object.partNumber = null;
+    }
     deleteRow(index): void {
         if (this.workFlow.exclusions[index].workflowExclusionId == undefined || this.workFlow.exclusions[index].workflowExclusionId == "0" || this.workFlow.exclusions[index].workflowExclusionId == "") {
             this.workFlow.exclusions.splice(index, 1);
@@ -161,14 +164,14 @@ export class ExclusionsCreateComponent implements OnInit, OnChanges {
         if (this.allPartnumbersInfo != undefined && this.allPartnumbersInfo.length > 0) {
             for (let i = 0; i < this.allPartnumbersInfo.length; i++) {
                 let partName = this.allPartnumbersInfo[i].partNumber;
-                
+
                 let isMaterialListPart: any;
                 if (this.workFlow.materialList != undefined && this.workFlow.materialList.length > 0) {
                     isMaterialListPart = this.workFlow.materialList.find(x => x.itemMasterId == this.allPartnumbersInfo[i].itemMasterId);
                     if (isMaterialListPart != undefined)
                         continue;
                 }
-                
+
                 if (partName.toLowerCase().indexOf(event.query.toLowerCase()) == 0 && isMaterialListPart == undefined) {
                     this.itemclaColl.push([{
                         "partId": this.allPartnumbersInfo[i].itemMasterId,
@@ -246,9 +249,9 @@ export class ExclusionsCreateComponent implements OnInit, OnChanges {
         try {
             this.markupList.forEach((markup) => {
 
-            if (markup.value == Number(matData.markUpPercentageId)) {
-                matData.costPlusAmount = (matData.extendedPrice) + (((matData.extendedPrice) / 100) * Number(markup.label))
-            }
+                if (markup.value == Number(matData.markUpPercentageId)) {
+                    matData.costPlusAmount = (matData.extendedPrice) + (((matData.extendedPrice) / 100) * Number(markup.label))
+                }
             })
         }
         catch (e) {

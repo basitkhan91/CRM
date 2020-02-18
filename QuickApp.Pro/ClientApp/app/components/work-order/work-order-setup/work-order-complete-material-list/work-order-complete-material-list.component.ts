@@ -71,10 +71,12 @@ export class WorkOrderCompleteMaterialListComponent {
     isShowEqPN: boolean = false;
     isShowAlternatePN: boolean = false;
     eqPartData: any[] = [];
+    pageIndex: number = 1;
+    pageSize: number = 10;
 
 
     cols = [
-        { field: 'line', header: 'Line Num' },
+        // { field: 'line', header: 'Line Num' },
         { field: 'stockLineNumber', header: 'Stock Line' },
         { field: 'partNumber', header: 'PN' },
         { field: 'partDescription', header: 'PN Description' },
@@ -83,7 +85,7 @@ export class WorkOrderCompleteMaterialListComponent {
         { field: 'provision', header: 'Provision' },
         { field: 'oem', header: 'Stock Type' },
         { field: 'eq', header: 'Alternate/Equivalence Part' },
-        { field: 'control', header: 'Control Num' },
+        { field: 'controlNo', header: 'Control Num' },
         { field: 'controlId', header: 'Control Id' },
         { field: 'condition', header: 'Cond' },
         { field: 'itemType', header: 'Item Type' },
@@ -111,6 +113,7 @@ export class WorkOrderCompleteMaterialListComponent {
         { field: 'shelf', header: 'Shelf' },
         { field: 'bin', header: 'Bin' },
     ]
+
 
 
 
@@ -345,6 +348,12 @@ export class WorkOrderCompleteMaterialListComponent {
 
         })
 
+
+    }
+
+    pageIndexChange(event) {
+        this.pageIndex = parseInt(event.first) / event.rows;
+        this.pageSize = event.rows;
 
     }
     saveRIPart() {

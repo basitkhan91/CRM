@@ -210,7 +210,7 @@ export class WorkOrderListComponent implements OnInit {
     loadData(event) {
         console.log(event)
         this.lazyLoadEventData = event;
-        const pageIndex = parseInt(event.first) / event.rows;;
+        const pageIndex = parseInt(event.first) / event.rows;
         this.pageIndex = pageIndex;
         this.pageSize = event.rows;
         event.first = pageIndex;
@@ -472,7 +472,7 @@ export class WorkOrderListComponent implements OnInit {
 
     edit(rowData) {
         const { workOrderId } = rowData;
-        this.workOrderService.getWorkOrderById(workOrderId,0).subscribe(res => {
+        this.workOrderService.getWorkOrderById(workOrderId, 0).subscribe(res => {
             this.route.navigate([`workordersmodule/workorderspages/app-work-order-edit/${workOrderId}`]);
         })
     }

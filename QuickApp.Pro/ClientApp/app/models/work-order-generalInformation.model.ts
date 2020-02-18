@@ -8,6 +8,7 @@ export class workOrderGeneralInfo {
   employeeId: number;
   workOrderTypeId: string;
   openDate: Date;
+  creditTerm: string;
   creditTermsId: number;
   creditLimit: number;
   workOrderStatusId: number;
@@ -19,7 +20,8 @@ export class workOrderGeneralInfo {
   customerReference: string;
   csr: string;
   workOrderType: string;
-  managementStructureId : number;
+  managementStructureId: number;
+  receivingCustomerWorkId: number;
   partNumbers: WorkOrderPartNumber[]
 
   // workOrderType: string;
@@ -47,6 +49,7 @@ export class workOrderGeneralInfo {
     this.workOrderTypeId = "1";
     this.openDate = new Date();
     this.creditTermsId = null;
+    this.creditTerm = '';
     this.creditLimit = null;
     this.workOrderStatusId = 1;
     this.salesPersonId = null;
@@ -58,6 +61,7 @@ export class workOrderGeneralInfo {
     this.csr = '';
     this.workOrderType = '';
     this.managementStructureId = null;
+    this.receivingCustomerWorkId = null;
     this.partNumbers = []
 
     // this.workOrderType = 'single';

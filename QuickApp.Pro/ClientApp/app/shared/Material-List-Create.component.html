@@ -1,8 +1,8 @@
 <div class="fixed-table-container-inner table-responsive cat4-table fixed-column-table column-r1-fixed">
   <div>
     <span class="cat-heading cat4" *ngIf="!isEdit">
-      Add Material<i (click)="addRow()" class="fa fa-plus"></i>
-      <span class="float-right">
+      Add Material <i (click)="addRow()" class="fa fa-plus"></i>
+      <span class="float-right" *ngIf="!isWorkOrder">
         Deferred &nbsp;<input type="checkbox" (click)="isDeferredEnable($event)" />
       </span>
     </span>
@@ -19,7 +19,8 @@
           <th>Mandatory / Supplemental *</th>
           <th>Item Classification</th>
           <th>QTY *</th>
-          <th>UOM *</th>
+          <th *ngIf="!isWorkOrder">UOM *</th>
+          <th *ngIf="isWorkOrder">UOM</th>
           <th>Unit Cost *</th>
           <th>Extended Cost *</th>
           <th *ngIf="!isQuote">Unit Price *</th>
@@ -90,8 +91,10 @@
               " [(ngModel)]="material.quantity" name="qty_{{ i }}" required />
           </td>
           <td>
+            <!-- <input type="text" class="form-control w100" value="uom_{{ i }}" [(ngModel)]="material.unitOfMeasureId" name="uom_{{i}}"
+              [required]="!isWorkOrder" /> -->
             <select class="form-control custom-select wf-pub-id" id="ddlMaterialUOM"
-              [(ngModel)]="material.unitOfMeasureId" name="uom_{{ i }}" required>
+              [(ngModel)]="material.unitOfMeasureId" name="uom_{{ i }}" [required]="!isWorkOrder">
               <option value="">Select</option>
               <option *ngFor="let uom of materialUOM" [ngValue]="uom.unitOfMeasureId">
                 {{ uom.shortName }}
@@ -134,7 +137,7 @@
           </td>
         </tr>
       </tbody>
-      <tfoot *ngIf="workFlow.materialList.length > 0">
+      <tfoot *ngIf="workFlow.materialList.length > 0 && !isWorkOrder">
         <tr>
           <td>
             Total
