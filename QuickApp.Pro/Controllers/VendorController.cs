@@ -218,12 +218,7 @@ namespace QuickApp.Pro.Controllers
            
         }
 
-        //[HttpGet("POListById")]
-        //public IActionResult POListById(int itemMasterId)
-        //{
-        //    var result = _unitOfWork.purchaseOrder.POListByMasterItemId(itemMasterId); //.GetAllCustomersData();
-        //    return Ok(result);
-        //}
+       
 
         [HttpGet("recevingpolist")]
         public IActionResult RecevingPolist()
@@ -2871,6 +2866,7 @@ namespace QuickApp.Pro.Controllers
                         vendorprocess.UpdatedDate = DateTime.Now;
                         vendorprocess.IsDefaultRadio = item.IsDefaultRadio;
                         vendorprocess.IsDefaultCheck = item.IsDefaultCheck;
+                        vendorprocess.MasterCompanyId = 1;
                         if (vendorprocess.VendorProcess1099Id > 0)
                         {
                             _context.VendorProcess1099.Update(vendorprocess);
@@ -3571,7 +3567,7 @@ namespace QuickApp.Pro.Controllers
                 if (checkPaymentObj != null)
                 {
                     var addressObj = _unitOfWork.Address.GetSingleOrDefault(c => c.AddressId == checkPaymentObj.AddressId);
-                    checkPaymentObj.IsActive = true;
+                   
                     checkPaymentObj.MasterCompanyId = 1;
                     checkPaymentObj.IsActive = vendorShippingViewModel.IsActive;
                     checkPaymentObj.SiteName = vendorShippingViewModel.SiteName;
@@ -4916,7 +4912,7 @@ namespace QuickApp.Pro.Controllers
                 address.City = billingAddress.City;
                 address.Country = billingAddress.Country;
                 address.MasterCompanyId = 1;
-                address.IsActive = true;
+                address.IsActive = billingAddress.IsActive;
                 address.CreatedBy = billingAddress.CreatedBy ?? "Admin"; //Hotfix
                 address.UpdatedBy = billingAddress.UpdatedBy ?? "Admin";//Hotfix
 
@@ -5570,6 +5566,21 @@ namespace QuickApp.Pro.Controllers
 
         }
 
+
+        [HttpGet("vendorAircraftAuditDataByCapsId")]
+        public IActionResult VendorAircraftAuditDataByCapsId(long vendorCapabilityAircraftId)
+        {
+        
+            try
+            {
+                var result = _unitOfWork.Vendor.VendorAircraftAuditDataByCapsId(vendorCapabilityAircraftId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.InnerException.ToString());
+            }
+        }
 
 
 
