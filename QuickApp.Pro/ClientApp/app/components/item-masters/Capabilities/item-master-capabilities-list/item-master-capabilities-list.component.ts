@@ -29,6 +29,7 @@ import { WorkOrderService } from '../../../../services/work-order/work-order.ser
 import { CommonService } from '../../../../services/common.service';
 import * as $ from 'jquery';
 import { ItemMasterCreateCapabilitiesComponent } from '../item-master-create-capabilities/item-master-create-capabilities.component';
+import { DBkeys } from '../../../../services/db-Keys';
 
 
 @Component({
@@ -72,7 +73,7 @@ export class ItemMasterCapabilitiesListComponent implements OnInit {
     maincompanylist: any[] = [];
     bulist: any[];
     departmentList: any[];
-    divisionlist: any[];
+    divisionlist: any[] = [];
     manufacturerData: any[] = [];
     allAircraftinfo: any[];
     completeAircraftManfacturerData: any[];
@@ -111,7 +112,7 @@ export class ItemMasterCapabilitiesListComponent implements OnInit {
     isEnableCapesList: boolean = true;
     globalSearchData: any = {};
     pnData: any;
-    capabalityTypeList: any;
+    capabalityTypeList: any = [];
     aircraftModelData: any;
     ataChapterData: any;
     entityList: any;
@@ -127,6 +128,8 @@ export class ItemMasterCapabilitiesListComponent implements OnInit {
     selectedItemMasterCapData: any = {};
     legalEntityList: any = [];
     capabilityauditHisory: AuditHistory[] = [];
+    businessUnitList: any = [];
+    employeeList: any = [];
 
 
     /** item-master-capabilities-list ctor */
@@ -201,9 +204,12 @@ export class ItemMasterCapabilitiesListComponent implements OnInit {
         this.Integration();
         this.getAllATAChapter();
         this.getAllATASubChapter();
-        this.loadManagementdataForTree();
+        this.getCapabilityTypesList();
+        // this.loadManagementdataForTree();
         this.getCapabilityTypeData();
         this.getLegalEntity();
+        this.getAllEmployees();
+
 
 
     }
@@ -392,11 +398,19 @@ export class ItemMasterCapabilitiesListComponent implements OnInit {
         this.openPopUpWithData(content, row);
     }
 
-    openEdits(row) //this is for Edit Data get
+    openEdits(row, index) //this is for Edit Data get
     {
         
 
         this.selectedItemMasterCapData = row;
+        this.selectedLegalEntity(row.levelId1);
+        this.selectedBusinessUnit(row.levelId2);
+        this.selectedDivision(row.levelId3);
+        this.selectedDepartment(row.levelId4);
+
+
+
+
         this.selectedItemMasterCapData.verifiedDate = new Date(this.selectedItemMasterCapData.verifiedDate);
         // this.itemMasterService.isCapsEditMode = true;
         // this.isEditMode = true;
@@ -407,6 +421,50 @@ export class ItemMasterCapabilitiesListComponent implements OnInit {
     }
     getDynamicVariableData(variable, index) {
         return this[variable + index]
+    }
+    selectedLegalEntity(legalEntityId) {
+        if (legalEntityId) {
+            this.selectedItemMasterCapData['managementStructureId'] = legalEntityId;
+
+            this.commonservice.getBusinessUnitListByLegalEntityId(legalEntityId).subscribe(res => {
+                // this['businessUnitList' + index] = res;
+                this.businessUnitList = res;
+
+            })
+        }
+
+    }
+    selectedBusinessUnit(businessUnitId) {
+        if (businessUnitId) {
+            this.selectedItemMasterCapData['managementStructureId'] = businessUnitId;
+
+            this.commonservice.getDivisionListByBU(businessUnitId).subscribe(res => {
+
+                this.divisionlist = res;
+            })
+        }
+
+    }
+    selectedDivision(divisionUnitId) {
+        if (divisionUnitId) {
+            this.selectedItemMasterCapData['managementStructureId'] = divisionUnitId;
+
+            this.commonservice.getDepartmentListByDivisionId(divisionUnitId).subscribe(res => {
+                this.departmentList = res;
+            })
+        }
+
+    }
+    selectedDepartment(departmentId) {
+        if (departmentId) {
+            this.selectedItemMasterCapData['managementStructureId'] = departmentId;
+        }
+    }
+    resetVerified(rowData, value) {
+        if (value === false) {
+            rowData.verifiedById = null;
+            rowData.verifiedDate = new Date();
+        }
     }
     openPopUpWithData(content, row) //this is for Edit Data get
     {
@@ -649,7 +707,11 @@ export class ItemMasterCapabilitiesListComponent implements OnInit {
 
         });
     }
-
+    getCapabilityTypesList() {
+        this.commonservice.smartDropDownList('CapabilityType', 'CapabilityTypeId', 'Description').subscribe(res => {
+            this.capabalityTypeList = res;
+        })
+    }
     aircraftModalChange(event, capData) {
         let selectedData = event.value;
         capData.selectedModel = [];
@@ -1121,6 +1183,11 @@ export class ItemMasterCapabilitiesListComponent implements OnInit {
             });
         })
     }
+    async getAllEmployees() {
+        await this.commonservice.smartDropDownList('Employee', 'EmployeeId', 'FirstName').subscribe(res => {
+            this.employeeList = res;
+        })
+    }
 
     addModels(capData) {
         // this.capabilityTypeData.for
@@ -1249,6 +1316,28 @@ export class ItemMasterCapabilitiesListComponent implements OnInit {
 
         });
         return itemExisted;
+    }
+    saveCapability() {     
+        this.selectedItemMasterCapData["updatedBy"]="admin";  
+        this.selectedItemMasterCapData["createdBy"]="admin";  
+        this.selectedItemMasterCapData["companyId"]=this.selectedItemMasterCapData.levelId1;  
+        this.selectedItemMasterCapData["buId"]=this.selectedItemMasterCapData.levelId2;  
+        this.selectedItemMasterCapData["divisionId"]=this.selectedItemMasterCapData.levelId3;  
+        this.selectedItemMasterCapData["departmentId"]=this.selectedItemMasterCapData.levelId4;  
+        this.selectedItemMasterCapData["masterCompanyId"]=DBkeys.MASTER_COMPANY_ID
+        this.itemMasterService.updateItemMasterCapes(this.selectedItemMasterCapData.itemMasterCapesId, this.selectedItemMasterCapData).subscribe(res => {
+            this.selectedItemMasterCapData = {};
+
+            this.loadData();
+            this.alertService.showMessage(
+                'Capes',
+                'Saved Capes Details Successfully',
+                MessageSeverity.success
+            );
+            
+        })
+        // this.onCloseCapes();
+        
     }
     saveCapabilities() {
         let capbilitiesForm = this.capabilitiesForm.value;

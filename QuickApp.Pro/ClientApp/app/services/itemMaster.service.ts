@@ -409,6 +409,9 @@ export class ItemMasterService {
     saveItemMasterCapes(data){
         return this.itemMasterEndpoint.saveItemMasterCapes(data)
     }
+    updateItemMasterCapes(itemMasterCapId, data){
+        return this.itemMasterEndpoint.updateItemMasterCapes(itemMasterCapId, data)
+    }
     deleteCapabilityById(capabilityId, user) {
         return this.itemMasterEndpoint.deleteCapabilityById<any>(capabilityId, user);
     }

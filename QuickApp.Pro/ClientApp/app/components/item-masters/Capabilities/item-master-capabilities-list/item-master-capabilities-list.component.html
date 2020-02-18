@@ -101,7 +101,7 @@
             
         </ng-template>
 
-        <ng-template pTemplate="body" let-rowData let-columns="columns">
+        <ng-template pTemplate="body" 	let-row_no="rowIndex"        let-rowData let-columns="columns">
             <tr [pSelectableRow]="rowData" pReorderableRowHandle>
 
                 <td *ngFor="let col of columns" class="ui-resizable-column" pReorderableRowHandle>
@@ -199,7 +199,7 @@
       *ngIf="allItemMasterCapsList?.length == 0"
     >
             <tr>
-                <td [attr.colspan]="6" class="no-records-cstm">
+                <td [attr.colspan]="11" class="no-records-cstm">
                 No records found
                 </td>
             </tr>
@@ -401,125 +401,147 @@
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                 <h4 class="modal-title">Edit Capability</h4>
             </div>
-            <div class="modal-body">
-                <div class="table-responsive default-bg clear">
-                    <div style="overflow-y: scroll;height: 400px;">
-                        <table class="table table-bordered table-striped table-sorting">
-                            <thead>
-                            <tr>
-                                <th style="width: 130px;text-align: center;">Capability Type</th>
-                                <th style="width: 520px;text-align: center;" colspan="4">Managment Structure <span class="clr-red">*</span></th>
-                                <th style="width: 130px;text-align: center;">Verified</th>
-                                <th style="width: 130px;text-align: center;">Verified By</th>
-                                <th style="width: 130px;text-align: center;">Verified Date</th>
-                                <th style="width: 130px;text-align: center;">Memo</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                                <tr>            
-                                    <td style="width: 130px;">{{ selectedItemMasterCapData.capabilityType }}</td>                    
-                                    <td style="width: 130px;">
-                                    <!-- <p-dropdown
-                                    placeholder="Select"
-                                    name="level1"
-                                    #level1="ngModel"
-                                    [options]="legalEntityList"
-                                    class="p-dropdown-custom-sm"
-                                    (onChange)="selectedLegalEntity($event.value, row_no)"
-                                    [(ngModel)]="selectedItemMasterCapData.level1"
-                                    [required]="true"
-                                    >
-                                    </p-dropdown> -->
-                                    </td>
-                                    <td style="width: 130px;">
-                                    <!-- <p-dropdown
-                                    placeholder="Select"
-                                    name="level2"
-                                    #level2="ngModel"
-                                    [options]="getDynamicVariableData('businessUnitList',row_no)"
-                                    class="p-dropdown-custom-sm"
-                                    (onChange)="selectedBusinessUnit($event.value, row_no)"
-                                    [(ngModel)]="selectedItemMasterCapData.level2"
-                                    >
-                                    </p-dropdown> -->
-                                    </td>
-                                    <td style="width: 130px;">
-                                    <!-- <p-dropdown
-                                    placeholder="Select"
-                                    name="level3"
-                                    #level3="ngModel"
-                                    [options]="getDynamicVariableData('divisionList',row_no)"
-                                    class="p-dropdown-custom-sm"
-                                    (onChange)="selectedDivision($event.value, row_no)"
-                                    [(ngModel)]="selectedItemMasterCapData.level3"
-                                    >
-                                    </p-dropdown> -->
-                                    </td>
-                                    <td style="width: 130px;">
-                                    <!-- <p-dropdown
-                                    placeholder="Select"
-                                    name="level4"
-                                    #level4="ngModel"
-                                    [options]="getDynamicVariableData('departmentList',row_no)"
-                                    class="p-dropdown-custom-sm"
-                                    (onChange)="selectedDepartment($event.value, row_no)"
-                                    [(ngModel)]="selectedItemMasterCapData.level4"
-                                    >
-                                </p-dropdown> -->
-                                    </td>
-                            
-                                
-                                    <td style="width: 130px;text-align: center;">
-                                    <!-- <p-checkbox
-                                        class="pcheckbox-cstm"
-                                        name="isVerified"
-                                        binary="false"
-                                        [(ngModel)]="selectedItemMasterCapData.isVerified"
-                                        (onChange)="resetVerified(selectedItemMasterCapData, $event)"
-                                    
-                                    ></p-checkbox> -->
-                                    </td>
-                                    <td style="width: 130px;">
-                                    <!-- <p-dropdown
-                                        class="p-dropdown-custom-sm"
-                                        [options]="employeeList"
-                                        placeholder="Select"
-                                        [disabled]="!selectedItemMasterCapData.isVerified"
-                                        [required]="selectedItemMasterCapData.isVerified"
-                                        name="verifiedBy"
-                                        [(ngModel)]="selectedItemMasterCapData.verifiedBy"
-                                    ></p-dropdown> -->
-                                    </td>
-                                    <td style="width: 130px;">
-                                    <!-- <p-calendar
-                                        class="pcal-item-capes"
-                                        [(ngModel)]="selectedItemMasterCapData.verifiedDate"
-                                        [disabled]="!selectedItemMasterCapData.isVerified"
-                                        [required]="selectedItemMasterCapData.isVerified"
-                                        name="verifiedDate"
-                                        [showIcon]="true"
-                                    ></p-calendar> -->
-                                    </td>
-                            
-                                    <!-- <td *ngFor="let col of columns">
-                                    {{ selectedItemMasterCapData[col.field] }}
-                                    </td> -->
-                                    <td style="width: 130px;">
-                                    <input
-                                        type="text"
-                                        class="form-control input-value"
-                                        [(ngModel)]="selectedItemMasterCapData.memo"
-                                        name="memo"
-                                    />
-                                    </td>
-                                
+            <form #capesForm="ngForm">
+                <div class="modal-body">
+                    <div class="table-responsive default-bg clear">
+                        <div style="overflow-y: scroll;height: 400px;">
+                            <table class="table table-bordered table-striped table-sorting">
+                                <thead>
+                                <tr>
+                                    <th style="width: 130px;text-align: center;">Capability Type</th>
+                                    <th style="width: 520px;text-align: center;" colspan="4">Managment Structure <span class="clr-red">*</span></th>
+                                    <th style="width: 130px;text-align: center;">Verified</th>
+                                    <th style="width: 130px;text-align: center;">Verified By</th>
+                                    <th style="width: 130px;text-align: center;">Verified Date</th>
+                                    <th style="width: 130px;text-align: center;">Memo</th>
                                 </tr>
-                            </tbody>
-                        </table>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-            </div>
+                                </thead>
+                                <tbody>
+                                    <tr>            
+                                        <td style="width: 130px;">
+                                            <p-dropdown
+                                            placeholder="Select"
+                                            class="p-dropdown-custom-sm"
+                                            [options]="capabalityTypeList"
+                                            #capabilityTypeId="ngModel"
+                                            [(ngModel)]="selectedItemMasterCapData.capabilityTypeId"
+                                            name="capabilityTypeId"	
+                                            [required]="true"				
+                                            ></p-dropdown>                                                                               
+                                        </td>                    
+                                        <td style="width: 130px;">
+                                        <p-dropdown
+                                        placeholder="Select"
+                                        name="level1"
+                                        #level1="ngModel"
+                                        [options]="legalEntityList"
+                                        class="p-dropdown-custom-sm"
+                                        (onChange)="selectedLegalEntity($event.value)"
+                                        [(ngModel)]="selectedItemMasterCapData.levelId1"
+                                        [required]="true"
+                                        >
+                                        </p-dropdown>
+                                        </td>
+                                        <td style="width: 130px;">
+                                        <p-dropdown
+                                        placeholder="Select"
+                                        name="level2"
+                                        #level2="ngModel"
+                                        [options]="businessUnitList"
+                                        class="p-dropdown-custom-sm"
+                                        (onChange)="selectedBusinessUnit($event.value)"
+                                        [(ngModel)]="selectedItemMasterCapData.levelId2"
+                                        >
+                                        </p-dropdown>
+                                        </td>
+                                        <td style="width: 130px;">
+                                        <p-dropdown
+                                        placeholder="Select"
+                                        name="level3"
+                                        #level3="ngModel"
+                                        [options]="divisionlist"
+                                        class="p-dropdown-custom-sm"
+                                        (onChange)="selectedDivision($event.value)"
+                                        [(ngModel)]="selectedItemMasterCapData.levelId3"
+                                        >
+                                        </p-dropdown>
+                                        </td>
+                                        <td style="width: 130px;">
+                                        <p-dropdown
+                                        placeholder="Select"
+                                        name="level4"
+                                        #level4="ngModel"
+                                        [options]="departmentList"
+                                        class="p-dropdown-custom-sm"
+                                        (onChange)="selectedDepartment($event.value)"
+                                        [(ngModel)]="selectedItemMasterCapData.levelId4"
+                                        >
+                                    </p-dropdown>
+                                        </td>
+                                
+                                    
+                                        <td style="width: 130px;text-align: center;">
+                                        <p-checkbox
+                                            class="pcheckbox-cstm"
+                                            name="isVerified"
+                                            binary="false"
+                                            [(ngModel)]="selectedItemMasterCapData.isVerified"
+                                            (onChange)="resetVerified(selectedItemMasterCapData, $event)"
+                                        
+                                        ></p-checkbox>
+                                        </td>
+                                        <td style="width: 130px;">
+                                        <p-dropdown
+                                            class="p-dropdown-custom-sm"
+                                            [options]="employeeList"
+                                            placeholder="Select"
+                                            [disabled]="!selectedItemMasterCapData.isVerified"
+                                            [required]="selectedItemMasterCapData.isVerified"
+                                            name="verifiedById"
+                                            [(ngModel)]="selectedItemMasterCapData.verifiedById"
+                                        ></p-dropdown>
+                                        </td>
+                                        <td style="width: 130px;">
+                                        <p-calendar
+                                            class="pcal-item-capes"
+                                            [(ngModel)]="selectedItemMasterCapData.verifiedDate"
+                                            [disabled]="!selectedItemMasterCapData.isVerified"
+                                            [required]="selectedItemMasterCapData.isVerified"
+                                            name="verifiedDate"
+                                            [showIcon]="true"
+                                        ></p-calendar>
+                                        </td>
+                                
+                                        <!-- <td *ngFor="let col of columns">
+                                        {{ selectedItemMasterCapData[col.field] }}
+                                        </td> -->
+                                        <td style="width: 130px;">
+                                        <input
+                                            type="text"
+                                            class="form-control input-value"
+                                            [(ngModel)]="selectedItemMasterCapData.memo"
+                                            name="memo"
+                                        />
+                                        </td>
+                                    
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button
+                    type="button"
+                    class="btn btn-primary" [disabled]="!capesForm.valid"
+                    data-dismiss="modal"
+                    (click)="saveCapability(); "
+                >
+                    Save
+                </button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
