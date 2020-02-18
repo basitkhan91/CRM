@@ -2070,7 +2070,7 @@ namespace QuickApp.Pro.Controllers
                     checkPaymentObj.MasterCompanyId = 1;
                     checkPaymentObj.IsDelete = true;
                     checkPaymentObj.UpdatedDate = DateTime.Now;
-                    checkPaymentObj.CreatedBy = CustomerShippingViewModel.CreatedBy;
+                   // checkPaymentObj.CreatedBy = CustomerShippingViewModel.CreatedBy;
                     checkPaymentObj.UpdatedBy = CustomerShippingViewModel.UpdatedBy;
                     _unitOfWork.CustomerShippingAddress.Update(checkPaymentObj);
                     _unitOfWork.SaveChanges();

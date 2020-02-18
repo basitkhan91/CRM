@@ -1806,7 +1806,7 @@ namespace DAL.Repositories
                             join atasub in _appContext.ATASubChapter on cATA.ATASubChapterId equals atasub.ATASubChapterId into atasubchapter
                             from atasub in atasubchapter.DefaultIfEmpty()
 
-                            where cATA.CustomerId == customerId && myATAChapterId.Contains(cATA.ATAChapterId) && myATASubChapterID.Contains(cATA.ATASubChapterId) && mycontactID.Contains(cATA.CustomerContactId) && cATA.IsDeleted != true
+                            where cATA.CustomerId == customerId && myATAChapterId.Contains(cATA.ATAChapterId) && myATASubChapterID.Contains(cATA.ATASubChapterId) && mycontactID.Contains(Convert.ToInt64(cont.ContactId)) && cATA.IsDeleted != true
                             select new
                             {
                                 cATA.CustomerContactATAMappingId,
@@ -1860,7 +1860,7 @@ namespace DAL.Repositories
                             join atasub in _appContext.ATASubChapter on cATA.ATASubChapterId equals atasub.ATASubChapterId into atasubchapter
                             from atasub in atasubchapter.DefaultIfEmpty()
 
-                            where cATA.CustomerId == customerId && myATAChapterId.Contains(cATA.ATAChapterId) && mycontactID.Contains(cATA.CustomerContactId) && cATA.IsDeleted != true
+                            where cATA.CustomerId == customerId && myATAChapterId.Contains(cATA.ATAChapterId) && mycontactID.Contains(Convert.ToInt64(cont.ContactId)) && cATA.IsDeleted != true
                             select new
                             {
                                 cATA.CustomerContactATAMappingId,
@@ -1889,7 +1889,7 @@ namespace DAL.Repositories
                             join atasub in _appContext.ATASubChapter on cATA.ATASubChapterId equals atasub.ATASubChapterId into atasubchapter
                             from atasub in atasubchapter.DefaultIfEmpty()
 
-                            where cATA.CustomerId == customerId && myATASubChapterID.Contains(cATA.ATASubChapterId) && mycontactID.Contains(cATA.CustomerContactId) && cATA.IsDeleted != true
+                            where cATA.CustomerId == customerId && myATASubChapterID.Contains(cATA.ATASubChapterId) && mycontactID.Contains(Convert.ToInt64(cont.ContactId)) && cATA.IsDeleted != true
                             select new
                             {
                                 cATA.CustomerContactATAMappingId,
@@ -1977,7 +1977,7 @@ namespace DAL.Repositories
                             join atasub in _appContext.ATASubChapter on cATA.ATASubChapterId equals atasub.ATASubChapterId into atasubchapter
                             from atasub in atasubchapter.DefaultIfEmpty()
 
-                            where cATA.CustomerId == customerId && mycontactID.Contains(cATA.CustomerContactId) && cATA.IsDeleted != true
+                            where cATA.CustomerId == customerId && mycontactID.Contains(Convert.ToInt64(cont.ContactId)) && cATA.IsDeleted != true
                             select new
                             {
                                 cATA.CustomerContactATAMappingId,
