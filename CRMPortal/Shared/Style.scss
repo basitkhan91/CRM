@@ -1,0 +1,246 @@
+﻿
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,700);
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: #ffffff;
+    font-family: 'Open Sans', sans-serif;
+}
+
+.wrapper {
+    max-width: 400px;
+    width: 100%;
+    padding: 15px;
+    margin: auto;
+    font-size: 16px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 370px;
+}
+
+.login {
+    box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+    -webkit-box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+}
+
+/* Reset top and bottom margins from certain elements */
+.login-header,
+.login p {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+/* The triangle form is achieved by a CSS hack */
+.login-triangle {
+    width: 0;
+    margin-right: auto;
+    margin-left: auto;
+    border: 12px solid transparent;
+    border-bottom-color: #28d;
+}
+
+.login-header {
+    background: #28d;
+    padding: 20px;
+    font-size: 1.4em;
+    font-weight: normal;
+    text-align: center;
+    text-transform: uppercase;
+    color: #fff;
+}
+
+.login-container {
+    background: #ebebeb;
+    padding: 12px;
+}
+
+/* Every row inside .login-container is defined with p tags */
+.login p {
+    padding: 12px;
+}
+
+.login input {
+    box-sizing: border-box;
+    display: block;
+    width: 100%;
+    border-width: 1px;
+    border-style: solid;
+    padding: 16px;
+    outline: 0;
+    font-family: inherit;
+    font-size: 0.95em;
+}
+
+.login input[type="email"],
+.login input[type="password"] {
+    background: #fff;
+    border-color: #bbb;
+    color: #555;
+}
+
+/* Text fields' focus effect */
+.login input[type="email"]:focus,
+.login input[type="password"]:focus {
+    border-color: #888;
+}
+
+.login input[type="submit"] {
+    background: #28d;
+    border-color: transparent;
+    color: #fff;
+    cursor: pointer;
+}
+
+.login input[type="submit"]:hover {
+    background: #17c;
+}
+
+/* Buttons' focus effect */
+.login input[type="submit"]:focus {
+    border-color: #05a;
+}
+
+.clearfix:after {
+    content: " ";
+    visibility: hidden;
+    display: block;
+    height: 0;
+    clear: both;
+}
+
+.clearfix:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.forgotpass {
+    padding: 12px;
+    display: flex;
+    align-self: center;
+}
+
+.forgotpass a {
+    display: inline-block;
+    color: #28d;
+    font-size: 12px;
+    margin-left: auto;
+}
+
+/*--check box--*/
+.custom-checkbox-box {
+    padding: 12px;
+}
+
+.custom-checkbox-box input {
+    display: inline-block;
+    width: auto;
+}
+
+.custom-checkbox-box [type="checkbox"]:not(:checked),
+.custom-checkbox-box [type="checkbox"]:checked {
+    position: absolute;
+    left: -9999px;
+    opacity: 0;
+}
+
+.custom-checkbox-box input[type="checkbox"],
+.custom-checkbox-box input[type="radio"] {
+    box-sizing: border-box;
+    padding: 0;
+}
+
+.custom-checkbox-box [type="checkbox"] + label {
+    position: relative;
+    cursor: pointer;
+    display: block;
+    width: 100%;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -ms-user-select: none;
+    margin-bottom: 0;
+    padding: 0px 0 0 30px;
+    font-weight: normal;
+    font-size: 14px;
+}
+
+.custom-checkbox-box .filled-in[type="checkbox"]:not(:checked) + label::before {
+    width: 0;
+    height: 0;
+    border: 3px solid transparent;
+    right: 11px;
+    top: 10px;
+    -webkit-transform: rotateZ(37deg);
+    transform: rotateZ(37deg);
+    -webkit-transform-origin: 20% 40%;
+    transform-origin: 100% 100%;
+}
+
+.custom-checkbox-box .filled-in[type="checkbox"]:checked + label::before {
+    top: 0px;
+    left: 2px;
+    width: 4px;
+    height: 8px;
+    border-top: 2px solid transparent;
+    border-left: 2px solid transparent;
+    border-right: 2px solid #28d;
+    border-bottom: 2px solid #28d;
+    -webkit-transform: rotateZ(37deg);
+    transform: rotateZ(37deg);
+    -webkit-transform-origin: 100% 100%;
+    transform-origin: 100% 100%;
+}
+
+.custom-checkbox-box .filled-in[type="checkbox"] + label::before,
+.custom-checkbox-box .filled-in[type="checkbox"] + label::after {
+    content: '';
+    left: 0px;
+    position: absolute;
+    transition: border .25s, background-color .25s, width .20s .1s, height .20s .1s, top .20s .1s, left .20s .1s;
+    z-index: 1;
+}
+
+.custom-checkbox-box .filled-in[type="checkbox"]:not(:checked) + label::after {
+    height: 18px;
+    width: 18px;
+    background-color: transparent;
+    border: 1px solid #c5c5c5; /*top: 0px;*/
+    z-index: 0;
+}
+
+.custom-checkbox-box .filled-in[type="checkbox"]:checked + label::after { /*top: 0; */
+    width: 18px;
+    height: 18px;
+    border: 1px solid #28d;
+    background-color: transparent;
+    z-index: 0;
+}
+
+.custom-checkbox-box .filled-in[type="checkbox"] + label::after {
+    border-radius: 2px;
+}
+
+.custom-checkbox-box [type="checkbox"] + label::before,
+.custom-checkbox-box [type="checkbox"]:not(.filled-in) + label::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 18px;
+    height: 18px;
+    z-index: 0;
+    border: 2px solid #5a5a5a;
+    border-radius: 1px;
+    margin-top: 2px;
+    transition: .2s;
+}
+/*--check box--*/
